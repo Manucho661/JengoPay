@@ -1,0 +1,118 @@
+body {
+    margin: 0%;
+    font-family: Arial, sans-serif;
+    /* display: flex;\ */
+    
+    
+  }
+  
+  /* search bar */
+  
+  
+  
+  .nav {
+    margin-top: 10px;
+  }
+  .nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 16px;
+  }
+  .nav a:hover {
+    text-decoration: underline;
+  }
+  
+  
+  /* sidebar style */
+  
+  
+  
+  
+  
+  .col{
+    margin: 50px;
+  
+  }
+  .hidden-items {
+  display: none;
+  }
+  
+  /* Styling for the button */
+  #showButton {
+  margin: 20px;
+  }
+  
+  /* Style for the container of the items */
+  #items {
+  display: none;
+  background-color: lightblue; /* Background color */
+  border: 2px solid darkblue; /* Border around the list */
+  padding: 10px;
+  width: 200px; /* Width of the list */
+  position: fixed; /* Position fixed on the screen */
+  left: 150px; /* Position the list on the right side */
+  top: 50px; /* Adjust from top for visibility */
+  }
+  
+  /* Style for list items */
+  #items ul {
+  list-style-type: none;
+  padding-left: 0;
+  }
+  
+  #items li {
+  padding: 5px;
+  border-bottom: 1px solid darkblue; /* Border between items */
+  }
+  
+  #items li:last-child {
+  border-bottom: none; /* Remove border from the last item */
+  }
+  /* Container for right-side icons in header */
+  
+  /* Common styles for all icons */
+  .icon-button {
+    font-size: 20px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.3s;
+  }
+  
+  .icon-button:hover {
+    color: blue;
+  }
+  
+  .top-right {
+  top:300px;
+  right:300px;
+  position: absolute;
+  }
+  
+  .jt-right {
+  position: absolute;
+  top: 300px;
+  right:60px;
+  }
+  
+  .top-left-button {
+  background-color:#00192D ;
+  color:#FFC107;
+  position: absolute; /* Position it within the header */
+  top: 35px;          /* Distance from the top of the header */
+  left: 50px;         /* Distance from the left of the header */
+  z-index: 1000;      /* Ensure it stays on top */
+  }
+  .def{
+  background-color:#FFC107;
+  color: #00192D;
+  }
+  
+  
+  
+  .item electronics{
+    margin-left: 80%;
+  }
+  
