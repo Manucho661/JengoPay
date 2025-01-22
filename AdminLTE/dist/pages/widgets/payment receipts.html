@@ -49,55 +49,86 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-      .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            font-size: 18px;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            border-radius: 5px;
-        }
-        .invoice-container {
-            max-width: 600px;
-            background: #fff;
+        #idem {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 20px auto;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            margin: auto;
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
         }
-        h2, h3 {
+        h2 {
             text-align: center;
-            color: #333;
         }
-        .invoice-details {
-            margin-bottom: 20px;
+        .receipt-details {
+            margin: 10px 0;
         }
-        .invoice-details p {
+        .receipt-details p {
             margin: 5px 0;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #555;
         }
-        table, th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-        }
-        th {
-            background-color: #007BFF;
-            color: white;
-        }
-        .total {
-            font-weight: bold;
-        }
+        .trash-can {
+      width: 60px;
+      height: 80px;
+      background-color: #e0e0e0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      position: relative;
+    }
+
+    .trash-can::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 20px;
+      width: 20px;
+      height: 10px;
+      background-color: #888;
+      border-radius: 3px;
+    }
+
+    .trash-can::after {
+      content: "";
+      position: absolute;
+      top: 25px;
+      left: 25px;
+      width: 10px;
+      height: 50px;
+      background-color: #333;
+      border-radius: 2px;
+    }
+
+    .trash-can::after:before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 10px;
+      bottom: 10px;
+      margin: auto;
+      width: 2px;
+      height: 30px;
+      background-color: #fff;
+    }
+
+    .trash-can::after:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 20px;
+      bottom: 20px;
+      margin: auto;
+      width: 2px;
+      height: 10px;
+      background-color: #fff;
+    }
+
     </style>
   </head>
   <!--end::Head-->
@@ -774,153 +805,123 @@
           <!--end::Container-->
         </div>
         <!--end::App Content Header-->
-        <!--begin::App Content-->
-                 <!-- Beginning Property row -->
-      
-                 <div class="col-md-12">
-                  <div class="card mb-4">
-                    <div class="card-header" style="background-color:#00192D; color: white;" >
-                      <h5 class="card-title bg-warning" style="padding:0.5rem; border-radius: 10px;">Payment Receipts</h5>
-                      <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                          <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                          <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                        </button>
-                        <div class="btn-group">
-                          <button
-                            type="button"
-                            class="btn btn-tool dropdown-toggle"
-                            data-bs-toggle="dropdown"
-                          >
-                            <i class="bi bi-wrench"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-end" role="menu">
-                            <a href="#" class="dropdown-item">Action</a>
-                            <a href="#" class="dropdown-item">Another action</a>
-                            <a href="#" class="dropdown-item"> Something else here </a>
-                            <a class="dropdown-divider"></a>
-                            <a href="#" class="dropdown-item">Separated link</a>
-                          </div>
-                        </div>
-                        <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                          <i class="bi bi-x-lg"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                      <!--begin::Row-->
-                      <table id="myTableOne" class="display" style="">
-                        <thead>
-                          <tr>
-                            <th>Property</th>
-                            <th>Management Fees</th>
-                            <th>Commissions Earned</th>
-                            <th>Date</th>
-                            <th>Actions</th>
-                            
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>Manucho Apartments</td>
-                            <td>KSH80,000</td>
-                            <td>KSH40,000</td>
-                            <td>10-04-2025</td>
-                            <td><button type="button" class="close-btn text-warning overlay-btn">PRINT</button></td>
-                          </tr>
-                          <tr>
-                            <td>Ethical Apartments</td>
-                            <td>KSH69,000</td>
-                            <td>KSH 39,000</td>
-                            <td>09-11-2024</td>
-                          <td><button type="button"   class="close-btn text-warning overlay-btn" onclick="showOverlay()">PRINT</button></td>
-                          </tr>
-                          <!-- Add more rows as needed -->
-                        </tbody>
-                    </table>
-                    <div class="overlay invoice-container" id="overlay">
-                      <h2>Tenant Invoice</h2>
-                      <h3>Property Management System</h3>
-                      <div class="invoice-details">
-                          <p><strong>Invoice Number:</strong> INV-0001</p>
-                          <p><strong>Tenant Name:</strong> John Doe</p>
-                          <p><strong>Property Address:</strong> 123 Main St, Apt 4B, City, State</p>
-                          <p><strong>Invoice Date:</strong> YYYY-MM-DD</p>
-                          <p><strong>Due Date:</strong> YYYY-MM-DD</p>
-                      </div>
-                      <table>
-                          <tr>
-                              <th>Description</th>
-                              <th>Amount (USD)</th>
-                          </tr>
-                          <tr>
-                              <td>Rent Amount</td>
-                              <td>$XXXX.XX</td>
-                          </tr>
-                          <tr>
-                              <td>Water Bill</td>
-                              <td>$XX.XX</td>
-                          </tr>
-                          <tr>
-                              <td>Garbage Collection Fees</td>
-                              <td>$XX.XX</td>
-                          </tr>
-                          <tr>
-                              <td>Late Fees</td>
-                              <td>$XX.XX</td>
-                          </tr>
-                          <tr>
-                              <td>Maintenance Costs</td>
-                              <td>$XX.XX</td>
-                          </tr>
-                          <tr>
-                              <td>Arrears</td>
-                              <td>$XX.XX</td>
-                          </tr>
-                          <tr class="total">
-                              <td>Total Balance Due</td>
-                              <td>$XXXX.XX</td>
-                          </tr>
-                      </table>
-              </div>
-                    
-<!--                     
-                    <div class="overlay" id="printOverlay">
-                      <div class="overlay-content">
-                          <h3>Print Invoice</h3>
-                          <p>Do you want to print this invoice?</p>
-                          <button class="close-btn" onclick="hidePrintOverlay()">Cancel</button>
-                          <button class="close-btn" onclick="window.location.href='financial.html'">Proceed</button>
-                      </div>
-                  </div> -->
-  
-  
-                  
-                      <!--end::Row-->
-                    </div>
-                    <!-- ./card-body -->
-                    <div class="card-footer">
-                      <!--begin::Row-->
-                      
-                        <!-- /.col -->
-                        
-                      <!--end::Row-->
-                    </div>
-                    <!-- /.card-footer -->
-                  </div>
-                  <!-- /.card -->
-                </div>
-           </div>
-                <!-- End Tenant Invoices Row -->
 
-                
-                <script>
-                  function showOverlay() {
-                      const overlay = document.getElementById('overlay');
-                      overlay.style.display = 'flex'; // Show the overlay
-                  }
-              </script>
+        <!-- /.col -->
+        <div class="col-md-12">
+          <div class="card card-success">
+            <div class="card-header">
+              <h3 class="card-title">TOTAL PAID RENT</h3>
+            
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                  <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                  <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                </button>
+              </div>
+               <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body text-center">KSH50,000</div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <hr>
+<button class="button" style="width: 150px; height: 50px; margin-left: 50rem; border-radius: 10px; background-color: #FFC107; color: #00192D;">
+  
+  RECORD PAYMENT</button>
+         <!-- Beginning Property row -->
+      
+         <div class="col-md-12">
+          <div class="card mb-4">
+            <div class="card-header" style="background-color:#00192D; color: white;" >
+              <h5 class="card-title bg-warning" style="padding:0.5rem; border-radius: 10px;">
+                SEND RECEIPTS</h5>
+              
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                  <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                  <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                </button>
+                <div class="btn-group">
+                  <button
+                    type="button"
+                    class="btn btn-tool dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                  >
+                    <i class="bi bi-wrench"></i>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-end" role="menu">
+                    <a href="#" class="dropdown-item">Action</a>
+                    <a href="#" class="dropdown-item">Another action</a>
+                    <a href="#" class="dropdown-item"> Something else here </a>
+                    <a class="dropdown-divider"></a>
+                    <a href="#" class="dropdown-item">Separated link</a>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <!--begin::Row-->
+              <table id="myTableOne" class="display">
+                <thead>
+                  <tr>
+                    <th>Property</th>
+                    <th>Tenant</th>
+                    <th>Unit</th>
+                    <th>Date</th>
+                    <th>Amount Paid</th>
+                    <th>Payment Method</th>
+                    <th>Rent Amount</th>
+                    <th>Reference Number</th>
+                    <th>Balance</th>
+                    <th>Action</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Manucho Apartments</td>
+                    <td>John</td>
+                    <th>A11</th>
+                    <td>KSH 29,000</td>
+                    <td>KSH80,000</td>
+                    <td>Kisumu</td>
+                    <td>Kisumu</td>
+                    <td>Kisumu</td>
+                    <td>Kisumu</td>
+                    <td>
+                      <button type="button"  style="background-color: #00192D; border-radius: 10px;" class="btn text-warning" onclick="openOverlay()">PRINT</button>
+                      </td>
+
+                  </tr>
+                  <tr>
+                    <td>Ethical Apartments</td>
+                    <td>Peter</td>
+                    <td>A12</td>
+                    <td>KSH 29,000</td>
+                    <td>KSH69,000</td>
+                    <td>Rongai</td>
+                    <td>Kisumu</td>
+                    <td>Kisumu</td>
+                    <td>Kisumu</td>
+                    <td>
+                      <button type="button" style="background-color: #00192D; border-radius: 10px;" class="btn text-warning" onclick="openOverlay()">PRINT</button>
+                      </td>
+
+                  </tr>
+                  <!-- Add more rows as needed -->
+                </tbody>
+      
+            </table>
+
+              <!--end::Row-->
+
+
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
       integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
@@ -961,6 +962,7 @@
         }
       });
     </script>
+
 
      <!-- datatable script -->
      <script>

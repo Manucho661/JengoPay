@@ -48,6 +48,83 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+ .overlay {
+  position: fixed;
+  top:5%;
+  bottom:15%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.overlay-content {
+  background: white;
+  /* padding: 20px; */
+  border-radius: 8px;
+  text-align: center;
+}
+
+.invoice-container {
+            width: 400px;
+            height: 500px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin: auto;
+        }
+         /* h2, h3 {
+            text-align: center;
+            color: #333;
+        } */
+         .invoice-details {
+            margin-bottom: 10px;
+        }
+        .invoice-details p {
+            margin: 5px 0;
+        }
+         table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+         table, th, td {
+            border: 0.5px solid #ddd;
+            /* padding: 10px; */
+            text-align: left;
+        } 
+        /* th {
+            background-color: #007BFF;
+            color: white;
+        } */
+        /* .total {
+            font-weight: bold;
+        } */ */ */
+        .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  /* background:none;
+  border: none; */
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #333;
+  border-radius: 10px;
+}
+
+.close-btn:hover {
+  color: red;
+}
+
+
+</style>
   </head>
   <!--end::Head-->
   <!--begin::Body-->
@@ -710,11 +787,11 @@
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-              <div class="col-sm-6"><h3 class="mb-0">Small Box</h3></div>
+              <div class="col-sm-6"><h3 class="mb-0"></h3></div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Small Box</li>
+                  <li class="breadcrumb-item"><a href="#"></a></li>
+                  <li class="breadcrumb-item active" aria-current="page"></li>
                 </ol>
               </div>
             </div>
@@ -759,10 +836,12 @@
                     <!-- /.card-header -->
                     <div class="card-body">
                       <!--begin::Row-->
-                      <table id="myTableOne" class="display" style="">
+                      <table id="myTableOne" class="display">
                         <thead>
                           <tr>
                             <th>Property</th>
+                            <th>Tenant</th>
+                            <th>Unit</th>
                             <th>Rent Amount</th>
                             <th>Water Bill</th>
                             <th>Garbage Colection Fees</th>
@@ -776,34 +855,39 @@
                         <tbody>
                           <tr>
                             <td>Manucho Apartments</td>
+                            <td>John</td>
+                            <th>A11</th>
                             <td>KSH 29,000</td>
                             <td>KSH80,000</td>
                             <td>Kisumu</td>
                             <td>Kisumu</td>
                             <td>Kisumu</td>
                             <td>60</td>
-                            <td> <button type="button" class="btn text-warning">PRINT</button></td>
+                            <td>
+                              <button type="button"  style="background-color: #00192D; border-radius: 10px;" class="btn text-warning" onclick="openOverlay()">PRINT</button>
+                              </td>
 
                           </tr>
                           <tr>
                             <td>Ethical Apartments</td>
+                            <td>Peter</td>
+                            <td>A12</td>
                             <td>KSH 29,000</td>
                             <td>KSH69,000</td>
                             <td>Rongai</td>
                             <td>65</td>
                             <td>Kisumu</td>
                             <td>Kisumu</td>
-                            <td> <a href="financial.html"><button type="button" class="btn text-warning">PRINT</button></td></a>
+                            <td>
+                              <button type="button" style="background-color: #00192D; border-radius: 10px;" class="btn text-warning" onclick="openOverlay()">PRINT</button>
+                              </td>
 
                           </tr>
                           <!-- Add more rows as needed -->
                         </tbody>
               
                     </table>
-  
-  
-  
-                  
+ 
                       <!--end::Row-->
                     </div>
                     <!-- ./card-body -->
@@ -818,11 +902,128 @@
                   </div>
                   <!-- /.card -->
                 </div>
-           </div>
+           <!-- </div> -->
                 <!-- End Tenant Invoices Row -->
-
                 
+            <!--begin::Row-->
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card mb-4">
+                  <div class="card-header" style="background-color:#00192D; color: white;" >
+                    <h5 class="card-title bg-warning" style="padding:0.5rem; border-radius: 10px;" >Property Manager Invoices</h5>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                      </button>
+                      <div class="btn-group">
+                        <button
+                          type="button"
+                          class="btn btn-tool dropdown-toggle"
+                          data-bs-toggle="dropdown"
+                        >
+                          <i class="bi bi-wrench"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end" role="menu">
+                          <a href="#" class="dropdown-item">Action</a>
+                          <a href="#" class="dropdown-item">Another action</a>
+                          <a href="#" class="dropdown-item"> Something else here </a>
+                          <a class="dropdown-divider"></a>
+                          <a href="#" class="dropdown-item">Separated link</a>
+                        </div>
+                      </div>
+                      <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                  <!-- /.card-header -->
+                  <div class="card-body"> 
+                    <!--begin::Row-->
+                    <table id="myTable" class="display" style="">
+                      <thead>
+                          <tr>
+                            <th>Property</th>
+                            <th>Management Fees</th>
+                            <th>Commissions Earned</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Manucho Apartments</td>
+                          <td>KSH80,000</td>
+                          <td>KSH40,000</td>
+                          <td>10-04-2025</td>
+                          <td><button type="button" style="background-color: #00192D; border-radius: 10px;" class="close-btn text-warning overlay-btn">PRINT</button></td>
+                        </tr>
+                        <tr>
+                          <td>Ethical Apartments</td>
+                          <td>KSH69,000</td>
+                          <td>KSH 39,000</td>
+                          <td>09-11-2024</td>
+                        <td><button type="button"   style="background-color: #00192D;  border-radius: 10px;" class="close-btn text-warning overlay-btn" onclick="showOverlay()">PRINT</button></td>
+                        </tr>
+                          <!-- Add more rows as needed -->
+                      </tbody>
+                  </table> 
+                  </div>
+        </div>
 
+
+                <div class="overlay" id="overlay">
+                  <div class="overlay-content">
+                    <div class="invoice-container">
+                      <button class="close-btn" onclick="closeOverlay()">X</button>
+                      <div class="invoice-details">
+                        <p><strong>Invoice Number:</strong> INV-0001</p>
+                        <p><strong>Tenant Name:</strong> John Doe</p>
+                        <p><strong>Property:</strong></p>
+                        <p><strong>Invoice Date:</strong> YYYY-MM-DD</p>
+                        <p><strong>Due Date:</strong> YYYY-MM-DD</p>
+                    </div>
+                    <table>
+                      <tr>
+                          <th>Description</th>
+                          <th>Amount (USD)</th>
+                      </tr>
+                      <tr>
+                          <td>Rent Amount</td>
+                          <td>$XXXX.XX</td>
+                      </tr>
+                      <tr>
+                          <td>Water Bill</td>
+                          <td>$XX.XX</td>
+                      </tr>
+                      <tr>
+                        <td>Garbage Collection Fees</td>
+                        <td>$XX.XX</td>
+                    </tr>
+                    <tr>
+                        <td>Late Fees</td>
+                        <td>$XX.XX</td>
+                    </tr>
+                    <tr>
+                        <td>Maintenance Costs</td>
+                        <td>$XX.XX</td>
+                    </tr>
+                    <tr>
+                        <td>Arrears</td>
+                        <td>$XX.XX</td>
+                    </tr>
+                    <tr class="total">
+                        <td>Total Balance Due</td>
+                        <td>$XXXX.XX</td>
+                    </tr>
+                    </table>
+                    </div>
+                    </div>
+                 </div>
+
+        
+                    <!--end::Row-->
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
       integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
@@ -880,6 +1081,19 @@
           $('#myTableFour').DataTable();
       });
    </script>
+
+   <script>
+    function openOverlay() {
+  document.getElementById("overlay").style.display = "flex";
+}
+
+function closeOverlay() {
+  document.getElementById("overlay").style.display = "none";
+}
+
+   </script>
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
     <!--end::OverlayScrollbars Configure-->
     <!--end::Script-->
