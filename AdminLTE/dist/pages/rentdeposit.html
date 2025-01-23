@@ -56,7 +56,8 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.2/xlsx.full.min.js"></script>
+   <style>
       a{
           text-decoration: none;
       }
@@ -433,7 +434,7 @@ color: #00192D;
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="./widgets/invoices.html" class="nav-link">
+                    <a href="./invoices.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Invoices</p>
                     </a>
@@ -451,7 +452,7 @@ color: #00192D;
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./widgets/cards.html" class="nav-link">
+                    <a href="./maintenancereports.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Maintenance And Repair Costs</p>
                     </a>
@@ -820,122 +821,108 @@ color: #00192D;
         <div class="app-content-header">
           <!--begin::Container-->
           <div class="container-fluid">
-            <!--begin::Row-->
-            <div class="row">
-              <!-- <div class="col-sm-6"><h3 class="mb-0"></h3></div> -->
-              <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-end">
-                  <!-- <li class="breadcrumb-item"><a href="#">Home</a></li> -->
-                  <li class="breadcrumb-item active" aria-current="page"></li>
-                </ol>
-              </div>
-            </div>
-            <!--end::Row-->
-          </div>
-          <!--end::Container-->
-        </div>
-        <div class="app-content">
-          <!--begin::Container-->
-          <div class="container-fluid">
-            <!--begin::Row-->
-            <div class="row">
-              <div class="col-sm-6"><h3 class="mb-0">   RENT DEPOSIT REPORT</h3></div>
-              <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-end">
-                  <!-- <li class="breadcrumb-item"><a href="#">Home</a></li> -->
-                  <!-- <li class="breadcrumb-item active" aria-current="page">Cards</li> -->
-                </ol>
-              </div>
-            </div>
-            <!--end::Row-->
-          </div>
-          <!--end::Container-->
-        </div>
-        <!--end::App Content Header-->
-        <!--begin::App Content-->
-        <div class="app-content">
-          <button id="exportButton" style="border-radius: 10px; margin-left: 57rem;">
-            <i class="fas fa-share-square"></i> Export
-           </button>
+  <!--begin::Row-->
+  <div class="row">
+    <div class="col-sm-6"><h3 class="mb-0">   RENT DEPOSIT REPORT</h3></div>
+    <div class="col-sm-6">
+      <ol class="breadcrumb float-sm-end">
+        <!-- <li class="breadcrumb-item"><a href="#">Home</a></li> -->
+        <!-- <li class="breadcrumb-item active" aria-current="page">Cards</li> -->
+      </ol>
+    </div>
+  </div>
+  <!--end::Row-->
+</div>
+<!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+<button id="exportButton" style="border-radius: 10px; margin-left: 57rem;">
+  <i class="fas fa-share-square"></i> Export
+ </button>
 <hr>
-           <!-- Beginning Property row -->
-      
-         <div class="col-md-12">
-          <div class="card mb-4">
-            <div class="card-header" style="background-color:#00192D; color: white;" >
-              <h5 class="card-title bg-warning" style="padding:0.5rem; border-radius: 10px;">
-                RENT DEPOSIT REPORT</h5>
-              
-              <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                  <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                  <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                </button>
-                <div class="btn-group">
-                  <button
-                    type="button"
-                    class="btn btn-tool dropdown-toggle"
-                    data-bs-toggle="dropdown"
-                  >
-                    <i class="bi bi-wrench"></i>
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-end" role="menu">
-                    <a href="#" class="dropdown-item">Action</a>
-                    <a href="#" class="dropdown-item">Another action</a>
-                    <a href="#" class="dropdown-item"> Something else here </a>
-                    <a class="dropdown-divider"></a>
-                    <a href="#" class="dropdown-item">Separated link</a>
-                  </div>
-                </div>
-                <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                  <i class="bi bi-x-lg"></i>
-                </button>
-              </div>
-            </div>
-            <!-- /.card-header -->
-            <div class="card-body">
-              <!--begin::Row-->
-              <table id="myTableOne" class="display">
-                <thead>
-                  <tr>
-                    <th>TenantID</th>
-                    <th>Deposit Amount</th>
-                    <th>Deposit Date</th>
-                    <th>Deductions</th>
-                    <th>Refund Amount</th>
-                    <th>Refund Date</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Manucho Apartments</td>
-                    <td>John</td>
-                    <td>John</td>
-                    <th>A11</th>
-                    <td>KSH 29,000</td>
-                    <td>KSH80,000</td>
-                    <td>
-                      <button type="button"  style="background-color: #00192D; border-radius: 10px;" class="btn text-danger" onclick="openOverlay()">DELETE</button>
-                      </td>
+ <!-- Beginning Property row -->
 
-                  </tr>
-                  <tr>
-                    <td>Ethical Apartments</td>
-                    <td>Peter</td>
-                    <td>John</td>
-                    <td>A12</td>
-                    <td>KSH 29,000</td>
-                    <td>KSH69,000</td>
-                    <td>
-                      <button type="button" style="background-color: #00192D; border-radius: 10px;" class="btn text-danger" onclick="openOverlay()">DELETE</button>
-                      </td>
+<div class="col-md-12">
+<div class="card mb-4">
+  <div class="card-header" style="background-color:#00192D; color: white;" >
+    <h5 class="card-title text-warning" style="padding:0.5rem; border-radius: 10px;">
+      |RENT DEPOSIT REPORT</h5>
+    
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+      </button>
+      <div class="btn-group">
+        <button
+          type="button"
+          class="btn btn-tool dropdown-toggle"
+          data-bs-toggle="dropdown"
+        >
+          <i class="bi bi-wrench"></i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-end" role="menu">
+          <a href="#" class="dropdown-item">Action</a>
+          <a href="#" class="dropdown-item">Another action</a>
+          <a href="#" class="dropdown-item"> Something else here </a>
+          <a class="dropdown-divider"></a>
+          <a href="#" class="dropdown-item">Separated link</a>
+        </div>
+      </div>
+      <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body">
+    <!--begin::Row-->
+    <table id="myTableOne" class="display">
+      <thead>
+        <tr>
+          <th>Manucho Apartments</th>
+          <th>TenantID</th>
+          <th>Deposit Amount</th>
+          <th>Deposit Date</th>
+          <th>Deductions</th>
+          <th>Refund Amount</th>
+          <th>Refund Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Manuching Apartments</td>
+          <td>John</td>
+          <td>KSH30,000</td>
+          <th>10-09-2024</th>
+          <td>KSH 29,000</td>
+          <td>KSH9,000</td>
+          <td>09-10-2024</td>
+          <td>
+            <button type="button"  style="background-color: #00192D; border-radius: 10px;" class="btn text-danger" onclick="openOverlay()">DELETE</button>
+            </td>
 
-                  </tr>
-                  <!-- Add more rows as needed -->
-                </tbody>
-      
-            </table>
+        </tr>
+        <tr>
+          <td>Ethical Apartments</td>
+          <td>Peter</td>
+          <td>KSH20,000</td>
+          <td>09-10-2024</td>
+          <td>KSH 24,000</td>
+          <td>KSH8,000</td>
+          <td>09-10-2024</td>
+          <td>
+            <button type="button" style="background-color: #00192D; border-radius: 10px;" class="btn text-danger" onclick="openOverlay()">DELETE</button>
+            </td>
+
+        </tr>
+        <!-- Add more rows as needed -->
+      </tbody>
+
+  </table>
 
 
     <!--end::App Wrapper-->
@@ -1154,6 +1141,26 @@ color: #00192D;
       //-----------------
       // - END PIE CHART -
       //-----------------
+    </script>
+    <script>
+      document.getElementById("exportButton").addEventListener("click", function() {
+        // Example data (can be your table data or an array of objects)
+        const data = [
+          { Name: "John", Age: 30, City: "New York" },
+          { Name: "Jane", Age: 25, City: "London" },
+          { Name: "Mark", Age: 35, City: "Paris" }
+        ];
+    
+        // Convert data to a worksheet
+        const ws = XLSX.utils.json_to_sheet(data);
+    
+        // Create a new workbook and append the worksheet
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    
+        // Export the workbook as an Excel file
+        XLSX.writeFile(wb, "ExportedData.xlsx");
+      });
     </script>
     <!--end::Script-->
   </body>
