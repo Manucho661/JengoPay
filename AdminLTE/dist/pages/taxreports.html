@@ -141,6 +141,62 @@ color: #00192D;
       display: block;
       text-align: justify;
   }
+  h2, h3 {
+            margin: 0;
+        }
+
+        table {
+             width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 15px;
+        }
+
+        th, td {
+            border-bottom: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background: #f4f4f4;
+            text-align: left;
+        }
+
+        td:first-child {
+            text-align: left;
+            padding-left: 10px;
+        }
+
+        td:last-child {
+            text-align: right;
+            padding-right: 10px;
+        }
+        /* .category {
+            font-weight: bold;
+            background: #e3f2fd;
+            text-align: left;
+            margin-left: 2rem;
+        } */
+
+        .total {
+            font-weight: bold;
+            background: #ffeb3b;
+        }
+
+        .total-equity {
+            font-weight: bold;
+            background: #4CAF50;
+            color: white;
+        }
+        /* .statement-container {
+            width: 600px;
+            margin: auto;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            background: white;
+        } */
 
   </style>
   </head>
@@ -469,15 +525,9 @@ color: #00192D;
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./cashflow.html" class="nav-link">
+                    <a href="./" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Cashflow</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./cashflow.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Tax Reports</p>
                     </a>
                   </li>
                   
@@ -845,177 +895,29 @@ color: #00192D;
         <div class="app-content-header">
           <!--begin::Container-->
           <div class="container-fluid">
-            <!--begin::Row-->
-            <div class="row">
-              <div class="col-sm-6"><h3 class="mb-0">Dashboard v2</h3></div>
-              <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Dashboard v2</li>
-                </ol>
-              </div>
-            </div>
-            <!--end::Row-->
-          </div>
-          <!--end::Container-->
-        </div>
-        <div class="app-content">
-          <!--begin::Container-->
-          <div class="container-fluid">
-            <!-- Info boxes -->
-            <div class="row">
-              <div class="col-12 col-sm-6 col-md-3">
-                <div class="info-box">
-                  <span class="info-box-icon text-bg-primary shadow-sm">
-                    <i class="fas fa-home properties-icon"></i>
-                  </span>
-                  <div class="info-box-content">
-                    <span class="info-box-text">PROPERTIES</span>
-                    <span class="info-box-number">
-                      50
-                      <small></small>
-                    </span>
-                  </div>
-                  <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
-              </div>
               <!-- /.col -->
-              <div class="col-12 col-sm-6 col-md-3">
-                <div class="info-box">
-                  <span class="info-box-icon text-bg-danger shadow-sm">
-                    <i class="fas fa-tools maintenance-icon"></i>
-                  </span>
-                  <div class="info-box-content">
-                    <span class="info-box-text">MAINTENANCE REQ</span>
-                    <span class="info-box-number">20</span>
-                  </div>
-                  <!-- /.info-box-content -->
+        <div class="col-md-12">
+            <div class="card card-success">
+              <div class="card-header" style="background-color: #00192D;">
+                <h3 class="card-title"  style="color: #FFC107; ">MRI REPORT</h3>
+              
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                    <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                    <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                  </button>
                 </div>
-                <!-- /.info-box -->
-              </div>
-              <!-- /.col -->
-              <!-- fix for small devices only -->
-              <!-- <div class="clearfix hidden-md-up"></div> -->
-              <div class="col-12 col-sm-6 col-md-3">
-                <div class="info-box">
-                  <span class="info-box-icon text-bg-success shadow-sm">
-                    <i class="fas fa-users people-icon"></i>
-                  </span>
-                  <div class="info-box-content">
-                    <span class="info-box-text">REGISTERED TENS</span>
-                    <span class="info-box-number">200</span>
-                  </div>
-                  <!-- /.info-box-content -->
+                 <!-- /.card-tools -->
                 </div>
-                <!-- /.info-box -->
-              </div>
-              <!-- /.col -->
-              <div class="col-12 col-sm-6 col-md-3">
-                <div class="info-box">
-                  <span class="info-box-icon text-bg-warning shadow-sm">
-                    <i class="bi bi-people-fill"></i>
-                  </span>
-                  <div class="info-box-content">
-                    <span class="info-box-text">ACTIVE TENANTS</span>
-                    <span class="info-box-number">100</span>
-                  </div>
-                  <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
-              </div>
-              <!-- /.col -->
-            </div>
-            <!-- /.row -->
-
-
+                <!-- /.card-header -->
+                <div class="card-body text-center">
+                    
             <!-- Beginning Property row -->
 
             <div class="col-md-12">
-              <div class="card mb-4">
-                <div class="card-header" style="background-color:#00192D; color: white;" >
-                  <h5 class="card-title bg-warning" style="padding:0.5rem; border-radius: 10px;">Properties</h5>
-                  <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                      <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                      <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                    </button>
-                    <div class="btn-group">
-                      <button
-                        type="button"
-                        class="btn btn-tool dropdown-toggle"
-                        data-bs-toggle="dropdown"
-                      >
-                        <i class="bi bi-wrench"></i>
-                      </button>
-                      <div class="dropdown-menu dropdown-menu-end" role="menu">
-                        <a href="#" class="dropdown-item">Action</a>
-                        <a href="#" class="dropdown-item">Another action</a>
-                        <a href="#" class="dropdown-item"> Something else here </a>
-                        <a class="dropdown-divider"></a>
-                        <a href="#" class="dropdown-item">Separated link</a>
-                      </div>
-                    </div>
-                    <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                      <i class="bi bi-x-lg"></i>
-                    </button>
-                  </div>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-                  <!--begin::Row-->
-                  <table id="myTableOne" class="display" style="">
-                    <thead>
-                      <tr>
-                        <th>Property Name</th>
-                        <th>Units</th>
-                        <th>Location</th>
-                        <th>No of Tenants</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Manucho Apartments</td>
-                        <td>80</td>
-                        <td>Kisumu</td>
-                        <td>60</td>
-                      </tr>
-                      <tr>
-                        <td>Ethical Apartments</td>
-                        <td>69</td>
-                        <td>Rongai</td>
-                        <td>65</td>
-                      </tr>
-                      <!-- Add more rows as needed -->
-                    </tbody>
-          
-                </table>
-
-
-
-              
-                  <!--end::Row-->
-                </div>
-                <!-- ./card-body -->
-                <div class="card-footer">
-                  <!--begin::Row-->
-                  
-                    <!-- /.col -->
-                    
-                  <!--end::Row-->
-                </div>
-                <!-- /.card-footer -->
-              </div>
-              <!-- /.card -->
-            </div>
-       </div>
-            <!-- End Property Row -->
-            <!--begin::Row-->
-            <div class="row">
-              <div class="col-md-12">
                 <div class="card mb-4">
                   <div class="card-header" style="background-color:#00192D; color: white;" >
-                    <h5 class="card-title bg-warning" style="padding:0.5rem; border-radius: 10px;" >Rental Collections</h5>
+                    <h5 class="card-title text-warning" style="padding:0.5rem; border-radius: 10px;">MRI REPORT|JAN</h5>
                     <div class="card-tools">
                       <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
                         <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
@@ -1042,146 +944,81 @@ color: #00192D;
                       </button>
                     </div>
                   </div>
-                </div>
                   <!-- /.card-header -->
-                  <div class="card-body"> 
+                  <div class="card-body">
                     <!--begin::Row-->
-                    <table id="myTable" class="display" style="">
+                    <table id="myTableOne" class="display" style="">
                       <thead>
-                          <tr>
-                              <th>Property</th>
-                              <th>TYPE</th>
-                              <th>Total Paid</th>
-                              <th>Pending</th>
-                              <th>No of Tenants</th>
-                            
-                          </tr>
+                        <tr>
+                          <th>Property ID</th>
+                          <th> Gross Rent </th>
+                          <th>MRI Deduction</th>
+                          <th> Date </th>
+                          <th>Status</th>
+                        </tr>
                       </thead>
                       <tbody>
-                          <tr>
-                              <td>Manucho Apartments</td>
-                              <td>BEDSITTER</td>
-                              <td>KSH 200,000</td>
-                              <td>KSH 100,100</td>
-                              <td>200</td>
-                            
-                          </tr>
-                          <tr>
-                              <td>Ebenezer Apartments</td>
-                              <td>1 BEDROOM</td>
-                              <td>KSH 200,000</td>
-                              <td>KSH 100, 200</td>
-                              <td>100</td>
-                            
-                          </tr>
-                          <!-- Add more rows as needed -->
+                        <tr>
+                          <td>200</td>
+                          <td>KSH20,000</td>
+                          <td>KSH10,000</td>
+                          <td>10-11-2025</td>
+                          <td><button type="button"  style="background-color: #00192D; border-radius: 10px;" class="btn text-warning">PAID</button></td>
+                        </tr>
+                        <tr>
+                          <td>201</td>
+                          <td>KSH10,000</td>
+                          <td>KSH15,000</td>
+                          <td>12-01-2025</td>
+                          <td><button type="button"  style="background-color: #00192D; border-radius: 10px;" class="btn text-warning" >PAID</button>
+                        </tr>
+                        <!-- Add more rows as needed -->
                       </tbody>
-                  </table> 
-                  </div>
-        </div>
-
-        <hr>
+            
+                  </table>
                     <!--end::Row-->
                   </div>
                   <!-- ./card-body -->
-                  <div class="card-footer"> 
+                  <div class="card-footer">
                     <!--begin::Row-->
-                    <div class="row">
-                      <div class="col-md-6 col-6">
-                        <div class="text-center border-end">
-                          <span class="text-success">
-                            <i class="bi bi-caret-up-fill"></i>80%
-                          </span>
-                          <h5 class="fw-bold mb-0">KSH 35,210.43</h5>
-                          <span class="text-uppercase">TOTAL RENT</span>
-                        </div>
-                      </div>
-                      <!-- /.col -->
-                      <div class="col-md-6 col-6">
-                        <div class="text-center border-end">
-                          <span class="text-info"> <i class="bi bi-caret-left-fill"></i> 20% </span>
-                          <h5 class="fw-bold mb-0">KSH 10,390.90</h5>
-                          <span class="text-uppercase">TOTAL PENDING</span>
-                        </div>
-                      </div> 
+                    
                       <!-- /.col -->
                       
                     <!--end::Row-->
-                  </div> 
+                  </div>
                   <!-- /.card-footer -->
-                <!-- </div> -->
-                <!-- /.card -->
-              <!-- </div> -->
-              <!-- /.col -->
-            <!-- </div> -->
-            <!--end::Row-->
-            </div>
-            <!--begin::Row-->
-            <div class="row g-4 mb-8">
-              <!-- First Card -->
-              <div class="col-md-6">
-                <!--begin::Row-->
-                <div class="row g-4 mb-4">
-                  <div class="col-md-12">
-                    <!-- DIRECT CHAT -->
-                    <div class="card">
-                      <div class="card-header" style="background-color:#FFC107; /* RGB */;">
-                        <h3 class="card-title">RentalTrends</h3>
-                      </div>
-
-                      <div class="card-body">
-                        <canvas id="rentalTrends" width="400" height="300"></canvas>
-                      </div>
-                    </div>
-
-                
-                    <!-- /.direct-chat -->
-                  </div>
-                  <!-- /.col -->
-                  
-                  <!-- /.col -->
-                </div>
-                <!--end::Row-->
-                <!--begin::Latest Order Widget-->
-                
-                <!-- /.card -->
-              </div>
-              <!-- /.col -->
-              <div class="col-md-6">
-                <!-- Info Boxes Style 2 -->
-                <div class="card">
-
-                  <div class="card-header" style="background-color:#FFC107; /* RGB */;">
-                    <h3 class="card-title">Occupancy</h3>
-                  </div>
-
-                  <div class="card-body">
-                  
-                    <!--begin::Row-->
-                    <div class="row">
-                      <div class="col-12"><div id="pie-chart"></div></div>
-                      <!-- /.col -->
-                    </div>
-                    <!--end::Row-->
-                  </div>
-
-                  </div>
-
-
                 </div>
                 <!-- /.card -->
               </div>
-              <!-- /.col -->
-            </div>
-            <!--end::Row-->
+         </div>
+              <!-- End Property Row -->
+               </div>
+              <hr>
+              
 
-            <!-- Begin Mantainance row -->
+               <!-- /.col -->
+        <div class="col-md-12">
+            <div class="card card-success">
+              <div class="card-header" style="background-color: #00192D;">
+                <h3 class="card-title"  style="color: #FFC107; ">VAT REPORTS</h3>
+              
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                    <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                    <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                  </button>
+                </div>
+                 <!-- /.card-tools -->
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body text-center">
+                    
+            <!-- Beginning Property row -->
 
-            <div class="row">
-              <div class="col-md-12">
+            <div class="col-md-12">
                 <div class="card mb-4">
-                  <div class="card-header" style="background-color:#00192D; color: white;">
-                    <h5 class="card-title bg-warning" style="padding:0.5rem; border-radius: 10px;">Maintenance Requests</h5>
+                  <div class="card-header" style="background-color:#00192D; color: white;" >
+                    <h5 class="card-title text-warning" style="padding:0.5rem; border-radius: 10px;">VAT REPORTS|JAN</h5>
                     <div class="card-tools">
                       <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
                         <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
@@ -1207,45 +1044,45 @@ color: #00192D;
                         <i class="bi bi-x-lg"></i>
                       </button>
                     </div>
-                  </div> 
+                  </div>
                   <!-- /.card-header -->
                   <div class="card-body">
                     <!--begin::Row-->
-                    <table id="myTableThree" class="display" style="">
+                    <table id="myTableOne" class="display" style="">
                       <thead>
-                          <tr>
-
-                              <th>Residence</th>
-                              <th>Request</th>
-                              <th>Status</th>
-                            
-                          </tr>
+                        <tr>
+                          <th>Property ID</th>
+                          <th>Rental Income</th>
+                          <th>VAT (16%)</th>
+                          <th> Date </th>
+                          <th>No of Tenants</th>
+                          <th>Status</th>
+                        </tr>
                       </thead>
                       <tbody>
-                          <tr>
-                             
-                              <td>Manucho Apartments</td>
-                              <td>Leaking Repair</td>
-                              <td><span class="badge text-bg-success">!Completed </span></td>
-                          </tr>
-                          <tr>
-                             
-                              <td>Manucho Apartments</td>
-                              <td>Water Sink Repair</td>
-                              <td><span class="badge text-bg-danger">!Pending</span></td>
-                          </tr>
-                          <tr>
-                           
-                            <td>Many Apartments</td>
-                            <td>Balcony Painting</td>
-                            <td><span class="badge text-bg-warning"> !Work In Progress </span></td>
+                        <tr>
+                          <td>100</td>
+                          <td>KSH100,000</td>
+                          <td>KSH80,000</td>
+                          <td>6-01-2025</td>
+                          <td>200</td>
+                          <td><button type="button"  style="background-color: #00192D; border-radius: 10px;" class="btn text-warning">PAID</button>
                         </tr>
-                          <!-- Add more rows as needed -->
+                        <tr>
+                          <td>101</td>
+                          <td>KSH169,000</td>
+                          <td>KSH100,000</td>
+                          <td>16-01-2025</td>
+                          <td>500</td>
+                          <td><button type="button"  style="background-color: #00192D; border-radius: 10px;" class="btn text-warning" >PAID</button>
+                        </tr>
+                        <!-- Add more rows as needed -->
                       </tbody>
+            
                   </table>
-
-
-
+  
+  
+  
                 
                     <!--end::Row-->
                   </div>
@@ -1261,170 +1098,15 @@ color: #00192D;
                 </div>
                 <!-- /.card -->
               </div>
-              <!-- /.col -->
-            </div>
-
-        <!-- Begin Communications Row -->
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="card mb-4">
-                    <div class="card-header" style="background-color:#00192D; color: white;" >
-                      <h5 class="card-title bg-warning" style="padding:0.5rem; border-radius: 10px;" >Communication</h5>
-                      <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                          <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                          <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                        </button>
-                        <div class="btn-group">
-                          <button
-                            type="button"
-                            class="btn btn-tool dropdown-toggle"
-                            data-bs-toggle="dropdown"
-                          >
-                            <i class="bi bi-wrench"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-end" role="menu">
-                            <a href="#" class="dropdown-item">Action</a>
-                            <a href="#" class="dropdown-item">Another action</a>
-                            <a href="#" class="dropdown-item"> Something else here </a>
-                            <a class="dropdown-divider"></a>
-                            <a href="#" class="dropdown-item">Separated link</a>
-                          </div>
-                        </div>
-                        <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                          <i class="bi bi-x-lg"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="card-body">
-                      <!-- Conversations are loaded here -->
-                      <div class="direct-chat-messages">
-                        <!-- Message. Default to the start -->
-                        <div class="direct-chat-msg">
-                          <div class="direct-chat-infos clearfix">
-                            <span class="direct-chat-name float-start"> Alexander Pierce </span>
-                            <span class="direct-chat-timestamp float-end"> 23 Jan 2:00 pm </span>
-                          </div>
-                          <!-- /.direct-chat-infos -->
-                          <img
-                            class="direct-chat-img"
-                            src="assets/img/user1-128x128.jpg"
-                            alt="message user image"
-                          />
-                          <!-- /.direct-chat-img -->
-                          <div class="direct-chat-text">
-                            Is this template really for free? That's unbelievable!
-                          </div>
-                          <!-- /.direct-chat-text -->
-                        </div>
-                        <!-- /.direct-chat-msg -->
-                        <!-- Message to the end -->
-                        <div class="direct-chat-msg end">
-                          <div class="direct-chat-infos clearfix">
-                            <span class="direct-chat-name float-end"> Sarah Bullock </span>
-                            <span class="direct-chat-timestamp float-start">
-                              23 Jan 2:05 pm
-                            </span>
-                          </div>
-                          <!-- /.direct-chat-infos -->
-                          <img
-                            class="direct-chat-img"
-                            src="assets/img/user3-128x128.jpg"
-                            alt="message user image"
-                          />
-                          <!-- /.direct-chat-img -->
-                          <div class="direct-chat-text">You better believe it!</div>
-                          <!-- /.direct-chat-text -->
-                        </div>
-                        <!-- /.direct-chat-msg -->
-                        <!-- Message. Default to the start -->
-                        <div class="direct-chat-msg">
-                          <div class="direct-chat-infos clearfix">
-                            <span class="direct-chat-name float-start"> Alexander Pierce </span>
-                            <span class="direct-chat-timestamp float-end"> 23 Jan 5:37 pm </span>
-                          </div>
-                          <!-- /.direct-chat-infos -->
-                          <img
-                            class="direct-chat-img"
-                            src="assets/img/user1-128x128.jpg"
-                            alt="message user image"
-                          />
-                          <!-- /.direct-chat-img -->
-                          <div class="direct-chat-text">
-                            Working with AdminLTE on a great new app! Wanna join?
-                          </div>
-                          <!-- /.direct-chat-text -->
-                        </div>
-                        <!-- /.direct-chat-msg -->
-                        <!-- Message to the end -->
-                        <div class="direct-chat-msg end">
-                          <div class="direct-chat-infos clearfix">
-                            <span class="direct-chat-name float-end"> Sarah Bullock </span>
-                            <span class="direct-chat-timestamp float-start">
-                              23 Jan 6:10 pm
-                            </span>
-                          </div>
-                          <!-- /.direct-chat-infos -->
-                          <img
-                            class="direct-chat-img"
-                            src="../../dist/assets/img/user3-128x128.jpg"
-                            alt="message user image"
-                          />
-                          <!-- /.direct-chat-img -->
-                          <div class="direct-chat-text">I would love to.</div>
-                          <!-- /.direct-chat-text -->
-                        </div>
-                        <!-- /.direct-chat-msg -->
-                      </div>
-                      <!-- /.direct-chat-messages-->
-                      <!-- Contacts are loaded here -->
-                    
-                          <!-- End Contact Item -->
-                        </ul>
-                        <!-- /.contacts-list -->
-                      </div>
-                      <!-- /.direct-chat-pane -->
-                    </div>
-                    <!-- /.card-body -->
-                    <div class="card-footer">
-                      <form action="#" method="post">
-                        <div class="input-group">
-                          <input
-                            type="text"
-                            name="message"
-                            placeholder="Type Message ..."
-                            class="form-control"
-                          />
-                          <span class="input-group-append">
-                            <button type="button" class="btn btn-warning">Send</button>
-                          </span>
-                        </div>
-                      </form>
-                    </div>
-                    <!-- /.card-footer-->
-                  </div>
-
-                    <div class="card-footer">
-                      <!--begin::Row-->
-                      
-                        <!-- /.col -->
-                        
-                      <!--end::Row-->
-                    </div>
-                    <!-- /.card-footer -->
-                  </div>
-                  <!-- /.card -->
+         </div>
+              <!-- End Property Row -->
+               
                 </div>
-                <!-- /.col -->
+                <!-- /.card-body -->
               </div>
-
-
-            
-          </div>
-          <!--end::Container-->
-        </div>
-        <!--end::App Content-->
-      </main>
+              <!-- /.card -->
+            </div>
+               
 
     <!--end::App Wrapper-->
     <!--begin::Script-->
