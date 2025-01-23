@@ -56,6 +56,7 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.2/xlsx.full.min.js"></script>
     <style>
       a{
           text-decoration: none;
@@ -141,107 +142,7 @@ color: #00192D;
       display: block;
       text-align: justify;
   }
-/* Receipt container */
-.receipt-container {
-            width: 300px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            background: white;
-            margin: 20px auto;
-            text-align: center;
-        }
 
-        .receipt-container h2 {
-            margin-bottom: 10px;
-        }
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5); /* Semi-transparent */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            display: none; /* Initially hidden */
-        }
-/* Close Button */
-.close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #ff4d4d;
-            color: white;
-            border: none;
-            font-size: 16px;
-            cursor: pointer;
-            padding: 5px 10px;
-            border-radius: 50%;
-            transition: 0.3s;
-        }
-        .close-btn:hover {
-            background: #d9534f;
-        }
-        .invoicy-container {
-            background: white;
-            width: 400px;
-            max-width: 80%;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            text-align: center;
-            position: relative;
-            animation: fadeIn 0.3s ease-in-out;
-        }
-         /* Invoice Details */
-         .invoicy-details p {
-            font-size: 14px;
-            margin: 5px 0;
-            color: #333;
-        }
-  /* Invoice Table */
-  table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        th, td {
-            border-bottom: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background: #f4f4f4;
-            font-weight: bold;
-        }
-
-        .total {
-            font-weight: bold;
-            background: #ffeb3b;
-        }
-        /* Hide everything except receipt when printing */
-        @media print {
-            body * {
-                visibility: hidden;
-            }
-            .receipt-container, .receipt-container * {
-                visibility: visible;
-            }
-            .receipt-container {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-            }
-            .print-btn {
-              border-radius: 10px;
-                display: none; /* Hide the button when printing */
-            }
-        }
   </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -533,25 +434,25 @@ color: #00192D;
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="./widgets/invoices.html" class="nav-link">
+                    <a href="./invoices.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Invoices</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./widgets/payment receipts.html" class="nav-link">
+                    <a href="./paymentreceipts.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Payment Receipts</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./widgets/payment receipts.html" class="nav-link">
+                    <a href="./rentdeposit.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p> Rent Deposit Reports</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./widgets/cards.html" class="nav-link">
+                    <a href="./maintenancereports.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Maintenance And Repair Costs</p>
                     </a>
@@ -920,264 +821,100 @@ color: #00192D;
         <div class="app-content-header">
           <!--begin::Container-->
           <div class="container-fluid">
- <!--begin::Row-->
- <div class="row">
-  <div class="col-sm-6"><h3 class="mb-0"></h3></div>
-  <div class="col-sm-6">
-   
-  </div>
-</div>
-<!--end::Row-->
-</div>
-<!--end::Container-->
-</div>
-<div id="content" >           
-
-<div class="container-fluid" style="box-shadow: 0 2em 8em rgba(0, 0, 0, 0.2);">
-
-
-<div class="row bg-light ">
-<!-- Profile Picture -->
-
-<div class="card" style="border:transparent"> 
-
-
-<div class="card-body">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="profile_details">
-                <div class="profile_picture">
-                 <img class="mt-3" src="images/Doe.jpg" alt="Profile Picture"  width="100">
+            <b><p>|MAINTENANCE AND REPAIR REPORTS</p></b>
+     
+            <button id="exportButton" style="border-radius: 10px; margin-left: 54rem;">
+                <i class="fas fa-share-square"></i> Export
+               </button>
+               <hr>
+             <!-- Beginning Property row -->
+     <div class="col-md-12">
+            <div class="card mb-4">
+              <div class="card-header" style="background-color:#00192D; color: white;" >
+                <h5 class="card-title text-warning" style="padding:0.5rem; border-radius: 10px;">
+                    MAINTENANCE AND REPAIR REPORTS
+                </h5>
+                
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                    <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                    <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                  </button>
+                  <div class="btn-group">
+                    <button
+                      type="button"
+                      class="btn btn-tool dropdown-toggle"
+                      data-bs-toggle="dropdown"
+                    >
+                      <i class="bi bi-wrench"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end" role="menu">
+                      <a href="#" class="dropdown-item">Action</a>
+                      <a href="#" class="dropdown-item">Another action</a>
+                      <a href="#" class="dropdown-item"> Something else here </a>
+                      <a class="dropdown-divider"></a>
+                      <a href="#" class="dropdown-item">Separated link</a>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
+                    <i class="bi bi-x-lg"></i>
+                  </button>
                 </div>
-                <div class="profile_info">
-            
-                    <!-- <h2>Jane Doe</h2> -->
-                     <h3 style=" border-bottom: 1px solid #ddd;" >John Doe</h3>
-                     <div class="profile_details one">
-                        <p><strong>Occupation &nbsp;|</strong> Teacher</p>
-                        <p><strong>DATE OF BIRTH &nbsp;|</strong> 5-23-1995</p>
-                        <p><strong>IDENTIFICATION NUMBER &nbsp; |</strong> 012020202</p>
-                    </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <!--begin::Row-->
+                <table id="myTableOne" class="display">
+                  <thead>
+                    <tr>
+                      <th>Property</th>
+                      <th>TENANT</th>
+                      <th>REQUEST ID</th>
+                      <th>UNIT</th>
+                      <th>DATE</th>
+                      <th>ISSUE</th>
+                      <th>ESTIMATED COST</th>
+                      <th>ACTUAL COST</th>
+                      <th>SERVICE PROVIDER</th>
+                       <th>ACTION</th> 
+  
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>CROWN Z TOWERS</td>
+                      <td>Manucho</td>
+                      <td>002</td>
+                      <td>A12</td>
+                      <td>11-10-2025</td>
+                      <td>Broken handle</td>
+                      <td>KSH2,000</td>
+                      <td>KSH1,500</td>
+                      <td>Manifest Electricals</td>
+                        <td><button type="button"  style="background-color: #00192D; border-radius: 10px;" class="btn text-danger" onclick="openOverlay()">DELETE</button>
+                        </td>
+                    </tr>
+                    <tr>
+                    <td>ALPHA APARTMENTS</td>
+                      <td>Ethic</td>
+                      <td>003</td>
+                      <td>A11</td>
+                      <td>12-11-2025</td>
+                      <td>Leaking roof</td>
+                      <td>KSH 5,000</td>
+                      <td>KSH 4,500</td>
+                      <td>New Electrics</td>
+                      <td>
+                        <button type="button" style="background-color: #00192D; border-radius: 10px;" class="btn text-danger" onclick="openOverlay()">DELETE</button>
+                        </td>
+                    </tr>
+                    <!-- Add more rows as needed -->
+                  </tbody>
         
-                </div>
-            </div>
-            
-        </div>
-        <!-- Profile Details -->
-
-        <div class="col-md-4" style=" border-left: 1px solid #ddd;">
-        
-                    <div class="other_profile_details">
-                        <p><strong>Origin &nbsp;|</strong> KENYAN</p>
-                        <p><strong>End Date &nbsp; |</strong> 6-7-2020</p>
-                        <p><strong>Start Date &nbsp;|</strong> 5-23-1995</p>
-                        
-                    </div>
-
-
-        </div>
-        <div class="col-md-2" style=" display:flex; flex-direction: column; justify-content:end;">
-        
-                    <div>
-                        <button type="button" class="btn btn-danger">Remove John</button>
-                    </div>
-
-
-        </div>
-    </div>
-        
-
-</div>
-
-
-</div>
-
-
-
-
-
-<div class="">
-
-
-
-<div class="row mt-3"> <!-- third row -->
-
-<div class="col-md-12">
-<div class="card">
-<div class="card-header " style="background-color: #00192D; color:#FFC107;">
-    <div class="card-title">
-     RENT/LEASE PAYMENT HISTORY(Monthly)
-    </div>
-</div>
-
-<div class="card-body">
-    <table id="tenants"  class="table table-striped table-bordered">
-        <thead>
-            <tr>
-                <th scope="col">DATE PAID</th>
-                    <th scope="col">AMOUNT PAID</th>
-                    <th scope="col">ARREAS</th>
-                    <th scope="col">ACTION</th>
-                    
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th scope="row">1/7/11</th>
-                    <td>KSH 10,000</td>
-                    <td>KSH 10,000</td>
-                    <td><button type="button"  style="background-color: #00192D; border-radius: 10px;" class="btn text-warning" onclick="openOverlay()">DOWNLOAD RECEIPT</button>
-                    
-            </tr>
-            <tr>
-            <th scope="row">2/7/11</th>
-            <td>KSH 20,0000</td>
-            <td>KSH 0</td>
-            <td><button type="button"  style="background-color: #00192D; border-radius: 10px;" class="btn text-warning" onclick="openOverlay()">DOWNLOAD RECEIPT</button>            
-
-            </tr>
-            <tr>
-                <th scope="row">3/7/11</th>
-            <td>KSH 10000</td>
-            <td>KSH 0</td>
-            <td><button type="button"  style="background-color: #00192D; border-radius: 10px;" class="btn text-warning" onclick="openOverlay()">DOWNLOAD RECEIPT</button>
-            
-            
-
-                </tr>
-        </tbody>
-    </table>
-
-
-
-</div>
-
-<div class="card-footer">
-    
-</div>
-
-</div>
-
-<div class="row mt-3 ">
-<div class="col-md-12">
-<div class="card"> 
-<div class="card-header " style="background-color: #00192D; color:#FFC107;">
-        <div class="card-title" >
-            
-            RENT/LEASE AGREEMENT FILES
-            
-            
-        </div>
-
-    </div>
-</div>
-
-<div class="card-body">
-        <table class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th scope="col">FIRST PARTY (YOU)</th>
-                        <th scope="col">SECOND PARTY (TENANT)</th>
-                        <th scope="col">DEPOSIT</th>
-                        <th scope="col">ACTION</th>
-                        
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th scope="row">EBENEZER</th>
-                        <td>JOHN DOE</td>
-                        <td>KSH 100,000</td>
-                        <td>   <span><button class="btn btn-sm btn-outline custom-btn">VIEW AGREEMENT</button></span> <span><button class="btn btn-sm btn-outline custom-btn">DOWNLOAD</button></span></td>
-                </tr>
-                <tr>
-            </tbody>
-        </table>
-
-        <div class="overlay" id="overlay">
-          <div class="invoicy-container">
-            <!-- <div class="receipt-container" id="receipt"> -->
-              <button class="close-btn" onclick="closeOverlay()">×</button>
-              <h2><strong>Payment Receipt</strong></h2>
-              <p><strong> Nairobi,  KENYA</strong></p>
-              <p><strong>Date:</strong> <span id="date"></span></p>
-              <p><strong>Method:MPESA</strong></p>
-              <p><strong>Reference:TGH34KJ89K</strong></p>
-
-         
-              <!-- <div class="invoice-details">
-                  <p><strong>Invoice Number:</strong> INV-0001</p>
-                  <p><strong>Tenant Name:</strong> John Doe</p>
-                  <p><strong>Property:</strong> ABC Apartments</p>
-                  <p><strong>Invoice Date:</strong> 2025-01-23</p>
-                  <p><strong>Due Date:</strong> 2025-02-01</p>
-              </div> -->
-              <table>
-                  <tr><th>Description</th><th>AMOUNT</th></tr>
-                  <tr><td>Rent Amount</td><td>KSH1500.00</td></tr>
-                  <tr><td>Water Bill</td><td>KSH50.00</td></tr>
-                  <tr><td>Garbage Collection Fees</td><td>KSH200.00</td></tr>
-                  <tr><td>Late Fees</td><td>KSH300.00</td></tr>
-                  <tr><td>Maintenance Costs</td><td>KSH100.00</td></tr>
-                  <!-- <tr><td>Arrears</td><td>KSH 200.00</td></tr> -->
-                  <tr class="total"><td>Total Amount Paid</td><td>KSH1905.00</td></tr>
-                  <tr><td> <button id="exportButton" style="border-radius: 10px; margin-left: 6rem;">
-                    <i class="fas fa-share-square"></i> DOWNLOAD
-                   </button></td></tr>
               </table>
-          </div>
-      </div>
-
-
-<!-- 
-        <div class="overlay" id="overlay">
-          <div class="invoicy-container">
-          <div class="receipt-container" id="receipt">
-            <button class="close-btn" onclick="closeOverlay()">×</button>
-            <h2>Payment Receipt</h2>
-            <p> Nairobi,  KENYA</p>
-            <p><strong>Date:</strong> <span id="date"></span></p>
-           
-            <table>
-              <td>Manucho Apartments</td>
-              <td>John</td>
-              <th>A11</th>
-              <td>KSH80,000</td>
-              <td>KSH80,000</td>
-              <td>MPESA</td>
-              <td>TBM34KGNJ8</td>
-              <td>10-12-2025</td>
-              <td>KSH0</td>
-            </table>
-        </div>
-    
-        <button class="print-btn" onclick="printReceipt()">Print Receipt</button>
-     -->
-
-
     <!--end::App Wrapper-->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
-
-    <script>
-      // Function to print the receipt
-      function printReceipt() {
-          window.print(); // Opens the print dialog
-      }
-
-      // Set current date on the receipt
-      document.getElementById("date").textContent = new Date().toLocaleDateString();
-  </script>
-
-    <script>
-      function openOverlay() {
-          document.getElementById("overlay").style.display = "flex";
-      }
-
-      function closeOverlay() {
-          document.getElementById("overlay").style.display = "none";
-      }
-  </script>
     <script>
         // Initialize DataTable
         $(document).ready(function () {

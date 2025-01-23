@@ -138,23 +138,82 @@ color: #00192D;
       text-align: justify;
   }
   .overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: none;
-  justify-content: center;
-  align-items: center;
-}
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none; /* Initially hidden */
+        }
+/* Close Button */
+.close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+        .close-btn:hover {
+            background: #d9534f;
+        }
+         /* Invoice Container */
+         .invoice-container {
+            background: white;
+            width: 400px;
+            max-width: 80%;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            position: relative;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+         /* Invoice Details */
+         .invoice-details p {
+            font-size: 14px;
+            margin: 5px 0;
+            color: #333;
+        }
 
-.overlay-content {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-}
+        /* Invoice Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border-bottom: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background: #f4f4f4;
+            font-weight: bold;
+        }
+
+        .total {
+            font-weight: bold;
+            background: #ffeb3b;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
 
   </style>
   </head>
@@ -447,13 +506,13 @@ color: #00192D;
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="./widgets/invoices.html" class="nav-link">
+                    <a href="./invoices.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Invoices</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./widgets/payment receipts.html" class="nav-link">
+                    <a href="./paymentreceipts.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Payment Receipts</p>
                     </a>
@@ -465,7 +524,7 @@ color: #00192D;
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./widgets/cards.html" class="nav-link">
+                    <a href="./maintenancereports.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Maintenance And Repair Costs</p>
                     </a>
@@ -836,11 +895,11 @@ color: #00192D;
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-              <div class="col-sm-6"><h3 class="mb-0">Dashboard v2</h3></div>
+              <!-- <div class="col-sm-6"><h3 class="mb-0">Dashboard v2</h3></div> -->
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Dashboard v2</li>
+                  <!-- <li class="breadcrumb-item"><a href="#">Home</a></li> -->
+                  <!-- <li class="breadcrumb-item active" aria-current="page">Dashboard v2</li> -->
                 </ol>
               </div>
             </div>
@@ -872,7 +931,7 @@ color: #00192D;
                  <div class="col-md-12">
                   <div class="card mb-4">
                     <div class="card-header" style="background-color:#00192D; color: white;" >
-                      <h5 class="card-title bg-warning" style="padding:0.5rem; border-radius: 10px;">Tenant Invoices</h5>
+                      <h5 class="card-title text-warning" style="padding:0.5rem; border-radius: 10px;">Tenant Invoices</h5>
                       <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
                           <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
@@ -976,7 +1035,7 @@ color: #00192D;
               <div class="col-md-12">
                 <div class="card mb-4">
                   <div class="card-header" style="background-color:#00192D; color: white;" >
-                    <h5 class="card-title bg-warning" style="padding:0.5rem; border-radius: 10px;" >Property Manager Invoices</h5>
+                    <h5 class="card-title text-warning" style="padding:0.5rem; border-radius: 10px;" >Property Manager Invoices</h5>
                     <div class="card-tools">
                       <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
                         <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
@@ -1023,14 +1082,14 @@ color: #00192D;
                           <td>KSH80,000</td>
                           <td>KSH40,000</td>
                           <td>10-04-2025</td>
-                          <td><button type="button" style="background-color: #00192D; border-radius: 10px;" class="close-btn text-warning overlay-btn">PRINT</button></td>
+                          <td><button type="button"  style="background-color: #00192D; border-radius: 10px;" class="btn text-warning" onclick="openOverlay()">PRINT</button>
                         </tr>
                         <tr>
                           <td>Ethical Apartments</td>
                           <td>KSH69,000</td>
                           <td>KSH 39,000</td>
                           <td>09-11-2024</td>
-                        <td><button type="button"   style="background-color: #00192D;  border-radius: 10px;" class="close-btn text-warning overlay-btn" onclick="showOverlay()">PRINT</button></td>
+                          <td><button type="button"  style="background-color: #00192D; border-radius: 10px;" class="btn text-warning" onclick="openOverlay()">PRINT</button>
                         </tr>
                           <!-- Add more rows as needed -->
                       </tbody>
@@ -1039,54 +1098,32 @@ color: #00192D;
         </div>
 
 
-                <div class="overlay" id="overlay">
-                  <div class="overlay-content">
-                    <div class="invoice-container">
-                      <button class="close-btn" onclick="closeOverlay()">X</button>
-                      <div class="invoice-details">
-                        <p><strong>Invoice Number:</strong> INV-0001</p>
-                        <p><strong>Tenant Name:</strong> John Doe</p>
-                        <p><strong>Property:</strong></p>
-                        <p><strong>Invoice Date:</strong> YYYY-MM-DD</p>
-                        <p><strong>Due Date:</strong> YYYY-MM-DD</p>
-                    </div>
-                    <table>
-                      <tr>
-                          <th>Description</th>
-                          <th>Amount (USD)</th>
-                      </tr>
-                      <tr>
-                          <td>Rent Amount</td>
-                          <td>$XXXX.XX</td>
-                      </tr>
-                      <tr>
-                          <td>Water Bill</td>
-                          <td>$XX.XX</td>
-                      </tr>
-                      <tr>
-                        <td>Garbage Collection Fees</td>
-                        <td>$XX.XX</td>
-                    </tr>
-                    <tr>
-                        <td>Late Fees</td>
-                        <td>$XX.XX</td>
-                    </tr>
-                    <tr>
-                        <td>Maintenance Costs</td>
-                        <td>$XX.XX</td>
-                    </tr>
-                    <tr>
-                        <td>Arrears</td>
-                        <td>$XX.XX</td>
-                    </tr>
-                    <tr class="total">
-                        <td>Total Balance Due</td>
-                        <td>$XXXX.XX</td>
-                    </tr>
-                    </table>
-                    </div>
-                    </div>
-                 </div>
+        <div class="overlay" id="overlay">
+          <div class="invoice-container">
+              <button class="close-btn" onclick="closeOverlay()">×</button>
+              <h2>Invoice</h2>
+              <div class="invoice-details">
+                  <p><strong>Invoice Number:</strong> INV-0001</p>
+                  <p><strong>Tenant Name:</strong> John Doe</p>
+                  <p><strong>Property:</strong> ABC Apartments</p>
+                  <p><strong>Invoice Date:</strong> 2025-01-23</p>
+                  <p><strong>Due Date:</strong> 2025-02-01</p>
+              </div>
+              <table>
+                  <tr><th>Description</th><th>Amount (USD)</th></tr>
+                  <tr><td>Rent Amount</td><td>$1500.00</td></tr>
+                  <tr><td>Water Bill</td><td>$50.00</td></tr>
+                  <tr><td>Garbage Collection Fees</td><td>$25.00</td></tr>
+                  <tr><td>Late Fees</td><td>$30.00</td></tr>
+                  <tr><td>Maintenance Costs</td><td>$100.00</td></tr>
+                  <tr><td>Arrears</td><td>$200.00</td></tr>
+                  <tr class="total"><td>Total Balance Due</td><td>$1905.00</td></tr>
+                  <tr><td> <button id="exportButton" style="border-radius: 10px; margin-left: 8rem;">
+                    <i class="fas fa-share-square"></i> Print
+                   </button></td></tr>
+              </table>
+          </div>
+      </div>
 
         
                     <!--end::Row-->
@@ -1094,16 +1131,17 @@ color: #00192D;
     <!--end::App Wrapper-->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
+
     <script>
       function openOverlay() {
-  document.getElementById("overlay").style.display = "flex";
-}
+          document.getElementById("overlay").style.display = "flex";
+      }
 
-function closeOverlay() {
-  document.getElementById("overlay").style.display = "none";
-}
+      function closeOverlay() {
+          document.getElementById("overlay").style.display = "none";
+      }
+  </script>
 
-    </script>
     <script>
         // Initialize DataTable
         $(document).ready(function () {
@@ -1317,6 +1355,27 @@ function closeOverlay() {
       //-----------------
       // - END PIE CHART -
       //-----------------
+    </script>
+    
+    <script>
+      document.getElementById("exportButton").addEventListener("click", function() {
+        // Example data (can be your table data or an array of objects)
+        const data = [
+          { Name: "John", Age: 30, City: "New York" },
+          { Name: "Jane", Age: 25, City: "London" },
+          { Name: "Mark", Age: 35, City: "Paris" }
+        ];
+    
+        // Convert data to a worksheet
+        const ws = XLSX.utils.json_to_sheet(data);
+    
+        // Create a new workbook and append the worksheet
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    
+        // Export the workbook as an Excel file
+        XLSX.writeFile(wb, "ExportedData.xlsx");
+      });
     </script>
     
     <!--end::Script-->

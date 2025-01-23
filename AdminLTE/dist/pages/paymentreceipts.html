@@ -451,7 +451,7 @@ color: #00192D;
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./widgets/cards.html" class="nav-link">
+                    <a href="./maintenancereports.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Maintenance And Repair Costs</p>
                     </a>
@@ -857,16 +857,18 @@ color: #00192D;
             <!-- /.card -->
           </div>
           <hr>
-<button class="button" style="width: 150px; height: 50px; margin-left: 50rem; border-radius: 10px; background-color: #FFC107; color: #00192D;">
+<button class="button" style="width: 150px; height: 50px; margin-left: 50rem; border-radius: 10px;  color:  #FFC107;">
   
   RECORD PAYMENT</button>
+
+  <hr>
          <!-- Beginning Property row -->
       
          <div class="col-md-12">
           <div class="card mb-4">
             <div class="card-header" style="background-color:#00192D; color: white;" >
-              <h5 class="card-title bg-warning" style="padding:0.5rem; border-radius: 10px;">
-                SEND RECEIPTS</h5>
+              <h5 class="card-title text-warning" style="padding:0.5rem; border-radius: 10px;">
+               RECEIPTS INFORMATION</h5>
               
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
@@ -903,11 +905,11 @@ color: #00192D;
                     <th>Property</th>
                     <th>Tenant</th>
                     <th>Unit</th>
-                    <th>Date</th>
+                    <th>Rent Amount</th>
                     <th>Amount Paid</th>
                     <th>Payment Method</th>
-                    <th>Rent Amount</th>
                     <th>Reference Number</th>
+                    <th>Date</th>
                     <th>Balance</th>
                     <th>Action</th>
 
@@ -918,14 +920,14 @@ color: #00192D;
                     <td>Manucho Apartments</td>
                     <td>John</td>
                     <th>A11</th>
-                    <td>KSH 29,000</td>
                     <td>KSH80,000</td>
-                    <td>Kisumu</td>
-                    <td>Kisumu</td>
-                    <td>Kisumu</td>
-                    <td>Kisumu</td>
+                    <td>KSH80,000</td>
+                    <td>MPESA</td>
+                    <td>TBM34KGNJ8</td>
+                    <td>10-12-2025</td>
+                    <td>KSH0</td>
                     <td>
-                      <button type="button"  style="background-color: #00192D; border-radius: 10px;" class="btn text-warning" onclick="openOverlay()">PRINT</button>
+                      <button type="button"  style="background-color: #00192D; border-radius: 10px;" class="btn text-warning" onclick="openOverlay()">DELETE</button>
                       </td>
 
                   </tr>
@@ -933,14 +935,14 @@ color: #00192D;
                     <td>Ethical Apartments</td>
                     <td>Peter</td>
                     <td>A12</td>
-                    <td>KSH 29,000</td>
+                    <td>KSH80,000</td>
                     <td>KSH69,000</td>
-                    <td>Rongai</td>
-                    <td>Kisumu</td>
-                    <td>Kisumu</td>
-                    <td>Kisumu</td>
+                    <td>MPESA</td>
+                    <td>TBM34KHKM8</td>
+                    <td>11-12-2025</td>
+                    <td>KSH 11,000</td>
                     <td>
-                      <button type="button" style="background-color: #00192D; border-radius: 10px;" class="btn text-warning" onclick="openOverlay()">PRINT</button>
+                      <button type="button" style="background-color: #00192D; border-radius: 10px;" class="btn text-warning" onclick="openOverlay()">DELETE</button>
                       </td>
 
                   </tr>
@@ -1167,6 +1169,26 @@ color: #00192D;
       //-----------------
       // - END PIE CHART -
       //-----------------
+    </script>
+    <script>
+      document.getElementById("exportButton").addEventListener("click", function() {
+        // Example data (can be your table data or an array of objects)
+        const data = [
+          { Name: "John", Age: 30, City: "New York" },
+          { Name: "Jane", Age: 25, City: "London" },
+          { Name: "Mark", Age: 35, City: "Paris" }
+        ];
+    
+        // Convert data to a worksheet
+        const ws = XLSX.utils.json_to_sheet(data);
+    
+        // Create a new workbook and append the worksheet
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    
+        // Export the workbook as an Excel file
+        XLSX.writeFile(wb, "ExportedData.xlsx");
+      });
     </script>
     <!--end::Script-->
   </body>
