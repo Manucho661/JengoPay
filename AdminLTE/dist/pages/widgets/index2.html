@@ -57,53 +57,91 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-      /* body {
-          margin: 0;
-          padding: 0;
-          width: 100vw;
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: flex-start;
-          background-color: #f8f9fa;
-      } */
+      a{
+          text-decoration: none;
+      }
+      
+      body{
+          
+          background-color: rgba(128, 128, 128, 0.1);
+      }
+      .summaryItem{
+          font-family: 'Playfair Display', serif; /* Elegant for creative projects */
+font-size: 25px;
+font-weight: bold;
 
-      .container-full {
-        /* margin-left: 10rem;
-        margin-right:12rem; */
-          width: 100%;
-          max-width: 1200px; /* Adjust max width as needed */
-          padding: 20px;
-          text-align: center;
+font-weight: 400; /* Lighter weight for a faint look */
+letter-spacing: 1px; /* Slight spacing for an airy feel */
+color:gray;
+
+      }
+      .summaryItemOne{
+          font-family: 'Playfair Display', serif; /* Elegant for creative projects */
+font-size: 25px;
+font-weight: bold;
+
+font-weight: 400; /* Lighter weight for a faint look */
+letter-spacing: 1px; /* Slight spacing for an airy feel */
+color: #00192D;
+
+      }
+      .custom-btn{
+          background-color: #00192D;
+  border-color: #00192D;
+  color:  #FFC107; /* White background */
       }
 
-      .filters {
-          margin: 20px 0;
+  .statement{
+      background-color: #FFC107;
+      color: #00192D ;
+
       }
 
-      .filters button {
-          margin: 5px;
-          width: 150px;
-          border-radius: 10px;
-      }
+      .profile-card {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* padding: 20px; */
+    
+    margin: 30px auto;
+  }
+  .profile-picture {
+    border-radius: 10px;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border: 4px solid #007bff;
+  }
+  .profile-details h2 {
+    /* margin-bottom: 10px; */
+    
+  }
+  .profile-details p {
+    /* /margin: 5px 0; */
+    color: #6c757d;
+  }
+  .profile_details{
+      display: flex;
+      
+  }
+  .profile_picture{
+      margin-right: 4%;
+  }
+  .profile_info .one{
+      color: #666;
+      font-size: 14px;
+      display: block;
+      text-align: justify;   
 
-      table {
-          width: 100%;
-          border-collapse: collapse;
-          margin-top: 20px;
-      }
+  }
+  .other_profile_details{
+      display: block;
+      color: #666;
+      font-size: 14px;
+      display: block;
+      text-align: justify;
+  }
 
-      th, td {
-          padding: 10px;
-          border: 1px solid #ddd;
-          text-align: center;
-      }
-
-      th {
-          background-color: #ffc107;
-          color: black;
-      }
   </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -347,80 +385,61 @@
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
-                  <!-- <li class="nav-item">
+                  <li class="nav-item">
                     <a href="./index.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard</p>
+                      <p>Dashboard v1</p>
                     </a>
-                  </li> -->
+                  </li>
                   <li class="nav-item">
                     <a href="./index2.html" class="nav-link active">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard </p>
+                      <p>Dashboard v2</p>
                     </a>
                   </li>
-                  <!-- <li class="nav-item">
+                  <li class="nav-item">
                     <a href="./index3.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Dashboard v3</p>
                     </a>
-                  </li> -->
+                  </li>
                 </ul>
               </li>
               <li class="nav-item">
-                <a href="./property.html" class="nav-link">
+                <a href="./generate/theme.html" class="nav-link">
                   <i class="nav-icon bi bi-palette"></i>
-                  <p>Tenants</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./tenantscreening.html" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Tenant Screening</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./leasy.html" class="nav-link">
-                  <i class="nav-icon bi bi-file-earmark-text"></i>
-                  <p>Lease Management</p>
+                  <p>Theme Generate</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-box-seam-fill"></i>
                   <p>
-                   Financial Documents
+                    Widgets
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="./invoices.html" class="nav-link">
+                    <a href="./widgets/small-box.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Invoices</p>
+                      <p>Small Box</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./rentdeposit.html" class="nav-link">
+                    <a href="./widgets/info-box.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Payment Receipts</p>
+                      <p>info Box</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./rentdeposit.html" class="nav-link">
+                    <a href="./widgets/cards.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p> Rent Deposit Reports</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Maintenance And Repair Costs</p>
+                      <p>Cards</p>
                     </a>
                   </li>
                 </ul>
               </li>
-              
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-clipboard-fill"></i>
@@ -799,82 +818,162 @@
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
-            <!--begin::Row-->
-            <div class="row">
-              <div class="col-sm-6"><h3 class="mb-0"></h3></div>
-              <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Dashboard v2</li>
-                </ol>
-              </div>
-            </div>
-            <!--end::Row-->
-          </div>
-          <!--end::Container-->
-        </div>
-    <div class="container-full">
-        <h2>Tenant Screening</h2>
+           
+<div class="content">
 
-        <div class="filters">
-            <b>Filters:</b>
-            <button class="btn btn-warning">All</button>
-            <button class="btn btn-warning">Pending</button>
-            <button class="btn btn-warning">Approved</button>
-            <button class="btn btn-warning">Rejected</button>
+    <div class="row">
+    <div class="col-sm-6 mb-3 mb-sm-0">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">NO OF LEASE</h5>
+          <p class="card-text">50</p>
+          <!-- <a href="#" class="btn" id="yolo">Go somewhere</a> -->
         </div>
-
-        <h2>APPLICANT LIST</h2>
-        <table>
-            <tr>
-                <th>Name</th>
-                <th>Date Applied</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-            <tr>
-                <td>John Doe</td>
-                <td>10-01-2025</td>
-                <td><span class="badge bg-success">Approved</span></td>
-                <td><a href="application.html">[View]</a></td>
-            </tr>
-            <tr>
-                <td>Jane Smith</td>
-                <td>6-06-2025</td>
-                <td><span class="badge bg-danger">Pending</span></td>
-                <td><a href="application.html">[View]</a></td>
-            </tr>
-            <tr>
-                <td>Jane Smith</td>
-                <td>6-06-2025</td>
-                <td><span class="badge bg-danger">Pending</span></td>
-                <td><a href="application.html">[View]</a></td>
-            </tr>
-            <tr>
-                <td>John Doe</td>
-                <td>10-01-2025</td>
-                <td><span class="badge bg-success">Approved</span></td>
-                <td><a href="application.html">[View]</a></td>
-            </tr>
-            <tr>
-                <td>Jane Smith</td>
-                <td>6-06-2025</td>
-                <td><span class="badge bg-danger">Pending</span></td>
-                <td><a href="application.html">[View]</a></td>
-            </tr>
-            <tr>
-                <td>John Doe</td>
-                <td>10-01-2025</td>
-                <td><span class="badge bg-success">Approved</span></td>
-                <td><a href="application.html">[View]</a></td>
-            </tr>
-        </table>
+      </div>
     </div>
-          <!--end::Container-->
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">TOTAL RENT</h5>
+          <p class="card-text">KSH 40,000</p>
+          <!-- <a href="#" class="btn" id="yolo">Go somewhere</a> -->
         </div>
-        <!--end::App Content-->
-      </main>
-
+      </div>
+    </div>
+  </div>
+  
+  <hr>
+   <!-- Beginning Property row -->
+  
+   <div class="col-md-12">
+                  <div class="card mb-4">
+                    <div class="card-header" style="background-color:#00192D; color: white;" >
+                    <button class="btn  mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseModal" \>
+                    <i class="fas fa-plus"></i> 
+                      Add Lease</button>
+                      <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                          <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                          <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                        </button>
+                        <div class="btn-group">
+                          <button
+                            type="button"
+                            class="btn btn-tool dropdown-toggle"
+                            data-bs-toggle="dropdown"
+                          >
+                            <i class="bi bi-wrench"></i>
+                          </button>
+                          <div class="dropdown-menu dropdown-menu-end" role="menu">
+                            <a href="#" class="dropdown-item">Action</a>
+                            <a href="#" class="dropdown-item">Another action</a>
+                            <a href="#" class="dropdown-item"> Something else here </a>
+                            <a class="dropdown-divider"></a>
+                            <a href="#" class="dropdown-item">Separated link</a>
+                          </div>
+                        </div>
+                        <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
+                          <i class="bi bi-x-lg"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                      <!--begin::Row-->
+                      <table id="myTableOne" class="display" style="">
+                        <thead>
+                          <tr>
+                            <th>Property Name</th>
+                            <th>Lesse Name</th>
+                            <th>Start Date</th>
+                            <th>End  Date</th>
+                            <th>Rent</th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Manucho Apartments</td>
+                            <td>Matthew</td>
+                            <td>Kisumu</td>
+                            <td>10-10-2024</td>
+                            <td>60,000</td>
+                            <td><span class="badge" id="yolo">Active</span></td>
+                          </tr>
+                          <tr>
+                            <td>Ethical Apartments</td>
+                            <td>Mark</td>
+                            <td>Rongai</td>
+                            <td>11-10-2024</td>
+                            <td>65,000</td>
+                            <td><span class="badge" id="yolo">!inactive</span></td>
+                          </tr>
+                          <!-- Add more rows as needed -->
+                        </tbody>
+              
+                    </table>
+                      <!--end::Row-->
+                    </div>
+  </div>
+  <hr>
+     
+        <!-- Renewal Alerts -->
+  
+        <div class="card">
+    <div class="card-body">
+    <section>
+          <h2 class="mb-3" style="color: grey;">Renewal Alerts</h2>
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Greenwood Apartments lease is expiring on 2024-01-01.
+              <button class="btn btn-sm" id="yolo">Renew</button>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Lakeview Villa lease has expired on 2023-05-15.
+              <button class="btn btn-danger btn-sm">Terminate</button>
+            </li>
+          </ul>
+        </section>
+    
+    </div>
+  </div>
+  
+    <!-- Lease Modal -->
+    <div class="modal fade" id="leaseModal" tabindex="-1" aria-labelledby="leaseModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="leaseModalLabel">Add New Lease</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <label for="propertyName" class="form-label">Property Name</label>
+                <input type="text" class="form-control" id="propertyName" placeholder="Enter property name">
+              </div>
+              <div class="mb-3">
+                <label for="lesseeName" class="form-label">Lessee Name</label>
+                <input type="text" class="form-control" id="lesseeName" placeholder="Enter lessee name">
+              </div>
+              <div class="mb-3">
+                <label for="startDate" class="form-label">Start Date</label>
+                <input type="date" class="form-control" id="startDate">
+              </div>
+              <div class="mb-3">
+                <label for="endDate" class="form-label">End Date</label>
+                <input type="date" class="form-control" id="endDate">
+              </div>
+              <div class="mb-3">
+                <label for="agreementFile" class="form-label">Upload Agreement</label>
+                <input type="file" class="form-control" id="agreementFile">
+              </div>
+              <button type="submit" class="btn btn-primary w-100">Add Lease</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
     <!--end::App Wrapper-->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->

@@ -60,41 +60,121 @@
           integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
           crossorigin="anonymous"
         />
-        <link rel="stylesheet" href="application.css">
+        <!-- <link rel="stylesheet" href="application.css">
         <link rel="stylesheet" href="index.css">
-        <link rel="stylesheet" href="main.css">
+        <link rel="stylesheet" href="main.css"> -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
         <style>
-          body {
-              font-family: Arial, sans-serif;
-              text-align: center;
-              margin: 50px;
-          }
-          .best{
-            background-color:#00192D;
-            color: #FFC107;
-            border-radius: 10px;
-          }
-          .upload1-container {
-              border-radius: 10px;
-              width: 350px;
-              margin: auto;
-              margin-top: 50px;
-              box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-          }
-          /* input {
-              margin-top: 0px;
+          /* body {
+              background-color: #f8f9fa;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              min-height: 100vh;
+              padding: 20px;
           } */
-          img {
-              margin-top: 10px;
-              max-width: 100%;
-              display: none;
+  
+          .card-container {
+            margin-left: 2rem;
+              background: #ffffff;
+              padding: 30px;
+              border-radius: 20px;
+              box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+              width: 100%;
+              max-width: 600px;
+              text-align: center;
           }
-          .message {
-              margin-top: 10px;
-              color: green;
+  
+          h2 {
+              color: #333;
+              margin-bottom: 20px;
+          }
+  
+          table {
+              width: 100%;
+              border-collapse: collapse;
+              margin-bottom: 20px;
+              background: white;
+          }
+  
+          th, td {
+              padding: 12px;
+              border: 1px solid #ddd;
+              text-align: left;
+          }
+  
+          th {
+              background: #ffc107;
+              color: black;
+              text-align: center;
+          }
+  
+          .section {
+              background: #f8f9fa;
               font-weight: bold;
+              text-align: center;
           }
+  
+          .upload1-container {
+              margin: 20px 0;
+              padding: 15px;
+              border: 2px dashed #ccc;
+              border-radius: 10px;
+              background: #fff;
+              text-align: center;
+          }
+  
+          .upload1-container input {
+              margin: 10px 0;
+          }
+  
+          .upload1-container img {
+              display: none;
+              margin-top: 10px;
+              width: 100%;
+              max-width: 200px;
+              border-radius: 5px;
+          }
+  
+          .actions {
+              text-align: center;
+              padding: 15px;
+          }
+  
+          .actions button {
+              margin: 5px;
+              padding: 10px 20px;
+              border: none;
+              color: white;
+              border-radius: 5px;
+              cursor: pointer;
+          }
+  
+          .approve {
+              background-color: #28a745;
+          }
+  
+          .reject {
+              background-color: #dc3545;
+          }
+  
+          .info {
+              background-color: #007bff;
+          }
+  
+          .approve:hover {
+              background-color: #218838;
+          }
+  
+          .reject:hover {
+              background-color: #c82333;
+          }
+  
+          .info:hover {
+              background-color: #0056b3;
+          }
+  
+        
       </style>
       </head>
 
@@ -339,37 +419,49 @@
                       </p>
                     </a>
                     <ul class="nav nav-treeview">
-                      <li class="nav-item">
+                      <!-- <li class="nav-item">
                         <a href="./index.html" class="nav-link">
                           <i class="nav-icon bi bi-circle"></i>
                           <p>Dashboard v1</p>
-                        </a>
-                      </li>
+                        </a> -->
+                      <!-- </li> -->
                       <li class="nav-item">
                         <a href="./index2.html" class="nav-link active">
                           <i class="nav-icon bi bi-circle"></i>
-                          <p>Dashboard v2</p>
+                          <p>Dashboard</p>
                         </a>
                       </li>
-                      <li class="nav-item">
+                      <!-- <li class="nav-item">
                         <a href="./index3.html" class="nav-link">
                           <i class="nav-icon bi bi-circle"></i>
                           <p>Dashboard v3</p>
                         </a>
-                      </li>
+                      </li> -->
                     </ul>
                   </li>
                   <li class="nav-item">
                     <a href="./property.html" class="nav-link">
-                      <i class="nav-icon bi bi-palette"></i>
+                      <i class="nav-icon bi bi-people"></i> 
                       <p>Tenants</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="./tenantscreening.html" class="nav-link">
+                      <i class="nav-icon bi bi-people"></i> 
+                      <p>Tenant Screening</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="./leasy.html" class="nav-link">
+                      <i class="nav-icon bi bi-file-earmark-text"></i>
+                      <p>Lease Management</p>
                     </a>
                   </li>
                   <li class="nav-item">
                     <a href="#" class="nav-link">
                       <i class="nav-icon bi bi-box-seam-fill"></i>
                       <p>
-                        Tenants
+                        Tenant Screening
                         <i class="nav-arrow bi bi-chevron-right"></i>
                       </p>
                     </a>
@@ -757,7 +849,7 @@
               <div class="container-fluid">
                 <!--begin::Row-->
                 <div class="row">
-                  <div class="col-sm-6"><h3 class="mb-0">Dashboard v2</h3></div>
+                  <div class="col-sm-6"><h3 class="mb-0"></h3></div>
                   <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-end">
                       <li class="breadcrumb-item"><a href="#">Home</a></li>
@@ -769,72 +861,37 @@
               </div>
               <!--end::Container-->
             </div>
-            <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
-              <!--begin::App Wrapper-->
-              <div class="app-wrapper">
-                <!--begin::Header-->
-                
-                <!--end::Header-->
-                <!--begin::Sidebar-->
+                    <div class="card card-container">
+                      <div class="card-body">
+                          <h2>Application Detail Page</h2>
               
-                 <?php include 'sidebar.php'?>
-                <!--end::Sidebar-->
-                <!-- start content -->
-                <div id="content">
-                   <!--begin::App Main-->
-                
-                  <main class="app-main">
-                    <!--begin::App Content Header-->
-                    <div class="app-content-header">
-                      <!--begin::Container-->
-                      <div class="container-fluid">
-                        <!--begin::Row-->
-                        <div class="row">
-                          <div class="col-sm-6"><h3 class="mb-0"></h3></div>
-                          <div class="col-sm-6">
-                           
+                          <table>
+                              <tr><th colspan="2">Application Details - John Doe</th></tr>
+                              <tr class="section"><td colspan="2">Personal Information</td></tr>
+                              <tr><td><b>Name:</b></td><td>John Doe</td></tr>
+                              <tr><td><b>Identity Number:</b></td><td>38789099</td></tr>
+                              <tr><td><b>ID Number:</b></td><td>1234-5678-910</td></tr>
+                          </table>
+              
+                          <div class="upload1-container">
+                              <h2>Upload ID</h2>
+                              <input type="file" id="fileInput" accept="image/*" required onchange="previewFile()">
+                              <button class="best btn btn-warning" onclick="uploadImage()">UPLOAD</button>
+                              <p class="message" id="message"></p>
+                              <img id="previewImage" src="" alt="Preview">
                           </div>
-                        </div>
-                        <!--end::Row-->
+              
+                          <table>
+                              <tr>
+                                  <td colspan="2" class="actions">
+                                      <button class="approve" onclick="takeAction('Approved')">Approve</button>
+                                      <button class="reject" onclick="takeAction('Rejected')">Reject</button>
+                                      <button class="info" onclick="takeAction('Request Info')">Request Info</button>
+                                  </td>
+                              </tr>
+                          </table>
                       </div>
-                      <!--end::Container-->
-                    </div>
-    
-<div class="card card-container">
-    <div class="card-body">
-      <h2>Application Detail Page</h2>
-  
-      <table>
-          <tr><th colspan="2">Application Details - John Doe</th></tr>
-      
-  
-          <tr class="section"><td colspan="2"><spani></span></td></tr>
-            <tr><td>Name:</td><td><a href="#"></a></td></tr>
-    
-
-          <tr class="section"><td colspan="2"><spani>Identity Number</span></td></tr>
-          <!-- <tr class="section"><td colspan="2">Actions</td></tr> -->
-           </table>
-
-           <div class="upload1-container">
-            <h2>Upload ID</h2>
-            <input type="file" id="fileInput" accept="image/*" required>
-            <button class="best" onclick="uploadImage()">UPLOAD</button>
-            <p class="message" id="message"></p>
-            <img id="previewImage" src="" alt="Preview">
-        </div>
-        <table>
-          <tr>
-              <td colspan="2" class="actions">
-                  <button class="approve" onclick="takeAction('Approved')">Approve</button>
-                  <button class="reject" onclick="takeAction('Rejected')">Reject</button>
-                  <button class="info" onclick="takeAction('Request Info')">Request Info</button>
-              </td>
-          </tr>
-      </table>
-  
-    </div>
-  </div>
+                  </div>
   <script>
     function uploadImage() {
         let fileInput = document.getElementById('fileInput');

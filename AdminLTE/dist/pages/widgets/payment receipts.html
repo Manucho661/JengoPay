@@ -44,6 +44,92 @@
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        #idem {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        .receipt-details {
+            margin: 10px 0;
+        }
+        .receipt-details p {
+            margin: 5px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #555;
+        }
+        .trash-can {
+      width: 60px;
+      height: 80px;
+      background-color: #e0e0e0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      position: relative;
+    }
+
+    .trash-can::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 20px;
+      width: 20px;
+      height: 10px;
+      background-color: #888;
+      border-radius: 3px;
+    }
+
+    .trash-can::after {
+      content: "";
+      position: absolute;
+      top: 25px;
+      left: 25px;
+      width: 10px;
+      height: 50px;
+      background-color: #333;
+      border-radius: 2px;
+    }
+
+    .trash-can::after:before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 10px;
+      bottom: 10px;
+      margin: auto;
+      width: 2px;
+      height: 30px;
+      background-color: #fff;
+    }
+
+    .trash-can::after:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 20px;
+      bottom: 20px;
+      margin: auto;
+      width: 2px;
+      height: 10px;
+      background-color: #fff;
+    }
+
+    </style>
   </head>
   <!--end::Head-->
   <!--begin::Body-->
@@ -706,11 +792,11 @@
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-              <div class="col-sm-6"><h3 class="mb-0">Small Box</h3></div>
+              <div class="col-sm-6"><h3 class="mb-0"></h3></div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Small Box</li>
+                  <li class="breadcrumb-item"><a href="#"></a></li>
+                  <li class="breadcrumb-item active" aria-current="page"></li>
                 </ol>
               </div>
             </div>
@@ -719,155 +805,123 @@
           <!--end::Container-->
         </div>
         <!--end::App Content Header-->
-        <!--begin::App Content-->
-        <div class="app-content">
-          <!--begin::Container-->
-          <div class="container-fluid">
-            <!-- Small Box (Stat card) -->
-            <h5 class="mb-2">Small Box</h5>
-            <!-- Small boxes (Stat box) -->
-            <div class="row">
-              <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box text-bg-primary">
-                  <div class="inner">
-                    <h3>150</h3>
-                    <p>New Orders</p>
-                  </div>
-                  <svg
-                    class="small-box-icon"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"
-                    ></path>
-                  </svg>
-                  <a
-                    href="#"
-                    class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover"
-                  >
-                    More info <i class="bi bi-link-45deg"></i>
-                  </a>
-                </div>
+
+        <!-- /.col -->
+        <div class="col-md-12">
+          <div class="card card-success">
+            <div class="card-header">
+              <h3 class="card-title">TOTAL PAID RENT</h3>
+            
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                  <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                  <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                </button>
               </div>
-              <!-- ./col -->
-              <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box text-bg-success">
-                  <div class="inner">
-                    <h3>53<sup class="fs-5">%</sup></h3>
-                    <p>Bounce Rate</p>
-                  </div>
-                  <svg
-                    class="small-box-icon"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75zM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 01-1.875-1.875V8.625zM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 013 19.875v-6.75z"
-                    ></path>
-                  </svg>
-                  <a
-                    href="#"
-                    class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover"
-                  >
-                    More info <i class="bi bi-link-45deg"></i>
-                  </a>
-                </div>
+               <!-- /.card-tools -->
               </div>
-              <!-- ./col -->
-              <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box text-bg-warning">
-                  <div class="inner">
-                    <h3>44</h3>
-                    <p>User Registrations</p>
-                  </div>
-                  <svg
-                    class="small-box-icon"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M6.25 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM3.25 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM19.75 7.5a.75.75 0 00-1.5 0v2.25H16a.75.75 0 000 1.5h2.25v2.25a.75.75 0 001.5 0v-2.25H22a.75.75 0 000-1.5h-2.25V7.5z"
-                    ></path>
-                  </svg>
-                  <a
-                    href="#"
-                    class="small-box-footer link-dark link-underline-opacity-0 link-underline-opacity-50-hover"
-                  >
-                    More info <i class="bi bi-link-45deg"></i>
-                  </a>
-                </div>
-              </div>
-              <!-- ./col -->
-              <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box text-bg-danger">
-                  <div class="inner">
-                    <h3>65</h3>
-                    <p>Unique Visitors</p>
-                  </div>
-                  <svg
-                    class="small-box-icon"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                  >
-                    <path
-                      clip-rule="evenodd"
-                      fill-rule="evenodd"
-                      d="M2.25 13.5a8.25 8.25 0 018.25-8.25.75.75 0 01.75.75v6.75H18a.75.75 0 01.75.75 8.25 8.25 0 01-16.5 0z"
-                    ></path>
-                    <path
-                      clip-rule="evenodd"
-                      fill-rule="evenodd"
-                      d="M12.75 3a.75.75 0 01.75-.75 8.25 8.25 0 018.25 8.25.75.75 0 01-.75.75h-7.5a.75.75 0 01-.75-.75V3z"
-                    ></path>
-                  </svg>
-                  <a
-                    href="#"
-                    class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover"
-                  >
-                    More info <i class="bi bi-link-45deg"></i>
-                  </a>
-                </div>
-              </div>
-              <!-- ./col -->
+              <!-- /.card-header -->
+              <div class="card-body text-center">KSH50,000</div>
+              <!-- /.card-body -->
             </div>
-            <!-- /.row -->
+            <!-- /.card -->
           </div>
-          <!--end::Container-->
-        </div>
-        <!--end::App Content-->
-      </main>
-      <!--end::App Main-->
-      <!--begin::Footer-->
-      <footer class="app-footer">
-        <!--begin::To the end-->
-        <div class="float-end d-none d-sm-inline">Anything you want</div>
-        <!--end::To the end-->
-        <!--begin::Copyright-->
-        <strong>
-          Copyright &copy; 2014-2024&nbsp;
-          <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>.
-        </strong>
-        All rights reserved.
-        <!--end::Copyright-->
-      </footer>
-      <!--end::Footer-->
-    </div>
-    <!--end::App Wrapper-->
-    <!--begin::Script-->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+          <hr>
+<button class="button" style="width: 150px; height: 50px; margin-left: 50rem; border-radius: 10px; background-color: #FFC107; color: #00192D;">
+  
+  RECORD PAYMENT</button>
+         <!-- Beginning Property row -->
+      
+         <div class="col-md-12">
+          <div class="card mb-4">
+            <div class="card-header" style="background-color:#00192D; color: white;" >
+              <h5 class="card-title bg-warning" style="padding:0.5rem; border-radius: 10px;">
+                SEND RECEIPTS</h5>
+              
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                  <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                  <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                </button>
+                <div class="btn-group">
+                  <button
+                    type="button"
+                    class="btn btn-tool dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                  >
+                    <i class="bi bi-wrench"></i>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-end" role="menu">
+                    <a href="#" class="dropdown-item">Action</a>
+                    <a href="#" class="dropdown-item">Another action</a>
+                    <a href="#" class="dropdown-item"> Something else here </a>
+                    <a class="dropdown-divider"></a>
+                    <a href="#" class="dropdown-item">Separated link</a>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <!--begin::Row-->
+              <table id="myTableOne" class="display">
+                <thead>
+                  <tr>
+                    <th>Property</th>
+                    <th>Tenant</th>
+                    <th>Unit</th>
+                    <th>Date</th>
+                    <th>Amount Paid</th>
+                    <th>Payment Method</th>
+                    <th>Rent Amount</th>
+                    <th>Reference Number</th>
+                    <th>Balance</th>
+                    <th>Action</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Manucho Apartments</td>
+                    <td>John</td>
+                    <th>A11</th>
+                    <td>KSH 29,000</td>
+                    <td>KSH80,000</td>
+                    <td>Kisumu</td>
+                    <td>Kisumu</td>
+                    <td>Kisumu</td>
+                    <td>Kisumu</td>
+                    <td>
+                      <button type="button"  style="background-color: #00192D; border-radius: 10px;" class="btn text-warning" onclick="openOverlay()">PRINT</button>
+                      </td>
+
+                  </tr>
+                  <tr>
+                    <td>Ethical Apartments</td>
+                    <td>Peter</td>
+                    <td>A12</td>
+                    <td>KSH 29,000</td>
+                    <td>KSH69,000</td>
+                    <td>Rongai</td>
+                    <td>Kisumu</td>
+                    <td>Kisumu</td>
+                    <td>Kisumu</td>
+                    <td>
+                      <button type="button" style="background-color: #00192D; border-radius: 10px;" class="btn text-warning" onclick="openOverlay()">PRINT</button>
+                      </td>
+
+                  </tr>
+                  <!-- Add more rows as needed -->
+                </tbody>
+      
+            </table>
+
+              <!--end::Row-->
+
+
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
       integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
@@ -908,6 +962,25 @@
         }
       });
     </script>
+
+
+     <!-- datatable script -->
+     <script>
+      // Initialize DataTable
+      $(document).ready(function () {
+          $('#myTable').DataTable();
+      });
+      $(document).ready(function () {
+          $('#myTableOne').DataTable();
+      });
+      $(document).ready(function () {
+          $('#myTableThree').DataTable();
+      });
+      $(document).ready(function () {
+          $('#myTableFour').DataTable();
+      });
+   </script>
+
     <!--end::OverlayScrollbars Configure-->
     <!--end::Script-->
   </body>
