@@ -87,7 +87,7 @@ color: #00192D;
       }
       .custom-btn{
           background-color: #00192D;
-  border-color: #FFC107;
+  border-color: #00192D;
   color:  #FFC107; /* White background */
       }
 
@@ -141,6 +141,13 @@ color: #00192D;
       display: block;
       text-align: justify;
   }
+  .container { width: 100%; margin: auto; margin-top: 30px; }
+        input { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #00192D; color:#FFC107; }
+        button { padding: 10px 15px; background-color: #dc3545; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #c82333; }
 
   </style>
   </head>
@@ -433,51 +440,27 @@ color: #00192D;
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="./invoices.html" class="nav-link">
+                    <a href="./widgets/invoices.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Invoices</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./paymentreceipts.html" class="nav-link">
+                    <a href="./widgets/payment receipts.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Payment Receipts</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./rentdeposit.html" class="nav-link">
+                    <a href="./widgets/payment receipts.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p> Rent Deposit Reports</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./maintenancereports.html" class="nav-link">
+                    <a href="./widgets/cards.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Maintenance And Repair Costs</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./profitandloss.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Profit&Loss Statement</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./balancesheet.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Balance Sheet</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./cashflow.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Cashflow</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./taxreports.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Tax Reports</p>
                     </a>
                   </li>
                 </ul>
@@ -844,183 +827,91 @@ color: #00192D;
         <div class="app-content-header">
           <!--begin::Container-->
           <div class="container-fluid">
-            <!--begin::Row-->
-            <div class="row">
-              <div class="col-sm-6"><h3 class="mb-0">Dashboard v2</h3></div>
-              <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Dashboard v2</li>
-                </ol>
-              </div>
-            </div>
-            <!--end::Row-->
+            <div class="container">
+              <h1>Occupied Properties</h1>
+              Filter:<input type="text" id="search" onkeyup="filterTable()" placeholder="Search properties...">
+              <table>
+                  <tr>
+                      <th>Property Name</th>
+                      <th>Location</th>
+                      <th>Type</th>
+                      <th>Tenant</th>
+                      <th>Occupied Units</th>
+                      <th>Start Date</th>
+                  </tr>
+                  <tr>
+                      <td>Leap Apartments</td>
+                      <td>Westside</td>
+                      <td>Bedsitter</td>
+                      <td>John Doe</td>
+                      <td>Unit 304</td>
+                      <td>December 2025</td>
+                  </tr>
+                  <tr>
+                    <td>Rappy Apartments</td>
+                    <td>Westside</td>
+                    <td>Banking Hall</td>
+                    <td>John Doe</td>
+                    <td>Unit 304</td>
+                    <td>December 2025</td>
+                </tr>
+                <tr>
+                  <td>Bisty Apartments</td>
+                  <td>Westside</td>
+                  <td>One Bedroom</td>
+                  <td>John Doe</td>
+                  <td>Unit 304</td>
+                  <td>December 2025</td>
+              </tr>
+              <tr>
+                <td>Top Apartments</td>
+                <td>Westside</td>
+                <td>Bedsitter</td>
+                <td>John Doe</td>
+                <td>Unit 304</td>
+                <td>December 2025</td>
+            </tr>
+            <tr>
+              <td>Hilly Apartments</td>
+              <td>Westside</td>
+              <td>One Bedroom</td>
+              <td>John Doe</td>
+              <td>Unit 304</td>
+              <td>December 2025</td>
+          </tr>
+              </table>
+              <br>
+              <!-- <button onclick="goBack()">Back to Chart</button> -->
           </div>
-          <!--end::Container-->
-        </div>
-        <div class="app-content">
-          <!--begin::Container-->
-          <div class="container-fluid">
-           
-<div class="content">
-
-  <div class="row">
-  <div class="col-sm-6 mb-3 mb-sm-0">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">NO OF LEASE</h5>
-        <p class="card-text">50</p>
-        <!-- <a href="#" class="btn" id="yolo">Go somewhere</a> -->
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-6">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">TOTAL RENT</h5>
-        <p class="card-text">KSH 40,000</p>
-        <!-- <a href="#" class="btn" id="yolo">Go somewhere</a> -->
-      </div>
-    </div>
-  </div>
-</div>
-
-<hr>
- <!-- Beginning Property row -->
-
- <div class="col-md-12">
-                <div class="card mb-4">
-                  <div class="card-header" style="background-color:#00192D;" >
-                  <button class="btn  mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseModal" style="color: #FFC107;">
-                  <i class="fas fa-plus"></i> 
-                    Add Lease</button>
-                    <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                      </button>
-                      <div class="btn-group">
-                        <button
-                          type="button"
-                          class="btn btn-tool dropdown-toggle"
-                          data-bs-toggle="dropdown"
-                        >
-                          <i class="bi bi-wrench"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end" role="menu">
-                          <a href="#" class="dropdown-item">Action</a>
-                          <a href="#" class="dropdown-item">Another action</a>
-                          <a href="#" class="dropdown-item"> Something else here </a>
-                          <a class="dropdown-divider"></a>
-                          <a href="#" class="dropdown-item">Separated link</a>
-                        </div>
-                      </div>
-                      <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                        <i class="bi bi-x-lg"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <!-- /.card-header -->
-                  <div class="card-body">
-                    <!--begin::Row-->
-                    <table id="myTableOne" class="display" style="">
-                      <thead>
-                        <tr>
-                          <th>Property Name</th>
-                          <th>Lesse Name</th>
-                          <th>Start Date</th>
-                          <th>End  Date</th>
-                          <th>Rent</th>
-                          <th>Status</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>Manucho Apartments</td>
-                          <td>Matthew</td>
-                          <td>Kisumu</td>
-                          <td>10-10-2024</td>
-                          <td>60,000</td>
-                          <td><span class="badge" id="yolo">Active</span></td>
-                        </tr>
-                        <tr>
-                          <td>Ethical Apartments</td>
-                          <td>Mark</td>
-                          <td>Rongai</td>
-                          <td>11-10-2024</td>
-                          <td>65,000</td>
-                          <td><span class="badge" id="yolo">!inactive</span></td>
-                        </tr>
-                        <!-- Add more rows as needed -->
-                      </tbody>
-            
-                  </table>
-                    <!--end::Row-->
-                  </div>
-</div>
-<hr>
-   
-      <!-- Renewal Alerts -->
-
-      <div class="card">
-  <div class="card-body">
-  <section>
-        <h2 class="mb-3" style="color: grey;">Renewal Alerts</h2>
-        <ul class="list-group">
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            Greenwood Apartments lease is expiring on 2024-01-01.
-            <button class="btn btn-sm" id="yolo">Renew</button>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            Lakeview Villa lease has expired on 2023-05-15.
-            <button class="btn btn-danger btn-sm">Terminate</button>
-          </li>
-        </ul>
-      </section>
-  
-  </div>
-</div>
-
-  <!-- Lease Modal -->
-  <div class="modal fade" id="leaseModal" tabindex="-1" aria-labelledby="leaseModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="leaseModalLabel">Add New Lease</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="mb-3">
-              <label for="propertyName" class="form-label">Property Name</label>
-              <input type="text" class="form-control" id="propertyName" placeholder="Enter property name">
-            </div>
-            <div class="mb-3">
-              <label for="lesseeName" class="form-label">Lessee Name</label>
-              <input type="text" class="form-control" id="lesseeName" placeholder="Enter lessee name">
-            </div>
-            <div class="mb-3">
-              <label for="startDate" class="form-label">Start Date</label>
-              <input type="date" class="form-control" id="startDate">
-            </div>
-            <div class="mb-3">
-              <label for="endDate" class="form-label">End Date</label>
-              <input type="date" class="form-control" id="endDate">
-            </div>
-            <div class="mb-3">
-              <label for="agreementFile" class="form-label">Upload Agreement</label>
-              <input type="file" class="form-control" id="agreementFile">
-            </div>
-            <button type="submit" class="btn btn-primary w-100">Add Lease</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
+      
     <!--end::App Wrapper-->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
+
+    <script>
+      function filterTable() {
+          let input = document.getElementById("search").value.toUpperCase();
+          let table = document.querySelector("table");
+          let tr = table.getElementsByTagName("tr");
+
+          for (let i = 1; i < tr.length; i++) {
+              let td = tr[i].getElementsByTagName("td");
+              let match = false;
+              for (let j = 0; j < td.length; j++) {
+                  if (td[j].innerHTML.toUpperCase().indexOf(input) > -1) {
+                      match = true;
+                      break;
+                  }
+              }
+              tr[i].style.display = match ? "" : "none";
+          }
+      }
+
+      // function goBack() {
+      //     window.location.href = "index.html";
+      // }
+  </script>
+  
     <script>
         // Initialize DataTable
         $(document).ready(function () {
@@ -1234,6 +1125,26 @@ color: #00192D;
       //-----------------
       // - END PIE CHART -
       //-----------------
+    </script>
+    <script>
+      document.getElementById("exportButton").addEventListener("click", function() {
+        // Example data (can be your table data or an array of objects)
+        const data = [
+          { Name: "John", Age: 30, City: "New York" },
+          { Name: "Jane", Age: 25, City: "London" },
+          { Name: "Mark", Age: 35, City: "Paris" }
+        ];
+    
+        // Convert data to a worksheet
+        const ws = XLSX.utils.json_to_sheet(data);
+    
+        // Create a new workbook and append the worksheet
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    
+        // Export the workbook as an Excel file
+        XLSX.writeFile(wb, "ExportedData.xlsx");
+      });
     </script>
     <!--end::Script-->
   </body>

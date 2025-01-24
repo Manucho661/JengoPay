@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clickable Pie Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        #myPieChart {
+      max-width: 250px;
+      max-height: 250px;
+      display: block;
+      margin: auto; /* Center it */
+  }
+    </style>
+</head>
+<body>
+
+    <canvas id="myPieChart" width="400" height="400"></canvas>
+    <script>
+        const ctx = document.getElementById('myPieChart').getContext('2d');
+      
+        const myPieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Approved', 'Pending', 'Rejected'],
+                datasets: [{
+                    data: [30, 50, 20],
+                    backgroundColor: ['#28a745', '#ffc107', '#dc3545']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                onClick: function(event, elements) {
+                    if (elements.length > 0) {
+                        let index = elements[0].index;
+                        let label = this.data.labels[index];
+                        let links = { "Approved": "approved.html", "Pending": "pending.html", "Rejected": "rejected.html" };
+                        if (links[label]) window.location.href = links[label];
+                    }
+                }
+            }
+        });
+      </script>
+</body>
+</html>

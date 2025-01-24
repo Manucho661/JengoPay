@@ -141,7 +141,12 @@ color: #00192D;
       display: block;
       text-align: justify;
   }
-
+  #myPieChart {
+      width: 360px;
+      height: 310px;
+      display: block;
+      margin: auto; /* Center it */
+  }
   </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -1191,7 +1196,7 @@ color: #00192D;
                   
                     <!--begin::Row-->
                     <div class="row">
-                      <div class="col-12"><div id="pie-chart"></div></div>
+                      <canvas id="myPieChart" width="200" height="200"></canvas>
                       <!-- /.col -->
                     </div>
                     <!--end::Row-->
@@ -1651,29 +1656,35 @@ color: #00192D;
       createSparklineChart('#table-sparkline-5', table_sparkline_5_data);
       createSparklineChart('#table-sparkline-6', table_sparkline_6_data);
       createSparklineChart('#table-sparkline-7', table_sparkline_7_data);
+</script>
+      
+<script>
+  const ctx = document.getElementById('myPieChart').getContext('2d');
 
-      //-------------
-      // - PIE CHART -
-      //-------------
-
-      const pie_chart_options = {
-        series: [700, 500, 400, 600, 300, 100],
-        chart: {
-          type: 'donut',
-        },
-        labels: ['Chrome', 'Edge', 'FireFox', 'Safari', 'Opera', 'IE'],
-        dataLabels: {
-          enabled: false,
-        },
-        colors: ['#0d6efd', '#20c997', '#ffc107', '#d63384', '#6f42c1', '#adb5bd'],
-      };
-
-      const pie_chart = new ApexCharts(document.querySelector('#pie-chart'), pie_chart_options);
-      pie_chart.render();
-
-      //-----------------
-      // - END PIE CHART -
-      //-----------------
+  const myPieChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+          labels: ['Occupied','Vacant', 'Vacant Soon'],
+          datasets: [{
+              data: [30, 50, 20],
+              backgroundColor: ['#28a745', '#ffc107', '#dc3545']
+          }]
+      },
+      options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          onClick: function(event, elements) {
+              if (elements.length > 0) {
+                  let index = elements[0].index;
+                  let label = this.data.labels[index];
+                  // let links = { "Approved": "approved.html", "Pending": "pending.html", "Rejected": "rejected.html" };
+                  let links = { "Occupied": "occupied.html", "Vacant": "vacant.html", "Vacant Soon": "vacantsoon.html"};
+                  if (links[label]) window.location.href = links[label];
+              }
+          }
+      }
+  });
+</script>
     </script>
     <!--end::Script-->
   </body>
