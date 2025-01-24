@@ -56,18 +56,7 @@ color: #00192D;
     </style>
 </head>
 <body>
-    <?php include 'topbar.php'?>
-
-    <?php include 'sidebar.php'?>
-
-
-
 <div id="content" >           
-    <?php include 'MenuIcon.php'?>
-
-                
-
-
     <div class="container-fluid">
         <div class="row mb-3">
             <div class="col-3">

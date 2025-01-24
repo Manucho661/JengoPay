@@ -77,6 +77,9 @@
           padding: 20px;
           text-align: center;
       }
+.btn:hover{
+background-color: #ffc107;
+}
 
       .filters {
           margin: 20px 0;
@@ -104,6 +107,7 @@
           background-color: #ffc107;
           color: black;
       }
+
   </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -842,7 +846,9 @@
         <h2>Tenant Screening</h2>
 
         <div class="filters">
-            <b>Filters:</b>
+            <b>
+              <i class="fas fa-filter"></i>
+              Filters:</b>
             <button class="btn btn-warning">All</button>
             <button class="btn btn-warning">Pending</button>
             <button class="btn btn-warning">Approved</button>
