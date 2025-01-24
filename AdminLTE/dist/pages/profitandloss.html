@@ -894,6 +894,11 @@ color: #00192D;
           <!--begin::Container-->
           <div class="container-fluid">
              <!-- /.col -->
+
+             <button id="exportButton" style="border-radius: 10px; margin-left: 90%;">
+              <i class="fas fa-share-square"></i> Export
+             </button>
+
         <div class="col-md-12">
           <div class="card">
             <div class="card-header"style="background-color: #00192D;">
@@ -911,6 +916,7 @@ color: #00192D;
                
               <div class="statement-container"> 
                 <div class="card-body text-center">
+                  
               <h2>Profit and Loss Statement|CROWN Z TOWERS(Monthly)</h2>
               <h3>JANUARY</h3>
               <table>
@@ -1202,6 +1208,27 @@ color: #00192D;
       // - END PIE CHART -
       //-----------------
     </script>
+
+<script>
+  document.getElementById("exportButton").addEventListener("click", function() {
+    // Example data (can be your table data or an array of objects)
+    const data = [
+      { Name: "John", Age: 30, City: "New York" },
+      { Name: "Jane", Age: 25, City: "London" },
+      { Name: "Mark", Age: 35, City: "Paris" }
+    ];
+
+    // Convert data to a worksheet
+    const ws = XLSX.utils.json_to_sheet(data);
+
+    // Create a new workbook and append the worksheet
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+    // Export the workbook as an Excel file
+    XLSX.writeFile(wb, "ExportedData.xlsx");
+  });
+</script>
     <!--end::Script-->
   </body>
   <!--end::Body-->
