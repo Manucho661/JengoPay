@@ -197,6 +197,35 @@ color: #00192D;
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
             background: white;
         } */
+        .filter-container {
+            background-color: #ffffff;
+            padding: 20px;
+            margin: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-container select, .filter-container input {
+            padding: 10px;
+            margin-right: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .filter-container button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .filter-container button:hover {
+            background-color: #0056b3;
+        }
+
 
   </style>
   </head>
@@ -902,6 +931,36 @@ color: #00192D;
         <div class="app-content-header">
           <!--begin::Container-->
           <div class="container-fluid">
+                <!-- Filter Section -->
+    <div class="filter-container">
+      <h3>Balance Sheet</h3> 
+     <label for="date-range">
+       <i class="fas fa-filter"></i>
+       Filters:</label>
+     <select id="date-range">AS of :Month
+         <option value="Q1">Month</option>
+         <option value="Q1">January</option>
+         <option value="Q2">February</option>
+         <option value="Q3">March</option>
+         <option value="Q4">April</option>
+         <option value="Q1">May</option>
+         <option value="Q1">June</option>
+         <option value="Q2">July</option>
+         <option value="Q3">August</option>
+         <option value="Q4">September</option>
+         <option value="Q1">October</option>
+         <option value="Q1">November</option>
+         <option value="Q2">December</option>
+     </select>
+
+     <label for="category">Basis:</label>
+     <select id="category">
+         <option value="cash">Cash</option>
+         <option value="accrual">Accrual</option>
+     </select>
+
+     <button onclick="applyFilter()">RUN REPORTS</button>
+ </div>
             <div class="statement-container">
               <button id="exportButton" style="border-radius: 10px; margin-left: 90%;">
                 <i class="fas fa-share-square"></i> Export

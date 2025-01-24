@@ -1160,6 +1160,7 @@ color: #00192D;
             <!-- </div> -->
             <!--end::Row-->
             </div>
+            <hr>
             <!--begin::Row-->
             <div class="row g-4 mb-8">
               <!-- First Card -->
@@ -1174,7 +1175,7 @@ color: #00192D;
                       </div>
 
                       <div class="card-body">
-                        <canvas id="rentalTrends" width="400" height="300"></canvas>
+                        <canvas id="rentalTrends" width="300" height="205"></canvas>
                       </div>
                     </div>
 
@@ -1672,6 +1673,63 @@ color: #00192D;
       createSparklineChart('#table-sparkline-7', table_sparkline_7_data);
 </script>
       
+<script>
+  const cty = document.getElementById('rentalTrends').getContext('2d');
+
+  new Chart(cty, {
+    type: 'line',
+    data: {
+      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+      datasets: [
+        {
+          label: 'CROWN Z TOWERS',
+          data: [35,'000', 30,'000', 32,'000', 30,'000', 33,'000', 35,'000', 34,'000', 33,'000', 34,'000', 35,'000', 34,'000', 35,'000'],
+          borderColor: 'cyan',
+          backgroundColor: 'transparent',
+          tension: 0.4
+        },
+        {
+          label: 'Manucho Apartments',
+          data: [32,'000', 33,'000', 38,'000', 34,'000', 33,'000', 34,'000', 38,'000', 36,'000', 37,'000', 32,'000', 31,'000', 34,'000'],
+          borderColor: 'green',
+          backgroundColor: 'transparent',
+          tension: 0.4
+        },
+        {
+          label: 'The Mansion Apartments',
+          data:[31,'000', 32,'000', 39,'000', 35,'000', 32,'000', 33,'000', 39,'000', 37,'000', 39,'000', 31,'000', 32,'000', 34,'000'],
+          borderColor: 'black',
+          backgroundColor: 'transparent',
+          tension: 0.4
+        },
+        {
+          label: 'Bsty Apartments',
+          data: [34,'000', 39,'000', 34,'000', 32,'000', 34,'000', 36,'000', 38,'000', 37,'000', 34,'000', 33,'000', 32,'000', 31,'000'],
+          borderColor: 'red',
+          backgroundColor: 'transparent',
+          tension: 0.4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top'
+        },
+       
+      },
+      scales: {
+        y: {
+          beginAtZero: false
+        }
+      }
+    }
+  });
+</script>
+
+
+
 <script>
   const ctx = document.getElementById('myPieChart').getContext('2d');
 

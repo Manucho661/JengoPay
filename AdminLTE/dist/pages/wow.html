@@ -3,39 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Balance Sheet</title>
+    <title>Profit and Loss Filter</title>
     <style>
-        body { font-family: Arial, sans-serif; }
-        table { width: 50%; border-collapse: collapse; margin: 20px auto; }
-        th, td { border: 1px solid black; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f6f9;
+        }
+
+        .filter-container {
+            background-color: #ffffff;
+            padding: 20px;
+            margin: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-container select, .filter-container input {
+            padding: 10px;
+            margin-right: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .filter-container button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .filter-container button:hover {
+            background-color: #0056b3;
+        }
+
+        .results-container {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .result {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .result h4 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .result p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
 
-    <h2 style="text-align:center;">Balance Sheet</h2>
+    <!-- Filter Section -->
+    <div class="filter-container">
+        <h3>Filter Profit and Loss Data</h3>
+        <label for="date-range">Date Range:</label>
+        <select id="date-range">
+            <option value="Q1">Q1 2024</option>
+            <option value="Q2">Q2 2024</option>
+            <option value="Q3">Q3 2024</option>
+            <option value="Q4">Q4 2024</option>
+        </select>
 
-    <table>
-        <tr><th>Category</th><th>Amount ($)</th></tr>
-        <tr><td><strong>Assets</strong></td><td></td></tr>
-        <tr><td>Cash</td><td>10,000</td></tr>
-        <tr><td>Accounts Receivable</td><td>5,000</td></tr>
-        <tr><td>Inventory</td><td>7,000</td></tr>
-        <tr><td>Equipment</td><td>15,000</td></tr>
-        <tr><td><strong>Total Assets</strong></td><td><strong>37,000</strong></td></tr>
-        
-        <tr><td><strong>Liabilities</strong></td><td></td></tr>
-        <tr><td>Accounts Payable</td><td>3,000</td></tr>
-        <tr><td>Loans Payable</td><td>10,000</td></tr>
-        <tr><td><strong>Total Liabilities</strong></td><td><strong>13,000</strong></td></tr>
+        <label for="category">Category:</label>
+        <select id="category">
+            <option value="all">All Categories</option>
+            <option value="sales">Sales</option>
+            <option value="marketing">Marketing</option>
+            <option value="general">General Expenses</option>
+        </select>
 
-        <tr><td><strong>Owner’s Equity</strong></td><td></td></tr>
-        <tr><td>Owner's Capital</td><td>20,000</td></tr>
-        <tr><td>Retained Earnings</td><td>4,000</td></tr>
-        <tr><td><strong>Total Equity</strong></td><td><strong>24,000</strong></td></tr>
+        <button onclick="applyFilter()">Apply Filter</button>
+    </div>
 
-        <tr><td><strong>Total Liabilities + Equity</strong></td><td><strong>37,000</strong></td></tr>
-    </table>
+    <!-- Results Section -->
+    <div class="results-container" id="results-container">
+        <div class="result" data-date="Q1" data-category="sales">
+            <h4>Revenue (Q1 2024 - Sales)</h4>
+            <p>$1,200,000</p>
+        </div>
+        <div class="result" data-date="Q1" data-category="marketing">
+            <h4>Marketing Expenses (Q1 2024)</h4>
+            <p>($200,000)</p>
+        </div>
+        <div class="result" data-date="Q2" data-category="sales">
+            <h4>Revenue (Q2 2024 - Sales)</h4>
+            <p>$1,500,000</p>
+        </div>
+        <div class="result" data-date="Q2" data-category="general">
+            <h4>General Expenses (Q2 2024)</h4>
+            <p>($500,000)</p>
+        </div>
+        <!-- Add more results as needed -->
+    </div>
+
+    <script>
+        function applyFilter() {
+            // Get filter values
+            const dateRange = document.getElementById("date-range").value;
+            const category = document.getElementById("category").value;
+
+            // Get all result elements
+            const results = document.querySelectorAll(".result");
+
+            // Loop through results and hide/show based on filter criteria
+            results.forEach(result => {
+                const resultDate = result.getAttribute("data-date");
+                const resultCategory = result.getAttribute("data-category");
+
+                // Show result if it matches the filter criteria
+                if ((dateRange === resultDate || dateRange === "all") && (category === resultCategory || category === "all")) {
+                    result.style.display = "block";
+                } else {
+                    result.style.display = "none";
+                }
+            });
+        }
+    </script>
 
 </body>
 </html>
