@@ -42,8 +42,7 @@
     />
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
-    <link rel="stylesheet" href="text.css" />
+    <link rel="stylesheet" href="../../dist/css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -52,7 +51,11 @@
       integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
       crossorigin="anonymous"
     />   
-     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
 
 
@@ -539,61 +542,80 @@ position: relative;
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
-                  <li class="nav-item">
+                  <!-- <li class="nav-item">
                     <a href="./index.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard v1</p>
+                      <p>Dashboard</p>
                     </a>
-                  </li>
+                  </li> -->
                   <li class="nav-item">
                     <a href="./index2.html" class="nav-link active">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard v2</p>
+                      <p>Dashboard </p>
                     </a>
                   </li>
-                  <li class="nav-item">
+                  <!-- <li class="nav-item">
                     <a href="./index3.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Dashboard v3</p>
                     </a>
-                  </li>
+                  </li> -->
                 </ul>
               </li>
               <li class="nav-item">
-                <a href="./generate/theme.html" class="nav-link">
+                <a href="./property.html" class="nav-link">
                   <i class="nav-icon bi bi-palette"></i>
-                  <p>Theme Generate</p>
+                  <p>Tenants</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./tenantscreening.html" class="nav-link">
+                  <i class="nav-icon bi bi-palette"></i>
+                  <p>Tenant Screening</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./leasy.html" class="nav-link">
+                  <i class="nav-icon bi bi-file-earmark-text"></i>
+                  <p>Lease Management</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-box-seam-fill"></i>
                   <p>
-                    Widgets
+                   Financial Documents
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="./widgets/small-box.html" class="nav-link">
+                    <a href="./widgets/invoices.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Small Box</p>
+                      <p>Invoices</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./widgets/info-box.html" class="nav-link">
+                    <a href="./widgets/payment receipts.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>info Box</p>
+                      <p>Payment Receipts</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="./widgets/payment receipts.html" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p> Rent Deposit Reports</p>
                     </a>
                   </li>
                   <li class="nav-item">
                     <a href="./widgets/cards.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Cards</p>
+                      <p>Maintenance And Repair Costs</p>
                     </a>
                   </li>
                 </ul>
               </li>
+              
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-clipboard-fill"></i>
@@ -976,25 +998,25 @@ position: relative;
             <!-- Info boxes -->
             <div class="row">
 
-                <div class="col-md-6">
-                    <div class="profile_details">
-                        <div class="profile_picture">
-                                         <!-- <img class="mt-3" src="images/mansion-1.jpg" alt="Profile Picture"  width="100" height="100"> -->
-                        </div>
-                        <div class="profile_info">
-                                    
-                                            <!-- <h2>Jane Doe</h2> -->
-                                             
-                            <div class="profile_details one">
-                              <p> Total Open: <strong>&nbsp;50|</strong> Replied: <strong> 30|&nbsp;</strong>  Closed: &nbsp; <strong>40 </strong>   </p>
+              <div class="col-md-6">
+                  <div class="profile_details">
+                      <div class="profile_picture">
+                                       <!-- <img class="mt-3" src="images/mansion-1.jpg" alt="Profile Picture"  width="100" height="100"> -->
+                      </div>
+                      <div class="profile_info">
+                                  
+                                          <!-- <h2>Jane Doe</h2> -->
+                                           
+                          <div class="profile_details one">
+                            <p> Total Open: <strong>&nbsp;50|</strong> Replied: <strong> 30|&nbsp;</strong>  Closed: &nbsp; <strong>40 </strong>   </p>
 
-                            
-                            </div>
-                                
-                        </div>
-                    </div>
-                                    
-                </div>
+                          
+                          </div>
+                              
+                      </div>
+                  </div>
+                                  
+              </div>
 
                 <div class="col-md-6">
                   <div style="display: flex; justify-content: end;">
@@ -1004,19 +1026,19 @@ position: relative;
                 
 
 
-              <!-- /.col -->
-            </div>
-            <!-- /.row -->
-            <!--begin::Row-->
-            
-            <!--end::Row-->
-            <!--begin::Row-->
-            <div class="row">
-              <!-- Start col -->
-              <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                      <div class="filter-container" id="filter-container">
+            <!-- /.col -->
+          </div>
+          <!-- /.row -->
+          <!--begin::Row-->
+          
+          <!--end::Row-->
+          <!--begin::Row-->
+          <div class="row">
+            <!-- Start col -->
+            <div class="col-md-12">
+              <div class="card">
+                  <div class="card-header">
+                    <div class="filter-container" id="filter-container">
 
                         <div class="filter" id="filter">
                           <i class="bi bi-filter"></i>
@@ -1028,11 +1050,11 @@ position: relative;
                           <a href="#">Manucho</a>
                           <a href="#">MM Towers</a>
 
-                        </div>
-
                       </div>
-                          
+
                     </div>
+                        
+                  </div>
 
                     <div class="card-body">
                         <table id="Texts"  class="display" style="font-size: small;" >
@@ -1084,13 +1106,13 @@ position: relative;
 
 
 
-                    </div>
+                  </div>
 
-                    <div class="card-footer">
-                        
-                     </div>
+                  <div class="card-footer">
+                      
+                   </div>
 
-                </div>
+              </div>
 
 
             </div>
@@ -1121,6 +1143,46 @@ position: relative;
     <!--end::App Wrapper-->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
+
+    <script>
+      function filterTable() {
+          let input = document.getElementById("search").value.toUpperCase();
+          let table = document.querySelector("table");
+          let tr = table.getElementsByTagName("tr");
+
+          for (let i = 1; i < tr.length; i++) {
+              let td = tr[i].getElementsByTagName("td");
+              let match = false;
+              for (let j = 0; j < td.length; j++) {
+                  if (td[j].innerHTML.toUpperCase().indexOf(input) > -1) {
+                      match = true;
+                      break;
+                  }
+              }
+              tr[i].style.display = match ? "" : "none";
+          }
+      }
+
+      // function goBack() {
+      //     window.location.href = "index.html";
+      // }
+  </script>
+  
+    <script>
+        // Initialize DataTable
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });
+        $(document).ready(function () {
+            $('#myTableOne').DataTable();
+        });
+        $(document).ready(function () {
+            $('#myTableThree').DataTable();
+        });
+        $(document).ready(function () {
+            $('#myTableFour').DataTable();
+        });
+     </script>
 
 <!-- Overlays -->
 <div class="respond" id="respond">
@@ -1196,54 +1258,13 @@ position: relative;
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-    
-<!-- script for occordion -->
-<script>
-
-        // JavaScript to handle hover and hide functionality
-        const filterContainer = document.getElementById("filter-container");
-        const accordion = document.getElementById("filter");
-        const panel = document.getElementById("panel");
-
-        // Show panel when hovering over the accordion
-        accordion.addEventListener("mouseenter", () => {
-            panel.style.display = "block";
-        });
-
-        // Hide panel when moving out of both accordion and panel
-         filterContainer.addEventListener("mouseleave", () => {
-             panel.style.display = "none";
-      });
-  
-
-</script>
-<!-- End for Occordion script -->
-
-    <!-- Begin script for datatable -->
-    <script>
-       $(document).ready(function() {
-        $('#Texts').DataTable({
-            "paging": true,
-            "searching": true,
-            "info": true,
-            "lengthMenu": [5, 10, 25, 50],
-            "language": {
-                "search": "Filter records:",
-                "lengthMenu": "Show _MENU_ entries"
-            }
-        });
-    });
-
-    </script>
-    <!-- End script for data_table -->
-    
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <script src="../../../dist/js/adminlte.js"></script>
+    <script src="../../dist/js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
@@ -1265,6 +1286,8 @@ position: relative;
         }
       });
     </script>
+    <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!--end::OverlayScrollbars Configure-->
     <!-- OPTIONAL SCRIPTS -->
     <!-- apexcharts -->
@@ -1421,6 +1444,26 @@ position: relative;
       //-----------------
       // - END PIE CHART -
       //-----------------
+    </script>
+    <script>
+      document.getElementById("exportButton").addEventListener("click", function() {
+        // Example data (can be your table data or an array of objects)
+        const data = [
+          { Name: "John", Age: 30, City: "New York" },
+          { Name: "Jane", Age: 25, City: "London" },
+          { Name: "Mark", Age: 35, City: "Paris" }
+        ];
+    
+        // Convert data to a worksheet
+        const ws = XLSX.utils.json_to_sheet(data);
+    
+        // Create a new workbook and append the worksheet
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    
+        // Export the workbook as an Excel file
+        XLSX.writeFile(wb, "ExportedData.xlsx");
+      });
     </script>
     <!--end::Script-->
   </body>
