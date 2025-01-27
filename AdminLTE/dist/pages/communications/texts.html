@@ -42,8 +42,7 @@
     />
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
-    <link rel="stylesheet" href="text.css" />
+    <link rel="stylesheet" href="../../dist/css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -51,7 +50,15 @@
       href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
       integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
       crossorigin="anonymous"
-    />
+    />   
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+
+
 
     <style>
         body {
@@ -127,7 +134,7 @@ tr:hover {
             /* color: white; */
             cursor: pointer;
             /* padding: 12%;  */
-            width: 20%;
+            width: 25%;
             border-bottom: gray solid 1px;
             text-align: left;
             outline: none;
@@ -165,8 +172,126 @@ tr:hover {
         .panel a:hover{
           color: #FFC107;
         }
-        
 
+        #respond_btn{
+          color: blueviolet;
+          font-weight: 500;
+          cursor: pointer;
+        }
+
+        #respond{
+          /* display: block ; */
+          position: fixed; 
+          z-index: 10000;
+          position: fixed; 
+          /* background-color: #FFC107; */
+          top: 0;
+          width: 100%;
+          height: 100%;
+          justify-content: center;
+          align-items: center;
+          display: none;
+          background-color: rgba(0, 0, 0, 0.5); 
+        }
+
+        .card.content{
+
+position: relative;
+  background: white;
+  
+  border-radius: 5px;
+  
+  color: black;
+  width: 100%;
+  max-width: 50%; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  font-size: 90%;
+  color: gray;
+}
+
+.card-footer.view_announcement {
+            justify-content: flex-end;
+            
+        }
+
+        .card-footer .btn + .btn {
+            margin-left: 10px; /* Adds spacing between the buttons */
+        }
+
+        .close-btn{
+             position: absolute; 
+            
+            right: 15px;
+        
+            color: white;
+            cursor: pointer;
+            
+        }
+
+        #close-overlay-btn {
+            /* top: 0; */
+            color: white;
+            /* color: white; */
+            border: none;
+            cursor: pointer;
+            font-size: 100%; 
+              }
+          #close-overlay-btn:hover {
+              color: red;
+              }
+
+        .card-header.view_announcement {
+            position: relative; 
+            display: flex;/* Add this for the absolute positioning of the close button */
+        }
+        .message-card {
+            max-width: 70%;
+            margin-bottom: 15px;
+        }
+        .tenant-message {
+            margin-right: auto;
+        }
+        .admin-message {
+            margin-left: auto;
+        }
+        #respond .container{
+          width: 70%;
+          font-size: small;
+          /* background-color: #00192D;; */
+          padding: 2%;
+          position: relative;
+          border-radius: 2%;
+          /* height: 70%;  */
+          background-color: white;
+          overflow: hidden;
+          /* flex: 1; */
+        }
+
+        .card{
+/* flex: 1; */
+        }
+        #sendButton{ 
+          background-color: #FFC107;
+          position: absolute;
+          right: 2%;
+          bottom: 1%;
+        }
+
+       
+        .closeTextWindow:hover{
+          color:red !important;
+        }
+        #closeTextWindow{
+          position: absolute; 
+          /* background-color: white; */
+          /* color: white; */
+          z-index: 10000;
+          right: 2%;
+          cursor: pointer;
+        }
+        .closeTextWindow:hover{
+          color:red !important;
+        }
         </style>
 
 <!-- scripts for data_table -->
@@ -332,11 +457,11 @@ tr:hover {
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <img
-                  src="../../dist/assets/img/user2-160x160.jpg"
+                  src="17.jpg"
                   class="user-image rounded-circle shadow"
                   alt="User Image"
                 />
-                <span class="d-none d-md-inline">Alexander Pierce</span>
+                <span class="d-none d-md-inline" style="color: #00192D;" > <b> JENGO PAY  </b>  </span>
               </a>
               <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                 <!--begin::User Image-->
@@ -417,61 +542,80 @@ tr:hover {
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
-                  <li class="nav-item">
+                  <!-- <li class="nav-item">
                     <a href="./index.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard v1</p>
+                      <p>Dashboard</p>
                     </a>
-                  </li>
+                  </li> -->
                   <li class="nav-item">
                     <a href="./index2.html" class="nav-link active">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard v2</p>
+                      <p>Dashboard </p>
                     </a>
                   </li>
-                  <li class="nav-item">
+                  <!-- <li class="nav-item">
                     <a href="./index3.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Dashboard v3</p>
                     </a>
-                  </li>
+                  </li> -->
                 </ul>
               </li>
               <li class="nav-item">
-                <a href="./generate/theme.html" class="nav-link">
+                <a href="./property.html" class="nav-link">
                   <i class="nav-icon bi bi-palette"></i>
-                  <p>Theme Generate</p>
+                  <p>Tenants</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./tenantscreening.html" class="nav-link">
+                  <i class="nav-icon bi bi-palette"></i>
+                  <p>Tenant Screening</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./leasy.html" class="nav-link">
+                  <i class="nav-icon bi bi-file-earmark-text"></i>
+                  <p>Lease Management</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-box-seam-fill"></i>
                   <p>
-                    Widgets
+                   Financial Documents
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="./widgets/small-box.html" class="nav-link">
+                    <a href="./widgets/invoices.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Small Box</p>
+                      <p>Invoices</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./widgets/info-box.html" class="nav-link">
+                    <a href="./widgets/payment receipts.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>info Box</p>
+                      <p>Payment Receipts</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="./widgets/payment receipts.html" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p> Rent Deposit Reports</p>
                     </a>
                   </li>
                   <li class="nav-item">
                     <a href="./widgets/cards.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Cards</p>
+                      <p>Maintenance And Repair Costs</p>
                     </a>
                   </li>
                 </ul>
               </li>
+              
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-clipboard-fill"></i>
@@ -835,11 +979,12 @@ tr:hover {
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-              <div class="col-sm-6"><h3 class="mb-0">Communications| Text Messages</h3></div>
+              <div class="col-sm-6"><h3 class="mb-0"> <i class="bi bi-chat"></i> Communications| Text Messages</h3></div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Dashboard v2</li>
+                <ol class="breadcrumb float-sm-end">
+                  <li class="breadcrumb-item"><a href="#" style="color: #00192D;"> <i class="bi bi-house"></i>  Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
                 </ol>
               </div>
             </div>
@@ -853,50 +998,51 @@ tr:hover {
             <!-- Info boxes -->
             <div class="row">
 
-                <div class="col-md-6">
-                    <div class="profile_details">
-                        <div class="profile_picture">
-                                         <!-- <img class="mt-3" src="images/mansion-1.jpg" alt="Profile Picture"  width="100" height="100"> -->
-                        </div>
-                        <div class="profile_info">
-                                    
-                                            <!-- <h2>Jane Doe</h2> -->
-                                             
-                            <div class="profile_details one">
-                              <p> Total Open: <strong>&nbsp;50|</strong> Replied: <strong> 30|&nbsp;</strong> <strong> Closed:</strong> &nbsp; 40  </p>
+              <div class="col-md-6">
+                  <div class="profile_details">
+                      <div class="profile_picture">
+                                       <!-- <img class="mt-3" src="images/mansion-1.jpg" alt="Profile Picture"  width="100" height="100"> -->
+                      </div>
+                      <div class="profile_info">
+                                  
+                                          <!-- <h2>Jane Doe</h2> -->
+                                           
+                          <div class="profile_details one">
+                            <p> Total Open: <strong>&nbsp;50|</strong> Replied: <strong> 30|&nbsp;</strong>  Closed: &nbsp; <strong>40 </strong>   </p>
 
-                            
-                            </div>
-                                
-                        </div>
-                    </div>
-                                    
-                </div>
+                          
+                          </div>
+                              
+                      </div>
+                  </div>
+                                  
+              </div>
 
                 <div class="col-md-6">
                   <div style="display: flex; justify-content: end;">
-                  <button class="btn" style="background-color: #00192D; color: white; font-size: small;"> <b> NEW TEXT </b></button>     
+                  <button  id="new_text"  class="btn" style="background-color: #00192D; color: white; font-size: small;">   <i class="bi bi-chat"></i>  <b> NEW TEXT </b></button>     
                 </div>
               </div>
                 
 
 
-              <!-- /.col -->
-            </div>
-            <!-- /.row -->
-            <!--begin::Row-->
-            
-            <!--end::Row-->
-            <!--begin::Row-->
-            <div class="row">
-              <!-- Start col -->
-              <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                      <div class="filter-container" id="filter-container">
+            <!-- /.col -->
+          </div>
+          <!-- /.row -->
+          <!--begin::Row-->
+          
+          <!--end::Row-->
+          <!--begin::Row-->
+          <div class="row">
+            <!-- Start col -->
+            <div class="col-md-12">
+              <div class="card">
+                  <div class="card-header">
+                    <div class="filter-container" id="filter-container">
 
                         <div class="filter" id="filter">
-                          Filter | <b>All Properties</b> 
+                          <i class="bi bi-filter"></i>
+                          Filter | <b>All Properties  <i class="fas fa-chevron-down"></i>  </b> 
                         </div>
                         <div class="panel" id="panel">
                           <a href="#">All Properties</a>
@@ -904,11 +1050,11 @@ tr:hover {
                           <a href="#">Manucho</a>
                           <a href="#">MM Towers</a>
 
-                        </div>
-
                       </div>
-                          
+
                     </div>
+                        
+                  </div>
 
                     <div class="card-body">
                         <table id="Texts"  class="display" style="font-size: small;" >
@@ -928,45 +1074,45 @@ tr:hover {
                                 <td>10:00 AM</td>
                                 <td>Property A</td>
                                 <td>John Doe</td>
-                                <td>Hello, I need assistance.</td>
-                                <td>Respond</td>
+                                <td>Hello, I need assistance &#x2026;  </td>
+                                <td  class="action" id="respond_btn" >Respond</td>
                             </tr>
                             <tr>
                                 <td>2</td>
                                 <td>10:15 AM</td>
                                 <td>Property B</td>
                                 <td>Jane Smith</td>
-                                <td>Can you fix the leak?</td>
-                                <td>Respond</td>
+                                <td>Can you fix the leak? &#x2026; </td>
+                                <td class="action" id="respond_btn"  >Respond  </td>
                             </tr>
                             <tr>
                                 <td>3</td>
                                 <td>10:30 AM</td>
                                 <td>Property C</td>
                                 <td>Emily Johnson</td>
-                                <td>What is the rent due date?</td>
-                                <td>Respond</td>
+                                <td>What is the rent due date? &#x2026;  </td>
+                                <td class="action" id="respond_btn" >Respond   </td>
                             </tr>
                             <tr>
                                 <td>4</td>
                                 <td>10:45 AM</td>
                                 <td>Property D</td>
                                 <td>Michael Brown</td>
-                                <td>The heater is not working.</td>
-                                <td>Respond</td>
+                                <td>The heater is not working &#x2026;</td>
+                                <td  class="action" id="respond_btn" >Respond </td>
                             </tr>
                         </tbody>
                         </table>
 
 
 
-                    </div>
+                  </div>
 
-                    <div class="card-footer">
-                        
-                     </div>
+                  <div class="card-footer">
+                      
+                   </div>
 
-                </div>
+              </div>
 
 
             </div>
@@ -987,7 +1133,7 @@ tr:hover {
         <!--begin::Copyright-->
         <strong>
           Copyright &copy; 2014-2024&nbsp;
-          <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>.
+          <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;" >JENGO PAY</a>.
         </strong>
         All rights reserved.
         <!--end::Copyright-->
@@ -997,6 +1143,109 @@ tr:hover {
     <!--end::App Wrapper-->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
+
+    <script>
+      function filterTable() {
+          let input = document.getElementById("search").value.toUpperCase();
+          let table = document.querySelector("table");
+          let tr = table.getElementsByTagName("tr");
+
+          for (let i = 1; i < tr.length; i++) {
+              let td = tr[i].getElementsByTagName("td");
+              let match = false;
+              for (let j = 0; j < td.length; j++) {
+                  if (td[j].innerHTML.toUpperCase().indexOf(input) > -1) {
+                      match = true;
+                      break;
+                  }
+              }
+              tr[i].style.display = match ? "" : "none";
+          }
+      }
+
+      // function goBack() {
+      //     window.location.href = "index.html";
+      // }
+  </script>
+  
+    <script>
+        // Initialize DataTable
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });
+        $(document).ready(function () {
+            $('#myTableOne').DataTable();
+        });
+        $(document).ready(function () {
+            $('#myTableThree').DataTable();
+        });
+        $(document).ready(function () {
+            $('#myTableFour').DataTable();
+        });
+     </script>
+
+<!-- Overlays -->
+<div class="respond" id="respond">
+
+  <div class="container" id="container">
+      <div id="closeTextWindow" class="closeTextWindow text-dark "> <i class="bi bi-x"></i>
+    </div>
+   
+
+    <div id="messageWindow" class="mb-4">
+        <div class="card message-card tenant-message">
+            
+            <div class="card-body">
+              <p> <b class="text-bg-secondary p-2 rounded-circle">Joseph</b></p>
+                <p>Hello support_team, I'm writing to ask if I can be given my balance even if it is not 5000, my current situation needs some finances to keep working. I have tried before to restart but things seem difficult.</p>
+                <p class="text-secondary"> <em>Mon, Jan 20, 2025 8:01 AM</em>  </p>
+              </div>
+            
+
+        </div>
+
+        <div class="card message-card admin-message">
+          
+            <div class="card-body">
+              <p> <b class="text-bg-secondary p-2 rounded-circle">You</b>  </p>
+                <p>Hi Emmanuel, Thank you for reaching out. Kindly email operations@writersthrive.com for assistance on this matter. Thanks.</p>
+                <p class="text-secondary"> <em>Mon, Jan 20, 2025 8:01 AM</em>  </p>
+              </div>
+            
+        </div>
+    </div>
+
+    <textarea id="newMessage" class="form-control mb-3" rows="4" placeholder="Type your message here..."></textarea>
+    <button id="sendButton" class="btn btn-sm send-btn">Send</button>
+</div>
+</div>
+
+<script>
+
+  const   next_text = document.getElementById('respond_btn');
+  const   respond_window = document.getElementById('respond');
+  const   close_text_overlay = document.getElementById("closeTextWindow");
+
+  next_text.addEventListener('click', ()=>{
+
+     respond_window.style.display= "flex";  
+     document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
+     const now = new Date();
+            const formattedTime = now.toLocaleString(); // Format the date and time
+            timestamp.textContent = `Sent on: ${formattedTime}`;
+
+
+  });
+
+  close_text_overlay.addEventListener('click', ()=>{
+
+    respond_window.style.display= "none";
+     document.querySelector('.app-wrapper').style.opacity = '1';
+     });
+  
+</script>
+
+
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
       integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
@@ -1009,54 +1258,13 @@ tr:hover {
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-    
-<!-- script for occordion -->
-<script>
-
-        // JavaScript to handle hover and hide functionality
-        const filterContainer = document.getElementById("filter-container");
-        const accordion = document.getElementById("filter");
-        const panel = document.getElementById("panel");
-
-        // Show panel when hovering over the accordion
-        accordion.addEventListener("mouseenter", () => {
-            panel.style.display = "block";
-        });
-
-        // Hide panel when moving out of both accordion and panel
-         filterContainer.addEventListener("mouseleave", () => {
-             panel.style.display = "none";
-      });
-  
-
-</script>
-<!-- End for Occordion script -->
-
-    <!-- Begin script for datatable -->
-    <script>
-       $(document).ready(function() {
-        $('#Texts').DataTable({
-            "paging": true,
-            "searching": true,
-            "info": true,
-            "lengthMenu": [5, 10, 25, 50],
-            "language": {
-                "search": "Filter records:",
-                "lengthMenu": "Show _MENU_ entries"
-            }
-        });
-    });
-
-    </script>
-    <!-- End script for data_table -->
-    
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <script src="../../../dist/js/adminlte.js"></script>
+    <script src="../../dist/js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
@@ -1078,6 +1286,8 @@ tr:hover {
         }
       });
     </script>
+    <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!--end::OverlayScrollbars Configure-->
     <!-- OPTIONAL SCRIPTS -->
     <!-- apexcharts -->
@@ -1234,6 +1444,26 @@ tr:hover {
       //-----------------
       // - END PIE CHART -
       //-----------------
+    </script>
+    <script>
+      document.getElementById("exportButton").addEventListener("click", function() {
+        // Example data (can be your table data or an array of objects)
+        const data = [
+          { Name: "John", Age: 30, City: "New York" },
+          { Name: "Jane", Age: 25, City: "London" },
+          { Name: "Mark", Age: 35, City: "Paris" }
+        ];
+    
+        // Convert data to a worksheet
+        const ws = XLSX.utils.json_to_sheet(data);
+    
+        // Create a new workbook and append the worksheet
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    
+        // Export the workbook as an Excel file
+        XLSX.writeFile(wb, "ExportedData.xlsx");
+      });
     </script>
     <!--end::Script-->
   </body>
