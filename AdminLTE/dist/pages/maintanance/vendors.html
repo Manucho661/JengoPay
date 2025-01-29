@@ -43,6 +43,7 @@
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
+    <link rel="stylesheet" href="text.css" />
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -50,22 +51,32 @@
       href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
       integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
       crossorigin="anonymous"
-    />   
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-
-
-
+    />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
     <style>
         body {
             font-family: Arial, sans-serif;
             columns: gray;
         }
+        .row.first{
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
 
+        }
+        .first_col{
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
+            transition: transform 0.3s ease-in-out; /* Smooth transition */
+
+        }
+        .first_col:hover{
+            transform: scale(1.05); /* Slightly increase size on hover */
+
+
+        }
+        .second_col{
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
+        }
+        
         .filter-container{
           
             /* width: 250px; */
@@ -134,7 +145,7 @@ tr:hover {
             /* color: white; */
             cursor: pointer;
             /* padding: 12%;  */
-            width: 25%;
+            width:50%;
             border-bottom: gray solid 1px;
             text-align: left;
             outline: none;
@@ -172,44 +183,39 @@ tr:hover {
         .panel a:hover{
           color: #FFC107;
         }
+        
+/* Announcement Overlay styles */
+        #view_announcement {
+            /* width: 50%; Adjust the card width as needed */
+            /* max-width: 500px; Ensures the card doesn't grow too wide */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            display: none;
+            z-index: 10000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
 
-        #respond_btn{
-          color: blueviolet;
-          font-weight: 500;
-          cursor: pointer;
         }
-
-        #respond{
-          /* display: block ; */
-          position: fixed; 
-          z-index: 10000;
-          position: fixed; 
-          /* background-color: #FFC107; */
-          top: 0;
-          width: 100%;
-          height: 100%;
-          justify-content: center;
-          align-items: center;
-          display: none;
-          background-color: rgba(0, 0, 0, 0.5); 
-        }
-
         .card.content{
 
-position: relative;
-  background: white;
-  
-  border-radius: 5px;
-  
-  color: black;
-  width: 100%;
-  max-width: 50%; 
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  font-size: 90%;
-  color: gray;
-}
+          position: relative;
+            background: white;
+            
+            border-radius: 5px;
+            
+            color: black;
+            width: 100%;
+            max-width: 50%; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            font-size: 90%;
+            color: gray;
+        }
 
-.card-footer.view_announcement {
+        .card-footer.view_announcement {
             justify-content: flex-end;
             
         }
@@ -228,6 +234,36 @@ position: relative;
             
         }
 
+        #more{
+          display: flex;
+           justify-content: center;
+          cursor: pointer;
+
+        }
+        
+        #more_icon{
+          /* border: 1px solid black; */
+          border-radius: 30%;
+          padding: 10%;
+          font-size: larger;
+        }
+       
+        #more_options{
+          display: none;
+          /* position: absolute; */
+          z-index: 1000;
+          background: #00192D;
+          border-radius: 10%;
+          padding: 10px;
+          
+        }
+        #more_options a{
+          text-decoration: none;
+          color: white;
+        }
+        #more_options a:hover{
+          color: #FFC107;
+        }
         #close-overlay-btn {
             /* top: 0; */
             color: white;
@@ -244,54 +280,18 @@ position: relative;
             position: relative; 
             display: flex;/* Add this for the absolute positioning of the close button */
         }
-        .message-card {
-            max-width: 70%;
-            margin-bottom: 15px;
-        }
-        .tenant-message {
-            margin-right: auto;
-        }
-        .admin-message {
-            margin-left: auto;
-        }
-        #respond .container{
-          width: 70%;
-          font-size: small;
-          /* background-color: #00192D;; */
-          padding: 2%;
-          position: relative;
-          border-radius: 2%;
-          /* height: 70%;  */
-          background-color: white;
-          overflow: hidden;
-          /* flex: 1; */
-        }
+#more_announcement_btn{
+  color: blueviolet;
+  font-weight: 500;
+  cursor: pointer;
 
-        .card{
-/* flex: 1; */
-        }
-        #sendButton{ 
-          background-color: #FFC107;
-          position: absolute;
-          right: 2%;
-          bottom: 1%;
-        }
+}
+#more_announcement_btn:hover{
+  background-color: rgba(128, 128, 128, 0.2);
+  color: #FFC107;
+}
 
-       
-        .closeTextWindow:hover{
-          color:red !important;
-        }
-        #closeTextWindow{
-          position: absolute; 
-          /* background-color: white; */
-          /* color: white; */
-          z-index: 10000;
-          right: 2%;
-          cursor: pointer;
-        }
-        .closeTextWindow:hover{
-          color:red !important;
-        }
+
         </style>
 
 <!-- scripts for data_table -->
@@ -457,11 +457,11 @@ position: relative;
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <img
-                  src="17.jpg"
+                  src="../17.jpg"
                   class="user-image rounded-circle shadow"
                   alt="User Image"
                 />
-                <span class="d-none d-md-inline" style="color: #00192D;" > <b> JENGO PAY  </b>  </span>
+                <span class="d-none d-md-inline">  <b>JENGO PAY</b>  </span>
               </a>
               <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                 <!--begin::User Image-->
@@ -511,7 +511,7 @@ position: relative;
           <a href="./index.html" class="brand-link">
             <!--begin::Brand Image-->
             <img
-              src="../../dist/assets/img/AdminLTELogo.png"
+              src="../../../dist/assets/img/AdminLTELogo.png"
               alt="AdminLTE Logo"
               class="brand-image opacity-75 shadow"
             />
@@ -542,80 +542,61 @@ position: relative;
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
-                  <!-- <li class="nav-item">
+                  <li class="nav-item">
                     <a href="./index.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard</p>
+                      <p>Dashboard v1</p>
                     </a>
-                  </li> -->
+                  </li>
                   <li class="nav-item">
                     <a href="./index2.html" class="nav-link active">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard </p>
+                      <p>Dashboard v2</p>
                     </a>
                   </li>
-                  <!-- <li class="nav-item">
+                  <li class="nav-item">
                     <a href="./index3.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Dashboard v3</p>
                     </a>
-                  </li> -->
+                  </li>
                 </ul>
               </li>
               <li class="nav-item">
-                <a href="./property.html" class="nav-link">
+                <a href="./generate/theme.html" class="nav-link">
                   <i class="nav-icon bi bi-palette"></i>
-                  <p>Tenants</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./tenantscreening.html" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Tenant Screening</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./leasy.html" class="nav-link">
-                  <i class="nav-icon bi bi-file-earmark-text"></i>
-                  <p>Lease Management</p>
+                  <p>Theme Generate</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-box-seam-fill"></i>
                   <p>
-                   Financial Documents
+                    Widgets
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="./widgets/invoices.html" class="nav-link">
+                    <a href="./widgets/small-box.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Invoices</p>
+                      <p>Small Box</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./widgets/payment receipts.html" class="nav-link">
+                    <a href="./widgets/info-box.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Payment Receipts</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./widgets/payment receipts.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p> Rent Deposit Reports</p>
+                      <p>info Box</p>
                     </a>
                   </li>
                   <li class="nav-item">
                     <a href="./widgets/cards.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Maintenance And Repair Costs</p>
+                      <p>Cards</p>
                     </a>
                   </li>
                 </ul>
               </li>
-              
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-clipboard-fill"></i>
@@ -979,11 +960,10 @@ position: relative;
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-              <div class="col-sm-6"><h3 class="mb-0"> <i class="bi bi-chat"></i> Communications| Text Messages</h3></div>
+              <div class="col-sm-6"><h3 class="mb-0"> <i class="fas fa-wrench"></i>   Providers & Categories</h3></div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
-                <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#" style="color: #00192D;"> <i class="bi bi-house"></i>  Home</a></li>
+                  <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
                   <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
                 </ol>
               </div>
@@ -996,123 +976,167 @@ position: relative;
           <!--begin::Container-->
           <div class="container-fluid">
             <!-- Info boxes -->
-            <div class="row">
-
-              <div class="col-md-6">
-                  <div class="profile_details">
-                      <div class="profile_picture">
-                                       <!-- <img class="mt-3" src="images/mansion-1.jpg" alt="Profile Picture"  width="100" height="100"> -->
-                      </div>
-                      <div class="profile_info">
-                                  
-                                          <!-- <h2>Jane Doe</h2> -->
-                                           
-                          <div class="profile_details one">
-                            <p> Total Open: <strong>&nbsp;50|</strong> Replied: <strong> 30|&nbsp;</strong>  Closed: &nbsp; <strong>40 </strong>   </p>
-
-                          
-                          </div>
-                              
-                      </div>
-                  </div>
-                                  
-              </div>
+            <div class="row first mb-2 mt-2 rounded-circle">
 
                 <div class="col-md-6">
-                  <div style="display: flex; justify-content: end;">
-                  <button  id="new_text"  class="btn" style="background-color: #00192D; color: white; font-size: small;">   <i class="bi bi-chat"></i>  <b> NEW TEXT </b></button>     
+                   <p>Total  <b>50</b> | New applications| <b>60</b>  </p>
+                                    
                 </div>
-              </div>
-                
 
+                <div class="col-md-6">
 
-            <!-- /.col -->
-          </div>
-          <!-- /.row -->
-          <!--begin::Row-->
-          
-          <!--end::Row-->
-          <!--begin::Row-->
-          <div class="row">
-            <!-- Start col -->
-            <div class="col-md-12">
-              <div class="card">
-                  <div class="card-header">
-                    <div class="filter-container" id="filter-container">
+                  <div style="display: flex; justify-content: end;">
+                    <button class="btn" style="background-color: #00192D; color: white; font-size: small; margin-right: 2%;">  <i class="fas fa-plus icon"></i> 
+                        <b> Add Category </b></button>   
+                  <button class="btn" style="background-color: #00192D; color: white; font-size: small;">  <i class="fas fa-plus icon"></i> 
+                    <b> Add Provider </b></button>  
+                    </div>   
+                </div>
 
-                        <div class="filter" id="filter">
-                          <i class="bi bi-filter"></i>
-                          Filter | <b>All Properties  <i class="fas fa-chevron-down"></i>  </b> 
+              <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <!--begin::Row-->
+            
+            <!--end::Row-->
+            <!--begin::Row-->
+            <div class="row second">
+              <!-- Start col -->
+              <div class="col-md-8 " >
+                    <div class="card second_col ">
+                        <div class="card-header">
+                        <div class="filter-container" id="filter-container">
+
+                            <div class="filter" id="filter">
+                            <i class="bi bi-filter"></i>
+                            Filter | <b>All Categories <i class="fas fa-chevron-down"></i> </b>
+    
+                            </div>
+                            <div class="panel" id="panel">
+                            <a href="#">All Properties</a>
+                            <a href="#">Crown Z</a>
+                            <a href="#">Manucho</a>
+                            <a href="#">MM Towers</a>
+
+                            </div>
+
                         </div>
-                        <div class="panel" id="panel">
-                          <a href="#">All Properties</a>
-                          <a href="#">Crown Z</a>
-                          <a href="#">Manucho</a>
-                          <a href="#">MM Towers</a>
+                            
+                        </div>
 
-                      </div>
-
-                    </div>
-                        
-                  </div>
-
-                    <div class="card-body">
-                        <table id="Texts"  class="display" style="font-size: small;" >
-                          <thead>
+                        <div class="card-body">
+                        <table id="maintenance" class="display">
+                            <thead class="mb-2">
                             <tr>
-                                <th>Message ID</th>
-                                <th>Time</th>
-                                <th>Property</th>
-                                <th>Tenant</th>
-                                <th>Message</th>
-                                <th>Action</th>
+                                <th>ID</th>
+                                <th>First Name</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Category</th>
+                                <th>ACTION</th> 
+            
                             </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>10:00 AM</td>
-                                <td>Property A</td>
+                            </thead>
+                            <tbody>
+                            <tr >
+                                <td>002</td>
                                 <td>John Doe</td>
-                                <td>Hello, I need assistance &#x2026;  </td>
-                                <td  class="action" id="respond_btn" >Respond</td>
+                                <td>0756752987</td>
+                                <td class="text-primary"> <i class="fas fa-envelope"></i>  emmanu@gmail.com</td>
+                                <td>Electrician</td>
+                                <td id="more">
+                                <div id="more_icon">&#x2026;</div> 
+                                <br>
+                                <div id="more_options">
+                                    <a href="#">Remove</a>
+                                    <a href="#">Update</a>
+                                    <a href="#">View</a>
+                                
+                                    
+                                </div>
+                                </td>
                             </tr>
                             <tr>
-                                <td>2</td>
-                                <td>10:15 AM</td>
-                                <td>Property B</td>
-                                <td>Jane Smith</td>
-                                <td>Can you fix the leak? &#x2026; </td>
-                                <td class="action" id="respond_btn"  >Respond  </td>
+                                <td>002</td>
+                                <td>John Doe</td>
+                                <td>0756752987</td>
+                                <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
+                                <td>Plumber</td>
+                                <td id="more">
+                                <div id="more_icon" class="rounded-circle" >&#x2026;</div> 
+                                </td>
                             </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>10:30 AM</td>
-                                <td>Property C</td>
-                                <td>Emily Johnson</td>
-                                <td>What is the rent due date? &#x2026;  </td>
-                                <td class="action" id="respond_btn" >Respond   </td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>10:45 AM</td>
-                                <td>Property D</td>
-                                <td>Michael Brown</td>
-                                <td>The heater is not working &#x2026;</td>
-                                <td  class="action" id="respond_btn" >Respond </td>
-                            </tr>
-                        </tbody>
+                            <!-- Add more rows as needed -->
+                            </tbody>
+                
                         </table>
 
 
 
-                  </div>
+                        </div>
 
-                  <div class="card-footer">
-                      
-                   </div>
 
-              </div>
+
+                        <div class="card-footer">
+                            
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-md-4" class="first_col">
+                    <div class="card second_col">
+                        <div class="card-header">
+                             <div class="card-text">
+                                Vendor Distribution
+                             </div>
+                        </div>
+                        <div class="card-body">
+                            <table  class="table-striped">
+                                <thead>
+                                <tr>
+                                    <th> <i class="fas fa-th-large"></i>  Category</th>
+                                    <th>Number</th>
+                                    <th >  Action</th>
+                                </tr>
+                            </thead>
+                                <tr>
+                                    <td>Plumbing</td>
+                                    <td>5</td>
+                                    <td id="more">
+                                        <div id="more_icon" class="rounded-circle" >&#x2026;</div> 
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Electricians</td>
+                                    <td>5</td>
+                                </tr>
+                                <tr>
+                                    <td>Landscaping</td>
+                                    <td>3</td>
+                                    <td id="more">
+                                        <div id="more_icon" class="rounded-circle" >&#x2026;</div> 
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Masons</td>
+                                    <td>No vendor is assigned to this category </td>
+                                    <td id="more">
+                                        <div id="more_icon" class="rounded-circle" >&#x2026;</div> 
+                                    </td>
+                                </tr>
+                                
+                            </table>
+                            
+
+                        </div>
+
+
+                    </div>
+                    
+
+
+                </div>
 
 
             </div>
@@ -1126,6 +1150,9 @@ position: relative;
       </main>
       <!--end::App Main-->
       <!--begin::Footer-->
+
+
+
       <footer class="app-footer">
         <!--begin::To the end-->
         <div class="float-end d-none d-sm-inline">Anything you want</div>
@@ -1133,7 +1160,7 @@ position: relative;
         <!--begin::Copyright-->
         <strong>
           Copyright &copy; 2014-2024&nbsp;
-          <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;" >JENGO PAY</a>.
+          <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;"> JENGO PAY</a>.
         </strong>
         All rights reserved.
         <!--end::Copyright-->
@@ -1141,94 +1168,66 @@ position: relative;
       <!--end::Footer-->
     </div>
     <!--end::App Wrapper-->
+
+
+
+
+<!-- Overlay Cards -->
+
+<!-- create Announcement -->
+
+
+
+
+
+ <!-- Start View announcement -->
+ <div class="view_announcement" id="view_announcement">
+  <div class="card content">
+   <div class="card-header view_announcement bg-secondary text-white">
+       <h5 class="mb-0">Rent Payments</h5>
+       <div id="close-overlay-btn" class="close-btn" > <b> &times;</b> </div>
+       
+   </div>
+   <div class="card-body">
+       <p class="card-text">
+           All Rent Payments should be made before 24/01/17. Anyone who feels that they might not 
+           be able to complete their dues on 24/01/17 should communicate to management before the due date.
+           Else, you face an eviction risk if you fail to pay your dues before the said date without a reasonable reason</p>
+          
+           <p class="timestamp" id="timestamp"></p> <!-- Timestamp -->
+
+ 
+       <div class="Recipients border-top border-gray "> <p><strong>Recipients|</strong> All Employees</p>  </div>
+       
+   </div>
+   <div class="card-footer view_announcement d-flex">
+       <button class="btn btn-danger btn-sm">Delete</button>
+       <button class="btn btn-secondary btn-sm">Resend</button>
+   </div>
+ </div>
+ </div>
+
+<!-- End view announcement -->
+<!-- end overlay card. -->
+
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
 
-    <script>
-      function filterTable() {
-          let input = document.getElementById("search").value.toUpperCase();
-          let table = document.querySelector("table");
-          let tr = table.getElementsByTagName("tr");
 
-          for (let i = 1; i < tr.length; i++) {
-              let td = tr[i].getElementsByTagName("td");
-              let match = false;
-              for (let j = 0; j < td.length; j++) {
-                  if (td[j].innerHTML.toUpperCase().indexOf(input) > -1) {
-                      match = true;
-                      break;
-                  }
-              }
-              tr[i].style.display = match ? "" : "none";
-          }
-      }
 
-      // function goBack() {
-      //     window.location.href = "index.html";
-      // }
-  </script>
-  
-    <script>
-        // Initialize DataTable
-        $(document).ready(function () {
-            $('#myTable').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableOne').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableThree').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableFour').DataTable();
-        });
-     </script>
+<!-- Overlay scripts -->
+ <!-- View announcements script -->
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Overlays -->
-<div class="respond" id="respond">
 
-  <div class="container" id="container">
-      <div id="closeTextWindow" class="closeTextWindow text-dark "> <i class="bi bi-x"></i>
-    </div>
-   
+ <script>
+  const   more_announcement = document.getElementById('more_announcement_btn');
+  const   view_announcement = document.getElementById('view_announcement');
+  const   close_overlay = document.getElementById("close-overlay-btn");
 
-    <div id="messageWindow" class="mb-4">
-        <div class="card message-card tenant-message">
-            
-            <div class="card-body">
-              <p> <b class="text-bg-secondary p-2 rounded-circle">Joseph</b></p>
-                <p>Hello support_team, I'm writing to ask if I can be given my balance even if it is not 5000, my current situation needs some finances to keep working. I have tried before to restart but things seem difficult.</p>
-                <p class="text-secondary"> <em>Mon, Jan 20, 2025 8:01 AM</em>  </p>
-              </div>
-            
+  more_announcement.addEventListener('click', ()=>{
 
-        </div>
-
-        <div class="card message-card admin-message">
-          
-            <div class="card-body">
-              <p> <b class="text-bg-secondary p-2 rounded-circle">You</b>  </p>
-                <p>Hi Emmanuel, Thank you for reaching out. Kindly email operations@writersthrive.com for assistance on this matter. Thanks.</p>
-                <p class="text-secondary"> <em>Mon, Jan 20, 2025 8:01 AM</em>  </p>
-              </div>
-            
-        </div>
-    </div>
-
-    <textarea id="newMessage" class="form-control mb-3" rows="4" placeholder="Type your message here..."></textarea>
-    <button id="sendButton" class="btn btn-sm send-btn">Send</button>
-</div>
-</div>
-
-<script>
-
-  const   next_text = document.getElementById('respond_btn');
-  const   respond_window = document.getElementById('respond');
-  const   close_text_overlay = document.getElementById("closeTextWindow");
-
-  next_text.addEventListener('click', ()=>{
-
-     respond_window.style.display= "flex";  
+     view_announcement.style.display= "flex";  
      document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
      const now = new Date();
             const formattedTime = now.toLocaleString(); // Format the date and time
@@ -1237,13 +1236,16 @@ position: relative;
 
   });
 
-  close_text_overlay.addEventListener('click', ()=>{
+     close_overlay.addEventListener('click', ()=>{
 
-    respond_window.style.display= "none";
+     view_announcement.style.display= "none";
      document.querySelector('.app-wrapper').style.opacity = '1';
+
+
      });
-  
-</script>
+ </script>
+
+ <!-- End view announcement script -->
 
 
     <script
@@ -1258,13 +1260,95 @@ position: relative;
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
+    
+<!-- script for occordion -->
+<script>
+
+        // JavaScript to handle hover and hide functionality
+        const filterContainer = document.getElementById("filter-container");
+        const accordion = document.getElementById("filter");
+        const panel = document.getElementById("panel");
+
+        // Show panel when hovering over the accordion
+        accordion.addEventListener("mouseenter", () => {
+            panel.style.display = "block";
+        });
+
+        // Hide panel when moving out of both accordion and panel
+         filterContainer.addEventListener("mouseleave", () => {
+             panel.style.display = "none";
+      });
+  
+
+</script>
+<!-- End for Occordion script -->
+
+
+<!-- more options -->
+<script>
+
+  // JavaScript to handle hover and hide functionality
+  const  more= document.getElementById("more");
+  const more_icon = document.getElementById("more_icon");
+  const more_options = document.getElementById("more_options");
+
+  // Show panel when hovering over the accordion
+  more_icon.addEventListener("mouseenter", () => {
+    more_options.style.display = "block";
+  });
+
+  // Hide panel when moving out of both accordion and panel
+   more.addEventListener("mouseleave", () => {
+    more_options.style.display = "none";
+});
+
+
+</script>
+    <!-- Begin script for datatable -->
+    <script>
+        
+       $(document).ready(function() {
+        $('#maintenance').DataTable({
+            "paging": true,
+            "searching": true,
+            "info": true,
+            "lengthMenu": [5, 10, 25, 60],
+            "language": {
+                "search": "Filter records:",
+                "lengthMenu": "Show _MENU_ entries"
+            }
+        });
+    });
+
+    </script>
+            <script>
+                    
+                $(document).ready(function() {
+                $('#vendor_distribution1').DataTable({
+                    // "paging": true,
+                    // "searching": true,
+                    // "info": true,
+                    // "lengthMenu": [5, 10, 25, 60],
+                    // "language": {
+                    //     "search": "Filter records:",
+                    //     "lengthMenu": "Show _MENU_ entries"
+                    // }
+                });
+            });
+
+            </script>
+
+
+    </script>
+    <!-- End script for data_table -->
+    
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <script src="../../dist/js/adminlte.js"></script>
+    <script src="../../../../dist/js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
@@ -1286,8 +1370,6 @@ position: relative;
         }
       });
     </script>
-    <!-- Bootstrap Bundle with Popper -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!--end::OverlayScrollbars Configure-->
     <!-- OPTIONAL SCRIPTS -->
     <!-- apexcharts -->
@@ -1444,26 +1526,6 @@ position: relative;
       //-----------------
       // - END PIE CHART -
       //-----------------
-    </script>
-    <script>
-      document.getElementById("exportButton").addEventListener("click", function() {
-        // Example data (can be your table data or an array of objects)
-        const data = [
-          { Name: "John", Age: 30, City: "New York" },
-          { Name: "Jane", Age: 25, City: "London" },
-          { Name: "Mark", Age: 35, City: "Paris" }
-        ];
-    
-        // Convert data to a worksheet
-        const ws = XLSX.utils.json_to_sheet(data);
-    
-        // Create a new workbook and append the worksheet
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-    
-        // Export the workbook as an Excel file
-        XLSX.writeFile(wb, "ExportedData.xlsx");
-      });
     </script>
     <!--end::Script-->
   </body>
