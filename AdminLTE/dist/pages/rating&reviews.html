@@ -55,94 +55,75 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.2/xlsx.full.min.js"></script>
-   <style>
-      a{
-          text-decoration: none;
-      }
-      
-      body{
-          
-          background-color: rgba(128, 128, 128, 0.1);
-      }
-      .summaryItem{
-          font-family: 'Playfair Display', serif; /* Elegant for creative projects */
-font-size: 25px;
-font-weight: bold;
-
-font-weight: 400; /* Lighter weight for a faint look */
-letter-spacing: 1px; /* Slight spacing for an airy feel */
-color:gray;
-
-      }
-      .summaryItemOne{
-          font-family: 'Playfair Display', serif; /* Elegant for creative projects */
-font-size: 25px;
-font-weight: bold;
-
-font-weight: 400; /* Lighter weight for a faint look */
-letter-spacing: 1px; /* Slight spacing for an airy feel */
-color: #00192D;
-
-      }
-      .custom-btn{
-          background-color: #00192D;
-  border-color: #00192D;
-  color:  #FFC107; /* White background */
+    <style>
+        .super {
+          width: 100%;
+          margin: auto;
+          background: white;
+          padding: 20px;
+          border-radius: 10px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       }
 
-  .statement{
-      background-color: #FFC107;
-      color: #00192D ;
+      /* Service Provider List */
+      /* .service-list { 
+          display: flex;
+          justify-content: center;
+          gap: 20px;
+      } */
 
+      .service {
+          background: #fff;
+          padding: 15px;
+          border-radius: 8px;
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+          width: 40%;
       }
 
-      .profile-card {
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    /* padding: 20px; */
-    
-    margin: 30px auto;
-  }
-  .profile-picture {
-    border-radius: 10px;
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    border: 4px solid #007bff;
-  }
-  .profile-details h2 {
-    /* margin-bottom: 10px; */
-    
-  }
-  .profile-details p {
-    /* /margin: 5px 0; */
-    color: #6c757d;
-  }
-  .profile_details{
-      display: flex;
-      
-  }
-  .profile_picture{
-      margin-right: 4%;
-  }
-  .profile_info .one{
-      color: #666;
-      font-size: 14px;
-      display: block;
-      text-align: justify;   
+      .service button {
+          background: #007bff;
+          color: white;
+          border: none;
+          padding: 10px;
+          border-radius: 5px;
+          cursor: pointer;
+      }
 
-  }
-  .other_profile_details{
-      display: block;
-      color: #666;
-      font-size: 14px;
-      display: block;
-      text-align: justify;
-  }
+      .service button:hover {
+          background: #0056b3;
+      }
 
+      /* Overlay Styles */
+      .overlay {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.7);
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+      }
+
+      .overlay-content {
+          background: white;
+          padding: 20px;
+          border-radius: 10px;
+          text-align: center;
+          width: 300px;
+      }
+
+      .close-btn {
+          background: red;
+          color: white;
+          border: none;
+          padding: 8px 15px;
+          cursor: pointer;
+          margin-top: 10px;
+          border-radius: 5px;
+      }
   </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -160,7 +141,7 @@ color: #00192D;
               </a>
             </li>
             <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
-            <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li> -->
+            <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li>
           </ul>
           <!--end::Start Navbar Links-->
           <!--begin::End Navbar Links-->
@@ -354,14 +335,14 @@ color: #00192D;
           <!--begin::Brand Link-->
           <a href="./index.html" class="brand-link">
             <!--begin::Brand Image-->
-            <!-- <img
+            <img
               src="../../dist/assets/img/AdminLTELogo.png"
               alt="AdminLTE Logo"
               class="brand-image opacity-75 shadow"
-            /> -->
+            />
             <!--end::Brand Image-->
             <!--begin::Brand Text-->
-            <span class="brand-text fw-light"></span>
+            <span class="brand-text fw-light">AdminLTE 4</span>
             <!--end::Brand Text-->
           </a>
           <!--end::Brand Link-->
@@ -389,13 +370,13 @@ color: #00192D;
                   <!-- <li class="nav-item">
                     <a href="./index.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard</p>
+                      <p>Dashboard v1</p>
                     </a>
                   </li> -->
                   <li class="nav-item">
                     <a href="./index2.html" class="nav-link active">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard </p>
+                      <p>Dashboard</p>
                     </a>
                   </li>
                   <!-- <li class="nav-item">
@@ -469,11 +450,16 @@ color: #00192D;
                       <p>Cashflow</p>
                     </a>
                   </li>
-                  
                   <li class="nav-item">
-                    <a href="./taxreports.html" class="nav-link">
+                    <a href="./cashflow.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Tax Reports</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="./cashflowforecasting.html" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Cashflow Forecasting</p>
                     </a>
                   </li>
                 </ul>
@@ -484,14 +470,14 @@ color: #00192D;
                   <p>Maintenance Requests</p>
                 </a>
               </li>
-              
+
               <li class="nav-item">
                 <a href="./serviceproviders.html" class="nav-link">
                   <i class="nav-icon bi bi-palette"></i>
                   <p>Service Providers</p>
                 </a>
               </li>
-              
+
               <li class="nav-item">
                 <a href="./rating&reviews.html" class="nav-link">
                   <i class="nav-icon bi bi-palette"></i>
@@ -499,44 +485,16 @@ color: #00192D;
                 </a>
               </li>
               
-               <!-- Start Communications part -->
-               <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-pencil-square"></i>
-                  <p>
-                    Communications
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="communications/texts.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Texts</p>
-                    </a>
-                  </li>
-
-                  <li class="nav-item">
-                    <a href="communications/announcements.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Announcements</p>
-                    </a>
-                    
-                  </li>
-                </ul>
-              </li>
-
-              <!-- End communications part --> 
-
-              <!-- <li class="nav-item">
-                <a href="#" class="nav-link">
+              
+              <li class="nav-item">
+                <!-- <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-clipboard-fill"></i>
                   <p>
                     Layout Options
                     <span class="nav-badge badge text-bg-secondary me-3">6</span>
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
-                </a>
+                </a> -->
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
                     <a href="./layout/unfixed-sidebar.html" class="nav-link">
@@ -583,13 +541,13 @@ color: #00192D;
                 </ul>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <!-- <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-tree-fill"></i>
                   <p>
                     UI Elements
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
-                </a>
+                </a> -->
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
                     <a href="./UI/general.html" class="nav-link">
@@ -610,7 +568,8 @@ color: #00192D;
                     </a>
                   </li>
                 </ul>
-              </li> -->
+              </li>
+              <!-- start nav-item forms -->
               <!-- <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-pencil-square"></i>
@@ -627,15 +586,46 @@ color: #00192D;
                     </a>
                   </li>
                 </ul>
-              </li>
+              </li> -->
+
+              <!-- end nav-item forms -->
+
+              <!-- Start Communications part -->
               <li class="nav-item">
                 <a href="#" class="nav-link">
+                  <i class="nav-icon bi bi-pencil-square"></i>
+                  <p>
+                    Communications
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="texts.html" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Texts</p>
+                    </a>
+                  </li>
+
+                  <li class="nav-item">
+                    <a href="communications/announcements.html" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Announcements</p>
+                    </a>
+                    
+                  </li>
+                </ul>
+              </li>
+
+              <!-- End communications part -->
+              <li class="nav-item">
+                <!-- <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-table"></i>
                   <p>
                     Tables
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
-                </a>
+                </a> -->
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
                     <a href="./tables/simple.html" class="nav-link">
@@ -645,15 +635,15 @@ color: #00192D;
                   </li>
                 </ul>
               </li>
-              <li class="nav-header">EXAMPLES</li>
+              <!-- <li class="nav-header">EXAMPLES</li> -->
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <!-- <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-box-arrow-in-right"></i>
                   <p>
                     Auth
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
-                </a>
+                </a> -->
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
                     <a href="#" class="nav-link">
@@ -708,26 +698,26 @@ color: #00192D;
                     </a>
                   </li>
                 </ul>
-              </li> -->
-              <!-- <li class="nav-header">DOCUMENTATIONS</li>
+              </li>
+              <!-- <li class="nav-header">DOCUMENTATIONS</li> -->
               <li class="nav-item">
-                <a href="./docs/introduction.html" class="nav-link">
+                <!-- <a href="./docs/introduction.html" class="nav-link">
                   <i class="nav-icon bi bi-download"></i>
                   <p>Installation</p>
-                </a>
+                </a> -->
               </li>
               <li class="nav-item">
-                <a href="./docs/layout.html" class="nav-link">
+                <!-- <a href="./docs/layout.html" class="nav-link">
                   <i class="nav-icon bi bi-grip-horizontal"></i>
                   <p>Layout</p>
-                </a>
+                </a> -->
               </li>
               <li class="nav-item">
-                <a href="./docs/color-mode.html" class="nav-link">
+                <!-- <a href="./docs/color-mode.html" class="nav-link">
                   <i class="nav-icon bi bi-star-half"></i>
                   <p>Color Mode</p>
-                </a>
-              </li> -->
+                </a> -->
+              </li>
               <!-- <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-ui-checks-grid"></i>
@@ -755,7 +745,7 @@ color: #00192D;
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-filetype-js"></i>
                   <p>
-                   Help
+                    Help
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
                 </a>
@@ -889,128 +879,198 @@ color: #00192D;
         <div class="app-content-header">
           <!--begin::Container-->
           <div class="container-fluid">
-  <!--begin::Row-->
-  <div class="row">
-    <div class="col-sm-6"><h3 class="mb-0">   RENT DEPOSIT REPORT</h3></div>
-    <div class="col-sm-6">
-      <ol class="breadcrumb float-sm-end">
-        <!-- <li class="breadcrumb-item"><a href="#">Home</a></li> -->
-        <!-- <li class="breadcrumb-item active" aria-current="page">Cards</li> -->
-      </ol>
-    </div>
-  </div>
-  <!--end::Row-->
-</div>
-<!--end::Container-->
-</div>
-<!--end::App Content Header-->
-<!--begin::App Content-->
-<div class="app-content">
-<button id="exportButton" style="border-radius: 10px; margin-left: 90%;">
-  <i class="fas fa-share-square"></i> Export
- </button>
-<hr>
- <!-- Beginning Property row -->
-
-<div class="col-md-12">
-<div class="card mb-4">
-  <div class="card-header" style="background-color:#00192D; color: white;" >
-    <h5 class="card-title text-warning" style="padding:0.5rem; border-radius: 10px;">
-      |RENT DEPOSIT REPORT</h5>
-    
-    <div class="card-tools">
-      <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-      </button>
-      <div class="btn-group">
-        <button
-          type="button"
-          class="btn btn-tool dropdown-toggle"
-          data-bs-toggle="dropdown"
-        >
-          <i class="bi bi-wrench"></i>
-        </button>
-        <div class="dropdown-menu dropdown-menu-end" role="menu">
-          <a href="#" class="dropdown-item">Action</a>
-          <a href="#" class="dropdown-item">Another action</a>
-          <a href="#" class="dropdown-item"> Something else here </a>
-          <a class="dropdown-divider"></a>
-          <a href="#" class="dropdown-item">Separated link</a>
+            <div class="super">
+                <!-- <h2>Service Provider Directory</h2> -->
+        
+                <!-- Service Provider List -->
+                <div class="service-list">
+                    <div class="service">
+                        <h3>ABC Cleaning Services</h3>
+                        <p>Professional cleaning for residential & commercial spaces.</p>
+                        <p><strong>Rating:</strong> <span class="rating">4.5</span> ⭐</p>
+                        <button onclick="openReviewForm('ABC Cleaning Services')" class="" style=" background-color:#00192D; color:#FFC107 ;">Rate & Review</button>
+                    </div>
+        
+        
+                     <div class="service-list">
+                    <div class="service">
+                        <h3>ABC Cleaning Services</h3>
+                        <p>Professional cleaning for residential & commercial spaces.</p>
+                        <p><strong>Rating:</strong> <span class="rating">4.5</span> ⭐</p><br>
+                        <button onclick="openReviewForm('ABC Cleaning Services')" class="" style=" background-color:#00192D; color:#FFC107 ;">Rate & Review</button>
+                    </div>
+        
+                    <div class="service">
+                        <h3>QuickFix Plumbing</h3>
+                        <p>Reliable plumbing solutions for your home & business.</p>
+                        <p><strong>Rating:</strong> <span class="rating">4.2</span> ⭐</p>
+                        <button onclick="openReviewForm('QuickFix Plumbing')">Rate & Review</button>
+                    </div>
+                </div>
+            </div>
+        
+            <br>
+        
+             <!-- Service Provider List -->
+             <div class="service-list">
+                <div class="service">
+                    <h3>SIMBA Cleaning Services</h3>
+                    <p>Professional cleaning for residential & commercial spaces.</p>
+                    <p><strong>Rating:</strong> <span class="rating">4.5</span> ⭐</p>
+                    <button onclick="openReviewForm('ABC Cleaning Services')">Rate & Review</button>
+                </div>
+        
+        
+                 <div class="service-list">
+                <div class="service">
+                    <h3>GRACE Cleaning Services</h3>
+                    <p>Professional cleaning for residential & commercial spaces.</p>
+                    <p><strong>Rating:</strong> <span class="rating">4.5</span> ⭐</p>
+                    <button onclick="openReviewForm('ABC Cleaning Services')">Rate & Review</button>
+                </div>
+        
+                <div class="service">
+                    <h3>WOW Plumbing</h3>
+                    <p>Reliable plumbing solutions for your home & business.</p>
+                    <p><strong>Rating:</strong> <span class="rating">4.2</span> ⭐</p>
+                    <button onclick="openReviewForm('QuickFix Plumbing')">Rate & Review</button>
+                </div>
+            </div>
         </div>
-      </div>
-      <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-        <i class="bi bi-x-lg"></i>
-      </button>
-    </div>
-  </div>
-  <!-- /.card-header -->
-  <div class="card-body">
-    <!--begin::Row-->
-    <table id="myTableOne" class="display">
-      <thead>
-        <tr>
-          <th>Manucho Apartments</th>
-          <th>TenantID</th>
-          <th>Deposit Amount</th>
-          <th>Deposit Date</th>
-          <th>Deductions</th>
-          <th>Refund Amount</th>
-          <th>Refund Date</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Manuching Apartments</td>
-          <td>John</td>
-          <td>KSH30,000</td>
-          <th>10-09-2024</th>
-          <td>KSH 29,000</td>
-          <td>KSH9,000</td>
-          <td>09-10-2024</td>
-          <td>
-            <button type="button"  style="background-color: #00192D; border-radius: 10px;" class="btn text-danger" onclick="openOverlay()">DELETE</button>
-            </td>
-
-        </tr>
-        <tr>
-          <td>Ethical Apartments</td>
-          <td>Peter</td>
-          <td>KSH20,000</td>
-          <td>09-10-2024</td>
-          <td>KSH 24,000</td>
-          <td>KSH8,000</td>
-          <td>09-10-2024</td>
-          <td>
-            <button type="button" style="background-color: #00192D; border-radius: 10px;" class="btn text-danger" onclick="openOverlay()">DELETE</button>
-            </td>
-
-        </tr>
-        <!-- Add more rows as needed -->
-      </tbody>
-
-  </table>
-
-
+        
+        <br>
+        
+         <!-- Service Provider List -->
+         <div class="service-list">
+            <div class="service">
+                <h3>BADDY Cleaning Services</h3>
+                <p>Professional cleaning for residential & commercial spaces.</p>
+                <p><strong>Rating:</strong> <span class="rating">4.5</span> ⭐</p>
+                <button onclick="openReviewForm('ABC Cleaning Services')">Rate & Review</button>
+            </div>
+        
+        
+             <div class="service-list">
+            <div class="service">
+                <h3>BEST Cleaning Services</h3>
+                <p>Professional cleaning for residential & commercial spaces.</p>
+                <p><strong>Rating:</strong> <span class="rating">4.5</span> ⭐</p>
+                <button onclick="openReviewForm('ABC Cleaning Services')">Rate & Review</button>
+            </div>
+        
+            <div class="service">
+                <h3>Fix Plumbing</h3>
+                <p>Reliable plumbing solutions for your home & business.</p>
+                <p><strong>Rating:</strong> <span class="rating">4.2</span> ⭐</p>
+                <button onclick="openReviewForm('QuickFix Plumbing')">Rate & Review</button>
+            </div>
+        </div>
+        </div>
+            <!-- Overlay for Review Form -->
+            <div id="reviewOverlay" class="overlay">
+                <div class="overlay-content">
+                    <h2>Submit a Review</h2>
+                    <p id="serviceName"></p>
+                    <label for="rating">Rating (1-5):</label>
+                    <input type="number" id="rating" min="1" max="5">
+                    <label for="reviewText">Review:</label>
+                    <textarea id="reviewText"></textarea>
+                    <button onclick="submitReview()">Submit</button>
+                    <button class="close-btn" onclick="closeOverlay()">Close</button>
+                </div>
+            </div>
+      
     <!--end::App Wrapper-->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    
+   
     <script>
-        // Initialize DataTable
-        $(document).ready(function () {
-            $('#myTable').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableOne').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableThree').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableFour').DataTable();
-        });
-     </script>
+      // Initialize DataTable
+      $(document).ready(function () {
+          $('#myTable').DataTable();
+      });
+      $(document).ready(function () {
+          $('#myTableOne').DataTable();
+      });
+      $(document).ready(function () {
+          $('#myTableThree').DataTable();
+      });
+      $(document).ready(function () {
+          $('#myTableFour').DataTable();
+      });
+   </script>
+
+
+    <script>
+      document.addEventListener("DOMContentLoaded", loadProviders);
+
+      function addProvider() {
+          let name = document.getElementById("name").value;
+          let category = document.getElementById("category").value;
+          let phone = document.getElementById("phone").value;
+
+          if (name && category && phone) {
+              let providers = JSON.parse(localStorage.getItem("providers")) || [];
+              providers.push({ name, category, phone });
+              localStorage.setItem("providers", JSON.stringify(providers));
+              loadProviders();
+              document.getElementById("name").value = "";
+              document.getElementById("category").value = "";
+              document.getElementById("phone").value = "";
+          } else {
+              alert("Please fill all fields.");
+          }
+      }
+
+      function loadProviders() {
+          let providers = JSON.parse(localStorage.getItem("providers")) || [];
+          let providerList = document.getElementById("provider-list");
+          providerList.innerHTML = "";
+
+          providers.forEach((provider, index) => {
+              let row = `<tr>
+                  <td>${provider.name}</td>
+                  <td>${provider.category}</td>
+                  <td>${provider.phone}</td>
+                  <td><button class="delete-btn" onclick="deleteProvider(${index})">Delete</button></td>
+              </tr>`;
+              providerList.innerHTML += row;
+          });
+      }
+
+      function deleteProvider(index) {
+          let providers = JSON.parse(localStorage.getItem("providers")) || [];
+          providers.splice(index, 1);
+          localStorage.setItem("providers", JSON.stringify(providers));
+          loadProviders();
+      }
+
+      function filterProviders() {
+          let searchQuery = document.getElementById("search").value.toLowerCase();
+          let categoryFilter = document.getElementById("filter").value;
+          let providers = JSON.parse(localStorage.getItem("providers")) || [];
+
+          let filteredProviders = providers.filter(provider => {
+              return (
+                  (provider.name.toLowerCase().includes(searchQuery) || searchQuery === "") &&
+                  (provider.category === categoryFilter || categoryFilter === "")
+              );
+          });
+
+          let providerList = document.getElementById("provider-list");
+          providerList.innerHTML = "";
+          filteredProviders.forEach((provider, index) => {
+              let row = `<tr>
+                  <td>${provider.name}</td>
+                  <td>${provider.category}</td>
+                  <td>${provider.phone}</td>
+                  <td><button class="delete-btn" onclick="deleteProvider(${index})">Delete</button></td>
+              </tr>`;
+              providerList.innerHTML += row;
+          });
+      }
+  </script>
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
       integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
@@ -1051,8 +1111,7 @@ color: #00192D;
         }
       });
     </script>
-    <!-- Bootstrap Bundle with Popper -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
     <!--end::OverlayScrollbars Configure-->
     <!-- OPTIONAL SCRIPTS -->
     <!-- apexcharts -->
@@ -1211,24 +1270,24 @@ color: #00192D;
       //-----------------
     </script>
     <script>
-      document.getElementById("exportButton").addEventListener("click", function() {
-        // Example data (can be your table data or an array of objects)
-        const data = [
-          { Name: "John", Age: 30, City: "New York" },
-          { Name: "Jane", Age: 25, City: "London" },
-          { Name: "Mark", Age: 35, City: "Paris" }
-        ];
-    
-        // Convert data to a worksheet
-        const ws = XLSX.utils.json_to_sheet(data);
-    
-        // Create a new workbook and append the worksheet
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-    
-        // Export the workbook as an Excel file
-        XLSX.writeFile(wb, "ExportedData.xlsx");
-      });
+      // Function to show the overlay
+function openOverlay() {
+    document.getElementById("overlay").style.display = "flex";
+}
+
+// Function to hide the overlay
+function closeOverlay() {
+    document.getElementById("overlay").style.display = "none";
+}
+
+// Close overlay if user clicks outside the modal
+window.onclick = function(event) {
+    let overlay = document.getElementById("overlay");
+    if (event.target === overlay) {
+        overlay.style.display = "none";
+    }
+};
+
     </script>
     <!--end::Script-->
   </body>
