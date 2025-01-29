@@ -43,6 +43,7 @@
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../dist/css/adminlte.css" />
+    <link rel="stylesheet" href="text.css" />
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -51,99 +52,237 @@
       integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            columns: gray;
+        }
+
+        .filter-container{
+          
+            /* width: 250px; */
+          
+            color: white;
+            position: relative; /* To position the panel below */
+        
+        }
+        .nav-bar {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .nav-item {
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #666;
+            font-size: 16px;
+            position: relative;
+        }
+        .nav-item.active {
+            color: #000;
+            font-weight: bold;
+        }
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #FFC107; /* Green underline */
+        }
+        
+
+        table {
+    border-collapse: collapse;
+    width: 100%;
+}
+th {
+    background-color: #FFC107;
+    color: #00192D;
+    text-align: left;
+    padding: 0.5em;
+    font-size: 0.9rem;
+}
+td {
+    padding: 0.5em;
+    text-align: left;
+    font-size: 0.9rem;
+    
+}
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+
+.filter:hover {
+            color: #FFC107;
+            
+        }
+.filter{
+            /* background-color: #444; */
+            /* color: white; */
+            cursor: pointer;
+            /* padding: 12%;  */
+            width: 25%;
+            border-bottom: gray solid 1px;
+            text-align: left;
+            outline: none;
+            font-size: 16px;
+            transition: 0.3s;
+            color: gray;
+            font-size: 100%;
+            border-radius: 2%;
+}
+
+.panel {
+            display: none; /* Initially hidden */
+            background-color: #00192D;
+            /* padding-left: 20px;position: absolute; Makes the panel an overlay */
+            position: absolute; /* Makes the panel an overlay */
+            /* left: 250px; Positioned to the right of the container */
+            top: 100%; /* Place right below the accordion */
+            left: 0;
+            width: fit-content;
+            z-index: 1000;
+            padding: 2%;
+            color: white;
+            border-radius: 4%;
+            
+        }
+.panel a {
+            display: block;
+            padding: 8px;
+            /* color: white; */
+            text-decoration: none;
+            transition: 0.3s;
+            color: whitesmoke;
+        }
+
+        .panel a:hover{
+          color: #FFC107;
+        }
+        
+/* Announcement Overlay styles */
+        #view_announcement {
+            /* width: 50%; Adjust the card width as needed */
+            /* max-width: 500px; Ensures the card doesn't grow too wide */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            display: none;
+            z-index: 10000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+
+        }
+        .card.content{
+
+          position: relative;
+            background: white;
+            
+            border-radius: 5px;
+            
+            color: black;
+            width: 100%;
+            max-width: 50%; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            font-size: 90%;
+            color: gray;
+        }
+
+        .card-footer.view_announcement {
+            justify-content: flex-end;
+            
+        }
+
+        .card-footer .btn + .btn {
+            margin-left: 10px; /* Adds spacing between the buttons */
+        }
+
+        .close-btn{
+             position: absolute; 
+            
+            right: 15px;
+        
+            color: white;
+            cursor: pointer;
+            
+        }
+
+        #more{
+          display: flex;
+           justify-content: center;
+          cursor: pointer;
+
+        }
+        
+        #more_icon{
+          /* border: 1px solid black; */
+          border-radius: 30%;
+          padding: 10%;
+          font-size: larger;
+        }
+       
+        #more_options{
+          display: none;
+          /* position: absolute; */
+          z-index: 1000;
+          background: #00192D;
+          border-radius: 10%;
+          padding: 10px;
+          
+        }
+        #more_options a{
+          text-decoration: none;
+          color: white;
+        }
+        #more_options a:hover{
+          color: #FFC107;
+        }
+        #close-overlay-btn {
+            /* top: 0; */
+            color: white;
+            /* color: white; */
+            border: none;
+            cursor: pointer;
+            font-size: 100%; 
+              }
+          #close-overlay-btn:hover {
+              color: red;
+              }
+
+        .card-header.view_announcement {
+            position: relative; 
+            display: flex;/* Add this for the absolute positioning of the close button */
+        }
+#more_announcement_btn{
+  color: blueviolet;
+  font-weight: 500;
+  cursor: pointer;
+
+}
+#more_announcement_btn:hover{
+  background-color: rgba(128, 128, 128, 0.2);
+  color: #FFC107;
+}
+
+
+        </style>
+
+<!-- scripts for data_table -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.2/xlsx.full.min.js"></script>
-    <style>
-      a{
-          text-decoration: none;
-      }
-      
-      body{
-          
-          background-color: rgba(128, 128, 128, 0.1);
-      }
-      .summaryItem{
-          font-family: 'Playfair Display', serif; /* Elegant for creative projects */
-font-size: 25px;
-font-weight: bold;
 
-font-weight: 400; /* Lighter weight for a faint look */
-letter-spacing: 1px; /* Slight spacing for an airy feel */
-color:gray;
-
-      }
-      .summaryItemOne{
-          font-family: 'Playfair Display', serif; /* Elegant for creative projects */
-font-size: 25px;
-font-weight: bold;
-
-font-weight: 400; /* Lighter weight for a faint look */
-letter-spacing: 1px; /* Slight spacing for an airy feel */
-color: #00192D;
-
-      }
-      .custom-btn{
-          background-color: #00192D;
-  border-color: #00192D;
-  color:  #FFC107; /* White background */
-      }
-
-  .statement{
-      background-color: #FFC107;
-      color: #00192D ;
-
-      }
-
-      .profile-card {
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    /* padding: 20px; */
-    
-    margin: 30px auto;
-  }
-  .profile-picture {
-    border-radius: 10px;
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    border: 4px solid #007bff;
-  }
-  .profile-details h2 {
-    /* margin-bottom: 10px; */
-    
-  }
-  .profile-details p {
-    /* /margin: 5px 0; */
-    color: #6c757d;
-  }
-  .profile_details{
-      display: flex;
-      
-  }
-  .profile_picture{
-      margin-right: 4%;
-  }
-  .profile_info .one{
-      color: #666;
-      font-size: 14px;
-      display: block;
-      text-align: justify;   
-
-  }
-  .other_profile_details{
-      display: block;
-      color: #666;
-      font-size: 14px;
-      display: block;
-      text-align: justify;
-  }
-
-  </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -301,11 +440,11 @@ color: #00192D;
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <img
-                  src="../../dist/assets/img/user2-160x160.jpg"
+                  src="17.jpg"
                   class="user-image rounded-circle shadow"
                   alt="User Image"
                 />
-                <span class="d-none d-md-inline">Alexander Pierce</span>
+                <span class="d-none d-md-inline">  <b>JENGO PAY</b>  </span>
               </a>
               <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                 <!--begin::User Image-->
@@ -386,105 +525,61 @@ color: #00192D;
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
-                  <!-- <li class="nav-item">
+                  <li class="nav-item">
                     <a href="./index.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard</p>
+                      <p>Dashboard v1</p>
                     </a>
-                  </li> -->
+                  </li>
                   <li class="nav-item">
                     <a href="./index2.html" class="nav-link active">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard </p>
+                      <p>Dashboard v2</p>
                     </a>
                   </li>
-                  <!-- <li class="nav-item">
+                  <li class="nav-item">
                     <a href="./index3.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Dashboard v3</p>
                     </a>
-                  </li> -->
+                  </li>
                 </ul>
               </li>
               <li class="nav-item">
-                <a href="./property.html" class="nav-link">
+                <a href="./generate/theme.html" class="nav-link">
                   <i class="nav-icon bi bi-palette"></i>
-                  <p>Tenants</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./tenantscreening.html" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Tenant Screening</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./leasy.html" class="nav-link">
-                  <i class="nav-icon bi bi-file-earmark-text"></i>
-                  <p>Lease Management</p>
+                  <p>Theme Generate</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-box-seam-fill"></i>
                   <p>
-                   Financial Documents
+                    Widgets
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="./invoices.html" class="nav-link">
+                    <a href="./widgets/small-box.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Invoices</p>
+                      <p>Small Box</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./paymentreceipts.html" class="nav-link">
+                    <a href="./widgets/info-box.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Payment Receipts</p>
+                      <p>info Box</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./rentdeposit.html" class="nav-link">
+                    <a href="./widgets/cards.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p> Rent Deposit Reports</p>
+                      <p>Cards</p>
                     </a>
                   </li>
-                  <li class="nav-item">
-                    <a href="./maintenancereports.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Maintenance And Repair Costs</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./profitandloss.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Profit&Loss Statement</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./balancesheet.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Balance Sheet</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./cashflow.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Cashflow</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./taxreports.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Tax Reports</p>
-                    </a>
-                  </li>
-                  
                 </ul>
               </li>
-              
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-clipboard-fill"></i>
@@ -846,115 +941,267 @@ color: #00192D;
         <div class="app-content-header">
           <!--begin::Container-->
           <div class="container-fluid">
-            <b><p>|MAINTENANCE AND REPAIR REPORTS</p></b>
-     
-            <button id="exportButton" style="border-radius: 10px; margin-left: 90%;">
-                <i class="fas fa-share-square"></i> Export
-               </button>
-               <hr>
-             <!-- Beginning Property row -->
-     <div class="col-md-12">
-            <div class="card mb-4">
-              <div class="card-header" style="background-color:#00192D; color: white;" >
-                <h5 class="card-title text-warning" style="padding:0.5rem; border-radius: 10px;">
-                    MAINTENANCE AND REPAIR REPORTS
-                </h5>
-                
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                    <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                    <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                  </button>
-                  <div class="btn-group">
-                    <button
-                      type="button"
-                      class="btn btn-tool dropdown-toggle"
-                      data-bs-toggle="dropdown"
-                    >
-                      <i class="bi bi-wrench"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end" role="menu">
-                      <a href="#" class="dropdown-item">Action</a>
-                      <a href="#" class="dropdown-item">Another action</a>
-                      <a href="#" class="dropdown-item"> Something else here </a>
-                      <a class="dropdown-divider"></a>
-                      <a href="#" class="dropdown-item">Separated link</a>
-                    </div>
-                  </div>
-                  <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                    <i class="bi bi-x-lg"></i>
-                  </button>
-                </div>
+            <!--begin::Row-->
+            <div class="row">
+              <div class="col-sm-6"><h3 class="mb-0"> <i class="fas fa-wrench"></i>   Maintenances Requests</h3></div>
+              <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                  <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                </ol>
               </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <!--begin::Row-->
-                <table id="myTableOne" class="display">
-                  <thead>
-                    <tr>
-                      <th>REQUEST ID</th>
-                      <th>Property</th>
-                      <th>TENANT</th>
-                      <th>UNIT</th>
-                      <th>DATE</th>
-                      <th>ISSUE</th>
-                      <th>ESTIMATED COST</th>
-                      <th>ACTUAL COST</th>
-                      <th>SERVICE PROVIDER</th>
-                       <th>ACTION</th> 
+            </div>
+            <!--end::Row-->
+          </div>
+          <!--end::Container-->
+        </div>
+        <div class="app-content">
+          <!--begin::Container-->
+          <div class="container-fluid">
+            <!-- Info boxes -->
+            <div class="row">
+
+                <div class="col-md-6">
+                    <div class="profile_details">
+                        <div class="profile_picture">
+                                         <!-- <img class="mt-3" src="images/mansion-1.jpg" alt="Profile Picture"  width="100" height="100"> -->
+                        </div>
+                        <div class="profile_info">
+                                    
+                                            <!-- <h2>Jane Doe</h2> -->
+                                             
+                            <div class="profile_details one">
+                              <p> New: <strong>&nbsp;50|</strong> In Progress: <strong> &nbsp;30|</strong> Completed: <strong> &nbsp;70</strong> </p>
+
+                            
+                            </div>
+                                
+                        </div>
+                    </div>
+                                    
+                </div>
+                <div class="col-md-6">
+                  <div style="display: flex; justify-content: end;">
+                  <button class="btn" style="background-color: #00192D; color: white; font-size: small;"> <i class="fas fa-tools icon"></i> 
+                    <b> Vendors </b></button>     
+                </div>
+
+                
+                
+
+
+              <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <!--begin::Row-->
+            
+            <!--end::Row-->
+            <!--begin::Row-->
+            <div class="row">
+              <!-- Start col -->
+              <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                      <div class="filter-container" id="filter-container">
+
+                        <div class="filter" id="filter">
+                          <i class="bi bi-filter"></i>
+                          Filter | <b>All Properties <i class="fas fa-chevron-down"></i> </b>
   
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>002</td>
-                      <td>CROWN Z TOWERS</td>
-                      <td>Manucho</td>
-                      <td>A12</td>
-                      <td>11-10-2025</td>
-                      <td>Broken handle</td>
-                      <td>KSH2,000</td>
-                      <td>KSH1,500</td>
-                      <td>Manifest Electricals</td>
-                        <td><button type="button"  style="background-color: #00192D; border-radius: 10px;" class="btn text-danger" onclick="openOverlay()">DELETE</button>
-                        </td>
-                    </tr>
-                    <tr>
-                      <td>003</td>
-                      <td>ALPHA APARTMENTS</td>
-                      <td>Ethic</td>
-                      <td>A11</td>
-                      <td>12-11-2025</td>
-                      <td>Leaking roof</td>
-                      <td>KSH 5,000</td>
-                      <td>KSH 4,500</td>
-                      <td>New Electrics</td>
-                      <td>
-                        <button type="button" style="background-color: #00192D; border-radius: 10px;" class="btn text-danger" onclick="openOverlay()">DELETE</button>
-                        </td>
-                    </tr>
-                    <!-- Add more rows as needed -->
-                  </tbody>
-        
-              </table>
+                        </div>
+                        <div class="panel" id="panel">
+                          <a href="#">All Properties</a>
+                          <a href="#">Crown Z</a>
+                          <a href="#">Manucho</a>
+                          <a href="#">MM Towers</a>
+
+                        </div>
+
+                      </div>
+                          
+                    </div>
+
+                    <div class="card-body">
+                      <table id="maintenance" class="display">
+                        <thead>
+                          <tr>
+                            <th>ID</th>
+                            <th>Property</th>
+                            <th>TENANT</th>
+                            <th>UNIT</th>
+                            <th>DATE</th>
+                            <th>ISSUE</th>
+                            <th>Prority</th>
+                            <th>PROVIDER</th>
+                             <th>ACTION</th> 
+          
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>002</td>
+                            <td>CROWN Z TOWERS</td>
+                            <td>Manucho</td>
+                            <td>A12</td>
+                            <td>11-10-2025</td>
+                            <td>Broken handle</td>
+                            <td>low</td>
+                            
+                            <td>Not assigned</td>
+                            <td id="more">
+                             <div id="more_icon">&#x2026;</div> 
+                             <br>
+                             <div id="more_options">
+                                <a href="#">Assign</a>
+                                <a href="#">Update</a>
+                                <a href="#">Delete</a>
+                                <a href="#">View</a>
+                              
+                                
+                             </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>003</td>
+                            <td>ALPHA APARTMENTS</td>
+                            <td>Ethic</td>
+                            <td>A11</td>
+                            <td>12-11-2025</td>
+                            <td>Leaking roof</td>
+                            <td>high</td>
+                            
+                            <td>New Electrics</td>
+                            <td id="more">
+                              <div id="more_icon" class="rounded-circle" >&#x2026;</div> 
+                              </td>
+                          </tr>
+                          <!-- Add more rows as needed -->
+                        </tbody>
+              
+                    </table>
+
+
+
+                    </div>
+
+
+
+                    <div class="card-footer">
+                        
+                     </div>
+
+                </div>
+
+
+            </div>
+              <!-- /.col -->
+            </div>
+            <!--end::Row-->
+          </div>
+          <!--end::Container-->
+        </div>
+        <!--end::App Content-->
+      </main>
+      <!--end::App Main-->
+      <!--begin::Footer-->
+
+
+
+      <footer class="app-footer">
+        <!--begin::To the end-->
+        <div class="float-end d-none d-sm-inline">Anything you want</div>
+        <!--end::To the end-->
+        <!--begin::Copyright-->
+        <strong>
+          Copyright &copy; 2014-2024&nbsp;
+          <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;"> JENGO PAY</a>.
+        </strong>
+        All rights reserved.
+        <!--end::Copyright-->
+      </footer>
+      <!--end::Footer-->
+    </div>
     <!--end::App Wrapper-->
+
+
+
+
+<!-- Overlay Cards -->
+
+<!-- create Announcement -->
+
+
+
+
+
+ <!-- Start View announcement -->
+ <div class="view_announcement" id="view_announcement">
+  <div class="card content">
+   <div class="card-header view_announcement bg-secondary text-white">
+       <h5 class="mb-0">Rent Payments</h5>
+       <div id="close-overlay-btn" class="close-btn" > <b> &times;</b> </div>
+       
+   </div>
+   <div class="card-body">
+       <p class="card-text">
+           All Rent Payments should be made before 24/01/17. Anyone who feels that they might not 
+           be able to complete their dues on 24/01/17 should communicate to management before the due date.
+           Else, you face an eviction risk if you fail to pay your dues before the said date without a reasonable reason</p>
+          
+           <p class="timestamp" id="timestamp"></p> <!-- Timestamp -->
+
+ 
+       <div class="Recipients border-top border-gray "> <p><strong>Recipients|</strong> All Employees</p>  </div>
+       
+   </div>
+   <div class="card-footer view_announcement d-flex">
+       <button class="btn btn-danger btn-sm">Delete</button>
+       <button class="btn btn-secondary btn-sm">Resend</button>
+   </div>
+ </div>
+ </div>
+
+<!-- End view announcement -->
+<!-- end overlay card. -->
+
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <script>
-        // Initialize DataTable
-        $(document).ready(function () {
-            $('#myTable').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableOne').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableThree').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableFour').DataTable();
-        });
-     </script>
+
+
+
+<!-- Overlay scripts -->
+ <!-- View announcements script -->
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+ <script>
+  const   more_announcement = document.getElementById('more_announcement_btn');
+  const   view_announcement = document.getElementById('view_announcement');
+  const   close_overlay = document.getElementById("close-overlay-btn");
+
+  more_announcement.addEventListener('click', ()=>{
+
+     view_announcement.style.display= "flex";  
+     document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
+     const now = new Date();
+            const formattedTime = now.toLocaleString(); // Format the date and time
+            timestamp.textContent = `Sent on: ${formattedTime}`;
+
+
+  });
+
+     close_overlay.addEventListener('click', ()=>{
+
+     view_announcement.style.display= "none";
+     document.querySelector('.app-wrapper').style.opacity = '1';
+
+
+     });
+ </script>
+
+ <!-- End view announcement script -->
+
+
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
       integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
@@ -967,6 +1214,71 @@ color: #00192D;
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
+    
+<!-- script for occordion -->
+<script>
+
+        // JavaScript to handle hover and hide functionality
+        const filterContainer = document.getElementById("filter-container");
+        const accordion = document.getElementById("filter");
+        const panel = document.getElementById("panel");
+
+        // Show panel when hovering over the accordion
+        accordion.addEventListener("mouseenter", () => {
+            panel.style.display = "block";
+        });
+
+        // Hide panel when moving out of both accordion and panel
+         filterContainer.addEventListener("mouseleave", () => {
+             panel.style.display = "none";
+      });
+  
+
+</script>
+<!-- End for Occordion script -->
+
+
+<!-- more options -->
+<script>
+
+  // JavaScript to handle hover and hide functionality
+  const  more= document.getElementById("more");
+  const more_icon = document.getElementById("more_icon");
+  const more_options = document.getElementById("more_options");
+
+  // Show panel when hovering over the accordion
+  more_icon.addEventListener("mouseenter", () => {
+    more_options.style.display = "block";
+  });
+
+  // Hide panel when moving out of both accordion and panel
+   more.addEventListener("mouseleave", () => {
+    more_options.style.display = "none";
+});
+
+
+</script>
+    <!-- Begin script for datatable -->
+    <script>
+        
+       $(document).ready(function() {
+        $('#maintenance').DataTable({
+            "paging": true,
+            "searching": true,
+            "info": true,
+            "lengthMenu": [5, 10, 25, 60],
+            "language": {
+                "search": "Filter records:",
+                "lengthMenu": "Show _MENU_ entries"
+            }
+        });
+    });
+
+    </script>
+
+    </script>
+    <!-- End script for data_table -->
+    
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
@@ -995,8 +1307,6 @@ color: #00192D;
         }
       });
     </script>
-    <!-- Bootstrap Bundle with Popper -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!--end::OverlayScrollbars Configure-->
     <!-- OPTIONAL SCRIPTS -->
     <!-- apexcharts -->
@@ -1153,26 +1463,6 @@ color: #00192D;
       //-----------------
       // - END PIE CHART -
       //-----------------
-    </script>
-    <script>
-      document.getElementById("exportButton").addEventListener("click", function() {
-        // Example data (can be your table data or an array of objects)
-        const data = [
-          { Name: "John", Age: 30, City: "New York" },
-          { Name: "Jane", Age: 25, City: "London" },
-          { Name: "Mark", Age: 35, City: "Paris" }
-        ];
-    
-        // Convert data to a worksheet
-        const ws = XLSX.utils.json_to_sheet(data);
-    
-        // Create a new workbook and append the worksheet
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-    
-        // Export the workbook as an Excel file
-        XLSX.writeFile(wb, "ExportedData.xlsx");
-      });
     </script>
     <!--end::Script-->
   </body>
