@@ -3,7 +3,7 @@
   <!--begin::Head-->
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>AdminLTE | Dashboard v2</title>
+    <title>AdminLTE |</title>
     <!--begin::Primary Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="title" content="AdminLTE | Dashboard v2" />
@@ -56,94 +56,62 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.2/xlsx.full.min.js"></script>
-   <style>
-      a{
-          text-decoration: none;
-      }
-      
-      body{
-          
-          background-color: rgba(128, 128, 128, 0.1);
-      }
-      .summaryItem{
-          font-family: 'Playfair Display', serif; /* Elegant for creative projects */
-font-size: 25px;
-font-weight: bold;
-
-font-weight: 400; /* Lighter weight for a faint look */
-letter-spacing: 1px; /* Slight spacing for an airy feel */
-color:gray;
-
-      }
-      .summaryItemOne{
-          font-family: 'Playfair Display', serif; /* Elegant for creative projects */
-font-size: 25px;
-font-weight: bold;
-
-font-weight: 400; /* Lighter weight for a faint look */
-letter-spacing: 1px; /* Slight spacing for an airy feel */
-color: #00192D;
-
-      }
-      .custom-btn{
-          background-color: #00192D;
-  border-color: #00192D;
-  color:  #FFC107; /* White background */
-      }
-
-  .statement{
-      background-color: #FFC107;
-      color: #00192D ;
-
-      }
-
-      .profile-card {
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    /* padding: 20px; */
-    
-    margin: 30px auto;
-  }
-  .profile-picture {
-    border-radius: 10px;
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    border: 4px solid #007bff;
-  }
-  .profile-details h2 {
-    /* margin-bottom: 10px; */
-    
-  }
-  .profile-details p {
-    /* /margin: 5px 0; */
-    color: #6c757d;
-  }
-  .profile_details{
-      display: flex;
-      
-  }
-  .profile_picture{
-      margin-right: 4%;
-  }
-  .profile_info .one{
-      color: #666;
-      font-size: 14px;
-      display: block;
-      text-align: justify;   
-
-  }
-  .other_profile_details{
-      display: block;
-      color: #666;
-      font-size: 14px;
-      display: block;
-      text-align: justify;
-  }
-
-  </style>
+    <link rel="stylesheet" href="chatbot.html">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            margin: 50px auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            width: 100%;
+            margin-bottom: 20px;
+            display: grid;
+            gap: 10px;
+            grid-template-columns: 1fr 1fr;
+        }
+        label {
+            font-weight: bold;
+        }
+        input {
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            grid-column: span 2;
+            padding: 10px;
+            background-color: #00192D;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #FFC107;
+        }
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            margin-top: 20px;
+        }
+    </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -357,8 +325,8 @@ color: #00192D;
             <!-- <img
               src="../../dist/assets/img/AdminLTELogo.png"
               alt="AdminLTE Logo"
-              class="brand-image opacity-75 shadow"
-            /> -->
+              class="brand-image opacity-75 shadow" -->
+            <!-- /> -->
             <!--end::Brand Image-->
             <!--begin::Brand Text-->
             <span class="brand-text fw-light"></span>
@@ -469,9 +437,8 @@ color: #00192D;
                       <p>Cashflow</p>
                     </a>
                   </li>
-                  
                   <li class="nav-item">
-                    <a href="./taxreports.html" class="nav-link">
+                    <a href="./cashflow.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Tax Reports</p>
                     </a>
@@ -486,57 +453,14 @@ color: #00192D;
               </li>
               
               <li class="nav-item">
-                <a href="./serviceproviders.html" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Service Providers</p>
-                </a>
-              </li>
-              
-              <li class="nav-item">
-                <a href="./rating&reviews.html" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Reviews And Rating</p>
-                </a>
-              </li>
-              
-               <!-- Start Communications part -->
-               <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-pencil-square"></i>
-                  <p>
-                    Communications
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="communications/texts.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Texts</p>
-                    </a>
-                  </li>
-
-                  <li class="nav-item">
-                    <a href="communications/announcements.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Announcements</p>
-                    </a>
-                    
-                  </li>
-                </ul>
-              </li>
-
-              <!-- End communications part --> 
-
-              <!-- <li class="nav-item">
-                <a href="#" class="nav-link">
+                <!-- <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-clipboard-fill"></i>
                   <p>
                     Layout Options
                     <span class="nav-badge badge text-bg-secondary me-3">6</span>
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
-                </a>
+                </a> -->
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
                     <a href="./layout/unfixed-sidebar.html" class="nav-link">
@@ -583,13 +507,13 @@ color: #00192D;
                 </ul>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <!-- <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-tree-fill"></i>
                   <p>
                     UI Elements
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
-                </a>
+                </a> -->
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
                     <a href="./UI/general.html" class="nav-link">
@@ -610,7 +534,8 @@ color: #00192D;
                     </a>
                   </li>
                 </ul>
-              </li> -->
+              </li>
+              <!-- start nav-item forms -->
               <!-- <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-pencil-square"></i>
@@ -627,15 +552,46 @@ color: #00192D;
                     </a>
                   </li>
                 </ul>
-              </li>
+              </li> -->
+
+              <!-- end nav-item forms -->
+
+              <!-- Start Communications part -->
               <li class="nav-item">
                 <a href="#" class="nav-link">
+                  <i class="nav-icon bi bi-pencil-square"></i>
+                  <p>
+                    Communications
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="texts.html" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Texts</p>
+                    </a>
+                  </li>
+
+                  <li class="nav-item">
+                    <a href="communications/announcements.html" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Announcements</p>
+                    </a>
+                    
+                  </li>
+                </ul>
+              </li>
+
+              <!-- End communications part -->
+              <li class="nav-item">
+                <!-- <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-table"></i>
                   <p>
                     Tables
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
-                </a>
+                </a> -->
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
                     <a href="./tables/simple.html" class="nav-link">
@@ -645,15 +601,15 @@ color: #00192D;
                   </li>
                 </ul>
               </li>
-              <li class="nav-header">EXAMPLES</li>
+              <!-- <li class="nav-header">EXAMPLES</li> -->
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <!-- <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-box-arrow-in-right"></i>
                   <p>
                     Auth
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
-                </a>
+                </a> -->
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
                     <a href="#" class="nav-link">
@@ -708,26 +664,26 @@ color: #00192D;
                     </a>
                   </li>
                 </ul>
-              </li> -->
-              <!-- <li class="nav-header">DOCUMENTATIONS</li>
+              </li>
+              <!-- <li class="nav-header">DOCUMENTATIONS</li> -->
               <li class="nav-item">
-                <a href="./docs/introduction.html" class="nav-link">
+                <!-- <a href="./docs/introduction.html" class="nav-link">
                   <i class="nav-icon bi bi-download"></i>
                   <p>Installation</p>
-                </a>
+                </a> -->
               </li>
               <li class="nav-item">
-                <a href="./docs/layout.html" class="nav-link">
+                <!-- <a href="./docs/layout.html" class="nav-link">
                   <i class="nav-icon bi bi-grip-horizontal"></i>
                   <p>Layout</p>
-                </a>
+                </a> -->
               </li>
               <li class="nav-item">
-                <a href="./docs/color-mode.html" class="nav-link">
+                <!-- <a href="./docs/color-mode.html" class="nav-link">
                   <i class="nav-icon bi bi-star-half"></i>
                   <p>Color Mode</p>
-                </a>
-              </li> -->
+                </a> -->
+              </li>
               <!-- <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-ui-checks-grid"></i>
@@ -755,7 +711,7 @@ color: #00192D;
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-filetype-js"></i>
                   <p>
-                   Help
+                    Help
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
                 </a>
@@ -889,113 +845,117 @@ color: #00192D;
         <div class="app-content-header">
           <!--begin::Container-->
           <div class="container-fluid">
-  <!--begin::Row-->
-  <div class="row">
-    <div class="col-sm-6"><h3 class="mb-0">   RENT DEPOSIT REPORT</h3></div>
-    <div class="col-sm-6">
-      <ol class="breadcrumb float-sm-end">
-        <!-- <li class="breadcrumb-item"><a href="#">Home</a></li> -->
-        <!-- <li class="breadcrumb-item active" aria-current="page">Cards</li> -->
-      </ol>
-    </div>
-  </div>
-  <!--end::Row-->
-</div>
-<!--end::Container-->
-</div>
-<!--end::App Content Header-->
-<!--begin::App Content-->
-<div class="app-content">
-<button id="exportButton" style="border-radius: 10px; margin-left: 90%;">
-  <i class="fas fa-share-square"></i> Export
- </button>
-<hr>
- <!-- Beginning Property row -->
-
-<div class="col-md-12">
-<div class="card mb-4">
-  <div class="card-header" style="background-color:#00192D; color: white;" >
-    <h5 class="card-title text-warning" style="padding:0.5rem; border-radius: 10px;">
-      |RENT DEPOSIT REPORT</h5>
-    
-    <div class="card-tools">
-      <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-      </button>
-      <div class="btn-group">
-        <button
-          type="button"
-          class="btn btn-tool dropdown-toggle"
-          data-bs-toggle="dropdown"
-        >
-          <i class="bi bi-wrench"></i>
-        </button>
-        <div class="dropdown-menu dropdown-menu-end" role="menu">
-          <a href="#" class="dropdown-item">Action</a>
-          <a href="#" class="dropdown-item">Another action</a>
-          <a href="#" class="dropdown-item"> Something else here </a>
-          <a class="dropdown-divider"></a>
-          <a href="#" class="dropdown-item">Separated link</a>
+            <!--begin::Row-->
+            <div class="row">
+              <div class="col-sm-6"><h3 class="mb-0"></h3></div>
+              <div class="col-sm-6">
+                <!-- <ol class="breadcrumb float-sm-end">
+                  <li class="breadcrumb-item"><a href="#">Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Dashboard v2</li>
+                </ol> -->
+              </div>
+            </div>
+            <!--end::Row-->
+          </div>
+          <!--end::Container-->
         </div>
-      </div>
-      <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-        <i class="bi bi-x-lg"></i>
-      </button>
-    </div>
+        <div class="app-content">
+          <!--begin::Container-->
+          <div class="container-fluid">
+            
+<div class="container">
+  <h2>Cash Flow Forecasting</h2>
+  <form id="forecastForm">
+      <label for="rentalIncome">Monthly Rental Income (KSH): </label>
+      <input type="number" id="rentalIncome" placeholder="Enter Income" required>
+
+      <label for="expenses">Monthly Expenses (KSH): </label>
+      <input type="number" id="expenses" placeholder="Enter Expenses" required>
+
+      <label for="rentIncrease">Expected Rent Increase (%): </label>
+      <input type="number" id="rentIncrease" placeholder="Enter Rent Increase %" required>
+
+      <label for="years">Forecast Duration (years): </label>
+      <input type="number" id="years" placeholder="Enter Number of years" required>
+
+      <button type="submit">Generate Forecast</button>
+  </form>
+
+  <div class="chart-container">
+      <canvas id="forecastChart"></canvas>
   </div>
-  <!-- /.card-header -->
-  <div class="card-body">
-    <!--begin::Row-->
-    <table id="myTableOne" class="display">
-      <thead>
-        <tr>
-          <th>Manucho Apartments</th>
-          <th>TenantID</th>
-          <th>Deposit Amount</th>
-          <th>Deposit Date</th>
-          <th>Deductions</th>
-          <th>Refund Amount</th>
-          <th>Refund Date</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Manuching Apartments</td>
-          <td>John</td>
-          <td>KSH30,000</td>
-          <th>10-09-2024</th>
-          <td>KSH 29,000</td>
-          <td>KSH9,000</td>
-          <td>09-10-2024</td>
-          <td>
-            <button type="button"  style="background-color: #00192D; border-radius: 10px;" class="btn text-danger" onclick="openOverlay()">DELETE</button>
-            </td>
-
-        </tr>
-        <tr>
-          <td>Ethical Apartments</td>
-          <td>Peter</td>
-          <td>KSH20,000</td>
-          <td>09-10-2024</td>
-          <td>KSH 24,000</td>
-          <td>KSH8,000</td>
-          <td>09-10-2024</td>
-          <td>
-            <button type="button" style="background-color: #00192D; border-radius: 10px;" class="btn text-danger" onclick="openOverlay()">DELETE</button>
-            </td>
-
-        </tr>
-        <!-- Add more rows as needed -->
-      </tbody>
-
-  </table>
-
+</div>
 
     <!--end::App Wrapper-->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <script>
+      document.getElementById('forecastForm').addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const rentalIncome = parseFloat(document.getElementById('rentalIncome').value);
+          const expenses = parseFloat(document.getElementById('expenses').value);
+          const rentIncrease = parseFloat(document.getElementById('rentIncrease').value) / 100;
+          const years = parseInt(document.getElementById('years').value);
+          
+          // Prepare the data for forecasting
+          const forecastData = [];
+          let currentIncome = rentalIncome;
+          let currentExpenses = expenses;
+          for (let i = 0; i < years; i++) {
+              currentIncome += currentIncome * rentIncrease;  // Apply rent increase
+              currentExpenses += currentExpenses * 0.02;    // Example: 2% increase in expenses every year
+              forecastData.push({ year: i + 1, income: currentIncome, expenses: currentExpenses, profit: currentIncome - currentExpenses });
+          }
+          
+          // Display the forecast chart
+          const labels = forecastData.map(item => `year ${item.year}`);
+          const incomeData = forecastData.map(item => item.income);
+          const expensesData = forecastData.map(item => item.expenses);
+          const profitData = forecastData.map(item => item.profit);
+  
+          const ctx = document.getElementById('forecastChart').getContext('2d');
+          const forecastChart = new Chart(ctx, {
+              type: 'line',
+              data: {
+                  labels: labels,
+                  datasets: [
+                      {
+                          label: 'Income (KSH)',
+                          data: incomeData,
+                          borderColor: 'green',
+                          fill: false,
+                      },
+                      {
+                          label: 'Expenses (KSH)',
+                          data: expensesData,
+                          borderColor: 'red',
+                          fill: false,
+                      },
+                      {
+                          label: 'Profit (KSH)',
+                          data: profitData,
+                          borderColor: 'blue',
+                          fill: false,
+                      }
+                  ]
+              },
+              options: {
+                  responsive: true,
+                  scales: {
+                      x: { 
+                          title: { text: 'Years', display: true }
+                      },
+                      y: { 
+                          title: { text: 'Amount (KSH)', display: true }
+                      }
+                  }
+              }
+          });
+      });
+  </script>
+
+
     <script>
         // Initialize DataTable
         $(document).ready(function () {
@@ -1186,49 +1146,140 @@ color: #00192D;
       createSparklineChart('#table-sparkline-5', table_sparkline_5_data);
       createSparklineChart('#table-sparkline-6', table_sparkline_6_data);
       createSparklineChart('#table-sparkline-7', table_sparkline_7_data);
+</script>
+      
+<script>
+  const cty = document.getElementById('rentalTrends').getContext('2d');
 
-      //-------------
-      // - PIE CHART -
-      //-------------
-
-      const pie_chart_options = {
-        series: [700, 500, 400, 600, 300, 100],
-        chart: {
-          type: 'donut',
+  new Chart(cty, {
+    type: 'line',
+    data: {
+      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+      datasets: [
+        {
+          label: 'CROWN Z TOWERS',
+          data: [35,'000', 30,'000', 32,'000', 30,'000', 33,'000', 35,'000', 34,'000', 33,'000', 34,'000', 35,'000', 34,'000', 35,'000'],
+          borderColor: 'cyan',
+          backgroundColor: 'transparent',
+          tension: 0.4
         },
-        labels: ['Chrome', 'Edge', 'FireFox', 'Safari', 'Opera', 'IE'],
-        dataLabels: {
-          enabled: false,
+        {
+          label: 'Manucho Apartments',
+          data: [32,'000', 33,'000', 38,'000', 34,'000', 33,'000', 34,'000', 38,'000', 36,'000', 37,'000', 32,'000', 31,'000', 34,'000'],
+          borderColor: 'green',
+          backgroundColor: 'transparent',
+          tension: 0.4
         },
-        colors: ['#0d6efd', '#20c997', '#ffc107', '#d63384', '#6f42c1', '#adb5bd'],
-      };
+        {
+          label: 'The Mansion Apartments',
+          data:[31,'000', 32,'000', 39,'000', 35,'000', 32,'000', 33,'000', 39,'000', 37,'000', 39,'000', 31,'000', 32,'000', 34,'000'],
+          borderColor: 'black',
+          backgroundColor: 'transparent',
+          tension: 0.4
+        },
+        {
+          label: 'Bsty Apartments',
+          data: [34,'000', 39,'000', 34,'000', 32,'000', 34,'000', 36,'000', 38,'000', 37,'000', 34,'000', 33,'000', 32,'000', 31,'000'],
+          borderColor: 'red',
+          backgroundColor: 'transparent',
+          tension: 0.4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top'
+        },
+       
+      },
+      scales: {
+        y: {
+          beginAtZero: false
+        }
+      }
+    }
+  });
+</script>
 
-      const pie_chart = new ApexCharts(document.querySelector('#pie-chart'), pie_chart_options);
-      pie_chart.render();
+<script>
+  // Toggles visibility of the chat container
+  function toggleChat() {
+      const chatContainer = document.getElementById('chat-container');
+      chatContainer.style.display = chatContainer.style.display === 'none' ? 'flex' : 'none';
+  }
 
-      //-----------------
-      // - END PIE CHART -
-      //-----------------
-    </script>
-    <script>
-      document.getElementById("exportButton").addEventListener("click", function() {
-        // Example data (can be your table data or an array of objects)
-        const data = [
-          { Name: "John", Age: 30, City: "New York" },
-          { Name: "Jane", Age: 25, City: "London" },
-          { Name: "Mark", Age: 35, City: "Paris" }
-        ];
-    
-        // Convert data to a worksheet
-        const ws = XLSX.utils.json_to_sheet(data);
-    
-        // Create a new workbook and append the worksheet
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-    
-        // Export the workbook as an Excel file
-        XLSX.writeFile(wb, "ExportedData.xlsx");
-      });
+  // Closes the chat container when the "X" button is clicked
+  function closeChat() {
+      const chatContainer = document.getElementById('chat-container');
+      chatContainer.style.display = 'none';
+  }
+
+  function sendMessage() {
+      const userInput = document.getElementById('user-input').value;
+      if (userInput.trim() !== '') {
+          const chatBox = document.getElementById('chat-box');
+          
+          // Add user message
+          const userMessage = document.createElement('div');
+          userMessage.classList.add('message', 'user-message');
+          userMessage.textContent = userInput;
+          chatBox.appendChild(userMessage);
+
+          // Add bot response
+          const botResponse = document.createElement('div');
+          botResponse.classList.add('message', 'bot-message');
+          botResponse.textContent = getBotResponse(userInput);
+          chatBox.appendChild(botResponse);
+
+          // Clear input field
+          document.getElementById('user-input').value = '';
+
+          // Scroll to the bottom
+          chatBox.scrollTop = chatBox.scrollHeight;
+      }
+  }
+
+  function getBotResponse(userInput) {
+      const lowerCaseInput = userInput.toLowerCase();
+      if (lowerCaseInput.includes('hello') || lowerCaseInput.includes('hi')) {
+          return 'Hello there! How can I assist you today?';
+      } else if (lowerCaseInput.includes('bye')) {
+          return 'Goodbye! Have a great day!';
+      } else {
+          return 'Sorry, I didn\'t quite get that. Can you rephrase?';
+      }
+  }
+</script>
+
+<script>
+  const ctx = document.getElementById('myPieChart').getContext('2d');
+
+  const myPieChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+          labels: ['Occupied','Vacant', 'Vacant Soon'],
+          datasets: [{
+              data: [30, 50, 20],
+              backgroundColor: ['#28a745', '#ffc107', '#dc3545']
+          }]
+      },
+      options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          onClick: function(event, elements) {
+              if (elements.length > 0) {
+                  let index = elements[0].index;
+                  let label = this.data.labels[index];
+                  // let links = { "Approved": "approved.html", "Pending": "pending.html", "Rejected": "rejected.html" };
+                  let links = { "Occupied": "occupied.html", "Vacant": "vacant.html", "Vacant Soon": "vacantsoon.html"};
+                  if (links[label]) window.location.href = links[label];
+              }
+          }
+      }
+  });
+</script>
     </script>
     <!--end::Script-->
   </body>
