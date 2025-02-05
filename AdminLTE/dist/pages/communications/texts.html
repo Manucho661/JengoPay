@@ -45,6 +45,7 @@
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
+     <link rel="stylesheet" href="texts.css">
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
@@ -1074,8 +1075,8 @@ position: relative;
                                 <td>10:00 AM</td>
                                 <td>Property A</td>
                                 <td>John Doe</td>
-                                <td>Hello, I need assistance &#x2026;  </td>
-                                <td  class="action" id="respond_btn" >Respond</td>
+                                <td>Hello! How are&#x2026;  </td>
+                                <td  class="action" id="respond_btn" onclick="openChat()">Respond</td>
                             </tr>
                             <tr>
                                 <td>2</td>
@@ -1185,6 +1186,29 @@ position: relative;
      </script>
 
 <!-- Overlays -->
+
+
+
+
+<!-- Chat section -->
+
+<div class="chat-overlay" id="chatOverlay">
+  <div class="chat-container">
+      <div class="chat-header">Dear Joseph<button class="close-btn" onclick="closeChat()">&times;</button></div>
+      <div class="chat-body" id="chatBody">
+          <div class="message incoming">Hello! How are you? We need to talk</div>
+          <div class="message outgoing">I'm good, thanks! What about you?</div>
+      </div>
+      <div class="chat-footer">
+          <input type="text" id="messageInput" placeholder="Type a message...">
+          <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+      </div>
+  </div>
+</div>
+<!-- End chat section -->
+
+
+
 <div class="respond" id="respond">
 
   <div class="container" id="container">
@@ -1220,9 +1244,35 @@ position: relative;
 </div>
 </div>
 
+
+<!-- PopUp Scripts -->
+ <!-- Chat Script -->
+ <script>
+  function openChat() {
+      document.getElementById("chatOverlay").style.display = "flex";
+  }
+  function closeChat() {
+      document.getElementById("chatOverlay").style.display = "none";
+  }
+  function sendMessage() {
+      let messageInput = document.getElementById("messageInput");
+      let messageText = messageInput.value.trim();
+      if (messageText !== "") {
+          let chatBody = document.getElementById("chatBody");
+          let messageElement = document.createElement("div");
+          messageElement.classList.add("message", "outgoing");
+          messageElement.textContent = messageText;
+          chatBody.appendChild(messageElement);
+          chatBody.scrollTop = chatBody.scrollHeight;
+          messageInput.value = "";
+      }
+  }
+</script>
+ <!-- End Chat Script -->
+
 <script>
 
-  const   next_text = document.getElementById('respond_btn');
+  // const   next_text = document.getElementById('respond_btn');
   const   respond_window = document.getElementById('respond');
   const   close_text_overlay = document.getElementById("closeTextWindow");
 

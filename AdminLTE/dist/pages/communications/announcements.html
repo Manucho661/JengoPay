@@ -184,32 +184,6 @@ tr:hover {
             align-items: center;
 
         }
-        #New_Announcement{
-          display: none;
-          position: fixed;
-          display: none;
-             z-index: 10000;
-             top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            justify-content: center;
-            align-items: center;
-
-        }
-        .card.New_Announcement{
-          position: relative;
-            background: white;
-
-            border-radius: 5px;
-
-            color: black;
-            width: 50%;
-            /* max-width: 50%; */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            font-size: 90%;
-            /* color: gray; */
-        }
         .card.content{
 
           position: relative;
@@ -243,14 +217,6 @@ tr:hover {
             cursor: pointer;
 
         }
-        .close-btnOne{
-          position: absolute;
-
-            right: 15px;
-
-            color: white;
-            cursor: pointer;
-        }
 
         #close-overlay-btn {
             /* top: 0; */
@@ -260,7 +226,6 @@ tr:hover {
             cursor: pointer;
             font-size: 100%;
               }
-
           #close-overlay-btn:hover {
               color: red;
               }
@@ -281,20 +246,11 @@ tr:hover {
 }
 
 
-.form-control:focus,
-    .form-select:focus,
-    textarea:focus,
-    button:focus {
-        outline: none !important; /* Remove default outline */
-        box-shadow: none !important; /* Remove Bootstrap's box shadow */
-        border-color:none !important; /* Optional: Set a subtle border color */
-    }
-
-
         </style>
 
 <!-- scripts for data_table -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="announcements.css">
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
@@ -1135,7 +1091,7 @@ tr:hover {
 
 <!-- Overlay Cards -->
 
-<!-- create Announcement -->
+
 
 
 
@@ -1144,13 +1100,15 @@ tr:hover {
  <!-- Start View announcement -->
  <div class="view_announcement" id="view_announcement">
   <div class="card content">
-   <div class="card-header view_announcement text-white" style="background-color: #00192D;">
+   <div class="card-header view_announcement header">
        <h5 class="mb-0">Rent Payments</h5>
        <div id="close-overlay-btn" class="close-btn" > <b> &times;</b> </div>
 
    </div>
    <div class="card-body">
        <p class="card-text">
+           All Rent Payments should be made before 24/01/17. Anyone who feels that they might not
+       <p class="card-text announcement">
            All Rent Payments should be made before 24/01/17. Anyone who feels that they might not
            be able to complete their dues on 24/01/17 should communicate to management before the due date.
            Else, you face an eviction risk if you fail to pay your dues before the said date without a reasonable reason</p>
@@ -1163,7 +1121,7 @@ tr:hover {
    </div>
    <div class="card-footer view_announcement d-flex">
        <button class="btn btn-danger btn-sm">Delete</button>
-       <button class="btn btn-secondary btn-sm">Resend</button>
+       <button class="btn resend btn-sm">Resend</button>
    </div>
  </div>
  </div>
@@ -1240,6 +1198,8 @@ tr:hover {
 
      view_announcement.style.display= "flex";
      document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
+     view_announcement.style.display= "flex";
+    //  document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
      const now = new Date();
             const formattedTime = now.toLocaleString(); // Format the date and time
             timestamp.textContent = `Sent on: ${formattedTime}`;
@@ -1250,7 +1210,7 @@ tr:hover {
      close_overlay.addEventListener('click', ()=>{
 
      view_announcement.style.display= "none";
-     document.querySelector('.app-wrapper').style.opacity = '1';
+    //  document.querySelector('.app-wrapper').style.opacity = '1';
 
 
      });
@@ -1276,7 +1236,7 @@ tr:hover {
      close_overlay.addEventListener('click', ()=>{
 
      view_announcement.style.display= "none";
-     document.querySelector('.app-wrapper').style.opacity = '1';
+    //  document.querySelector('.app-wrapper').style.opacity = '1';
 
 
      });
