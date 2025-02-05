@@ -123,6 +123,7 @@ tr:hover {
             color: #FFC107;
             
         }
+
 .filter{
             /* background-color: #444; */
             /* color: white; */
@@ -187,9 +188,7 @@ tr:hover {
 
           position: relative;
             background: white;
-            
             border-radius: 5px;
-            
             color: black;
             width: 100%;
             max-width: 50%; 
@@ -274,7 +273,153 @@ tr:hover {
   color: #FFC107;
 }
 
+     form {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin: 0 auto;
+    }  
 
+     h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    } 
+
+    label {
+      font-size: 12px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+      input[type="text"], input[type="email"], input[type="password"], select, textarea {
+      width: 60%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    input[type="radio"], input[type="checkbox"] {
+      margin-right: 8px;
+    } 
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color:#00192D;
+    }
+
+    /* .form-container {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      margin: 30px auto;
+    } */
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-size: 16px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+     /* input[type="text"], input[type="email"], input[type="number"], select, textarea {
+      width: 70%;
+      padding: 8px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }  */
+
+    /* textarea {
+      resize: vertical;
+    } */
+     .form-section {
+      margin-bottom: 15px;
+    }
+
+    /* Main form container */    
+     .form-container{
+      position: fixed;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 3px 11px rgba(0, 0, 0, 0.1);
+      width: 100%; 
+     }
+
+ /* Form Section Titles */
+.form-section h3 {
+      font-size: 1.25em; 
+      color: #333;
+      margin-bottom: 12px;
+      border-bottom: 2px solid #f1f1f1;
+      padding-bottom: 5px;
+    } 
+   
+    /* Optional: Make the button more prominent */
+    .bossy {
+      background-color: #00192D;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+      /* padding: 12px 20px; */
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 65%;
+      height: 2%;
+    }
+
+    .bossy:hover {
+      background-color: #00192D;
+    }
+    .beasy{
+      max-width: 510px;
+      max-height:490px;
+    }
+    .text-warning {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    /* font-weight: 50; */
+    color: #FFC107; /* Bright yellow color */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Light shadow effect */
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.text-warning:hover {
+    color: #FFC107; /* Slightly darker yellow on hover */
+    transform: scale(1.05); /* Slight scale effect on hover */
+}
+#taskForm{
+  font-size: medium;
+}
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 10.2px;
+    margin-top: 8px;
+    transition: border-color 0.3s ease;
+}
         </style>
 
 <!-- scripts for data_table -->
@@ -982,7 +1127,7 @@ tr:hover {
                 </div>
                 <div class="col-md-6">
                   <div style="display: flex; justify-content: end;">
-                  <button class="btn" style="background-color: #00192D; color: white; font-size: small;"> <i class="fas fa-tools icon"></i> 
+                  <button class="btn" style="background-color: #00192D; width:20%; height:20%; color: white; font-size: small;"> <i class="fas fa-tools icon"></i> 
                     <b> Vendors </b></button>     
                 </div>
 
@@ -1031,6 +1176,7 @@ tr:hover {
                             <th>UNIT</th>
                             <th>DATE</th>
                             <th>ISSUE</th>
+                            <th>Payment Status</th>
                             <th>Prority</th>
                             <th>PROVIDER</th>
                              <th>ACTION</th> 
@@ -1045,14 +1191,20 @@ tr:hover {
                             <td>A12</td>
                             <td>11-10-2025</td>
                             <td>Broken handle</td>
-                            <td>low</td>
+                            <td><button class="btn  mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseModal" style="color: #FFC107;">
+                           PAY</button></td>
+                            <!-- <td><button onclick="toggleOverlay()">Paid</button></td> -->
+                            <td>urgent</td>
                             
                             <td>Not assigned</td>
                             <td id="more">
                              <div id="more_icon">&#x2026;</div> 
                              <br>
                              <div id="more_options">
-                                <a href="#">Assign</a>
+                              <a href="#" class="mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseyModal" style="color: #FFC107;"class="btn  mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseyModal" style="color: #FFC107;">
+                              Assign
+                              </a>
+                                <!-- <a href="#">Assign</a> -->
                                 <a href="#">Update</a>
                                 <a href="#">Delete</a>
                                 <a href="#">View</a>
@@ -1068,7 +1220,8 @@ tr:hover {
                             <td>A11</td>
                             <td>12-11-2025</td>
                             <td>Leaking roof</td>
-                            <td>high</td>
+                            <td><button  class="btn  mt-0" id="example" style="color: #FFC107;">PAID</button></td>
+                            <td>low</td>
                             
                             <td>New Electrics</td>
                             <td id="more">
@@ -1161,6 +1314,118 @@ tr:hover {
  </div>
  </div>
 
+  <!-- Lease Modal -->
+<div class="modal fadey" id="leaseyModal" tabindex="-1" aria-labelledby="leaseyModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="leaseyModalLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="form-wrapper">
+              <h1 class="text-warning">Assign Task</h1>
+              <form id="taskForm">
+                <div class="input-group">
+                  <label for="taskName">Task About To Be Assigned:</label>
+                  <input type="text" id="taskName" name="taskName" placeholder="Enter task name" style="border-radius: 10px; width: 100%;"   required>
+              </div>
+
+                  <div class="input-group">
+                      <label for="serviceProvider">Select A Category For The Task</label>
+                  <label for="taskName"></label>
+                      <select id="serviceProvider" name="serviceProvider" style="border-radius: 10px;"  required>
+                          <option value="" id="taskName" disabled selected>Select A Category </option>
+                          <option value="John">Electrical</option>
+                          <option value="Jane">Plumbing</option>
+                          <option value="Mike">Cleaning</option>
+                      </select>
+                  </div>
+                  <div class="input-group">
+                    <label for="serviceProvider">Select Service Provider:</label>
+                    <select id="serviceProvider" name="serviceProvider" style="border-radius: 10px;" required>
+                        <option value="" id="taskName"  disabled selected>Select Provider</option>
+                        <option value="John">John </option>
+                        <option value="Jane">Jane </option>
+                        <option value="Mike">Mike </option>
+                    </select>
+                </div>
+
+  
+                  <button type="submit" class="submit-btn" style="border-radius: 10px; background-color: #00192D; width: 50%; margin-left: 6rem;" >Assign</button>
+              </form>
+          </div>
+  
+          <!-- <div id="assignedTasks">
+              <h2>Assigned Tasks</h2>
+              <ul id="taskList"></ul>
+          </div> -->
+      </div>
+  
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Lease Modal -->
+  <div class="modal fade" id="leaseModal" tabindex="-1" aria-labelledby="leaseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="leaseModalLabel"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form class="beasy">
+             <!-- Landlord Information Section -->
+      <!-- Service Provider Information Section -->
+      <div class="form-section">
+        <h3 class="text-warning">Landlord Information</h3>
+         <a href="#"><p>Martin White</p></a>
+        <!-- <label for="landlordName">Landlord Name(Martin White)</label> -->
+        <!-- <input type="text" id="landlordName" name="landlordName" placeholder="Enter your full name" required> -->
+
+        <h3 class="text-warning">Select Service Providers Information</h3>
+        <label for="paymentMethod">Choose:</label>
+        <select id="paymentMethod" name="paymentMethod" required>
+          <option value="bank_transfer">ABX Electricals</option>
+          <option value="bank_transfer">Sunsine Plumbers</option>
+          <option value="bank_transfer">Favored Technologies</option>
+        </select>
+        <h3 class="text-warning">Payment Details</h3>
+        <label for="amount">Payment Amount (KSH)</label>
+        <input type="text" id="landlordName" name="landlordName" placeholder="Enter Amount" required>
+
+        <label for="paymentMethod">Payment Method</label>
+        <select id="paymentMethod" name="paymentMethod" required>
+          <option value="mpesa_transfer" class="bossy">MPESA</option>
+        </select>
+         <!-- Submit Button -->
+         <button type="submit" class="bossy"> MAKE PAYMENT</button>
+      </div>
+
+     
+
+      <!-- Payment Details Section
+      <div class="form-section"> 
+        <h3>Payment Details</h3>
+        <label for="amount">Payment Amount (KSH)</label>
+        <input type="number" id="amount" name="amount" placeholder="Enter the amount to pay" min="1" required>
+
+        <label for="paymentMethod">Payment Method</label>
+        <select id="paymentMethod" name="paymentMethod" required>
+          <option value="mpesa_transfer" class="bossy">MPESA</option>
+        </select>
+      </div> -->
+       
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <!-- End view announcement -->
 <!-- end overlay card. -->
 
@@ -1200,6 +1465,19 @@ tr:hover {
  </script>
 
  <!-- End view announcement script -->
+
+ <script>
+  // Function to toggle the visibility of the overlay
+  function toggleOverlay() {
+    var overlay = document.getElementById('overlay');
+    // If overlay is hidden, show it
+    if (overlay.style.display === "none" || overlay.style.display === "") {
+      overlay.style.display = "flex";
+    } else {
+      overlay.style.display = "none";
+    }
+  }
+</script>
 
 
     <script
@@ -1464,6 +1742,7 @@ tr:hover {
       // - END PIE CHART -
       //-----------------
     </script>
+    
     <!--end::Script-->
   </body>
   <!--end::Body-->

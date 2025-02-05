@@ -506,18 +506,18 @@ color: #00192D;
                   <p>Tenants</p>
                 </a>
               </li>
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <a href="./tenantscreening.html" class="nav-link">
                   <i class="nav-icon bi bi-palette"></i>
                   <p>Tenant Screening</p>
                 </a>
-              </li>
-              <li class="nav-item">
+              </li> -->
+              <!-- <li class="nav-item">
                 <a href="./leasy.html" class="nav-link">
                   <i class="nav-icon bi bi-file-earmark-text"></i>
                   <p>Lease Management</p>
                 </a>
-              </li>
+              </li> -->
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-box-seam-fill"></i>
@@ -579,25 +579,25 @@ color: #00192D;
                 </ul>
               </li>
               <li class="nav-item">
-                <a href="./showCommunication.html" class="nav-link">
+                <a href="./maintanceReport1.html" class="nav-link">
                   <i class="nav-icon bi bi-palette"></i>
                   <p>Maintenance Requests</p>
                 </a>
               </li>
 
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <a href="./serviceproviders.html" class="nav-link">
                   <i class="nav-icon bi bi-palette"></i>
                   <p>Service Providers</p>
                 </a>
-              </li>
+              </li> -->
               
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <a href="./rating&reviews.html" class="nav-link">
                   <i class="nav-icon bi bi-palette"></i>
                   <p>Reviews And Rating</p>
                 </a>
-              </li>
+              </li> -->
 
                 <!-- Start Communications part -->
                 <li class="nav-item">
@@ -610,7 +610,7 @@ color: #00192D;
                   </a>
                   <ul class="nav nav-treeview">
                     <li class="nav-item">
-                      <a href="communications/texts.html" class="nav-link">
+                      <a href="./texts.html" class="nav-link">
                         <i class="nav-icon bi bi-circle"></i>
                         <p>Texts</p>
                       </a>
@@ -1034,7 +1034,7 @@ color: #00192D;
 <div class="row mb-3">
 <div class="col-3">
     <div class="page">
-        <b>TENANTS</b>     
+        <b>TENANTS|</b>     
     </div>
 </div>
 
@@ -1042,7 +1042,7 @@ color: #00192D;
     <div class="custom-button"> -->
 
       <div class="contenting" >
-        <button class="open-overlay-btn" onclick="openOverlay()">Add New Tenant</button>
+        <!-- <button class="open-overlay-btn" onclick="openOverlay()">Add New Tenant</button> -->
         </div> <br>
 <!-- </div> -->
 
@@ -1053,108 +1053,102 @@ color: #00192D;
 
 <div class="row mt-6"> <!-- third row -->
 
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header " style="background-color: #00192D; color:#FFC107;">
-                <div class="card-title">
-                    TENANTS &nbsp; 500 PERSONS
+  <!-- !-- Beginning Property row  -->
+
+            <div class="col-md-12">
+              <div class="card mb-4">
+                <div class="card-header" style="background-color:#00192D; color: white;">
+                  <h5 class="card-title text-warning" style="border-radius: 10px;">Tenants  Details</h5>
+                  <a href=""><h5 style="margin-left: 85%; padding:0.5rem; border-radius: 10px;">
+                    
+                    <!-- <i class="fas fa-arrow-right"></i> -->
+                  </h5></a>
+                  <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                      <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                      <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                    </button>
+                    <div class="btn-group">
+                      <button
+                        type="button"
+                        class="btn btn-tool dropdown-toggle"
+                        data-bs-toggle="dropdown"
+                      >
+                        <i class="bi bi-wrench"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-end" role="menu">
+                        <a href="#" class="dropdown-item">Action</a>
+                        <a href="#" class="dropdown-item">Another action</a>
+                        <a href="#" class="dropdown-item"> Something else here </a>
+                        <a class="dropdown-divider"></a>
+                        <a href="#" class="dropdown-item">Separated link</a>
+                      </div>
+                    </div>
+                    <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
+                      <i class="bi bi-x-lg"></i>
+                    </button>
+                  </div>
                 </div>
-
-            </div>
-
-            <div class="card-body">
-                <table id="tenants"  class="table table-striped table-bordered">
+                <!-- /.card-header -->
+                <div class="card-body">
+                  <!--begin::Row-->
+                  <table id="myTableOne" class="display" style="">
                     <thead>
-                        <tr  >
-                            <th scope="col">OCCUPIED</th>
-                                <th scope="col">NAME</th>
-                                <th scope="col">PHONE</th>
-                                <th scope="col">TYPE</th>
-                                <th scope="col">Property</th>
-                                <th scope="col">UNIT</th>
-                                <th scope="col">R.HISTORY</th>
-                                <th scope="col">P.RECORDS</th>
-                            <th scope="col">ACTION</th>
-                        </tr>
+                      <tr>
+                        <th>Date</th>
+                        <th>Property</th>
+                        <th>Type</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Unit</th>
+                        <th scope="col">R.HISTORY</th>
+                        <th scope="col">P.RECORDS</th>
+                    <th scope="col">ACTION</th>
+                      </tr>
                     </thead>
                     <tbody>
-                        <tr onclick="window.location.href='details.html'" >
-                            <th scope="row">1/7/11</th>
-                                <td>Kelvin Mbugua</td>
-                                <td>0757414722</td>
-                                <td> LEASE</td>
-                                <td> CROWN Z</td>
-                                <td>E456</td>
-                                <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
-                                <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
-                                <td> <button type="button" class="btn text-danger">REMOVE</button>
-                                </td>
-                        </tr>
-                        <tr onclick="window.location.href='details.html'">
+                      <tr onclick="window.location.href='details.html'">
                         <th scope="row">2/7/11</th>
-                        <td>Jacob Wesonga</td>
-                        <td>0758322543</td>
-                        <td>REQULAR</td>
-                        <td>EBENEZER</td>
-                        <td>E537</td>
+                        <td> CROWN Z</td> 
+                        <td>Bed-Sitter</td>
+                        <td>Kelvin Mbugua</td>
+                        <td>0757414722</td>
+                        <td>E456</td>
                         <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
                         <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
                         <td> <button type="button" class="btn text-danger">REMOVE</button>
-
-                        </tr>
-                        <tr>
-                            <th scope="row">3/7/11</th>
-                        <td>Larry Madowo</td>
-                        <td>0758322543</td>
-                        <td>LEASE</td>
-                        <td>MANUCHO</td>
-                        <td>F10</td>
+                        </td>
+                      </tr>
+                      <tr onclick="window.location.href='details.html'">
+                        <th scope="row">2/7/11</th>
+                        <td> CROWN Z</td> 
+                        <td>Bed-Sitter</td>
+                        <td>Kelvin Mbuguani</td>
+                        <td>0757414722</td>
+                        <td>E456</td>
                         <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
                         <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
                         <td> <button type="button" class="btn text-danger">REMOVE</button>
-
-                            </tr>
-
-                            <tr>
-                              <th scope="row">3/7/11</th>
-                          <td>Larry Madowo</td>
-                          <td>0758322543</td>
-                          <td>LEASE</td>
-                          <td>MANUCHO</td>
-                          <td>F10</td>
-                          <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
-                          <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
-                          <td> <button type="button" class="btn text-danger">REMOVE</button>
-
-                              </tr>
-                              
-                              <tr>
-                                <th scope="row">3/7/11</th>
-                            <td>Larry Madowo</td>
-                            <td>0758322543</td>
-                            <td>LEASE</td>
-                            <td>MANUCHO</td>
-                            <td>F10</td>
-                            <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
-                            <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
-                            <td> <button type="button" class="btn text-danger">REMOVE</button>
-
-                                </tr>
-                                <tr>
-                                  <th scope="row">3/7/11</th>
-                              <td>Larry Madowo</td>
-                              <td>0758322543</td>
-                              <td>LEASE</td>
-                              <td>MANUCHO</td>
-                              <td>F10</td>
-                              <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
-                              <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
-                              <td> <button type="button" class="btn text-danger">REMOVE</button>
-
-                                  </tr>
+                        </td>
+                      </tr>
+                      <tr onclick="window.location.href='details.html'">
+                        <th scope="row">2/7/11</th>
+                        <td> CROWN Z</td> 
+                        <td>Bed-Sitter</td>
+                        <td>Kelvin Mbuguani</td>
+                        <td>0757414722</td>
+                        <td>E456</td>
+                        <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
+                        <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
+                        <td> <button type="button" class="btn text-danger">REMOVE</button>
+                        </td>
+                      </tr>
+                      <!-- Add more rows as needed -->
                     </tbody>
+          
                 </table>
-            </div>
+
+
 
          <!-- Overlay -->
     <div class="overlay" id="overlay">
