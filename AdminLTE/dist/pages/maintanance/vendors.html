@@ -76,14 +76,14 @@
         .second_col{
             box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
         }
-        
+
         .filter-container{
-          
+
             /* width: 250px; */
-          
+
             color: white;
             position: relative; /* To position the panel below */
-        
+
         }
         .nav-bar {
             display: flex;
@@ -109,7 +109,7 @@
             height: 2px;
             background-color: #FFC107; /* Green underline */
         }
-        
+
 
         table {
     border-collapse: collapse;
@@ -126,7 +126,7 @@ td {
     padding: 0.5em;
     text-align: left;
     font-size: 0.9rem;
-    
+
 }
 tr:nth-child(even) {
     background-color: #f9f9f9;
@@ -138,7 +138,7 @@ tr:hover {
 
 .filter:hover {
             color: #FFC107;
-            
+
         }
 .filter{
             /* background-color: #444; */
@@ -169,7 +169,7 @@ tr:hover {
             padding: 2%;
             color: white;
             border-radius: 4%;
-            
+
         }
 .panel a {
             display: block;
@@ -183,7 +183,10 @@ tr:hover {
         .panel a:hover{
           color: #FFC107;
         }
-        
+.card-body.add_provider{
+  position: relative;
+}
+
 /* Announcement Overlay styles */
         #view_announcement {
             /* width: 50%; Adjust the card width as needed */
@@ -204,12 +207,12 @@ tr:hover {
 
           position: relative;
             background: white;
-            
+
             border-radius: 5px;
-            
+
             color: black;
             width: 100%;
-            max-width: 50%; 
+            max-width: 50%;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             font-size: 90%;
             color: gray;
@@ -217,7 +220,7 @@ tr:hover {
 
         .card-footer.view_announcement {
             justify-content: flex-end;
-            
+
         }
 
         .card-footer .btn + .btn {
@@ -225,13 +228,13 @@ tr:hover {
         }
 
         .close-btn{
-             position: absolute; 
-            
+             position: absolute;
+
             right: 15px;
-        
+
             color: white;
             cursor: pointer;
-            
+
         }
 
         #more{
@@ -240,14 +243,14 @@ tr:hover {
           cursor: pointer;
 
         }
-        
+
         #more_icon{
           /* border: 1px solid black; */
           border-radius: 30%;
           padding: 10%;
           font-size: larger;
         }
-       
+
         #more_options{
           display: none;
           /* position: absolute; */
@@ -255,7 +258,7 @@ tr:hover {
           background: #00192D;
           border-radius: 10%;
           padding: 10px;
-          
+
         }
         #more_options a{
           text-decoration: none;
@@ -270,14 +273,14 @@ tr:hover {
             /* color: white; */
             border: none;
             cursor: pointer;
-            font-size: 100%; 
+            font-size: 100%;
               }
           #close-overlay-btn:hover {
               color: red;
               }
 
         .card-header.view_announcement {
-            position: relative; 
+            position: relative;
             display: flex;/* Add this for the absolute positioning of the close button */
         }
 #more_announcement_btn{
@@ -291,6 +294,16 @@ tr:hover {
   color: #FFC107;
 }
 
+.add_provider{
+            width: 100%;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            transition: 0.3s ease-in-out;
+
+}
 
         </style>
 
@@ -980,24 +993,79 @@ tr:hover {
 
                 <div class="col-md-6">
                    <p>Total  <b>50</b> | New applications| <b>60</b>  </p>
-                                    
+
                 </div>
 
                 <div class="col-md-6">
 
                   <div style="display: flex; justify-content: end;">
-                    <button class="btn" style="background-color: #00192D; color: white; font-size: small; margin-right: 2%;">  <i class="fas fa-plus icon"></i> 
-                        <b> Add Category </b></button>   
-                  <button class="btn" style="background-color: #00192D; color: white; font-size: small;">  <i class="fas fa-plus icon"></i> 
-                    <b> Add Provider </b></button>  
-                    </div>   
+                    <button class="btn" style="background-color: #00192D; color: white; font-size: small; margin-right: 2%;">  <i class="fas fa-plus icon"></i>
+                        <b> Add Category </b></button>
+                  <button class="btn" style="background-color: #00192D; color: white; font-size: small;">  <i class="fas fa-plus icon"></i>
+                    <b> Add Provider </b></button>
+                    </div>
                 </div>
 
               <!-- /.col -->
             </div>
             <!-- /.row -->
             <!--begin::Row-->
-            
+            <div style="border-color: #FFC107; display: none;" class="row add_provider mb-2">
+              <div class="card">
+                <div class="card-header">
+                 <b> Add Provider</b>
+                </div>
+                <div class="card-body add_provider">
+
+                  <div class="row">
+
+                    <div class="col-md-6">
+                      <form>
+                        <div class="form-group">
+                          <label for="formGroupExampleInput"> <i class="fa fa-user"></i> Name</label>
+                          <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Joseph">
+                        </div>
+                        <div class="form-group">
+                          <label for="formGroupExampleInput2">  <i class="fas fa-envelope"></i>  Email</label>
+                          <input type="email" class="form-control" id="formGroupExampleInput2" placeholder="Another@gmail.com">
+                        </div>
+                      </form>
+                    </div>
+
+                    <div class="col-md-6">
+                      <form>
+                        <div class="form-group">
+                          <label for="formGroupExampleInput"> <i class="fas fa-phone"></i> Phone</label>
+                          <br>
+                          <input type="number" class="form-control" id="formGroupExampleInput" placeholder="Joseph">
+                        </div>
+
+                        <div class="form-group col-md-4">
+                          <label for="inputState"> <i class="fas fa-th-large"></i> Category</label>
+                          <select id="inputState" class="form-control">
+                            <option selected>Choose...</option>
+                            <option>Plumbing</option>
+                            <option>Electrician</option>
+                            <option > Landscaping</option>
+                          </select>
+                        </div>
+                    </div>
+
+
+                  </div>
+                  <button class="btn mt-2" style="background-color: #00192D;  color: white; font-size: small; margin-right: 2%;">  <i class="fas fa-plus icon"></i>
+                    <b> Add </b></button>
+
+
+
+                </div>
+
+
+
+              </div>
+
+
+            </div>
             <!--end::Row-->
             <!--begin::Row-->
             <div class="row second">
@@ -1010,7 +1078,7 @@ tr:hover {
                             <div class="filter" id="filter">
                             <i class="bi bi-filter"></i>
                             Filter | <b>All Categories <i class="fas fa-chevron-down"></i> </b>
-    
+
                             </div>
                             <div class="panel" id="panel">
                             <a href="#">All Properties</a>
@@ -1021,7 +1089,7 @@ tr:hover {
                             </div>
 
                         </div>
-                            
+
                         </div>
 
                         <div class="card-body">
@@ -1033,8 +1101,8 @@ tr:hover {
                                 <th>Phone</th>
                                 <th>Email</th>
                                 <th>Category</th>
-                                <th>ACTION</th> 
-            
+                                <th>ACTION</th>
+
                             </tr>
                             </thead>
                             <tbody>
@@ -1045,14 +1113,14 @@ tr:hover {
                                 <td class="text-primary"> <i class="fas fa-envelope"></i>  emmanu@gmail.com</td>
                                 <td>Electrician</td>
                                 <td id="more">
-                                <div id="more_icon">&#x2026;</div> 
+                                <div id="more_icon">&#x2026;</div>
                                 <br>
                                 <div id="more_options">
                                     <a href="#">Remove</a>
                                     <a href="#">Update</a>
                                     <a href="#">View</a>
-                                
-                                    
+
+
                                 </div>
                                 </td>
                             </tr>
@@ -1063,12 +1131,12 @@ tr:hover {
                                 <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
                                 <td>Plumber</td>
                                 <td id="more">
-                                <div id="more_icon" class="rounded-circle" >&#x2026;</div> 
+                                <div id="more_icon" class="rounded-circle" >&#x2026;</div>
                                 </td>
                             </tr>
                             <!-- Add more rows as needed -->
                             </tbody>
-                
+
                         </table>
 
 
@@ -1078,7 +1146,7 @@ tr:hover {
 
 
                         <div class="card-footer">
-                            
+
                         </div>
 
                     </div>
@@ -1104,7 +1172,7 @@ tr:hover {
                                     <td>Plumbing</td>
                                     <td>5</td>
                                     <td id="more">
-                                        <div id="more_icon" class="rounded-circle" >&#x2026;</div> 
+                                        <div id="more_icon" class="rounded-circle" >&#x2026;</div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -1115,25 +1183,25 @@ tr:hover {
                                     <td>Landscaping</td>
                                     <td>3</td>
                                     <td id="more">
-                                        <div id="more_icon" class="rounded-circle" >&#x2026;</div> 
+                                        <div id="more_icon" class="rounded-circle" >&#x2026;</div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Masons</td>
                                     <td>No vendor is assigned to this category </td>
                                     <td id="more">
-                                        <div id="more_icon" class="rounded-circle" >&#x2026;</div> 
+                                        <div id="more_icon" class="rounded-circle" >&#x2026;</div>
                                     </td>
                                 </tr>
-                                
+
                             </table>
-                            
+
 
                         </div>
 
 
                     </div>
-                    
+
 
 
                 </div>
@@ -1186,19 +1254,19 @@ tr:hover {
    <div class="card-header view_announcement bg-secondary text-white">
        <h5 class="mb-0">Rent Payments</h5>
        <div id="close-overlay-btn" class="close-btn" > <b> &times;</b> </div>
-       
+
    </div>
    <div class="card-body">
        <p class="card-text">
-           All Rent Payments should be made before 24/01/17. Anyone who feels that they might not 
+           All Rent Payments should be made before 24/01/17. Anyone who feels that they might not
            be able to complete their dues on 24/01/17 should communicate to management before the due date.
            Else, you face an eviction risk if you fail to pay your dues before the said date without a reasonable reason</p>
-          
+
            <p class="timestamp" id="timestamp"></p> <!-- Timestamp -->
 
- 
+
        <div class="Recipients border-top border-gray "> <p><strong>Recipients|</strong> All Employees</p>  </div>
-       
+
    </div>
    <div class="card-footer view_announcement d-flex">
        <button class="btn btn-danger btn-sm">Delete</button>
@@ -1227,7 +1295,7 @@ tr:hover {
 
   more_announcement.addEventListener('click', ()=>{
 
-     view_announcement.style.display= "flex";  
+     view_announcement.style.display= "flex";
      document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
      const now = new Date();
             const formattedTime = now.toLocaleString(); // Format the date and time
@@ -1260,7 +1328,7 @@ tr:hover {
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-    
+
 <!-- script for occordion -->
 <script>
 
@@ -1278,7 +1346,7 @@ tr:hover {
          filterContainer.addEventListener("mouseleave", () => {
              panel.style.display = "none";
       });
-  
+
 
 </script>
 <!-- End for Occordion script -->
@@ -1306,7 +1374,7 @@ tr:hover {
 </script>
     <!-- Begin script for datatable -->
     <script>
-        
+
        $(document).ready(function() {
         $('#maintenance').DataTable({
             "paging": true,
@@ -1322,7 +1390,7 @@ tr:hover {
 
     </script>
             <script>
-                    
+
                 $(document).ready(function() {
                 $('#vendor_distribution1').DataTable({
                     // "paging": true,
@@ -1341,7 +1409,7 @@ tr:hover {
 
     </script>
     <!-- End script for data_table -->
-    
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
