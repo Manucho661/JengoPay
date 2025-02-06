@@ -56,7 +56,7 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- <link rel="stylesheet" href="chatbot.html">-->
+    <link rel="stylesheet" href="chatbot.html">
     <style>
       a{
           text-decoration: none;
@@ -66,9 +66,9 @@
           
           background-color: rgba(128, 128, 128, 0.1);
       }
-      .summaryItem{
+      /* .summaryItem{
           font-family: 'Playfair Display', serif; /* Elegant for creative projects */
-font-size: 12px;
+font-size: 25px;
 font-weight: bold;
 
 font-weight: 400; /* Lighter weight for a faint look */
@@ -102,18 +102,18 @@ color: #00192D;
     background-color: #f8f9fa;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    /* padding: 20px; */
+    padding: 20px;
     
     margin: 30px auto;
   }
-  .profile-picture {
+  /* .profile-picture {
     border-radius: 10px;
     width: 100%;
     height: auto;
     object-fit: cover;
     border: 4px solid #007bff;
-  }
-  .profile-details h2 {
+  } */
+  .profile-details h2 { */
     /* margin-bottom: 10px; */
     
   }
@@ -149,7 +149,7 @@ color: #00192D;
       margin: auto; /* Center it */
   }
   
-  /* .chat-container {
+  .chat-container {
             width: 400px;
             height: 500px;
             border: 2px solid #ccc;
@@ -164,9 +164,9 @@ color: #00192D;
             right: 20px;
             cursor: pointer;
             display: none; /* Initially hidden */
-        } */
+        }
 
-        /* .chat-box {
+        .chat-box {
             flex-grow: 1;
             overflow-y: auto;
             padding: 10px;
@@ -174,7 +174,7 @@ color: #00192D;
             border-radius: 5px;
             margin-bottom: 10px;
             background-color: #fafafa;
-        } */
+        }
 
         .message {
             padding: 8px;
@@ -257,7 +257,366 @@ color: #00192D;
         #close{
 background-color: red;
         }
+        .filter-container{
+          
+          /* width: 250px; */
+        
+          color: white;
+          position: relative; /* To position the panel below */
+      
+      }
+      .nav-bar {
+          display: flex;
+          border-bottom: 1px solid #e0e0e0;
+      }
+      .nav-item {
+          padding: 10px 20px;
+          text-decoration: none;
+          color: #666;
+          font-size: 16px;
+          position: relative;
+      }
+      .nav-item.active {
+          color: #000;
+          font-weight: bold;
+      }
+      .nav-item.active::after {
+          content: '';
+          position: absolute;
+          bottom: -1px;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background-color: #FFC107; /* Green underline */
+      }
+      
 
+      table {
+  border-collapse: collapse;
+  width: 100%;
+}
+th {
+  background-color: #FFC107;
+  color: #00192D;
+  text-align: left;
+  padding: 0.5em;
+  font-size: 0.9rem;
+}
+td {
+  padding: 0.5em;
+  text-align: left;
+  font-size: 0.9rem;
+  
+}
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+tr:hover {
+  background-color: #f1f1f1;
+}
+
+
+.filter:hover {
+          color: #FFC107;
+          
+      }
+
+.filter{
+          /* background-color: #444; */
+          /* color: white; */
+          cursor: pointer;
+          /* padding: 12%;  */
+          width: 25%;
+          border-bottom: gray solid 1px;
+          text-align: left;
+          outline: none;
+          font-size: 16px;
+          transition: 0.3s;
+          color: gray;
+          font-size: 100%;
+          border-radius: 2%;
+}
+
+.panel {
+          display: none; /* Initially hidden */
+          background-color: #00192D;
+          /* padding-left: 20px;position: absolute; Makes the panel an overlay */
+          position: absolute; /* Makes the panel an overlay */
+          /* left: 250px; Positioned to the right of the container */
+          top: 100%; /* Place right below the accordion */
+          left: 0;
+          width: fit-content;
+          z-index: 1000;
+          padding: 2%;
+          color: white;
+          border-radius: 4%;
+          
+      }
+.panel a {
+          display: block;
+          padding: 8px;
+          /* color: white; */
+          text-decoration: none;
+          transition: 0.3s;
+          color: whitesmoke;
+      }
+
+      .panel a:hover{
+        color: #FFC107;
+      }
+      
+/* Announcement Overlay styles */
+      #view_announcement {
+          /* width: 50%; Adjust the card width as needed */
+          /* max-width: 500px; Ensures the card doesn't grow too wide */
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          position: fixed;
+          display: none;
+          z-index: 10000;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          justify-content: center;
+          align-items: center;
+
+      }
+      .card.content{
+
+        position: relative;
+          background: white;
+          border-radius: 5px;
+          color: black;
+          width: 100%;
+          max-width: 50%; 
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+          font-size: 90%;
+          color: gray;
+      }
+
+      .card-footer.view_announcement {
+          justify-content: flex-end;
+          
+      }
+
+      .card-footer .btn + .btn {
+          margin-left: 10px; /* Adds spacing between the buttons */
+      }
+
+      .close-btn{
+           position: absolute; 
+          
+          right: 15px;
+      
+          color: white;
+          cursor: pointer;
+          
+      }
+
+      #more{
+        display: flex;
+         justify-content: center;
+        cursor: pointer;
+
+      }
+      
+      #more_icon{
+        /* border: 1px solid black; */
+        border-radius: 30%;
+        padding: 10%;
+        font-size: larger;
+      }
+     
+      #more_options{
+        display: none;
+        /* position: absolute; */
+        z-index: 1000;
+        background: #00192D;
+        border-radius: 10%;
+        padding: 10px;
+        
+      }
+      #more_options a{
+        text-decoration: none;
+        color: white;
+      }
+      #more_options a:hover{
+        color: #FFC107;
+      }
+      #close-overlay-btn {
+          /* top: 0; */
+          color: white;
+          /* color: white; */
+          border: none;
+          cursor: pointer;
+          font-size: 100%; 
+            }
+        #close-overlay-btn:hover {
+            color: red;
+            }
+
+      .card-header.view_announcement {
+          position: relative; 
+          display: flex;/* Add this for the absolute positioning of the close button */
+      }
+#more_announcement_btn{
+color: blueviolet;
+font-weight: 500;
+cursor: pointer;
+
+}
+#more_announcement_btn:hover{
+background-color: rgba(128, 128, 128, 0.2);
+color: #FFC107;
+}
+
+   form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+  }  
+
+   h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  } 
+
+  label {
+    font-size: 12px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+    input[type="text"], input[type="email"], input[type="password"], select, textarea {
+    width: 60%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  input[type="radio"], input[type="checkbox"] {
+    margin-right: 8px;
+  } 
+
+  button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+  }
+
+  button:hover {
+    background-color:#00192D;
+  }
+
+  /* .form-container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 30px auto;
+  } */
+
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  label {
+    font-size: 16px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+   /* input[type="text"], input[type="email"], input[type="number"], select, textarea {
+    width: 70%;
+    padding: 8px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }  */
+
+  /* textarea {
+    resize: vertical;
+  } */
+   .form-section {
+    margin-bottom: 15px;
+  }
+
+  /* Main form container */    
+   .form-container{
+    position: fixed;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 3px 11px rgba(0, 0, 0, 0.1);
+    width: 100%; 
+   }
+
+/* Form Section Titles */
+.form-section h3 {
+    font-size: 1.25em; 
+    color: #333;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #f1f1f1;
+    padding-bottom: 5px;
+  } 
+ 
+  /* Optional: Make the button more prominent */
+  .bossy {
+    background-color: #00192D;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    /* padding: 12px 20px; */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 65%;
+    height: 2%;
+  }
+
+  .bossy:hover {
+    background-color: #00192D;
+  }
+  .beasy{
+    max-width: 510px;
+    max-height:490px;
+  }
+  .text-warning {
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  /* font-weight: 50; */
+  color: #FFC107; /* Bright yellow color */
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Light shadow effect */
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.text-warning:hover {
+  color: #FFC107; /* Slightly darker yellow on hover */
+  transform: scale(1.05); /* Slight scale effect on hover */
+}
+#taskForm{
+font-size: medium;
+}
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  font-size: 10.2px;
+  margin-top: 8px;
+  transition: border-color 0.3s ease;
+}
   </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -527,18 +886,18 @@ background-color: red;
                   <p>Tenants</p>
                 </a>
               </li>
-              <!-- <li class="nav-item">
+              <li class="nav-item">
                 <a href="./tenantscreening.html" class="nav-link">
                   <i class="nav-icon bi bi-palette"></i>
                   <p>Tenant Screening</p>
                 </a>
-              </li> -->
-              <!-- <li class="nav-item">
+              </li>
+              <li class="nav-item">
                 <a href="./leasy.html" class="nav-link">
                   <i class="nav-icon bi bi-file-earmark-text"></i>
                   <p>Lease Management</p>
                 </a>
-              </li> -->
+              </li>
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-box-seam-fill"></i>
@@ -590,34 +949,14 @@ background-color: red;
                       <p>Tax Reports</p>
                     </a>
                   </li>
-                  <li class="nav-item">
-                    <a href="./cashflowforecasting.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Cashflow Forecasting</p>
-                    </a>
-                  </li>
                 </ul>
               </li>
               <li class="nav-item">
-                <a href="./maintanceReport1.html" class="nav-link">
+                <a href="./showCommunication.html" class="nav-link">
                   <i class="nav-icon bi bi-palette"></i>
                   <p>Maintenance Requests</p>
                 </a>
               </li>
-
-              <!-- <li class="nav-item">
-                <a href="./serviceproviders.html" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Service Providers</p>
-                </a>
-              </li> -->
-              
-              <!-- <li class="nav-item">
-                <a href="./rating&reviews.html" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Reviews And Rating</p>
-                </a>
-              </li> -->
               
               <li class="nav-item">
                 <!-- <a href="#" class="nav-link">
@@ -1030,136 +1369,129 @@ background-color: red;
           <!--begin::Container-->
           <div class="container-fluid">
             <!-- Info boxes -->
-            <div class="row">
-              <div class="col-10 col-sm-6 col-md-3">
-                <div class="info-box">
-                  <span class="info-box-icon text-bg-primary shadow-sm">
-                    <i class="fas fa-home properties-icon"></i>
-                  </span>
-                  <div class="info-box-content">
-                    <span class="info-box-text">PROPERTIES</span>
-                    <span class="info-box-number">
-                      50
-                      <small></small>
-                    </span>
-                  </div>
-                  <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
-              </div>
-              <!-- /.col -->
-              <div class="col-12 col-sm-6 col-md-3">
-                <div class="info-box">
-                  <span class="info-box-icon text-bg-danger shadow-sm">
-                    <i class="fas fa-tools maintenance-icon"></i>
-                  </span>
-                  <div class="info-box-content">
-                    <span class="info-box-text">MAINTENANCE</span>
-                    <span class="info-box-number">20</span>
-                  </div>
-                  <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
-              </div>
-              <!-- /.col -->
-              <!-- fix for small devices only -->
-              <!-- <div class="clearfix hidden-md-up"></div> -->
-              <div class="col-12 col-sm-6 col-md-3">
-                <div class="info-box">
-                  <span class="info-box-icon text-bg-success shadow-sm">
-                    <i class="fas fa-users people-icon"></i>
-                  </span>
-                  <div class="info-box-content">
-                    <span class="info-box-text">LANDLORDS</span>
-                    <span class="info-box-number">200</span>
-                  </div>
-                  <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
-              </div>
-              <!-- /.col -->
-              <div class="col-12 col-sm-6 col-md-3">
-                <div class="info-box">
-                  <span class="info-box-icon text-bg-warning shadow-sm">
-                    <i class="bi bi-people-fill"></i>
-                  </span>
-                  <div class="info-box-content">
-                    <span class="info-box-text">TENANTS</span>
-                    <span class="info-box-number">100</span>
-                  </div>
-                  <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
-              </div>
-              <!-- /.col -->
-            </div>
-            <!-- /.row -->
+           <div class="row">
 
-
-            <!-- Beginning Property row -->
-
-            <div class="col-md-12">
-              <div class="card mb-4">
-                <div class="card-header" style="background-color:#00192D; color: white;">
-                  <h5 class="card-title text-warning" style="border-radius: 10px; ">Properties</h5>
-                  <a href=""><h5 style="margin-left: 85%; padding:0.5rem; border-radius: 10px;">
-                    Full  Details
-                    <i class="fas fa-arrow-right"></i>
-                  </h5></a>
-                  <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                      <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                      <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                    </button>
-                    <div class="btn-group">
-                      <button
-                        type="button"
-                        class="btn btn-tool dropdown-toggle"
-                        data-bs-toggle="dropdown"
-                      >
-                        <i class="bi bi-wrench"></i>
-                      </button>
-                      <div class="dropdown-menu dropdown-menu-end" role="menu">
-                        <a href="#" class="dropdown-item">Action</a>
-                        <a href="#" class="dropdown-item">Another action</a>
-                        <a href="#" class="dropdown-item"> Something else here </a>
-                        <a class="dropdown-divider"></a>
-                        <a href="#" class="dropdown-item">Separated link</a>
-                      </div>
+            <div class="col-md-6">
+                <div class="profile_details">
+                    <div class="profile_picture">
+                                     <!-- <img class="mt-3" src="images/mansion-1.jpg" alt="Profile Picture"  width="100" height="100"> -->
                     </div>
-                    <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                      <i class="bi bi-x-lg"></i>
-                    </button>
-                  </div>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body">
+                    <div class="profile_info">
+                                
+                                        <!-- <h2>Jane Doe</h2> -->
+                                         
+                        <div class="profile_details one">
+                          <p> New: <strong>&nbsp;50|</strong> In Progress: <strong> &nbsp;30|</strong> Completed: <strong> &nbsp;70</strong> </p>
 
-                  <!--begin::Row-->
-                  <table id="myTableOne" class="display" style="">
+                        
+                        </div>
+                            
+                    </div>
+                </div>
+                                
+            </div>
+            <div class="col-md-6">
+              <div style="display: flex; justify-content: end;">
+              <button class="btn" style="background-color: #00192D; width:20%; height:20%; color: white; font-size: small;"> <i class="fas fa-tools icon"></i> 
+                <b> Vendors </b></button>     
+            </div>
+
+            
+            
+
+
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+        <!--begin::Row-->
+        
+        <!--end::Row-->
+        <!--begin::Row-->
+        <div class="row">
+          <!-- Start col -->
+          <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                  <div class="filter-container" id="filter-container">
+
+                    <div class="filter" id="filter">
+                      <i class="bi bi-filter"></i>
+                      Filter | <b>All Properties <i class="fas fa-chevron-down"></i> </b>
+
+                    </div>
+                    <div class="panel" id="panel">
+                      <a href="#">All Properties</a>
+                      <a href="#">Crown Z</a>
+                      <a href="#">Manucho</a>
+                      <a href="#">MM Towers</a>
+
+                    </div>
+
+                  </div>
+                      
+                </div>
+
+                <div class="card-body">
+                  <table id="maintenance" class="display">
                     <thead>
                       <tr>
-                        <th>Property Name</th>
-                        <th>Landlord</th>
-                        <th>Unit</th>
-                        <th>Location</th>
-                        <th>Tenant</th>
+                        <th>ID</th>
+                        <th>Property</th>
+                        <th>TENANT</th>
+                        <th>UNIT</th>
+                        <th>DATE</th>
+                        <th>ISSUE</th>
+                        <th>Payment Status</th>
+                        <th>Prority</th>
+                        <th>PROVIDER</th>
+                         <th>ACTION</th> 
+      
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td>Manucho Apartments</td>
-                        <td>Manu</td>
-                        <td>80</td>
-                        <td>Kisumu</td>
-                        <td>60</td>
+                        <td>002</td>
+                        <td>CROWN Z TOWERS</td>
+                        <td>Manucho</td>
+                        <td>A12</td>
+                        <td>11-10-2025</td>
+                        <td>Broken handle</td>
+                        <td><button class="btn  mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseModal" style="color: #FFC107;">
+                       PAY</button></td>
+                        <!-- <td><button onclick="toggleOverlay()">Paid</button></td> -->
+                        <td>urgent</td>
+                        
+                        <td>Not assigned</td>
+                        <td id="more">
+                         <div id="more_icon">&#x2026;</div> 
+                         <br>
+                         <div id="more_options">
+                          <a href="#" class="mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseyModal" style="color: #FFC107;"class="btn  mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseyModal" style="color: #FFC107;">
+                          Assign
+                          </a>
+                            <!-- <a href="#">Assign</a> -->
+                            <a href="#">Update</a>
+                            <a href="#">Delete</a>
+                            <a href="#">View</a>
+                          
+                            
+                         </div>
+                        </td>
                       </tr>
                       <tr>
-                        <td>Ethical Apartments</td>
-                        <td>Elias</td>
-                        <td>69</td>
-                        <td>Rongai</td>
-                        <td>65</td>
+                        <td>003</td>
+                        <td>ALPHA APARTMENTS</td>
+                        <td>Ethic</td>
+                        <td>A11</td>
+                        <td>12-11-2025</td>
+                        <td>Leaking roof</td>
+                        <td><button  class="btn  mt-0" id="example" style="color: #FFC107;">PAID</button></td>
+                        <td>low</td>
+                        
+                        <td>New Electrics</td>
+                        <td id="more">
+                          <div id="more_icon" class="rounded-circle" >&#x2026;</div> 
+                          </td>
                       </tr>
                       <!-- Add more rows as needed -->
                     </tbody>
@@ -1168,467 +1500,196 @@ background-color: red;
 
 
 
-              
-                  <!--end::Row-->
                 </div>
-                <!-- ./card-body -->
+
+
+
                 <div class="card-footer">
-                  <!--begin::Row-->
-                  
-                    <!-- /.col -->
                     
-                  <!--end::Row-->
-                </div>
-                <!-- /.card-footer -->
-              </div>
-              <!-- /.card -->
+                 </div>
+
             </div>
-       </div>
-            <!-- End Property Row -->
-            <!--begin::Row-->
-            <div class="row">
-              <div class="col-md-12">
-                <div class="card mb-4">
-                  <div class="card-header" style="background-color:#00192D; color: white;" >
-                    <h5 class="card-title text-warning" style="padding:0.5rem; border-radius: 10px;" >Rental Collections</h5>
-                    <a href="./property.html"><h5 style="margin-left:  85%; padding:0.5rem; border-radius: 10px;">Full  Details
-                      <i class="fas fa-arrow-right"></i>
-                    </h5></a>
-                    <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                      </button>
-                      <div class="btn-group">
-                        <button
-                          type="button"
-                          class="btn btn-tool dropdown-toggle"
-                          data-bs-toggle="dropdown"
-                        >
-                          <i class="bi bi-wrench"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end" role="menu">
-                          <a href="#" class="dropdown-item">Action</a>
-                          <a href="#" class="dropdown-item">Another action</a>
-                          <a href="#" class="dropdown-item"> Something else here </a>
-                          <a class="dropdown-divider"></a>
-                          <a href="#" class="dropdown-item">Separated link</a>
-                        </div>
-                      </div>
-                      <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                        <i class="bi bi-x-lg"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                  <!-- /.card-header -->
-                  <div class="card-body"> 
-                    <!--begin::Row-->
-                    <table id="myTable" class="display" style="">
-                      <thead>
-                          <tr>
-                              <th>Property</th>
-                              <th>Landlord</th>
-                              <th>TYPE</th>
-                              <th>Total Paid</th>
-                              <th>Pending</th>
-                              <th>No of Tenants</th>
-                            
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <tr>
-                              <td>Manucho Apartments</td>
-                              <td>Manu</td>
-                              <td>BEDSITTER</td>
-                              <td>KSH 200,000</td>
-                              <td>KSH 100,100</td>
-                              <td>200</td>
-                            
-                          </tr>
-                          <tr>
-                              <td>Ebenezer Apartments</td>
-                              <td>Elias</td>
-                              <td>1 BEDROOM</td>
-                              <td>KSH 200,000</td>
-                              <td>KSH 100, 200</td>
-                              <td>100</td>
-                            
-                          </tr>
-                          <!-- Add more rows as needed -->
-                      </tbody>
-                  </table> 
-                  </div>
+
+
         </div>
+          <!-- /.col -->
+        </div>
+        <!--end::Row-->
+      </div>
+      <!--end::Container-->
+    </div>
+    <!--end::App Content-->
+  </main>
+  <!--end::App Main-->
+  <!--begin::Footer-->
+
+
+
+  <footer class="app-footer">
+    <!--begin::To the end-->
+    <div class="float-end d-none d-sm-inline">Anything you want</div>
+    <!--end::To the end-->
+    <!--begin::Copyright-->
+    <strong>
+      Copyright &copy; 2014-2024&nbsp;
+      <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;"> JENGO PAY</a>.
+    </strong>
+    All rights reserved.
+    <!--end::Copyright-->
+  </footer>
+  <!--end::Footer-->
+</div>
+<!--end::App Wrapper-->
+
+
+
+
+<!-- Overlay Cards -->
+
+<!-- create Announcement -->
+
+
+
+
+
+<!-- Start View announcement -->
+<div class="view_announcement" id="view_announcement">
+<div class="card content">
+<div class="card-header view_announcement bg-secondary text-white">
+   <h5 class="mb-0">Rent Payments</h5>
+   <div id="close-overlay-btn" class="close-btn" > <b> &times;</b> </div>
    
-        <hr>
-                    <!--end::Row-->
-                  </div>
-                  <!-- ./card-body -->
-                  <div class="card-footer"> 
-                    <!--begin::Row-->
-                    <div class="row">
-                      <div class="col-md-6 col-6">
-                        <div class="text-center border-end">
-                          <span class="text-success">
-                            <i class="bi bi-caret-up-fill"></i>80%
-                          </span>
-                          <h5 class="fw-bold mb-0">KSH 35,210.43</h5>
-                          <span class="text-uppercase">TOTAL PAID RENT</span>
-                        </div>
-                      </div>
-                      <!-- /.col -->
-                      <div class="col-md-6 col-6">
-                        <div class="text-center border-end">
-                          <span class="text-info"> <i class="bi bi-caret-left-fill"></i> 20% </span>
-                          <h5 class="fw-bold mb-0">KSH 10,390.90</h5>
-                          <span class="text-uppercase">TOTAL PENDING</span>
-                        </div>
-                      </div> 
-                      <!-- /.col -->
-                      
-                    <!--end::Row-->
-                  </div> 
-                  <!-- /.card-footer -->
-                <!-- </div> -->
-                <!-- /.card -->
-              <!-- </div> -->
-              <!-- /.col -->
-            <!-- </div> -->
-            <!--end::Row-->
-            </div>
-            <hr>
-                 
- <!-- Chat Icon to Trigger the Chat -->
- <!-- <div class="chat-icon" onclick="toggleChat()">
-  💬
-</div> -->
+</div>
+<div class="card-body">
+   <p class="card-text">
+       All Rent Payments should be made before 24/01/17. Anyone who feels that they might not 
+       be able to complete their dues on 24/01/17 should communicate to management before the due date.
+       Else, you face an eviction risk if you fail to pay your dues before the said date without a reasonable reason</p>
+      
+       <p class="timestamp" id="timestamp"></p> <!-- Timestamp -->
 
 
-    <!-- Chat Container -->
-    <!-- <div class="chat-container" id="chat-container"> -->
-      <!-- Close button -->
-      <!-- <button id="iden"class="close-btn" id="close" onclick="closeChat()">X</button>
+   <div class="Recipients border-top border-gray "> <p><strong>Recipients|</strong> All Employees</p>  </div>
+   
+</div>
+<div class="card-footer view_announcement d-flex">
+   <button class="btn btn-danger btn-sm">Delete</button>
+   <button class="btn btn-secondary btn-sm">Resend</button>
+</div>
+</div>
+</div>
 
-      <div class="chat-box" id="chat-box">
-          <div class="message bot-message">Hello! How can I help you today?</div>
-      </div>
-      <input type="text" id="user-input" placeholder="Type your message..." />
-      <button class="text-black"   onclick="sendMessage()">Send</button>
-  </div> -->
-
-            <!-- begin::Row -->
-            <!-- <div class="row g-4 mb-8"> -->
-              <!-- First Card -->
-              <!-- <div class="col-md-10"> -->
-                <!--begin::Row-->
-                <!-- <div class="row g-4 mb-4"> -->
-                  <!-- <div class="col-md-8"> -->
-                    <!-- DIRECT CHAT -->
-                    <!-- <div class="card">
-                      <div class="card-header" style="background-color:#FFC107; /* RGB */;">
-                        <h3 class="card-title">RentalTrends</h3><br> -->
-                       <!-- <b><p>Click The Rectangle To Know Per Apartment</p></b>  -->
-                       <!-- </div>  -->
-
-                      <!-- <div class="card-body">
-                        
-                        <canvas id="rentalTrends" width="300" height="205"></canvas>
-                      </div>
-                    </div>
-
-                 -->
-                    <!-- /.direct-chat -->
-                  <!-- </div> -->
-                  <!-- /.col -->
-                  
-                  <!-- /.col -->
-                <!-- </div> -->
-                <!--end::Row-->
-                <!--begin::Latest Order Widget-->
-                
-                <!-- /.card -->
-              <!-- </div> -->
-              <!-- /.col -->
-              <!-- <div class="col-md-6"> -->
-                <!-- Info Boxes Style 2 -->
-                <!-- <div class="card">
-
-                  <div class="card-header" style="background-color:#FFC107; /* RGB */;">
-                    <h3 class="card-title">Occupancy Status</h3>
-                  </div> -->
-
-                  <!-- <div class="card-body"> -->
-                  
-                    <!--begin::Row-->
-                    <!-- <div class="row">
-                      <canvas id="myPieChart" width="200" height="200"></canvas> -->
-                      <!-- /.col -->
-                    <!-- </div> -->
-                    <!--end::Row-->
-                  <!-- </div> -->
-
-                  <!-- </div> -->
-
-
-                <!-- </div> -->
-                <!-- /.card -->
-              <!-- </div> -->
-              <!-- /.col -->
-            <!-- </div> -->
-            <!--end::Row-->
-
-   <!-- Begin Communications Row -->
-   <div class="row">
-    <div class="col-md-12">
-      <div class="card mb-4">
-        <div class="card-header" style="background-color:#00192D; color: white;" >
-          <h5 class="card-title text-warning" style="padding:0.5rem; border-radius: 10px;" >Communication</h5>
-          <a href="./texts.html"><h5 style="margin-left: 85%; padding:0.5rem; border-radius: 10px;">Full  Details
-            <i class="fas fa-arrow-right"></i>
-          </h5></a>
-
-          <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-              <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-              <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-            </button>
-            <div class="btn-group">
-              <button
-                type="button"
-                class="btn btn-tool dropdown-toggle"
-                data-bs-toggle="dropdown"
-              >
-                <i class="bi bi-wrench"></i>
-              </button>
-              <div class="dropdown-menu dropdown-menu-end" role="menu">
-                <a href="#" class="dropdown-item">Action</a>
-                <a href="#" class="dropdown-item">Another action</a>
-                <a href="#" class="dropdown-item"> Something else here </a>
-                <a class="dropdown-divider"></a>
-                <a href="#" class="dropdown-item">Separated link</a>
-              </div>
-            </div>
-            <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-              <i class="bi bi-x-lg"></i>
-            </button>
-          </div>
-        </div>
-        <div class="card-body">
-          <!-- Conversations are loaded here -->
-          <div class="direct-chat-messages">
-            <!-- Message. Default to the start -->
-            <div class="direct-chat-msg">
-              <div class="direct-chat-infos clearfix">
-                <span class="direct-chat-name float-start">Landlord</span>
-                <span class="direct-chat-timestamp float-end"> 23 Jan 2:00 pm </span>
-              </div>
-              <!-- /.direct-chat-infos -->
-              <img
-                class="direct-chat-img"
-                src="assets/img/user1-128x128.jpg"
-                alt="message user image"
-              />
-              <!-- /.direct-chat-img -->
-              <div class="direct-chat-text">
-                Is this template really for free? That's unbelievable!
-              </div>
-              <!-- /.direct-chat-text -->
-            </div>
-            <!-- /.direct-chat-msg -->
-            <!-- Message to the end -->
-            <div class="direct-chat-msg end">
-              <div class="direct-chat-infos clearfix">
-                <span class="direct-chat-name float-end"> Sarah Bullock </span>
-                <span class="direct-chat-timestamp float-start">
-                  23 Jan 2:05 pm
-                </span>
-              </div>
-              <!-- /.direct-chat-infos -->
-              <img
-                class="direct-chat-img"
-                src="assets/img/user3-128x128.jpg"
-                alt="message user image"
-              />
-              <!-- /.direct-chat-img -->
-              <div class="direct-chat-text">You better believe it!</div>
-              <!-- /.direct-chat-text -->
-            </div>
-            <!-- /.direct-chat-msg -->
-            <!-- Message. Default to the start -->
-            <div class="direct-chat-msg">
-              <div class="direct-chat-infos clearfix">
-                <span class="direct-chat-name float-start"> Alexander Pierce </span>
-                <span class="direct-chat-timestamp float-end"> 23 Jan 5:37 pm </span>
-              </div>
-              <!-- /.direct-chat-infos -->
-              <img
-                class="direct-chat-img"
-                src="assets/img/user1-128x128.jpg"
-                alt="message user image"
-              />
-              <!-- /.direct-chat-img -->
-              <div class="direct-chat-text">
-                Working with AdminLTE on a great new app! Wanna join?
-              </div>
-              <!-- /.direct-chat-text -->
-            </div>
-            <!-- /.direct-chat-msg -->
-            <!-- Message to the end -->
-            <div class="direct-chat-msg end">
-              <div class="direct-chat-infos clearfix">
-                <span class="direct-chat-name float-end"> Sarah Bullock </span>
-                <span class="direct-chat-timestamp float-start">
-                  23 Jan 6:10 pm
-                </span>
-              </div>
-              <!-- /.direct-chat-infos -->
-              <img
-                class="direct-chat-img"
-                src="../../dist/assets/img/user3-128x128.jpg"
-                alt="message user image"
-              />
-              <!-- /.direct-chat-img -->
-              <div class="direct-chat-text">I would love to.</div>
-              <!-- /.direct-chat-text -->
-            </div>
-            <!-- /.direct-chat-msg -->
-          </div>
-          <!-- /.direct-chat-messages-->
-          <!-- Contacts are loaded here -->
-        
-              <!-- End Contact Item -->
-            </ul>
-            <!-- /.contacts-list -->
-          </div>
-          <!-- /.direct-chat-pane -->
-        <!-- </div> -->
-        <!-- /.card-body -->
-        <div class="card-footer">
-          <form action="#" method="post">
+<!-- Lease Modal -->
+<div class="modal fadey" id="leaseyModal" tabindex="-1" aria-labelledby="leaseyModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+  <div class="modal-header">
+    <h5 class="modal-title" id="leaseyModalLabel"></h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <div class="container">
+      <div class="form-wrapper">
+          <h1 class="text-warning">Assign Task</h1>
+          <form id="taskForm">
             <div class="input-group">
-              <input
-                type="text"
-                name="message"
-                placeholder="Type Message ..."
-                class="form-control"
-              />
-              <span class="input-group-append">
-                <button type="button" class="btn btn-warning">Send</button>
-              </span>
+              <label for="taskName">Task About To Be Assigned:</label>
+              <input type="text" id="taskName" name="taskName" placeholder="Enter task name" style="border-radius: 10px; width: 100%;"   required>
+          </div>
+
+              <div class="input-group">
+                  <label for="serviceProvider">Select A Category For The Task</label>
+              <label for="taskName"></label>
+                  <select id="serviceProvider" name="serviceProvider" style="border-radius: 10px;"  required>
+                      <option value="" id="taskName" disabled selected>Select A Category </option>
+                      <option value="John">Electrical</option>
+                      <option value="Jane">Plumbing</option>
+                      <option value="Mike">Cleaning</option>
+                  </select>
+              </div>
+              <div class="input-group">
+                <label for="serviceProvider">Select Service Provider:</label>
+                <select id="serviceProvider" name="serviceProvider" style="border-radius: 10px;" required>
+                    <option value="" id="taskName"  disabled selected>Select Provider</option>
+                    <option value="John">John </option>
+                    <option value="Jane">Jane </option>
+                    <option value="Mike">Mike </option>
+                </select>
             </div>
+
+
+              <button type="submit" class="submit-btn" style="border-radius: 10px; background-color: #00192D; width: 50%; margin-left: 6rem;" >Assign</button>
           </form>
-        </div>
-        <!-- /.card-footer-->
       </div>
 
-            <!-- Begin Mantainance row -->
-
-            <div class="row">
-              <div class="col-md-12">
-                <div class="card mb-4">
-                  <div class="card-header" style="background-color:#00192D; color: white;">
-                    <h5 class="card-title text-warning" style="padding:0.5rem; border-radius: 10px;">Maintenance Management</h5>
-                    <a href="./maintanceReport1.html"><h5 style="margin-left: 85%; padding:0.5rem; border-radius: 10px;">Full  Details
-                      <i class="fas fa-arrow-right"></i>
-                    </h5></a>
-                    <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                      </button>
-                      <div class="btn-group">
-                        <button
-                          type="button"
-                          class="btn btn-tool dropdown-toggle"
-                          data-bs-toggle="dropdown"
-                        >
-                          <i class="bi bi-wrench"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end" role="menu">
-                          <a href="#" class="dropdown-item">Action</a>
-                          <a href="#" class="dropdown-item">Another action</a>
-                          <a href="#" class="dropdown-item"> Something else here </a>
-                          <a class="dropdown-divider"></a>
-                          <a href="#" class="dropdown-item">Separated link</a>
-                        </div>
-                      </div>
-                      <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                        <i class="bi bi-x-lg"></i>
-                      </button>
-                    </div>
-                  </div> 
-                  <!-- /.card-header -->
-                  <div class="card-body">
-                    <!--begin::Row-->
-                    <table id="myTableThree" class="display" style="">
-                      <thead>
-                          <tr>
-
-                              <th>Residence</th>
-                              <th>Request</th>
-                              <th>Status</th>
-                            
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <tr>
-                             
-                              <td>Manucho Apartments</td>
-                              <td>Leaking Repair</td>
-                              <td><span class="badge text-bg-success">!Completed </span></td>
-                          </tr>
-                          <tr>
-                             
-                              <td>Manucho Apartments</td>
-                              <td>Water Sink Repair</td>
-                              <td><span class="badge text-bg-danger">!Pending</span></td>
-                          </tr>
-                          <tr>
-                           
-                            <td>Many Apartments</td>
-                            <td>Balcony Painting</td>
-                            <td><span class="badge text-bg-warning"> !Work In Progress </span></td>
-                        </tr>
-                          <!-- Add more rows as needed -->
-                      </tbody>
-                  </table>
+      <!-- <div id="assignedTasks">
+          <h2>Assigned Tasks</h2>
+          <ul id="taskList"></ul>
+      </div> -->
+  </div>
 
 
+  </div>
+</div>
+</div>
+</div>
 
-                
-                    <!--end::Row-->
-                  </div>
-                  <!-- ./card-body -->
-                  <div class="card-footer">
-                    <!--begin::Row-->
-                    
-                      <!-- /.col -->
-                      
-                    <!--end::Row-->
-                  </div>
-                  <!-- /.card-footer -->
-                </div>
-                <!-- /.card -->
-              </div>
-              <!-- /.col -->
-            </div>
+<!-- Lease Modal -->
+<div class="modal fade" id="leaseModal" tabindex="-1" aria-labelledby="leaseModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="leaseModalLabel"></h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <form class="beasy">
+         <!-- Landlord Information Section -->
+  <!-- Service Provider Information Section -->
+  <div class="form-section">
+    <h3 class="text-warning">Landlord Information</h3>
+     <a href="#"><p>Martin White</p></a>
+    <!-- <label for="landlordName">Landlord Name(Martin White)</label> -->
+    <!-- <input type="text" id="landlordName" name="landlordName" placeholder="Enter your full name" required> -->
 
-        
-                    <div class="card-footer">
-                      <!--begin::Row-->
-                      
-                        <!-- /.col -->
-                        
-                      <!--end::Row-->
-                    </div>
-                    <!-- /.card-footer -->
-                  </div>
-                  <!-- /.card -->
-                </div>
-                <!-- /.col -->
-              </div>
+    <h3 class="text-warning">Select Service Providers Information</h3>
+    <label for="paymentMethod">Choose:</label>
+    <select id="paymentMethod" name="paymentMethod" required>
+      <option value="bank_transfer">ABX Electricals</option>
+      <option value="bank_transfer">Sunsine Plumbers</option>
+      <option value="bank_transfer">Favored Technologies</option>
+    </select>
+    <h3 class="text-warning">Payment Details</h3>
+    <label for="amount">Payment Amount (KSH)</label>
+    <input type="text" id="landlordName" name="landlordName" placeholder="Enter Amount" required>
 
+    <label for="paymentMethod">Payment Method</label>
+    <select id="paymentMethod" name="paymentMethod" required>
+      <option value="mpesa_transfer" class="bossy">MPESA</option>
+    </select>
+     <!-- Submit Button -->
+     <button type="submit" class="bossy"> MAKE PAYMENT</button>
+  </div>
+
+ 
+
+  <!-- Payment Details Section
+  <div class="form-section"> 
+    <h3>Payment Details</h3>
+    <label for="amount">Payment Amount (KSH)</label>
+    <input type="number" id="amount" name="amount" placeholder="Enter the amount to pay" min="1" required>
+
+    <label for="paymentMethod">Payment Method</label>
+    <select id="paymentMethod" name="paymentMethod" required>
+      <option value="mpesa_transfer" class="bossy">MPESA</option>
+    </select>
+  </div> -->
+   
+      </form>
+    </div>
+  </div>
+</div>
+</div>
 
             
           </div>
@@ -1637,9 +1698,78 @@ background-color: red;
         <!--end::App Content-->
       </main>
 
+
+
     <!--end::App Wrapper-->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <script>
+      document.getElementById('forecastForm').addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const rentalIncome = parseFloat(document.getElementById('rentalIncome').value);
+          const expenses = parseFloat(document.getElementById('expenses').value);
+          const rentIncrease = parseFloat(document.getElementById('rentIncrease').value) / 100;
+          const months = parseInt(document.getElementById('months').value);
+          
+          // Prepare the data for forecasting
+          const forecastData = [];
+          let currentIncome = rentalIncome;
+          let currentExpenses = expenses;
+          for (let i = 0; i < months; i++) {
+              currentIncome += currentIncome * rentIncrease;  // Apply rent increase
+              currentExpenses += currentExpenses * 0.02;    // Example: 2% increase in expenses every month
+              forecastData.push({ month: i + 1, income: currentIncome, expenses: currentExpenses, profit: currentIncome - currentExpenses });
+          }
+          
+          // Display the forecast chart
+          const labels = forecastData.map(item => `Month ${item.month}`);
+          const incomeData = forecastData.map(item => item.income);
+          const expensesData = forecastData.map(item => item.expenses);
+          const profitData = forecastData.map(item => item.profit);
+  
+          const ctx = document.getElementById('forecastChart').getContext('2d');
+          const forecastChart = new Chart(ctx, {
+              type: 'line',
+              data: {
+                  labels: labels,
+                  datasets: [
+                      {
+                          label: 'Income (KSH)',
+                          data: incomeData,
+                          borderColor: 'green',
+                          fill: false,
+                      },
+                      {
+                          label: 'Expenses (KSH)',
+                          data: expensesData,
+                          borderColor: 'red',
+                          fill: false,
+                      },
+                      {
+                          label: 'Profit (KSH)',
+                          data: profitData,
+                          borderColor: 'blue',
+                          fill: false,
+                      }
+                  ]
+              },
+              options: {
+                  responsive: true,
+                  scales: {
+                      x: { 
+                          title: { text: 'Months', display: true }
+                      },
+                      y: { 
+                          title: { text: 'Amount (KSH)', display: true }
+                      }
+                  }
+              }
+          });
+      });
+  </script>
+
+
     <script>
         // Initialize DataTable
         $(document).ready(function () {
@@ -1887,7 +2017,7 @@ background-color: red;
   });
 </script>
 
-<!-- <script>
+<script>
   // Toggles visibility of the chat container
   function toggleChat() {
       const chatContainer = document.getElementById('chat-container');
@@ -1935,9 +2065,9 @@ background-color: red;
           return 'Sorry, I didn\'t quite get that. Can you rephrase?';
       }
   }
-</script> -->
+</script>
 
-<!-- <script>
+<script>
   const ctx = document.getElementById('myPieChart').getContext('2d');
 
   const myPieChart = new Chart(ctx, {
@@ -1963,7 +2093,7 @@ background-color: red;
           }
       }
   });
-</script> -->
+</script>
     </script>
     <!--end::Script-->
   </body>
