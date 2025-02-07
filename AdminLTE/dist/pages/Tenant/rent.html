@@ -42,7 +42,7 @@
     />
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../../dist/css/adminlte.css" />
+    <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -55,149 +55,19 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-      .container {
-            width: 100%;
-            margin: auto;
-            background: white;
-            padding: 25px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            transition: 0.3s ease-in-out;
-        }
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="profile.css">
+    
+    
+    <!-- scripts for data_table -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="announcements.css">
+    
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-        h1 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 24px;
-        }
 
-        /* Button Styling */
-        .add-btn {
-            background: #00192D;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 14px;
-            transition: 0.3s;
-        }
 
-        .add-btn:hover {
-            background: #00192D;
-        }
-
-        /* Overlay Styles */
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .overlay-content {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            width: 300px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Form Styling */
-        input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 14px;
-            margin: 5px 0;
-        }
-
-        button {
-            background: #00192D;
-            color: white;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 14px;
-            margin-top: 10px;
-        }
-
-        button:hover {
-            background: #00192D;
-        }
-
-        /* Close Button */
-        .close-btn {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 6px 10px;
-            cursor: pointer;
-            border-radius: 50%;
-            font-size: 14px;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-        }
-
-        .close-btn:hover {
-            background: #c82333;
-        }
-        .next{
-          justify-content: center;
-        }
-
-        /* Table Styling */
-        table {
-            width: 100%;
-            margin-top: 15px;
-            border-collapse: collapse;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        th, td {
-            padding: 12px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
-
-        th {
-            background: #00192D;
-            color: white;
-            font-weight: bold;
-        }
-
-        tbody tr:nth-child(even) {
-            background: #f8f9fa;
-        }
-
-        /* Delete Button */
-        .delete-btn {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 6px 10px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 12px;
-            transition: 0.3s;
-        }
-
-        .delete-btn:hover {
-            background: #c82333;
-        }
-    </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -290,7 +160,7 @@
                   <div class="d-flex">
                     <div class="flex-shrink-0">
                       <img
-                        src="../../dist/assets/img/user3-128x128.jpg"
+                        src="../../../dist/assets/img/user3-128x128.jpg"
                         alt="User Avatar"
                         class="img-size-50 rounded-circle me-3"
                       />
@@ -443,13 +313,13 @@
                   <!-- <li class="nav-item">
                     <a href="./index.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard v1</p>
+                      <p>Dashboard</p>
                     </a>
                   </li> -->
                   <li class="nav-item">
                     <a href="./index2.html" class="nav-link active">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard</p>
+                      <p>Dashboard </p>
                     </a>
                   </li>
                   <!-- <li class="nav-item">
@@ -488,86 +358,41 @@
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="./invoices.html" class="nav-link">
+                    <a href="./widgets/invoices.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Invoices</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./paymentreceipts.html" class="nav-link">
+                    <a href="./widgets/payment receipts.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Payment Receipts</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./rentdeposit.html" class="nav-link">
+                    <a href="./widgets/payment receipts.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p> Rent Deposit Reports</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./profitandloss.html" class="nav-link">
+                    <a href="./widgets/cards.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Profit&Loss Statement</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./balancesheet.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Balance Sheet</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./cashflow.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Cashflow</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./cashflow.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Tax Reports</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./cashflowforecasting.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Cashflow Forecasting</p>
+                      <p>Maintenance And Repair Costs</p>
                     </a>
                   </li>
                 </ul>
               </li>
-              <li class="nav-item">
-                <a href="./showCommunication.html" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Maintenance Requests</p>
-                </a>
-              </li>
-
-              <li class="nav-item">
-                <a href="./serviceproviders.html" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Service Providers</p>
-                </a>
-              </li>
               
               <li class="nav-item">
-                <a href="./rating&reviews.html" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Reviews And Rating</p>
-                </a>
-              </li>
-
-              
-              <li class="nav-item">
-                <!-- <a href="#" class="nav-link">
+                <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-clipboard-fill"></i>
                   <p>
                     Layout Options
                     <span class="nav-badge badge text-bg-secondary me-3">6</span>
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
-                </a> -->
+                </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
                     <a href="./layout/unfixed-sidebar.html" class="nav-link">
@@ -614,13 +439,13 @@
                 </ul>
               </li>
               <li class="nav-item">
-                <!-- <a href="#" class="nav-link">
+                <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-tree-fill"></i>
                   <p>
                     UI Elements
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
-                </a> -->
+                </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
                     <a href="./UI/general.html" class="nav-link">
@@ -642,8 +467,7 @@
                   </li>
                 </ul>
               </li>
-              <!-- start nav-item forms -->
-              <!-- <li class="nav-item">
+              <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-pencil-square"></i>
                   <p>
@@ -659,46 +483,15 @@
                     </a>
                   </li>
                 </ul>
-              </li> -->
-
-              <!-- end nav-item forms -->
-
-              <!-- Start Communications part -->
+              </li>
               <li class="nav-item">
                 <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-pencil-square"></i>
-                  <p>
-                    Communications
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="texts.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Texts</p>
-                    </a>
-                  </li>
-
-                  <li class="nav-item">
-                    <a href="communications/announcements.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Announcements</p>
-                    </a>
-                    
-                  </li>
-                </ul>
-              </li>
-
-              <!-- End communications part -->
-              <li class="nav-item">
-                <!-- <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-table"></i>
                   <p>
                     Tables
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
-                </a> -->
+                </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
                     <a href="./tables/simple.html" class="nav-link">
@@ -708,15 +501,15 @@
                   </li>
                 </ul>
               </li>
-              <!-- <li class="nav-header">EXAMPLES</li> -->
+              <li class="nav-header">EXAMPLES</li>
               <li class="nav-item">
-                <!-- <a href="#" class="nav-link">
+                <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-box-arrow-in-right"></i>
                   <p>
                     Auth
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
-                </a> -->
+                </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
                     <a href="#" class="nav-link">
@@ -772,26 +565,26 @@
                   </li>
                 </ul>
               </li>
-              <!-- <li class="nav-header">DOCUMENTATIONS</li> -->
+              <li class="nav-header">DOCUMENTATIONS</li>
               <li class="nav-item">
-                <!-- <a href="./docs/introduction.html" class="nav-link">
+                <a href="./docs/introduction.html" class="nav-link">
                   <i class="nav-icon bi bi-download"></i>
                   <p>Installation</p>
-                </a> -->
+                </a>
               </li>
               <li class="nav-item">
-                <!-- <a href="./docs/layout.html" class="nav-link">
+                <a href="./docs/layout.html" class="nav-link">
                   <i class="nav-icon bi bi-grip-horizontal"></i>
                   <p>Layout</p>
-                </a> -->
+                </a>
               </li>
               <li class="nav-item">
-                <!-- <a href="./docs/color-mode.html" class="nav-link">
+                <a href="./docs/color-mode.html" class="nav-link">
                   <i class="nav-icon bi bi-star-half"></i>
                   <p>Color Mode</p>
-                </a> -->
+                </a>
               </li>
-              <!-- <li class="nav-item">
+              <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-ui-checks-grid"></i>
                   <p>
@@ -813,12 +606,12 @@
                     </a>
                   </li>
                 </ul>
-              </li> -->
+              </li>
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-filetype-js"></i>
                   <p>
-                    Help
+                    Javascript
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
                 </a>
@@ -831,31 +624,31 @@
                   </li>
                 </ul>
               </li>
-              <!-- <li class="nav-item">
+              <li class="nav-item">
                 <a href="./docs/browser-support.html" class="nav-link">
                   <i class="nav-icon bi bi-browser-edge"></i>
                   <p>Browser Support</p>
                 </a>
-              </li> -->
-              <!-- <li class="nav-item">
+              </li>
+              <li class="nav-item">
                 <a href="./docs/how-to-contribute.html" class="nav-link">
                   <i class="nav-icon bi bi-hand-thumbs-up-fill"></i>
                   <p>How To Contribute</p>
                 </a>
-              </li> -->
+              </li>
               <li class="nav-item">
                 <a href="./docs/faq.html" class="nav-link">
                   <i class="nav-icon bi bi-question-circle-fill"></i>
                   <p>FAQ</p>
                 </a>
               </li>
-              <!-- <li class="nav-item">
+              <li class="nav-item">
                 <a href="./docs/license.html" class="nav-link">
                   <i class="nav-icon bi bi-patch-check-fill"></i>
                   <p>License</p>
                 </a>
-              </li> -->
-              <!-- <li class="nav-header">MULTI LEVEL EXAMPLE</li>
+              </li>
+              <li class="nav-header">MULTI LEVEL EXAMPLE</li>
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-circle-fill"></i>
@@ -939,7 +732,7 @@
                   <p>Informational</p>
                 </a>
               </li>
-            </ul> -->
+            </ul>
             <!--end::Sidebar Menu-->
           </nav>
         </div>
@@ -952,125 +745,256 @@
         <div class="app-content-header">
           <!--begin::Container-->
           <div class="container-fluid">
-            <div class="container">
-              <h1>Service Providers</h1>
-      
-              <!-- Add Provider Form -->
-              <div class="form-container">
-                  <input type="text" id="name" placeholder="Provider Name" required>
-                  <input type="text" id="category" placeholder="Category" required>
-                  <input type="email" id="email" placeholder="Email" required>
-                  <input type="text" id="phone" placeholder="Phone Number" required>
-                 
+            <!--begin::Row-->
+            <div class="row">
+              <div class="col-sm-6"><h3 class="mb-0"></h3></div>
+              <div class="col-sm-6">
+              
               </div>
-      
-              <!-- Search & Filter -->
-              <div class="search-container">
-                 
-                  <select id="filter" onchange="filterProviders()">
-                      <option value="">All Categories</option>
-                      <option value="Plumbing">Plumbing</option>
-                      <option value="Electrical">Electrical</option>
-                      <option value="Cleaning">Cleaning Services</option>
-                      <!-- <option value="Inspection">Inspection</option>
-                      <option value="Inspection">Wifi Provider</option>
-                      <option value="Inspection">Gas Supplier</option> -->
-                  </select>
-              </div>
-              <button class="next" onclick="addProvider()">Add Provider</button>
-             
+            </div>
+            <!--end::Row-->
           </div>
-      
+          <!--end::Container-->
+        </div>
+        <div  class="app-content">           
+
+          <div class="container-fluid">
+            <!-- First Row -->
+            <div class="row  " >
+              <div class="col-sm-8">
+                
+                <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> JOSEPH</h3>
+              
+                
+                    <div class="row mt-2  ">
+                      <div class="col-md-12  ">
+                  
+                        <div class="row mt-6 ">
+                            <!-- Summary -->
+                            <div class="col-md-3 ">
+                                <label class="text text-center">  <i class="fas fa-briefcase icon"></i>   Occupation </label>
+                                <span class="value text-center">Teacher</span>
+                            </div>
+                    
+                            <div class="col-md-3">
+                                <label class="text text-center"> <i class="fas fa-baby icon"></i>   BIRTH  </label>
+                                <span class="value"> 5-23-1995 </span>
+                            </div>
+                            <div class="col-md-3">
+                              <label class="text text-center">  <i class="fas fa-id-card"></i>  IDENTIFICATION NUMBER </label>
+                              <span class="value">012020202 </span>
+                            </div>
+                        </div>
+
+                        <div class="row mt-6" >
+                          <!-- Summary -->
+                          <div class="col-md-3  ">
+                              <label class="text text-center"> <i class="fas fa-globe icon"></i>   ORIGIN </label>
+                              <span class="value text-center">Kenyan </span>
+                          </div>
+                  
+                          <div class="col-md-3">
+                              <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> End_Date  </label>
+                              <span class="value"> 6-7-2020 </span>
+                          </div>
+                          <div class="col-md-3">
+                            <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> <a href=""> Start_Date  </a>  </label>
+                            <span class="value"> 5-23-1995 </span>
+                          </div>
+                          <div class="col-md-3">
+                            <button class="btn text text-danger">  <i class="fas fa-trash"></i> Remove Joseph</button>
+                          </div>
+                        </div>
+                        
+                      </div>
+                      <!-- <div class="col-md-6">
+
+                        <div class="contact">
+                          <p class="contact_item" >Email</p>
+                          <p class="contact_value" >nucho@gmail</p>
+                        </div>
+                        <div class="contact">
+                          <p  class="contact_item" >Address</p>
+                          <p  class="contact_value" >50202|202|Califonia</p>
+                        </div>
+
+                      </div> -->
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <ol class="breadcrumb float-sm-end">
+                  <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                </ol>
+              </div>
+            </div>
+
+            <!-- End first Row -->
+
+            <!-- Second row start --><div class="row first mb-2 mt-3 rounded-circle">
+
+                <div class="col-md-6 d-flex justify-content-between">
+                  <button id="add_provider_btn" class="btn" style="background-color: #00192D; color: white; font-size: small;">  <i class="fas fa-calendar-check icon"></i>
+                    <b> Rent_Details </b></button>  
+                    <button id="add_provider_btn" class="btn" style="background-color: #00192D; color: white; font-size: small;">  <i class="fas fa-calendar-check icon"></i>
+                      <b> Agreements </b></button>                
+                </div>
+
+                <div class="col-md-6">
+                  <div style="display: flex; justify-content: end;">
+                     
+                   
+                  </div>   
+                </div>
+              <!-- /.col -->
+            </div>
+
+            
+
+      <div class="row mt-3 ">
+        <div class="col-md-12">
+          <div class="card"> 
+            
+            <div class="card-body">
+            <table id="agreements" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">FIRST PARTY (YOU)</th>
+                            <th scope="col">SECOND PARTY (TENANT)</th>
+                            <th scope="col">DEPOSIT</th>
+                            <th scope="col">ACTION</th>
+                            
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">EBENEZER</th>
+                            <td>JOHN DOE</td>
+                            <td>KSH 100,000</td>
+                            <td>   <span><button class="btn btn-sm btn-outline custom-btn">VIEW AGREEMENT</button></span> <span><button class="btn btn-sm btn-outline custom-btn">DOWNLOAD</button></span></td>
+                    </tr>
+                    <tr>
+                </tbody>
+            </table>
+
+            <div class="overlay" id="overlay">
+              <div class="invoicy-container">
+                <!-- <div class="receipt-container" id="receipt"> -->
+                  <button class="close-btn" onclick="closeOverlay()">×</button>
+                  <h2><strong>Payment Receipt</strong></h2>
+                  <p><strong> Nairobi,  KENYA</strong></p>
+                  <p><strong>Date:</strong> <span id="date"></span></p>
+                  <p><strong>Method:MPESA</strong></p>
+                  <p><strong>Reference:TGH34KJ89K</strong></p>
+
+            
+                  <!-- <div class="invoice-details">
+                      <p><strong>Invoice Number:</strong> INV-0001</p>
+                      <p><strong>Tenant Name:</strong> John Doe</p>
+                      <p><strong>Property:</strong> ABC Apartments</p>
+                      <p><strong>Invoice Date:</strong> 2025-01-23</p>
+                      <p><strong>Due Date:</strong> 2025-02-01</p>
+                  </div> -->
+                  <table>
+                      <tr><th>Description</th><th>AMOUNT</th></tr>
+                      <tr><td>Rent Amount</td><td>KSH1500.00</td></tr>
+                      <tr><td>Water Bill</td><td>KSH50.00</td></tr>
+                      <tr><td>Garbage Collection Fees</td><td>KSH200.00</td></tr>
+                      <tr><td>Late Fees</td><td>KSH300.00</td></tr>
+                      <tr><td>Maintenance Costs</td><td>KSH100.00</td></tr>
+                      <!-- <tr><td>Arrears</td><td>KSH 200.00</td></tr> -->
+                      <tr class="total"><td>Total Amount Paid</td><td>KSH1905.00</td></tr>
+                      <tr><td> <button id="exportButton" style="border-radius: 10px; margin-left: 6rem;">
+                        <i class="fas fa-share-square"></i> DOWNLOAD
+                      </button></td></tr>
+                  </table>
+              </div>
+          </div>
+
+
+<!-- 
+        <div class="overlay" id="overlay">
+          <div class="invoicy-container">
+          <div class="receipt-container" id="receipt">
+            <button class="close-btn" onclick="closeOverlay()">×</button>
+            <h2>Payment Receipt</h2>
+            <p> Nairobi,  KENYA</p>
+            <p><strong>Date:</strong> <span id="date"></span></p>
+           
+            <table>
+              <td>Manucho Apartments</td>
+              <td>John</td>
+              <th>A11</th>
+              <td>KSH80,000</td>
+              <td>KSH80,000</td>
+              <td>MPESA</td>
+              <td>TBM34KGNJ8</td>
+              <td>10-12-2025</td>
+              <td>KSH0</td>
+            </table>
+        </div>
+    
+        <button class="print-btn" onclick="printReceipt()">Print Receipt</button>
+     -->
+
+
     <!--end::App Wrapper-->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    
-    <script>
-      // Initialize DataTable
-      $(document).ready(function () {
-          $('#myTable').DataTable();
-      });
-      $(document).ready(function () {
-          $('#myTableOne').DataTable();
-      });
-      $(document).ready(function () {
-          $('#myTableThree').DataTable();
-      });
-      $(document).ready(function () {
-          $('#myTableFour').DataTable();
-      });
-   </script>
-
 
     <script>
-      document.addEventListener("DOMContentLoaded", loadProviders);
-
-      function addProvider() {
-          let name = document.getElementById("name").value;
-          let category = document.getElementById("category").value;
-          let phone = document.getElementById("phone").value;
-
-          if (name && category && phone) {
-              let providers = JSON.parse(localStorage.getItem("providers")) || [];
-              providers.push({ name, category, phone });
-              localStorage.setItem("providers", JSON.stringify(providers));
-              loadProviders();
-              document.getElementById("name").value = "";
-              document.getElementById("category").value = "";
-              document.getElementById("phone").value = "";
-          } else {
-              alert("Please fill all fields.");
-          }
+      // Function to print the receipt
+      function printReceipt() {
+          window.print(); // Opens the print dialog
       }
 
-      function loadProviders() {
-          let providers = JSON.parse(localStorage.getItem("providers")) || [];
-          let providerList = document.getElementById("provider-list");
-          providerList.innerHTML = "";
+      // Set current date on the receipt
+      document.getElementById("date").textContent = new Date().toLocaleDateString();
+  </script>
 
-          providers.forEach((provider, index) => {
-              let row = `<tr>
-                  <td>${provider.name}</td>
-                  <td>${provider.category}</td>
-                  <td>${provider.phone}</td>
-                  <td><button class="delete-btn" onclick="deleteProvider(${index})">Delete</button></td>
-              </tr>`;
-              providerList.innerHTML += row;
-          });
+    <script>
+      function openOverlay() {
+          document.getElementById("overlay").style.display = "flex";
       }
 
-      function deleteProvider(index) {
-          let providers = JSON.parse(localStorage.getItem("providers")) || [];
-          providers.splice(index, 1);
-          localStorage.setItem("providers", JSON.stringify(providers));
-          loadProviders();
-      }
-
-      function filterProviders() {
-          let searchQuery = document.getElementById("search").value.toLowerCase();
-          let categoryFilter = document.getElementById("filter").value;
-          let providers = JSON.parse(localStorage.getItem("providers")) || [];
-
-          let filteredProviders = providers.filter(provider => {
-              return (
-                  (provider.name.toLowerCase().includes(searchQuery) || searchQuery === "") &&
-                  (provider.category === categoryFilter || categoryFilter === "")
-              );
-          });
-
-          let providerList = document.getElementById("provider-list");
-          providerList.innerHTML = "";
-          filteredProviders.forEach((provider, index) => {
-              let row = `<tr>
-                  <td>${provider.name}</td>
-                  <td>${provider.category}</td>
-                  <td>${provider.phone}</td>
-                  <td><button class="delete-btn" onclick="deleteProvider(${index})">Delete</button></td>
-              </tr>`;
-              providerList.innerHTML += row;
-          });
+      function closeOverlay() {
+          document.getElementById("overlay").style.display = "none";
       }
   </script>
+    
+
+<!-- Begin script for datatable -->
+<script>
+  $(document).ready(function() {
+   $('#rent').DataTable({
+       "paging": true,
+       "searching": true,
+       "info": true,
+       "lengthMenu": [5, 10, 25, 50],
+       "language": {
+           "search": "Filter records:",
+           "lengthMenu": "Show _MENU_ entries"
+       }
+   });
+});
+
+$(document).ready(function() {
+   $('#agreements').DataTable({
+       "paging": true,
+       "searching": true,
+       "info": true,
+       "lengthMenu": [5, 10, 25, 50],
+       "language": {
+           "search": "Filter records:",
+           "lengthMenu": "Show _MENU_ entries"
+       }
+   });
+});
+
+</script>
+<!-- End script for data_table -->
+
+
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
       integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
@@ -1111,7 +1035,8 @@
         }
       });
     </script>
-
+    <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!--end::OverlayScrollbars Configure-->
     <!-- OPTIONAL SCRIPTS -->
     <!-- apexcharts -->
@@ -1270,24 +1195,24 @@
       //-----------------
     </script>
     <script>
-      // Function to show the overlay
-function openOverlay() {
-    document.getElementById("overlay").style.display = "flex";
-}
-
-// Function to hide the overlay
-function closeOverlay() {
-    document.getElementById("overlay").style.display = "none";
-}
-
-// Close overlay if user clicks outside the modal
-window.onclick = function(event) {
-    let overlay = document.getElementById("overlay");
-    if (event.target === overlay) {
-        overlay.style.display = "none";
-    }
-};
-
+      document.getElementById("exportButton").addEventListener("click", function() {
+        // Example data (can be your table data or an array of objects)
+        const data = [
+          { Name: "John", Age: 30, City: "New York" },
+          { Name: "Jane", Age: 25, City: "London" },
+          { Name: "Mark", Age: 35, City: "Paris" }
+        ];
+    
+        // Convert data to a worksheet
+        const ws = XLSX.utils.json_to_sheet(data);
+    
+        // Create a new workbook and append the worksheet
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    
+        // Export the workbook as an Excel file
+        XLSX.writeFile(wb, "ExportedData.xlsx");
+      });
     </script>
     <!--end::Script-->
   </body>

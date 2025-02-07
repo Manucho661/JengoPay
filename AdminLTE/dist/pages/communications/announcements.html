@@ -53,6 +53,7 @@
       crossorigin="anonymous"
     />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
     <style>
         body {
@@ -61,12 +62,12 @@
         }
 
         .filter-container{
-          
+
             /* width: 250px; */
-          
+
             color: white;
             position: relative; /* To position the panel below */
-        
+
         }
         .nav-bar {
             display: flex;
@@ -92,7 +93,7 @@
             height: 2px;
             background-color: #FFC107; /* Green underline */
         }
-        
+
 
         table {
     border-collapse: collapse;
@@ -109,7 +110,7 @@ td {
     padding: 0.5em;
     text-align: left;
     font-size: 0.9rem;
-    
+
 }
 tr:nth-child(even) {
     background-color: #f9f9f9;
@@ -121,7 +122,7 @@ tr:hover {
 
 .filter:hover {
             color: #FFC107;
-            
+
         }
 .filter{
             /* background-color: #444; */
@@ -152,7 +153,7 @@ tr:hover {
             padding: 2%;
             color: white;
             border-radius: 4%;
-            
+
         }
 .panel a {
             display: block;
@@ -166,7 +167,7 @@ tr:hover {
         .panel a:hover{
           color: #FFC107;
         }
-        
+
 /* Announcement Overlay styles */
         #view_announcement {
             /* width: 50%; Adjust the card width as needed */
@@ -187,12 +188,12 @@ tr:hover {
 
           position: relative;
             background: white;
-            
+
             border-radius: 5px;
-            
+
             color: black;
             width: 100%;
-            max-width: 50%; 
+            max-width: 50%;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             font-size: 90%;
             color: gray;
@@ -200,7 +201,7 @@ tr:hover {
 
         .card-footer.view_announcement {
             justify-content: flex-end;
-            
+
         }
 
         .card-footer .btn + .btn {
@@ -208,13 +209,13 @@ tr:hover {
         }
 
         .close-btn{
-             position: absolute; 
-            
+             position: absolute;
+
             right: 15px;
-        
+
             color: white;
             cursor: pointer;
-            
+
         }
 
         #close-overlay-btn {
@@ -223,14 +224,14 @@ tr:hover {
             /* color: white; */
             border: none;
             cursor: pointer;
-            font-size: 100%; 
+            font-size: 100%;
               }
           #close-overlay-btn:hover {
               color: red;
               }
 
         .card-header.view_announcement {
-            position: relative; 
+            position: relative;
             display: flex;/* Add this for the absolute positioning of the close button */
         }
 #more_announcement_btn{
@@ -249,6 +250,7 @@ tr:hover {
 
 <!-- scripts for data_table -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="announcements.css">
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
@@ -937,34 +939,33 @@ tr:hover {
                                          <!-- <img class="mt-3" src="images/mansion-1.jpg" alt="Profile Picture"  width="100" height="100"> -->
                         </div>
                         <div class="profile_info">
-                                    
+
                                             <!-- <h2>Jane Doe</h2> -->
-                                             
+
                             <div class="profile_details one">
                               <p> Total Send: <strong>&nbsp;50|</strong> Reactions: <strong> 30&nbsp;</strong>  </p>
 
-                            
+
                             </div>
-                                
+
                         </div>
                     </div>
-                                    
+
                 </div>
 
                 <div class="col-md-6">
                   <div style="display: flex; justify-content: end;">
-                  <button class="btn" style="background-color: #00192D; color: white; font-size: small;"> <i class="bi bi-megaphone"></i>
-                    <b> Create Announcement </b></button>     
+                  <button class="btn" style="background-color: #00192D; color: white; font-size: small;"> <b> Create Announcement </b></button>
                 </div>
               </div>
-                
+
 
 
               <!-- /.col -->
             </div>
             <!-- /.row -->
             <!--begin::Row-->
-            
+
             <!--end::Row-->
             <!--begin::Row-->
             <div class="row">
@@ -975,9 +976,7 @@ tr:hover {
                       <div class="filter-container" id="filter-container">
 
                         <div class="filter" id="filter">
-                          <i class="bi bi-filter"></i>
-                          Filter | <b>All Properties <i class="fas fa-chevron-down"></i> </b>
-  
+                          Filter | <b>All Properties</b>
                         </div>
                         <div class="panel" id="panel">
                           <a href="#">All Properties</a>
@@ -988,7 +987,7 @@ tr:hover {
                         </div>
 
                       </div>
-                          
+
                     </div>
 
                     <div class="card-body">
@@ -1051,7 +1050,7 @@ tr:hover {
 
 
                     <div class="card-footer">
-                        
+
                      </div>
 
                 </div>
@@ -1092,7 +1091,7 @@ tr:hover {
 
 <!-- Overlay Cards -->
 
-<!-- create Announcement -->
+
 
 
 
@@ -1101,31 +1100,83 @@ tr:hover {
  <!-- Start View announcement -->
  <div class="view_announcement" id="view_announcement">
   <div class="card content">
-   <div class="card-header view_announcement bg-secondary text-white">
+   <div class="card-header view_announcement header">
        <h5 class="mb-0">Rent Payments</h5>
        <div id="close-overlay-btn" class="close-btn" > <b> &times;</b> </div>
-       
+
    </div>
    <div class="card-body">
        <p class="card-text">
-           All Rent Payments should be made before 24/01/17. Anyone who feels that they might not 
+           All Rent Payments should be made before 24/01/17. Anyone who feels that they might not
+       <p class="card-text announcement">
+           All Rent Payments should be made before 24/01/17. Anyone who feels that they might not
            be able to complete their dues on 24/01/17 should communicate to management before the due date.
            Else, you face an eviction risk if you fail to pay your dues before the said date without a reasonable reason</p>
-          
+
            <p class="timestamp" id="timestamp"></p> <!-- Timestamp -->
 
- 
+
        <div class="Recipients border-top border-gray "> <p><strong>Recipients|</strong> All Employees</p>  </div>
-       
+
    </div>
    <div class="card-footer view_announcement d-flex">
        <button class="btn btn-danger btn-sm">Delete</button>
-       <button class="btn btn-secondary btn-sm">Resend</button>
+       <button class="btn resend btn-sm">Resend</button>
    </div>
  </div>
  </div>
 
 <!-- End view announcement -->
+
+<!-- Start of new announcement card-->
+<div class="container-fluid New_Announcement mt-5" id="New_Announcement">
+  <div class="card New_Announcement">
+      <div class="card-header text-white" style="background-color: #00192D; display: flex;">
+          <h5 class="mb-0">New Announcement</h5>
+         <div id="close-new_announcement-btn" class="close-btnOne" > <b> &times;</b> </div>
+      </div>
+      <div class="card-body">
+          <!-- Title -->
+          <div class="mb-3">
+              <label for="announcementTitle" class="form-label">Title</label>
+              <input type="text" class="form-control" id="announcementTitle" placeholder="Enter title">
+          </div>
+
+
+
+          <!-- Message -->
+          <div class="mb-3">
+              <label for="announcementMessage" class="form-label">Message</label>
+              <textarea class="form-control" id="announcementMessage" rows="5" placeholder="Write your message here"></textarea>
+          </div>
+
+          <!-- Recipients -->
+
+            <div class="mb-3 recipients-container" id="recipients-container">
+              <label for="recipientsSelect" class="form-label">Recipients</label>  <i class="fas fa-chevron-down"></i>
+              <div class="panel " >
+
+              <select class="form-select bg-dark text-white" id="recipientsSelect" multiple>
+                  <option value="all">All Employees</option>
+                  <option value="managers">Managers</option>
+                  <option value="tenants">Tenants</option>
+                  <option value="staff">Staff</option>
+              </select>
+
+            </div>
+          </div>
+
+
+      </div>
+      <div class="card-footer d-flex justify-content-end">
+          <button type="button" class="btn btn-secondary me-2" id="saveDraftBtn">Add to Draft</button>
+          <button type="button"  class="btn" style="background-color: #FFC107; color: white;" id="sendAnnouncementBtn">Send</button>
+      </div>
+  </div>
+</div>
+<!-- end of new announcement card-->
+
+
 <!-- end overlay card. -->
 
     <!--begin::Script-->
@@ -1145,7 +1196,35 @@ tr:hover {
 
   more_announcement.addEventListener('click', ()=>{
 
-     view_announcement.style.display= "flex";  
+     view_announcement.style.display= "flex";
+     document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
+     view_announcement.style.display= "flex";
+    //  document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
+     const now = new Date();
+            const formattedTime = now.toLocaleString(); // Format the date and time
+            timestamp.textContent = `Sent on: ${formattedTime}`;
+
+
+  });
+
+     close_overlay.addEventListener('click', ()=>{
+
+     view_announcement.style.display= "none";
+    //  document.querySelector('.app-wrapper').style.opacity = '1';
+
+
+     });
+ </script>
+
+
+<script>
+  const   create_announcement= document.getElementById('Create_Announcement');
+  const   announcement_window = document.getElementById('New_Announcement');
+  const   close_overlayOne = document.getElementById("close-overlay-btnOne");
+
+  create_announcement.addEventListener('click', ()=>{
+
+    announcement_window.style.display= "flex";
      document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
      const now = new Date();
             const formattedTime = now.toLocaleString(); // Format the date and time
@@ -1157,7 +1236,7 @@ tr:hover {
      close_overlay.addEventListener('click', ()=>{
 
      view_announcement.style.display= "none";
-     document.querySelector('.app-wrapper').style.opacity = '1';
+    //  document.querySelector('.app-wrapper').style.opacity = '1';
 
 
      });
@@ -1178,7 +1257,7 @@ tr:hover {
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-    
+
 <!-- script for occordion -->
 <script>
 
@@ -1196,7 +1275,7 @@ tr:hover {
          filterContainer.addEventListener("mouseleave", () => {
              panel.style.display = "none";
       });
-  
+
 
 </script>
 <!-- End for Occordion script -->
@@ -1218,7 +1297,7 @@ tr:hover {
 
     </script>
     <!-- End script for data_table -->
-    
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
