@@ -267,6 +267,9 @@ table {
   #rent_details_btn{
     background-color: #00192D; color: white; font-size: small;
   }
+  #rent_details_btn a{
+    color: #FFC107;
+  }
 
   #agreements_btn a{
     color: white;
