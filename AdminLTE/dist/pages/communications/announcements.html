@@ -53,8 +53,200 @@
       crossorigin="anonymous"
     />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
-    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            columns: gray;
+        }
+
+        .filter-container{
+
+            /* width: 250px; */
+
+            color: white;
+            position: relative; /* To position the panel below */
+
+        }
+        .nav-bar {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .nav-item {
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #666;
+            font-size: 16px;
+            position: relative;
+        }
+        .nav-item.active {
+            color: #000;
+            font-weight: bold;
+        }
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #FFC107; /* Green underline */
+        }
+
+
+        table {
+    border-collapse: collapse;
+    width: 100%;
+}
+th {
+    background-color: #FFC107;
+    color: #00192D;
+    text-align: left;
+    padding: 0.5em;
+    font-size: 0.9rem;
+}
+td {
+    padding: 0.5em;
+    text-align: left;
+    font-size: 0.9rem;
+
+}
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+
+.filter:hover {
+            color: #FFC107;
+
+        }
+.filter{
+            /* background-color: #444; */
+            /* color: white; */
+            cursor: pointer;
+            /* padding: 12%;  */
+            width: 25%;
+            border-bottom: gray solid 1px;
+            text-align: left;
+            outline: none;
+            font-size: 16px;
+            transition: 0.3s;
+            color: gray;
+            font-size: 100%;
+            border-radius: 2%;
+}
+
+.panel {
+            display: none; /* Initially hidden */
+            background-color: #00192D;
+            /* padding-left: 20px;position: absolute; Makes the panel an overlay */
+            position: absolute; /* Makes the panel an overlay */
+            /* left: 250px; Positioned to the right of the container */
+            top: 100%; /* Place right below the accordion */
+            left: 0;
+            width: fit-content;
+            z-index: 1000;
+            padding: 2%;
+            color: white;
+            border-radius: 4%;
+
+        }
+.panel a {
+            display: block;
+            padding: 8px;
+            /* color: white; */
+            text-decoration: none;
+            transition: 0.3s;
+            color: whitesmoke;
+        }
+
+        .panel a:hover{
+          color: #FFC107;
+        }
+
+/* Announcement Overlay styles */
+        #view_announcement {
+            /* width: 50%; Adjust the card width as needed */
+            /* max-width: 500px; Ensures the card doesn't grow too wide */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            display: none;
+            z-index: 10000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+
+        }
+        .card.content{
+
+          position: relative;
+            background: white;
+
+            border-radius: 5px;
+
+            color: black;
+            width: 100%;
+            max-width: 50%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            font-size: 90%;
+            color: gray;
+        }
+
+        .card-footer.view_announcement {
+            justify-content: flex-end;
+
+        }
+
+        .card-footer .btn + .btn {
+            margin-left: 10px; /* Adds spacing between the buttons */
+        }
+
+        .close-btn{
+             position: absolute;
+
+            right: 15px;
+
+            color: white;
+            cursor: pointer;
+
+        }
+
+        #close-overlay-btn {
+            /* top: 0; */
+            color: white;
+            /* color: white; */
+            border: none;
+            cursor: pointer;
+            font-size: 100%;
+              }
+          #close-overlay-btn:hover {
+              color: red;
+              }
+
+        .card-header.view_announcement {
+            position: relative;
+            display: flex;/* Add this for the absolute positioning of the close button */
+        }
+#more_announcement_btn{
+  color: blueviolet;
+  font-weight: 500;
+  cursor: pointer;
+
+}
+#more_announcement_btn:hover{
+  background-color: rgba(128, 128, 128, 0.2);
+  color: #FFC107;
+}
+
+
+        </style>
 
 <!-- scripts for data_table -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
@@ -747,34 +939,33 @@
                                          <!-- <img class="mt-3" src="images/mansion-1.jpg" alt="Profile Picture"  width="100" height="100"> -->
                         </div>
                         <div class="profile_info">
-                                    
+
                                             <!-- <h2>Jane Doe</h2> -->
-                                             
+
                             <div class="profile_details one">
                               <p> Total Send: <strong>&nbsp;50|</strong> Reactions: <strong> 30&nbsp;</strong>  </p>
 
-                            
+
                             </div>
-                                
+
                         </div>
                     </div>
-                                    
+
                 </div>
 
                 <div class="col-md-6">
                   <div style="display: flex; justify-content: end;">
-                  <button class="btn" style="background-color: #00192D; color: white; font-size: small;"> <i class="bi bi-megaphone"></i>
-                    <b> Create Announcement </b></button>     
+                  <button class="btn" style="background-color: #00192D; color: white; font-size: small;"> <b> Create Announcement </b></button>
                 </div>
               </div>
-                
+
 
 
               <!-- /.col -->
             </div>
             <!-- /.row -->
             <!--begin::Row-->
-            
+
             <!--end::Row-->
             <!--begin::Row-->
             <div class="row">
@@ -785,9 +976,7 @@
                       <div class="filter-container" id="filter-container">
 
                         <div class="filter" id="filter">
-                          <i class="bi bi-filter"></i>
-                          Filter | <b>All Properties <i class="fas fa-chevron-down"></i> </b>
-  
+                          Filter | <b>All Properties</b>
                         </div>
                         <div class="panel" id="panel">
                           <a href="#">All Properties</a>
@@ -798,7 +987,7 @@
                         </div>
 
                       </div>
-                          
+
                     </div>
 
                     <div class="card-body">
@@ -861,7 +1050,7 @@
 
 
                     <div class="card-footer">
-                        
+
                      </div>
 
                 </div>
@@ -914,19 +1103,21 @@
    <div class="card-header view_announcement header">
        <h5 class="mb-0">Rent Payments</h5>
        <div id="close-overlay-btn" class="close-btn" > <b> &times;</b> </div>
-       
+
    </div>
    <div class="card-body">
+       <p class="card-text">
+           All Rent Payments should be made before 24/01/17. Anyone who feels that they might not
        <p class="card-text announcement">
-           All Rent Payments should be made before 24/01/17. Anyone who feels that they might not 
+           All Rent Payments should be made before 24/01/17. Anyone who feels that they might not
            be able to complete their dues on 24/01/17 should communicate to management before the due date.
            Else, you face an eviction risk if you fail to pay your dues before the said date without a reasonable reason</p>
-          
+
            <p class="timestamp" id="timestamp"></p> <!-- Timestamp -->
 
- 
+
        <div class="Recipients border-top border-gray "> <p><strong>Recipients|</strong> All Employees</p>  </div>
-       
+
    </div>
    <div class="card-footer view_announcement d-flex">
        <button class="btn btn-danger btn-sm">Delete</button>
@@ -936,6 +1127,56 @@
  </div>
 
 <!-- End view announcement -->
+
+<!-- Start of new announcement card-->
+<div class="container-fluid New_Announcement mt-5" id="New_Announcement">
+  <div class="card New_Announcement">
+      <div class="card-header text-white" style="background-color: #00192D; display: flex;">
+          <h5 class="mb-0">New Announcement</h5>
+         <div id="close-new_announcement-btn" class="close-btnOne" > <b> &times;</b> </div>
+      </div>
+      <div class="card-body">
+          <!-- Title -->
+          <div class="mb-3">
+              <label for="announcementTitle" class="form-label">Title</label>
+              <input type="text" class="form-control" id="announcementTitle" placeholder="Enter title">
+          </div>
+
+
+
+          <!-- Message -->
+          <div class="mb-3">
+              <label for="announcementMessage" class="form-label">Message</label>
+              <textarea class="form-control" id="announcementMessage" rows="5" placeholder="Write your message here"></textarea>
+          </div>
+
+          <!-- Recipients -->
+
+            <div class="mb-3 recipients-container" id="recipients-container">
+              <label for="recipientsSelect" class="form-label">Recipients</label>  <i class="fas fa-chevron-down"></i>
+              <div class="panel " >
+
+              <select class="form-select bg-dark text-white" id="recipientsSelect" multiple>
+                  <option value="all">All Employees</option>
+                  <option value="managers">Managers</option>
+                  <option value="tenants">Tenants</option>
+                  <option value="staff">Staff</option>
+              </select>
+
+            </div>
+          </div>
+
+
+      </div>
+      <div class="card-footer d-flex justify-content-end">
+          <button type="button" class="btn btn-secondary me-2" id="saveDraftBtn">Add to Draft</button>
+          <button type="button"  class="btn" style="background-color: #FFC107; color: white;" id="sendAnnouncementBtn">Send</button>
+      </div>
+  </div>
+</div>
+<!-- end of new announcement card-->
+
+
 <!-- end overlay card. -->
 
     <!--begin::Script-->
@@ -955,8 +1196,36 @@
 
   more_announcement.addEventListener('click', ()=>{
 
-     view_announcement.style.display= "flex";  
+     view_announcement.style.display= "flex";
+     document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
+     view_announcement.style.display= "flex";
     //  document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
+     const now = new Date();
+            const formattedTime = now.toLocaleString(); // Format the date and time
+            timestamp.textContent = `Sent on: ${formattedTime}`;
+
+
+  });
+
+     close_overlay.addEventListener('click', ()=>{
+
+     view_announcement.style.display= "none";
+    //  document.querySelector('.app-wrapper').style.opacity = '1';
+
+
+     });
+ </script>
+
+
+<script>
+  const   create_announcement= document.getElementById('Create_Announcement');
+  const   announcement_window = document.getElementById('New_Announcement');
+  const   close_overlayOne = document.getElementById("close-overlay-btnOne");
+
+  create_announcement.addEventListener('click', ()=>{
+
+    announcement_window.style.display= "flex";
+     document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
      const now = new Date();
             const formattedTime = now.toLocaleString(); // Format the date and time
             timestamp.textContent = `Sent on: ${formattedTime}`;
@@ -988,7 +1257,7 @@
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-    
+
 <!-- script for occordion -->
 <script>
 
@@ -1006,7 +1275,7 @@
          filterContainer.addEventListener("mouseleave", () => {
              panel.style.display = "none";
       });
-  
+
 
 </script>
 <!-- End for Occordion script -->
@@ -1028,7 +1297,7 @@
 
     </script>
     <!-- End script for data_table -->
-    
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"

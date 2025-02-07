@@ -76,14 +76,14 @@
         .second_col{
             box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
         }
-        
+
         .filter-container{
-          
+
             /* width: 250px; */
-          
+
             color: white;
             position: relative; /* To position the panel below */
-        
+
         }
         .nav-bar {
             display: flex;
@@ -109,7 +109,7 @@
             height: 2px;
             background-color: #FFC107; /* Green underline */
         }
-        
+
 
         table {
     border-collapse: collapse;
@@ -126,7 +126,7 @@ td {
     padding: 0.5em;
     text-align: left;
     font-size: 0.9rem;
-    
+
 }
 tr:nth-child(even) {
     background-color: #f9f9f9;
@@ -138,7 +138,7 @@ tr:hover {
 
 .filter:hover {
             color: #FFC107;
-            
+
         }
 .filter{
             /* background-color: #444; */
@@ -169,7 +169,7 @@ tr:hover {
             padding: 2%;
             color: white;
             border-radius: 4%;
-            
+
         }
 .panel a {
             display: block;
@@ -183,7 +183,10 @@ tr:hover {
         .panel a:hover{
           color: #FFC107;
         }
-        
+.card-body.add_provider{
+  position: relative;
+}
+
 /* Announcement Overlay styles */
         #view_announcement {
             /* width: 50%; Adjust the card width as needed */
@@ -204,12 +207,12 @@ tr:hover {
 
           position: relative;
             background: white;
-            
+
             border-radius: 5px;
-            
+
             color: black;
             width: 100%;
-            max-width: 50%; 
+            max-width: 50%;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             font-size: 90%;
             color: gray;
@@ -217,7 +220,7 @@ tr:hover {
 
         .card-footer.view_announcement {
             justify-content: flex-end;
-            
+
         }
 
         .card-footer .btn + .btn {
@@ -225,11 +228,13 @@ tr:hover {
         }
 
         .close-btn{
-             position: absolute; 
+             position: absolute;
+
             right: 15px;
+
             color: white;
             cursor: pointer;
-            
+
         }
 
         #more{
@@ -238,14 +243,14 @@ tr:hover {
           cursor: pointer;
 
         }
-        
+
         #more_icon{
           /* border: 1px solid black; */
           border-radius: 30%;
           padding: 10%;
           font-size: larger;
         }
-       
+
         #more_options{
           display: none;
           /* position: absolute; */
@@ -253,7 +258,7 @@ tr:hover {
           background: #00192D;
           border-radius: 10%;
           padding: 10px;
-          
+
         }
         #more_options a{
           text-decoration: none;
@@ -268,14 +273,14 @@ tr:hover {
             /* color: white; */
             border: none;
             cursor: pointer;
-            font-size: 100%; 
+            font-size: 100%;
               }
           #close-overlay-btn:hover {
               color: red;
               }
 
         .card-header.view_announcement {
-            position: relative; 
+            position: relative;
             display: flex;/* Add this for the absolute positioning of the close button */
         }
 #more_announcement_btn{
@@ -311,7 +316,7 @@ tr:hover {
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 5px;
-        } 
+        }
         .add_provider_btn{
           width: 10%;
             padding: 10px;
@@ -341,7 +346,7 @@ tr:hover {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
-            
+
         }
 
         input, select {
@@ -374,7 +379,7 @@ select {
         display: flex;
         justify-content: end;
       }
-             
+
         </style>
 
 <!-- scripts for data_table -->
@@ -1063,77 +1068,22 @@ select {
 
                 <div class="col-md-6">
                    <p>Total  <b>50</b> | New applications| <b>60</b>  </p>
-                                    
+
                 </div>
 
                 <div class="col-md-6">
                   <div style="display: flex; justify-content: end;">
-                    <button class="btn" style="background-color: #00192D; color: white; font-size: small; margin-right: 2%;">  <i class="fas fa-plus icon"></i> 
-                        <b> Add Category </b></button>   
-                  <button id="add_provider_btn" class="btn" style="background-color: #00192D; color: white; font-size: small;">  <i class="fas fa-plus icon"></i> 
-                    <b> Add Provider </b></button>  
-                    </div>   
+                    <button class="btn" style="background-color: #00192D; color: white; font-size: small; margin-right: 2%;">  <i class="fas fa-plus icon"></i>
+                        <b> Add Category </b></button>
+                  <button class="btn" style="background-color: #00192D; color: white; font-size: small;">  <i class="fas fa-plus icon"></i>
+                    <b> Add Provider </b></button>
+                    </div>
                 </div>
               <!-- /.col -->
             </div>
             <!-- /.row -->
             <!--begin::Row-->
-            <div class="row add_provider mb-2" id="add_provider">
-              <div class="card">
-                <div class="card-header">
-                  
-                  <div id="close_provider_btn_container">
-                    <div id="close_btn">
-                      &times;
-                    </div>    
-                  </div>
 
-                </div>
-                <div class="card-body">
-                  <div class="row">
-                    <div class="form-row">
-                      <div class="form-group">
-                          <label for="firstName"> <i class="fa fa-user"></i>First Name</label>
-                          <input type="text" id="firstName" name="firstName" required>
-                      </div>
-                      <div class="form-group">
-                          <label for="lastName"> <i class="far fa-envelope"></i>  Email </label>
-                          <input type="email" id="lastName" name="lastName" required>
-                      </div>
-
-                      
-                    
-                  </div>
-      
-                  <div class="form-row">
-                     
-                      <div class="form-group">
-                          <label for="phone"> <i class="fa fa-phone"></i>   Phone</label>
-                          <input type="tel" id="phone" name="phone" required>
-                      </div>
-
-                      <div class="form-group">
-                        <label for="category">  <i class="fas fa-list"></i>  Category</label>
-                        <select id="category" name="category" required>
-                            <option class="text-bg-warning" value="">Select a category</option>
-                            <option  value="student">Student</option>
-                            <option value="teacher">Teacher</option>
-                            <option value="business">Business</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-    
-                        
-                      </div>
-                  </div>
-
-                  <div class="add_provider_btn-container">
-                  <button class="add_provider_btn" type="submit">Submit</button>
-                  </div>  
-                  </div>
-                </div>
-              </div>
-            </div>
             <!--end::Row-->
             <!--begin::Row-->
             <div class="row second">
@@ -1146,7 +1096,7 @@ select {
                             <div class="filter" id="filter">
                             <i class="bi bi-filter"></i>
                             Filter | <b>All Categories <i class="fas fa-chevron-down"></i> </b>
-    
+
                             </div>
                             <div class="panel" id="panel">
                             <a href="#">All Properties</a>
@@ -1157,7 +1107,7 @@ select {
                             </div>
 
                         </div>
-                            
+
                         </div>
 
                         <div class="card-body">
@@ -1169,8 +1119,8 @@ select {
                                 <th>Phone</th>
                                 <th>Email</th>
                                 <th>Category</th>
-                                <th>ACTION</th> 
-            
+                                <th>ACTION</th>
+
                             </tr>
                             </thead>
                             <tbody>
@@ -1181,14 +1131,14 @@ select {
                                 <td class="text-primary"> <i class="fas fa-envelope"></i>  emmanu@gmail.com</td>
                                 <td>Electrician</td>
                                 <td id="more">
-                                <div id="more_icon">&#x2026;</div> 
+                                <div id="more_icon">&#x2026;</div>
                                 <br>
                                 <div id="more_options">
                                     <a href="#">Remove</a>
                                     <a href="#">Update</a>
                                     <a href="#">View</a>
-                                
-                                    
+
+
                                 </div>
                                 </td>
                             </tr>
@@ -1199,12 +1149,12 @@ select {
                                 <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
                                 <td>Plumber</td>
                                 <td id="more">
-                                <div id="more_icon" class="rounded-circle" >&#x2026;</div> 
+                                <div id="more_icon" class="rounded-circle" >&#x2026;</div>
                                 </td>
                             </tr>
                             <!-- Add more rows as needed -->
                             </tbody>
-                
+
                         </table>
 
 
@@ -1214,7 +1164,7 @@ select {
 
 
                         <div class="card-footer">
-                            
+
                         </div>
 
                     </div>
@@ -1240,7 +1190,7 @@ select {
                                     <td>Plumbing</td>
                                     <td>5</td>
                                     <td id="more">
-                                        <div id="more_icon" class="rounded-circle" >&#x2026;</div> 
+                                        <div id="more_icon" class="rounded-circle" >&#x2026;</div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -1251,25 +1201,25 @@ select {
                                     <td>Landscaping</td>
                                     <td>3</td>
                                     <td id="more">
-                                        <div id="more_icon" class="rounded-circle" >&#x2026;</div> 
+                                        <div id="more_icon" class="rounded-circle" >&#x2026;</div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Masons</td>
                                     <td>No vendor is assigned to this category </td>
                                     <td id="more">
-                                        <div id="more_icon" class="rounded-circle" >&#x2026;</div> 
+                                        <div id="more_icon" class="rounded-circle" >&#x2026;</div>
                                     </td>
                                 </tr>
-                                
+
                             </table>
-                            
+
 
                         </div>
 
 
                     </div>
-                    
+
 
 
                 </div>
@@ -1322,19 +1272,19 @@ select {
    <div class="card-header view_announcement bg-secondary text-white">
        <h5 class="mb-0">Rent Payments</h5>
        <div id="close-overlay-btn" class="close-btn" > <b> &times;</b> </div>
-       
+
    </div>
    <div class="card-body">
        <p class="card-text">
-           All Rent Payments should be made before 24/01/17. Anyone who feels that they might not 
+           All Rent Payments should be made before 24/01/17. Anyone who feels that they might not
            be able to complete their dues on 24/01/17 should communicate to management before the due date.
            Else, you face an eviction risk if you fail to pay your dues before the said date without a reasonable reason</p>
-          
+
            <p class="timestamp" id="timestamp"></p> <!-- Timestamp -->
 
- 
+
        <div class="Recipients border-top border-gray "> <p><strong>Recipients|</strong> All Employees</p>  </div>
-       
+
    </div>
    <div class="card-footer view_announcement d-flex">
        <button class="btn btn-danger btn-sm">Delete</button>
@@ -1363,7 +1313,7 @@ select {
 
   more_announcement.addEventListener('click', ()=>{
 
-     view_announcement.style.display= "flex";  
+     view_announcement.style.display= "flex";
      document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
      const now = new Date();
             const formattedTime = now.toLocaleString(); // Format the date and time
@@ -1396,7 +1346,7 @@ select {
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-    
+
 <!-- script for occordion -->
 <script>
 
@@ -1414,7 +1364,7 @@ select {
          filterContainer.addEventListener("mouseleave", () => {
              panel.style.display = "none";
       });
-  
+
 
 </script>
 <!-- End for Occordion script -->
@@ -1456,7 +1406,7 @@ close_add_provider_container.addEventListener('click', ()=>{
 </script>
     <!-- Begin script for datatable -->
     <script>
-        
+
        $(document).ready(function() {
         $('#maintenance').DataTable({
             "paging": true,
@@ -1472,7 +1422,7 @@ close_add_provider_container.addEventListener('click', ()=>{
 
     </script>
             <script>
-                    
+
                 $(document).ready(function() {
                 $('#vendor_distribution1').DataTable({
                     // "paging": true,
@@ -1491,7 +1441,7 @@ close_add_provider_container.addEventListener('click', ()=>{
 
     </script>
     <!-- End script for data_table -->
-    
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"

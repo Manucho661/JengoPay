@@ -51,7 +51,7 @@
       href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
       integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
       crossorigin="anonymous"
-    />   
+    />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
@@ -62,7 +62,237 @@
 
 
     <style>
-        
+        body {
+            font-family: Arial, sans-serif;
+            columns: gray;
+        }
+
+        .filter-container{
+
+            /* width: 250px; */
+
+            color: white;
+            position: relative; /* To position the panel below */
+
+        }
+        .nav-bar {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .nav-item {
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #666;
+            font-size: 16px;
+            position: relative;
+        }
+        .nav-item.active {
+            color: #000;
+            font-weight: bold;
+        }
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #FFC107; /* Green underline */
+        }
+
+
+        table {
+    border-collapse: collapse;
+    width: 100%;
+}
+th {
+    background-color: #FFC107;
+    color: #00192D;
+    text-align: left;
+    padding: 0.5em;
+    font-size: 0.9rem;
+}
+td {
+    padding: 0.5em;
+    text-align: left;
+    font-size: 0.9rem;
+
+}
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+
+.filter:hover {
+            color: #FFC107;
+
+        }
+.filter{
+            /* background-color: #444; */
+            /* color: white; */
+            cursor: pointer;
+            /* padding: 12%;  */
+            width: 25%;
+            border-bottom: gray solid 1px;
+            text-align: left;
+            outline: none;
+            font-size: 16px;
+            transition: 0.3s;
+            color: gray;
+            font-size: 100%;
+            border-radius: 2%;
+}
+
+.panel {
+            display: none; /* Initially hidden */
+            background-color: #00192D;
+            /* padding-left: 20px;position: absolute; Makes the panel an overlay */
+            position: absolute; /* Makes the panel an overlay */
+            /* left: 250px; Positioned to the right of the container */
+            top: 100%; /* Place right below the accordion */
+            left: 0;
+            width: fit-content;
+            z-index: 1000;
+            padding: 2%;
+            color: white;
+            border-radius: 4%;
+
+        }
+.panel a {
+            display: block;
+            padding: 8px;
+            /* color: white; */
+            text-decoration: none;
+            transition: 0.3s;
+            color: whitesmoke;
+        }
+
+        .panel a:hover{
+          color: #FFC107;
+        }
+
+        #respond_btn{
+          color: blueviolet;
+          font-weight: 500;
+          cursor: pointer;
+        }
+
+        #respond{
+          /* display: block ; */
+          position: fixed;
+          z-index: 10000;
+          position: fixed;
+          /* background-color: #FFC107; */
+          top: 0;
+          width: 100%;
+          height: 100%;
+          justify-content: center;
+          align-items: center;
+          display: none;
+          background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .card.content{
+
+position: relative;
+  background: white;
+
+  border-radius: 5px;
+
+  color: black;
+  width: 100%;
+  max-width: 50%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  font-size: 90%;
+  color: gray;
+}
+
+.card-footer.view_announcement {
+            justify-content: flex-end;
+
+        }
+
+        .card-footer .btn + .btn {
+            margin-left: 10px; /* Adds spacing between the buttons */
+        }
+
+        .close-btn{
+             position: absolute;
+
+            right: 15px;
+
+            color: white;
+            cursor: pointer;
+
+        }
+
+        #close-overlay-btn {
+            /* top: 0; */
+            color: white;
+            /* color: white; */
+            border: none;
+            cursor: pointer;
+            font-size: 100%;
+              }
+          #close-overlay-btn:hover {
+              color: red;
+              }
+
+        .card-header.view_announcement {
+            position: relative;
+            display: flex;/* Add this for the absolute positioning of the close button */
+        }
+        .message-card {
+            max-width: 70%;
+            margin-bottom: 15px;
+        }
+        .tenant-message {
+            margin-right: auto;
+        }
+        .admin-message {
+            margin-left: auto;
+        }
+        #respond .container{
+          width: 70%;
+          font-size: small;
+          /* background-color: #00192D;; */
+          padding: 2%;
+          position: relative;
+          border-radius: 2%;
+          /* height: 70%;  */
+          background-color: white;
+          overflow: hidden;
+          /* flex: 1; */
+        }
+
+        .card{
+/* flex: 1; */
+        }
+        #sendButton{
+          background-color: #FFC107;
+          position: absolute;
+          right: 2%;
+          bottom: 1%;
+        }
+
+
+        .closeTextWindow:hover{
+          color:red !important;
+        }
+        #closeTextWindow{
+          position: absolute;
+          /* background-color: white; */
+          /* color: white; */
+          z-index: 10000;
+          right: 2%;
+          cursor: pointer;
+        }
+        .closeTextWindow:hover{
+          color:red !important;
+        }
         </style>
 
 <!-- scripts for data_table -->
@@ -386,7 +616,7 @@
                   </li>
                 </ul>
               </li>
-              
+
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-clipboard-fill"></i>
@@ -775,33 +1005,33 @@
                                        <!-- <img class="mt-3" src="images/mansion-1.jpg" alt="Profile Picture"  width="100" height="100"> -->
                       </div>
                       <div class="profile_info">
-                                  
+
                                           <!-- <h2>Jane Doe</h2> -->
-                                           
+
                           <div class="profile_details one">
                             <p> Total Open: <strong>&nbsp;50|</strong> Replied: <strong> 30|&nbsp;</strong>  Closed: &nbsp; <strong>40 </strong>   </p>
 
-                          
+
                           </div>
-                              
+
                       </div>
                   </div>
-                                  
+
               </div>
 
                 <div class="col-md-6">
                   <div style="display: flex; justify-content: end;">
-                  <button  id="new_text"  class="btn" style="background-color: #00192D; color: white; font-size: small;">   <i class="bi bi-chat"></i>  <b> NEW TEXT </b></button>     
+                  <button  id="new_text"  class="btn" style="background-color: #00192D; color: white; font-size: small;">   <i class="bi bi-chat"></i>  <b> NEW TEXT </b></button>
                 </div>
               </div>
-                
+
 
 
             <!-- /.col -->
           </div>
           <!-- /.row -->
           <!--begin::Row-->
-          
+
           <!--end::Row-->
           <!--begin::Row-->
           <div class="row">
@@ -813,7 +1043,7 @@
 
                         <div class="filter" id="filter">
                           <i class="bi bi-filter"></i>
-                          Filter | <b>All Properties  <i class="fas fa-chevron-down"></i>  </b> 
+                          Filter | <b>All Properties  <i class="fas fa-chevron-down"></i>  </b>
                         </div>
                         <div class="panel" id="panel">
                           <a href="#">All Properties</a>
@@ -824,7 +1054,7 @@
                       </div>
 
                     </div>
-                        
+
                   </div>
 
                     <div class="card-body">
@@ -880,7 +1110,7 @@
                   </div>
 
                   <div class="card-footer">
-                      
+
                    </div>
 
               </div>
@@ -938,7 +1168,7 @@
       //     window.location.href = "index.html";
       // }
   </script>
-  
+
     <script>
         // Initialize DataTable
         $(document).ready(function () {
@@ -984,28 +1214,28 @@
   <div class="container" id="container">
       <div id="closeTextWindow" class="closeTextWindow text-dark "> <i class="bi bi-x"></i>
     </div>
-   
+
 
     <div id="messageWindow" class="mb-4">
         <div class="card message-card tenant-message">
-            
+
             <div class="card-body">
               <p> <b class="text-bg-secondary p-2 rounded-circle">Joseph</b></p>
                 <p>Hello support_team, I'm writing to ask if I can be given my balance even if it is not 5000, my current situation needs some finances to keep working. I have tried before to restart but things seem difficult.</p>
                 <p class="text-secondary"> <em>Mon, Jan 20, 2025 8:01 AM</em>  </p>
               </div>
-            
+
 
         </div>
 
         <div class="card message-card admin-message">
-          
+
             <div class="card-body">
               <p> <b class="text-bg-secondary p-2 rounded-circle">You</b>  </p>
                 <p>Hi Emmanuel, Thank you for reaching out. Kindly email operations@writersthrive.com for assistance on this matter. Thanks.</p>
                 <p class="text-secondary"> <em>Mon, Jan 20, 2025 8:01 AM</em>  </p>
               </div>
-            
+
         </div>
     </div>
 
@@ -1048,7 +1278,7 @@
 
   next_text.addEventListener('click', ()=>{
 
-     respond_window.style.display= "flex";  
+     respond_window.style.display= "flex";
      document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
      const now = new Date();
             const formattedTime = now.toLocaleString(); // Format the date and time
@@ -1062,7 +1292,7 @@
     respond_window.style.display= "none";
      document.querySelector('.app-wrapper').style.opacity = '1';
      });
-  
+
 </script>
 
 
@@ -1273,14 +1503,14 @@
           { Name: "Jane", Age: 25, City: "London" },
           { Name: "Mark", Age: 35, City: "Paris" }
         ];
-    
+
         // Convert data to a worksheet
         const ws = XLSX.utils.json_to_sheet(data);
-    
+
         // Create a new workbook and append the worksheet
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-    
+
         // Export the workbook as an Excel file
         XLSX.writeFile(wb, "ExportedData.xlsx");
       });
