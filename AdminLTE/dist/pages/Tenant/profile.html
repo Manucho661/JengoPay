@@ -55,117 +55,19 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<<<<<<< HEAD:AdminLTE/dist/pages/details.html
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
-      integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
-      crossorigin="anonymous"
-    />
-    <style>
-
-a{
-            text-decoration: none;
-        }
-        
-        body{
-            
-            background-color: rgba(128, 128, 128, 0.1);
-        }
-        .summaryItem{
-            font-family: 'Playfair Display', serif; /* Elegant for creative projects */
-font-size: 25px;
-font-weight: bold;
-
-font-weight: 400; /* Lighter weight for a faint look */
-letter-spacing: 1px; /* Slight spacing for an airy feel */
-color:gray;
-
-        }
-        .summaryItemOne{
-            font-family: 'Playfair Display', serif; /* Elegant for creative projects */
-font-size: 25px;
-font-weight: bold;
-
-font-weight: 400; /* Lighter weight for a faint look */
-letter-spacing: 1px; /* Slight spacing for an airy feel */
-color: #00192D;
-
-        }
-        .custom-btn{
-            background-color: #00192D;
-    border-color: #00192D;
-    color:  #FFC107; /* White background */
-        }
-
-    .statement{
-        background-color: #FFC107;
-        color: #00192D ;
-
-        }
-
-        .profile-card {
-      background-color: #f8f9fa;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      /* padding: 20px; */
-      
-      margin: 30px auto;
-    }
-    .profile-picture {
-      border-radius: 10px;
-      width: 100%;
-      height: auto;
-      object-fit: cover;
-      border: 4px solid #007bff;
-    }
-    .profile-details h2 {
-      /* margin-bottom: 10px; */
-      
-    }
-    .profile-details p {
-      /* /margin: 5px 0; */
-      color: #6c757d;
-    }
-    .profile_details{
-        display: flex;
-        
-    }
-    .profile_picture{
-        margin-right: 4%;
-    }
-    .profile_info .one{
-        color: #666;
-        font-size: 14px;
-        display: block;
-        text-align: justify;   
-
-    }
-    .other_profile_details{
-        display: block;
-        color: #666;
-        font-size: 14px;
-        display: block;
-        text-align: justify;
-        
-        
-    }
-    </style>
-=======
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="profile.css">
-    
-    
+
+
     <!-- scripts for data_table -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="announcements.css">
-    
+
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
 
 
->>>>>>> a3085e0aa3c6b0b9c964686276de079ac36e0647:AdminLTE/dist/pages/Tenant/profile.html
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -408,24 +310,24 @@ color: #00192D;
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
-                  <li class="nav-item">
+                  <!-- <li class="nav-item">
                     <a href="./index.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard v1</p>
+                      <p>Dashboard</p>
                     </a>
-                  </li>
+                  </li> -->
                   <li class="nav-item">
                     <a href="./index2.html" class="nav-link active">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard v2</p>
+                      <p>Dashboard </p>
                     </a>
                   </li>
-                  <li class="nav-item">
+                  <!-- <li class="nav-item">
                     <a href="./index3.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Dashboard v3</p>
                     </a>
-                  </li>
+                  </li> -->
                 </ul>
               </li>
               <li class="nav-item">
@@ -435,34 +337,53 @@ color: #00192D;
                 </a>
               </li>
               <li class="nav-item">
-                <a href="tenantscreening.html" class="nav-link">
+                <a href="./tenantscreening.html" class="nav-link">
+                  <i class="nav-icon bi bi-palette"></i>
+                  <p>Tenant Screening</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./leasy.html" class="nav-link">
+                  <i class="nav-icon bi bi-file-earmark-text"></i>
+                  <p>Lease Management</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-box-seam-fill"></i>
                   <p>
-                    Tenant Screening
+                   Financial Documents
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="./widgets/small-box.html" class="nav-link">
+                    <a href="./widgets/invoices.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Small Box</p>
+                      <p>Invoices</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./widgets/info-box.html" class="nav-link">
+                    <a href="./widgets/payment receipts.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>info Box</p>
+                      <p>Payment Receipts</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="./widgets/payment receipts.html" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p> Rent Deposit Reports</p>
                     </a>
                   </li>
                   <li class="nav-item">
                     <a href="./widgets/cards.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Cards</p>
+                      <p>Maintenance And Repair Costs</p>
                     </a>
                   </li>
                 </ul>
               </li>
+
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-clipboard-fill"></i>
@@ -826,46 +747,35 @@ color: #00192D;
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-<<<<<<< HEAD:AdminLTE/dist/pages/details.html
-              <div class="col-sm-6"><h3 class="mb-0">Dashboard v2</h3></div>
-              <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Dashboard v2</li>
-                </ol>
-=======
               <div class="col-sm-6"><h3 class="mb-0"></h3></div>
               <div class="col-sm-6">
-              
->>>>>>> a3085e0aa3c6b0b9c964686276de079ac36e0647:AdminLTE/dist/pages/Tenant/profile.html
+
               </div>
             </div>
             <!--end::Row-->
           </div>
           <!--end::Container-->
-<<<<<<< HEAD:AdminLTE/dist/pages/details.html
-=======
         </div>
-        <div  class="app-content">           
+        <div  class="app-content">
 
           <div class="container-fluid">
             <!-- First Row -->
             <div class="row  " >
               <div class="col-sm-8">
-                
+
                 <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> JOSEPH</h3>
-              
-                
+
+
                     <div class="row mt-2  ">
                       <div class="col-md-12  ">
-                  
+
                         <div class="row mt-6 ">
                             <!-- Summary -->
                             <div class="col-md-3 ">
                                 <label class="text text-center">  <i class="fas fa-briefcase icon"></i>   Occupation </label>
                                 <span class="value text-center">Teacher</span>
                             </div>
-                    
+
                             <div class="col-md-3">
                                 <label class="text text-center"> <i class="fas fa-baby icon"></i>   BIRTH  </label>
                                 <span class="value"> 5-23-1995 </span>
@@ -882,7 +792,7 @@ color: #00192D;
                               <label class="text text-center"> <i class="fas fa-globe icon"></i>   ORIGIN </label>
                               <span class="value text-center">Kenyan </span>
                           </div>
-                  
+
                           <div class="col-md-3">
                               <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> End_Date  </label>
                               <span class="value"> 6-7-2020 </span>
@@ -895,7 +805,7 @@ color: #00192D;
                             <button class="btn text text-danger">  <i class="fas fa-trash"></i> Remove Joseph</button>
                           </div>
                         </div>
-                        
+
                       </div>
                       <!-- <div class="col-md-6">
 
@@ -924,18 +834,18 @@ color: #00192D;
             <!-- Second row start --><div class="row first mb-2 mt-3 rounded-circle">
 
                 <div class="col-md-6 d-flex justify-content-between">
-                  <button id="rent_details_btn" class="btn">  <i class="fas fa-calendar-check icon"></i> <a href="profile.html"> <b> Rent_Details </b> </a> </button>  
-                    
+                  <button id="rent_details_btn" class="btn">  <i class="fas fa-calendar-check icon"></i> <a href="profile.html"> <b> Rent_Details </b> </a> </button>
+
                   <button id="agreements_btn" class="btn"><i class="fas fa-calendar-check icon"></i>
-                       <a href="agreements.html"> <b> Agreements </b> </a>  </button> 
-                                      
+                       <a href="agreements.html"> <b> Agreements </b> </a>  </button>
+
                 </div>
 
                 <div class="col-md-6">
                   <div style="display: flex; justify-content: end;">
-                     
-                   
-                  </div>   
+
+
+                  </div>
                 </div>
               <!-- /.col -->
             </div>
@@ -962,34 +872,34 @@ color: #00192D;
                                 <td>KSH 10,000</td>
                                 <td>KSH 10,000</td>
                                 <td id="more">
-                                  <div id="more_icon">&#x2026;</div> 
+                                  <div id="more_icon">&#x2026;</div>
                                   <br>
                                   <div id="more_options">
                                      <a href="#">Delete</a>
                                      <a href="#">Edit</a>
-        
-                                   
-                                     
+
+
+
                                   </div>
                                  </td>
-                                
+
                         </tr>
                         <tr>
                         <th scope="row">2/7/11</th>
                         <td>KSH 20,0000</td>
                         <td>KSH 0</td>
                         <td id="more">
-                          <div id="more_icon">&#x2026;</div> 
+                          <div id="more_icon">&#x2026;</div>
                           <br>
                           <div id="more_options">
                              <a href="#">Assign</a>
                              <a href="#">Update</a>
                              <a href="#">Delete</a>
                              <a href="#">View</a>
-                           
-                             
+
+
                           </div>
-                         </td>       
+                         </td>
 
                         </tr>
                         <tr>
@@ -997,19 +907,19 @@ color: #00192D;
                         <td>KSH 10000</td>
                         <td>KSH 0</td>
                         <td id="more">
-                          <div id="more_icon">&#x2026;</div> 
+                          <div id="more_icon">&#x2026;</div>
                           <br>
                           <div id="more_options">
                              <a  href="#">Assign</a>
                              <a href="#">Update</a>
                              <a href="#">Delete</a>
                              <a href="#">View</a>
-                           
-                             
+
+
                           </div>
                          </td>
-                        
-                        
+
+
 
                             </tr>
                       </tbody>
@@ -1017,17 +927,17 @@ color: #00192D;
                   </div>
 
                   <div class="card-footer">
-                      
+
                   </div>
 
                 </div>
               </div>
             </div>
 
-      
 
 
-<!-- 
+
+<!--
         <div class="overlay" id="overlay">
           <div class="invoicy-container">
           <div class="receipt-container" id="receipt">
@@ -1035,7 +945,7 @@ color: #00192D;
             <h2>Payment Receipt</h2>
             <p> Nairobi,  KENYA</p>
             <p><strong>Date:</strong> <span id="date"></span></p>
-           
+
             <table>
               <td>Manucho Apartments</td>
               <td>John</td>
@@ -1047,273 +957,8 @@ color: #00192D;
               <td>10-12-2025</td>
               <td>KSH0</td>
             </table>
->>>>>>> a3085e0aa3c6b0b9c964686276de079ac36e0647:AdminLTE/dist/pages/Tenant/profile.html
         </div>
-        <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
-          <!--begin::App Wrapper-->
-          <div class="app-wrapper">
-            <!--begin::Header-->
-            
-            <!--end::Header-->
-            <!--begin::Sidebar-->
-          
-             <?php include 'sidebar.php'?>
-            <!--end::Sidebar-->
-            <!-- start content -->
-            <div id="content">
-               <!--begin::App Main-->
-            
-              <main class="app-main">
-                <!--begin::App Content Header-->
 
-                <div class="container-fluid" style="box-shadow: 0 2em 8em rgba(0, 0, 0, 0.2);">
-
-
-                  <div class="row bg-light ">
-                      <!-- Profile Picture -->
-          
-                      <div class="card" style="border:transparent"> 
-                                  
-          
-                                  <div class="card-body">
-                                      <div class="row">
-                                          <div class="col-md-6">
-                                              <div class="profile_details">
-                                                  <div class="profile_picture">
-                                                   <img class="mt-3" src="images/Doe.jpg" alt="Profile Picture"  width="100">
-                                                  </div>
-                                                  <div class="profile_info">
-                                              
-                                                      <!-- <h2>Jane Doe</h2> -->
-                                                       <h3 style=" border-bottom: 1px solid #ddd;" >John Doe</h3>
-                                                       <div class="profile_details one">
-                                                          <p><strong>Occupation &nbsp;|</strong> Teacher</p>
-                                                          <p><strong>DATE OF BIRTH &nbsp;|</strong> 5-23-1995</p>
-                                                          <p><strong>IDENTIFICATION NUMBER &nbsp; |</strong> 012020202</p>
-                                                      </div>
-                                          
-                                                  </div>
-                                              </div>
-                                              
-                                          </div>
-                                          <!-- Profile Details -->
-          
-                                          <div class="col-md-4" style=" border-left: 1px solid #ddd;">
-                                          
-                                                      <div class="other_profile_details">
-                                                          <p><strong>Origin &nbsp;|</strong> KENYAN</p>
-                                                          <p><strong>End Date &nbsp; |</strong> 6-7-2020</p>
-                                                          <p><strong>Start Date &nbsp;|</strong> 5-23-1995</p>
-                                                          
-                                                      </div>
-          
-          
-                                          </div>
-                                          <div class="col-md-2" style=" display:flex; flex-direction: column; justify-content:end;">
-                                          
-                                                      <div>
-                                                          <button type="button" class="btn btn-danger">Remove John</button>
-                                                      </div>
-          
-          
-                                          </div>
-                                      </div>
-                                          
-          
-                                  </div>
-          
-                     
-                  </div>
-                 
-                  
-                  
-          
-                  
-                  <div class="">
-          
-                         
-          
-                      <div class="row mt-3"> <!-- third row -->
-          
-                          <div class="col-md-12">
-                              <div class="card">
-                                  <div class="card-header " style="background-color: #00192D; color:#FFC107;">
-                                      <div class="card-title" style="display: flex;  justify-content: space-between;">
-                                          <div>RENT/LEASE PAYMENT HISTORY (Monthly)</div>
-                                          <div><button class="btn btn-sm btn-outline custom-btn statement">GET Full STATEMENT</button></div>
-                                       
-                                      </div>
-                                  </div>
-          
-                                  <div class="card-body">
-                                      <table id="tenants"  class="table table-striped table-bordered">
-                                          <thead>
-                                              <tr>
-                                                  <th scope="col">DATE PAID</th>
-                                                      <th scope="col">AMOUNT PAID</th>
-                                                      <th scope="col">ARREAS</th>
-                                                      <th scope="col">ACTION</th>
-                                                      
-                                              </tr>
-                                          </thead>
-                                          <tbody>
-                                              <tr>
-                                                  <th scope="row">1/7/11</th>
-                                                      <td>KSH 10,000</td>
-                                                      <td>KSH 10,000</td>
-                                                      <td> <button class="btn btn-sm btn-outline custom-btn">DOWNLOAD RECEIPT</button>   </td>
-                                                      
-                                              </tr>
-                                              <tr>
-                                              <th scope="row">2/7/11</th>
-                                              <td>KSH 20,0000</td>
-                                              <td>KSH 0</td>
-                                              <td>  <button class="btn btn-sm btn-outline custom-btn">DOWNLOAD RECEIPT</button>  </td>
-                                              
-          
-                                              </tr>
-                                              <tr>
-                                                  <th scope="row">3/7/11</th>
-                                              <td>KSH 10000</td>
-                                              <td>KSH 0</td>
-                                              <td> <button class="btn btn-sm btn-outline custom-btn">DOWNLOAD RECEIPT</button> </td>
-                                              
-                                              
-          
-                                                  </tr>
-                                          </tbody>
-                                      </table>
-              
-          
-          
-                                  </div>
-          
-                                  <div class="card-footer">
-                                      
-                                  </div>
-          
-                      </div>
-          
-                      <div class="row mt-3 ">
-                          <div class="col-md-12">
-                              <div class="card"> 
-                                  <div class="card-header " style="background-color: #00192D; color:#FFC107;">
-                                          <div class="card-title" >
-                                              
-                                              RENT/LEASE AGREEMENT FILES
-                                              
-                                              
-                                          </div>
-          
-                                      </div>
-                                  </div>
-          
-                                  <div class="card-body">
-                                          <table class="table table-striped table-bordered">
-                                              <thead>
-                                                  <tr>
-                                                      <th scope="col">FIRST PARTY (YOU)</th>
-                                                          <th scope="col">SECOND PARTY (TENANT)</th>
-                                                          <th scope="col">DEPOSIT</th>
-                                                          <th scope="col">ACTION</th>
-                                                          
-                                                  </tr>
-                                              </thead>
-                                              <tbody>
-                                                  <tr>
-                                                      <th scope="row">EBENEZER</th>
-                                                          <td>JOHN DOE</td>
-                                                          <td>KSH 100,000</td>
-                                                          <td>   <span><button class="btn btn-sm btn-outline custom-btn">VIEW AGREEMENT</button></span> <span><button class="btn btn-sm btn-outline custom-btn">DOWNLOAD</button></span></td>
-                                                          
-                                                  </tr>
-                                                  <tr>
-                                                  
-                                              
-                                              </tbody>
-                                          </table>
-          
-                                  </div>
-          
-                          </div>
-          
-          
-                      </div>
-          
-          
-          
-          
-          
-                                  </div>
-          
-                              </div>
-          
-                          </div>
-                          
-                          
-          
-                      </div>            
-                  </div>
-          
-          
-                  
-              
-                  </div>
-          
-                  
-          
-          
-          
-          
-                 
-          
-              </div>
-
-                <!--end::App Content-->
-              </main>
-      
-               <!--end::App Main-->
-               <!--begin::Footer-->
-              <footer class="app-footer">
-                <!--begin::To the end-->
-                <!-- <div class="float-end d-none d-sm-inline">Anything you want</div> -->
-                 <!--end::To the end-->
-                 <!--begin::Copyright-->
-                 <strong>
-                 <!-- Copyright &copy; 2014-2024&nbsp; -->
-                 <!-- <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>. -->
-                 </strong>
-                 All rights reserved.
-                <!--end::Copyright-->
-              </footer>
-      
-            </div>
-            <!-- end content -->
-            <!--end::Footer-->
-          </div>
-          <!--end::App Wrapper-->
-          <!--begin::Script-->
-          <!--begin::Third Party Plugin(OverlayScrollbars)-->
-
-          <!-- datatable script -->
-    <script>
-      // Initialize DataTable
-      $(document).ready(function () {
-          $('#myTable').DataTable();
-      });
-      $(document).ready(function () {
-          $('#myTableOne').DataTable();
-      });
-      $(document).ready(function () {
-          $('#myTableThree').DataTable();
-      });
-      $(document).ready(function () {
-          $('#myTableFour').DataTable();
-      });
-   </script>
-    
-<<<<<<< HEAD:AdminLTE/dist/pages/details.html
-=======
         <button class="print-btn" onclick="printReceipt()">Print Receipt</button>
      -->
 
@@ -1341,7 +986,7 @@ color: #00192D;
           document.getElementById("overlay").style.display = "none";
       }
   </script>
-    
+
 
 <!-- Begin script for datatable -->
 <script>
@@ -1396,7 +1041,6 @@ $(document).ready(function() {
 <!-- End script for data_table -->
 
 
->>>>>>> a3085e0aa3c6b0b9c964686276de079ac36e0647:AdminLTE/dist/pages/Tenant/profile.html
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
       integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
@@ -1437,6 +1081,8 @@ $(document).ready(function() {
         }
       });
     </script>
+    <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!--end::OverlayScrollbars Configure-->
     <!-- OPTIONAL SCRIPTS -->
     <!-- apexcharts -->
@@ -1445,63 +1091,6 @@ $(document).ready(function() {
       integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
       crossorigin="anonymous"
     ></script>
-
-    <script>
-      const ctx = document.getElementById('rentalTrends').getContext('2d');
-    
-      new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-          datasets: [
-            {
-              label: 'CROWN Z TOWERS',
-              data: [35,'000', 30,'000', 32,'000', 30,'000', 33,'000', 35,'000', 34,'000', 33,'000', 34,'000', 35,'000', 34,'000', 35,'000'],
-              borderColor: 'cyan',
-              backgroundColor: 'transparent',
-              tension: 0.4
-            },
-            {
-              label: 'Manucho Apartments',
-              data: [32,'000', 33,'000', 38,'000', 34,'000', 33,'000', 34,'000', 38,'000', 36,'000', 37,'000', 32,'000', 31,'000', 34,'000'],
-              borderColor: 'green',
-              backgroundColor: 'transparent',
-              tension: 0.4
-            },
-            {
-              label: 'The Mansion Apartments',
-              data:[31,'000', 32,'000', 39,'000', 35,'000', 32,'000', 33,'000', 39,'000', 37,'000', 39,'000', 31,'000', 32,'000', 34,'000'],
-              borderColor: 'black',
-              backgroundColor: 'transparent',
-              tension: 0.4
-            },
-            {
-              label: 'Bsty Apartments',
-              data: [34,'000', 39,'000', 34,'000', 32,'000', 34,'000', 36,'000', 38,'000', 37,'000', 34,'000', 33,'000', 32,'000', 31,'000'],
-              borderColor: 'red',
-              backgroundColor: 'transparent',
-              tension: 0.4
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'top'
-            },
-           
-          },
-          scales: {
-            y: {
-              beginAtZero: false
-            }
-          }
-        }
-      });
-    </script>
-   
-
     <script>
       // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
       // IT'S ALL JUST JUNK FOR DEMO
@@ -1633,15 +1222,15 @@ $(document).ready(function() {
       //-------------
 
       const pie_chart_options = {
-        series: [700, 500,400],
+        series: [700, 500, 400, 600, 300, 100],
         chart: {
           type: 'donut',
         },
-        labels: ['Occupied', 'Vacant', 'Vacant Soon'],
+        labels: ['Chrome', 'Edge', 'FireFox', 'Safari', 'Opera', 'IE'],
         dataLabels: {
           enabled: false,
         },
-        colors: ['#0d6efd', '#20c997', '#ffc107'],
+        colors: ['#0d6efd', '#20c997', '#ffc107', '#d63384', '#6f42c1', '#adb5bd'],
       };
 
       const pie_chart = new ApexCharts(document.querySelector('#pie-chart'), pie_chart_options);
@@ -1650,6 +1239,26 @@ $(document).ready(function() {
       //-----------------
       // - END PIE CHART -
       //-----------------
+    </script>
+    <script>
+      document.getElementById("exportButton").addEventListener("click", function() {
+        // Example data (can be your table data or an array of objects)
+        const data = [
+          { Name: "John", Age: 30, City: "New York" },
+          { Name: "Jane", Age: 25, City: "London" },
+          { Name: "Mark", Age: 35, City: "Paris" }
+        ];
+
+        // Convert data to a worksheet
+        const ws = XLSX.utils.json_to_sheet(data);
+
+        // Create a new workbook and append the worksheet
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+        // Export the workbook as an Excel file
+        XLSX.writeFile(wb, "ExportedData.xlsx");
+      });
     </script>
     <!--end::Script-->
   </body>
