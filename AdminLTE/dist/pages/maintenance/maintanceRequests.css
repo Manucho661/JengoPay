@@ -1,0 +1,218 @@
+body {
+    font-family: Arial, sans-serif;
+    columns: gray;
+}
+
+.filter-container{
+  
+    /* width: 250px; */
+  
+    color: white;
+    position: relative; /* To position the panel below */
+
+}
+.nav-bar {
+    display: flex;
+    border-bottom: 1px solid #e0e0e0;
+}
+.nav-item {
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #666;
+    font-size: 16px;
+    position: relative;
+}
+.nav-item.active {
+    color: #000;
+    font-weight: bold;
+}
+.nav-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #FFC107; /* Green underline */
+}
+
+
+table {
+border-collapse: collapse;
+width: 100%;
+}
+th {
+background-color: #FFC107;
+color: #00192D;
+text-align: left;
+padding: 0.5em;
+font-size: 0.9rem;
+}
+td {
+padding: 0.5em;
+text-align: left;
+font-size: 0.9rem;
+
+}
+tr:nth-child(even) {
+background-color: #f9f9f9;
+}
+tr:hover {
+background-color: #f1f1f1;
+}
+
+
+.filter:hover {
+    color: #FFC107;
+    
+}
+.filter{
+    /* background-color: #444; */
+    /* color: white; */
+    cursor: pointer;
+    /* padding: 12%;  */
+    width: 25%;
+    border-bottom: gray solid 1px;
+    text-align: left;
+    outline: none;
+    font-size: 16px;
+    transition: 0.3s;
+    color: gray;
+    font-size: 100%;
+    border-radius: 2%;
+}
+
+.panel {
+    display: none; /* Initially hidden */
+    background-color: #00192D;
+    /* padding-left: 20px;position: absolute; Makes the panel an overlay */
+    position: absolute; /* Makes the panel an overlay */
+    /* left: 250px; Positioned to the right of the container */
+    top: 100%; /* Place right below the accordion */
+    left: 0;
+    width: fit-content;
+    z-index: 1000;
+    padding: 2%;
+    color: white;
+    border-radius: 4%;
+    
+}
+.panel a {
+    display: block;
+    padding: 8px;
+    /* color: white; */
+    text-decoration: none;
+    transition: 0.3s;
+    color: whitesmoke;
+}
+
+.panel a:hover{
+  color: #FFC107;
+}
+
+/* Announcement Overlay styles */
+#view_announcement {
+    /* width: 50%; Adjust the card width as needed */
+    /* max-width: 500px; Ensures the card doesn't grow too wide */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    display: none;
+    z-index: 10000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+
+}
+.card.content{
+
+  position: relative;
+    background: white;
+    
+    border-radius: 5px;
+    
+    color: black;
+    width: 100%;
+    max-width: 50%; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    font-size: 90%;
+    color: gray;
+}
+
+.card-footer.view_announcement {
+    justify-content: flex-end;
+    
+}
+
+.card-footer .btn + .btn {
+    margin-left: 10px; /* Adds spacing between the buttons */
+}
+
+.close-btn{
+     position: absolute; 
+    
+    right: 15px;
+
+    color: white;
+    cursor: pointer;
+    
+}
+
+#more{
+  display: flex;
+   justify-content: center;
+  cursor: pointer;
+
+}
+
+#more_icon{
+  /* border: 1px solid black; */
+  border-radius: 30%;
+  padding: 10%;
+  font-size: larger;
+}
+
+#more_options{
+  display: none;
+  /* position: absolute; */
+  z-index: 1000;
+  background: #00192D;
+  border-radius: 10%;
+  padding: 10px;
+  
+}
+#more_options a{
+  text-decoration: none;
+  color: white; 
+}
+#more_options a:hover{
+  color: #FFC107;
+}
+#close-overlay-btn {
+    /* top: 0; */
+    color: white;
+    
+    border: none;
+    cursor: pointer;
+    font-size: 100%; 
+      }
+  #close-overlay-btn:hover {
+      color: red;
+      }
+
+.card-header.view_announcement {
+    position: relative; 
+    display: flex;/* Add this for the absolute positioning of the close button */
+}
+#more_announcement_btn{
+color: blueviolet;
+font-weight: 500;
+cursor: pointer;
+
+}
+#more_announcement_btn:hover{
+background-color: rgba(128, 128, 128, 0.2);
+color: #FFC107;
+}

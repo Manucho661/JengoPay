@@ -43,7 +43,6 @@
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
-    <link rel="stylesheet" href="text.css" />
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -52,236 +51,22 @@
       integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
       crossorigin="anonymous"
     />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            columns: gray;
-        }
-
-        .filter-container{
-
-            /* width: 250px; */
-
-            color: white;
-            position: relative; /* To position the panel below */
-
-        }
-        .nav-bar {
-            display: flex;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        .nav-item {
-            padding: 10px 20px;
-            text-decoration: none;
-            color: #666;
-            font-size: 16px;
-            position: relative;
-        }
-        .nav-item.active {
-            color: #000;
-            font-weight: bold;
-        }
-        .nav-item.active::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: #FFC107; /* Green underline */
-        }
-
-
-        table {
-    border-collapse: collapse;
-    width: 100%;
-}
-th {
-    background-color: #FFC107;
-    color: #00192D;
-    text-align: left;
-    padding: 0.5em;
-    font-size: 0.9rem;
-}
-td {
-    padding: 0.5em;
-    text-align: left;
-    font-size: 0.9rem;
-
-}
-tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-tr:hover {
-    background-color: #f1f1f1;
-}
-
-
-.filter:hover {
-            color: #FFC107;
-
-        }
-.filter{
-            /* background-color: #444; */
-            /* color: white; */
-            cursor: pointer;
-            /* padding: 12%;  */
-            width: 25%;
-            border-bottom: gray solid 1px;
-            text-align: left;
-            outline: none;
-            font-size: 16px;
-            transition: 0.3s;
-            color: gray;
-            font-size: 100%;
-            border-radius: 2%;
-}
-
-.panel {
-            display: none; /* Initially hidden */
-            background-color: #00192D;
-            /* padding-left: 20px;position: absolute; Makes the panel an overlay */
-            position: absolute; /* Makes the panel an overlay */
-            /* left: 250px; Positioned to the right of the container */
-            top: 100%; /* Place right below the accordion */
-            left: 0;
-            width: fit-content;
-            z-index: 1000;
-            padding: 2%;
-            color: white;
-            border-radius: 4%;
-
-        }
-.panel a {
-            display: block;
-            padding: 8px;
-            /* color: white; */
-            text-decoration: none;
-            transition: 0.3s;
-            color: whitesmoke;
-        }
-
-        .panel a:hover{
-          color: #FFC107;
-        }
-
-/* Announcement Overlay styles */
-        #view_announcement {
-            /* width: 50%; Adjust the card width as needed */
-            /* max-width: 500px; Ensures the card doesn't grow too wide */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            display: none;
-            z-index: 10000;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            justify-content: center;
-            align-items: center;
-
-        }
-        .card.content{
-
-          position: relative;
-            background: white;
-
-            border-radius: 5px;
-
-            color: black;
-            width: 100%;
-            max-width: 50%;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            font-size: 90%;
-            color: gray;
-        }
-
-        .card-footer.view_announcement {
-            justify-content: flex-end;
-
-        }
-
-        .card-footer .btn + .btn {
-            margin-left: 10px; /* Adds spacing between the buttons */
-        }
-
-        .close-btn{
-             position: absolute;
-
-            right: 15px;
-
-            color: white;
-            cursor: pointer;
-
-        }
-
-        #more{
-          display: flex;
-           justify-content: center;
-          cursor: pointer;
-
-        }
-
-        #more_icon{
-          /* border: 1px solid black; */
-          border-radius: 30%;
-          padding: 10%;
-          font-size: larger;
-        }
-
-        #more_options{
-          display: none;
-          /* position: absolute; */
-          z-index: 1000;
-          background: #00192D;
-          border-radius: 10%;
-          padding: 10px;
-
-        }
-        #more_options a{
-          text-decoration: none;
-          color: white;
-        }
-        #more_options a:hover{
-          color: #FFC107;
-        }
-        #close-overlay-btn {
-            /* top: 0; */
-            color: white;
-            /* color: white; */
-            border: none;
-            cursor: pointer;
-            font-size: 100%;
-              }
-          #close-overlay-btn:hover {
-              color: red;
-              }
-
-        .card-header.view_announcement {
-            position: relative;
-            display: flex;/* Add this for the absolute positioning of the close button */
-        }
-#more_announcement_btn{
-  color: blueviolet;
-  font-weight: 500;
-  cursor: pointer;
-
-}
-#more_announcement_btn:hover{
-  background-color: rgba(128, 128, 128, 0.2);
-  color: #FFC107;
-}
-
-
-        </style>
-
-<!-- scripts for data_table -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="agreements.css">
+    
+    
+    <!-- scripts for data_table -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="announcements.css">
+    
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+
 
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -375,7 +160,7 @@ tr:hover {
                   <div class="d-flex">
                     <div class="flex-shrink-0">
                       <img
-                        src="../../dist/assets/img/user3-128x128.jpg"
+                        src="../../../dist/assets/img/user3-128x128.jpg"
                         alt="User Avatar"
                         class="img-size-50 rounded-circle me-3"
                       />
@@ -440,11 +225,11 @@ tr:hover {
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <img
-                  src="17.jpg"
+                  src="../../dist/assets/img/user2-160x160.jpg"
                   class="user-image rounded-circle shadow"
                   alt="User Image"
                 />
-                <span class="d-none d-md-inline">  <b>JENGO PAY</b>  </span>
+                <span class="d-none d-md-inline">Alexander Pierce</span>
               </a>
               <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                 <!--begin::User Image-->
@@ -525,61 +310,80 @@ tr:hover {
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
-                  <li class="nav-item">
+                  <!-- <li class="nav-item">
                     <a href="./index.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard v1</p>
+                      <p>Dashboard</p>
                     </a>
-                  </li>
+                  </li> -->
                   <li class="nav-item">
                     <a href="./index2.html" class="nav-link active">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard v2</p>
+                      <p>Dashboard </p>
                     </a>
                   </li>
-                  <li class="nav-item">
+                  <!-- <li class="nav-item">
                     <a href="./index3.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Dashboard v3</p>
                     </a>
-                  </li>
+                  </li> -->
                 </ul>
               </li>
               <li class="nav-item">
-                <a href="./generate/theme.html" class="nav-link">
+                <a href="./property.html" class="nav-link">
                   <i class="nav-icon bi bi-palette"></i>
-                  <p>Theme Generate</p>
+                  <p>Tenants</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./tenantscreening.html" class="nav-link">
+                  <i class="nav-icon bi bi-palette"></i>
+                  <p>Tenant Screening</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./leasy.html" class="nav-link">
+                  <i class="nav-icon bi bi-file-earmark-text"></i>
+                  <p>Lease Management</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-box-seam-fill"></i>
                   <p>
-                    Widgets
+                   Financial Documents
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="./widgets/small-box.html" class="nav-link">
+                    <a href="./widgets/invoices.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Small Box</p>
+                      <p>Invoices</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./widgets/info-box.html" class="nav-link">
+                    <a href="./widgets/payment receipts.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>info Box</p>
+                      <p>Payment Receipts</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="./widgets/payment receipts.html" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p> Rent Deposit Reports</p>
                     </a>
                   </li>
                   <li class="nav-item">
                     <a href="./widgets/cards.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Cards</p>
+                      <p>Maintenance And Repair Costs</p>
                     </a>
                   </li>
                 </ul>
               </li>
+              
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-clipboard-fill"></i>
@@ -943,302 +747,300 @@ tr:hover {
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-              <div class="col-sm-6"><h3 class="mb-0"> <i class="fas fa-wrench"></i>   Maintenances Requests</h3></div>
+              <div class="col-sm-6"><h3 class="mb-0"></h3></div>
               <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                </ol>
+              
               </div>
             </div>
             <!--end::Row-->
           </div>
           <!--end::Container-->
         </div>
-        <div class="app-content">
-          <!--begin::Container-->
+        <div  class="app-content">           
+
           <div class="container-fluid">
-            <!-- Info boxes -->
-            <div class="row">
-
-                <div class="col-md-6">
-                    <div class="profile_details">
-                        <div class="profile_picture">
-                                         <!-- <img class="mt-3" src="images/mansion-1.jpg" alt="Profile Picture"  width="100" height="100"> -->
-                        </div>
-                        <div class="profile_info">
-
-                                            <!-- <h2>Jane Doe</h2> -->
-
-                            <div class="profile_details one">
-                              <p> New: <strong>&nbsp;50|</strong> In Progress: <strong> &nbsp;30|</strong> Completed: <strong> &nbsp;70</strong> </p>
-
-
+            <!-- First Row -->
+            <div class="row  " >
+              <div class="col-sm-8">
+                
+                <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> JOSEPH</h3>
+              
+                
+                    <div class="row mt-2  ">
+                      <div class="col-md-12  ">
+                  
+                        <div class="row mt-6 ">
+                            <!-- Summary -->
+                            <div class="col-md-3 ">
+                                <label class="text text-center">  <i class="fas fa-briefcase icon"></i>   Occupation </label>
+                                <span class="value text-center">Teacher</span>
                             </div>
-
+                    
+                            <div class="col-md-3">
+                                <label class="text text-center"> <i class="fas fa-baby icon"></i>   BIRTH  </label>
+                                <span class="value"> 5-23-1995 </span>
+                            </div>
+                            <div class="col-md-3">
+                              <label class="text text-center">  <i class="fas fa-id-card"></i>  IDENTIFICATION NUMBER </label>
+                              <span class="value">012020202 </span>
+                            </div>
                         </div>
-                    </div>
 
+                        <div class="row mt-6" >
+                          <!-- Summary -->
+                          <div class="col-md-3  ">
+                              <label class="text text-center"> <i class="fas fa-globe icon"></i>   ORIGIN </label>
+                              <span class="value text-center">Kenyan </span>
+                          </div>
+                  
+                          <div class="col-md-3">
+                              <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> End_Date  </label>
+                              <span class="value"> 6-7-2020 </span>
+                          </div>
+                          <div class="col-md-3">
+                            <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> <a href=""> Start_Date  </a>  </label>
+                            <span class="value"> 5-23-1995 </span>
+                          </div>
+                          <div class="col-md-3">
+                            <button class="btn text text-danger">  <i class="fas fa-trash"></i> Remove Joseph</button>
+                          </div>
+                        </div>
+                        
+                      </div>
+                      <!-- <div class="col-md-6">
+
+                        <div class="contact">
+                          <p class="contact_item" >Email</p>
+                          <p class="contact_value" >nucho@gmail</p>
+                        </div>
+                        <div class="contact">
+                          <p  class="contact_item" >Address</p>
+                          <p  class="contact_value" >50202|202|Califonia</p>
+                        </div>
+
+                      </div> -->
                 </div>
+              </div>
+              <div class="col-sm-4">
+                <ol class="breadcrumb float-sm-end">
+                  <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                </ol>
+              </div>
+            </div>
+
+            <!-- End first Row -->
+
+            <!-- Second row start --><div class="row first mb-2 mt-3 rounded-circle">
+
+                <div class="col-md-6 d-flex justify-content-between">
+                  <button id="rent_details_btn" class="btn" >  <i class="fas fa-calendar-check icon"></i>
+                    <b> Rent_Details </b></button>  
+                    <button id="agreements_btn" class="btn">  <i class="fas fa-calendar-check icon"></i>
+                      <b> Agreements </b></button>                
+                </div>
+
                 <div class="col-md-6">
                   <div style="display: flex; justify-content: end;">
-                  <button class="btn" style="background-color: #00192D; color: white; font-size: small;"> <i class="fas fa-tools icon"></i>
-                    <b> Vendors </b></button>
+                     
+                   
+                  </div>   
                 </div>
-
-
-
-
-
               <!-- /.col -->
             </div>
-            <!-- /.row -->
-            <!--begin::Row-->
 
-            <!--end::Row-->
-            <!--begin::Row-->
-            <div class="row">
-              <!-- Start col -->
-              <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                      <div class="filter-container" id="filter-container">
+            
 
-                        <div class="filter" id="filter">
-                          <i class="bi bi-filter"></i>
-                          Filter | <b>All Properties <i class="fas fa-chevron-down"></i> </b>
+      <div class="row mt-3 ">
+        <div class="col-md-12">
+          <div class="card"> 
+            
+            <div class="card-body">
+                <table id="agreements" class="display" style="font-size: small;" >
+                    <thead>
+                      <tr>
+                          <th scope="col">DATE</th>
+                              <th scope="col">FIRST PARTY (YOU)</th>
+                              <th scope="col">SECOND PARTY (TENANT)</th>
+                              <th scope="col">DEPOSIT</th>
+                              <th scope="col">ACTION</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                          <th scope="row">1/7/11</th>
+                              <td>JOSEPH KAIRO</td>
+                              <td>Emmanuel Wanyonyi</td>
+                              <td>KSH 10,000</td>
+                              <td id="more">
+                                <div id="more_icon">&#x2026;</div> 
+                                <br>
+                                <div id="more_options">
+                                   <a href="#">View</a>
+                                   <a href="#">Edit</a>
+                                   <a href="#">Delete</a>
+                                 
+                                   
+                                </div>
+                               </td>
+                              
+                      </tr>
+                      <tr>
 
-                        </div>
-                        <div class="panel" id="panel">
-                          <a href="#">All Properties</a>
-                          <a href="#">Crown Z</a>
-                          <a href="#">Manucho</a>
-                          <a href="#">MM Towers</a>
+                      <th scope="row">1/7/11</th>
+                              <td>JOSEPH KAIRO</td>
+                              <td>Emmanuel Wanyonyi</td>
+                              <td>KSH 10,000</td>
+                              <td id="more">
+                                <div id="more_icon">&#x2026;</div> 
+                                <br>
+                                <div id="more_options">
+                                   <a href="#">View</a>
+                                   <a href="#">Edit</a>
+                                   <a href="#">Delete</a>
+                                 
+                                   
+                                </div>
+                               </td>
+                      </tr>
+                      <tr>
+                          
+                        <th scope="row">1/7/11</th>
+                        <td>JOSEPH KAIRO</td>
+                        <td>Emmanuel Wanyonyi</td>
+                        <td>KSH 10,000</td>
+                        <td id="more">
+                          <div id="more_icon">&#x2026;</div> 
+                          <br>
+                          <div id="more_options">
+                             <a href="#">Delete</a>
+                             <a href="#">Edit</a>
 
-                        </div>
-
-                      </div>
-
-                    </div>
-
-                    <div class="card-body">
-                      <table id="maintenance" class="display">
-                        <thead>
-                          <tr>
-                            <th>ID</th>
-                            <th>Property</th>
-                            <th>TENANT</th>
-                            <th>UNIT</th>
-                            <th>DATE</th>
-                            <th>ISSUE</th>
-                            <th>Prority</th>
-                            <th>PROVIDER</th>
-                             <th>ACTION</th>
+                           
+                             
+                          </div>
+                         </td>
+                      
 
                           </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>002</td>
-                            <td>CROWN Z TOWERS</td>
-                            <td>Manucho</td>
-                            <td>A12</td>
-                            <td>11-10-2025</td>
-                            <td>Broken handle</td>
-                            <td>low</td>
+                    </tbody>
+                  </table>
+            <div class="overlay" id="overlay">
+              <div class="invoicy-container">
+                <!-- <div class="receipt-container" id="receipt"> -->
+                  <button class="close-btn" onclick="closeOverlay()">×</button>
+                  <h2><strong>Payment Receipt</strong></h2>
+                  <p><strong> Nairobi,  KENYA</strong></p>
+                  <p><strong>Date:</strong> <span id="date"></span></p>
+                  <p><strong>Method:MPESA</strong></p>
+                  <p><strong>Reference:TGH34KJ89K</strong></p>
 
-                            <td>Not assigned</td>
-                            <td id="more">
-                             <div id="more_icon">&#x2026;</div>
-                             <br>
-                             <div id="more_options">
-                                <a href="#">Assign</a>
-                                <a href="#">Update</a>
-                                <a href="#">Delete</a>
-                                <a href="#">View</a>
-
-
-                             </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>003</td>
-                            <td>ALPHA APARTMENTS</td>
-                            <td>Ethic</td>
-                            <td>A11</td>
-                            <td>12-11-2025</td>
-                            <td>Leaking roof</td>
-                            <td>high</td>
-
-                            <td>New Electrics</td>
-                            <td id="more">
-                              <div id="more_icon" class="rounded-circle" >&#x2026;</div>
-                              </td>
-                          </tr>
-                          <!-- Add more rows as needed -->
-                        </tbody>
-
-                    </table>
-
-
-
-                    </div>
-
-
-
-                    <div class="card-footer">
-
-                     </div>
-
-                </div>
-
-
-            </div>
-              <!-- /.col -->
-            </div>
-            <!--end::Row-->
+            
+                  <!-- <div class="invoice-details">
+                      <p><strong>Invoice Number:</strong> INV-0001</p>
+                      <p><strong>Tenant Name:</strong> John Doe</p>
+                      <p><strong>Property:</strong> ABC Apartments</p>
+                      <p><strong>Invoice Date:</strong> 2025-01-23</p>
+                      <p><strong>Due Date:</strong> 2025-02-01</p>
+                  </div> -->
+                  <table>
+                      <tr><th>Description</th><th>AMOUNT</th></tr>
+                      <tr><td>Rent Amount</td><td>KSH1500.00</td></tr>
+                      <tr><td>Water Bill</td><td>KSH50.00</td></tr>
+                      <tr><td>Garbage Collection Fees</td><td>KSH200.00</td></tr>
+                      <tr><td>Late Fees</td><td>KSH300.00</td></tr>
+                      <tr><td>Maintenance Costs</td><td>KSH100.00</td></tr>
+                      <!-- <tr><td>Arrears</td><td>KSH 200.00</td></tr> -->
+                      <tr class="total"><td>Total Amount Paid</td><td>KSH1905.00</td></tr>
+                      <tr><td> <button id="exportButton" style="border-radius: 10px; margin-left: 6rem;">
+                        <i class="fas fa-share-square"></i> DOWNLOAD
+                      </button></td></tr>
+                  </table>
+              </div>
           </div>
-          <!--end::Container-->
+
+
+<!-- 
+        <div class="overlay" id="overlay">
+          <div class="invoicy-container">
+          <div class="receipt-container" id="receipt">
+            <button class="close-btn" onclick="closeOverlay()">×</button>
+            <h2>Payment Receipt</h2>
+            <p> Nairobi,  KENYA</p>
+            <p><strong>Date:</strong> <span id="date"></span></p>
+           
+            <table>
+              <td>Manucho Apartments</td>
+              <td>John</td>
+              <th>A11</th>
+              <td>KSH80,000</td>
+              <td>KSH80,000</td>
+              <td>MPESA</td>
+              <td>TBM34KGNJ8</td>
+              <td>10-12-2025</td>
+              <td>KSH0</td>
+            </table>
         </div>
-        <!--end::App Content-->
-      </main>
-      <!--end::App Main-->
-      <!--begin::Footer-->
+    
+        <button class="print-btn" onclick="printReceipt()">Print Receipt</button>
+     -->
 
 
-
-      <footer class="app-footer">
-        <!--begin::To the end-->
-        <div class="float-end d-none d-sm-inline">Anything you want</div>
-        <!--end::To the end-->
-        <!--begin::Copyright-->
-        <strong>
-          Copyright &copy; 2014-2024&nbsp;
-          <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;"> JENGO PAY</a>.
-        </strong>
-        All rights reserved.
-        <!--end::Copyright-->
-      </footer>
-      <!--end::Footer-->
-    </div>
     <!--end::App Wrapper-->
-
-
-
-
-<!-- Overlay Cards -->
-
-<!-- create Announcement -->
-
-
-
-
-
- <!-- Start View announcement -->
- <div class="view_announcement" id="view_announcement">
-  <div class="card content">
-   <div class="card-header view_announcement bg-secondary text-white">
-       <h5 class="mb-0">Rent Payments</h5>
-       <div id="close-overlay-btn" class="close-btn" > <b> &times;</b> </div>
-
-   </div>
-   <div class="card-body">
-       <p class="card-text">
-           All Rent Payments should be made before 24/01/17. Anyone who feels that they might not
-           be able to complete their dues on 24/01/17 should communicate to management before the due date.
-           Else, you face an eviction risk if you fail to pay your dues before the said date without a reasonable reason</p>
-
-           <p class="timestamp" id="timestamp"></p> <!-- Timestamp -->
-
-
-       <div class="Recipients border-top border-gray "> <p><strong>Recipients|</strong> All Employees</p>  </div>
-
-   </div>
-   <div class="card-footer view_announcement d-flex">
-       <button class="btn btn-danger btn-sm">Delete</button>
-       <button class="btn btn-secondary btn-sm">Resend</button>
-   </div>
- </div>
- </div>
-
-<!-- End view announcement -->
-<!-- end overlay card. -->
-
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
 
+    <script>
+      // Function to print the receipt
+      function printReceipt() {
+          window.print(); // Opens the print dialog
+      }
 
+      // Set current date on the receipt
+      document.getElementById("date").textContent = new Date().toLocaleDateString();
+  </script>
 
-<!-- Overlay scripts -->
- <!-- View announcements script -->
- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      function openOverlay() {
+          document.getElementById("overlay").style.display = "flex";
+      }
 
+      function closeOverlay() {
+          document.getElementById("overlay").style.display = "none";
+      }
+  </script>
+    
 
- <script>
-  const   more_announcement = document.getElementById('more_announcement_btn');
-  const   view_announcement = document.getElementById('view_announcement');
-  const   close_overlay = document.getElementById("close-overlay-btn");
-
-  more_announcement.addEventListener('click', ()=>{
-
-     view_announcement.style.display= "flex";
-     document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
-     const now = new Date();
-            const formattedTime = now.toLocaleString(); // Format the date and time
-            timestamp.textContent = `Sent on: ${formattedTime}`;
-
-
-  });
-
-     close_overlay.addEventListener('click', ()=>{
-
-     view_announcement.style.display= "none";
-     document.querySelector('.app-wrapper').style.opacity = '1';
-
-
-     });
- </script>
-
- <!-- End view announcement script -->
-
-
-    <script
-      src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-      integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
-      crossorigin="anonymous"
-    ></script>
-    <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-    <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-      crossorigin="anonymous"
-    ></script>
-    <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-
-<!-- script for occordion -->
+<!-- Begin script for datatable -->
 <script>
+  $(document).ready(function() {
+   $('#rent').DataTable({
+       "paging": true,
+       "searching": true,
+       "info": true,
+       "lengthMenu": [5, 10, 25, 50],
+       "language": {
+           "search": "Filter records:",
+           "lengthMenu": "Show _MENU_ entries"
+       }
+   });
+});
 
-        // JavaScript to handle hover and hide functionality
-        const filterContainer = document.getElementById("filter-container");
-        const accordion = document.getElementById("filter");
-        const panel = document.getElementById("panel");
-
-        // Show panel when hovering over the accordion
-        accordion.addEventListener("mouseenter", () => {
-            panel.style.display = "block";
-        });
-
-        // Hide panel when moving out of both accordion and panel
-         filterContainer.addEventListener("mouseleave", () => {
-             panel.style.display = "none";
-      });
-
+$(document).ready(function() {
+   $('#agreements').DataTable({
+       "paging": true,
+       "searching": true,
+       "info": true,
+       "lengthMenu": [5, 10, 25, 50],
+       "language": {
+           "search": "Filter records:",
+           "lengthMenu": "Show _MENU_ entries"
+       }
+   });
+});
 
 </script>
-<!-- End for Occordion script -->
-
-
-<!-- more options -->
+<!-- End script for data_table -->
 <script>
 
   // JavaScript to handle hover and hide functionality
@@ -1258,34 +1060,26 @@ tr:hover {
 
 
 </script>
-    <!-- Begin script for datatable -->
-    <script>
 
-       $(document).ready(function() {
-        $('#maintenance').DataTable({
-            "paging": true,
-            "searching": true,
-            "info": true,
-            "lengthMenu": [5, 10, 25, 60],
-            "language": {
-                "search": "Filter records:",
-                "lengthMenu": "Show _MENU_ entries"
-            }
-        });
-    });
-
-    </script>
-
-    </script>
-    <!-- End script for data_table -->
-
+    <script
+      src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
+      integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
+      crossorigin="anonymous"
+    ></script>
+    <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <script src="../../../dist/js/adminlte.js"></script>
+    <script src="../../dist/js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
@@ -1307,6 +1101,8 @@ tr:hover {
         }
       });
     </script>
+    <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!--end::OverlayScrollbars Configure-->
     <!-- OPTIONAL SCRIPTS -->
     <!-- apexcharts -->
@@ -1463,6 +1259,26 @@ tr:hover {
       //-----------------
       // - END PIE CHART -
       //-----------------
+    </script>
+    <script>
+      document.getElementById("exportButton").addEventListener("click", function() {
+        // Example data (can be your table data or an array of objects)
+        const data = [
+          { Name: "John", Age: 30, City: "New York" },
+          { Name: "Jane", Age: 25, City: "London" },
+          { Name: "Mark", Age: 35, City: "Paris" }
+        ];
+    
+        // Convert data to a worksheet
+        const ws = XLSX.utils.json_to_sheet(data);
+    
+        // Create a new workbook and append the worksheet
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    
+        // Export the workbook as an Excel file
+        XLSX.writeFile(wb, "ExportedData.xlsx");
+      });
     </script>
     <!--end::Script-->
   </body>

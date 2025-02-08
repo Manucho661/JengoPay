@@ -42,7 +42,8 @@
     />
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../../dist/css/adminlte.css" />
+    <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
+    <link rel="stylesheet" href="text.css" />
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -51,105 +52,382 @@
       integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            columns: gray;
+        }
+
+        .filter-container{
+          
+            /* width: 250px; */
+          
+            color: white;
+            position: relative; /* To position the panel below */
+        
+        }
+        .nav-bar {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .nav-item {
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #666;
+            font-size: 16px;
+            position: relative;
+        }
+        .nav-item.active {
+            color: #000;
+            font-weight: bold;
+        }
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #FFC107; /* Green underline */
+        }
+        
+
+        table {
+    border-collapse: collapse;
+    width: 100%;
+}
+th {
+    background-color: #FFC107;
+    color: #00192D;
+    text-align: left;
+    padding: 0.5em;
+    font-size: 0.9rem;
+}
+td {
+    padding: 0.5em;
+    text-align: left;
+    font-size: 0.9rem;
+    
+}
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+
+.filter:hover {
+            color: #FFC107;
+            
+        }
+
+.filter{
+            /* background-color: #444; */
+            /* color: white; */
+            cursor: pointer;
+            /* padding: 12%;  */
+            width: 25%;
+            border-bottom: gray solid 1px;
+            text-align: left;
+            outline: none;
+            font-size: 16px;
+            transition: 0.3s;
+            color: gray;
+            font-size: 100%;
+            border-radius: 2%;
+}
+
+.panel {
+            display: none; /* Initially hidden */
+            background-color: #00192D;
+            /* padding-left: 20px;position: absolute; Makes the panel an overlay */
+            position: absolute; /* Makes the panel an overlay */
+            /* left: 250px; Positioned to the right of the container */
+            top: 100%; /* Place right below the accordion */
+            left: 0;
+            width: fit-content;
+            z-index: 1000;
+            padding: 2%;
+            color: white;
+            border-radius: 4%;
+            
+        }
+.panel a {
+            display: block;
+            padding: 8px;
+            /* color: white; */
+            text-decoration: none;
+            transition: 0.3s;
+            color: whitesmoke;
+        }
+
+        .panel a:hover{
+          color: #FFC107;
+        }
+        
+/* Announcement Overlay styles */
+        #view_announcement {
+            /* width: 50%; Adjust the card width as needed */
+            /* max-width: 500px; Ensures the card doesn't grow too wide */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            display: none;
+            z-index: 10000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+
+        }
+        .card.content{
+
+          position: relative;
+            background: white;
+            border-radius: 5px;
+            color: black;
+            width: 100%;
+            max-width: 50%; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            font-size: 90%;
+            color: gray;
+        }
+
+        .card-footer.view_announcement {
+            justify-content: flex-end;
+            
+        }
+
+        .card-footer .btn + .btn {
+            margin-left: 10px; /* Adds spacing between the buttons */
+        }
+
+        .close-btn{
+             position: absolute; 
+            
+            right: 15px;
+        
+            color: white;
+            cursor: pointer;
+            
+        }
+
+        #more{
+          display: flex;
+           justify-content: center;
+          cursor: pointer;
+
+        }
+        
+        #more_icon{
+          /* border: 1px solid black; */
+          border-radius: 30%;
+          padding: 10%;
+          font-size: larger;
+        }
+       
+        #more_options{
+          display: none;
+          /* position: absolute; */
+          z-index: 1000;
+          background: #00192D;
+          border-radius: 10%;
+          padding: 10px;
+          
+        }
+        #more_options a{
+          text-decoration: none;
+          color: white;
+        }
+        #more_options a:hover{
+          color: #FFC107;
+        }
+        #close-overlay-btn {
+            /* top: 0; */
+            color: white;
+            /* color: white; */
+            border: none;
+            cursor: pointer;
+            font-size: 100%; 
+              }
+          #close-overlay-btn:hover {
+              color: red;
+              }
+
+        .card-header.view_announcement {
+            position: relative; 
+            display: flex;/* Add this for the absolute positioning of the close button */
+        }
+#more_announcement_btn{
+  color: blueviolet;
+  font-weight: 500;
+  cursor: pointer;
+
+}
+#more_announcement_btn:hover{
+  background-color: rgba(128, 128, 128, 0.2);
+  color: #FFC107;
+}
+
+     form {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin: 0 auto;
+    }  
+
+     h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    } 
+
+    label {
+      font-size: 12px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+      input[type="text"], input[type="email"], input[type="password"], select, textarea {
+      width: 60%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    input[type="radio"], input[type="checkbox"] {
+      margin-right: 8px;
+    } 
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color:#00192D;
+    }
+
+    /* .form-container {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      margin: 30px auto;
+    } */
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-size: 16px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+     /* input[type="text"], input[type="email"], input[type="number"], select, textarea {
+      width: 70%;
+      padding: 8px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }  */
+
+    /* textarea {
+      resize: vertical;
+    } */
+     .form-section {
+      margin-bottom: 15px;
+    }
+
+    /* Main form container */    
+     .form-container{
+      position: fixed;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 3px 11px rgba(0, 0, 0, 0.1);
+      width: 100%; 
+     }
+
+ /* Form Section Titles */
+.form-section h3 {
+      font-size: 1.25em; 
+      color: #333;
+      margin-bottom: 12px;
+      border-bottom: 2px solid #f1f1f1;
+      padding-bottom: 5px;
+    } 
+   
+    /* Optional: Make the button more prominent */
+    .bossy {
+      background-color: #00192D;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+      /* padding: 12px 20px; */
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 65%;
+      height: 2%;
+    }
+
+    .bossy:hover {
+      background-color: #00192D;
+    }
+    .beasy{
+      max-width: 510px;
+      max-height:490px;
+    }
+    .text-warning {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    /* font-weight: 50; */
+    color: #FFC107; /* Bright yellow color */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Light shadow effect */
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.text-warning:hover {
+    color: #FFC107; /* Slightly darker yellow on hover */
+    transform: scale(1.05); /* Slight scale effect on hover */
+}
+#taskForm{
+  font-size: medium;
+}
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 10.2px;
+    margin-top: 8px;
+    transition: border-color 0.3s ease;
+}
+        </style>
+
+<!-- scripts for data_table -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
-      integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
-      crossorigin="anonymous"
-    />
-    <style>
 
-a{
-            text-decoration: none;
-        }
-        
-        body{
-            
-            background-color: rgba(128, 128, 128, 0.1);
-        }
-        .summaryItem{
-            font-family: 'Playfair Display', serif; /* Elegant for creative projects */
-font-size: 25px;
-font-weight: bold;
-
-font-weight: 400; /* Lighter weight for a faint look */
-letter-spacing: 1px; /* Slight spacing for an airy feel */
-color:gray;
-
-        }
-        .summaryItemOne{
-            font-family: 'Playfair Display', serif; /* Elegant for creative projects */
-font-size: 25px;
-font-weight: bold;
-
-font-weight: 400; /* Lighter weight for a faint look */
-letter-spacing: 1px; /* Slight spacing for an airy feel */
-color: #00192D;
-
-        }
-        .custom-btn{
-            background-color: #00192D;
-    border-color: #00192D;
-    color:  #FFC107; /* White background */
-        }
-
-    .statement{
-        background-color: #FFC107;
-        color: #00192D ;
-
-        }
-
-        .profile-card {
-      background-color: #f8f9fa;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      /* padding: 20px; */
-      
-      margin: 30px auto;
-    }
-    .profile-picture {
-      border-radius: 10px;
-      width: 100%;
-      height: auto;
-      object-fit: cover;
-      border: 4px solid #007bff;
-    }
-    .profile-details h2 {
-      /* margin-bottom: 10px; */
-      
-    }
-    .profile-details p {
-      /* /margin: 5px 0; */
-      color: #6c757d;
-    }
-    .profile_details{
-        display: flex;
-        
-    }
-    .profile_picture{
-        margin-right: 4%;
-    }
-    .profile_info .one{
-        color: #666;
-        font-size: 14px;
-        display: block;
-        text-align: justify;   
-
-    }
-    .other_profile_details{
-        display: block;
-        color: #666;
-        font-size: 14px;
-        display: block;
-        text-align: justify;
-        
-        
-    }
-    </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -307,11 +585,11 @@ color: #00192D;
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <img
-                  src="../../dist/assets/img/user2-160x160.jpg"
+                  src="17.jpg"
                   class="user-image rounded-circle shadow"
                   alt="User Image"
                 />
-                <span class="d-none d-md-inline">Alexander Pierce</span>
+                <span class="d-none d-md-inline">  <b>JENGO PAY</b>  </span>
               </a>
               <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                 <!--begin::User Image-->
@@ -413,16 +691,16 @@ color: #00192D;
                 </ul>
               </li>
               <li class="nav-item">
-                <a href="./property.html" class="nav-link">
+                <a href="./generate/theme.html" class="nav-link">
                   <i class="nav-icon bi bi-palette"></i>
-                  <p>Tenants</p>
+                  <p>Theme Generate</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="tenantscreening.html" class="nav-link">
+                <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-box-seam-fill"></i>
                   <p>
-                    Tenant Screening
+                    Widgets
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
                 </a>
@@ -810,11 +1088,11 @@ color: #00192D;
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-              <div class="col-sm-6"><h3 class="mb-0">Dashboard v2</h3></div>
+              <div class="col-sm-6"><h3 class="mb-0"> <i class="fas fa-wrench"></i>   Maintenances Requests</h3></div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Dashboard v2</li>
+                  <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
                 </ol>
               </div>
             </div>
@@ -822,269 +1100,390 @@ color: #00192D;
           </div>
           <!--end::Container-->
         </div>
-        <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
-          <!--begin::App Wrapper-->
-          <div class="app-wrapper">
-            <!--begin::Header-->
+        <div class="app-content">
+          <!--begin::Container-->
+          <div class="container-fluid">
+            <!-- Info boxes -->
+            <div class="row">
+
+                <div class="col-md-6">
+                    <div class="profile_details">
+                        <div class="profile_picture">
+                                         <!-- <img class="mt-3" src="images/mansion-1.jpg" alt="Profile Picture"  width="100" height="100"> -->
+                        </div>
+                        <div class="profile_info">
+                                    
+                                            <!-- <h2>Jane Doe</h2> -->
+                                             
+                            <div class="profile_details one">
+                              <p> New: <strong>&nbsp;50|</strong> In Progress: <strong> &nbsp;30|</strong> Completed: <strong> &nbsp;70</strong> </p>
+
+                            
+                            </div>
+                                
+                        </div>
+                    </div>
+                                    
+                </div>
+                <div class="col-md-6">
+                  <div style="display: flex; justify-content: end;">
+                  <button class="btn" style="background-color: #00192D; width:20%; height:20%; color: white; font-size: small;"> <i class="fas fa-tools icon"></i> 
+                    <b> Vendors </b></button>     
+                </div>
+
+                
+                
+
+
+              <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <!--begin::Row-->
             
-            <!--end::Header-->
-            <!--begin::Sidebar-->
-          
-             <?php include 'sidebar.php'?>
-            <!--end::Sidebar-->
-            <!-- start content -->
-            <div id="content">
-               <!--begin::App Main-->
-            
-              <main class="app-main">
-                <!--begin::App Content Header-->
+            <!--end::Row-->
+            <!--begin::Row-->
+            <div class="row">
+              <!-- Start col -->
+              <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                      <div class="filter-container" id="filter-container">
 
-                <div class="container-fluid" style="box-shadow: 0 2em 8em rgba(0, 0, 0, 0.2);">
+                        <div class="filter" id="filter">
+                          <i class="bi bi-filter"></i>
+                          Filter | <b>All Properties <i class="fas fa-chevron-down"></i> </b>
+  
+                        </div>
+                        <div class="panel" id="panel">
+                          <a href="#">All Properties</a>
+                          <a href="#">Crown Z</a>
+                          <a href="#">Manucho</a>
+                          <a href="#">MM Towers</a>
 
+                        </div>
 
-                  <div class="row bg-light ">
-                      <!-- Profile Picture -->
-          
-                      <div class="card" style="border:transparent"> 
-                                  
-          
-                                  <div class="card-body">
-                                      <div class="row">
-                                          <div class="col-md-6">
-                                              <div class="profile_details">
-                                                  <div class="profile_picture">
-                                                   <img class="mt-3" src="images/Doe.jpg" alt="Profile Picture"  width="100">
-                                                  </div>
-                                                  <div class="profile_info">
-                                              
-                                                      <!-- <h2>Jane Doe</h2> -->
-                                                       <h3 style=" border-bottom: 1px solid #ddd;" >John Doe</h3>
-                                                       <div class="profile_details one">
-                                                          <p><strong>Occupation &nbsp;|</strong> Teacher</p>
-                                                          <p><strong>DATE OF BIRTH &nbsp;|</strong> 5-23-1995</p>
-                                                          <p><strong>IDENTIFICATION NUMBER &nbsp; |</strong> 012020202</p>
-                                                      </div>
-                                          
-                                                  </div>
-                                              </div>
-                                              
-                                          </div>
-                                          <!-- Profile Details -->
-          
-                                          <div class="col-md-4" style=" border-left: 1px solid #ddd;">
-                                          
-                                                      <div class="other_profile_details">
-                                                          <p><strong>Origin &nbsp;|</strong> KENYAN</p>
-                                                          <p><strong>End Date &nbsp; |</strong> 6-7-2020</p>
-                                                          <p><strong>Start Date &nbsp;|</strong> 5-23-1995</p>
-                                                          
-                                                      </div>
-          
-          
-                                          </div>
-                                          <div class="col-md-2" style=" display:flex; flex-direction: column; justify-content:end;">
-                                          
-                                                      <div>
-                                                          <button type="button" class="btn btn-danger">Remove John</button>
-                                                      </div>
-          
-          
-                                          </div>
-                                      </div>
-                                          
-          
-                                  </div>
-          
-                     
-                  </div>
-                 
-                  
-                  
-          
-                  
-                  <div class="">
-          
-                         
-          
-                      <div class="row mt-3"> <!-- third row -->
-          
-                          <div class="col-md-12">
-                              <div class="card">
-                                  <div class="card-header " style="background-color: #00192D; color:#FFC107;">
-                                      <div class="card-title" style="display: flex;  justify-content: space-between;">
-                                          <div>RENT/LEASE PAYMENT HISTORY (Monthly)</div>
-                                          <div><button class="btn btn-sm btn-outline custom-btn statement">GET Full STATEMENT</button></div>
-                                       
-                                      </div>
-                                  </div>
-          
-                                  <div class="card-body">
-                                      <table id="tenants"  class="table table-striped table-bordered">
-                                          <thead>
-                                              <tr>
-                                                  <th scope="col">DATE PAID</th>
-                                                      <th scope="col">AMOUNT PAID</th>
-                                                      <th scope="col">ARREAS</th>
-                                                      <th scope="col">ACTION</th>
-                                                      
-                                              </tr>
-                                          </thead>
-                                          <tbody>
-                                              <tr>
-                                                  <th scope="row">1/7/11</th>
-                                                      <td>KSH 10,000</td>
-                                                      <td>KSH 10,000</td>
-                                                      <td> <button class="btn btn-sm btn-outline custom-btn">DOWNLOAD RECEIPT</button>   </td>
-                                                      
-                                              </tr>
-                                              <tr>
-                                              <th scope="row">2/7/11</th>
-                                              <td>KSH 20,0000</td>
-                                              <td>KSH 0</td>
-                                              <td>  <button class="btn btn-sm btn-outline custom-btn">DOWNLOAD RECEIPT</button>  </td>
-                                              
-          
-                                              </tr>
-                                              <tr>
-                                                  <th scope="row">3/7/11</th>
-                                              <td>KSH 10000</td>
-                                              <td>KSH 0</td>
-                                              <td> <button class="btn btn-sm btn-outline custom-btn">DOWNLOAD RECEIPT</button> </td>
-                                              
-                                              
-          
-                                                  </tr>
-                                          </tbody>
-                                      </table>
-              
-          
-          
-                                  </div>
-          
-                                  <div class="card-footer">
-                                      
-                                  </div>
-          
                       </div>
-          
-                      <div class="row mt-3 ">
-                          <div class="col-md-12">
-                              <div class="card"> 
-                                  <div class="card-header " style="background-color: #00192D; color:#FFC107;">
-                                          <div class="card-title" >
-                                              
-                                              RENT/LEASE AGREEMENT FILES
-                                              
-                                              
-                                          </div>
-          
-                                      </div>
-                                  </div>
-          
-                                  <div class="card-body">
-                                          <table class="table table-striped table-bordered">
-                                              <thead>
-                                                  <tr>
-                                                      <th scope="col">FIRST PARTY (YOU)</th>
-                                                          <th scope="col">SECOND PARTY (TENANT)</th>
-                                                          <th scope="col">DEPOSIT</th>
-                                                          <th scope="col">ACTION</th>
-                                                          
-                                                  </tr>
-                                              </thead>
-                                              <tbody>
-                                                  <tr>
-                                                      <th scope="row">EBENEZER</th>
-                                                          <td>JOHN DOE</td>
-                                                          <td>KSH 100,000</td>
-                                                          <td>   <span><button class="btn btn-sm btn-outline custom-btn">VIEW AGREEMENT</button></span> <span><button class="btn btn-sm btn-outline custom-btn">DOWNLOAD</button></span></td>
-                                                          
-                                                  </tr>
-                                                  <tr>
-                                                  
-                                              
-                                              </tbody>
-                                          </table>
-          
-                                  </div>
-          
-                          </div>
-          
-          
-                      </div>
-          
-          
-          
-          
-          
-                                  </div>
-          
-                              </div>
-          
-                          </div>
                           
-                          
+                    </div>
+
+                    <div class="card-body">
+                      <table id="maintenance" class="display">
+                        <thead>
+                          <tr>
+                            <th>ID</th>
+                            <th>Property</th>
+                            <th>TENANT</th>
+                            <th>UNIT</th>
+                            <th>DATE</th>
+                            <th>ISSUE</th>
+                            <th>Payment Status</th>
+                            <th>Prority</th>
+                            <th>PROVIDER</th>
+                             <th>ACTION</th> 
           
-                      </div>            
-                  </div>
-          
-          
-                  
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>002</td>
+                            <td>CROWN Z TOWERS</td>
+                            <td>Manucho</td>
+                            <td>A12</td>
+                            <td>11-10-2025</td>
+                            <td>Broken handle</td>
+                            <td><button class="btn  mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseModal" style="color: #FFC107;">
+                           PAY</button></td>
+                            <!-- <td><button onclick="toggleOverlay()">Paid</button></td> -->
+                            <td>low</td>
+                            
+                            <td>Not assigned</td>
+                            <td id="more">
+                             <div id="more_icon">&#x2026;</div> 
+                             <br>
+                             <div id="more_options">
+                              <a href="#" class="mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseyModal" style="color: #FFC107;"class="btn  mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseyModal" style="color: #FFC107;">
+                              Assign
+                              </a>
+                                <!-- <a href="#">Assign</a> -->
+                                <a href="#">Update</a>
+                                <a href="#">Delete</a>
+                                <a href="#">View</a>
+                              
+                                
+                             </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>003</td>
+                            <td>ALPHA APARTMENTS</td>
+                            <td>Ethic</td>
+                            <td>A11</td>
+                            <td>12-11-2025</td>
+                            <td>Leaking roof</td>
+                            <td><button  class="btn  mt-0" id="example" style="color: #FFC107;">PAID</button></td>
+                            <td>high</td>
+                            
+                            <td>New Electrics</td>
+                            <td id="more">
+                              <div id="more_icon" class="rounded-circle" >&#x2026;</div> 
+                              </td>
+                          </tr>
+                          <!-- Add more rows as needed -->
+                        </tbody>
               
-                  </div>
+                    </table>
+
+
+
+                    </div>
+
+
+
+                    <div class="card-footer">
+                        
+                     </div>
+
+                </div>
+
+
+            </div>
+              <!-- /.col -->
+            </div>
+            <!--end::Row-->
+          </div>
+          <!--end::Container-->
+        </div>
+        <!--end::App Content-->
+      </main>
+      <!--end::App Main-->
+      <!--begin::Footer-->
+
+
+
+      <footer class="app-footer">
+        <!--begin::To the end-->
+        <div class="float-end d-none d-sm-inline">Anything you want</div>
+        <!--end::To the end-->
+        <!--begin::Copyright-->
+        <strong>
+          Copyright &copy; 2014-2024&nbsp;
+          <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;"> JENGO PAY</a>.
+        </strong>
+        All rights reserved.
+        <!--end::Copyright-->
+      </footer>
+      <!--end::Footer-->
+    </div>
+    <!--end::App Wrapper-->
+
+
+
+
+<!-- Overlay Cards -->
+
+<!-- create Announcement -->
+
+
+
+
+
+ <!-- Start View announcement -->
+ <div class="view_announcement" id="view_announcement">
+  <div class="card content">
+   <div class="card-header view_announcement bg-secondary text-white">
+       <h5 class="mb-0">Rent Payments</h5>
+       <div id="close-overlay-btn" class="close-btn" > <b> &times;</b> </div>
+       
+   </div>
+   <div class="card-body">
+       <p class="card-text">
+           All Rent Payments should be made before 24/01/17. Anyone who feels that they might not 
+           be able to complete their dues on 24/01/17 should communicate to management before the due date.
+           Else, you face an eviction risk if you fail to pay your dues before the said date without a reasonable reason</p>
           
-                  
-          
-          
-          
-          
-                 
-          
+           <p class="timestamp" id="timestamp"></p> <!-- Timestamp -->
+
+ 
+       <div class="Recipients border-top border-gray "> <p><strong>Recipients|</strong> All Employees</p>  </div>
+       
+   </div>
+   <div class="card-footer view_announcement d-flex">
+       <button class="btn btn-danger btn-sm">Delete</button>
+       <button class="btn btn-secondary btn-sm">Resend</button>
+   </div>
+ </div>
+ </div>
+
+  <!-- Lease Modal -->
+<div class="modal fadey" id="leaseyModal" tabindex="-1" aria-labelledby="leaseyModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="leaseyModalLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="form-wrapper">
+              <h1 class="text-warning">Assign Task</h1>
+              <form id="taskForm">
+                <div class="input-group">
+                  <label for="taskName">Task About To Be Assigned:</label>
+                  <input type="text" id="taskName" name="taskName" placeholder="Enter task name" style="border-radius: 10px; width: 100%;"   required>
               </div>
 
-                <!--end::App Content-->
-              </main>
-      
-               <!--end::App Main-->
-               <!--begin::Footer-->
-              <footer class="app-footer">
-                <!--begin::To the end-->
-                <!-- <div class="float-end d-none d-sm-inline">Anything you want</div> -->
-                 <!--end::To the end-->
-                 <!--begin::Copyright-->
-                 <strong>
-                 <!-- Copyright &copy; 2014-2024&nbsp; -->
-                 <!-- <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>. -->
-                 </strong>
-                 All rights reserved.
-                <!--end::Copyright-->
-              </footer>
-      
-            </div>
-            <!-- end content -->
-            <!--end::Footer-->
-          </div>
-          <!--end::App Wrapper-->
-          <!--begin::Script-->
-          <!--begin::Third Party Plugin(OverlayScrollbars)-->
+                  <div class="input-group">
+                      <label for="serviceProvider">Select A Category For The Task</label>
+                  <label for="taskName"></label>
+                      <select id="serviceProvider" name="serviceProvider" style="border-radius: 10px;"  required>
+                          <option value="" id="taskName" disabled selected>Select A Category </option>
+                          <option value="John">Electrical</option>
+                          <option value="Jane">Plumbing</option>
+                          <option value="Mike">Cleaning</option>
+                      </select>
+                  </div>
+                  <div class="input-group">
+                    <label for="serviceProvider">Select Service Provider:</label>
+                    <select id="serviceProvider" name="serviceProvider" style="border-radius: 10px;" required>
+                        <option value="" id="taskName"  disabled selected>Select Provider</option>
+                        <option value="John">John </option>
+                        <option value="Jane">Jane </option>
+                        <option value="Mike">Mike </option>
+                    </select>
+                </div>
 
-          <!-- datatable script -->
-    <script>
-      // Initialize DataTable
-      $(document).ready(function () {
-          $('#myTable').DataTable();
-      });
-      $(document).ready(function () {
-          $('#myTableOne').DataTable();
-      });
-      $(document).ready(function () {
-          $('#myTableThree').DataTable();
-      });
-      $(document).ready(function () {
-          $('#myTableFour').DataTable();
-      });
-   </script>
-    
+  
+                  <button type="submit" class="submit-btn" style="border-radius: 10px; background-color: #00192D; width: 50%; margin-left: 6rem;" >Assign</button>
+              </form>
+          </div>
+  
+          <!-- <div id="assignedTasks">
+              <h2>Assigned Tasks</h2>
+              <ul id="taskList"></ul>
+          </div> -->
+      </div>
+  
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Lease Modal -->
+  <div class="modal fade" id="leaseModal" tabindex="-1" aria-labelledby="leaseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="leaseModalLabel"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form class="beasy">
+             <!-- Landlord Information Section -->
+      <!-- Service Provider Information Section -->
+      <div class="form-section">
+        <h3 class="text-warning">Landlord Information</h3>
+         <a href="#"><p>Martin White</p></a>
+        <!-- <label for="landlordName">Landlord Name(Martin White)</label> -->
+        <!-- <input type="text" id="landlordName" name="landlordName" placeholder="Enter your full name" required> -->
+
+        <h3 class="text-warning">Select Service Providers Information</h3>
+        <label for="paymentMethod">Choose:</label>
+        <select id="paymentMethod" name="paymentMethod" required>
+          <option value="bank_transfer">ABX Electricals</option>
+          <option value="bank_transfer">Sunsine Plumbers</option>
+          <option value="bank_transfer">Favored Technologies</option>
+        </select>
+        <h3 class="text-warning">Payment Details</h3>
+        <label for="amount">Payment Amount (KSH)</label>
+        <input type="text" id="landlordName" name="landlordName" placeholder="Enter Amount" required>
+
+        <label for="paymentMethod">Payment Method</label>
+        <select id="paymentMethod" name="paymentMethod" required>
+          <option value="mpesa_transfer" class="bossy">MPESA</option>
+          <option value="mpesa_transfer" class="bossy">Bank</option>
+          <option value="mpesa_transfer" class="bossy">Global Pay</option>
+          <option value="mpesa_transfer" class="bossy">Cash</option>
+
+        </select>
+         <!-- Submit Button -->
+         <button type="submit" class="bossy"> MAKE PAYMENT</button>
+      </div>
+
+     
+
+      <!-- Payment Details Section
+      <div class="form-section"> 
+        <h3>Payment Details</h3>
+        <label for="amount">Payment Amount (KSH)</label>
+        <input type="number" id="amount" name="amount" placeholder="Enter the amount to pay" min="1" required>
+
+        <label for="paymentMethod">Payment Method</label>
+        <select id="paymentMethod" name="paymentMethod" required>
+          <option value="mpesa_transfer" class="bossy">MPESA</option>
+        </select>
+      </div> -->
+       
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- End view announcement -->
+<!-- end overlay card. -->
+
+    <!--begin::Script-->
+    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+
+
+
+<!-- Overlay scripts -->
+ <!-- View announcements script -->
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+ <script>
+  const   more_announcement = document.getElementById('more_announcement_btn');
+  const   view_announcement = document.getElementById('view_announcement');
+  const   close_overlay = document.getElementById("close-overlay-btn");
+
+  more_announcement.addEventListener('click', ()=>{
+
+     view_announcement.style.display= "flex";  
+     document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
+     const now = new Date();
+            const formattedTime = now.toLocaleString(); // Format the date and time
+            timestamp.textContent = `Sent on: ${formattedTime}`;
+
+
+  });
+
+     close_overlay.addEventListener('click', ()=>{
+
+     view_announcement.style.display= "none";
+     document.querySelector('.app-wrapper').style.opacity = '1';
+
+
+     });
+ </script>
+
+ <!-- End view announcement script -->
+
+ <script>
+  // Function to toggle the visibility of the overlay
+  function toggleOverlay() {
+    var overlay = document.getElementById('overlay');
+    // If overlay is hidden, show it
+    if (overlay.style.display === "none" || overlay.style.display === "") {
+      overlay.style.display = "flex";
+    } else {
+      overlay.style.display = "none";
+    }
+  }
+</script>
+
+
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
       integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
@@ -1097,13 +1496,78 @@ color: #00192D;
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
+    
+<!-- script for occordion -->
+<script>
+
+        // JavaScript to handle hover and hide functionality
+        const filterContainer = document.getElementById("filter-container");
+        const accordion = document.getElementById("filter");
+        const panel = document.getElementById("panel");
+
+        // Show panel when hovering over the accordion
+        accordion.addEventListener("mouseenter", () => {
+            panel.style.display = "block";
+        });
+
+        // Hide panel when moving out of both accordion and panel
+         filterContainer.addEventListener("mouseleave", () => {
+             panel.style.display = "none";
+      });
+  
+
+</script>
+<!-- End for Occordion script -->
+
+
+<!-- more options -->
+<script>
+
+  // JavaScript to handle hover and hide functionality
+  const  more= document.getElementById("more");
+  const more_icon = document.getElementById("more_icon");
+  const more_options = document.getElementById("more_options");
+
+  // Show panel when hovering over the accordion
+  more_icon.addEventListener("mouseenter", () => {
+    more_options.style.display = "block";
+  });
+
+  // Hide panel when moving out of both accordion and panel
+   more.addEventListener("mouseleave", () => {
+    more_options.style.display = "none";
+});
+
+
+</script>
+    <!-- Begin script for datatable -->
+    <script>
+        
+       $(document).ready(function() {
+        $('#maintenance').DataTable({
+            "paging": true,
+            "searching": true,
+            "info": true,
+            "lengthMenu": [5, 10, 25, 60],
+            "language": {
+                "search": "Filter records:",
+                "lengthMenu": "Show _MENU_ entries"
+            }
+        });
+    });
+
+    </script>
+
+    </script>
+    <!-- End script for data_table -->
+    
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <script src="../../dist/js/adminlte.js"></script>
+    <script src="../../../dist/js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
@@ -1133,63 +1597,6 @@ color: #00192D;
       integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
       crossorigin="anonymous"
     ></script>
-
-    <script>
-      const ctx = document.getElementById('rentalTrends').getContext('2d');
-    
-      new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-          datasets: [
-            {
-              label: 'CROWN Z TOWERS',
-              data: [35,'000', 30,'000', 32,'000', 30,'000', 33,'000', 35,'000', 34,'000', 33,'000', 34,'000', 35,'000', 34,'000', 35,'000'],
-              borderColor: 'cyan',
-              backgroundColor: 'transparent',
-              tension: 0.4
-            },
-            {
-              label: 'Manucho Apartments',
-              data: [32,'000', 33,'000', 38,'000', 34,'000', 33,'000', 34,'000', 38,'000', 36,'000', 37,'000', 32,'000', 31,'000', 34,'000'],
-              borderColor: 'green',
-              backgroundColor: 'transparent',
-              tension: 0.4
-            },
-            {
-              label: 'The Mansion Apartments',
-              data:[31,'000', 32,'000', 39,'000', 35,'000', 32,'000', 33,'000', 39,'000', 37,'000', 39,'000', 31,'000', 32,'000', 34,'000'],
-              borderColor: 'black',
-              backgroundColor: 'transparent',
-              tension: 0.4
-            },
-            {
-              label: 'Bsty Apartments',
-              data: [34,'000', 39,'000', 34,'000', 32,'000', 34,'000', 36,'000', 38,'000', 37,'000', 34,'000', 33,'000', 32,'000', 31,'000'],
-              borderColor: 'red',
-              backgroundColor: 'transparent',
-              tension: 0.4
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'top'
-            },
-           
-          },
-          scales: {
-            y: {
-              beginAtZero: false
-            }
-          }
-        }
-      });
-    </script>
-   
-
     <script>
       // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
       // IT'S ALL JUST JUNK FOR DEMO
@@ -1321,15 +1728,15 @@ color: #00192D;
       //-------------
 
       const pie_chart_options = {
-        series: [700, 500,400],
+        series: [700, 500, 400, 600, 300, 100],
         chart: {
           type: 'donut',
         },
-        labels: ['Occupied', 'Vacant', 'Vacant Soon'],
+        labels: ['Chrome', 'Edge', 'FireFox', 'Safari', 'Opera', 'IE'],
         dataLabels: {
           enabled: false,
         },
-        colors: ['#0d6efd', '#20c997', '#ffc107'],
+        colors: ['#0d6efd', '#20c997', '#ffc107', '#d63384', '#6f42c1', '#adb5bd'],
       };
 
       const pie_chart = new ApexCharts(document.querySelector('#pie-chart'), pie_chart_options);
@@ -1339,6 +1746,7 @@ color: #00192D;
       // - END PIE CHART -
       //-----------------
     </script>
+    
     <!--end::Script-->
   </body>
   <!--end::Body-->
