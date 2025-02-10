@@ -42,7 +42,7 @@
     />
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../../dist/css/adminlte.css" />
+    <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -56,100 +56,18 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-      a{
-          text-decoration: none;
-      }
-      
-      body{
-          
-          background-color: rgba(128, 128, 128, 0.1);
-      }
-      .summaryItem{
-          font-family: 'Playfair Display', serif; /* Elegant for creative projects */
-font-size: 25px;
-font-weight: bold;
-
-font-weight: 400; /* Lighter weight for a faint look */
-letter-spacing: 1px; /* Slight spacing for an airy feel */
-color:gray;
-
-      }
-      .summaryItemOne{
-          font-family: 'Playfair Display', serif; /* Elegant for creative projects */
-font-size: 25px;
-font-weight: bold;
-
-font-weight: 400; /* Lighter weight for a faint look */
-letter-spacing: 1px; /* Slight spacing for an airy feel */
-color: #00192D;
-
-      }
-      .custom-btn{
-          background-color: #00192D;
-  border-color: #00192D;
-  color:  #FFC107; /* White background */
-      }
-
-  .statement{
-      background-color: #FFC107;
-      color: #00192D ;
-
-      }
-
-      .profile-card {
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    /* padding: 20px; */
+    <link rel="stylesheet" href="Rent.css">
     
-    margin: 30px auto;
-  }
-  .profile-picture {
-    border-radius: 10px;
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    border: 4px solid #007bff;
-  }
-  .profile-details h2 {
-    /* margin-bottom: 10px; */
     
-  }
-  .profile-details p {
-    /* /margin: 5px 0; */
-    color: #6c757d;
-  }
-  .profile_details{
-      display: flex;
-      
-  }
-  .profile_picture{
-      margin-right: 4%;
-  }
-  .profile_info .one{
-      color: #666;
-      font-size: 14px;
-      display: block;
-      text-align: justify;   
+    <!-- scripts for data_table -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="announcements.css">
+    
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-  }
-  .other_profile_details{
-      display: block;
-      color: #666;
-      font-size: 14px;
-      display: block;
-      text-align: justify;
-  }
-  .container { width: 100%; margin: auto; margin-top: 30px; }
-        input { width: 100%; padding: 10px; margin-bottom: 10px;border-radius: 10px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background-color: #00192D; color: #FFC107 }
-        button { padding: 10px 15px; background-color: #dc3545; color: white; border: none; cursor: pointer; }
-        button:hover { background-color: #c82333; }
 
-  </style>
+
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -166,7 +84,7 @@ color: #00192D;
               </a>
             </li>
             <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
-            <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li> -->
+            <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li>
           </ul>
           <!--end::Start Navbar Links-->
           <!--begin::End Navbar Links-->
@@ -190,7 +108,7 @@ color: #00192D;
                   <div class="d-flex">
                     <div class="flex-shrink-0">
                       <img
-                        src="../../dist/assets/img/user1-128x128.jpg"
+                        src="../../../dist/assets/img/user1-128x128.jpg"
                         alt="User Avatar"
                         class="img-size-50 rounded-circle me-3"
                       />
@@ -242,7 +160,7 @@ color: #00192D;
                   <div class="d-flex">
                     <div class="flex-shrink-0">
                       <img
-                        src="../../dist/assets/img/user3-128x128.jpg"
+                        src="../../../dist/assets/img/user3-128x128.jpg"
                         alt="User Avatar"
                         class="img-size-50 rounded-circle me-3"
                       />
@@ -360,14 +278,14 @@ color: #00192D;
           <!--begin::Brand Link-->
           <a href="./index.html" class="brand-link">
             <!--begin::Brand Image-->
-            <!-- <img
+            <img
               src="../../dist/assets/img/AdminLTELogo.png"
               alt="AdminLTE Logo"
               class="brand-image opacity-75 shadow"
-            /> -->
+            />
             <!--end::Brand Image-->
             <!--begin::Brand Text-->
-            <span class="brand-text fw-light"></span>
+            <span class="brand-text fw-light">AdminLTE 4</span>
             <!--end::Brand Text-->
           </a>
           <!--end::Brand Link-->
@@ -458,69 +376,15 @@ color: #00192D;
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./profitandloss.html" class="nav-link">
+                    <a href="./widgets/cards.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Profit&Loss Statement</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./balancesheet.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Balance Sheet</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./cashflow.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Cashflow</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./cashflow.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Tax Reports</p>
+                      <p>Maintenance And Repair Costs</p>
                     </a>
                   </li>
                 </ul>
               </li>
-
-              <li class="nav-item">
-                <a href="./showCommunication.html" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Maintenance Requests</p>
-                </a>
-              </li>
-
-               <!-- Start Communications part -->
-               <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-pencil-square"></i>
-                  <p>
-                    Communications
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="texts.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Texts</p>
-                    </a>
-                  </li>
-
-                  <li class="nav-item">
-                    <a href="communications/announcements.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Announcements</p>
-                    </a>
-                    
-                  </li>
-                </ul>
-              </li>
-
-              <!-- End communications part -->
               
-              <!-- <li class="nav-item">
+              <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-clipboard-fill"></i>
                   <p>
@@ -692,16 +556,16 @@ color: #00192D;
                         </a>
                       </li>
                     </ul>
-                  </li> -->
-                  <!-- <li class="nav-item">
+                  </li>
+                  <li class="nav-item">
                     <a href="./examples/lockscreen.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Lockscreen</p>
                     </a>
                   </li>
                 </ul>
-              </li> -->
-              <!-- <li class="nav-header">DOCUMENTATIONS</li>
+              </li>
+              <li class="nav-header">DOCUMENTATIONS</li>
               <li class="nav-item">
                 <a href="./docs/introduction.html" class="nav-link">
                   <i class="nav-icon bi bi-download"></i>
@@ -742,12 +606,12 @@ color: #00192D;
                     </a>
                   </li>
                 </ul>
-              </li> -->
+              </li>
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-filetype-js"></i>
                   <p>
-                   Help
+                    Javascript
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
                 </a>
@@ -760,38 +624,38 @@ color: #00192D;
                   </li>
                 </ul>
               </li>
-              <!-- <li class="nav-item">
+              <li class="nav-item">
                 <a href="./docs/browser-support.html" class="nav-link">
                   <i class="nav-icon bi bi-browser-edge"></i>
                   <p>Browser Support</p>
                 </a>
-              </li> -->
-              <!-- <li class="nav-item">
+              </li>
+              <li class="nav-item">
                 <a href="./docs/how-to-contribute.html" class="nav-link">
                   <i class="nav-icon bi bi-hand-thumbs-up-fill"></i>
                   <p>How To Contribute</p>
                 </a>
-              </li> -->
+              </li>
               <li class="nav-item">
                 <a href="./docs/faq.html" class="nav-link">
                   <i class="nav-icon bi bi-question-circle-fill"></i>
                   <p>FAQ</p>
                 </a>
               </li>
-              <!-- <li class="nav-item">
+              <li class="nav-item">
                 <a href="./docs/license.html" class="nav-link">
                   <i class="nav-icon bi bi-patch-check-fill"></i>
                   <p>License</p>
                 </a>
-              </li> -->
-              <!-- <li class="nav-header">MULTI LEVEL EXAMPLE</li>
+              </li>
+              <li class="nav-header">MULTI LEVEL EXAMPLE</li>
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-circle-fill"></i>
                   <p>Level 1</p>
                 </a>
-              </li> -->
-              <!-- <li class="nav-item">
+              </li>
+              <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-circle-fill"></i>
                   <p>
@@ -827,8 +691,8 @@ color: #00192D;
                           <p>Level 3</p>
                         </a>
                       </li>
-                      <li class="nav-item"> -->
-                        <!-- <a href="#" class="nav-link">
+                      <li class="nav-item">
+                        <a href="#" class="nav-link">
                           <i class="nav-icon bi bi-record-circle-fill"></i>
                           <p>Level 3</p>
                         </a>
@@ -868,7 +732,7 @@ color: #00192D;
                   <p>Informational</p>
                 </a>
               </li>
-            </ul> -->
+            </ul>
             <!--end::Sidebar Menu-->
           </nav>
         </div>
@@ -880,148 +744,293 @@ color: #00192D;
         <!--begin::App Content Header-->
         <div class="app-content-header">
           <!--begin::Container-->
-          <!--begin::Row-->
-          <div class="row">
-            <div class="col-sm-6"><h3 class="mb-0">Communications| Text Messages</h3></div>
-            <div class="col-sm-6">
-              <!-- <ol class="breadcrumb float-sm-end">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Dashboard v2</li>
-              </ol> -->
-            </div>
-          </div>
-          <!--end::Row-->
-        <!-- </div> -->
-        <!--end::Container-->
-      </div>
-      <div class="app-content">
-        <!--begin::Container-->
-        <div class="container-fluid">
-          <!-- Info boxes -->
-          <div class="row">
-
-              <div class="col-md-6">
-                  <div class="profile_details">
-                      <div class="profile_picture">
-                                       <!-- <img class="mt-3" src="images/mansion-1.jpg" alt="Profile Picture"  width="100" height="100"> -->
-                      </div>
-                      <div class="profile_info">
-                                  
-                                          <!-- <h2>Jane Doe</h2> -->
-                                           
-                          <div class="profile_details one">
-                            <p> Total Open: <strong>&nbsp;50|</strong> Replied: <strong> 30|&nbsp;</strong> <strong> Closed:</strong> &nbsp; 40  </p>
-
-                          
-                          </div>
-                              
-                      </div>
-                  </div>
-                                  
-              </div>
-
-              <div class="col-md-6">
-                <div style="display: flex; justify-content: end;">
-                <button class="btn" style="background-color: #00192D; color: white; font-size: small;"> <b> NEW TEXT </b></button>     
-              </div>
-            </div>
+          <div class="container-fluid">
+            <!--begin::Row-->
+            <div class="row">
+              <div class="col-sm-6"><h3 class="mb-0"></h3></div>
+              <div class="col-sm-6">
               
-
-
-            <!-- /.col -->
+              </div>
+            </div>
+            <!--end::Row-->
           </div>
-          <!-- /.row -->
-          <!--begin::Row-->
-          
-          <!--end::Row-->
-          <!--begin::Row-->
-          <div class="row">
-            <!-- Start col -->
-            <div class="col-md-12">
-              <div class="card">
-                  <div class="card-header">
-                    <div class="filter-container" id="filter-container">
+          <!--end::Container-->
+        </div>
+        <div  class="app-content">           
 
-                      <div class="filter" id="filter">
-                        Filter | <b>All Properties</b> 
-                      </div>
-                      <div class="panel" id="panel">
-                        <a href="#">All Properties</a>
-                        <a href="#">Crown Z</a>
-                        <a href="#">Manucho</a>
-                        <a href="#">MM Towers</a>
+          <div class="container-fluid">
+            <!-- First Row -->
+            <div class="row  " >
+              <div class="col-sm-8">
+                
+                <h3 class="mb-0 contact_section_header"> <i class="fas fa-house-user"></i>  Rental Roll  | Ebenezer</h3>
+              
+                
+                    <div class="row mt-2  ">
+                      <div class="col-md-12  ">
+                  
+                        <div class="row mt-6 ">
+                            <!-- Summary -->
+                            <div class="col-md-3 ">
+                                <label class="text text-center">  <i class="fas fa-map-marker-alt"></i>   Address </label>
+                                <span class="value text-center"> 50303 KAMAKIS </span>
+                            </div>
+                    
+                            <div class="col-md-3">
+                                <label class="text text-center"> <i class="fas fa-building unit-icon"></i>  Units  </label>
+                                <span class="value"> 56 </span>
+                            </div>
+                           
+                        </div>
 
-                      </div>
+                        <div class="row mt-6" >
+                          <!-- Summary -->
+                          <div class="col-md-3  ">
+                              <label class="text text-center">      <i class="fas fa-money-bill money-icon"></i>
+                                Amount_Per_Unit </label>
+                              <span class="value text-center"> Ksh 5000 </span>
+                          </div>
+                  
+                          <div class="col-md-3">
+                              <label class="text text-center"> <i class="fas fa-home unit-type"></i>  Unit Type  </label>
+                              <span class="value"> 6-7-2020 </span>
+                          </div>
+                          <div class="col-md-3">
+                            <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> <a href=""> Roll_Over  </a>  </label>
+                            <span class="value"> Monthly </span>
+                          </div>
+                          <div class="col-md-3">
+                            <button class="btn text text-danger"> <i class="fas fa-edit"></i>  Edit</button>
+                          </div>
 
-                    </div>
+
+                        </div>
                         
-                  </div>
+                      </div>
+                      <!-- <div class="col-md-6">
+
+                        <div class="contact">
+                          <p class="contact_item" >Email</p>
+                          <p class="contact_value" >nucho@gmail</p>
+                        </div>
+                        <div class="contact">
+                          <p  class="contact_item" >Address</p>
+                          <p  class="contact_value" >50202|202|Califonia</p>
+                        </div>
+
+                      </div> -->
+                </div>
+              </div>
+              <div class="col-sm-4">
+
+                
+                <div class="row float-sm-end">
+                    <ol class="breadcrumb float-sm-end">
+                        <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                      </ol>
+                </div>
+
+                <div class="row d-flex">
+                </div>
+
+              </div>
+            </div>
+
+            <!-- End first Row -->
+
+            <div class="row mt-5">
+                <div class="col-md-8">
+                
+                          <h6 class="mb-0 contact_section_header"> <i class="fas fa-file-alt summary-icon"></i>   Summary</h6>
+                  
+                    
+                        <div class="row mt-2  ">
+                            <div class="col-md-12  ">
+                      
+                                <div class="row mt-6 ">
+                                    <!-- Summary -->
+                                    <div class="col-md-3 ">
+                                        <label class="text text-center">      <i class="fas fa-money-bill-wave money-icon"></i>      TOTAL_PAID </label>
+                                        <span class="value text-center">  <b>KSH 500000</b>  </span>
+                                    </div>
+                                </div>
+        
+                                <div class="row mt-6" >
+                                <!-- Summary -->
+                                    <div class="col-md-3  ">
+                                        <label class="text text-center">      <i class="fas fa-money-bill money-icon"></i>
+                                            Outstanding </label>
+                                        <span class="value text-center"> <b>Ksh 30000</b>    </span>
+                                    </div>
+                            
+                                    <div class="col-md-3">
+                                        <label class="text text-center"><i class="fas fa-building unit-icon"></i>   OCCUPIED_UNITS  </label>
+                                        <span class="value"> <b> 38 </b>  </span>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <button class="btn text text-danger"> <i class="fas fa-edit"></i>  Edit</button>
+                                    </div>
+                                </div>
+                            
+                            </div>
+                        </div>
+                          
+                </div>
+                
+                <div class="col-md-4 d-flex justify-content-end" style="height: fit-content;">
+                    <button id="announcement_btn" class="btn"> <i class="fas fa-bullhorn"></i>  </i> <a href="profile.html"> <b> Create_Notification </b> </a> </button>  
+                </div>
+            </div>
+
+
+
+
+            <!-- Second row start -->
+             <div class="row first mb-2 mt-3 rounded-circle">
+
+                <div class="col-md-6 d-flex justify-content-between">
+                  <button id="rent_details_btn" class="btn">  <i class="fas fa-calendar-check icon"></i> <a href="profile.html"> <b> Records </b> </a> </button>  
+                    
+                  <button id="agreements_btn" class="btn"><i class="fas fa-calendar-check icon"></i>
+                       <a href="agreements.html"> <b> Agreements </b> </a>  </button> 
+                                      
+                </div>
+
+                <div class="col-md-6">
+                  <div style="display: flex; justify-content: end;">
+                     
+                   
+                  </div>   
+                </div>
+              <!-- /.col -->
+            </div>
+
+
+            <div class="row mt-3"> <!-- second row -->
+
+              <div class="col-md-12">
+                <div class="card">
+
 
                   <div class="card-body">
-                      <table id="Texts"  class="display" style="font-size: small;" >
+                    <table id="rent" class="display" style="font-size: small;" >
                         <thead>
-                          <tr>
-                              <th>Message ID</th>
-                              <th>Time</th>
-                              <th>Property</th>
-                              <th>Tenant</th>
-                              <th>Message</th>
-                              <th>Action</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <tr>
-                              <td>1</td>
-                              <td>10:00 AM</td>
-                              <td>Property A</td>
-                              <td>John Doe</td>
-                              <td>Hello, I need assistance.</td>
-                              <td>Respond</td>
-                          </tr>
-                          <tr>
-                              <td>2</td>
-                              <td>10:15 AM</td>
-                              <td>Property B</td>
-                              <td>Jane Smith</td>
-                              <td>Can you fix the leak?</td>
-                              <td>Respond</td>
-                          </tr>
-                          <tr>
-                              <td>3</td>
-                              <td>10:30 AM</td>
-                              <td>Property C</td>
-                              <td>Emily Johnson</td>
-                              <td>What is the rent due date?</td>
-                              <td>Respond</td>
-                          </tr>
-                          <tr>
-                              <td>4</td>
-                              <td>10:45 AM</td>
-                              <td>Property D</td>
-                              <td>Michael Brown</td>
-                              <td>The heater is not working.</td>
-                              <td>Respond</td>
-                          </tr>
-                      </tbody>
-                      </table>
+                            <tr>
+                                <th scope="col">TENANT</th>
+                                    <th scope="col">AMOUNT PAID</th>
+                                    <th scope="col">PAYMENT DATE</th>
+                                    <th scope="col">RENT OVERDUE</th>
+                                    <th scope="col">DAYS OVERDUE</th>
 
+                                    <th scope="col">ACTION</th>
+                                    
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">KELVIN</th>
+                                    <td>KSH 10,000</td>
+                                    <td>1/3/2030</td>
+                                    <td>KSH 10,000</td>
+                                    <td> 12</td>
+                                    <td>  <button class="btn btn-sm btn-outline custom-btn">More details</button>  </td>
 
+                                    
+                            </tr>
+                            <tr>
+                            <th scope="row">JOEL</th>
+                            <td>KSH 20,0000</td>
+                            <td>1/3/2029</td>
+                            <td>1000</td>
+                            <td>12</td>
+                            <td>  <button class="btn btn-sm btn-outline custom-btn">More &#x2026;</button>  </td>
+                            
 
+                            </tr>
+                            <tr>
+                                <th scope="row">FRED</th>
+                            <td>KSH 10000</td>
+                            <td>2/4/2020</td>
+                            <td> 10000</td>
+                            <td>13</td>
+
+                            <td>  <button class="btn btn-sm btn-outline custom-btn">More &#x2026;</button>  </td>
+
+                                </tr>
+
+                                <tr>
+                                    <th scope="row">FRED</th>
+                                <td>KSH 10000</td>
+                                <td>2/4/2020</td>
+                                <td> 10000</td>
+                                <td>13</td>
+
+                                <td>  <button class="btn btn-sm btn-outline custom-btn">More &#x2026;</button>  </td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <th scope="row">FRED</th>
+                                    <td>KSH 10000</td>
+                                    <td>2/4/2020</td>
+                                    <td> 10000</td>
+                                    <td>13</td>
+
+                                    <td>  <button class="btn btn-sm btn-outline custom-btn">More &#x2026;</button>  </td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <th scope="row">FRED</th>
+                                        <td>KSH 10000</td>
+                                        <td>2/4/2020</td>
+                                        <td> 10000</td>
+                                        <td>13</td>
+    
+                                        <td>  <button class="btn btn-sm btn-outline custom-btn">More &#x2026;</button>  </td>
+    
+                                            </tr>
+                        </tbody>
+                    </table>
                   </div>
 
                   <div class="card-footer">
                       
-                   </div>
+                  </div>
 
+                </div>
               </div>
+            </div>
+
+      
 
 
-          </div>
-            <!-- /.col -->
-          </div>
-          <!--end::Row-->
+<!-- 
+        <div class="overlay" id="overlay">
+          <div class="invoicy-container">
+          <div class="receipt-container" id="receipt">
+            <button class="close-btn" onclick="closeOverlay()">×</button>
+            <h2>Payment Receipt</h2>
+            <p> Nairobi,  KENYA</p>
+            <p><strong>Date:</strong> <span id="date"></span></p>
+           
+            <table>
+              <td>Manucho Apartments</td>
+              <td>John</td>
+              <th>A11</th>
+              <td>KSH80,000</td>
+              <td>KSH80,000</td>
+              <td>MPESA</td>
+              <td>TBM34KGNJ8</td>
+              <td>10-12-2025</td>
+              <td>KSH0</td>
+            </table>
         </div>
-          
+    
+        <button class="print-btn" onclick="printReceipt()">Print Receipt</button>
+     -->
 
 
     <!--end::App Wrapper-->
@@ -1029,44 +1038,79 @@ color: #00192D;
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
 
     <script>
-      function filterTable() {
-          let input = document.getElementById("search").value.toUpperCase();
-          let table = document.querySelector("table");
-          let tr = table.getElementsByTagName("tr");
-
-          for (let i = 1; i < tr.length; i++) {
-              let td = tr[i].getElementsByTagName("td");
-              let match = false;
-              for (let j = 0; j < td.length; j++) {
-                  if (td[j].innerHTML.toUpperCase().indexOf(input) > -1) {
-                      match = true;
-                      break;
-                  }
-              }
-              tr[i].style.display = match ? "" : "none";
-          }
+      // Function to print the receipt
+      function printReceipt() {
+          window.print(); // Opens the print dialog
       }
 
-      // function goBack() {
-      //     window.location.href = "index.html";
-      // }
+      // Set current date on the receipt
+      document.getElementById("date").textContent = new Date().toLocaleDateString();
   </script>
-  
+
     <script>
-        // Initialize DataTable
-        $(document).ready(function () {
-            $('#myTable').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableOne').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableThree').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableFour').DataTable();
-        });
-     </script>
+      function openOverlay() {
+          document.getElementById("overlay").style.display = "flex";
+      }
+
+      function closeOverlay() {
+          document.getElementById("overlay").style.display = "none";
+      }
+  </script>
+    
+
+<!-- Begin script for datatable -->
+<script>
+  $(document).ready(function() {
+   $('#rent').DataTable({
+       "paging": true,
+       "searching": true,
+       "info": true,
+       "lengthMenu": [5, 10, 25, 50],
+       "language": {
+           "search": "Filter records:",
+           "lengthMenu": "Show _MENU_ entries"
+       }
+   });
+});
+
+$(document).ready(function() {
+   $('#agreements').DataTable({
+       "paging": true,
+       "searching": true,
+       "info": true,
+       "lengthMenu": [5, 10, 25, 50],
+       "language": {
+           "search": "Filter records:",
+           "lengthMenu": "Show _MENU_ entries"
+       }
+   });
+});
+
+</script>
+
+<script>
+
+  // JavaScript to handle hover and hide functionality
+  const  more= document.getElementById("more");
+  const more_icon = document.getElementById("more_icon");
+  const more_options = document.getElementById("more_options");
+
+  // Show panel when hovering over the accordion
+  more_icon.addEventListener("mouseenter", () => {
+    more_options.style.display = "block";
+  });
+
+  // Hide panel when moving out of both accordion and panel
+   more.addEventListener("mouseleave", () => {
+    more_options.style.display = "none";
+});
+
+
+</script>
+
+<!-- End script for data_table -->
+
+
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
       integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
@@ -1085,7 +1129,7 @@ color: #00192D;
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <script src="../../dist/js/adminlte.js"></script>
+    <script src="../../../dist/js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
