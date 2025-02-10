@@ -199,3 +199,7 @@ color: #FFC107;
 }
 
 
+/* New announcement styles */
+#New_Announcement{
+    display: none;
+}
