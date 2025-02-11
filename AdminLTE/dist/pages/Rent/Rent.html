@@ -66,7 +66,94 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
+<style>
+   .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
 
+        .overlay-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            width: 400px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        /* Heading */
+        .overlay-content h2 {
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            color: #333;
+        }
+
+        /* Message Input Area */
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-family: 'Arial', sans-serif;
+            font-size: 14px;
+        }
+
+        /* Recipient Selector */
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Send Button */
+        .send-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .send-button:hover {
+            background-color: #0056b3;
+        }
+        .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: red;
+    border-radius: 20px;
+  }
+  .notification-title {
+    color: #00192D;
+    font-size: 15px;
+    font-weight: bold;
+   
+}
+
+</style>
 
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -879,9 +966,13 @@
                           
                 </div>
                 
-                <div class="col-md-4 d-flex justify-content-end" style="height: fit-content;">
-                    <button id="announcement_btn" class="btn"> <i class="fas fa-bullhorn"></i>  </i> <a href="profile.html"> <b> Create_Notification </b> </a> </button>  
-                </div>
+               <!-- Button to trigger overlay -->
+<div class="col-md-4 d-flex justify-content-end" style="height: fit-content;">
+  <button id="announcement_btn" class="btn" onclick="showOverlay()"> 
+    <i class="fas fa-bullhorn"></i> 
+    <b>Create Notification</b>
+  </button>
+</div>
             </div>
 
 
@@ -1004,7 +1095,32 @@
               </div>
             </div>
 
-      
+
+<!-- Overlay Notification -->
+<div class="overlay" id="notificationOverlay" style="display: none;">
+  <div class="overlay-content">
+    <button class="close-btn" onclick="closeOverlay()">×</button>
+    <h2 class="notification-title" style="color: #00192D;">New Notification</h2>
+
+    <!-- Recipient selector -->
+    <select>
+      <option disabled>Select recipient</option>
+      <option>All</option>
+      <option>John Doe</option>
+      <option>Jane Smith</option>
+      <option>Charlie Brown</option>
+    </select>
+
+    <!-- Message input area -->
+    <textarea placeholder="Type your message..."></textarea>
+
+    <!-- Send button -->
+    <button class="send-button text-warning" style="background-color: #00192D;">Send</button>
+  </div>
+</div>
+
+
+
 
 
 <!-- 
@@ -1036,26 +1152,28 @@
     <!--end::App Wrapper-->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    
 
+    <!-- script for notification overlay -->
+    
     <script>
-      // Function to print the receipt
-      function printReceipt() {
-          window.print(); // Opens the print dialog
+      function showOverlay() {
+        document.getElementById('notificationOverlay').style.display = 'flex';
       }
-
-      // Set current date on the receipt
-      document.getElementById("date").textContent = new Date().toLocaleDateString();
-  </script>
-
-    <script>
-      function openOverlay() {
-          document.getElementById("overlay").style.display = "flex";
-      }
-
+    
       function closeOverlay() {
-          document.getElementById("overlay").style.display = "none";
+        document.getElementById('notificationOverlay').style.display = 'none';
       }
-  </script>
+    </script>
+    
+
+<!-- close overlay -->
+<script>
+  function closeOverlay() {
+    document.querySelector('.overlay').style.display = 'none';
+  }
+</script>
+
     
 
 <!-- Begin script for datatable -->

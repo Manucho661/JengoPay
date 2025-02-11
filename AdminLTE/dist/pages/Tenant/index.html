@@ -43,10 +43,6 @@
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
-<<<<<<< HEAD:AdminLTE/dist/pages/maintenance/maintanceRequests.html
-    <link rel="stylesheet" href="text.css" />
-=======
->>>>>>> a3085e0aa3c6b0b9c964686276de079ac36e0647:AdminLTE/dist/pages/Tenant/index.html
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -55,246 +51,12 @@
       integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
       crossorigin="anonymous"
     />
-<<<<<<< HEAD:AdminLTE/dist/pages/maintenance/maintanceRequests.html
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            columns: gray;
-        }
-
-        .filter-container{
-
-            /* width: 250px; */
-
-            color: white;
-            position: relative; /* To position the panel below */
-
-        }
-        .nav-bar {
-            display: flex;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        .nav-item {
-            padding: 10px 20px;
-            text-decoration: none;
-            color: #666;
-            font-size: 16px;
-            position: relative;
-        }
-        .nav-item.active {
-            color: #000;
-            font-weight: bold;
-        }
-        .nav-item.active::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: #FFC107; /* Green underline */
-        }
-
-
-        table {
-    border-collapse: collapse;
-    width: 100%;
-}
-th {
-    background-color: #FFC107;
-    color: #00192D;
-    text-align: left;
-    padding: 0.5em;
-    font-size: 0.9rem;
-}
-td {
-    padding: 0.5em;
-    text-align: left;
-    font-size: 0.9rem;
-
-}
-tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-tr:hover {
-    background-color: #f1f1f1;
-}
-
-
-.filter:hover {
-            color: #FFC107;
-
-        }
-.filter{
-            /* background-color: #444; */
-            /* color: white; */
-            cursor: pointer;
-            /* padding: 12%;  */
-            width: 25%;
-            border-bottom: gray solid 1px;
-            text-align: left;
-            outline: none;
-            font-size: 16px;
-            transition: 0.3s;
-            color: gray;
-            font-size: 100%;
-            border-radius: 2%;
-}
-
-.panel {
-            display: none; /* Initially hidden */
-            background-color: #00192D;
-            /* padding-left: 20px;position: absolute; Makes the panel an overlay */
-            position: absolute; /* Makes the panel an overlay */
-            /* left: 250px; Positioned to the right of the container */
-            top: 100%; /* Place right below the accordion */
-            left: 0;
-            width: fit-content;
-            z-index: 1000;
-            padding: 2%;
-            color: white;
-            border-radius: 4%;
-
-        }
-.panel a {
-            display: block;
-            padding: 8px;
-            /* color: white; */
-            text-decoration: none;
-            transition: 0.3s;
-            color: whitesmoke;
-        }
-
-        .panel a:hover{
-          color: #FFC107;
-        }
-
-/* Announcement Overlay styles */
-        #view_announcement {
-            /* width: 50%; Adjust the card width as needed */
-            /* max-width: 500px; Ensures the card doesn't grow too wide */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            display: none;
-            z-index: 10000;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            justify-content: center;
-            align-items: center;
-
-        }
-        .card.content{
-
-          position: relative;
-            background: white;
-
-            border-radius: 5px;
-
-            color: black;
-            width: 100%;
-            max-width: 50%;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            font-size: 90%;
-            color: gray;
-        }
-
-        .card-footer.view_announcement {
-            justify-content: flex-end;
-
-        }
-
-        .card-footer .btn + .btn {
-            margin-left: 10px; /* Adds spacing between the buttons */
-        }
-
-        .close-btn{
-             position: absolute;
-
-            right: 15px;
-
-            color: white;
-            cursor: pointer;
-
-        }
-
-        #more{
-          display: flex;
-           justify-content: center;
-          cursor: pointer;
-
-        }
-
-        #more_icon{
-          /* border: 1px solid black; */
-          border-radius: 30%;
-          padding: 10%;
-          font-size: larger;
-        }
-
-        #more_options{
-          display: none;
-          /* position: absolute; */
-          z-index: 1000;
-          background: #00192D;
-          border-radius: 10%;
-          padding: 10px;
-
-        }
-        #more_options a{
-          text-decoration: none;
-          color: white;
-        }
-        #more_options a:hover{
-          color: #FFC107;
-        }
-        #close-overlay-btn {
-            /* top: 0; */
-            color: white;
-            /* color: white; */
-            border: none;
-            cursor: pointer;
-            font-size: 100%;
-              }
-          #close-overlay-btn:hover {
-              color: red;
-              }
-
-        .card-header.view_announcement {
-            position: relative;
-            display: flex;/* Add this for the absolute positioning of the close button */
-        }
-#more_announcement_btn{
-  color: blueviolet;
-  font-weight: 500;
-  cursor: pointer;
-
-}
-#more_announcement_btn:hover{
-  background-color: rgba(128, 128, 128, 0.2);
-  color: #FFC107;
-}
-
-
-        </style>
-
-<!-- scripts for data_table -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
-=======
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="index.css">
->>>>>>> a3085e0aa3c6b0b9c964686276de079ac36e0647:AdminLTE/dist/pages/Tenant/index.html
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -546,11 +308,7 @@ tr:hover {
                   <li class="nav-item">
                     <a href="./index2.html" class="nav-link active">
                       <i class="nav-icon bi bi-circle"></i>
-<<<<<<< HEAD:AdminLTE/dist/pages/maintenance/maintanceRequests.html
-                      <p>Dashboard v2</p>
-=======
                       <p>Dashboard </p>
->>>>>>> a3085e0aa3c6b0b9c964686276de079ac36e0647:AdminLTE/dist/pages/Tenant/index.html
                     </a>
                   </li>
                   <li class="nav-item">
@@ -591,9 +349,6 @@ tr:hover {
                   <li class="nav-item">
                     <a href="./widgets/cards.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-<<<<<<< HEAD:AdminLTE/dist/pages/maintenance/maintanceRequests.html
-                      <p>Cards</p>
-=======
                       <p> Rent Deposit Reports</p>
                     </a>
                   </li>
@@ -626,14 +381,11 @@ tr:hover {
                     <a href="./taxreports.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Tax Reports</p>
->>>>>>> a3085e0aa3c6b0b9c964686276de079ac36e0647:AdminLTE/dist/pages/Tenant/index.html
                     </a>
                   </li>
                 </ul>
               </li>
               <li class="nav-item">
-<<<<<<< HEAD:AdminLTE/dist/pages/maintenance/maintanceRequests.html
-=======
                 <a href="./showCommunication.html" class="nav-link">
                   <i class="nav-icon bi bi-palette"></i>
                   <p>Maintenance Requests</p>
@@ -684,7 +436,6 @@ tr:hover {
                 <!-- End communications part -->
 
               <!-- <li class="nav-item">
->>>>>>> a3085e0aa3c6b0b9c964686276de079ac36e0647:AdminLTE/dist/pages/Tenant/index.html
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-clipboard-fill"></i>
                   <p>
@@ -737,13 +488,8 @@ tr:hover {
                     </a>
                   </li>
                 </ul>
-<<<<<<< HEAD:AdminLTE/dist/pages/maintenance/maintanceRequests.html
-              </li>
-              <li class="nav-item">
-=======
               </li> -->
               <!-- <li class="nav-item">
->>>>>>> a3085e0aa3c6b0b9c964686276de079ac36e0647:AdminLTE/dist/pages/Tenant/index.html
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-tree-fill"></i>
                   <p>
@@ -771,13 +517,8 @@ tr:hover {
                     </a>
                   </li>
                 </ul>
-<<<<<<< HEAD:AdminLTE/dist/pages/maintenance/maintanceRequests.html
-              </li>
-              <li class="nav-item">
-=======
               </li> -->
               <!-- <li class="nav-item">
->>>>>>> a3085e0aa3c6b0b9c964686276de079ac36e0647:AdminLTE/dist/pages/Tenant/index.html
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-pencil-square"></i>
                   <p>
@@ -793,13 +534,8 @@ tr:hover {
                     </a>
                   </li>
                 </ul>
-<<<<<<< HEAD:AdminLTE/dist/pages/maintenance/maintanceRequests.html
-              </li>
-              <li class="nav-item">
-=======
               </li> -->
               <!-- <li class="nav-item">
->>>>>>> a3085e0aa3c6b0b9c964686276de079ac36e0647:AdminLTE/dist/pages/Tenant/index.html
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-table"></i>
                   <p>
@@ -815,13 +551,8 @@ tr:hover {
                     </a>
                   </li>
                 </ul>
-<<<<<<< HEAD:AdminLTE/dist/pages/maintenance/maintanceRequests.html
-              </li>
-              <li class="nav-header">EXAMPLES</li>
-=======
               </li> -->
               <!-- <li class="nav-header">EXAMPLES</li>
->>>>>>> a3085e0aa3c6b0b9c964686276de079ac36e0647:AdminLTE/dist/pages/Tenant/index.html
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-box-arrow-in-right"></i>
@@ -903,13 +634,8 @@ tr:hover {
                   <i class="nav-icon bi bi-star-half"></i>
                   <p>Color Mode</p>
                 </a>
-<<<<<<< HEAD:AdminLTE/dist/pages/maintenance/maintanceRequests.html
-              </li>
-              <li class="nav-item">
-=======
               </li> -->
               <!-- <li class="nav-item">
->>>>>>> a3085e0aa3c6b0b9c964686276de079ac36e0647:AdminLTE/dist/pages/Tenant/index.html
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-ui-checks-grid"></i>
                   <p>
@@ -949,30 +675,12 @@ tr:hover {
                   </li>
                 </ul>
               </li>
-<<<<<<< HEAD:AdminLTE/dist/pages/maintenance/maintanceRequests.html
-              <li class="nav-item">
-                <a href="./docs/browser-support.html" class="nav-link">
-                  <i class="nav-icon bi bi-browser-edge"></i>
-                  <p>Browser Support</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./docs/how-to-contribute.html" class="nav-link">
-                  <i class="nav-icon bi bi-hand-thumbs-up-fill"></i>
-                  <p>How To Contribute</p>
-                </a>
-              </li>
-=======
-
->>>>>>> a3085e0aa3c6b0b9c964686276de079ac36e0647:AdminLTE/dist/pages/Tenant/index.html
               <li class="nav-item">
                 <a href="./docs/faq.html" class="nav-link">
                   <i class="nav-icon bi bi-question-circle-fill"></i>
                   <p>FAQ</p>
                 </a>
               </li>
-<<<<<<< HEAD:AdminLTE/dist/pages/maintenance/maintanceRequests.html
-=======
               <!-- <li class="nav-item">
                 <a href="./docs/browser-support.html" class="nav-link">
                   <i class="nav-icon bi bi-browser-edge"></i>
@@ -992,7 +700,6 @@ tr:hover {
                   <p>FAQ</p>
                 </a>
               </li>
->>>>>>> a3085e0aa3c6b0b9c964686276de079ac36e0647:AdminLTE/dist/pages/Tenant/index.html
               <li class="nav-item">
                 <a href="./docs/license.html" class="nav-link">
                   <i class="nav-icon bi bi-patch-check-fill"></i>
@@ -1098,21 +805,12 @@ tr:hover {
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-<<<<<<< HEAD:AdminLTE/dist/pages/maintenance/maintanceRequests.html
-              <div class="col-sm-6"><h3 class="mb-0"> <i class="fas fa-wrench"></i>   Maintenances Requests</h3></div>
-              <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                </ol>
-=======
               <div class="col-sm-6"><h3 class="mb-0"></h3></div>
               <div class="col-sm-6">
                 <!-- <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#">Home</a></li>
                   <li class="breadcrumb-item active" aria-current="page">Dashboard v2</li>
                 </ol> -->
->>>>>>> a3085e0aa3c6b0b9c964686276de079ac36e0647:AdminLTE/dist/pages/Tenant/index.html
               </div>
             </div>
             <!--end::Row-->
@@ -1122,10 +820,6 @@ tr:hover {
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
-<<<<<<< HEAD:AdminLTE/dist/pages/maintenance/maintanceRequests.html
-            <!-- Info boxes -->
-            <div class="row">
-=======
              <!--begin::Row-->
              <div class="row">
               <div class="col-sm-6"><h3 class="mb-0"></h3></div>
@@ -1186,8 +880,6 @@ tr:hover {
                                 <th scope="col">TYPE</th>
                                 <th scope="col">Property</th>
                                 <th scope="col">UNIT</th>
-                                <th scope="col">R.HISTORY</th>
-                                <th scope="col">P.RECORDS</th>
                             <th scope="col">ACTION</th>
                         </tr>
                     </thead>
@@ -1199,9 +891,7 @@ tr:hover {
                                 <td> LEASE</td>
                                 <td> CROWN Z</td>
                                 <td>E456</td>
-                                <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
-                                <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
-                                <td> <button type="button" class="btn text-danger">REMOVE</button>
+                                <td> <button type="button" class="btn text-warning">MORE...</button>
                                 </td>
                         </tr>
                         <tr onclick="window.location.href='profile.html'">
@@ -1211,9 +901,8 @@ tr:hover {
                         <td>REQULAR</td>
                         <td>EBENEZER</td>
                         <td>E537</td>
-                        <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
-                        <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
-                        <td> <button type="button" class="btn text-danger">REMOVE</button>
+                       
+                        <td> <button type="button" class="btn text-warning">MORE...</button>
 
                         </tr>
                         <tr>
@@ -1223,9 +912,8 @@ tr:hover {
                         <td>LEASE</td>
                         <td>MANUCHO</td>
                         <td>F10</td>
-                        <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
-                        <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
-                        <td> <button type="button" class="btn text-danger">REMOVE</button>
+                        
+                        <td> <button type="button" class="btn text-warning">MORE...</button>
 
                             </tr>
 
@@ -1236,9 +924,8 @@ tr:hover {
                           <td>LEASE</td>
                           <td>MANUCHO</td>
                           <td>F10</td>
-                          <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
-                          <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
-                          <td> <button type="button" class="btn text-danger">REMOVE</button>
+  
+                          <td> <button type="button" class="btn text-warning">MORE...</button>
 
                               </tr>
                               
@@ -1249,9 +936,7 @@ tr:hover {
                             <td>LEASE</td>
                             <td>MANUCHO</td>
                             <td>F10</td>
-                            <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
-                            <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
-                            <td> <button type="button" class="btn text-danger">REMOVE</button>
+                            <td> <button type="button" class="btn text-warning">MORE...</button>
 
                                 </tr>
                                 <tr>
@@ -1261,10 +946,7 @@ tr:hover {
                               <td>LEASE</td>
                               <td>MANUCHO</td>
                               <td>F10</td>
-                              <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
-                              <td><button class="btn btn-sm btn-outline custom-btn">View</button></td>
-                              <td> <button type="button" class="btn text-danger">REMOVE</button>
-
+                              <td> <button type="button" class="btn text-warning">MORE...</button>
                                   </tr>
                     </tbody>
                 </table>
@@ -1306,7 +988,6 @@ tr:hover {
       </div>
   </div>
 
->>>>>>> a3085e0aa3c6b0b9c964686276de079ac36e0647:AdminLTE/dist/pages/Tenant/index.html
 
                 <div class="col-md-6">
                     <div class="profile_details">
@@ -1513,44 +1194,6 @@ tr:hover {
 
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
-<<<<<<< HEAD:AdminLTE/dist/pages/maintenance/maintanceRequests.html
-
-
-
-<!-- Overlay scripts -->
- <!-- View announcements script -->
- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
- <script>
-  const   more_announcement = document.getElementById('more_announcement_btn');
-  const   view_announcement = document.getElementById('view_announcement');
-  const   close_overlay = document.getElementById("close-overlay-btn");
-
-  more_announcement.addEventListener('click', ()=>{
-
-     view_announcement.style.display= "flex";
-     document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
-     const now = new Date();
-            const formattedTime = now.toLocaleString(); // Format the date and time
-            timestamp.textContent = `Sent on: ${formattedTime}`;
-
-
-  });
-
-     close_overlay.addEventListener('click', ()=>{
-
-     view_announcement.style.display= "none";
-     document.querySelector('.app-wrapper').style.opacity = '1';
-
-
-     });
- </script>
-
- <!-- End view announcement script -->
-
-
-=======
     <script>
       // Function to open the overlay
       function openOverlay() {
@@ -1588,7 +1231,6 @@ tr:hover {
             $('#myTableFour').DataTable();
         });
      </script>
->>>>>>> a3085e0aa3c6b0b9c964686276de079ac36e0647:AdminLTE/dist/pages/Tenant/index.html
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
       integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
@@ -1694,11 +1336,8 @@ tr:hover {
         }
       });
     </script>
-<<<<<<< HEAD:AdminLTE/dist/pages/maintenance/maintanceRequests.html
-=======
     <!-- Bootstrap Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
->>>>>>> a3085e0aa3c6b0b9c964686276de079ac36e0647:AdminLTE/dist/pages/Tenant/index.html
     <!--end::OverlayScrollbars Configure-->
     <!-- OPTIONAL SCRIPTS -->
     <!-- apexcharts -->
