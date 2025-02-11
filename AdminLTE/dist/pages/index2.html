@@ -3,7 +3,7 @@
   <!--begin::Head-->
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>AdminLTE |</title>
+    <title>AdminLTE | Dashboard v2</title>
     <!--begin::Primary Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="title" content="AdminLTE | Dashboard v2" />
@@ -51,14 +51,17 @@
       integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
       crossorigin="anonymous"
     />
+    
+    <!-- scripts for data_table -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="chatbot.html">
-    <style>
-      a{
+    <link rel="stylesheet" href="announcements.css">
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<style>
+
+a{
           text-decoration: none;
       }
       
@@ -203,7 +206,7 @@ color: #00192D;
 
         button {
             padding: 10px;
-            width: 100%;
+          
             border: 1px solid #ccc;
             border-radius: 5px;
             /* background-color: #00796b; */
@@ -257,8 +260,8 @@ color: #00192D;
         #close{
 background-color: red;
         }
+</style>
 
-  </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -275,7 +278,7 @@ background-color: red;
               </a>
             </li>
             <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
-            <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li> -->
+            <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li>
           </ul>
           <!--end::Start Navbar Links-->
           <!--begin::End Navbar Links-->
@@ -469,528 +472,22 @@ background-color: red;
           <!--begin::Brand Link-->
           <a href="./index.html" class="brand-link">
             <!--begin::Brand Image-->
-            <!-- <img
+            <img
               src="../../dist/assets/img/AdminLTELogo.png"
               alt="AdminLTE Logo"
-              class="brand-image opacity-75 shadow" -->
-            <!-- /> -->
+              class="brand-image opacity-75 shadow"
+            />
             <!--end::Brand Image-->
             <!--begin::Brand Text-->
-            <span class="brand-text fw-light"></span>
+            <span class="brand-text fw-light">AdminLTE 4</span>
             <!--end::Brand Text-->
           </a>
           <!--end::Brand Link-->
         </div>
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
-        <div class="sidebar-wrapper">
-          <nav class="mt-2">
-            <!--begin::Sidebar Menu-->
-            <ul
-              class="nav sidebar-menu flex-column"
-              data-lte-toggle="treeview"
-              role="menu"
-              data-accordion="false"
-            >
-              <li class="nav-item menu-open">
-                <a href="#" class="nav-link active">
-                  <i class="nav-icon bi bi-speedometer"></i>
-                  <p>
-                    Dashboard
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <!-- <li class="nav-item">
-                    <a href="./index.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard</p>
-                    </a>
-                  </li> -->
-                  <li class="nav-item">
-                    <a href="./index2.html" class="nav-link active">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard </p>
-                    </a>
-                  </li>
-                  <!-- <li class="nav-item">
-                    <a href="./index3.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard v3</p>
-                    </a>
-                  </li> -->
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="./Tenant/index.html" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Tenants</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./tenantscreening.html" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Tenant Screening</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./leasy.html" class="nav-link">
-                  <i class="nav-icon bi bi-file-earmark-text"></i>
-                  <p>Lease Management</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-box-seam-fill"></i>
-                  <p>
-                   Financial Documents
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./invoices.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Invoices</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./paymentreceipts.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Payment Receipts</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./rentdeposit.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p> Rent Deposit Reports</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./profitandloss.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Profit&Loss Statement</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./balancesheet.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Balance Sheet</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./cashflow.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Cashflow</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./cashflow.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Tax Reports</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./cashflowforecasting.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Cashflow Forecasting</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="./maintenance/maintanceReport1.html" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Maintenance Requests</p>
-                </a>
-              </li>
+        <div id="sidebar"></div> <!-- This is where the header will be inserted -->
 
-            
-              
-              <li class="nav-item">
-                <!-- <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-clipboard-fill"></i>
-                  <p>
-                    Layout Options
-                    <span class="nav-badge badge text-bg-secondary me-3">6</span>
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a> -->
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./layout/unfixed-sidebar.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Default Sidebar</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./layout/fixed-sidebar.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Fixed Sidebar</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./layout/layout-custom-area.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Layout <small>+ Custom Area </small></p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./layout/sidebar-mini.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Sidebar Mini</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./layout/collapsed-sidebar.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Sidebar Mini <small>+ Collapsed</small></p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./layout/logo-switch.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Sidebar Mini <small>+ Logo Switch</small></p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./layout/layout-rtl.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Layout RTL</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <!-- <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-tree-fill"></i>
-                  <p>
-                    UI Elements
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a> -->
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./UI/general.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>General</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./UI/icons.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Icons</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./UI/timeline.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Timeline</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <!-- start nav-item forms -->
-              <!-- <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-pencil-square"></i>
-                  <p>
-                    Forms
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./forms/general.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>General Elements</p>
-                    </a>
-                  </li>
-                </ul>
-              </li> -->
-
-              <!-- end nav-item forms -->
-
-              <!-- Start Communications part -->
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-pencil-square"></i>
-                  <p>
-                    Communications
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="texts.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Texts</p>
-                    </a>
-                  </li>
-
-                  <li class="nav-item">
-                    <a href="communications/announcements.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Announcements</p>
-                    </a>
-                    
-                  </li>
-                </ul>
-              </li>
-
-              <!-- End communications part -->
-              <li class="nav-item">
-                <!-- <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-table"></i>
-                  <p>
-                    Tables
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a> -->
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./tables/simple.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Simple Tables</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <!-- <li class="nav-header">EXAMPLES</li> -->
-              <li class="nav-item">
-                <!-- <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-box-arrow-in-right"></i>
-                  <p>
-                    Auth
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a> -->
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-box-arrow-in-right"></i>
-                      <p>
-                        Version 1
-                        <i class="nav-arrow bi bi-chevron-right"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a href="./examples/login.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Login</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="./examples/register.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Register</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-box-arrow-in-right"></i>
-                      <p>
-                        Version 2
-                        <i class="nav-arrow bi bi-chevron-right"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a href="./examples/login-v2.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Login</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="./examples/register-v2.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Register</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./examples/lockscreen.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Lockscreen</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <!-- <li class="nav-header">DOCUMENTATIONS</li> -->
-              <li class="nav-item">
-                <!-- <a href="./docs/introduction.html" class="nav-link">
-                  <i class="nav-icon bi bi-download"></i>
-                  <p>Installation</p>
-                </a> -->
-              </li>
-              <li class="nav-item">
-                <!-- <a href="./docs/layout.html" class="nav-link">
-                  <i class="nav-icon bi bi-grip-horizontal"></i>
-                  <p>Layout</p>
-                </a> -->
-              </li>
-              <li class="nav-item">
-                <!-- <a href="./docs/color-mode.html" class="nav-link">
-                  <i class="nav-icon bi bi-star-half"></i>
-                  <p>Color Mode</p>
-                </a> -->
-              </li>
-              <!-- <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-ui-checks-grid"></i>
-                  <p>
-                    Components
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./docs/components/main-header.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Main Header</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./docs/components/main-sidebar.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Main Sidebar</p>
-                    </a>
-                  </li>
-                </ul>
-              </li> -->
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-filetype-js"></i>
-                  <p>
-                    Help
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./docs/javascript/treeview.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Treeview</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <!-- <li class="nav-item">
-                <a href="./docs/browser-support.html" class="nav-link">
-                  <i class="nav-icon bi bi-browser-edge"></i>
-                  <p>Browser Support</p>
-                </a>
-              </li> -->
-              <!-- <li class="nav-item">
-                <a href="./docs/how-to-contribute.html" class="nav-link">
-                  <i class="nav-icon bi bi-hand-thumbs-up-fill"></i>
-                  <p>How To Contribute</p>
-                </a>
-              </li> -->
-              <li class="nav-item">
-                <a href="./docs/faq.html" class="nav-link">
-                  <i class="nav-icon bi bi-question-circle-fill"></i>
-                  <p>FAQ</p>
-                </a>
-              </li>
-              <!-- <li class="nav-item">
-                <a href="./docs/license.html" class="nav-link">
-                  <i class="nav-icon bi bi-patch-check-fill"></i>
-                  <p>License</p>
-                </a>
-              </li> -->
-              <!-- <li class="nav-header">MULTI LEVEL EXAMPLE</li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle-fill"></i>
-                  <p>Level 1</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle-fill"></i>
-                  <p>
-                    Level 1
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Level 2</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>
-                        Level 2
-                        <i class="nav-arrow bi bi-chevron-right"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a href="#" class="nav-link">
-                          <i class="nav-icon bi bi-record-circle-fill"></i>
-                          <p>Level 3</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="#" class="nav-link">
-                          <i class="nav-icon bi bi-record-circle-fill"></i>
-                          <p>Level 3</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="#" class="nav-link">
-                          <i class="nav-icon bi bi-record-circle-fill"></i>
-                          <p>Level 3</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Level 2</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle-fill"></i>
-                  <p>Level 1</p>
-                </a>
-              </li>
-              <li class="nav-header">LABELS</li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle text-danger"></i>
-                  <p class="text">Important</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle text-warning"></i>
-                  <p>Warning</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle text-info"></i>
-                  <p>Informational</p>
-                </a>
-              </li>
-            </ul> -->
-            <!--end::Sidebar Menu-->
-          </nav>
-        </div>
         <!--end::Sidebar Wrapper-->
       </aside>
       <!--end::Sidebar-->
@@ -1002,12 +499,12 @@ background-color: red;
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-              <div class="col-sm-6"><h3 class="mb-0"></h3></div>
+              <div class="col-sm-6"><h3 class="mb-0">Dashboard v2</h3></div>
               <div class="col-sm-6">
-                <!-- <ol class="breadcrumb float-sm-end">
+                <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#">Home</a></li>
                   <li class="breadcrumb-item active" aria-current="page">Dashboard v2</li>
-                </ol> -->
+                </ol>
               </div>
             </div>
             <!--end::Row-->
@@ -1022,13 +519,13 @@ background-color: red;
               <div class="col-12 col-sm-6 col-md-3">
                 <div class="info-box">
                   <span class="info-box-icon text-bg-primary shadow-sm">
-                    <i class="fas fa-home properties-icon"></i>
+                    <i class="bi bi-gear-fill"></i>
                   </span>
                   <div class="info-box-content">
                     <span class="info-box-text">PROPERTIES</span>
                     <span class="info-box-number">
                       50
-                      <small></small>
+                      <small>%</small>
                     </span>
                   </div>
                   <!-- /.info-box-content -->
@@ -1039,11 +536,11 @@ background-color: red;
               <div class="col-12 col-sm-6 col-md-3">
                 <div class="info-box">
                   <span class="info-box-icon text-bg-danger shadow-sm">
-                    <i class="fas fa-tools maintenance-icon"></i>
+                    <i class="bi bi-hand-thumbs-up-fill"></i>
                   </span>
                   <div class="info-box-content">
-                    <span class="info-box-text">MAINTENANCE REQ</span>
-                    <span class="info-box-number">20</span>
+                    <span class="info-box-text">Mantainance</span>
+                    <span class="info-box-number">70</span>
                   </div>
                   <!-- /.info-box-content -->
                 </div>
@@ -1055,11 +552,11 @@ background-color: red;
               <div class="col-12 col-sm-6 col-md-3">
                 <div class="info-box">
                   <span class="info-box-icon text-bg-success shadow-sm">
-                    <i class="fas fa-users people-icon"></i>
+                    <i class="bi bi-cart-fill"></i>
                   </span>
                   <div class="info-box-content">
-                    <span class="info-box-text">REGISTERED TENS</span>
-                    <span class="info-box-number">200</span>
+                    <span class="info-box-text">Tenants</span>
+                    <span class="info-box-number">760</span>
                   </div>
                   <!-- /.info-box-content -->
                 </div>
@@ -1072,8 +569,8 @@ background-color: red;
                     <i class="bi bi-people-fill"></i>
                   </span>
                   <div class="info-box-content">
-                    <span class="info-box-text">ACTIVE TENANTS</span>
-                    <span class="info-box-number">100</span>
+                    <span class="info-box-text">ACTIVE_TENANTS</span>
+                    <span class="info-box-number">2,000</span>
                   </div>
                   <!-- /.info-box-content -->
                 </div>
@@ -1082,102 +579,12 @@ background-color: red;
               <!-- /.col -->
             </div>
             <!-- /.row -->
-
-
-            <!-- Beginning Property row -->
-
-            <div class="col-md-12">
-              <div class="card mb-4">
-                <div class="card-header" style="background-color:#00192D; color: white;">
-                  <h5 class="card-title text-warning" style="border-radius: 10px;">Properties</h5>
-                  <a href=""><h5 style="margin-left: 85%; padding:0.5rem; border-radius: 10px;">
-                    Full  Details
-                    <i class="fas fa-arrow-right"></i>
-                  </h5></a>
-                  <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                      <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                      <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                    </button>
-                    <div class="btn-group">
-                      <button
-                        type="button"
-                        class="btn btn-tool dropdown-toggle"
-                        data-bs-toggle="dropdown"
-                      >
-                        <i class="bi bi-wrench"></i>
-                      </button>
-                      <div class="dropdown-menu dropdown-menu-end" role="menu">
-                        <a href="#" class="dropdown-item">Action</a>
-                        <a href="#" class="dropdown-item">Another action</a>
-                        <a href="#" class="dropdown-item"> Something else here </a>
-                        <a class="dropdown-divider"></a>
-                        <a href="#" class="dropdown-item">Separated link</a>
-                      </div>
-                    </div>
-                    <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                      <i class="bi bi-x-lg"></i>
-                    </button>
-                  </div>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-                  <!--begin::Row-->
-                  <table id="myTableOne" class="display" style="">
-                    <thead>
-                      <tr>
-                        <th>Property Name</th>
-                        <th>Units</th>
-                        <th>Location</th>
-                        <th>No of Tenants</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Manucho Apartments</td>
-                        <td>80</td>
-                        <td>Kisumu</td>
-                        <td>60</td>
-                      </tr>
-                      <tr>
-                        <td>Ethical Apartments</td>
-                        <td>69</td>
-                        <td>Rongai</td>
-                        <td>65</td>
-                      </tr>
-                      <!-- Add more rows as needed -->
-                    </tbody>
-          
-                </table>
-
-
-
-              
-                  <!--end::Row-->
-                </div>
-                <!-- ./card-body -->
-                <div class="card-footer">
-                  <!--begin::Row-->
-                  
-                    <!-- /.col -->
-                    
-                  <!--end::Row-->
-                </div>
-                <!-- /.card-footer -->
-              </div>
-              <!-- /.card -->
-            </div>
-       </div>
-            <!-- End Property Row -->
             <!--begin::Row-->
             <div class="row">
               <div class="col-md-12">
                 <div class="card mb-4">
-                  <div class="card-header" style="background-color:#00192D; color: white;" >
-                    <h5 class="card-title text-warning" style="padding:0.5rem; border-radius: 10px;" >Rental Collections</h5>
-                    <a href="./property.html"><h5 style="margin-left:  85%; padding:0.5rem; border-radius: 10px;">Full  Details
-                      <i class="fas fa-arrow-right"></i>
-                    </h5></a>
+                  <div class="card-header">
+                    <h5 class="card-title">Properties</h5>
                     <div class="card-tools">
                       <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
                         <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
@@ -1204,101 +611,166 @@ background-color: red;
                       </button>
                     </div>
                   </div>
-                </div>
                   <!-- /.card-header -->
-                  <div class="card-body"> 
+                  <div class="card-body">
                     <!--begin::Row-->
-                    <table id="myTable" class="display" style="">
-                      <thead>
+                    <div class="row">
+                      <table id="myTableOne" class="display" style="">
+                        <thead>
                           <tr>
-                              <th>Property</th>
-                              <th>TYPE</th>
-                              <th>Total Paid</th>
-                              <th>Pending</th>
-                              <th>No of Tenants</th>
-                            
+                            <th>Property Name</th>
+                            <th>Units</th>
+                            <th>Location</th>
+                            <th>No of Tenants</th>
                           </tr>
-                      </thead>
-                      <tbody>
+                        </thead>
+                        <tbody>
                           <tr>
-                              <td>Manucho Apartments</td>
-                              <td>BEDSITTER</td>
-                              <td>KSH 200,000</td>
-                              <td>KSH 100,100</td>
-                              <td>200</td>
-                            
+                            <td>Manucho Apartments</td>
+                            <td>80</td>
+                            <td>Kisumu</td>
+                            <td>60</td>
                           </tr>
                           <tr>
-                              <td>Ebenezer Apartments</td>
-                              <td>1 BEDROOM</td>
-                              <td>KSH 200,000</td>
-                              <td>KSH 100, 200</td>
-                              <td>100</td>
-                            
+                            <td>Ethical Apartments</td>
+                            <td>69</td>
+                            <td>Rongai</td>
+                            <td>65</td>
                           </tr>
                           <!-- Add more rows as needed -->
-                      </tbody>
-                  </table> 
-                  </div>
-        </div>
-   
-        <hr>
+                        </tbody>
+            
+                      </table>
+
+                      
+                      <!-- /.col -->
+                    </div>
                     <!--end::Row-->
                   </div>
                   <!-- ./card-body -->
-                  <div class="card-footer"> 
+                  <div class="card-footer">
                     <!--begin::Row-->
                     <div class="row">
-                      <div class="col-md-6 col-6">
-                        <div class="text-center border-end">
-                          <span class="text-success">
-                            <i class="bi bi-caret-up-fill"></i>80%
-                          </span>
-                          <h5 class="fw-bold mb-0">KSH 35,210.43</h5>
-                          <span class="text-uppercase">TOTAL RENT</span>
-                        </div>
-                      </div>
-                      <!-- /.col -->
-                      <div class="col-md-6 col-6">
-                        <div class="text-center border-end">
-                          <span class="text-info"> <i class="bi bi-caret-left-fill"></i> 20% </span>
-                          <h5 class="fw-bold mb-0">KSH 10,390.90</h5>
-                          <span class="text-uppercase">TOTAL PENDING</span>
-                        </div>
-                      </div> 
-                      <!-- /.col -->
                       
+                    </div>
                     <!--end::Row-->
-                  </div> 
+                  </div>
                   <!-- /.card-footer -->
-                <!-- </div> -->
+                </div>
                 <!-- /.card -->
-              <!-- </div> -->
+              </div>
               <!-- /.col -->
-            <!-- </div> -->
-            <!--end::Row-->
             </div>
-            <hr>
-                 
- <!-- Chat Icon to Trigger the Chat -->
- <div class="chat-icon" onclick="toggleChat()">
-  💬
-</div>
-
-
-    <!-- Chat Container -->
-    <div class="chat-container" id="chat-container">
-      <!-- Close button -->
-      <button id="iden"class="close-btn" id="close" onclick="closeChat()">X</button>
-
-      <div class="chat-box" id="chat-box">
-          <div class="message bot-message">Hello! How can I help you today?</div>
-      </div>
-      <input type="text" id="user-input" placeholder="Type your message..." />
-      <button class="text-black"   onclick="sendMessage()">Send</button>
-  </div>
+            <!--end::Row-->
 
             <!--begin::Row-->
+            <div class="row">
+              <!-- Start col -->
+              <div class="col-md-12">
+                <!--begin::Row-->
+                <div class="row g-4 mb-4">
+                  <div class="col-md-12">
+                    <!-- DIRECT CHAT -->
+                    <div class="card direct-chat direct-chat-warning">
+                      <div class="card-header">
+                        <h3 class="card-title">Direct Chat</h3>
+                        <div class="card-tools">
+                          <span title="3 New Messages" class="badge text-bg-warning"> 3 </span>
+                          <button
+                            type="button"
+                            class="btn btn-tool"
+                            data-lte-toggle="card-collapse"
+                          >
+                            <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                            <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                          </button>
+                          <button
+                            type="button"
+                            class="btn btn-tool"
+                            title="Contacts"
+                            data-lte-toggle="chat-pane"
+                          >
+                            <i class="bi bi-chat-text-fill"></i>
+                          </button>
+                          <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
+                            <i class="bi bi-x-lg"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <!-- /.card-header -->
+                      <div class="card-body">
+                        <!-- Conversations are loaded here -->
+                        <table id="myTable" class="display" style="">
+                          <thead>
+                              <tr>
+                                  <th>Property</th>
+                                  <th>TYPE</th>
+                                  <th>Total Paid</th>
+                                  <th>Pending</th>
+                                  <th>No of Tenants</th>
+                                
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr>
+                                  <td>Manucho Apartments</td>
+                                  <td>BEDSITTER</td>
+                                  <td>KSH 200,000</td>
+                                  <td>KSH 100,100</td>
+                                  <td>200</td>
+                                
+                              </tr>
+                              <tr>
+                                  <td>Ebenezer Apartments</td>
+                                  <td>1 BEDROOM</td>
+                                  <td>KSH 200,000</td>
+                                  <td>KSH 100, 200</td>
+                                  <td>100</td>
+                                
+                              </tr>
+                              <!-- Add more rows as needed -->
+                          </tbody>
+                        </table> 
+                        <!-- /.direct-chat-pane -->
+                      </div>
+                      <!-- /.card-body -->
+                      <div class="card-footer">
+                        <div class="row">
+                            <div class="col-md-6 col-6">
+                              <div class="text-center border-end">
+                                <span class="text-success">
+                                  <i class="bi bi-caret-up-fill"></i>80%
+                                </span>
+                                <h5 class="fw-bold mb-0">KSH 35,210.43</h5>
+                                <span class="text-uppercase">TOTAL RENT</span>
+                              </div>
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-md-6 col-6">
+                              <div class="text-center border-end">
+                                <span class="text-info"> <i class="bi bi-caret-left-fill"></i> 20% </span>
+                                <h5 class="fw-bold mb-0">KSH 10,390.90</h5>
+                                <span class="text-uppercase">TOTAL PENDING</span>
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+                      <!-- /.card-footer-->
+                    </div>
+                    <!-- /.direct-chat -->
+                  </div>
+                  <!-- /.col -->
+                  
+                  <!-- /.col -->
+                </div>
+                <!--end::Row-->
+                
+                <!-- /.card -->
+              </div>
+              <!-- /.col -->
+              
+            </div>
+            <!--end::Row-->
             <div class="row g-4 mb-8">
               <!-- First Card -->
               <div class="col-md-6">
@@ -1316,6 +788,7 @@ background-color: red;
                         
                         <canvas id="rentalTrends" width="300" height="205"></canvas>
                       </div>
+
                     </div>
 
                 
@@ -1357,17 +830,14 @@ background-color: red;
               </div>
               <!-- /.col -->
             </div>
-            <!--end::Row-->
-
-            <!-- Begin Mantainance row -->
+            <!--end::Row--> <!-- Begin Mantainance row -->
 
             <div class="row">
               <div class="col-md-12">
                 <div class="card mb-4">
-                  <div class="card-header" style="background-color:#00192D; color: white;">
-                    <h5 class="card-title text-warning" style="padding:0.5rem; border-radius: 10px;">Maintenance Requests</h5>
-                    <a href="showCommunication.html"><h5 style="margin-left: 85%; padding:0.5rem; border-radius: 10px;">Full  Details
-                      <i class="fas fa-arrow-right"></i>
+                  <div class="card-header">
+                    <h5 class="card-title text-warning">Maintenance Requests</h5>
+                    
                     </h5></a>
                     <div class="card-tools">
                       <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
@@ -1450,164 +920,7 @@ background-color: red;
               </div>
               <!-- /.col -->
             </div>
-
-        <!-- Begin Communications Row -->
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="card mb-4">
-                    <div class="card-header" style="background-color:#00192D; color: white;" >
-                      <h5 class="card-title text-warning" style="padding:0.5rem; border-radius: 10px;" >Communication</h5>
-                      <a href="./texts.html"><h5 style="margin-left: 85%; padding:0.5rem; border-radius: 10px;">Full  Details
-                        <i class="fas fa-arrow-right"></i>
-                      </h5></a>
-
-                      <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                          <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                          <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                        </button>
-                        <div class="btn-group">
-                          <button
-                            type="button"
-                            class="btn btn-tool dropdown-toggle"
-                            data-bs-toggle="dropdown"
-                          >
-                            <i class="bi bi-wrench"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-end" role="menu">
-                            <a href="#" class="dropdown-item">Action</a>
-                            <a href="#" class="dropdown-item">Another action</a>
-                            <a href="#" class="dropdown-item"> Something else here </a>
-                            <a class="dropdown-divider"></a>
-                            <a href="#" class="dropdown-item">Separated link</a>
-                          </div>
-                        </div>
-                        <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                          <i class="bi bi-x-lg"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="card-body">
-                      <!-- Conversations are loaded here -->
-                      <div class="direct-chat-messages">
-                        <!-- Message. Default to the start -->
-                        <div class="direct-chat-msg">
-                          <div class="direct-chat-infos clearfix">
-                            <span class="direct-chat-name float-start"> Alexander Pierce </span>
-                            <span class="direct-chat-timestamp float-end"> 23 Jan 2:00 pm </span>
-                          </div>
-                          <!-- /.direct-chat-infos -->
-                          <img
-                            class="direct-chat-img"
-                            src="assets/img/user1-128x128.jpg"
-                            alt="message user image"
-                          />
-                          <!-- /.direct-chat-img -->
-                          <div class="direct-chat-text">
-                            Is this template really for free? That's unbelievable!
-                          </div>
-                          <!-- /.direct-chat-text -->
-                        </div>
-                        <!-- /.direct-chat-msg -->
-                        <!-- Message to the end -->
-                        <div class="direct-chat-msg end">
-                          <div class="direct-chat-infos clearfix">
-                            <span class="direct-chat-name float-end"> Sarah Bullock </span>
-                            <span class="direct-chat-timestamp float-start">
-                              23 Jan 2:05 pm
-                            </span>
-                          </div>
-                          <!-- /.direct-chat-infos -->
-                          <img
-                            class="direct-chat-img"
-                            src="assets/img/user3-128x128.jpg"
-                            alt="message user image"
-                          />
-                          <!-- /.direct-chat-img -->
-                          <div class="direct-chat-text">You better believe it!</div>
-                          <!-- /.direct-chat-text -->
-                        </div>
-                        <!-- /.direct-chat-msg -->
-                        <!-- Message. Default to the start -->
-                        <div class="direct-chat-msg">
-                          <div class="direct-chat-infos clearfix">
-                            <span class="direct-chat-name float-start"> Alexander Pierce </span>
-                            <span class="direct-chat-timestamp float-end"> 23 Jan 5:37 pm </span>
-                          </div>
-                          <!-- /.direct-chat-infos -->
-                          <img
-                            class="direct-chat-img"
-                            src="assets/img/user1-128x128.jpg"
-                            alt="message user image"
-                          />
-                          <!-- /.direct-chat-img -->
-                          <div class="direct-chat-text">
-                            Working with AdminLTE on a great new app! Wanna join?
-                          </div>
-                          <!-- /.direct-chat-text -->
-                        </div>
-                        <!-- /.direct-chat-msg -->
-                        <!-- Message to the end -->
-                        <div class="direct-chat-msg end">
-                          <div class="direct-chat-infos clearfix">
-                            <span class="direct-chat-name float-end"> Sarah Bullock </span>
-                            <span class="direct-chat-timestamp float-start">
-                              23 Jan 6:10 pm
-                            </span>
-                          </div>
-                          <!-- /.direct-chat-infos -->
-                          <img
-                            class="direct-chat-img"
-                            src="../../dist/assets/img/user3-128x128.jpg"
-                            alt="message user image"
-                          />
-                          <!-- /.direct-chat-img -->
-                          <div class="direct-chat-text">I would love to.</div>
-                          <!-- /.direct-chat-text -->
-                        </div>
-                        <!-- /.direct-chat-msg -->
-                      </div>
-                      <!-- /.direct-chat-messages-->
-                      <!-- Contacts are loaded here -->
-                    
-                          <!-- End Contact Item -->
-                        </ul>
-                        <!-- /.contacts-list -->
-                      </div>
-                      <!-- /.direct-chat-pane -->
-                    </div>
-                    <!-- /.card-body -->
-                    <div class="card-footer">
-                      <form action="#" method="post">
-                        <div class="input-group">
-                          <input
-                            type="text"
-                            name="message"
-                            placeholder="Type Message ..."
-                            class="form-control"
-                          />
-                          <span class="input-group-append">
-                            <button type="button" class="btn btn-warning">Send</button>
-                          </span>
-                        </div>
-                      </form>
-                    </div>
-                    <!-- /.card-footer-->
-                  </div>
-
-                    <div class="card-footer">
-                      <!--begin::Row-->
-                      
-                        <!-- /.col -->
-                        
-                      <!--end::Row-->
-                    </div>
-                    <!-- /.card-footer -->
-                  </div>
-                  <!-- /.card -->
-                </div>
-                <!-- /.col -->
-              </div>
+            <!-- End mantainance row -->
 
 
             
@@ -1616,15 +929,29 @@ background-color: red;
         </div>
         <!--end::App Content-->
       </main>
-
+      <!--end::App Main-->
+      <!--begin::Footer-->
+      <footer class="app-footer">
+        <!--begin::To the end-->
+        <div class="float-end d-none d-sm-inline">Anything you want</div>
+        <!--end::To the end-->
+        <!--begin::Copyright-->
+        <strong>
+          Copyright &copy; 2014-2024&nbsp;
+          <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>.
+        </strong>
+        All rights reserved.
+        <!--end::Copyright-->
+      </footer>
+      <!--end::Footer-->
+    </div>
     <!--end::App Wrapper-->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <script>
-        // Initialize DataTable
-        $(document).ready(function () {
-            $('#myTable').DataTable();
-        });
+<script>
+  
+
+        
         $(document).ready(function () {
             $('#myTableOne').DataTable();
         });
@@ -1634,7 +961,36 @@ background-color: red;
         $(document).ready(function () {
             $('#myTableFour').DataTable();
         });
-     </script>
+
+
+        $(document).ready(function() {
+   $('#myTable').DataTable({
+       "paging": true,
+       "searching": true,
+       "info": true,
+       "lengthMenu": [5, 10, 25, 50],
+       "language": {
+           "search": "Filter records:",
+           "lengthMenu": "Show _MENU_ entries"
+       }
+   });
+});
+
+</script>
+
+
+<!-- Sidebar script -->
+<script>
+  fetch('sidebar.html')  // Fetch the file
+      .then(response => response.text()) // Convert it to text
+      .then(data => {
+          document.getElementById('sidebar').innerHTML = data; // Insert it
+      })
+      .catch(error => console.error('Error loading the file:', error)); // Handle errors
+</script>
+
+<!-- End sidebar script -->
+
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
       integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
@@ -1675,8 +1031,93 @@ background-color: red;
         }
       });
     </script>
-    <!-- Bootstrap Bundle with Popper -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script>
+  const cty = document.getElementById('rentalTrends').getContext('2d');
+
+  new Chart(cty, {
+    type: 'line',
+    data: {
+      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+      datasets: [
+        {
+          label: 'CROWN Z TOWERS',
+          data: [35,'000', 30,'000', 32,'000', 30,'000', 33,'000', 35,'000', 34,'000', 33,'000', 34,'000', 35,'000', 34,'000', 35,'000'],
+          borderColor: 'cyan',
+          backgroundColor: 'transparent',
+          tension: 0.4
+        },
+        {
+          label: 'Manucho Apartments',
+          data: [32,'000', 33,'000', 38,'000', 34,'000', 33,'000', 34,'000', 38,'000', 36,'000', 37,'000', 32,'000', 31,'000', 34,'000'],
+          borderColor: 'green',
+          backgroundColor: 'transparent',
+          tension: 0.4
+        },
+        {
+          label: 'The Mansion Apartments',
+          data:[31,'000', 32,'000', 39,'000', 35,'000', 32,'000', 33,'000', 39,'000', 37,'000', 39,'000', 31,'000', 32,'000', 34,'000'],
+          borderColor: 'black',
+          backgroundColor: 'transparent',
+          tension: 0.4
+        },
+        {
+          label: 'Bsty Apartments',
+          data: [34,'000', 39,'000', 34,'000', 32,'000', 34,'000', 36,'000', 38,'000', 37,'000', 34,'000', 33,'000', 32,'000', 31,'000'],
+          borderColor: 'red',
+          backgroundColor: 'transparent',
+          tension: 0.4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top'
+        },
+       
+      },
+      scales: {
+        y: {
+          beginAtZero: false
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  const ctx = document.getElementById('myPieChart').getContext('2d');
+
+  const myPieChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+          labels: ['Occupied','Vacant', 'Vacant Soon'],
+          datasets: [{
+              data: [30, 50, 20],
+              backgroundColor: ['#28a745', '#ffc107', '#dc3545']
+          }]
+      },
+      options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          onClick: function(event, elements) {
+              if (elements.length > 0) {
+                  let index = elements[0].index;
+                  let label = this.data.labels[index];
+                  // let links = { "Approved": "approved.html", "Pending": "pending.html", "Rejected": "rejected.html" };
+                  let links = { "Occupied": "occupied.html", "Vacant": "vacant.html", "Vacant Soon": "vacantsoon.html"};
+                  if (links[label]) window.location.href = links[label];
+              }
+          }
+      }
+  });
+</script>
+
+
+
     <!--end::OverlayScrollbars Configure-->
     <!-- OPTIONAL SCRIPTS -->
     <!-- apexcharts -->
@@ -1686,6 +1127,9 @@ background-color: red;
       crossorigin="anonymous"
     ></script>
     <script>
+
+
+
       // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
       // IT'S ALL JUST JUNK FOR DEMO
       // ++++++++++++++++++++++++++++++++++++++++++
@@ -1810,140 +1254,29 @@ background-color: red;
       createSparklineChart('#table-sparkline-5', table_sparkline_5_data);
       createSparklineChart('#table-sparkline-6', table_sparkline_6_data);
       createSparklineChart('#table-sparkline-7', table_sparkline_7_data);
-</script>
-      
-<script>
-  const cty = document.getElementById('rentalTrends').getContext('2d');
 
-  new Chart(cty, {
-    type: 'line',
-    data: {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-      datasets: [
-        {
-          label: 'CROWN Z TOWERS',
-          data: [35,'000', 30,'000', 32,'000', 30,'000', 33,'000', 35,'000', 34,'000', 33,'000', 34,'000', 35,'000', 34,'000', 35,'000'],
-          borderColor: 'cyan',
-          backgroundColor: 'transparent',
-          tension: 0.4
+      //-------------
+      // - PIE CHART -
+      //-------------
+
+      const pie_chart_options = {
+        series: [700, 500, 400, 600, 300, 100],
+        chart: {
+          type: 'donut',
         },
-        {
-          label: 'Manucho Apartments',
-          data: [32,'000', 33,'000', 38,'000', 34,'000', 33,'000', 34,'000', 38,'000', 36,'000', 37,'000', 32,'000', 31,'000', 34,'000'],
-          borderColor: 'green',
-          backgroundColor: 'transparent',
-          tension: 0.4
+        labels: ['Chrome', 'Edge', 'FireFox', 'Safari', 'Opera', 'IE'],
+        dataLabels: {
+          enabled: false,
         },
-        {
-          label: 'The Mansion Apartments',
-          data:[31,'000', 32,'000', 39,'000', 35,'000', 32,'000', 33,'000', 39,'000', 37,'000', 39,'000', 31,'000', 32,'000', 34,'000'],
-          borderColor: 'black',
-          backgroundColor: 'transparent',
-          tension: 0.4
-        },
-        {
-          label: 'Bsty Apartments',
-          data: [34,'000', 39,'000', 34,'000', 32,'000', 34,'000', 36,'000', 38,'000', 37,'000', 34,'000', 33,'000', 32,'000', 31,'000'],
-          borderColor: 'red',
-          backgroundColor: 'transparent',
-          tension: 0.4
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          position: 'top'
-        },
-       
-      },
-      scales: {
-        y: {
-          beginAtZero: false
-        }
-      }
-    }
-  });
-</script>
+        colors: ['#0d6efd', '#20c997', '#ffc107', '#d63384', '#6f42c1', '#adb5bd'],
+      };
 
-<script>
-  // Toggles visibility of the chat container
-  function toggleChat() {
-      const chatContainer = document.getElementById('chat-container');
-      chatContainer.style.display = chatContainer.style.display === 'none' ? 'flex' : 'none';
-  }
+      const pie_chart = new ApexCharts(document.querySelector('#pie-chart'), pie_chart_options);
+      pie_chart.render();
 
-  // Closes the chat container when the "X" button is clicked
-  function closeChat() {
-      const chatContainer = document.getElementById('chat-container');
-      chatContainer.style.display = 'none';
-  }
-
-  function sendMessage() {
-      const userInput = document.getElementById('user-input').value;
-      if (userInput.trim() !== '') {
-          const chatBox = document.getElementById('chat-box');
-          
-          // Add user message
-          const userMessage = document.createElement('div');
-          userMessage.classList.add('message', 'user-message');
-          userMessage.textContent = userInput;
-          chatBox.appendChild(userMessage);
-
-          // Add bot response
-          const botResponse = document.createElement('div');
-          botResponse.classList.add('message', 'bot-message');
-          botResponse.textContent = getBotResponse(userInput);
-          chatBox.appendChild(botResponse);
-
-          // Clear input field
-          document.getElementById('user-input').value = '';
-
-          // Scroll to the bottom
-          chatBox.scrollTop = chatBox.scrollHeight;
-      }
-  }
-
-  function getBotResponse(userInput) {
-      const lowerCaseInput = userInput.toLowerCase();
-      if (lowerCaseInput.includes('hello') || lowerCaseInput.includes('hi')) {
-          return 'Hello there! How can I assist you today?';
-      } else if (lowerCaseInput.includes('bye')) {
-          return 'Goodbye! Have a great day!';
-      } else {
-          return 'Sorry, I didn\'t quite get that. Can you rephrase?';
-      }
-  }
-</script>
-
-<script>
-  const ctx = document.getElementById('myPieChart').getContext('2d');
-
-  const myPieChart = new Chart(ctx, {
-      type: 'pie',
-      data: {
-          labels: ['Occupied','Vacant', 'Vacant Soon'],
-          datasets: [{
-              data: [30, 50, 20],
-              backgroundColor: ['#28a745', '#ffc107', '#dc3545']
-          }]
-      },
-      options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          onClick: function(event, elements) {
-              if (elements.length > 0) {
-                  let index = elements[0].index;
-                  let label = this.data.labels[index];
-                  // let links = { "Approved": "approved.html", "Pending": "pending.html", "Rejected": "rejected.html" };
-                  let links = { "Occupied": "occupied.html", "Vacant": "vacant.html", "Vacant Soon": "vacantsoon.html"};
-                  if (links[label]) window.location.href = links[label];
-              }
-          }
-      }
-  });
-</script>
+      //-----------------
+      // - END PIE CHART -
+      //-----------------
     </script>
     <!--end::Script-->
   </body>
