@@ -83,11 +83,15 @@
     /* Overlay content */
     .overlay-content {
       background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
+            padding: 30px;
+            /* border-radius: 8px; */
             width: 400px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             position: relative;
+            text-align: center;
+  /* background-color: white; */
+  /* padding: 30px; */
+  border-radius: 10px;
     }
 
     /* Close button */
@@ -127,6 +131,63 @@
   border-radius: 10px;
   border: none;
 }
+/* Receipt Overlay Styling */
+.receipt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: none;  /* Hide by default */
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+}
+
+/* Content inside the overlay */
+.receiptoverlay-content {
+  text-align: center;
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+}
+
+/* Button for the receipt */
+.receipt-btn {
+  padding: 15px 30px;
+  font-size: 16px;
+  background-color: #00192D;
+  color: white;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Close button for the overlay */
+.close-overlay-btn {
+  position: absolute;
+    /* top: 10px; */
+    right:0.5px; 
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: red;
+    border-radius: 20px;
+}
+#invoicy-container {
+      background: white;
+       width: 400px;
+       height: 480px;
+      /* max-width: 80%; */
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      text-align: center;
+}
+
+
 </style>
 
   </head>
@@ -938,7 +999,7 @@
                                   <div id="more_options">
                                     
                                      <a href="#"class="" onclick="showOverlay()">Invoice</a>
-                                     <a href="#">Receipts</a>
+                                     <a href="#" id="showReceiptLink">Receipt</a>
                                      <a href="#">Maintenance&RepairCost</a>
                                      <a href="#">Delete</a>
                                      <a href="#">Edit</a>
@@ -999,7 +1060,26 @@
               </div>
             </div>
 
- <!-- The Overlay -->
+<!-- First Overlay (Receipt) -->
+<div class="receipt-overlay" id="receiptOverlay">
+  <div class="receiptoverlay-content" id="invoicy-container">
+    <button class="close-overlay-btn"  id="closeReceiptBtn">×</button>
+        <h2>Payment Receipt</h2>
+        <!-- <p> Nairobi,  KENYA</p> -->
+        <p><strong>Date:</strong><span id="date"></span>10-10-2025</p>
+              <p><strong>Property:</strong>Wawani</p>
+              <p><strong>Tenant:</strong>John</p>
+              <p><strong>Unit:</strong> A11</p>
+              <p><strong>Amount:</strong> KSH80,000</p>
+              <!-- <p><strong>Invoice Number:</strong> KSH80,000</p> -->
+              <p><strong>Method:</strong> MPESA</p>
+              <p><strong>Transaction:</strong> TBM34KGNJ8</p>
+              <!-- <p><strong>Date:</strong> 10-12-2025</p> -->
+               <!-- <p><strong>Invoice Number:</strong> KSH35</p> -->
+        <button class="receipt-btn" id="downloadReceiptBtn">Download Receipt</button>
+  </div>
+</div>
+ <!-- The notification Overlay -->
 
  <div id="invoiceOverlay" class="overlay"> 
   <div class="overlay-content">
@@ -1045,18 +1125,23 @@
             </tr>
         </tfoot>
       </table>
-      <div class="overlay">
-        <button class="downloadi"style="color: #FFC107; background-color: #00192D; border-radius: 10px;">DOWNLOAD</button>
+      <div>
+        
       </div>
-    
+      <button class="downloadi"style="color: #FFC107; background-color: #00192D; border-radius: 10px;">DOWNLOAD</button>
     <!-- <button class="close-btn" id="closeBtn">&times;</button> -->
   </div>
 </div>
 
 
 
+
+
+
+
+
 <!--
-        <div class="overlay" id="overlay">
+        <div class="overlaying" id="overlaying">
           <div class="invoicy-container">
           <div class="receipt-container" id="receipt">
             <button class="close-btn" onclick="closeOverlay()">×</button>
@@ -1115,7 +1200,31 @@
   }
 </script>
 
+<script>
+  // Get the overlay and link elements
+const receiptOverlay = document.getElementById('receiptOverlay');
+const showReceiptLink = document.getElementById('showReceiptLink');
+const downloadReceiptBtn = document.getElementById('downloadReceiptBtn');
+const closeReceiptBtn = document.getElementById('closeReceiptBtn');
 
+// Show the receipt overlay when clicking the "Show Receipt" link
+showReceiptLink.addEventListener('click', function(event) {
+  event.preventDefault();  // Prevent the default link behavior (navigation)
+  receiptOverlay.style.display = 'flex';  // Show the overlay
+});
+
+// Hide the receipt overlay when clicking the "Download Receipt" button
+downloadReceiptBtn.addEventListener('click', function() {
+  alert('Downloading receipt...');  // Example action (you can add actual download functionality here)
+  receiptOverlay.style.display = 'none';  // Hide the overlay after download
+});
+
+// Close the receipt overlay when clicking the "Close" button
+closeReceiptBtn.addEventListener('click', function() {
+  receiptOverlay.style.display = 'none';  // Hide the overlay
+});
+
+</script>
 
 <!-- Begin script for datatable -->
 <script>
