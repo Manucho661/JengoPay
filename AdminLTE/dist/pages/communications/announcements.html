@@ -64,13 +64,25 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-<style>
 
 
-        
+   <script>
 
-</style>
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll(".nav-item > .nav-link").forEach((navLink) => {
+    navLink.addEventListener("click", function (e) {
+      // Check if the link has a submenu (dropdown)
+      let dropdown = this.nextElementSibling;
+      if (dropdown && dropdown.classList.contains("nav-treeview")) {
+        e.preventDefault(); // Prevents "#" from appearing in the URL
+        dropdown.classList.toggle("show"); // Toggles dropdown visibility
+      }
+    });
+  });
+});
 
+
+   </script>
 
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -283,7 +295,7 @@
           <a href="./index.html" class="brand-link">
             <!--begin::Brand Image-->
             <img
-              src="../../dist/assets/img/AdminLTELogo.png"
+              src="../../../dist/assets/img/AdminLTELogo.png"
               alt="AdminLTE Logo"
               class="brand-image opacity-75 shadow"
             />
@@ -633,6 +645,11 @@
  </script>
 
  <!-- End view announcement script -->
+
+
+ <!-- sidebar dropdowns-->
+
+
 
 
     <script

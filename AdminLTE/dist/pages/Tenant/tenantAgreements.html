@@ -316,7 +316,7 @@
                               <span class="value text-center">60000 </span>
                           </div>
 
-                          
+
                           <div class="col-md-3">
                             <button class="btn text text-danger"><i class="bi bi-pencil"></i> </i> EDIT</button>
                           </div>
@@ -571,6 +571,25 @@
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 
+
+ <script>
+
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".nav-item > .nav-link").forEach((navLink) => {
+      navLink.addEventListener("click", function (e) {
+        // Check if the link has a submenu (dropdown)
+        let dropdown = this.nextElementSibling;
+        if (dropdown && dropdown.classList.contains("nav-treeview")) {
+          e.preventDefault(); // Prevents "#" from appearing in the URL
+          dropdown.classList.toggle("show"); // Toggles dropdown visibility
+        }
+      });
+    });
+  });
+
+
+     </script>
+
  <script>
   const   more_announcement = document.getElementById('more_announcement_btn');
   const   view_announcement = document.getElementById('view_announcement');
@@ -735,7 +754,7 @@
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <script src="../../../../dist/js/adminlte.js"></script>
+    <script src="../../../dist/js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';

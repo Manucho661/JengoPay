@@ -342,7 +342,7 @@
           </div>
           <!--end::Container-->
         </div>
-        
+
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
@@ -587,7 +587,7 @@
       <option value="Moderate">Ben 10</option>
       <option value="Low">Alpha</option>
     </select>
-    
+
     <textarea id="notes" name="notes" rows="10" cols="98" placeholder="Enter any additional information..."></textarea>
 
       <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
@@ -708,7 +708,23 @@
 <!-- script for popups  -->
 
 
+<script>
 
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".nav-item > .nav-link").forEach((navLink) => {
+      navLink.addEventListener("click", function (e) {
+        // Check if the link has a submenu (dropdown)
+        let dropdown = this.nextElementSibling;
+        if (dropdown && dropdown.classList.contains("nav-treeview")) {
+          e.preventDefault(); // Prevents "#" from appearing in the URL
+          dropdown.classList.toggle("show"); // Toggles dropdown visibility
+        }
+      });
+    });
+  });
+
+
+     </script>
 
 <!-- more options -->
 <script>
