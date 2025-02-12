@@ -4,9 +4,9 @@ body {
 }
 
 .filter-container{
-  
+
     /* width: 250px; */
-  
+
     color: white;
     position: relative; /* To position the panel below */
 
@@ -42,7 +42,7 @@ border-collapse: collapse;
 width: 100%;
 }
 th {
-background-color: #FFC107;
+/* background-color: #FFC107; */
 color: #00192D;
 text-align: left;
 padding: 0.5em;
@@ -64,7 +64,7 @@ background-color: #f1f1f1;
 
 .filter:hover {
     color: #FFC107;
-    
+
 }
 .filter{
     /* background-color: #444; */
@@ -95,7 +95,7 @@ background-color: #f1f1f1;
     padding: 2%;
     color: white;
     border-radius: 4%;
-    
+
 }
 .panel a {
     display: block;
@@ -118,9 +118,9 @@ background-color: #f1f1f1;
 
 #respond{
   /* display: block ; */
-  position: fixed; 
+  position: fixed;
   z-index: 10000;
-  position: fixed; 
+  position: fixed;
   /* background-color: #FFC107; */
   top: 0;
   width: 100%;
@@ -128,7 +128,7 @@ background-color: #f1f1f1;
   justify-content: center;
   align-items: center;
   display: none;
-  background-color: rgba(0, 0, 0, 0.5); 
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .card.content{
@@ -140,7 +140,7 @@ border-radius: 5px;
 
 color: black;
 width: 100%;
-max-width: 50%; 
+max-width: 50%;
 box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 font-size: 90%;
 color: gray;
@@ -148,7 +148,7 @@ color: gray;
 
 .card-footer.view_announcement {
     justify-content: flex-end;
-    
+
 }
 
 .card-footer .btn + .btn {
@@ -156,13 +156,13 @@ color: gray;
 }
 
 .close-btn{
-     position: absolute; 
-    
+     position: absolute;
+
     right: 15px;
 
     color: white;
     cursor: pointer;
-    
+
 }
 
 #close-overlay-btn {
@@ -171,14 +171,14 @@ color: gray;
     /* color: white; */
     border: none;
     cursor: pointer;
-    font-size: 100%; 
+    font-size: 100%;
       }
   #close-overlay-btn:hover {
       color: red;
       }
 
 .card-header.view_announcement {
-    position: relative; 
+    position: relative;
     display: flex;/* Add this for the absolute positioning of the close button */
 }
 .message-card {
@@ -207,7 +207,7 @@ color: gray;
 .card{
 /* flex: 1; */
 }
-#sendButton{ 
+#sendButton{
   background-color: #FFC107;
   position: absolute;
   right: 2%;
@@ -219,7 +219,7 @@ color: gray;
   color:red !important;
 }
 #closeTextWindow{
-  position: absolute; 
+  position: absolute;
   /* background-color: white; */
   /* color: white; */
   z-index: 10000;
@@ -246,7 +246,7 @@ td {
     padding: 0.5em;
     text-align: left;
     font-size: 0.9rem;
-    
+
 }
 tr:nth-child(even) {
     background-color: #f9f9f9;

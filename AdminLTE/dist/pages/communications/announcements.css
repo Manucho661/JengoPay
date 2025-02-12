@@ -3,14 +3,7 @@ body {
       columns: gray;
   }
 
-.filter-container{
-  
-    /* width: 250px; */
-  
-    color: white;
-    position: relative; /* To position the panel below */
 
-}
 .nav-bar {
     display: flex;
     border-bottom: 1px solid #e0e0e0;
@@ -42,18 +35,13 @@ border-collapse: collapse;
 width: 100%;
 }
 th {
-background-color: #FFC107;
+background-color: ghostwhite;
 color: #00192D;
 text-align: left;
-padding: 0.5em;
-font-size: 0.9rem;
-}
-td {
-padding: 0.5em;
-text-align: left;
-font-size: 0.9rem;
+/* padding: 0.5em; */
 
 }
+
 tr:nth-child(even) {
 background-color: #f9f9f9;
 }
@@ -62,25 +50,7 @@ background-color: #f1f1f1;
 }
 
 
-.filter:hover {
-    color: #FFC107;
-    
-}
-.filter{
-    /* background-color: #444; */
-    /* color: white; */
-    cursor: pointer;
-    /* padding: 12%;  */
-    width: 25%;
-    border-bottom: gray solid 1px;
-    text-align: left;
-    outline: none;
-    font-size: 16px;
-    transition: 0.3s;
-    color: gray;
-    font-size: 100%;
-    border-radius: 2%;
-}
+
 
 .panel {
     display: none; /* Initially hidden */
@@ -95,7 +65,7 @@ background-color: #f1f1f1;
     padding: 2%;
     color: white;
     border-radius: 4%;
-    
+
 }
 .panel a {
     display: block;
@@ -132,12 +102,12 @@ background-color: #f1f1f1;
 
   position: relative;
     background: white;
-    
+
     border-radius: 5px;
-    
+
     color: black;
     width: 100%;
-    max-width: 50%; 
+    max-width: 50%;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     font-size: 90%;
     color: #00192D;
@@ -145,7 +115,7 @@ background-color: #f1f1f1;
 
 .card-footer.view_announcement {
     justify-content: flex-end;
-    
+
 }
 
 .card-footer .btn + .btn {
@@ -153,13 +123,13 @@ background-color: #f1f1f1;
 }
 
 .close-btn{
-     position: absolute; 
-    
+     position: absolute;
+
     right: 15px;
 
     color: white;
     cursor: pointer;
-    
+
 }
 
 #close-overlay-btn {
@@ -168,14 +138,14 @@ background-color: #f1f1f1;
     /* color: white; */
     border: none;
     cursor: pointer;
-    font-size: 100%; 
+    font-size: 100%;
       }
   #close-overlay-btn:hover {
       color: red;
       }
 
 .card-header.view_announcement {
-    position: relative; 
+    position: relative;
     display: flex;/* Add this for the absolute positioning of the close button */
 }
 #more_announcement_btn{
@@ -202,4 +172,73 @@ color: #FFC107;
 /* New announcement styles */
 #New_Announcement{
     display: none;
+}
+
+
+.text{
+  display: block;
+  margin-bottom: 5px;
+  line-height: 11px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  color: #767676;
+  color: #00192D;
+  font-family: 'Poppins', sans-serif;
+
+  }
+  .value{
+      font-size: 12px;
+      display: flex;
+      justify-content: center;
+      color: #FFC107;
+      /* background-color: #00192D; */
+      border-radius: 10px;
+  }
+
+  a{
+    color: #00192D;
+  }
+
+  .contact_section_header{
+    border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+    font-family: 'Poppins', sans-serif;
+
+  }
+  .text a{
+    text-decoration: none;
+  }
+
+
+  .row.first{
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
+
+}
+
+
+/* /table styles */
+table {
+  width: 50%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+table, th, td {
+  border: 1px solid #ddd;
+}
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+th {
+  background-color: #f2f2f2;
+}
+.total-row {
+  font-weight: bold;
+}
+
+table {
+  height: 50vh;
+  border-collapse: collapse;
+  margin: 20px 0;
 }
