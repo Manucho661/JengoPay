@@ -373,7 +373,7 @@
                   <div style="display: flex; justify-content: end;">
 
                     <button id="add_provider_btn" class="btn" style="background-color: #00192D; color: white; font-size: small;">  <i class="fas fa-calendar-check icon"></i>
-                    <b class="button_item" id="complaint" class="open-btn" onclick="openModal()"> New Schedule </b></button>
+                    <b class="button_item" id="complaint" class="open-btn" onclick="opennotificationPopup()"> New Schedule </b></button>
                   </div>
                 </div>
               <!-- /.col -->
@@ -555,6 +555,41 @@
 
 
 
+
+<!-- notification popup -->
+<div class="notificationpopup-overlay" id="notificationPopup">
+  <div class="notificationpopup-content">
+    <button class="close-btn text-secondary" onclick="closenotificationPopup()">×</button>
+    <h2 style="color: #00192D;">New Schedule</h2>
+    <form onsubmit="event.preventDefault(); addSchedule();">
+      <label for="property">Inspector:</label>
+      <select id="property" required>
+        <option value=""disabled>Select Inspector</option>
+        <option value="High">Manucho</option>
+        <option value="Moderate">Ben 10</option>
+        <option value="Low">Alpha</option>
+      </select>
+      <label for="property">Type:</label>
+      <select id="property" required>
+        <option value=""disabled>Select Type</option>
+        <option value="High">Regular</option>
+        <option value="Moderate">Hard Core</option>
+      </select>
+      <label for="property">Property:</label>
+      <select id="property" required>
+        <option value=""disabled>Select Property</option>
+        <option value="High">Manucho</option>
+        <option value="Moderate">Alpha</option>
+      </select>
+      <label for="date">Date:</label>
+      <input type="date" id="date" required>
+  </form><br>
+      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
+  </div>
+</div>
+<!-- End Notification popup -->
+
+
 <!-- start complaint section -->
 
 <!-- schedule section-->
@@ -648,6 +683,20 @@
 
 <!-- script for popups  -->
 
+<!-- create notification -->
+<script>
+  // Function to open the complaint popup
+  function opennotificationPopup() {
+    document.getElementById("notificationPopup").style.display = "flex";
+  }
+
+  // Function to close the complaint popup
+  function closenotificationPopup() {
+    document.getElementById("notificationPopup").style.display = "none";
+  }
+</script>
+
+    <!-- script for notification overlay -->
 
 
 

@@ -372,7 +372,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                 <button id="add_provider_btn" class="btn" style="background-color: #00192D; color: white; font-size: small;">   <i class="fa fa-bullhorn"></i>
-                <b class="button_item" class="open-btn"> New_Announcement</b></button>
+                <b class="button_item" class="open-btn" onclick="opennotificationPopup()"> New_Announcement</b></button>
 
             </div>
           <!-- /.col -->
@@ -579,6 +579,29 @@ document.addEventListener("DOMContentLoaded", function () {
 <!-- end of new announcement card-->
 
 
+
+
+<!-- notification popup -->
+<div class="notificationpopup-overlay" id="notificationPopup">
+  <div class="notificationpopup-content">
+    <button class="close-btn text-secondary" onclick="closenotificationPopup()">×</button>
+    <h2 style="color: #00192D;">Announcement</h2>
+
+    <label for="property">Recepients:</label>
+    <select id="property" required>
+      <option value=""disabled>Select Recepient</option>
+      <option value="High">Manucho</option>
+      <option value="Moderate">Ben 10</option>
+      <option value="Low">Alpha</option>
+    </select>
+
+    <textarea id="notes" name="notes" rows="10" cols="98" placeholder="Enter any additional information..."></textarea>
+
+      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
+  </div>
+</div>
+<!-- End Notification popup -->
+
 <!-- end overlay card. -->
 
     <!--begin::Script-->
@@ -651,6 +674,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
+ 
+<!-- create notification -->
+<script>
+  // Function to open the complaint popup
+  function opennotificationPopup() {
+    document.getElementById("notificationPopup").style.display = "flex";
+  }
+
+  // Function to close the complaint popup
+  function closenotificationPopup() {
+    document.getElementById("notificationPopup").style.display = "none";
+  }
+</script>
 
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"

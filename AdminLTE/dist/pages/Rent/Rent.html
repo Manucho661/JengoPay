@@ -525,7 +525,7 @@
 
                <!-- Button to trigger overlay -->
 <div class="col-md-4 d-flex justify-content-end" style="height: fit-content;">
-  <button id="announcement_btn" class="btn" onclick="showOverlay()">
+  <button id="announcement_btn" class="btn" onclick="opennotificationPopup()">
     <i class="fas fa-bullhorn"></i>
     <b>Create Notification</b>
   </button>
@@ -653,6 +653,26 @@
             </div>
 
 
+<!-- notification popup -->
+<div class="notificationpopup-overlay" id="notificationPopup">
+  <div class="notificationpopup-content">
+    <button class="close-btn text-secondary" onclick="closenotificationPopup()">×</button>
+    <h2 style="color: #00192D;">Notification</h2>
+
+    <label for="property">Recepients:</label>
+    <select id="property" required>
+      <option value=""disabled>Select Recepient</option>
+      <option value="High">Manucho</option>
+      <option value="Moderate">Ben 10</option>
+      <option value="Low">Alpha</option>
+    </select>
+
+    <textarea id="notes" name="notes" rows="10" cols="98" placeholder="Enter any additional information..."></textarea>
+
+      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
+  </div>
+</div>
+<!-- End Notification popup -->
 
 
 
@@ -686,6 +706,19 @@
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
 
+ 
+<!-- create notification -->
+<script>
+  // Function to open the complaint popup
+  function opennotificationPopup() {
+    document.getElementById("notificationPopup").style.display = "flex";
+  }
+
+  // Function to close the complaint popup
+  function closenotificationPopup() {
+    document.getElementById("notificationPopup").style.display = "none";
+  }
+</script>
 
     <!-- script for notification overlay -->
 
