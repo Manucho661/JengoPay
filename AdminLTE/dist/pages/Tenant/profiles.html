@@ -43,6 +43,7 @@
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
+    <link rel="stylesheet" href="serviceProviderProfile.css" />
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -51,12 +52,17 @@
       integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="profiles.css">
+
+<!-- scripts for data_table -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="index.css">
+
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -73,7 +79,7 @@
               </a>
             </li>
             <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
-            <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li> -->
+            <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li>
           </ul>
           <!--end::Start Navbar Links-->
           <!--begin::End Navbar Links-->
@@ -214,7 +220,7 @@
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <img
-                  src="17.jpg"
+                  src="../17.jpg"
                   class="user-image rounded-circle shadow"
                   alt="User Image"
                 />
@@ -267,21 +273,21 @@
           <!--begin::Brand Link-->
           <a href="./index.html" class="brand-link">
             <!--begin::Brand Image-->
-            <!-- <img
-              src="../../dist/assets/img/AdminLTELogo.png"
+            <img
+              src="../../../dist/assets/img/AdminLTELogo.png"
               alt="AdminLTE Logo"
               class="brand-image opacity-75 shadow"
-            /> -->
+            />
             <!--end::Brand Image-->
             <!--begin::Brand Text-->
-            <span class="brand-text fw-light"></span>
+            <span class="brand-text fw-light">AdminLTE 4</span>
             <!--end::Brand Text-->
           </a>
           <!--end::Brand Link-->
         </div>
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
-        <div id="sidebar"></div>
+        <div id="sidebar"></div> <!-- This is where the sidebar is inserted -->
         <!--end::Sidebar Wrapper-->
       </aside>
       <!--end::Sidebar-->
@@ -293,13 +299,44 @@
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-              <div class="col-sm-6"><h3 class="mb-0"></h3></div>
-              <div class="col-sm-6">
-                <!-- <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Dashboard v2</li>
-                </ol> -->
+              <div class="col-sm-8">
+
+                <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> Tenants</h3>
+
+
+                    <div class="row mt-2  ">
+                      <div class="col-md-12  ">
+
+
+
+                        <div class="row mt-6" >
+                          <!-- Summary -->
+                          <div class="col-md-3  ">
+                            <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> <a href="index.html"> TOTAL</a>  </label>
+                              <span class="value text-center">60000 </span>
+                          </div>
+
+                          <div class="col-md-3">
+                            <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> <a href=""> NEW_REQUESTS </a>  </label>
+                            <span class="value"> 30 </span>
+                          </div>
+                          <div class="col-md-3">
+                            <button class="btn text text-danger"><i class="bi bi-pencil"></i> </i> EDIT</button>
+                          </div>
+                        </div>
+
+                      </div>
+
+                </div>
               </div>
+
+              <div class="col-sm-4">
+                <ol class="breadcrumb float-sm-end">
+                  <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                </ol>
+              </div>
+
             </div>
             <!--end::Row-->
           </div>
@@ -308,204 +345,18 @@
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
-             <!--begin::Row-->
-             <div class="row">
-              <div class="col-sm-6"><h3 class="mb-0"></h3></div>
-              <div class="col-sm-6">
+            <!-- Info boxes -->
+            <div class="row first mb-2 mt-2 rounded-circle">
 
-              </div>
-            </div>
-            <!--end::Row-->
-          </div>
-          <!--end::Container-->
-        </div>
+                <div class="col-md-12 d-flex justify-content-end">
 
+                    <button id="add_provider_btn" class="btn me-3 " style="background-color: #00192D; color: white; font-size: small;">  <i class="bi bi-plus"></i>
+                      <b class="button_item" class="open-btn" onclick="openPopup()"> Add Tenant </b></button>
 
-<!-- <div id="content" >            -->
-
-
-<div class="container-fluid">
-<div class="row mb-3">
-<div class="col-3">
-    <div class="page">
-        <b>TENANTS</b>
-    </div>
-</div>
-
-<!-- <div class="col-9 text-end">
-    <div class="custom-button"> -->
-
-      <div class="contenting" >
-        <button class="open-overlay-btn" onclick="openOverlay()">
-          <i class="fas fa-plus"></i>
-          Add Tenant</button>
-        </div> <br>
-<!-- </div> -->
-
-<!-- </div> -->
-
-<br>
-<div class="Tenant-section mt-6">
-
-<div class="row mt-6"> <!-- third row -->
-
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header " style="background-color: #00192D; color:#FFC107;">
-                <div class="card-title">
-                    TENANTS &nbsp; 500 PERSONS
-                </div>
-
-            </div>
-
-            <div class="card-body">
-                <table id="tenants"  class="table table-striped table-bordered">
-                    <thead>
-                        <tr  >
-                            <th scope="col">OCCUPIED</th>
-                                <th scope="col">NAME</th>
-                                <th scope="col">PHONE</th>
-                                <th scope="col">TYPE</th>
-                                <th scope="col">Property</th>
-                                <th scope="col">UNIT</th>
-                            <th scope="col">ACTION</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr onclick="window.location.href='profile.html'" >
-                            <th scope="row">1/7/11</th>
-                                <td>Kelvin Mbugua</td>
-                                <td>0757414722</td>
-                                <td> LEASE</td>
-                                <td> CROWN Z</td>
-                                <td>E456</td>
-                                <td> <button type="button" class="btn text-warning">MORE...</button>
-                                </td>
-                        </tr>
-                        <tr onclick="window.location.href='profile.html'">
-                        <th scope="row">2/7/11</th>
-                        <td>Jacob Wesonga</td>
-                        <td>0758322543</td>
-                        <td>REQULAR</td>
-                        <td>EBENEZER</td>
-                        <td>E537</td>
-
-                        <td> <button type="button" class="btn text-warning">MORE...</button>
-
-                        </tr>
-                        <tr>
-                            <th scope="row">3/7/11</th>
-                        <td>Larry Madowo</td>
-                        <td>0758322543</td>
-                        <td>LEASE</td>
-                        <td>MANUCHO</td>
-                        <td>F10</td>
-
-                        <td> <button type="button" class="btn text-warning">MORE...</button>
-
-                            </tr>
-
-                            <tr>
-                              <th scope="row">3/7/11</th>
-                          <td>Larry Madowo</td>
-                          <td>0758322543</td>
-                          <td>LEASE</td>
-                          <td>MANUCHO</td>
-                          <td>F10</td>
-
-                          <td> <button type="button" class="btn text-warning">MORE...</button>
-
-                              </tr>
-
-                              <tr>
-                                <th scope="row">3/7/11</th>
-                            <td>Larry Madowo</td>
-                            <td>0758322543</td>
-                            <td>LEASE</td>
-                            <td>MANUCHO</td>
-                            <td>F10</td>
-                            <td> <button type="button" class="btn text-warning">MORE...</button>
-
-                                </tr>
-                                <tr>
-                                  <th scope="row">3/7/11</th>
-                              <td>Larry Madowo</td>
-                              <td>0758322543</td>
-                              <td>LEASE</td>
-                              <td>MANUCHO</td>
-                              <td>F10</td>
-                              <td> <button type="button" class="btn text-warning">MORE...</button>
-                                  </tr>
-                    </tbody>
-                </table>
-            </div>
-
-         <!-- Overlay -->
-    <div class="overlay" id="overlay">
-      <div class="overlay-content">
-        <button class="close-overlay-btn" onclick="closeOverlay()">X</button>
-          <h2>Add Tenant</h2>
-          <form id="tenant-form">
-              <div class="form-group">
-                  <label for="tenant-name">Tenant Name</label>
-                  <input type="text" id="tenant-name" name="tenant-name" required>
-              </div>
-              <div class="form-group">
-                  <label for="tenant-email">Email</label>
-                  <input type="email" id="tenant-email" name="tenant-email" required>
-              </div>
-              <div class="form-group">
-                  <label for="tenant-phone">Phone Number</label>
-                  <input type="text" id="tenant-phone" name="tenant-phone" required>
-              </div>
-            <div class="form-group">
-              <label for="property">Property</label>
-              <select id="property" name="property" required>
-                  <option value="">Select Property</option>
-                  <option value="Apartment 1">Apartment 1</option>
-                  <option value="Apartment 2">Apartment 2</option>
-                  <option value="House 1">House 1</option>
-                  <option value="House 2">House 2</option>
-              </select>
-          </div>
-            <button type="submit" style="border-radius: 10px; position:center;background-color:  #00192D; color: #FFC107; width: 120px; height:50px;">Add</button>
-
-
-          </form>
-
-      </div>
-  </div>
-
-
-                <div class="col-md-6">
-                    <div class="profile_details">
-                        <div class="profile_picture">
-                                         <!-- <img class="mt-3" src="images/mansion-1.jpg" alt="Profile Picture"  width="100" height="100"> -->
-                        </div>
-                        <div class="profile_info">
-
-                                            <!-- <h2>Jane Doe</h2> -->
-
-                            <div class="profile_details one">
-                              <p> New: <strong>&nbsp;50|</strong> In Progress: <strong> &nbsp;30|</strong> Completed: <strong> &nbsp;70</strong> </p>
-
-
-                            </div>
-
-                        </div>
-                    </div>
+                    <button id="add_provider_btn" class="btn" style="background-color: #00192D; color: white; font-size: small;">  <i class="bi bi-bell"></i>
+                    <b class="button_item" class="open-btn" onclick="openPopup()"> Create_Notification </b></button>
 
                 </div>
-                <div class="col-md-6">
-                  <div style="display: flex; justify-content: end;">
-                  <button class="btn" style="background-color: #00192D; color: white; font-size: small;"> <i class="fas fa-tools icon"></i>
-                    <b> Vendors </b></button>
-                </div>
-
-
-
-
-
               <!-- /.col -->
             </div>
             <!-- /.row -->
@@ -513,99 +364,107 @@
 
             <!--end::Row-->
             <!--begin::Row-->
-            <div class="row">
+            <div class="row second">
               <!-- Start col -->
-              <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                      <div class="filter-container" id="filter-container">
+              <div class="col-md-12 " >
+                    <div class="card second_col ">
+                        <div class="card-header">
 
-                        <div class="filter" id="filter">
-                          <i class="bi bi-filter"></i>
-                          Filter | <b>All Properties <i class="fas fa-chevron-down"></i> </b>
-
-                        </div>
-                        <div class="panel" id="panel">
-                          <a href="#">All Properties</a>
-                          <a href="#">Crown Z</a>
-                          <a href="#">Manucho</a>
-                          <a href="#">MM Towers</a>
 
                         </div>
 
-                      </div>
+                        <div class="card-body">
+                          <table id="tenants"  class="table table-striped table-bordered">
+                            <thead>
+                                <tr  >
+                                    <th scope="col">OCCUPIED</th>
+                                        <th scope="col">NAME</th>
+                                        <th scope="col">PHONE</th>
+                                        <th scope="col">TYPE</th>
+                                        <th scope="col">Property</th>
+                                        <th scope="col">UNIT</th>
+                                    <th scope="col">ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr onclick="window.location.href='profile.html'" >
+                                    <th scope="row">1/7/11</th>
+                                        <td>Kelvin Mbugua</td>
+                                        <td>0757414722</td>
+                                        <td> LEASE</td>
+                                        <td> CROWN Z</td>
+                                        <td>E456</td>
+                                        <td> <button type="button" class="btn text-warning">View...</button>
+                                        </td>
+                                </tr>
+                                <tr onclick="window.location.href='profile.html'">
+                                <th scope="row">2/7/11</th>
+                                <td>Jacob Wesonga</td>
+                                <td>0758322543</td>
+                                <td>REQULAR</td>
+                                <td>EBENEZER</td>
+                                <td>E537</td>
+
+                                <td> <button type="button" class="btn text-warning">View..</button>
+
+                                </tr>
+                                <tr onclick="window.location.href='profile.html'" >
+                                    <th scope="row">3/7/11</th>
+                                <td>Larry Madowo</td>
+                                <td>0758322543</td>
+                                <td>LEASE</td>
+                                <td>MANUCHO</td>
+                                <td>F10</td>
+
+                                <td> <button type="button" class="btn text-warning">View...</button>
+
+                                    </tr>
+
+                                    <tr onclick="window.location.href='profile.html'" >
+                                      <th scope="row">3/7/11</th>
+                                  <td>Larry Madowo</td>
+                                  <td>0758322543</td>
+                                  <td>LEASE</td>
+                                  <td>MANUCHO</td>
+                                  <td>F10</td>
+
+                                  <td> <button type="button" class="btn text-warning">View...</button>
+
+                                      </tr>
+
+                                      <tr onclick="window.location.href='profile.html'" >
+                                        <th scope="row">3/7/11</th>
+                                    <td>Larry Madowo</td>
+                                    <td>0758322543</td>
+                                    <td>LEASE</td>
+                                    <td>MANUCHO</td>
+                                    <td>F10</td>
+                                    <td> <button type="button" class="btn text-warning">View...</button>
+
+                                        </tr>
+                                        <tr onclick="window.location.href='profile.html'" >
+                                          <th scope="row">3/7/11</th>
+                                      <td>Larry Madowo</td>
+                                      <td>0758322543</td>
+                                      <td>LEASE</td>
+                                      <td>MANUCHO</td>
+                                      <td>F10</td>
+                                      <td> <button type="button" class="btn text-warning">View...</button>
+                                          </tr>
+                            </tbody>
+                        </table>
+
+
+
+                        </div>
+
+
+
+                        <div class="card-footer">
+
+                        </div>
 
                     </div>
-
-                    <div class="card-body">
-                      <table id="maintenance" class="display">
-                        <thead>
-                          <tr>
-                            <th>ID</th>
-                            <th>Property</th>
-                            <th>TENANT</th>
-                            <th>UNIT</th>
-                            <th>DATE</th>
-                            <th>ISSUE</th>
-                            <th>Prority</th>
-                            <th>PROVIDER</th>
-                             <th>ACTION</th>
-
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>002</td>
-                            <td>CROWN Z TOWERS</td>
-                            <td>Manucho</td>
-                            <td>A12</td>
-                            <td>11-10-2025</td>
-                            <td>Broken handle</td>
-                            <td>low</td>
-
-                            <td>Not assigned</td>
-                            <td id="more">
-                             <div id="more_icon">&#x2026;</div>
-                             <br>
-                             <div id="more_options">
-                                <a href="#">Assign</a>
-                                <a href="#">Update</a>
-                                <a href="#">Delete</a>
-                                <a href="#">View</a>
-
-
-                             </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>003</td>
-                            <td>ALPHA APARTMENTS</td>
-                            <td>Ethic</td>
-                            <td>A11</td>
-                            <td>12-11-2025</td>
-                            <td>Leaking roof</td>
-                            <td>high</td>
-
-                            <td>New Electrics</td>
-                            <td id="more">
-                              <div id="more_icon" class="rounded-circle" >&#x2026;</div>
-                              </td>
-                          </tr>
-                          <!-- Add more rows as needed -->
-                        </tbody>
-
-                    </table>
-
-
-
-                    </div>
-
-
-
-                    <div class="card-footer">
-
-                     </div>
-
                 </div>
 
 
@@ -678,47 +537,102 @@
  </div>
 
 <!-- End view announcement -->
+
+<!-- Complaint part -->
+
+<div class="popup-overlay" id="complaintPopup">
+  <div class="popup-content">
+    <button class="close-btn text-secondary" onclick="closePopup()">×</button>
+    <h2 style="color: #00192D;">Complaint</h2>
+    <form class="complaint-form">
+      <label for="category">Complaint Category:</label>
+        <select id="category" required>
+          <option value="">Select Category</option>
+          <option value="Billing Issue">Billing Issue</option>
+          <option value="Technical Problem">Technical Problem</option>
+          <option value="Customer Service">Customer Service</option>
+          <option value="Others">Others</option>
+        </select>
+
+        <label for="priority">Priority Level:</label>
+        <select id="priority" required>
+          <option value="">Select Priority</option>
+          <option value="High">High</option>
+          <option value="Moderate">Moderate</option>
+          <option value="Low">Low</option>
+        </select>
+
+
+      <label for="complaint">Complaint Description:</label>
+      <textarea id="complaint" rows="4" placeholder="Describe your complaint" required></textarea>
+
+      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">Submit Complaint</button>
+    </form>
+  </div>
+</div>
+<!-- End complaint part -->
+
+
+
 <!-- end overlay card. -->
 
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <script>
-      // Function to open the overlay
-      function openOverlay() {
-          const overlay = document.getElementById('overlay');
-          overlay.style.display = 'flex'; // Show overlay
-      }
 
-      // Function to close the overlay
-      function closeOverlay() {
-          const overlay = document.getElementById('overlay');
-          overlay.style.display = 'none'; // Hide overlay
-      }
 
-      // Form validation and submission logic
-      const form = document.getElementById('tenant-form');
-      form.addEventListener('submit', function(event) {
-          event.preventDefault(); // Prevent actual form submission
-          alert('Tenant added successfully!');
-          closeOverlay(); // Close overlay after submission
-      });
-  </script>
 
-    <script>
-        // Initialize DataTable
-        $(document).ready(function () {
-            $('#myTable').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableOne').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableThree').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableFour').DataTable();
-        });
-     </script>
+<!-- Overlay scripts -->
+ <!-- View announcements script -->
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+ <script>
+  const   more_announcement = document.getElementById('more_announcement_btn');
+  const   view_announcement = document.getElementById('view_announcement');
+  const   close_overlay = document.getElementById("close-overlay-btn");
+
+  more_announcement.addEventListener('click', ()=>{
+
+     view_announcement.style.display= "flex";
+     document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
+     const now = new Date();
+            const formattedTime = now.toLocaleString(); // Format the date and time
+            timestamp.textContent = `Sent on: ${formattedTime}`;
+
+
+  });
+
+     close_overlay.addEventListener('click', ()=>{
+
+     view_announcement.style.display= "none";
+     document.querySelector('.app-wrapper').style.opacity = '1';
+
+
+     });
+ </script>
+
+ <!-- End view announcement script -->
+
+<!-- Complain script -->
+<!-- Complaint script -->
+<script>
+  // Function to open the complaint popup
+  function openPopup() {
+    document.getElementById("complaintPopup").style.display = "flex";
+  }
+
+  // Function to close the complaint popup
+  function closePopup() {
+    document.getElementById("complaintPopup").style.display = "none";
+  }
+</script>
+
+
+<!-- End complaint script -->
+<!-- End Complain script -->
+
+
+
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
       integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
@@ -754,6 +668,10 @@
 </script>
 <!-- End for Occordion script -->
 
+<!-- script for popups  -->
+
+
+
 
 <!-- more options -->
 <script>
@@ -779,7 +697,7 @@
     <script>
 
        $(document).ready(function() {
-        $('#maintenance').DataTable({
+        $('#tenants').DataTable({
             "paging": true,
             "searching": true,
             "info": true,
@@ -792,12 +710,28 @@
     });
 
     </script>
+            <script>
+
+                $(document).ready(function() {
+                $('#vendor_distribution1').DataTable({
+                    // "paging": true,
+                    // "searching": true,
+                    // "info": true,
+                    // "lengthMenu": [5, 10, 25, 60],
+                    // "language": {
+                    //     "search": "Filter records:",
+                    //     "lengthMenu": "Show _MENU_ entries"
+                    // }
+                });
+            });
+
+            </script>
+
 
     </script>
-
     <!-- End script for data_table -->
 
-    <!--Begin sidebar script -->
+<!--Begin sidebar script -->
 <script>
   fetch('../bars/sidebar.html')  // Fetch the file
       .then(response => response.text()) // Convert it to text
@@ -808,13 +742,14 @@
 </script>
 <!-- end sidebar script -->
 
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <script src="../../../dist/js/adminlte.js"></script>
+    <script src="../../../../dist/js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
@@ -836,8 +771,6 @@
         }
       });
     </script>
-    <!-- Bootstrap Bundle with Popper -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!--end::OverlayScrollbars Configure-->
     <!-- OPTIONAL SCRIPTS -->
     <!-- apexcharts -->
