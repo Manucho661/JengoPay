@@ -43,6 +43,7 @@
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
+    <link rel="stylesheet" href="serviceProviderProfile.css" />
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -51,22 +52,16 @@
       integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="index1.css">
+
+<!-- scripts for data_table -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="agreements.css">
-
-
-    <!-- scripts for data_table -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="announcements.css">
-
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
-
 
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -160,7 +155,7 @@
                   <div class="d-flex">
                     <div class="flex-shrink-0">
                       <img
-                        src="../../../dist/assets/img/user3-128x128.jpg"
+                        src="../../dist/assets/img/user3-128x128.jpg"
                         alt="User Avatar"
                         class="img-size-50 rounded-circle me-3"
                       />
@@ -225,11 +220,11 @@
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <img
-                  src="../../dist/assets/img/user2-160x160.jpg"
+                  src="../17.jpg"
                   class="user-image rounded-circle shadow"
                   alt="User Image"
                 />
-                <span class="d-none d-md-inline">Alexander Pierce</span>
+                <span class="d-none d-md-inline">  <b>JENGO PAY</b>  </span>
               </a>
               <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                 <!--begin::User Image-->
@@ -279,7 +274,7 @@
           <a href="./index.html" class="brand-link">
             <!--begin::Brand Image-->
             <img
-              src="../../dist/assets/img/AdminLTELogo.png"
+              src="../../../dist/assets/img/AdminLTELogo.png"
               alt="AdminLTE Logo"
               class="brand-image opacity-75 shadow"
             />
@@ -291,11 +286,9 @@
           <!--end::Brand Link-->
         </div>
         <!--end::Sidebar Brand-->
-
         <!--begin::Sidebar Wrapper-->
         <div id="sidebar"></div> <!-- This is where the sidebar is inserted -->
         <!--end::Sidebar Wrapper-->
-
       </aside>
       <!--end::Sidebar-->
       <!--begin::App Main-->
@@ -306,300 +299,381 @@
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-              <div class="col-sm-6"><h3 class="mb-0"></h3></div>
-              <div class="col-sm-6">
-
-              </div>
-            </div>
-            <!--end::Row-->
-          </div>
-          <!--end::Container-->
-        </div>
-        <div  class="app-content">
-
-          <div class="container-fluid">
-            <!-- First Row -->
-            <div class="row  " >
               <div class="col-sm-8">
 
-                <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> JOSEPH</h3>
+                <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> Tenants</h3>
 
 
                     <div class="row mt-2  ">
                       <div class="col-md-12  ">
 
-                        <div class="row mt-6 ">
-                            <!-- Summary -->
-                            <div class="col-md-3 ">
-                                <label class="text text-center">  <i class="fas fa-briefcase icon"></i>   Occupation </label>
-                                <span class="value text-center">Teacher</span>
-                            </div>
 
-                            <div class="col-md-3">
-                                <label class="text text-center"> <i class="fas fa-baby icon"></i>   BIRTH  </label>
-                                <span class="value"> 5-23-1995 </span>
-                            </div>
-                            <div class="col-md-3">
-                              <label class="text text-center">  <i class="fas fa-id-card"></i>  IDENTIFICATION NUMBER </label>
-                              <span class="value">012020202 </span>
-                            </div>
-                        </div>
 
                         <div class="row mt-6" >
                           <!-- Summary -->
                           <div class="col-md-3  ">
-                              <label class="text text-center"> <i class="fas fa-globe icon"></i>   ORIGIN </label>
-                              <span class="value text-center">Kenyan </span>
+                            <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> <a href="index.html"> TOTAL</a>  </label>
+                              <span class="value text-center">60000 </span>
                           </div>
 
                           <div class="col-md-3">
-                              <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> End_Date  </label>
-                              <span class="value"> 6-7-2020 </span>
+                            <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> <a href=""> NEW_REQUESTS </a>  </label>
+                            <span class="value"> 30 </span>
                           </div>
                           <div class="col-md-3">
-                            <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> <a href=""> Start_Date  </a>  </label>
-                            <span class="value"> 5-23-1995 </span>
-                          </div>
-                          <div class="col-md-3">
-                            <button class="btn text text-danger">  <i class="fas fa-trash"></i> Remove Joseph</button>
+                            <button class="btn text text-danger"><i class="bi bi-pencil"></i> </i> EDIT</button>
                           </div>
                         </div>
 
                       </div>
-                      <!-- <div class="col-md-6">
 
-                        <div class="contact">
-                          <p class="contact_item" >Email</p>
-                          <p class="contact_value" >nucho@gmail</p>
-                        </div>
-                        <div class="contact">
-                          <p  class="contact_item" >Address</p>
-                          <p  class="contact_value" >50202|202|Califonia</p>
-                        </div>
-
-                      </div> -->
                 </div>
               </div>
+
               <div class="col-sm-4">
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
                   <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
                 </ol>
               </div>
+
             </div>
+            <!--end::Row-->
+          </div>
+          <!--end::Container-->
+        </div>
+        <div class="app-content">
+          <!--begin::Container-->
+          <div class="container-fluid">
+            <!-- Info boxes -->
+            <div class="row first mb-2 mt-2 rounded-circle">
 
-            <!-- End first Row -->
+                <div class="col-md-12 d-flex justify-content-end">
 
-            <!-- Second row start --><div class="row first mb-2 mt-3 rounded-circle">
+                    <button id="add_provider_btn" class="btn me-3 " style="background-color: #00192D; color: white; font-size: small;">  <i class="bi bi-plus"></i>
+                      <b class="button_item" class="open-btn" onclick="openPopup()"> Add Tenant </b></button>
 
-                <div class="col-md-6 d-flex justify-content-between">
-                  <button id="rent_details_btn" class="btn" >  <i class="fas fa-calendar-check icon"></i>
-                    <b> Rent_Details </b></button>
-                    <button id="agreements_btn" class="btn">  <i class="fas fa-calendar-check icon"></i>
-                      <b> Agreements </b></button>
-                </div>
+                    <button id="add_provider_btn" class="btn" style="background-color: #00192D; color: white; font-size: small;">  <i class="bi bi-bell"></i>
+                    <b class="button_item" class="open-btn" onclick="openPopup()"> Create_Notification </b></button>
 
-                <div class="col-md-6">
-                  <div style="display: flex; justify-content: end;">
-
-
-                  </div>
                 </div>
               <!-- /.col -->
             </div>
+            <!-- /.row -->
+            <!--begin::Row-->
+
+            <!--end::Row-->
+            <!--begin::Row-->
+            <div class="row second">
+              <!-- Start col -->
+              <div class="col-md-12 " >
+                    <div class="card second_col ">
+                        <div class="card-header">
+
+
+                        </div>
+
+                        <div class="card-body">
+                          <table id="tenants"  class="table table-striped table-bordered">
+                            <thead>
+                                <tr  >
+                                    <th scope="col">OCCUPIED</th>
+                                        <th scope="col">NAME</th>
+                                        <th scope="col">PHONE</th>
+                                        <th scope="col">TYPE</th>
+                                        <th scope="col">Property</th>
+                                        <th scope="col">UNIT</th>
+                                    <th scope="col">ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr onclick="window.location.href='profile.html'" >
+                                    <th scope="row">1/7/11</th>
+                                        <td>Kelvin Mbugua</td>
+                                        <td>0757414722</td>
+                                        <td> LEASE</td>
+                                        <td> CROWN Z</td>
+                                        <td>E456</td>
+                                        <td> <button type="button" class="btn text-warning">MORE...</button>
+                                        </td>
+                                </tr>
+                                <tr onclick="window.location.href='profile.html'">
+                                <th scope="row">2/7/11</th>
+                                <td>Jacob Wesonga</td>
+                                <td>0758322543</td>
+                                <td>REQULAR</td>
+                                <td>EBENEZER</td>
+                                <td>E537</td>
+
+                                <td> <button type="button" class="btn text-warning">MORE...</button>
+
+                                </tr>
+                                <tr>
+                                    <th scope="row">3/7/11</th>
+                                <td>Larry Madowo</td>
+                                <td>0758322543</td>
+                                <td>LEASE</td>
+                                <td>MANUCHO</td>
+                                <td>F10</td>
+
+                                <td> <button type="button" class="btn text-warning">MORE...</button>
+
+                                    </tr>
+
+                                    <tr>
+                                      <th scope="row">3/7/11</th>
+                                  <td>Larry Madowo</td>
+                                  <td>0758322543</td>
+                                  <td>LEASE</td>
+                                  <td>MANUCHO</td>
+                                  <td>F10</td>
+
+                                  <td> <button type="button" class="btn text-warning">MORE...</button>
+
+                                      </tr>
+
+                                      <tr>
+                                        <th scope="row">3/7/11</th>
+                                    <td>Larry Madowo</td>
+                                    <td>0758322543</td>
+                                    <td>LEASE</td>
+                                    <td>MANUCHO</td>
+                                    <td>F10</td>
+                                    <td> <button type="button" class="btn text-warning">MORE...</button>
+
+                                        </tr>
+                                        <tr>
+                                          <th scope="row">3/7/11</th>
+                                      <td>Larry Madowo</td>
+                                      <td>0758322543</td>
+                                      <td>LEASE</td>
+                                      <td>MANUCHO</td>
+                                      <td>F10</td>
+                                      <td> <button type="button" class="btn text-warning">MORE...</button>
+                                          </tr>
+                            </tbody>
+                        </table>
 
 
 
-      <div class="row mt-3 ">
-        <div class="col-md-12">
-          <div class="card">
-
-            <div class="card-body">
-                <table id="agreements" class="display" style="font-size: small;" >
-                    <thead>
-                      <tr>
-                          <th scope="col">DATE</th>
-                              <th scope="col">FIRST PARTY (YOU)</th>
-                              <th scope="col">SECOND PARTY (TENANT)</th>
-                              <th scope="col">DEPOSIT</th>
-                              <th scope="col">ACTION</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                          <th scope="row">1/7/11</th>
-                              <td>JOSEPH KAIRO</td>
-                              <td>Emmanuel Wanyonyi</td>
-                              <td>KSH 10,000</td>
-                              <td id="more">
-                                <div id="more_icon">&#x2026;</div>
-                                <br>
-                                <div id="more_options">
-                                   <a href="#">View</a>
-                                   <a href="#">Edit</a>
-                                   <a href="#">Delete</a>
-
-
-                                </div>
-                               </td>
-
-                      </tr>
-                      <tr>
-
-                      <th scope="row">1/7/11</th>
-                              <td>JOSEPH KAIRO</td>
-                              <td>Emmanuel Wanyonyi</td>
-                              <td>KSH 10,000</td>
-                              <td id="more">
-                                <div id="more_icon">&#x2026;</div>
-                                <br>
-                                <div id="more_options">
-                                   <a href="#">View</a>
-                                   <a href="#">Edit</a>
-                                   <a href="#">Delete</a>
-
-
-                                </div>
-                               </td>
-                      </tr>
-                      <tr>
-
-                        <th scope="row">1/7/11</th>
-                        <td>JOSEPH KAIRO</td>
-                        <td>Emmanuel Wanyonyi</td>
-                        <td>KSH 10,000</td>
-                        <td id="more">
-                          <div id="more_icon">&#x2026;</div>
-                          <br>
-                          <div id="more_options">
-                             <a href="#">Delete</a>
-                             <a href="#">Edit</a>
+                        </div>
 
 
 
-                          </div>
-                         </td>
+                        <div class="card-footer">
+
+                        </div>
+
+                    </div>
+                </div>
 
 
-                          </tr>
-                    </tbody>
-                  </table>
-            <div class="overlay" id="overlay">
-              <div class="invoicy-container">
-                <!-- <div class="receipt-container" id="receipt"> -->
-                  <button class="close-btn" onclick="closeOverlay()">×</button>
-                  <h2><strong>Payment Receipt</strong></h2>
-                  <p><strong> Nairobi,  KENYA</strong></p>
-                  <p><strong>Date:</strong> <span id="date"></span></p>
-                  <p><strong>Method:MPESA</strong></p>
-                  <p><strong>Reference:TGH34KJ89K</strong></p>
-
-
-                  <!-- <div class="invoice-details">
-                      <p><strong>Invoice Number:</strong> INV-0001</p>
-                      <p><strong>Tenant Name:</strong> John Doe</p>
-                      <p><strong>Property:</strong> ABC Apartments</p>
-                      <p><strong>Invoice Date:</strong> 2025-01-23</p>
-                      <p><strong>Due Date:</strong> 2025-02-01</p>
-                  </div> -->
-                  <table>
-                      <tr><th>Description</th><th>AMOUNT</th></tr>
-                      <tr><td>Rent Amount</td><td>KSH1500.00</td></tr>
-                      <tr><td>Water Bill</td><td>KSH50.00</td></tr>
-                      <tr><td>Garbage Collection Fees</td><td>KSH200.00</td></tr>
-                      <tr><td>Late Fees</td><td>KSH300.00</td></tr>
-                      <tr><td>Maintenance Costs</td><td>KSH100.00</td></tr>
-                      <!-- <tr><td>Arrears</td><td>KSH 200.00</td></tr> -->
-                      <tr class="total"><td>Total Amount Paid</td><td>KSH1905.00</td></tr>
-                      <tr><td> <button id="exportButton" style="border-radius: 10px; margin-left: 6rem;">
-                        <i class="fas fa-share-square"></i> DOWNLOAD
-                      </button></td></tr>
-                  </table>
-              </div>
+            </div>
+              <!-- /.col -->
+            </div>
+            <!--end::Row-->
           </div>
-
-
-<!--
-        <div class="overlay" id="overlay">
-          <div class="invoicy-container">
-          <div class="receipt-container" id="receipt">
-            <button class="close-btn" onclick="closeOverlay()">×</button>
-            <h2>Payment Receipt</h2>
-            <p> Nairobi,  KENYA</p>
-            <p><strong>Date:</strong> <span id="date"></span></p>
-
-            <table>
-              <td>Manucho Apartments</td>
-              <td>John</td>
-              <th>A11</th>
-              <td>KSH80,000</td>
-              <td>KSH80,000</td>
-              <td>MPESA</td>
-              <td>TBM34KGNJ8</td>
-              <td>10-12-2025</td>
-              <td>KSH0</td>
-            </table>
+          <!--end::Container-->
         </div>
+        <!--end::App Content-->
+      </main>
+      <!--end::App Main-->
+      <!--begin::Footer-->
 
-        <button class="print-btn" onclick="printReceipt()">Print Receipt</button>
-     -->
 
 
+      <footer class="app-footer">
+        <!--begin::To the end-->
+        <div class="float-end d-none d-sm-inline">Anything you want</div>
+        <!--end::To the end-->
+        <!--begin::Copyright-->
+        <strong>
+          Copyright &copy; 2014-2024&nbsp;
+          <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;"> JENGO PAY</a>.
+        </strong>
+        All rights reserved.
+        <!--end::Copyright-->
+      </footer>
+      <!--end::Footer-->
+    </div>
     <!--end::App Wrapper-->
+
+
+
+
+<!-- Overlay Cards -->
+
+<!-- create Announcement -->
+
+
+
+
+
+ <!-- Start View announcement -->
+ <div class="view_announcement" id="view_announcement">
+  <div class="card content">
+   <div class="card-header view_announcement bg-secondary text-white">
+       <h5 class="mb-0">Rent Payments</h5>
+       <div id="close-overlay-btn" class="close-btn" > <b> &times;</b> </div>
+
+   </div>
+   <div class="card-body">
+       <p class="card-text">
+           All Rent Payments should be made before 24/01/17. Anyone who feels that they might not
+           be able to complete their dues on 24/01/17 should communicate to management before the due date.
+           Else, you face an eviction risk if you fail to pay your dues before the said date without a reasonable reason</p>
+
+           <p class="timestamp" id="timestamp"></p> <!-- Timestamp -->
+
+
+       <div class="Recipients border-top border-gray "> <p><strong>Recipients|</strong> All Employees</p>  </div>
+
+   </div>
+   <div class="card-footer view_announcement d-flex">
+       <button class="btn btn-danger btn-sm">Delete</button>
+       <button class="btn btn-secondary btn-sm">Resend</button>
+   </div>
+ </div>
+ </div>
+
+<!-- End view announcement -->
+
+<!-- Complaint part -->
+
+<div class="popup-overlay" id="complaintPopup">
+  <div class="popup-content">
+    <button class="close-btn text-secondary" onclick="closePopup()">×</button>
+    <h2 style="color: #00192D;">Complaint</h2>
+    <form class="complaint-form">
+      <label for="category">Complaint Category:</label>
+        <select id="category" required>
+          <option value="">Select Category</option>
+          <option value="Billing Issue">Billing Issue</option>
+          <option value="Technical Problem">Technical Problem</option>
+          <option value="Customer Service">Customer Service</option>
+          <option value="Others">Others</option>
+        </select>
+
+        <label for="priority">Priority Level:</label>
+        <select id="priority" required>
+          <option value="">Select Priority</option>
+          <option value="High">High</option>
+          <option value="Moderate">Moderate</option>
+          <option value="Low">Low</option>
+        </select>
+
+
+      <label for="complaint">Complaint Description:</label>
+      <textarea id="complaint" rows="4" placeholder="Describe your complaint" required></textarea>
+
+      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">Submit Complaint</button>
+    </form>
+  </div>
+</div>
+<!-- End complaint part -->
+
+
+
+<!-- end overlay card. -->
+
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
 
-    <script>
-      // Function to print the receipt
-      function printReceipt() {
-          window.print(); // Opens the print dialog
-      }
-
-      // Set current date on the receipt
-      document.getElementById("date").textContent = new Date().toLocaleDateString();
-  </script>
-
-    <script>
-      function openOverlay() {
-          document.getElementById("overlay").style.display = "flex";
-      }
-
-      function closeOverlay() {
-          document.getElementById("overlay").style.display = "none";
-      }
-  </script>
 
 
-<!-- Begin script for datatable -->
+<!-- Overlay scripts -->
+ <!-- View announcements script -->
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+ <script>
+  const   more_announcement = document.getElementById('more_announcement_btn');
+  const   view_announcement = document.getElementById('view_announcement');
+  const   close_overlay = document.getElementById("close-overlay-btn");
+
+  more_announcement.addEventListener('click', ()=>{
+
+     view_announcement.style.display= "flex";
+     document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
+     const now = new Date();
+            const formattedTime = now.toLocaleString(); // Format the date and time
+            timestamp.textContent = `Sent on: ${formattedTime}`;
+
+
+  });
+
+     close_overlay.addEventListener('click', ()=>{
+
+     view_announcement.style.display= "none";
+     document.querySelector('.app-wrapper').style.opacity = '1';
+
+
+     });
+ </script>
+
+ <!-- End view announcement script -->
+
+<!-- Complain script -->
+<!-- Complaint script -->
 <script>
-  $(document).ready(function() {
-   $('#rent').DataTable({
-       "paging": true,
-       "searching": true,
-       "info": true,
-       "lengthMenu": [5, 10, 25, 50],
-       "language": {
-           "search": "Filter records:",
-           "lengthMenu": "Show _MENU_ entries"
-       }
-   });
-});
+  // Function to open the complaint popup
+  function openPopup() {
+    document.getElementById("complaintPopup").style.display = "flex";
+  }
 
-$(document).ready(function() {
-   $('#agreements').DataTable({
-       "paging": true,
-       "searching": true,
-       "info": true,
-       "lengthMenu": [5, 10, 25, 50],
-       "language": {
-           "search": "Filter records:",
-           "lengthMenu": "Show _MENU_ entries"
-       }
-   });
-});
+  // Function to close the complaint popup
+  function closePopup() {
+    document.getElementById("complaintPopup").style.display = "none";
+  }
+</script>
+
+
+<!-- End complaint script -->
+<!-- End Complain script -->
+
+
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
+      integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
+      crossorigin="anonymous"
+    ></script>
+    <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
+
+<!-- script for occordion -->
+<script>
+
+        // JavaScript to handle hover and hide functionality
+        const filterContainer = document.getElementById("filter-container");
+        const accordion = document.getElementById("filter");
+        const panel = document.getElementById("panel");
+
+        // Show panel when hovering over the accordion
+        accordion.addEventListener("mouseenter", () => {
+            panel.style.display = "block";
+        });
+
+        // Hide panel when moving out of both accordion and panel
+         filterContainer.addEventListener("mouseleave", () => {
+             panel.style.display = "none";
+      });
+
 
 </script>
-<!-- End script for data_table -->
+<!-- End for Occordion script -->
+
+<!-- script for popups  -->
+
+
+
+
+<!-- more options -->
 <script>
 
   // JavaScript to handle hover and hide functionality
@@ -619,6 +693,43 @@ $(document).ready(function() {
 
 
 </script>
+    <!-- Begin script for datatable -->
+    <script>
+
+       $(document).ready(function() {
+        $('#tenants').DataTable({
+            "paging": true,
+            "searching": true,
+            "info": true,
+            "lengthMenu": [5, 10, 25, 60],
+            "language": {
+                "search": "Filter records:",
+                "lengthMenu": "Show _MENU_ entries"
+            }
+        });
+    });
+
+    </script>
+            <script>
+
+                $(document).ready(function() {
+                $('#vendor_distribution1').DataTable({
+                    // "paging": true,
+                    // "searching": true,
+                    // "info": true,
+                    // "lengthMenu": [5, 10, 25, 60],
+                    // "language": {
+                    //     "search": "Filter records:",
+                    //     "lengthMenu": "Show _MENU_ entries"
+                    // }
+                });
+            });
+
+            </script>
+
+
+    </script>
+    <!-- End script for data_table -->
 
 <!--Begin sidebar script -->
 <script>
@@ -633,24 +744,12 @@ $(document).ready(function() {
 
 
     <script
-      src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-      integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
-      crossorigin="anonymous"
-    ></script>
-    <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-    <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-      crossorigin="anonymous"
-    ></script>
-    <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-    <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <script src="../../dist/js/adminlte.js"></script>
+    <script src="../../../../dist/js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
@@ -672,8 +771,6 @@ $(document).ready(function() {
         }
       });
     </script>
-    <!-- Bootstrap Bundle with Popper -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!--end::OverlayScrollbars Configure-->
     <!-- OPTIONAL SCRIPTS -->
     <!-- apexcharts -->
@@ -830,26 +927,6 @@ $(document).ready(function() {
       //-----------------
       // - END PIE CHART -
       //-----------------
-    </script>
-    <script>
-      document.getElementById("exportButton").addEventListener("click", function() {
-        // Example data (can be your table data or an array of objects)
-        const data = [
-          { Name: "John", Age: 30, City: "New York" },
-          { Name: "Jane", Age: 25, City: "London" },
-          { Name: "Mark", Age: 35, City: "Paris" }
-        ];
-
-        // Convert data to a worksheet
-        const ws = XLSX.utils.json_to_sheet(data);
-
-        // Create a new workbook and append the worksheet
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-
-        // Export the workbook as an Excel file
-        XLSX.writeFile(wb, "ExportedData.xlsx");
-      });
     </script>
     <!--end::Script-->
   </body>

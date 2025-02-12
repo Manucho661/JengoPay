@@ -526,7 +526,7 @@ position: relative;
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
         <div id="sidebar"></div> <!-- This is where the sidebar is inserted -->
- 
+
         <!--end::Sidebar Wrapper-->
       </aside>
       <!--end::Sidebar-->
@@ -857,7 +857,7 @@ position: relative;
 
 <!--Begin sidebar script -->
 <script>
-  fetch('../sidebar.html')  // Fetch the file
+  fetch('../bars/sidebar.html')  // Fetch the file
       .then(response => response.text()) // Convert it to text
       .then(data => {
           document.getElementById('sidebar').innerHTML = data; // Insert it
