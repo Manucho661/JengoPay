@@ -354,7 +354,7 @@
                       <b class="button_item" class="open-btn" onclick="openPopup()"> Add Tenant </b></button>
 
                     <button id="add_provider_btn" class="btn" style="background-color: #00192D; color: white; font-size: small;">  <i class="bi bi-bell"></i>
-                    <b class="button_item" class="open-btn" onclick="openPopup()"> Create_Notification </b></button>
+                    <b class="button_item" class="open-btn" onclick="opennotificationPopup()"> Create_Notification </b></button>
 
                 </div>
               <!-- /.col -->
@@ -574,6 +574,20 @@
 </div>
 <!-- End complaint part -->
 
+<div class="notificationpopup-overlay" id="notificationPopup">
+  <div class="notificationpopup-content">
+    <button class="close-btn text-secondary" onclick="closenotificationPopup()">×</button>
+    <h2 style="color: #00192D;">Add Tenant</h2>
+
+    <label for="emails">Enter Recipients:</label>
+<input type="text" id="emails" name="emails" placeholder="example1@gmail.com">
+
+    <textarea id="notes" name="notes" rows="10" cols="98" placeholder="Enter any additional information..."></textarea>
+
+      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
+  </div>
+</div>
+
 
 
 <!-- end overlay card. -->
@@ -615,8 +629,10 @@
 
  <!-- End view announcement script -->
 
-<!-- Complain script -->
-<!-- Complaint script -->
+
+
+<!-- Add Tenant script -->
+
 <script>
   // Function to open the complaint popup
   function openPopup() {
@@ -628,10 +644,25 @@
     document.getElementById("complaintPopup").style.display = "none";
   }
 </script>
+<!-- End add new script -->
+<!-- End add new script -->
 
 
-<!-- End complaint script -->
-<!-- End Complain script -->
+<!-- create notification -->
+<script>
+  // Function to open the complaint popup
+  function opennotificationPopup() {
+    document.getElementById("notificationPopup").style.display = "flex";
+  }
+
+  // Function to close the complaint popup
+  function closenotificationPopup() {
+    document.getElementById("notificationPopup").style.display = "none";
+  }
+</script>
+
+<!-- create notification -->
+
 
 
 
