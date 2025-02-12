@@ -56,7 +56,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="index1.css">
-
+    <link rel="stylesheet" href="agreements.css">
 <!-- scripts for data_table -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 
@@ -351,7 +351,7 @@
                       <b class="button_item" class="open-btn" onclick="openPopup()"> New_agreement</b></button>
 
                     <button id="add_provider_btn" class="btn" style="background-color: #00192D; color: white; font-size: small;">  <i class="bi bi-bell"></i>
-                    <b class="button_item" class="open-btn" onclick="openPopup()"> Create_Notification </b></button>
+                    <b class="button_item" class="open-btn" onclick="opennotificationPopup()"> Create_Notification </b></button>
 
                 </div>
               <!-- /.col -->
@@ -524,39 +524,45 @@
 <!-- End view announcement -->
 
 <!-- Complaint part -->
-
 <div class="popup-overlay" id="complaintPopup">
   <div class="popup-content">
     <button class="close-btn text-secondary" onclick="closePopup()">×</button>
-    <h2 style="color: #00192D;">Complaint</h2>
-    <form class="complaint-form">
-      <label for="category">Complaint Category:</label>
-        <select id="category" required>
-          <option value="">Select Category</option>
-          <option value="Billing Issue">Billing Issue</option>
-          <option value="Technical Problem">Technical Problem</option>
-          <option value="Customer Service">Customer Service</option>
-          <option value="Others">Others</option>
-        </select>
-
-        <label for="priority">Priority Level:</label>
-        <select id="priority" required>
-          <option value="">Select Priority</option>
-          <option value="High">High</option>
-          <option value="Moderate">Moderate</option>
-          <option value="Low">Low</option>
-        </select>
-
-
-      <label for="complaint">Complaint Description:</label>
-      <textarea id="complaint" rows="4" placeholder="Describe your complaint" required></textarea>
-
+    <h2 style="color: #00192D;">Agreement Form</h2>
+    <p>Full Legal Name: <input type="text" name="partyB_name"></p>
+    <p>Email: <input type="email" name="partyB_email"></p>
+    <p>Phone: <input type="tel" name="partyB_phone"></p>
+    <p>Deposit: <input type="tel" name="partyB_phone"></p>
+    <label for="file">Choose file to upload ID:</label>
+    <input type="file" name="file" id="file">
+    <br><br>
+   
       <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">Submit Complaint</button>
     </form>
   </div>
 </div>
 <!-- End complaint part -->
 
+
+<!-- notification popup -->
+<div class="notificationpopup-overlay" id="notificationPopup">
+  <div class="notificationpopup-content">
+    <button class="close-btn text-secondary" onclick="closenotificationPopup()">×</button>
+    <h2 style="color: #00192D;">Notification</h2>
+
+    <label for="property">Recepients:</label>
+    <select id="property" required>
+      <option value=""disabled>Select Recepient</option>
+      <option value="High">Manucho</option>
+      <option value="Moderate">Ben 10</option>
+      <option value="Low">Alpha</option>
+    </select>
+    
+    <textarea id="notes" name="notes" rows="10" cols="98" placeholder="Enter any additional information..."></textarea>
+
+      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
+  </div>
+</div>
+<!-- End Notification popup -->
 
 
 <!-- end overlay card. -->
@@ -630,6 +636,22 @@
     document.getElementById("complaintPopup").style.display = "none";
   }
 </script>
+
+
+<!-- create notification -->
+<script>
+  // Function to open the complaint popup
+  function opennotificationPopup() {
+    document.getElementById("notificationPopup").style.display = "flex";
+  }
+
+  // Function to close the complaint popup
+  function closenotificationPopup() {
+    document.getElementById("notificationPopup").style.display = "none";
+  }
+</script>
+
+<!-- create notification -->
 
 
 <!-- End complaint script -->
