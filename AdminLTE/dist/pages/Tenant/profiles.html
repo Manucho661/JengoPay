@@ -578,11 +578,16 @@
 <div class="notificationpopup-overlay" id="notificationPopup">
   <div class="notificationpopup-content">
     <button class="close-btn text-secondary" onclick="closenotificationPopup()">×</button>
-    <h2 style="color: #00192D;">Add Tenant</h2>
+    <h2 style="color: #00192D;">Notification</h2>
 
-    <label for="emails">Enter Recipients:</label>
-<input type="text" id="emails" name="emails" placeholder="example1@gmail.com">
-
+    <label for="property">Recepients:</label>
+    <select id="property" required>
+      <option value=""disabled>Select Recepient</option>
+      <option value="High">Manucho</option>
+      <option value="Moderate">Ben 10</option>
+      <option value="Low">Alpha</option>
+    </select>
+    
     <textarea id="notes" name="notes" rows="10" cols="98" placeholder="Enter any additional information..."></textarea>
 
       <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
@@ -630,10 +635,8 @@
 
  <!-- End view announcement script -->
 
-
-
-<!-- Add Tenant script -->
-
+<!-- Complain script -->
+<!-- Complaint script -->
 <script>
   // Function to open the complaint popup
   function openPopup() {
