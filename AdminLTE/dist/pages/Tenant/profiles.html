@@ -543,30 +543,32 @@
 <div class="popup-overlay" id="complaintPopup">
   <div class="popup-content">
     <button class="close-btn text-secondary" onclick="closePopup()">×</button>
-    <h2 style="color: #00192D;">Complaint</h2>
+    <h2 style="color: #00192D;">Add Tenant</h2>
     <form class="complaint-form">
-      <label for="category">Complaint Category:</label>
-        <select id="category" required>
-          <option value="">Select Category</option>
-          <option value="Billing Issue">Billing Issue</option>
-          <option value="Technical Problem">Technical Problem</option>
-          <option value="Customer Service">Customer Service</option>
-          <option value="Others">Others</option>
+        <label for="name">Tenant Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Email Address:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" required>
+
+
+        <label for="property">Property:</label>
+        <select id="property" required>
+          <option value="">Select Property</option>
+          <option value="High">Manucho</option>
+          <option value="Moderate">Ben 10</option>
+          <option value="Low">Alpha</option>
         </select>
+        
 
-        <label for="priority">Priority Level:</label>
-        <select id="priority" required>
-          <option value="">Select Priority</option>
-          <option value="High">High</option>
-          <option value="Moderate">Moderate</option>
-          <option value="Low">Low</option>
-        </select>
+        <label for="unit">Rental Unit:</label>
+        <input type="text" id="unit" name="unit" required>
 
 
-      <label for="complaint">Complaint Description:</label>
-      <textarea id="complaint" rows="4" placeholder="Describe your complaint" required></textarea>
-
-      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">Submit Complaint</button>
+      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
     </form>
   </div>
 </div>
