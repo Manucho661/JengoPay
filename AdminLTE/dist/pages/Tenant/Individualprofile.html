@@ -56,13 +56,9 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<<<<<<< HEAD:AdminLTE/dist/pages/Tenant/profile.html
-    <link rel="stylesheet" href="profile.css">
-=======
     <link rel="stylesheet" href="individualprofile.css">
 
 
->>>>>>> e4e0b46fdb57efae0425b52f90aa7b6c29fe5d79:AdminLTE/dist/pages/Tenant/Individualprofile.html
     <!-- scripts for data_table -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="announcements.css">
@@ -70,8 +66,6 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-<<<<<<< HEAD:AdminLTE/dist/pages/Tenant/profile.html
-=======
 <style>
    .overlay {
             /* position: absolute; */
@@ -100,18 +94,16 @@
   border-radius: 10px;
     }
 
-    /* Close button */
-    .close-btn {
-      position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    background-color: red;
-    border-radius: 20px;
-    }
+     /* Close button
+  .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  } */
     table {
             width: 50%;
             border-collapse: collapse;
@@ -137,66 +129,10 @@
   border-radius: 10px;
   border: none;
 }
-/* Receipt Overlay Styling */
-.receipt-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: none;  /* Hide by default */
-  justify-content: center;
-  align-items: center;
-  z-index: 1001;
-}
-
-/* Content inside the overlay */
-.receiptoverlay-content {
-  text-align: center;
-  background-color: white;
-  padding: 30px;
-  border-radius: 10px;
-}
-
-/* Button for the receipt */
-.receipt-btn {
-  padding: 15px 30px;
-  font-size: 16px;
-  background-color: #00192D;
-  color: white;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-}
-
-/* Close button for the overlay */
-.close-overlay-btn {
-  position: absolute;
-    /* top: 10px; */
-    right:0.5px;
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    background-color: red;
-    border-radius: 20px;
-}
-#invoicy-container {
-      background: white;
-       width: 400px;
-       height: 480px;
-      /* max-width: 80%; */
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-      text-align: center;
-}
 
 
 </style>
 
->>>>>>> e4e0b46fdb57efae0425b52f90aa7b6c29fe5d79:AdminLTE/dist/pages/Tenant/Individualprofile.html
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -554,8 +490,8 @@
                                   <div id="more_options">
 
                                      <a href="#"class="" onclick="showOverlay()">Invoice</a>
-                                     <a href="#" id="showReceiptLink">Receipt</a>
-                                     <a href="#">Maintenance&RepairCost</a>
+                                     <a href="#" id="showReceiptLink" onclick="openPopup()">Receipt</a>
+                                     <a href="#" onclick=" maintenancePopup()">Maintenance&RepairCost</a>
                                      <a href="#">Delete</a>
                                      <a href="#">Edit</a>
 
@@ -615,33 +551,64 @@
               </div>
             </div>
           
+            <!-- maintenance &repair cost overlay -->
+<div class="maintenancepopup-overlay" id="maintenancePopup">
+  <div class="maintenancepopup-content">
+    <button class="close-btn text-secondary" onclick="closemaintenancePopup()">×</button>
+    <h2 style="color: #00192D; font-size: medium;">Maintenance & Repair Cost</h2>
+    <div class="info">
+        <p><strong>Invoice No:</strong> #987654</p>
+        <p><strong>Date:</strong> 2025-02-13</p>
+        <p><strong>Property:</strong> Greenview Apartments</p>
+    </div>
+    <div class="cost-details">
+        <p><strong>Issue Description:</strong> Broken door handle</p>
+        <p><strong>Service Provider:</strong> ABC Repairs Ltd.</p>
+        <p><strong>Estimated Cost:</strong> KSH 4,500</p>
+        <p><strong>Actual Cost:</strong> KSH 5,000</p>
+        <p class="total"><strong>Total Cost:</strong> KSH 5,000</p>
+    </div>
+    <p style="text-align: center;">Thank you!</p>
 
-<!-- Farst Overlay (Receipt) -->
-<div class="receipt-overlay" id="receiptOverlay">
-  <div class="receiptoverlay-content" id="invoicy-container">
-    <button class="close-overlay-btn"  id="closeReceiptBtn">×</button>
-        <h2 style="color: #00192D;">Payment Receipt</h2>
-        <!-- <p> Nairobi,  KENYA</p> -->
-        <p><strong>Date:</strong><span id="date"></span></p>
-              <p ><strong  style="color:#FFC107 ;">Property:</strong>Wawani</p>
-              <p><strong style="color:#FFC107 ;">Tenant:</strong>John</p>
-              <p><strong  style="color:#FFC107 ;">Unit:</strong> A11</p>
-              <p><strong  style="color:#FFC107 ;">Unit:</strong> A11</p>
-              <p><strong style="color:#FFC107 ;">Amount:</strong> KSH80,000</p>
-              <!-- <p><strong>Invoice Number:</strong> KSH80,000</p> -->
-              <p><strong style="color:#FFC107 ;">Method:</strong> MPESA</p>
-              <p><strong style="color:#FFC107 ;">Transaction:</strong> TBM34KGNJ8</p>
-              <!-- <p><strong>Date:</strong> 10-12-2025</p> -->
-               <!-- <p><strong>Invoice Number:</strong> KSH35</p> -->
-        <button class="receipt-btn" id="downloadReceiptBtn">Download Receipt</button>
+    <button class="receipt-btn" id="downloadReceiptBtn" style="color: #FFC107;">Download</button>
+
+      
   </div>
 </div>
- <!-- The notification Overlay -->
+<!-- End maintenanceoverlay -->
+            
+
+<!-- Farst Overlay (Receipt) -->
+<div class="popup-overlay" id="complaintPopup">
+  <div class="popup-content">
+    <button class="close-btn text-secondary" onclick="closePopup()">×</button>
+        <h2 style="color: #00192D; font-size: medium;">Payment Receipt</h2>
+        <div class="info" id="inform">
+            <p><strong>Receipt No:</strong>#123456</p>
+            <p><strong>Date:</strong> 2025-02-13</p>
+            <p><strong>Tenant:</strong> John Doe</p>
+        </div>
+        <div class="receipt">
+          <p><strong>Property:</strong>Manucho</p>
+          <p><strong>House Unit:</strong>A12</p>
+          <p><strong>Mpesa:</strong> KSH 10,0000</p>
+          <p><strong>Transaction:</strong> TBM34KGNJ8</p>
+          <p class="total"><strong>Total:</strong> KSH10,000.00</p>
+
+        </div>
+        <p style="text-align: center;" style="color:#00192D;">Thank you for your payment!</p>
+        <button class="receipt-btn" id="downloadReceiptBtn" style="color: #FFC107;">Download Receipt</button>
+  </div>
+</div>
+<!-- end -->
+
+
+ <!-- The invoice Overlay -->
 
  <div id="invoiceOverlay" class="overlay">
   <div class="overlay-content">
     <button class="close-btn" onclick="closeOverlay()">×</button>
-    <h2>Invoice Details</h2>
+    <h2 style="color: #00192D; font-size: medium;">Invoice Details</h2>
     <p><strong>Invoice Number:</strong> 00123</p>
     <p><strong>Invoice Date:</strong> February 11, 2025</p>
     <p><strong>Due Date:</strong> February 25, 2025</p>
@@ -748,7 +715,34 @@
       document.getElementById("date").textContent = new Date().toLocaleDateString();
   </script>
 
+<!--  Maintenance script -->
+<script>
+  // Function to open the complaint popup
+  function maintenancePopup() {
+    document.getElementById("maintenancePopup").style.display = "flex";
+  }
 
+  // Function to close the complaint popup
+  function closemaintenancePopup() {
+    document.getElementById("maintenancePopup").style.display = "none";
+  }
+</script>
+
+<!-- end Maintenance script -->
+
+<!-- reciept overlay -->
+<script>
+  // Function to open the receipt popup
+  function openPopup() {
+    document.getElementById("complaintPopup").style.display = "flex";
+  }
+
+  // Function to close the receipt popup
+  function closePopup() {
+    document.getElementById("complaintPopup").style.display = "none";
+  }
+</script>
+<!-- end receipt overlay -->
 <!-- invoice overlay -->
 <script>
   function showOverlay() {
