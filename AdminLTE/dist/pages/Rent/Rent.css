@@ -233,6 +233,11 @@ table {
   #agreements_btn{
     background-color: #00192D; color: white; font-size: small;
   }
+ #generateReport{
+  /* background-color: #00192D;  */
+    color:  #FFC107; 
+    font-size: small;
+ }
   #rent_details_btn{
     background-color: #00192D; 
     color: white; 
