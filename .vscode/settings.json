@@ -1,3 +1,8 @@
 {
+<<<<<<< HEAD
     "liveServer.settings.port": 5503
+=======
+    "liveServer.settings.port": 5502,
+    "DockerRun.DisableAutoGenerateConfig": true
+>>>>>>> e4e0b46fdb57efae0425b52f90aa7b6c29fe5d79
 }

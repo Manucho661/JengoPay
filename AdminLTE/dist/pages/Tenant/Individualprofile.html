@@ -56,7 +56,13 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<<<<<<< HEAD:AdminLTE/dist/pages/Tenant/profile.html
     <link rel="stylesheet" href="profile.css">
+=======
+    <link rel="stylesheet" href="individualprofile.css">
+
+
+>>>>>>> e4e0b46fdb57efae0425b52f90aa7b6c29fe5d79:AdminLTE/dist/pages/Tenant/Individualprofile.html
     <!-- scripts for data_table -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="announcements.css">
@@ -64,6 +70,133 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
+<<<<<<< HEAD:AdminLTE/dist/pages/Tenant/profile.html
+=======
+<style>
+   .overlay {
+            /* position: absolute; */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            display: none;
+            justify-content: center;
+            align-items: center;
+            /* z-index: 1000; */
+    }
+
+    /* Overlay content */
+    .overlay-content {
+      background-color: #fff;
+            padding: 30px;
+            /* border-radius: 8px; */
+            width: 400px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            text-align: center;
+  /* background-color: white; */
+  /* padding: 30px; */
+  border-radius: 10px;
+    }
+
+    /* Close button */
+    .close-btn {
+      position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: red;
+    border-radius: 20px;
+    }
+    table {
+            width: 50%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .total-row {
+            font-weight: bold;
+        }
+        .downloadi {
+          padding: 15px 30px; /* Add padding to the button */
+  font-size: 16px; /* Optional: adjust font size */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  border-radius: 10px;
+  border: none;
+}
+/* Receipt Overlay Styling */
+.receipt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: none;  /* Hide by default */
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+}
+
+/* Content inside the overlay */
+.receiptoverlay-content {
+  text-align: center;
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+}
+
+/* Button for the receipt */
+.receipt-btn {
+  padding: 15px 30px;
+  font-size: 16px;
+  background-color: #00192D;
+  color: white;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Close button for the overlay */
+.close-overlay-btn {
+  position: absolute;
+    /* top: 10px; */
+    right:0.5px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: red;
+    border-radius: 20px;
+}
+#invoicy-container {
+      background: white;
+       width: 400px;
+       height: 480px;
+      /* max-width: 80%; */
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      text-align: center;
+}
+
+
+</style>
+
+>>>>>>> e4e0b46fdb57efae0425b52f90aa7b6c29fe5d79:AdminLTE/dist/pages/Tenant/Individualprofile.html
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -362,18 +495,7 @@
                         </div>
 
                       </div>
-                      <!-- <div class="col-md-6">
 
-                        <div class="contact">
-                          <p class="contact_item" >Email</p>
-                          <p class="contact_value" >nucho@gmail</p>
-                        </div>
-                        <div class="contact">
-                          <p  class="contact_item" >Address</p>
-                          <p  class="contact_value" >50202|202|Califonia</p>
-                        </div>
-
-                      </div> -->
                 </div>
               </div>
               <div class="col-sm-4">
@@ -430,7 +552,7 @@
                                   <div id="more_icon">&#x2026;</div>
                                   <br>
                                   <div id="more_options">
-                                    
+
                                      <a href="#"class="" onclick="showOverlay()">Invoice</a>
                                      <a href="#" id="showReceiptLink">Receipt</a>
                                      <a href="#">Maintenance&RepairCost</a>
@@ -516,7 +638,7 @@
 </div>
  <!-- The notification Overlay -->
 
- <div id="invoiceOverlay" class="overlay"> 
+ <div id="invoiceOverlay" class="overlay">
   <div class="overlay-content">
     <button class="close-btn" onclick="closeOverlay()">×</button>
     <h2>Invoice Details</h2>
@@ -534,7 +656,7 @@
                <!-- <th>Maintenance</th> -->
 
 
-               
+
             </tr>
         </thead>
         <tbody>
@@ -561,7 +683,7 @@
         </tfoot>
       </table>
       <div>
-        
+
       </div>
       <button class="downloadi"style="color: #FFC107; background-color: #00192D; border-radius: 10px;">DOWNLOAD</button>
     <!-- <button class="close-btn" id="closeBtn">&times;</button> -->
@@ -607,7 +729,7 @@
 
 <!--Begin sidebar script -->
 <script>
-  fetch('../sidebar.html')  // Fetch the file
+  fetch('../bars/sidebar.html')  // Fetch the file
       .then(response => response.text()) // Convert it to text
       .then(data => {
           document.getElementById('sidebar').innerHTML = data; // Insert it

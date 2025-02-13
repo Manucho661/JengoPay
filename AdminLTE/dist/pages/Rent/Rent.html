@@ -57,12 +57,12 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="Rent.css">
-    
-    
+
+
     <!-- scripts for data_table -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="announcements.css">
-    
+
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
@@ -150,7 +150,7 @@
     color: #00192D;
     font-size: 15px;
     font-weight: bold;
-   
+
 }
 
 </style>
@@ -379,450 +379,7 @@
         </div>
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
-        <div class="sidebar-wrapper">
-          <nav class="mt-2">
-            <!--begin::Sidebar Menu-->
-            <ul
-              class="nav sidebar-menu flex-column"
-              data-lte-toggle="treeview"
-              role="menu"
-              data-accordion="false"
-            >
-              <li class="nav-item menu-open">
-                <a href="#" class="nav-link active">
-                  <i class="nav-icon bi bi-speedometer"></i>
-                  <p>
-                    Dashboard
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <!-- <li class="nav-item">
-                    <a href="./index.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard</p>
-                    </a>
-                  </li> -->
-                  <li class="nav-item">
-                    <a href="./index2.html" class="nav-link active">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard </p>
-                    </a>
-                  </li>
-                  <!-- <li class="nav-item">
-                    <a href="./index3.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard v3</p>
-                    </a>
-                  </li> -->
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="./property.html" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Tenants</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./tenantscreening.html" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Tenant Screening</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./leasy.html" class="nav-link">
-                  <i class="nav-icon bi bi-file-earmark-text"></i>
-                  <p>Lease Management</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-box-seam-fill"></i>
-                  <p>
-                   Financial Documents
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./widgets/invoices.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Invoices</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./widgets/payment receipts.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Payment Receipts</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./widgets/payment receipts.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p> Rent Deposit Reports</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./widgets/cards.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Maintenance And Repair Costs</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-clipboard-fill"></i>
-                  <p>
-                    Layout Options
-                    <span class="nav-badge badge text-bg-secondary me-3">6</span>
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./layout/unfixed-sidebar.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Default Sidebar</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./layout/fixed-sidebar.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Fixed Sidebar</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./layout/layout-custom-area.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Layout <small>+ Custom Area </small></p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./layout/sidebar-mini.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Sidebar Mini</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./layout/collapsed-sidebar.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Sidebar Mini <small>+ Collapsed</small></p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./layout/logo-switch.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Sidebar Mini <small>+ Logo Switch</small></p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./layout/layout-rtl.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Layout RTL</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-tree-fill"></i>
-                  <p>
-                    UI Elements
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./UI/general.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>General</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./UI/icons.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Icons</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./UI/timeline.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Timeline</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-pencil-square"></i>
-                  <p>
-                    Forms
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./forms/general.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>General Elements</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-table"></i>
-                  <p>
-                    Tables
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./tables/simple.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Simple Tables</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-header">EXAMPLES</li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-box-arrow-in-right"></i>
-                  <p>
-                    Auth
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-box-arrow-in-right"></i>
-                      <p>
-                        Version 1
-                        <i class="nav-arrow bi bi-chevron-right"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a href="./examples/login.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Login</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="./examples/register.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Register</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-box-arrow-in-right"></i>
-                      <p>
-                        Version 2
-                        <i class="nav-arrow bi bi-chevron-right"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a href="./examples/login-v2.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Login</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="./examples/register-v2.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Register</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./examples/lockscreen.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Lockscreen</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-header">DOCUMENTATIONS</li>
-              <li class="nav-item">
-                <a href="./docs/introduction.html" class="nav-link">
-                  <i class="nav-icon bi bi-download"></i>
-                  <p>Installation</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./docs/layout.html" class="nav-link">
-                  <i class="nav-icon bi bi-grip-horizontal"></i>
-                  <p>Layout</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./docs/color-mode.html" class="nav-link">
-                  <i class="nav-icon bi bi-star-half"></i>
-                  <p>Color Mode</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-ui-checks-grid"></i>
-                  <p>
-                    Components
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./docs/components/main-header.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Main Header</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./docs/components/main-sidebar.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Main Sidebar</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-filetype-js"></i>
-                  <p>
-                    Javascript
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./docs/javascript/treeview.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Treeview</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="./docs/browser-support.html" class="nav-link">
-                  <i class="nav-icon bi bi-browser-edge"></i>
-                  <p>Browser Support</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./docs/how-to-contribute.html" class="nav-link">
-                  <i class="nav-icon bi bi-hand-thumbs-up-fill"></i>
-                  <p>How To Contribute</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./docs/faq.html" class="nav-link">
-                  <i class="nav-icon bi bi-question-circle-fill"></i>
-                  <p>FAQ</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./docs/license.html" class="nav-link">
-                  <i class="nav-icon bi bi-patch-check-fill"></i>
-                  <p>License</p>
-                </a>
-              </li>
-              <li class="nav-header">MULTI LEVEL EXAMPLE</li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle-fill"></i>
-                  <p>Level 1</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle-fill"></i>
-                  <p>
-                    Level 1
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Level 2</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>
-                        Level 2
-                        <i class="nav-arrow bi bi-chevron-right"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a href="#" class="nav-link">
-                          <i class="nav-icon bi bi-record-circle-fill"></i>
-                          <p>Level 3</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="#" class="nav-link">
-                          <i class="nav-icon bi bi-record-circle-fill"></i>
-                          <p>Level 3</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="#" class="nav-link">
-                          <i class="nav-icon bi bi-record-circle-fill"></i>
-                          <p>Level 3</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Level 2</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle-fill"></i>
-                  <p>Level 1</p>
-                </a>
-              </li>
-              <li class="nav-header">LABELS</li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle text-danger"></i>
-                  <p class="text">Important</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle text-warning"></i>
-                  <p>Warning</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle text-info"></i>
-                  <p>Informational</p>
-                </a>
-              </li>
-            </ul>
-            <!--end::Sidebar Menu-->
-          </nav>
-        </div>
+        <div id="sidebar"></div>
         <!--end::Sidebar Wrapper-->
       </aside>
       <!--end::Sidebar-->
@@ -836,38 +393,38 @@
             <div class="row">
               <div class="col-sm-6"><h3 class="mb-0"></h3></div>
               <div class="col-sm-6">
-              
+
               </div>
             </div>
             <!--end::Row-->
           </div>
           <!--end::Container-->
         </div>
-        <div  class="app-content">           
+        <div  class="app-content">
 
           <div class="container-fluid">
             <!-- First Row -->
             <div class="row  " >
               <div class="col-sm-8">
-                
+
                 <h3 class="mb-0 contact_section_header"> <i class="fas fa-house-user"></i>  Rental Roll  | Ebenezer</h3>
-              
-                
+
+
                     <div class="row mt-2  ">
                       <div class="col-md-12  ">
-                  
+
                         <div class="row mt-6 ">
                             <!-- Summary -->
                             <div class="col-md-3 ">
                                 <label class="text text-center">  <i class="fas fa-map-marker-alt"></i>   Address </label>
                                 <span class="value text-center"> 50303 KAMAKIS </span>
                             </div>
-                    
+
                             <div class="col-md-3">
                                 <label class="text text-center"> <i class="fas fa-building unit-icon"></i>  Units  </label>
                                 <span class="value"> 56 </span>
                             </div>
-                           
+
                         </div>
 
                         <div class="row mt-6" >
@@ -877,7 +434,7 @@
                                 Amount_Per_Unit </label>
                               <span class="value text-center"> Ksh 5000 </span>
                           </div>
-                  
+
                           <div class="col-md-3">
                               <label class="text text-center"> <i class="fas fa-home unit-type"></i>  Unit Type  </label>
                               <span class="value"> 6-7-2020 </span>
@@ -892,7 +449,7 @@
 
 
                         </div>
-                        
+
                       </div>
                       <!-- <div class="col-md-6">
 
@@ -910,7 +467,7 @@
               </div>
               <div class="col-sm-4">
 
-                
+
                 <div class="row float-sm-end">
                     <ol class="breadcrumb float-sm-end">
                         <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
@@ -928,13 +485,13 @@
 
             <div class="row mt-5">
                 <div class="col-md-8">
-                
+
                           <h6 class="mb-0 contact_section_header"> <i class="fas fa-file-alt summary-icon"></i>   Summary</h6>
-                  
-                    
+
+
                         <div class="row mt-2  ">
                             <div class="col-md-12  ">
-                      
+
                                 <div class="row mt-6 ">
                                     <!-- Summary -->
                                     <div class="col-md-3 ">
@@ -942,7 +499,7 @@
                                         <span class="value text-center">  <b>KSH 500000</b>  </span>
                                     </div>
                                 </div>
-        
+
                                 <div class="row mt-6" >
                                 <!-- Summary -->
                                     <div class="col-md-3  ">
@@ -950,26 +507,26 @@
                                             Outstanding </label>
                                         <span class="value text-center"> <b>Ksh 30000</b>    </span>
                                     </div>
-                            
+
                                     <div class="col-md-3">
                                         <label class="text text-center"><i class="fas fa-building unit-icon"></i>   OCCUPIED_UNITS  </label>
                                         <span class="value"> <b> 38 </b>  </span>
                                     </div>
-                                    
+
                                     <div class="col-md-3">
                                         <button class="btn text text-danger"> <i class="fas fa-edit"></i>  Edit</button>
                                     </div>
                                 </div>
-                            
+
                             </div>
                         </div>
-                          
+
                 </div>
-                
+
                <!-- Button to trigger overlay -->
 <div class="col-md-4 d-flex justify-content-end" style="height: fit-content;">
-  <button id="announcement_btn" class="btn" onclick="showOverlay()"> 
-    <i class="fas fa-bullhorn"></i> 
+  <button id="announcement_btn" class="btn" onclick="opennotificationPopup()">
+    <i class="fas fa-bullhorn"></i>
     <b>Create Notification</b>
   </button>
 </div>
@@ -982,18 +539,18 @@
              <div class="row first mb-2 mt-3 rounded-circle">
 
                 <div class="col-md-6 d-flex justify-content-between">
-                  <button id="rent_details_btn" class="btn">  <i class="fas fa-calendar-check icon"></i> <a href="profile.html"> <b> Records </b> </a> </button>  
-                    
+                  <button id="rent_details_btn" class="btn">  <i class="fas fa-calendar-check icon"></i> <a href="profile.html"> <b> Records </b> </a> </button>
+
                   <button id="agreements_btn" class="btn"><i class="fas fa-calendar-check icon"></i>
-                       <a href="agreements.html"> <b> Agreements </b> </a>  </button> 
-                                      
+                       <a href="agreements.html"> <b> Agreements </b> </a>  </button>
+
                 </div>
 
                 <div class="col-md-6">
                   <div style="display: flex; justify-content: end;">
-                     
-                   
-                  </div>   
+
+
+                  </div>
                 </div>
               <!-- /.col -->
             </div>
@@ -1016,7 +573,7 @@
                                     <th scope="col">DAYS OVERDUE</th>
 
                                     <th scope="col">ACTION</th>
-                                    
+
                             </tr>
                         </thead>
                         <tbody>
@@ -1028,7 +585,7 @@
                                     <td> 12</td>
                                     <td>  <button class="btn btn-sm btn-outline custom-btn">More details</button>  </td>
 
-                                    
+
                             </tr>
                             <tr>
                             <th scope="row">JOEL</th>
@@ -1037,7 +594,7 @@
                             <td>1000</td>
                             <td>12</td>
                             <td>  <button class="btn btn-sm btn-outline custom-btn">More &#x2026;</button>  </td>
-                            
+
 
                             </tr>
                             <tr>
@@ -1079,16 +636,16 @@
                                         <td>2/4/2020</td>
                                         <td> 10000</td>
                                         <td>13</td>
-    
+
                                         <td>  <button class="btn btn-sm btn-outline custom-btn">More &#x2026;</button>  </td>
-    
+
                                             </tr>
                         </tbody>
                     </table>
                   </div>
 
                   <div class="card-footer">
-                      
+
                   </div>
 
                 </div>
@@ -1096,10 +653,30 @@
             </div>
 
 
+<!-- notification popup -->
+<div class="notificationpopup-overlay" id="notificationPopup">
+  <div class="notificationpopup-content">
+    <button class="close-btn text-secondary" onclick="closenotificationPopup()">×</button>
+    <h2 style="color: #00192D;">Notification</h2>
 
-           
+    <label for="property">Recepients:</label>
+    <select id="property" required>
+      <option value=""disabled>Select Recepient</option>
+      <option value="High">Manucho</option>
+      <option value="Moderate">Ben 10</option>
+      <option value="Low">Alpha</option>
+    </select>
 
-<!-- 
+    <textarea id="notes" name="notes" rows="10" cols="98" placeholder="Enter any additional information..."></textarea>
+
+      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
+  </div>
+</div>
+<!-- End Notification popup -->
+
+
+
+<!--
         <div class="overlaying" id="overlaying">
           <div class="invoicing-container">
           <div class="receipt-container" id="receipt">
@@ -1107,7 +684,7 @@
             <h2>Payment Receipt</h2>
             <p> Nairobi,  KENYA</p>
             <p><strong>Date:</strong> <span id="date"></span></p>
-           
+
             <table>
               <td>Manucho Apartments</td>
               <td>John</td>
@@ -1120,7 +697,7 @@
               <td>KSH0</td>
             </table>
         </div>
-    
+
         <button class="print-btn" onclick="printReceipt()">Print Receipt</button>
      -->
 
@@ -1128,20 +705,33 @@
     <!--end::App Wrapper-->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    
+
+ 
+<!-- create notification -->
+<script>
+  // Function to open the complaint popup
+  function opennotificationPopup() {
+    document.getElementById("notificationPopup").style.display = "flex";
+  }
+
+  // Function to close the complaint popup
+  function closenotificationPopup() {
+    document.getElementById("notificationPopup").style.display = "none";
+  }
+</script>
 
     <!-- script for notification overlay -->
-    
+
     <script>
       function showOverlay() {
         document.getElementById('notificationOverlay').style.display = 'flex';
       }
-    
+
       function closeOverlay() {
         document.getElementById('notificationOverlay').style.display = 'none';
       }
     </script>
-    
+
 
 <!-- close overlay -->
 <script>
@@ -1150,7 +740,7 @@
   }
 </script>
 
-    
+
 
 <!-- Begin script for datatable -->
 <script>
@@ -1203,6 +793,19 @@ $(document).ready(function() {
 </script>
 
 <!-- End script for data_table -->
+
+
+<!--Begin sidebar script -->
+<script>
+  fetch('../bars/sidebar.html')  // Fetch the file
+      .then(response => response.text()) // Convert it to text
+      .then(data => {
+          document.getElementById('sidebar').innerHTML = data; // Insert it
+      })
+      .catch(error => console.error('Error loading the file:', error)); // Handle errors
+</script>
+<!-- end sidebar script -->
+
 
 
     <script
@@ -1412,14 +1015,14 @@ $(document).ready(function() {
           { Name: "Jane", Age: 25, City: "London" },
           { Name: "Mark", Age: 35, City: "Paris" }
         ];
-    
+
         // Convert data to a worksheet
         const ws = XLSX.utils.json_to_sheet(data);
-    
+
         // Create a new workbook and append the worksheet
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-    
+
         // Export the workbook as an Excel file
         XLSX.writeFile(wb, "ExportedData.xlsx");
       });

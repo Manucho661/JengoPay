@@ -203,7 +203,7 @@ color: #00192D;
 
         button {
             padding: 10px;
-            width: 100%;
+          
             border: 1px solid #ccc;
             border-radius: 5px;
             /* background-color: #00796b; */
@@ -258,7 +258,7 @@ color: #00192D;
 background-color: red;
         }
 
-  </style>
+  </style> 
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -1088,38 +1088,36 @@ background-color: red;
 
             <div class="col-md-12">
               <div class="card mb-4">
-                <div class="card-header" style="background-color:#00192D; color: white;">
-                  <h5 class="card-title text-warning" style="border-radius: 10px;">Properties</h5>
-                  <a href=""><h5 style="margin-left: 85%; padding:0.5rem; border-radius: 10px;">
-                    Full  Details
-                    <i class="fas fa-arrow-right"></i>
-                  </h5></a>
-                  <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                      <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                      <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                    </button>
-                    <div class="btn-group">
-                      <button
-                        type="button"
-                        class="btn btn-tool dropdown-toggle"
-                        data-bs-toggle="dropdown"
-                      >
-                        <i class="bi bi-wrench"></i>
+                <div class="card-header">
+                  <h5 class="card-title">
+                    Properties</h5><div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
                       </button>
-                      <div class="dropdown-menu dropdown-menu-end" role="menu">
-                        <a href="#" class="dropdown-item">Action</a>
-                        <a href="#" class="dropdown-item">Another action</a>
-                        <a href="#" class="dropdown-item"> Something else here </a>
-                        <a class="dropdown-divider"></a>
-                        <a href="#" class="dropdown-item">Separated link</a>
+                      <div class="btn-group">
+                        <button
+                          type="button"
+                          class="btn btn-tool dropdown-toggle"
+                          data-bs-toggle="dropdown"
+                        >
+                          <i class="bi bi-wrench"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end" role="menu">
+                          <a href="#" class="dropdown-item">Action</a>
+                          <a href="#" class="dropdown-item">Another action</a>
+                          <a href="#" class="dropdown-item"> Something else here </a>
+                          <a class="dropdown-divider"></a>
+                          <a href="#" class="dropdown-item">Separated link</a>
+                        </div>
                       </div>
+                      <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
+                        <i class="bi bi-x-lg"></i>
+                      </button>
                     </div>
-                    <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                      <i class="bi bi-x-lg"></i>
-                    </button>
                   </div>
-                </div>
+
+                  
                 <!-- /.card-header -->
                 <div class="card-body">
                   <!--begin::Row-->
@@ -1167,17 +1165,15 @@ background-color: red;
               </div>
               <!-- /.card -->
             </div>
-       </div>
+            </div>
             <!-- End Property Row -->
+
             <!--begin::Row-->
             <div class="row">
               <div class="col-md-12">
                 <div class="card mb-4">
-                  <div class="card-header" style="background-color:#00192D; color: white;" >
-                    <h5 class="card-title text-warning" style="padding:0.5rem; border-radius: 10px;" >Rental Collections</h5>
-                    <a href="./property.html"><h5 style="margin-left:  85%; padding:0.5rem; border-radius: 10px;">Full  Details
-                      <i class="fas fa-arrow-right"></i>
-                    </h5></a>
+                  <div class="card-header">
+                    <h5 class="card-title">Monthly Recap Report</h5>
                     <div class="card-tools">
                       <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
                         <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
@@ -1238,7 +1234,7 @@ background-color: red;
                           </tr>
                           <!-- Add more rows as needed -->
                       </tbody>
-                  </table> 
+                    </table> 
                   </div>
         </div>
    
@@ -1280,10 +1276,10 @@ background-color: red;
             </div>
             <hr>
                  
- <!-- Chat Icon to Trigger the Chat -->
- <div class="chat-icon" onclick="toggleChat()">
-  💬
-</div>
+                <!-- Chat Icon to Trigger the Chat -->
+                <div class="chat-icon" onclick="toggleChat()">
+                💬
+                </div>
 
 
     <!-- Chat Container -->
@@ -1315,6 +1311,8 @@ background-color: red;
                       <div class="card-body">
                         
                         <canvas id="rentalTrends" width="300" height="205"></canvas>
+
+                        
                       </div>
                     </div>
 
@@ -1361,10 +1359,10 @@ background-color: red;
 
             <!-- Begin Mantainance row -->
 
-            <div class="row">
+            <div class="row mt-5">
               <div class="col-md-12">
                 <div class="card mb-4">
-                  <div class="card-header" style="background-color:#00192D; color: white;">
+                  <div class="card-header">
                     <h5 class="card-title text-warning" style="padding:0.5rem; border-radius: 10px;">Maintenance Requests</h5>
                     <a href="showCommunication.html"><h5 style="margin-left: 85%; padding:0.5rem; border-radius: 10px;">Full  Details
                       <i class="fas fa-arrow-right"></i>
@@ -1814,7 +1812,6 @@ background-color: red;
       
 <script>
   const cty = document.getElementById('rentalTrends').getContext('2d');
-
   new Chart(cty, {
     type: 'line',
     data: {
@@ -1949,3 +1946,5 @@ background-color: red;
   </body>
   <!--end::Body-->
 </html>
+
+      
