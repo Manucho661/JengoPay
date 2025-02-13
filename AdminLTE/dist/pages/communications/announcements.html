@@ -66,23 +66,7 @@
 
 
 
-   <script>
 
-document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll(".nav-item > .nav-link").forEach((navLink) => {
-    navLink.addEventListener("click", function (e) {
-      // Check if the link has a submenu (dropdown)
-      let dropdown = this.nextElementSibling;
-      if (dropdown && dropdown.classList.contains("nav-treeview")) {
-        e.preventDefault(); // Prevents "#" from appearing in the URL
-        dropdown.classList.toggle("show"); // Toggles dropdown visibility
-      }
-    });
-  });
-});
-
-
-   </script>
 
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -674,7 +658,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
- 
+
 <!-- create notification -->
 <script>
   // Function to open the complaint popup
@@ -780,6 +764,26 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       });
     </script>
+
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".nav-item > .nav-link").forEach((navLink) => {
+      navLink.addEventListener("click", function (e) {
+        // Check if the link has a submenu (dropdown)
+        let dropdown = this.nextElementSibling;
+        if (dropdown && dropdown.classList.contains("nav-treeview")) {
+          e.preventDefault(); // Prevents "#" from appearing in the URL
+          dropdown.classList.toggle("show"); // Toggles dropdown visibility
+        }
+      });
+    });
+  });
+
+
+     </script>
+
     <!--end::OverlayScrollbars Configure-->
     <!-- OPTIONAL SCRIPTS -->
     <!-- apexcharts -->
