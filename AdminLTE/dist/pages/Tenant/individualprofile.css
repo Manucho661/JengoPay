@@ -409,3 +409,13 @@ text-align: center;
     border-top: 2px dashed #000;
     padding-top: 10px;
 }
+
+.row.Summary{
+  /* box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); x-offset, y-offset, blur-radius, color */
+
+}
+.col-md-12.Summary{
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+}
+

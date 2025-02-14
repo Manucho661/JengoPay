@@ -312,24 +312,28 @@
 
 
                     <div class="row mt-2  ">
-                      <div class="col-md-12  ">
+                      <div class="col-md-12 Summary ">
 
 
 
                         <div class="row mt-6" >
                           <!-- Summary -->
                           <div class="col-md-3  ">
-                            <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> <a href="index.html"> TOTAL_SEND</a>  </label>
+                            <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> <a href="index.html"> TOTAL</a>  </label>
                               <span class="value text-center"> <b>50 </b> </span>
                           </div>
 
                           <div class="col-md-3">
-                            <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> <a href=""> Duration </a>  </label>
+                            <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> <a href=""> REPLIED </a>  </label>
                             <span class="value"> 04 </span>
                           </div>
                           <div class="col-md-3">
-                            <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> <a href=""> Duration </a>  </label>
+                            <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> <a href=""> CLOSED </a>  </label>
                             <span class="value"> 30 </span>
+                          </div>
+                          <div class="col-md-3">
+                            <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> <a href=""> Duration </a>  </label>
+                            <span class="value"> <i class="text-secondary">1/2/2025 - 2/2/2025</i>  </span>
                           </div>
 
                         </div>
@@ -535,6 +539,10 @@
 </div>
 </div>
 
+<!-- Script source File -->
+<script src="text.js"></script>
+
+
 
 <!-- PopUp Scripts -->
  <!-- Chat Script -->
@@ -650,21 +658,7 @@
       crossorigin="anonymous"
     ></script>
 
-    <script>
-      $(document).ready(function() {
-       $('#Texts').DataTable({
-           "paging": true,
-           "searching": true,
-           "info": true,
-           "lengthMenu": [5, 10, 25, 50],
-           "language": {
-               "search": "Filter records:",
-               "lengthMenu": "Show _MENU_ entries"
-           }
-       });
-   });
-
-   </script>
+    
 
 
     <script>

@@ -395,3 +395,9 @@ a{
 a{
   color: #00192D;
 }
+.col-md-12.Summary{
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 10px;
+}
+
