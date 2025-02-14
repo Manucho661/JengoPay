@@ -217,7 +217,7 @@ background-color: #fff;
     width: 400px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     position: relative;
-    text-align: center;
+    /* text-align: center; */
 /* background-color: white; */
 /* padding: 30px; */
 border-radius: 10px;
@@ -254,11 +254,12 @@ th {
     font-weight: bold;
 }
 .downloadi {
-  padding: 15px 30px; /* Add padding to the button */
-font-size: 16px; /* Optional: adjust font size */
-cursor: pointer; /* Change cursor to pointer on hover */
-border-radius: 10px;
-border: none;
+/* padding: 15px 30px; Add padding to the button */
+/* font-size: 16px; Optional: adjust font size */
+/* cursor: pointer; Change cursor to pointer on hover */
+/* border-radius: 10px; */
+/* border: none; */
+/* justify-content: flex-end; */
 }
 /* Receipt Overlay Styling */
 .receipt-overlay {
@@ -421,4 +422,6 @@ text-align: center;
   padding: 10px;
   border-radius: 10px;
 }
-
+#invoice{
+  justify-content: start;
+}

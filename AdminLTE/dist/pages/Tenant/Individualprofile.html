@@ -607,14 +607,15 @@
 
 
  <!-- The invoice Overlay -->
-
  <div id="invoiceOverlay" class="overlay">
   <div class="overlay-content">
     <button class="close-btn" onclick="closeOverlay()">×</button>
-    <h2 style="color: #00192D; font-size: medium;">Invoice Details</h2>
+    <div id="invoice" style="text-align: start;">
+    <b><h2 style="color:#FFC107;; font-size: medium;"><strong>Invoice Details</strong></h2></b>
     <p><strong>Invoice Number:</strong> 00123</p>
     <p><strong>Invoice Date:</strong> February 11, 2025</p>
     <p><strong>Due Date:</strong> February 25, 2025</p>
+</div>
 
      <table>
         <thead>
@@ -655,8 +656,13 @@
       <div>
 
       </div>
-      <button class="downloadi"style="color: #FFC107; background-color: #00192D; border-radius: 10px;">DOWNLOAD</button>
-    <!-- <button class="close-btn" id="closeBtn">&times;</button> -->
+
+      <div style="display: flex; justify-content: flex-end;">
+        <button style="background-color: white; color:#FFC107; padding: 10px 20px; border: 2px solid #00192D ; border-radius: 10px; cursor: pointer;">
+          DOWNLOAD
+        </button>
+    </div>
+    
   </div>
 </div>
 
