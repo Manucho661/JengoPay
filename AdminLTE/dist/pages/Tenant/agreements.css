@@ -272,6 +272,10 @@ table {
     font-size: small;
   }
 
+  #rent_details_btn a{
+    color: white;
+  }
+
   #agreements_btn a{
     color: white;
 

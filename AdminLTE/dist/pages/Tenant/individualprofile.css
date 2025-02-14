@@ -185,7 +185,9 @@ text-align: justify;
     background-color: #00192D; color: white; font-size: small;
   }
   #rent_details_btn{
-    background-color: #00192D; color: white; font-size: small;
+    background-color: #00192D; 
+    color: #FFC107;
+    font-size: small;
   }
   #rent_details_btn a{
     color: #FFC107;
@@ -417,5 +419,6 @@ text-align: center;
 .col-md-12.Summary{
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
   padding: 10px;
+  border-radius: 10px;
 }
 
