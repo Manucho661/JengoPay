@@ -365,7 +365,7 @@
 
 
 
-              <button  id="new_text"  class="btn new_text">   <i class="bi bi-chat"></i>  <b> NEW TEXT </b></button>
+              <button  id="new_text"  class="btn new_text">   <i class="bi bi-chat" onclick="opennewtextPopup()"></i>  <b>NEW TEXT </b></button>
 
             </div>
             <!-- /.col -->
@@ -537,6 +537,44 @@
 
 
 <!-- PopUp Scripts -->
+
+<!-- new text popup -->
+<div class="newtextpopup-overlay" id="newtextPopup">
+  <div class="newtextpopup-content">
+    <button class="close-btn text-secondary" onclick="closenewtextPopup()">×</button>
+    <h2 style="color: #00192D; text-size-adjust: small;">New Text</h2>
+
+    <label for="property">Recipients:</label>
+<select id="property" required style="width: 518px; height: 40px; font-size: 16px;">
+  <option value="" disabled selected>Select Recipient</option>
+  <option value="High">Manucho</option>
+  <option value="Moderate">Ben 10</option>
+  <option value="Low">Alpha</option>
+</select>
+
+
+    <textarea id="notes" name="notes" rows="10" cols="98" placeholder="Enter any additional information..."></textarea>
+
+      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SEND</button>
+  </div>
+</div>
+<!-- End NewText popup -->
+
+<!-- PopUp Scripts -->
+
+<!-- !-- create notification --> 
+<script>
+  // Function to open the complaint popup
+  function opennewtextPopup() {
+    document.getElementById("newtextPopup").style.display = "flex";
+  }
+
+  // Function to close the complaint popup
+  function closenewtextPopup() {
+    document.getElementById("newtextPopup").style.display = "none";
+  }
+</script>
+
  <!-- Chat Script -->
  <script>
   function openChat() {
