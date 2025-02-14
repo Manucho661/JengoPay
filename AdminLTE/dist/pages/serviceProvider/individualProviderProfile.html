@@ -43,7 +43,7 @@
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
-    <link rel="stylesheet" href="text.css" />
+    <link rel="stylesheet" href="individualProviderProfile.css" />
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -53,334 +53,9 @@
       crossorigin="anonymous"
     />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            columns: gray;
-        }
-        .row.first{
-            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
-
-        }
-        .first_col{
-            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
-            transition: transform 0.3s ease-in-out; /* Smooth transition */
-
-        }
-        .first_col:hover{
-            transform: scale(1.05); /* Slightly increase size on hover */
-
-
-        }
-        .second_col{
-            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
-        }
-
-        .filter-container{
-
-            /* width: 250px; */
-
-            color: white;
-            position: relative; /* To position the panel below */
-
-        }
-        .nav-bar {
-            display: flex;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        .nav-item {
-            padding: 10px 20px;
-            text-decoration: none;
-            color: #666;
-            font-size: 16px;
-            position: relative;
-        }
-        .nav-item.active {
-            color: #000;
-            font-weight: bold;
-        }
-        .nav-item.active::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: #FFC107; /* Green underline */
-        }
-
-
-        table {
-    border-collapse: collapse;
-    width: 100%;
-}
-th {
-    background-color: #FFC107;
-    color: #00192D;
-    text-align: left;
-    padding: 0.5em;
-    font-size: 0.9rem;
-}
-td {
-    padding: 0.5em;
-    text-align: left;
-    font-size: 0.9rem;
-
-}
-tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-tr:hover {
-    background-color: #f1f1f1;
-}
-
-
-.filter:hover {
-            color: #FFC107;
-
-        }
-.filter{
-            /* background-color: #444; */
-            /* color: white; */
-            cursor: pointer;
-            /* padding: 12%;  */
-            width:50%;
-            border-bottom: gray solid 1px;
-            text-align: left;
-            outline: none;
-            font-size: 16px;
-            transition: 0.3s;
-            color: gray;
-            font-size: 100%;
-            border-radius: 2%;
-}
-
-.panel {
-            display: none; /* Initially hidden */
-            background-color: #00192D;
-            /* padding-left: 20px;position: absolute; Makes the panel an overlay */
-            position: absolute; /* Makes the panel an overlay */
-            /* left: 250px; Positioned to the right of the container */
-            top: 100%; /* Place right below the accordion */
-            left: 0;
-            width: fit-content;
-            z-index: 1000;
-            padding: 2%;
-            color: white;
-            border-radius: 4%;
-
-        }
-.panel a {
-            display: block;
-            padding: 8px;
-            /* color: white; */
-            text-decoration: none;
-            transition: 0.3s;
-            color: whitesmoke;
-        }
-
-        .panel a:hover{
-          color: #FFC107;
-        }
-.card-body.add_provider{
-  position: relative;
-}
-
-/* Announcement Overlay styles */
-        #view_announcement {
-            /* width: 50%; Adjust the card width as needed */
-            /* max-width: 500px; Ensures the card doesn't grow too wide */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            display: none;
-            z-index: 10000;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            justify-content: center;
-            align-items: center;
-
-        }
-        .card.content{
-
-          position: relative;
-            background: white;
-
-            border-radius: 5px;
-
-            color: black;
-            width: 100%;
-            max-width: 50%;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            font-size: 90%;
-            color: gray;
-        }
-
-        .card-footer.view_announcement {
-            justify-content: flex-end;
-
-        }
-
-        .card-footer .btn + .btn {
-            margin-left: 10px; /* Adds spacing between the buttons */
-        }
-
-        .close-btn{
-             position: absolute;
-
-            right: 15px;
-
-            color: white;
-            cursor: pointer;
-
-        }
-
-        #more{
-          display: flex;
-           justify-content: center;
-          cursor: pointer;
-
-        }
-
-        #more_icon{
-          /* border: 1px solid black; */
-          border-radius: 30%;
-          padding: 10%;
-          font-size: larger;
-        }
-
-        #more_options{
-          display: none;
-          /* position: absolute; */
-          z-index: 1000;
-          background: #00192D;
-          border-radius: 10%;
-          padding: 10px;
-
-        }
-        #more_options a{
-          text-decoration: none;
-          color: white;
-        }
-        #more_options a:hover{
-          color: #FFC107;
-        }
-        #close-overlay-btn {
-            /* top: 0; */
-            color: white;
-            /* color: white; */
-            border: none;
-            cursor: pointer;
-            font-size: 100%;
-              }
-          #close-overlay-btn:hover {
-              color: red;
-              }
-
-        .card-header.view_announcement {
-            position: relative;
-            display: flex;/* Add this for the absolute positioning of the close button */
-        }
-#more_announcement_btn{
-  color: blueviolet;
-  font-weight: 500;
-  cursor: pointer;
-
-}
-#more_announcement_btn:hover{
-  background-color: rgba(128, 128, 128, 0.2);
-  color: #FFC107;
-}
-
-/* Form styles */
-.form-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-
-        .form-group {
-            width: 48%;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .add_provider_btn{
-          width: 10%;
-            padding: 10px;
-            background-color: #00192D;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .add_provider_btn-container{
-            display: flex;
-            justify-content: flex-end; /* Moves the button to the right */
-            margin-top: 15px;
-        }
-        #close_provider_btn_container{
-          display: flex;
-            justify-content: flex-end;
-        }
-        #close_provider_btn_container #close_btn{
-          cursor: pointer;
-        }
-        #close_provider_btn_container #close_btn:hover{
-          color: red;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-
-        }
-
-        input, select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-            background-color: #fff;
-            cursor: pointer;
-        }
-        .row.add_provider{
-          display: none;
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-select {
-            appearance: none; /* Hides default arrow in some browsers */
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="%23FFC107" d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
-            background-size: 16px;
-            padding-right: 30px;
-        }
-
-        input:focus, select:focus {
-            border-color: #FFC107;
-            outline: none;
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-        }
-
-      #close_provider_btn{
-        display: flex;
-        justify-content: end;
-      }
-
-        </style>
+    <link rel="stylesheet" href="vendorProfile.css">
 
 <!-- scripts for data_table -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
@@ -624,7 +299,41 @@ select {
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-              <div class="col-sm-6"><h3 class="mb-0"> <i class="fas fa-wrench"></i>   Providers & Categories</h3></div>
+              <div class="col-sm-6 ">
+
+                <h3 class="mb-0 contact_section_header"> <i class="fas fa-user"></i>    Joel Keith</h3>
+
+
+                    <div class="row mt-2">
+                      <div class="col-md-12">
+
+                        <div class="contact">
+                        <p class="contact_item"> <b>PHONE</b> - &nbsp; </p><p class="contact_value">   0757414721 &nbsp; <b class="text-warning">|</b> </p>   &nbsp;<p class="contact_item"> <b>EMAIL </b>  - &nbsp; </p><p class="contact_value text-primary">emmanuel@gmail.com</p>
+                        </div>
+                        <div class="contact">
+                          <p class="contact_item" > <b>WEBSITE</b>  - &nbsp; </p><p class="contact_value text-primary" >nucho.co.ke.com &nbsp; <b class="text-warning">|</b> </p> &nbsp;&nbsp; <p class="contact_item"> <b>ADDRESS</b>  - </p><p class="contact_value">50202|23|45 New York</p>
+
+                        </div>
+
+                      </div>
+                      <!-- <div class="col-md-6">
+
+                        <div class="contact">
+                          <p class="contact_item" >Email</p>
+                          <p class="contact_value" >nucho@gmail</p>
+                        </div>
+                        <div class="contact">
+                          <p  class="contact_item" >Address</p>
+                          <p  class="contact_value" >50202|202|Califonia</p>
+                        </div>
+
+                      </div> -->
+
+
+
+
+                </div>
+              </div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
@@ -643,17 +352,23 @@ select {
             <div class="row first mb-2 mt-2 rounded-circle">
 
                 <div class="col-md-6">
-                   <p>Total  <b>50</b> | New applications| <b>60</b>  </p>
+                  <div style="display: flex;">
+                    <button class="btn text-warning" style="background-color: #00192D; font-size: small; margin-right: 2%;">   <i class="fas fa-tasks"></i>
+                        <b class="button_item"> <a class="link_item" href="financials.html"> Assigned Contracts </a>  </b></button>
+                    <button id="add_provider_btn" class="btn" style="background-color: #00192D; color: white; font-size: small; margin-right: 2%;">   <i class="fas fa-arrow-left"></i>
+                    <b class="button_item"> <a class="link_item" href="previous.html"> Previous Contracts </a>  </b></button>
+                    <button id="add_provider_btn" class="btn" style="background-color: #00192D; color: white; font-size: small;">  <i class="fas fa-coins"></i>
+                      <b class="button_item" > <a class="link_item" href="financials.html"> Financials </a> </b></button>
+                  </div>
 
                 </div>
 
                 <div class="col-md-6">
                   <div style="display: flex; justify-content: end;">
-                    <button class="btn" style="background-color: #00192D; color: white; font-size: small; margin-right: 2%;">  <i class="fas fa-plus icon"></i>
-                        <b> Add Category </b></button>
-                  <button class="btn" style="background-color: #00192D; color: white; font-size: small;">  <i class="fas fa-plus icon"></i>
-                    <b> Add Provider </b></button>
-                    </div>
+
+                    <button id="add_provider_btn" class="btn" style="background-color: #00192D; color: white; font-size: small;">  <i class="fas fa-exclamation-circle"></i>
+                    <b class="button_item" class="open-btn" onclick="openPopup()"> Raise a Complaint </b></button>
+                  </div>
                 </div>
               <!-- /.col -->
             </div>
@@ -664,14 +379,14 @@ select {
             <!--begin::Row-->
             <div class="row second">
               <!-- Start col -->
-              <div class="col-md-8 " >
+              <div class="col-md-12 " >
                     <div class="card second_col ">
                         <div class="card-header">
                         <div class="filter-container" id="filter-container">
 
                             <div class="filter" id="filter">
                             <i class="bi bi-filter"></i>
-                            Filter | <b>All Categories <i class="fas fa-chevron-down"></i> </b>
+                            Filter | All Categories <i class="fas fa-chevron-down"></i>
 
                             </div>
                             <div class="panel" id="panel">
@@ -691,21 +406,23 @@ select {
                             <thead class="mb-2">
                             <tr>
                                 <th>ID</th>
-                                <th>First Name</th>
-                                <th>Phone</th>
-                                <th>Email</th>
-                                <th>Category</th>
-                                <th>ACTION</th>
+                                <th>Title</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                                <th>Payment</th>
+                                <th>Property</th>
+                                <th>Unit</th>
 
                             </tr>
                             </thead>
                             <tbody>
                             <tr >
                                 <td>002</td>
-                                <td>John Doe</td>
-                                <td>0756752987</td>
-                                <td class="text-primary"> <i class="fas fa-envelope"></i>  emmanu@gmail.com</td>
-                                <td>Electrician</td>
+                                <td>Broken Door Handle</td>
+                                <td>11-10-2025 t0 11-10-2025</td>
+                                <td> <i class="fas fa-circle-notch"></i>   Inprogress  </td>
+                                <td class="text-primary">Paid</td>
+                                <td>Ebenezer House</td>
                                 <td id="more">
                                 <div id="more_icon">&#x2026;</div>
                                 <br>
@@ -720,14 +437,27 @@ select {
                             </tr>
                             <tr>
                                 <td>002</td>
-                                <td>John Doe</td>
-                                <td>0756752987</td>
-                                <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
-                                <td>Plumber</td>
+                                <td> Broken Door Handle </td>
+                                <td> 11-10-2025 t0 11-10-2025 </td>
+                                <td> <i class="fas fa-circle-notch"></i>   Inprogress  </td>
+                                <td class="text-danger">  Pay</td>
+                                <td>Manucho APARTMENTS</td>
                                 <td id="more">
                                 <div id="more_icon" class="rounded-circle" >&#x2026;</div>
                                 </td>
                             </tr>
+
+                            <tr>
+                              <td>002</td>
+                              <td> Broken Door Handle </td>
+                              <td> 11-10-2025 t0 11-10-2025 </td>
+                              <td> <i class="fas fa-circle-notch"></i>   Inprogress  </td>
+                              <td class="text-primary" >Paid</td>
+                              <td>Manucho APARTMENTS</td>
+                              <td id="more">
+                              <div id="more_icon" class="rounded-circle" >&#x2026;</div>
+                              </td>
+                          </tr>
                             <!-- Add more rows as needed -->
                             </tbody>
 
@@ -744,60 +474,6 @@ select {
                         </div>
 
                     </div>
-                </div>
-
-                <div class="col-md-4" class="first_col">
-                    <div class="card second_col">
-                        <div class="card-header">
-                             <div class="card-text">
-                                Vendor Distribution
-                             </div>
-                        </div>
-                        <div class="card-body">
-                            <table  class="table-striped">
-                                <thead>
-                                <tr>
-                                    <th> <i class="fas fa-th-large"></i>  Category</th>
-                                    <th>Number</th>
-                                    <th >  Action</th>
-                                </tr>
-                            </thead>
-                                <tr>
-                                    <td>Plumbing</td>
-                                    <td>5</td>
-                                    <td id="more">
-                                        <div id="more_icon" class="rounded-circle" >&#x2026;</div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Electricians</td>
-                                    <td>5</td>
-                                </tr>
-                                <tr>
-                                    <td>Landscaping</td>
-                                    <td>3</td>
-                                    <td id="more">
-                                        <div id="more_icon" class="rounded-circle" >&#x2026;</div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Masons</td>
-                                    <td>No vendor is assigned to this category </td>
-                                    <td id="more">
-                                        <div id="more_icon" class="rounded-circle" >&#x2026;</div>
-                                    </td>
-                                </tr>
-
-                            </table>
-
-
-                        </div>
-
-
-                    </div>
-
-
-
                 </div>
 
 
@@ -870,6 +546,43 @@ select {
  </div>
 
 <!-- End view announcement -->
+
+<!-- Complaint part -->
+
+<div class="popup-overlay" id="complaintPopup">
+  <div class="popup-content">
+    <button class="close-btn text-secondary" onclick="closePopup()">×</button>
+    <h2 style="color: #00192D;">Complaint</h2>
+    <form class="complaint-form">
+      <label for="category">Complaint Category:</label>
+        <select id="category" required>
+          <option value="">Select Category</option>
+          <option value="Billing Issue">Billing Issue</option>
+          <option value="Technical Problem">Technical Problem</option>
+          <option value="Customer Service">Customer Service</option>
+          <option value="Others">Others</option>
+        </select>
+
+        <label for="priority">Priority Level:</label>
+        <select id="priority" required>
+          <option value="">Select Priority</option>
+          <option value="High">High</option>
+          <option value="Moderate">Moderate</option>
+          <option value="Low">Low</option>
+        </select>
+
+
+      <label for="complaint">Complaint Description:</label>
+      <textarea id="complaint" rows="4" placeholder="Describe your complaint" required></textarea>
+
+      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">Submit Complaint</button>
+    </form>
+  </div>
+</div>
+<!-- End complaint part -->
+
+
+
 <!-- end overlay card. -->
 
     <!--begin::Script-->
@@ -909,6 +622,25 @@ select {
 
  <!-- End view announcement script -->
 
+<!-- Complain script -->
+<!-- Complaint script -->
+<script>
+  // Function to open the complaint popup
+  function openPopup() {
+    document.getElementById("complaintPopup").style.display = "flex";
+  }
+
+  // Function to close the complaint popup
+  function closePopup() {
+    document.getElementById("complaintPopup").style.display = "none";
+  }
+</script>
+
+
+<!-- End complaint script -->
+<!-- End Complain script -->
+
+
 
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
@@ -946,17 +678,7 @@ select {
 <!-- End for Occordion script -->
 
 <!-- script for popups  -->
-<script>
-const display_add_provider = document.getElementById('add_provider');
-const  display_add_provider_btn= document.getElementById('add_provider_btn');
-const close_add_provider_container = document.getElementById('close_btn');
-display_add_provider_btn.addEventListener('click', ()=>{
-  display_add_provider.style.display = "flex";
-})
-close_add_provider_container.addEventListener('click', ()=>{
-  display_add_provider.style.display = "none";
-})
-</script>
+
 
 
 
@@ -1028,7 +750,6 @@ close_add_provider_container.addEventListener('click', ()=>{
       .catch(error => console.error('Error loading the file:', error)); // Handle errors
 </script>
 <!-- end sidebar script -->
-
 
 
     <script

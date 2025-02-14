@@ -1,5 +1,5 @@
 body {
-  font-family: 'Poppins', sans-serif;
+    font-family: Arial, sans-serif;
     columns: gray;
 }
 .row.first{
@@ -9,9 +9,12 @@ body {
 .first_col{
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
     transition: transform 0.3s ease-in-out; /* Smooth transition */
+
 }
 .first_col:hover{
     transform: scale(1.05); /* Slightly increase size on hover */
+
+
 }
 .second_col{
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
@@ -25,7 +28,6 @@ body {
     position: relative; /* To position the panel below */
 
 }
-
 
 table {
 border-collapse: collapse;
@@ -99,6 +101,9 @@ background-color: #f1f1f1;
 .panel a:hover{
   color: #FFC107;
 }
+.card-body.add_provider{
+position: relative;
+}
 
 /* Announcement Overlay styles */
 #view_announcement {
@@ -142,7 +147,9 @@ background-color: #f1f1f1;
 
 .close-btn{
      position: absolute;
+
     right: 15px;
+
     color: white;
     cursor: pointer;
 
@@ -290,134 +297,3 @@ input:focus, select:focus {
 display: flex;
 justify-content: end;
 }
-.contact{
-display: flex;
-}
-.contact_item{
-  color: gray;
-  font-size: smaller;
-}
-.contact_value{
-  font-size: smaller;
-}
-.contact_section_header{
-  border-bottom: 1px solid rgba(128, 128, 128, 0.5);
-  font-family: 'Poppins', sans-serif;
-
-}
-.btn:hover{
-  color: #FFC107;
-}
-#add_provider_btn:hover{
-  color: #FFC107;
-
-}
-.button_item:hover{
-  color: #FFC107;
-}
-a{
-  text-decoration: none;
-}
-.link_item{
-  color: white;
-}
-.link_item:hover{
-  color: #FFC107;
-}
-td{
-  font-family: 'Poppins', sans-serif;
-  font-size: small;
-}
-
-
-/* Complaint section Css */
-
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 10000;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7); /* Dark overlay */
-  display: none; /* Initially hidden */
-  justify-content: center;
-  align-items: center;
-  font-family: 'Poppins', sans-serif;
-  font-size: small;
-  }
-
-  /* Popup content */
-  .popup-content {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 50%;
-  text-align: left;
-  position: relative;
-  }
-
-  /* Close button */
-  .close-btn {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 20px;
-  cursor: pointer;
-  border: none;
-  background: none;
-  }
-
-  /* Form styling */
-  .complaint-form input, .complaint-form textarea {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  }
-
-  /* Submit button */
-  .submit-btn {
-  background-color: #00192D;
-  color: white;
-  padding: 10px;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-  border-radius: 5px;
-  }
-
-
-
-  /* summary */
-  .text{
-    display: block;
-    margin-bottom: 5px;
-    line-height: 11px;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: .5px;
-    text-transform: uppercase;
-    color: #767676;
-    color: #00192D;
-    font-family: 'Poppins', sans-serif;
-
-    }
-    .value{
-        font-size: 12px;
-        display: flex;
-        justify-content: center;
-        color: #FFC107;
-        background-color: #00192D;
-        border-radius: 10px;
-    }
-
-    a{
-      color: #00192D;
-    }
-    .col-md-12.Summary{
-      box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
-      padding: 10px;
-      border-radius: 10px;
-    }

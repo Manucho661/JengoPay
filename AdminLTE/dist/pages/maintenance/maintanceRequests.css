@@ -371,8 +371,13 @@ transition: border-color 0.3s ease;
 a{
   color: #00192D;
 }
-.btn.new_text{
+
+#Service_Provider_btn{
   background-color: #00192D;
   color: white;
   font-size: small;
+}
+#Service_Provider_btn a{
+  color: #f1f1f1;
+  text-decoration: none;
 }

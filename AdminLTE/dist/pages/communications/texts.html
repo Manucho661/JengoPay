@@ -69,6 +69,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
+
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -550,11 +551,12 @@
 <div class="newtextpopup-overlay" id="newtextPopup">
   <div class="newtextpopup-content">
     <button class="close-btn text-secondary" onclick="closenewtextPopup()">×</button>
-    <h2 style="color: #00192D;font-size: medium;">New Text</h2>
+    <h2 style="color: #00192D;">New Text</h2>
 
     <!-- <label for="property">Recipients:</label> -->
-     <b>Recepients:</p></b>
-<select id="property" required style="width: 590px; height: 40px; font-size: 16px; border-radius: 10px;">
+     
+  <label for="property">Recepients:</label>
+<select id="property" required >
   <option value="" disabled selected>Select Recipient</option>
   <option value="High">All</option>
   <option value="High">Manucho</option>
