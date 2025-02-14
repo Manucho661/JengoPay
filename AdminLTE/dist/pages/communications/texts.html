@@ -550,18 +550,20 @@
 <div class="newtextpopup-overlay" id="newtextPopup">
   <div class="newtextpopup-content">
     <button class="close-btn text-secondary" onclick="closenewtextPopup()">×</button>
-    <h2 style="color: #00192D; text-size-adjust: small;">New Text</h2>
+    <h2 style="color: #00192D;font-size: medium;">New Text</h2>
 
-    <label for="property">Recipients:</label>
-<select id="property" required style="width: 518px; height: 40px; font-size: 16px;">
+    <!-- <label for="property">Recipients:</label> -->
+     <b>Recepients:</p></b>
+<select id="property" required style="width: 590px; height: 40px; font-size: 16px; border-radius: 10px;">
   <option value="" disabled selected>Select Recipient</option>
+  <option value="High">All</option>
   <option value="High">Manucho</option>
   <option value="Moderate">Ben 10</option>
   <option value="Low">Alpha</option>
 </select>
 
 
-    <textarea id="notes" name="notes" rows="10" cols="98" placeholder="Enter any additional information..."></textarea>
+    <textarea id="notes" name="notes" rows="10" cols="98" placeholder="Enter any additional information..." style="width: 590px; height: 150px; font-size: 16px; border-radius: 10px;"></textarea>
 
       <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SEND</button>
   </div>
@@ -570,7 +572,9 @@
 
 <!-- PopUp Scripts -->
 
-<!-- !-- create notification --> 
+
+
+<!-- !-- create new text --> 
 <script>
   // Function to open the complaint popup
   function opennewtextPopup() {
@@ -582,6 +586,7 @@
     document.getElementById("newtextPopup").style.display = "none";
   }
 </script>
+<!-- create new text -->
 
  <!-- Chat Script -->
  <script>
