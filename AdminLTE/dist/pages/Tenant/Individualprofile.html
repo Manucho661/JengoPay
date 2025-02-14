@@ -66,76 +66,6 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-<<<<<<< HEAD
-<style>
-   .overlay {
-            /* position: absolute; */
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-            display: none;
-            justify-content: center;
-            align-items: center;
-            /* z-index: 1000; */
-    }
-
-    /* Overlay content */
-    .overlay-content {
-      background-color: #fff;
-            padding: 30px;
-            /* border-radius: 8px; */
-            width: 50%;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-            text-align: center;
-  /* background-color: white; */
-  /* padding: 30px; */
-  border-radius: 10px;
-    }
-
-     /* Close button
-  .close-btn {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 20px;
-  cursor: pointer;
-  border: none;
-  background: none;
-  } */
-    table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .total-row {
-            font-weight: bold;
-        }
-        .downloadi {
-          padding: 15px 30px; /* Add padding to the button */
-  font-size: 16px; /* Optional: adjust font size */
-  cursor: pointer; /* Change cursor to pointer on hover */
-  border-radius: 10px;
-  border: none;
-}
-
-
-</style>
-
-=======
->>>>>>> 5db0db846cc763c5561dd715b949690bb7334335
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -511,16 +441,12 @@
                           <div id="more_icon">&#x2026;</div>
                           <br>
                           <div id="more_options">
-                             <a href="#">Assign</a>
-                             <a href="#">Invoice</a>
-                             <a href="#">Update</a>
-                             <a href="#">Delete</a>
-                             <a href="#">View</a>
-
-
+                            <a href="#"class="" onclick="showOverlay()">Invoice</a>
+                            <a href="#" id="showReceiptLink" onclick="openPopup()">Receipt</a>
+                            <a href="#">Delete</a>
+                            <a href="#">Edit</a>
                           </div>
                          </td>
-
                         </tr>
                         <tr>
                             <th scope="row">3/7/11</th>
@@ -603,7 +529,11 @@
 
         </div>
         <p style="text-align: center;" style="color:#00192D;">Thank you for your payment!</p>
-        <button class="receipt-btn" id="downloadReceiptBtn" style="color: #FFC107;">Download Receipt</button>
+        <div style="display: flex; justify-content: flex-end;">
+          <button style="background-color: white; color:#FFC107; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">
+            DOWNLOAD
+          </button>
+      </div>
   </div>
 </div>
 <!-- end -->
@@ -661,7 +591,7 @@
       </div>
 
       <div style="display: flex; justify-content: flex-end;">
-        <button style="background-color: white; color:#FFC107; padding: 10px 20px; border: 2px solid #00192D ; border-radius: 10px; cursor: pointer;">
+        <button style="background-color: white; color:#FFC107; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">
           DOWNLOAD
         </button>
     </div>
