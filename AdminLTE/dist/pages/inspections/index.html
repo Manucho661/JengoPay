@@ -420,7 +420,7 @@
                                 <div id="more_icon">&#x2026;</div>
                                 <br>
                                 <div id="more_options">
-                                    <a href="#">VIEW</a>
+                                    <a href="#" onclick="openviewPopup()">VIEW</a>
                                     <a href="#">EDIT</a>
                                     <a href="#">DELETE</a>
 
@@ -589,6 +589,35 @@
 </div>
 <!-- End Notification popup -->
 
+ <!-- view overlay -->
+ <div class="viewpopup-overlay" id="viewPopup">
+  <div class="viewpopup-content">
+    <button class="close-btn text-secondary" onclick="closeviewPopup()">×</button>
+    <h2 style="color: #00192D; font-size: medium;">Inspection Details</h2>
+    <!-- Door Handle Inspection -->
+    <div class="inspection-card">
+      <h3><i class="fas fa-door-closed icon"></i> Door Handle Inspection</h3>
+      <p><strong>Status:</strong> <span class="needs-repair">Needs Repair</span></p>
+      <p><strong>Comments:</strong> Loose handle, requires tightening.</p>
+      <p><strong>Inspection Date:</strong> February 14, 2025</p>
+  </div>
+  <!-- Floor Inspection -->
+  <div class="inspection-card">
+    <h3><i class="fas fa-border-style icon"></i> Floor Inspection</h3>
+    <p><strong>Status:</strong> <span class="broken">Broken</span></p>
+    <p><strong>Comments:</strong> Cracks detected in several tiles; replacement recommended.</p>
+    <p><strong>Inspection Date:</strong> February 14, 2025</p>
+</div>
+    <p style="text-align: center;">Thank you!</p>
+
+    <!-- <button class="receipt-btn" id="downloadReceiptBtn" style="color: #FFC107;">Download</button> -->
+
+      
+  </div>
+</div>
+<!-- End maintenanceoverlay -->
+            
+
 
 <!-- start complaint section -->
 
@@ -609,6 +638,21 @@
 
 
 <!-- Overlay scripts -->
+<!--  Maintenance script -->
+<script>
+  // Function to open the complaint popup
+  function openviewPopup() {
+    document.getElementById("viewPopup").style.display = "flex";
+  }
+
+  // Function to close the complaint popup
+  function closeviewPopup() {
+    document.getElementById("viewPopup").style.display = "none";
+  }
+</script>
+
+<!-- end Maintenance script -->
+
 
  <!-- View announcements script -->
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
