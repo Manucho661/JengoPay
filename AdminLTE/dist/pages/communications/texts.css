@@ -395,6 +395,7 @@ a{
 a{
   color: #00192D;
 }
+<<<<<<< HEAD
 .newtextpopup-overlay{
   position: fixed;
   top: 0;
@@ -446,3 +447,11 @@ a{
   border-radius: 5px;
   }
   
+=======
+.col-md-12.Summary{
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+>>>>>>> 0fb3c50a29615ed7afe0e5a0dcce153a7a2b5bf4
