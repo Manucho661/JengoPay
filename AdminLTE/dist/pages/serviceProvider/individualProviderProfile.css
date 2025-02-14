@@ -17,14 +17,7 @@ body {
       box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
   }
 
-  .filter-container{
-
-      /* width: 250px; */
-
-      color: white;
-      position: relative; /* To position the panel below */
-
-  }
+  
  
 
 
@@ -53,25 +46,7 @@ background-color: #f1f1f1;
 }
 
 
-.filter:hover {
-      color: #FFC107;
 
-  }
-.filter{
-      /* background-color: #444; */
-      /* color: white; */
-      cursor: pointer;
-      /* padding: 12%;  */
-      width:50%;
-      border-bottom: gray solid 1px;
-      text-align: left;
-      outline: none;
-      font-size: 16px;
-      transition: 0.3s;
-      color: gray;
-      font-size: 100%;
-      border-radius: 2%;
-}
 
 .panel {
       display: none; /* Initially hidden */
