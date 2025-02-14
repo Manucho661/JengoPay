@@ -69,6 +69,56 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
+
+    <style>
+
+/* Form styles */
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    width: 48%;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+select {
+    appearance: none; /* Hides default arrow in some browsers */
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="%23FFC107" d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
+    background-size: 16px;
+    padding-right: 30px;
+}
+input:focus, select:focus {
+    border-color: #FFC107;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #fff;
+    cursor: pointer;
+}
+    </style>
+
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -553,8 +603,9 @@
     <h2 style="color: #00192D;font-size: medium;">New Text</h2>
 
     <!-- <label for="property">Recipients:</label> -->
-     <b>Recepients:</p></b>
-<select id="property" required style="width: 590px; height: 40px; font-size: 16px; border-radius: 10px;">
+     
+  <label for="property">Recepients:</label>
+<select id="property" required >
   <option value="" disabled selected>Select Recipient</option>
   <option value="High">All</option>
   <option value="High">Manucho</option>
