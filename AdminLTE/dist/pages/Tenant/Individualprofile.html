@@ -508,16 +508,12 @@
                           <div id="more_icon">&#x2026;</div>
                           <br>
                           <div id="more_options">
-                             <a href="#">Assign</a>
-                             <a href="#">Invoice</a>
-                             <a href="#">Update</a>
-                             <a href="#">Delete</a>
-                             <a href="#">View</a>
-
-
+                            <a href="#"class="" onclick="showOverlay()">Invoice</a>
+                            <a href="#" id="showReceiptLink" onclick="openPopup()">Receipt</a>
+                            <a href="#">Delete</a>
+                            <a href="#">Edit</a>
                           </div>
                          </td>
-
                         </tr>
                         <tr>
                             <th scope="row">3/7/11</th>
@@ -600,7 +596,11 @@
 
         </div>
         <p style="text-align: center;" style="color:#00192D;">Thank you for your payment!</p>
-        <button class="receipt-btn" id="downloadReceiptBtn" style="color: #FFC107;">Download Receipt</button>
+        <div style="display: flex; justify-content: flex-end;">
+          <button style="background-color: white; color:#FFC107; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">
+            DOWNLOAD
+          </button>
+      </div>
   </div>
 </div>
 <!-- end -->
@@ -658,7 +658,7 @@
       </div>
 
       <div style="display: flex; justify-content: flex-end;">
-        <button style="background-color: white; color:#FFC107; padding: 10px 20px; border: 2px solid #00192D ; border-radius: 10px; cursor: pointer;">
+        <button style="background-color: white; color:#FFC107; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">
           DOWNLOAD
         </button>
     </div>
