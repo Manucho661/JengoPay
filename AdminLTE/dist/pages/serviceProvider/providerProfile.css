@@ -297,3 +297,39 @@ input:focus, select:focus {
 display: flex;
 justify-content: end;
 }
+
+.text{
+    display: block;
+    margin-bottom: 5px;
+    line-height: 11px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    color: #767676;
+    color: #00192D;
+    font-family: 'Poppins', sans-serif;
+  
+    }
+    .value{
+        font-size: 12px;
+        display: flex;
+        justify-content: center;
+        color: #FFC107;
+        /* background-color: #00192D; */
+        border-radius: 10px;
+    }
+    .text a{
+      text-decoration: none;
+    }
+  
+  
+    .row.first{
+      box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
+  
+  }
+  .contact_section_header{
+    border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+    font-family: 'Poppins', sans-serif;
+  
+  }
