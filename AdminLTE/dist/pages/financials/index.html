@@ -152,7 +152,10 @@
     font-weight: bold;
 
 }
-
+canvas {
+            max-width: 600px;
+            margin: auto;
+        }
 </style>
 
   </head>
@@ -449,7 +452,7 @@
                             <span class="value"> <b>MONTHLY</b> </span>
                           </div>
                           <div class="col-md-3">
-                            <button class="btn text text-danger"> <i class="fas fa-edit"></i>  Edit</button>
+                            <button class="btn text text-danger"> <i class="fas fa-edit"></i> Edit</button>
                           </div>
 
 
@@ -471,17 +474,14 @@
                 </div>
               </div>
               <div class="col-sm-4">
-
-
                 <div class="row float-sm-end">
-                    <!-- <ol class="breadcrumb float-sm-end">
+                      <ol class="breadcrumb float-sm-end">
                         <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                      </ol> -->
+                      </ol> 
                 </div>
 
-                <div class="row d-flex">
-                </div>
+                
 
               </div>
             </div>
@@ -489,9 +489,9 @@
             <!-- End first Row -->
 
             <div class="row mt-5">
-                <div class="col-md-8">
+                <div class="col-md-12">
 
-                          <h6 class="mb-0 contact_section_header"> <i class="fas fa-file-alt summary-icon"></i>   Summary</h6>
+                          <h6 class="mb-0 contact_section_header"> <i class="fas fa-file-alt summary-icon"></i>   Trends</h6>
 
 
                         <div class="row mt-2  ">
@@ -499,29 +499,24 @@
 
                                 <div class="row mt-6 ">
                                     <!-- Summary -->
-                                    <div class="col-md-3 ">
-                                        <label class="text text-center">      <i class="fas fa-money-bill-wave money-icon"></i>      TOTAL_PAID </label>
-                                        <span class="value text-center">  <b>KSH 500000</b>  </span>
+                                    <div class="col-md-4 ">
+                                        <label class="text text-center">      <i class="fas fa-money-bill-wave money-icon"></i>      RENT_COLLECTED </label>
+                                        <canvas id="myChart"></canvas>
                                     </div>
+                                    <div class="col-md-4 ">
+                                      <label class="text text-center">      <i class="fas fa-money-bill-wave money-icon"></i>      EXPENSES </label>
+                                      <canvas id="myChart1"></canvas>
+                                    </div>
+                                    <div class="col-md-4 ">
+                                      <label class="text text-center">      <i class="fas fa-money-bill-wave money-icon"></i> NET_PROFIT </label>
+                                      <canvas id="myChart2"></canvas>
+                                    </div>
+
                                 </div>
 
                                 <div class="row mt-6" >
                                 <!-- Summary -->
-                                    <div class="col-md-3  ">
-                                        <label class="text text-center">      <i class="fas fa-money-bill money-icon"></i>
-                                            Outstanding </label>
-                                        <span class="value text-center"> <b>Ksh 30000</b>    </span>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <label class="text text-center"><i class="fas fa-building unit-icon"></i>   OCCUPIED_UNITS  </label>
-                                        <span class="value"> <b> 38 </b>  </span>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <button class="btn text text-danger"> <i class="fas fa-edit"></i>  Edit</button>
-                                    </div>
-                                </div>
+                                  
 
                             </div>
                         </div>
@@ -529,12 +524,12 @@
                 </div>
 
                <!-- Button to trigger overlay -->
-<div class="col-md-4 d-flex justify-content-end" style="height: fit-content;">
-  <button id="announcement_btn" class="btn" onclick="opennotificationPopup()">
-    <i class="fas fa-bullhorn"></i>
-    <b>Create Notification</b>
-  </button>
-</div>
+                <!-- <div class="col-md-4 d-flex justify-content-end" style="height: fit-content;">
+                  <button id="announcement_btn" class="btn" onclick="opennotificationPopup()">
+                    <i class="fas fa-bullhorn"></i>
+                    <b>Create Notification</b>
+                  </button>
+                </div> -->
             </div>
 
 
@@ -545,7 +540,6 @@
 
                 <div class="col-md-8 d-flex justify-content-between">
                     <button id="rent_details_btn" class="btn">  <i class="fas fa-calendar-check icon"></i> <a href="profile.html"> <b> Rental_Roll </b> </a> </button>
-                    <button id="agreements_btn" class="btn"><i class="fas fa-calendar-check icon"></i> <a href="agreements.html"> <b> Outstanding </b> </a>  </button>
                     <button id="agreements_btn" class="btn"><i class="fas fa-calendar-check icon"></i> <a href="agreements.html"> <b> Expenses </b> </a>  </button>
                     <button id="agreements_btn" class="btn"><i class="fas fa-calendar-check icon"></i> <a href="agreements.html"> <b> Projections </b> </a>  </button>
 
@@ -909,6 +903,126 @@ $(document).ready(function() {
       integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
       crossorigin="anonymous"
     ></script>
+
+<!-- Rental_TRends data -->
+<script>
+  const ctx = document.getElementById('myChart').getContext('2d');
+  const myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+          datasets: [{
+              label: 'Rent',
+              data: [12, 19, 3, 5, 2, 3],
+              backgroundColor: 'rgba(0, 25, 45, 0.2)',
+              borderColor: '#00192D',
+              borderWidth: 1,
+              
+          }]
+      },
+      options: {
+          responsive: true,
+          scales: {
+              y: {
+                  beginAtZero: true,
+                  ticks: {
+                      callback: function(value, index, values) {
+                          return '$' + value + 'M';
+                      }, 
+                       color: '#FFC107' // Change this to the desired color
+                  },
+              },
+              x: {
+                  ticks: {
+                          color: '#00192D' // Change this to the desired color
+                        }
+                  }
+          }
+      }
+  });
+</script>
+
+<!-- Expense trends -->
+<script>
+  const ctx1 = document.getElementById('myChart1').getContext('2d');
+  const myChart1 = new Chart(ctx1, {
+      type: 'line',
+      data: {
+          labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+          datasets: [{
+              label: 'Expenses',
+              data: [12, 19, 3, 5, 2, 3],
+              backgroundColor: 'rgba(192, 75, 75, 0.2)',
+              borderColor: 'rgba(255, 75, 75, 1)',
+              borderWidth: 1,
+              fill: true
+          }]
+      },
+      options: {
+          responsive: true,
+          scales: {
+              y: {
+                  beginAtZero: true,
+                  ticks: {
+                      callback: function(value, index, values) {
+                          return '$' + value + 'M';
+                      },
+                    color: '#FFC107' // Change this to the desired color            
+                  }
+                },
+                x: {
+                  ticks: {
+                          color: '#00192D' // Change this to the desired color
+                        }
+                  }
+
+
+          }
+      }
+  });
+</script>
+
+<!-- Net Profit trends -->
+<script>
+  const ctx2 = document.getElementById('myChart2').getContext('2d');
+  const myChart2 = new Chart(ctx2, {
+      type: 'line',
+      data: {
+          labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+          datasets: [{
+              label: 'Net Profit',
+              data: [12, 19, 3, 5, 2, 3],
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1,
+              fill: true
+          }]
+      },
+      options: {
+          responsive: true,
+          scales: {
+              y: {
+                  beginAtZero: true,
+                  ticks: {
+                      callback: function(value, index, values) {
+                          return '$' + value + 'M';
+                      },
+                    color: '#FFC107' // Change this to the desired color            
+
+                  }
+              },
+
+              x: {
+                  ticks: {
+                          color: '#00192D' // Change this to the desired color
+                        }
+                  }
+          }
+      }
+  });
+</script>
+
+
     <script>
       // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
       // IT'S ALL JUST JUNK FOR DEMO
