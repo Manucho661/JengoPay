@@ -42,7 +42,7 @@
     />
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../../dist/css/adminlte.css" />
+    <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -142,12 +142,12 @@ color: #00192D;
       text-align: justify;
   }
   .container { width: 100%; margin: auto; margin-top: 30px; }
-        input { width: 100%; padding: 10px; margin-bottom: 10px;border-radius: 10px; }
+        input { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 10px; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background-color: #00192D; color: #FFC107 }
-        button { padding: 10px 15px; background-color: #dc3545; color: white; border: none; cursor: pointer; }
-        button:hover { background-color: #c82333; }
+        th { background-color:#00192D; color: #FFC107; }
+        button { padding: 10px 15px; background-color: #28a745; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #218838; }
 
   </style>
   </head>
@@ -496,6 +496,7 @@ color: #00192D;
               <!-- End communications part -->
               
 
+
               <!-- <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-clipboard-fill"></i>
@@ -549,8 +550,8 @@ color: #00192D;
                     </a>
                   </li>
                 </ul>
-              </li> -->
-              <!-- <li class="nav-item">
+              </li>
+              <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-tree-fill"></i>
                   <p>
@@ -595,8 +596,8 @@ color: #00192D;
                     </a>
                   </li>
                 </ul>
-              </li>
-              <li class="nav-item">
+              </li> -->
+              <!-- <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-table"></i>
                   <p>
@@ -645,8 +646,8 @@ color: #00192D;
                         </a>
                       </li>
                     </ul>
-                  </li>
-                  <li class="nav-item">
+                  </li> -->
+                  <!-- <li class="nav-item">
                     <a href="#" class="nav-link">
                       <i class="nav-icon bi bi-box-arrow-in-right"></i>
                       <p>
@@ -676,8 +677,8 @@ color: #00192D;
                     </a>
                   </li>
                 </ul>
-              </li>
-              <li class="nav-header">DOCUMENTATIONS</li>
+              </li> -->
+              <!-- <li class="nav-header">DOCUMENTATIONS</li>
               <li class="nav-item">
                 <a href="./docs/introduction.html" class="nav-link">
                   <i class="nav-icon bi bi-download"></i>
@@ -723,7 +724,7 @@ color: #00192D;
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-filetype-js"></i>
                   <p>
-                   Help
+               Help
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
                 </a>
@@ -736,13 +737,13 @@ color: #00192D;
                   </li>
                 </ul>
               </li>
-              <!-- <li class="nav-item">
-                <a href="./docs/browser-support.html" class="nav-link">
+              <li class="nav-item">
+                <!-- <a href="./docs/browser-support.html" class="nav-link">
                   <i class="nav-icon bi bi-browser-edge"></i>
                   <p>Browser Support</p>
                 </a>
-              </li> -->
-              <!-- <li class="nav-item">
+              </li>
+              <li class="nav-item">
                 <a href="./docs/how-to-contribute.html" class="nav-link">
                   <i class="nav-icon bi bi-hand-thumbs-up-fill"></i>
                   <p>How To Contribute</p>
@@ -810,8 +811,8 @@ color: #00192D;
                         </a>
                       </li>
                     </ul>
-                  </li> -->
-                  <!-- <li class="nav-item">
+                  </li>
+                  <li class="nav-item">
                     <a href="#" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Level 2</p>
@@ -858,54 +859,68 @@ color: #00192D;
           <!--begin::Container-->
           <div class="container-fluid">
             <div class="container">
-              <h1>Vacant Soon Properties</h1>
-             Filter:
-             <input type="text" id="search" onkeyup="filterTable()" placeholder="Search properties...">
+              <h1>Vacant Properties</h1>
+              Filter:<input type="text" id="search" onkeyup="filterTable()" placeholder="Search properties...">
               <table>
                   <tr>
                       <th>Property Name</th>
                       <th>Location</th>
+                      <th>Rent Price</th>
                       <th>Type</th>
-                      <th>Tenant</th>
-                      <th>Units</th>
-                      <th>Vacancy Date</th>
+                      <th>Units Available</th>
+                      <th>Vacant Units</th>
+                      <th>Availability Date</th>
                   </tr>
                   <tr>
-                      <td>Sunset Villas</td>
-                      <td>Eastside</td>
+                      <td>Greenview Apartments</td>
+                      <td>Downtown</td>
+                      <td>KSH1,200</td>
                       <td>Bedsitter</td>
-                      <td>Michael Lee</td>
-                      <td>Unit 11A</td>
-                      <td>June 2025</td>
+                      <td>3</td>
+                      <td>Unit 101, Unit 205, Unit 307</td>
+                      <td>March 1, 2025</td>
                   </tr>
                   <tr>
-                      <td>Sunbless Villas</td>
-                      <td>Eastside</td>
-                      <td>One Bedroom</td>
-                      <td>Michael Lee</td>
-                      <td>Unit 11A</td>
-                      <td>June 2025</td>
+                      <td>Sunnide Residences</td>
+                      <td>Uptown</td>
+                      <td>KSH 1,500</td>
+                      <td>One bedroom</td>
+                      <td>3</td>
+                      <td>Unit 12B, Unit 14A, Unit 13B</td>
+                      <td>April 15, 2025</td>
                   </tr>
                   <tr>
-                      <td>Sunny Villas</td>
-                      <td>Eastside</td>
-                      <td>Bed sitters</td>
-                      <td>Michael Lee</td>
-                      <td>Unit 11A</td>
-                      <td>June 2025</td>
-                  </tr>
-                  <tr>
-                      <td>Sune Villas</td>
-                      <td>Eastside</td>
-                      <td>Bed Sitters</td>
-                      <td>Michael Lee</td>
-                      <td>Unit 11A</td>
-                      <td>June 2025</td>
-                  </tr>
+                    <td>Season Residences</td>
+                    <td>Uptown</td>
+                    <td>KSH 1,500</td>
+                    <td>Lease</td>
+                    <td>2</td>
+                    <td>Unit 12B, Unit 14A</td>
+                    <td>April 15, 2025</td>
+                </tr>
+                <tr>
+                  <td>Sindy Residences</td>
+                  <td>Uptown</td>
+                  <td>KSH1,500</td>
+                  <td>Two bedroom</td>
+                  <td>2</td>
+                  <td>Unit 12B, Unit 14A</td>
+                  <td>April 15, 2025</td>
+              </tr>
+              <tr>
+                <td>Sindy Residences</td>
+                <td>Uptown</td>
+                <td>KSH 1,500</td>
+                <td>Three Bedroom</td>
+                <td>2</td>
+                <td>Unit 12B, Unit 14A</td>
+                <td>April 15, 2025</td>
+            </tr>
               </table>
               <br>
+              <!-- <button onclick="goBack()" style="border-radius: 10px;">Back to Chart</button> -->
           </div>
-      
+        
     <!--end::App Wrapper-->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->

@@ -42,7 +42,7 @@
     />
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../../dist/css/adminlte.css" />
+    <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -145,9 +145,9 @@ color: #00192D;
         input { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 10px; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background-color:#00192D; color: #FFC107; }
-        button { padding: 10px 15px; background-color: #28a745; color: white; border: none; cursor: pointer; }
-        button:hover { background-color: #218838; }
+        th { background-color: #00192D; color:#FFC107; }
+        button { padding: 10px 15px; background-color: #dc3545; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #c82333; }
 
   </style>
   </head>
@@ -466,8 +466,8 @@ color: #00192D;
                 </ul>
               </li>
               
-               <!-- Start Communications part -->
-               <li class="nav-item">
+              <!-- Start Communications part -->
+              <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-pencil-square"></i>
                   <p>
@@ -495,6 +495,7 @@ color: #00192D;
 
               <!-- End communications part -->
               
+
 
 
               <!-- <li class="nav-item">
@@ -550,8 +551,8 @@ color: #00192D;
                     </a>
                   </li>
                 </ul>
-              </li>
-              <li class="nav-item">
+              </li> -->
+              <!-- <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-tree-fill"></i>
                   <p>
@@ -677,8 +678,8 @@ color: #00192D;
                     </a>
                   </li>
                 </ul>
-              </li> -->
-              <!-- <li class="nav-header">DOCUMENTATIONS</li>
+              </li>
+              <li class="nav-header">DOCUMENTATIONS</li>
               <li class="nav-item">
                 <a href="./docs/introduction.html" class="nav-link">
                   <i class="nav-icon bi bi-download"></i>
@@ -724,7 +725,7 @@ color: #00192D;
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-filetype-js"></i>
                   <p>
-               Help
+                  Help
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
                 </a>
@@ -737,13 +738,13 @@ color: #00192D;
                   </li>
                 </ul>
               </li>
-              <li class="nav-item">
-                <!-- <a href="./docs/browser-support.html" class="nav-link">
+              <!-- <li class="nav-item">
+                <a href="./docs/browser-support.html" class="nav-link">
                   <i class="nav-icon bi bi-browser-edge"></i>
                   <p>Browser Support</p>
                 </a>
-              </li>
-              <li class="nav-item">
+              </li> -->
+              <!-- <li class="nav-item">
                 <a href="./docs/how-to-contribute.html" class="nav-link">
                   <i class="nav-icon bi bi-hand-thumbs-up-fill"></i>
                   <p>How To Contribute</p>
@@ -782,16 +783,16 @@ color: #00192D;
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Level 2</p>
                     </a>
-                  </li>
-                  <li class="nav-item">
+                  </li> -->
+                  <!-- <li class="nav-item">
                     <a href="#" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>
                         Level 2
                         <i class="nav-arrow bi bi-chevron-right"></i>
                       </p>
-                    </a>
-                    <ul class="nav nav-treeview">
+                    </a> -->
+                    <!-- <ul class="nav nav-treeview">
                       <li class="nav-item">
                         <a href="#" class="nav-link">
                           <i class="nav-icon bi bi-record-circle-fill"></i>
@@ -811,16 +812,16 @@ color: #00192D;
                         </a>
                       </li>
                     </ul>
-                  </li>
-                  <li class="nav-item">
+                  </li> -->
+                  <!-- <li class="nav-item">
                     <a href="#" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Level 2</p>
                     </a>
                   </li>
                 </ul>
-              </li>
-              <li class="nav-item">
+              </li> -->
+              <!-- <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-circle-fill"></i>
                   <p>Level 1</p>
@@ -838,14 +839,14 @@ color: #00192D;
                   <i class="nav-icon bi bi-circle text-warning"></i>
                   <p>Warning</p>
                 </a>
-              </li>
-              <li class="nav-item">
+              </li> -->
+              <!-- <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-circle text-info"></i>
                   <p>Informational</p>
                 </a>
-              </li>
-            </ul> -->
+              </li> -->
+            </ul>
             <!--end::Sidebar Menu-->
           </nav>
         </div>
@@ -859,68 +860,62 @@ color: #00192D;
           <!--begin::Container-->
           <div class="container-fluid">
             <div class="container">
-              <h1>Vacant Properties</h1>
+              <h1>Occupied Properties</h1>
               Filter:<input type="text" id="search" onkeyup="filterTable()" placeholder="Search properties...">
               <table>
                   <tr>
                       <th>Property Name</th>
                       <th>Location</th>
-                      <th>Rent Price</th>
                       <th>Type</th>
-                      <th>Units Available</th>
-                      <th>Vacant Units</th>
-                      <th>Availability Date</th>
+                      <th>Tenant</th>
+                      <th>Occupied Units</th>
+                      <th>Start Date</th>
                   </tr>
                   <tr>
-                      <td>Greenview Apartments</td>
-                      <td>Downtown</td>
-                      <td>KSH1,200</td>
+                      <td>Leap Apartments</td>
+                      <td>Westside</td>
                       <td>Bedsitter</td>
-                      <td>3</td>
-                      <td>Unit 101, Unit 205, Unit 307</td>
-                      <td>March 1, 2025</td>
+                      <td>John Doe</td>
+                      <td>Unit 304</td>
+                      <td>December 2025</td>
                   </tr>
                   <tr>
-                      <td>Sunnide Residences</td>
-                      <td>Uptown</td>
-                      <td>KSH 1,500</td>
-                      <td>One bedroom</td>
-                      <td>3</td>
-                      <td>Unit 12B, Unit 14A, Unit 13B</td>
-                      <td>April 15, 2025</td>
-                  </tr>
-                  <tr>
-                    <td>Season Residences</td>
-                    <td>Uptown</td>
-                    <td>KSH 1,500</td>
-                    <td>Lease</td>
-                    <td>2</td>
-                    <td>Unit 12B, Unit 14A</td>
-                    <td>April 15, 2025</td>
+                    <td>Rappy Apartments</td>
+                    <td>Westside</td>
+                    <td>Banking Hall</td>
+                    <td>John Doe</td>
+                    <td>Unit 304</td>
+                    <td>December 2025</td>
                 </tr>
                 <tr>
-                  <td>Sindy Residences</td>
-                  <td>Uptown</td>
-                  <td>KSH1,500</td>
-                  <td>Two bedroom</td>
-                  <td>2</td>
-                  <td>Unit 12B, Unit 14A</td>
-                  <td>April 15, 2025</td>
+                  <td>Bisty Apartments</td>
+                  <td>Westside</td>
+                  <td>One Bedroom</td>
+                  <td>John Doe</td>
+                  <td>Unit 304</td>
+                  <td>December 2025</td>
               </tr>
               <tr>
-                <td>Sindy Residences</td>
-                <td>Uptown</td>
-                <td>KSH 1,500</td>
-                <td>Three Bedroom</td>
-                <td>2</td>
-                <td>Unit 12B, Unit 14A</td>
-                <td>April 15, 2025</td>
+                <td>Top Apartments</td>
+                <td>Westside</td>
+                <td>Bedsitter</td>
+                <td>John Doe</td>
+                <td>Unit 304</td>
+                <td>December 2025</td>
             </tr>
+            <tr>
+              <td>Hilly Apartments</td>
+              <td>Westside</td>
+              <td>One Bedroom</td>
+              <td>John Doe</td>
+              <td>Unit 304</td>
+              <td>December 2025</td>
+          </tr>
               </table>
               <br>
-              <!-- <button onclick="goBack()" style="border-radius: 10px;">Back to Chart</button> -->
+              <!-- <button onclick="goBack()">Back to Chart</button> -->
           </div>
-        
+      
     <!--end::App Wrapper-->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
@@ -982,7 +977,7 @@ color: #00192D;
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <script src="../../dist/js/adminlte.js"></script>
+    <script src="../../../dist/js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
