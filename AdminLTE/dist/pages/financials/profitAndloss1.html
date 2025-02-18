@@ -54,7 +54,7 @@
     />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-   <link rel="stylesheet" href="maintanceRequests.css">
+   <link rel="stylesheet" href="profitAndloss1.css">
 <!-- scripts for data_table -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 
@@ -297,28 +297,63 @@
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-              <div class="col-sm-8">
+              <div class="col-sm-12">
 
-                <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> Maintenance Requests</h3>
-
-
+                <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> PROFIT & LOSS</h3> 
                     <div class="row mt-2  ">
-                      <div class="col-md-12  ">
-
-
+                      <div class="col-md-12">
+                        
+                        <div class="row">
+                                
+                                
+                        
 
                         <div class="row mt-6" >
                           <!-- Summary -->
-                          <div class="col-md-3  ">
-                            <label class="text text-center"> <i class="fas fa-calculator"></i> <a href="index.html"> TOTAL</a>  </label>
-                              <span class="value text-center"> <b>60 </b> </span>
+                          
+
+                          <div class="col-md-2  ">
+                            <label class="text text-center"> <i class="fas fa-calculator"></i> <a href="index.html"> INCOME</a>  </label>
+                              <span class="value text-center"> <b>KSH 76,889 </b> </span>
                           </div>
 
-                          <div class="col-md-3">
-                            <label class="text text-center"> <i class="fas fa-spinner fa-spin icon"></i> <a href=""> In Progress </a>  </label>
-                            <span class="value"> 89 </span>
+                          <div class="col-md-2">
+                            <label class="text text-center"> <i class="fas fa-spinner fa-spin icon"></i> <a href=""> EXPENSES </a>  </label>
+                            <span class="value"> <B>KSH 60,889</B> </span>
                           </div>
 
+                          <div class="col-md-2">
+                            <label class="text text-center"> <i class="fas fa-spinner fa-spin icon"></i> <a href=""> NET_PROFIT </a>  </label>
+                            <span class="value"> <B>KSH 16,889</B> </span>
+                          </div>
+
+                          <div class="col-md-2">
+                            <div class="select-container">
+                                
+                                <select name="cars" id="cars" class="custom-select">
+                                  <option value="volvo">January</option>
+                                  <option value="saab">Feb</option>
+                                  <option value="mercedes">March</option>
+                                  <option value="audi">April</option>
+                                </select>
+                            </div>
+                          </div>
+
+
+
+                          <div class="col-md-2">
+                            <div class="select-container">
+                                
+                                <select name="cars" id="cars" class="custom-select">
+                                  <option value="volvo">All_Properties</option>
+                                  <option value="saab">Nucho</option>
+                                  <option value="mercedes">EBENEZER</option>
+                                  <option value="audi">PINK_HOUSE</option>
+                                </select>
+                            </div>
+                          </div>
+                          
+                          
                         </div>
 
                       </div>
@@ -326,12 +361,7 @@
                 </div>
               </div>
 
-              <div class="col-sm-4">
-                <!-- <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                </ol> -->
-              </div>
+              
 
             </div>
             <!--end::Row-->
@@ -345,114 +375,68 @@
 
             <!-- /.row -->
             <!--begin::Row-->
-            <div class="row first mb-2 mt-2 rounded-circle">
-
-              <div class="col-md-12 d-flex justify-content-end">
-                <div>
-
-                  <button  id="Service_Provider_btn"  class="btn new_text">   <i class="bi bi-chat"></i> <b> <a href="../serviceProvider/providerProfiles.html"> Service_Providers</a> </b> </button>
-
-                </div>
-
-
-              </div>
-              <!-- /.col -->
-            </div>
+            
             <!--end::Row-->
             <!--begin::Row-->
-            <div class="row">
-              <!-- Start col -->
+            <div class="row mt-3">
+              <!-- Start col -->       
+               <h6 class="mb-1 contact_section_subheader"> <b>INCOME</b>  </h6>
               <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
+                <table id="income" class="display">
+                    <thead>
+                      <tr>
+                        <th>Income</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Rental Income</td><td>KSH10,000</td></tr>
+                        <tr><td>Maintenance Fees Collected</td><td>KSH500</td></tr>
+                        <tr><td>Late Payment Fees</td><td>KSH200</td></tr>
+                    
+                        <tr><td>Management Fees</td><td>KSH1,000</td></tr>
+                        <tr><td>Other Income</td><td>KSH100</td></tr>
+                        <tr><td>Total Income</td><td>KSH12,100</td></tr>
+                      <!-- Add more rows as needed -->
+                    </tbody>
 
+                  </table>
+            </div>
+              <!-- /.col -->
+            </div>
+            <!--end::Row-->
 
-                    </div>
+            <div class="row mt-5">
+                <h6 class="mb-1 contact_section_subheader"> <b>EXPENSES</b>  </h6>
 
-                    <div class="card-body">
-                      <table id="maintenance" class="display">
+                <div class="col-md-12">
+                    <table id="loss" class="display"  >
                         <thead>
-                          <tr>
-                            <th>ID</th>
-                            <th>Property</th>
-                            <th>TENANT</th>
-                            <th>UNIT</th>
-                            <th>DATE</th>
-                            <th>ISSUE</th>
-                            <th>Payment Status</th>
-                            <th>Prority</th>
-                            <th>PROVIDER</th>
-                             <th>ACTION</th>
-
-                          </tr>
+                            <tr>
+                                <th>Expense</th>
+                                <th>Amount</th>
+                            </tr>
                         </thead>
-                        <tbody>
-                          <tr>
-                            <td>002</td>
-                            <td>CROWN Z TOWERS</td>
-                            <td>Manucho</td>
-                            <td>A12</td>
-                            <td>11-10-2025</td>
-                            <td>Broken handle</td>
-                            <td><button class="btn  mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseModal" style="color: #FFC107;">
-                           PAY</button></td>
-                            <!-- <td><button onclick="toggleOverlay()">Paid</button></td> -->
-                            <td>low</td>
+                        <tr><td>MRI Deductions</td><td>KSH100</td></tr>
+                  <tr><td>Maintenance and Repairs</td><td>KSH1,200</td></tr>
+                  <tr><td>Staff Salaries</td><td>KSH2,500</td></tr>
+                  <tr><td>Utilities</td><td>KSH300</td></tr>
+                  <tr><td>Software Subscriptions</td><td>KSH150</td></tr>
+                  <tr><td>Marketing Costs</td><td>KSH400</td></tr>
+                  <tr><td>Legal Fees</td><td>KSH100</td></tr>
+                  <tr><td>Depreciation</td><td>KSH200</td></tr>
+                  <tr><td>Loan Interest</td><td>KSH250</td></tr>
+                  <tr><td>Miscellaneous Expenses</td><td>KSH100</td></tr>
+                  <tr><td>Total</td><td>KSH5,300</td></tr>
 
-                            <td>Not assigned</td>
-                            <td id="more">
-                             <div id="more_icon">&#x2026;</div>
-                             <br>
-                             <div id="more_options">
-                              <a href="#" class="mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseyModal" style="color: #FFC107;"class="btn  mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseyModal" style="color: #FFC107;">
-                              Assign
-                              </a>
-                                <!-- <a href="#">Assign</a> -->
-                                <a href="#">Update</a>
-                                <a href="#">Delete</a>
-                                <a href="#">View</a>
-
-
-                             </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>003</td>
-                            <td>ALPHA APARTMENTS</td>
-                            <td>Ethic</td>
-                            <td>A11</td>
-                            <td>12-11-2025</td>
-                            <td>Leaking roof</td>
-                            <td><button  class="btn  mt-0" id="example" style="color: #FFC107;">PAID</button></td>
-                            <td>high</td>
-
-                            <td>New Electrics</td>
-                            <td id="more">
-                              <div id="more_icon" class="rounded-circle" >&#x2026;</div>
-                              </td>
-                          </tr>
-                          <!-- Add more rows as needed -->
-                        </tbody>
-
-                      </table>
-
-
-
-                    </div>
-
-
-
-                    <div class="card-footer">
-
-                     </div>
+                    </table>
 
                 </div>
 
 
             </div>
-              <!-- /.col -->
-            </div>
-            <!--end::Row-->
+
+
           </div>
           <!--end::Container-->
         </div>
@@ -726,11 +710,11 @@
     <script>
 
        $(document).ready(function() {
-        $('#maintenance').DataTable({
+        $('#income').DataTable({
             "paging": true,
             "searching": true,
             "info": true,
-            "lengthMenu": [5, 10, 25, 60],
+            "lengthMenu": [10, 10, 25, 60],
             "language": {
                 "search": "Filter records:",
                 "lengthMenu": "Show _MENU_ entries"
@@ -739,6 +723,22 @@
     });
 
     </script>
+
+<script>
+    $(document).ready(function() {
+     $('#loss').DataTable({
+         "paging": true,
+         "searching": true,
+         "info": true,
+         "lengthMenu": [10, 10, 25, 60],
+         "language": {
+             "search": "Filter records:",
+             "lengthMenu": "Show _MENU_ entries"
+         }
+     });
+ });
+ </script>
+
 
     </script>
     <!-- End script for data_table -->
