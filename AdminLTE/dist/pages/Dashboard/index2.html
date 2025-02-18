@@ -261,7 +261,60 @@ color: #00192D;
             border: none;
         }
         #close{
-background-color: red;
+        background-color: red;
+        }
+        /* .cardi {
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .card-headering {
+            background-color: #FFC107;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between; /* Ensures proper alignment */
+            /* align-items: center; */
+        /* } */ */
+
+        .dropdown {
+            /* position: relative; */
+            top: 20px;  /* Moves 20px down */
+            left: 80px; /* Moves 30px to the right */
+        }
+        .dropdown-btn {
+            background-color:#00192D;
+            color:#FFC107;
+            padding: 4px 12px;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            /* z-index: 1; */
+            right: 0; /* Ensures dropdown aligns to the right */
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 10px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display:grid;
         }
 </style> 
 
@@ -677,6 +730,7 @@ background-color: red;
                     <div class="card direct-chat direct-chat-warning">
                       <div class="card-header">
                         <h3 class="card-title text-warning">Rental Trends</h3>
+
                         <div class="card-tools">
                           <span title="3 New Messages" class="badge text-bg-warning"> 3 </span>
                           <button
@@ -703,7 +757,7 @@ background-color: red;
                       <!-- /.card-header -->
                       <div class="card-body">
                         <!-- Conversations are loaded here -->
-                        <table id="myTable" class="display" style="">
+                        <table id="myTable" class="display">
                           <thead>
                               <tr>
                                   <th>Property</th>
@@ -781,9 +835,19 @@ background-color: red;
                 <div class="row g-4 mb-4">
                   <div class="col-md-12">
                     <!-- DIRECT CHAT -->
-                    <div class="card">
-                      <div class="card-header" style="background-color:#FFC107; /* RGB */;">
+                    <div class="cardi">
+                    
+                      <div class="card-headering" style="background-color:#FFC107; /* RGB */;">
                         <h3 class="card-title">RentalTrends</h3><br>
+                        <div class="dropdown">
+                          <button class="dropdown-btn">Select Apartment</button>
+                          <div class="dropdown-content">
+                              <a href="#">Crown Z Towers</a>
+                              <a href="#">Manucho Apartments</a>
+                              <a href="#">The mansion Apartments</a>
+                              <a href="#">Besty Apartments</a>
+                          </div>
+                      </div>
                        <!-- <b><p>Click The Rectangle To Know Per Apartment</p></b>  -->
                       </div>
 

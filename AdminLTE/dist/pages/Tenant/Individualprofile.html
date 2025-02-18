@@ -129,8 +129,54 @@
   border-radius: 10px;
   border: none;
 }
+.invoice-header {
+            display: flex;
+            justify-content: space-between;
+        }
+        .invoice-headering {
+            display: flex; 
+            justify-content: space-between;
+        }
+.btns{
+  margin-top: 10px;
+            display: inline-block;
+            padding: 10px 15px;
+            background-color:#00192D;
+            color:#FFC107;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+}
+.total {
+            text-align: right;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .invoice-details {
+            margin-bottom: 20px;
+        }
 
-
+        .invoice-details p {
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        @media print {
+            .overlay {
+                display: block !important;
+                position: absolute;
+            }
+            .close-btn, .btns {
+                display: none;
+            }
+            .overlay-content {
+                width: 100%;
+                max-width: 100%;
+                box-shadow: none;
+            }
+          }
+          .btn-print {
+                display: none;
+            }
 </style>
 
   </head>
@@ -605,64 +651,61 @@
 </div>
 <!-- end -->
 
-
- <!-- The invoice Overlay -->
- <div id="invoiceOverlay" class="overlay">
+<!-- The invoice Overlay -->
+<div id="invoiceOverlay" class="overlay">
   <div class="overlay-content">
-    <button class="close-btn" onclick="closeOverlay()">×</button>
-    <div id="invoice" style="text-align: start;">
-    <b><h2 style="color:#FFC107;; font-size: medium;"><strong>Invoice Details</strong></h2></b>
-    <p><strong>Invoice Number:</strong> 00123</p>
-    <p><strong>Invoice Date:</strong> February 11, 2025</p>
-    <p><strong>Due Date:</strong> February 25, 2025</p>
-</div>
-
-     <table>
-        <thead>
-            <tr>
-                <th style="color:#FFC107 ;">Rent</th>
-                <th style="color:#FFC107 ;">Water</th>
-               <th style="color:#FFC107 ;">Garbage</th>
-               <th style="color:#FFC107 ;">Late fees</th>
-               <!-- <th>Maintenance</th> -->
-
-
-
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-               <td>KSH3000</td>
-               <td>KSH500</td>
-               <td>KSH200</td>
-               <td>KSH200</td>
-               </tr>
-        </tbody>
-        <tfoot>
-            <tr class="total-row">
-                <td colspan="3" style="text-align: right;">Total  Due</td>
-                <td>KSH39,000</td>
-            </tr>
-            <tr class="total-row">
-              <td colspan="3" style="text-align: right;">PAID</td>
-              <td>KSH40,000</td>
-          </tr>
-            <tr class="total-row">
-                <td colspan="3" style="text-align: right;">Balance</td>
-                <td>KSH200</td>
-            </tr>
-        </tfoot>
-      </table>
-      <div>
-
+      <button class="close-btn" onclick="closeOverlay()">×</button>
+      <div id="invoice" style="text-align: start;">
+          <b><h2 style="color:#00192D; font-size: medium;"><strong>Invoice Details</strong></h2></b>
       </div>
 
-      <div style="display: flex; justify-content: flex-end;">
+      <div class="invoice-header">
+          <div>
+              <strong>From:</strong><br>
+              XYZ Rentals Ltd.<br>
+              Tatu City, Kiambu<br>
+              Email: xyz@gmail.com<br>
+          </div>
+          <div>
+              <strong>To:</strong><br>
+              John Doe<br>
+              Manucho Apartments<br>
+              Email: johndoe@example.com
+          </div>
+      </div>
+
+      <div class="invoice-headering">
+          <p><strong>Invoice Date:</strong> <span id="invoice-date"></span></p>
+          <p><strong>Invoice Number:</strong> #INV-2025001</p>
+      </div>
+
+      <div class="invoice-details">
+          <p>Rent <span>Ksh 20,000</span></p>
+          <p>Water Bill <span>Ksh 1,000</span></p>
+          <p>Garbage <span>Ksh 200</span></p>
+          <p>Arrears <span>Ksh 10,000</span></p>
+          <p>Penalty <span>Ksh 5,000</span></p>
+      </div>
+
+      <p class="total">Grand Total: Ksh <span id="grand-total"></span></p>
+
+      <button class="btn-print" onclick="printReceipt()">Print Receipt</button>
+
+
+      <div class="invoice-headering">
+          <button class="btns" onclick="printInvoice()">
+              <i class="fa fa-print"></i> Print Invoice
+          </button>
+      </div>
+  </div>
+</div>
+
+      <!-- <div style="display: flex; justify-content: flex-end;">
         <button style="background-color: white; color:#FFC107; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">
           DOWNLOAD
         </button>
     </div>
-    
+     -->
   </div>
 </div>
 
@@ -703,6 +746,41 @@
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
 
+    <!-- invoice -->
+    <script>
+      // Set current date for the invoice
+      document.getElementById('invoice-date').textContent = new Date().toLocaleDateString();
+
+      // // Calculate and update grand total
+      // function calculateTotal() {
+      //     let total = 0;
+      //     document.querySelectorAll(".total-price").forEach(cell => {
+      //         total += parseFloat(cell.textContent);
+      //     });
+      //     document.getElementById("grand-total").textContent = total.toFixed(2);
+      // }
+      // calculateTotal();
+
+      // Function to print invoice
+    function printInvoice() {
+        // Hide close button and print button before printing
+        document.querySelector(".close-btn").style.display = "none";
+        document.querySelector(".btns").style.display = "none";
+
+        // Print the invoice content
+        window.print();
+
+        // After print, restore the content visibility
+        window.onafterprint = function() {
+            document.querySelector(".close-btn").style.display = "block";
+            document.querySelector(".btns").style.display = "block";
+        };
+    }
+  </script>
+<!-- invoice end -->
+
+
+
 <!--Begin sidebar script -->
 <script>
   fetch('../bars/sidebar.html')  // Fetch the file
@@ -714,7 +792,7 @@
 </script>
 <!-- end sidebar script -->
 
-    <script>
+    <!-- <script>
       // Function to print the receipt
       function printReceipt() {
           window.print(); // Opens the print dialog
@@ -722,7 +800,7 @@
 
       // Set current date on the receipt
       document.getElementById("date").textContent = new Date().toLocaleDateString();
-  </script>
+  </script> -->
 
 <!--  Maintenance script -->
 <script>
