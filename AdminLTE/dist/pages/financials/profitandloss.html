@@ -43,6 +43,7 @@
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
+    <link rel="stylesheet" href="text.css" />
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -51,176 +52,15 @@
       integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+   <link rel="stylesheet" href="profitAndloss.css">
+<!-- scripts for data_table -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-      a{
-          text-decoration: none;
-      }
-      
-      body{
-          
-          background-color: rgba(128, 128, 128, 0.1);
-      }
-      .summaryItem{
-          font-family: 'Playfair Display', serif; /* Elegant for creative projects */
-font-size: 25px;
-font-weight: bold;
 
-font-weight: 400; /* Lighter weight for a faint look */
-letter-spacing: 1px; /* Slight spacing for an airy feel */
-color:gray;
-
-      }
-      .summaryItemOne{
-          font-family: 'Playfair Display', serif; /* Elegant for creative projects */
-font-size: 25px;
-font-weight: bold;
-
-font-weight: 400; /* Lighter weight for a faint look */
-letter-spacing: 1px; /* Slight spacing for an airy feel */
-color: #00192D;
-
-      }
-      .custom-btn{
-          background-color: #00192D;
-  border-color: #00192D;
-  color:  #FFC107; /* White background */
-      }
-
-  .statement{
-      background-color: #FFC107;
-      color: #00192D ;
-
-      }
-
-      .profile-card {
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    /* padding: 20px; */
-    
-    margin: 30px auto;
-  }
-  .profile-picture {
-    border-radius: 10px;
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    border: 4px solid #007bff;
-  }
-  .profile-details h2 {
-    /* margin-bottom: 10px; */
-    
-  }
-  .profile-details p {
-    /* /margin: 5px 0; */
-    color: #6c757d;
-  }
-  .profile_details{
-      display: flex;
-      
-  }
-  .profile_picture{
-      margin-right: 4%;
-  }
-  .profile_info .one{
-      color: #666;
-      font-size: 14px;
-      display: block;
-      text-align: justify;   
-
-  }
-  .other_profile_details{
-      display: block;
-      color: #666;
-      font-size: 14px;
-      display: block;
-      text-align: justify;
-  }
-  h2, h3 {
-            margin: 0;
-        }
-
-        .table-container {
-            width: 50%;
-            margin: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-
-        th, td {
-            border-bottom: 1px solid #ddd;
-            padding: 10px;
-        }
-
-        th {
-            background: #f4f4f4;
-            text-align: left;
-        }
-
-        td:first-child {
-            text-align: left;
-            padding-left: 10px;
-        }
-
-        td:last-child {
-            text-align: right;
-            padding-right: 10px;
-        }
-
-        .total-income, .total-expenses {
-            font-weight: bold;
-            background: #ffeb3b;
-        }
-        /* .statement-container {
-            width: 600px;
-            margin: auto;
-            border: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-            background: white;
-        } */
-
-        
-        .filter-container {
-            background-color: #ffffff;
-            padding: 20px;
-            margin: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .filter-container select, .filter-container input {
-            padding: 10px;
-            margin-right: 10px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-
-        .filter-container button {
-            padding: 10px 20px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .filter-container button:hover {
-            background-color: #0056b3;
-        }
-
-  </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -237,7 +77,7 @@ color: #00192D;
               </a>
             </li>
             <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
-            <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li> -->
+            <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li>
           </ul>
           <!--end::Start Navbar Links-->
           <!--begin::End Navbar Links-->
@@ -261,7 +101,7 @@ color: #00192D;
                   <div class="d-flex">
                     <div class="flex-shrink-0">
                       <img
-                        src="../../dist/assets/img/user1-128x128.jpg"
+                        src="../../../dist/assets/img/user1-128x128.jpg"
                         alt="User Avatar"
                         class="img-size-50 rounded-circle me-3"
                       />
@@ -287,7 +127,7 @@ color: #00192D;
                   <div class="d-flex">
                     <div class="flex-shrink-0">
                       <img
-                        src="../../dist/assets/img/user8-128x128.jpg"
+                        src="../../../dist/assets/img/user8-128x128.jpg"
                         alt="User Avatar"
                         class="img-size-50 rounded-circle me-3"
                       />
@@ -313,7 +153,7 @@ color: #00192D;
                   <div class="d-flex">
                     <div class="flex-shrink-0">
                       <img
-                        src="../../dist/assets/img/user3-128x128.jpg"
+                        src="../../../dist/assets/img/user3-128x128.jpg"
                         alt="User Avatar"
                         class="img-size-50 rounded-circle me-3"
                       />
@@ -378,17 +218,17 @@ color: #00192D;
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <img
-                  src="../../dist/assets/img/user2-160x160.jpg"
+                  src="17.jpg"
                   class="user-image rounded-circle shadow"
                   alt="User Image"
                 />
-                <span class="d-none d-md-inline">Alexander Pierce</span>
+                <span class="d-none d-md-inline">  <b>JENGO PAY</b>  </span>
               </a>
               <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                 <!--begin::User Image-->
                 <li class="user-header text-bg-primary">
                   <img
-                    src="../../dist/assets/img/user2-160x160.jpg"
+                    src="../../../dist/assets/img/user2-160x160.jpg"
                     class="rounded-circle shadow"
                     alt="User Image"
                   />
@@ -431,533 +271,21 @@ color: #00192D;
           <!--begin::Brand Link-->
           <a href="./index.html" class="brand-link">
             <!--begin::Brand Image-->
-            <!-- <img
-              src="../../dist/assets/img/AdminLTELogo.png"
+            <img
+              src="../../../dist/assets/img/AdminLTELogo.png"
               alt="AdminLTE Logo"
               class="brand-image opacity-75 shadow"
-            /> -->
+            />
             <!--end::Brand Image-->
             <!--begin::Brand Text-->
-            <span class="brand-text fw-light"></span>
+            <span class="brand-text fw-light">AdminLTE 4</span>
             <!--end::Brand Text-->
           </a>
           <!--end::Brand Link-->
         </div>
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
-        <div class="sidebar-wrapper">
-          <nav class="mt-2">
-            <!--begin::Sidebar Menu-->
-            <ul
-              class="nav sidebar-menu flex-column"
-              data-lte-toggle="treeview"
-              role="menu"
-              data-accordion="false"
-            >
-              <li class="nav-item menu-open">
-                <a href="#" class="nav-link active">
-                  <i class="nav-icon bi bi-speedometer"></i>
-                  <p>
-                    Dashboard
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <!-- <li class="nav-item">
-                    <a href="./index.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard</p>
-                    </a>
-                  </li> -->
-                  <li class="nav-item">
-                    <a href="./index2.html" class="nav-link active">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard </p>
-                    </a>
-                  </li>
-                  <!-- <li class="nav-item">
-                    <a href="./index3.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard v3</p>
-                    </a>
-                  </li> -->
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="./property.html" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Tenants</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./tenantscreening.html" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Tenant Screening</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./leasy.html" class="nav-link">
-                  <i class="nav-icon bi bi-file-earmark-text"></i>
-                  <p>Lease Management</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-box-seam-fill"></i>
-                  <p>
-                   Financial Documents
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./invoices.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Invoices</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./paymentreceipts.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Payment Receipts</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./rentdeposit.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p> Rent Deposit Reports</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./profitandloss.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Profit&Loss Statement</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./balancesheet.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Balance Sheet</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./cashflow.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Cashflow</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./taxreports.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Tax Reports</p>
-                    </a>
-                  </li>
-                  
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="./showCommunication.html" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Maintenance Requests</p>
-                </a>
-              </li>
-
-              <li class="nav-item">
-                <a href="./serviceproviders.html" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Service Providers</p>
-                </a>
-              </li>
-              
-              <li class="nav-item">
-                <a href="./rating&reviews.html" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Reviews And Rating</p>
-                </a>
-              </li>
-                  
-               <!-- Start Communications part -->
-               <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-pencil-square"></i>
-                  <p>
-                    Communications
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="communications/texts.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Texts</p>
-                    </a>
-                  </li>
-
-                  <li class="nav-item">
-                    <a href="communications/announcements.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Announcements</p>
-                    </a>
-                    
-                  </li>
-                </ul>
-              </li>
-
-              <!-- End communications part -->
-
-<!--               
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-clipboard-fill"></i>
-                  <p>
-                    Layout Options
-                    <span class="nav-badge badge text-bg-secondary me-3">6</span>
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./layout/unfixed-sidebar.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Default Sidebar</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./layout/fixed-sidebar.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Fixed Sidebar</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./layout/layout-custom-area.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Layout <small>+ Custom Area </small></p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./layout/sidebar-mini.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Sidebar Mini</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./layout/collapsed-sidebar.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Sidebar Mini <small>+ Collapsed</small></p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./layout/logo-switch.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Sidebar Mini <small>+ Logo Switch</small></p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./layout/layout-rtl.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Layout RTL</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-tree-fill"></i>
-                  <p>
-                    UI Elements
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./UI/general.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>General</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./UI/icons.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Icons</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./UI/timeline.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Timeline</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-pencil-square"></i>
-                  <p>
-                    Forms
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./forms/general.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>General Elements</p>
-                    </a>
-                  </li>
-                </ul>
-              </li> -->
-              <!-- <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-table"></i>
-                  <p>
-                    Tables
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./tables/simple.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Simple Tables</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-header">EXAMPLES</li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-box-arrow-in-right"></i>
-                  <p>
-                    Auth
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-box-arrow-in-right"></i>
-                      <p>
-                        Version 1
-                        <i class="nav-arrow bi bi-chevron-right"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a href="./examples/login.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Login</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="./examples/register.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Register</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li> -->
-                  <!-- <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-box-arrow-in-right"></i>
-                      <p>
-                        Version 2
-                        <i class="nav-arrow bi bi-chevron-right"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a href="./examples/login-v2.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Login</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="./examples/register-v2.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Register</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li> -->
-                  <!-- <li class="nav-item">
-                    <a href="./examples/lockscreen.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Lockscreen</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-header">DOCUMENTATIONS</li>
-              <li class="nav-item">
-                <a href="./docs/introduction.html" class="nav-link">
-                  <i class="nav-icon bi bi-download"></i>
-                  <p>Installation</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./docs/layout.html" class="nav-link">
-                  <i class="nav-icon bi bi-grip-horizontal"></i>
-                  <p>Layout</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./docs/color-mode.html" class="nav-link">
-                  <i class="nav-icon bi bi-star-half"></i>
-                  <p>Color Mode</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-ui-checks-grid"></i>
-                  <p>
-                    Components
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./docs/components/main-header.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Main Header</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./docs/components/main-sidebar.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Main Sidebar</p>
-                    </a>
-                  </li>
-                </ul>
-              </li> -->
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-filetype-js"></i>
-                  <p>
-                 Help
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./docs/javascript/treeview.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Treeview</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <!-- <li class="nav-item">
-                <a href="./docs/browser-support.html" class="nav-link">
-                  <i class="nav-icon bi bi-browser-edge"></i>
-                  <p>Browser Support</p>
-                </a>
-              </li> -->
-              <!-- <li class="nav-item">
-                <a href="./docs/how-to-contribute.html" class="nav-link">
-                  <i class="nav-icon bi bi-hand-thumbs-up-fill"></i>
-                  <p>How To Contribute</p>
-                </a>
-              </li> -->
-              <li class="nav-item">
-                <a href="./docs/faq.html" class="nav-link">
-                  <i class="nav-icon bi bi-question-circle-fill"></i>
-                  <p>FAQ</p>
-                </a>
-              </li>
-              <!-- <li class="nav-item">
-                <a href="./docs/license.html" class="nav-link">
-                  <i class="nav-icon bi bi-patch-check-fill"></i>
-                  <p>License</p>
-                </a>
-              </li> -->
-              <!-- <li class="nav-header">MULTI LEVEL EXAMPLE</li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle-fill"></i>
-                  <p>Level 1</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle-fill"></i>
-                  <p>
-                    Level 1
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Level 2</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>
-                        Level 2
-                        <i class="nav-arrow bi bi-chevron-right"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a href="#" class="nav-link">
-                          <i class="nav-icon bi bi-record-circle-fill"></i>
-                          <p>Level 3</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="#" class="nav-link">
-                          <i class="nav-icon bi bi-record-circle-fill"></i>
-                          <p>Level 3</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="#" class="nav-link">
-                          <i class="nav-icon bi bi-record-circle-fill"></i>
-                          <p>Level 3</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Level 2</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle-fill"></i>
-                  <p>Level 1</p>
-                </a>
-              </li>
-              <li class="nav-header">LABELS</li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle text-danger"></i>
-                  <p class="text">Important</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle text-warning"></i>
-                  <p>Warning</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle text-info"></i>
-                  <p>Informational</p>
-                </a>
-              </li>
-            </ul> -->
-            <!--end::Sidebar Menu-->
-          </nav>
-        </div>
+        <div id="sidebar"></div>
         <!--end::Sidebar Wrapper-->
       </aside>
       <!--end::Sidebar-->
@@ -967,108 +295,129 @@ color: #00192D;
         <div class="app-content-header">
           <!--begin::Container-->
           <div class="container-fluid">
-             <!-- /.col -->
-             <!-- Filter Section -->
-    <div class="filter-container">
-       <h3>Profit and Loss</h3> 
-      <label for="date-range">
-        <i class="fas fa-filter"></i>
-        Filters:</label>
-      <select id="date-range">AS of :Month
-          <option value="Q1">Month</option>
-          <option value="Q1">January</option>
-          <option value="Q2">February</option>
-          <option value="Q3">March</option>
-          <option value="Q4">April</option>
-          <option value="Q1">May</option>
-          <option value="Q1">June</option>
-          <option value="Q2">July</option>
-          <option value="Q3">August</option>
-          <option value="Q4">September</option>
-          <option value="Q1">October</option>
-          <option value="Q1">November</option>
-          <option value="Q2">December</option>
-      </select>
+            <!--begin::Row-->
+            <div class="row">
+              <div class="col-sm-12">
 
-      <label for="category">Basis:</label>
-      <select id="category">
-          <option value="cash">Cash</option>
-          <option value="accrual">Accrual</option>
-      </select>
+                <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> PROFIT & LOSS</h3> 
+                    <div class="row mt-2  ">
+                      <div class="col-md-12">
+                        
+                        <div class="row">
+                                
+                                
+                        
 
-      <button onclick="applyFilter()">RUN REPORTS</button>
-  </div>
+                        <div class="row mt-6" >
+                          <!-- Summary -->
+                          
 
-             <button id="exportButton" style="border-radius: 10px; margin-left: 90%;">
-              <i class="fas fa-share-square"></i> Export
-             </button>
+                          <div class="col-md-2  ">
+                            <label class="text text-center"> <i class="fas fa-calculator"></i> <a href="index.html"> INCOME</a>  </label>
+                              <span class="value text-center"> <b>KSH 76,889 </b> </span>
+                          </div>
 
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-header"style="background-color: #00192D;">
-              <h3 class="card-title" style="color: #FFC107;">INCOME</h3>
-            
-              <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                  <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                  <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                </button>
+                          <div class="col-md-2">
+                            <label class="text text-center"> <i class="fas fa-spinner fa-spin icon"></i> <a href=""> EXPENSES </a>  </label>
+                            <span class="value"> <B>KSH 60,889</B> </span>
+                          </div>
+
+                          <div class="col-md-2">
+                            <label class="text text-center"> <i class="fas fa-spinner fa-spin icon"></i> <a href=""> NET_PROFIT </a>  </label>
+                            <span class="value"> <B>KSH 16,889</B> </span>
+                          </div>
+
+                          <div class="col-md-2">
+                            <div class="select-container">
+                                
+                                <select name="cars" id="cars" class="custom-select">
+                                  <option value="volvo">January</option>
+                                  <option value="saab">Feb</option>
+                                  <option value="mercedes">March</option>
+                                  <option value="audi">April</option>
+                                </select>
+                            </div>
+                          </div>
+
+
+
+                          <div class="col-md-2">
+                            <div class="select-container">
+                                
+                                <select name="cars" id="cars" class="custom-select">
+                                  <option value="volvo">All_Properties</option>
+                                  <option value="saab">Nucho</option>
+                                  <option value="mercedes">EBENEZER</option>
+                                  <option value="audi">PINK_HOUSE</option>
+                                </select>
+                            </div>
+                          </div>
+                          
+                          
+                        </div>
+
+                      </div>
+
+                </div>
               </div>
-               <!-- /.card-tools -->
-              </div>
-              <!-- /.card-header -->
-               
-              <div class="statement-container"> 
-                <div class="card-body text-center">
-                  
-              <h2>Profit and Loss Statement|CROWN Z TOWERS(Monthly)</h2>
-              <h3>JANUARY</h3>
-              <table>
-                <table>
-                  <tr>
-                    <th style="text-align: left; color: #FFC107;">Income</th>
-                    <th style="text-align: right;color: #FFC107;">Amount (KSH)</th>
-                </tr>
-                  <tr><td>Rental Income</td><td>KSH10,000</td></tr>
-                  <tr><td>Maintenance Fees Collected</td><td>KSH500</td></tr>
-                  <tr><td>Late Payment Fees</td><td>KSH200</td></tr>
-                  <tr><td>Utility Charges</td><td>KSH300</td></tr>
-                  <tr><td>Management Fees</td><td>KSH1,000</td></tr>
-                  <tr><td>Other Income</td><td>KSH100</td></tr>
-                  <tr class="#" style="background-color: #FFC107;"><td>Total Income</td><td>KSH12,100</td></tr>
-              </table>
+
+              
+
             </div>
+            <!--end::Row-->
           </div>
+          <!--end::Container-->
         </div>
-        </div>
-        <hr>
-               <!-- /.col -->
-        <div class="col-md-12">
-          <div class="card card-success">
-            <div class="card-header"style="background-color: #00192D;">
-              <h3 class="card-title"  style="color: #FFC107; ">EXPENSES</h3>
+        <div class="app-content">
+          <!--begin::Container-->
+          <div class="container-fluid">
+            <!-- Info boxes -->
+
+            <!-- /.row -->
+            <!--begin::Row-->
             
-              <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                  <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                  <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                </button>
-              </div>
-               <!-- /.card-tools -->
-              </div>
-              <!-- /.card-header -->
-               
-              <div class="statement-container"> 
-                <div class="card-body text-center">
-              <h2>Profit and Loss Statement|CROWN Z TOWERS(Monthly)</h2>
-              <h3>JANUARY</h3>
-              <table>
-                
-                <tr>
-                    <th style="text-align: left; color: #FFC107;">Expense</th>
-                    <th style="text-align: right; color: #FFC107;">Amount (KSH)</th>
-                </tr>
-                <tr><td>MRI Deductions</td><td>KSH100</td></tr>
+            <!--end::Row-->
+            <!--begin::Row-->
+            <div class="row mt-3">
+              <!-- Start col -->       
+               <h6 class="mb-1 contact_section_subheader"> <b>INCOME</b>  </h6>
+              <div class="col-md-12">
+                <table id="income" class="display">
+                    <thead>
+                      <tr>
+                        <th>Income</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Rental Income</td><td>KSH10,000</td></tr>
+                        <tr><td>Maintenance Fees Collected</td><td>KSH500</td></tr>
+                        <tr><td>Late Payment Fees</td><td>KSH200</td></tr>
+                    
+                        <tr><td>Management Fees</td><td>KSH1,000</td></tr>
+                        <tr><td>Other Income</td><td>KSH100</td></tr>
+                        <tr><td>Total Income</td><td>KSH12,100</td></tr>
+                      <!-- Add more rows as needed -->
+                    </tbody>
+
+                  </table>
+            </div>
+              <!-- /.col -->
+            </div>
+            <!--end::Row-->
+
+            <div class="row mt-5">
+                <h6 class="mb-1 contact_section_subheader"> <b>EXPENSES</b>  </h6>
+
+                <div class="col-md-12">
+                    <table id="loss" class="display"  >
+                        <thead>
+                            <tr>
+                                <th>Expense</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tr><td>MRI Deductions</td><td>KSH100</td></tr>
                   <tr><td>Maintenance and Repairs</td><td>KSH1,200</td></tr>
                   <tr><td>Staff Salaries</td><td>KSH2,500</td></tr>
                   <tr><td>Utilities</td><td>KSH300</td></tr>
@@ -1078,41 +427,250 @@ color: #00192D;
                   <tr><td>Depreciation</td><td>KSH200</td></tr>
                   <tr><td>Loan Interest</td><td>KSH250</td></tr>
                   <tr><td>Miscellaneous Expenses</td><td>KSH100</td></tr>
-                  <tr class="#"style="background-color: #FFC107;"><td>Total Expenses</td><td>KSH5,300</td></tr>
-      
-                  <tr class="net-profit"><td>Net Profit</td><td>KSH6,800</td></tr> 
-                 
-              </table>
-            </div>
-          </div>
-          </div>
-          </div>
-              
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-          </div>
-            <div class="statement-container"> 
-                
+                  <tr><td>Total</td><td>KSH5,300</td></tr>
 
+                    </table>
+
+                </div>
+
+
+            </div>
+
+
+          </div>
+          <!--end::Container-->
+        </div>
+        <!--end::App Content-->
+      </main>
+      <!--end::App Main-->
+      <!--begin::Footer-->
+
+
+
+      <footer class="app-footer">
+        <!--begin::To the end-->
+        <div class="float-end d-none d-sm-inline">Anything you want</div>
+        <!--end::To the end-->
+        <!--begin::Copyright-->
+        <strong>
+          Copyright &copy; 2014-2024&nbsp;
+          <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;"> JENGO PAY</a>.
+        </strong>
+        All rights reserved.
+        <!--end::Copyright-->
+      </footer>
+      <!--end::Footer-->
+    </div>
     <!--end::App Wrapper-->
+
+
+
+
+<!-- Overlay Cards -->
+
+<!-- create Announcement -->
+
+
+
+
+
+ <!-- Start View announcement -->
+ <div class="view_announcement" id="view_announcement">
+  <div class="card content">
+   <div class="card-header view_announcement bg-secondary text-white">
+       <h5 class="mb-0">Rent Payments</h5>
+       <div id="close-overlay-btn" class="close-btn" > <b> &times;</b> </div>
+
+   </div>
+   <div class="card-body">
+       <p class="card-text">
+           All Rent Payments should be made before 24/01/17. Anyone who feels that they might not
+           be able to complete their dues on 24/01/17 should communicate to management before the due date.
+           Else, you face an eviction risk if you fail to pay your dues before the said date without a reasonable reason</p>
+
+           <p class="timestamp" id="timestamp"></p> <!-- Timestamp -->
+
+
+       <div class="Recipients border-top border-gray "> <p><strong>Recipients|</strong> All Employees</p>  </div>
+
+   </div>
+   <div class="card-footer view_announcement d-flex">
+       <button class="btn btn-danger btn-sm">Delete</button>
+       <button class="btn btn-secondary btn-sm">Resend</button>
+   </div>
+ </div>
+ </div>
+
+  <!-- Lease Modal -->
+<div class="modal fadey" id="leaseyModal" tabindex="-1" aria-labelledby="leaseyModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="leaseyModalLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="form-wrapper">
+              <h1 class="text-warning">Assign Task</h1>
+              <form id="taskForm">
+                <div class="input-group">
+                  <label for="taskName">Task About To Be Assigned:</label>
+                  <input type="text" id="taskName" name="taskName" placeholder="Enter task name" style="border-radius: 10px; width: 100%;"   required>
+              </div>
+
+                  <div class="input-group">
+                      <label for="serviceProvider">Select A Category For The Task</label>
+                  <label for="taskName"></label>
+                      <select id="serviceProvider" name="serviceProvider" style="border-radius: 10px;"  required>
+                          <option value="" id="taskName" disabled selected>Select A Category </option>
+                          <option value="John">Electrical</option>
+                          <option value="Jane">Plumbing</option>
+                          <option value="Mike">Cleaning</option>
+                      </select>
+                  </div>
+                  <div class="input-group">
+                    <label for="serviceProvider">Select Service Provider:</label>
+                    <select id="serviceProvider" name="serviceProvider" style="border-radius: 10px;" required>
+                        <option value="" id="taskName"  disabled selected>Select Provider</option>
+                        <option value="John">John </option>
+                        <option value="Jane">Jane </option>
+                        <option value="Mike">Mike </option>
+                    </select>
+                </div>
+
+
+                  <button type="submit" class="submit-btn" style="border-radius: 10px; background-color: #00192D; width: 50%; margin-left: 6rem;" >Assign</button>
+              </form>
+          </div>
+
+          <!-- <div id="assignedTasks">
+              <h2>Assigned Tasks</h2>
+              <ul id="taskList"></ul>
+          </div> -->
+      </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Lease Modal -->
+  <div class="modal fade" id="leaseModal" tabindex="-1" aria-labelledby="leaseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="leaseModalLabel"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form class="beasy">
+             <!-- Landlord Information Section -->
+      <!-- Service Provider Information Section -->
+      <div class="form-section">
+        <h3 class="text-warning">Landlord Information</h3>
+         <a href="#"><p>Martin White</p></a>
+        <!-- <label for="landlordName">Landlord Name(Martin White)</label> -->
+        <!-- <input type="text" id="landlordName" name="landlordName" placeholder="Enter your full name" required> -->
+
+        <h3 class="text-warning">Select Service Providers Information</h3>
+        <label for="paymentMethod">Choose:</label>
+        <select id="paymentMethod" name="paymentMethod" required>
+          <option value="bank_transfer">ABX Electricals</option>
+          <option value="bank_transfer">Sunsine Plumbers</option>
+          <option value="bank_transfer">Favored Technologies</option>
+        </select>
+        <h3 class="text-warning">Payment Details</h3>
+        <label for="amount">Payment Amount (KSH)</label>
+        <input type="text" id="landlordName" name="landlordName" placeholder="Enter Amount" required>
+
+        <label for="paymentMethod">Payment Method</label>
+        <select id="paymentMethod" name="paymentMethod" required>
+          <option value="mpesa_transfer" class="bossy">MPESA</option>
+          <option value="mpesa_transfer" class="bossy">Bank</option>
+          <option value="mpesa_transfer" class="bossy">Global Pay</option>
+          <option value="mpesa_transfer" class="bossy">Cash</option>
+
+        </select>
+         <!-- Submit Button -->
+         <button type="submit" class="bossy"> MAKE PAYMENT</button>
+      </div>
+
+
+
+      <!-- Payment Details Section
+      <div class="form-section">
+        <h3>Payment Details</h3>
+        <label for="amount">Payment Amount (KSH)</label>
+        <input type="number" id="amount" name="amount" placeholder="Enter the amount to pay" min="1" required>
+
+        <label for="paymentMethod">Payment Method</label>
+        <select id="paymentMethod" name="paymentMethod" required>
+          <option value="mpesa_transfer" class="bossy">MPESA</option>
+        </select>
+      </div> -->
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- End view announcement -->
+<!-- end overlay card. -->
+
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <script>
-        // Initialize DataTable
-        $(document).ready(function () {
-            $('#myTable').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableOne').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableThree').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableFour').DataTable();
-        });
-     </script>
+
+
+
+<!-- Overlay scripts -->
+ <!-- View announcements script -->
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+ <script>
+  const   more_announcement = document.getElementById('more_announcement_btn');
+  const   view_announcement = document.getElementById('view_announcement');
+  const   close_overlay = document.getElementById("close-overlay-btn");
+
+  more_announcement.addEventListener('click', ()=>{
+
+     view_announcement.style.display= "flex";
+     document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
+     const now = new Date();
+            const formattedTime = now.toLocaleString(); // Format the date and time
+            timestamp.textContent = `Sent on: ${formattedTime}`;
+
+
+  });
+
+     close_overlay.addEventListener('click', ()=>{
+
+     view_announcement.style.display= "none";
+     document.querySelector('.app-wrapper').style.opacity = '1';
+
+
+     });
+ </script>
+
+ <!-- End view announcement script -->
+
+ <script>
+  // Function to toggle the visibility of the overlay
+  function toggleOverlay() {
+    var overlay = document.getElementById('overlay');
+    // If overlay is hidden, show it
+    if (overlay.style.display === "none" || overlay.style.display === "") {
+      overlay.style.display = "flex";
+    } else {
+      overlay.style.display = "none";
+    }
+  }
+</script>
+
+
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
       integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
@@ -1125,13 +683,86 @@ color: #00192D;
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
+
+
+
+<!-- more options -->
+<script>
+
+  // JavaScript to handle hover and hide functionality
+  const  more= document.getElementById("more");
+  const more_icon = document.getElementById("more_icon");
+  const more_options = document.getElementById("more_options");
+
+  // Show panel when hovering over the accordion
+  more_icon.addEventListener("mouseenter", () => {
+    more_options.style.display = "block";
+  });
+
+  // Hide panel when moving out of both accordion and panel
+   more.addEventListener("mouseleave", () => {
+    more_options.style.display = "none";
+});
+
+
+</script>
+    <!-- Begin script for datatable -->
+    <script>
+
+       $(document).ready(function() {
+        $('#income').DataTable({
+            "paging": true,
+            "searching": true,
+            "info": true,
+            "lengthMenu": [10, 10, 25, 60],
+            "language": {
+                "search": "Filter records:",
+                "lengthMenu": "Show _MENU_ entries"
+            }
+        });
+    });
+
+    </script>
+
+<script>
+    $(document).ready(function() {
+     $('#loss').DataTable({
+         "paging": true,
+         "searching": true,
+         "info": true,
+         "lengthMenu": [10, 10, 25, 60],
+         "language": {
+             "search": "Filter records:",
+             "lengthMenu": "Show _MENU_ entries"
+         }
+     });
+ });
+ </script>
+
+
+    </script>
+    <!-- End script for data_table -->
+
+<!--Begin sidebar script -->
+<script>
+  fetch('../bars/sidebar.html')  // Fetch the file
+      .then(response => response.text()) // Convert it to text
+      .then(data => {
+          document.getElementById('sidebar').innerHTML = data; // Insert it
+      })
+      .catch(error => console.error('Error loading the file:', error)); // Handle errors
+</script>
+<!-- end sidebar script -->
+
+
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <script src="../../dist/js/adminlte.js"></script>
+    <script src="../../../dist/js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
@@ -1153,8 +784,6 @@ color: #00192D;
         }
       });
     </script>
-    <!-- Bootstrap Bundle with Popper -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!--end::OverlayScrollbars Configure-->
     <!-- OPTIONAL SCRIPTS -->
     <!-- apexcharts -->
@@ -1313,26 +942,6 @@ color: #00192D;
       //-----------------
     </script>
 
-<script>
-  document.getElementById("exportButton").addEventListener("click", function() {
-    // Example data (can be your table data or an array of objects)
-    const data = [
-      { Name: "John", Age: 30, City: "New York" },
-      { Name: "Jane", Age: 25, City: "London" },
-      { Name: "Mark", Age: 35, City: "Paris" }
-    ];
-
-    // Convert data to a worksheet
-    const ws = XLSX.utils.json_to_sheet(data);
-
-    // Create a new workbook and append the worksheet
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-
-    // Export the workbook as an Excel file
-    XLSX.writeFile(wb, "ExportedData.xlsx");
-  });
-</script>
     <!--end::Script-->
   </body>
   <!--end::Body-->
