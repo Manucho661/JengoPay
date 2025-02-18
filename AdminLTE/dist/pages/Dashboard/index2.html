@@ -3,7 +3,7 @@
   <!--begin::Head-->
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>AdminLTE | Dashboard v2</title>
+    <title>BT JENGOPAY |</title>
     <!--begin::Primary Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="title" content="AdminLTE | Dashboard v2" />
@@ -261,7 +261,60 @@ color: #00192D;
             border: none;
         }
         #close{
-background-color: red;
+        background-color: red;
+        }
+        /* .cardi {
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .card-headering {
+            background-color: #FFC107;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between; /* Ensures proper alignment */
+            /* align-items: center; */
+        /* } */ */
+
+        .dropdown {
+            /* position: relative; */
+            top: 20px;  /* Moves 20px down */
+            left: 80px; /* Moves 30px to the right */
+        }
+        .dropdown-btn {
+            background-color:#00192D;
+            color:#FFC107;
+            padding: 4px 12px;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            /* z-index: 1; */
+            right: 0; /* Ensures dropdown aligns to the right */
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 10px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display:grid;
         }
 </style> 
 
@@ -676,7 +729,7 @@ background-color: red;
                     <!-- DIRECT CHAT -->
                     <div class="card direct-chat direct-chat-warning">
                       <div class="card-header">
-                        <h3 class="card-title text-warning">Direct Chat</h3>
+                        <h3 class="card-title text-warning">Communication</h3>
                         <div class="card-tools">
                           <span title="3 New Messages" class="badge text-bg-warning"> 3 </span>
                           <button
@@ -703,62 +756,94 @@ background-color: red;
                       <!-- /.card-header -->
                       <div class="card-body">
                         <!-- Conversations are loaded here -->
-                        <table id="myTable" class="display" style="">
-                          <thead>
-                              <tr>
-                                  <th>Property</th>
-                                  <th>TYPE</th>
-                                  <th>Total Paid</th>
-                                  <th>Pending</th>
-                                  <th>No of Tenants</th>
-
-                              </tr>
-                          </thead>
-                          <tbody>
-                              <tr>
-                                  <td>Manucho Apartments</td>
-                                  <td>BEDSITTER</td>
-                                  <td>KSH 200,000</td>
-                                  <td>KSH 100,100</td>
-                                  <td>200</td>
-
-                              </tr>
-                              <tr>
-                                  <td>Ebenezer Apartments</td>
-                                  <td>1 BEDROOM</td>
-                                  <td>KSH 200,000</td>
-                                  <td>KSH 100, 200</td>
-                                  <td>100</td>
-
-                              </tr>
-                              <!-- Add more rows as needed -->
-                          </tbody>
-                        </table>
+                        <div class="direct-chat-messages">
+                          <!-- Message. Default to the start -->
+                          <div class="direct-chat-msg">
+                            <div class="direct-chat-infos clearfix">
+                              <span class="direct-chat-name float-start">Landlord</span>
+                              <span class="direct-chat-timestamp float-end"> 23 Jan 2:00 pm </span>
+                            </div>
+                            <!-- /.direct-chat-infos -->
+                            <img
+                              class="direct-chat-img"
+                              src="assets/img/user1-128x128.jpg"
+                              alt="message user image"
+                            />
+                            <!-- /.direct-chat-img -->
+                            <div class="direct-chat-text">
+                              Is this template really for free? That's unbelievable!
+                            </div>
+                            <!-- /.direct-chat-text -->
+                          </div>
+                          <!-- /.direct-chat-msg -->
+                          <!-- Message to the end -->
+                          <div class="direct-chat-msg end">
+                            <div class="direct-chat-infos clearfix">
+                              <span class="direct-chat-name float-end"> Sarah Bullock </span>
+                              <span class="direct-chat-timestamp float-start">
+                                23 Jan 2:05 pm
+                              </span>
+                            </div>
+                            <!-- /.direct-chat-infos -->
+                            <img
+                              class="direct-chat-img"
+                              src="assets/img/user3-128x128.jpg"
+                              alt="message user image"
+                            />
+                            <!-- /.direct-chat-img -->
+                            <div class="direct-chat-text">You better believe it!</div>
+                            <!-- /.direct-chat-text -->
+                          </div>
+                          <!-- /.direct-chat-msg -->
+                          <!-- Message. Default to the start -->
+                          <div class="direct-chat-msg">
+                            <div class="direct-chat-infos clearfix">
+                              <span class="direct-chat-name float-start"> Alexander Pierce </span>
+                              <span class="direct-chat-timestamp float-end"> 23 Jan 5:37 pm </span>
+                            </div>
+                            <!-- /.direct-chat-infos -->
+                            <img
+                              class="direct-chat-img"
+                              src="assets/img/user1-128x128.jpg"
+                              alt="message user image"
+                            />
+                            <!-- /.direct-chat-img -->
+                            <div class="direct-chat-text">
+                              Working with AdminLTE on a great new app! Wanna join?
+                            </div>
+                            <!-- /.direct-chat-text -->
+                          </div>
+                          <!-- /.direct-chat-msg -->
+                          <!-- Message to the end -->
+                          <div class="direct-chat-msg end">
+                            <div class="direct-chat-infos clearfix">
+                              <span class="direct-chat-name float-end"> Sarah Bullock </span>
+                              <span class="direct-chat-timestamp float-start">
+                                23 Jan 6:10 pm
+                              </span>
+                            </div>
+                            <!-- /.direct-chat-infos -->
+                            <img
+                              class="direct-chat-img"
+                              src="../../dist/assets/img/user3-128x128.jpg"
+                              alt="message user image"
+                            />
+                            <!-- /.direct-chat-img -->
+                            <div class="direct-chat-text">I would love to.</div>
+                            <!-- /.direct-chat-text -->
+                          </div>
+                          <!-- /.direct-chat-msg -->
+                        </div>
+                        <!-- /.direct-chat-messages-->
+                        <!-- Contacts are loaded here -->
+                      
+                            <!-- End Contact Item -->
+                          </ul>
+                          <!-- /.contacts-list -->
+                        </div>
                         <!-- /.direct-chat-pane -->
                       </div>
                       <!-- /.card-body -->
-                      <div class="card-footer">
-                        <div class="row">
-                            <div class="col-md-6 col-6">
-                              <div class="text-center border-end">
-                                <span class="text-success">
-                                  <i class="bi bi-caret-up-fill"></i>80%
-                                </span>
-                                <h5 class="fw-bold mb-0">KSH 35,210.43</h5>
-                                <span class="text-uppercase">TOTAL RENT</span>
-                              </div>
-                            </div>
-                            <!-- /.col -->
-                            <div class="col-md-6 col-6">
-                              <div class="text-center border-end">
-                                <span class="text-info"> <i class="bi bi-caret-left-fill"></i> 20% </span>
-                                <h5 class="fw-bold mb-0">KSH 10,390.90</h5>
-                                <span class="text-uppercase">TOTAL PENDING</span>
-                              </div>
-                            </div>
-                          </div>
-                      </div>
-                      <!-- /.card-footer-->
                     </div>
                     <!-- /.direct-chat -->
                   </div>
@@ -774,6 +859,8 @@ background-color: red;
 
             </div>
             <!--end::Row-->
+          
+                        
             <div class="row g-4 mb-8">
               <!-- First Card -->
               <div class="col-md-6">
@@ -781,9 +868,19 @@ background-color: red;
                 <div class="row g-4 mb-4">
                   <div class="col-md-12">
                     <!-- DIRECT CHAT -->
-                    <div class="card">
-                      <div class="card-header" style="background-color:#FFC107; /* RGB */;">
+                    <div class="cardi">
+                    
+                      <div class="card-headering" style="background-color:#FFC107; /* RGB */;">
                         <h3 class="card-title">RentalTrends</h3><br>
+                        <div class="dropdown">
+                          <button class="dropdown-btn">Select Apartment</button>
+                          <div class="dropdown-content">
+                              <a href="#">Crown Z Towers</a>
+                              <a href="#">Manucho Apartments</a>
+                              <a href="#">The mansion Apartments</a>
+                              <a href="#">Besty Apartments</a>
+                          </div>
+                      </div>
                        <!-- <b><p>Click The Rectangle To Know Per Apartment</p></b>  -->
                       </div>
 

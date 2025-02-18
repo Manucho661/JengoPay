@@ -1,59 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rent Deposit Report</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 20px;
-            border: 1px solid #ddd;
-            max-width: 500px;
-        }
-        h2 {
-            text-align: center;
-        }
-        .section {
-            border-top: 2px dashed #000;
-            padding-top: 10px;
-            margin-top: 10px;
-        }
-        .info {
-            margin-bottom: 10px;
-        }
-        .total {
-            font-weight: bold;
-            text-align: right;
-        }
-    </style>
-</head>
-<body>
-    <h2>Rent Deposit Report</h2>
-    <div class="info">
-        <p><strong>Tenant Name:</strong> John Doe</p>
-        <p><strong>Property:</strong> Greenview Apartments</p>
-    </div>
-    
-    <div class="section">
-        <h3>Initial Deposit Details</h3>
-        <p><strong>Amount Collected:</strong> KSH 30,000</p>
-        <p><strong>Date of Collection:</strong> 2025-01-10</p>
-    </div>
-    
-    <div class="section">
-        <h3>Deductions</h3>
-        <p><strong>Maintenance/Repair Costs Deducted:</strong> KSH 5,000</p>
-        <p><strong>Cleaning Fees:</strong> KSH 2,000</p>
-    </div>
-    
-    <div class="section">
-        <h3>Refund</h3>
-        <p><strong>Amount Refunded:</strong> KSH 23,000</p>
-        <p><strong>Date of Refund:</strong> 2025-02-15</p>
-    </div>
-    
-    <p style="text-align: center;">Thank you!</p>
-</body>
-</html>
+<ul class="nav nav-treeview">
+    <li class="nav-item">
+        <a href="#" class="nav-link">
+            <i class="nav-icon bi bi-circle"></i>
+            <p>Financial Reports <i class="bi bi-chevron-down"></i></p>
+        </a>
+        <!-- First-Level Dropdown -->
+        <ul class="nav nav-treeview" style="margin-left: 20px; display: none;">
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="nav-icon bi bi-file-earmark-text"></i>
+                    <p>Monthly Report</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="nav-icon bi bi-file-earmark-text"></i>
+                    <p>Annual Report <i class="bi bi-chevron-down"></i></p>
+                </a>
+                <!-- Second-Level Dropdown -->
+                <ul class="nav nav-treeview" style="margin-left: 20px; display: none;">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon bi bi-calendar"></i>
+                            <p>2023 Report</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon bi bi-calendar"></i>
+                            <p>2022 Report</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="nav-icon bi bi-graph-up"></i>
+                    <p>Revenue Analysis</p>
+                </a>
+            </li>
+        </ul>
+    </li>
+</ul>
