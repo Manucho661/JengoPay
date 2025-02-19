@@ -497,7 +497,11 @@
 
                   <button id="agreements_btn" class="btn"><i class="fas fa-calendar-check icon"></i>
                        <a href="agreements.html"> <b> Agreements </b> </a>  </button>
-
+                       
+                       <button id="agreements_btn" class="btn"><i class="fas fa-calendar-check icon"></i>
+                        <a href="agreements.html"> <b> Click To add  </b> </a>  </button>
+                        
+ 
                 </div>
 
                 <div class="col-md-6">
@@ -661,42 +665,107 @@
 
       <div class="invoice-header">
           <div>
-              <strong>From:</strong><br>
-              XYZ Rentals Ltd.<br>
-              Tatu City, Kiambu<br>
-              Email: xyz@gmail.com<br>
+            <strong>Bill To:</strong><br>
+            John Doe<br>
+            Manucho Apartments<br>
+            Email: johndoe@example.com
           </div>
           <div>
-              <strong>To:</strong><br>
-              John Doe<br>
-              Manucho Apartments<br>
-              Email: johndoe@example.com
+              <strong>INVOICE</strong><br>
+            <b>  Invoice Date <span>18-02-2025</span><br></b>
+              <b>Due Date<span>25-03-2025</span><br></b>
+              <!-- Email<span>johndoe@example.com</span>  -->
           </div>
       </div>
 
-      <div class="invoice-headering">
-          <p><strong>Invoice Date:</strong> <span id="invoice-date"></span></p>
-          <p><strong>Invoice Number:</strong> #INV-2025001</p>
-      </div>
-
-      <div class="invoice-details">
-          <p>Rent <span>Ksh 20,000</span></p>
-          <p>Water Bill <span>Ksh 1,000</span></p>
-          <p>Garbage <span>Ksh 200</span></p>
-          <p>Arrears <span>Ksh 10,000</span></p>
-          <p>Penalty <span>Ksh 5,000</span></p>
-      </div>
-
-      <p class="total">Grand Total: Ksh <span id="grand-total"></span></p>
-
-      <button class="btn-print" onclick="printReceipt()">Print Receipt</button>
+      <table>
+        <thead>
+            <tr>
+              <th>Qty</th>
+                <th>Description</th>
+                <th>Unit Price</th>
+               <th>Amount</th>
+               <!-- <th style="color:#FFC107 ;">Late fees</th> -->
+               <!-- <th>Maintenance</th> -->
 
 
-      <div class="invoice-headering">
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+               <td>1.00</td>
+               <td>Rent For February</td>
+               <td>KSH20,000</td>
+               <td>KSH20,000</td>
+               <!-- <td>ksh</td> -->
+               </tr>
+               <tr>
+                <td>10</td>
+                <td>Water Bill</td>
+                <td>KSH200.00</td>
+                <td>KSH200.00</td>
+                <!-- <td>ksh</td> -->
+                </tr>
+                <tr>
+                  <td>1.00</td>
+                  <td>Garbage Collection</td>
+                  <td>KSH250.00</td>
+                  <td>KSH250.00</td>
+                  <!-- <td>ksh</td> -->
+                  </tr>
+                  <tr>
+                    <td>1.00</td>
+                    <td>Late Payment Fees</td>
+                    <td>KSH250.00</td>
+                    <td>KSH250.00</td>
+                    <!-- <td>ksh</td> -->
+                    </tr>
+        </tbody>
+        <tfoot>
+            <tr class="total-row">
+                <td colspan="3" style="text-align: right;">Subtotal</td>
+                <td>KSH39,000</td>
+            </tr>
+            <tr class="total-row">
+              <td colspan="3" style="text-align: right;">*VAT(16%)</td>
+              <td>KSH40,000</td>
+          </tr>
+            <tr class="total-row">
+                <td colspan="3" style="text-align: right;">Total</td>
+                <td>KSH200</td>
+            </tr>
+        </tfoot>
+      </table>
+      
+      <div class="">
+        POWERED BY 
+        <button class="btns">
+          BTJENGOPAY
+        </button>
+      <div>
+  
+
+      <!-- <p class="total">Grand Total: Ksh <span id="grand-total"></span></p> -->
+
+      <!-- <button class="btn-print" onclick="printReceipt()">Print Receipt</button> -->
+
+
+      <div class="invoice-header">
           <button class="btns" onclick="printInvoice()">
               <i class="fa fa-print"></i> Print Invoice
           </button>
+          <button class="btns" onclick="downloadpdf()">
+            <i class="fa fa-file-pdf"></i> Generate PDF
+          </button>
+          <button class="btns" onclick="exportexcel()">
+            <i class="fa fa-file-export"></i> Export Excel
+          </button>
+
       </div>
+      
+
+
   </div>
 </div>
 
