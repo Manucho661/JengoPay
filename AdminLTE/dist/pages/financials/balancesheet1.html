@@ -54,7 +54,7 @@
     />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-   <link rel="stylesheet" href="profitAndloss.css">
+   <link rel="stylesheet" href="balancesheet1.css">
 <!-- scripts for data_table -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 
@@ -298,8 +298,7 @@
             <!--begin::Row-->
             <div class="row">
               <div class="col-sm-12">
-
-                <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> PROFIT & LOSS</h3> 
+                <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> BALANCE SHEET</h3> 
                     <div class="row mt-2  ">
                       <div class="col-md-12">
                         
@@ -312,12 +311,12 @@
                           
 
                           <div class="col-md-2  ">
-                            <label class="text text-center"> <i class="fas fa-calculator"></i> <a href="index.html"> INCOME</a>  </label>
+                            <label class="text text-center"> <i class="fas fa-calculator"></i> <a href="index.html"> ASSETS</a>  </label>
                               <span class="value text-center"> <b>KSH 76,889 </b> </span>
                           </div>
 
                           <div class="col-md-2">
-                            <label class="text text-center"> <i class="fas fa-spinner fa-spin icon"></i> <a href=""> EXPENSES </a>  </label>
+                            <label class="text text-center"> <i class="fas fa-spinner fa-spin icon"></i> <a href=""> LIABILITIES </a>  </label>
                             <span class="value"> <B>KSH 60,889</B> </span>
                           </div>
 
@@ -379,54 +378,108 @@
             <!--begin::Row-->
             <div class="row mt-3">
               <!-- Start col -->       
-               <h6 class="mb-1 contact_section_subheader"> <b>INCOME</b>  </h6>
+               <h6 class="mb-1 contact_section_subheader"> <b>ASSETS</b>  </h6>
               <div class="col-md-12">
-                <table id="income" class="display">
-                    <thead>
-                      <tr>
-                        <th>Income</th>
-                        <th>Amount</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>Rental Income</td><td>KSH10,000</td></tr>
-                        <tr><td>Maintenance Fees Collected</td><td>KSH500</td></tr>
-                        <tr><td>Late Payment Fees</td><td>KSH200</td></tr>
-                    
-                        <tr><td>Management Fees</td><td>KSH1,000</td></tr>
-                        <tr><td>Other Income</td><td>KSH100</td></tr>
-                        <tr><td>Total Income</td><td>KSH12,100</td></tr>
-                      <!-- Add more rows as needed -->
-                    </tbody>
+                <div class="asset_container">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title text-warning">
+                                Current_Assets
 
-                  </table>
+                            </div>
+                            <div class="card-body">
+                
+                                <table id="income" class="display">
+                                    <thead>
+                                    <tr>
+                                        <th>Income</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        <tr><td>Rent Deposits</td><td>KSH5,000</td></tr>
+                                        <tr><td>Accounts Receivable</td><td>KSH2,000</td></tr>
+                                        <tr><td>Prepaid Expenses</td><td>KSH300</td></tr>
+                                        <tr><td>Maintenance Inventory</td><td>KSH700</td></tr>
+                                        
+                                        
+                                        <tr class="#" ><td>Total Assets</td><td>KSH85,000</td></tr>
+                                    <!-- Add more rows as needed -->
+                                    </tbody>
+                
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    
+                <!-- /card -->
+
+                <div class="card mt-3">
+                    <div class="card-header text-warning">
+                        Fixed
+                    </div>
+                    
+                    <div class="card-body">
+                        <table id="income" class="display">
+                            <thead>
+                              <tr>
+                                <th>Income</th>
+                                <th>Amount</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                                
+                                
+                                <tr><td>Office Equipment</td><td>KSH3,000</td></tr>
+                                <tr><td>Vehicles</td><td>KSH15,000</td></tr>
+                                <tr><td>Property Assets</td><td>KSH50,000</td></tr>
+                    
+                                <tr><td>Investments</td><td>KSH10,000</td></tr>
+                                <tr class="#" ><td>Total Assets</td><td>KSH85,000</td></tr>
+                              <!-- Add more rows as needed -->
+                            </tbody>
+        
+                          </table>
+                    </div>
+
+                </div>
+                
             </div>
               <!-- /.col -->
             </div>
             <!--end::Row-->
 
             <div class="row mt-5">
-                <h6 class="mb-1 contact_section_subheader"> <b>EXPENSES</b>  </h6>
+                <h6 class="mb-1 contact_section_subheader"> <b>LIABILITIES</b>  </h6>
 
                 <div class="col-md-12">
-                    <table id="loss" class="display"  >
+                    <table>
                         <thead>
                             <tr>
-                                <th>Expense</th>
-                                <th>Amount</th>
+                              <th>Income</th>
+                              <th>Amount</th>
                             </tr>
                         </thead>
-                        <tr><td>MRI Deductions</td><td>KSH100</td></tr>
-                  <tr><td>Maintenance and Repairs</td><td>KSH1,200</td></tr>
-                  <tr><td>Staff Salaries</td><td>KSH2,500</td></tr>
-                  <tr><td>Utilities</td><td>KSH300</td></tr>
-                  <tr><td>Software Subscriptions</td><td>KSH150</td></tr>
-                  <tr><td>Marketing Costs</td><td>KSH400</td></tr>
-                  <tr><td>Legal Fees</td><td>KSH100</td></tr>
-                  <tr><td>Depreciation</td><td>KSH200</td></tr>
-                  <tr><td>Loan Interest</td><td>KSH250</td></tr>
-                  <tr><td>Miscellaneous Expenses</td><td>KSH100</td></tr>
-                  <tr><td>Total</td><td>KSH5,300</td></tr>
+
+                        <tbody>
+
+                        <tr class="category"><td>Current Liabilities</td><td></td></tr>
+                        <tr><td>Accounts Payable</td><td>KSH1,200</td></tr>
+                        <tr><td>Maintenance Costs Owed</td><td>KSH1,500</td></tr>
+                        <tr><td>Pending Refunds</td><td>KSH300</td></tr>
+                        <tr><td>Salaries Payable</td><td>KSH1,000</td></tr>
+            
+                        <tr class="category"><td>Long-term Liabilities</td><td></td></tr>
+                        <tr><td>Loans Payable</td><td>KSH20,000</td></tr>
+                        <tr><td>Deferred Tax Liabilities</td><td>KSH5,000</td></tr>
+            
+                        <tr class="#" ><td>Total</td><td>KSH29,000</td></tr>
+                        </tbody>
+
 
                     </table>
 

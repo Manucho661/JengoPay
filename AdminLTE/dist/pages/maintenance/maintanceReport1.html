@@ -56,11 +56,9 @@
 
    <link rel="stylesheet" href="maintanceRequests.css">
 <!-- scripts for data_table -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -299,7 +297,7 @@
             <div class="row">
               <div class="col-sm-8">
 
-                <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> Maintenance Requests</h3>
+                <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> Maintenance Requests/Plumbing</h3>
 
 
                     <div class="row mt-2  ">
@@ -347,15 +345,7 @@
             <!--begin::Row-->
             <div class="row first mb-2 mt-2 rounded-circle">
 
-              <div class="col-md-12 d-flex justify-content-end">
-                <div>
-
-                  <button  id="Service_Provider_btn"  class="btn new_text">   <i class="bi bi-chat"></i> <b> <a href="../serviceProvider/providerProfiles.html"> Service_Providers</a> </b> </button>
-
-                </div>
-
-
-              </div>
+              
               <!-- /.col -->
             </div>
             <!--end::Row-->
@@ -370,71 +360,69 @@
                     </div>
 
                     <div class="card-body">
-                      <table id="maintenance" class="display">
-                        <thead>
-                          <tr>
-                            <th>ID</th>
-                            <th>Property</th>
-                            <th>TENANT</th>
-                            <th>UNIT</th>
-                            <th>DATE</th>
-                            <th>ISSUE</th>
-                            <th>Payment Status</th>
-                            <th>Prority</th>
-                            <th>PROVIDER</th>
-                             <th>ACTION</th>
+                      <div class="container">
+                        <table id="maintenance" class="table table-striped" style="width: 100%;">
+                          <thead>
+                            <tr>
+                              <th>Request_Date</th>                       
+                              <th>CATEGORY</th>
+                              <th>Payment Status</th>
+                              <th>Prority</th>
+                              <th>PROVIDER</th>
+                                <th>ACTION</th>
 
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>002</td>
-                            <td>CROWN Z TOWERS</td>
-                            <td>Manucho</td>
-                            <td>A12</td>
-                            <td>11-10-2025</td>
-                            <td>Broken handle</td>
-                            <td><button class="btn  mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseModal" style="color: #FFC107;">
-                           PAY</button></td>
-                            <!-- <td><button onclick="toggleOverlay()">Paid</button></td> -->
-                            <td>low</td>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>11-10-2025</td>
+                              
+                              
+                              
+                              
+                              <td>Broken handle</td>
+                              <td><button class="btn  mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseModal" style="color: #FFC107;">
+                              PAY</button></td>
+                              <!-- <td><button onclick="toggleOverlay()">Paid</button></td> -->
+                              <td>low</td>
 
-                            <td>Not assigned</td>
-                            <td id="more">
-                             <div id="more_icon">&#x2026;</div>
-                             <br>
-                             <div id="more_options">
-                              <a href="#" class="mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseyModal" style="color: #FFC107;"class="btn  mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseyModal" style="color: #FFC107;">
-                              Assign
-                              </a>
-                                <!-- <a href="#">Assign</a> -->
-                                <a href="#">Update</a>
-                                <a href="#">Delete</a>
-                                <a href="#">View</a>
+                              <td>Not assigned</td>
+                              <td id="more">
+                                <div id="more_icon">&#x2026;</div>
+                                <br>
+                                <div id="more_options">
+                                <a href="#" class="mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseyModal" style="color: #FFC107;"class="btn  mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseyModal" style="color: #FFC107;">
+                                Assign
+                                </a>
+                                  <!-- <a href="#">Assign</a> -->
+                                  <a href="#">Update</a>
+                                  <a href="#">Delete</a>
+                                  <a href="#">View</a>
 
 
-                             </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>003</td>
-                            <td>ALPHA APARTMENTS</td>
-                            <td>Ethic</td>
-                            <td>A11</td>
-                            <td>12-11-2025</td>
-                            <td>Leaking roof</td>
-                            <td><button  class="btn  mt-0" id="example" style="color: #FFC107;">PAID</button></td>
-                            <td>high</td>
-
-                            <td>New Electrics</td>
-                            <td id="more">
-                              <div id="more_icon" class="rounded-circle" >&#x2026;</div>
+                                </div>
                               </td>
-                          </tr>
-                          <!-- Add more rows as needed -->
-                        </tbody>
+                            </tr>
+                            <tr>
+                              <td>11-10-2025</td>
+                            
+                            
+                              
+                              
+                              <td>Leaking roof</td>
+                              <td><button  class="btn  mt-0" id="example" style="color: #FFC107;">PAID</button></td>
+                              <td>high</td>
 
-                      </table>
+                              <td>New Electrics</td>
+                              <td id="more">
+                                <div id="more_icon" class="rounded-circle" >&#x2026;</div>
+                                </td>
+                            </tr>
+                            <!-- Add more rows as needed -->
+                          </tbody>
+
+                        </table>
+                      </div>
 
 
 
@@ -442,10 +430,7 @@
 
 
 
-                    <div class="card-footer">
-
-                     </div>
-
+                    
                 </div>
 
 
@@ -725,20 +710,48 @@
     <!-- Begin script for datatable -->
     <script>
 
-       $(document).ready(function() {
-        $('#maintenance').DataTable({
-            "paging": true,
-            "searching": true,
-            "info": true,
-            "lengthMenu": [5, 10, 25, 60],
-            "language": {
-                "search": "Filter records:",
-                "lengthMenu": "Show _MENU_ entries"
-            }
-        });
-    });
+            document.addEventListener("DOMContentLoaded", function() {
+            let table = $('#maintenanc').DataTable({
+                lengthChange: false, // Removes "Show [X] entries"
+                dom: 't<"bottom"p>', // Removes default search bar & keeps only table + pagination
+            });
 
+            // Link custom search box to DataTables search
+            $('#searchInput').on('keyup', function () {
+                table.search(this.value).draw();
+            });
+        });
     </script>
+
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
+
+
+
+
+<script>
+  $(document).ready(function() {
+      $('#maintenance').DataTable({
+          "lengthChange": false,
+          "dom": 'Bfrtip',
+          "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      });
+  });
+</script>
+          
+<script>
+  
+  </script>
 
     </script>
     <!-- End script for data_table -->
