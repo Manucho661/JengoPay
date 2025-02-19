@@ -43,6 +43,7 @@
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
+    <link rel="stylesheet" href="invoices.css">
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -977,7 +978,7 @@ color: #00192D;
           <div class="container-fluid">
 
               <!-- Filter Section -->
-    <div class="filter-container">
+    <!-- <div class="filter-container">
       <h3>Balance Sheet</h3> 
      <label for="date-range">
        <i class="fas fa-filter"></i>
@@ -996,44 +997,44 @@ color: #00192D;
          <option value="Q1">October</option>
          <option value="Q1">November</option>
          <option value="Q2">December</option>
-     </select>
+     </select> -->
 
-     <label for="category">Basis:</label>
+     <!-- <label for="category">Basis:</label>
      <select id="category">
          <option value="cash">Cash</option>
          <option value="accrual">Accrual</option>
-     </select>
+     </select> -->
 
-     <button onclick="applyFilter()">RUN REPORTS</button>
+     <!-- <button onclick="applyFilter()">RUN REPORTS</button>
  </div>
             <div class="statement-container">
               <button id="exportButton" style="border-radius: 10px; margin-left: 90%;">
                 <i class="fas fa-share-square"></i> Export
-               </button>
-                <h2>Balance Sheet|CROWN Z TOWERS(MONTHLY)</h2>
+               </button> -->
+                <!-- <h2>Balance Sheet|CROWN Z TOWERS(MONTHLY)</h2> -->
                 
                  <!-- /.col -->
-        <div class="col-md-12">
-            <div class="card" >
-              <div class="card-header" style="background-color: #00192D;">
-                <h3 class="card-title"  style="color: #FFC107; ">BALANCE SHEET MONTHLY|CROWN Z TOWERS(Monthly)</h3>
+        <!-- <div class="col-md-12">
+            <div class="card" > -->
+              <!-- <div class="card-header" style="background-color: #00192D;"> -->
+                <!-- <h3 class="card-title"  style="color: #FFC107; ">BALANCE SHEET MONTHLY|CROWN Z TOWERS(Monthly)</h3> -->
               
-                <div class="card-tools">
+                <!-- <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
                     <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
                     <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
                   </button>
-                </div>
+                </div> -->
                  <!-- /.card-tools -->
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body text-center">
 
-                    <table>
+                    <!-- <table>
                         <tr>
                         <th style="text-align: left; color: #FFC107;">Assets</th>
                         <th style="text-align: right; color: #FFC107;">Amount (KSH)</th>
-                        </tr>
+                    </tr>
                         <tr class="category" style=" color: #FFC107;"><td>Current Assets</td><td></td></tr>
                         <tr><td>Rent Deposits</td><td>KSH5,000</td></tr>
                         <tr><td>Accounts Receivable</td><td>KSH2,000</td></tr>
@@ -1063,19 +1064,20 @@ color: #00192D;
                         <tr><td>Deferred Tax Liabilities</td><td>KSH5,000</td></tr>
             
                         <tr class="#"  style="background-color: #FFC107;"><td>Total Liabilities</td><td>KSH29,000</td></tr>
-                        </table>
-            <hr>
+                        </table> -->
+            <!-- <hr> -->
+<!-- </div>
 </div>
 </div>
 </div>
-</div>
-</div>
-<hr>
+</div> -->
+
+<!-- <hr> -->
              <!-- /.col -->
         <div class="col-md-12">
             <div class="card card-success">
               <div class="card-header" style="background-color: #00192D;">
-                <h3 class="card-title"  style="color: #FFC107; ">EQUITY</h3>
+                <h3 class="card-title"  style="color: #FFC107;">Add Invoice</h3>
               
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
@@ -1087,24 +1089,181 @@ color: #00192D;
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body text-center">
-                    <table>
+                    <div class="form-section">
+                        <h2>Invoice Details</h2>
+                        <div class="form-row">
+                          <input type="text" name="invoice_number" placeholder="Invoice Number" required>
+                          <input type="date" name="invoice_date" placeholder="Invoice Date" required>
+                        </div>
+                      </div>
+                        <!-- Select Property -->
+      <div class="form-section">
+        <h2>Property</h2>
+        <select name="payment_method" required>
+          <option value="" disabled selected>Select Property</option>
+          <option value="credit_card">Credlings Apartment</option>
+          <option value="paypal">PayPal Apartment</option>
+          <option value="bank_transfer">Banky Apartments</option>
+          <option value="cash">Cashy Apartments</option>
+        </select>
+      </div>
+      <!-- end -->
 
-                    <tr>
-                        <th style="text-align: left; color: #FFC107;">Liabilities</th>
-                        <th style="text-align: right; color: #FFC107;">Amount (KSH)</th>
-                    </tr>
-                    <tr><td>Retained Earnings</td><td>KSH50,000</td></tr>
-                    <tr><td>Shareholder Capital</td><td>KSH6,000</td></tr>
-                    <tr class="total-equity"><td>Total Equity</td><td>KSH56,000</td></tr>
-        
-                    <tr class="total"><td>Total Liabilities & Equity</td><td>KSH85,000</td></tr>
-                </table>
+                      <!-- Customer Information Section -->
+                      <div class="form-section">
+                        <h2>Tenant Information</h2>
+                        <select name="payment_method" required>
+                            <option value="" disabled selected>Select Tenant</option>
+                            <option value="credit_card">Dennis</option>
+                            <option value="paypal">Kipchumba</option>
+                            <option value="bank_transfer">Gituma</option>
+                            <!-- <option value="cash">Cashy Apartments</option> -->
+                          </select>
+                        <!-- <input type="text" name="custome_rname" placeholder="Tenant Name" required> -->
+                        <!-- <textarea name="customer_address" placeholder="Customer Address" rows="4" required></textarea> -->
+                        <input type="email" name="customer_email" placeholder="Tenant Email" required>
+                      </div>
+                
+                      <!-- Item Details Section -->
+                      <div class="form-section">
+                        <h2>Invoice</h2>
+                        <hr>
+                        <table class="items-table">
+                          <thead>
+                            <tr>
+                              <th>Item (Service)</th>
+                              <th>Description</th>
+                              <th>Amount Paid</th>
+                              <th>Qty</th>
+                              <th>Subtotal</th>
+                              <th>Remove</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                                <td>
+                              <!-- <td><input type="text" name="item_description[]" placeholder="Item Description" required> -->
+                                <select name="payment_method" required>
+                                    <option value="" disabled selected>Select Option</option>
+                                    <option value="credit_card">Rent</option>
+                                    <option value="paypal">Water Bill</option>
+                                    <option value="bank_transfer">Garbage</option>
+                                    <!-- <option value="cash">Cashy Apartments</option> -->
+                                  </select>
+                            </td>
+                            <td><textarea name="customer_address" placeholder="Customer Address" rows="4" required></textarea></td>
+
+                            <td><input type="number" name="item_price[]" placeholder="Amount" required oninput="updateTotal(this)"></td>
+                              <td><input type="number" name="item_quantity[]" placeholder="Quantity" required oninput="updateTotal(this)"></td>
+                              <td><input type="number" name="item_total[]" placeholder="Total" readonly></td>
+                              <td><button type="button" class="delete-btn" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>
+                            </tr>
+                            <!-- Add more rows dynamically as needed -->
+                          </tbody>
+                        </table>
+                      </div>
+                
+                      <!-- Total Section -->
+                      <div class="total-row">
+                        <div>Total Amount: KSH<span id="totalAmount">0.00</span></div>
+                      </div>
+                
+                      <!-- Buttons -->
+                      <div class="form-btns">
+                        <button type="submit">Submit</button>
+                        <!-- <button type="reset"></button> -->
+                      </div>
+                    </form>
                 </div>
             </div>
                 <!-- /.card-body -->
               </div>
               <!-- /.card -->
             </div>
+<hr>
+            <!--begin::Row-->
+            <div class="row">
+                <div class="col-md-12">
+                  <div class="card mb-4">
+                    <div class="card-header">
+                      <h5 class="card-title text-warning">All Invoices</h5>
+                      <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                          <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                          <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                        </button>
+                        <div class="btn-group">
+                          <button
+                            type="button"
+                            class="btn btn-tool dropdown-toggle"
+                            data-bs-toggle="dropdown"
+                          >
+                            <i class="bi bi-wrench"></i>
+                          </button>
+                          <div class="dropdown-menu dropdown-menu-end" role="menu">
+                            <a href="#" class="dropdown-item">Action</a>
+                            <a href="#" class="dropdown-item">Another action</a>
+                            <a href="#" class="dropdown-item"> Something else here </a>
+                            <a class="dropdown-divider"></a>
+                            <a href="#" class="dropdown-item">Separated link</a>
+                          </div>
+                        </div>
+                        <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
+                          <i class="bi bi-x-lg"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                      <!--begin::Row-->
+                      <div class="row">
+                        <table id="myTableOne" class="display" style="">
+                          <thead>
+                            <tr>
+                              <th>Position</th>
+                              <th>Property Name</th>
+                              <th>Amount Paid</th>
+                              <th>Qty</th>
+                              <th>Subtotal</th>
+                              <th>Option</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>1</td>
+                              <td>Manucho Apartments</td>
+                              <td>10,000</td>
+                              <td>1</td>
+                              <td>10,000</td>
+                              <td>
+                                <button class="view" onclick="viewInvoice()">View <i class="fa fa-eye"></i></button>
+                                <button class="#" onclick="viewInvoice()" style="background-color: #00192D;color: white;border-radius: 5px;">PDF  <i class="fa fa-file-pdf"></i></button>
+                                <button class="#" onclick="viewInvoice()" style="background-color: #00192D;color: red;border-radius: 5px;">PRINT    <i class="fa fa-print"></i></button>
+
+                            </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                              <td>Ethical Apartments</td>
+                              <td>200.00</td>
+                              <td>1</td>
+                              <td>200.00</td>
+                              <td>
+                                <button class="view" onclick="viewInvoice()">View <i class="fa fa-eye"></i></button>
+                                <button class="#" onclick="viewInvoice()" style="background-color: #00192D;color: white;border-radius: 10px;" >PDF <i class="fa fa-file-pdf"></i></button>
+                                <button class="#" onclick="viewInvoice()" style="background-color: #00192D;color: red;border-radius: 10px;">PRINT<i class="fa fa-print"></i></button>
+
+                            </td>
+                            </tr>
+                            <!-- Add more rows as needed -->
+                          </tbody>
+  
+                        </table>
+  
+  
+                        <!-- /.col -->
+                      </div>
+                      <!--end::Row-->
                        
                 </div>
                 </div>
@@ -1112,8 +1271,49 @@ color: #00192D;
               </div>
               <!-- /.card -->
             </div>
-        
+    
                
+            <script>
+                 // Function to view the invoice in the modal
+    function viewInvoice() {
+      document.getElementById('viewInvoiceNumber').textContent = document.querySelector('[name="invoice_number"]').value;
+      document.getElementById('viewInvoiceDate').textContent = document.querySelector('[name="invoice_date"]').value;
+      document.getElementById('viewCustomerName').textContent = document.querySelector('[name="tenant_name"]').value;
+      document.getElementById('viewCustomerAddress').textContent = document.querySelector('[name="customer_address"]').value;
+      document.getElementById('viewCustomerEmail').textContent = document.querySelector('[name="customer_email"]').value;
+      document.getElementById('viewPaymentMethod').textContent = document.querySelector('[name="payment_method"]').value;
+      document.getElementById('viewShippingOption').textContent = document.querySelector('[name="shipping_option"]').value;
+    }
+                // Function to delete a row
+                function deleteRow(button) {
+                  // Find the row to delete
+                  var row = button.parentElement.parentElement;
+                  row.remove();
+                  updateTotalAmount();
+                }
+            
+                // Function to update the total amount of an item when quantity or price is changed
+                function updateTotal(input) {
+                  var row = input.parentElement.parentElement;
+                  var quantity = row.querySelector('[name="item_quantity[]"]').value;
+                  var price = row.querySelector('[name="item_price[]"]').value;
+                  var totalCell = row.querySelector('[name="item_total[]"]');
+                  totalCell.value = (quantity * price).toFixed(2);
+            
+                  updateTotalAmount();
+                }
+            
+                // Function to calculate the total invoice amount
+                function updateTotalAmount() {
+                  var totalAmount = 0;
+                  var rows = document.querySelectorAll('.items-table tbody tr');
+                  rows.forEach(function(row) {
+                    var total = parseFloat(row.querySelector('[name="item_total[]"]').value) || 0;
+                    totalAmount += total;
+                  });
+                  document.getElementById('totalAmount').textContent = totalAmount.toFixed(2);
+                }
+              </script>
 
     <!--end::App Wrapper-->
     <!--begin::Script-->
