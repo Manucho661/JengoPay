@@ -1,6 +1,7 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Poppins', sans-serif;
   columns: gray;
+  background-color: black;
 }
 
 
@@ -327,3 +328,55 @@ a{
   color: #f1f1f1;
   text-decoration: none;
 }
+div.dt-buttons{
+  background-color: #00192D !important ;
+}
+div.dt-buttons .btn{
+  background-color: #00192D !important
+}
+
+
+div.dt-button-collection {
+  background-color: #00192D !important;  /* Change to your preferred color */
+  border: 1px solid #ccc !important;
+  border-radius: 2px;
+}
+div.dt-button-collection .dt-button {
+  background-color: #00192D !important;
+  color: white !important; /* Ensure text is visible */
+  border: none !important;
+}
+
+/* Change hover effect */
+div.dt-button-collection .dt-button:hover {
+  background-color: #FFC107 !important;
+  color: white !important;
+  border-radius: 3px;
+}
+
+
+
+.paginate_button.page-item.active a{
+  background-color: #FFC107 !important;
+}
+.row.Summary{
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
+  padding: 10px;
+  border-radius: 2px;
+  background-color: white;
+}
+.card.content{
+  /* box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); x-offset, y-offset, blur-radius, color */
+
+}
+
+td button{
+  background-color: #00192D;
+  color: #FFC107;
+  border-radius: 2px;
+  border: transparent;
+  font-size: small;
+  max-width: 100%;
+}
+
+
