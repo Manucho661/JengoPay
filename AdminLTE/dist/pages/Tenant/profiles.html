@@ -320,9 +320,9 @@
                             <label class="text text-center"> <i class="fas fa-plus-circle"></i><a href=""> NEW_REQUESTS </a>  </label>
                             <span class="value"> 30 </span>
                           </div>
-                          <div class="col-md-3">
+                          <!-- <div class="col-md-3">
                             <button class="btn text text-danger"><i class="bi bi-pencil-square"></i></i> EDIT</button>
-                          </div>
+                          </div> -->
                         </div>
 
                       </div>
@@ -353,6 +353,9 @@
 
                     <button id="add_provider_btn" class="btn me-3 " style="background-color: #00192D; color: white; font-size: small;">  <i class="bi bi-plus"></i>
                       <b class="button_item" class="open-btn" onclick="openPopup()"> Add Tenant </b></button>
+
+                      <button id="add_provider_btn" class="btn me-3 " style="background-color: #00192D; color: white; font-size: small;">  <i class="bi bi-plus"></i>
+                        <b class="button_item" class="open-btn" onclick="openshiftPopup()"> Shift Tenant </b></button>
 
                     <button id="add_provider_btn" class="btn" style="background-color: #00192D; color: white; font-size: small;">  <i class="bi bi-bell"></i>
                     <b class="button_item" class="open-btn" onclick="opennotificationPopup()"> Create_Notification </b></button>
@@ -595,6 +598,41 @@
 </div>
 <!-- End Notification popup -->
 
+<!-- shift popup -->
+<div class="shiftpopup-overlay" id="shiftPopup">
+  <div class="shiftpopup-content">
+    <button class="close-btn text-secondary" onclick="closeshiftPopup()">×</button>
+    <div class="shift">
+    <h2 style="color: #00192D;">Shift Tenant</h2>
+    <label for="tenant">Select Tenant:</label>
+
+    <select id="tenant">
+        <option value="John Doe">John Doe</option>
+        <option value="Jane Smith">Jane Smith</option>
+        <option value="Mike Johnson">Mike Johnson</option>
+    </select>
+
+    <label for="property">Select New Property/Unit:</label>
+    <select id="property">
+        <option value="Apartment 101">Apartment 101</option>
+        <option value="House B3">House B3</option>
+        <option value="Condo 23A">Condo 23A</option>
+    </select>
+    <label for="property">Select Unit:</label>
+    <select id="property" style="width: 100%;padding: 10px;margin-bottom: 15px;border-radius: 5px;border: 1px solid #ccc;">
+        <option value="Apartment 101">A55</option>
+        <option value="House B3">B3</option>
+        <option value="Condo 23A">CA</option>
+    </select>
+    <br>
+
+    <button  type="submit" class="submit-btn" onclick="shiftTenant()"  style="background-color: #00192D; color: #f1f1f1;">Confirm Shift</button>
+
+</div>
+  </div>
+</div>
+<!-- End shift popup -->
+
 
 <!-- end overlay card. -->
 
@@ -635,7 +673,21 @@
 
  <!-- End view announcement script -->
 
+
 <!-- Complain script -->
+<script>
+  function shiftTenant() {
+        let tenant = document.getElementById("tenant").value;
+        let property = document.getElementById("property").value;
+
+        if (tenant && property) {
+            document.getElementById("message").innerText = `${tenant} has been moved to ${property}.`;
+        } else {
+            document.getElementById("message").innerText = "Please select both tenant and property.";
+        }
+    }
+</script>
+<!-- end -->
 <!-- Complaint script -->
 <script>
   // Function to open the complaint popup
@@ -666,6 +718,22 @@
 </script>
 
 <!-- create notification -->
+
+<!-- create shift -->
+<script>
+  // Function to open the complaint popup
+  function openshiftPopup() {
+    document.getElementById("shiftPopup").style.display = "flex";
+  }
+
+  // Function to close the complaint popup
+  function closeshiftPopup() {
+    document.getElementById("shiftPopup").style.display = "none";
+  }
+</script>
+
+<!-- create shift-->
+
 
 
 
