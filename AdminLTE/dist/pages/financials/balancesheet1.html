@@ -54,11 +54,13 @@
     />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-   <link rel="stylesheet" href="maintanceRequests.css">
+   <link rel="stylesheet" href="balancesheet1.css">
 <!-- scripts for data_table -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -295,28 +297,61 @@
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-              <div class="col-sm-8">
-
-                <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> Maintenance Requests/Plumbing</h3>
-
-
+              <div class="col-sm-12">
+                <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> BALANCE SHEET</h3> 
                     <div class="row mt-2  ">
-                      <div class="col-md-12  ">
-
-
-
+                      <div class="col-md-12">
+                        
+                        <div class="row">
+                                
+                                
+                        
                         <div class="row mt-6" >
                           <!-- Summary -->
-                          <div class="col-md-3  ">
-                            <label class="text text-center"> <i class="fas fa-calculator"></i> <a href="index.html"> TOTAL</a>  </label>
-                              <span class="value text-center"> <b>60 </b> </span>
+                          
+
+                          <div class="col-md-2  ">
+                            <label class="text text-center"> <i class="fas fa-calculator"></i> <a href="index.html"> ASSETS</a>  </label>
+                              <span class="value text-center"> <b>KSH 76,889 </b> </span>
                           </div>
 
-                          <div class="col-md-3">
-                            <label class="text text-center"> <i class="fas fa-spinner fa-spin icon"></i> <a href=""> In Progress </a>  </label>
-                            <span class="value"> 89 </span>
+                          <div class="col-md-2">
+                            <label class="text text-center"> <i class="fas fa-spinner fa-spin icon"></i> <a href=""> LIABILITIES </a>  </label>
+                            <span class="value"> <B>KSH 60,889</B> </span>
                           </div>
 
+                          <div class="col-md-2">
+                            <label class="text text-center"> <i class="fas fa-spinner fa-spin icon"></i> <a href=""> NET_PROFIT </a>  </label>
+                            <span class="value"> <B>KSH 16,889</B> </span>
+                          </div>
+
+                          <div class="col-md-2">
+                            <div class="select-container">
+                                
+                                <select name="cars" id="cars" class="custom-select">
+                                  <option value="volvo">January</option>
+                                  <option value="saab">Feb</option>
+                                  <option value="mercedes">March</option>
+                                  <option value="audi">April</option>
+                                </select>
+                            </div>
+                          </div>
+
+
+
+                          <div class="col-md-2">
+                            <div class="select-container">
+                                
+                                <select name="cars" id="cars" class="custom-select">
+                                  <option value="volvo">All_Properties</option>
+                                  <option value="saab">Nucho</option>
+                                  <option value="mercedes">EBENEZER</option>
+                                  <option value="audi">PINK_HOUSE</option>
+                                </select>
+                            </div>
+                          </div>
+                          
+                          
                         </div>
 
                       </div>
@@ -324,12 +359,7 @@
                 </div>
               </div>
 
-              <div class="col-sm-4">
-                <!-- <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                </ol> -->
-              </div>
+              
 
             </div>
             <!--end::Row-->
@@ -343,101 +373,122 @@
 
             <!-- /.row -->
             <!--begin::Row-->
-            <div class="row first mb-2 mt-2 rounded-circle">
+            
+            <!--end::Row-->
+            <!--begin::Row-->
+            <div class="row mt-3">
+              <!-- Start col -->       
+               <h6 class="mb-1 contact_section_subheader"> <b>ASSETS</b>  </h6>
+              <div class="col-md-12">
+                <div class="asset_container">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title text-warning">
+                                Current_Assets
 
-              
+                            </div>
+                            <div class="card-body">
+                
+                                <table id="income" class="display">
+                                    <thead>
+                                    <tr>
+                                        <th>Income</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        <tr><td>Rent Deposits</td><td>KSH5,000</td></tr>
+                                        <tr><td>Accounts Receivable</td><td>KSH2,000</td></tr>
+                                        <tr><td>Prepaid Expenses</td><td>KSH300</td></tr>
+                                        <tr><td>Maintenance Inventory</td><td>KSH700</td></tr>
+                                        
+                                        
+                                        <tr class="#" ><td>Total Assets</td><td>KSH85,000</td></tr>
+                                    <!-- Add more rows as needed -->
+                                    </tbody>
+                
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    
+                <!-- /card -->
+
+                <div class="card mt-3">
+                    <div class="card-header text-warning">
+                        Fixed
+                    </div>
+                    
+                    <div class="card-body">
+                        <table id="income" class="display">
+                            <thead>
+                              <tr>
+                                <th>Income</th>
+                                <th>Amount</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                                
+                                
+                                <tr><td>Office Equipment</td><td>KSH3,000</td></tr>
+                                <tr><td>Vehicles</td><td>KSH15,000</td></tr>
+                                <tr><td>Property Assets</td><td>KSH50,000</td></tr>
+                    
+                                <tr><td>Investments</td><td>KSH10,000</td></tr>
+                                <tr class="#" ><td>Total Assets</td><td>KSH85,000</td></tr>
+                              <!-- Add more rows as needed -->
+                            </tbody>
+        
+                          </table>
+                    </div>
+
+                </div>
+                
+            </div>
               <!-- /.col -->
             </div>
             <!--end::Row-->
-            <!--begin::Row-->
-            <div class="row">
-              <!-- Start col -->
-              <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
 
+            <div class="row mt-5">
+                <h6 class="mb-1 contact_section_subheader"> <b>LIABILITIES</b>  </h6>
 
-                    </div>
-
-                    <div class="card-body">
-                      <div class="container">
-                        <table id="maintenance" class="table table-striped" style="width: 100%;">
-                          <thead>
+                <div class="col-md-12">
+                    <table>
+                        <thead>
                             <tr>
-                              <th>Request_Date</th>                       
-                              <th>CATEGORY</th>
-                              <th>Payment Status</th>
-                              <th>Prority</th>
-                              <th>PROVIDER</th>
-                                <th>ACTION</th>
-
+                              <th>Income</th>
+                              <th>Amount</th>
                             </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td>11-10-2025</td>
-                              
-                              
-                              
-                              
-                              <td>Broken handle</td>
-                              <td><button class="btn  mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseModal" style="color: #FFC107;">
-                              PAY</button></td>
-                              <!-- <td><button onclick="toggleOverlay()">Paid</button></td> -->
-                              <td>low</td>
+                        </thead>
 
-                              <td>Not assigned</td>
-                              <td id="more">
-                                <div id="more_icon">&#x2026;</div>
-                                <br>
-                                <div id="more_options">
-                                <a href="#" class="mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseyModal" style="color: #FFC107;"class="btn  mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseyModal" style="color: #FFC107;">
-                                Assign
-                                </a>
-                                  <!-- <a href="#">Assign</a> -->
-                                  <a href="#">Update</a>
-                                  <a href="#">Delete</a>
-                                  <a href="#">View</a>
+                        <tbody>
+
+                        <tr class="category"><td>Current Liabilities</td><td></td></tr>
+                        <tr><td>Accounts Payable</td><td>KSH1,200</td></tr>
+                        <tr><td>Maintenance Costs Owed</td><td>KSH1,500</td></tr>
+                        <tr><td>Pending Refunds</td><td>KSH300</td></tr>
+                        <tr><td>Salaries Payable</td><td>KSH1,000</td></tr>
+            
+                        <tr class="category"><td>Long-term Liabilities</td><td></td></tr>
+                        <tr><td>Loans Payable</td><td>KSH20,000</td></tr>
+                        <tr><td>Deferred Tax Liabilities</td><td>KSH5,000</td></tr>
+            
+                        <tr class="#" ><td>Total</td><td>KSH29,000</td></tr>
+                        </tbody>
 
 
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>11-10-2025</td>
-                            
-                            
-                              
-                              
-                              <td>Leaking roof</td>
-                              <td><button  class="btn  mt-0" id="example" style="color: #FFC107;">PAID</button></td>
-                              <td>high</td>
+                    </table>
 
-                              <td>New Electrics</td>
-                              <td id="more">
-                                <div id="more_icon" class="rounded-circle" >&#x2026;</div>
-                                </td>
-                            </tr>
-                            <!-- Add more rows as needed -->
-                          </tbody>
-
-                        </table>
-                      </div>
-
-
-
-                    </div>
-
-
-
-                    
                 </div>
 
 
             </div>
-              <!-- /.col -->
-            </div>
-            <!--end::Row-->
+
+
           </div>
           <!--end::Container-->
         </div>
@@ -710,48 +761,36 @@
     <!-- Begin script for datatable -->
     <script>
 
-            document.addEventListener("DOMContentLoaded", function() {
-            let table = $('#maintenanc').DataTable({
-                lengthChange: false, // Removes "Show [X] entries"
-                dom: 't<"bottom"p>', // Removes default search bar & keeps only table + pagination
-            });
-
-            // Link custom search box to DataTables search
-            $('#searchInput').on('keyup', function () {
-                table.search(this.value).draw();
-            });
+       $(document).ready(function() {
+        $('#income').DataTable({
+            "paging": true,
+            "searching": true,
+            "info": true,
+            "lengthMenu": [10, 10, 25, 60],
+            "language": {
+                "search": "Filter records:",
+                "lengthMenu": "Show _MENU_ entries"
+            }
         });
+    });
+
     </script>
 
-     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
-
-
-
-
 <script>
-  $(document).ready(function() {
-      $('#maintenance').DataTable({
-          "lengthChange": false,
-          "dom": 'Bfrtip',
-          "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-      });
-  });
-</script>
-          
-<script>
-  
-  </script>
+    $(document).ready(function() {
+     $('#loss').DataTable({
+         "paging": true,
+         "searching": true,
+         "info": true,
+         "lengthMenu": [10, 10, 25, 60],
+         "language": {
+             "search": "Filter records:",
+             "lengthMenu": "Show _MENU_ entries"
+         }
+     });
+ });
+ </script>
+
 
     </script>
     <!-- End script for data_table -->

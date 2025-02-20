@@ -1,0 +1,432 @@
+body {
+    font-family: Arial, sans-serif;
+    columns: gray;
+  }
+  
+  
+  
+  table {
+  border-collapse: collapse;
+  width: 100%;
+  height: 50vh;
+  }
+  th {
+  background-color: #FFC107;
+  color: #00192D;
+  text-align: left;
+  padding: 0.5em;
+  font-size: 0.9rem;
+  }
+  td {
+  padding: 0.5em;
+  text-align: left;
+  font-size: 0.9rem;
+  
+  }
+  tr:nth-child(even) {
+  background-color: #f9f9f9;
+  }
+  tr:hover {
+  background-color: #f1f1f1;
+  }
+  
+  
+  .filter:hover {
+    color: #FFC107;
+  
+  }
+  
+  .filter{
+    /* background-color: #444; */
+    /* color: white; */
+    cursor: pointer;
+    /* padding: 12%;  */
+    width: 25%;
+    border-bottom: gray solid 1px;
+    text-align: left;
+    outline: none;
+    font-size: 16px;
+    transition: 0.3s;
+    color: gray;
+    font-size: 100%;
+    border-radius: 2%;
+  }
+  
+  .panel {
+    display: none; /* Initially hidden */
+    background-color: #00192D;
+    /* padding-left: 20px;position: absolute; Makes the panel an overlay */
+    position: absolute; /* Makes the panel an overlay */
+    /* left: 250px; Positioned to the right of the container */
+    top: 100%; /* Place right below the accordion */
+    left: 0;
+    width: fit-content;
+    z-index: 1000;
+    padding: 2%;
+    color: white;
+    border-radius: 4%;
+  
+  }
+  .panel a {
+    display: block;
+    padding: 8px;
+    /* color: white; */
+    text-decoration: none;
+    transition: 0.3s;
+    color: whitesmoke;
+  }
+  
+  .panel a:hover{
+  color: #FFC107;
+  }
+  
+  /* Announcement Overlay styles */
+  #view_announcement {
+    /* width: 50%; Adjust the card width as needed */
+    /* max-width: 500px; Ensures the card doesn't grow too wide */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    display: none;
+    z-index: 10000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+  
+  }
+  
+  
+  
+  .close-btn{
+     position: absolute;
+  
+    right: 15px;
+  
+    color: white;
+    cursor: pointer;
+  
+  }
+  
+  #more{
+  display: flex;
+   justify-content: center;
+  cursor: pointer;
+  
+  }
+  
+  #more_icon{
+  /* border: 1px solid black; */
+  border-radius: 30%;
+  padding: 10%;
+  font-size: larger;
+  }
+  
+  #more_options{
+  display: none;
+  /* position: absolute; */
+  z-index: 1000;
+  background: #00192D;
+  border-radius: 10%;
+  padding: 10px;
+  
+  }
+  #more_options a{
+  text-decoration: none;
+  color: white;
+  }
+  #more_options a:hover{
+  color: #FFC107;
+  }
+  #close-overlay-btn {
+    /* top: 0; */
+    color: white;
+    /* color: white; */
+    border: none;
+    cursor: pointer;
+    font-size: 100%;
+      }
+  #close-overlay-btn:hover {
+      color: red;
+      }
+  
+  
+  #more_announcement_btn{
+  color: blueviolet;
+  font-weight: 500;
+  cursor: pointer;
+  
+  }
+  #more_announcement_btn:hover{
+  background-color: rgba(128, 128, 128, 0.2);
+  color: #FFC107;
+  }
+  
+  form {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+  }
+  
+  h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  button:hover {
+  background-color:#00192D;
+  }
+  
+  /* .form-container {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 30px auto;
+  } */
+  
+  h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  }
+  
+  
+  
+  /* input[type="text"], input[type="email"], input[type="number"], select, textarea {
+  width: 70%;
+  padding: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  }  */
+  
+  /* textarea {
+  resize: vertical;
+  } */
+  
+  
+  /* Main form container */
+  .form-container{
+  position: fixed;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 3px 11px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  }
+  
+  /* Form Section Titles */
+  .form-section h3 {
+  font-size: 1.25em;
+  color: #333;
+  margin-bottom: 12px;
+  border-bottom: 2px solid #f1f1f1;
+  padding-bottom: 5px;
+  }
+  
+  /* Optional: Make the button more prominent */
+  .bossy {
+  background-color: #00192D;
+  justify-content: center;
+  color: white;
+  font-size: 12px;
+  /* padding: 12px 20px; */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 65%;
+  height: 2%;
+  }
+  
+  .bossy:hover {
+  background-color: #00192D;
+  }
+  .beasy{
+  max-width: 510px;
+  max-height:490px;
+  }
+  .text-warning {
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  /* font-weight: 50; */
+  color: #FFC107; /* Bright yellow color */
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Light shadow effect */
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+  transition: color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .text-warning:hover {
+  color: #FFC107; /* Slightly darker yellow on hover */
+  transform: scale(1.05); /* Slight scale effect on hover */
+  }
+  #taskForm{
+  font-size: medium;
+  }
+  
+ 
+  
+  .text{
+    display: block;
+    margin-bottom: 5px;
+    line-height: 11px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    color: #767676;
+    color: #00192D;
+    font-family: 'Poppins', sans-serif;
+  
+    }
+    .value{
+        font-size: 12px;
+        display: flex;
+        justify-content: center;
+        color: #FFC107;
+        /* background-color: #00192D; */
+        border-radius: 10px;
+    }
+    .text a{
+      text-decoration: none;
+    }
+  
+  
+    .row.first{
+      box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
+  
+  }
+  .contact_section_header{
+    border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+    font-family: 'Poppins', sans-serif;
+  
+  }
+  a{
+    color: #00192D;
+  }
+  
+  #Service_Provider_btn{
+    background-color: #00192D;
+    color: white;
+    font-size: small;
+  }
+  #Service_Provider_btn a{
+    color: #f1f1f1;
+    text-decoration: none;
+  }
+
+
+  .Month_dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.Month_dropbtn {
+    background-color: #FFC107;
+    color: white;
+    padding: 6px 16px;
+    font-size: 15px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dropbtn:hover {
+    background-color: #FFC107;
+}
+
+.Month_dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #ffffff;
+    min-width: 160px;
+    font-size: 10px;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.Month_dropdown:hover .Month_dropdown-content {
+    display: block;
+}
+
+.Month_dropdown-content a {
+    color: #333;
+    padding: 6px 10px;
+    text-decoration: none;
+    display: block;
+    border-radius: 10px;
+}
+
+.Month_dropdown-content a:hover {
+    background-color: #FFC107;
+    color: white;
+}
+
+.contact_section_subheader{
+    border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+    font-family: 'Poppins', sans-serif;
+  
+  }
+
+  /* Select styles */
+
+  .select-container {
+    /* width: 220px; */
+    font-family: Arial, sans-serif;
+  }
+
+  /* Label styling */
+  .select-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+    display: block;
+  }
+
+  /* Styled select dropdown */
+  .custom-select {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+    appearance: none; /* Removes default arrow */
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23007bff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18px" height="18px"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 18px;
+  }
+
+  /* Hover and Focus effects */
+  .custom-select:hover {
+    border-color: #FFC107;
+  }
+
+  .custom-select:focus {
+    border-color: #FFC107;
+    outline: none;
+    box-shadow: 2px 2px 8px rgba(0, 123, 255, 0.3);
+  }
+  .asset_container{  
+    box-shadow: 0 3px 11px rgba(0, 0, 0, 0.2);
+
+
+
+  }
