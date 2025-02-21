@@ -62,6 +62,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
       body{
@@ -405,11 +406,11 @@
                               <!-- <td><button onclick="toggleOverlay()">Paid</button></td> -->
                               <td>low</td>
 
-                              <td><button class="text-bg-primary"><i class="fa-solid fa-circle-check"></i>   COMPLETED</button></td>
+                              <td><button class="text-bg-danger"><i class="bi bi-x-circle-fill"></i>!INCOMPLETE</button></td>
                               <td>
-                                <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                                <button  onclick="openassignPopup()"  class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
                                 </button>
-                                <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
+                                <button onclick="openrequestPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
 
                               </td>
                             </tr>
@@ -423,12 +424,12 @@
                               <td><button  class="btn  mt-0" id="example" style="color: #FFC107;">PAID</button></td>
                               <td>high</td>
 
-                              <td> <button class="text-bg-danger"> <i class="bi bi-x-circle-fill"></i> IN_COMPLETE</button>  </td>
-                              <td><button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                              </button>
+                              <td> <button class="text-bg-success"><i class="fa-solid fa-circle-check"></i> DONE</button>  </td>
+                              <td>
+                                <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                              </button> -->
                               <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
-
-                                
+          
                                 </td>
                             </tr>
                             <!-- Add more rows as needed -->
@@ -632,6 +633,148 @@
   </div>
 
 <!-- End view announcement -->
+ <!-- assign popup -->
+<div class="assignpopup-overlay" id="assignPopup">
+  <div class="assignpopup-content">
+    <button class="close-btn text-secondary" onclick="closeassignPopup()">×</button>
+
+ 
+    <div class="bg-white rounded-lg  text-sm">
+      <button class="close-btn text-secondary" onclick="closeassignPopup()">×</button>
+
+      <h2 class="text-lg font-semibold text-gray-700 text-left mb-3">Assign a Plumber</h2>
+
+    <form>
+      
+      <div class="grid grid-cols-2 gap-2 flex items-center justify-center">
+          <div>
+              <label class="block text-gray-600">Requested By:</label>
+              <input type="text" class="w-full px-2 py-1 border rounded focus:ring-1 focus:ring-blue-500 text-xs" placeholder="Your Name">
+          </div>
+          <div>
+              <label class="block text-gray-600">Phone:</label>
+              <input type="tel" class="w-full px-2 py-1 border rounded focus:ring-1 focus:ring-blue-500 text-xs" placeholder="Phone">
+          </div>
+      </div>
+
+      <label class="block text-gray-600 mt-2">Email:</label>
+      <input type="email" class="w-full px-2 py-1 border rounded focus:ring-1 focus:ring-blue-500 text-xs" placeholder="Email">
+
+      <div class="grid grid-cols-2 gap-2 mt-2">
+          <div>
+              <label class="block text-gray-600">Unit:</label>
+              <input type="text" class="w-full px-2 py-1 border rounded focus:ring-1 focus:ring-blue-500 text-xs" placeholder="Unit">
+          </div>
+          <div>
+              <label class="block text-gray-600">Requested To:</label>
+              <input type="text" class="w-full px-2 py-1 border rounded focus:ring-1 focus:ring-blue-500 text-xs" placeholder="Requested To">
+          </div>
+      </div>
+
+      <label class="block text-gray-600 mt-2">Building:</label>
+      <input type="text" class="w-full px-2 py-1 border rounded focus:ring-1 focus:ring-blue-500 text-xs" placeholder="Building">
+
+      <label class="block text-gray-600 mt-2">Plumbing Issue:</label>
+      <select class="w-full px-2 py-1 border rounded focus:ring-1 focus:ring-blue-500 text-xs">
+          <option>Leaking Pipe</option>
+          <option>Clogged Drain</option>
+          <option>No Water Pressure</option>
+          <option>Broken Faucet</option>
+          <option>Overflowing Toilet</option>
+      </select>
+
+      <label class="block text-gray-600 mt-2">Detailed Description:</label>
+      <textarea class="w-full px-2 py-1 border rounded focus:ring-1 focus:ring-blue-500 text-xs" rows="3" placeholder="Describe the issue..."></textarea>
+
+      <label class="block text-gray-600 mt-2">Urgency:</label>
+      <select class="w-full px-2 py-1 border rounded focus:ring-1 focus:ring-blue-500 text-xs">
+          <option>Low</option>
+          <option>Medium</option>
+          <option>High</option>
+          <option>Emergency</option>
+      </select>
+
+      <div class="grid grid-cols-2 gap-2 mt-2">
+          <div>
+              <label class="block text-gray-600">Today's Date:</label>
+              <input type="date" class="w-full px-2 py-1 border rounded focus:ring-1 focus:ring-blue-500 text-xs" id="today-date" style="padding-left: 10px;">
+          </div>
+          <div class="flex items-center justify-between">
+              <span class="text-gray-600">Attach Photos:</span>
+              <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" id="attachPhotosSwitch" class="sr-only peer">
+                  <div class="w-8 h-4 bg-gray-300 rounded-full peer peer-checked:bg-blue-500 peer-checked:after:translate-x-4 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border after:rounded-full after:h-3 after:w-3 after:transition-all"></div>
+              </label>
+          </div>
+      </div>
+
+      <button type="submit" class=" w-full bg-blue-600 text-white rounded shadow hover:bg-blue-700 text-sm">
+        Submit Request
+    </button>
+  </form>
+  </div>
+  </div>
+</div>
+<!-- End assign popup -->
+
+<!-- notification popup -->
+<div class="requestpopup-overlay" id="requestPopup">
+  <div class="requestpopup-content">  
+<!-- Close Button Positioned to the Right -->
+<button class="close-btn text-secondary"   
+style="position: absolute; top: 10px; right: 10px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; font-size: 20px; cursor: pointer;" 
+onclick="closerequestPopup()">×</button>
+
+    <p>Plumbing Issue Request Details</p>
+    <form action="#" method="POST" class="tenant-card mb-2">
+      <b><p style="text-align: left;">Information About Request:</p></b>
+      <div class="form-group">
+        <div class="ray">
+          <p>Requested By: John Doe</p>
+          <p>Email:johndoe@gmail.com</p>
+        </div>
+        <div class="ray">
+          <p>Phone Number:0712349999</p>
+          <p>Unit:c29</p>
+        </div>
+        <div class="ray">
+          <p>Requested To: Landlord Name</p>
+          <p>Imela Apartments</p>
+        </div>
+        </div>
+</form>
+
+<form action="#" method="POST" class="teny-card mb-2">
+        <b><p style="text-align: left;">Plumbing Issue & Description:</p></b>
+        <p>Plumbing Requested Issue: Pipe Leakage</p>
+      <div class="form-group">
+        <div  class="riy">
+       <p> Description: Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid.</p>
+</div>
+      </div>
+      </form>
+
+      <form action="#" method="POST" class="teny-card mb-2">
+       <b><p style="text-align: left;">Urgence Level Request Date and Photos</p></b>
+       
+      <div class="form-group">
+        <!-- <p>Urgence Level Request Date and Photos</p> -->
+        <div  class="riy">
+      Urgence Level : <button style="background-color: red;color: white;border-radius: 10px;"> !Immediate Attention Required:</button>
+      <p>Date of Request: 21, Feb 2025</p>
+    </div>
+      </form>
+
+      <!-- <form action="#" method="POST" class="tenant-card">
+        <p>Photos</p>
+        <hr>
+    </div>
+      </form>
+       -->
+      <!-- <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SEND</button> -->
+  </div>
+</div>
+<!-- End Notification popup -->
 <!-- end overlay card. -->
 
     <!--begin::Script-->
@@ -641,6 +784,35 @@
 
 <!-- Overlay scripts -->
  <!-- View announcements script -->
+
+ <!-- View announcements script -->
+ <script>
+  // Function to open Assign popup
+  function openassignPopup() {
+    document.getElementById("assignPopup").style.display = "flex";
+  }
+
+  // Function to close the complaint popup
+  function closeassignPopup() {
+    document.getElementById("assignPopup").style.display = "none";
+  }
+</script>
+
+<!-- create assign-->
+ 
+<!-- request view popup -->
+<script>
+  // Function to open Assign popup
+  function openrequestPopup() {
+    document.getElementById("requestPopup").style.display = "flex";
+  }
+
+  // Function to close the complaint popup
+  function closerequestPopup() {
+    document.getElementById("requestPopup").style.display = "none";
+  }
+</script>
+<!-- end -->
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 
