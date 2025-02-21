@@ -406,7 +406,7 @@
                               <!-- <td><button onclick="toggleOverlay()">Paid</button></td> -->
                               <td>low</td>
 
-                              <td><button class="text-bg-primary"><i class="fa-solid fa-circle-check"></i>   COMPLETED</button></td>
+                              <td><button class="text-bg-danger"><i class="bi bi-x-circle-fill"></i>!INCOMPLETE</button></td>
                               <td>
                                 <button  onclick="openassignPopup()"   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
                                 </button>
@@ -424,9 +424,10 @@
                               <td><button  class="btn  mt-0" id="example" style="color: #FFC107;">PAID</button></td>
                               <td>high</td>
 
-                              <td> <button class="text-bg-danger"> <i class="bi bi-x-circle-fill"></i> IN_COMPLETE</button>  </td>
-                              <td><button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                              </button>
+                              <td> <button class="text-bg-success"><i class="fa-solid fa-circle-check"></i> DONE</button>  </td>
+                              <td>
+                                <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                              </button> -->
                               <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
 
                                 
@@ -730,15 +731,62 @@
 <!-- notification popup -->
 <div class="requestpopup-overlay" id="requestPopup">
   <div class="requestpopup-content">  
-    <button class="close-btn text-secondary" onclick="closerequestPopup()">×</button>
+<!-- Close Button Positioned to the Right -->
+<button class="close-btn text-secondary"   
+style="position: absolute; top: 10px; right: 10px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; font-size: 20px; cursor: pointer;" 
+onclick="closerequestPopup()">×</button>
+
     <p>Plumbing Issue Request Details</p>
-    <form action="#" method="POST" class="tenant-card">
-      <p>Information About Request:</p>
+    <form action="#" method="POST" class="tenant-card mb-2">
+      <b><p style="text-align: left;">Information About Request:</p></b>
       <div class="form-group">
-         <p><span>Name:</span> John Doe</p>
-            <p><span>Email:</span> johndoe@example.com</p>
-            <p><span>Message:</span> I am interested in renting the apartment and would like to schedule a visit.</p>
-  </form>
+        <div class="ray">
+          <p>Requested By: John Doe</p>
+          <p>Email:johndoe@gmail.com</p>
+        </div>
+        <div class="ray">
+          <p>Phone Number:0712349999</p>
+          <p>Unit:c29</p>
+        </div>
+        <div class="ray">
+          <p>Requested To: Landlord Name</p>
+          <p>Imela Apartments</p>
+        </div>
+        </div>
+</form>
+
+<form action="#" method="POST" class="teny-card mb-2">
+        <b><p style="text-align: left;">Plumbing Issue & Description:</p></b>
+        <p>Plumbing Requested Issue: Pipe Leakage</p>
+      <div class="form-group">
+        <div  class="riy">
+       <p> Description: Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid.</p>
+</div>
+      </div>
+      </form>
+
+      <form action="#" method="POST" class="teny-card mb-2">
+       <b><p style="text-align: left;">Urgence Level Request Date and Photos</p></b>
+       
+      <div class="form-group">
+        <!-- <p>Urgence Level Request Date and Photos</p> -->
+        <div  class="riy">
+      Urgence Level : <button style="background-color: red;color: white;border-radius: 10px;"> !Immediate Attention Required:</button>
+      <p>Date of Request: 21, Feb 2025</p>
+    </div>
+      </form>
+
+      <!-- <form action="#" method="POST" class="tenant-card">
+        <p>Photos</p>
+        <hr>
+    </div>
+      </form>
+       -->
+
+
+
+
+
 
       <!-- <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SEND</button> -->
   </div>
