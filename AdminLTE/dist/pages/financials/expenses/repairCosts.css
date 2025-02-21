@@ -1,0 +1,64 @@
+/* add expense styles */
+
+.form-container {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    margin: auto;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #333;
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    transition: all 0.3s ease-in-out;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
+}
+
+.btn-custom {
+    background-color: #00192D;
+    border: none;
+    border-radius: 8px;
+    transition: 0.3s;
+    color: white;
+    padding: 8px 15px;
+    font-weight: 500;
+
+}
+
+.btn-custom:hover {
+    background-color: #193A4D;
+}
+
+.btn-danger {
+    padding: 8px 12px;
+}
+
+table {
+    width: 100%;
+    margin-top: 10px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+th {
+    /* background: linear-gradient(to right, #FFC107, #FF8C00, #FF4500); */
+
+    color: black;
+    font-weight: 600;
+}
