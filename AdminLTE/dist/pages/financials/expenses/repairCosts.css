@@ -10,29 +10,29 @@
 }
 
 .form-label {
-    font-weight: 600;
-    color: #333;
+    font-weight: 600 !important;
+    color: #333 !important;
 }
 
 .form-control, .form-select {
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    transition: all 0.3s ease-in-out;
+    border-radius: 8px !important;
+    border: 1px solid #ccc !important;
+    transition: all 0.3s ease-in-out !important;
 }
 
 .form-control:focus, .form-select:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
+    border-color: #007bff !important;
+    box-shadow: 0 0 6px rgba(0, 123, 255, 0.3) !important;
 }
 
 .btn-custom {
-    background-color: #00192D;
-    border: none;
-    border-radius: 8px;
-    transition: 0.3s;
-    color: white;
-    padding: 8px 15px;
-    font-weight: 500;
+    background-color: #00192D !important;
+    border: none !important;
+    border-radius: 8px !important;
+    transition: 0.3s !important;
+    color: white !important;
+    padding: 8px 15px !important;
+    font-weight: 500 !important;
 
 }
 
@@ -62,3 +62,59 @@ th {
     color: black;
     font-weight: 600;
 }
+
+div.dt-buttons{
+    background-color: #00192D !important ;
+  }
+  div.dt-buttons .btn{
+    background-color: #00192D !important
+  }
+  
+  
+  div.dt-button-collection {
+    background-color: #00192D !important;  /* Change to your preferred color */
+    border: 1px solid #ccc !important;
+    border-radius: 2px;
+  }
+  div.dt-button-collection .dt-button {
+    background-color: #00192D !important;
+    color: white !important; /* Ensure text is visible */
+    border: none !important;
+  }
+  
+  /* Change hover effect */
+  div.dt-button-collection .dt-button:hover {
+    background-color: #FFC107 !important;
+    color: white !important;
+    border-radius: 3px;
+  }
+  
+
+  .text{
+    display: block;
+    margin-bottom: 5px;
+    line-height: 11px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    color: #767676;
+    color: #00192D;
+    font-family: 'Poppins', sans-serif;
+  
+    }
+    .value{
+        font-size: 12px;
+        display: flex;
+        justify-content: center;
+        color: #FFC107;
+        /* background-color: #00192D; */
+        border-radius: 10px;
+    }
+    .text a{
+      text-decoration: none;
+    }
+    
+    .paginate_button.page-item.active a {
+        background-color: #FFC107 !important;
+    }
