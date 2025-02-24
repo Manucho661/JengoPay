@@ -40,10 +40,13 @@
       integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
-    <link rel="stylesheet" href="tenantAgreements.css" />
+    <link rel="stylesheet" href="../../../../dist/css/adminlte.css" />
+    <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -53,16 +56,17 @@
       crossorigin="anonymous"
     />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="index1.css">
-    <link rel="stylesheet" href="agreements.css">
-<!-- scripts for data_table -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+   <link rel="stylesheet" href="">
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <!-- scripts for data_table -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
 
+    <style>
+      
+    </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -103,7 +107,7 @@
                   <div class="d-flex">
                     <div class="flex-shrink-0">
                       <img
-                        src="../../dist/assets/img/user1-128x128.jpg"
+                        src="../../../dist/assets/img/user1-128x128.jpg"
                         alt="User Avatar"
                         class="img-size-50 rounded-circle me-3"
                       />
@@ -129,7 +133,7 @@
                   <div class="d-flex">
                     <div class="flex-shrink-0">
                       <img
-                        src="../../dist/assets/img/user8-128x128.jpg"
+                        src="../../../dist/assets/img/user8-128x128.jpg"
                         alt="User Avatar"
                         class="img-size-50 rounded-circle me-3"
                       />
@@ -155,7 +159,7 @@
                   <div class="d-flex">
                     <div class="flex-shrink-0">
                       <img
-                        src="../../dist/assets/img/user3-128x128.jpg"
+                        src="../../../dist/assets/img/user3-128x128.jpg"
                         alt="User Avatar"
                         class="img-size-50 rounded-circle me-3"
                       />
@@ -220,7 +224,7 @@
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <img
-                  src="../17.jpg"
+                  src="17.jpg"
                   class="user-image rounded-circle shadow"
                   alt="User Image"
                 />
@@ -230,7 +234,7 @@
                 <!--begin::User Image-->
                 <li class="user-header text-bg-primary">
                   <img
-                    src="../../dist/assets/img/user2-160x160.jpg"
+                    src="../../../dist/assets/img/user2-160x160.jpg"
                     class="rounded-circle shadow"
                     alt="User Image"
                   />
@@ -287,7 +291,7 @@
         </div>
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
-        <div id="sidebar"></div> <!-- This is where the sidebar is inserted -->
+        <div id="sidebar"></div>
         <!--end::Sidebar Wrapper-->
       </aside>
       <!--end::Sidebar-->
@@ -301,41 +305,174 @@
             <div class="row">
               <div class="col-sm-8">
 
-                <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> Tenants</h3>
+                <h3 class="mb-0 contact_section_header">  <i class="fas fa-tools"></i>RepairCosts</h3>
 
 
                     <div class="row mt-2  ">
-                      <div class="col-md-12 Summary ">
+                      <div class="col-md-12  ">
 
 
 
-                        <div class="row mt-6" >
+                        <div class="row Summary mt-6" >
                           <!-- Summary -->
-                          <div class="col-md-3  ">
-                            <label class="text text-center">  <i class="fas fa-calculator"></i>  <a href="index.html"> TOTAL</a>  </label>
-                              <span class="value text-center">60000 </span>
+                          <div class="col-md-3 ">
+                            <label class="text text-center"> <i class="fas fa-calculator"></i> <b>TOTAL</b>   </label>
+                              <span class="value text-center"> <b>100 </b> </span>
                           </div>
 
+                          <div class="col-md-3 ">
+                            <label class="text text-center"><i class="fa-solid fa-circle-check"></i> <b>COMPLETED</b>   </label>
+                              <span class="value text-center"> <b>30 </b> </span>
+                          </div>
+                          
+                          <div class="col-md-3">
+                            <label class="text text-center"> <i class="fas fa-spinner fa-spin icon"></i> <b>In Progress</b>  </label>
+                            <span class="value"> <b>39</b>  </span>
+                          </div>
 
                           <div class="col-md-3">
-                            <!-- <button class="btn text text-danger"><i class="bi bi-pencil"></i> </i> EDIT</button> -->
+                            <label class="text text-center"> <i class="bi bi-x-circle-fill"></i>  <b>INCOMPLETE</b>  </label>
+                            <span class="value"> <b>25</b>  </span>
                           </div>
                         </div>
-
+                          
                       </div>
 
                 </div>
               </div>
 
               <div class="col-sm-4">
-                <!-- <ol class="breadcrumb float-sm-end">
+                <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
                   <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                </ol> -->
+                </ol> 
               </div>
 
             </div>
             <!--end::Row-->
+            <!-- begin row -->
+             <div class="row mt-5">
+                <div class="card">
+                  <div class="card-header">
+                      <a class="btn btn-link" data-bs-toggle="collapse" href="#addExpense" aria-expanded="false" aria-controls="addExpenseAccordion" style="color: #00192D; font-weight:bold; text-decoration: none;">
+                          <span id="toggleIcon">+</span> Click Here to Add Expense
+                      </a>
+                  </div>
+          
+                  <div class="card-body collapse" id="addExpense">
+                      <div class="card">
+                          <div class="card-header" style="background: linear-gradient(to right, #00192D, #003D5B, #00788D);">
+                              <h6 class="text-white">Enter Expense Details</h6>
+                          </div>
+                          <div class="card-body">
+                              <div class="form-container">
+                                  <form>
+                                      <div class="row g-3">
+                                          <!-- No -->
+                                          <div class="col-md-3">
+                                              <label class="form-label"><b>No</b></label>
+                                              <input type="number" class="form-control" placeholder="123">
+                                          </div>
+                          
+                                          <!-- Expense of the Month -->
+                                          <div class="col-md-5">
+                                              <label class="form-label"><b>Expense for the Month of</b></label>
+                                              <select class="form-select">
+                                                  <option selected disabled>Select Month</option>
+                                                  <option>January</option>
+                                                  <option>February</option>
+                                                  <option>March</option>
+                                                  <option>April</option>
+                                                  <option>May</option>
+                                                  <option>June</option>
+                                                  <option>July</option>
+                                                  <option>August</option>
+                                                  <option>September</option>
+                                                  <option>October</option>
+                                                  <option>November</option>
+                                                  <option>December</option>
+                                              </select>
+                                          </div>
+                          
+                                          <!-- Year -->
+                                          <div class="col-md-4">
+                                              <label class="form-label"><b>Year</b></label>
+                                              <input type="number" class="form-control" placeholder="2025">
+                                          </div>
+                                      </div>
+          
+                                      <div class="row g-3 mt-2">
+                                          <div class="col-md-6">
+                                              <label class="form-label"><b>Entry Date</b></label>
+                                              <input type="date" class="form-control">
+                                          </div>
+                                      </div>
+          
+                                      <!-- Brief Description -->
+                                      <div class="row g-3 mt-2">
+                                          <div class="col-12">
+                                              <label class="form-label"><b>Brief Description</b></label>
+                                              <textarea class="form-control" rows="3" placeholder="Enter details"></textarea>
+                                          </div>
+                                      </div>
+          
+                                      <!-- Expense Table -->
+                                      <div class="row g-3 mt-2">
+                                          <h6 class="text-center" style="color:linear-gradient(to right, #00192D, #003D5B, #00788D) ;"> <b>Add the Spend items in the fields below</b> </h6>
+                                          <table class="table table-bordered table-hover table-striped">
+                                              <thead>
+                                                  <tr>
+                                                      <th>Item</th>
+                                                      <th>Description</th>
+                                                      <th>Amount Paid</th>
+                                                      <th>Quantity</th>
+                                                      <th>Sub-total</th>
+                                                      <th>Remove</th>
+                                                  </tr>
+                                              </thead>
+                                              <tbody>
+                                                  <tr>
+                                                      <td>
+                                                          <select class="form-select">
+                                                              <option selected disabled>Expense</option>
+                                                              <option>Rent</option>
+                                                              <option>Water</option>
+                                                              <option>Internet</option>
+                                                              <option>Taxes</option>
+                                                              <option>Salaries</option>
+                                                              <option>Others</option>
+                                                          </select>
+                                                      </td>
+                                                      <td><textarea class="form-control" rows="2" placeholder="Enter details"></textarea></td>
+                                                      <td><input type="text" class="form-control" placeholder="123"></td>
+                                                      <td><input type="number" class="form-control" placeholder="1"></td>
+                                                      <td><input type="number" class="form-control" placeholder="123"></td>
+                                                      <td><button type="button" class="btn btn-danger remove-row">Delete</button></td>
+                                                  </tr>
+                                              </tbody>
+                                          </table>
+                                      </div>
+          
+                                      <div class="row g-3 mt-2">
+                                          <div class="col-6">
+                                              <button type="button" class="btn btn-custom" id="addRow">Add More</button>
+                                          </div>
+                                          <div class="col-6 mt-2 d-flex justify-content-end">
+                                              <button type="submit" class="btn btn-custom btn-sm" style="height: fit-content;"> Submit</button>
+                                          </div>
+                                      </div>
+                                      
+                                        
+                                      
+                                      
+                                  </form>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            <!-- /end row -->
           </div>
           <!--end::Container-->
         </div>
@@ -343,113 +480,71 @@
           <!--begin::Container-->
           <div class="container-fluid">
             <!-- Info boxes -->
-            <div class="row first mb-2 mt-2 ">
 
-                <div class="col-md-12 d-flex justify-content-end">
-
-                    <button id="add_provider_btn" class="btn me-3 " style="background-color: #00192D; color: white; font-size: small;">  <i class="bi bi-plus"></i>
-                      <b class="button_item" class="open-btn" onclick="openPopup()"> New_agreement</b></button>
-
-                    <button id="add_provider_btn" class="btn" style="background-color: #00192D; color: white; font-size: small;">  <i class="bi bi-bell"></i>
-                    <b class="button_item" class="open-btn" onclick="opennotificationPopup()"> Create_Notification </b></button>
-
-                </div>
-              <!-- /.col -->
-            </div>
             <!-- /.row -->
             <!--begin::Row-->
+            <div class="row first mb-2 mt-2 rounded-circle">
 
+              
+              <!-- /.col -->
+            </div>
             <!--end::Row-->
+
             <!--begin::Row-->
-            <div class="row second">
+            <div class="row">
+                
+            </div>
+            <!--end::Row-->
+
+           <!--begin::Row-->
+            <div class="row">
               <!-- Start col -->
-              <div class="col-md-12 " >
-                    <div class="card second_col ">
-                        <div class="card-header">
-
-
-                        </div>
-
-                        <div class="card-body">
-                          <table id="agreements" class="display" >
-                            <thead>
-                              <tr>
-                                  <th scope="col">DATE</th>
-                                      <th scope="col">FIRST PARTY (YOU)</th>
-                                      <th scope="col">SECOND PARTY (TENANT)</th>
-                                      <th scope="col">DEPOSIT</th>
-                                      <th scope="col">ACTION</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                  <td scope="row">1/7/11</td>
-                                      <td>JOSEPH KAIRO</td>
-                                      <td>Emmanuel Wanyonyi</td>
-                                      <td>KSH 10,000</td>
-                                      <td id="more">
-                                        <div id="more_icon">&#x2026;</div>
-                                        <br>
-                                        <div id="more_options">
-                                           <a href="#">View</a>
-                                           <a href="#">Edit</a>
-                                           <a href="#">Delete</a>
-
-
-                                        </div>
-                                       </td>
-
-                              </tr>
-                              <tr>
-
-                              <td scope="row">1/7/11</td>
-                                      <td>JOSEPH KAIRO</td>
-                                      <td>Emmanuel Wanyonyi</td>
-                                      <td>KSH 10,000</td>
-                                      <td id="more">
-                                        <div id="more_icon">&#x2026;</div>
-                                        <br>
-                                        <div id="more_options">
-                                           <a href="#">View</a>
-                                           <a href="#">Edit</a>
-                                           <a href="#">Delete</a>
-
-
-                                        </div>
-                                       </td>
-                              </tr>
-                              <tr>
-
-                                <td scope="row">1/7/11</td>
-                                <td>JOSEPH KAIRO</td>
-                                <td>Emmanuel Wanyonyi</td>
-                                <td>KSH 10,000</td>
-                                <td id="more">
-                                  <div id="more_icon">&#x2026;</div>
-                                  <br>
-                                  <div id="more_options">
-                                     <a href="#">Delete</a>
-                                     <a href="#">Edit</a>
-
-
-
-                                  </div>
-                                 </td>
-
-
-                                  </tr>
-                            </tbody>
-                          </table>
-
-                        </div>
-
-
-
-                        <div class="card-footer">
-
-                        </div>
-
+              <div class="col-md-12 ">
+                <div class="card Content">
+                    <div class="card-header">
+                      <b>All Repair Requests</b>
                     </div>
+
+                    <div class="card-body">
+                        <table class="table-striped" id="repaireExpenses" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>Repair_ID</th>
+                                    <th>EXP DATE</th>
+                                    <th>UNITY PRICE</th>
+                                    <th>Quantity</th>
+                                    <th>SUB TOTAL</th>
+                                    <th>TOTAL</th>
+                                    <th>ACTIONS</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <td>6AD</td>
+                                    <td>20/11/2013</td>
+                                    <td>KSH 10000</td>
+                                    <td>2</td>
+                                    <td>KSH 20,000</td>
+                                    <td>KSH 20,000</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>6AD</td>
+                                    <td>20/11/2013</td>
+                                    <td>KSH 10000</td>
+                                    <td>2</td>
+                                    <td>KSH 20,000</td>
+                                    <td>KSH 20,000</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+
+
+                        </table>
+                      
+                    </div>
+                    
                 </div>
 
 
@@ -487,84 +582,125 @@
 
 
 <!-- Overlay Cards -->
+ 
 
-<!-- create Announcement -->
+  <!-- Lease Modal -->
+<div class="modal fadey" id="leaseyModal" tabindex="-1" aria-labelledby="leaseyModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="leaseyModalLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="form-wrapper">
+              <h1 class="text-warning">Assign Task</h1>
+              <form id="taskForm">
+                <div class="input-group">
+                  <label for="taskName">Task About To Be Assigned:</label>
+                  <input type="text" id="taskName" name="taskName" placeholder="Enter task name" style="border-radius: 10px; width: 100%;"   required>
+              </div>
+
+                  <div class="input-group">
+                      <label for="serviceProvider">Select A Category For The Task</label>
+                  <label for="taskName"></label>
+                      <select id="serviceProvider" name="serviceProvider" style="border-radius: 10px;"  required>
+                          <option value="" id="taskName" disabled selected>Select A Category </option>
+                          <option value="John">Electrical</option>
+                          <option value="Jane">Plumbing</option>
+                          <option value="Mike">Cleaning</option>
+                      </select>
+                  </div>
+                  <div class="input-group">
+                    <label for="serviceProvider">Select Service Provider:</label>
+                    <select id="serviceProvider" name="serviceProvider" style="border-radius: 10px;" required>
+                        <option value="" id="taskName"  disabled selected>Select Provider</option>
+                        <option value="John">John </option>
+                        <option value="Jane">Jane </option>
+                        <option value="Mike">Mike </option>
+                    </select>
+                </div>
+
+
+                  <button type="submit" class="submit-btn" style="border-radius: 10px; background-color: #00192D; width: 50%; margin-left: 6rem;" >Assign</button>
+              </form>
+          </div>
+
+          <!-- <div id="assignedTasks">
+              <h2>Assigned Tasks</h2>
+              <ul id="taskList"></ul>
+          </div> -->
+      </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Lease Modal -->
+  <div class="modal fade" id="leaseModal" tabindex="-1" aria-labelledby="leaseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="leaseModalLabel"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form class="beasy">
+             <!-- Landlord Information Section -->
+      <!-- Service Provider Information Section -->
+      <div class="form-section">
+        <h3 class="text-warning">Landlord Information</h3>
+         <a href="#"><p>Martin White</p></a>
+        <!-- <label for="landlordName">Landlord Name(Martin White)</label> -->
+        <!-- <input type="text" id="landlordName" name="landlordName" placeholder="Enter your full name" required> -->
+
+        <h3 class="text-warning">Select Service Providers Information</h3>
+        <label for="paymentMethod">Choose:</label>
+        <select id="paymentMethod" name="paymentMethod" required>
+          <option value="bank_transfer">ABX Electricals</option>
+          <option value="bank_transfer">Sunsine Plumbers</option>
+          <option value="bank_transfer">Favored Technologies</option>
+        </select>
+        <h3 class="text-warning">Payment Details</h3>
+        <label for="amount">Payment Amount (KSH)</label>
+        <input type="text" id="landlordName" name="landlordName" placeholder="Enter Amount" required>
+
+        <label for="paymentMethod">Payment Method</label>
+        <select id="paymentMethod" name="paymentMethod" required>
+          <option value="mpesa_transfer" class="bossy">MPESA</option>
+          <option value="mpesa_transfer" class="bossy">Bank</option>
+          <option value="mpesa_transfer" class="bossy">Global Pay</option>
+          <option value="mpesa_transfer" class="bossy">Cash</option>
+
+        </select>
+         <!-- Submit Button -->
+         <button type="submit" class="bossy"> MAKE PAYMENT</button>
+      </div>
 
 
 
+      <!-- Payment Details Section
+      <div class="form-section">
+        <h3>Payment Details</h3>
+        <label for="amount">Payment Amount (KSH)</label>
+        <input type="number" id="amount" name="amount" placeholder="Enter the amount to pay" min="1" required>
 
+        <label for="paymentMethod">Payment Method</label>
+        <select id="paymentMethod" name="paymentMethod" required>
+          <option value="mpesa_transfer" class="bossy">MPESA</option>
+        </select>
+      </div> -->
 
- <!-- Start View announcement -->
- <div class="view_announcement" id="view_announcement">
-  <div class="card content">
-   <div class="card-header view_announcement bg-secondary text-white">
-       <h5 class="mb-0">Rent Payments</h5>
-       <div id="close-overlay-btn" class="close-btn" > <b> &times;</b> </div>
-
-   </div>
-   <div class="card-body">
-       <p class="card-text">
-           All Rent Payments should be made before 24/01/17. Anyone who feels that they might not
-           be able to complete their dues on 24/01/17 should communicate to management before the due date.
-           Else, you face an eviction risk if you fail to pay your dues before the said date without a reasonable reason</p>
-
-           <p class="timestamp" id="timestamp"></p> <!-- Timestamp -->
-
-
-       <div class="Recipients border-top border-gray "> <p><strong>Recipients|</strong> All Employees</p>  </div>
-
-   </div>
-   <div class="card-footer view_announcement d-flex">
-       <button class="btn btn-danger btn-sm">Delete</button>
-       <button class="btn btn-secondary btn-sm">Resend</button>
-   </div>
- </div>
- </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <!-- End view announcement -->
-
-<!-- Complaint part -->
-<div class="popup-overlay" id="complaintPopup">
-  <div class="popup-content">
-    <button class="close-btn text-secondary" onclick="closePopup()">×</button>
-    <h2 style="color: #00192D;">Agreement Form</h2>
-    <p>Full Legal Name: <input type="text" name="partyB_name"></p>
-    <p>Email: <input type="email" name="partyB_email"></p>
-    <p>Phone: <input type="tel" name="partyB_phone"></p>
-    <p>Deposit: <input type="tel" name="partyB_phone"></p>
-    <label for="file">Choose file to upload ID:</label>
-    <input type="file" name="file" id="file">
-    <br><br>
-   
-      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
-    </form>
-  </div>
-</div>
-<!-- End Agreement part -->
-
-
-<!-- notification popup -->
-<div class="notificationpopup-overlay" id="notificationPopup">
-  <div class="notificationpopup-content">
-    <button class="close-btn text-secondary" onclick="closenotificationPopup()">×</button>
-    <h2 style="color: #00192D;">Notification</h2>
-
-    <label for="property">Recepients:</label>
-    <select id="property" required>
-      <option value=""disabled>Select Recepient</option>
-      <option value="High">Manucho</option>
-      <option value="Moderate">Ben 10</option>
-      <option value="Low">Alpha</option>
-    </select>
-    
-    <textarea id="notes" name="notes" rows="10" cols="98" placeholder="Enter any additional information..."></textarea>
-
-      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SEND</button>
-  </div>
-</div>
-<!-- End Notification popup -->
-
-
 <!-- end overlay card. -->
 
     <!--begin::Script-->
@@ -576,25 +712,6 @@
  <!-- View announcements script -->
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-
-
- <script>
-
-  document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".nav-item > .nav-link").forEach((navLink) => {
-      navLink.addEventListener("click", function (e) {
-        // Check if the link has a submenu (dropdown)
-        let dropdown = this.nextElementSibling;
-        if (dropdown && dropdown.classList.contains("nav-treeview")) {
-          e.preventDefault(); // Prevents "#" from appearing in the URL
-          dropdown.classList.toggle("show"); // Toggles dropdown visibility
-        }
-      });
-    });
-  });
-
-
-     </script>
 
  <script>
   const   more_announcement = document.getElementById('more_announcement_btn');
@@ -623,40 +740,18 @@
 
  <!-- End view announcement script -->
 
-<!-- Complain script -->
-<!-- Complaint script -->
-<script>
-  // Function to open the complaint popup
-  function openPopup() {
-    document.getElementById("complaintPopup").style.display = "flex";
-  }
-
-  // Function to close the complaint popup
-  function closePopup() {
-    document.getElementById("complaintPopup").style.display = "none";
-  }
-</script>
-
-
-<!-- create notification -->
-<script>
-  // Function to open the complaint popup
-  function opennotificationPopup() {
-    document.getElementById("notificationPopup").style.display = "flex";
-  }
-
-  // Function to close the complaint popup
-  function closenotificationPopup() {
-    document.getElementById("notificationPopup").style.display = "none";
+ <script>
+  // Function to toggle the visibility of the overlay
+  function toggleOverlay() {
+    var overlay = document.getElementById('overlay');
+    // If overlay is hidden, show it
+    if (overlay.style.display === "none" || overlay.style.display === "") {
+      overlay.style.display = "flex";
+    } else {
+      overlay.style.display = "none";
+    }
   }
 </script>
-
-<!-- create notification -->
-
-
-<!-- End complaint script -->
-<!-- End Complain script -->
-
 
 
     <script
@@ -671,31 +766,6 @@
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-
-<!-- script for occordion -->
-<script>
-
-        // JavaScript to handle hover and hide functionality
-        const filterContainer = document.getElementById("filter-container");
-        const accordion = document.getElementById("filter");
-        const panel = document.getElementById("panel");
-
-        // Show panel when hovering over the accordion
-        accordion.addEventListener("mouseenter", () => {
-            panel.style.display = "block";
-        });
-
-        // Hide panel when moving out of both accordion and panel
-         filterContainer.addEventListener("mouseleave", () => {
-             panel.style.display = "none";
-      });
-
-
-</script>
-<!-- End for Occordion script -->
-
-<!-- script for popups  -->
-
 
 
 
@@ -722,45 +792,113 @@
     <!-- Begin script for datatable -->
     <script>
 
-
-    $(document).ready(function() {
-   $('#agreements').DataTable({
-       "paging": true,
-       "searching": true,
-       "info": true,
-       "lengthMenu": [5, 10, 25, 50],
-       "language": {
-           "search": "Filter records:",
-           "lengthMenu": "Show _MENU_ entries"
-       }
-   });
-});
-
-    </script>
-            <script>
-
-                $(document).ready(function() {
-                $('#vendor_distribution1').DataTable({
-                    // "paging": true,
-                    // "searching": true,
-                    // "info": true,
-                    // "lengthMenu": [5, 10, 25, 60],
-                    // "language": {
-                    //     "search": "Filter records:",
-                    //     "lengthMenu": "Show _MENU_ entries"
-                    // }
-                });
+            document.addEventListener("DOMContentLoaded", function() {
+            let table = $('#maintenanc').DataTable({
+                lengthChange: false, // Removes "Show [X] entries"
+                dom: 't<"bottom"p>', // Removes default search bar & keeps only table + pagination
             });
 
-            </script>
+            // Link custom search box to DataTables search
+            $('#searchInput').on('keyup', function () {
+                table.search(this.value).draw();
+            });
+        });
+    </script>
 
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
+
+
+
+<!-- 
+  Add expense scripts.
+
+-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const addRowButton = document.getElementById("addRow");
+        const tableBody = document.querySelector("tbody");
+
+        function createNewRow() {
+            const newRow = document.createElement("tr");
+            newRow.innerHTML = `
+                <td>
+                    <select class="form-select">
+                        <option selected disabled>Expense</option>
+                        <option>Rent</option>
+                        <option>Water</option>
+                        <option>Internet</option>
+                        <option>Taxes</option>
+                        <option>Salaries</option>
+                        <option>Others</option>
+                    </select>
+                </td>
+                <td><textarea class="form-control" rows="2" placeholder="Enter details"></textarea></td>
+                <td><input type="text" class="form-control" placeholder="123"></td>
+                <td><input type="number" class="form-control" placeholder="1"></td>
+                <td><input type="number" class="form-control" placeholder="123"></td>
+                <td><button type="button" class="btn btn-danger remove-row">Delete</button></td>
+            `;
+
+            newRow.querySelector(".remove-row").addEventListener("click", function () {
+                newRow.remove();
+                checkIfTableEmpty();
+            });
+
+            return newRow;
+        }
+
+        function checkIfTableEmpty() {
+            if (tableBody.children.length === 0) {
+                tableBody.appendChild(createNewRow()); // Add default row if empty
+            }
+        }
+
+        addRowButton.addEventListener("click", function () {
+            tableBody.appendChild(createNewRow());
+        });
+
+        // Initialize the first row in case user removes all
+        checkIfTableEmpty();
+    });
+
+
+</script>
+
+
+
+<script>
+  $(document).ready(function() {
+      $('#repaireExpenses').DataTable({
+          "lengthChange": false,
+          "dom": 'Bfrtip',
+          "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      });
+  });
+</script>
+          
+<script>
+  
+  </script>
 
     </script>
     <!-- End script for data_table -->
 
 <!--Begin sidebar script -->
 <script>
-  fetch('../bars/sidebar.html')  // Fetch the file
+  fetch('../../bars/sidebar.html')  // Fetch the file
       .then(response => response.text()) // Convert it to text
       .then(data => {
           document.getElementById('sidebar').innerHTML = data; // Insert it
@@ -770,13 +908,14 @@
 <!-- end sidebar script -->
 
 
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <script src="../../../dist/js/adminlte.js"></script>
+    <script src="../../../../dist/js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
@@ -955,6 +1094,7 @@
       // - END PIE CHART -
       //-----------------
     </script>
+
     <!--end::Script-->
   </body>
   <!--end::Body-->
