@@ -57,8 +57,6 @@
     />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="salaries.css">
-
    <link rel="stylesheet" href="">
 
     <!-- scripts for data_table -->
@@ -308,7 +306,6 @@
               <div class="col-sm-8">
 
                 <h3 class="mb-0 contact_section_header"><i class="fas fa-money-bill-wave"></i> Salaries</h3>
-                <h3 class="mb-0 contact_section_header">  <i class="fas fa-tools"></i>Expenses/Salaries</h3>
 
 
                     <div class="row mt-2  ">
@@ -337,14 +334,6 @@
                             <label class="text text-center"> <i class="bi bi-x-circle-fill"></i>  <b>INCOMPLETE</b>  </label>
                             <span class="value"> <b>25</b>  </span>
                           </div>
-                            <label class="text text-center"> <i class="fas fa-calculator"></i> <b>TOTAL_SPEND</b>   </label>
-                              <span class="value text-center"> <b>KSH 100000</b> </span>
-                          </div>
-
-                          
-                         
-
-                          
                         </div>
                           
                       </div>
@@ -367,7 +356,6 @@
                   <div class="card-header">
                       <a class="btn btn-link" data-bs-toggle="collapse" href="#addExpense" aria-expanded="false" aria-controls="addExpenseAccordion" style="color: #00192D; font-weight:bold; text-decoration: none;">
                           <span id="toggleIcon">+</span> Click Here to Add Salaries
-                          <!-- <span id="toggleIcon">+</span> Click Here to Add Expense -->
                       </a>
                   </div>
           
@@ -375,7 +363,6 @@
                       <div class="card">
                           <div class="card-header" style="background: linear-gradient(to right, #00192D, #003D5B, #00788D);">
                               <h6 class="text-white">Enter Salary Details</h6>
-                              <!-- <h6 class="text-white">Enter Expense Details</h6> -->
                           </div>
                           <div class="card-body">
                               <div class="form-container">
@@ -385,8 +372,6 @@
                                           <div class="col-md-3">
                                               <label class="form-label"><b>Vendor Name</b></label>
                                               <input type="number" class="form-control" placeholder="vendor">
-                                              <label class="form-label"><b>No</b></label>
-                                              <input type="number" class="form-control" placeholder="123">
                                           </div>
                           
                                           <!-- Expense of the Month -->
@@ -438,7 +423,6 @@
                                               <thead>
                                                   <tr>
                                                       <th>Service</th>
-                                                      <th>Item</th>
                                                       <th>Description</th>
                                                       <th>Amount Paid</th>
                                                       <th>Quantity</th>
@@ -457,13 +441,6 @@
                                                               <option>Pest Control</option>
                                                               <option>General Repairs</option>
                                                               <option>Outdoor Repairs</option>
-                                                              <option selected disabled>Expense</option>
-                                                              <option>Rent</option>
-                                                              <option>Water</option>
-                                                              <option>Internet</option>
-                                                              <option>Taxes</option>
-                                                              <option>Salaries</option>
-                                                              <option>Others</option>
                                                           </select>
                                                       </td>
                                                       <td><textarea class="form-control" rows="2" placeholder="Enter details"></textarea></td>
@@ -534,10 +511,11 @@
                                 <tr>
                                     <th>Vendor</th>
                                     <th>DATE OF PAYMENT</th>
+                                    <!-- <th>UNITY PRICE</th> -->
+                                    <!-- <th>Quantity</th> -->
                                     <th>PAID AMOUNT</th>
                                     <th>PENDING AMOUNT</th>
                                     <th>ACTIONS</th>
-                              
                                 </tr>
                             </thead>
 
@@ -561,9 +539,7 @@
                                     <td>KSH 20,000</td>
                                     <td>KSH 2,000</td>
                                     <td> <button style="background-color: red;"><i class="fas fa-trash"></i></button></td>
-                          
                                 </tr>
-                                
                             </tbody>
 
 
@@ -664,6 +640,49 @@
     </div>
   </div>
 </div>
+
+  <!-- Lease Modal -->
+  <div class="modal fade" id="leaseModal" tabindex="-1" aria-labelledby="leaseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="leaseModalLabel"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form class="beasy">
+             <!-- Landlord Information Section -->
+      <!-- Service Provider Information Section -->
+      <div class="form-section">
+        <h3 class="text-warning">Landlord Information</h3>
+         <a href="#"><p>Martin White</p></a>
+        <!-- <label for="landlordName">Landlord Name(Martin White)</label> -->
+        <!-- <input type="text" id="landlordName" name="landlordName" placeholder="Enter your full name" required> -->
+
+        <h3 class="text-warning">Select Service Providers Information</h3>
+        <label for="paymentMethod">Choose:</label>
+        <select id="paymentMethod" name="paymentMethod" required>
+          <option value="bank_transfer">ABX Electricals</option>
+          <option value="bank_transfer">Sunsine Plumbers</option>
+          <option value="bank_transfer">Favored Technologies</option>
+        </select>
+        <h3 class="text-warning">Payment Details</h3>
+        <label for="amount">Payment Amount (KSH)</label>
+        <input type="text" id="landlordName" name="landlordName" placeholder="Enter Amount" required>
+
+        <label for="paymentMethod">Payment Method</label>
+        <select id="paymentMethod" name="paymentMethod" required>
+          <option value="mpesa_transfer" class="bossy">MPESA</option>
+          <option value="mpesa_transfer" class="bossy">Bank</option>
+          <option value="mpesa_transfer" class="bossy">Global Pay</option>
+          <option value="mpesa_transfer" class="bossy">Cash</option>
+
+        </select>
+         <!-- Submit Button -->
+         <button type="submit" class="bossy"> MAKE PAYMENT</button>
+      </div>
+
+
 
       <!-- Payment Details Section
       <div class="form-section">
