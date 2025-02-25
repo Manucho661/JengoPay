@@ -484,9 +484,20 @@
         <!-- <form id="identification-form">
           <div class="form-container"> -->
 <!-- building type -->
-            <div class="col-md-5">
-              
-              <label class="form-label"><b>Building Type</b></label>
+          
+              <div class="col-md-3">
+                <label class="form-label"><b>Building Name</b></label>
+                <input type="text" class="form-control" placeholder="Building Name:">
+            </div>
+
+            <div class="col-md-3">
+            <label for="imageUpload" class="form-label"><b>Upload Building Image:</b></label>
+    <input type="file" id="imageUpload" name="image" accept="image/*">
+    </div>
+
+            <div class="col-md-3">
+              <label class="form-label" style="text-align: left;">
+                <b>BuildingType</b></label>
               <select class="form-select">
                   <option selected disabled></option>
                   <option>Residential</option>
@@ -496,13 +507,9 @@
               </select>
           </div>
 
-          <div class="col-md-3">
-            <label class="form-label"><b>Building Name</b></label>
-            <input type="text" class="form-control" placeholder="Building Name:">
-        </div>
-                                          <!-- County -->
+                         <!-- County -->
                                            <b><p>Location Information</p></b>
-                                          <div class="col-md-5">
+                                          <div class="col-md-3">
                                             <label class="form-label"><b>County</b></label>
                                             <select class="form-select">
                                                 <option selected disabled>Select County</option>
@@ -514,6 +521,22 @@
                                                 <option>Nyeri</option>
                                                 <option>Kirinyaga</option>
                                                 <option>Embu</option>
+                                            </select>
+                                            <label class="form-label"><b>Constituency</b></label>
+                                            <select class="form-select">
+                                                <option selected disabled>Select Constituency</option>
+                                                <option>Westlands</option>
+                                                <option>Starehe</option>
+                                                <option>Embakasi</option>
+                                                
+                                            </select>
+                                            <label class="form-label"><b>Ward</b></label>
+                                            <select class="form-select">
+                                                <option selected disabled>Select Ward</option>
+                                                <option>Kangemi</option>
+                                                <option>Kiambu</option>
+                                                <option>Pipeline</option>
+                                                
                                             </select>
                                         </div>
                                         
@@ -569,49 +592,85 @@
                 <!-- </div> -->
                  </div>
     <hr>
-
-    <div class="card-body">
-      <table id="rent" class="display" style="font-size: small;" >
-          <thead>
-              <tr>
-                      <th scope="col">REGISTERED BUILDINGS</th>
-                      <th scope="col">Building Image</th>
-                      <th scope="col">Detailed Information</th>
-                      <th scope="col">Edit</th>
-              </tr>
-          </thead>
-          <tbody>
-              <tr>
-                  <th scope="row">
-                    <!-- <td> -->
-                      
-                      <td>
-                    <div class="slider">
-                      <div class="slides">
-                          <img src="../17.jpg" class="slide" alt="Image 1" style="width: 200px; height:200px;">
-                          <!-- <img src="../17.jpg" class="slide" alt="Image 2" style="width: 200px; height:200px;">
-                          <img src="../17.jpg" class="slide" alt="Image 3" style="width: 200px; height:200px;"> -->
+            <!--begin::Row-->
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card mb-4">
+                  <div class="card-header">
+                    <h5 class="card-title text-warning">Registered Buildings</h5>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                      </button>
+                      <div class="btn-group">
+                        <button
+                          type="button"
+                          class="btn btn-tool dropdown-toggle"
+                          data-bs-toggle="dropdown"
+                        >
+                          <i class="bi bi-wrench"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end" role="menu">
+                          <a href="#" class="dropdown-item">Action</a>
+                          <a href="#" class="dropdown-item">Another action</a>
+                          <a href="#" class="dropdown-item"> Something else here </a>
+                          <a class="dropdown-divider"></a>
+                          <a href="#" class="dropdown-item">Separated link</a>
+                        </div>
                       </div>
-                      </div>
-                      </td>
-                      <!-- </td> -->
-                       <td>
-                        <button style="background-color: #00192D; color:#FFC107;">Detailed Information</button>
-</td>
-                      <td>
-                        <button style="background-color: #00192D; color:#FFC107;">EDIT</button>
-                        </td>
-                  </th>
-              </tr>
-              <tr>
-              </tr>
-    
-          </tbody>
-      </table>
-    </div>
-
-                    <!--end::Row-->
+                      <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    </div>
                   </div>
+                  <!-- /.card-header -->
+                  <div class="card-body">
+                    <!--begin::Row-->
+                    <div class="row">
+                      <table id="myTableOne" class="display" style="">
+                        <thead>
+                          <tr>
+                            <th>REGISTERED BUILDINGS</th>
+                            <th >Building Name</th>
+                            <th>Building Image</th>
+                            <th >Detailed Information</th>
+                            <th>Edit</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>1</td>
+                            <td>Mwihoko apartments</td>
+                            <td>
+                              <img src="../17.jpg" class="slide" alt="Image 1" style="width: 200px; height:200px;">
+                            </td>
+                            <td>
+                              <button style="background-color: #00192D; color:#FFC107;">Detailed Information</button>
+      </td>
+                            <td>
+                              <button style="background-color: #00192D; color:#FFC107;">EDIT</button>
+                              </td>
+                          </tr>
+                          <!-- <tr>
+                              <td>2</td>
+                            <td>Ethical Apartments</td>
+                            <td>200.00</td>
+                            <td>1</td>
+                            <td>200.00</td>
+                            <td>
+                              <a href="../financials/viewinvoices.html"><button class="view" onclick="viewInvoice()">View <i class="fa fa-eye"></i></button></a>
+                              <button class="#" onclick="downloadPDF()" style="background-color: #00192D;color: white;border-radius: 10px;" >PDF <i class="fa fa-file-pdf"></i></button>
+                              <button class="#" onclick="printInvoice()" style="background-color: #00192D;color: red;border-radius: 10px;">PRINT<i class="fa fa-print"></i></button>
+
+                          </td>
+                          </tr> -->
+                          <!-- Add more rows as needed -->
+                        </tbody>
+                      </table>
+                      <!-- /.col -->
+                    </div>
+                    <!--end::Row-->
                   <!-- ./card-body -->
                   <div class="card-footer">
                     <!--begin::Row-->

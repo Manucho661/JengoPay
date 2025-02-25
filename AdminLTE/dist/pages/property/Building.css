@@ -110,6 +110,7 @@ select{
     border-radius: 5px;
 }
 label{
+    display:inline-block;
     text-align: left;
 }
 .slider {
@@ -202,4 +203,9 @@ button:hover {
 .slide {
     width: 100%;
     flex-shrink: 0;
+}
+.form-label{
+    justify-content: left;
+    display: block; /* Ensures label takes full width */
+    text-align: left; /* Aligns text to the left */
 }
