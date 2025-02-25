@@ -319,25 +319,34 @@
 
                         <div class="row Summary mt-6" >
                           <!-- Summary -->
-                          <div class="col-md-3 ">
-                            <label class="text text-center"> <i class="fas fa-calculator"></i> <b>TOTAL</b>   </label>
-                              <span class="value text-center"> <b>100 </b> </span>
-                          </div>
-
-                          <div class="col-md-3 ">
-                            <label class="text text-center"><i class="fa-solid fa-circle-check"></i> <b>COMPLETED</b>   </label>
-                              <span class="value text-center"> <b>30 </b> </span>
-                          </div>
                           
-                          <div class="col-md-3">
-                            <label class="text text-center"> <i class="fas fa-spinner fa-spin icon"></i> <b>In Progress</b>  </label>
-                            <span class="value"> <b>39</b>  </span>
+                            <div class="col-md-12 ">
+                              <div class="summary-section text-center p-2 row">
+                              <div class="col-6 col-md-3 summary-item total">
+                                  <i class="fas fa-calculator"></i> 
+                                  <div class="label">Total <b class="value" >100</b>  </div>
+                                  
+                              </div>
+                              <div class="col-6 col-md-3 summary-item completed">
+                                  <i class="fa-solid fa-circle-check"></i> 
+                                  <div class="label">Completed <b class="value">30</b></div>
+                                    
+                              </div>
+                              <div class="col-6 col-md-3 summary-item in-progress">
+                                  <i class="fas fa-spinner fa-spin"></i> 
+                                  <div class="label">In Progress <b class="value">20</b></div>
+                                    
+                              </div>
+                              
                           </div>
+                      
 
-                          <div class="col-md-3">
-                            <label class="text text-center"> <i class="bi bi-x-circle-fill"></i>  <b>INCOMPLETE</b>  </label>
-                            <span class="value"> <b>25</b>  </span>
-                          </div>
+                              
+                        
+                                <!-- <span class="value text-center"> <b>100 </b> </span> -->
+                            </div>
+                          
+                       
                         </div>
                           
                       </div>
@@ -363,13 +372,7 @@
             <!-- Info boxes -->
 
             <!-- /.row -->
-            <!--begin::Row-->
-            <div class="row first mb-2 mt-2 rounded-circle">
-
-              
-              <!-- /.col -->
-            </div>
-            <!--end::Row-->
+            
             <!--begin::Row-->
             <div class="row">
               <!-- Start col -->
@@ -384,7 +387,7 @@
                         <table id="maintenance" class="table table-striped" style="width: 100%;">
                           <thead>
                             <tr>
-                              <th>REQUEST_DATE</th>                       
+                              <th>REQUEST DATE</th>                       
                               <th>CATEGORY</th>
                               <th>PAYMENT</th>
                               <th>PROVIDER</th>
@@ -400,12 +403,12 @@
                               
                           
                               <td>Broken handle</td>
-                              <td><button class="btn  mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseModal" style="color: #FFC107;">
-                              PAY</button></td>
+                              <td><button class="payment pending" id="example" data-bs-toggle="modal" data-bs-target="#leaseModal"> <i class="fa fa-exclamation-circle"></i>
+                              PENDING</button></td>
                               <!-- <td><button onclick="toggleOverlay()">Paid</button></td> -->
                               <td>low</td>
+                              <td > <button class="status completed"><i class="fa fa-check-circle"></i> COMPLETED </button>  </td>
 
-                              <td><button class="text-bg-primary"><i class="fa-solid fa-circle-check"></i>   COMPLETED</button></td>
                               <td>
                                 <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
                                 </button>
@@ -420,14 +423,14 @@
                               
                               
                               <td>Leaking roof</td>
-                              <td><button  class="btn  mt-0" id="example" style="color: #FFC107;">PAID</button></td>
+                              <td><button  class=" payment paid" id="example"> <i class="fa fa-check-circle"></i>  PAID</button></td>
                               <td>high</td>
 
-                              <td> <button class="text-bg-danger"> <i class="bi bi-x-circle-fill"></i> IN_COMPLETE</button>  </td>
+                              <td > <button class="status incomplete" ><i class="fa fa-times-circle"></i> INCOMPLETE </button> </td>
+
                               <td><button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
                               </button>
                               <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
-
                                 
                                 </td>
                             </tr>
@@ -753,13 +756,22 @@
 
 
 <script>
-  $(document).ready(function() {
-      $('#maintenance').DataTable({
-          "lengthChange": false,
-          "dom": 'Bfrtip',
-          "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-      });
-  });
+$(document).ready(function() {
+    var table = $('#maintenance').DataTable({
+        "lengthChange": false,
+        "dom": 'Bfrtip',
+        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+        "initComplete": function() {
+            // Move the buttons to the first .col-md-6
+            table.buttons().container().appendTo('#maintenance_wrapper .col-md-6:eq(0)');
+
+            // Move the search box to the second .col-md-6
+            $('#maintenance_filter').appendTo('#maintenance_wrapper .col-md-6:eq(1)');
+        }
+    });
+});
+
+
 </script>
           
 <script>
