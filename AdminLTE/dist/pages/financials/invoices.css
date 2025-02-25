@@ -87,7 +87,7 @@
   }
 
   .form-btns button {
-    padding: 10px 20px;
+    padding: 5px 10px;
     background-color:#00192D;
     color:#FFC107;
     border: none;
@@ -117,3 +117,59 @@
   .delete-btn i {
     font-size: 14px;
   }
+  .invoice-container {
+    width: 700px;
+    margin: auto;
+    border: 1px solid #ccc;
+    padding: 20px;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.header h1 {
+    text-transform: uppercase;
+}
+.logo {
+    width: 80px;
+    height: 80px;
+    background: gray;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+}
+.invoice-info {
+    text-align: right;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+.totals {
+    text-align: right;
+    margin-top: 20px;
+}
+.footer {
+    margin-top: 20px;
+    font-size: 12px;
+}
+.add-btn {
+  margin-top: 10px;
+  padding: 10px;
+  background:  #00192D;;
+  color:#FFC107;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  margin-right: 50rem;
+}
