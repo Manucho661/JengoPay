@@ -44,25 +44,37 @@
     padding: 8px 12px;
 }
 
-table {
-    width: 100%;
-    margin-top: 10px;
-    border-collapse: collapse;
-}
 
 th, td {
-    padding: 10px;
-    border: 1px solid #ccc;
-    text-align: center;
-}
-
-th {
-    /* background: linear-gradient(to right, #FFC107, #FF8C00, #FF4500); */
-
-    color: black;
-    font-weight: 600;
-}
-
+    text-align: left !important; /* Align text for readability */
+  }
+  
+  th:nth-child(1), td:nth-child(1) { 
+    text-align: center !important; /* Center align numbers like serial numbers */
+  }
+  
+  th:nth-child(3), td:nth-child(3) { 
+    text-align: center !important; /* Center align payment status */
+  }
+  
+  th:nth-child(4), td:nth-child(4) { 
+    text-align: left !important; /* Align provider names to the left */
+  }
+  th, td {
+    padding: 12px 15px !important; /* Top-bottom: 12px, Left-right: 15px */
+  }
+  
+  th, td {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important; /* Add '...' if text overflows */
+  }
+  th {
+    font-weight: bold !important;
+    text-transform: uppercase !important;
+    background-color: #f4f4f4 !important; /* Light background for contrast */
+    border-bottom: 2px solid #ddd !important;
+  }
 div.dt-buttons{
     background-color: #00192D !important ;
   }
@@ -90,6 +102,15 @@ div.dt-buttons{
   }
   
 
+  .contact_section_header{
+    border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+    font-family: 'Poppins', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+
+
   .text{
     display: block;
     margin-bottom: 5px;
@@ -103,14 +124,7 @@ div.dt-buttons{
     font-family: 'Poppins', sans-serif;
   
     }
-    .value{
-        font-size: 12px;
-        display: flex;
-        justify-content: center;
-        color: #FFC107;
-        /* background-color: #00192D; */
-        border-radius: 10px;
-    }
+    
     .text a{
       text-decoration: none;
     }
@@ -118,3 +132,45 @@ div.dt-buttons{
     .paginate_button.page-item.active a {
         background-color: #FFC107 !important;
     }
+
+
+    .summary-section {
+        display: flex;
+        justify-content: start; /* Aligns left */
+        gap: 15px; /* Space between items */
+        margin-bottom: 10px; /* Moves closer to table */
+        font-size: 16px;
+        font-weight: bold;
+      }
+      
+      
+      /* General Styling for Summary Items */
+      .summary-item {
+        padding: 5px 10px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        gap: 5px; /* Space between icon and text */
+      }
+      
+      /* Color Coding */
+      .total { background-color:#FFC107 ; color: white; } /* Neutral */
+      
+
+      
+      .amount {
+        display: inline-flex;
+        align-items: center;
+        font-weight: bold;
+        padding: 6px 12px;
+         border-radius: 4px;  
+        font-size: 14px;
+      }
+      .amount.total {
+        background-color: #d32f2f; /* Light green */
+        
+        color: white;
+        border: none;
+        
+      }
+      
