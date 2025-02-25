@@ -57,7 +57,7 @@
     />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="operations.css">
+    <link rel="stylesheet" href="repairCosts.css">
 
    <link rel="stylesheet" href="">
 
@@ -307,7 +307,7 @@
             <div class="row">
               <div class="col-sm-8">
 
-                <h3 class="mb-0 contact_section_header">  <i class="fas fa-tools"></i>Expenses/Salaries</h3>
+                        <h3 class="mb-0 contact_section_header">  <i class="fas fa-tools"></i>Expenses/Operationals</h3>
 
 
                     <div class="row mt-2  ">
@@ -317,20 +317,25 @@
 
                         <div class="row Summary mt-6" >
                           <!-- Summary -->
-                          <div class="col-md-3 ">
-                            <label class="text text-center"> <i class="fas fa-calculator"></i> <b>TOTAL_SPEND</b>   </label>
-                              <span class="value text-center"> <b>KSH 100000</b> </span>
+                          <div class="col-md-12 ">
+                            <div class="summary-section text-center p-2 row">
+                              <div class="col-6 col-md-4 summary-item total">
+                                  <i class="fas fa-calculator"></i> 
+                                   <div class="label">Total_SPEND <b class="value" >KSH 10M</b>  </div>
+                                  
+                              </div>
+                            </div>
                           </div>
-
                           
+
                          
-
-                          
                         </div>
-                          
-                      </div>
 
-                </div>
+                      </div>
+                          
+                    </div>
+
+                
               </div>
 
               <div class="col-sm-4">
@@ -343,11 +348,11 @@
             </div>
             <!--end::Row-->
             <!-- begin row -->
-             <div class="row mt-5">
+             <div class="row mt-2">
                 <div class="card">
                   <div class="card-header">
                       <a class="btn btn-link" data-bs-toggle="collapse" href="#addExpense" aria-expanded="false" aria-controls="addExpenseAccordion" style="color: #00192D; font-weight:bold; text-decoration: none;">
-                          <span id="toggleIcon">+</span> Click Here to Add Expense
+                          <span id="toggleIcon">+</span> Click Here to Add operational Expense
                       </a>
                   </div>
           
@@ -426,13 +431,13 @@
                                                   <tr>
                                                       <td>
                                                           <select class="form-select">
-                                                              <option selected disabled>Expense</option>
-                                                              <option>Rent</option>
-                                                              <option>Water</option>
-                                                              <option>Internet</option>
-                                                              <option>Taxes</option>
-                                                              <option>Salaries</option>
-                                                              <option>Others</option>
+                                                            <option selected disabled>Service</option>
+                                                            <option>Plumbing Works</option>
+                                                            <option>Electrical Works</option>
+                                                            <option>Structural Repairs</option>
+                                                            <option>Pest Control</option>
+                                                            <option>General Repairs</option>
+                                                            <option>Outdoor Repairs</option>
                                                           </select>
                                                       </td>
                                                       <td><textarea class="form-control" rows="2" placeholder="Enter details"></textarea></td>
@@ -494,41 +499,52 @@
               <div class="col-md-12 ">
                 <div class="card Content">
                     <div class="card-header">
-                      <b>All Repair Requests</b>
+                      <b>All Operational Expenses</b>
                     </div>
 
                     <div class="card-body">
                         <table class="table-striped" id="repaireExpenses" style="width: 100%;">
                             <thead>
                                 <tr>
-                                    <th>Repair_ID</th>
-                                    <th>EXP DATE</th>
-                                    <th>UNITY PRICE</th>
-                                    <th>Quantity</th>
-                                    <th>SUB TOTAL</th>
-                                    <th>TOTAL</th>
-                                    <th>ACTIONS</th>
+                                    <th>Exp Date</th>
+                                    <th>Unit Price</th>
+                                    <!-- <th>UNITY PRICE</th> -->
+                                    <!-- <th>Quantity</th> -->
+                                    <th>Qty</th>
+                                    <th>Sub Total</th>
+                                    <th>All Totals</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
 
                             <tbody>
                                 <tr>
-                                    <td>6AD</td>
+                                    
                                     <td>20/11/2013</td>
                                     <td>KSH 10000</td>
                                     <td>2</td>
                                     <td>KSH 20,000</td>
-                                    <td>KSH 20,000</td>
-                                    <td></td>
+                                    <td> <button class="amount total " ><i class="fa fa-dollar-sign"></i> 20000 </button>  </td>
+                                    <td>
+                                      <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-trash"></i>
+                                      </button>
+                                      <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
+                                  
+                                    </td>
                                 </tr>
                                 <tr>
-                                    <td>6AD</td>
+                                
                                     <td>20/11/2013</td>
                                     <td>KSH 10000</td>
                                     <td>2</td>
                                     <td>KSH 20,000</td>
-                                    <td>KSH 20,000</td>
-                                    <td></td>
+                                    <td> <button class="amount total " ><i class="fa fa-dollar-sign"></i> 20000 </button>  </td>
+                                    <td>
+
+                                      <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-trash"></i>
+                                      </button>
+                                      <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
+                                    </td>
                                 </tr>
                             </tbody>
 
