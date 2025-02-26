@@ -115,8 +115,8 @@ div.dt-buttons{
     display: block;
     margin-bottom: 5px;
     line-height: 11px;
-    font-size: 12px;
-    font-weight: 500;
+    /* font-size: 12px; */
+    /* font-weight: 500; */
     letter-spacing: .5px;
     text-transform: uppercase;
     color: #767676;
@@ -137,24 +137,29 @@ div.dt-buttons{
     .summary-section {
         display: flex;
         justify-content: start; /* Aligns left */
-        gap: 15px; /* Space between items */
+         gap: 15px;  
         margin-bottom: 10px; /* Moves closer to table */
-        font-size: 16px;
-        font-weight: bold;
+         font-size: 16px; 
+         font-weight: bold; 
+        border-right: #f4f4f4;
       }
       
       
       /* General Styling for Summary Items */
       .summary-item {
-        padding: 5px 10px;
+         padding: 5px 10px; 
         border-radius: 5px;
         display: flex;
         align-items: center;
-        gap: 5px; /* Space between icon and text */
+       gap: 5px; 
+       display: flex;
+       justify-content: center;
+       box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+
       }
       
       /* Color Coding */
-      .total { background-color:#FFC107 ; color: white; } /* Neutral */
+      .total { background-color:#00192D ; color: white; } /* Neutral */
       
 
       
@@ -171,6 +176,23 @@ div.dt-buttons{
         
         color: white;
         border: none;
+        padding: 6px 12px; /* Smaller padding for better proportion */
+    font-size: 14px; /* Reduce font size to blend with table text */
+    font-weight: bold; /* Keep it readable but not overwhelming */
+    border-radius: 5px; 
         
       }
-      
+      .add-expense-btn{
+        display: block; /* Ensures it takes up full width if needed */
+    padding: 12px 20px; /* Increases internal spacing */
+    /* margin: 15px 0; Adds space above and below */
+    border-radius: 6px; /* Softens edges for better aesthetics */
+    font-size: 16px; /* Improves readability */
+
+      }
+
+      .row{
+        border-radius: 8px; /* Softens edges */
+
+
+      }
