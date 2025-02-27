@@ -411,7 +411,7 @@
                               <td > <button class="status completed"><i class="fa fa-check-circle"></i> COMPLETED </button>  </td>
 
                               <td>
-                                <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                                <button  onclick=" openassignPopup()"  class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
                                 </button>
                                 <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
 
@@ -430,7 +430,7 @@
 
                               <td > <button class="status incomplete" ><i class="fa fa-times-circle"></i> INCOMPLETE </button> </td>
 
-                              <td><button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                              <td><button onclick=" openassignPopup()" class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
                               </button>
                               <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
                                 
@@ -520,49 +520,94 @@
  </div>
  </div>
 
-  <!-- Lease Modal -->
-<div class="modal fadey" id="leaseyModal" tabindex="-1" aria-labelledby="leaseyModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="leaseyModalLabel"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="container">
-          <div class="form-wrapper">
-              <h1 class="text-warning">Assign Task</h1>
-              <form id="taskForm">
-                <div class="input-group">
-                  <label for="taskName">Task About To Be Assigned:</label>
-                  <input type="text" id="taskName" name="taskName" placeholder="Enter task name" style="border-radius: 10px; width: 100%;"   required>
-              </div>
-
-                  <div class="input-group">
-                      <label for="serviceProvider">Select A Category For The Task</label>
-                  <label for="taskName"></label>
-                      <select id="serviceProvider" name="serviceProvider" style="border-radius: 10px;"  required>
-                          <option value="" id="taskName" disabled selected>Select A Category </option>
-                          <option value="John">Electrical</option>
-                          <option value="Jane">Plumbing</option>
-                          <option value="Mike">Cleaning</option>
-                      </select>
-                  </div>
-                  <div class="input-group">
-                    <label for="serviceProvider">Select Service Provider:</label>
-                    <select id="serviceProvider" name="serviceProvider" style="border-radius: 10px;" required>
-                        <option value="" id="taskName"  disabled selected>Select Provider</option>
-                        <option value="John">John </option>
-                        <option value="Jane">Jane </option>
-                        <option value="Mike">Mike </option>
-                    </select>
-                </div>
 
 
-                  <button type="submit" class="submit-btn" style="border-radius: 10px; background-color: #00192D; width: 50%; margin-left: 6rem;" >Assign</button>
-              </form>
+ 
+  <!-- assign task popup -->
+
+  <div class="assignpopup-overlay" id="assignPopup">
+    <div class="assignpopup-content wide-form">
+        <button class="close-btn text-secondary" onclick="closeassignPopup()">×</button>
+        <h2 class="assign-title">Assign Task</h2>
+        <form class="wide-form">
+            <div class="form-group">
+                <label for="name">Requested By</label>
+                <input type="text" id="name" name="name" placeholder="Martin Wambua" disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" placeholder="0712345678" required disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="martin@gmail.com" required disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="house_number">House No:</label>
+                <input type="number" id="house_number" name="house_number" placeholder="001" required disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="requested_to">Requested To:</label>
+                <input type="text" id="requested_to" name="requested_to" placeholder="Biccount Technologies" required disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="building">Building:</label>
+                <input type="text" id="building" name="building" placeholder="Crown Z Towers" required disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="plumbing_issue">Plumbing Issue:</label>
+                <select id="plumbing_issue" required>
+                    <option>Leaking Pipe</option>
+                    <option>Faucet Issue</option>
+                    <option>Showerhead Issue</option>
+                    <option>Toilet Unclogging</option>
+                    <option>Sewage and Septic Tank Issues</option>
+                    <option>Installations</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea name="description" id="description" placeholder="Description" rows="2" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="urgency_level">Urgency Level:</label>
+                <select id="urgency_level" required>
+                    <option>Immediate Attention Needed</option>
+                    <option>Urgent within 24 hours</option>
+                    <option>Next Available Appointment</option>
+                </select>
+            </div>
+
+            <div class="switch-container">
+              <label class="switch">
+                  <input type="checkbox" id="authSwitch" onchange="toggleAuthorization()">
+                  <span class="slider"></span>
+              </label>
+              <span>Authorize Service</span>
           </div>
+          
+          <p id="authorizationText" class="authorization-text">
+              I authorize the plumbing service provider to inspect and perform the requested services. 
+              Depending on the extent of the required service, I understand that additional charges may 
+              apply based on the final assessment.
+          </p>
+          
+          
 
+            <button type="submit" class="submit-btn">SUBMIT</button>
+        </form>
+    </div>
+</div>
+<!-- end -->
+  
           <!-- <div id="assignedTasks">
               <h2>Assigned Tasks</h2>
               <ul id="taskList"></ul>
@@ -688,8 +733,30 @@
     }
   }
 </script>
+<script>
+  function toggleAuthorization() {
+      const authorizationText = document.getElementById("authorizationText");
+      const switchBtn = document.getElementById("authSwitch");
 
+      if (switchBtn.checked) {
+          authorizationText.style.display = "block";
+      } else {
+          authorizationText.style.display = "none";
+      }
+  }
+  </script>
 
+<script>
+  // Function to open the complaint popup
+  function openassignPopup() {
+    document.getElementById("assignPopup").style.display = "flex";
+  }
+
+  // Function to close the complaint popup
+  function closeassignPopup() {
+    document.getElementById("assignPopup").style.display = "none";
+  }
+</script>
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
       integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
