@@ -57,7 +57,7 @@
     />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="repairCosts.css">
+    <link rel="stylesheet" href="expenses.css">
 
    <link rel="stylesheet" href="">
 
@@ -307,33 +307,32 @@
             <div class="row">
               <div class="col-sm-8">
 
-                        <h3 class="mb-0 contact_section_header">  <i class="fas fa-tools"></i>Expenses/Salaries</h3>
-
-
-                    <div class="row mt-2  ">
-                      <div class="col-md-12  ">
-
-
+                        <h3 class="mb-0 contact_section_header">  <i class="fas fa-tools"></i>Expenses</h3>
 
                         <div class="row Summary mt-6" >
                           <!-- Summary -->
                           <div class="col-md-12 ">
+                            
                             <div class="summary-section text-center p-2 row">
                               <div class="col-6 col-md-4 summary-item total">
                                   <i class="fas fa-calculator"></i> 
-                                   <div class="label">Total_SPEND <b class="value" >KSH 10M</b>  </div>
-                                  
+                                   <div class="label">Total Items <b class="value" > 100</b>  </div>                                  
                               </div>
-                            </div>
-                          </div>
-                          
 
-                         
+                              <div class="col-6 col-md-4 summary-item total">
+                                <i class="fas fa-calculator"></i> 
+                                 <div class="label">Total Spend <b class="value" >KSH 500</b>  </div>
+                                
+                            </div>
+                            </div>
+                            
+                          </div>
+                                  
                         </div>
 
-                      </div>
+                      
                           
-                    </div>
+                    
 
                 
               </div>
@@ -343,131 +342,124 @@
                   <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
                   <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
                 </ol> 
-              </div>
+              </div> 
 
             </div>
             <!--end::Row-->
             <!-- begin row -->
              <div class="row mt-2">
+              <div class="col-md-12">
                 <div class="card">
                   <div class="card-header">
-                      <a class="btn btn-link" data-bs-toggle="collapse" href="#addExpense" aria-expanded="false" aria-controls="addExpenseAccordion" style="color: #00192D; font-weight:bold; text-decoration: none;">
-                          <span id="toggleIcon">+</span> Click Here to Add a Salary
+                      <a class="btn btn-link add-expense-btn" data-bs-toggle="collapse" href="#addExpense" aria-expanded="false" aria-controls="addExpenseAccordion" style="color: #00192D; font-weight:bold; text-decoration: none;">
+                          <span id="toggleIcon">+</span> Click Here to Add operational Expense
                       </a>
                   </div>
           
                   <div class="card-body collapse" id="addExpense">
-                      <div class="card">
-                          <div class="card-header" style="background: linear-gradient(to right, #00192D, #003D5B, #00788D);">
-                              <h6 class="text-white">Enter Expense Details</h6>
-                          </div>
-                          <div class="card-body">
-                              <div class="form-container">
-                                  <form>
-                                      <div class="row g-3">
-                                          <!-- No -->
-                                          <div class="col-md-3">
-                                              <label class="form-label"><b>No</b></label>
-                                              <input type="number" class="form-control" placeholder="123">
-                                          </div>
-                          
-                                          <!-- Expense of the Month -->
-                                          <div class="col-md-5">
-                                              <label class="form-label"><b>Expense for the Month of</b></label>
-                                              <select class="form-select">
-                                                  <option selected disabled>Select Month</option>
-                                                  <option>January</option>
-                                                  <option>February</option>
-                                                  <option>March</option>
-                                                  <option>April</option>
-                                                  <option>May</option>
-                                                  <option>June</option>
-                                                  <option>July</option>
-                                                  <option>August</option>
-                                                  <option>September</option>
-                                                  <option>October</option>
-                                                  <option>November</option>
-                                                  <option>December</option>
-                                              </select>
-                                          </div>
-                          
-                                          <!-- Year -->
-                                          <div class="col-md-4">
-                                              <label class="form-label"><b>Year</b></label>
-                                              <input type="number" class="form-control" placeholder="2025">
-                                          </div>
+                    <div class="card">
+                      <div class="card-header" style="background: linear-gradient(to right, #00192D, #003D5B, #00788D);">
+                          <h6 class="text-white">Enter Expense Details</h6>
+                      </div>
+                      <div class="card-body">
+                          <div class="form-container">
+                              <form>
+                                  <div class="row g-3">
+                                      <!-- No -->
+                                      <div class="col-md-3">
+                                          <label class="form-label"><b>No</b></label>
+                                          <input type="number" class="form-control" placeholder="123" disabled>
                                       </div>
-          
-                                      <div class="row g-3 mt-2">
-                                          <div class="col-md-6">
-                                              <label class="form-label"><b>Entry Date</b></label>
-                                              <input type="date" class="form-control">
-                                          </div>
+                      
+                                      <!-- Expense of the Month -->
+                                      <div class="col-md-5">
+                                          <label class="form-label"><b>Expense for the Month of</b></label>
+                                          <select class="form-select">
+                                              <option selected disabled>Select Month</option>
+                                              <option>January</option>
+                                              <option>February</option>
+                                              <option>March</option>
+                                              <option>April</option>
+                                              <option>May</option>
+                                              <option>June</option>
+                                              <option>July</option>
+                                              <option>August</option>
+                                              <option>September</option>
+                                              <option>October</option>
+                                              <option>November</option>
+                                              <option>December</option>
+                                          </select>
                                       </div>
-          
-                                      <!-- Brief Description -->
-                                      <div class="row g-3 mt-2">
-                                          <div class="col-12">
-                                              <label class="form-label"><b>Brief Description</b></label>
-                                              <textarea class="form-control" rows="3" placeholder="Enter details"></textarea>
-                                          </div>
+                      
+                                      <!-- Year -->
+                                      <div class="col-md-4">
+                                          <label class="form-label"><b>Year</b></label>
+                                          <input type="number" class="form-control" placeholder="2025">
                                       </div>
-          
-                                      <!-- Expense Table -->
-                                      <div class="row g-3 mt-2">
-                                          <h6 class="text-center" style="color:linear-gradient(to right, #00192D, #003D5B, #00788D) ;"> <b>Add the Spend items in the fields below</b> </h6>
-                                          <table class="table table-bordered table-hover table-striped">
-                                              <thead>
-                                                  <tr>
-                                                      <th>Item</th>
-                                                      <th>Description</th>
-                                                      <th>Amount Paid</th>
-                                                      <th>Quantity</th>
-                                                      <th>Sub-total</th>
-                                                      <th>Remove</th>
-                                                  </tr>
-                                              </thead>
-                                              <tbody>
-                                                  <tr>
-                                                      <td>
-                                                          <select class="form-select">
-                                                              <option selected disabled>Expense</option>
-                                                              <option>Rent</option>
-                                                              <option>Water</option>
-                                                              <option>Internet</option>
-                                                              <option>Taxes</option>
-                                                              <option>Salaries</option>
-                                                              <option>Others</option>
-                                                          </select>
-                                                      </td>
-                                                      <td><textarea class="form-control" rows="2" placeholder="Enter details"></textarea></td>
-                                                      <td><input type="text" class="form-control" placeholder="123"></td>
-                                                      <td><input type="number" class="form-control" placeholder="1"></td>
-                                                      <td><input type="number" class="form-control" placeholder="123"></td>
-                                                      <td><button type="button" class="btn btn-danger remove-row">Delete</button></td>
-                                                  </tr>
-                                              </tbody>
-                                          </table>
+                                  </div>
+      
+                                  <div class="row g-3 mt-2">
+                                      <div class="col-md-6">
+                                          <label class="form-label"><b>Entry Date</b></label>
+                                          <input type="date" class="form-control">
                                       </div>
-          
-                                      <div class="row g-3 mt-2">
-                                          <div class="col-6">
-                                              <button type="button" class="btn btn-custom" id="addRow">Add More</button>
-                                          </div>
-                                          <div class="col-6 mt-2 d-flex justify-content-end">
-                                              <button type="submit" class="btn btn-custom btn-sm" style="height: fit-content;"> Submit</button>
-                                          </div>
+                                  </div>
+      
+                            
+
+                                  <!-- Expense Table -->
+                                  <div class="row g-3 mt-2">
+                                      <h6 class="text-center" style="color:linear-gradient(to right, #00192D, #003D5B, #00788D) ;"> <b>Add the Spend items in the fields below</b> </h6>
+                                      <table class="table table-bordered table-hover table-striped">
+                                          <thead>
+                                              <tr>
+                                                  <th>Account</th>
+                                                  <th>Description</th>
+                                                  <th>Unit Price</th>
+                                                  <th>Quantity</th>
+                                                  <th>Sub-total</th>
+                                                  <th>Remove</th>
+                                              </tr>
+                                          </thead>
+                                          <tbody>
+                                              <tr>
+                                                  <td>
+                                                      <select class="form-select">
+                                                          <option selected disabled>Garbage</option>
+                                                          <option>Rent</option>
+                                                          <option>Water</option>
+                                                          <option>Internet</option>
+                                                          <option>Taxes</option>
+                                                          <option>Salaries</option>
+                                                          <option>Others</option>
+                                                      </select>
+                                                  </td>
+                                                  <td><textarea class="form-control" rows="1" placeholder="Enter details"></textarea></td>
+                                                  <td><input type="text" class="form-control" placeholder="123"></td>
+                                                  <td><input type="number" class="form-control" placeholder="1"></td>
+                                                  <td><input type="number" class="form-control" placeholder="123"></td>
+                                                  <td><button type="button" class="btn btn-danger remove-row">Delete</button></td>
+                                              </tr>
+                                          </tbody>
+                                      </table>
+                                  </div>
+      
+                                  <div class="row g-3 mt-2">
+                                      <div class="col-6">
+                                          <button type="button" class="btn btn-custom" id="addRow">Add More</button>
                                       </div>
-                                      
-                                        
-                                      
-                                      
-                                  </form>
-                              </div>
+                                      <div class="col-6 mt-2 d-flex justify-content-end">
+                                          <button type="submit" class="btn btn-custom btn-sm" style="height: fit-content;"> Submit</button>
+                                      </div>
+                                  </div>
+                                                  
+                              </form>
                           </div>
                       </div>
                   </div>
+                  </div>
                 </div>
+              </div>
               </div>
             <!-- /end row -->
           </div>
@@ -499,41 +491,42 @@
               <div class="col-md-12 ">
                 <div class="card Content">
                     <div class="card-header">
-                      <b>All Salaries</b>
+                      <b>All Operational Expenses</b>
                     </div>
 
                     <div class="card-body">
                         <table class="table-striped" id="repaireExpenses" style="width: 100%;">
                             <thead>
                                 <tr>
-                                    <th>Repair_ID</th>
-                                    <th>EXP DATE</th>
-                                    <th>UNITY PRICE</th>
-                                    <th>Quantity</th>
-                                    <th>SUB TOTAL</th>
-                                    <th>TOTAL</th>
-                                    <th>ACTIONS</th>
+                                    <th>Exp Date</th>
+                                    <th>Unit Price</th>
+                                    <!-- <th>UNITY PRICE</th> -->
+                                    <!-- <th>Quantity</th> -->
+                                    <th>Qty</th>
+                                    <th>Sub Total</th>
+                                    <th>All Totals</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
 
                             <tbody>
                                 <tr>
-                                    <td>6AD</td>
-                                    <td>20/11/2013</td>
+                                    
+                                    <td>20 Nov 2013</td>
                                     <td>KSH 10000</td>
                                     <td>2</td>
                                     <td>KSH 20,000</td>
                                     <td> <button class="amount total " ><i class="fa fa-dollar-sign"></i> 20000 </button>  </td>
                                     <td>
-                                      <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-trash"></i>
+                                      <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Remove"><i class="fa fa-trash"></i>
                                       </button>
-                                      <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
+                                      <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="view"><i class="fa fa-file"></i></button>
                                   
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>6AD</td>
-                                    <td>20/11/2013</td>
+                                
+                                    <td>20 Nov 2013</td>
                                     <td>KSH 10000</td>
                                     <td>2</td>
                                     <td>KSH 20,000</td>
@@ -1100,13 +1093,6 @@
       //-----------------
       // - END PIE CHART -
       //-----------------
-    </script>
-
-    <!--end::Script-->
-  </body>
-  <!--end::Body-->
-</html>
-
     </script>
 
     <!--end::Script-->
