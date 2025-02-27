@@ -1169,7 +1169,7 @@ color: #00192D;
                               <th>Qty</th>
                               <th>Subtotal</th>
                             <th>Taxes</th>
-                              <th>Remove</th>
+                              <th>Delete</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -1227,6 +1227,28 @@ color: #00192D;
                   <div class="card mb-4">
                     <div class="card-header">
                       <h5 class="card-title text-warning">All Invoices</h5>
+
+                      <!-- Three-Dot Menu for Column Filter -->
+    <div class="menu-container">
+      <button id="menuButton">⋮</button>
+                      <!-- Column Selection -->
+    <div id="columnFilter">
+      <label><input type="checkbox" checked data-column="1">Invoice Number</label>
+      <label><input type="checkbox" checked data-column="2">Property Name</label>
+      <label><input type="checkbox" checked data-column="3">Tenant</label>
+      <label><input type="checkbox" checked data-column="4">Paid Invoices</label>
+      <label><input type="checkbox" checked data-column="5">Unpaid Invoices</label>
+      <label><input type="checkbox" checked data-column="6">Invoice Date</label>
+      <label><input type="checkbox" checked data-column="7">Due Date</label>
+      <label><input type="checkbox" checked data-column="8">Taxes</label>
+      <label><input type="checkbox" checked data-column="9">Sub-Totals</label>
+      <label><input type="checkbox" checked data-column="10">Totals</label>
+
+      
+
+
+      <!-- <label><input type="checkbox" checked data-column="4"> Custom Filter</label> -->
+  </div>
                       <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
                           <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
@@ -1256,49 +1278,52 @@ color: #00192D;
                     <!-- /.card-header -->
                     <div class="card-body">
                       <!--begin::Row-->
-                      <div class="row">
-                        <table id="myTableOne" class="display" style="">
-                          <thead>
-                            <tr>
-                              <th>Position</th>
-                              <th>Property Name</th>
-                              <th>Amount Paid</th>
-                              <th>Qty</th>
-                              <th>Subtotal</th>
-                              <th>Option</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td>1</td>
-                              <td>Manucho Apartments</td>
-                              <td>10,000</td>
-                              <td>1</td>
-                              <td>10,000</td>
-                              <td>
-                                <a href="../financials/viewinvoices.html"><button class="view" onclick="viewInvoice()">View <i class="fa fa-eye"></i></button></a>
-                                <button class="#" onclick="downloadPDF()" style="background-color: #00192D;color: white;border-radius: 5px;">PDF  <i class="fa fa-file-pdf"></i></button>
-                                <button class="#" onclick="printInvoice()" style="background-color: #00192D;color: red;border-radius: 5px;">PRINT    <i class="fa fa-print"></i></button>
+<!-- Table -->
+<table border="1" class="col-md-">
+  <thead>
+      <tr>
+          <th class="col-1" style="width: 15%;">Invoice Number</th>
+          <th class="col-2" style="width: 15%;">Property Name</th>
+          <th class="col-3" style="width: 15%;">Tenant</th>
+           <!-- <th class="col-3">Cancelled Invoices</th>  -->
+          <th class="col-4">Paid Invoices</th>
+          <th class="col-5">Unpaid Invoices</th>
+          <th class="col-6">Invoice Date</th>
+          <th class="col-7">Due Date</th>
+          <th class="col-8">Sub-totals</th>
+          <th class="col-9">Taxes</th>
+          <th class="col-10">Totals</th>
 
-                            </td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                              <td>Ethical Apartments</td>
-                              <td>200.00</td>
-                              <td>1</td>
-                              <td>200.00</td>
-                              <td>
-                                <a href="../financials/viewinvoices.html"><button class="view" onclick="viewInvoice()">View <i class="fa fa-eye"></i></button></a>
-                                <button class="#" onclick="downloadPDF()" style="background-color: #00192D;color: white;border-radius: 10px;" >PDF <i class="fa fa-file-pdf"></i></button>
-                                <button class="#" onclick="printInvoice()" style="background-color: #00192D;color: red;border-radius: 10px;">PRINT<i class="fa fa-print"></i></button>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td class="col-1">INV NO 00001100</td>
+        <td class="col-2">Huduma Apartments</td>
+          <td class="col-3">John Doe</td>
+          <td class="col-4">PAID</td>
+          <td class="col-5">PENDING</td>
+          <td class="col-6">10-11-2025</td>
+          <td class="col-7">11-12-2025</td>
+          <td class="col-8">Ksh 15,000</td>
+          <td class="col-9">Ksh 2100</td>
+          <td class="col-10">Ksh 17,100</td>
 
-                            </td>
-                            </tr>
-                            <!-- Add more rows as needed -->
-                          </tbody>
-  
-                        </table>
+      </tr>
+      <tr>
+        <td class="col-1">INV NO 00001100</td>
+        <td class="col-2">Huduma Apartments</td>
+          <td class="col-3">John Doe</td>
+          <td class="col-4">Inv NO 0001</td>
+          <td class="col-5">INV 0001001</td>
+          <td class="col-6">10-11-2025</td>
+          <td class="col-7">11-12-2025</td>
+          <td class="col-8">Ksh 15,000</td>
+          <td class="col-9">Ksh 2100</td>
+          <td class="col-10">Ksh 17,100</td>
+      </tr>
+  </tbody>
+</table>
   
   
                         <!-- /.col -->
@@ -1610,8 +1635,6 @@ color: #00192D;
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
 
 
-
-
 <script>
 $(document).ready(function() {
   $('#maintenance').DataTable({
@@ -1621,6 +1644,44 @@ $(document).ready(function() {
   });
 });
 </script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      const checkboxes = document.querySelectorAll("#columnFilter input[type='checkbox']");
+      const menuButton = document.getElementById("menuButton");
+      const columnFilter = document.getElementById("columnFilter");
+  
+      // Toggle menu visibility when clicking the three dots
+      menuButton.addEventListener("click", function(event) {
+          columnFilter.classList.toggle("hidden");
+          columnFilter.style.display = columnFilter.classList.contains("hidden") ? "none" : "block";
+  
+          // Prevent closing immediately when clicking inside
+          event.stopPropagation();
+      });
+  
+      // Hide menu when clicking outside
+      document.addEventListener("click", function(event) {
+          if (!menuButton.contains(event.target) && !columnFilter.contains(event.target)) {
+              columnFilter.classList.add("hidden");
+              columnFilter.style.display = "none";
+          }
+      });
+  
+      // Column filtering logic
+      checkboxes.forEach(checkbox => {
+          checkbox.addEventListener("change", function() {
+              let columnClass = `.col-${this.dataset.column}`;
+              let elements = document.querySelectorAll(columnClass);
+  
+              elements.forEach(el => {
+                  el.style.display = this.checked ? "" : "none";
+              });
+          });
+      });
+  });
+  
+      </script>
     <!--end::Script-->
   </body>
   <!--end::Body-->

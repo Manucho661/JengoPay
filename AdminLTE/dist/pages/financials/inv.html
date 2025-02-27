@@ -3,133 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice</title>
-    <style>
+    <title>Dynamic Column Filter</title>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 20px;
-        }
-        .invoice-container {
-            width: 700px;
-            margin: auto;
-            border: 1px solid #ccc;
-            padding: 20px;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .header h1 {
-            text-transform: uppercase;
-        }
-        .logo {
-            width: 80px;
-            height: 80px;
-            background: gray;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-weight: bold;
-        }
-        .invoice-info {
-            text-align: right;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: left;
-        }
-        .totals {
-            text-align: right;
-            margin-top: 20px;
-        }
-        .footer {
-            margin-top: 20px;
-            font-size: 12px;
-        }
-    </style>
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+.menu-container {
+    position: relative;
+    display: inline-flex;
+}
+
+#menuButton {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px;
+    margin-left: 2rem;
+}
+
+#columnFilter {
+    position: absolute;
+    right: 0;
+    top: 30px;
+    background: #f8f8f8;
+    border: 1px solid #ddd;
+    padding: 10px;
+    display: none; /* Initially hidden */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.hidden {
+    display: none;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+     </style>
 </head>
 <body>
-    <div class="invoice-container">
-        <div class="header">
-            <div>
-                <h2>BT JENGOPAY</h2>
-                <p>
-                From:<br>
-                Angela Real Estate, Ltd..
-                795 Pinnacle Building
-                </p>
-                <p>Upperhill, Nairobi Kenya</p>
-                <p>Phone:0712345678</p>
-                <p>Email: info@angelarealestate.com </p>
-            </div>
-            <div class="logo">
-                <!-- <img src="../17.jpg" alt="" width="100px" height=""> -->
-                LOGO</div>
-        </div>
 
-        <div class="invoice-info">
-            <p><strong>Invoice No:</strong> #INV00001</p>
-            <p><strong>Invoice Date:</strong> 11/11/11</p>
-            <p><strong>Due Date:</strong> 12/12/12</p>
-        </div>
+    <h2>Column Filter Example</h2>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Description</th>
-                    <th>QTY</th>
-                    <th>Unit Price</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Rent</td>
-                    <td>1</td>
-                    <td>Ksh10,000</td>
-                    <td>Ksh 10,000</td>
-                </tr>
-                <tr>
-                    <td>Water</td>
-                    <td>1</td>
-                    <td>Ksh500</td>
-                    <td>Ksh 500</td>
-                </tr>
-                <tr>
-                    <td>Garbage</td>
-                    <td>1</td>
-                    <td>Ksh200</td>
-                    <td>Ksh 200</td>
-                </tr>
-                <!-- Add more items here -->
-            </tbody>
-        </table>
-
-        <div class="totals">
-            <p><strong>Subtotal:</strong> Ksh 10,700</p>
-            <!-- <p><strong>Discount:</strong> Ksh 500</p> -->
-            <!-- <p><strong>Subtotal Less Discount:</strong> $100.00</p> -->
-            <p><strong>Tax Rate:</strong> 16%</p>
-            <p><strong>Total Tax:</strong> Ksh 1712</p>
-            <p><strong>Total:</strong> Ksh 12,412</p>
-            <h2>Balance Due: Ksh100.00</h2>
-        </div>
-
-        <div class="footer">
-            <p><strong>Terms & Instructions</strong></p>
-            <p>Add payment instructions here, e.g., bank, PayPal...</p>
-            <p>Add terms here, e.g., warranty, returns policy...</p>
+    <!-- Three-Dot Menu for Column Filter -->
+    <div class="menu-container">
+        <button id="menuButton">⋮</button>
+        <div id="columnFilter" class="hidden">
+            <label><input type="checkbox" checked data-column="1"> Name</label>
+            <label><input type="checkbox" checked data-column="2"> Age</label>
+            <label><input type="checkbox" checked data-column="3"> Country</label>
+            <label><input type="checkbox" checked data-column="4"> Email</label>
         </div>
     </div>
+
+    <!-- Table -->
+    <table border="1">
+        <thead>
+            <tr>
+                <th class="col-1">Name</th>
+                <th class="col-2">Age</th>
+                <th class="col-3">Country</th>
+                <th class="col-4">Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-1">John Doe</td>
+                <td class="col-2">30</td>
+                <td class="col-3">USA</td>
+                <td class="col-4">john@example.com</td>
+            </tr>
+            <tr>
+                <td class="col-1">Jane Smith</td>
+                <td class="col-2">25</td>
+                <td class="col-3">Canada</td>
+                <td class="col-4">jane@example.com</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const checkboxes = document.querySelectorAll("#columnFilter input[type='checkbox']");
+    const menuButton = document.getElementById("menuButton");
+    const columnFilter = document.getElementById("columnFilter");
+
+    // Toggle menu visibility when clicking the three dots
+    menuButton.addEventListener("click", function(event) {
+        columnFilter.classList.toggle("hidden");
+        columnFilter.style.display = columnFilter.classList.contains("hidden") ? "none" : "block";
+
+        // Prevent closing immediately when clicking inside
+        event.stopPropagation();
+    });
+
+    // Hide menu when clicking outside
+    document.addEventListener("click", function(event) {
+        if (!menuButton.contains(event.target) && !columnFilter.contains(event.target)) {
+            columnFilter.classList.add("hidden");
+            columnFilter.style.display = "none";
+        }
+    });
+
+    // Column filtering logic
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener("change", function() {
+            let columnClass = `.col-${this.dataset.column}`;
+            let elements = document.querySelectorAll(columnClass);
+
+            elements.forEach(el => {
+                el.style.display = this.checked ? "" : "none";
+            });
+        });
+    });
+});
+
+    </script>
 </body>
 </html>

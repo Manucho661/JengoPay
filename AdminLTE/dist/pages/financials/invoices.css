@@ -173,3 +173,42 @@ th, td {
   border-radius: 10px;
   margin-right: 50rem;
 }
+#columnFilter {
+  position: absolute;
+  right: 0;
+  top: 30px;
+  background: #f8f8f8;
+  border: 1px solid #ddd;
+  padding: 10px;
+  display: none; /* Initially hidden */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.hidden {
+  display:inline-block;
+}
+.menu-container {
+  position: relative;
+  display: inline-flex;
+}
+
+#menuButton {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px;
+  margin-left: 2rem;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  width: 25%;
+  padding: 10px;
+  text-align: left;
+  flex: 3;
+}
