@@ -200,15 +200,34 @@ th, td {
   padding: 5px;
   margin-left: 2rem;
 }
-table {
+.items-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
+  table-layout: fixed; /* Ensures equal column widths */
 }
-
-th, td {
-  width: 25%;
-  padding: 10px;
-  text-align: left;
-  flex: 3;
+.items-table th, .billing-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+  width: 12.5%; /* 8 columns equally distributed */
 }
+.items-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+ .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        .invoice-table th, 
+        .invoice-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            width: 10%; /* Ensuring equal width distribution across 10 columns */
+        }
+        .invoice-table th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
