@@ -139,20 +139,16 @@ body {
   color: #FFC107;
   }
   
-  form {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin: 0 auto;
-  }
+ 
   
   h2 {
   text-align: center;
   margin-bottom: 20px;
   }
-  
-  label {
+  .form-label{
+    font-size: 12px;
+  }
+    label {
   font-size: 12px;
   margin-bottom: 8px;
   display: block;
@@ -207,18 +203,10 @@ body {
   /* textarea {
   resize: vertical;
   } */
-  .form-section {
-  margin-bottom: 15px;
-  }
+  
   
   /* Main form container */
-  .form-container{
-  position: fixed;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 3px 11px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  }
+ 
   
   /* Form Section Titles */
   .form-section h3 {
@@ -752,4 +740,49 @@ input:checked + .slider:before {
   font-size: 14px;
   color: #333;
   display: none;
+}
+
+
+/* Form styles */
+.form-control, .form-select {
+  border-radius: 8px !important;
+  border: 1px solid #ccc !important;
+  transition: all 0.3s ease-in-out !important;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #FFC107 !important;
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.3) !important;
+}
+
+select {
+  appearance: none; /* Hides default arrow in some browsers */
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="%23FFC107" d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
+  background-size: 16px;
+  padding-right: 30px;
+}
+input:focus, select:focus {
+  border-color: #FFC107;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+input, select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #fff;
+  cursor: pointer;
+}
+.btn-custom {
+  background-color: #00192D !important;
+  border: none !important;
+  border-radius: 8px !important;
+  transition: 0.3s !important;
+  color: white !important;
+  padding: 8px 15px !important;
+  font-weight: 500 !important;
+
 }

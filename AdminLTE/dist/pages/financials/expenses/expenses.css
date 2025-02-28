@@ -82,7 +82,6 @@ div.dt-buttons{
     background-color: #00192D !important
   }
   
-  
   div.dt-button-collection {
     background-color: #00192D !important;  /* Change to your preferred color */
     border: 1px solid #ccc !important;
@@ -193,6 +192,4 @@ div.dt-buttons{
 
       .row{
         border-radius: 8px; /* Softens edges */
-
-
       }
