@@ -257,5 +257,40 @@ th, td {
           color: white !important;
           border-radius: 3px;
         }
+
+        table{
+          font-size: 12px !important; /* Reduce table font size */
+        }
+      
+        th, td {
+          text-align: left !important; /* Align text for readability */
+        }
+        
+        th:nth-child(1), td:nth-child(1) { 
+          text-align: center !important; /* Center align numbers like serial numbers */
+        }
+        
+        th:nth-child(3), td:nth-child(3) { 
+          text-align: center !important; /* Center align payment status */
+        }
+        
+        th:nth-child(4), td:nth-child(4) { 
+          text-align: left !important; /* Align provider names to the left */
+        }
+        th, td {
+          padding: 12px 15px !important; /* Top-bottom: 12px, Left-right: 15px */
+        }
+        
+        th, td {
+          white-space: nowrap !important;
+          overflow: hidden !important;
+          text-overflow: ellipsis !important; /* Add '...' if text overflows */
+        }
+        th {
+          font-weight: bold !important;
+          text-transform: uppercase !important;
+          background-color: #f4f4f4 !important; /* Light background for contrast */
+          border-bottom: 2px solid #ddd !important;
+        }
         
         

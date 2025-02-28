@@ -77,9 +77,12 @@ th, td {
   }
 div.dt-buttons{
     background-color: #00192D !important ;
+    font-size: 12px !important;
+
   }
   div.dt-buttons .btn{
-    background-color: #00192D !important
+    background-color: #00192D !important;
+    font-size: 12px !important;
   }
   
   
@@ -87,11 +90,15 @@ div.dt-buttons{
     background-color: #00192D !important;  /* Change to your preferred color */
     border: 1px solid #ccc !important;
     border-radius: 2px;
+    font-size: 12px !important;
+
   }
   div.dt-button-collection .dt-button {
     background-color: #00192D !important;
     color: white !important; /* Ensure text is visible */
     border: none !important;
+    font-size: 12px !important;
+
   }
   
   /* Change hover effect */
@@ -99,6 +106,8 @@ div.dt-buttons{
     background-color: #FFC107 !important;
     color: white !important;
     border-radius: 3px;
+    font-size: 12px !important;
+
   }
   
 

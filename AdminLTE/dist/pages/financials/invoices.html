@@ -1073,6 +1073,9 @@
               </div>
               <!-- /.card -->
             </div>
+
+            <hr>
+
             <!--begin::Row-->
             <div class="row">
                 <div class="col-md-12">
@@ -1115,10 +1118,10 @@
           <th>Invoice Number</th>
           <th>Property Name</th>
           <th>Tenant</th>
-          <th>Paid Invoices</th>
-          <th>Unpaid Invoices</th>
+          <!-- <th>Paid Invoices</th> -->
+          <!-- <th>Unpaid Invoices</th> -->
           <th>Invoice Date</th>
-          <th>Due Date</th>
+          <!-- <th>Due Date</th> -->
           <th>Sub-totals</th>
           <th>Taxes</th>
           <th>Totals</th>
@@ -1129,10 +1132,10 @@
           <td>INV NO 00001100</td>
           <td>Huduma Apartments</td>
           <td>John Doe</td>
-          <td>PAID</td>
-          <td>PENDING</td>
+          <!-- <td>PAID</td> -->
+          <!-- <td>PENDING</td> -->
           <td>10-11-2025</td>
-          <td>11-12-2025</td>
+          <!-- <td>11-12-2025</td> -->
           <td>Ksh 15,000</td>
           <td>Ksh 2100</td>
           <td>Ksh 17,100</td>
@@ -1141,10 +1144,10 @@
           <td>INV NO 00001101</td>
           <td>Sunrise Apartments</td>
           <td>Jane Smith</td>
-          <td>PAID</td>
-          <td>OVERDUE</td>
+          <!-- <td>PAID</td> -->
+          <!-- <td>OVERDUE</td> -->
           <td>15-10-2025</td>
-          <td>15-11-2025</td>
+          <!-- <td>15-11-2025</td> -->
           <td>Ksh 12,500</td>
           <td>Ksh 1800</td>
           <td>Ksh 14,300</td>
@@ -1223,7 +1226,8 @@
         $(document).ready(function () {
             $('#myTableFour').DataTable();
         });
-     </script>
+     </script> 
+
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
       integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
@@ -1285,19 +1289,19 @@
 
 <script>
 $(document).ready(function() {
-        var table = $('#invoice').DataTable({
-            "lengthChange": false,
-            "dom": 'Bfrtip',
-            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
-            "initComplete": function() {
-                // Move the buttons to the first .col-md-6
-                table.buttons().container().appendTo('#invoice_wrapper .col-md-6:eq(0)');
+    var table = $('#maintenance').DataTable({
+        "lengthChange": false,
+        "dom": 'Bfrtip',
+        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+        "initComplete": function() {
+            // Move the buttons to the first .col-md-6
+            table.buttons().container().appendTo('#maintenance_wrapper .col-md-6:eq(0)');
 
-                // Move the search box to the second .col-md-6
-                $('#invoice_filter').appendTo('#invoice_wrapper .col-md-6:eq(1)');
-            }
-        });
+            // Move the search box to the second .col-md-6
+            $('#maintenance_filter').appendTo('#maintenance_wrapper .col-md-6:eq(1)');
+        }
     });
+});
 
 
 </script>
