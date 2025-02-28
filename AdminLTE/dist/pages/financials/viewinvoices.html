@@ -651,10 +651,15 @@ color: #00192D;
         <div class="app-content-header">
           <!--begin::Container-->
           <div class="container-fluid">
-            <button class="print-btn d-flex justify-content-end" onclick="print()">PRINT</button>
-            <button class="print-btn d-flex justify-content-end" onclick="print()">DOWNLOADPDF</button>
-
-            
+            <div class="button-container">
+            <button class="print-btn d-flex justify-content-end" onclick="print()">
+              <i class="fas fa-print"></i> 
+              PRINT</button>
+            <button class="print-btn d-flex justify-content-end" onclick="print()">
+              <i class="fas fa-file-pdf"></i>
+              DOWNLOADPDF</button>
+</div>
+            <hr>
             <div class="invoice-container">
 
                 <div class="header">
@@ -801,12 +806,22 @@ color: #00192D;
     <!--end::App Wrapper-->
     <!--begin::Script-->
 
-
     <script>
-      function print() {
-          window.print();
+      function downloadPDF() {
+          html2canvas(document.body).then(canvas => {
+              const imgData = canvas.toDataURL("image/png");
+              const { jsPDF } = window.jspdf;
+              const doc = new jsPDF("p", "mm", "a4");
+  
+              const imgWidth = 210; // A4 width in mm
+              const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  
+              doc.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+              doc.save("page.pdf");
+          });
       }
   </script>
+  
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <script>
         // Initialize DataTable
