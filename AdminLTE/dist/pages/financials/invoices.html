@@ -1073,36 +1073,16 @@
               </div>
               <!-- /.card -->
             </div>
-<hr>
+
+            <hr>
+
             <!--begin::Row-->
             <div class="row">
                 <div class="col-md-12">
                   <div class="card mb-4">
                     <div class="card-header">
                       <h5 class="card-title text-warning">All Invoices</h5>
-
-                      <!-- Three-Dot Menu for Column Filter -->
-    <div class="menu-container">
-      <button id="menuButton">⋮</button>
-                      <!-- Column Selection -->
-    <div id="columnFilter">
-      <label><input type="checkbox" checked data-column="1">Invoice Number</label>
-      <label><input type="checkbox" checked data-column="2">Property Name</label>
-      <label><input type="checkbox" checked data-column="3">Tenant</label>
-      <label><input type="checkbox" checked data-column="4">Paid Invoices</label>
-      <label><input type="checkbox" checked data-column="5">Unpaid Invoices</label>
-      <label><input type="checkbox" checked data-column="6">Invoice Date</label>
-      <label><input type="checkbox" checked data-column="7">Due Date</label>
-      <label><input type="checkbox" checked data-column="8">Taxes</label>
-      <label><input type="checkbox" checked data-column="9">Sub-Totals</label>
-      <label><input type="checkbox" checked data-column="10">Totals</label>
-
-      
-
-
-      <!-- <label><input type="checkbox" checked data-column="4"> Custom Filter</label> -->
-  </div>
-                      <div class="card-tools">
+                        <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
                           <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
                           <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
@@ -1132,48 +1112,45 @@
                     <div class="card-body">
                       <!--begin::Row-->
 <!-- Table -->
-<table border="1" class="invoice-table">
+<table id="invoice" class="table table-striped table-bordered" style="width:100%">
   <thead>
       <tr>
-          <th class="col-1" style="width: 15%;">Invoice Number</th>
-          <th class="col-2" style="width: 15%;">Property Name</th>
-          <th class="col-3" style="width: 15%;">Tenant</th>
-           <!-- <th class="col-3">Cancelled Invoices</th>  -->
-          <th class="col-4">Paid Invoices</th>
-          <th class="col-5">Unpaid Invoices</th>
-          <th class="col-6">Invoice Date</th>
-          <th class="col-7">Due Date</th>
-          <th class="col-8">Sub-totals</th>
-          <th class="col-9">Taxes</th>
-          <th class="col-10">Totals</th>
-
+          <th>Invoice Number</th>
+          <th>Property Name</th>
+          <th>Tenant</th>
+          <!-- <th>Paid Invoices</th> -->
+          <!-- <th>Unpaid Invoices</th> -->
+          <th>Invoice Date</th>
+          <!-- <th>Due Date</th> -->
+          <th>Sub-totals</th>
+          <th>Taxes</th>
+          <th>Totals</th>
       </tr>
   </thead>
   <tbody>
       <tr>
-        <td class="col-1">INV NO 00001100</td>
-        <td class="col-2">Huduma Apartments</td>
-          <td class="col-3">John Doe</td>
-          <td class="col-4">PAID</td>
-          <td class="col-5">PENDING</td>
-          <td class="col-6">10-11-2025</td>
-          <td class="col-7">11-12-2025</td>
-          <td class="col-8">Ksh 15,000</td>
-          <td class="col-9">Ksh 2100</td>
-          <td class="col-10">Ksh 17,100</td>
-
+          <td>INV NO 00001100</td>
+          <td>Huduma Apartments</td>
+          <td>John Doe</td>
+          <!-- <td>PAID</td> -->
+          <!-- <td>PENDING</td> -->
+          <td>10-11-2025</td>
+          <!-- <td>11-12-2025</td> -->
+          <td>Ksh 15,000</td>
+          <td>Ksh 2100</td>
+          <td>Ksh 17,100</td>
       </tr>
       <tr>
-        <td class="col-1">INV NO 00001100</td>
-        <td class="col-2">Huduma Apartments</td>
-          <td class="col-3">John Doe</td>
-          <td class="col-4">Inv NO 0001</td>
-          <td class="col-5">INV 0001001</td>
-          <td class="col-6">10-11-2025</td>
-          <td class="col-7">11-12-2025</td>
-          <td class="col-8">Ksh 15,000</td>
-          <td class="col-9">Ksh 2100</td>
-          <td class="col-10">Ksh 17,100</td>
+          <td>INV NO 00001101</td>
+          <td>Sunrise Apartments</td>
+          <td>Jane Smith</td>
+          <!-- <td>PAID</td> -->
+          <!-- <td>OVERDUE</td> -->
+          <td>15-10-2025</td>
+          <!-- <td>15-11-2025</td> -->
+          <td>Ksh 12,500</td>
+          <td>Ksh 1800</td>
+          <td>Ksh 14,300</td>
       </tr>
   </tbody>
 </table>
@@ -1249,7 +1226,8 @@
         $(document).ready(function () {
             $('#myTableFour').DataTable();
         });
-     </script>
+     </script> 
+
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
       integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
@@ -1290,6 +1268,44 @@
         }
       });
     </script>
+
+
+<!-- Required Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
+
+
+
+
+<script>
+$(document).ready(function() {
+    var table = $('#maintenance').DataTable({
+        "lengthChange": false,
+        "dom": 'Bfrtip',
+        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+        "initComplete": function() {
+            // Move the buttons to the first .col-md-6
+            table.buttons().container().appendTo('#maintenance_wrapper .col-md-6:eq(0)');
+
+            // Move the search box to the second .col-md-6
+            $('#maintenance_filter').appendTo('#maintenance_wrapper .col-md-6:eq(1)');
+        }
+    });
+});
+
+
+</script>
+
     <!-- Bootstrap Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!--end::OverlayScrollbars Configure-->

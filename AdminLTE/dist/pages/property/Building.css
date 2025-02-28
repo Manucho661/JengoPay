@@ -91,11 +91,15 @@ button {
 .next-btn {
     background: #00192D;
     color: white;
+    /* margin-left: 55rem; */
 }
+
+
 
 .prev-btn {
     background: #00192D;
     color: white;
+    margin-left: 48rem;
 }
 
 .submit-btn {
@@ -142,26 +146,27 @@ label{
 
 button {
     margin-top: 10px;
-    padding: 5px 10px;
-    background: #007bff;
+    padding: 5px 8px;
+    background:#00192D;
     color: white;
     border: none;
     cursor: pointer;
 }
 
 button:hover {
-    background: #0056b3;
+    background:#FFC107;
 }
 
 #prev, #next {
     position: absolute;
     top: 50%;
+    margin-left: 18rem;
     transform: translateY(-50%);
     background: rgba(0, 0, 0, 0.5);
     color: white;
     border: none;
     cursor: pointer;
-    padding: 10px;
+    padding: 5px;
 }
 
 #prev {
@@ -209,3 +214,61 @@ button:hover {
     display: block; /* Ensures label takes full width */
     text-align: left; /* Aligns text to the left */
 }
+  
+/* Overlay to cover the screen */
+.detailed-overlay {
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    z-index: 10000;
+    /* transform: translate(-50%, -50%); */
+    background: rgba(0, 0, 0, 0.5); /* Optional: Adds a semi-transparent background */
+    width: 100vw; 
+    height: 100vh;
+    font-weight:600 ;
+    display:none;
+    justify-content: center;
+    align-items: center;
+    overflow: scroll;
+    /* color: black; */
+  }
+  
+  /* Form Styling */
+  .complaint-form {
+    background: white;
+    padding: 20px;
+    width:50%;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    /* width: 300px; Adjust width as needed */
+    margin: 0 auto; 
+  }
+  
+  /* Form Inputs */
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  /* Button Styling */
+  .submit-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #00192D;
+    color: #f1f1f1;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .submit-btn:hover {
+    background-color: #003366;
+  }
+  .close-btn{
+    background: white;
+    color: black;
+  }
+
+  .close-btn:hover{
+    background: white !important;
+    color: red;
+  }
+  

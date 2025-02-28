@@ -515,37 +515,6 @@ td button{
 }
 
 
-th, td {
-  text-align: left !important; /* Align text for readability */
-}
-
-th:nth-child(1), td:nth-child(1) { 
-  text-align: center !important; /* Center align numbers like serial numbers */
-}
-
-th:nth-child(3), td:nth-child(3) { 
-  text-align: center !important; /* Center align payment status */
-}
-
-th:nth-child(4), td:nth-child(4) { 
-  text-align: left !important; /* Align provider names to the left */
-}
-th, td {
-  padding: 12px 15px !important; /* Top-bottom: 12px, Left-right: 15px */
-}
-
-th, td {
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important; /* Add '...' if text overflows */
-}
-th {
-  font-weight: bold !important;
-  text-transform: uppercase !important;
-  background-color: #f4f4f4 !important; /* Light background for contrast */
-  border-bottom: 2px solid #ddd !important;
-}
-
 
 .status {
   display: inline-flex;
@@ -627,3 +596,68 @@ th {
 .completed { background-color: #28a745; color: white; } /* Green */
 .in-progress { background-color: #007bff; color: white; } /* Blue */
 .incomplete { background-color: #dc3545; color: white; } /* Red */
+
+
+div.dt-buttons{
+  background-color: #00192D !important ;
+}
+div.dt-buttons .btn{
+  background-color: #00192D !important
+}
+
+
+div.dt-button-collection {
+  background-color: #00192D !important;  /* Change to your preferred color */
+  border: 1px solid #ccc !important;
+  border-radius: 2px;
+}
+div.dt-button-collection .dt-button {
+  background-color: #00192D !important;
+  color: white !important; /* Ensure text is visible */
+  border: none !important;
+}
+
+/* Change hover effect */
+div.dt-button-collection .dt-button:hover {
+  background-color: #FFC107 !important;
+  color: white !important;
+  border-radius: 3px;
+}
+
+table{
+  font-size: 12px !important; /* Reduce table font size */
+}
+
+th, td {
+  text-align: left !important; /* Align text for readability */
+}
+
+th:nth-child(1), td:nth-child(1) { 
+  text-align: center !important; /* Center align numbers like serial numbers */
+}
+
+th:nth-child(3), td:nth-child(3) { 
+  text-align: center !important; /* Center align payment status */
+}
+
+th:nth-child(4), td:nth-child(4) { 
+  text-align: left !important; /* Align provider names to the left */
+}
+th, td {
+  padding: 12px 15px !important; /* Top-bottom: 12px, Left-right: 15px */
+}
+
+th, td {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important; /* Add '...' if text overflows */
+}
+th {
+  font-weight: bold !important;
+  text-transform: uppercase !important;
+  background-color: #f4f4f4 !important; /* Light background for contrast */
+  border-bottom: 2px solid #ddd !important;
+}
+
+
+ 
