@@ -418,6 +418,7 @@
                                                   <th>Unit Price</th>
                                                   <th>Quantity</th>
                                                   <th>Sub-total</th>
+                                                  <th>Taxes</th>
                                                   <th>Remove</th>
                                               </tr>
                                           </thead>
@@ -425,19 +426,25 @@
                                               <tr>
                                                   <td>
                                                       <select class="form-select">
-                                                          <option selected disabled>Garbage</option>
-                                                          <option>Rent</option>
-                                                          <option>Water</option>
-                                                          <option>Internet</option>
-                                                          <option>Taxes</option>
+                                                          <option selected disabled>Repair and Mantainance</option>
                                                           <option>Salaries</option>
-                                                          <option>Others</option>
+                                                          <option>Legal Work</option>
+                                                          <option>Internet</option>
+                                                          
                                                       </select>
                                                   </td>
                                                   <td><textarea class="form-control" rows="1" placeholder="Enter details"></textarea></td>
                                                   <td><input type="text" class="form-control" placeholder="123"></td>
                                                   <td><input type="number" class="form-control" placeholder="1"></td>
                                                   <td><input type="number" class="form-control" placeholder="123"></td>
+                                                  <td>
+                                                    <select class="form-select">
+                                                      <option value="" disabled selected>Select Option</option>
+                                                      <option value="credit_card">VAT 16% Inclusive</option>
+                                                      <option value="paypal">VAT 16% Exclusive</option>
+                                                      <option value="bank_transfer">VAT 16% Zero Rated</option>
+                                                    </select>
+                                                  </td>
                                                   <td><button type="button" class="btn btn-danger remove-row">Delete</button></td>
                                               </tr>
                                           </tbody>
@@ -446,7 +453,7 @@
       
                                   <div class="row g-3 mt-2">
                                       <div class="col-6">
-                                          <button type="button" class="btn btn-custom" id="addRow">Add More</button>
+                                          <button type="button" class="btn btn-custom btn-sm" id="addRow">Add More</button>
                                       </div>
                                       <div class="col-6 mt-2 d-flex justify-content-end">
                                           <button type="submit" class="btn btn-custom btn-sm" style="height: fit-content;"> Submit</button>
@@ -500,8 +507,6 @@
                                 <tr>
                                     <th>Exp Date</th>
                                     <th>Unit Price</th>
-                                    <!-- <th>UNITY PRICE</th> -->
-                                    <!-- <th>Quantity</th> -->
                                     <th>Qty</th>
                                     <th>Sub Total</th>
                                     <th>All Totals</th>
