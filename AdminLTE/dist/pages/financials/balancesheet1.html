@@ -17,7 +17,9 @@
       content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard"
     />
     <!--end::Primary Meta Tags-->
-    <!--begin::Fonts-->
+    <!--begin::Fonts-->    
+
+
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
@@ -40,10 +42,13 @@
       integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
-    <link rel="stylesheet" href="text.css" />
+    <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -54,13 +59,18 @@
     />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-   <link rel="stylesheet" href="balancesheet1.css">
-<!-- scripts for data_table -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="balancesheet.css">
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+   <link rel="stylesheet" href="">
 
+    <!-- scripts for data_table -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> 
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
+
+    <style>
+      
+    </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -228,7 +238,7 @@
                 <!--begin::User Image-->
                 <li class="user-header text-bg-primary">
                   <img
-                    src="../../../dist/assets/img/user2-160x160.jpg"
+                    src="../../dist/assets/img/user2-160x160.jpg"
                     class="rounded-circle shadow"
                     alt="User Image"
                   />
@@ -297,72 +307,181 @@
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-              <div class="col-sm-12">
-                <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> BALANCE SHEET</h3> 
-                    <div class="row mt-2  ">
-                      <div class="col-md-12">
-                        
-                        <div class="row">
-                                
-                                
-                        
-                        <div class="row mt-6" >
+              <div class="col-sm-8">
+
+                        <h3 class="mb-0 contact_section_header">  <i class="fas fa-tools"></i>The Balance Sheet</h3>
+
+                        <div class="row Summary mt-6" >
                           <!-- Summary -->
-                          
+                          <div class="col-md-12 ">
+                            
+                            <div class="summary-section text-center p-2 row">
+                              <div class="col-6 col-md-4 ">
+                                <div class="summary-item total">
+                                  <i class="fas fa-calculator"></i> 
+                                   <div class="label">ASSETS <b class="value" > 100</b>  </div> 
+                                </div>
+                                                                   
+                              </div>
 
-                          <div class="col-md-2  ">
-                            <label class="text text-center"> <i class="fas fa-calculator"></i> <a href="index.html"> ASSETS</a>  </label>
-                              <span class="value text-center"> <b>KSH 76,889 </b> </span>
-                          </div>
-
-                          <div class="col-md-2">
-                            <label class="text text-center"> <i class="fas fa-spinner fa-spin icon"></i> <a href=""> LIABILITIES </a>  </label>
-                            <span class="value"> <B>KSH 60,889</B> </span>
-                          </div>
-
-                          <div class="col-md-2">
-                            <label class="text text-center"> <i class="fas fa-spinner fa-spin icon"></i> <a href=""> NET_PROFIT </a>  </label>
-                            <span class="value"> <B>KSH 16,889</B> </span>
-                          </div>
-
-                          <div class="col-md-2">
-                            <div class="select-container">
-                                
-                                <select name="cars" id="cars" class="custom-select">
-                                  <option value="volvo">January</option>
-                                  <option value="saab">Feb</option>
-                                  <option value="mercedes">March</option>
-                                  <option value="audi">April</option>
-                                </select>
+                              <div class="col-6 col-md-4 ">
+                                <div class="summary-item total">
+                                  <i class="fas fa-calculator"></i> 
+                                 <div class="label">LIABILITIES <b class="value" >KSH 500</b>  </div>
+                                </div>
+                              </div>
+                              <div class="col-6 col-md-4 ">
+                                <div class="summary-item total">
+                                  <i class="fas fa-calculator"></i> 
+                                  <div class="label">EQUITY <b class="value" >KSH 500</b>  </div>
+                                </div>
+                               
+                              </div>
                             </div>
+                            
                           </div>
-
-
-
-                          <div class="col-md-2">
-                            <div class="select-container">
-                                
-                                <select name="cars" id="cars" class="custom-select">
-                                  <option value="volvo">All_Properties</option>
-                                  <option value="saab">Nucho</option>
-                                  <option value="mercedes">EBENEZER</option>
-                                  <option value="audi">PINK_HOUSE</option>
-                                </select>
-                            </div>
-                          </div>
-                          
-                          
+                                  
                         </div>
 
-                      </div>
+                      
+                          
+                    
 
-                </div>
+                
               </div>
 
-              
+              <div class="col-sm-4">
+                <ol class="breadcrumb float-sm-end">
+                  <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                </ol> 
+              </div> 
 
             </div>
             <!--end::Row-->
+            <!-- begin row -->
+             <div class="row mt-2">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-header">
+                      <a class="btn btn-link add-expense-btn" data-bs-toggle="collapse" href="#addExpense" aria-expanded="false" aria-controls="addExpenseAccordion" style="color: #00192D; font-weight:bold; text-decoration: none;">
+                          <span id="toggleIcon">+</span> Click Here to Add operational Expense
+                      </a>
+                  </div>
+          
+                  <div class="card-body collapse" id="addExpense">
+                    <div class="card">
+                      <div class="card-header" style="background: linear-gradient(to right, #00192D, #003D5B, #00788D);">
+                          <h6 class="text-white">Enter Expense Details</h6>
+                      </div>
+                      <div class="card-body">
+                          <div class="form-container">
+                              <form>
+                                  <div class="row g-3">
+                                      <!-- No -->
+                                      <div class="col-md-3">
+                                          <label class="form-label"><b>No</b></label>
+                                          <input type="number" class="form-control" placeholder="123" disabled>
+                                      </div>
+                      
+                                      <!-- Expense of the Month -->
+                                      <div class="col-md-5">
+                                          <label class="form-label"><b>Expense for the Month of</b></label>
+                                          <select class="form-select">
+                                              <option selected disabled>Select Month</option>
+                                              <option>January</option>
+                                              <option>February</option>
+                                              <option>March</option>
+                                              <option>April</option>
+                                              <option>May</option>
+                                              <option>June</option>
+                                              <option>July</option>
+                                              <option>August</option>
+                                              <option>September</option>
+                                              <option>October</option>
+                                              <option>November</option>
+                                              <option>December</option>
+                                          </select>
+                                      </div>
+                      
+                                      <!-- Year -->
+                                      <div class="col-md-4">
+                                          <label class="form-label"><b>Year</b></label>
+                                          <input type="number" class="form-control" placeholder="2025">
+                                      </div>
+                                  </div>
+      
+                                  <div class="row g-3 mt-2">
+                                      <div class="col-md-6">
+                                          <label class="form-label"><b>Entry Date</b></label>
+                                          <input type="date" class="form-control">
+                                      </div>
+                                  </div>
+      
+                            
+
+                                  <!-- Expense Table -->
+                                  <div class="row g-3 mt-2">
+                                      <h6 class="text-center" style="color:linear-gradient(to right, #00192D, #003D5B, #00788D) ;"> <b>Add the Spend items in the fields below</b> </h6>
+                                      <table class="table table-bordered table-hover table-striped">
+                                          <thead>
+                                              <tr>
+                                                  <th>Account</th>
+                                                  <th>Description</th>
+                                                  <th>Unit Price</th>
+                                                  <th>Quantity</th>
+                                                  <th>Sub-total</th>
+                                                  <th>Taxes</th>
+                                                  <th>Remove</th>
+                                              </tr>
+                                          </thead>
+                                          <tbody>
+                                              <tr>
+                                                  <td>
+                                                      <select class="form-select">
+                                                          <option selected disabled>Repair and Mantainance</option>
+                                                          <option>Salaries</option>
+                                                          <option>Legal Work</option>
+                                                          <option>Internet</option>
+                                                          
+                                                      </select>
+                                                  </td>
+                                                  <td><textarea class="form-control" rows="1" placeholder="Enter details"></textarea></td>
+                                                  <td><input type="text" class="form-control" placeholder="123"></td>
+                                                  <td><input type="number" class="form-control" placeholder="1"></td>
+                                                  <td><input type="number" class="form-control" placeholder="123"></td>
+                                                  <td>
+                                                    <select class="form-select">
+                                                      <option value="" disabled selected>Select Option</option>
+                                                      <option value="credit_card">VAT 16% Inclusive</option>
+                                                      <option value="paypal">VAT 16% Exclusive</option>
+                                                      <option value="bank_transfer">VAT 16% Zero Rated</option>
+                                                    </select>
+                                                  </td>
+                                                  <td><button type="button" class="btn btn-danger remove-row">Delete</button></td>
+                                              </tr>
+                                          </tbody>
+                                      </table>
+                                  </div>
+      
+                                  <div class="row g-3 mt-2">
+                                      <div class="col-6">
+                                          <button type="button" class="btn btn-custom btn-sm" id="addRow">Add More</button>
+                                      </div>
+                                      <div class="col-6 mt-2 d-flex justify-content-end">
+                                          <button type="submit" class="btn btn-custom btn-sm" style="height: fit-content;"> Submit</button>
+                                      </div>
+                                  </div>
+                                                  
+                              </form>
+                          </div>
+                      </div>
+                  </div>
+                  </div>
+                </div>
+              </div>
+              </div>
+            <!-- /end row -->
           </div>
           <!--end::Container-->
         </div>
@@ -373,122 +492,123 @@
 
             <!-- /.row -->
             <!--begin::Row-->
-            
-            <!--end::Row-->
-            <!--begin::Row-->
-            <div class="row mt-3">
-              <!-- Start col -->       
-               <h6 class="mb-1 contact_section_subheader"> <b>ASSETS</b>  </h6>
-              <div class="col-md-12">
-                <div class="asset_container">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title text-warning">
-                                Current_Assets
+            <div class="row first mb-2 mt-2 rounded-circle">
 
-                            </div>
-                            <div class="card-body">
-                
-                                <table id="income" class="display">
-                                    <thead>
-                                    <tr>
-                                        <th>Income</th>
-                                        <th>Amount</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                        
-                                        <tr><td>Rent Deposits</td><td>KSH5,000</td></tr>
-                                        <tr><td>Accounts Receivable</td><td>KSH2,000</td></tr>
-                                        <tr><td>Prepaid Expenses</td><td>KSH300</td></tr>
-                                        <tr><td>Maintenance Inventory</td><td>KSH700</td></tr>
-                                        
-                                        
-                                        <tr class="#" ><td>Total Assets</td><td>KSH85,000</td></tr>
-                                    <!-- Add more rows as needed -->
-                                    </tbody>
-                
-                                </table>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-                    
-                <!-- /card -->
-
-                <div class="card mt-3">
-                    <div class="card-header text-warning">
-                        Fixed
-                    </div>
-                    
-                    <div class="card-body">
-                        <table id="income" class="display">
-                            <thead>
-                              <tr>
-                                <th>Income</th>
-                                <th>Amount</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                                
-                                
-                                <tr><td>Office Equipment</td><td>KSH3,000</td></tr>
-                                <tr><td>Vehicles</td><td>KSH15,000</td></tr>
-                                <tr><td>Property Assets</td><td>KSH50,000</td></tr>
-                    
-                                <tr><td>Investments</td><td>KSH10,000</td></tr>
-                                <tr class="#" ><td>Total Assets</td><td>KSH85,000</td></tr>
-                              <!-- Add more rows as needed -->
-                            </tbody>
-        
-                          </table>
-                    </div>
-
-                </div>
-                
-            </div>
+              
               <!-- /.col -->
             </div>
             <!--end::Row-->
 
-            <div class="row mt-5">
-                <h6 class="mb-1 contact_section_subheader"> <b>LIABILITIES</b>  </h6>
-
-                <div class="col-md-12">
-                    <table>
-                        <thead>
-                            <tr>
-                              <th>Income</th>
-                              <th>Amount</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-
-                        <tr class="category"><td>Current Liabilities</td><td></td></tr>
-                        <tr><td>Accounts Payable</td><td>KSH1,200</td></tr>
-                        <tr><td>Maintenance Costs Owed</td><td>KSH1,500</td></tr>
-                        <tr><td>Pending Refunds</td><td>KSH300</td></tr>
-                        <tr><td>Salaries Payable</td><td>KSH1,000</td></tr>
-            
-                        <tr class="category"><td>Long-term Liabilities</td><td></td></tr>
-                        <tr><td>Loans Payable</td><td>KSH20,000</td></tr>
-                        <tr><td>Deferred Tax Liabilities</td><td>KSH5,000</td></tr>
-            
-                        <tr class="#" ><td>Total</td><td>KSH29,000</td></tr>
-                        </tbody>
-
-
-                    </table>
-
-                </div>
-
-
+            <!--begin::Row-->
+            <div class="row">
+                
             </div>
+            <!--end::Row-->
 
-
+           <!--begin::Row-->
+            <div class="row">
+              <!-- Start col -->
+               <div class="container balancesheet">
+                <div>
+                   <h3 class=" text-start  balancesheet-header">Balance Sheet <small class="fw-normal">(As of December 31, 2024)</small></h3>
+                  <div class="table-responsive">
+                      <table class="table table-bordered text-end">
+                          <thead>
+                              <tr>
+                                  <th>Assets</th>
+                                  <th>Amount (KSH)</th>
+                                  <th>Liabilities & Equity</th>
+                                  <th>Amount (KSH)</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr class="fw-bold">
+                                  <td>Current Assets:</td>
+                                  <td></td>
+                                  <td>Current Liabilities:</td>
+                                  <td></td>
+                              </tr>
+                              <tr>
+                                  <td>Cash</td>
+                                  <td>15,000</td>
+                                  <td>Accounts Payable</td>
+                                  <td>5,000</td>
+                              </tr>
+                              <tr>
+                                  <td>Accounts Receivable</td>
+                                  <td>10,000</td>
+                                  <td>Short-term Loan</td>
+                                  <td>8,000</td>
+                              </tr>
+                              <tr>
+                                  <td>Inventory</td>
+                                  <td>7,000</td>
+                                  <td class="fw-bold">Total Current Liabilities</td>
+                                  <td class="fw-bold">13,000</td>
+                              </tr>
+                              <tr class="fw-bold">
+                                  <td>Total Current Assets</td>
+                                  <td>32,000</td>
+                                  <td></td>
+                                  <td></td>
+                              </tr>
+                              <tr class="fw-bold">
+                                  <td>Non-Current Assets:</td>
+                                  <td></td>
+                                  <td>Non-Current Liabilities:</td>
+                                  <td></td>
+                              </tr>
+                              <tr>
+                                  <td>Equipment</td>
+                                  <td>20,000</td>
+                                  <td>Long-term Loan</td>
+                                  <td>12,000</td>
+                              </tr>
+                              <tr>
+                                  <td>Property</td>
+                                  <td>30,000</td>
+                                  <td class="fw-bold">Total Non-Current Liabilities</td>
+                                  <td class="fw-bold">12,000</td>
+                              </tr>
+                              <tr class="fw-bold">
+                                  <td>Total Non-Current Assets</td>
+                                  <td>50,000</td>
+                                  <td></td>
+                                  <td></td>
+                              </tr>
+                              <tr class="fw-bold">
+                                  <td>Total Assets</td>
+                                  <td>82,000</td>
+                                  <td>Total Liabilities</td>
+                                  <td>25,000</td>
+                              </tr>
+                              <tr class="fw-bold text-end">
+                                  <td colspan="3">Owner’s Equity:</td>
+                                  <td></td>
+                              </tr>
+                              <tr class="text-end">
+                                  <td colspan="3">Owner’s Capital</td>
+                                  <td>40,000</td>
+                              </tr>
+                              <tr class="text-end">
+                                  <td colspan="3">Retained Earnings</td>
+                                  <td>17,000</td>
+                              </tr>
+                              <tr class="fw-bold text-end">
+                                  <td colspan="3">Total Equity</td>
+                                  <td>57,000</td>
+                              </tr>
+                              <tr class="fw-bold text-end">
+                                  <td colspan="3">Total Liabilities & Equity</td>
+                                  <td>82,000</td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </div>
+                </div>
+              <!-- /.col -->
+            </div>
+            <!--end::Row-->
           </div>
           <!--end::Container-->
         </div>
@@ -519,39 +639,7 @@
 
 
 <!-- Overlay Cards -->
-
-<!-- create Announcement -->
-
-
-
-
-
- <!-- Start View announcement -->
- <div class="view_announcement" id="view_announcement">
-  <div class="card content">
-   <div class="card-header view_announcement bg-secondary text-white">
-       <h5 class="mb-0">Rent Payments</h5>
-       <div id="close-overlay-btn" class="close-btn" > <b> &times;</b> </div>
-
-   </div>
-   <div class="card-body">
-       <p class="card-text">
-           All Rent Payments should be made before 24/01/17. Anyone who feels that they might not
-           be able to complete their dues on 24/01/17 should communicate to management before the due date.
-           Else, you face an eviction risk if you fail to pay your dues before the said date without a reasonable reason</p>
-
-           <p class="timestamp" id="timestamp"></p> <!-- Timestamp -->
-
-
-       <div class="Recipients border-top border-gray "> <p><strong>Recipients|</strong> All Employees</p>  </div>
-
-   </div>
-   <div class="card-footer view_announcement d-flex">
-       <button class="btn btn-danger btn-sm">Delete</button>
-       <button class="btn btn-secondary btn-sm">Resend</button>
-   </div>
- </div>
- </div>
+ 
 
   <!-- Lease Modal -->
 <div class="modal fadey" id="leaseyModal" tabindex="-1" aria-labelledby="leaseyModalLabel" aria-hidden="true">
@@ -761,36 +849,106 @@
     <!-- Begin script for datatable -->
     <script>
 
-       $(document).ready(function() {
-        $('#income').DataTable({
-            "paging": true,
-            "searching": true,
-            "info": true,
-            "lengthMenu": [10, 10, 25, 60],
-            "language": {
-                "search": "Filter records:",
-                "lengthMenu": "Show _MENU_ entries"
-            }
-        });
-    });
+            document.addEventListener("DOMContentLoaded", function() {
+            let table = $('#maintenanc').DataTable({
+                lengthChange: false, // Removes "Show [X] entries"
+                dom: 't<"bottom"p>', // Removes default search bar & keeps only table + pagination
+            });
 
+            // Link custom search box to DataTables search
+            $('#searchInput').on('keyup', function () {
+                table.search(this.value).draw();
+            });
+        });
     </script>
 
-<script>
-    $(document).ready(function() {
-     $('#loss').DataTable({
-         "paging": true,
-         "searching": true,
-         "info": true,
-         "lengthMenu": [10, 10, 25, 60],
-         "language": {
-             "search": "Filter records:",
-             "lengthMenu": "Show _MENU_ entries"
-         }
-     });
- });
- </script>
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
 
+
+
+<!-- 
+  Add expense scripts.
+
+-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const addRowButton = document.getElementById("addRow");
+        const tableBody = document.querySelector("tbody");
+
+        function createNewRow() {
+            const newRow = document.createElement("tr");
+            newRow.innerHTML = `
+                <td>
+                    <select class="form-select">
+                        <option selected disabled>Expense</option>
+                        <option>Rent</option>
+                        <option>Water</option>
+                        <option>Internet</option>
+                        <option>Taxes</option>
+                        <option>Salaries</option>
+                        <option>Others</option>
+                    </select>
+                </td>
+                <td><textarea class="form-control" rows="2" placeholder="Enter details"></textarea></td>
+                <td><input type="text" class="form-control" placeholder="123"></td>
+                <td><input type="number" class="form-control" placeholder="1"></td>
+                <td><input type="number" class="form-control" placeholder="123"></td>
+                <td><button type="button" class="btn btn-danger remove-row">Delete</button></td>
+            `;
+
+            newRow.querySelector(".remove-row").addEventListener("click", function () {
+                newRow.remove();
+                checkIfTableEmpty();
+            });
+
+            return newRow;
+        }
+
+        function checkIfTableEmpty() {
+            if (tableBody.children.length === 0) {
+                tableBody.appendChild(createNewRow()); // Add default row if empty
+            }
+        }
+
+        addRowButton.addEventListener("click", function () {
+            tableBody.appendChild(createNewRow());
+        });
+
+        // Initialize the first row in case user removes all
+        checkIfTableEmpty();
+    });
+
+
+</script>
+
+
+
+<script>
+  $(document).ready(function() {
+      $('#repaireExpenses').DataTable({
+          "lengthChange": false,
+          "dom": 'Bfrtip',
+          "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      });
+  });
+</script>
+          
+<script>
+  
+  </script>
 
     </script>
     <!-- End script for data_table -->
@@ -812,7 +970,10 @@
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
       crossorigin="anonymous"
-    ></script>
+    ></script>    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
     <script src="../../../dist/js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
