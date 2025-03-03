@@ -58,6 +58,12 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
+
     <style>
       a{
           text-decoration: none;
@@ -1089,47 +1095,19 @@
             <!--begin::Row-->
             <div class="row">
                 <div class="col-md-12">
-                  <div class="card mb-4">
-                    <div class="card-header">
-                      <h5 class="card-title text-warning">All Invoices</h5>
-                        <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                          <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                          <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                        </button>
-                        <div class="btn-group">
-                          <button
-                            type="button"
-                            class="btn btn-tool dropdown-toggle"
-                            data-bs-toggle="dropdown"
-                          >
-                            <i class="bi bi-wrench"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-end" role="menu">
-                            <a href="#" class="dropdown-item">Action</a>
-                            <a href="#" class="dropdown-item">Another action</a>
-                            <a href="#" class="dropdown-item"> Something else here </a>
-                            <a class="dropdown-divider"></a>
-                            <a href="#" class="dropdown-item">Separated link</a>
-                          </div>
-                        </div>
-                        <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                          <i class="bi bi-x-lg"></i>
-                        </button>
-                      </div>
-                    </div>
+                
                     <!-- /.card-header -->
                     <div class="card-body">
                       <!--begin::Row-->
+                      
 <!-- Table -->
-<table  id="invoice" class="table table-striped" style="width:100%">
+<table  id="invoice" class="table table-striped" style="width: fit-content; height: fit-content;">
   <thead>
       <tr>
           <th>Invoice Number</th>
           <th>Property Name</th>
           <th>Tenant</th>
-           <th>Paid Invoices</th>
-           <th>Unpaid Invoices</th>
+           <th>Payment Status</th>
           <th>Invoice Date</th>
           <th>Due Date</th>
           <th>Sub-totals</th>
@@ -1143,8 +1121,8 @@
           <td>INV NO 00001100</td>
           <td>Huduma Apartments</td>
           <td>John Doe</td>
-          <td>PAID</td> 
-           <td>PENDING</td>
+          <td><button style="background-color: #00192D; color: #FFC107; border-radius: 10px;">
+            !PENDING</button></td>
           <td>10-11-2025</td>
           <td>11-12-2025</td>
           <td>Ksh 15,000</td>
@@ -1160,8 +1138,9 @@
           <td>INV NO 00001101</td>
           <td>Sunrise Apartments</td>
           <td>Jane Smith</td>
-           <td>PAID</td> 
-          <td>OVERDUE</td>
+          <td><button style="background-color: green; color: white; border-radius: 10px;"><span>&#10004;</span> <!-- ✔ -->
+
+            PAID</button></td>
           <td>15-10-2025</td>
            <td>15-11-2025</td> 
           <td>Ksh 12,500</td>
@@ -1175,8 +1154,6 @@
       </tr>
   </tbody>
 </table>
-  
-                      /.col 
                       </div>
                       <!--end::Row-->
                        
@@ -1233,22 +1210,6 @@
     <!--end::App Wrapper-->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <script>
-        // Initialize DataTable
-        $(document).ready(function () {
-            $('#myTable').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableOne').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableThree').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableFour').DataTable();
-        });
-     </script> 
-
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
       integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
