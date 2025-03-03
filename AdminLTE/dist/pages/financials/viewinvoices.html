@@ -654,10 +654,10 @@ color: #00192D;
             <div class="button-container">
             <button class="print-btn d-flex justify-content-end" onclick="print()">
               <i class="fas fa-print"></i> 
-              PRINT</button>
-            <button class="print-btn d-flex justify-content-end" onclick="print()">
+              Print</button>
+            <button class="print-btn d-flex justify-content-end" onclick="generatePDF()">
               <i class="fas fa-file-pdf"></i>
-              DOWNLOADPDF</button>
+            Generate PDF</button>
 </div>
             <hr>
             <div class="invoice-container">
@@ -720,28 +720,31 @@ color: #00192D;
                         <!-- Add more items here -->
                     </tbody>
                 </table>
-        
-
-                <table class="col-md-5" style="margin-left: 25rem;">
-                  <thead>
-                      <tr>
-                          <th>Sub-Total</th>
-                          <th>VAT 16%</th>
-                        <th>Total</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr>
-                          <td>Ksh 10,000</td>
-                          <td>1500</td>
-                          <td>Ksh11,500</td>
+                <div class="row">
+                  <div class="col-md-12 d-flex justify-content-end">
+                    <table style="width: 30%;">
+                      <thead>
+                          <tr>
+                              <th>Sub-Total</th>
+                              <th>VAT 16%</th>
+                            <th>Total</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr>
+                              <td>Ksh 10,000</td>
+                              <td>1500</td>
+                              <td>Ksh11,500</td>
+                              
+                          </tr>
                           
-                      </tr>
-                      
-                      <!-- Add more items here -->
-                  </tbody>
-              </table>
+                          <!-- Add more items here -->
+                      </tbody>
+                    </table>
+                </div>
+            </div>
                 
+              <p class="mt-5"  style="width: 100%; display:flex; justify-content: end;">POWERED BY <span>BT JENGOPAY</span></p>
                 <!-- <div class="footer">
                     <p><strong>Terms & Instructions</strong></p>
                     <p>Add payment instructions here, e.g., bank, PayPal...</p>
@@ -806,22 +809,26 @@ color: #00192D;
     <!--end::App Wrapper-->
     <!--begin::Script-->
 
+   
     <script>
-      function downloadPDF() {
-          html2canvas(document.body).then(canvas => {
-              const imgData = canvas.toDataURL("image/png");
-              const { jsPDF } = window.jspdf;
-              const doc = new jsPDF("p", "mm", "a4");
-  
-              const imgWidth = 210; // A4 width in mm
-              const imgHeight = (canvas.height * imgWidth) / canvas.width;
-  
-              doc.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-              doc.save("page.pdf");
-          });
+      // Function to generate the PDF and enable download
+      function generatePDF() {
+          // Get content from the textarea
+          const content = document.getElementById('pdfContent').value;
+
+          // Create a new jsPDF instance
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF();
+
+          // Add text to the PDF (content from the textarea)
+          doc.text(content, 10, 10);
+
+          // Download the PDF (using the content from the textarea as the name)
+          doc.save('invoices-pdf.pdf');
       }
   </script>
-  
+
+
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <script>
         // Initialize DataTable

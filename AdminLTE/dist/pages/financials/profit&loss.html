@@ -43,7 +43,7 @@
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
-    <link rel="stylesheet" href="text.css" />
+    <link rel="stylesheet" href="../financials/profit&loss.css">
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -52,15 +52,60 @@
       integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
       crossorigin="anonymous"
     />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-
-   <link rel="stylesheet" href="profitAndloss.css">
-<!-- scripts for data_table -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+     
 
+  </style>
+  <script>
+    function addRow() {
+        const table = document.querySelector(".items-table tbody");
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+          <td>
+                                <select name="payment_method" required>
+                                    <option value="" disabled selected>Select Option</option>
+                                    <option value="credit_card">Rent</option>
+                                    <option value="paypal">Water Bill</option>
+                                    <option value="bank_transfer">Garbage</option>
+                                </select>
+                            </td>
+                            <td><textarea name="Description" placeholder="Description" rows="1" required></textarea></td>
+                            <td><input type="number" name="item_price[]" placeholder="Unit Price" required oninput="updateTotal(this)"></td>
+                            <td><input type="number" name="item_quantity[]" placeholder="Quantity" required oninput="updateTotal(this)"></td>
+                            <td><input type="number" name="item_quantity[]" placeholder="Sub-Total" required oninput="updateTotal(this)"></td>
+                            <td>
+                              <select name="payment_method" required>
+                                <option value="" disabled selected>Select Option</option>
+                                <option value="credit_card">VAT 16% Inclusive</option>
+                                <option value="paypal">VAT 16% Exclusive</option>
+                                <option value="bank_transfer">VAT 16% Zero Rated</option>
+                            </select>
+                          </td>
+                           <td><input type="number" name="item_total[]" placeholder="Total" readonly></td>
+                            <td><button type="button" class="delete-btn" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>
+                          
+        `;
+        table.appendChild(newRow);
+    }
+    function deleteRow(btn) {
+        btn.closest("tr").remove();
+    }
+        function printInvoice() {
+            window.print();
+        }
+        function downloadPDF() {
+            const element = document.querySelector(".invoice-container");
+            html2pdf().from(element).save("invoice.pdf");
+        }
+</script>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -77,7 +122,7 @@
               </a>
             </li>
             <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
-            <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li>
+            <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li> -->
           </ul>
           <!--end::Start Navbar Links-->
           <!--begin::End Navbar Links-->
@@ -101,7 +146,7 @@
                   <div class="d-flex">
                     <div class="flex-shrink-0">
                       <img
-                        src="../../../dist/assets/img/user1-128x128.jpg"
+                        src="../../dist/assets/img/user1-128x128.jpg"
                         alt="User Avatar"
                         class="img-size-50 rounded-circle me-3"
                       />
@@ -127,7 +172,7 @@
                   <div class="d-flex">
                     <div class="flex-shrink-0">
                       <img
-                        src="../../../dist/assets/img/user8-128x128.jpg"
+                        src="../../dist/assets/img/user8-128x128.jpg"
                         alt="User Avatar"
                         class="img-size-50 rounded-circle me-3"
                       />
@@ -153,7 +198,7 @@
                   <div class="d-flex">
                     <div class="flex-shrink-0">
                       <img
-                        src="../../../dist/assets/img/user3-128x128.jpg"
+                        src="../../dist/assets/img/user3-128x128.jpg"
                         alt="User Avatar"
                         class="img-size-50 rounded-circle me-3"
                       />
@@ -218,17 +263,17 @@
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <img
-                  src="17.jpg"
+                  src="../../dist/assets/img/user2-160x160.jpg"
                   class="user-image rounded-circle shadow"
                   alt="User Image"
                 />
-                <span class="d-none d-md-inline">  <b>JENGO PAY</b>  </span>
+                <span class="d-none d-md-inline">Alexander Pierce</span>
               </a>
               <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                 <!--begin::User Image-->
                 <li class="user-header text-bg-primary">
                   <img
-                    src="../../../dist/assets/img/user2-160x160.jpg"
+                    src="../../dist/assets/img/user2-160x160.jpg"
                     class="rounded-circle shadow"
                     alt="User Image"
                   />
@@ -271,21 +316,24 @@
           <!--begin::Brand Link-->
           <a href="./index.html" class="brand-link">
             <!--begin::Brand Image-->
-            <img
-              src="../../../dist/assets/img/AdminLTELogo.png"
+            <!-- <img
+              src="../../dist/assets/img/AdminLTELogo.png"
               alt="AdminLTE Logo"
               class="brand-image opacity-75 shadow"
-            />
+            /> -->
             <!--end::Brand Image-->
             <!--begin::Brand Text-->
-            <span class="brand-text fw-light">AdminLTE 4</span>
+            <span class="brand-text fw-light"></span>
             <!--end::Brand Text-->
           </a>
           <!--end::Brand Link-->
         </div>
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
-        <div id="sidebar"></div>
+        <div class="sidebar">
+            <!--end::Sidebar Menu-->
+          </nav>
+        </div>
         <!--end::Sidebar Wrapper-->
       </aside>
       <!--end::Sidebar-->
@@ -295,383 +343,224 @@
         <div class="app-content-header">
           <!--begin::Container-->
           <div class="container-fluid">
-            <!--begin::Row-->
-            <div class="row">
-              <div class="col-sm-12">
+     <!-- <label for="category">Basis:</label>
+     <select id="category">
+         <option value="cash">Cash</option>
+         <option value="accrual">Accrual</option>
+     </select> -->
 
-                <h3 class="mb-0 contact_section_header">  <i class="bi bi-graph-up bi-graph-down"></i>
-                    PROFIT & LOSS</h3> 
-                    <div class="row mt-2  ">
-                      <div class="col-md-12">
-                        
-                        <div class="row">
-                                
-                                
-                        
-                        <div class="row mt-6" >
-                          <!-- Summary -->
-                          
-
-                          <div class="col-md-2  ">
-                            <label class="text text-center"> <i class="bi bi-cash-stack"></i> <a href="index.html"> INCOME</a>  </label>
-                              <span class="value text-center"> <b>KSH 76,889 </b> </span>
-                          </div>
-
-                          <div class="col-md-2">
-                            <label class="text text-center"> <i class="bi bi-cash"></i>  <a href=""> EXPENSES </a>  </label>
-                            <span class="value"> <B>KSH 60,889</B> </span>
-                          </div>
-
-                          <div class="col-md-2">
-                            <label class="text text-center"> <i class="bi bi-check-circle"></i>  <a href=""> NET_PROFIT </a>  </label>
-                            <span class="value"> <B>KSH 16,889</B> </span>
-                          </div>
-
-                          <div class="col-md-2">
-                            <div class="select-container">
-                                
-                                <select name="cars" id="cars" class="custom-select">
-                                  <option value="volvo">January</option>
-                                  <option value="saab">Feb</option>
-                                  <option value="mercedes">March</option>
-                                  <option value="audi">April</option>
-                                </select>
-                            </div>
-                          </div>
-
-
-
-                          <div class="col-md-2">
-                            <div class="select-container">
-                                
-                                <select name="cars" id="cars" class="custom-select">
-                                  <option value="volvo">All_Properties</option>
-                                  <option value="saab">Nucho</option>
-                                  <option value="mercedes">EBENEZER</option>
-                                  <option value="audi">PINK_HOUSE</option>
-                                </select>
-                            </div>
-                          </div>
-                          
-                          
-                        </div>
-
-                      </div>
-
-                </div>
-              </div>
-
+    
+ </div>
+            <!-- <div class="statement-container">
+              <button id="exportButton" style="border-radius: 10px; margin-left: 90%;">
+                <i class="fas fa-share-square"></i> Export
+               </button>  -->
+                <!-- <h2>Balance Sheet|CROWN Z TOWERS(MONTHLY)</h2> -->
+                
+                 <!-- /.col -->
+        <!-- <div class="col-md-12">
+            <div class="card" > -->
+              <!-- <div class="card-header" style="background-color: #00192D;"> -->
+                <!-- <h3 class="card-title"  style="color: #FFC107; ">BALANCE SHEET MONTHLY|CROWN Z TOWERS(Monthly)</h3> -->
               
+                <!-- <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                    <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                    <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                  </button>
+                </div> -->
+                 <!-- /.card-tools -->
+                <!-- </div> -->
+                <!-- /.card-header -->
+                <!-- <div class="card-body text-center"> -->
 
-            </div>
-            <!--end::Row-->
-          </div>
-          <!--end::Container-->
-        </div>
-        <div class="app-content">
-          <!--begin::Container-->
-          <div class="container-fluid">
-            <!-- Info boxes -->
-
-            <!-- /.row -->
-            <!--begin::Row-->
+                    <!-- <table>
+                        <tr>
+                        <th style="text-align: left; color: #FFC107;">Assets</th>
+                        <th style="text-align: right; color: #FFC107;">Amount (KSH)</th>
+                    </tr>
+                        <tr class="category" style=" color: #FFC107;"><td>Current Assets</td><td></td></tr>
+                        <tr><td>Rent Deposits</td><td>KSH5,000</td></tr>
+                        <tr><td>Accounts Receivable</td><td>KSH2,000</td></tr>
+                        <tr><td>Prepaid Expenses</td><td>KSH300</td></tr>
+                        <tr><td>Maintenance Inventory</td><td>KSH700</td></tr>
+                        
+                        <tr class="category" style=" color: #FFC107;"><td>Fixed Assets</td><td></td></tr>
+                        <tr><td>Office Equipment</td><td>KSH3,000</td></tr>
+                        <tr><td>Vehicles</td><td>KSH15,000</td></tr>
+                        <tr><td>Property Assets</td><td>KSH50,000</td></tr>
             
-            <!--end::Row-->
-            <!--begin::Row-->
-            <div class="row mt-3">
-              <!-- Start col -->       
-               <h6 class="mb-1 contact_section_subheader">
-                <i class="bi bi-cash-stack"></i>
-                 <b>INCOME</b>  </h6>
-              <div class="col-md-12">
-                <table id="income" class="display">
-                    <thead>
-                      <tr>
-                        <th>Income</th>
-                        <th>Amount</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>Rental Income</td><td>KSH10,000</td></tr>
-                        <tr><td>Maintenance Fees Collected</td><td>KSH500</td></tr>
-                        <tr><td>Late Payment Fees</td><td>KSH200</td></tr>
-                    
-                        <tr><td>Management Fees</td><td>KSH1,000</td></tr>
-                        <tr><td>Other Income</td><td>KSH100</td></tr>
-                        <tr><td>Total Income</td><td>KSH12,100</td></tr>
-                      <!-- Add more rows as needed -->
-                    </tbody>
+                        <tr><td>Investments</td><td>KSH10,000</td></tr>
+                        <tr class="#"  style="background-color: #FFC107;"><td>Total Assets</td><td>KSH85,000</td></tr>
+            
+                        <tr>
+                            <th style="text-align: left; color: #FFC107;">Liabilities</th>
+                            <th style="text-align: right; color: #FFC107;">Amount (KSH)</th>
+                        </tr>
+                        <tr class="category"><td>Current Liabilities</td><td></td></tr>
+                        <tr><td>Accounts Payable</td><td>KSH1,200</td></tr>
+                        <tr><td>Maintenance Costs Owed</td><td>KSH1,500</td></tr>
+                        <tr><td>Pending Refunds</td><td>KSH300</td></tr>
+                        <tr><td>Salaries Payable</td><td>KSH1,000</td></tr>
+            
+                        <tr class="category"><td>Long-term Liabilities</td><td></td></tr>
+                        <tr><td>Loans Payable</td><td>KSH20,000</td></tr>
+                        <tr><td>Deferred Tax Liabilities</td><td>KSH5,000</td></tr>
+            
+                        <tr class="#"  style="background-color: #FFC107;"><td>Total Liabilities</td><td>KSH29,000</td></tr>
+                        </table> -->
+            <!-- <hr> -->
+<!-- </div>
+</div>
+</div>
+</div>
+</div> -->
 
-                  </table>
+<div class="container">
+    <div class="report-header">
+        <div class="row " >
+            <div class="col-md-8">
+                <h2>Profit and Loss Statement 
+                    <span> • For the Period Ending [28/02/2025] </span>
+                 </h2>
             </div>
-              <!-- /.col -->
+            <div class="col-md-4 d-flex justify-content-end ">
+                <button onclick="exportToExcel()" style="height: fit-content; margin-right: 6px;"><i class="fas fa-file-excel text-green-600"></i>Excel</button>
+                <button onclick="exportToPDF()" style="height: fit-content;"><i class="fas fa-file-pdf text-red-600"></i> Generate PDF</button>
             </div>
-            <!--end::Row-->
-
-            <div class="row mt-5">
-                <h6 class="mb-1 contact_section_subheader"> <b>EXPENSES</b>  </h6>
-
-                <div class="col-md-12">
-                    <table id="loss" class="display"  >
-                        <thead>
-                            <tr>
-                                <th>Expense</th>
-                                <th>Amount</th>
-                            </tr>
-                        </thead>
-                        <tr><td>MRI Deductions</td><td>KSH100</td></tr>
-                  <tr><td>Maintenance and Repairs</td><td>KSH1,200</td></tr>
-                  <tr><td>Staff Salaries</td><td>KSH2,500</td></tr>
-                  <tr><td>Utilities</td><td>KSH300</td></tr>
-                  <tr><td>Software Subscriptions</td><td>KSH150</td></tr>
-                  <tr><td>Marketing Costs</td><td>KSH400</td></tr>
-                  <tr><td>Legal Fees</td><td>KSH100</td></tr>
-                  <tr><td>Depreciation</td><td>KSH200</td></tr>
-                  <tr><td>Loan Interest</td><td>KSH250</td></tr>
-                  <tr><td>Miscellaneous Expenses</td><td>KSH100</td></tr>
-                  <tr><td>Total</td><td>KSH5,300</td></tr>
-
-                    </table>
-
-                </div>
-
-
-            </div>
-
-
-          </div>
-          <!--end::Container-->
         </div>
-        <!--end::App Content-->
-      </main>
-      <!--end::App Main-->
-      <!--begin::Footer-->
-
-
-
-      <footer class="app-footer">
-        <!--begin::To the end-->
-        <div class="float-end d-none d-sm-inline">Anything you want</div>
-        <!--end::To the end-->
-        <!--begin::Copyright-->
-        <strong>
-          Copyright &copy; 2014-2024&nbsp;
-          <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;"> JENGO PAY</a>.
-        </strong>
-        All rights reserved.
-        <!--end::Copyright-->
-      </footer>
-      <!--end::Footer-->
     </div>
-    <!--end::App Wrapper-->
+    
 
+    
+              <!-- Filter Section -->
+              <div class="filter-container">
+                <label for="date-range">
+                  <i class="fas fa-filter"></i>
+                  Filters:</label>
+                <select id="date-range" style="border-radius: 10px;">AS of :Month
+                    <option value="Q1" disabled>Month</option>
+                    <option value="Q1">January</option>
+                    <option value="Q2">February</option>
+                    <option value="Q3">March</option>
+                    <option value="Q4">April</option>
+                    <option value="Q1">May</option>
+                    <option value="Q1">June</option>
+                    <option value="Q2">July</option>
+                    <option value="Q3">August</option>
+                    <option value="Q4">September</option>
+                    <option value="Q1">October</option>
+                    <option value="Q1">November</option>
+                    <option value="Q2">December</option>
+                </select>
 
-
-
-<!-- Overlay Cards -->
-
-<!-- create Announcement -->
-
-
-
-
-
- <!-- Start View announcement -->
- <div class="view_announcement" id="view_announcement">
-  <div class="card content">
-   <div class="card-header view_announcement bg-secondary text-white">
-       <h5 class="mb-0">Rent Payments</h5>
-       <div id="close-overlay-btn" class="close-btn" > <b> &times;</b> </div>
-
-   </div>
-   <div class="card-body">
-       <p class="card-text">
-           All Rent Payments should be made before 24/01/17. Anyone who feels that they might not
-           be able to complete their dues on 24/01/17 should communicate to management before the due date.
-           Else, you face an eviction risk if you fail to pay your dues before the said date without a reasonable reason</p>
-
-           <p class="timestamp" id="timestamp"></p> <!-- Timestamp -->
-
-
-       <div class="Recipients border-top border-gray "> <p><strong>Recipients|</strong> All Employees</p>  </div>
-
-   </div>
-   <div class="card-footer view_announcement d-flex">
-       <button class="btn btn-danger btn-sm">Delete</button>
-       <button class="btn btn-secondary btn-sm">Resend</button>
-   </div>
- </div>
- </div>
-
-  <!-- Lease Modal -->
-<div class="modal fadey" id="leaseyModal" tabindex="-1" aria-labelledby="leaseyModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="leaseyModalLabel"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="container">
-          <div class="form-wrapper">
-              <h1 class="text-warning">Assign Task</h1>
-              <form id="taskForm">
-                <div class="input-group">
-                  <label for="taskName">Task About To Be Assigned:</label>
-                  <input type="text" id="taskName" name="taskName" placeholder="Enter task name" style="border-radius: 10px; width: 100%;"   required>
-              </div>
-
-                  <div class="input-group">
-                      <label for="serviceProvider">Select A Category For The Task</label>
-                  <label for="taskName"></label>
-                      <select id="serviceProvider" name="serviceProvider" style="border-radius: 10px;"  required>
-                          <option value="" id="taskName" disabled selected>Select A Category </option>
-                          <option value="John">Electrical</option>
-                          <option value="Jane">Plumbing</option>
-                          <option value="Mike">Cleaning</option>
-                      </select>
-                  </div>
-                  <div class="input-group">
-                    <label for="serviceProvider">Select Service Provider:</label>
-                    <select id="serviceProvider" name="serviceProvider" style="border-radius: 10px;" required>
-                        <option value="" id="taskName"  disabled selected>Select Provider</option>
-                        <option value="John">John </option>
-                        <option value="Jane">Jane </option>
-                        <option value="Mike">Mike </option>
-                    </select>
-                </div>
-
-
-                  <button type="submit" class="submit-btn" style="border-radius: 10px; background-color: #00192D; width: 50%; margin-left: 6rem;" >Assign</button>
-              </form>
-          </div>
-
-          <!-- <div id="assignedTasks">
-              <h2>Assigned Tasks</h2>
-              <ul id="taskList"></ul>
-          </div> -->
-      </div>
-
-
-      </div>
-    </div>
-  </div>
+                <button onclick="applyFilter()">Search</button>
+    <table id="profitLossTable">
+        <thead>
+            <tr>
+                <th>Income</th>
+                <th>Amount (KSh)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="category"><td>Rental Income</td><td></td></tr>
+            <tr><td>Maintenance Fees Collected</td><td>-</td></tr>
+            <tr><td>Late Payment Fees</td><td>-</td></tr>
+            <tr><td>Utility Charges</td><td>-</td></tr>
+            <tr><td>Management Fees</td><td>-</td></tr>
+            <tr><td>Other Income</td><td>-</td></tr>
+            <tr class="category"><td>Total Income</td><td>-</td></tr>
+            <tr class="category"><td>Expenses</td><td></td></tr>
+            <tr><td>MRI Deductions</td><td>-</td></tr>
+            <tr><td>Maintenance and Repairs</td><td>-</td></tr>
+            <tr><td>Staff Salaries</td><td>-</td></tr>
+            <tr><td>Utilities</td><td>-</td></tr>
+            <tr><td>Marketing Costs</td><td>-</td></tr>
+            <tr><td>Legal Fees</td><td>-</td></tr>
+            <tr><td>Depreciation</td><td>-</td></tr>
+            <tr><td>Loan Interest</td><td>-</td></tr>
+            <tr><td>Miscellaneous Expenses</td><td>-</td></tr>
+            <tr class="category"><td>Total Expenses</td><td>-</td></tr>
+            <tr class="category"><td>Net Profit</td><td>-</td></tr>
+        </tbody>
+    </table>
 </div>
 
-  <!-- Lease Modal -->
-  <div class="modal fade" id="leaseModal" tabindex="-1" aria-labelledby="leaseModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="leaseModalLabel"></h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form class="beasy">
-             <!-- Landlord Information Section -->
-      <!-- Service Provider Information Section -->
-      <div class="form-section">
-        <h3 class="text-warning">Landlord Information</h3>
-         <a href="#"><p>Martin White</p></a>
-        <!-- <label for="landlordName">Landlord Name(Martin White)</label> -->
-        <!-- <input type="text" id="landlordName" name="landlordName" placeholder="Enter your full name" required> -->
-
-        <h3 class="text-warning">Select Service Providers Information</h3>
-        <label for="paymentMethod">Choose:</label>
-        <select id="paymentMethod" name="paymentMethod" required>
-          <option value="bank_transfer">ABX Electricals</option>
-          <option value="bank_transfer">Sunsine Plumbers</option>
-          <option value="bank_transfer">Favored Technologies</option>
-        </select>
-        <h3 class="text-warning">Payment Details</h3>
-        <label for="amount">Payment Amount (KSH)</label>
-        <input type="text" id="landlordName" name="landlordName" placeholder="Enter Amount" required>
-
-        <label for="paymentMethod">Payment Method</label>
-        <select id="paymentMethod" name="paymentMethod" required>
-          <option value="mpesa_transfer" class="bossy">MPESA</option>
-          <option value="mpesa_transfer" class="bossy">Bank</option>
-          <option value="mpesa_transfer" class="bossy">Global Pay</option>
-          <option value="mpesa_transfer" class="bossy">Cash</option>
-
-        </select>
-         <!-- Submit Button -->
-         <button type="submit" class="bossy"> MAKE PAYMENT</button>
-      </div>
 
 
+  
+                    
+                      </div>
+                      <!--end::Row-->
+                       
+                </div>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </div>
+    
+               
+            <script>
+                 // Function to view the invoice in the modal
+    function viewInvoice() {
+      document.getElementById('viewInvoiceNumber').textContent = document.querySelector('[name="invoice_number"]').value;
+      document.getElementById('viewInvoiceDate').textContent = document.querySelector('[name="invoice_date"]').value;
+      document.getElementById('viewCustomerName').textContent = document.querySelector('[name="tenant_name"]').value;
+      document.getElementById('viewCustomerAddress').textContent = document.querySelector('[name="customer_address"]').value;
+      document.getElementById('viewCustomerEmail').textContent = document.querySelector('[name="customer_email"]').value;
+      document.getElementById('viewPaymentMethod').textContent = document.querySelector('[name="payment_method"]').value;
+      document.getElementById('viewShippingOption').textContent = document.querySelector('[name="shipping_option"]').value;
+    }
+                // Function to delete a row
+                function deleteRow(button) {
+                  // Find the row to delete
+                  var row = button.parentElement.parentElement;
+                  row.remove();
+                  updateTotalAmount();
+                }
+            
+                // Function to update the total amount of an item when quantity or price is changed
+                function updateTotal(input) {
+                  var row = input.parentElement.parentElement;
+                  var quantity = row.querySelector('[name="item_quantity[]"]').value;
+                  var price = row.querySelector('[name="item_price[]"]').value;
+                  var totalCell = row.querySelector('[name="item_total[]"]');
+                  totalCell.value = (quantity * price).toFixed(2);
+            
+                  updateTotalAmount();
+                }
+            
+                // Function to calculate the total invoice amount
+                function updateTotalAmount() {
+                  var totalAmount = 0;
+                  var rows = document.querySelectorAll('.items-table tbody tr');
+                  rows.forEach(function(row) {
+                    var total = parseFloat(row.querySelector('[name="item_total[]"]').value) || 0;
+                    totalAmount += total;
+                  });
+                  document.getElementById('totalAmount').textContent = totalAmount.toFixed(2);
+                }
+              </script>
 
-      <!-- Payment Details Section
-      <div class="form-section">
-        <h3>Payment Details</h3>
-        <label for="amount">Payment Amount (KSH)</label>
-        <input type="number" id="amount" name="amount" placeholder="Enter the amount to pay" min="1" required>
-
-        <label for="paymentMethod">Payment Method</label>
-        <select id="paymentMethod" name="paymentMethod" required>
-          <option value="mpesa_transfer" class="bossy">MPESA</option>
-        </select>
-      </div> -->
-
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-<!-- End view announcement -->
-<!-- end overlay card. -->
-
+    <!--end::App Wrapper-->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
-
-
-
-<!-- Overlay scripts -->
- <!-- View announcements script -->
- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
- <script>
-  const   more_announcement = document.getElementById('more_announcement_btn');
-  const   view_announcement = document.getElementById('view_announcement');
-  const   close_overlay = document.getElementById("close-overlay-btn");
-
-  more_announcement.addEventListener('click', ()=>{
-
-     view_announcement.style.display= "flex";
-     document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
-     const now = new Date();
-            const formattedTime = now.toLocaleString(); // Format the date and time
-            timestamp.textContent = `Sent on: ${formattedTime}`;
-
-
-  });
-
-     close_overlay.addEventListener('click', ()=>{
-
-     view_announcement.style.display= "none";
-     document.querySelector('.app-wrapper').style.opacity = '1';
-
-
-     });
- </script>
-
- <!-- End view announcement script -->
-
- <script>
-  // Function to toggle the visibility of the overlay
-  function toggleOverlay() {
-    var overlay = document.getElementById('overlay');
-    // If overlay is hidden, show it
-    if (overlay.style.display === "none" || overlay.style.display === "") {
-      overlay.style.display = "flex";
-    } else {
-      overlay.style.display = "none";
-    }
-  }
-</script>
-
+    <script>
+        // Initialize DataTable
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });
+        $(document).ready(function () {
+            $('#myTableOne').DataTable();
+        });
+        $(document).ready(function () {
+            $('#myTableThree').DataTable();
+        });
+        $(document).ready(function () {
+            $('#myTableFour').DataTable();
+        });
+     </script> 
 
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
@@ -685,79 +574,6 @@
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-
-
-
-<!-- more options -->
-<script>
-
-  // JavaScript to handle hover and hide functionality
-  const  more= document.getElementById("more");
-  const more_icon = document.getElementById("more_icon");
-  const more_options = document.getElementById("more_options");
-
-  // Show panel when hovering over the accordion
-  more_icon.addEventListener("mouseenter", () => {
-    more_options.style.display = "block";
-  });
-
-  // Hide panel when moving out of both accordion and panel
-   more.addEventListener("mouseleave", () => {
-    more_options.style.display = "none";
-});
-
-
-</script>
-    <!-- Begin script for datatable -->
-    <script>
-
-       $(document).ready(function() {
-        $('#income').DataTable({
-            "paging": true,
-            "searching": true,
-            "info": true,
-            "lengthMenu": [10, 10, 25, 60],
-            "language": {
-                "search": "Filter records:",
-                "lengthMenu": "Show _MENU_ entries"
-            }
-        });
-    });
-
-    </script>
-
-<script>
-    $(document).ready(function() {
-     $('#loss').DataTable({
-         "paging": true,
-         "searching": true,
-         "info": true,
-         "lengthMenu": [10, 10, 25, 60],
-         "language": {
-             "search": "Filter records:",
-             "lengthMenu": "Show _MENU_ entries"
-         }
-     });
- });
- </script>
-
-
-    </script>
-    <!-- End script for data_table -->
-
-<!--Begin sidebar script -->
-<script>
-  fetch('../bars/sidebar.html')  // Fetch the file
-      .then(response => response.text()) // Convert it to text
-      .then(data => {
-          document.getElementById('sidebar').innerHTML = data; // Insert it
-      })
-      .catch(error => console.error('Error loading the file:', error)); // Handle errors
-</script>
-<!-- end sidebar script -->
-
-
-
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
@@ -786,6 +602,25 @@
         }
       });
     </script>
+
+
+<!-- Required Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
+
+
+    <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!--end::OverlayScrollbars Configure-->
     <!-- OPTIONAL SCRIPTS -->
     <!-- apexcharts -->
@@ -944,6 +779,85 @@
       //-----------------
     </script>
 
+<script>
+    function exportToExcel() {
+        let table = document.getElementById("profitLossTable");
+        let wb = XLSX.utils.table_to_book(table, {sheet: "Profit_Loss_Report"});
+        XLSX.writeFile(wb, "Profit_Loss_Report.xlsx");
+    }
+    
+    function exportToPDF() {
+        const { jsPDF } = window.jspdf;
+        let doc = new jsPDF();
+        doc.text("Profit and Loss Report - 2025", 10, 10);
+        doc.autoTable({ html: "#profitLossTable" });
+        doc.save("Profit_Loss_Report.pdf");
+    }
+</script>
+
+
+
+<!-- Sidebar script -->
+<script>
+    fetch('../bars/sidebar.html')  // Fetch the file
+        .then(response => response.text()) // Convert it to text
+        .then(data => {
+            document.getElementById('sidebar').innerHTML = data; // Insert it
+        })
+        .catch(error => console.error('Error loading the file:', error)); // Handle errors
+  </script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      const checkboxes = document.querySelectorAll("#columnFilter input[type='checkbox']");
+      const menuButton = document.getElementById("menuButton");
+      const columnFilter = document.getElementById("columnFilter");
+  
+      // Toggle menu visibility when clicking the three dots
+      menuButton.addEventListener("click", function(event) {
+          columnFilter.classList.toggle("hidden");
+          columnFilter.style.display = columnFilter.classList.contains("hidden") ? "none" : "block";
+  
+          // Prevent closing immediately when clicking inside
+          event.stopPropagation();
+      });
+  
+      // Hide menu when clicking outside
+      document.addEventListener("click", function(event) {
+          if (!menuButton.contains(event.target) && !columnFilter.contains(event.target)) {
+              columnFilter.classList.add("hidden");
+              columnFilter.style.display = "none";
+          }
+      });
+  
+      // Column filtering logic
+      checkboxes.forEach(checkbox => {
+          checkbox.addEventListener("change", function() {
+              let columnClass = `.col-${this.dataset.column}`;
+              let elements = document.querySelectorAll(columnClass);
+  
+              elements.forEach(el => {
+                  el.style.display = this.checked ? "" : "none";
+              });
+          });
+      });
+  });
+  
+      </script>
     <!--end::Script-->
   </body>
   <!--end::Body-->
