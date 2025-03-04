@@ -376,6 +376,7 @@ td{
   align-items: center;
   font-family: 'Poppins', sans-serif;
   font-size: small;
+  overflow-x: auto; 
   }
 
   /* Popup content */
