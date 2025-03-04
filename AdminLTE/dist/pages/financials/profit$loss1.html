@@ -797,9 +797,9 @@
             const { jsPDF } = window.jspdf;
             let doc = new jsPDF();
 
-            doc.text("BALANCE_SHEET/DHABITI PROPERTIES ", 10, 10);  // Title
+            doc.text("PROFIT AND LOSS/DHABITI PROPERTIES ", 10, 10);  // Title
 
-            let table = document.getElementById("myTable");
+            let table = document.getElementById("profitLossTable");
             let rows = [];
             
             for (let i = 0; i < table.rows.length; i++) {
@@ -818,7 +818,7 @@
             doc.save("table_data.pdf");
         }
         function exportToExcel() {
-            let table = document.getElementById("myTable");
+            let table = document.getElementById("profitLossTable");
             let workbook = XLSX.utils.table_to_book(table, {sheet: "Sheet1"});
             let excelFile = XLSX.write(workbook, {bookType: 'xlsx', type: 'array'});
             let blob = new Blob([excelFile], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
