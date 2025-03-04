@@ -370,7 +370,6 @@ body {
     /* box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); x-offset, y-offset, blur-radius, color */
   
   }
-  
   td button{
     background-color: #00192D;
     color: #FFC107;
@@ -379,6 +378,7 @@ body {
     font-size: small;
     max-width: 100%;
   }
+
   .assignpopup-overlay{
     position: fixed;
     top: 0;

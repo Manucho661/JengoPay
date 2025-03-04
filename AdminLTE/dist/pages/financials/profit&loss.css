@@ -56,3 +56,33 @@ button {
 button:hover {
     background-color: #00192D;
 }
+
+/* Filter section */
+.filter-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    
+  }
+  
+  select, input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  .filter-label {
+    font-weight: normal;
+  }
+  .filter-section {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    width: 100%;
+  }
+  
+  #categoryFilter{
+    margin-right: 5px;
+  }
+
+  
