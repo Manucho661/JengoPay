@@ -45,7 +45,6 @@
     padding: 8px 12px;
 }
 
-
 th, td {
     text-align: left !important; /* Align text for readability */
     font-size: 12px !important;
@@ -210,4 +209,8 @@ div.dt-buttons{
       }
       .table{
         font-size: 12px !important;
+      }
+
+      .value{
+        
       }

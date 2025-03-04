@@ -68,9 +68,14 @@
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
 
-    <style>
-      
-    </style>
+    <!-- Include XLSX and FileSaver.js for Excel export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -306,34 +311,39 @@
           <!--begin::Container-->
           <div class="container-fluid">
             <!--begin::Row-->
+            
+
             <div class="row">
               <div class="col-sm-8">
-
                         <h3 class="mb-0 contact_section_header">  <i class="fas fa-tools"></i>The Balance Sheet</h3>
-
                         <div class="row Summary mt-6" >
                           <!-- Summary -->
                           <div class="col-md-12 ">
                             
-                            <div class="summary-section text-center p-2 row">
+                            <div class="summary-section text-center p-2 row g-3">
                               <div class="col-6 col-md-4 ">
-                                <div class="summary-item total">
-                                  <i class="fas fa-calculator"></i> 
-                                   <div class="label">ASSETS <b class="value" > 100</b>  </div> 
+                                <div class="summary-item assets">
+                                  
+                                    <div class="label "> <i class="fas fa-calculator"></i>  ASSETS   </div> 
+                                    <div class="value"> <b> KSH 10,000</b> </div>
                                 </div>
                                                                    
                               </div>
 
                               <div class="col-6 col-md-4 ">
-                                <div class="summary-item total">
-                                  <i class="fas fa-calculator"></i> 
-                                 <div class="label">LIABILITIES <b class="value" >KSH 500</b>  </div>
+                                <div class="summary-item liabilities">
+                                  
+                                  
+                                 <div class="label"> <i class="fas fa-calculator"></i>   LIABILITIES </div>
+                                 <div class="value"> <b>KSH 50,000</b></div>
                                 </div>
                               </div>
                               <div class="col-6 col-md-4 ">
-                                <div class="summary-item total">
-                                  <i class="fas fa-calculator"></i> 
-                                  <div class="label">EQUITY <b class="value" >KSH 500</b>  </div>
+                                <div class="summary-item equity">
+                                  
+                                    <div class="label"> <i class="fas fa-calculator"></i> EQUITY   </div>
+                                    
+                                    <div class="value"> KSH 500,000</div>
                                 </div>
                                
                               </div>
@@ -359,128 +369,7 @@
 
             </div>
             <!--end::Row-->
-            <!-- begin row -->
-             <div class="row mt-2">
-              <div class="col-md-12">
-                <div class="card">
-                  <div class="card-header">
-                      <a class="btn btn-link add-expense-btn" data-bs-toggle="collapse" href="#addExpense" aria-expanded="false" aria-controls="addExpenseAccordion" style="color: #00192D; font-weight:bold; text-decoration: none;">
-                          <span id="toggleIcon">+</span> Click Here to Add operational Expense
-                      </a>
-                  </div>
-          
-                  <div class="card-body collapse" id="addExpense">
-                    <div class="card">
-                      <div class="card-header" style="background: linear-gradient(to right, #00192D, #003D5B, #00788D);">
-                          <h6 class="text-white">Enter Expense Details</h6>
-                      </div>
-                      <div class="card-body">
-                          <div class="form-container">
-                              <form>
-                                  <div class="row g-3">
-                                      <!-- No -->
-                                      <div class="col-md-3">
-                                          <label class="form-label"><b>No</b></label>
-                                          <input type="number" class="form-control" placeholder="123" disabled>
-                                      </div>
-                      
-                                      <!-- Expense of the Month -->
-                                      <div class="col-md-5">
-                                          <label class="form-label"><b>Expense for the Month of</b></label>
-                                          <select class="form-select">
-                                              <option selected disabled>Select Month</option>
-                                              <option>January</option>
-                                              <option>February</option>
-                                              <option>March</option>
-                                              <option>April</option>
-                                              <option>May</option>
-                                              <option>June</option>
-                                              <option>July</option>
-                                              <option>August</option>
-                                              <option>September</option>
-                                              <option>October</option>
-                                              <option>November</option>
-                                              <option>December</option>
-                                          </select>
-                                      </div>
-                      
-                                      <!-- Year -->
-                                      <div class="col-md-4">
-                                          <label class="form-label"><b>Year</b></label>
-                                          <input type="number" class="form-control" placeholder="2025">
-                                      </div>
-                                  </div>
-      
-                                  <div class="row g-3 mt-2">
-                                      <div class="col-md-6">
-                                          <label class="form-label"><b>Entry Date</b></label>
-                                          <input type="date" class="form-control">
-                                      </div>
-                                  </div>
-      
-                            
-
-                                  <!-- Expense Table -->
-                                  <div class="row g-3 mt-2">
-                                      <h6 class="text-center" style="color:linear-gradient(to right, #00192D, #003D5B, #00788D) ;"> <b>Add the Spend items in the fields below</b> </h6>
-                                      <table class="table table-bordered table-hover table-striped">
-                                          <thead>
-                                              <tr>
-                                                  <th>Account</th>
-                                                  <th>Description</th>
-                                                  <th>Unit Price</th>
-                                                  <th>Quantity</th>
-                                                  <th>Sub-total</th>
-                                                  <th>Taxes</th>
-                                                  <th>Remove</th>
-                                              </tr>
-                                          </thead>
-                                          <tbody>
-                                              <tr>
-                                                  <td>
-                                                      <select class="form-select">
-                                                          <option selected disabled>Repair and Mantainance</option>
-                                                          <option>Salaries</option>
-                                                          <option>Legal Work</option>
-                                                          <option>Internet</option>
-                                                          
-                                                      </select>
-                                                  </td>
-                                                  <td><textarea class="form-control" rows="1" placeholder="Enter details"></textarea></td>
-                                                  <td><input type="text" class="form-control" placeholder="123"></td>
-                                                  <td><input type="number" class="form-control" placeholder="1"></td>
-                                                  <td><input type="number" class="form-control" placeholder="123"></td>
-                                                  <td>
-                                                    <select class="form-select">
-                                                      <option value="" disabled selected>Select Option</option>
-                                                      <option value="credit_card">VAT 16% Inclusive</option>
-                                                      <option value="paypal">VAT 16% Exclusive</option>
-                                                      <option value="bank_transfer">VAT 16% Zero Rated</option>
-                                                    </select>
-                                                  </td>
-                                                  <td><button type="button" class="btn btn-danger remove-row">Delete</button></td>
-                                              </tr>
-                                          </tbody>
-                                      </table>
-                                  </div>
-      
-                                  <div class="row g-3 mt-2">
-                                      <div class="col-6">
-                                          <button type="button" class="btn btn-custom btn-sm" id="addRow">Add More</button>
-                                      </div>
-                                      <div class="col-6 mt-2 d-flex justify-content-end">
-                                          <button type="submit" class="btn btn-custom btn-sm" style="height: fit-content;"> Submit</button>
-                                      </div>
-                                  </div>
-                                                  
-                              </form>
-                          </div>
-                      </div>
-                  </div>
-                  </div>
-                </div>
-              </div>
-              </div>
+            
             <!-- /end row -->
           </div>
           <!--end::Container-->
@@ -500,8 +389,36 @@
             <!--end::Row-->
 
             <!--begin::Row-->
-            <div class="row">
-                
+            <div class="row table_buttons mb-2 " >
+              
+                <div class="col-md-6">
+                  <div class="filter-container">
+                    <div>
+                      <label for="categoryFilter" class="filter-label">Property</label>
+                      <br>
+                      <select id="categoryFilter">
+                          <option value="">-- Select --</option>
+                          <option value="technology">All</option>
+                          <option value="health">Health</option>
+                          <option value="business">Business</option>
+                          <option value="education">Education</option>
+                      </select>
+                    </div>
+                    <div>
+                        <label for="filterDate" class="filter-label">As of</label>
+                        <br>
+                        <input type="date" id="filterDate" />
+                    </div>
+                </div>
+
+                </div>
+                <div class="col-md-6 d-flex justify-content-end" style="position: relative;" > 
+                  <div style="position: absolute; bottom: 0;">
+                    <button  class="pdf_button"  style="height: fit-content; padding: 4px;" onclick="exportToPDF()"> <i class="fas fa-file-pdf" style="font-size: 30px; padding: 5x; color: white"></i>  </button> 
+                    <button class="excel_button" style="height: fit-content; padding: 4px;" onclick="exportToExcel()"> <i class="fas fa-file-excel" style="font-size: 30px;  color: white"></i> </button>
+                  </div>
+                 
+                </div> 
             </div>
             <!--end::Row-->
 
@@ -512,7 +429,7 @@
                 <div>
                    <h3 class=" text-start  balancesheet-header">Balance Sheet <small class="fw-normal">(As of December 31, 2024)</small></h3>
                   <div class="table-responsive">
-                      <table class="table table-bordered text-end">
+                      <table class="table table-bordered text-end" id="myTable"  >
                           <thead>
                               <tr>
                                   <th>Assets</th>
@@ -583,23 +500,33 @@
                                   <td>25,000</td>
                               </tr>
                               <tr class="fw-bold text-end">
-                                  <td colspan="3">Owner’s Equity:</td>
+                                <td class="liabilityCell"></td>
+                                <td class="liabilityCell"></td>
+                                  <td>Owner’s Equity:</td>
                                   <td></td>
                               </tr>
                               <tr class="text-end">
-                                  <td colspan="3">Owner’s Capital</td>
+                                <td class="liabilityCell"></td>
+                                <td class="liabilityCell"></td>
+                                  <td>Owner’s Capital</td>
                                   <td>40,000</td>
                               </tr>
                               <tr class="text-end">
-                                  <td colspan="3">Retained Earnings</td>
+                                <td class="liabilityCell"></td>
+                                <td class="liabilityCell"></td>
+                                  <td>Retained Earnings</td>
                                   <td>17,000</td>
                               </tr>
                               <tr class="fw-bold text-end">
-                                  <td colspan="3">Total Equity</td>
+                                <td class="liabilityCell"></td>
+                                <td class="liabilityCell"></td>
+                                  <td >Total Equity</td>
                                   <td>57,000</td>
                               </tr>
                               <tr class="fw-bold text-end">
-                                  <td colspan="3">Total Liabilities & Equity</td>
+                                <td class="liabilityCell"></td>
+                                <td class="liabilityCell"></td>
+                                  <td>Total Liabilities & Equity</td>
                                   <td>82,000</td>
                               </tr>
                           </tbody>
@@ -936,19 +863,42 @@
 
 
 
-<script>
-  $(document).ready(function() {
-      $('#repaireExpenses').DataTable({
-          "lengthChange": false,
-          "dom": 'Bfrtip',
-          "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-      });
-  });
-</script>
+<!-- BalanceTable scripts -->
           
-<script>
-  
-  </script>
+  <script>
+    function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            let doc = new jsPDF();
+
+            doc.text("BALANCE_SHEET/DHABITI PROPERTIES ", 10, 10);  // Title
+
+            let table = document.getElementById("myTable");
+            let rows = [];
+            
+            for (let i = 0; i < table.rows.length; i++) {
+                let row = [];
+                for (let j = 0; j < table.rows[i].cells.length; j++) {
+                    row.push(table.rows[i].cells[j].innerText);
+                }
+                rows.push(row);
+            }
+
+            doc.autoTable({
+                head: [rows[0]],  // Table Headers
+                body: rows.slice(1),  // Table Data
+            });
+
+            doc.save("table_data.pdf");
+        }
+        function exportToExcel() {
+            let table = document.getElementById("myTable");
+            let workbook = XLSX.utils.table_to_book(table, {sheet: "Sheet1"});
+            let excelFile = XLSX.write(workbook, {bookType: 'xlsx', type: 'array'});
+            let blob = new Blob([excelFile], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+            saveAs(blob, "table_data.xlsx");
+        }
+
+    </script>
 
     </script>
     <!-- End script for data_table -->
@@ -1005,6 +955,28 @@
       integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
       crossorigin="anonymous"
     ></script>
+
+
+    <!-- DataTable Script -->
+
+    <script>
+      $(document).ready(function() {
+          var table = $('#balanceSheet').DataTable({
+              "lengthChange": false,
+              "dom": 'Bfrtip',
+              "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+              "initComplete": function() {
+                  // Move the buttons to the first .col-md-6
+                  table.buttons().container().appendTo('#balanceSheet_wrapper .col-md-6:eq(0)');
+      
+                  // Move the search box to the second .col-md-6
+                  $('#balanceSheet_filter').appendTo('#balanceSheet_wrapper .col-md-6:eq(1)');
+              }
+          });
+      });
+      </script>
+
+
     <script>
       // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
       // IT'S ALL JUST JUNK FOR DEMO
@@ -1019,136 +991,7 @@
       // - MONTHLY SALES CHART -
       //-----------------------
 
-      const sales_chart_options = {
-        series: [
-          {
-            name: 'Digital Goods',
-            data: [28, 48, 40, 19, 86, 27, 90],
-          },
-          {
-            name: 'Electronics',
-            data: [65, 59, 80, 81, 56, 55, 40],
-          },
-        ],
-        chart: {
-          height: 180,
-          type: 'area',
-          toolbar: {
-            show: false,
-          },
-        },
-        legend: {
-          show: false,
-        },
-        colors: ['#0d6efd', '#20c997'],
-        dataLabels: {
-          enabled: false,
-        },
-        stroke: {
-          curve: 'smooth',
-        },
-        xaxis: {
-          type: 'datetime',
-          categories: [
-            '2023-01-01',
-            '2023-02-01',
-            '2023-03-01',
-            '2023-04-01',
-            '2023-05-01',
-            '2023-06-01',
-            '2023-07-01',
-          ],
-        },
-        tooltip: {
-          x: {
-            format: 'MMMM yyyy',
-          },
-        },
-      };
-
-      const sales_chart = new ApexCharts(
-        document.querySelector('#sales-chart'),
-        sales_chart_options,
-      );
-      sales_chart.render();
-
-      //---------------------------
-      // - END MONTHLY SALES CHART -
-      //---------------------------
-
-      function createSparklineChart(selector, data) {
-        const options = {
-          series: [{ data }],
-          chart: {
-            type: 'line',
-            width: 150,
-            height: 30,
-            sparkline: {
-              enabled: true,
-            },
-          },
-          colors: ['var(--bs-primary)'],
-          stroke: {
-            width: 2,
-          },
-          tooltip: {
-            fixed: {
-              enabled: false,
-            },
-            x: {
-              show: false,
-            },
-            y: {
-              title: {
-                formatter: function (seriesName) {
-                  return '';
-                },
-              },
-            },
-            marker: {
-              show: false,
-            },
-          },
-        };
-
-        const chart = new ApexCharts(document.querySelector(selector), options);
-        chart.render();
-      }
-
-      const table_sparkline_1_data = [25, 66, 41, 89, 63, 25, 44, 12, 36, 9, 54];
-      const table_sparkline_2_data = [12, 56, 21, 39, 73, 45, 64, 52, 36, 59, 44];
-      const table_sparkline_3_data = [15, 46, 21, 59, 33, 15, 34, 42, 56, 19, 64];
-      const table_sparkline_4_data = [30, 56, 31, 69, 43, 35, 24, 32, 46, 29, 64];
-      const table_sparkline_5_data = [20, 76, 51, 79, 53, 35, 54, 22, 36, 49, 64];
-      const table_sparkline_6_data = [5, 36, 11, 69, 23, 15, 14, 42, 26, 19, 44];
-      const table_sparkline_7_data = [12, 56, 21, 39, 73, 45, 64, 52, 36, 59, 74];
-
-      createSparklineChart('#table-sparkline-1', table_sparkline_1_data);
-      createSparklineChart('#table-sparkline-2', table_sparkline_2_data);
-      createSparklineChart('#table-sparkline-3', table_sparkline_3_data);
-      createSparklineChart('#table-sparkline-4', table_sparkline_4_data);
-      createSparklineChart('#table-sparkline-5', table_sparkline_5_data);
-      createSparklineChart('#table-sparkline-6', table_sparkline_6_data);
-      createSparklineChart('#table-sparkline-7', table_sparkline_7_data);
-
-      //-------------
-      // - PIE CHART -
-      //-------------
-
-      const pie_chart_options = {
-        series: [700, 500, 400, 600, 300, 100],
-        chart: {
-          type: 'donut',
-        },
-        labels: ['Chrome', 'Edge', 'FireFox', 'Safari', 'Opera', 'IE'],
-        dataLabels: {
-          enabled: false,
-        },
-        colors: ['#0d6efd', '#20c997', '#ffc107', '#d63384', '#6f42c1', '#adb5bd'],
-      };
-
-      const pie_chart = new ApexCharts(document.querySelector('#pie-chart'), pie_chart_options);
-      pie_chart.render();
+      
 
       //-----------------
       // - END PIE CHART -
