@@ -316,26 +316,24 @@
           <!--begin::Brand Link-->
           <a href="./index.html" class="brand-link">
             <!--begin::Brand Image-->
-            <!-- <img
-              src="../../dist/assets/img/AdminLTELogo.png"
+            <img
+              src="../../../dist/assets/img/AdminLTELogo.png"
               alt="AdminLTE Logo"
               class="brand-image opacity-75 shadow"
-            /> -->
+            />
             <!--end::Brand Image-->
             <!--begin::Brand Text-->
-            <span class="brand-text fw-light"></span>
+            <span class="brand-text fw-light">AdminLTE 4</span>
             <!--end::Brand Text-->
           </a>
           <!--end::Brand Link-->
         </div>
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
-        <div class="sidebar">
-            <!--end::Sidebar Menu-->
-          </nav>
-        </div>
+        <div id="sidebar"></div>
         <!--end::Sidebar Wrapper-->
       </aside>
+      <!--end::Sidebar-->
       <!--end::Sidebar-->
       <!--begin::App Main-->
       <main class="app-main">
@@ -430,31 +428,28 @@
             </div>
         </div>
     </div>
-    
+    <div class="col-md-6">
+      <div class="filter-container">
+        <div>
+          <label for="categoryFilter" class="filter-label">Property</label>
+          <br>
+          <select id="categoryFilter">
+              <option value="">-- Select --</option>
+              <option value="technology">All</option>
+              <option value="health">Manucho</option>
+              <option value="business">Ebenezer</option>
+              <option value="education">Crown Z</option>
+          </select>
+        </div>
+        <div>
+            <label for="filterDate" class="filter-label">As of</label>
+            <br>
+            <input type="date" id="filterDate" />
+        </div>
+    </div>
 
-    
-              <!-- Filter Section -->
-              <div class="filter-container">
-                <label for="date-range">
-                  <i class="fas fa-filter"></i>
-                  Filters:</label>
-                <select id="date-range" style="border-radius: 10px;">AS of :Month
-                    <option value="Q1" disabled>Month</option>
-                    <option value="Q1">January</option>
-                    <option value="Q2">February</option>
-                    <option value="Q3">March</option>
-                    <option value="Q4">April</option>
-                    <option value="Q1">May</option>
-                    <option value="Q1">June</option>
-                    <option value="Q2">July</option>
-                    <option value="Q3">August</option>
-                    <option value="Q4">September</option>
-                    <option value="Q1">October</option>
-                    <option value="Q1">November</option>
-                    <option value="Q2">December</option>
-                </select>
-
-                <button onclick="applyFilter()">Search</button>
+    </div>
+                <!-- <button onclick="applyFilter()">Search</button> -->
     <table id="profitLossTable">
         <thead>
             <tr>
@@ -794,8 +789,6 @@
         doc.save("Profit_Loss_Report.pdf");
     }
 </script>
-
-
 
 <!-- Sidebar script -->
 <script>
