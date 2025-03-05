@@ -334,14 +334,14 @@
                                 <div class="summary-item liabilities">
                                   
                                   
-                                 <div class="label"> <i class="fas fa-calculator"></i>   EXPENSES </div>
+                                 <div class="label"> <i class="fas fa-calculator"></i>EXPENSES</div>
                                  <div class="value"> <b>KSH 50,000</b></div>
                                 </div>
                               </div>
                               <div class="col-6 col-md-4 ">
                                 <div class="summary-item equity">
                                   
-                                    <div class="label"> <i class="fas fa-calculator"></i> NETPROFIT   </div>
+                                    <div class="label"> <i class="fas fa-calculator"></i> NET PROFIT</div>
                                     
                                     <div class="value"> KSH 500,000</div>
                                 </div>
@@ -389,8 +389,7 @@
             <!--end::Row-->
 
             <!--begin::Row-->
-            <div class="row table_buttons mb-2 " >
-              
+            <div class="row table_buttons mb-2">
                 <div class="col-md-6">
                   <div class="filter-container">
                     <div>
@@ -404,12 +403,27 @@
                           <option value="education">Crown Z</option>
                       </select>
                     </div>
+
+
                     <div>
-                        <label for="filterDate" class="filter-label">As of</label>
+                        <label for="filterDate" class="filter-label">Start Date</label>
                         <br>
                         <input type="date" id="filterDate" />
                     </div>
+
+                    <div style="padding: 10px;">
+              <label for="filterDate" class="filter-label">End  Date</label> 
+
+              <br>
+              <input type="date" id="filterDate" />
+                    </div>
+                    
+                <div class="search-container">
+                  <label for="search" class="search-label">Search:</label>
+                  <input type="text" id="search" placeholder="Search...">
+              </div>
                 </div>
+
 
                 </div>
                 <div class="col-md-6 d-flex justify-content-end" style="position: relative;" > 
@@ -791,14 +805,15 @@
 
 
 <!-- BalanceTable scripts -->
-          
+
   <script>
     function exportToPDF() {
             const { jsPDF } = window.jspdf;
             let doc = new jsPDF();
 
-            doc.text("PROFIT AND LOSS/DHABITI PROPERTIES ", 10, 10);  // Title
+            doc.text("PROFIT AND LOSS / DHABITI PROPERTIES ", 10, 10);  // Title
 
+            
             let table = document.getElementById("profitLossTable");
             let rows = [];
             
