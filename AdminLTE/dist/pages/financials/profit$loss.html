@@ -417,11 +417,40 @@
               <br>
               <input type="date" id="filterDate" />
                     </div>
-                    
-                <div class="search-container">
-                  <label for="search" class="search-label">Search:</label>
-                  <input type="text" id="search" placeholder="Search...">
-              </div>
+               
+              
+                <div>
+                  <label for="categoryFilter" class="filter-label">Category</label>
+                  <br>
+                  <select id="categoryFilter">
+                      <option value="">-- Select --</option>
+                      <option value="technology">All</option>
+                      <option value="health">Manucho</option>
+                      <option value="business">Ebenezer</option>
+                      <option value="education">Crown Z</option>
+                  </select>
+                </div>
+
+            <div class="search-container">
+     <label for="date-range">
+       <i class="fas fa-filter"></i>
+       Filters:</label>
+     <select id="date-range">AS of :Month
+         <option value="Q1">Month</option>
+         <option value="Q1">January</option>
+         <option value="Q2">February</option>
+         <option value="Q3">March</option>
+         <option value="Q4">April</option>
+         <option value="Q1">May</option>
+         <option value="Q1">June</option>
+         <option value="Q2">July</option>
+         <option value="Q3">August</option>
+         <option value="Q4">September</option>
+         <option value="Q1">October</option>
+         <option value="Q1">November</option>
+         <option value="Q2">December</option>
+     </select> 
+          </div>
                 </div>
 
 
@@ -446,30 +475,41 @@
                     <table id="profitLossTable" style="width: 100%;">
                         <thead style="background-color: rgba(128, 128, 128, 0.2); color: black;" >
                             <tr>
-                                <th style="font-size: 16px;">Income</th>
-                                <th style="font-size: 16px;">Amount (KSh)</th>
+                                <th style="font-size: 16px;">Jan-25</th>
+                                <th style="font-size: 16px;">Feb-25</th>
+                                <th style="font-size: 16px;">Mar-25</th>
+                                <th style="font-size: 16px;">Apr-25</th>
+                                <th style="font-size: 16px;">Jun-25</th>
+                                <th style="font-size: 16px;">Jul-25</th>
+                                <th style="font-size: 16px;">Aug-25</th>
+                                <th style="font-size: 16px;">Sep-25</th>
+                                <th style="font-size: 16px;">Oct-25</th>
+                                <th style="font-size: 16px;">Nov-25</th>
+                                <th style="font-size: 16px;">Dec-25</th>
+                                <th style="font-size: 16px;">Total</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr><td>Rental Income</td><td>Ksh50,000</td></tr>
-                            <tr><td>Maintenance Fees Collected</td><td>Ksh 2500</td></tr>
-                            <tr><td>Late Payment Fees</td><td>Ksh 10,000</td></tr>
-                            <tr><td>Utility Charges</td><td>Ksh 1500</td></tr>
-                            <tr><td>Management Fees</td><td>Ksh 2000</td></tr>
-                            <tr><td>Other Income</td><td>Ksh 5000</td></tr>
-                            <tr class="category"><td> <b>Total Income</b></td><td> <b>Ksh71,000</b> </td></tr>
-                            <tr class="category"><td> <b style="font-size: 16px;">Expenses</b> </td><td></td></tr>
-                            <tr><td>MRI Deductions</td><td> Ksh 20,000</td></tr>
-                            <tr><td>Maintenance and Repairs</td><td>Ksh 3500</td></tr>
-                            <tr><td>Staff Salaries</td><td>Ksh 2,900</td></tr>
-                            <tr><td>Utilities</td><td>Ksh 1200</td></tr>
-                            <tr><td>Marketing Costs</td><td>Ksh 2500</td></tr>
-                            <tr><td>Legal Fees</td><td>Ksh 2300</td></tr>
-                            <tr><td>Depreciation</td><td>Ksh 1000</td></tr>
-                            <tr><td>Loan Interest</td><td>Ksh 5000</td></tr>
-                            <tr><td>Miscellaneous Expenses</td><td>Ksh 4500</td></tr>
-                            <tr class="category"><td> <b>Total Expenses</b> </td><td> <b>Ksh 38,400</b> </td></tr>
-                            <tr class="category"><td> <b>Net Profit</b> </td><td> <b>Ksh 32,600</b>  </td></tr>
+                          <tr class="category"><td> <b style="font-size: 16px;">Income</b></td></tr>
+                            <tr><td>Rental Income</td><td>Ksh50,000</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                            <tr><td>Maintenance Fees Collected</td><td>Ksh 2500</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                            <tr><td>Late Payment Fees</td><td>Ksh 10,000</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                            <tr><td>Utility Charges</td><td>Ksh 1500</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                            <tr><td>Management Fees</td><td>Ksh 2000</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                            <tr><td>Other Income</td><td>Ksh 5000</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                            <tr class="category"><td> <b>Total Income</b></td><td> <b>Ksh71,000</b></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                            <tr class="category"><td> <b style="font-size: 16px;">Expenses</b></td></tr>
+                            <tr><td>MRI Deductions</td><td> Ksh 20,000</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                            <tr><td>Maintenance and Repairs</td><td>Ksh 3500</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                            <tr><td>Staff Salaries</td><td>Ksh 2,900</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                            <tr><td>Utilities</td><td>Ksh 1200</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                            <tr><td>Marketing Costs</td><td>Ksh 2500</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                            <tr><td>Legal Fees</td><td>Ksh 2300</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                            <tr><td>Depreciation</td><td>Ksh 1000</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                            <tr><td>Loan Interest</td><td>Ksh 5000</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                            <tr><td>Miscellaneous Expenses</td><td>Ksh 4500</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                            <tr class="category"><td> <b>Total Expenses</b> </td><td> <b>Ksh 38,400</b></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                            <tr class="category"><td> <b>Net Profit</b> </td><td> <b>Ksh 32,600</b></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
                         </tbody>
                     </table> 
                   </div>
