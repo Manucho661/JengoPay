@@ -77,6 +77,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
   </head>
+
+  <style>
+    .sub-category{
+      padding-left: 35px !important;
+    }
+    .sub-category.total{
+      font-weight: 600;
+    }
+    .sub-current-assets.total{
+      font-weight: 600;
+    }
+
+  </style>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
@@ -414,7 +427,7 @@
                 </div>
                 <div class="col-md-6 d-flex justify-content-end" style="position: relative;" > 
                   <div style="position: absolute; bottom: 0;">
-                    <button  class="pdf_button"  style="height: fit-content; padding: 4px;" onclick="exportToPDF()"> <i class="fas fa-file-pdf" style="font-size: 30px; padding: 5x; color: white"></i>  </button> 
+                    <button  class="pdf_button"  style="height: fit-content; padding: 4px;" id="downloadBtn"> <i class="fas fa-file-pdf" style="font-size: 30px; padding: 5x; color: white"></i>  </button> 
                     <button class="excel_button" style="height: fit-content; padding: 4px;" onclick="exportToExcel()"> <i class="fas fa-file-excel" style="font-size: 30px;  color: white"></i> </button>
                   </div>
                  
@@ -428,110 +441,136 @@
                <div class="container balancesheet">
                 <div>
                    <h3 class=" text-start  balancesheet-header">As of December 31, 2024</h3>
-                  <div class="table-responsive">
-                      <table class="table table-bordered text-end" id="myTable"  >
-                          <thead>
-                              <tr>
-                                  <th>Assets</th>
-                                  <th>Amount (KSH)</th>
-                                  <th>Liabilities & Equity</th>
-                                  <th>Amount (KSH)</th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                              <tr class="fw-bold">
-                                  <td>Current Assets:</td>
-                                  <td></td>
-                                  <td>Current Liabilities:</td>
-                                  <td></td>
-                              </tr>
-                              <tr>
-                                  <td>Cash</td>
-                                  <td>15,000</td>
-                                  <td>Accounts Payable</td>
-                                  <td>5,000</td>
-                              </tr>
-                              <tr>
-                                  <td>Accounts Receivable</td>
-                                  <td>10,000</td>
-                                  <td>Short-term Loan</td>
-                                  <td>8,000</td>
-                              </tr>
-                              <tr>
-                                  <td>Inventory</td>
-                                  <td>7,000</td>
-                                  <td class="fw-bold">Total Current Liabilities</td>
-                                  <td class="fw-bold">13,000</td>
-                              </tr>
-                              <tr class="fw-bold">
-                                  <td>Total Current Assets</td>
-                                  <td>32,000</td>
-                                  <td></td>
-                                  <td></td>
-                              </tr>
-                              <tr class="fw-bold">
-                                  <td>Non-Current Assets:</td>
-                                  <td></td>
-                                  <td>Non-Current Liabilities:</td>
-                                  <td></td>
-                              </tr>
-                              <tr>
-                                  <td>Equipment</td>
-                                  <td>20,000</td>
-                                  <td>Long-term Loan</td>
-                                  <td>12,000</td>
-                              </tr>
-                              <tr>
-                                  <td>Property</td>
-                                  <td>30,000</td>
-                                  <td class="fw-bold">Total Non-Current Liabilities</td>
-                                  <td class="fw-bold">12,000</td>
-                              </tr>
-                              <tr class="fw-bold">
-                                  <td>Total Non-Current Assets</td>
-                                  <td>50,000</td>
-                                  <td></td>
-                                  <td></td>
-                              </tr>
-                              <tr class="fw-bold">
-                                  <td>Total Assets</td>
-                                  <td>82,000</td>
-                                  <td>Total Liabilities</td>
-                                  <td>25,000</td>
-                              </tr>
-                              <tr class="fw-bold text-end">
-                                <td class="liabilityCell"></td>
-                                <td class="liabilityCell"></td>
-                                  <td>Owner’s Equity:</td>
-                                  <td></td>
-                              </tr>
-                              <tr class="text-end">
-                                <td class="liabilityCell"></td>
-                                <td class="liabilityCell"></td>
-                                  <td>Owner’s Capital</td>
-                                  <td>40,000</td>
-                              </tr>
-                              <tr class="text-end">
-                                <td class="liabilityCell"></td>
-                                <td class="liabilityCell"></td>
-                                  <td>Retained Earnings</td>
-                                  <td>17,000</td>
-                              </tr>
-                              <tr class="fw-bold text-end">
-                                <td class="liabilityCell"></td>
-                                <td class="liabilityCell"></td>
-                                  <td >Total Equity</td>
-                                  <td>57,000</td>
-                              </tr>
-                              <tr class="fw-bold text-end">
-                                <td class="liabilityCell"></td>
-                                <td class="liabilityCell"></td>
-                                  <td>Total Liabilities & Equity</td>
-                                  <td>82,000</td>
-                              </tr>
-                          </tbody>
-                      </table>
-                  </div>
+                   <div class="table-responsive">
+                    <table class="table table-striped" id="myTable">
+                        <thead class="thead">
+                            <tr>
+                                <th >Description</th>
+                                <th  >Amount (KSH)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Assets Section -->
+                            <tr class="fw-bold">
+                                <td id="assets" class="main-category">Assets</td>
+                                <td></td>
+                            </tr>
+
+                            <tr>
+                                <td class="non-current-assets">Non-Current Assets:</td>
+                                <td></td>
+                            </tr>
+                            <tr class="sub-current-assets">
+                                <td class="sub-category"> Property Investments </td>
+                                <td>20,000</td>
+                            </tr>
+                            <tr class="sub-current-assets" >
+                                <td class="sub-category">Accumulated Depreciation</td>
+                                <td>30,000</td>
+                            </tr>
+                            <tr  class="sub-current-assets total" class="fw-bold">
+                                <td class="sub-category" >Total Non-Current Assets</td>
+                                <td>50,000</td>
+                            </tr>
+                            <tr>
+                                <td class="current-assets">Current Assets:</td>
+                                <td></td>
+                            </tr>
+                            <tr class="sub-current-assets">
+                                <td class="sub-category" >Cash on Hand</td>
+                                <td>15,000</td>
+                            </tr>
+                            <tr class="sub-current-assets" >
+                                <td class="sub-category">Petty Cash </td>
+                                <td>10,000</td>
+                            </tr>
+                            <tr class="sub-current-assets">
+                                <td class="sub-category">Bank Checking Account</td>
+                                <td>7,000</td>
+                            </tr>
+                            <tr class="sub-current-assets total "  class="fw-bold" >
+                                <td class="sub-category">Total Current Assets</td>
+                                <td>32,000</td>
+                            </tr>
+                            
+                            <tr class="fw-bold">
+                                <td>Total Assets</td>
+                                <td>82,000</td>
+                            </tr>
+                            <!-- Liabilities Section -->
+                             <tr>
+                                <td></td>
+                                <td></td>
+                            </tr>
+
+
+                            <tr class="fw-bold">
+                                <td class="Liabilities main-category">Liabilities</td>
+                                <td></td>
+                            </tr>
+
+                            <tr>
+                                <td>Current Liabilities:</td>
+                                <td></td>
+                            </tr>
+                            <tr class="sub-current-assets">
+                                <td class="sub-category" >Accounts Payable</td>
+                                <td>5,000</td>
+                            </tr>
+                            <tr class="sub-current-assets">
+                                <td class="sub-category" >Tenant Security Deposits </td>
+                                <td>8,000</td>
+                            </tr>
+                            <tr class="sub-current-assets total" class="fw-bold"  >
+                                <td class="sub-category" >Total Current Liabilities</td>
+                                <td>13,000</td>
+                            </tr>
+                            <tr>
+                                <td>Non-Current Liabilities:</td>
+                                <td></td>
+                            </tr>
+                            <tr class="sub-current-assets" >
+                                <td class="sub-category">Long-term Loan</td>
+                                <td>12,000</td>
+                            </tr>
+                            <tr class="sub-current-assets total"  class="fw-bold"  >
+                                <td class="sub-category" >Total Non-Current Liabilities</td>
+                                <td>12,000</td>
+                            </tr>
+                            <tr class="fw-bold">
+                                <td>Total Liabilities</td>
+                                <td>25,000</td>
+                            </tr>
+                            <!-- Equity Section -->
+                             <tr class="fw-bold">
+                                <td></td>
+                                <td></td>
+                            </tr>
+
+                            <tr class="equity"   class="fw-bold">
+                                <td   class="main-category" ><b>Equity</b> </td>
+                                <td></td>
+                            </tr>
+                            <tr class="sub-current-assets"    >
+                                <td  class="sub-category">Owner’s Capital</td>
+                                <td>40,000</td>
+                            </tr>
+                            <tr class="sub-current-assets"   >
+                                <td  class="sub-category" >Retained Earnings</td>
+                                <td>17,000</td>
+                            </tr>
+                            <tr   class="sub-current-assets total"  class="fw-bold">
+                                <td class="sub-category" >Total Equity</td>
+                                <td>57,000</td>
+                            </tr>
+                            <!-- Total Liabilities & Equity -->
+                            <tr class="fw-bold">
+                                <td>Total Liabilities & Equity</td>
+                                <td>82,000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
                 </div>
               <!-- /.col -->
             </div>
@@ -997,6 +1036,137 @@
       // - END PIE CHART -
       //-----------------
     </script>
+
+
+<!-- Balance Sheet PDF script -->
+<script>
+   
+  document.getElementById('downloadBtn').addEventListener('click', async function () {
+   const { jsPDF } = window.jspdf;
+   const doc = new jsPDF();
+
+   if (typeof doc.autoTable !== 'function') {
+       console.error("Error: autoTable plugin is not properly loaded.");
+       alert("Error: autoTable plugin is not available.");
+       return;
+   }
+
+   const table = document.getElementById("myTable");
+   const rows = table.querySelectorAll("tbody tr");
+
+   const data = [];
+   let boldRows = [];
+   let sectionHeaders = [];
+   let slightlyBoldRows = [];
+   
+   // Categories that should NOT be indented
+   let nonIndentedCategories = [
+       "non-current assets:",
+       "current assets:",
+       "non-current liabilities:",
+       "current liabilities:"
+   ].map(text => text.toLowerCase());
+
+   rows.forEach((row, rowIndex) => {
+       const rowData = [];
+       row.querySelectorAll("td").forEach((cell) => {
+           rowData.push(cell.innerText.trim()); // Trim to remove extra spaces
+       });
+
+       const firstCellText = rowData[0]?.toLowerCase() || "";
+
+       // Mark section headers for bold
+       if (["assets", "liabilities", "equity"].includes(firstCellText)) {
+           sectionHeaders.push(rowIndex);
+       }
+
+       // Major total rows for bold
+       if (["total assets", "total liabilities", "total liabilities & equity"].includes(firstCellText)) {
+           boldRows.push(rowIndex);
+       }
+
+       // Slightly bold rows (category totals)
+       if ([
+           "total non-current assets", 
+           "total current assets", 
+           "total non-current liabilities", 
+           "total equity",
+           "total current liabilities"
+       ].includes(firstCellText)) {
+           slightlyBoldRows.push(rowIndex);
+       }
+
+       data.push(rowData);
+   });
+
+   doc.setFontSize(14); // Adjust font size
+   doc.setFont("helvetica", "bold"); // Set font style
+   doc.text("Balance Sheet", 105, 6, { align: "center" }); // Center the title
+
+   doc.setFontSize(12);
+   doc.setFont("helvetica", "normal");
+   doc.text("Ebenezer,", 105, 10, { align: "center" });
+
+   doc.setFontSize(12);
+   doc.setFont("helvetica", "normal");
+   doc.text("As of December 31, 2024", 105, 14, { align: "center" });
+
+
+   doc.autoTable({        
+       startY: 15, // Moves the table down to create space for headers
+       head: [['Description', 'Amount (KSH)']],
+       body: data,
+
+       headStyles: {
+       fillColor: [0, 25, 45], // Dark Blue (#00192D)
+       textColor: [255, 255, 255], // White text
+       fontStyle: 'bold'
+       },
+
+
+       didParseCell: function (data) {
+           if (data.section === 'body') {
+               const rowIndex = data.row.index;
+               const colIndex = data.column.index;
+               const text = data.cell.raw.trim().toLowerCase();
+
+               // Apply bold to section headers
+               if (sectionHeaders.includes(rowIndex)) {
+                   data.cell.styles.fontSize = 12;
+                   data.cell.styles.fontStyle = 'bold';
+               }
+
+               // Apply bold to major total rows
+               if (boldRows.includes(rowIndex)) {
+                   data.cell.styles.fontStyle = 'bold';
+                   data.cell.styles.fontSize = 12;
+               }
+
+               // Apply semi-bold style to slightly bold rows
+               if (slightlyBoldRows.includes(rowIndex)) {
+                   data.cell.styles.fontStyle = 'bold';
+                   data.cell.styles.fontSize = 10;
+               }
+
+               // Indent sub-items but NOT Non-current Assets, Current Assets, Non-current Liabilities, Current Liabilities
+               if (
+                   colIndex === 0 && 
+                   !sectionHeaders.includes(rowIndex) && 
+                   !boldRows.includes(rowIndex) && 
+                   !nonIndentedCategories.includes(text)
+               ) {
+                   data.cell.styles.cellPadding = { left: 10, right: 2, top: 2, bottom: 2 };
+               }
+           }
+       }
+   });
+
+   doc.save('styled_table.pdf');
+});
+
+</script>    
+
+
 
     <!--end::Script-->
   </body>

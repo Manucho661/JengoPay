@@ -23,7 +23,7 @@
 thead {
   background-color: #34495e;
   color: white;
-  font-size: 12px;
+  font-size: 24px !important;
 }
 tbody tr:nth-child(even) {
   background-color: #ecf0f1;
@@ -31,8 +31,12 @@ tbody tr:nth-child(even) {
 .fw-bold {
   background-color: #d5dbdb;
 }
-th, td {
+th {
   /* vertical-align: middle; */
+  padding: 12px;
+  font-size: 20px !important;
+}
+td{
   padding: 12px;
   font-size: 12px;
 }
@@ -138,4 +142,21 @@ select, input {
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   padding: 10px;
   border-radius: 5px;
+}
+.non-current-assets{
+  margin-left: 4px;
+}
+.current-assets{
+  margin-left: 4px;
+}
+.sub-current-assets{
+  margin-left: 8px;
+}
+.sub-sub-category{
+  margin-left: 8px !important;
+
+}
+
+.main-category{
+  font-size: 16px;
 }
