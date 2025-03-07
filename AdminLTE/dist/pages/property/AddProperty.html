@@ -428,147 +428,143 @@
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
-            <a href="../property/AddProperty.html"><button>
-              <i class="fas fa-plus"></i>
-              Add Property</button></a>
-    <hr>
-            <!--begin::Row-->
-            <div class="row">
-              <div class="col-md-12">
-                <div class="card mb-4">
-                  <div class="card-header">
-                    <h5 class="card-title text-warning">Registered Buildings</h5>
-                    <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                      </button>
-                      <div class="btn-group">
-                        <button
-                          type="button"
-                          class="btn btn-tool dropdown-toggle"
-                          data-bs-toggle="dropdown"
-                        >
-                          <i class="bi bi-wrench"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end" role="menu">
-                          <a href="#" class="dropdown-item">Action</a>
-                          <a href="#" class="dropdown-item">Another action</a>
-                          <a href="#" class="dropdown-item"> Something else here </a>
-                          <a class="dropdown-divider"></a>
-                          <a href="#" class="dropdown-item">Separated link</a>
-                        </div>
-                      </div>
-                      <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                        <i class="bi bi-x-lg"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <!-- /.card-header -->
-                  <div class="card-body">
-                    <!--begin::Row-->
-                    <div class="row">
-                      <table id="myTableOne" class="display" >
-                        <thead>
-                          <tr>
-                            <th>Property</th>
-                            <th>Location</th>
-                            <th>Rental Owners</th>
-                            <th>Manager</th>
-                            <th>Type</th>
-                            <th>Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>
-                              <a href="../property/AllProperty.html"></a>
-                              Crown Z Towers</td>
-                            <td>Mai mahiu</td>
-                            <td>
-                             Patrick Musila
-                            </td>
-                            <td></td>
-                            <td>Commercial</td>
-                            <td>
-                              <button style="background-color: #00192D; color:#FFC107;">EDIT</button>
-                              </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <a href="../property/AllProperty.html"></a>
-                              Crown Z Towers</td>
-                            <td>Mai mahiu</td>
-                            <td>
-                             Patrick Musila
-                            </td>
-                            <td></td>
-                            <td>Commercial</td>
-                            <td>
-                              <button style="background-color: #00192D; color:#FFC107;">EDIT</button>
-                              </td>
-                          </tr>
 
-                          <tr>
-                            <td>
-                              <a href="../property/AllProperty.html"></a>
-                              Crown Z Towers</td>
-                            <td>Mai mahiu</td>
-                            <td>
-                             Patrick Musila
-                            </td>
-                            <td></td>
-                            <td>Commercial</td>
-                            <td>
-                              <button style="background-color: #00192D; color:#FFC107;">EDIT</button>
-                              </td>
-                          </tr>
+            <b><p>Add Property</p></b>
 
-                          <tr>
-                            <td>
-                              <a href="../property/AllProperty.html"></a>
-                              Crown Z Towers</td>
-                            <td>Mai mahiu</td>
-                            <td>
-                             Patrick Musila
-                            </td>
-                            <td></td>
-                            <td>Commercial</td>
-                            <td>
-                              <button style="background-color: #00192D; color:#FFC107;">EDIT</button>
-                              </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <a href="../property/AllUnits.html"></a>
-                              Crown Z Towers</td>
-                            <td>Mai mahiu</td>
-                            <td>
-                             Patrick Musila
-                            </td>
-                            <td></td>
-                            <td>Commercial</td>
-                            <td>
-                              <button style="background-color: #00192D; color:#FFC107;">EDIT</button>
-                              </td>
-                          </tr>
+            <div class="col-md-12">
+              <label for="building_name">Building Name:</label>
+              <input type="text" id="building_name" name="building_name" placeholder="Enter Building Name"> 
+          
+         
+    <form>
+          <label for="property">Property Type:</label>
+          <select id="property" name="property">
+          <option value="residential">Residential</option>
+          <option value="commercial">Commercial</option>
+          <option value="residential">Mixed-Use</option>
+          </select>
+  </form>
 
-                          <tr onclick="window.location.href='AllUnits.html'" >
-                            <td>
-                              Crown M Towers</td>
-                            <td>Limuru</td>
-                            <td>
-                             Patrick Mwangi
-                            </td>
-                            <td></td>
-                            <td>Residential</td>
-                            <td>
-                              <button style="background-color: #00192D; color:#FFC107;">EDIT</button>
-                              </td>
-                          </tr>
-                          <!-- Add more rows as needed -->
-                        </tbody>
-                      </table>
+  <b><p>Location</p></b>
+
+  <div class="row">
+    <div class="col-md-4">
+    <label for="location">County:</label>
+    <input type="text" id="location" name="location" placeholder="Enter your county"> 
+  </div>
+
+  <div class="col-md-4">
+  <label for="location">Constituency:</label>
+  <input type="text" id="location" name="location" placeholder="Enter your constituency"> 
+</div>
+
+<div class="col-md-4">
+  <label for="location">Ward:</label>
+  <input type="text" id="location" name="location" placeholder="Enter your ward"> 
+</div>
+  </div>
+
+  <b><p>Add Building Owner</p></b>
+  <b><p>1.Individual</p></b>
+  
+  <div class="row">
+    <div class="col-md-4">
+    <label for="location">First Name:</label>
+    <input type="text" id="first_name" name="first_name" placeholder="Enter First Name"> 
+  </div>
+
+  <div class="col-md-4">
+  <label for="location">Last Name:</label>
+  <input type="text" id="last_name" name="last_name" placeholder="Enter Last Name"> 
+</div>
+
+<div class="col-md-4">
+  <label for="location">Phone Number:</label>
+  <input type="number" id="phone_number" name="phone_number" placeholder="Enter Phone Number"> 
+</div>
+
+<div class="col-md-4">
+  <label for="email">Email:</label>
+  <input type="email" id="email" name="email" placeholder="Enter Email"> 
+</div>
+
+<div class="col-md-4">
+  <label for="file">Title Deed Copy:</label>
+  <input type="file" id="file" name="file" accept="image/*" required><br><br>
+</div>
+
+<div class="col-md-4">
+  <label for="file">Other Legal Document:</label>
+  <input type="file" id="file" name="file" accept="image/*" required><br><br> 
+</div>
+  </div>
+
+
+  <b><p>Add Building Owner</p></b>
+  <b><p>2.Entity</p></b>
+  
+  <div class="row">
+    <div class="col-md-4">
+    <label for="location">Entity Name:</label>
+    <input type="text" id="entity_name" name="entity_name" placeholder="Enter Entity Name"> 
+  </div>
+
+  <div class="col-md-4">
+  <label for="phone_number">Official Phone Number:</label>
+  <input type="number" id="phone_number" name="phone_number" placeholder="Enter Phone Number"> 
+</div>
+
+<div class="col-md-4">
+  <label for="email">Official Email:</label>
+  <input type="number" id="phone_number" name="phone_number" placeholder="Enter Email"> 
+</div>
+
+<div class="col-md-4">
+  <label for="text">Entity Representative:</label>
+  <input type="representative" id="representative" name="representative" placeholder="Enter Entity Representative"> 
+</div>
+
+<div class="col-md-4">
+  <label for="file">Title Deed Copy:</label>
+  <input type="file" id="file" name="file" accept="image/*" required><br><br>
+</div>
+
+<div class="col-md-4">
+  <label for="file">Other Legal Document:</label>
+  <input type="file" id="file" name="file" accept="image/*" required><br><br> 
+</div>
+  </div>
+
+
+  <b><p>INSURANCE</p></b>
+
+  <div class="row">
+    <div class="col-md-4">
+    <label for="location">Current Insurance Provider:</label>
+    <input type="text" id="insurance_provider" name="insurance_provider" placeholder="Enter Current Insurance Provider"> 
+  </div>
+
+  <div class="col-md-4">
+  <label for="number">Annual Premium:</label>
+  <input type="number" id="number" name="number" placeholder="Enter Annual Premium"> 
+</div>
+
+<div class="col-md-4">
+  <label for="date">Renewal Date:</label>
+  <input type="date" id="date" name="date" placeholder=""> 
+</div>
+
+  </div>
+
+  <div class="row justify-content-end ">
+    <div class="col-md-6">
+    <button>Create Property</button>
+  </div>
+  <div class="col-md-6">
+    <button>Cancel</button>
+  </div>
+</div>
+  
                       <!-- /.col -->
                     </div>
                     <!--end::Row-->

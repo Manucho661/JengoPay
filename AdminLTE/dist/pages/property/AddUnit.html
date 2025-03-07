@@ -428,147 +428,98 @@
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
-            <a href="../property/AddProperty.html"><button>
-              <i class="fas fa-plus"></i>
-              Add Property</button></a>
-    <hr>
-            <!--begin::Row-->
-            <div class="row">
-              <div class="col-md-12">
-                <div class="card mb-4">
-                  <div class="card-header">
-                    <h5 class="card-title text-warning">Registered Buildings</h5>
-                    <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                      </button>
-                      <div class="btn-group">
-                        <button
-                          type="button"
-                          class="btn btn-tool dropdown-toggle"
-                          data-bs-toggle="dropdown"
-                        >
-                          <i class="bi bi-wrench"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end" role="menu">
-                          <a href="#" class="dropdown-item">Action</a>
-                          <a href="#" class="dropdown-item">Another action</a>
-                          <a href="#" class="dropdown-item"> Something else here </a>
-                          <a class="dropdown-divider"></a>
-                          <a href="#" class="dropdown-item">Separated link</a>
-                        </div>
-                      </div>
-                      <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                        <i class="bi bi-x-lg"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <!-- /.card-header -->
-                  <div class="card-body">
-                    <!--begin::Row-->
-                    <div class="row">
-                      <table id="myTableOne" class="display" >
-                        <thead>
-                          <tr>
-                            <th>Property</th>
-                            <th>Location</th>
-                            <th>Rental Owners</th>
-                            <th>Manager</th>
-                            <th>Type</th>
-                            <th>Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>
-                              <a href="../property/AllProperty.html"></a>
-                              Crown Z Towers</td>
-                            <td>Mai mahiu</td>
-                            <td>
-                             Patrick Musila
-                            </td>
-                            <td></td>
-                            <td>Commercial</td>
-                            <td>
-                              <button style="background-color: #00192D; color:#FFC107;">EDIT</button>
-                              </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <a href="../property/AllProperty.html"></a>
-                              Crown Z Towers</td>
-                            <td>Mai mahiu</td>
-                            <td>
-                             Patrick Musila
-                            </td>
-                            <td></td>
-                            <td>Commercial</td>
-                            <td>
-                              <button style="background-color: #00192D; color:#FFC107;">EDIT</button>
-                              </td>
-                          </tr>
+          <div>
+<b><p>Crown Z Towers</p></b>
+<!-- <br> -->
+Residential | Multi-family 
+<button style="background-color: #00192D; color:#FFC107;">EDIT</button><br>
+<br>
 
-                          <tr>
-                            <td>
-                              <a href="../property/AllProperty.html"></a>
-                              Crown Z Towers</td>
-                            <td>Mai mahiu</td>
-                            <td>
-                             Patrick Musila
-                            </td>
-                            <td></td>
-                            <td>Commercial</td>
-                            <td>
-                              <button style="background-color: #00192D; color:#FFC107;">EDIT</button>
-                              </td>
-                          </tr>
+<div style="display: flex;gap: 25px;">
+<a href=""><p>Summary</p></a>
+<a href="../property/AllUnits.html"><p>Units(5)</p></a>
 
-                          <tr>
-                            <td>
-                              <a href="../property/AllProperty.html"></a>
-                              Crown Z Towers</td>
-                            <td>Mai mahiu</td>
-                            <td>
-                             Patrick Musila
-                            </td>
-                            <td></td>
-                            <td>Commercial</td>
-                            <td>
-                              <button style="background-color: #00192D; color:#FFC107;">EDIT</button>
-                              </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <a href="../property/AllUnits.html"></a>
-                              Crown Z Towers</td>
-                            <td>Mai mahiu</td>
-                            <td>
-                             Patrick Musila
-                            </td>
-                            <td></td>
-                            <td>Commercial</td>
-                            <td>
-                              <button style="background-color: #00192D; color:#FFC107;">EDIT</button>
-                              </td>
-                          </tr>
+</div>
+<hr>
+</div>
 
-                          <tr onclick="window.location.href='AllUnits.html'" >
-                            <td>
-                              Crown M Towers</td>
-                            <td>Limuru</td>
-                            <td>
-                             Patrick Mwangi
-                            </td>
-                            <td></td>
-                            <td>Residential</td>
-                            <td>
-                              <button style="background-color: #00192D; color:#FFC107;">EDIT</button>
-                              </td>
-                          </tr>
-                          <!-- Add more rows as needed -->
-                        </tbody>
-                      </table>
+<div style="display: flex; gap: 25px;">
+   <a href=""> <p>Unit list</p></a>
+    <a href=""><p>Meter Reading</p></a>
+</div>
+
+<b><p>Add Unit to Crown Z Towers</p></b>
+
+<b><p>What is the Unit Information?</p></b>
+
+<div class="row">
+  <div class="col-md-4">
+  <label for="location">Unit Number:</label>
+  <input type="text" id="unit_number" name="unit_number" placeholder="Enter Unit Number"> 
+</div>
+
+<div class="col-md-4">
+<label for="size">Size(Optional):</label>
+<input type="text" id="size" name="size" placeholder="Enter Size"> 
+</div>
+
+<b><p>What is the listing information?</p></b>
+<div class="col-md-4">
+<form>
+    <label for="rooms">Rooms:</label>
+    <select id="rooms" name="property">
+    <option value="Bedsitter">Bedsitter</option>
+    <option value="One bedroom">One bedroom</option>
+    <option value="Two bedroom">Two Bedroom</option>
+    <option value="Lease">Lease</option>
+    </select>
+</form>
+</div>
+
+<div class="col-md-4">
+    <form>
+        <label for="rooms">Rooms:</label>
+        <select id="rooms" name="property">
+        <option value="Bedsitter">Bedsitter</option>
+        <option value="One bedroom">One bedroom</option>
+        <option value="Two bedroom">Two Bedroom</option>
+        <option value="Lease">Lease</option>
+        </select>
+    </form>
+    </div>
+
+    <div class="col-md-4">
+        <form>
+            <label for="rooms">Bathrooms:</label>
+            <select id="rooms" name="property">
+            <option value="One bedroom">One Bathroom</option>
+            <option value="Two bedroom">Two Bathroom</option>
+            <option value="Lease">Lease</option>
+            </select>
+        </form>
+        </div>
+
+        <div class="col-md-12">
+            <label class="form-label"><b>Description</b></label>
+            <input type="text" class="form-control" placeholder="Enter">
+        </div>
+</div>
+
+<div class="row justify-content-end ">
+    <div class="col-md-4">
+    <button>Create Property</button>
+  </div>
+  <div class="col-md-4">
+   <a href="../property/AddUnit.html"><button>Add Another Unit</button></a> 
+  </div>
+  <div class="col-md-4">
+    <button>Cancel</button>
+  </div>
+            <!-- /.col -->
+          </div>
+          <!--end::Row-->
+
+
                       <!-- /.col -->
                     </div>
                     <!--end::Row-->
