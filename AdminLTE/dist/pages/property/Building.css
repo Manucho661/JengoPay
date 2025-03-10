@@ -259,16 +259,15 @@ button:hover {
     cursor: pointer;
   }
   
-  .submit-btn:hover {
+  /* .submit-btn:hover {
     background-color: #003366;
-  }
-  .close-btn{
-    background: white;
-    color: black;
+  } */
+
+  /* .close-btn{
+    margin-right: 2rem;
   }
 
   .close-btn:hover{
-    background: white !important;
-    color: red;
+    color: red !important;
   }
-  
+   */
