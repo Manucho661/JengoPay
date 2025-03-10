@@ -43,7 +43,7 @@
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
-   <link rel="stylesheet" href="Building.css">
+   <link rel="stylesheet" href="meterreading.css">
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -443,87 +443,97 @@ Residential | Multi-family
 <hr>
 </div>
 
+
 <div style="display: flex; gap: 25px;">
-   <a href=""> <p>Unit list</p></a>
-    <a href=""><p>Meter Reading</p></a>
+   <a href="../property/AllUnits.html"> <p>Unit list</p></a>
+    <a href="../property/meterreading.html"><p>Meter Reading</p></a>
 </div>
 
-<!-- <b><p>Add Unit to Crown Z Towers</p></b> -->
 
-<b><p>What is the Unit Information?</p></b>
+<div class="justify-content-end d-flex">
+<button onclick="meterreadingopenPopup()">
+    <i class="fas fa-plus"></i>
+    Add Meter Reading</button></a>
+  </div>
 
 <div class="row">
-  <div class="col-md-4">
-  <label for="location">Unit Number:</label>
-  <input type="text" id="unit_number" name="unit_number" placeholder="Enter Unit Number"> 
-</div>
+  <table id="myTableOne" class="display" >
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Unit</th>
+        <th>Meter Type</th>
+        <th>Previous Reading</th>
+        <th>Current Reading</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr onclick="window.location.href=''">
+        <td>8/03/2025</td>
+        <td>C10</td>
+        <td>Water</td>
+        <td>10</td>
+        <td>11</td>
+        <td>
+          <a href="#"> <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button></a>
+          <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px; color: red;"></i>
+          </td>
+      </tr>
+      <tr onclick="window.location.href=''">
+        <td>7/03/2025</td>
+        <td>B11</td>
+        <td>
+         Water
+        </td>
+        <td>19</td>
+        <td>20</td>
+        <td>
+          <a href="#"> <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button></a>
+          <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px; color: red;"></i>
+          </td>
+      </tr>
 
-<div class="col-md-4">
-<label for="size">Size(Optional):</label>
-<input type="text" id="size" name="size" placeholder="Enter Size"> 
-</div>
+      <tr onclick="window.location.href=''">
+        <td>6/03/2025</td>
+        <td>B18</td>18</td>
+        <td>
+        Water
+        </td>
+        <td>21</td>
+        <td>22</td>
+        <td>
+          <a href="#"> <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button></a>
+          <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px; color: red;"></i>
+          </td>
+      </tr>
 
-<b><p>What is the listing information?</p></b>
-<div class="col-md-4">
-<form>
-    <label for="rooms">Rooms:</label>
-    <select id="rooms" name="property">
-    <option value="Bedsitter">Bedsitter</option>
-    <option value="One bedroom">One bedroom</option>
-    <option value="Two bedroom">Two Bedroom</option>
-    <option value="Lease">Lease</option>
-    </select>
-</form>
-</div>
-
-<div class="col-md-4">
-    <form>
-        <label for="rooms">Room Type:</label>
-        <select id="rooms" name="property">
-        <option value="Rental">Rental</option>
-        <option value="Air BnB">Air Bnb</option>
-        <option value="Banking Hall">Banking Hall</option>
-        </select>
-    </form>
-    </div>
-
-    <div class="col-md-4">
-        <form>
-            <label for="rooms">Bathrooms:</label>
-            <select id="rooms" name="property">
-            <option value="One bedroom">One Bathroom</option>
-            <option value="Two bedroom">Two Bathroom</option>
-            <option value="Lease">Lease</option>
-            </select>
-        </form>
-        </div>
-
-        <div class="col-md-12">
-            <label class="form-label"><b>Description</b></label>
-            <input type="text" class="form-control" placeholder="Enter">
-        </div>
-</div>
-
-<div class="row justify-content-end ">
-    <div class="col-md-4">
-    <button>Create Property</button>
-  </div>
-  <div class="col-md-4">
-   <a href="../property/AddUnit.html"><button>Add Another Unit</button></a> 
-  </div>
-  <div class="col-md-4">
-    <a href="../property/AllUnits.html"><button>Cancel</button></a>
-  </div>
+      <tr onclick="window.location.href=''" >
+        <td>01/03/2025</td>
+        <td>D17</td>
+        <td>
+         Water
+        </td>
+        <td>12</td>
+        <td>13</td>
+        <td>
+          <a href="#"> <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button></a>
+          <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px; color: red;"></i>          </td>
+      </tr>
+      <!-- Add more rows as needed -->
+    </tbody>
+  </table>
             <!-- /.col -->
           </div>
           <!--end::Row-->
+
 
 
                       <!-- /.col -->
                     </div>
                     <!--end::Row-->
                   <!-- ./card-body -->
-                  <div class="card-footer">
+                
                     <!--begin::Row-->
 
                       <!-- /.col -->
@@ -560,47 +570,48 @@ Residential | Multi-family
     </div>
     <!--end::App Wrapper-->
 
-  
-    <div class="detailed-overlay" id="detailedPopup">
-      <div class="detailed-content">
-        <form class="complaint-form">
-          <div class="d-flex justify-content-end"> <button class="close-btn"   onclick="closedetailedPopup()">×</button></div>
-          
-          <h4 style="color: #00192D; font-weight: 600;">Detailed Information</h4>
-          <div class="row g-3">
-          <div class="col-md-6">
-          <label for="name">Building Name:</label>
-          <input type="text" id="name" name="name" placeholder="Mwihoko Apartment" required disabled>
+    
+    
+  <!-- meterreading popup -->
+  <div class="meterpopup-overlay" id="meterPopup">
+    <div class="meterpopup-content wide-form">
+        <button class="close-btn text-secondary" onclick="meterreadingclosePopup()">×</button>
+        <h2 class="assign-title">Add A Meter Reading</h2>
+
+        <form class="wide-form">
+          <div class="form-group">
+            <label for="units">Units:</label>
+            <select id="units" required>
+                <option>D17</option>
+                <option>B18</option>
+                <option>B11</option>
+                <option>C10</option>
+            </select>
         </div>
+            <div class="form-group">
+                <label for="meter_type">Meter Type:</label>
+                <select id="meter_type" required>
+                  <option>Water</option>
+              </select>
+            </div>
 
-        <div class="col-md-6">
-          <label for="email">Building Owner:</label>
-          <input type="email" id="email" name="email" placeholder="Mr Maina" required disabled>
-        </div>
+            <div class="form-group">
+                <label for="previous_reading">Previous Reading:</label>
+                <input type="number" id="previous_reading" name="previous_reading" placeholder="Previous Reading" required>
+            </div>
 
-        <div class="col-md-6">
-          <label for="phone">County</label>
-          <input type="tel" id="phone" name="phone" placeholder="Nairobi" required disabled>
-      </div>
-  
+            <div class="form-group">
+                <label for="current_reading">Current Reading:</label>
+                <input type="number" id="current_reading" name="current_reading" placeholder="Current Reading" required>
+            </div>
 
-      <div class="col-md-6">
-          <label for="unit">Constituency</label>
-          <input type="text" id="unit" name="unit"  placeholder="Westlands" disabled>
-  </div>
-
-  <div class="col-md-6">
-          <label for="unit">Ward</label>
-          <input type="text" id="unit" name="unit" placeholder="Parklands" disabled>
-  </div>
-
-  <div class="col-md-4">
-    Building Image
-  <img src="../17.jpg" class="slide" alt="Image 1" style="width: 200px; height:200px;">
+            <button type="submit" class="submit-btn">Create Meter Reading</button>
+        </form>
+    </div>
 </div>
+<!-- end -->
   
-        <!-- <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button> -->
-      </form>
+    
       </div>
       </div>
     </div>
@@ -682,18 +693,18 @@ Residential | Multi-family
         });
             </script>
 
+
 <script>
-  // Function to open the complaint popup
-  function opendetailedPopup() { 
-    document.getElementById("detailedPopup").style.display = "flex";
+  // Function to meter the complaint popup
+  function meterreadingopenPopup() {
+    document.getElementById("meterPopup").style.display = "flex";
   }
 
   // Function to close the complaint popup
-  function closedetailedPopup() {
-    document.getElementById("detailedPopup").style.display = "none";
+  function meterreadingclosePopup() {
+    document.getElementById("meterPopup").style.display = "none";
   }
 </script>
-
 
 <script>
         $(document).ready(function () {

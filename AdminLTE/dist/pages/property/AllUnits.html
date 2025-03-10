@@ -44,6 +44,8 @@
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
    <link rel="stylesheet" href="Building.css">
+   <link rel="stylesheet" href="AllUnits.css">
+
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -63,117 +65,6 @@
 
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-        <style>
-          .property-registration .progress-bar {
-              display: flex;
-              justify-content: center;
-          }
-      
-          /* Progress Bar */
-          .progress-bar {
-              display: flex!important;
-              justify-content: space-between; /* Spreads steps evenly */
-              align-items: center;
-              width: 100%; /* Full width */
-              max-width: 400px; /* Adjust width as needed */
-              margin: 20px auto; /* Centers it */
-              /* padding: 10px; */
-              gap: 10px; /* Adds spacing between steps */
-          }
-      
-          /* Individual Step */
-          .stepy {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              width: 40px;
-              height: 40px;
-              background: #00192D;
-              color:#FFC107;
-              border-radius: 50%;
-              font-weight: bold;
-              transition: 0.3s;
-          }
-      
-          .property-registration {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              width: 100%;
-          }
-      
-          /* Active Step */
-          .stepy.active {
-              background:#00192D;
-          }
-      
-          /* Completed Step (Tick) */
-          .stepy.completed span {
-              display: none;
-          }
-      
-          .stepy.completed::after {
-              content: "✔";
-              font-size: 18px;
-              font-weight: bold;
-          }
-      
-          /* Form Steps */
-          .form-step {
-              display: none;
-              opacity: 0;
-              transform: translateX(50px);
-              transition: all 0.3s ease-in-out;
-          }
-      
-          .form-step.active {
-              display: block;
-              opacity: 1;
-              transform: translateX(0);
-          }
-      
-          input {
-              width: 90%;
-              padding: 8px;
-              margin: 10px 0;
-              border: 1px solid #ccc;
-              border-radius: 5px;
-          }
-      
-          button {
-              padding: 10px 15px;
-              border: none;
-              border-radius: 10px;
-              cursor: pointer;
-              margin: 5px;
-          }
-      
-          .next-btn {
-              background: #00192D;
-              color: white;
-          }
-      
-          .prev-btn {
-              background: #00192D;
-              color: white;
-          }
-      
-          .submit-btn {
-              background: green;
-              color: white;
-          }
-          select{
-              width: 90%;
-              padding: 8px;
-              margin: 10px 0;
-              border: 1px solid #ccc;
-              border-radius: 5px;
-          }
-          label{
-              text-align: left;
-          }
-      
-      </style>
 
 </style>
   </head>
@@ -443,8 +334,8 @@ Residential | Multi-family
 </div>
 
 <div style="display: flex; gap: 25px;">
-    <a href=""><p>Unit list</p></a>
-    <a href=""><p>Meter Reading</p></a>
+    <a href="../property/AllUnits.html"><p>Unit list</p></a>
+    <a href="../property/meterreading.html"><p>Meter Reading</p></a>
 </div>
 
 
@@ -500,20 +391,21 @@ Residential | Multi-family
                 </tr>
               </thead>
               <tbody>
+                
                     <tr>
                     <td>A1</td>
                     <td>Jake Konza</td>
                     <td>
-                      <a href="#"> <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button></a>
-                     <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px; color: red;"></i>
+                      <a href="#"> <button onclick="openunitsPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button></a>
+                     <button  class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px; color: red;"></i>
                     </td>  
-
                     </tr>
+
                     <tr>
                     <td>B1</td>
                     <td>Julia Konzanni</td>
                     <td>
-                      <a href="#"> <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button></a>
+                      <a href="#"> <button  onclick="openunitsPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button></a>
                     <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px; color: red;"></i>
                     </td>  
                     </tr>
@@ -522,7 +414,7 @@ Residential | Multi-family
                     <td>C1</td>
                     <td>Jibu Walter</td>
                     <td>
-                      <a href="#"> <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button></a>
+                      <a href="#"> <button onclick="openunitsPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button></a>
                     <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px; color: red;"></i>
                     </td>  
                     </tr>
@@ -579,47 +471,55 @@ Residential | Multi-family
     </div>
     <!--end::App Wrapper-->
 
-  
-    <div class="detailed-overlay" id="detailedPopup">
-      <div class="detailed-content">
-        <form class="complaint-form">
-          <div class="d-flex justify-content-end"> <button class="close-btn"   onclick="closedetailedPopup()">×</button></div>
-          
-          <h4 style="color: #00192D; font-weight: 600;">Detailed Information</h4>
+
+ <!-- units popup -->
+ <div class="units-overlay" id="unitsPopup">
+  <div class="units-content wide-form">
+      <button class="close-btn" onclick="closeunitsPopup()">×</button>
+      <h2 class="assign-title">Detailed Units Information</h2>
+      <form class="wide-form">
+        <div class="form-group">
           <div class="row g-3">
+            <div class="col-md-6">
+            <label for="name">Unit Number:</label>
+            <input type="number" id="unit_number" name="unit_number" placeholder="D17" required disabled>
+          </div>
+  
           <div class="col-md-6">
-          <label for="name">Building Name:</label>
-          <input type="text" id="name" name="name" placeholder="Mwihoko Apartment" required disabled>
-        </div>
-
-        <div class="col-md-6">
-          <label for="email">Building Owner:</label>
-          <input type="email" id="email" name="email" placeholder="Mr Maina" required disabled>
-        </div>
-
-        <div class="col-md-6">
-          <label for="phone">County</label>
-          <input type="tel" id="phone" name="phone" placeholder="Nairobi" required disabled>
-      </div>
+            <label for="text">Size:</label>
+            <input type="text" id="size" name="size" placeholder="3 by 3" required disabled>
+          </div>
   
+          <div class="col-md-6">
+            <label for="floor_number">Floor Number</label>
+            <input type="tel" id="floor_number" name="floor_number" placeholder="2" required disabled>
+        </div>
 
-      <div class="col-md-6">
-          <label for="unit">Constituency</label>
-          <input type="text" id="unit" name="unit"  placeholder="Westlands" disabled>
-  </div>
+        <div class="col-md-6">
+            <label for="rooms">Rooms</label>
+            <input type="text" id="rooms" name="rooms"  placeholder="4" disabled>
+    </div>
 
-  <div class="col-md-6">
-          <label for="unit">Ward</label>
-          <input type="text" id="unit" name="unit" placeholder="Parklands" disabled>
-  </div>
-
-  <div class="col-md-4">
-    Building Image
-  <img src="../17.jpg" class="slide" alt="Image 1" style="width: 200px; height:200px;">
+    <div class="col-md-6">
+      <label for="room_type">Room Type</label>
+      <input type="text" id="room_type" name="room_type" placeholder="5" disabled>
 </div>
+
+    <div class="col-md-6">
+            <label for="bathrooms">Bathrooms</label>
+            <input type="text" id="bathrooms" name="bathrooms" placeholder="5" disabled>
+    </div>
   
-        <!-- <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button> -->
+    <div class="col-md-12">
+      <label for="description">Description</label>
+      <input type="text" id="description" name="description" placeholder="lorem skdkjfjkkkdkjjkjkjsjjejjnnfn" disabled> 
+  </div>
       </form>
+  </div>
+</div>
+<!-- end -->
+
+
       </div>
       </div>
     </div>
@@ -703,13 +603,13 @@ Residential | Multi-family
 
 <script>
   // Function to open the complaint popup
-  function opendetailedPopup() { 
-    document.getElementById("detailedPopup").style.display = "flex";
+  function openunitsPopup() { 
+    document.getElementById("unitsPopup").style.display = "flex";
   }
 
   // Function to close the complaint popup
-  function closedetailedPopup() {
-    document.getElementById("detailedPopup").style.display = "none";
+  function closeunitsPopup() {
+    document.getElementById("unitsPopup").style.display = "none";
   }
 </script>
 
