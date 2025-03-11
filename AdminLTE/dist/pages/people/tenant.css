@@ -273,6 +273,13 @@ body {
     background-size: 16px;
     padding-right: 30px;
   }
+
+  input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
   input, select, textarea {
   width: 100%;
   padding: 2px;
@@ -666,3 +673,139 @@ body {
     padding: 5px;
     align-items: center;
   }
+
+  /* Buttons */
+  .add_provider_btn{
+    background-color: #00192D !important; 
+    color: white !important; 
+    font-size: small !important; 
+    height: fit-content !important;
+  }
+  
+
+
+  /* POPUP SCRIPTS */
+
+  /* General styles */
+  /* Submit button */
+  .submit-btn {
+    background-color: #00192D;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 5px;
+    }
+  input, textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .complaint-form input, .complaint-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    }
+/* Shift Tenant */
+.shiftpopup-overlay{
+  position: fixed;
+top: 0;
+left: 0;
+z-index: 10000;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.7); /* Dark overlay */
+display: none; /* Initially hidden */
+justify-content: center;
+align-items: center;
+font-family: 'Poppins', sans-serif;
+font-size: small;
+}
+.shiftpopup-content{
+background: white;
+padding: 20px;
+border-radius: 8px;
+width: 50%;
+text-align: left;
+position: relative;
+}
+.shift{
+  width: 95%;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* dd Tenant */
+.popup-overlay {
+  position: fixed;
+  /* margin-top: 60px; */
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Dark overlay */
+  display: none; /* Initially hidden */
+  justify-content: center;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  font-size: small;
+  overflow: scroll;
+  }
+  .addTenantHeader{
+    font-weight: 600;
+  }
+  /* Popup content */
+  .popup-content {
+  /* background: white; */
+  margin-top: 15vh !important;
+  border-radius: 8px;
+  width: 50%;
+  text-align: left;
+  position: relative;
+  margin-bottom: 3px;
+
+  }
+
+  /* Close button */
+  .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  }
+
+  /* Notifiction */
+  .notificationpopup-overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Dark overlay */
+    display: none; /* Initially hidden */
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    font-size: small;
+    }
+    .notificationpopup-content{
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 50%;
+      text-align: left;
+      position: relative;
+    }

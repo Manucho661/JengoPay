@@ -364,8 +364,7 @@
             <div class="row first mb-2 ">
                 <div class="col-md-4">
                     <div>
-                         
-                        
+                                                 
                         <select id="categoryFilter">
                             <option value="">-- Select --</option>
                             <option value="technology">All</option>
@@ -376,9 +375,10 @@
                       </div>
                 </div>
 
+                <!-- Major Actions column-->
                 <div class="col-md-8 d-flex justify-content-end buttons">
 
-                    <button id="add_provider_btn" class="btn me-3 " style="background-color: #00192D; color: white; font-size: small; height: fit-content;">  <i class="bi bi-plus"></i>
+                    <button id="add_provider_btn" class="btn add_provider_btn  me-3">  <i class="bi bi-plus"></i>
                       <b class="button_item" class="open-btn" onclick="openPopup()"> Add Tenant </b></button>
 
                       <button id="add_provider_btn" class="btn me-3 " style="background-color: #00192D; color: white; font-size: small; height: fit-content;">  <i class="bi bi-plus"></i>
@@ -389,6 +389,7 @@
 
                 </div>
               <!-- /.col -->
+               
             </div>
             <!-- /.row -->
 
@@ -504,167 +505,108 @@
 
 
 
-<!-- Overlay Cards -->
+<!-- POPUPS -->
 
-<!-- create Announcement -->
+<!-- Add Tenant -->
+<div class="popup-overlay"  id="complaintPopup">
+  <div class="popup-content">
+    <button class="close-btn text-secondary" onclick="closePopup()">×</button>
+    
+    <form class="complaint-form ">
+      <h2 class="text-start addTenantHeader">Add Tenant</h2>
+        <label for="name">Tenant Name:</label>
+        <input type="text" id="name" name="name" required>
 
+        <label for="number">Kra pin:</label>
+        <input type="number" id="number" name="number" required>
 
+        <label for="email">Email Address:</label>
+        <input type="email" id="email" name="email" required>
 
-
-
- <!-- Start View announcement -->
- <div class="view_announcement" id="view_announcement">
-  <div class="card content">
-   <div class="card-header view_announcement bg-secondary text-white">
-       <h5 class="mb-0">Rent Payments</h5>
-       <div id="close-overlay-btn" class="close-btn" > <b> &times;</b> </div>
-
-   </div>
-   <div class="card-body">
-       <p class="card-text">
-           All Rent Payments should be made before 24/01/17. Anyone who feels that they might not
-           be able to complete their dues on 24/01/17 should communicate to management before the due date.
-           Else, you face an eviction risk if you fail to pay your dues before the said date without a reasonable reason</p>
-
-           <p class="timestamp" id="timestamp"></p> <!-- Timestamp -->
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" required>
 
 
-       <div class="Recipients border-top border-gray "> <p><strong>Recipients|</strong> All Employees</p>  </div>
-
-   </div>
-   <div class="card-footer view_announcement d-flex">
-       <button class="btn btn-danger btn-sm">Delete</button>
-       <button class="btn btn-secondary btn-sm">Resend</button>
-   </div>
- </div>
- </div>
-
-  <!-- Lease Modal -->
-<div class="modal fadey" id="leaseyModal" tabindex="-1" aria-labelledby="leaseyModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="leaseyModalLabel"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="container">
-          <div class="form-wrapper">
-              <h1 class="text-warning">Assign Task</h1>
-              <form id="taskForm">
-                <div class="input-group">
-                  <label for="taskName">Task About To Be Assigned:</label>
-                  <input type="text" id="taskName" name="taskName" placeholder="Enter task name" style="border-radius: 10px; width: 100%;"   required>
-              </div>
-
-                  <div class="input-group">
-                      <label for="serviceProvider">Select A Category For The Task</label>
-                  <label for="taskName"></label>
-                      <select id="serviceProvider" name="serviceProvider" style="border-radius: 10px;"  required>
-                          <option value="" id="taskName" disabled selected>Select A Category </option>
-                          <option value="John">Electrical</option>
-                          <option value="Jane">Plumbing</option>
-                          <option value="Mike">Cleaning</option>
-                      </select>
-                  </div>
-                  <div class="input-group">
-                    <label for="serviceProvider">Select Service Provider:</label>
-                    <select id="serviceProvider" name="serviceProvider" style="border-radius: 10px;" required>
-                        <option value="" id="taskName"  disabled selected>Select Provider</option>
-                        <option value="John">John </option>
-                        <option value="Jane">Jane </option>
-                        <option value="Mike">Mike </option>
-                    </select>
-                </div>
+        <label for="property">Property:</label>
+        <select id="property" required>
+          <option value="">Select Property</option>
+          <option value="High">Manucho</option>
+          <option value="Moderate">Ben 10</option>
+          <option value="Low">Alpha</option>
+        </select>
 
 
-                  <button type="submit" class="submit-btn" style="border-radius: 10px; background-color: #00192D; width: 50%; margin-left: 6rem;" >Assign</button>
-              </form>
-          </div>
-
-          <!-- <div id="assignedTasks">
-              <h2>Assigned Tasks</h2>
-              <ul id="taskList"></ul>
-          </div> -->
-      </div>
+        <label for="unit">Rental Unit:</label>
+        <input type="text" id="unit" name="unit" required>
 
 
-      </div>
-    </div>
+      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
+    </form>
   </div>
 </div>
+<!--End Add Tenant -->
 
-  <!-- Lease Modal -->
-  <div class="modal fade" id="leaseModal" tabindex="-1" aria-labelledby="leaseModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="leaseModalLabel"></h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form class="beasy">
-             <!-- Landlord Information Section -->
-      <!-- Service Provider Information Section -->
-      <div class="form-section">
-        <h3 class="text-warning">Landlord Information</h3>
-         <a href="#"><p>Martin White</p></a>
-        <!-- <label for="landlordName">Landlord Name(Martin White)</label> -->
-        <!-- <input type="text" id="landlordName" name="landlordName" placeholder="Enter your full name" required> -->
+ <!-- Shift Tenant -->
+ <div class="shiftpopup-overlay" id="shiftPopup">
+  <div class="shiftpopup-content">
+    <button class="close-btn text-secondary" onclick="closeshiftPopup()">×</button>
+    <div class="shift">
+    <h2 style="color: #00192D;">Shift Tenant</h2>
+    <label for="tenant">Select Tenant:</label>
 
-        <h3 class="text-warning">Select Service Providers Information</h3>
-        <label for="paymentMethod">Choose:</label>
-        <select id="paymentMethod" name="paymentMethod" required>
-          <option value="bank_transfer">ABX Electricals</option>
-          <option value="bank_transfer">Sunsine Plumbers</option>
-          <option value="bank_transfer">Favored Technologies</option>
-        </select>
-        <h3 class="text-warning">Payment Details</h3>
-        <label for="amount">Payment Amount (KSH)</label>
-        <input type="text" id="landlordName" name="landlordName" placeholder="Enter Amount" required>
+    <select id="tenant">
+        <option value="John Doe">John Doe</option>
+        <option value="Jane Smith">Jane Smith</option>
+        <option value="Mike Johnson">Mike Johnson</option>
+    </select>
 
-        <label for="paymentMethod">Payment Method</label>
-        <select id="paymentMethod" name="paymentMethod" required>
-          <option value="mpesa_transfer" class="bossy">MPESA</option>
-          <option value="mpesa_transfer" class="bossy">Bank</option>
-          <option value="mpesa_transfer" class="bossy">Global Pay</option>
-          <option value="mpesa_transfer" class="bossy">Cash</option>
+    <label for="property">Select New Property/Unit:</label>
+    <select id="property">
+        <option value="Apartment 101">Apartment 101</option>
+        <option value="House B3">House B3</option>
+        <option value="Condo 23A">Condo 23A</option>
+    </select>
+    <label for="property">Select Unit:</label>
+    <select id="property" style="width: 100%;padding: 10px;margin-bottom: 15px;border-radius: 5px;border: 1px solid #ccc;">
+        <option value="Apartment 101">A55</option>
+        <option value="House B3">B3</option>
+        <option value="Condo 23A">CA</option>
+    </select>
+    <br>
 
-        </select>
-         <!-- Submit Button -->
-         <button type="submit" class="bossy"> MAKE PAYMENT</button>
-      </div>
+    <button  type="submit" class="submit-btn" onclick="shiftTenant()"  style="background-color: #00192D; color: #f1f1f1;">Confirm Shift</button>
 
-
-
-      <!-- Payment Details Section
-      <div class="form-section">
-        <h3>Payment Details</h3>
-        <label for="amount">Payment Amount (KSH)</label>
-        <input type="number" id="amount" name="amount" placeholder="Enter the amount to pay" min="1" required>
-
-        <label for="paymentMethod">Payment Method</label>
-        <select id="paymentMethod" name="paymentMethod" required>
-          <option value="mpesa_transfer" class="bossy">MPESA</option>
-        </select>
-      </div> -->
-
-          </form>
-        </div>
-      </div>
-    </div>
   </div>
+  </div>
+</div>
+<!-- End shift popup -->
 
-<!-- End view announcement -->
-<!-- end overlay card. -->
+  <!-- notification popup -->
+<div class="notificationpopup-overlay" id="notificationPopup">
+  <div class="notificationpopup-content">
+    <button class="close-btn text-secondary" onclick="closenotificationPopup()">×</button>
+    <h2 style="color: #00192D;">Notification</h2>
 
-    <!--begin::Script-->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <label for="property">Recepients:</label>
+    <select id="property" required>
+      <option value=""disabled>Select Recepient</option>
+      <option value="High">Manucho</option>
+      <option value="Moderate">Ben 10</option>
+      <option value="Low">Alpha</option>
+    </select>
+
+    <textarea id="notes" name="notes" rows="10" cols="98" placeholder="Enter any additional information..."></textarea>
+
+      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SEND</button>
+  </div>
+</div>
+<!-- End Notification popup -->
 
 
 
-<!-- Overlay scripts -->
- <!-- View announcements script -->
+
+<!-- END POPUPS -->
+ 
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 
@@ -693,20 +635,7 @@
      });
  </script>
 
- <!-- End view announcement script -->
-
- <script>
-  // Function to toggle the visibility of the overlay
-  function toggleOverlay() {
-    var overlay = document.getElementById('overlay');
-    // If overlay is hidden, show it
-    if (overlay.style.display === "none" || overlay.style.display === "") {
-      overlay.style.display = "flex";
-    } else {
-      overlay.style.display = "none";
-    }
-  }
-</script>
+ 
 
 
     <script
@@ -723,28 +652,46 @@
     <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
 
 
+<!-- Scripts For PopUps -->
+        <script>
+          // Function to open the complaint popup
+          function openshiftPopup() {
+            document.getElementById("shiftPopup").style.display = "flex";
+          }
 
-<!-- more options -->
-<script>
+          // Function to close the complaint popup
+          function closeshiftPopup() {
+            document.getElementById("shiftPopup").style.display = "none";
+          }
+        </script>
 
-  // JavaScript to handle hover and hide functionality
-  const  more= document.getElementById("more");
-  const more_icon = document.getElementById("more_icon");
-  const more_options = document.getElementById("more_options");
+        <script>
+          // Function to open the complaint popup
+          function opennotificationPopup() {
+            document.getElementById("notificationPopup").style.display = "flex";
+          }
 
-  // Show panel when hovering over the accordion
-  more_icon.addEventListener("mouseenter", () => {
-    more_options.style.display = "block";
-  });
+          // Function to close the complaint popup
+          function closenotificationPopup() {
+            document.getElementById("notificationPopup").style.display = "none";
+          }
+        </script>
 
-  // Hide panel when moving out of both accordion and panel
-   more.addEventListener("mouseleave", () => {
-    more_options.style.display = "none";
-});
+        <script>
+          // Function to open the complaint popup
+          function openPopup() {
+            document.getElementById("complaintPopup").style.display = "flex";
+          }
 
+          // Function to close the complaint popup
+          function closePopup() {
+            document.getElementById("complaintPopup").style.display = "none";
+          }
+        </script>
 
-</script>
-    <!-- Begin script for datatable -->
+<!--End Scripts For PopUps -->
+
+    <!-- Script for datatable -->
     <script>
 
             document.addEventListener("DOMContentLoaded", function() {
@@ -759,6 +706,7 @@
             });
         });
     </script>
+
 
      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
