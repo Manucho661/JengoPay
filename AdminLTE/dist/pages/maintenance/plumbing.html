@@ -408,7 +408,7 @@
                                 <input type="number" class="form-control" placeholder="000001" >
                             </div>
             
-                            <div class="row g-3">
+                            <div class="row g-3 mt-2">
                             <div class="col-md-6">
                               <label class="form-label"><b>Description</b></label>
                               <input type="text" class="form-control" placeholder="Enter">
@@ -658,7 +658,7 @@
 
             <div class="form-group">
                 <label for="plumbing_issue">Plumbing Issue:</label>
-                <select id="plumbing_issue" required>
+                <select id="plumbing_issue" required disabled>
                     <option>Leaking Pipe</option>
                     <option>Faucet Issue</option>
                     <option>Showerhead Issue</option>
@@ -670,12 +670,12 @@
 
             <div class="form-group">
                 <label for="description">Description:</label>
-                <textarea name="description" id="description" placeholder="Description" rows="2" required></textarea>
+                <textarea name="description" id="description" placeholder="Description" rows="2" required disabled></textarea>
             </div>
 
             <div class="form-group">
                 <label for="urgency_level">Urgency Level:</label>
-                <select id="urgency_level" required>
+                <select id="urgency_level" required disabled>
                     <option>Immediate Attention Needed</option>
                     <option>Urgent within 24 hours</option>
                     <option>Next Available Appointment</option>

@@ -474,7 +474,7 @@
         <td>10</td>
         <td>11</td>
         <td>
-          <a href="#"> <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button></a>
+          <a href="#"> <button  onclick="openmeterPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button></a>
           <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>
           </td>
       </tr>
@@ -487,8 +487,8 @@
         <td>19</td>
         <td>20</td>
         <td>
-          <a href="#"> <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button></a>
-          <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>
+         <button onclick="openmeterPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
+          <button   class="btn btn-sm" style="background-color: #193042; color:#fff;">    <i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>
           </td>
       </tr>
 
@@ -501,8 +501,8 @@
         <td>21</td>
         <td>22</td>
         <td>
-          <a href="#"> <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button></a>
-          <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>
+          <button onclick="openmeterPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
+          <button   class="btn btn-sm" style="background-color: #193042; color:#fff;">    <i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>
           </td>
       </tr>
 
@@ -515,8 +515,8 @@
         <td>12</td>
         <td>13</td>
         <td>
-          <a href="#"> <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button></a>
-          <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>          </td>
+          <button onclick="openmeterPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
+          <button   class="btn btn-sm" style="background-color: #193042; color:#fff;"><i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>          </td>
       </tr>
       <!-- Add more rows as needed -->
     </tbody>
@@ -609,7 +609,47 @@
 </div>
 <!-- end -->
   
-    
+
+
+ <!-- units popup -->
+ <div class="meter-overlay" id="meteringPopup">
+  <div class="meter-content wide-form">
+      <button class="close-btn" onclick="closemeterPopup()">×</button>
+      <h2 class="assign-title">Detailed Meter Information</h2>
+      <form class="wide-form">
+        <div class="form-group">
+          <div class="row g-3">
+            <div class="col-md-6">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" placeholder="01/03/2025" required disabled>
+          </div>
+  
+          <div class="col-md-6">
+            <label for="unit">Unit:</label>
+            <input type="text" id="unit" name="unit" placeholder="D17" required disabled>
+          </div>
+  
+          <div class="col-md-6">
+            <label for="meter_type">Meter Type</label>
+            <input type="text" id="meter_type" name="meter_type" placeholder="water" required disabled>
+        </div>
+
+        <div class="col-md-6">
+            <label for="rooms">Previous Reading</label>
+            <input type="text" id="rooms" name="rooms"  placeholder="4" disabled>
+    </div>
+
+    <div class="col-md-6">
+      <label for="room_type">Current Reading</label>
+      <input type="text" id="room_type" name="room_type" placeholder="5" disabled>
+</div>
+      </form>
+      </div>
+  </div>
+</div>
+<!-- end -->
+
+
       </div>
       </div>
     </div>
@@ -691,14 +731,25 @@
         });
             </script>
 
+<script>
+  // Function to open the meter popup
+  function openmeterPopup() { 
+    document.getElementById("meterfullPopup").style.display = "flex";
+  }
+
+  // Function to close the meter popup
+  function closemeterPopup() {
+    document.getElementById("meterfullPopup").style.display = "none";
+  }
+</script>
 
 <script>
-  // Function to meter the complaint popup
+  // Function to meter the meter popup
   function meterreadingopenPopup() {
     document.getElementById("meterPopup").style.display = "flex";
   }
 
-  // Function to close the complaint popup
+  // Function to close the meter popup
   function meterreadingclosePopup() {
     document.getElementById("meterPopup").style.display = "none";
   }
