@@ -45,6 +45,7 @@
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
    <link rel="stylesheet" href="Building.css">
    <link rel="stylesheet" href="meterreading.css">
+   <link rel="stylesheet" href="AddUnit.css">
 
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
@@ -430,24 +431,18 @@
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
-          <div>
-<b><p>Crown Z Towers</p></b>
-<!-- <br> -->
-Residential | Multi-family 
-<button style="background-color: #00192D; color:#FFC107;">EDIT</button><br>
-<br>
-
+            <div class="property-title">Crown Z Towers <button class="edit-btn">EDIT</button></div>
+            <p>Residential | Multi-family</p>  
+            <hr>  
 <div style="display: flex;gap: 25px;">
-<a href=""><p>Summary</p></a>
-<a href="../property/AllUnits.html"><p>Units(5)</p></a>
-
+<!-- <a href=""><p>Summary</p></a> -->
+<!-- <a href="../property/AllUnits.html"><p>Units(5)</p></a> -->
 </div>
-<hr>
 </div>
 
 <div style="display: flex; gap: 25px;">
-   <a href="../property/AllUnits.html"> <p>Unit list</p></a>
-    <a href="../property/meterreading.html"><p>Meter Reading</p></a>
+   <a href="../property/AllUnits.html"  style="color: #FFC107;"> <p>Unit list</p></a>
+    <a href="../property/meterreading.html"  style="color: #FFC107;"><p>Meter Reading</p></a>
 </div>
 
 <!-- <b><p>Add Unit to Crown Z Towers</p></b> -->
@@ -507,9 +502,11 @@ Residential | Multi-family
         </form>
         </div>
 
+        <div class="row">
         <div class="col-md-12">
             <label class="form-label"><b>Description*</b></label>
             <input type="text" class="form-control" placeholder="Enter">
+        </div>
         </div>
 </div>
 
