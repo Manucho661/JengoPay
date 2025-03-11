@@ -1,0 +1,342 @@
+.container.balancesheet{
+    /* max-width: 850px; */
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+  }
+  .balancesheet-header{
+    color: #ffffff;
+    font-weight: 700;
+    background: linear-gradient(to right, #00192D, #003D5B, #00788D);
+    padding: 15px;
+    border-radius: 10px 10px 0 0;
+    text-align: center;
+    font-size: 16px;
+  }
+  
+  .table {
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 12px;
+  }
+  thead {
+    background-color: #34495e;
+    color: white;
+    font-size: 16px !important;
+  }
+  tbody tr:nth-child(even) {
+    background-color: #ecf0f1;
+  }
+  .fw-bold {
+    background-color: #d5dbdb;
+  }
+  th {
+    
+    padding: 12px;
+  
+  }
+  td{
+    padding: 12px;
+    font-size: 12px;
+  }
+  .fw-bold.text-end {
+    background-color: #2c3e50;
+    color: white;
+  }
+  
+  .contact_section_header{
+    border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+    font-family: 'Poppins', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+  
+  }
+ 
+  
+  .status {
+    display: inline-flex;
+    align-items: center;
+    font-weight: bold;
+    padding: 6px 12px;
+     border-radius: 4px;  
+    font-size: 14px;
+  }
+  .status.completed {
+    background-color: #2e7d32; /* Light green */
+    
+    color: white;
+    border: none;
+    
+  } 
+  /* General Styling for Summary Items */
+  
+  
+  
+  
+  /* Filter section */
+  .filter-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    
+  }
+  
+  /* iNPUT and selects */
+  select, input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  select{
+    appearance: none; /* Hides default arrow in some browsers */
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="%23FFC107" d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
+    background-size: 16px;
+    padding-right: 30px;
+  }
+
+  input[type="text"], input[type="email"], input[type="password"], select, textarea {
+    width: 60%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    }
+    
+    input[type="radio"], input[type="checkbox"] {
+      margin-right: 8px;
+      }
+
+  input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+  input, select, textarea {
+  width: 100%;
+  padding: 2px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  font-size: 10.2px;
+  margin-top: 8px;
+  transition: border-color 0.3s ease;
+  }
+  
+
+
+
+
+  .filter-label {
+    font-weight: normal;
+  }
+  .filter-section {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    width: 100%;
+  }
+  
+  #categoryFilter{
+    margin-right: 5px;
+  }
+  
+  
+  
+  .main-category{
+    font-size: 16px;
+  }
+
+  /* ACtions  */
+  .row.first{
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    align-items: center;
+   }
+
+   .add_provider_btn{
+    background-color: #00192D !important; 
+    color: white !important; 
+    font-size: small !important; 
+    height: fit-content !important;
+  }
+
+  .dt-buttons {
+    display: flex;
+    justify-content: start; /* or center */
+    gap: 5px;
+     
+  }
+  div.dt-buttons .btn{
+    background-color: #00192D !important ;
+   border-radius: 2px ;
+ }
+
+  
+  div.dt-button-collection {
+    background-color: #00192D !important;  /* Change to your preferred color */
+    border: 1px solid #ccc !important;
+    border-radius: 2px;
+  }
+  div.dt-button-collection .dt-button {
+    background-color: #00192D !important;
+    color: white !important; /* Ensure text is visible */
+    border: none !important;
+  }
+  
+  /* Change hover effect */
+  div.dt-button-collection .dt-button:hover {
+    background-color: #FFC107 !important;
+    color: white !important;
+    border-radius: 3px;
+  }
+
+
+  .assignpopup-overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10000; 
+    width: 100%;
+    /* height: 100%; */
+    background: rgba(0, 0, 0, 0.7); /* Dark overlay */
+    display: none; /* Initially hidden */
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    font-size: small;
+  }
+  /* POPUP SCRIPTS */
+
+  /* General styles */
+  /* Submit button */
+  .submit-btn {
+    background-color: #00192D;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 5px;
+    }
+  input, textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .complaint-form input, .complaint-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    }
+/* Shift Tenant */
+.shiftpopup-overlay{
+  position: fixed;
+top: 0;
+left: 0;
+z-index: 10000;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.7); /* Dark overlay */
+display: none; /* Initially hidden */
+justify-content: center;
+align-items: center;
+font-family: 'Poppins', sans-serif;
+font-size: small;
+}
+.shiftpopup-content{
+background: white;
+padding: 20px;
+border-radius: 8px;
+width: 50%;
+text-align: left;
+position: relative;
+}
+.shift{
+  width: 95%;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* dd Tenant */
+.popup-overlay {
+  position: fixed;
+  /* margin-top: 60px; */
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Dark overlay */
+  display: none; /* Initially hidden */
+  justify-content: center;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  font-size: small;
+  overflow: scroll;
+  }
+  .addTenantHeader{
+    font-weight: 600;
+  }
+  /* Popup content */
+  .popup-content {
+  /* background: white; */
+  margin-top: 15vh !important;
+  border-radius: 8px;
+  width: 50%;
+  text-align: left;
+  position: relative;
+  margin-bottom: 3px;
+  background-color: white;
+  padding: 20px;
+
+  }
+
+  /* Close button */
+  .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  }
+
+  /* Notifiction */
+  .notificationpopup-overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Dark overlay */
+    display: none; /* Initially hidden */
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    font-size: small;
+    }
+    .notificationpopup-content{
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 50%;
+      text-align: left;
+      position: relative;
+    }
+
+
+    /* Buttons */
+    

@@ -4,6 +4,7 @@ body {
     background-color: black;
     font-size: 10px;
   }
+ 
   
   .panel {
     display: none; /* Initially hidden */
@@ -81,37 +82,7 @@ body {
   
   }
   
-  #more{
-  display: flex;
-   justify-content: center;
-  cursor: pointer;
-  
-  }
-  
-  #more_icon{
-  /* border: 1px solid black; */
-  border-radius: 30%;
-  padding: 10%;
-  font-size: larger;
-  }
-  
-  #more_options{
-  display: none;
-  /* position: absolute; */
-  z-index: 1000;
-  background: #00192D;
-  border-radius: 10%;
-  padding: 10px;
-  
-  }
-  #more_options a{
-  text-decoration: none;
-  color: white;
-  }
-  #more_options a:hover{
-  color: #FFC107;
-  }
-  #close-overlay-btn {
+    #close-overlay-btn {
     /* top: 0; */
     color: white;
     /* color: white; */
@@ -195,17 +166,7 @@ body {
   display: block;
   }
   
-  /* input[type="text"], input[type="email"], input[type="number"], select, textarea {
-  width: 70%;
-  padding: 8px;
-  margin-bottom: 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  }  */
   
-  /* textarea {
-  resize: vertical;
-  } */
   .form-section {
   margin-bottom: 15px;
   }
@@ -436,29 +397,7 @@ body {
   .close-overlay-btn:hover {
       color: red;
       }
-    /* end assign */
-    .requestpopup-overlay{
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 10000;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7); /* Dark overlay */
-      display: none; /* Initially hidden */
-      justify-content: center;
-      align-items: center;
-      font-family: 'Poppins', sans-serif;
-      font-size: small;
-    }
-    .requestpopup-content{
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        width: 50%;
-        text-align: left;
-        position: relative;
-    }
+    
     .close-btn {
       background: none;
       border: none;
@@ -809,3 +748,7 @@ position: relative;
       text-align: left;
       position: relative;
     }
+
+
+    /* Buttons */
+    
