@@ -45,7 +45,7 @@
 
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../../../../dist/css/adminlte.css" />
+    <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
     <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
@@ -57,17 +57,19 @@
     />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="expenses.css">
-
-   <link rel="stylesheet" href="">
-
-    <!-- scripts for data_table -->
+   <link rel="stylesheet" href="tenant.css">
+<!-- scripts for data_table -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
 
     <style>
-      
+      body{
+        background-color: #FFC107 !important;
+      }
+      .app-wrapper{
+        background-color: rgba(128,128,128, 0.1);
+      }
     </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -307,34 +309,40 @@
             <div class="row">
               <div class="col-sm-8">
 
-                        <h3 class="mb-0 contact_section_header">  <i class="fas fa-tools"></i>Expenses</h3>
+                <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> Tenants</h3>
+
+
+                    <div class="row mt-2  ">
+                      <div class="col-md-12  ">
+
+
 
                         <div class="row Summary mt-6" >
                           <!-- Summary -->
-                          <div class="col-md-12 ">
-                            
-                            <div class="summary-section text-center p-2 row">
-                              <div class="col-6 col-md-4 summary-item total">
-                                  <i class="fas fa-calculator"></i> 
-                                   <div class="label">Total Items <b class="value" > 100</b>  </div>                                  
-                              </div>
-
-                              <div class="col-6 col-md-4 summary-item total">
-                                <i class="fas fa-calculator"></i> 
-                                 <div class="label">Total Spend <b class="value" >KSH 500</b>  </div>
+                          
+                            <div class="col-md-12 ">
+                              <div class="summary-section text-center p-2 row">
+                                <div class="col-6 col-md-4 summary-item total">
+                                    <i class="fas fa-calculator"></i> 
+                                    <div class="label">Total <b class="value" >10000 Persons</b>  </div>
+                                    
+                                </div>
+                                
                                 
                             </div>
-                            </div>
-                            
-                          </div>
-                                  
-                        </div>
-
                       
-                          
-                    
 
-                
+                              
+                        
+                                <!-- <span class="value text-center"> <b>100 </b> </span> -->
+                        </div>
+                          
+                       
+                        </div>
+                          
+                      </div>
+
+                </div>
               </div>
 
               <div class="col-sm-4">
@@ -342,213 +350,124 @@
                   <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
                   <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
                 </ol> 
-              </div> 
+              </div>
 
             </div>
             <!--end::Row-->
-            <!-- begin row -->
-             <div class="row mt-2">
-              <div class="col-md-12">
-                <div class="card">
-                  <div class="card-header">
-                      <a class="btn btn-link add-expense-btn" data-bs-toggle="collapse" href="#addExpense" aria-expanded="false" aria-controls="addExpenseAccordion" style="color: #00192D; font-weight:bold; text-decoration: none;">
-                          <span id="toggleIcon">+</span> Click Here to Add operational Expense
-                      </a>
-                  </div>
-          
-                  <div class="card-body collapse" id="addExpense">
-                    <div class="card">
-                      <div class="card-header" style="background: linear-gradient(to right, #00192D, #003D5B, #00788D);">
-                          <h6 class="text-white">Enter Expense Details</h6>
-                      </div>
-                      <div class="card-body">
-                          <div class="form-container">
-                              <form>
-                                  <div class="row g-3">
-                                      <!-- No -->
-                                      <div class="col-md-3">
-                                          <label class="form-label"><b>Expense No</b></label>
-                                          <input type="number" class="form-control" placeholder="123">
-                                      </div>
-                      
-                                      <!-- Expense of the Month -->
-                                      <div class="col-md-5">
-                                          <label class="form-label"><b>Expense for the Month of</b></label>
-                                          <select class="form-select">
-                                              <option selected disabled>Select Month</option>
-                                              <option>January</option>
-                                              <option>February</option>
-                                              <option>March</option>
-                                              <option>April</option>
-                                              <option>May</option>
-                                              <option>June</option>
-                                              <option>July</option>
-                                              <option>August</option>
-                                              <option>September</option>
-                                              <option>October</option>
-                                              <option>November</option>
-                                              <option>December</option>
-                                          </select>
-                                      </div>
-                      
-                                      <!-- Year -->
-                                      <div class="col-md-4">
-                                          <label class="form-label"><b>Year</b></label>
-                                          <input type="number" class="form-control" placeholder="2025">
-                                      </div>
-                                  </div>
-      
-                                  <div class="row g-3 mt-2">
-                                      <div class="col-md-6">
-                                          <label class="form-label"><b>Entry Date</b></label>
-                                          <input type="date" class="form-control">
-                                      </div>
-                                  </div>
-      
-                            
-
-                                  <!-- Expense Table -->
-                                  <div class="row g-3 mt-2">
-                                      <h6 class="text-center" style="color:linear-gradient(to right, #00192D, #003D5B, #00788D) ;"> <b>Add the Spend items in the fields below</b> </h6>
-                                      <table class="table table-bordered table-hover table-striped">
-                                          <thead>
-                                              <tr>
-                                                  <th>Account</th>
-                                                  <th>Description</th>
-                                                  <th>Unit Price</th>
-                                                  <th>Quantity</th>
-                                                  <th>Sub-total</th>
-                                                  <th>Taxes</th>
-                                                  <th>Remove</th>
-                                              </tr>
-                                          </thead>
-                                          <tbody>
-                                              <tr>
-                                                  <td>
-                                                      <select class="form-select">
-                                                          <option selected disabled>Repair and Mantainance</option>
-                                                          <option>Salaries</option>
-                                                          <option>Legal Work</option>
-                                                          <option>Internet</option>
-                                                          
-                                                      </select>
-                                                  </td>
-                                                  <td><textarea class="form-control" rows="1" placeholder="Enter details"></textarea></td>
-                                                  <td><input type="text" class="form-control" placeholder="123"></td>
-                                                  <td><input type="number" class="form-control" placeholder="1"></td>
-                                                  <td><input type="number" class="form-control" placeholder="123"></td>
-                                                  <td>
-                                                    <select class="form-select">
-                                                      <option value="" disabled selected>Select Option</option>
-                                                      <option value="credit_card">VAT 16% Inclusive</option>
-                                                      <option value="paypal">VAT 16% Exclusive</option>
-                                                      <option value="bank_transfer">Zero Rated</option>
-                                                      <option value="bank_transfer">Exempted</option>
-                                                    </select>
-                                                  </td>
-                                                  <td><button type="button" class="btn btn-danger remove-row">Delete</button></td>
-                                              </tr>
-                                          </tbody>
-                                      </table>
-                                  </div>
-      
-                                  <div class="row g-3 mt-2">
-                                      <div class="col-6">
-                                          <button type="button" class="btn btn-custom btn-sm" id="addRow">Add More</button>
-                                      </div>
-                                      <div class="col-6 mt-2 d-flex justify-content-end">
-                                          <button type="submit" class="btn btn-custom btn-sm" style="height: fit-content;"> Submit</button>
-                                      </div>
-                                  </div>
-                                                  
-                              </form>
-                          </div>
-                      </div>
-                  </div>
-                  </div>
-                </div>
-              </div>
-              </div>
-            <!-- /end row -->
           </div>
           <!--end::Container-->
         </div>
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
-            <!-- Info boxes -->
+            <!-- Info boxes --><!-- Info boxes -->
+            <div class="row first mb-2 ">
+                <div class="col-md-4">
+                    <div>
+                                                 
+                        <select id="categoryFilter">
+                            <option value="">-- Select --</option>
+                            <option value="technology">All</option>
+                            <option value="health">Manucho</option>
+                            <option value="business">Ebenezer</option>
+                            <option value="education">Crown Z</option>
+                        </select>
+                      </div>
+                </div>
+
+                <!-- Major Actions column-->
+                <div class="col-md-8 d-flex justify-content-end buttons">
+
+                    <button id="add_provider_btn" class="btn add_provider_btn  me-3">  <i class="bi bi-plus"></i>
+                      <b class="button_item" class="open-btn" onclick="openPopup()"> Add Tenant </b></button>
+
+                      <button id="add_provider_btn" class="btn me-3 " style="background-color: #00192D; color: white; font-size: small; height: fit-content;">  <i class="bi bi-plus"></i>
+                        <b class="button_item" class="open-btn" onclick="openshiftPopup()"> Shift Tenant </b></button>
+
+                    <button id="add_provider_btn" class="btn" style="background-color: #00192D; color: white; font-size: small; height: fit-content;">  <i class="bi bi-bell"></i>
+                    <b class="button_item" class="open-btn" onclick="opennotificationPopup()"> Create_Notification </b></button>
+
+                </div>
+              <!-- /.col -->
+               
+            </div>
+            <!-- /.row -->
+
+
 
             <!-- /.row -->
+            
             <!--begin::Row-->
-            <div class="row first mb-2 mt-2 rounded-circle">
-
-              
-              <!-- /.col -->
-            </div>
-            <!--end::Row-->
-
-            <!--begin::Row-->
-            <div class="row">
-                
-            </div>
-            <!--end::Row-->
-
-           <!--begin::Row-->
             <div class="row">
               <!-- Start col -->
               <div class="col-md-12 ">
                 <div class="card Content">
                     <div class="card-header">
-                      <b>All Operational Expenses</b>
+                      <b>All Tenants</b>
                     </div>
 
                     <div class="card-body">
-                        <table class="table-striped" id="repaireExpenses" style="width: 100%;">
-                            <thead>
-                                <tr>
-                                    <th>Exp Date</th>
-                                    <th>Unit Price</th>
-                                    <th>Qty</th>
-                                    <th>Sub Total</th>
-                                    <th>All Totals</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
+                      <div class="container">
+                        <table id="maintenance" class="table table-striped" style="width: 100%;">
+                          <thead>
+                            <tr>
+                              <th>Full Name</th>                       
+                              <th>ID NO</th>
+                              <th>RESIDENCE</th>
+                              <th>CONTACT</th>
+                              <th>STATUS</th>
+                                <th>ACTIONS</th>
 
-                            <tbody>
-                                <tr>
-                                    <td>20 Nov 2013</td>
-                                    <td>KSH 10000</td>
-                                    <td>2</td>
-                                    <td> KSH 20,000</td>
-                                    <td> <button class="amount total " ><i class="fa fa-dollar-sign"></i> 20000 </button>  </td>
-                                    <td>
-                                      <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Remove"><i class="fa fa-trash"></i>
-                                      </button>
-                                      <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="view"><i class="fa fa-file"></i></button>
-                                  
-                                    </td>
-                                </tr>
-                                <tr>
-                                
-                                    <td>20 Nov 2013</td>
-                                    <td>KSH 10000</td>
-                                    <td>2</td>
-                                    <td>KSH 20,000</td>
-                                    <td> <button class="amount total " ><i class="fa fa-dollar-sign"></i> 20000 </button>  </td>
-                                    <td>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>Edwin</td>
+                              
+                              
+                          
+                              <td> 3801790</td>
+                              <td>Ebenezer</td>
+                              <!-- <td><button onclick="toggleOverlay()">Paid</button></td> -->
+                              <td>0757414721</td>
+                              <td> <button class="status completed"><i class="fa fa-check-circle"></i> Active </button>  </td>
 
-                                      <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-trash"></i>
-                                      </button>
-                                      <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
-                                    </td>
-                                </tr>
-                            </tbody>
-
+                              <td>
+                                <a href="vacate_tenant.php" class="btn btn-sm" style="background-color: #00192D; color:#fff;" data-toggle="tooltip" title="Vacant Paul Pashan from the House"> <i class="fa fa-arrow-right"></i></a>
+                                <button class="btn btn-sm" style="background-color: #AF2A28; color:#fff;"> <i class="fa fa-comment" data-toggle="tooltip" title="Send Paul Pashan an SMS"></i></button>
+                                <button style="background-color: #F74B00; color:#fff;" class="btn btn-sm" data-toggle="tooltip" title="Send Paul Pashan Email"><i class="fa fa-envelope"></i> </button>
+                              </td>
+                            </tr>
+                            <tr>
+                                <td>Joseph</td>
+                              
+                              
+                          
+                                <td> 3801790</td>
+                                <td>Ebenezer</td>
+                                <!-- <td><button onclick="toggleOverlay()">Paid</button></td> -->
+                                <td>0757414721</td>
+                                <td> <button class="status completed"><i class="fa fa-check-circle"></i> Active </button>  </td>
+  
+                                <td>
+                                 
+                                    <a href="vacate_tenant.php" class="btn btn-sm" style="background-color: #00192D; color:#fff;" data-toggle="tooltip" title="Vacant Paul Pashan from the House"> <i class="fa fa-arrow-right"></i></a>
+                                    <button class="btn btn-sm" style="background-color: #AF2A28; color:#fff;"> <i class="fa fa-comment" data-toggle="tooltip" title="Send Paul Pashan an SMS"></i></button>
+                                    <button style="background-color: #F74B00; color:#fff;" class="btn btn-sm" data-toggle="tooltip" title="Send Paul Pashan Email"><i class="fa fa-envelope"></i> </button>
+                                </td>
+                            </tr>
+                            <!-- Add more rows as needed -->
+                          </tbody>
 
                         </table>
-                      
+                      </div>
+
+
+
                     </div>
+
+
+
                     
                 </div>
 
@@ -586,135 +505,108 @@
 
 
 
-<!-- Overlay Cards -->
- 
+<!-- POPUPS -->
 
-  <!-- Lease Modal -->
-<div class="modal fadey" id="leaseyModal" tabindex="-1" aria-labelledby="leaseyModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="leaseyModalLabel"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="container">
-          <div class="form-wrapper">
-              <h1 class="text-warning">Assign Task</h1>
-              <form id="taskForm">
-                <div class="input-group">
-                  <label for="taskName">Task About To Be Assigned:</label>
-                  <input type="text" id="taskName" name="taskName" placeholder="Enter task name" style="border-radius: 10px; width: 100%;"   required>
-              </div>
+<!-- Add Tenant -->
+<div class="popup-overlay"  id="complaintPopup">
+  <div class="popup-content">
+    <button class="close-btn text-secondary" onclick="closePopup()">×</button>
+    
+    <form class="complaint-form ">
+      <h2 class="text-start addTenantHeader">Add Tenant</h2>
+        <label for="name">Tenant Name:</label>
+        <input type="text" id="name" name="name" required>
 
-                  <div class="input-group">
-                      <label for="serviceProvider">Select A Category For The Task</label>
-                  <label for="taskName"></label>
-                      <select id="serviceProvider" name="serviceProvider" style="border-radius: 10px;"  required>
-                          <option value="" id="taskName" disabled selected>Select A Category </option>
-                          <option value="John">Electrical</option>
-                          <option value="Jane">Plumbing</option>
-                          <option value="Mike">Cleaning</option>
-                      </select>
-                  </div>
-                  <div class="input-group">
-                    <label for="serviceProvider">Select Service Provider:</label>
-                    <select id="serviceProvider" name="serviceProvider" style="border-radius: 10px;" required>
-                        <option value="" id="taskName"  disabled selected>Select Provider</option>
-                        <option value="John">John </option>
-                        <option value="Jane">Jane </option>
-                        <option value="Mike">Mike </option>
-                    </select>
-                </div>
+        <label for="number">Kra pin:</label>
+        <input type="number" id="number" name="number" required>
+
+        <label for="email">Email Address:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" required>
 
 
-                  <button type="submit" class="submit-btn" style="border-radius: 10px; background-color: #00192D; width: 50%; margin-left: 6rem;" >Assign</button>
-              </form>
-          </div>
-
-          <!-- <div id="assignedTasks">
-              <h2>Assigned Tasks</h2>
-              <ul id="taskList"></ul>
-          </div> -->
-      </div>
+        <label for="property">Property:</label>
+        <select id="property" required>
+          <option value="">Select Property</option>
+          <option value="High">Manucho</option>
+          <option value="Moderate">Ben 10</option>
+          <option value="Low">Alpha</option>
+        </select>
 
 
-      </div>
-    </div>
+        <label for="unit">Rental Unit:</label>
+        <input type="text" id="unit" name="unit" required>
+
+
+      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
+    </form>
   </div>
 </div>
+<!--End Add Tenant -->
 
-  <!-- Lease Modal -->
-  <div class="modal fade" id="leaseModal" tabindex="-1" aria-labelledby="leaseModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="leaseModalLabel"></h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form class="beasy">
-             <!-- Landlord Information Section -->
-      <!-- Service Provider Information Section -->
-      <div class="form-section">
-        <h3 class="text-warning">Landlord Information</h3>
-         <a href="#"><p>Martin White</p></a>
-        <!-- <label for="landlordName">Landlord Name(Martin White)</label> -->
-        <!-- <input type="text" id="landlordName" name="landlordName" placeholder="Enter your full name" required> -->
+ <!-- Shift Tenant -->
+ <div class="shiftpopup-overlay" id="shiftPopup">
+  <div class="shiftpopup-content">
+    <button class="close-btn text-secondary" onclick="closeshiftPopup()">×</button>
+    <div class="shift">
+    <h2 style="color: #00192D;">Shift Tenant</h2>
+    <label for="tenant">Select Tenant:</label>
 
-        <h3 class="text-warning">Select Service Providers Information</h3>
-        <label for="paymentMethod">Choose:</label>
-        <select id="paymentMethod" name="paymentMethod" required>
-          <option value="bank_transfer">ABX Electricals</option>
-          <option value="bank_transfer">Sunsine Plumbers</option>
-          <option value="bank_transfer">Favored Technologies</option>
-        </select>
-        <h3 class="text-warning">Payment Details</h3>
-        <label for="amount">Payment Amount (KSH)</label>
-        <input type="text" id="landlordName" name="landlordName" placeholder="Enter Amount" required>
+    <select id="tenant">
+        <option value="John Doe">John Doe</option>
+        <option value="Jane Smith">Jane Smith</option>
+        <option value="Mike Johnson">Mike Johnson</option>
+    </select>
 
-        <label for="paymentMethod">Payment Method</label>
-        <select id="paymentMethod" name="paymentMethod" required>
-          <option value="mpesa_transfer" class="bossy">MPESA</option>
-          <option value="mpesa_transfer" class="bossy">Bank</option>
-          <option value="mpesa_transfer" class="bossy">Global Pay</option>
-          <option value="mpesa_transfer" class="bossy">Cash</option>
+    <label for="property">Select New Property/Unit:</label>
+    <select id="property">
+        <option value="Apartment 101">Apartment 101</option>
+        <option value="House B3">House B3</option>
+        <option value="Condo 23A">Condo 23A</option>
+    </select>
+    <label for="property">Select Unit:</label>
+    <select id="property" style="width: 100%;padding: 10px;margin-bottom: 15px;border-radius: 5px;border: 1px solid #ccc;">
+        <option value="Apartment 101">A55</option>
+        <option value="House B3">B3</option>
+        <option value="Condo 23A">CA</option>
+    </select>
+    <br>
 
-        </select>
-         <!-- Submit Button -->
-         <button type="submit" class="bossy"> MAKE PAYMENT</button>
-      </div>
+    <button  type="submit" class="submit-btn" onclick="shiftTenant()"  style="background-color: #00192D; color: #f1f1f1;">Confirm Shift</button>
 
-
-
-      <!-- Payment Details Section
-      <div class="form-section">
-        <h3>Payment Details</h3>
-        <label for="amount">Payment Amount (KSH)</label>
-        <input type="number" id="amount" name="amount" placeholder="Enter the amount to pay" min="1" required>
-
-        <label for="paymentMethod">Payment Method</label>
-        <select id="paymentMethod" name="paymentMethod" required>
-          <option value="mpesa_transfer" class="bossy">MPESA</option>
-        </select>
-      </div> -->
-
-          </form>
-        </div>
-      </div>
-    </div>
   </div>
+  </div>
+</div>
+<!-- End shift popup -->
 
-<!-- End view announcement -->
-<!-- end overlay card. -->
+  <!-- notification popup -->
+<div class="notificationpopup-overlay" id="notificationPopup">
+  <div class="notificationpopup-content">
+    <button class="close-btn text-secondary" onclick="closenotificationPopup()">×</button>
+    <h2 style="color: #00192D;">Notification</h2>
 
-    <!--begin::Script-->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <label for="property">Recepients:</label>
+    <select id="property" required>
+      <option value=""disabled>Select Recepient</option>
+      <option value="High">Manucho</option>
+      <option value="Moderate">Ben 10</option>
+      <option value="Low">Alpha</option>
+    </select>
+
+    <textarea id="notes" name="notes" rows="10" cols="98" placeholder="Enter any additional information..."></textarea>
+
+      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SEND</button>
+  </div>
+</div>
+<!-- End Notification popup -->
 
 
 
-<!-- Overlay scripts -->
- <!-- View announcements script -->
+
+<!-- END POPUPS -->
+ 
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 
@@ -743,20 +635,7 @@
      });
  </script>
 
- <!-- End view announcement script -->
-
- <script>
-  // Function to toggle the visibility of the overlay
-  function toggleOverlay() {
-    var overlay = document.getElementById('overlay');
-    // If overlay is hidden, show it
-    if (overlay.style.display === "none" || overlay.style.display === "") {
-      overlay.style.display = "flex";
-    } else {
-      overlay.style.display = "none";
-    }
-  }
-</script>
+ 
 
 
     <script
@@ -773,28 +652,46 @@
     <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
 
 
+<!-- Scripts For PopUps -->
+        <script>
+          // Function to open the complaint popup
+          function openshiftPopup() {
+            document.getElementById("shiftPopup").style.display = "flex";
+          }
 
-<!-- more options -->
-<script>
+          // Function to close the complaint popup
+          function closeshiftPopup() {
+            document.getElementById("shiftPopup").style.display = "none";
+          }
+        </script>
 
-  // JavaScript to handle hover and hide functionality
-  const  more= document.getElementById("more");
-  const more_icon = document.getElementById("more_icon");
-  const more_options = document.getElementById("more_options");
+        <script>
+          // Function to open the complaint popup
+          function opennotificationPopup() {
+            document.getElementById("notificationPopup").style.display = "flex";
+          }
 
-  // Show panel when hovering over the accordion
-  more_icon.addEventListener("mouseenter", () => {
-    more_options.style.display = "block";
-  });
+          // Function to close the complaint popup
+          function closenotificationPopup() {
+            document.getElementById("notificationPopup").style.display = "none";
+          }
+        </script>
 
-  // Hide panel when moving out of both accordion and panel
-   more.addEventListener("mouseleave", () => {
-    more_options.style.display = "none";
-});
+        <script>
+          // Function to open the complaint popup
+          function openPopup() {
+            document.getElementById("complaintPopup").style.display = "flex";
+          }
 
+          // Function to close the complaint popup
+          function closePopup() {
+            document.getElementById("complaintPopup").style.display = "none";
+          }
+        </script>
 
-</script>
-    <!-- Begin script for datatable -->
+<!--End Scripts For PopUps -->
+
+    <!-- Script for datatable -->
     <script>
 
             document.addEventListener("DOMContentLoaded", function() {
@@ -809,6 +706,7 @@
             });
         });
     </script>
+
 
      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -825,73 +723,24 @@
 
 
 
-<!-- 
-  Add expense scripts.
 
--->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+$(document).ready(function() {
+    var table = $('#maintenance').DataTable({
+        "lengthChange": false,
+        "dom": 'Bfrtip',
+        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+        "initComplete": function() {
+            // Move the buttons to the first .col-md-6
+            table.buttons().container().appendTo('#maintenance_wrapper .col-md-6:eq(0)');
 
-    document.addEventListener("DOMContentLoaded", function () {
-        const addRowButton = document.getElementById("addRow");
-        const tableBody = document.querySelector("tbody");
-
-        function createNewRow() {
-            const newRow = document.createElement("tr");
-            newRow.innerHTML = `
-                <td>
-                    <select class="form-select">
-                        <option selected disabled>Expense</option>
-                        <option>Rent</option>
-                        <option>Water</option>
-                        <option>Internet</option>
-                        <option>Taxes</option>
-                        <option>Salaries</option>
-                        <option>Others</option>
-                    </select>
-                </td>
-                <td><textarea class="form-control" rows="2" placeholder="Enter details"></textarea></td>
-                <td><input type="text" class="form-control" placeholder="123"></td>
-                <td><input type="number" class="form-control" placeholder="1"></td>
-                <td><input type="number" class="form-control" placeholder="123"></td>
-                <td><button type="button" class="btn btn-danger remove-row">Delete</button></td>
-            `;
-
-            newRow.querySelector(".remove-row").addEventListener("click", function () {
-                newRow.remove();
-                checkIfTableEmpty();
-            });
-
-            return newRow;
+            // Move the search box to the second .col-md-6
+            $('#maintenance_filter').appendTo('#maintenance_wrapper .col-md-6:eq(1)');
         }
-
-        function checkIfTableEmpty() {
-            if (tableBody.children.length === 0) {
-                tableBody.appendChild(createNewRow()); // Add default row if empty
-            }
-        }
-
-        addRowButton.addEventListener("click", function () {
-            tableBody.appendChild(createNewRow());
-        });
-
-        // Initialize the first row in case user removes all
-        checkIfTableEmpty();
     });
+});
 
 
-</script>
-
-
-
-<script>
-  $(document).ready(function() {
-      $('#repaireExpenses').DataTable({
-          "lengthChange": false,
-          "dom": 'Bfrtip',
-          "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-      });
-  });
 </script>
           
 <script>
@@ -903,7 +752,7 @@
 
 <!--Begin sidebar script -->
 <script>
-  fetch('../../bars/sidebar.html')  // Fetch the file
+  fetch('../bars/sidebar.html')  // Fetch the file
       .then(response => response.text()) // Convert it to text
       .then(data => {
           document.getElementById('sidebar').innerHTML = data; // Insert it
@@ -920,7 +769,7 @@
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <script src="../../../../dist/js/adminlte.js"></script>
+    <script src="../../../dist/js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';

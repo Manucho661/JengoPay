@@ -17,7 +17,9 @@
       content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard"
     />
     <!--end::Primary Meta Tags-->
-    <!--begin::Fonts-->
+    <!--begin::Fonts-->    
+
+
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
@@ -40,9 +42,13 @@
       integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
+    <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -51,184 +57,39 @@
       integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-      a{
-          text-decoration: none;
-      }
-      
-      body{
-          
-          background-color: rgba(128, 128, 128, 0.1);
-      }
-      .summaryItem{
-          font-family: 'Playfair Display', serif; /* Elegant for creative projects */
-font-size: 25px;
-font-weight: bold;
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-font-weight: 400; /* Lighter weight for a faint look */
-letter-spacing: 1px; /* Slight spacing for an airy feel */
-color:gray;
+    <link rel="stylesheet" href="balancesheet.css">
 
-      }
-      .summaryItemOne{
-          font-family: 'Playfair Display', serif; /* Elegant for creative projects */
-font-size: 25px;
-font-weight: bold;
+   <link rel="stylesheet" href="">
 
-font-weight: 400; /* Lighter weight for a faint look */
-letter-spacing: 1px; /* Slight spacing for an airy feel */
-color: #00192D;
+    <!-- scripts for data_table -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> 
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
 
-      }
-      .custom-btn{
-          background-color: #00192D;
-  border-color: #00192D;
-  color:  #FFC107; /* White background */
-      }
-
-  .statement{
-      background-color: #FFC107;
-      color: #00192D ;
-
-      }
-
-      .profile-card {
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    /* padding: 20px; */
+    <!-- Include XLSX and FileSaver.js for Excel export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     
-    margin: 30px auto;
-  }
-  .profile-picture {
-    border-radius: 10px;
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    border: 4px solid #007bff;
-  }
-  .profile-details h2 {
-    /* margin-bottom: 10px; */
     
-  }
-  .profile-details p {
-    /* /margin: 5px 0; */
-    color: #6c757d;
-  }
-  .profile_details{
-      display: flex;
-      
-  }
-  .profile_picture{
-      margin-right: 4%;
-  }
-  .profile_info .one{
-      color: #666;
-      font-size: 14px;
-      display: block;
-      text-align: justify;   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
-  }
-  .other_profile_details{
-      display: block;
-      color: #666;
-      font-size: 14px;
-      display: block;
-      text-align: justify;
-  }
-  h2, h3 {
-            margin: 0;
-        }
+  </head>
 
-        table {
-             width: 100%; 
-            border-collapse: collapse; 
-            margin-top: 15px;
-        }
-
-        th, td {
-            border-bottom: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background: #f4f4f4;
-            text-align: left;
-        }
-
-        td:first-child {
-            text-align: left;
-            padding-left: 10px;
-        }
-
-        td:last-child {
-            text-align: right;
-            padding-right: 10px;
-        }
-        /* .category {
-            font-weight: bold;
-            background: #e3f2fd;
-            text-align: left;
-            margin-left: 2rem;
-        } */
-
-        .total {
-            font-weight: bold;
-            background: #ffeb3b;
-        }
-
-        .total-equity {
-            font-weight: bold;
-            background: #4CAF50;
-            color: white;
-        }
-        /* .statement-container {
-            width: 600px;
-            margin: auto;
-            border: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-            background: white;
-        } */
-        .filter-container {
-            background-color: #ffffff;
-            padding: 20px;
-            margin: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .filter-container select, .filter-container input {
-            padding: 10px;
-            margin-right: 10px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-
-        .filter-container button {
-            padding: 10px 20px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .filter-container button:hover {
-            background-color: #0056b3;
-        }
-
+  <style>
+    .sub-category{
+      padding-left: 35px !important;
+    }
+    .sub-category.total{
+      font-weight: 600;
+    }
+    .sub-current-assets.total{
+      font-weight: 600;
+    }
 
   </style>
-  </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
@@ -244,7 +105,7 @@ color: #00192D;
               </a>
             </li>
             <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
-            <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li> -->
+            <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li>
           </ul>
           <!--end::Start Navbar Links-->
           <!--begin::End Navbar Links-->
@@ -268,7 +129,7 @@ color: #00192D;
                   <div class="d-flex">
                     <div class="flex-shrink-0">
                       <img
-                        src="../../dist/assets/img/user1-128x128.jpg"
+                        src="../../../dist/assets/img/user1-128x128.jpg"
                         alt="User Avatar"
                         class="img-size-50 rounded-circle me-3"
                       />
@@ -294,7 +155,7 @@ color: #00192D;
                   <div class="d-flex">
                     <div class="flex-shrink-0">
                       <img
-                        src="../../dist/assets/img/user8-128x128.jpg"
+                        src="../../../dist/assets/img/user8-128x128.jpg"
                         alt="User Avatar"
                         class="img-size-50 rounded-circle me-3"
                       />
@@ -320,7 +181,7 @@ color: #00192D;
                   <div class="d-flex">
                     <div class="flex-shrink-0">
                       <img
-                        src="../../dist/assets/img/user3-128x128.jpg"
+                        src="../../../dist/assets/img/user3-128x128.jpg"
                         alt="User Avatar"
                         class="img-size-50 rounded-circle me-3"
                       />
@@ -385,11 +246,11 @@ color: #00192D;
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <img
-                  src="../../dist/assets/img/user2-160x160.jpg"
+                  src="17.jpg"
                   class="user-image rounded-circle shadow"
                   alt="User Image"
                 />
-                <span class="d-none d-md-inline">Alexander Pierce</span>
+                <span class="d-none d-md-inline">  <b>JENGO PAY</b>  </span>
               </a>
               <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                 <!--begin::User Image-->
@@ -438,24 +299,21 @@ color: #00192D;
           <!--begin::Brand Link-->
           <a href="./index.html" class="brand-link">
             <!--begin::Brand Image-->
-            <!-- <img
-              src="../../dist/assets/img/AdminLTELogo.png"
+            <img
+              src="../../../dist/assets/img/AdminLTELogo.png"
               alt="AdminLTE Logo"
               class="brand-image opacity-75 shadow"
-            /> -->
+            />
             <!--end::Brand Image-->
             <!--begin::Brand Text-->
-            <span class="brand-text fw-light"></span>
+            <span class="brand-text fw-light">AdminLTE 4</span>
             <!--end::Brand Text-->
           </a>
           <!--end::Brand Link-->
         </div>
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
-        <div class="sidebar-wrapper">
-          <div id="sidebar"></div>
-
-        </div>
+        <div id="sidebar"></div>
         <!--end::Sidebar Wrapper-->
       </aside>
       <!--end::Sidebar-->
@@ -465,199 +323,368 @@ color: #00192D;
         <div class="app-content-header">
           <!--begin::Container-->
           <div class="container-fluid">
-                <!-- Filter Section -->
-    <div class="filter-container">
-      <h3>Cashflow</h3> 
-     <label for="date-range">
-       <i class="fas fa-filter"></i>
-       Filters:</label>
-     <select id="date-range">AS of :Month
-         <option value="Q1" disabled>Month</option>
-         <option value="Q1">January</option>
-         <option value="Q2">February</option>
-         <option value="Q3">March</option>
-         <option value="Q4">April</option>
-         <option value="Q1">May</option>
-         <option value="Q1">June</option>
-         <option value="Q2">July</option>
-         <option value="Q3">August</option>
-         <option value="Q4">September</option>
-         <option value="Q1">October</option>
-         <option value="Q1">November</option>
-         <option value="Q2">December</option>
-     </select>
-
-     <label for="category">Basis:</label>
-     <select id="category">
-         <option value="cash">Cash</option>
-         <option value="accrual">Accrual</option>
-     </select>
-
-     <!-- <button onclick="applyFilter()">RUN REPORTS</button> -->
- </div>
-            <div class="statement-container">
-              <button id="exportButton" style="border-radius: 10px; margin-left: 90%;">
-                <i class="fas fa-share-square"></i> Export
-            </button>        
-                <h2>Cash Flow Statement|CROWN Z TOWERS(Monthly)</h2>
-             
-
-                 <!-- /.col -->
-        <div class="col-md-12">
-            <div class="card" >
-              <div class="card-header" style="background-color: #00192D;">
-                <h3 class="card-title"  style="color: #FFC107; ">Operating Activities
-                 </h3>
-              
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                    <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                    <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                  </button>
-                </div>
-                 <!-- /.card-tools -->
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body text-center">
-
-                    <table>
-                        <tr>
-                        <th style="text-align: left; color: #FFC107;">Operating Activities</th>
-                        <th style="text-align: right; color: #FFC107;">Amount (KSH)</th>
-                    </tr>
-                    <tr><td>Rental Payments Collected</td><td>KSH8,000</td></tr>
-                    <tr><td>Maintenance Costs Paid</td><td>(KSH1,500)</td></tr>
-                    <tr><td>Utility Bills Paid</td><td>(KSH300)</td></tr>
-                    <tr><td>Late Fees Collected</td><td>KSH200</td></tr>
-                    <tr><td>Salaries Paid</td><td>(KSH2,500)</td></tr>
-                    <tr class="#" style="background-color: #FFC107;"><td>Net Cash from Operating Activities</td><td>KSH3,900</td></tr>
-                        
-                </table>
-            </div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<hr>
-             <!-- /.col -->
-        <div class="col-md-12">
-            <div class="card card-success">
-              <div class="card-header" style="background-color: #00192D;">
-                <h3 class="card-title"  style="color: #FFC107; ">Investing Activities</h3>
-              
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                    <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                    <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                  </button>
-                </div>
-                 <!-- /.card-tools -->
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body text-center">
-                    <table>
-
-                    <tr>
-                        <th style="text-align: left; color: #FFC107;">Investing Activities</th>
-                        <th style="text-align: right; color: #FFC107;">Amount (KSH)</th>
-                    </tr>
-                    <tr><td>New Equipment Purchase</td><td>(KSH2,000)</td></tr>
-                    <tr><td>Sale of Old Equipment</td><td>KSH500</td></tr>
-                    <tr><td>Property Improvements</td><td>(KSH1,500)</td></tr>
-                    <tr class="#" style="background-color: #FFC107;" ><td>Net Cash from Investing Activities</td><td>(KSH3,000)</td></tr>
-                </table>
-                </div>
-            </div>
-            <hr>
+            <!--begin::Row-->
             
-             <!-- /.col -->
-        <div class="col-md-12">
-            <div class="card card-success">
-              <div class="card-header" style="background-color: #00192D;">
-                <h3 class="card-title"  style="color: #FFC107; ">Financing Activities</h3>
-              
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                    <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                    <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                  </button>
-                </div>
-                 <!-- /.card-tools -->
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body text-center">
-                    <table>
 
-                    <tr>
-                        <th style="text-align: left; color: #FFC107;">Financing Activities</th>
-                        <th style="text-align: right; color: #FFC107;">Amount (KSH)</th>
-                    </tr>
-                    <tr><td>Loan Taken</td><td>KSH5,000</td></tr>
-                    <tr><td>Loan Repayment</td><td>(KSH1,000)</td></tr>
-                    <tr><td>Shareholder Capital</td><td>KSH2,000</td></tr>
-                    <tr class="#" style="background-color: #FFC107;"><td>Net Cash from Financing Activities</td><td>KSH6,000</td></tr>
-        
-                    <tr class="net-total"><td>Net Increase in Cash</td><td>KSH6,900</td></tr>
-                    <tr><td>Beginning Cash Balance</td><td>KSH10,000</td></tr>
-                    <tr class="#" style="background-color: #FFC107;"><td>Ending Cash Balance</td><td>KSH16,900</td></tr>
-                </table>
-                </div>
+            <div class="row">
+              <div class="col-sm-8">
+                          <h3 class="mb-0 contact_section_header"> <i class="fas fa-file-invoice-dollar" style=" color:#FFC107;"></i> Cash Flow</h3>
+              </div>
+
+              <div class="col-sm-4">
+                <ol class="breadcrumb float-sm-end">
+                  <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                </ol> 
+              </div> 
+
             </div>
-
+            <!--end::Row-->
             
-            </div>
-        </main>
-                <!-- /.card-body -->
-              </div>
-              <!-- /.card -->
-            </div>
-                       
-                </div>
-                </div>
-                <!-- /.card-body -->
-              </div>
-              <!-- /.card -->
-            </div>
-        
-               
+            <!-- /end row -->
+          </div>
+          <!--end::Container-->
+        </div>
+        <div class="app-content">
+          <!--begin::Container-->
+          <div class="container-fluid">
+            <!-- Info boxes -->
 
+            <!-- /.row -->
+            <!--begin::Row-->
+            <div class="row first mb-2 mt-2 rounded-circle">
+
+              
+              <!-- /.col -->
+            </div>
+            <!--end::Row-->
+
+            <!--begin::Row-->
+            <div class="row table_buttons mb-2 " >
+              
+                <div class="col-md-6">
+                  <div class="filter-container">
+                    <div>
+                      <label for="categoryFilter" class="filter-label">Property</label>
+                      <br>
+                      <select id="categoryFilter">
+                          <option value="">-- Select --</option>
+                          <option value="technology">All</option>
+                          <option value="health">Manucho</option>
+                          <option value="business">Ebenezer</option>
+                          <option value="education">Crown Z</option>
+                      </select>
+                    </div>
+                    <div>
+                        <label for="filterDate" class="filter-label">Ending</label>
+                        <br>
+                        <input type="date" id="filterDate" />
+                    </div>
+                </div>
+
+                </div>
+                <div class="col-md-6 d-flex justify-content-end" style="position: relative;" > 
+                  <div style="position: absolute; bottom: 0;">
+                    <button  class="pdf_button"  style="height: fit-content; padding: 4px;" id="downloadBtn"> <i class="fas fa-file-pdf" style="font-size: 30px; padding: 5x; color: white"></i>  </button> 
+                    <button class="excel_button" style="height: fit-content; padding: 4px;" onclick="exportToExcel()"> <i class="fas fa-file-excel" style="font-size: 30px;  color: white"></i> </button>
+                  </div>
+                 
+                </div> 
+            </div>
+            <!--end::Row-->
+
+           <!--begin::Row-->
+            <div class="row">
+              <!-- Start col -->
+               <div class="container balancesheet">
+                <div>
+                   <h3 class=" text-start  balancesheet-header">For the year ending december 31, 2024</h3>
+                   <div class="table-responsive">
+                    <table class="table table-striped" id="myTable">
+                        <thead class="thead">
+                            <tr>
+                                <th >Description</th>
+                                <th  >Amount (KSH)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Assets Section -->
+                           
+
+                            <tr>
+                                <td class="non-current-assets fw-bold">Operating Activities:</td>
+                                <td></td>
+                            </tr>
+                            <tr class="sub-current-assets">
+                                <td class="sub-category"> Property Investments </td>
+                                <td>20,000</td>
+                            </tr>
+                            <tr class="sub-current-assets" >
+                                <td class="sub-category">Accumulated Depreciation</td>
+                                <td>(30,000)</td>
+                            </tr>
+                            <tr  class="sub-current-assets total" class="fw-bold">
+                                <td class="sub-category">Net cash from operating activities</td>
+                                <td>(20,000)</td>
+                            </tr>
+                            <tr>
+                                <td class="current-assets fw-bold">Investing Activities:</td>
+                                <td></td>
+                            </tr>
+                            <tr class="sub-current-assets">
+                                <td class="sub-category" >Purchase of new equipment</td>
+                                <td>(15,000)</td>
+                            </tr>
+                            <tr class="sub-current-assets" >
+                                <td class="sub-category">Sale of old equipment </td>
+                                <td>10,000</td>
+                            </tr>
+                            
+                            <tr class="sub-current-assets total "  class="fw-bold" >
+                                <td class="sub-category">Net cash from investing activities </td>
+                                <td>(5,000)</td>
+                            </tr>
+                            
+                            
+                            <!-- Financing Section -->
+                            
+                            
+                            <tr>
+                              <td class="current-assets fw-bold">Financing Activities:</td>
+                              <td></td>
+                           </tr>
+                            
+                            <tr class="sub-current-assets">
+                                <td class="sub-category" >Loan received from the bank</td>
+                                <td>5,000</td>
+                            </tr>
+                            <tr class="sub-current-assets">
+                                <td class="sub-category" >Loan repayment</td>
+                                <td>($2,000)</td>
+                            </tr>
+                            <tr class="sub-current-assets">
+                              <td class="sub-category" >Owner's withdrawal</td>
+                              <td>($1,000) </td>
+                            </tr>
+                            <tr class="sub-current-assets total" class="fw-bold"  >
+                                <td class="sub-category" >Net cash from financing activities</td>
+                                <td>$2,000 </td>
+                            </tr>
+
+                            <!-- Total Liabilities & Equity -->
+                            <tr class="fw-bold">
+                                <td>Cash Flow For the year Ending December 31, 2024</td>
+                                <td>($22,000)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+              <!-- /.col -->
+            </div>
+            <!--end::Row-->
+          </div>
+          <!--end::Container-->
+        </div>
+        <!--end::App Content-->
+      </main>
+      <!--end::App Main-->
+      <!--begin::Footer-->
+
+
+
+      <footer class="app-footer">
+        <!--begin::To the end-->
+        <div class="float-end d-none d-sm-inline">Anything you want</div>
+        <!--end::To the end-->
+        <!--begin::Copyright-->
+        <strong>
+          Copyright &copy; 2014-2024&nbsp;
+          <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;"> JENGO PAY</a>.
+        </strong>
+        All rights reserved.
+        <!--end::Copyright-->
+      </footer>
+      <!--end::Footer-->
+    </div>
     <!--end::App Wrapper-->
+
+
+
+
+<!-- Overlay Cards -->
+ 
+
+  <!-- Lease Modal -->
+<div class="modal fadey" id="leaseyModal" tabindex="-1" aria-labelledby="leaseyModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="leaseyModalLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="form-wrapper">
+              <h1 class="text-warning">Assign Task</h1>
+              <form id="taskForm">
+                <div class="input-group">
+                  <label for="taskName">Task About To Be Assigned:</label>
+                  <input type="text" id="taskName" name="taskName" placeholder="Enter task name" style="border-radius: 10px; width: 100%;"   required>
+              </div>
+
+                  <div class="input-group">
+                      <label for="serviceProvider">Select A Category For The Task</label>
+                  <label for="taskName"></label>
+                      <select id="serviceProvider" name="serviceProvider" style="border-radius: 10px;"  required>
+                          <option value="" id="taskName" disabled selected>Select A Category </option>
+                          <option value="John">Electrical</option>
+                          <option value="Jane">Plumbing</option>
+                          <option value="Mike">Cleaning</option>
+                      </select>
+                  </div>
+                  <div class="input-group">
+                    <label for="serviceProvider">Select Service Provider:</label>
+                    <select id="serviceProvider" name="serviceProvider" style="border-radius: 10px;" required>
+                        <option value="" id="taskName"  disabled selected>Select Provider</option>
+                        <option value="John">John </option>
+                        <option value="Jane">Jane </option>
+                        <option value="Mike">Mike </option>
+                    </select>
+                </div>
+
+
+                  <button type="submit" class="submit-btn" style="border-radius: 10px; background-color: #00192D; width: 50%; margin-left: 6rem;" >Assign</button>
+              </form>
+          </div>
+
+          <!-- <div id="assignedTasks">
+              <h2>Assigned Tasks</h2>
+              <ul id="taskList"></ul>
+          </div> -->
+      </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Lease Modal -->
+  <div class="modal fade" id="leaseModal" tabindex="-1" aria-labelledby="leaseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="leaseModalLabel"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form class="beasy">
+             <!-- Landlord Information Section -->
+      <!-- Service Provider Information Section -->
+      <div class="form-section">
+        <h3 class="text-warning">Landlord Information</h3>
+         <a href="#"><p>Martin White</p></a>
+        <!-- <label for="landlordName">Landlord Name(Martin White)</label> -->
+        <!-- <input type="text" id="landlordName" name="landlordName" placeholder="Enter your full name" required> -->
+
+        <h3 class="text-warning">Select Service Providers Information</h3>
+        <label for="paymentMethod">Choose:</label>
+        <select id="paymentMethod" name="paymentMethod" required>
+          <option value="bank_transfer">ABX Electricals</option>
+          <option value="bank_transfer">Sunsine Plumbers</option>
+          <option value="bank_transfer">Favored Technologies</option>
+        </select>
+        <h3 class="text-warning">Payment Details</h3>
+        <label for="amount">Payment Amount (KSH)</label>
+        <input type="text" id="landlordName" name="landlordName" placeholder="Enter Amount" required>
+
+        <label for="paymentMethod">Payment Method</label>
+        <select id="paymentMethod" name="paymentMethod" required>
+          <option value="mpesa_transfer" class="bossy">MPESA</option>
+          <option value="mpesa_transfer" class="bossy">Bank</option>
+          <option value="mpesa_transfer" class="bossy">Global Pay</option>
+          <option value="mpesa_transfer" class="bossy">Cash</option>
+
+        </select>
+         <!-- Submit Button -->
+         <button type="submit" class="bossy"> MAKE PAYMENT</button>
+      </div>
+
+
+
+      <!-- Payment Details Section
+      <div class="form-section">
+        <h3>Payment Details</h3>
+        <label for="amount">Payment Amount (KSH)</label>
+        <input type="number" id="amount" name="amount" placeholder="Enter the amount to pay" min="1" required>
+
+        <label for="paymentMethod">Payment Method</label>
+        <select id="paymentMethod" name="paymentMethod" required>
+          <option value="mpesa_transfer" class="bossy">MPESA</option>
+        </select>
+      </div> -->
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- End view announcement -->
+<!-- end overlay card. -->
+
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <script>
-      document.getElementById("exportButton").addEventListener("click", function() {
-          // Example CSV content
-          let csvContent = "data:text/csv;charset=utf-8,Name,Amount\nJohn,1000\nJane,1500\nDoe,1200";
-          
-          // Create a downloadable link
-          let encodedUri = encodeURI(csvContent);
-          let link = document.createElement("a");
-          link.setAttribute("href", encodedUri);
-          link.setAttribute("download", "export_data.csv");
 
-          // Append the link and trigger click
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-      });
-  </script>
 
-    <script>
-        // Initialize DataTable
-        $(document).ready(function () {
-            $('#myTable').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableOne').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableThree').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableFour').DataTable();
-        });
-     </script>
+
+<!-- Overlay scripts -->
+ <!-- View announcements script -->
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+ <script>
+  const   more_announcement = document.getElementById('more_announcement_btn');
+  const   view_announcement = document.getElementById('view_announcement');
+  const   close_overlay = document.getElementById("close-overlay-btn");
+
+  more_announcement.addEventListener('click', ()=>{
+
+     view_announcement.style.display= "flex";
+     document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
+     const now = new Date();
+            const formattedTime = now.toLocaleString(); // Format the date and time
+            timestamp.textContent = `Sent on: ${formattedTime}`;
+
+
+  });
+
+     close_overlay.addEventListener('click', ()=>{
+
+     view_announcement.style.display= "none";
+     document.querySelector('.app-wrapper').style.opacity = '1';
+
+
+     });
+ </script>
+
+ <!-- End view announcement script -->
+
+ <script>
+  // Function to toggle the visibility of the overlay
+  function toggleOverlay() {
+    var overlay = document.getElementById('overlay');
+    // If overlay is hidden, show it
+    if (overlay.style.display === "none" || overlay.style.display === "") {
+      overlay.style.display = "flex";
+    } else {
+      overlay.style.display = "none";
+    }
+  }
+</script>
+
+
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
       integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
@@ -670,11 +697,180 @@ color: #00192D;
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
+
+
+
+<!-- more options -->
+<script>
+
+  // JavaScript to handle hover and hide functionality
+  const  more= document.getElementById("more");
+  const more_icon = document.getElementById("more_icon");
+  const more_options = document.getElementById("more_options");
+
+  // Show panel when hovering over the accordion
+  more_icon.addEventListener("mouseenter", () => {
+    more_options.style.display = "block";
+  });
+
+  // Hide panel when moving out of both accordion and panel
+   more.addEventListener("mouseleave", () => {
+    more_options.style.display = "none";
+});
+
+
+</script>
+    <!-- Begin script for datatable -->
+    <script>
+
+            document.addEventListener("DOMContentLoaded", function() {
+            let table = $('#maintenanc').DataTable({
+                lengthChange: false, // Removes "Show [X] entries"
+                dom: 't<"bottom"p>', // Removes default search bar & keeps only table + pagination
+            });
+
+            // Link custom search box to DataTables search
+            $('#searchInput').on('keyup', function () {
+                table.search(this.value).draw();
+            });
+        });
+    </script>
+
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
+
+
+
+<!-- 
+  Add expense scripts.
+
+-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const addRowButton = document.getElementById("addRow");
+        const tableBody = document.querySelector("tbody");
+
+        function createNewRow() {
+            const newRow = document.createElement("tr");
+            newRow.innerHTML = `
+                <td>
+                    <select class="form-select">
+                        <option selected disabled>Expense</option>
+                        <option>Rent</option>
+                        <option>Water</option>
+                        <option>Internet</option>
+                        <option>Taxes</option>
+                        <option>Salaries</option>
+                        <option>Others</option>
+                    </select>
+                </td>
+                <td><textarea class="form-control" rows="2" placeholder="Enter details"></textarea></td>
+                <td><input type="text" class="form-control" placeholder="123"></td>
+                <td><input type="number" class="form-control" placeholder="1"></td>
+                <td><input type="number" class="form-control" placeholder="123"></td>
+                <td><button type="button" class="btn btn-danger remove-row">Delete</button></td>
+            `;
+
+            newRow.querySelector(".remove-row").addEventListener("click", function () {
+                newRow.remove();
+                checkIfTableEmpty();
+            });
+
+            return newRow;
+        }
+
+        function checkIfTableEmpty() {
+            if (tableBody.children.length === 0) {
+                tableBody.appendChild(createNewRow()); // Add default row if empty
+            }
+        }
+
+        addRowButton.addEventListener("click", function () {
+            tableBody.appendChild(createNewRow());
+        });
+
+        // Initialize the first row in case user removes all
+        checkIfTableEmpty();
+    });
+
+
+</script>
+
+
+
+<!-- BalanceTable scripts -->
+          
+  <script>
+    function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            let doc = new jsPDF();
+
+            doc.text("BALANCE_SHEET/DHABITI PROPERTIES ", 10, 10);  // Title
+
+            let table = document.getElementById("myTable");
+            let rows = [];
+            
+            for (let i = 0; i < table.rows.length; i++) {
+                let row = [];
+                for (let j = 0; j < table.rows[i].cells.length; j++) {
+                    row.push(table.rows[i].cells[j].innerText);
+                }
+                rows.push(row);
+            }
+
+            doc.autoTable({
+                head: [rows[0]],  // Table Headers
+                body: rows.slice(1),  // Table Data
+            });
+
+            doc.save("table_data.pdf");
+        }
+        function exportToExcel() {
+            let table = document.getElementById("myTable");
+            let workbook = XLSX.utils.table_to_book(table, {sheet: "Sheet1"});
+            let excelFile = XLSX.write(workbook, {bookType: 'xlsx', type: 'array'});
+            let blob = new Blob([excelFile], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+            saveAs(blob, "table_data.xlsx");
+        }
+
+    </script>
+
+    </script>
+    <!-- End script for data_table -->
+
+<!--Begin sidebar script -->
+<script>
+  fetch('../bars/sidebar.html')  // Fetch the file
+      .then(response => response.text()) // Convert it to text
+      .then(data => {
+          document.getElementById('sidebar').innerHTML = data; // Insert it
+      })
+      .catch(error => console.error('Error loading the file:', error)); // Handle errors
+</script>
+<!-- end sidebar script -->
+
+
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
       crossorigin="anonymous"
-    ></script>
+    ></script>    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
     <script src="../../../dist/js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
@@ -698,8 +894,6 @@ color: #00192D;
         }
       });
     </script>
-    <!-- Bootstrap Bundle with Popper -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!--end::OverlayScrollbars Configure-->
     <!-- OPTIONAL SCRIPTS -->
     <!-- apexcharts -->
@@ -708,6 +902,28 @@ color: #00192D;
       integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
       crossorigin="anonymous"
     ></script>
+
+
+    <!-- DataTable Script -->
+
+    <script>
+      $(document).ready(function() {
+          var table = $('#balanceSheet').DataTable({
+              "lengthChange": false,
+              "dom": 'Bfrtip',
+              "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+              "initComplete": function() {
+                  // Move the buttons to the first .col-md-6
+                  table.buttons().container().appendTo('#balanceSheet_wrapper .col-md-6:eq(0)');
+      
+                  // Move the search box to the second .col-md-6
+                  $('#balanceSheet_filter').appendTo('#balanceSheet_wrapper .col-md-6:eq(1)');
+              }
+          });
+      });
+      </script>
+
+
     <script>
       // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
       // IT'S ALL JUST JUNK FOR DEMO
@@ -722,173 +938,157 @@ color: #00192D;
       // - MONTHLY SALES CHART -
       //-----------------------
 
-      const sales_chart_options = {
-        series: [
-          {
-            name: 'Digital Goods',
-            data: [28, 48, 40, 19, 86, 27, 90],
-          },
-          {
-            name: 'Electronics',
-            data: [65, 59, 80, 81, 56, 55, 40],
-          },
-        ],
-        chart: {
-          height: 180,
-          type: 'area',
-          toolbar: {
-            show: false,
-          },
-        },
-        legend: {
-          show: false,
-        },
-        colors: ['#0d6efd', '#20c997'],
-        dataLabels: {
-          enabled: false,
-        },
-        stroke: {
-          curve: 'smooth',
-        },
-        xaxis: {
-          type: 'datetime',
-          categories: [
-            '2023-01-01',
-            '2023-02-01',
-            '2023-03-01',
-            '2023-04-01',
-            '2023-05-01',
-            '2023-06-01',
-            '2023-07-01',
-          ],
-        },
-        tooltip: {
-          x: {
-            format: 'MMMM yyyy',
-          },
-        },
-      };
-
-      const sales_chart = new ApexCharts(
-        document.querySelector('#sales-chart'),
-        sales_chart_options,
-      );
-      sales_chart.render();
-
-      //---------------------------
-      // - END MONTHLY SALES CHART -
-      //---------------------------
-
-      function createSparklineChart(selector, data) {
-        const options = {
-          series: [{ data }],
-          chart: {
-            type: 'line',
-            width: 150,
-            height: 30,
-            sparkline: {
-              enabled: true,
-            },
-          },
-          colors: ['var(--bs-primary)'],
-          stroke: {
-            width: 2,
-          },
-          tooltip: {
-            fixed: {
-              enabled: false,
-            },
-            x: {
-              show: false,
-            },
-            y: {
-              title: {
-                formatter: function (seriesName) {
-                  return '';
-                },
-              },
-            },
-            marker: {
-              show: false,
-            },
-          },
-        };
-
-        const chart = new ApexCharts(document.querySelector(selector), options);
-        chart.render();
-      }
-
-      const table_sparkline_1_data = [25, 66, 41, 89, 63, 25, 44, 12, 36, 9, 54];
-      const table_sparkline_2_data = [12, 56, 21, 39, 73, 45, 64, 52, 36, 59, 44];
-      const table_sparkline_3_data = [15, 46, 21, 59, 33, 15, 34, 42, 56, 19, 64];
-      const table_sparkline_4_data = [30, 56, 31, 69, 43, 35, 24, 32, 46, 29, 64];
-      const table_sparkline_5_data = [20, 76, 51, 79, 53, 35, 54, 22, 36, 49, 64];
-      const table_sparkline_6_data = [5, 36, 11, 69, 23, 15, 14, 42, 26, 19, 44];
-      const table_sparkline_7_data = [12, 56, 21, 39, 73, 45, 64, 52, 36, 59, 74];
-
-      createSparklineChart('#table-sparkline-1', table_sparkline_1_data);
-      createSparklineChart('#table-sparkline-2', table_sparkline_2_data);
-      createSparklineChart('#table-sparkline-3', table_sparkline_3_data);
-      createSparklineChart('#table-sparkline-4', table_sparkline_4_data);
-      createSparklineChart('#table-sparkline-5', table_sparkline_5_data);
-      createSparklineChart('#table-sparkline-6', table_sparkline_6_data);
-      createSparklineChart('#table-sparkline-7', table_sparkline_7_data);
-
-      //-------------
-      // - PIE CHART -
-      //-------------
-
-      const pie_chart_options = {
-        series: [700, 500, 400, 600, 300, 100],
-        chart: {
-          type: 'donut',
-        },
-        labels: ['Chrome', 'Edge', 'FireFox', 'Safari', 'Opera', 'IE'],
-        dataLabels: {
-          enabled: false,
-        },
-        colors: ['#0d6efd', '#20c997', '#ffc107', '#d63384', '#6f42c1', '#adb5bd'],
-      };
-
-      const pie_chart = new ApexCharts(document.querySelector('#pie-chart'), pie_chart_options);
-      pie_chart.render();
+      
 
       //-----------------
       // - END PIE CHART -
       //-----------------
     </script>
 
+
+<!-- Balance Sheet PDF script -->
 <script>
-  fetch('../bars/sidebar.html')  // Fetch the file
-      .then(response => response.text()) // Convert it to text
-      .then(data => {
-          document.getElementById('sidebar').innerHTML = data; // Insert it
-      })
-      .catch(error => console.error('Error loading the file:', error)); // Handle errors
-</script>
-<!-- end sidebar script -->
+   
+  document.getElementById('downloadBtn').addEventListener('click', async function () {
+   const { jsPDF } = window.jspdf;
+   const doc = new jsPDF();
+
+   if (typeof doc.autoTable !== 'function') {
+       console.error("Error: autoTable plugin is not properly loaded.");
+       alert("Error: autoTable plugin is not available.");
+       return;
+   }
+
+   const table = document.getElementById("myTable");
+   const rows = table.querySelectorAll("tbody tr");
+
+   const data = [];
+   let boldRows = [];
+   let sectionHeaders = [];
+   let slightlyBoldRows = [];
+   
+   // Categories that should NOT be indented
+   let nonIndentedCategories = [
+       "non-current assets:",
+       "current assets:",
+       "Investing Activities:",
+       "operating activities:",
+       "financing activities",
+       "current liabilities:"
+   ].map(text => text.toLowerCase());
+
+   rows.forEach((row, rowIndex) => {
+       const rowData = [];
+       row.querySelectorAll("td").forEach((cell) => {
+           rowData.push(cell.innerText.trim()); // Trim to remove extra spaces
+       });
+
+       const firstCellText = rowData[0]?.toLowerCase() || "";
+
+       // Mark section headers for bold
+       if (["assets", "liabilities", "equity"].includes(firstCellText)) {
+           sectionHeaders.push(rowIndex);
+       }
+
+       // Major total rows for bold
+       if (["total assets", "total liabilities", "cash flow for the year ending december 31, 2024"].includes(firstCellText)) {
+           boldRows.push(rowIndex);
+       }
+
+       // Slightly bold rows (category totals)
+       if ([
+           "total non-current assets", 
+           "net cash from operating activities",
+           "net cash from investing activities", 
+           "net cash from financing activities", 
+           "total equity",
+           "total current liabilities"
+       ].includes(firstCellText)) {
+           slightlyBoldRows.push(rowIndex);
+       }
+
+       data.push(rowData);
+   });
+
+   doc.setFontSize(14); // Adjust font size
+   doc.setFont("helvetica", "bold"); // Set font style
+   doc.text("CASH FLOW", 105, 6, { align: "center" }); // Center the title
+
+   doc.setFontSize(12);
+   doc.setFont("helvetica", "normal");
+   doc.text("Ebenezer,", 105, 10, { align: "center" });
+
+   doc.setFontSize(12);
+   doc.setFont("helvetica", "normal");
+   doc.text("For the year Ending December 31, 2024", 105, 14, { align: "center" });
 
 
-<script>
-  document.getElementById("exportButton").addEventListener("click", function() {
-    // Example data (can be your table data or an array of objects)
-    const data = [
-      { Name: "John", Age: 30, City: "New York" },
-      { Name: "Jane", Age: 25, City: "London" },
-      { Name: "Mark", Age: 35, City: "Paris" }
-    ];
+   doc.autoTable({        
+       startY: 15, // Moves the table down to create space for headers
+       head: [['Description', 'Amount (KSH)']],
+       body: data,
 
-    // Convert data to a worksheet
-    const ws = XLSX.utils.json_to_sheet(data);
+       headStyles: {
+       fillColor: [0, 25, 45], // Dark Blue (#00192D)
+       textColor: [255, 255, 255], // White text
+       fontStyle: 'bold'
+       },
 
-    // Create a new workbook and append the worksheet
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
 
-    // Export the workbook as an Excel file
-    XLSX.writeFile(wb, "ExportedData.xlsx");
-  });
-</script>
+       didParseCell: function (data) {
+           if (data.section === 'body') {
+               const rowIndex = data.row.index;
+               const colIndex = data.column.index;
+               const text = data.cell.raw.trim().toLowerCase();
+
+               // Apply bold to section headers
+               if (sectionHeaders.includes(rowIndex)) {
+                   data.cell.styles.fontSize = 12;
+                   data.cell.styles.fontStyle = 'bold';
+               }
+
+               // Apply bold to major total rows
+               if (boldRows.includes(rowIndex)) {
+                   data.cell.styles.fontStyle = 'bold';
+                   data.cell.styles.fontSize = 12;
+               }
+
+               // Apply semi-bold style to slightly bold rows
+               if (slightlyBoldRows.includes(rowIndex)) {
+                   data.cell.styles.fontStyle = 'bold';
+                   data.cell.styles.fontSize = 10;
+               }
+
+               // Indent sub-items but NOT Non-current Assets, Current Assets, Non-current Liabilities, Current Liabilities
+               if (
+                   colIndex === 0 && 
+                   !sectionHeaders.includes(rowIndex) && 
+                   !boldRows.includes(rowIndex) && 
+                   !nonIndentedCategories.includes(text)
+               ) {
+                   data.cell.styles.cellPadding = { left: 10, right: 2, top: 2, bottom: 2 }
+               }
+
+               if(
+                colIndex === 0 && 
+                   !sectionHeaders.includes(rowIndex) && 
+                   !boldRows.includes(rowIndex) && 
+                   nonIndentedCategories.includes(text)
+               ){
+                data.cell.styles.fontStyle = 'bold'; 
+               }
+
+           }
+       }
+   });
+
+   doc.save('styled_table.pdf');
+});
+
+</script>    
+
+
+
     <!--end::Script-->
   </body>
   <!--end::Body-->

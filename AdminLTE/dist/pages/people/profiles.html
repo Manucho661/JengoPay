@@ -349,7 +349,7 @@
             <!-- Info boxes -->
             <div class="row first mb-2 mt-2 ">
 
-                <div class="col-md-12 d-flex justify-content-end">
+                <div class="col-md-12 d-flex justify-content-end ">
 
                     <button id="add_provider_btn" class="btn me-3 " style="background-color: #00192D; color: white; font-size: small;">  <i class="bi bi-plus"></i>
                       <b class="button_item" class="open-btn" onclick="openPopup()"> Add Tenant </b></button>
@@ -534,41 +534,41 @@
 
 <!-- Complaint part -->
   <div class="popup-overlay"  id="complaintPopup">
-  <div class="popup-content">
-    <button class="close-btn text-secondary" onclick="closePopup()">×</button>
-    <h2 style="color: #00192D;">Add Tenant</h2>
-    <form class="complaint-form">
+    <div class="popup-content">
+      <button class="close-btn text-secondary" onclick="closePopup()">×</button>
+      <h2 style="color: #00192D;">Add Tenant</h2>
+      <form class="complaint-form">
 
-        <label for="name">Tenant Name:</label>
-        <input type="text" id="name" name="name" required>
+          <label for="name">Tenant Name:</label>
+          <input type="text" id="name" name="name" required>
 
-        <label for="number">Kra pin:</label>
-        <input type="number" id="number" name="number" required>
+          <label for="number">Kra pin:</label>
+          <input type="number" id="number" name="number" required>
 
-        <label for="email">Email Address:</label>
-        <input type="email" id="email" name="email" required>
+          <label for="email">Email Address:</label>
+          <input type="email" id="email" name="email" required>
 
-        <label for="phone">Phone Number:</label>
-        <input type="tel" id="phone" name="phone" required>
-
-
-        <label for="property">Property:</label>
-        <select id="property" required>
-          <option value="">Select Property</option>
-          <option value="High">Manucho</option>
-          <option value="Moderate">Ben 10</option>
-          <option value="Low">Alpha</option>
-        </select>
+          <label for="phone">Phone Number:</label>
+          <input type="tel" id="phone" name="phone" required>
 
 
-        <label for="unit">Rental Unit:</label>
-        <input type="text" id="unit" name="unit" required>
+          <label for="property">Property:</label>
+          <select id="property" required>
+            <option value="">Select Property</option>
+            <option value="High">Manucho</option>
+            <option value="Moderate">Ben 10</option>
+            <option value="Low">Alpha</option>
+          </select>
 
 
-      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
-    </form>
+          <label for="unit">Rental Unit:</label>
+          <input type="text" id="unit" name="unit" required>
+
+
+        <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
+      </form>
+    </div>
   </div>
-</div>
 <!-- End add tenant part -->
 
 
@@ -623,7 +623,7 @@
 
     <button  type="submit" class="submit-btn" onclick="shiftTenant()"  style="background-color: #00192D; color: #f1f1f1;">Confirm Shift</button>
 
-</div>
+  </div>
   </div>
 </div>
 <!-- End shift popup -->
