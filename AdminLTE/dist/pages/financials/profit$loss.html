@@ -58,10 +58,7 @@
       crossorigin="anonymous"
     />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-
     <link rel="stylesheet" href="balancesheet.css">
-
-   <link rel="stylesheet" href="">
 
     <!-- scripts for data_table -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> 
@@ -72,11 +69,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     
-    
+         <!-- Include jsPDF library (latest version) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
-  </head>
+    <!-- Include jsPDF autoTable plugin (latest compatible version with jsPDF 2.5.1) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+   
+    <!-- Include jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Include jsPDF autoTable plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+</head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
@@ -348,15 +351,8 @@
                                
                               </div>
                             </div>
-                            
-                          </div>
-                                  
+                          </div>    
                         </div>
-
-                      
-                          
-                    
-
                 
               </div>
 
@@ -444,7 +440,7 @@
                 </div>
                 <div class="col-md-6 d-flex justify-content-end" style="position: relative;" > 
                   <div style="position: absolute; bottom: 0;">
-                    <button  class="pdf_button"  style="height: fit-content; padding: 4px;" id="downloadBtn"> <i class="fas fa-file-pdf" style="font-size: 30px; padding: 5x; color: white"></i>  </button> 
+                   <button  class="pdf_button"  style="height: fit-content; padding: 4px;" id="downloadBtn"> <i class="fas fa-file-pdf" style="font-size: 30px; padding: 5x; color: white"></i></button>
                     <button class="excel_button" style="height: fit-content; padding: 4px;" onclick="exportToExcel()"> <i class="fas fa-file-excel" style="font-size: 30px;  color: white"></i> </button>
                   </div>
                  
@@ -457,7 +453,7 @@
               <!-- Start col -->
                <div class="container balancesheet">
                 <div>
-                   <h3 class=" text-start  balancesheet-header">As of December 31, 2024</h3>
+                   <h3 class=" text-start  balancesheet-header">December 31, 2024</h3>
                   <div class="table-responsive">
                     <table id="myTable" style="width: 100%;">
                         <thead style="background-color: rgba(128, 128, 128, 0.2); color: black;" >
@@ -816,139 +812,121 @@
         // Initialize the first row in case user removes all
         checkIfTableEmpty();
     });
-
-
 </script>
 
 
- <!-- Balance Sheet PDF script -->
+<!-- BalanceTable scripts -->
+          
 <script>
-   
-  document.getElementById('downloadBtn').addEventListener('click', async function () {
-   const { jsPDF } = window.jspdf;
-   const doc = new jsPDF();
+  function exportToPDF() {
+          const { jsPDF } = window.jspdf;
+          let doc = new jsPDF();
 
-   if (typeof doc.autoTable !== 'function') {
-       console.error("Error: autoTable plugin is not properly loaded.");
-       alert("Error: autoTable plugin is not available.");
-       return;
-   }
+          doc.text("PROFIT&LOSS/DHABITI PROPERTIES ", 10, 10);  // Title
 
-   const table = document.getElementById("myTable");
-   const rows = table.querySelectorAll("tbody tr");
+          let table = document.getElementById("myTable");
+          let rows = [];
+          
+          for (let i = 0; i < table.rows.length; i++) {
+              let row = [];
+              for (let j = 0; j < table.rows[i].cells.length; j++) {
+                  row.push(table.rows[i].cells[j].innerText);
+              }
+              rows.push(row);
+          }
+          doc.autoTable({
+              head: [rows[0]],  // Table Headers
+              body: rows.slice(1),  // Table Data
+          });
+          doc.save("profit&loss_data.pdf");
+      }
+      function exportToExcel() {
+          let table = document.getElementById("myTable");
+          let workbook = XLSX.utils.table_to_book(table, {sheet: "Sheet1"});
+          let excelFile = XLSX.write(workbook, {bookType: 'xlsx', type: 'array'});
+          let blob = new Blob([excelFile], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+          saveAs(blob, "profit&loss_data.xlsx");
+      }
+  </script>
 
-   const data = [];
-   let boldRows = [];
-   let sectionHeaders = [];
-   let slightlyBoldRows = [];
-   
-   // Categories that should NOT be indented
-   let nonIndentedCategories = [
-       "income:",
-       "expenses:",
-       "total income:",
-       "total expenses:",,
-         "net profit"
-   ].map(text => text.toLowerCase());
+<script>
+  document.getElementById('downloadBtn').addEventListener('click', function () {
+     const { jsPDF } = window.jspdf;
+     const doc = new jsPDF();
 
-   rows.forEach((row, rowIndex) => {
-       const rowData = [];
-       row.querySelectorAll("td").forEach((cell) => {
-           rowData.push(cell.innerText.trim()); // Trim to remove extra spaces
-       });
+     // Check if autoTable is available
+     if (typeof doc.autoTable !== 'function') {
+         console.error("Error: autoTable plugin is not properly loaded.");
+         alert("Error: autoTable plugin is not available.");
+         return;
+     }
 
-       const firstCellText = rowData[0]?.toLowerCase() || "";
+     const table = document.getElementById("myTable");
+     const rows = table.querySelectorAll("tbody tr");
 
-       // Mark section headers for bold
-       if (["income", "expenses", "total income","total expenses","net profit"].includes(firstCellText)) {
-           sectionHeaders.push(rowIndex);
-       }
+     const data = [];
+     let boldRows = [];
+     let sectionHeaders = [];
 
-       // Major total rows for bold
-       if (["income", "expenses", "total income","total expenses", "net profit"].includes(firstCellText)) {
-           boldRows.push(rowIndex);
-       }
+     rows.forEach((row, rowIndex) => {
+         const rowData = [];
+         row.querySelectorAll("td").forEach((cell) => {
+             rowData.push(cell.innerText.trim()); // Trim to remove extra spaces
+         });
 
-       // Slightly bold rows (category totals)
-       if ([
-           "income",
-            "expenses", 
-            "total income",
-            "total expenses", 
-            "net profit"
-       ].includes(firstCellText)) {
-           slightlyBoldRows.push(rowIndex);
-       }
+         const firstCellText = rowData[0]?.toLowerCase() || "";
 
-       data.push(rowData);
-   });
+         // Mark category headers (e.g., Income, Expenses, Net Profit) as bold
+         if (row.classList.contains("category")) {
+             sectionHeaders.push(rowIndex);
+             rowData[0] = `${rowData[0]}`; // Wrap in <b> tags for bold
+         }
 
-   doc.setFontSize(14); // Adjust font size
-   doc.setFont("helvetica", "bold"); // Set font style
-   doc.text("Balance Sheet", 105, 6, { align: "center" }); // Center the title
+         data.push(rowData);
+     });
 
-   doc.setFontSize(12);
-   doc.setFont("helvetica", "normal");
-   doc.text("Ebenezer,", 105, 10, { align: "center" });
+     doc.setFontSize(14); // Adjust font size for title
+     doc.setFont("helvetica", "bold"); // Set font style to bold
+     doc.text("Profit and Loss Statement", 105, 6, { align: "center" }); // Center the title
 
-   doc.setFontSize(12);
-   doc.setFont("helvetica", "normal");
-   doc.text("As of December 31, 2024", 105, 14, { align: "center" });
+     doc.setFontSize(12);
+     doc.setFont("helvetica", "normal");
+     doc.text("Ebenezer,", 105, 10, { align: "center" });
 
+     doc.setFontSize(12);
+     doc.setFont("helvetica", "normal");
+     doc.text("For the year ended December 31, 2024", 105, 14, { align: "center" });
 
-   doc.autoTable({        
-       startY: 15, // Moves the table down to create space for headers
-       head: [['Description', 'Amount (KSH)']],
-       body: data,
+     doc.autoTable({        
+         startY: 20, // Moves the table down to create space for headers
+         head: [['Description', 'Amount']],
+         body: data,
 
-       headStyles: {
-       fillColor: [0, 25, 45], // Dark Blue (#00192D)
-       textColor: [255, 255, 255], // White text
-       fontStyle: 'bold'
-       },
+         headStyles: {
+             fillColor: [0, 25, 45], // Dark Blue (#00192D)
+             textColor: [255, 255, 255], // White text
+             fontStyle: 'bold'
+         },
 
+         didParseCell: function (data) {
+             if (data.section === 'body') {
+                 const rowIndex = data.row.index;
+                 const colIndex = data.column.index;
 
-       didParseCell: function (data) {
-           if (data.section === 'body') {
-               const rowIndex = data.row.index;
-               const colIndex = data.column.index;
-               const text = data.cell.raw.trim().toLowerCase();
+                 // Apply bold to section headers (e.g., Income, Expenses, Net Profit)
+                 if (sectionHeaders.includes(rowIndex)) {
+                     data.cell.styles.fontSize = 12;
+                     data.cell.styles.fontStyle = 'bold';
+                 }
+             }
+         }
+     });
 
-               // Apply bold to section headers
-               if (sectionHeaders.includes(rowIndex)) {
-                   data.cell.styles.fontSize = 12;
-                   data.cell.styles.fontStyle = 'bold';
-               }
+     // Trigger the download of the PDF with the filename 'profit_loss_statement.pdf'
+     doc.save('profit_loss_statement.pdf');
+  });
+</script>
 
-               // Apply bold to major total rows
-               if (boldRows.includes(rowIndex)) {
-                   data.cell.styles.fontStyle = 'bold';
-                   data.cell.styles.fontSize = 12;
-               }
-
-               // Apply semi-bold style to slightly bold rows
-               if (slightlyBoldRows.includes(rowIndex)) {
-                   data.cell.styles.fontStyle = 'bold';
-                   data.cell.styles.fontSize = 10;
-               }
-
-               // Indent sub-items but NOT Non-current Assets, Current Assets, Non-current Liabilities, Current Liabilities
-               if (
-                   colIndex === 0 && 
-                   !sectionHeaders.includes(rowIndex) && 
-                   !boldRows.includes(rowIndex) && 
-                   !nonIndentedCategories.includes(text)
-               ) {
-                   data.cell.styles.cellPadding = { left: 10, right: 2, top: 2, bottom: 2 };
-               }
-           }
-       }
-   });
-
-   doc.save('pdf_profit&loss.pdf');
-});
-
-</script>    
 
     </script>
     <!-- End script for data_table -->
