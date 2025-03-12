@@ -319,8 +319,10 @@
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
-            <div class="property-title">Crown Z Towers <button class="edit-btn">EDIT</button></div>
-            <p>Residential | Multi-family</p>    
+            <div class="property-title">Crown Z Towers</div>
+            <p>Residential|
+              <button class="edit-btn"><i class="fas fa-edit"></i>EDIT</button>
+            </p>    
 <br>
 <!-- <hr> -->
 <div style="display: flex;gap: 25px;">
@@ -493,13 +495,23 @@
         </div>
 
         <div class="col-md-6">
-            <label for="rooms">Rooms</label>
-            <input type="text" id="rooms" name="rooms"  placeholder="4" disabled>
+            <label for="rooms">Room</label>
+            <input type="text" id="rooms" name="rooms"  placeholder="Bed Sitter" disabled>
     </div>
 
     <div class="col-md-6">
       <label for="room_type">Room Type</label>
-      <input type="text" id="room_type" name="room_type" placeholder="5" disabled>
+      <input type="text" id="room_type" name="room_type" placeholder="Office" disabled>
+</div>
+
+<div class="col-md-6">
+  <label for="kitchen">Kitchen</label>
+  <input type="text" id="kitchen" name="Kitchen" placeholder="Open" disabled>
+</div>
+
+<div class="col-md-6">
+  <label for="balcony">Balcony</label>
+  <input type="text" id="balcony" name="Balcony" placeholder="One" disabled>
 </div>
 
     <div class="col-md-6">
@@ -511,6 +523,11 @@
       <label for="description">Description</label>
       <input type="text" id="description" name="description" placeholder="lorem skdkjfjkkkdkjjkjkjsjjejjnnfn" disabled> 
   </div>
+
+  <button onclick="enableEdit()" id="editButton" class="btn btn-warning">
+    <i class="fas fa-edit"></i> Edit
+</button>
+
       </form>
   </div>
 </div>
@@ -526,6 +543,13 @@
 
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
+
+    <script>
+      function enableEdit() {
+          document.getElementById("description").disabled = false;
+      }
+  </script>
+  
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const steps = document.querySelectorAll(".form-step");

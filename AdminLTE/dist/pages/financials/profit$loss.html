@@ -398,6 +398,7 @@
                           <option value="business">Ebenezer</option>
                           <option value="education">Crown Z</option>
                       </select>
+                      
                     </div>
 
 
@@ -408,31 +409,18 @@
                     </div>
 
                     <div style="padding: 10px;">
-              <label for="filterDate" class="filter-label">End  Date</label> 
+                    <label for="filterDate" class="filter-label">End  Date</label> 
 
-              <br>
-              <input type="date" id="filterDate" />
+                    <br>
+                     <input type="date" id="filterDate"/>
                     </div>
                
-            <div class="search-container">
-            <label for="date-range">
-            <i class="fas fa-filter"></i>
-             Comparison:</label>
-            <select id="date-range">AS of :Month
-            <option value="Q1">Month</option>
-            <option value="Q1">January</option>
-            <option value="Q2">February</option>
-            <option value="Q3">March</option>
-            <option value="Q4">April</option>
-         <option value="Q1">May</option>
-         <option value="Q1">June</option>
-         <option value="Q2">July</option>
-         <option value="Q3">August</option>
-         <option value="Q4">September</option>
-         <option value="Q1">October</option>
-         <option value="Q1">November</option>
-         <option value="Q2">December</option>
-     </select> 
+
+                   
+            <!-- Compare Button -->
+            <div style="padding: 10px;">
+              <label for="filterDate" class="filter-label"><i class="fas fa-filter">Comparison</i></label>
+              <button id="compareButton" class="btn btn-primary">Compare</button>
           </div>
                 </div>
 
@@ -443,7 +431,6 @@
                    <button  class="pdf_button"  style="height: fit-content; padding: 4px;" id="downloadBtn"> <i class="fas fa-file-pdf" style="font-size: 30px; padding: 5x; color: white"></i></button>
                     <button class="excel_button" style="height: fit-content; padding: 4px;" onclick="exportToExcel()"> <i class="fas fa-file-excel" style="font-size: 30px;  color: white"></i> </button>
                   </div>
-                 
                 </div> 
             </div>
             <!--end::Row-->
@@ -679,6 +666,35 @@
 
  <!-- End view announcement script -->
 
+<script>
+  function compare() {
+    let date1 = new Date(document.getElementById("date1").value);
+    let date2 = new Date(document.getElementById("date2").value);
+    let resultDiv = document.getElementById("result");
+
+    if (!date1 || !date2 || isNaN(date1) || isNaN(date2)) {
+        resultDiv.innerHTML = "<p style='color:red;'>Please select both dates.</p>";
+        resultDiv.classList.add("show");
+        return;
+    }
+
+    let message = "";
+
+    if (date1 > date2) {
+        message = `The first date (<strong>${date1.toDateString()}</strong>) is later than the second date (<strong>${date2.toDateString()}</strong>).`;
+    } else if (date1 < date2) {
+        message = `The first date (<strong>${date1.toDateString()}</strong>) is earlier than the second date (<strong>${date2.toDateString()}</strong>).`;
+    } else {
+        message = `Both dates are the same (<strong>${date1.toDateString()}</strong>).`;
+    }
+
+    resultDiv.innerHTML = `<p>${message}</p>`;
+    resultDiv.classList.add("show");
+}
+
+</script>
+
+
  <script>
   // Function to toggle the visibility of the overlay
   function toggleOverlay() {
@@ -885,14 +901,16 @@
          data.push(rowData);
      });
 
+     doc.setFontSize(14);
+     doc.setFont("helvetica", "normal");
+     doc.text("Ebenezer Apartment,", 105, 6, { align: "center" });
+
+
      doc.setFontSize(14); // Adjust font size for title
      doc.setFont("helvetica", "bold"); // Set font style to bold
-     doc.text("Profit and Loss Statement", 105, 6, { align: "center" }); // Center the title
+     doc.text("Profit and Loss Statement", 105, 10, { align: "center" }); // Center the title
 
-     doc.setFontSize(12);
-     doc.setFont("helvetica", "normal");
-     doc.text("Ebenezer,", 105, 10, { align: "center" });
-
+    
      doc.setFontSize(12);
      doc.setFont("helvetica", "normal");
      doc.text("From 1 January 2024 to December 31, 2024", 105, 14, { align: "center" });

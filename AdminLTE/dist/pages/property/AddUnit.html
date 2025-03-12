@@ -431,8 +431,12 @@
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
-            <div class="property-title">Crown Z Towers <button class="edit-btn">EDIT</button></div>
-            <p>Residential | Multi-family</p>  
+            <div class="property-title">Crown Z Towers</div>
+            <p>Residential | 
+              <button class="edit-btn">
+                <i class="fas fa-edit"></i> 
+                EDIT</button>
+            </p>  
             <hr>  
 <div style="display: flex;gap: 25px;">
 <!-- <a href=""><p>Summary</p></a> -->
@@ -451,62 +455,104 @@
 
 <div class="row">
   <div class="col-md-4">
-  <label for="location">Unit Number*:</label>
+  <label for="location">Unit Number*</label>
   <input type="number" id="unit_number" name="unit_number" placeholder="Enter Unit Number"> 
 </div>
 
 
 <div class="col-md-4">
-  <label for="size">Size(Optional)*:</label>
-  <input type="text" id="size" name="size" placeholder="Enter Size"> 
+  <label for="size">Size(Optional)*</label>
+  <input type="number" id="size" name="size" placeholder="Enter Size"> 
   </div>
 
 
 <div class="col-md-4">
-<label for="size">Floor Number*:</label>
+<label for="size">Floor Number*</label>
 <input type="" id="size" name="size" placeholder="Enter Size"> 
 </div>
 
 <b><p>What is the listing information?</p></b>
 <div class="col-md-4">
 <form>
-    <label for="rooms">Rooms*:</label>
+    <label for="rooms">Rooms*</label>
     <select id="rooms" name="property">
     <option value="Bedsitter">Bedsitter</option>
     <option value="One bedroom">One bedroom</option>
     <option value="Two bedroom">Two Bedroom</option>
-    <option value="Lease">Lease</option>
+    <option value="Two bedroom">Three Bedroom</option>
+    <option value="Two bedroom">Four Bedroom</option>
+    <option value="Two bedroom">Five Bedroom</option>
+
+
     </select>
 </form>
 </div>
 
 <div class="col-md-4">
     <form>
-        <label for="rooms">Room Type*:</label>
+        <label for="rooms">Room Type*</label>
         <select id="rooms" name="property">
         <option value="Rental">Rental</option>
         <option value="Air BnB">Air Bnb</option>
         <option value="Banking Hall">Banking Hall</option>
+        <option value="Banking Hall">Office</option>
+
         </select>
     </form>
     </div>
 
     <div class="col-md-4">
         <form>
-            <label for="rooms">Bathrooms*:</label>
+            <label for="rooms">Bathrooms*</label>
             <select id="rooms" name="property">
             <option value="One bedroom">One Bathroom</option>
             <option value="Two bedroom">Two Bathroom</option>
-            <option value="Lease">Lease</option>
+            <option value="Two bedroom">ThreeBathroom</option>
+            <option value="Two bedroom">Four Bathroom</option>
+            <option value="Two bedroom">Five Bathroom</option>
             </select>
         </form>
         </div>
 
-        <div class="row">
-        <div class="col-md-12">
-            <label class="form-label"><b>Description*</b></label>
-            <input type="text" class="form-control" placeholder="Enter">
-        </div>
+        <div class="col-md-4">
+          <form>
+              <label for="kitchen">Kitchen*</label>
+              <select id="kitchen" name="property">
+              <option value="open">Open</option>
+              <option value="closed">Closed</option>
+              </select>
+          </form>
+          </div>
+
+          <div class="col-md-4">
+            <form>
+                <label for="balcony">Balcony*</label>
+                <select id="balcony" name="property">
+                <option value="one">One </option>
+                <option value="two">Two </option>
+                <option value="three">Three</option>
+                <option value="four">Four</option>
+                <option value="five">Five</option>
+                </select>
+            </form>
+            </div>
+
+            <div class="col-md-4">
+              <form>
+                  <label for="Rent Amount">Rent Amount*</label>
+                  <input type="number" id="rent_amount" name="rent_amount" placeholder="Enter Amount"> 
+
+              </form>
+              </div>
+
+            <div class="col-md-12">
+              <form>
+                <label for="description" class="filter-label">Description</label>
+                <input type="text" id="description" class="form-control" placeholder="Enter a brief description" />
+                  </select>
+              </form>
+              </div>
+
         </div>
 </div>
 

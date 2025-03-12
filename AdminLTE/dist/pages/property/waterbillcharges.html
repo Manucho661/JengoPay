@@ -437,7 +437,7 @@
               </p>
               <a href="../property/waterbillcharges.html"><button class="edit-btn">
                 <i class="fas fa-edit"></i> 
-                Create Meter Charges</button></a>
+                Meter Charges</button></a>
               
 
 <br>
@@ -457,84 +457,77 @@
 </div>
 
 
-<div class="justify-content-end d-flex">
-<button onclick="meterreadingopenPopup()" style="color: #FFC107; background-color: #00192D;">
-    <i class="fas fa-plus"></i>
-    Add Meter Reading</button></a>
-  </div>
+<div class="container mt-4">
+    <h2>Create Charges</h2>
 
-<div class="row">
-  <table id="myTableOne" class="display" >
-    <thead>
-      <tr>
-        <th>Reading Date</th>
-        <th>Unit</th>
-        <th>Meter Type</th>
-        <th>Previous Reading</th>
-        <th>Current Reading</th>
-        <th>Consumption Units</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr onclick="window.location.href=''">
-        <td>8/03/2025</td>
-        <td>C10</td>
-        <td>Water</td>
-        <td>10</td>
-        <td>11</td>
-        <td>1</td>
-        <td>
-          <a href="#"> <button  onclick="openmeterPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button></a>
-          <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>
-          </td>
-      </tr>
-      <tr onclick="window.location.href=''">
-        <td>7/03/2025</td>
-        <td>B11</td>
-        <td>
-         Water
-        </td>
-        <td>19</td>
-        <td>20</td>
-        <td>1</td>
-        <td>
-         <button onclick="openmeterPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
-          <button   class="btn btn-sm" style="background-color: #193042; color:#fff;">    <i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>
-          </td>
-      </tr>
+    <!-- Add Charge Section -->
+    <div class="mb-3">
+        <label for="chargeName" class="form-label">Charge Name</label>
+        <input type="text" id="chargeName" class="form-control" placeholder="Enter charge name">
+    </div>
 
-      <tr onclick="window.location.href=''">
-        <td>6/03/2025</td>
-        <td>B18</td>
-        <td>
-        Water
-        </td>
-        <td>21</td>
-        <td>22</td>
-        <td>1</td>
-        <td>
-          <button onclick="openmeterPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
-          <button   class="btn btn-sm" style="background-color: #193042; color:#fff;">    <i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>
-          </td>
-      </tr>
+    <div class="row">
+        <div class="col-md-4">
+            <label for="unitPrice" class="form-label">Unit Price</label>
+            <input type="number" id="unitPrice" class="form-control" placeholder="Enter unit price">
+        </div>
+        <div class="col-md-4">
+            <label for="quantity" class="form-label">Quantity</label>
+            <input type="number" id="quantity" class="form-control" placeholder="Enter quantity">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">&nbsp;</label>
+            <button class="btn btn-primary w-100" onclick="addCharge()">
+                <i class="fas fa-plus"></i> Add Charge
+            </button>
+        </div>
+    </div>
 
-      <tr onclick="window.location.href=''" >
-        <td>01/03/2025</td>
-        <td>D17</td>
-        <td>
-         Water
-        </td>
-        <td>12</td>
-        <td>13</td>
-        <td>1</td>
-        <td>
-          <button onclick="openmeterPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
-          <button   class="btn btn-sm" style="background-color: #193042; color:#fff;"><i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>          </td>
-      </tr>
-      <!-- Add more rows as needed -->
-    </tbody>
-  </table>
+    <!-- Charges Summary Table -->
+    <h4 class="mt-4">Charges Summary</h4>
+    <table class="table table-bordered mt-2">
+        <thead>
+            <tr>
+                <th>Charge Name</th>
+                <th>Unit Price (Ksh)</th>
+                <th>Quantity</th>
+                <th>Total (Ksh)</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="chargesTable">
+            <!-- Dynamic Rows Will Be Added Here -->
+        </tbody>
+    </table>
+
+    <!-- Tax, Discount, and Final Calculation -->
+    <div class="row">
+        <div class="col-md-4">
+            <label for="tax" class="form-label">Tax (%)</label>
+            <input type="number" id="tax" class="form-control" value="10" oninput="calculateTotal()">
+        </div>
+        <div class="col-md-4">
+            <label for="discount" class="form-label">Discount (Ksh)</label>
+            <input type="number" id="discount" class="form-control" value="0" oninput="calculateTotal()">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Total Amount (Ksh)</label>
+            <input type="text" id="totalAmount" class="form-control" readonly>
+        </div>
+    </div>
+
+    <button class="btn btn-success mt-3" onclick="generateInvoice()">
+        <i class="fas fa-file-invoice"></i> Send To Invoice
+    </button>
+
+    <!-- Invoice Display -->
+    <div class="mt-4 p-3 border" id="invoiceSection" style="display: none;">
+        <h4>Invoice</h4>
+        <div id="invoiceDetails"></div>
+        <h5 class="text-end">Grand Total: Ksh<span id="invoiceTotal"></span></h5>
+    </div>
+</div>
+
             <!-- /.col -->
           </div>
           <!--end::Row-->
@@ -583,88 +576,6 @@
     <!--end::App Wrapper-->
 
     
-    
-  <!-- meterreading popup -->
-  <div class="meterpopup-overlay" id="meterPopup">
-    <div class="meterpopup-content wide-form">
-        <button class="close-btn text-secondary" onclick="meterreadingclosePopup()">×</button>
-        <h2 class="assign-title">Add A Meter Reading</h2>
-
-  
-        <form class="wide-form">
-          <div class="form-group">
-
-            <b><label for="dateInput" class="filter-label">Reading Date</label></b>
-            <input type="date" id="dateInput" class="form-control" required/>
-
-            <label for="units">Units:</label>
-            <select id="units" required>
-                <option>D17</option>
-                <option>B18</option>
-                <option>B11</option>
-                <option>C10</option>
-            </select>
-        </div>
-            <div class="form-group">
-                <label for="meter_type">Meter Type:</label>
-                <select id="meter_type" required>
-                  <option>Water</option>
-                  <option>Electrical</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-                <label for="previous_reading">Previous Reading:</label>
-                <input type="number" id="previous_reading" name="previous_reading" placeholder="Previous Reading" required>
-            </div>
-
-            <div class="form-group">
-                <label for="current_reading">Current Reading:</label>
-                <input type="number" id="current_reading" name="current_reading" placeholder="Current Reading" required>
-            </div>
-
-           <button type="submit" class="submit-btn">Create Meter Reading</button>
-        </form>
-    </div>
-</div>
-<!-- end -->
-  
-
-
- <!-- units popup -->
- <div class="meter-overlay" id="meteringPopup">
-  <div class="meter-content wide-form">
-      <button class="close-btn" onclick="closemeterPopup()">×</button>
-      <h2 class="assign-title">Detailed Meter Information</h2>
-      <form class="wide-form">
-        <div class="form-group">
-          <div class="row g-3">
-            <div class="col-md-6">
-            <label for="date">Date:</label>
-            <input type="date" id="date" name="date" placeholder="01/03/2025" required disabled>
-          </div>
-  
-          <div class="col-md-6">
-            <label for="unit">Unit:</label>
-            <input type="text" id="unit" name="unit" placeholder="D17" required disabled>
-          </div>
-  
-          <div class="col-md-6">
-            <label for="meter_type">Meter Type</label>
-            <input type="text" id="meter_type" name="meter_type" placeholder="water" required disabled>
-        </div>
-
-        <div class="col-md-6">
-            <label for="rooms">Previous Reading</label>
-            <input type="text" id="rooms" name="rooms"  placeholder="4" disabled>
-    </div>
-
-    <div class="col-md-6">
-      <label for="room_type">Current Reading</label>
-      <input type="text" id="room_type" name="room_type" placeholder="5" disabled>
-</div>
-      </form>
-      </div>
   </div>
 </div>
 <!-- end -->
@@ -679,6 +590,81 @@
 
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
+
+    <script>
+        let charges = [];
+    
+        function addCharge() {
+            let name = document.getElementById("chargeName").value;
+            let unitPrice = parseFloat(document.getElementById("unitPrice").value);
+            let quantity = parseInt(document.getElementById("quantity").value);
+    
+            if (!name || isNaN(unitPrice) || isNaN(quantity) || unitPrice <= 0 || quantity <= 0) {
+                alert("Please enter valid charge details.");
+                return;
+            }
+    
+            let total = unitPrice * quantity;
+            charges.push({ name, unitPrice, quantity, total });
+    
+            updateTable();
+            calculateTotal();
+        }
+    
+        function updateTable() {
+            let tableBody = document.getElementById("chargesTable");
+            tableBody.innerHTML = "";
+            charges.forEach((charge, index) => {
+                let row = `<tr>
+                    <td>${charge.name}</td>
+                    <td>Ksh${charge.unitPrice.toFixed(2)}</td>
+                    <td>${charge.quantity}</td>
+                    <td>Ksh${charge.total.toFixed(2)}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="removeCharge(${index})">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </td>
+                </tr>`;
+                tableBody.innerHTML += row;
+            });
+        }
+    
+        function removeCharge(index) {
+            charges.splice(index, 1);
+            updateTable();
+            calculateTotal();
+        }
+    
+        function calculateTotal() {
+            let subtotal = charges.reduce((sum, charge) => sum + charge.total, 0);
+            let tax = parseFloat(document.getElementById("tax").value) || 0;
+            let discount = parseFloat(document.getElementById("discount").value) || 0;
+    
+            let taxAmount = (subtotal * tax) / 100;
+            let totalAmount = subtotal + taxAmount - discount;
+            document.getElementById("totalAmount").value = totalAmount.toFixed(2);
+        }
+    
+        // function generateInvoice() {
+        //     if (charges.length === 0) {
+        //         alert("No charges to generate an invoice.");
+        //         return;
+        //     }
+    
+        //     let invoiceHTML = "<ul>";
+        //     charges.forEach(charge => {
+        //         invoiceHTML += `<li>${charge.name} - $${charge.unitPrice.toFixed(2)} x ${charge.quantity} = $${charge.total.toFixed(2)}</li>`;
+        //     });
+        //     invoiceHTML += "</ul>";
+    
+        //     let finalAmount = document.getElementById("totalAmount").value;
+        //     document.getElementById("invoiceTotal").innerText = finalAmount;
+        //     document.getElementById("invoiceDetails").innerHTML = invoiceHTML;
+        //     document.getElementById("invoiceSection").style.display = "block";
+        // }
+    </script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const steps = document.querySelectorAll(".form-step");
