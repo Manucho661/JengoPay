@@ -309,37 +309,10 @@
             <div class="row">
               <div class="col-sm-8">
 
-                <h3 class="mb-0 contact_section_header"> <i class="fas fa-comments"></i></i> Texts</h3>
+                <h3 class="mb-0 contact_section_header"> <i class="fas fa-comments"></i></i> Text Messages</h3>
 
 
                     <div class="row mt-2  ">
-                      <div class="col-md-12 Summary ">
-
-
-
-                        <div class="row mt-6" >
-                          <!-- Summary -->
-                          <div class="col-md-3  ">
-                            <label class="text text-center">  <i class="fas fa-calculator"></i> <a href="index.html"> TOTAL</a>  </label>
-                              <span class="value text-center"> <b>50 </b> </span>
-                          </div>
-
-                          <div class="col-md-3">
-                            <label class="text text-center"><i class="fas fa-reply"></i> <a href=""> REPLIED </a>  </label>
-                            <span class="value"> 04 </span>
-                          </div>
-                          <div class="col-md-3">
-                            <label class="text text-center">  <i class="fas fa-comment-slash"></i> <a href=""> CLOSED </a>  </label>
-                            <span class="value"> 30 </span>
-                          </div>
-                          <div class="col-md-3">
-                            <label class="text text-center"><i class="fas fa-clock"></i> <a href=""> Duration </a>  </label>
-                            <span class="value"> <i class="text-secondary">1/2/2025 - 2/2/2025</i>  </span>
-                          </div>
-
-                        </div>
-
-                      </div>
 
                 </div>
               </div>
@@ -379,73 +352,67 @@
 
 
           <!--end::Row-->
+
+
           <!--begin::Row-->
+          <!-- Message Container -->
           <div class="row">
-            <!-- Start col -->
-            <div class="col-md-12">
-              <div class="card">
-                  <div class="card-header">
+            <div class="col-md-12 message-container">
+              <!-- <div class="container" style="border:1px solid #E2E2E2" > -->
+                <div class="row " style="border:1px solid #E2E2E2" >
+                  <div class="col-md-12 message-container-header-section">
 
-
-                  </div>
-
-                    <div class="card-body">
-                        <table id="Texts"  class="display" style="font-size: small;" >
-                          <thead>
-                            <tr>
-                                <th>Message ID</th>
-                                <th>Time</th>
-                                <th>Property</th>
-                                <th>Tenant</th>
-                                <th>Message</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>10:00 AM</td>
-                                <td>Property A</td>
-                                <td>John Doe</td>
-                                <td>Hello! How are&#x2026;  </td>
-                                <td  class="action" id="respond_btn" onclick="openChat()">Respond</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>10:15 AM</td>
-                                <td>Property B</td>
-                                <td>Jane Smith</td>
-                                <td>Can you fix the leak? &#x2026; </td>
-                                <td class="action" id="respond_btn"  >Respond  </td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>10:30 AM</td>
-                                <td>Property C</td>
-                                <td>Emily Johnson</td>
-                                <td>What is the rent due date? &#x2026;  </td>
-                                <td class="action" id="respond_btn" >Respond   </td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>10:45 AM</td>
-                                <td>Property D</td>
-                                <td>Michael Brown</td>
-                                <td>The heater is not working &#x2026;</td>
-                                <td  class="action" id="respond_btn" >Respond </td>
-                            </tr>
-                        </tbody>
-                        </table>
-
-
+                    <select id="categoryFilter">
+                      <option value="">-- Select --</option>
+                      <option value="technology">All</option>
+                      <option value="health">Manucho</option>
+                      <option value="business">Ebenezer</option>
+                      <option value="education">Crown Z</option>
+                  </select>
 
                   </div>
+                </div>
 
-                  <div class="card-footer">
+                <div class="row" style="border:1px solid #E2E2E2">
 
-                   </div>
+                    <div class="col-md-4" style="border:1px solid #E2E2E2; padding: 0 !important;">
 
-              </div>
+                      <div class="message-profiles-header-section">Recent Conversations</div>
+                      <div class="message-profiles-section">
+
+                        <div class="individual-message-profiles d-flex">
+                          <div class="profile-initials">JM</div>
+                          <div class="individual-profile-message-container">
+                            <div class="individual-name">Joseph Makori</div>
+                            <div class="individual-message mt-2">I will be paying rent from march...</div>
+                          </div>
+                        </div>
+
+                        <div class="individual-message-profiles d-flex">
+                          <div class="profile-initials">JM</div>
+                          <div class="individual-profile-message-container">
+                            <div class="individual-name">Joseph Makori</div>
+                            <div class="individual-message mt-2 ">I will not be paying rent this month, i did not receive..</div>
+                          </div>
+                        </div>
+
+                        <div class="individual-message-profiles d-flex">
+                          <div class="  profile-initials">JM</div>
+                          <div class="individual-profile-message-container">
+                            <div class="individual-name">Joseph Makori</div>
+                            <div class="individual-message mt-2 ">I will be paying rent from march...</div>
+                          </div>
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                    <div class="col-md-8">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et blanditiis reiciendis minima eligendi facere nisi rerum sint aliquid ratione! Quasi, est? Est recusandae exercitationem magnam dolor consequuntur! Vero, quaerat suscipit!
+                    </div>
+                </div>
+              <!-- </div> -->
 
 
             </div>
@@ -482,63 +449,6 @@
 
 
 <!-- Overlays -->
-
-
-
-
-<!-- Chat section -->
-
-<div class="chat-overlay" id="chatOverlay">
-  <div class="chat-container">
-      <div class="chat-header">Dear Joseph<button class="close-btn" onclick="closeChat()">&times;</button></div>
-      <div class="chat-body" id="chatBody">
-          <div class="message incoming">Hello! How are you? We need to talk</div>
-          <div class="message outgoing">I'm good, thanks! What about you?</div>
-      </div>
-      <div class="chat-footer">
-          <input type="text" id="messageInput" placeholder="Type a message...">
-          <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
-      </div>
-  </div>
-</div>
-<!-- End chat section -->
-
-
-
-<div class="respond" id="respond">
-
-  <div class="container" id="container">
-      <div id="closeTextWindow" class="closeTextWindow text-dark "> <i class="bi bi-x"></i>
-    </div>
-
-
-    <div id="messageWindow" class="mb-4">
-        <div class="card message-card tenant-message">
-
-            <div class="card-body">
-              <p> <b class="text-bg-secondary p-2 rounded-circle">Joseph</b></p>
-                <p>Hello support_team, I'm writing to ask if I can be given my balance even if it is not 5000, my current situation needs some finances to keep working. I have tried before to restart but things seem difficult.</p>
-                <p class="text-secondary"> <em>Mon, Jan 20, 2025 8:01 AM</em>  </p>
-              </div>
-
-
-        </div>
-
-        <div class="card message-card admin-message">
-
-            <div class="card-body">
-              <p> <b class="text-bg-secondary p-2 rounded-circle">You</b>  </p>
-                <p>Hi Emmanuel, Thank you for reaching out. Kindly email operations@writersthrive.com for assistance on this matter. Thanks.</p>
-                <p class="text-secondary"> <em>Mon, Jan 20, 2025 8:01 AM</em>  </p>
-              </div>
-
-        </div>
-    </div>
-
-    <textarea id="newMessage" class="form-control mb-3" rows="4" placeholder="Type your message here..."></textarea>
-    <button id="sendButton" class="btn btn-sm send-btn">Send</button>
-</div>
-</div>
 
 <!-- Script source File -->
 <script src="text.js"></script>
