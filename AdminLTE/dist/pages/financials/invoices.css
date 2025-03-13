@@ -117,20 +117,20 @@
   .delete-btn i {
     font-size: 14px;
   }
-  .invoice-container {
+  /* .invoice-container { */
     /* width: 700px; */
-    margin: auto 0;
+    /* margin: auto 0;
     border: 1px solid #ccc;
-    padding: 20px;
-}
-.header {
+    padding: 20px; */
+/* } */
+/* .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 .header h1 {
     text-transform: uppercase;
-}
+} */
 .logo {
     width: 80px;
     height: 80px;
@@ -318,4 +318,10 @@ th, td {
         gap: 8px; /* Spacing between buttons */
         justify-content: end; /* Center align buttons */
     }
-      
+
+    /* .to-section {
+      text-align: right;
+  }
+  .from-section {
+    text-align: left;
+} */

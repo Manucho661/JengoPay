@@ -43,7 +43,7 @@
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
-   <link rel="stylesheet" href="Building.css">
+   <link rel="stylesheet" href="meterreading.css">
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -428,154 +428,117 @@
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
-            <div class="justify-content-end d-flex">
-            <a href="../property/AddProperty.html"><button>
-              <i class="fas fa-plus"></i>
-              Add Property</button></a>
-            </div>
-    <hr>
-            <!--begin::Row-->
-            <div class="row">
-              <div class="col-md-12">
-                <div class="card mb-4">
-                  <div class="card-header">
-                    <h5 class="card-title text-warning">Registered Buildings</h5>
-                    <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                      </button>
-                      <div class="btn-group">
-                        <button
-                          type="button"
-                          class="btn btn-tool dropdown-toggle"
-                          data-bs-toggle="dropdown"
-                        >
-                          <i class="bi bi-wrench"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end" role="menu">
-                          <a href="#" class="dropdown-item">Action</a>
-                          <a href="#" class="dropdown-item">Another action</a>
-                          <a href="#" class="dropdown-item"> Something else here </a>
-                          <a class="dropdown-divider"></a>
-                          <a href="#" class="dropdown-item">Separated link</a>
-                        </div>
-                      </div>
-                      <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                        <i class="bi bi-x-lg"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <!-- /.card-header -->
-                  <div class="card-body">
-                    <!--begin::Row-->
-                    <div class="row">
-                      <table id="myTableOne" class="display" >
-                        <thead>
-                          <tr>
-                            <th>Property</th>
-                            <th>Location</th>
-                            <th>Rental Owners</th>
-                            <th>Manager</th>
-                            <th>Type</th>
-                            <th>Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>
-                              <a href="../property/AllProperty.html"></a>
-                              Crown Z Towers</td>
-                            <td>Mai mahiu</td>
-                            <td>
-                             Patrick Musila
-                            </td>
-                            <td></td>
-                            <td>Commercial</td>
-                            <td>
-                              <button style="background-color: #00192D; color:#FFC107;">EDIT</button>
-                              </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <a href="../property/AllProperty.html"></a>
-                              Crown Z Towers</td>
-                            <td>Mai mahiu</td>
-                            <td>
-                             Patrick Musila
-                            </td>
-                            <td></td>
-                            <td>Commercial</td>
-                            <td>
-                              <button style="background-color: #00192D; color:#FFC107;">EDIT</button>
-                              </td>
-                          </tr>
+            <div class="container-fluid">
+              <div class="property-title">Crown Z Towers</div>
+              <p>Residential | 
+                <button class="edit-btn">
+                  <i class="fas fa-edit"></i> 
+                  EDIT</button>
+              </p>
+              <a href="../property/waterbillcharges.html"><button class="edit-btn">
+                <i class="fas fa-edit"></i> 
+                Meter Charges</button></a>
+              
 
-                          <tr>
-                            <td>
-                              <a href="../property/AllProperty.html"></a>
-                              Crown Z Towers</td>
-                            <td>Mai mahiu</td>
-                            <td>
-                             Patrick Musila
-                            </td>
-                            <td></td>
-                            <td>Commercial</td>
-                            <td>
-                              <button style="background-color: #00192D; color:#FFC107;">EDIT</button>
-                              </td>
-                          </tr>
+<br>
 
-                          <tr>
-                            <td>
-                              <a href="../property/AllProperty.html"></a>
-                              Crown Z Towers</td>
-                            <td>Mai mahiu</td>
-                            <td>
-                             Patrick Musila
-                            </td>
-                            <td></td>
-                            <td>Commercial</td>
-                            <td>
-                              <button style="background-color: #00192D; color:#FFC107;">EDIT</button>
-                              </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <a href="../property/AllUnits.html"></a>
-                              Crown Z Towers</td>
-                            <td>Mai mahiu</td>
-                            <td>
-                             Patrick Musila
-                            </td>
-                            <td></td>
-                            <td>Commercial</td>
-                            <td>
-                              <button style="background-color: #00192D; color:#FFC107;">EDIT</button>
-                              </td>
-                          </tr>
+<div style="display: flex;gap: 25px;">
+<!-- <a href=""><p>Summary</p></a> -->
+<!-- <a href="../property/AllUnits.html"><p>Units(5)</p></a> -->
 
-                          <tr onclick="window.location.href='AllUnits.html'" >
-                            <td>
-                              Crown M Towers</td>
-                            <td>Limuru</td>
-                            <td>
-                             Patrick Mwangi
-                            </td>
-                            <td></td>
-                            <td>Residential</td>
-                            <td>
-                              <button style="background-color: #00192D; color:#FFC107;">EDIT</button>
-                              </td>
-                          </tr>
-                          <!-- Add more rows as needed -->
-                        </tbody>
-                      </table>
+</div>
+<hr>
+</div>
+
+
+<div style="display: flex; gap: 25px;">
+   <a href="../property/AllUnits.html" style="color: #FFC107;"> <p>Unit list</p></a>
+    <a href="../property/meterreading.html" style="color: #FFC107;"><p>Meter Reading</p></a>
+</div>
+
+
+<div class="container mt-4">
+    <h2>Create Charges</h2>
+
+    <!-- Add Charge Section -->
+    <div class="mb-3">
+        <label for="chargeName" class="form-label">Charge Name</label>
+        <input type="text" id="chargeName" class="form-control" placeholder="Enter charge name">
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <label for="unitPrice" class="form-label">Unit Price</label>
+            <input type="number" id="unitPrice" class="form-control" placeholder="Enter unit price">
+        </div>
+        <div class="col-md-4">
+            <label for="consumption_units" class="form-label">Consumption Units</label>
+            <input type="number" id="quantity" class="form-control" placeholder="Enter Consumption Units">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">&nbsp;</label>
+            <button class="btn btn-primary w-100" onclick="addCharge()">
+                <i class="fas fa-plus"></i> Add Charge
+            </button>
+        </div>
+    </div>
+
+    <!-- Charges Summary Table -->
+    <h4 class="mt-4">Charges Summary</h4>
+    <table class="table table-bordered mt-2">
+        <thead>
+            <tr>
+                <th>Charge Name</th>
+                <th>Unit Price (Ksh)</th>
+                <th>Consumption Units</th>
+                <th>Total (Ksh)</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="chargesTable">
+            <!-- Dynamic Rows Will Be Added Here -->
+        </tbody>
+    </table>
+
+    <!-- Tax, Discount, and Final Calculation -->
+    <div class="row">
+        <div class="col-md-4">
+            <label for="tax" class="form-label">Tax (%)</label>
+            <input type="number" id="tax" class="form-control" value="16" oninput="calculateTotal()">
+        </div>
+        <div class="col-md-4">
+            <label for="discount" class="form-label">Discount (Ksh)</label>
+            <input type="number" id="discount" class="form-control" value="0" oninput="calculateTotal()">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Total Amount (Ksh)</label>
+            <input type="text" id="totalAmount" class="form-control" readonly>
+        </div>
+    </div>
+
+    <a href="../financials/invoices.html"><button class="btn btn-success mt-3" onclick="generateInvoice()">
+        <i class="fas fa-file-invoice"></i> Send To Invoice
+    </button></a>
+
+    <!-- Invoice Display -->
+    <div class="mt-4 p-3 border" id="invoiceSection" style="display: none;">
+        <h4>Invoice</h4>
+        <div id="invoiceDetails"></div>
+        <h5 class="text-end">Grand Total: Ksh<span id="invoiceTotal"></span></h5>
+    </div>
+</div>
+
+            <!-- /.col -->
+          </div>
+          <!--end::Row-->
+
+
+
                       <!-- /.col -->
                     </div>
                     <!--end::Row-->
                   <!-- ./card-body -->
-                  <div class="card-footer">
+                
                     <!--begin::Row-->
 
                       <!-- /.col -->
@@ -612,47 +575,12 @@
     </div>
     <!--end::App Wrapper-->
 
-  
-    <div class="detailed-overlay" id="detailedPopup">
-      <div class="detailed-content">
-        <form class="complaint-form">
-          <div class="d-flex justify-content-end"> <button class="close-btn"   onclick="closedetailedPopup()">×</button></div>
-          
-          <h4 style="color: #00192D; font-weight: 600;">Detailed Information</h4>
-          <div class="row g-3">
-          <div class="col-md-6">
-          <label for="name">Building Name:</label>
-          <input type="text" id="name" name="name" placeholder="Mwihoko Apartment" required disabled>
-        </div>
-
-        <div class="col-md-6">
-          <label for="email">Building Owner:</label>
-          <input type="email" id="email" name="email" placeholder="Mr Maina" required disabled>
-        </div>
-
-        <div class="col-md-6">
-          <label for="phone">County</label>
-          <input type="tel" id="phone" name="phone" placeholder="Nairobi" required disabled>
-      </div>
-  
-
-      <div class="col-md-6">
-          <label for="unit">Constituency</label>
-          <input type="text" id="unit" name="unit"  placeholder="Westlands" disabled>
+    
   </div>
-
-  <div class="col-md-6">
-          <label for="unit">Ward</label>
-          <input type="text" id="unit" name="unit" placeholder="Parklands" disabled>
-  </div>
-
-  <div class="col-md-4">
-    Building Image
-  <img src="../17.jpg" class="slide" alt="Image 1" style="width: 200px; height:200px;">
 </div>
-  
-        <!-- <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button> -->
-      </form>
+<!-- end -->
+
+
       </div>
       </div>
     </div>
@@ -662,6 +590,81 @@
 
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
+
+    <script>
+        let charges = [];
+    
+        function addCharge() {
+            let name = document.getElementById("chargeName").value;
+            let unitPrice = parseFloat(document.getElementById("unitPrice").value);
+            let quantity = parseInt(document.getElementById("quantity").value);
+    
+            if (!name || isNaN(unitPrice) || isNaN(quantity) || unitPrice <= 0 || quantity <= 0) {
+                alert("Please enter valid charge details.");
+                return;
+            }
+    
+            let total = unitPrice * quantity;
+            charges.push({ name, unitPrice, quantity, total });
+    
+            updateTable();
+            calculateTotal();
+        }
+    
+        function updateTable() {
+            let tableBody = document.getElementById("chargesTable");
+            tableBody.innerHTML = "";
+            charges.forEach((charge, index) => {
+                let row = `<tr>
+                    <td>${charge.name}</td>
+                    <td>Ksh${charge.unitPrice.toFixed(2)}</td>
+                    <td>${charge.quantity}</td>
+                    <td>Ksh${charge.total.toFixed(2)}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="removeCharge(${index})">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </td>
+                </tr>`;
+                tableBody.innerHTML += row;
+            });
+        }
+    
+        function removeCharge(index) {
+            charges.splice(index, 1);
+            updateTable();
+            calculateTotal();
+        }
+    
+        function calculateTotal() {
+            let subtotal = charges.reduce((sum, charge) => sum + charge.total, 0);
+            let tax = parseFloat(document.getElementById("tax").value) || 0;
+            let discount = parseFloat(document.getElementById("discount").value) || 0;
+    
+            let taxAmount = (subtotal * tax) / 100;
+            let totalAmount = subtotal + taxAmount - discount;
+            document.getElementById("totalAmount").value = totalAmount.toFixed(2);
+        }
+    
+        // function generateInvoice() {
+        //     if (charges.length === 0) {
+        //         alert("No charges to generate an invoice.");
+        //         return;
+        //     }
+    
+        //     let invoiceHTML = "<ul>";
+        //     charges.forEach(charge => {
+        //         invoiceHTML += `<li>${charge.name} - $${charge.unitPrice.toFixed(2)} x ${charge.quantity} = $${charge.total.toFixed(2)}</li>`;
+        //     });
+        //     invoiceHTML += "</ul>";
+    
+        //     let finalAmount = document.getElementById("totalAmount").value;
+        //     document.getElementById("invoiceTotal").innerText = finalAmount;
+        //     document.getElementById("invoiceDetails").innerHTML = invoiceHTML;
+        //     document.getElementById("invoiceSection").style.display = "block";
+        // }
+    </script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const steps = document.querySelectorAll(".form-step");
@@ -735,17 +738,28 @@
             </script>
 
 <script>
-  // Function to open the complaint popup
-  function opendetailedPopup() { 
-    document.getElementById("detailedPopup").style.display = "flex";
+  // Function to open the meter popup
+  function openmeterPopup() { 
+    document.getElementById("meterfullPopup").style.display = "flex";
   }
 
-  // Function to close the complaint popup
-  function closedetailedPopup() {
-    document.getElementById("detailedPopup").style.display = "none";
+  // Function to close the meter popup
+  function closemeterPopup() {
+    document.getElementById("meterfullPopup").style.display = "none";
   }
 </script>
 
+<script>
+  // Function to meter the meter popup
+  function meterreadingopenPopup() {
+    document.getElementById("meterPopup").style.display = "flex";
+  }
+
+  // Function to close the meter popup
+  function meterreadingclosePopup() {
+    document.getElementById("meterPopup").style.display = "none";
+  }
+</script>
 
 <script>
         $(document).ready(function () {

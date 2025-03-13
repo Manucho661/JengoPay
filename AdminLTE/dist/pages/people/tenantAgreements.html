@@ -391,7 +391,7 @@
                                         <div id="more_icon">&#x2026;</div>
                                         <br>
                                         <div id="more_options">
-                                           <a href="#">View</a>
+                                           <a href="#" onclick="openviewagreementPopup()">View</a>
                                            <a href="#">Edit</a>
                                            <a href="#">Delete</a>
 
@@ -410,7 +410,7 @@
                                         <div id="more_icon">&#x2026;</div>
                                         <br>
                                         <div id="more_options">
-                                           <a href="#">View</a>
+                                           <a onclick="openviewagreementPopup()" href="#">View</a>
                                            <a href="#">Edit</a>
                                            <a href="#">Delete</a>
 
@@ -523,6 +523,7 @@
 
 <!-- End view announcement -->
 
+
 <!-- Complaint part -->
 <div class="popup-overlay" id="complaintPopup">
   <div class="popup-content">
@@ -564,6 +565,26 @@
 </div>
 <!-- End Notification popup -->
 
+
+<!-- view agreement details part -->
+<div class="viewpopup-overlay" id="viewPopup">
+  <div class="viewpopup-content">
+    <button class="close-btn text-secondary" onclick="closeviewgreementPopup">×</button>
+    <h2 style="color: #00192D;">View Agreement Details</h2>
+    <button class="edit-btn"><i class="fas fa-edit"></i>EDIT</button>
+    <p>Full Legal Name: <input type="text" name="partyB_name" placeholder="Many Kioni" disabled></p>
+    <p>Email: <input type="email" name="partyB_email" placeholder="kioni@gmail.com" disabled></p>
+    <p>Phone: <input type="tel" name="partyB_phone" placeholder="0789997788" disabled></p>
+    <p>Deposit: <input type="tel" name="partyB_phone" placeholder="Ksh 15,000" disabled></p>
+     <label for="file">Choose file to upload ID:</label>
+    <input type="file" name="file" id="file" disabled>
+    <br><br>
+   
+      <!-- <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button> -->
+    </form>
+  </div>
+</div>
+<!-- End view  Agreement part -->
 
 <!-- end overlay card. -->
 
@@ -636,6 +657,21 @@
     document.getElementById("complaintPopup").style.display = "none";
   }
 </script>
+
+<!-- view agreement -->
+<script>
+  // Function to open the complaint popup
+  function openviewagreementPopup() {
+    document.getElementById("viewPopup").style.display = "flex";
+  }
+
+  // Function to close the complaint popup
+  function closeviewgreementPopup() {
+    document.getElementById("viewPopup").style.display = "none";
+  }
+</script>
+
+<!-- create notification -->
 
 
 <!-- create notification -->

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date Comparison</title>
+    <!-- <link rel="stylesheet" href="styles.css">/\ -->
+    <style>
+   /* General Styling */
+body {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f2f5;
+    margin: 0;
+}
+
+/* Card Container */
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 320px;
+}
+
+/* Date Input Section */
+.date-inputs {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.date-inputs div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Button */
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Result Display */
+#result {
+    margin-top: 15px;
+    font-weight: bold;
+    color: #333;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+#result.show {
+    opacity: 1;
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Compare Two Dates</h2>
+        <div class="date-inputs">
+            <div>
+                <label for="date1">First Date:</label>
+                <input type="date" id="date1">
+            </div>
+            <div>
+                <label for="date2">Second Date:</label>
+                <input type="date" id="date2">
+            </div>
+        </div>
+        <button onclick="compare()">Compare</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+function compare() {
+    let date1 = new Date(document.getElementById("date1").value);
+    let date2 = new Date(document.getElementById("date2").value);
+    let resultDiv = document.getElementById("result");
+
+    if (!date1 || !date2 || isNaN(date1) || isNaN(date2)) {
+        resultDiv.innerHTML = "<p style='color:red;'>Please select both dates.</p>";
+        resultDiv.classList.add("show");
+        return;
+    }
+
+    let message = "";
+
+    if (date1 > date2) {
+        message = `The first date (<strong>${date1.toDateString()}</strong>) is later than the second date (<strong>${date2.toDateString()}</strong>).`;
+    } else if (date1 < date2) {
+        message = `The first date (<strong>${date1.toDateString()}</strong>) is earlier than the second date (<strong>${date2.toDateString()}</strong>).`;
+    } else {
+        message = `Both dates are the same (<strong>${date1.toDateString()}</strong>).`;
+    }
+
+    resultDiv.innerHTML = `<p>${message}</p>`;
+    resultDiv.classList.add("show");
+}
+
+    </script>
+</body>
+</html>

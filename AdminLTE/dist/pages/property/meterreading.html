@@ -429,8 +429,17 @@
           <!--begin::Container-->
           <div class="container-fluid">
             <div class="container-fluid">
-              <div class="property-title">Crown Z Towers <button class="edit-btn">EDIT</button></div>
-              <p>Residential | Multi-family</p>  
+              <div class="property-title">Crown Z Towers</div>
+              <p>Residential | 
+                <button class="edit-btn">
+                  <i class="fas fa-edit"></i> 
+                  EDIT</button>
+              </p>
+              <a href="../property/waterbillcharges.html"><button class="edit-btn">
+                <i class="fas fa-edit"></i> 
+                Create Meter Charges</button></a>
+              
+
 <br>
 
 <div style="display: flex;gap: 25px;">
@@ -458,11 +467,12 @@
   <table id="myTableOne" class="display" >
     <thead>
       <tr>
-        <th>Date</th>
+        <th>Reading Date</th>
         <th>Unit</th>
         <th>Meter Type</th>
         <th>Previous Reading</th>
         <th>Current Reading</th>
+        <th>Consumption Units</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -473,6 +483,7 @@
         <td>Water</td>
         <td>10</td>
         <td>11</td>
+        <td>1</td>
         <td>
           <a href="#"> <button  onclick="openmeterPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button></a>
           <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>
@@ -486,6 +497,7 @@
         </td>
         <td>19</td>
         <td>20</td>
+        <td>1</td>
         <td>
          <button onclick="openmeterPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
           <button   class="btn btn-sm" style="background-color: #193042; color:#fff;">    <i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>
@@ -500,6 +512,7 @@
         </td>
         <td>21</td>
         <td>22</td>
+        <td>1</td>
         <td>
           <button onclick="openmeterPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
           <button   class="btn btn-sm" style="background-color: #193042; color:#fff;">    <i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>
@@ -514,6 +527,7 @@
         </td>
         <td>12</td>
         <td>13</td>
+        <td>1</td>
         <td>
           <button onclick="openmeterPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
           <button   class="btn btn-sm" style="background-color: #193042; color:#fff;"><i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>          </td>
@@ -576,8 +590,13 @@
         <button class="close-btn text-secondary" onclick="meterreadingclosePopup()">×</button>
         <h2 class="assign-title">Add A Meter Reading</h2>
 
+  
         <form class="wide-form">
           <div class="form-group">
+
+            <b><label for="dateInput" class="filter-label">Reading Date</label></b>
+            <input type="date" id="dateInput" class="form-control" required/>
+
             <label for="units">Units:</label>
             <select id="units" required>
                 <option>D17</option>
@@ -590,6 +609,7 @@
                 <label for="meter_type">Meter Type:</label>
                 <select id="meter_type" required>
                   <option>Water</option>
+                  <option>Electrical</option>
               </select>
             </div>
 
@@ -603,7 +623,7 @@
                 <input type="number" id="current_reading" name="current_reading" placeholder="Current Reading" required>
             </div>
 
-            <button type="submit" class="submit-btn">Create Meter Reading</button>
+           <button type="submit" class="submit-btn">Create Meter Reading</button>
         </form>
     </div>
 </div>
