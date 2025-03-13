@@ -1,54 +1,24 @@
+                                      /* BODY DEFAULT */
 body {
     font-family: Arial, sans-serif;
     columns: gray;
 }
 
-
-.close-btn{
-     position: absolute;
-
-    right: 15px;
-
-    color: white;
-    cursor: pointer;
-
-}
-
-#sendButton{
-  background-color: #FFC107;
-  position: absolute;
-  right: 2%;
-  bottom: 1%;
-}
-  .row.first{
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
-
-}
+                                        /* BODY TITLE SECTION */
 .contact_section_header{
   border-bottom: 1px solid rgba(128, 128, 128, 0.5);
   font-family: 'Poppins', sans-serif;
-
+  font-weight: 600;
+  letter-spacing: .5px;
 }
-a{
-  color: #00192D;
-}
-
-
-.btn.new_text{
-  background-color: #00192D;
-  color: white;
-  font-size: small;
+/* title icon */
+.title-icon{
+  color: #FFC107;
 }
 
-  .row.first{
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
 
-}
-.contact_section_header{
-  border-bottom: 1px solid rgba(128, 128, 128, 0.5);
-  font-family: 'Poppins', sans-serif;
+                                      /* NEW MESSAGE POP-UP */
 
-}
 a{
   color: #00192D;
 }
@@ -74,6 +44,8 @@ a{
     text-align: left;
     position: relative;
   }
+
+                                        /* SELECT, INPUT, TEXT_AREA */
   input, textarea {
     width: 100%;
     padding: 8px;
@@ -91,21 +63,7 @@ a{
   cursor: pointer;
   border: none;
   background: none;
-  }
-  /* Submit button */
- .submit-btn {
-  background-color: #00192D;
-  color: white;
-  padding: 10px;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-  border-radius: 5px;
-  }
-  
-
-
-
+  } 
 /* Form styles */
 .form-row {
   display: flex;
@@ -143,32 +101,63 @@ input:focus, select:focus {
 }
 
 input, select {
-  width: 20%;
+  width: 30%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
   background-color: #fff;
   cursor: pointer;
+  margin-right: 20px;
 }
 
 
-/* Message Container styles */
+
+                                    /* BUTTONS */
+
+  .btn{
+    font: bold !important;
+    letter-spacing: 0.15em;
+    padding: 6px 14px;
+    height: fit-content;
+    background-color: #00192D;
+    color: white;
+    cursor: pointer;
+  }
+  .btn:hover {
+    background-color: #002a4d; /* Slightly lighter blue */
+    transform: scale(1.05); /* Slightly enlarge */
+    color: #FFC107;
+  }
+
+  .submit-btn {
+    width: 100%;
+    }
+                                    /* MESSAGE CONTAINER STYLES */
 .message-container{
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
 }
+.message-body{
+  background-color: #f2f2f2;
 
+}
+.message-profiles{
+  border-right:1px solid #E2E2E2; padding: 0 !important;
+background-color: white;
+}
 .message-container-header-section{
   padding: 10px;
+ 
 }
 .message-profiles-header-section{
-  padding: 10px;
+  padding: 20px;
   font-weight: 600;
   letter-spacing: .5px;
   font-size: 20px;
   border-bottom: 1px solid #E2E2E2;
   width: 100%;
   margin-left: 0;
+  height: 80px;
 }
 .message-profiles-section{
   
@@ -183,8 +172,8 @@ input, select {
   padding: 15px;
   height: 10vh;
   width: 10vh;
-
-  
+  font-size: medium;
+  font-weight: normal;
 }
 .individual-profile-message-container{
   margin-left: 10px;
@@ -192,9 +181,10 @@ input, select {
 }
 .individual-name{
   font-weight: 600;
+  font-size: medium;
 }
 .individual-message-profiles{
-  border: 1px solid #ccc;
+  border-bottom: 1px solid #ccc; 
   padding: 10px;
 }
 .individual-message{
@@ -202,5 +192,31 @@ input, select {
   color: #767676;
   font-size: 12px;
   font-weight: bold;
-  
 }
+.individual-message-body-header{
+  padding: 10px;
+  font-weight: 600;
+  letter-spacing: .5px;
+  font-size: 20px;
+  border-bottom: 1px solid #E2E2E2;
+  width: 100%;
+  margin-left: 0;
+  height: 80px;
+  align-items: center;
+  background: white;
+}
+ /* message body */
+.residence{
+  max-width: 236px;
+  color: #767676;
+  font-size: 12px;
+  font-weight: bold;
+}
+.individual-residence{
+  margin-left: 10px;
+}
+.individual-details-container{
+  align-items: center;
+}
+
+
