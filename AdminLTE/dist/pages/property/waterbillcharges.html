@@ -472,8 +472,8 @@
             <input type="number" id="unitPrice" class="form-control" placeholder="Enter unit price">
         </div>
         <div class="col-md-4">
-            <label for="quantity" class="form-label">Quantity</label>
-            <input type="number" id="quantity" class="form-control" placeholder="Enter quantity">
+            <label for="consumption_units" class="form-label">Consumption Units</label>
+            <input type="number" id="quantity" class="form-control" placeholder="Enter Consumption Units">
         </div>
         <div class="col-md-4">
             <label class="form-label">&nbsp;</label>
@@ -490,7 +490,7 @@
             <tr>
                 <th>Charge Name</th>
                 <th>Unit Price (Ksh)</th>
-                <th>Quantity</th>
+                <th>Consumption Units</th>
                 <th>Total (Ksh)</th>
                 <th>Action</th>
             </tr>
@@ -504,7 +504,7 @@
     <div class="row">
         <div class="col-md-4">
             <label for="tax" class="form-label">Tax (%)</label>
-            <input type="number" id="tax" class="form-control" value="10" oninput="calculateTotal()">
+            <input type="number" id="tax" class="form-control" value="16" oninput="calculateTotal()">
         </div>
         <div class="col-md-4">
             <label for="discount" class="form-label">Discount (Ksh)</label>
@@ -516,9 +516,9 @@
         </div>
     </div>
 
-    <button class="btn btn-success mt-3" onclick="generateInvoice()">
+    <a href="../financials/invoices.html"><button class="btn btn-success mt-3" onclick="generateInvoice()">
         <i class="fas fa-file-invoice"></i> Send To Invoice
-    </button>
+    </button></a>
 
     <!-- Invoice Display -->
     <div class="mt-4 p-3 border" id="invoiceSection" style="display: none;">
