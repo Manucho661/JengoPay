@@ -3,126 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Date Comparison</title>
-    <!-- <link rel="stylesheet" href="styles.css">/\ -->
+    <title>Floating Three Dots Menu</title>
     <style>
-   /* General Styling */
-body {
-    font-family: 'Poppins', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f0f2f5;
-    margin: 0;
-}
+        /* Page Content */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
 
-/* Card Container */
-.card {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 320px;
-}
+        .content {
+            padding: 20px;
+        }
 
-/* Date Input Section */
-.date-inputs {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    margin: 15px 0;
-}
+        /* Floating menu container */
+        .menu-container {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000; /* Ensures it stays on top */
+        }
 
-.date-inputs div {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
+        /* Three dots button */
+        .menu-button {
+            font-size: 24px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 10px;
+        }
 
-input {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
-}
+        /* Dropdown menu */
+        .menu-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 35px; /* Adjusts position under the dots */
+            background: white;
+            min-width: 150px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            z-index: 1001; /* Ensures it stays above content */
+        }
 
-/* Button */
-button {
-    background-color: #007bff;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%;
-    font-size: 16px;
-}
+        /* Menu items */
+        .menu-content a {
+            color: black;
+            padding: 10px;
+            text-decoration: none;
+            display: block;
+        }
 
-button:hover {
-    background-color: #0056b3;
-}
+        /* Hover effect */
+        .menu-content a:hover {
+            background-color: #f1f1f1;
+        }
 
-/* Result Display */
-#result {
-    margin-top: 15px;
-    font-weight: bold;
-    color: #333;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-}
-
-#result.show {
-    opacity: 1;
-}
-
-
+        /* Show menu when active */
+        .show {
+            display: block;
+        }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h2>Compare Two Dates</h2>
-        <div class="date-inputs">
-            <div>
-                <label for="date1">First Date:</label>
-                <input type="date" id="date1">
-            </div>
-            <div>
-                <label for="date2">Second Date:</label>
-                <input type="date" id="date2">
-            </div>
+
+    <!-- Floating Three Dots Menu -->
+    <div class="menu-container">
+        <button class="menu-button" onclick="toggleMenu()">&#8226;&#8226;&#8226;</button>
+        <div class="menu-content" id="menu">
+            <a href="#">Option 1</a>
+            <a href="#">Option 2</a>
+            <a href="#">Option 3</a>
         </div>
-        <button onclick="compare()">Compare</button>
-        <div id="result"></div>
+    </div>
+
+    <!-- Page Content -->
+    <div class="content">
+        <h1>Welcome to the Page</h1>
+        <p>This is the existing content. The three dots menu stays at the top-right corner.</p>
     </div>
 
     <script>
-function compare() {
-    let date1 = new Date(document.getElementById("date1").value);
-    let date2 = new Date(document.getElementById("date2").value);
-    let resultDiv = document.getElementById("result");
+        // Function to toggle the menu
+        function toggleMenu() {
+            document.getElementById("menu").classList.toggle("show");
+        }
 
-    if (!date1 || !date2 || isNaN(date1) || isNaN(date2)) {
-        resultDiv.innerHTML = "<p style='color:red;'>Please select both dates.</p>";
-        resultDiv.classList.add("show");
-        return;
-    }
-
-    let message = "";
-
-    if (date1 > date2) {
-        message = `The first date (<strong>${date1.toDateString()}</strong>) is later than the second date (<strong>${date2.toDateString()}</strong>).`;
-    } else if (date1 < date2) {
-        message = `The first date (<strong>${date1.toDateString()}</strong>) is earlier than the second date (<strong>${date2.toDateString()}</strong>).`;
-    } else {
-        message = `Both dates are the same (<strong>${date1.toDateString()}</strong>).`;
-    }
-
-    resultDiv.innerHTML = `<p>${message}</p>`;
-    resultDiv.classList.add("show");
-}
-
+        // Close menu when clicking outside
+        window.onclick = function(event) {
+            if (!event.target.matches('.menu-button')) {
+                let dropdown = document.getElementById("menu");
+                if (dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
+            }
+        };
     </script>
+
 </body>
 </html>
