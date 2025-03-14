@@ -136,6 +136,7 @@ input, select {
                                     /* MESSAGE CONTAINER STYLES */
 .message-container{
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
+ 
 }
 .message-body{
   background-color: #f2f2f2;
@@ -230,3 +231,6 @@ background-color: white;
 }
 
 
+.new-messages{
+  margin-left: 10%;
+}
