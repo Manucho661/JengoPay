@@ -6,7 +6,7 @@ body {
 
                                         /* BODY TITLE SECTION */
 .contact_section_header{
-  border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+  /* border-bottom: 1px solid rgba(128, 128, 128, 0.5); */
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
   letter-spacing: .5px;
@@ -19,8 +19,17 @@ body {
 
                                       /* NEW MESSAGE POP-UP */
 
-a{
-  color: #00192D;
+.text-message-header{
+   color: #00192D;
+   font-weight: 600;
+   text-transform: uppercase;
+   font-size: 16px;
+   border-bottom: 1px solid rgba(128, 128, 128, 0.5); 
+   width: 100px;
+}
+.recepients{
+  font-size: 12px;
+  margin-right: 5px;
 }
 .newtextpopup-overlay{
   position: fixed;
@@ -131,8 +140,13 @@ input, select {
   }
 
   .submit-btn {
-    width: 100%;
+    margin-right: 5px;
     }
+    .message-send-button {
+      margin-left: 10px;
+      
+      
+  }
                                     /* MESSAGE CONTAINER STYLES */
 .message-container{
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
@@ -184,6 +198,19 @@ background-color: white;
 .individual-profile-message-container{
   margin-left: 10px;
   align-items: center;
+
+}
+.individual-message-profiles.active{
+  background: rgba(128, 128, 128, 0.2);
+    
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+.individual-message-profiles:hover{
+  
+    background: rgba(128, 128, 128, 0.2);
+    
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  
 }
 .individual-name{
   font-weight: 600;
@@ -215,7 +242,7 @@ background-color: white;
   flex-direction: column;
   justify-content: center;
 }
- /* message body */
+        /* message body */
 .residence{
   max-width: 236px;
   color: #767676;
@@ -255,3 +282,48 @@ background-color: white;
   color: #fff;
   border-radius: 100%;
 }
+.individual-message-body{
+  height: 100%;
+}
+
+/* messages */
+.messages{
+  height: 18em;
+  overflow-y: auto;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.message {
+  padding: 8px 12px;
+  margin: 5px 0;
+  border-radius: 10px;
+  max-width: 80%;
+}
+.incoming {
+  background: #e0e0e0;
+  align-self: flex-start;
+}
+.outgoing {
+ background: #FFC107;
+  color: white;
+  align-self: flex-end;
+}
+.input-box {
+  flex: 1;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  min-height: 20px;
+  max-height: 100px;
+  overflow-y: auto;
+  outline: none;
+}
+.input-area {
+  display: flex;
+  padding: 10px;
+  background: #fff;
+  border-top: 1px solid #ddd;
+}
+
