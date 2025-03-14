@@ -63,7 +63,7 @@ a{
   cursor: pointer;
   border: none;
   background: none;
-  } 
+  }
 /* Form styles */
 .form-row {
   display: flex;
@@ -147,7 +147,7 @@ background-color: white;
 }
 .message-container-header-section{
   padding: 10px;
- 
+
 }
 .message-profiles-header-section{
   padding: 20px;
@@ -157,21 +157,21 @@ background-color: white;
   border-bottom: 1px solid #E2E2E2;
   width: 100%;
   margin-left: 0;
-  height: 80px;
+  height: 6rem;
 }
 .message-profiles-section{
-  
+
 }
 .profile-initials{
   position: 20px;
-  border-radius: 100%; 
+  border-radius: 100%;
   border: 2px solid #FFC107;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 15px;
-  height: 10vh;
-  width: 10vh;
+  height: 4rem;
+  width: 4rem;
   font-size: medium;
   font-weight: normal;
 }
@@ -184,7 +184,7 @@ background-color: white;
   font-size: medium;
 }
 .individual-message-profiles{
-  border-bottom: 1px solid #ccc; 
+  border-bottom: 1px solid #ccc;
   padding: 10px;
 }
 .individual-message{
@@ -201,7 +201,7 @@ background-color: white;
   border-bottom: 1px solid #E2E2E2;
   width: 100%;
   margin-left: 0;
-  height: 80px;
+  height: 6rem;
   align-items: center;
   background: white;
 }
