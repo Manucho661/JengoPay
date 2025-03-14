@@ -136,7 +136,7 @@ input, select {
                                     /* MESSAGE CONTAINER STYLES */
 .message-container{
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
- 
+
 }
 .message-body{
   background-color: #f2f2f2;
@@ -192,6 +192,7 @@ background-color: white;
 .individual-message-profiles{
   border-bottom: 1px solid #ccc;
   padding: 10px;
+  position: relative;
 }
 .individual-message{
   max-width: 236px;
@@ -233,4 +234,24 @@ background-color: white;
 
 .new-messages{
   margin-left: 10%;
+}
+.time-count{
+  position: absolute;
+  right: 0;
+  margin-right: 5px;
+  display: flex;
+  flex-direction: column;
+}
+.time{
+  max-width: 236px;
+  color: #767676;
+  font-size: 12px;
+  font-weight: bold;
+}
+.message-count{
+  background-color: #FFC107;
+  display: flex;
+  justify-content: center;
+  color: #fff;
+  border-radius: 100%;
 }
