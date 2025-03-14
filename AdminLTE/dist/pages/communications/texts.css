@@ -142,8 +142,9 @@ input, select {
 
 }
 .message-profiles{
-  border-right:1px solid #E2E2E2; padding: 0 !important;
+border-right:1px solid #E2E2E2; padding: 0 !important;
 background-color: white;
+
 }
 .message-container-header-section{
   padding: 10px;
@@ -158,6 +159,9 @@ background-color: white;
   width: 100%;
   margin-left: 0;
   height: 6rem;
+  display: flex;
+ flex-direction: column;
+ justify-content: center;
 }
 .message-profiles-section{
 
@@ -167,13 +171,14 @@ background-color: white;
   border-radius: 100%;
   border: 2px solid #FFC107;
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
   justify-content: center;
   padding: 15px;
   height: 4rem;
   width: 4rem;
   font-size: medium;
   font-weight: normal;
+  align-items: center;
 }
 .individual-profile-message-container{
   margin-left: 10px;
@@ -202,8 +207,11 @@ background-color: white;
   width: 100%;
   margin-left: 0;
   height: 6rem;
-  align-items: center;
+  /* align-items: center; */
   background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
  /* message body */
 .residence{
@@ -216,7 +224,9 @@ background-color: white;
   margin-left: 10px;
 }
 .individual-details-container{
-  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 

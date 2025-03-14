@@ -329,11 +329,11 @@
           </div>
           <!--end::Container-->
         </div>
-        
+
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
-          
+
           <!--begin::Row-->
 
           <!-- Message Container -->
@@ -350,7 +350,7 @@
                           <option value="health">Manucho</option>
                           <option value="business">Ebenezer</option>
                           <option value="education">Crown Z</option>
-                        </select>        
+                        </select>
                         <input type="text" class="search-input" placeholder="Search by name...">
 
 
@@ -360,24 +360,25 @@
                         <button  id="new_text" onclick="opennewtextPopup()" class="btn new_text">    <i class="bi bi-chat" ></i> New Text</button>
                       </div>
                     </div>
-                                     
+
                 </div>
 
-                <div class="row align-items-stretch" style="border:1px solid #E2E2E2">
+                <div class="row align-items-stretch" style="border:1px solid #E2E2E2; ">
 
                     <div class="col-md-4  message-profiles">
 
                       <div class="message-profiles-header-section d-flex">
-                        <div class="text">Recent Conversations</div>
-                        <div class="new-messages" style="position: relative;">
-                          <a class="nav-link" data-bs-toggle="dropdown" href="#">
-                            <i class="bi bi-chat-text"></i>
-                            <span class="navbar-badge badge text-bg-danger">3</span>
-                          </a>
+                        <div class="content d-flex">
+                              <div class="text">Recent Conversations</div>
+                              <div class="new-messages" style="position: relative;">
+                                <a class="nav-link" data-bs-toggle="dropdown" href="#">
+                                  <i class="bi bi-chat-text"></i>
+                                  <span class="navbar-badge badge text-bg-danger">3</span>
+                                </a>
+                              </div>
                         </div>
-                        
                       </div>
-                      
+
                       <div class="h-80  message-profiles-section">
 
                         <div class="individual-message-profiles d-flex">
@@ -418,16 +419,19 @@
 
                     <div class="col-md-8  message-body" style="padding: 0 !important;">
                       <div class="individual-message-body-header">
-                        <div class="individual-details-container d-flex">
-                          <div class="profile-initials">JM</div>
-                          <div class="individual-residence">
-                            <div class="individual-name">Joseph Makori</div>
-                            <div class="residence mt-2">EBENEZER, C12</div>
+                        <div class="individual-details-container">
+                          <div class="content d-flex">
+                            <div class="profile-initials">JM</div>
+                            <div class="individual-residence">
+                              <div class="individual-name">Joseph Makori</div>
+                              <div class="residence mt-2">EBENEZER, C12</div>
+                            </div>
                           </div>
+
                         </div>
                       </div>
                       <div class=" individual-message-body">
-                        
+
                       </div>
                     </div>
                 </div>
@@ -483,7 +487,7 @@
     <h2 style="color: #00192D;">New Text</h2>
 
     <!-- <label for="property">Recipients:</label> -->
-     
+
   <label for="property">Recepients:</label>
 <select id="property" required >
   <option value="" disabled selected>Select Recipient</option>
@@ -505,7 +509,7 @@
 
 
 
-<!-- !-- create new text --> 
+<!-- !-- create new text -->
 <script>
   // Function to open the complaint popup
   function opennewtextPopup() {
@@ -632,7 +636,7 @@
       crossorigin="anonymous"
     ></script>
 
-    
+
 
 
     <script>
