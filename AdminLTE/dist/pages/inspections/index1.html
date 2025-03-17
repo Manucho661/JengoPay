@@ -45,7 +45,7 @@
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
-     <link rel="stylesheet" href="texts.css">
+     <link rel="stylesheet" href="index1.css">
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
@@ -58,13 +58,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-
-
-
-
-
-<!-- scripts for data_table -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+        <!-- scripts for data_table -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
@@ -333,146 +328,110 @@
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
+            <!-- Begin Row -->
 
-                <!--begin::Row-->
-
-                <!-- Message Container -->
-
-
-              <div class="row " >
-                  <div class="col-md-12 message-container">
-                    <!-- <div class="container" style="border:1px solid #E2E2E2" > -->
-                      <div class="row " style="border:1px solid #E2E2E2" >
-                        <div class="col-12 message-container-header-section">
-                          <div class="row">
-                            <div class="col-md-8">
-                              <select id="categoryFilter">
-                                <option value="">-- Select --</option>
-                                <option value="technology">All</option>
-                                <option value="health">Manucho</option>
-                                <option value="business">Ebenezer</option>
-                                <option value="education">Crown Z</option>
-                              </select>
-                              <input type="text" class="search-input" placeholder="Search by name...">
-
-
-
-                            </div>
-                            <div class="col-md-4 d-flex justify-content-end RecentChatNewText-btns" style="align-items: center;">
-                              <button id="RecentChats" onclick="recentChats()" class="btn recentChats mt-2"> <i class="fa-solid fa-arrow-left"></i> </button>
-                              <button  id="new_text" onclick="opennewtextPopup()" class="btn new_text mt-2">    <i class="bi bi-chat" ></i> New Chat</button>
-                            </div>
+            <div class="row second">
+                <!-- Start col -->
+                <div class="col-md-12 " >
+                      <div class="card second_col ">
+                          <div class="card-header">
+  
+  
                           </div>
-                        </div>
-                      </div>
-
-                      <div class="row align-items-stretch" style="border:1px solid #E2E2E2; padding: 0 !important;">
-
-                          <div id="message-profiles" class="col-md-4  message-profiles">
-
-                            <div class="message-profiles-header-section d-flex">
-                              <div class="content d-flex">
-                                    <div class="text">Recent Conversations</div>
-
-                              </div>
-                            </div>
-
-                            <div class="h-80  message-profiles-section">
-
-                              <div class="individual-message-profiles active d-flex">
-                                <div class="profile-initials">JM</div>
-                                <div class="individual-profile-message-container">
-
-                                  <div class="individual-name">Emmanuel Wanyoni</div>
-
-                                  <div class="individual-message mt-2">I will be paying rent from march...</div>
-
-                                </div>
-                                <div class="d-flex justify-content-end time-count">
-                                  <div class="time">3/3/25</div>
-                                  <div class="message-count mt-2">6</div>
-                                </div>
-                              </div>
-
-                              <div class="individual-message-profiles d-flex">
-                                <div class="profile-initials">JM</div>
-                                <div class="individual-profile-message-container">
-                                  <div class="individual-name">Caleb Kibet</div>
-                                  <div class="individual-message mt-2 ">I will not be paying rent this month, i did not receive..</div>
-                                </div>
-
-                                <div class="d-flex justify-content-end time-count">
-                                  <div class="time">3/3/25</div>
-                                  <div class="message-count mt-2">3</div>
-                                </div>
-                              </div>
-
-                              <div class="individual-message-profiles d-flex">
-                                <div class="profile-initials">JM</div>
-                                <div class="individual-profile-message-container">
-                                  <div class="individual-name">Milton Omondi</div>
-                                  <div class="individual-message mt-2 ">I will not be paying rent this month, i did not receive..</div>
-                                </div>
-
-                                <div class="d-flex justify-content-end time-count">
-                                  <div class="time">3/3/25</div>
-                                  <div class="message-count"></div>
-                                </div>
-                              </div>
-
-                              <div class="individual-message-profiles d-flex">
-                                <div class="  profile-initials">JM</div>
-                                <div class="individual-profile-message-container">
-                                  <div class="individual-name">Joseph Makori</div>
-                                  <div class="individual-message mt-2 ">I will be paying rent from march...</div>
-                                </div>
-
-                                <div class="d-flex justify-content-end time-count">
-                                  <div class="time">3/3/25</div>
-                                  <div class="message-count"></div>
-                                </div>
-                              </div>
-
-
-                            </div>
-
-                          </div>
-
-                          <div id="messageBody" class="col-md-8  message-body" style="padding: 0 !important;">
-                            <div class="individual-message-body-header">
-                              <div class="individual-details-container">
-                                <div class="content d-flex">
-                                  <div class="profile-initials">JM</div>
-                                  <div class="individual-residence">
-                                    <div class="individual-name body">Emmanuel Wanyoni</div>
-                                    <div class="residence mt-2">EBENEZER, C12</div>
+  
+                          <div class="card-body" style="overflow-x: scroll;">
+                          <table id="maintenance" class="display">
+                              <thead class="mb-2">
+                              <tr>
+                                  <th>Date</th>
+                                  <th>REF NO</th>
+                                  <th>TYPE</th>
+                                  <th>PROPERTY</th>
+                                  <th>UNITY</th>
+                                  <th>INSPECTOR</th>
+  
+                                  <th>ACTION</th>
+  
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr >
+                                  <td> 11/13/2024 </td>
+                                  <td>004DE</td>
+                                  <td>Regular</td>
+                                  <td>Manucho APARTMENTS </td>
+                                  <td> C39</td>
+                                  <td>Keroche Farms</td>
+  
+                                  <td id="more">
+                                  <div id="more_icon">&#x2026;</div>
+                                  <br>
+                                  <div id="more_options">
+                                      <a href="#" onclick="openviewPopup()">VIEW</a>
+                                      <a href="#">EDIT</a>
+                                      <a href="#">DELETE</a>
+  
                                   </div>
-
-
+                                  </td>
+                              </tr>
+                              <tr>
+                                <td> 11/13/2024 </td>
+                                <td>004DE</td>
+                                <td>Ad hoc</td>
+                                <td>Manucho APARTMENTS </td>
+                                <td> C39</td>
+                                <td>Keroche Farms</td>
+  
+                                <td id="more">
+                                <div id="more_icon">&#x2026;</div>
+                                <br>
+                                <div id="more_options">
+                                    <a href="#">DELETE</a>
+                                    <a href="#">EDIT</a>
+  
                                 </div>
-
-
-                              </div>
-                            </div>
-                            <div class="individual-message-body">
-
-                              <div class="messages" id="messages">
-                                <div class="message incoming">Hello! How are you?</div>
-                                <div class="message outgoing">I'm doing great, thanks!</div>
-                              </div>
-                              <div class="input-area">
-                                <div class="input-box" id="inputBox" contenteditable="true"></div>
-                                <button class="btn message-send-button" onclick="sendMessage()"><i class="fa fa-paper-plane"></i> </button>
-                            </div>
-
-                            </div>
+                                </td>
+                              </tr>
+  
+                              <tr>
+                                <td> 11/13/2024 </td>
+                                <td>004DE</td>
+                                <td>Ad hoc</td>
+                                <td>Manucho APARTMENTS </td>
+                                <td> C39</td>
+                                <td>Keroche Farms</td>
+  
+                                <td id="more">
+                                <div id="more_icon">&#x2026;</div>
+                                <br>
+                                <div id="more_options">
+                                    <a href="#">DELETE</a>
+                                    <a href="#">EDIT</a>
+  
+                                </div>
+                                </td>
+                            </tr>
+                              <!-- Add more rows as needed -->
+                              </tbody>
+  
+                          </table>
+  
+  
+  
                           </div>
+  
+  
+  
+                          <div class="card-footer">
+  
+                          </div>
+  
                       </div>
-                    </div>
-                <!--end::Row-->
-
                   </div>
-                  <!-- /.col -->
+  
+  
+              </div>
+                <!-- /.col -->
               </div>
               <!--end::Row-->
           </div>
@@ -513,50 +472,6 @@
 
 <!-- PopUp Scripts -->
 
-<!-- new text popup -->
-<div class="newtextpopup-overlay" id="newtextPopup">
-  <div class="newtextpopup-content">
-    <button class="close-btn" onclick="closenewtextPopup()">×</button>
-    <h class="text-message-header">New Text</h3>
-<div class="recepients-container d-flex">
-  <label class="recepients" for="property">To</label>
-  <select id="property" required >
-    <option value="" disabled selected>Select building</option>
-    <option value="High">All</option>
-    <option value="High">Manucho</option>
-    <option value="Moderate">EBENEZER</option>
-    <option value="Low">Alpha</option>
-  </select>
-  
-  
-  <select id="property" required >
-    <option value="" disabled selected>Select Unit</option>
-    <option value="High">All</option>
-    <option value="High">C12</option>
-    <option value="Moderate">C17</option>
-    <option value="Low">E13</option>
-  </select>
-  
-  <select id="property" required >
-    <option value="" disabled selected>Tenant</option>
-    <option value="High">Nucho</option>
-    <option value="High">Alex</option>
-    <option value="Moderate">Chamwada</option>
-    <option value="Low">yoyo</option>
-  </select>
-</div>
-  
-
-    <textarea id="notes" name="notes" rows="10" cols="98" placeholder="Enter message..." style="width: 590px; height: 150px; font-size: 16px; border-radius: 10px;"></textarea>
-  <div class="d-flex justify-content-end">
-
-    <button type="submit" class="btn submit-btn"><i class="fa fa-paper-plane"></i> </button>
-    <button type="submit" class="btn text-bg-danger" ><i class="fa fa-times-circle"></i> </button>
-  </div>
-      
-  </div>
-</div>
-<!-- End NewText popup -->
 
 <!-- PopUp Scripts -->
 
