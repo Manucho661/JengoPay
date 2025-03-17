@@ -148,36 +148,6 @@ background-color: #f1f1f1;
 
 }
 
-#more{
-  display: flex;
-   justify-content: center;
-  cursor: pointer;
-
-}
-
-#more_icon{
-  /* border: 1px solid black; */
-  border-radius: 30%;
-  padding: 10%;
-  font-size: larger;
-}
-
-#more_options{
-  display: none;
-  /* position: absolute; */
-  z-index: 1000;
-  background: #00192D;
-  border-radius: 10%;
-  padding: 10px;
-
-}
-#more_options a{
-  text-decoration: none;
-  color: white;
-}
-#more_options a:hover{
-  color: #FFC107;
-}
 #close-overlay-btn {
     /* top: 0; */
     color: white;
@@ -194,16 +164,7 @@ background-color: #f1f1f1;
     position: relative;
     display: flex;/* Add this for the absolute positioning of the close button */
 }
-#more_announcement_btn{
-color: blueviolet;
-font-weight: 500;
-cursor: pointer;
 
-}
-#more_announcement_btn:hover{
-background-color: rgba(128, 128, 128, 0.2);
-color: #FFC107;
-}
 
 /* Form styles */
 .form-row {
@@ -421,3 +382,40 @@ td{
       padding: 10px;
       border-radius: 10px;
     }
+    .content {
+      padding: 20px;
+  }
+
+  /* Show menu when active */
+  .show {
+      display: block;
+  }
+  #more {
+    position: relative;
+    cursor: pointer;
+}
+#more_icon {
+    font-size: 20px;
+    cursor: pointer;
+}
+#more_options {
+    display: none;
+    position: absolute;
+    background:black;
+    color: white;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 5px;
+    top: 20px;
+    right: 0;
+    width: 80px;
+}
+#more_options a {
+    display: block;
+    padding: 5px;
+    text-decoration: none;
+    color: black;
+}
+#more_options a:hover {
+    color: #000;
+}
