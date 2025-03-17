@@ -4,6 +4,10 @@ body {
     columns: gray;
 }
 
+                                            /* SCROLL BARS */
+
+                                                                                     
+
                                         /* BODY TITLE SECTION */
 .contact_section_header{
   /* border-bottom: 1px solid rgba(128, 128, 128, 0.5); */
@@ -62,17 +66,19 @@ body {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+
+input:hover{
+  border: 1px solid #00192D
+}
+select:hover{
+  border: 1px solid #00192D
+}
+textarea:hover{
+  border: 1px solid #00192D
+
+}
 /* notification popup */
-/* Close button */
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 20px;
-  cursor: pointer;
-  border: none;
-  background: none;
-  }
+
 /* Form styles */
 .form-row {
   display: flex;
@@ -143,9 +149,25 @@ input, select {
     margin-right: 5px;
     }
     .message-send-button {
-      margin-left: 10px;
-      
-      
+      margin-left: 10px; 
+  }
+  /* Close button */
+  .close-btn:hover{
+    color: red;
+  }
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  }
+  .recentChats{
+    display: none; 
+    margin-top: 2px;
   }
                                     /* MESSAGE CONTAINER STYLES */
 .message-container{
@@ -326,4 +348,12 @@ background-color: white;
   background: #fff;
   border-top: 1px solid #ddd;
 }
-
+ /* Responsive Behavior */
+ @media (max-width: 768px) {
+  
+  .RecentChatNewText-btns{
+    display: flex !important;
+    justify-content: space-between !important;
+  }
+  
+}
