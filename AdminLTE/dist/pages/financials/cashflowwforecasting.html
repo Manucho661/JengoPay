@@ -3,7 +3,7 @@
   <!--begin::Head-->
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>BT JENGOPAY |</title>
+    <title>AdminLTE | Dashboard v2</title>
     <!--begin::Primary Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="title" content="AdminLTE | Dashboard v2" />
@@ -43,10 +43,6 @@
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
-   <link rel="stylesheet" href="Building.css">
-   <link rel="stylesheet" href="meterreading.css">
-   <link rel="stylesheet" href="AddUnit.css">
-
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -55,130 +51,113 @@
       integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="index.css">
+
 
     <!-- scripts for data_table -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <!-- <link rel="stylesheet" href="announcements.css"> -->
+    <link rel="stylesheet" href="announcements.css">
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+   .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
 
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-        <style>
-          .property-registration .progress-bar {
-              display: flex;
-              justify-content: center;
-          }
-      
-          /* Progress Bar */
-          .progress-bar {
-              display: flex!important;
-              justify-content: space-between; /* Spreads steps evenly */
-              align-items: center;
-              width: 100%; /* Full width */
-              max-width: 400px; /* Adjust width as needed */
-              margin: 20px auto; /* Centers it */
-              /* padding: 10px; */
-              gap: 10px; /* Adds spacing between steps */
-          }
-      
-          /* Individual Step */
-          .stepy {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              width: 40px;
-              height: 40px;
-              background: #00192D;
-              color:#FFC107;
-              border-radius: 50%;
-              font-weight: bold;
-              transition: 0.3s;
-          }
-      
-          .property-registration {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              width: 100%;
-          }
-      
-          /* Active Step */
-          .stepy.active {
-              background:#00192D;
-          }
-      
-          /* Completed Step (Tick) */
-          .stepy.completed span {
-              display: none;
-          }
-      
-          .stepy.completed::after {
-              content: "✔";
-              font-size: 18px;
-              font-weight: bold;
-          }
-      
-          /* Form Steps */
-          .form-step {
-              display: none;
-              opacity: 0;
-              transform: translateX(50px);
-              transition: all 0.3s ease-in-out;
-          }
-      
-          .form-step.active {
-              display: block;
-              opacity: 1;
-              transform: translateX(0);
-          }
-      
-          input {
-              width: 90%;
-              padding: 8px;
-              margin: 10px 0;
-              border: 1px solid #ccc;
-              border-radius: 5px;
-          }
-      
-          button {
-              padding: 10px 15px;
-              border: none;
-              border-radius: 10px;
-              cursor: pointer;
-              margin: 5px;
-          }
-      
-          .next-btn {
-              background: #00192D;
-              color: white;
-          }
-      
-          .prev-btn {
-              background: #00192D;
-              color: white;
-          }
-      
-          .submit-btn {
-              background: green;
-              color: white;
-          }
-          select{
-              width: 90%;
-              padding: 8px;
-              margin: 10px 0;
-              border: 1px solid #ccc;
-              border-radius: 5px;
-          }
-          label{
-              text-align: left;
-          }
-      
-      </style>
+        .overlay-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            width: 400px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
 
+        /* Heading */
+        .overlay-content h2 {
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            color: #333;
+        }
+
+        /* Message Input Area */
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-family: 'Arial', sans-serif;
+            font-size: 14px;
+        }
+
+        /* Recipient Selector */
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Send Button */
+        .send-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .send-button:hover {
+            background-color: #0056b3;
+        }
+        .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: red;
+    border-radius: 20px;
+  }
+  .notification-title {
+    color: #00192D;
+    font-size: 15px;
+    font-weight: bold;
+
+}
+canvas {
+            max-width: 600px;
+            margin: auto;
+        }
 </style>
+
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -396,15 +375,14 @@
             />
             <!--end::Brand Image-->
             <!--begin::Brand Text-->
-            <span class="brand-text fw-dark">BT JENGOPAY</span>
+            <span class="brand-text fw-light">AdminLTE 4</span>
             <!--end::Brand Text-->
           </a>
           <!--end::Brand Link-->
         </div>
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
-        <div id="sidebar"></div> <!-- This is where the header will be inserted -->
-
+        <div id="sidebar"></div>
         <!--end::Sidebar Wrapper-->
       </aside>
       <!--end::Sidebar-->
@@ -418,347 +396,350 @@
             <div class="row">
               <div class="col-sm-6"><h3 class="mb-0"></h3></div>
               <div class="col-sm-6">
-                <!-- <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#"></a></li>
-                  <li class="breadcrumb-item active" aria-current="page"></li>
-                </ol> -->
+
               </div>
             </div>
             <!--end::Row-->
           </div>
           <!--end::Container-->
         </div>
-        <div class="app-content">
-          <!--begin::Container-->
+        <div  class="app-content">
+
           <div class="container-fluid">
-            <div class="property-title">Crown Z Towers</div>
-            <p>Residential | 
-              <button class="edit-btn"><i class="fas fa-edit"></i>EDIT</button>
-            </p>  
-            <hr>  
-<div style="display: flex;gap: 25px;">
-<!-- <a href=""><p>Summary</p></a> -->
-<!-- <a href="../property/AllUnits.html"><p>Units(5)</p></a> -->
-</div>
-</div>
+            <!-- First Row -->
+            <div class="row  " >
+              <div class="col-sm-8">
 
-<div style="display: flex; gap: 25px;">
-   <a href="../property/AllUnits.html"  style="color: #FFC107;"> <p>Unit list</p></a>
-    <a href="../property/meterreading.html"  style="color: #FFC107;"><p>Meter Reading</p></a>
-</div>
-
-<!-- <b><p>Add Unit to Crown Z Towers</p></b> -->
-
-<b><p>What is the Unit Information?</p></b>
-
-<div class="row">
-  <div class="col-md-4">
-  <label for="location">Unit Number*</label>
-  <input type="text" id="unit_number" name="unit_number" placeholder="Enter Unit Number"> 
-</div>
+                <h3 class="mb-0 contact_section_header"> <i class="fas fa-chart-line" style="font-size: 30px; color: #3498db;"></i> CashFlow Forecasting</h3>
 
 
-<div class="col-md-4">
-  <label for="size">Size(Optional)*</label>
-  <input type="number" id="size" name="size" placeholder="Enter Size"> 
-  </div>
+                    <div class="row mt-2  ">
+                      <div class="col-md-12 Summary ">
+
+                        <div class="row mt-6 mb-2">
+                            <!-- Summary -->
+                            <div class="col-md-3 ">
+                                <label class="text text-center">   <i class="fas fa-money-bill-wave money-icon"></i>INCOME</label>
+                                <span class="value text-center"> <b> KSH 50,000,000</b>  </span>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="text text-center">  <i class="fas fa-money-bill-wave money-icon"></i>EXPENSES</label>
+                                <span class="value"> <b>KSH 30,000,000</b>  </span>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="text text-center"> <i class="fas fa-money-bill-wave money-icon"></i> NET_PROFIT</label>
+                                <span class="value"> <b>KSH 20,000,000</b>  </span>
+                            </div>
+
+                            <div class="col-md-3">
+                                <button class="btn text text-danger"> <i class="fas fa-edit"></i> Edit</button>
+                              </div>
+
+                        </div>
+
+                        <div class="row mt-6" >
+                          <!-- Summary -->
+                        
+                          <!-- <div class="col-md-3">
+                              <label class="text text-center"> <i class="fas fa-home unit-type"></i>  OCCUPANCY_RATE  </label>
+                              <span class="value"> <b>30%</b> </span>
+                          </div> -->
+                          <!-- <div class="col-md-3">
+                            <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> <a href=""> Roll_Over  </a>  </label>
+                            <span class="value"> <b>MONTHLY</b> </span>
+                          </div> -->
+                         
 
 
-<div class="col-md-4">
-<label for="size">Floor Number*</label>
-<input type="" id="size" name="size" placeholder="Enter Floor Size"> 
-</div>
+                        </div>
 
-<b><p>What is the listing information?</p></b>
-<div class="col-md-4">
-<form>
-    <label for="rooms">Rooms*</label>
-    <select id="rooms" name="property">
-    <option value="Bedsitter">Bedsitter</option>
-    <option value="One bedroom">One bedroom</option>
-    <option value="Two bedroom">Two Bedroom</option>
-    <option value="Two bedroom">Three Bedroom</option>
-    <option value="Two bedroom">Four Bedroom</option>
-    <option value="Two bedroom">Five Bedroom</option>
+                      </div>
+                      <!-- <div class="col-md-6">
 
+                        <div class="contact">
+                          <p class="contact_item" >Email</p>
+                          <p class="contact_value" >nucho@gmail</p>
+                        </div>
+                        <div class="contact">
+                          <p  class="contact_item" >Address</p>
+                          <p  class="contact_value" >50202|202|Califonia</p>
+                        </div>
 
-    </select>
-</form>
-</div>
-
-<div class="col-md-4">
-    <form>
-        <label for="rooms">Room Type*</label>
-        <select id="rooms" name="property">
-        <option value="Rental">Rental</option>
-        <option value="Air BnB">Air Bnb</option>
-        <option value="Banking Hall">Banking Hall</option>
-        <option value="Banking Hall">Office</option>
-
-        </select>
-    </form>
-    </div>
-
-    <div class="col-md-4">
-        <form>
-            <label for="rooms">Bathrooms*</label>
-            <select id="rooms" name="property">
-            <option value="One bedroom">One Bathroom</option>
-            <option value="Two bedroom">Two Bathroom</option>
-            <option value="Two bedroom">ThreeBathroom</option>
-            <option value="Two bedroom">Four Bathroom</option>
-            <option value="Two bedroom">Five Bathroom</option>
-            </select>
-        </form>
-        </div>
-
-        <div class="col-md-4">
-          <form>
-              <label for="kitchen">Kitchen*</label>
-              <select id="kitchen" name="property">
-              <option value="open">Open</option>
-              <option value="closed">Closed</option>
-              </select>
-          </form>
-          </div>
-
-          <div class="col-md-4">
-            <form>
-                <label for="balcony">Balcony*</label>
-                <select id="balcony" name="property">
-                <option value="one">One </option>
-                <option value="two">Two </option>
-                <option value="three">Three</option>
-                <option value="four">Four</option>
-                <option value="five">Five</option>
-                </select>
-            </form>
+                      </div> -->
+                </div>
+                
+              </div>
+              
+              <div class="col-sm-4 d-block">
+                <div class="row float-sm-end">
+                      <ol class="breadcrumb">
+                        <!-- <li><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li> -->
+                      </ol>
+                </div>
+                <div class="row">
+                  <div class="dropdown">
+                    <button class="dropbtn">Select a Property</button>
+                    <div class="dropdown-content">
+                        <a href="">EBENEZER</a>
+                        <a href="">MANUCHO</a>
+                        <a href="">PINK_HOUSE</a>
+                    </div>
+                  </div>
+                
+                </div>
+              </div>
             </div>
 
-            <div class="col-md-4">
-              <form>
-                  <label for="Rent Amount">Rent Amount*</label>
-                  <input type="number" id="rent_amount" name="rent_amount" placeholder="Enter Amount"> 
+            <!-- End first Row -->
 
-              </form>
-              </div>
+            <!-- Second row start -->
+            <div class="row first mb-2 mt-3">
 
-            <div class="col-md-12">
-              <form>
-                <label for="description" class="filter-label">Description</label>
-                <input type="text" id="description" class="form-control" placeholder="Enter a brief description" />
-                  </select>
-              </form>
-              </div>
-
-        </div>
-</div>
-
-<div class="row justify-content-end ">
-    <div class="col-md-4">
-    <button>Create Unit</button>
-  </div>
-  <div class="col-md-4">
-   <a href="../property/AddUnit.html"><button>Add Another Unit</button></a> 
-  </div>
-  <div class="col-md-4">
-    <a href="../property/AllUnits.html"><button>Cancel</button></a>
-  </div>
-            <!-- /.col -->
-          </div>
-          <!--end::Row-->
+                <div class="col-md-8 d-flex justify-content-between">
+                    <!-- <button id="rent_details_btn" class="btn">  <i class="fas fa-calendar-check icon"></i> <a href="profile.html"> <b> Rental_Roll </b> </a> </button> -->
+                    <button id="agreements_btn" class="btn"> <i class="fas fa-money-bill-wave money-icon"></i> <a href="agreements.html"> <b> Future Income </b> </a>  </button>
+                    <button id="agreements_btn" class="btn"> <i class="fas fa-money-bill-wave money-icon"></i> <a href="agreements.html"> <b> Future Expenses </b> </a>  </button>
+                    <button id="agreements_btn" class="btn"> <i class="fas fa-money-bill-wave money-icon"></i> <a href="agreements.html"> <b> Future Net Profit </b> </a>  </button>
 
 
-                      <!-- /.col -->
-                    </div>
-                    <!--end::Row-->
-                  <!-- ./card-body -->
-                  <div class="card-footer">
-                    <!--begin::Row-->
+      
+                       <button id="generateReport" class="btn" style="color: #FFC107;">  <i class="fas fa-download"></i> <a href="#"> <b> cashflowforecasting </b> </a> </button>
 
-                      <!-- /.col -->
 
-                    <!--end::Row-->
-                  </div>
-                  <!-- /.card-footer -->
                 </div>
-                <!-- /.card -->
-              </div>
+
+                <div class="col-md-6">
+                  <div style="display: flex; justify-content: end;">
+
+
+                  </div>
+                </div>
+
+
+            <div class="row mt-5">
+                <div class="col-md-12 Trents">
+
+                          <b><h6 class="mb-0 contact_section_header"><i class="fas fa-file-alt summary-icon"></i>Future  Trends</h6></b>
+
+
+                        <div class="row mt-2  ">
+                            <div class="col-md-12  ">
+
+                                <!-- <div class="row mt-6 "> -->
+                                    <!-- Summary -->
+                                    <div class="col-md-4 ">
+                                        <label class="text text-center">      <i class="fas fa-money-bill-wave money-icon"></i>INCOME </label>
+                                        <canvas id="myChart"  width="1600" height="600"></canvas>
+                                    </div>
+                                    <div class="col-md-4 ">
+                                      <label class="text text-center">      <i class="fas fa-money-bill-wave money-icon"></i>EXPENSES </label>
+                                      <canvas id="myChart1" width="1600" height="600"></canvas>
+                                    </div>
+                                    <div class="col-md-4 ">
+                                      <label class="text text-center">      <i class="fas fa-money-bill-wave money-icon"></i> NET_PROFIT </label>
+                                      <canvas id="myChart2" width="1600" height="600"></canvas> <!-- Adjust width and height -->
+                                    </div>
+
+                                </div>
+
+                                <div class="row mt-6" >
+                                <!-- Summary -->
+                                  
+
+                            </div>
+                        </div>
+
+                </div>
+
+               <!-- Button to trigger overlay -->
+                <!-- <div class="col-md-4 d-flex justify-content-end" style="height: fit-content;">
+                  <button id="announcement_btn" class="btn" onclick="opennotificationPopup()">
+                    <i class="fas fa-bullhorn"></i>
+                    <b>Create Notification</b>
+                  </button>
+                </div> -->
+            </div>
+
               <!-- /.col -->
             </div>
-            <!-- End mantainance row -->
-          </div>
-          <!--end::Container-->
-        </div>
-        <!--end::App Content-->
-      </main>
-      <!--end::App Main-->
-      <!--begin::Footer-->
-      <footer class="app-footer">
-        <!--begin::To the end-->
-        <div class="float-end d-none d-sm-inline">Anything you want</div>
-        <!--end::To the end-->
-        <!--begin::Copyright-->
-        <strong>
-          Copyright &copy; 2014-2024&nbsp;
-          <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>.
-        </strong>
-        All rights reserved.
-        <!--end::Copyright-->
-      </footer>
-      <!--end::Footer-->
-    </div>
-    <!--end::App Wrapper-->
 
-  
-    <div class="detailed-overlay" id="detailedPopup">
-      <div class="detailed-content">
-        <form class="complaint-form">
-          <div class="d-flex justify-content-end"> <button class="close-btn"   onclick="closedetailedPopup()">×</button></div>
-          
-          <h4 style="color: #00192D; font-weight: 600;">Detailed Information</h4>
-          <div class="row g-3">
-          <div class="col-md-6">
-          <label for="name">Building Name:</label>
-          <input type="text" id="name" name="name" placeholder="Mwihoko Apartment" required disabled>
-        </div>
 
-        <div class="col-md-6">
-          <label for="email">Building Owner:</label>
-          <input type="email" id="email" name="email" placeholder="Mr Maina" required disabled>
-        </div>
+            
+                  <div class="card-footer">
 
-        <div class="col-md-6">
-          <label for="phone">County</label>
-          <input type="tel" id="phone" name="phone" placeholder="Nairobi" required disabled>
-      </div>
-  
+                  </div>
 
-      <div class="col-md-6">
-          <label for="unit">Constituency</label>
-          <input type="text" id="unit" name="unit"  placeholder="Westlands" disabled>
+                </div>
+              </div>
+            </div>
+
+            <!-- Row start -->
+            <!-- <div class="row mt-5">
+              <div class="col-md-12 d-flex justify-content-end">
+                <button id="announcement_btn" class="btn" onclick="opennotificationPopup()">
+                  <i class="fas fa-bullhorn"></i>
+                  <b>Create announcement</b>
+                </button>
+              </div>
+             </div> -->
+
+            <!-- row end -->
+
+
+<!-- notification popup -->
+<div class="notificationpopup-overlay" id="notificationPopup">
+  <div class="notificationpopup-content">
+    <button class="close-btn text-secondary" onclick="closenotificationPopup()">×</button>
+    <h2 style="color: #00192D;">Notification</h2>
+
+    <label for="property">Recepients:</label>
+    <select id="property" class="property"><br>
+      <option value=""disabled>Select Recepient</option>
+      <option value="High">Manucho</option>
+      <option value="Moderate">Ben 10</option>
+      <option value="Low">Alpha</option>
+    </select>
+
+    <textarea id="notes" name="notes" rows="10" cols="98" placeholder="Enter any additional information..."></textarea>
+
+      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
   </div>
-
-  <div class="col-md-6">
-          <label for="unit">Ward</label>
-          <input type="text" id="unit" name="unit" placeholder="Parklands" disabled>
-  </div>
-
-  <div class="col-md-4">
-    Building Image
-  <img src="../17.jpg" class="slide" alt="Image 1" style="width: 200px; height:200px;">
 </div>
-  
-        <!-- <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button> -->
-      </form>
-      </div>
-      </div>
-    </div>
+<!-- End Notification popup -->
 
 
 
 
+
+
+<!--
+        <div class="overlaying" id="overlaying">
+          <div class="invoicing-container">
+          <div class="receipt-container" id="receipt">
+            <button class="close-btn" onclick="closeOverlay()">×</button>
+            <h2>Payment Receipt</h2>
+            <p> Nairobi,  KENYA</p>
+            <p><strong>Date:</strong> <span id="date"></span></p>
+
+            <table>
+              <td>Manucho Apartments</td>
+              <td>John</td>
+              <th>A11</th>
+              <td>KSH80,000</td>
+              <td>KSH80,000</td>
+              <td>MPESA</td>
+              <td>TBM34KGNJ8</td>
+              <td>10-12-2025</td>
+              <td>KSH0</td>
+            </table>
+        </div>
+
+        <button class="print-btn" onclick="printReceipt()">Print Receipt</button>
+     -->
+
+
+    <!--end::App Wrapper-->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const steps = document.querySelectorAll(".form-step");
-            const progressSteps = document.querySelectorAll(".step");
-            const nextBtns = document.querySelectorAll(".next-btn");
-            const prevBtns = document.querySelectorAll(".prev-btn");
-            const form = document.getElementById("property-form");
-        
-            let currentStep = 0;
-        
-            function showStep(stepIndex) {
-                // Hide all steps and reset progress
-                steps.forEach((step, index) => {
-                    step.classList.remove("active");
-                    if (index === stepIndex) {
-                        step.classList.add("active");
-                    }
-                });
-        
-                // Update progress bar (show tick for completed steps)
-                progressSteps.forEach((step, index) => {
-                    step.classList.remove("active", "completed");
-                    if (index < stepIndex) {
-                        step.classList.add("completed"); // Mark previous steps as completed (✔️)
-                    }
-                    if (index === stepIndex) {
-                        step.classList.add("active"); // Highlight current step
-                    }
-                });
-            }
-        
-            function validateStep() {
-                const inputs = steps[currentStep].querySelectorAll("input");
-                for (let input of inputs) {
-                    if (input.value.trim() === "") {
-                        alert("Please fill in all fields before proceeding.");
-                        return false;
-                    }
-                }
-                return true;
-            }
-        
-            nextBtns.forEach((button) => {
-                button.addEventListener("click", () => {
-                    if (validateStep()) {
-                        if (currentStep < steps.length - 1) {
-                            currentStep++;
-                            showStep(currentStep);
-                        }
-                    }
-                });
-            });
-        
-            prevBtns.forEach((button) => {
-                button.addEventListener("click", () => {
-                    if (currentStep > 0) {
-                        currentStep--;
-                        showStep(currentStep);
-                    }
-                });
-            });
-        
-            form.addEventListener("submit", function (event) {
-                event.preventDefault();
-                alert("Property Registered Successfully!");
-            });
-        
-            // Show first step on load
-            showStep(currentStep);
-        });
-            </script>
 
+ <!-- dowload as pdf -->
+ <script>
+  document.getElementById("generateReport").addEventListener("click", function () {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      // Title
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(18);
+      doc.text("Rent Deposit Report", 70, 20);
+
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+
+      // Report Data
+      let y = 40;
+      const lineSpacing = 10;
+      const reportData = [
+          ["Tenant Name:", "John Doe"],
+          ["Property:", "Greenview Apartments"],
+          ["Amount Collected:", "KSH 30,000"],
+          ["Date of Collection:", "2025-01-10"],
+          ["Maintenance Costs Deducted:", "KSH 5,000"],
+          ["Cleaning Fees:", "KSH 2,000"],
+          ["Amount Refunded:", "KSH 23,000"],
+          ["Date of Refund:", "2025-02-15"]
+      ];
+
+      reportData.forEach(row => {
+          doc.text(`${row[0]} ${row[1]}`, 20, y);
+          y += lineSpacing;
+      });
+
+      // Footer
+      doc.setFontSize(10);
+      doc.text("Generated by Greenview Apartments Management", 50, y + 10);
+
+      // Save PDF
+      doc.save("Rent_Deposit_Report.pdf");
+  });
+</script>
+<!-- end download as pdf -->
+
+
+<!-- create notification -->
 <script>
   // Function to open the complaint popup
-  function opendetailedPopup() { 
-    document.getElementById("detailedPopup").style.display = "flex";
+  function opennotificationPopup() {
+    document.getElementById("notificationPopup").style.display = "flex";
   }
 
   // Function to close the complaint popup
-  function closedetailedPopup() {
-    document.getElementById("detailedPopup").style.display = "none";
+  function closenotificationPopup() {
+    document.getElementById("notificationPopup").style.display = "none";
+  }
+</script>
+
+    <!-- script for notification overlay -->
+
+    <script>
+      function showOverlay() {
+        document.getElementById('notificationOverlay').style.display = 'flex';
+      }
+
+      function closeOverlay() {
+        document.getElementById('notificationOverlay').style.display = 'none';
+      }
+    </script>
+
+
+<!-- close overlay -->
+<script>
+  function closeOverlay() {
+    document.querySelector('.overlay').style.display = 'none';
   }
 </script>
 
 
+
+<!-- Begin script for datatable -->
 <script>
-        $(document).ready(function () {
-            $('#myTableOne').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableThree').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableFour').DataTable();
-        });
+  $(document).ready(function() {
+   $('#rent').DataTable({
+       "paging": true,
+       "searching": true,
+       "info": true,
+       "lengthMenu": [5, 10, 25, 50],
+       "language": {
+           "search": "Filter records:",
+           "lengthMenu": "Show _MENU_ entries"
+       }
+   });
+});
 
-
-        $(document).ready(function() {
-   $('#myTable').DataTable({
+$(document).ready(function() {
+   $('#agreements').DataTable({
        "paging": true,
        "searching": true,
        "info": true,
@@ -772,31 +753,30 @@
 
 </script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
-
-    
 <script>
-  $(document).ready(function() {
-      $('#rent').DataTable({
-          "lengthChange": false,
-          "dom": 'Bfrtip',
-          "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-      });
+
+  // JavaScript to handle hover and hide functionality
+  const  more= document.getElementById("more");
+  const more_icon = document.getElementById("more_icon");
+  const more_options = document.getElementById("more_options");
+
+  // Show panel when hovering over the accordion
+  more_icon.addEventListener("mouseenter", () => {
+    more_options.style.display = "block";
   });
+
+  // Hide panel when moving out of both accordion and panel
+   more.addEventListener("mouseleave", () => {
+    more_options.style.display = "none";
+});
+
+
 </script>
 
-<!-- Sidebar script -->
+<!-- End script for data_table -->
+
+
+<!--Begin sidebar script -->
 <script>
   fetch('../bars/sidebar.html')  // Fetch the file
       .then(response => response.text()) // Convert it to text
@@ -805,8 +785,9 @@
       })
       .catch(error => console.error('Error loading the file:', error)); // Handle errors
 </script>
+<!-- end sidebar script -->
 
-<!-- End sidebar script -->
+
 
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
@@ -848,124 +829,8 @@
         }
       });
     </script>
-
-<script>
-  const slides = document.querySelector('.slides');
-const prevBtn = document.getElementById('prev');
-const nextBtn = document.getElementById('next');
-
-let index = 0;
-const totalSlides = document.querySelectorAll('.slide').length;
-
-function updateSlide() {
-    slides.style.transform = `translateX(-${index * 100}%)`;
-}
-
-// Next button
-nextBtn.addEventListener('click', () => {
-    index = (index + 1) % totalSlides;
-    updateSlide();
-});
-
-// Previous button
-prevBtn.addEventListener('click', () => {
-    index = (index - 1 + totalSlides) % totalSlides;
-    updateSlide();
-});
-
-// Auto-slide every 3 seconds
-setInterval(() => {
-    index = (index + 1) % totalSlides;
-    updateSlide();
-}, 3000);
-
-</script>
-
-<script>
-  const cty = document.getElementById('rentalTrends').getContext('2d');
-
-  new Chart(cty, {
-    type: 'line',
-    data: {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-      datasets: [
-        {
-          label: 'CROWN Z TOWERS',
-          data: [35,'000', 30,'000', 32,'000', 30,'000', 33,'000', 35,'000', 34,'000', 33,'000', 34,'000', 35,'000', 34,'000', 35,'000'],
-          borderColor: 'cyan',
-          backgroundColor: 'transparent',
-          tension: 0.4
-        },
-        {
-          label: 'Manucho Apartments',
-          data: [32,'000', 33,'000', 38,'000', 34,'000', 33,'000', 34,'000', 38,'000', 36,'000', 37,'000', 32,'000', 31,'000', 34,'000'],
-          borderColor: 'green',
-          backgroundColor: 'transparent',
-          tension: 0.4
-        },
-        {
-          label: 'The Mansion Apartments',
-          data:[31,'000', 32,'000', 39,'000', 35,'000', 32,'000', 33,'000', 39,'000', 37,'000', 39,'000', 31,'000', 32,'000', 34,'000'],
-          borderColor: 'black',
-          backgroundColor: 'transparent',
-          tension: 0.4
-        },
-        {
-          label: 'Bsty Apartments',
-          data: [34,'000', 39,'000', 34,'000', 32,'000', 34,'000', 36,'000', 38,'000', 37,'000', 34,'000', 33,'000', 32,'000', 31,'000'],
-          borderColor: 'red',
-          backgroundColor: 'transparent',
-          tension: 0.4
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          position: 'top'
-        },
-
-      },
-      scales: {
-        y: {
-          beginAtZero: false
-        }
-      }
-    }
-  });
-</script>
-
-<script>
-  const ctx = document.getElementById('myPieChart').getContext('2d');
-
-  const myPieChart = new Chart(ctx, {
-      type: 'pie',
-      data: {
-          labels: ['Occupied','Vacant', 'Vacant Soon'],
-          datasets: [{
-              data: [30, 50, 20],
-              backgroundColor: ['#28a745', '#ffc107', '#dc3545']
-          }]
-      },
-      options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          onClick: function(event, elements) {
-              if (elements.length > 0) {
-                  let index = elements[0].index;
-                  let label = this.data.labels[index];
-                  // let links = { "Approved": "approved.html", "Pending": "pending.html", "Rejected": "rejected.html" };
-                  let links = { "Occupied": "occupied.html", "Vacant": "vacant.html", "Vacant Soon": "vacantsoon.html"};
-                  if (links[label]) window.location.href = links[label];
-              }
-          }
-      }
-  });
-</script>
-
-
-
+    <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!--end::OverlayScrollbars Configure-->
     <!-- OPTIONAL SCRIPTS -->
     <!-- apexcharts -->
@@ -974,10 +839,127 @@ setInterval(() => {
       integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
       crossorigin="anonymous"
     ></script>
+
+<!-- Rental_TRends data -->
+<script>
+  const ctx = document.getElementById('myChart').getContext('2d');
+  const myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: ['January', 'February', 'March', 'April', 'May', 'June','July','August','September','October','November','December'],
+          datasets: [{
+              label: 'Rent',
+              data: [12, 19, 3, 5, 2, 3,7,4,8,2,3,6],
+              backgroundColor: 'rgba(0, 25, 45, 0.2)',
+              borderColor: '#00192D',
+              borderWidth: 1,
+              
+          }]
+      },
+      options: {
+          responsive: true,
+          scales: {
+              y: {
+                  beginAtZero: true,
+                  ticks: {
+                      callback: function(value, index, values) {
+                          return '$' + value + 'M';
+                      }, 
+                       color: '#FFC107' // Change this to the desired color
+                  },
+              },
+              x: {
+                  ticks: {
+                          color: '#00192D' // Change this to the desired color
+                        }
+                  }
+          }
+      }
+  });
+</script>
+
+<!-- Expense trends -->
+<script>
+  const ctx1 = document.getElementById('myChart1').getContext('2d');
+  const myChart1 = new Chart(ctx1, {
+      type: 'line',
+      data: {
+          labels: ['January', 'February', 'March', 'April', 'May', 'June','July','August','Septmeber','October','November','December'],
+          datasets: [{
+              label: 'Expenses',
+              data: [12, 19, 3, 5, 2, 3,4,5,2,7,8,4],
+              backgroundColor: 'rgba(192, 75, 75, 0.2)',
+              borderColor: 'rgba(255, 75, 75, 1)',
+              borderWidth: 1,
+              fill: true
+          }]
+      },
+      options: {
+          responsive: true,
+          scales: {
+              y: {
+                  beginAtZero: true,
+                  ticks: {
+                      callback: function(value, index, values) {
+                          return '$' + value + 'M';
+                      },
+                    color: '#FFC107' // Change this to the desired color            
+                  }
+                },
+                x: {
+                  ticks: {
+                          color: '#00192D' // Change this to the desired color
+                        }
+                  }
+
+
+          }
+      }
+  });
+</script>
+
+<!-- Net Profit trends -->
+<script>
+  const ctx2 = document.getElementById('myChart2').getContext('2d');
+  const myChart2 = new Chart(ctx2, {
+      type: 'line',
+      data: {
+          labels: ['January', 'February', 'March', 'April', 'May', 'June','July','August','September','October','November','December'],
+          datasets: [{
+              label: 'Net Profit',
+              data: [12, 19, 3, 5, 2, 3,7,8,5,10,11,12],
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 2,
+              fill: true
+          }]
+      },
+      options: {
+          responsive: true,
+          scales: {
+              y: {
+                  beginAtZero: true,
+                  ticks: {
+                      callback: function(value, index, values) {
+                          return '$' + value + 'M';
+                      },
+                    color: '#FFC107' // Change this to the desired color            
+
+                  }
+              },
+
+              x: {
+                  ticks: {
+                          color: '#00192D' // Change this to the desired color
+                        }
+                  }
+          }
+      }
+  });
+</script>
+
+
     <script>
-
-
-
       // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
       // IT'S ALL JUST JUNK FOR DEMO
       // ++++++++++++++++++++++++++++++++++++++++++
@@ -1125,6 +1107,26 @@ setInterval(() => {
       //-----------------
       // - END PIE CHART -
       //-----------------
+    </script>
+    <script>
+      document.getElementById("exportButton").addEventListener("click", function() {
+        // Example data (can be your table data or an array of objects)
+        const data = [
+          { Name: "John", Age: 30, City: "New York" },
+          { Name: "Jane", Age: 25, City: "London" },
+          { Name: "Mark", Age: 35, City: "Paris" }
+        ];
+
+        // Convert data to a worksheet
+        const ws = XLSX.utils.json_to_sheet(data);
+
+        // Create a new workbook and append the worksheet
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+        // Export the workbook as an Excel file
+        XLSX.writeFile(wb, "ExportedData.xlsx");
+      });
     </script>
     <!--end::Script-->
   </body>
