@@ -312,16 +312,16 @@
                 <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> Tenants</h3>
 
 
-                    
+
 
                 </div>
-              
+
 
               <div class="col-sm-4">
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
                   <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                </ol> 
+                </ol>
               </div>
 
             </div>
@@ -336,7 +336,7 @@
             <div class="row first mb-2 ">
                 <div class="col-md-4">
                     <div>
-                                                 
+
                         <select id="categoryFilter">
                             <option value="">-- Select Property --</option>
                             <option value="technology">All</option>
@@ -361,14 +361,14 @@
 
                 </div>
               <!-- /.col -->
-               
+
             </div>
             <!-- /.row -->
 
 
 
             <!-- /.row -->
-            
+
             <!--begin::Row-->
             <div class="row">
               <!-- Start col -->
@@ -379,7 +379,7 @@
                     <table class="table table-striped" id="maintenance">
                         <thead>
                             <tr>
-                              <th>Full Name</th>                       
+                              <th>Full Name</th>
                               <th>ID NO</th>
                               <th>RESIDENCE</th>
                               <th>CONTACT</th>
@@ -391,9 +391,6 @@
                           <tbody>
                             <tr>
                               <td>Edwin</td>
-                              
-                              
-                          
                               <td> 3801790</td>
                               <td>Ebenezer</td>
                               <!-- <td><button onclick="toggleOverlay()">Paid</button></td> -->
@@ -408,17 +405,17 @@
                             </tr>
                             <tr>
                                 <td>Joseph</td>
-                              
-                              
-                          
+
+
+
                                 <td> 3801790</td>
                                 <td>Ebenezer</td>
                                 <!-- <td><button onclick="toggleOverlay()">Paid</button></td> -->
                                 <td>0757414721</td>
                                 <td> <button class="status completed"><i class="fa fa-check-circle"></i> Active </button>  </td>
-  
+
                                 <td>
-                                 
+
                                     <a href="vacate_tenant.php" class="btn btn-sm" style="background-color: #00192D; color:#fff;" data-toggle="tooltip" title="Vacant Paul Pashan from the House"> <i class="fa fa-arrow-right"></i></a>
                                     <button class="btn btn-sm" style="background-color: #AF2A28; color:#fff;"> <i class="fa fa-comment" data-toggle="tooltip" title="Send Paul Pashan an SMS"></i></button>
                                     <button style="background-color: #F74B00; color:#fff;" class="btn btn-sm" data-toggle="tooltip" title="Send Paul Pashan Email"><i class="fa fa-envelope"></i> </button>
@@ -467,7 +464,7 @@
 <div class="popup-overlay"  id="complaintPopup">
   <div class="popup-content">
     <button class="close-btn text-secondary" onclick="closePopup()">×</button>
-    
+
     <form class="complaint-form ">
       <h2 class="text-start addTenantHeader">Add Tenant</h2>
         <label for="name">Tenant Name:</label>
@@ -482,14 +479,15 @@
         <label for="phone">Phone Number:</label>
         <input type="tel" id="phone" name="phone" required>
 
-
         <label for="property">Property:</label>
-        <select id="property" required>
-          <option value="">Select Property</option>
+        <select id="property" name="property" required style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;">
+          <option value="" disabled selected>Select Property</option>
           <option value="High">Manucho</option>
           <option value="Moderate">Ben 10</option>
           <option value="Low">Alpha</option>
         </select>
+
+
 
 
         <label for="unit">Rental Unit:</label>
@@ -510,14 +508,14 @@
     <h2 style="color: #00192D;">Shift Tenant</h2>
     <label for="tenant">Select Tenant:</label>
 
-    <select id="tenant">
+    <select id="tenant"  style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;">
         <option value="John Doe">John Doe</option>
         <option value="Jane Smith">Jane Smith</option>
         <option value="Mike Johnson">Mike Johnson</option>
     </select>
 
-    <label for="property">Select New Property/Unit:</label>
-    <select id="property">
+    <label for="property" >Select New Property/Unit:</label>
+    <select id="property" style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;">
         <option value="Apartment 101">Apartment 101</option>
         <option value="House B3">House B3</option>
         <option value="Condo 23A">Condo 23A</option>
@@ -544,7 +542,7 @@
     <h2 style="color: #00192D;">Notification</h2>
 
     <label for="property">Recepients:</label>
-    <select id="property" required>
+    <select id="property" required style=" margin-bottom :2%;   padding: 10px; width: 100%; border: 2px solid #ccc; border-radius: 4px; font-size: 16px;">
       <option value=""disabled>Select Recepient</option>
       <option value="High">Manucho</option>
       <option value="Moderate">Ben 10</option>
@@ -562,7 +560,7 @@
 
 
 <!-- END POPUPS -->
- 
+
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 
@@ -591,7 +589,7 @@
      });
  </script>
 
- 
+
 
 
     <script
@@ -698,9 +696,9 @@ $(document).ready(function() {
 
 
 </script>
-          
+
 <script>
-  
+
   </script>
 
     </script>
