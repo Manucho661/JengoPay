@@ -68,7 +68,7 @@
               display: flex;
               justify-content: center;
           }
-      
+
           /* Progress Bar */
           .progress-bar {
               display: flex!important;
@@ -80,7 +80,7 @@
               /* padding: 10px; */
               gap: 10px; /* Adds spacing between steps */
           }
-      
+
           /* Individual Step */
           .stepy {
               display: flex;
@@ -94,30 +94,30 @@
               font-weight: bold;
               transition: 0.3s;
           }
-      
+
           .property-registration {
               display: flex;
               justify-content: center;
               align-items: center;
               width: 100%;
           }
-      
+
           /* Active Step */
           .stepy.active {
               background:#00192D;
           }
-      
+
           /* Completed Step (Tick) */
           .stepy.completed span {
               display: none;
           }
-      
+
           .stepy.completed::after {
               content: "✔";
               font-size: 18px;
               font-weight: bold;
           }
-      
+
           /* Form Steps */
           .form-step {
               display: none;
@@ -125,13 +125,13 @@
               transform: translateX(50px);
               transition: all 0.3s ease-in-out;
           }
-      
+
           .form-step.active {
               display: block;
               opacity: 1;
               transform: translateX(0);
           }
-      
+
           input {
               width: 90%;
               padding: 8px;
@@ -139,7 +139,7 @@
               border: 1px solid #ccc;
               border-radius: 5px;
           }
-      
+
           button {
               padding: 10px 15px;
               border: none;
@@ -147,17 +147,17 @@
               cursor: pointer;
               margin: 5px;
           }
-      
+
           .next-btn {
               background: #00192D;
               color: white;
           }
-      
+
           .prev-btn {
               background: #00192D;
               color: white;
           }
-      
+
           .submit-btn {
               background: green;
               color: white;
@@ -172,7 +172,7 @@
           label{
               text-align: left;
           }
-      
+
       </style>
 
 </style>
@@ -430,15 +430,15 @@
           <div class="container-fluid">
             <div class="container-fluid">
               <div class="property-title">Crown Z Towers</div>
-              <p>Residential | 
+              <p>Residential |
                 <button class="edit-btn">
-                  <i class="fas fa-edit"></i> 
+                  <i class="fas fa-edit"></i>
                   EDIT</button>
               </p>
               <a href="../property/waterbillcharges.html"><button class="edit-btn">
-                <i class="fas fa-edit"></i> 
+                <i class="fas fa-edit"></i>
                 Meter Charges</button></a>
-              
+
 
 <br>
 
@@ -521,11 +521,11 @@
     </button></a>
 
     <!-- Invoice Display -->
-    <div class="mt-4 p-3 border" id="invoiceSection" style="display: none;">
+    <!-- <div class="mt-4 p-3 border" id="invoiceSection" style="display: none;">
         <h4>Invoice</h4>
         <div id="invoiceDetails"></div>
         <h5 class="text-end">Grand Total: Ksh<span id="invoiceTotal"></span></h5>
-    </div>
+    </div> -->
 </div>
 
             <!-- /.col -->
@@ -538,7 +538,7 @@
                     </div>
                     <!--end::Row-->
                   <!-- ./card-body -->
-                
+
                     <!--begin::Row-->
 
                       <!-- /.col -->
@@ -575,7 +575,7 @@
     </div>
     <!--end::App Wrapper-->
 
-    
+
   </div>
 </div>
 <!-- end -->
@@ -593,24 +593,24 @@
 
     <script>
         let charges = [];
-    
+
         function addCharge() {
             let name = document.getElementById("chargeName").value;
             let unitPrice = parseFloat(document.getElementById("unitPrice").value);
             let quantity = parseInt(document.getElementById("quantity").value);
-    
+
             if (!name || isNaN(unitPrice) || isNaN(quantity) || unitPrice <= 0 || quantity <= 0) {
                 alert("Please enter valid charge details.");
                 return;
             }
-    
+
             let total = unitPrice * quantity;
             charges.push({ name, unitPrice, quantity, total });
-    
+
             updateTable();
             calculateTotal();
         }
-    
+
         function updateTable() {
             let tableBody = document.getElementById("chargesTable");
             tableBody.innerHTML = "";
@@ -629,35 +629,35 @@
                 tableBody.innerHTML += row;
             });
         }
-    
+
         function removeCharge(index) {
             charges.splice(index, 1);
             updateTable();
             calculateTotal();
         }
-    
+
         function calculateTotal() {
             let subtotal = charges.reduce((sum, charge) => sum + charge.total, 0);
             let tax = parseFloat(document.getElementById("tax").value) || 0;
             let discount = parseFloat(document.getElementById("discount").value) || 0;
-    
+
             let taxAmount = (subtotal * tax) / 100;
             let totalAmount = subtotal + taxAmount - discount;
             document.getElementById("totalAmount").value = totalAmount.toFixed(2);
         }
-    
+
         // function generateInvoice() {
         //     if (charges.length === 0) {
         //         alert("No charges to generate an invoice.");
         //         return;
         //     }
-    
+
         //     let invoiceHTML = "<ul>";
         //     charges.forEach(charge => {
         //         invoiceHTML += `<li>${charge.name} - $${charge.unitPrice.toFixed(2)} x ${charge.quantity} = $${charge.total.toFixed(2)}</li>`;
         //     });
         //     invoiceHTML += "</ul>";
-    
+
         //     let finalAmount = document.getElementById("totalAmount").value;
         //     document.getElementById("invoiceTotal").innerText = finalAmount;
         //     document.getElementById("invoiceDetails").innerHTML = invoiceHTML;
@@ -672,9 +672,9 @@
             const nextBtns = document.querySelectorAll(".next-btn");
             const prevBtns = document.querySelectorAll(".prev-btn");
             const form = document.getElementById("property-form");
-        
+
             let currentStep = 0;
-        
+
             function showStep(stepIndex) {
                 // Hide all steps and reset progress
                 steps.forEach((step, index) => {
@@ -683,7 +683,7 @@
                         step.classList.add("active");
                     }
                 });
-        
+
                 // Update progress bar (show tick for completed steps)
                 progressSteps.forEach((step, index) => {
                     step.classList.remove("active", "completed");
@@ -695,7 +695,7 @@
                     }
                 });
             }
-        
+
             function validateStep() {
                 const inputs = steps[currentStep].querySelectorAll("input");
                 for (let input of inputs) {
@@ -706,7 +706,7 @@
                 }
                 return true;
             }
-        
+
             nextBtns.forEach((button) => {
                 button.addEventListener("click", () => {
                     if (validateStep()) {
@@ -717,7 +717,7 @@
                     }
                 });
             });
-        
+
             prevBtns.forEach((button) => {
                 button.addEventListener("click", () => {
                     if (currentStep > 0) {
@@ -726,12 +726,12 @@
                     }
                 });
             });
-        
+
             form.addEventListener("submit", function (event) {
                 event.preventDefault();
                 alert("Property Registered Successfully!");
             });
-        
+
             // Show first step on load
             showStep(currentStep);
         });
@@ -739,7 +739,7 @@
 
 <script>
   // Function to open the meter popup
-  function openmeterPopup() { 
+  function openmeterPopup() {
     document.getElementById("meterfullPopup").style.display = "flex";
   }
 
@@ -801,7 +801,7 @@
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
 
-    
+
 <script>
   $(document).ready(function() {
       $('#rent').DataTable({

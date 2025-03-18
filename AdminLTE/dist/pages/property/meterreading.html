@@ -63,119 +63,6 @@
 
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-        <style>
-          .property-registration .progress-bar {
-              display: flex;
-              justify-content: center;
-          }
-      
-          /* Progress Bar */
-          .progress-bar {
-              display: flex!important;
-              justify-content: space-between; /* Spreads steps evenly */
-              align-items: center;
-              width: 100%; /* Full width */
-              max-width: 400px; /* Adjust width as needed */
-              margin: 20px auto; /* Centers it */
-              /* padding: 10px; */
-              gap: 10px; /* Adds spacing between steps */
-          }
-      
-          /* Individual Step */
-          .stepy {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              width: 40px;
-              height: 40px;
-              background: #00192D;
-              color:#FFC107;
-              border-radius: 50%;
-              font-weight: bold;
-              transition: 0.3s;
-          }
-      
-          .property-registration {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              width: 100%;
-          }
-      
-          /* Active Step */
-          .stepy.active {
-              background:#00192D;
-          }
-      
-          /* Completed Step (Tick) */
-          .stepy.completed span {
-              display: none;
-          }
-      
-          .stepy.completed::after {
-              content: "✔";
-              font-size: 18px;
-              font-weight: bold;
-          }
-      
-          /* Form Steps */
-          .form-step {
-              display: none;
-              opacity: 0;
-              transform: translateX(50px);
-              transition: all 0.3s ease-in-out;
-          }
-      
-          .form-step.active {
-              display: block;
-              opacity: 1;
-              transform: translateX(0);
-          }
-      
-          input {
-              width: 90%;
-              padding: 8px;
-              margin: 10px 0;
-              border: 1px solid #ccc;
-              border-radius: 5px;
-          }
-      
-          button {
-              padding: 10px 15px;
-              border: none;
-              border-radius: 10px;
-              cursor: pointer;
-              margin: 5px;
-          }
-      
-          .next-btn {
-              background: #00192D;
-              color: white;
-          }
-      
-          .prev-btn {
-              background: #00192D;
-              color: white;
-          }
-      
-          .submit-btn {
-              background: green;
-              color: white;
-          }
-          select{
-              width: 90%;
-              padding: 8px;
-              margin: 10px 0;
-              border: 1px solid #ccc;
-              border-radius: 5px;
-          }
-          label{
-              text-align: left;
-          }
-      
-      </style>
-
-</style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -430,15 +317,15 @@
           <div class="container-fluid">
             <div class="container-fluid">
               <div class="property-title">Crown Z Towers</div>
-              <p>Residential | 
+              <p>Residential |
                 <button class="edit-btn">
-                  <i class="fas fa-edit"></i> 
+                  <i class="fas fa-edit"></i>
                   EDIT</button>
               </p>
               <a href="../property/waterbillcharges.html"><button class="edit-btn">
-                <i class="fas fa-edit"></i> 
+                <i class="fas fa-edit"></i>
                 Create Meter Charges</button></a>
-              
+
 
 <br>
 
@@ -458,7 +345,7 @@
 
 
 <div class="justify-content-end d-flex">
-<button onclick="meterreadingopenPopup()" style="color: #FFC107; background-color: #00192D;">
+<button onclick="meterreadingopenPopup()" style="color: #FFC107; background-color: #00192D; border-radius:10px;">
     <i class="fas fa-plus"></i>
     Add Meter Reading</button></a>
   </div>
@@ -477,7 +364,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr onclick="window.location.href=''">
+      <tr>
         <td>8/03/2025</td>
         <td>C10</td>
         <td>Water</td>
@@ -485,11 +372,11 @@
         <td>11</td>
         <td>1</td>
         <td>
-          <a href="#"> <button  onclick="openmeterPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button></a>
-          <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>
+         <button   class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file" onclick="openshiftPopup()"></i></button>
+          <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>
           </td>
       </tr>
-      <tr onclick="window.location.href=''">
+      <tr>
         <td>7/03/2025</td>
         <td>B11</td>
         <td>
@@ -545,7 +432,7 @@
                     </div>
                     <!--end::Row-->
                   <!-- ./card-body -->
-                
+
                     <!--begin::Row-->
 
                       <!-- /.col -->
@@ -582,21 +469,55 @@
     </div>
     <!--end::App Wrapper-->
 
-    
-    
+
+
+<!-- Shift Tenant -->
+<div class="shiftpopup-overlay" id="shiftPopup">
+  <div class="shiftpopup-content">
+    <button class="close-btn text-secondary" onclick="closeshiftPopup()">×</button>
+    <div class="shift">
+    <h2 style="color: #00192D;">Shift Tenant</h2>
+    <label for="tenant">Select Tenant:</label>
+
+    <select id="tenant">
+        <option value="John Doe">John Doe</option>
+        <option value="Jane Smith">Jane Smith</option>
+        <option value="Mike Johnson">Mike Johnson</option>
+    </select>
+
+    <label for="property">Select New Property/Unit:</label>
+    <select id="property">
+        <option value="Apartment 101">Apartment 101</option>
+        <option value="House B3">House B3</option>
+        <option value="Condo 23A">Condo 23A</option>
+    </select>
+    <label for="property">Select Unit:</label>
+    <select id="property" style="width: 100%;padding: 10px;margin-bottom: 15px;border-radius: 5px;border: 1px solid #ccc;">
+        <option value="Apartment 101">A55</option>
+        <option value="House B3">B3</option>
+        <option value="Condo 23A">CA</option>
+    </select>
+    <br>
+
+    <button  type="submit" class="submit-btn" onclick="shiftTenant()"  style="background-color: #00192D; color: #f1f1f1;">Confirm Shift</button>
+
+  </div>
+  </div>
+</div>
+<!-- End shift popup -->
+
+
   <!-- meterreading popup -->
   <div class="meterpopup-overlay" id="meterPopup">
     <div class="meterpopup-content wide-form">
         <button class="close-btn text-secondary" onclick="meterreadingclosePopup()">×</button>
         <h2 class="assign-title">Add A Meter Reading</h2>
 
-  
+
         <form class="wide-form">
           <div class="form-group">
-
             <b><label for="dateInput" class="filter-label">Reading Date</label></b>
             <input type="date" id="dateInput" class="form-control" required/>
-
             <label for="units">Units:</label>
             <select id="units" required>
                 <option>D17</option>
@@ -628,51 +549,9 @@
     </div>
 </div>
 <!-- end -->
-  
 
 
- <!-- units popup -->
- <div class="meter-overlay" id="meteringPopup">
-  <div class="meter-content wide-form">
-      <button class="close-btn" onclick="closemeterPopup()">×</button>
-      <h2 class="assign-title">Detailed Meter Information</h2>
-      <form class="wide-form">
-        <div class="form-group">
-          <div class="row g-3">
-            <div class="col-md-6">
-            <label for="date">Date:</label>
-            <input type="date" id="date" name="date" placeholder="01/03/2025" required disabled>
-          </div>
-  
-          <div class="col-md-6">
-            <label for="unit">Unit:</label>
-            <input type="text" id="unit" name="unit" placeholder="D17" required disabled>
-          </div>
-  
-          <div class="col-md-6">
-            <label for="meter_type">Meter Type</label>
-            <input type="text" id="meter_type" name="meter_type" placeholder="water" required disabled>
-        </div>
 
-        <div class="col-md-6">
-            <label for="rooms">Previous Reading</label>
-            <input type="text" id="rooms" name="rooms"  placeholder="4" disabled>
-    </div>
-
-    <div class="col-md-6">
-      <label for="room_type">Current Reading</label>
-      <input type="text" id="room_type" name="room_type" placeholder="5" disabled>
-</div>
-      </form>
-      </div>
-  </div>
-</div>
-<!-- end -->
-
-
-      </div>
-      </div>
-    </div>
 
 
 
@@ -686,9 +565,9 @@
             const nextBtns = document.querySelectorAll(".next-btn");
             const prevBtns = document.querySelectorAll(".prev-btn");
             const form = document.getElementById("property-form");
-        
+
             let currentStep = 0;
-        
+
             function showStep(stepIndex) {
                 // Hide all steps and reset progress
                 steps.forEach((step, index) => {
@@ -697,7 +576,7 @@
                         step.classList.add("active");
                     }
                 });
-        
+
                 // Update progress bar (show tick for completed steps)
                 progressSteps.forEach((step, index) => {
                     step.classList.remove("active", "completed");
@@ -709,7 +588,7 @@
                     }
                 });
             }
-        
+
             function validateStep() {
                 const inputs = steps[currentStep].querySelectorAll("input");
                 for (let input of inputs) {
@@ -720,7 +599,7 @@
                 }
                 return true;
             }
-        
+
             nextBtns.forEach((button) => {
                 button.addEventListener("click", () => {
                     if (validateStep()) {
@@ -731,7 +610,7 @@
                     }
                 });
             });
-        
+
             prevBtns.forEach((button) => {
                 button.addEventListener("click", () => {
                     if (currentStep > 0) {
@@ -740,28 +619,28 @@
                     }
                 });
             });
-        
+
             form.addEventListener("submit", function (event) {
                 event.preventDefault();
                 alert("Property Registered Successfully!");
             });
-        
+
             // Show first step on load
             showStep(currentStep);
         });
             </script>
 
-<script>
-  // Function to open the meter popup
-  function openmeterPopup() { 
-    document.getElementById("meterfullPopup").style.display = "flex";
-  }
 
-  // Function to close the meter popup
-  function closemeterPopup() {
-    document.getElementById("meterfullPopup").style.display = "none";
-  }
-</script>
+            <script>
+              function openmeterPopup() {
+                  document.getElementById('meteringPopup').style.display = 'flex'; // Make the overlay visible
+              }
+
+              function closemeterPopup() {
+                  document.getElementById('meteringPopup').style.display = 'none'; // Hide the overlay
+              }
+          </script>
+
 
 <script>
   // Function to meter the meter popup
@@ -815,7 +694,7 @@
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
 
-    
+
 <script>
   $(document).ready(function() {
       $('#rent').DataTable({
@@ -965,6 +844,19 @@ setInterval(() => {
     }
   });
 </script>
+
+<script>
+  // Function to open the complaint popup
+  function openshiftPopup() {
+    document.getElementById("shiftPopup").style.display = "flex";
+  }
+
+  // Function to close the complaint popup
+  function closeshiftPopup() {
+    document.getElementById("shiftPopup").style.display = "none";
+  }
+</script>
+
 
 <script>
   const ctx = document.getElementById('myPieChart').getContext('2d');

@@ -399,7 +399,7 @@
 
                                         </div>
 
-                                       
+
 
                                        </td>
 
@@ -417,12 +417,12 @@
                                              <a href="#" onclick="openviewagreementPopup()">View</a>
                                              <a href="#">Edit</a>
                                              <a href="#">Delete</a>
-  
-  
+
+
                                           </div>
-  
-                                         
-  
+
+
+
                                          </td>
                               </tr>
                               <tr>
@@ -443,7 +443,7 @@
 
                                     </div>
 
-                                   
+
 
                                    </td>
 
@@ -547,7 +547,7 @@
     <label for="file">Choose file to upload ID:</label>
     <input type="file" name="file" id="file">
     <br><br>
-   
+
       <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
     </form>
   </div>
@@ -562,13 +562,13 @@
     <h2 style="color: #00192D;">Notification</h2>
 
     <label for="property">Recepients:</label>
-    <select id="property" required>
+    <select id="property" required style=" margin-bottom :2%;  padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;">
       <option value=""disabled>Select Recepient</option>
       <option value="High">Manucho</option>
       <option value="Moderate">Ben 10</option>
       <option value="Low">Alpha</option>
     </select>
-    
+
     <textarea id="notes" name="notes" rows="10" cols="98" placeholder="Enter any additional information..."></textarea>
 
       <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SEND</button>
@@ -580,7 +580,7 @@
 <!-- view agreement details part -->
 <div class="viewpopup-overlay" id="viewPopup">
   <div class="viewpopup-content">
-    <button class="close-btn text-secondary" onclick="closeviewgreementPopup">×</button>
+    <button class="close-btn" onclick="closeviewagreementPopup()">×</button>
     <h2 style="color: #00192D;">View Agreement Details</h2>
     <button class="edit-btn"><i class="fas fa-edit"></i>EDIT</button>
     <p>Full Legal Name: <input type="text" name="partyB_name" placeholder="Many Kioni" disabled></p>
@@ -590,7 +590,7 @@
      <label for="file">Choose file to upload ID:</label>
     <input type="file" name="file" id="file" disabled>
     <br><br>
-   
+
       <!-- <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button> -->
     </form>
   </div>
@@ -690,7 +690,7 @@
   }
 
   // Function to close the complaint popup
-  function closeviewgreementPopup() {
+  function closeviewagreementPopup() {
     document.getElementById("viewPopup").style.display = "none";
   }
 </script>

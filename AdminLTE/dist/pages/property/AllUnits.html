@@ -66,7 +66,7 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
-</style>
+<!-- </style> -->
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -322,7 +322,7 @@
             <div class="property-title">Crown Z Towers</div>
             <p>Residential|
               <button class="edit-btn"><i class="fas fa-edit"></i>EDIT</button>
-            </p>    
+            </p>
 <br>
 <!-- <hr> -->
 <div style="display: flex;gap: 25px;">
@@ -390,14 +390,14 @@
                 </tr>
               </thead>
               <tbody>
-                
+
                     <tr>
                     <td>A1</td>
                     <td>Jake Konza</td>
                     <td>
                       <a href="#"> <button onclick="openunitsPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button></a>
                      <button  class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px;"></i>
-                    </td>  
+                    </td>
                     </tr>
 
                     <tr>
@@ -406,7 +406,7 @@
                     <td>
                       <a href="#"> <button  onclick="openunitsPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button></a>
                     <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px;"></i>
-                    </td>  
+                    </td>
                     </tr>
 
                     <tr>
@@ -415,12 +415,12 @@
                     <td>
                       <a href="#"> <button onclick="openunitsPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button></a>
                     <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px;"></i>
-                    </td>  
+                    </td>
                     </tr>
 
-               
 
-        
+
+
                 <!-- Add more rows as needed -->
               </tbody>
             </table>
@@ -487,7 +487,7 @@
             <label for="text">Size:</label>
             <input type="text" id="size" name="size" placeholder="3 by 3" required disabled>
           </div>
-  
+
           <div class="col-md-6">
             <label for="floor_number">Floor Number</label>
             <input type="tel" id="floor_number" name="floor_number" placeholder="2" required disabled>
@@ -517,10 +517,10 @@
             <label for="bathrooms">Bathrooms</label>
             <input type="text" id="bathrooms" name="bathrooms" placeholder="5" disabled>
     </div>
-  
+
     <div class="col-md-12">
       <label for="description">Description</label>
-      <input type="text" id="description" name="description" placeholder="lorem skdkjfjkkkdkjjkjkjsjjejjnnfn" disabled> 
+      <input type="text" id="description" name="description" placeholder="lorem skdkjfjkkkdkjjkjkjsjjejjnnfn" disabled>
   </div>
 
       </form>
@@ -544,7 +544,7 @@
           document.getElementById("description").disabled = false;
       }
   </script>
-  
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const steps = document.querySelectorAll(".form-step");
@@ -552,9 +552,9 @@
             const nextBtns = document.querySelectorAll(".next-btn");
             const prevBtns = document.querySelectorAll(".prev-btn");
             const form = document.getElementById("property-form");
-        
+
             let currentStep = 0;
-        
+
             function showStep(stepIndex) {
                 // Hide all steps and reset progress
                 steps.forEach((step, index) => {
@@ -563,7 +563,7 @@
                         step.classList.add("active");
                     }
                 });
-        
+
                 // Update progress bar (show tick for completed steps)
                 progressSteps.forEach((step, index) => {
                     step.classList.remove("active", "completed");
@@ -575,7 +575,7 @@
                     }
                 });
             }
-        
+
             function validateStep() {
                 const inputs = steps[currentStep].querySelectorAll("input");
                 for (let input of inputs) {
@@ -586,7 +586,7 @@
                 }
                 return true;
             }
-        
+
             nextBtns.forEach((button) => {
                 button.addEventListener("click", () => {
                     if (validateStep()) {
@@ -597,7 +597,7 @@
                     }
                 });
             });
-        
+
             prevBtns.forEach((button) => {
                 button.addEventListener("click", () => {
                     if (currentStep > 0) {
@@ -606,12 +606,12 @@
                     }
                 });
             });
-        
+
             form.addEventListener("submit", function (event) {
                 event.preventDefault();
                 alert("Property Registered Successfully!");
             });
-        
+
             // Show first step on load
             showStep(currentStep);
         });
@@ -619,7 +619,7 @@
 
 <script>
   // Function to open the complaint popup
-  function openunitsPopup() { 
+  function openunitsPopup() {
     document.getElementById("unitsPopup").style.display = "flex";
   }
 
@@ -670,7 +670,7 @@
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
 
-    
+
 <script>
   $(document).ready(function() {
       $('#rent').DataTable({

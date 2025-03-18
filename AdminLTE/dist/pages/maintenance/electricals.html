@@ -74,11 +74,11 @@
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
-    <div class="app-wrapper">
+    <div class="app-wrapper" style="height: 100 vh; " >
       <!--begin::Header-->
-      <nav class="app-header navbar navbar-expand bg-body">
+      <nav class="app-header navbar navbar-expand bg-body" style="height: 90%; " >
         <!--begin::Container-->
-        <div class="container-fluid">
+        <div class="container-fluid"  style="height: 100%; "  >
           <!--begin::Start Navbar Links-->
           <ul class="navbar-nav">
             <li class="nav-item">
@@ -300,11 +300,11 @@
       </aside>
       <!--end::Sidebar-->
       <!--begin::App Main-->
-      <main class="app-main">
+      <main class="app-main" style=" height:100%;" >
         <!--begin::App Content Header-->
-        <div class="app-content-header">
+        <div class="app-content-header" style=" height: 20%;">
           <!--begin::Container-->
-          <div class="container-fluid">
+          <div class="container-fluid" >
             <!--begin::Row-->
             <div class="row">
               <div class="col-sm-8">
@@ -319,36 +319,36 @@
 
                         <div class="row Summary mt-6" >
                           <!-- Summary -->
-                          
+
                             <div class="col-md-12 ">
                               <div class="summary-section text-center p-2 row">
                                 <div class="col-6 col-md-3 summary-item total">
-                                    <i class="fas fa-calculator"></i> 
+                                    <i class="fas fa-calculator"></i>
                                     <div class="label">Total <b class="value" >100</b>  </div>
-                                    
+
                                 </div>
                                 <div class="col-6 col-md-3 summary-item completed">
-                                    <i class="fa-solid fa-circle-check"></i> 
+                                    <i class="fa-solid fa-circle-check"></i>
                                     <div class="label">Completed <b class="value">30</b></div>
-                                      
+
                                 </div>
                                 <div class="col-6 col-md-3 summary-item in-progress">
-                                    <i class="fas fa-spinner fa-spin"></i> 
+                                    <i class="fas fa-spinner fa-spin"></i>
                                     <div class="label">In Progress <b class="value">20</b></div>
-                                      
-                              </div>
-                              
-                            </div>
-                      
 
-                              
-                        
+                              </div>
+
+                            </div>
+
+
+
+
                                 <!-- <span class="value text-center"> <b>100 </b> </span> -->
                         </div>
-                          
-                       
+
+
                         </div>
-                          
+
                       </div>
 
                 </div>
@@ -358,7 +358,7 @@
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
                   <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                </ol> 
+                </ol>
               </div>
 
             </div>
@@ -366,28 +366,28 @@
           </div>
           <!--end::Container-->
         </div>
-        <div class="app-content">
+        <div class="app-content" style="height: 80%;">
           <!--begin::Container-->
-          <div class="container-fluid">
+          <div class="container-fluid"  style=" height: 100%;">
             <!-- Info boxes -->
 
             <!-- /.row -->
-            
+
             <!--begin::Row-->
-            <div class="row">
+            <div class="row" style=" height: 100%;">
               <!-- Start col -->
-              <div class="col-md-12 ">
-                <div class="card Content">
-                    <div class="card-header">
+              <div class="col-md-12 " style=" height: 100%;" >
+                <div class="card Content" style=" height: 100%;" >
+                    <div class="card-header" style="  display:flex; flex-direction:column; justify-content:center;" >
                       <b>All Appliance Requests</b>
                     </div>
 
-                    <div class="card-body">
-                      <div class="container">
-                        <table id="maintenance" class="table table-striped" style="width: 100%;">
+                    <div class="card-body" style=" " >
+                      <div class="container" style="width: 100%;">
+                        <table id="maintenance" class="table table-striped" style="width: 100%; padding:10px">
                           <thead>
                             <tr>
-                              <th>REQUEST DATE</th>                       
+                              <th>REQUEST DATE</th>
                               <th>CATEGORY</th>
                               <th>PAYMENT</th>
                               <th>PROVIDER</th>
@@ -399,9 +399,9 @@
                           <tbody>
                             <tr>
                               <td>11-10-2025</td>
-                              
-                              
-                          
+
+
+
                               <td> <b>Broken handle</b> </td>
                               <td><button class="payment pending" id="example" data-bs-toggle="modal" data-bs-target="#leaseModal"> <i class="fa fa-exclamation-circle"></i>
                               PENDING</button></td>
@@ -418,10 +418,10 @@
                             </tr>
                             <tr>
                               <td>11-10-2025</td>
-                            
-                            
-                              
-                              
+
+
+
+
                               <td>Leaking roof</td>
                               <td><button  class=" payment paid" id="example"> <i class="fa fa-check-circle"></i>  PAID</button></td>
                               <td>high</td>
@@ -431,7 +431,7 @@
                               <td><button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
                               </button>
                               <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
-                                
+
                                 </td>
                             </tr>
                             <!-- Add more rows as needed -->
@@ -446,7 +446,7 @@
 
 
 
-                    
+
                 </div>
 
 
@@ -773,9 +773,9 @@ $(document).ready(function() {
 
 
 </script>
-          
+
 <script>
-  
+
   </script>
 
     </script>

@@ -319,34 +319,34 @@
 
                         <div class="row Summary mt-6" >
                           <!-- Summary -->
-                          
+
                             <div class="col-md-12 ">
                               <div class="summary-section text-center p-2 row">
                               <div class="col-6 col-md-3 summary-item total">
-                                  <i class="fas fa-calculator"></i> 
+                                  <i class="fas fa-calculator"></i>
                                   <div class="label">Total <b class="value" >100</b>  </div>
-                                  
+
                               </div>
                               <div class="col-6 col-md-3 summary-item completed">
-                                  <i class="fa-solid fa-circle-check"></i> 
+                                  <i class="fa-solid fa-circle-check"></i>
                                   <div class="label">Completed <b class="value">30</b></div>
-                                    
+
                               </div>
                               <div class="col-6 col-md-3 summary-item in-progress">
-                                  <i class="fas fa-spinner fa-spin"></i> 
+                                  <i class="fas fa-spinner fa-spin"></i>
                                   <div class="label">In Progress <b class="value">20</b></div>
-                                    
+
                               </div>
-                              
+
                           </div>
-                      
+
 
                                                              <!-- <span class="value text-center"> <b>100 </b> </span> -->
                             </div>
-                          
-                       
+
+
                         </div>
-                          
+
                       </div>
 
                 </div>
@@ -356,7 +356,7 @@
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
                   <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                </ol> 
+                </ol>
               </div>
 
             </div>
@@ -394,20 +394,20 @@
                                   <label class="form-label"><b>Request ID</b></label>
                                   <input type="number" class="form-control" placeholder="123" >
                               </div>
-              
+
 
                               <!-- Expense of the Month -->
                               <div class="col-md-4">
                                 <label class="form-label"><b>Invoice NO</b></label>
                                 <input type="number" class="form-control" placeholder="123">
                               </div>
-              
+
                               <!-- Cheque No -->
                               <div class="col-md-4">
                                 <label class="form-label"><b>Cheque No</b></label>
                                 <input type="number" class="form-control" placeholder="000001" >
                             </div>
-            
+
                             <div class="row g-3 mt-2">
                             <div class="col-md-6">
                               <label class="form-label"><b>Description</b></label>
@@ -426,13 +426,13 @@
                               <div class="col-md-6">
                                 <label class="form-label"> <b>Payment Method</b> </label>
                                 <select class="form-select">
-                                
+
                                 <option selected disabled>Payment</option>
                                 <option>Cash</option>
                                 <option>Bank</option>
                                 <option>M-pesa</option>
-                                
-                            </select>  
+
+                            </select>
                               </div>
 
                               <div class="col-md-6">
@@ -441,14 +441,14 @@
                               </div>
                           </div>
 
-                    
+
 
                           <!-- Expense Table -->
-                          
+
 
                           <div class="row g-3 mt-2">
                               <div class="col-6">
-                                  
+
                               </div>
                               <div class="col-6 mt-2 d-flex justify-content-end">
                                   <button type="submit" class="btn btn-custom btn-sm" style="height: fit-content;"> Submit</button>
@@ -464,7 +464,7 @@
                 </div>
             </div>
              </div>
-            
+
             <!-- End row -->
 
             <!--begin::Row-->
@@ -481,8 +481,8 @@
                         <table id="maintenance" class="table table-striped" style="width: 100%;">
                           <thead>
                             <tr>
-                              <th>REQUESTDATE</th>   
-                              <th>ID</th>                    
+                              <th>REQUESTDATE</th>
+                              <th>ID</th>
                               <th>CATEGORY</th>
                               <th>PAYMENT</th>
                               <th>PROVIDER</th>
@@ -514,9 +514,9 @@
                             <tr>
                               <td>11-10-2025</td>
                             <td>12432</td>
-                            
-                              
-                              
+
+
+
                               <td>Leaking roof</td>
                               <td><button  class=" payment paid" id="example"> <i class="fa fa-check-circle"></i>  PAID</button></td>
                               <td>Not Assigned </td>
@@ -527,7 +527,7 @@
                               <td><button onclick=" openassignPopup()" class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
                               </button>
                               <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
-                                
+
                                 </td>
                             </tr>
                             <!-- Add more rows as needed -->
@@ -542,7 +542,7 @@
 
 
 
-                    
+
                 </div>
 
 
@@ -551,7 +551,7 @@
             </div>
             <!--end::Row-->
 
-            
+
           </div>
           <!--end::Container-->
         </div>
@@ -618,7 +618,7 @@
 
 
 
- 
+
   <!-- assign task popup -->
 
   <div class="assignpopup-overlay" id="assignPopup">
@@ -670,7 +670,7 @@
 
             <div class="form-group">
                 <label for="description">Description:</label>
-                <textarea name="description" id="description" placeholder="Description" rows="2" required disabled></textarea>
+                <textarea name="description" id="description" placeholder="Leaking Pipe in the sink near the kitchen" rows="2" required disabled></textarea>
             </div>
 
             <div class="form-group">
@@ -689,21 +689,21 @@
               </label>
               <span>Authorize Service</span>
           </div>
-          
+
           <p id="authorizationText" class="authorization-text">
-              I authorize the plumbing service provider to inspect and perform the requested services. 
-              Depending on the extent of the required service, I understand that additional charges may 
+              I authorize the plumbing service provider to inspect and perform the requested services.
+              Depending on the extent of the required service, I understand that additional charges may
               apply based on the final assessment.
           </p>
-          
-          
+
+
 
             <button type="submit" class="submit-btn">SUBMIT</button>
         </form>
     </div>
 </div>
 <!-- end -->
-  
+
           <!-- <div id="assignedTasks">
               <h2>Assigned Tasks</h2>
               <ul id="taskList"></ul>
@@ -922,9 +922,9 @@ $(document).ready(function() {
     });
 });
 </script>
-          
+
 <script>
-  
+
   </script>
 
     </script>
@@ -979,7 +979,7 @@ $(document).ready(function() {
       integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
       crossorigin="anonymous"
     ></script>
-    
+
 
     <!--end::Script-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
