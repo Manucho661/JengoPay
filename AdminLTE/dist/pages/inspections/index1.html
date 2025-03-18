@@ -64,15 +64,22 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-
+    <style>
+      body{
+        /* background-color: #FFC107 !important; */
+      }
+      .app-wrapper{
+         background-color: rgba(128,128,128, 0.1); 
+      }
+    </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
-    <div class="app-wrapper">
+    <div class="app-wrapper"  >
       <!--begin::Header-->
-      <nav class="app-header navbar navbar-expand bg-body">
+      <nav class="app-header navbar navbar-expand bg-white">
         <!--begin::Container-->
-        <div class="container-fluid">
+        <div class="container-fluid" >
           <!--begin::Start Navbar Links-->
           <ul class="navbar-nav">
             <li class="nav-item">
@@ -304,10 +311,10 @@
             <div class="row">
               <div class="col-sm-8">
 
-                <h3 class="mb-0 contact_section_header"> <i class="fas fa-comments title-icon"></i></i> Text Messages</h3>
+                <h3 class="mb-0 contact_section_header"> <i class="fas fa-search icon title-icon"></i>INSPECTIONS</h3> 
 
 
-                    <div class="row mt-2  ">
+                    <div class="row mt-2">
 
                 </div>
               </div>
@@ -328,11 +335,76 @@
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
+
+            <!-- BEGIN ROW --><div class="row Summary mt-6" >
+                          <!-- Summary -->
+                          
+                            <div class="col-md-12 ">
+                              <div class="summary-section text-center p-2 row">
+                                
+                                <div class="col-6 col-md-3 ">
+                                  <div class="summary-item total">
+                                    <i class="fas fa-calculator icon"></i> 
+                                    <div class="label">Total <b class="value" >100</b>  </div>
+                                    
+                                  </div>
+                                   
+                                </div>
+                                <div class="col-6 col-md-3">
+                                  <div class="summary-item completed">
+                                    <i class="fa-solid fa-circle-check icon"></i> 
+                                    <div class="label">Completed <b class="value">30</b></div>
+                                  </div>     
+                                </div>
+                              
+                                <div class="col-6 col-md-3 ">
+                                  <div class="summary-item in-progress">
+                                    <i class="fas fa-spinner fa-spin icon"></i> 
+                                    <div class="label">In Progress <b class="value">20</b></div>
+                                  </div>                                
+                                </div>
+
+                                <div class="col-6 col-md-3 ">
+                                  <div class="summary-item incomplete">
+                                    <i class="fas fa-spinner fa-spin icon"></i> 
+                                   <div class="label">Incomplete <b class="value">20</b></div>
+                                  </div>  
+                                </div>
+                              
+                            </div>
+                      
+
+                              
+                        
+                                <!-- <span class="value text-center"> <b>100 </b> </span> -->
+                        </div>
+            <!-- /end row -->
+
             <!-- Begin Row -->
+
 
             <div class="row second">
                 <!-- Start col -->
-                <div class="col-md-12 " >
+                <div class="col-md-12 ">
+                  <div class="row mb-2" style="border:1px solid #E2E2E2" >
+                    <div class="col-12 inspection-container-header-section">
+                      <div class="row">
+                        <div class="col-md-122">
+                          <select id="categoryFilter">
+                            <option value="">-- Select --</option>
+                            <option value="technology">All</option>
+                            <option value="health">Manucho</option>
+                            <option value="business">Ebenezer</option>
+                            <option value="education">Crown Z</option>
+                          </select>
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="row">
                       <div class="card second_col ">
                           <div class="card-header">
   
@@ -428,6 +500,7 @@
   
                       </div>
                   </div>
+                </div>
   
   
               </div>
