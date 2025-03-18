@@ -319,7 +319,7 @@
 
                         </div>
 
-                        
+
 
                       </div>
                       <!-- <div class="col-md-6">
@@ -350,7 +350,7 @@
                 </div>
 
               </div>
-            </div>  
+            </div>
             <!--end::Row-->
           </div>
           <!--end::Container-->
@@ -359,10 +359,10 @@
           <!--begin::Container-->
           <div class="container-fluid">
             <!-- Info boxes -->
-            <div class="row first mb-2 mt-2 rounded-circle">
+            <div class="row first mb-2 mt-2 ">
 
                 <div class="col-md-12">
-                          
+
                   <div>
                     <button class="btn" style="background-color: #00192D; color: white; font-size: small; margin-right: 2%;" onclick="openCategoryPopup()">  <i class="fas fa-plus icon"></i>
                         <b > Add Category </b></button>
@@ -379,13 +379,10 @@
             <!--begin::Row-->
             <div class="row second">
               <!-- Start col -->
-              <div class="col-md-8 " >
+              <div class="col-md-6 " >
                     <div class="card second_col ">
                         <div class="card-header">
-                        
-
                         </div>
-
                         <div class="card-body">
                         <table id="maintenance" class="display">
                             <thead class="mb-2">
@@ -407,16 +404,16 @@
                                 <td class="text-primary"> <i class="fas fa-envelope"></i>  emmanu@gmail.com</td>
                                 <td>Electrician</td>
                                 <td id="more">
-                                <div id="more_icon">&#x2026;</div>
-                                <br>
-                                <div id="more_options">
-                                    <a href="../serviceProvider/individualProviderProfile.html">View</a>
-                                    <a href="#">Remove</a>
-                                    <a href="#">Update</a>
-                                    
+                               <div id="more_icon">&#x2026;</div>
+                                        <br>
+                                        <div id="more_options">
+                                           <a href="../serviceProvider/individualProviderProfile.html">View</a>
+                                           <a href="#">Edit</a>
+                                           <a href="#">Delete</a>
+                                           <a href="#">Others</a>
 
 
-                                </div>
+                                        </div>
                                 </td>
                             </tr>
                             <tr>
@@ -426,8 +423,17 @@
                                 <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
                                 <td>Plumber</td>
                                 <td id="more">
-                                <div id="more_icon" class="rounded-circle" >&#x2026;</div>
-                                </td>
+                                  <div id="more_icon">&#x2026;</div>
+                                           <br>
+                                           <div id="more_options">
+                                              <a href="../serviceProvider/individualProviderProfile.html">View</a>
+                                              <a href="#">Edit</a>
+                                              <a href="#">Delete</a>
+                                              <a href="#">Others</a>
+
+
+                                           </div>
+                                   </td>
                             </tr>
                             <!-- Add more rows as needed -->
                             </tbody>
@@ -447,7 +453,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-4" class="first_col">
+                <div class="col-md-6" class="first_col">
                     <div class="card second_col">
                         <div class="card-header">
                              <div class="card-text">
@@ -467,19 +473,49 @@
                                     <td>Plumbing</td>
                                     <td>5</td>
                                     <td id="more">
-                                        <div id="more_icon" class="rounded-circle" >&#x2026;</div>
-                                    </td>
+                                      <div id="more_icon">&#x2026;</div>
+                                               <br>
+                                               <div id="more_options">
+                                                  <a href="../serviceProvider/individualProviderProfile.html">View</a>
+                                                  <a href="#">Edit</a>
+                                                  <a href="#">Delete</a>
+                                                  <a href="#">Others</a>
+
+
+                                               </div>
+                                       </td>
                                 </tr>
                                 <tr>
                                     <td>Electricians</td>
                                     <td>5</td>
+                                    <td id="more">
+                                      <div id="more_icon">&#x2026;</div>
+                                               <br>
+                                               <div id="more_options">
+                                                  <a href="../serviceProvider/individualProviderProfile.html">View</a>
+                                                  <a href="#">Edit</a>
+                                                  <a href="#">Delete</a>
+                                                  <a href="#">Others</a>
+
+
+                                               </div>
+                                       </td>
                                 </tr>
                                 <tr>
                                     <td>Landscaping</td>
                                     <td>3</td>
                                     <td id="more">
-                                        <div id="more_icon" class="rounded-circle" >&#x2026;</div>
-                                    </td>
+                                      <div id="more_icon">&#x2026;</div>
+                                               <br>
+                                               <div id="more_options">
+                                                  <a href="../serviceProvider/individualProviderProfile.html">View</a>
+                                                  <a href="#">Edit</a>
+                                                  <a href="#">Delete</a>
+                                                  <a href="#">Others</a>
+
+
+                                               </div>
+                                       </td>
                                 </tr>
                                 <tr>
                                     <td>Masons</td>
@@ -606,8 +642,8 @@
         <input type="name" id="name" name="name" required>
         <label for="name">Email</label>
         <input type="number" id="number" name="number" required>
-   
-       
+
+
 
       <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button><br>
     </form>
@@ -733,27 +769,19 @@ close_add_provider_container.addEventListener('click', ()=>{
 </script>
 
 
-
-<!-- more options -->
 <script>
-
-  // JavaScript to handle hover and hide functionality
-  const  more= document.getElementById("more");
-  const more_icon = document.getElementById("more_icon");
-  const more_options = document.getElementById("more_options");
-
-  // Show panel when hovering over the accordion
-  more_icon.addEventListener("mouseenter", () => {
-    more_options.style.display = "block";
+  document.getElementById("more_icon").addEventListener("click", function(event) {
+      let options = document.getElementById("more_options");
+      options.style.display = options.style.display === "block" ? "none" : "block";
+      event.stopPropagation();
   });
 
-  // Hide panel when moving out of both accordion and panel
-   more.addEventListener("mouseleave", () => {
-    more_options.style.display = "none";
-});
-
-
+  document.addEventListener("click", function() {
+      document.getElementById("more_options").style.display = "none";
+  });
 </script>
+
+
     <!-- Begin script for datatable -->
     <script>
 
