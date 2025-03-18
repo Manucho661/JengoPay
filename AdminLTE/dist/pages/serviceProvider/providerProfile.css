@@ -309,7 +309,7 @@ justify-content: end;
     color: #767676;
     color: #00192D;
     font-family: 'Poppins', sans-serif;
-  
+
     }
     .value{
         font-size: 12px;
@@ -322,16 +322,16 @@ justify-content: end;
     .text a{
       text-decoration: none;
     }
-  
-  
+
+
     .row.first{
       box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
-  
+
   }
   .contact_section_header{
     border-bottom: 1px solid rgba(128, 128, 128, 0.5);
     font-family: 'Poppins', sans-serif;
-  
+
   }
 
   .col-md-12.Summary{
@@ -423,3 +423,25 @@ justify-content: end;
     border: 1px solid #ccc;
     border-radius: 5px;
     }
+
+    #more_options {
+      display: none;
+      position: absolute;
+      background:white;
+      color:black;
+      border: 1px solid #ccc;
+      /* box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); */
+      padding: 5px;
+      top: 20px;
+      right: 0;
+      width: 80px;
+  }
+  #more_options a {
+      display: block;
+      padding: 5px;
+      text-decoration: none;
+      color: black;
+  }
+  #more_options a:hover {
+      color:#FFC107;
+  }
