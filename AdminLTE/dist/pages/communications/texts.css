@@ -63,18 +63,18 @@ body {
     width: 100%;
     padding: 8px;
     margin-top: 5px;
-    border: 1px solid #ccc;
+    border: 1px solid #00192D;
     border-radius: 4px;
 }
 
 input:hover{
-  border: 1px solid #00192D
+  border: 1px solid #FFC107;
 }
 select:hover{
-  border: 1px solid #00192D
+  border: 1px solid #FFC107;
 }
 textarea:hover{
-  border: 1px solid #00192D
+  border: 1px solid #FFC107;
 
 }
 /* notification popup */
@@ -118,7 +118,7 @@ input:focus, select:focus {
 input, select {
   width: 30%;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #00192D;
   border-radius: 5px;
   font-size: 16px;
   background-color: #fff;
@@ -169,9 +169,33 @@ input, select {
     display: none; 
     margin-top: 2px;
   }
+  .view{
+    padding: 2px 8px;
+    font-size: 12px;
+    background-color: transparent;
+    color: green;
+  }
+  .delete{
+    padding: 2px 8px;
+    font-size: 12px;
+    background-color: transparent;
+    color: #E63946 ;
+  }
+  .view:hover{
+    border: 1px solid #00192D;
+    background-color: transparent;
+    color: green;
+    cursor: pointer;
+  }
+  .delete:hover{
+    border: 1px solid #00192D;
+    background-color: transparent;
+    color: red;
+    cursor: pointer;
+  }
                                     /* MESSAGE CONTAINER STYLES */
 .message-container{
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
+  /* box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); x-offset, y-offset, blur-radius, color */
 
 }
 .message-body{
@@ -316,7 +340,9 @@ background-color: white;
   display: flex;
   flex-direction: column;
 }
-
+.message-summary{
+  overflow: auto;
+}
 .message {
   padding: 8px 12px;
   margin: 5px 0;
@@ -357,3 +383,86 @@ background-color: white;
   }
   
 }
+
+                                      /* TABLE STYLES */
+  .table-summary-messages{
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    border-radius: 200px !important;
+  }
+  table{
+    border-radius: 200px !important;
+  }
+  th, td {
+    text-align: left !important; /* Align text for readability */
+  }
+  td{
+    font-size: 14px !important;
+  }
+
+  th{
+    font-size: 12px !important;
+    letter-spacing: .5px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  th:nth-child(1), td:nth-child(1) {
+    text-align: center !important; /* Center align numbers like serial numbers */
+  }
+
+ 
+  th:nth-child(4), td:nth-child(4) {
+    text-align: left !important; /* Align provider names to the left */
+  }
+  th, td {
+    padding: 12px 15px !important; /* Top-bottom: 12px, Left-right: 15px */
+
+  }
+
+  th, td {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important; /* Add '...' if text overflows */
+  }
+  th {
+    font-weight: 600 !important;
+    /* text-transform: uppercase !important; */
+    /* background-color: #f4f4f4 !important; Light background for contrast */
+    border-bottom: 2px solid #ddd !important;
+    background: #023E6A    !important ;
+    color: white !important;
+  }
+  /* contents */
+  td{
+    background: #EFF2F5;
+  }
+
+  .recent-messages-header{
+    font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  letter-spacing: .5px;
+  font-size: 18px;
+  }
+
+  .time{
+    color: #767676;
+    font-size: 12px;
+    font-weight: bold;
+  
+  }
+  .date{
+    
+  color: #767676;
+  font-size: 12px;
+  font-weight: bold;
+  }
+  .title{
+    font-weight: bold;
+  }
+
+  .sender-email{
+    color: #0072C6;
+  }
+  .sender-email:hover{
+    text-decoration: underline;
+    cursor: pointer;
+  }
