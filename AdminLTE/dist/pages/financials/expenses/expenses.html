@@ -67,7 +67,7 @@
     <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
 
     <style>
-      
+
     </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -312,37 +312,37 @@
                         <div class="row Summary mt-6" >
                           <!-- Summary -->
                           <div class="col-md-12 ">
-                            
+
                             <div class="summary-section text-center p-2 row">
                               <div class="col-6 col-md-4 summary-item total">
-                                  <i class="fas fa-calculator"></i> 
-                                   <div class="label">Total Items <b class="value" > 100</b>  </div>                                  
+                                  <i class="fas fa-calculator"></i>
+                                   <div class="label">Total Items <b class="value" > 100</b>  </div>
                               </div>
 
                               <div class="col-6 col-md-4 summary-item total">
-                                <i class="fas fa-calculator"></i> 
+                                <i class="fas fa-calculator"></i>
                                  <div class="label">Total Spend <b class="value" >KSH 500</b>  </div>
-                                
+
                             </div>
                             </div>
-                            
+
                           </div>
-                                  
+
                         </div>
 
-                      
-                          
-                    
 
-                
+
+
+
+
               </div>
 
               <div class="col-sm-4">
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
                   <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                </ol> 
-              </div> 
+                </ol>
+              </div>
 
             </div>
             <!--end::Row-->
@@ -355,7 +355,7 @@
                           <span id="toggleIcon">+</span> Click Here to Add operational Expense
                       </a>
                   </div>
-          
+
                   <div class="card-body collapse" id="addExpense">
                     <div class="card">
                       <div class="card-header" style="background: linear-gradient(to right, #00192D, #003D5B, #00788D);">
@@ -370,7 +370,7 @@
                                           <label class="form-label"><b>Expense No</b></label>
                                           <input type="number" class="form-control" placeholder="123">
                                       </div>
-                      
+
                                       <!-- Expense of the Month -->
                                       <div class="col-md-5">
                                           <label class="form-label"><b>Expense for the Month of</b></label>
@@ -390,22 +390,22 @@
                                               <option>December</option>
                                           </select>
                                       </div>
-                      
+
                                       <!-- Year -->
                                       <div class="col-md-4">
                                           <label class="form-label"><b>Year</b></label>
                                           <input type="number" class="form-control" placeholder="2025">
                                       </div>
                                   </div>
-      
+
                                   <div class="row g-3 mt-2">
                                       <div class="col-md-6">
                                           <label class="form-label"><b>Entry Date</b></label>
                                           <input type="date" class="form-control">
                                       </div>
                                   </div>
-      
-                            
+
+
 
                                   <!-- Expense Table -->
                                   <div class="row g-3 mt-2">
@@ -415,10 +415,11 @@
                                               <tr>
                                                   <th>Account</th>
                                                   <th>Description</th>
-                                                  <th>Unit Price</th>
                                                   <th>Quantity</th>
+                                                  <th>Unit Price</th>
                                                   <th>Sub-total</th>
                                                   <th>Taxes</th>
+                                                  <th>Totals</th>
                                                   <th>Remove</th>
                                               </tr>
                                           </thead>
@@ -430,7 +431,6 @@
                                                           <option>Salaries</option>
                                                           <option>Legal Work</option>
                                                           <option>Internet</option>
-                                                          
                                                       </select>
                                                   </td>
                                                   <td><textarea class="form-control" rows="1" placeholder="Enter details"></textarea></td>
@@ -446,12 +446,13 @@
                                                       <option value="bank_transfer">Exempted</option>
                                                     </select>
                                                   </td>
+                                                  <td><input type="number" class="form-control" placeholder="1300"></td>
                                                   <td><button type="button" class="btn btn-danger remove-row">Delete</button></td>
                                               </tr>
                                           </tbody>
                                       </table>
                                   </div>
-      
+
                                   <div class="row g-3 mt-2">
                                       <div class="col-6">
                                           <button type="button" class="btn btn-custom btn-sm" id="addRow">Add More</button>
@@ -460,7 +461,7 @@
                                           <button type="submit" class="btn btn-custom btn-sm" style="height: fit-content;"> Submit</button>
                                       </div>
                                   </div>
-                                                  
+
                               </form>
                           </div>
                       </div>
@@ -482,17 +483,16 @@
             <!--begin::Row-->
             <div class="row first mb-2 mt-2 rounded-circle">
 
-              
+
               <!-- /.col -->
             </div>
             <!--end::Row-->
 
             <!--begin::Row-->
             <div class="row">
-                
+
             </div>
             <!--end::Row-->
-
            <!--begin::Row-->
             <div class="row">
               <!-- Start col -->
@@ -501,58 +501,87 @@
                     <div class="card-header">
                       <b>All Operational Expenses</b>
                     </div>
-
                     <div class="card-body">
                         <table class="table-striped" id="repaireExpenses" style="width: 100%;">
                             <thead>
                                 <tr>
-                                    <th>Exp Date</th>
-                                    <th>Unit Price</th>
-                                    <th>Qty</th>
-                                    <th>Sub Total</th>
-                                    <th>All Totals</th>
+                                    <th>Date</th>
+                                    <th>Supplier</th>
+                                    <th>Invoice No</th>
+                                    <th>Totals</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-
                             <tbody>
                                 <tr>
                                     <td>20 Nov 2013</td>
-                                    <td>KSH 10000</td>
-                                    <td>2</td>
-                                    <td> KSH 20,000</td>
-                                    <td> <button class="amount total " ><i class="fa fa-dollar-sign"></i> 20000 </button>  </td>
+                                    <td>Quickmart</td>
+                                    <td>INV-001</td>
+                                    <td>KSH 20,000</td>
                                     <td>
+                                      <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="view"><i class="fa fa-file"></i></button>
                                       <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Remove"><i class="fa fa-trash"></i>
                                       </button>
-                                      <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="view"><i class="fa fa-file"></i></button>
-                                  
                                     </td>
                                 </tr>
                                 <tr>
-                                
-                                    <td>20 Nov 2013</td>
-                                    <td>KSH 10000</td>
-                                    <td>2</td>
-                                    <td>KSH 20,000</td>
-                                    <td> <button class="amount total " ><i class="fa fa-dollar-sign"></i> 20000 </button>  </td>
+                                    <td>25 Oct 2013</td>
+                                    <td>Naivas</td>
+                                    <td>INV-002</td>
+                                    <td>KSH 28,000</td>
                                     <td>
-
+                                      <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="view"><i class="fa fa-file"></i></button>
                                       <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-trash"></i>
-                                      </button>
-                                      <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
-                                    </td>
+                                      </button>                                    </td>
                                 </tr>
+                                <tr>
+                                  <td>20 Nov 2013</td>
+                                  <td>Quickmart</td>
+                                  <td>INV-001</td>
+                                  <td>KSH 20,000</td>
+                                  <td>
+                                    <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="view"><i class="fa fa-file"></i></button>
+                                    <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Remove"><i class="fa fa-trash"></i>
+                                    </button>
+                                  </td>
+                              </tr>
+                              <tr>
+                                <td>20 Nov 2013</td>
+                                <td>Quickmart</td>
+                                <td>INV-001</td>
+                                <td>KSH 20,000</td>
+                                <td>
+                                  <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="view"><i class="fa fa-file"></i></button>
+                                  <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Remove"><i class="fa fa-trash"></i>
+                                  </button>
+                                </td>
+                            </tr>
+                            <tr>
+                              <td>20 Nov 2013</td>
+                              <td>Quickmart</td>
+                              <td>INV-001</td>
+                              <td>KSH 20,000</td>
+                              <td>
+                                <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="view"><i class="fa fa-file"></i></button>
+                                <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Remove"><i class="fa fa-trash"></i>
+                                </button>
+                              </td>
+                          </tr>
+                          <tr>
+                            <td>20 Nov 2013</td>
+                            <td>Quickmart</td>
+                            <td>INV-001</td>
+                            <td>KSH 20,000</td>
+                            <td>
+                              <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="view"><i class="fa fa-file"></i></button>
+                              <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Remove"><i class="fa fa-trash"></i>
+                              </button>
+                            </td>
+                        </tr>
                             </tbody>
-
-
                         </table>
-                      
                     </div>
-                    
                 </div>
-
-
             </div>
               <!-- /.col -->
             </div>
@@ -587,7 +616,7 @@
 
 
 <!-- Overlay Cards -->
- 
+
 
   <!-- Lease Modal -->
 <div class="modal fadey" id="leaseyModal" tabindex="-1" aria-labelledby="leaseyModalLabel" aria-hidden="true">
@@ -684,21 +713,6 @@
          <!-- Submit Button -->
          <button type="submit" class="bossy"> MAKE PAYMENT</button>
       </div>
-
-
-
-      <!-- Payment Details Section
-      <div class="form-section">
-        <h3>Payment Details</h3>
-        <label for="amount">Payment Amount (KSH)</label>
-        <input type="number" id="amount" name="amount" placeholder="Enter the amount to pay" min="1" required>
-
-        <label for="paymentMethod">Payment Method</label>
-        <select id="paymentMethod" name="paymentMethod" required>
-          <option value="mpesa_transfer" class="bossy">MPESA</option>
-        </select>
-      </div> -->
-
           </form>
         </div>
       </div>
@@ -707,16 +721,11 @@
 
 <!-- End view announcement -->
 <!-- end overlay card. -->
-
-    <!--begin::Script-->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
-
-
+<!--begin::Third Party Plugin(OverlayScrollbars)-->
 
 <!-- Overlay scripts -->
  <!-- View announcements script -->
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 
  <script>
   const   more_announcement = document.getElementById('more_announcement_btn');
@@ -730,8 +739,6 @@
      const now = new Date();
             const formattedTime = now.toLocaleString(); // Format the date and time
             timestamp.textContent = `Sent on: ${formattedTime}`;
-
-
   });
 
      close_overlay.addEventListener('click', ()=>{
@@ -825,13 +832,12 @@
 
 
 
-<!-- 
+<!--
   Add expense scripts.
 
 -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-
     document.addEventListener("DOMContentLoaded", function () {
         const addRowButton = document.getElementById("addRow");
         const tableBody = document.querySelector("tbody");
@@ -840,21 +846,28 @@
             const newRow = document.createElement("tr");
             newRow.innerHTML = `
                 <td>
-                    <select class="form-select">
-                        <option selected disabled>Expense</option>
-                        <option>Rent</option>
-                        <option>Water</option>
-                        <option>Internet</option>
-                        <option>Taxes</option>
-                        <option>Salaries</option>
-                        <option>Others</option>
-                    </select>
-                </td>
-                <td><textarea class="form-control" rows="2" placeholder="Enter details"></textarea></td>
-                <td><input type="text" class="form-control" placeholder="123"></td>
-                <td><input type="number" class="form-control" placeholder="1"></td>
-                <td><input type="number" class="form-control" placeholder="123"></td>
-                <td><button type="button" class="btn btn-danger remove-row">Delete</button></td>
+                                                      <select class="form-select">
+                                                          <option selected disabled>Repair and Mantainance</option>
+                                                          <option>Salaries</option>
+                                                          <option>Legal Work</option>
+                                                          <option>Internet</option>
+                                                      </select>
+                                                  </td>
+                                                  <td><textarea class="form-control" rows="1" placeholder="Enter details"></textarea></td>
+                                                  <td><input type="text" class="form-control" placeholder="123"></td>
+                                                  <td><input type="number" class="form-control" placeholder="1"></td>
+                                                  <td><input type="number" class="form-control" placeholder="123"></td>
+                                                  <td>
+                                                    <select class="form-select">
+                                                      <option value="" disabled selected>Select Option</option>
+                                                      <option value="credit_card">VAT 16% Inclusive</option>
+                                                      <option value="paypal">VAT 16% Exclusive</option>
+                                                      <option value="bank_transfer">Zero Rated</option>
+                                                      <option value="bank_transfer">Exempted</option>
+                                                    </select>
+                                                  </td>
+                                                  <td><input type="number" class="form-control" placeholder="1300"></td>
+                                                  <td><button type="button" class="btn btn-danger remove-row">Delete</button></td>
             `;
 
             newRow.querySelector(".remove-row").addEventListener("click", function () {
@@ -878,8 +891,6 @@
         // Initialize the first row in case user removes all
         checkIfTableEmpty();
     });
-
-
 </script>
 
 
@@ -893,12 +904,6 @@
       });
   });
 </script>
-          
-<script>
-  
-  </script>
-
-    </script>
     <!-- End script for data_table -->
 
 <!--Begin sidebar script -->
@@ -913,6 +918,17 @@
 <!-- end sidebar script -->
 
 
+<!--Begin sidebar script -->
+<script>
+  fetch('../chatbot/index.html')  // Fetch the file
+      .then(response => response.text()) // Convert it to text
+      .then(data => {
+          document.getElementById('index').innerHTML = data; // Insert it
+      })
+      .catch(error => console.error('Error loading the file:', error)); // Handle errors
+</script>
+<!-- end sidebar script -->
+
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
@@ -921,6 +937,7 @@
     ></script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
     <script src="../../../../dist/js/adminlte.js"></script>
+
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';

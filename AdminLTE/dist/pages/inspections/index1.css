@@ -7,7 +7,7 @@ body {
 
                             /* BODY TITLE SECTION */
   .contact_section_header{
-     border-bottom: 1px solid rgba(128, 128, 128, 0.5); 
+     border-bottom: 1px solid rgba(128, 128, 128, 0.5);
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
     letter-spacing: .5px;
@@ -16,7 +16,7 @@ body {
   .title-icon{
     color: #FFC107;
   }
-  
+
                         /* SELECT, INPUT, TEXT_AREA */
   input, textarea {
     width: 100%;
@@ -106,7 +106,7 @@ input, select {
     margin-right: 5px;
     }
     .message-send-button {
-      margin-left: 10px; 
+      margin-left: 10px;
   }
   /* Close button */
   .close-btn:hover{
@@ -123,7 +123,7 @@ input, select {
   background: none;
   }
   .recentChats{
-    display: none; 
+    display: none;
     margin-top: 2px;
   }
 
@@ -136,8 +136,8 @@ input, select {
     line-height: 1.2;
     font-weight: bold;
     }
-    
-    
+
+
     /* General Styling for Summary Items */
     .summary-item {
     padding: 5px 10px;
@@ -157,18 +157,18 @@ input, select {
         border-radius: 2px ;
       }
       h1 {
-    
+
       }
-    
-    
-    
-    
+
+
+
+
       .dt-buttons {
         display: flex;
         justify-content: start; /* or center */
         gap: 5px;
       }
-    
+
       div.dt-button-collection {
         background-color: #00192D !important;  /* Change to your preferred color */
         border: 1px solid #ccc !important;
@@ -179,20 +179,20 @@ input, select {
         color: white !important; /* Ensure text is visible */
         border: none !important;
       }
-    
+
       /* Change hover effect */
       div.dt-button-collection .dt-button:hover {
         background-color: #FFC107 !important;
         color: white !important;
         border-radius: 3px;
       }
-    
-    
-    
+
+
+
       .paginate_button.page-item.active a{
         background-color: #FFC107 !important;
       }
-    
+
     /* Color Coding */
     .total { background-color: #f8f9fa; color: #333; } /* Neutral */
     .completed { background-color: #28a745; color: white; } /* Green */
@@ -209,7 +209,7 @@ input, select {
 .summary-item.icon{
     margin-right: 12px;
 }
-                                                                                                                                       
+
 
 
 /* INSPECTION CONTAINER */
@@ -219,14 +219,14 @@ input, select {
 
 
 
-  
+
   .filter-container{
-    
+
       /* width: 250px; */
-    
+
       color: white;
       position: relative; /* To position the panel below */
-  
+
   }
   .nav-bar {
       display: flex;
@@ -252,11 +252,11 @@ input, select {
       height: 2px;
       background-color: #FFC107; /* Green underline */
   }
-  
+
 
   table {
 border-collapse: collapse;
- width: 100%; 
+ width: 100%;
 }
 th {
 /* background-color: #FFC107; */
@@ -281,7 +281,7 @@ background-color: #f1f1f1;
 
 .filter:hover {
       color: #FFC107;
-      
+
   }
 .filter{
       /* background-color: #444; */
@@ -312,7 +312,7 @@ background-color: #f1f1f1;
       padding: 2%;
       color: white;
       border-radius: 4%;
-      
+
   }
 .panel a {
       display: block;
@@ -326,7 +326,7 @@ background-color: #f1f1f1;
   .panel a:hover{
     color: #FFC107;
   }
-  
+
 /* Announcement Overlay styles */
   #view_announcement {
       /* width: 50%; Adjust the card width as needed */
@@ -347,12 +347,12 @@ background-color: #f1f1f1;
 
     position: relative;
       background: white;
-      
+
       border-radius: 5px;
-      
+
       color: black;
       width: 100%;
-      max-width: 50%; 
+      max-width: 50%;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
       font-size: 90%;
       color: gray;
@@ -360,7 +360,7 @@ background-color: #f1f1f1;
 
   .card-footer.view_announcement {
       justify-content: flex-end;
-      
+
   }
 
   .card-footer .btn + .btn {
@@ -368,11 +368,11 @@ background-color: #f1f1f1;
   }
 
   .close-btn{
-       position: absolute; 
+       position: absolute;
       right: 15px;
       color: white;
       cursor: pointer;
-      
+
   }
 
   #more{
@@ -381,14 +381,14 @@ background-color: #f1f1f1;
     cursor: pointer;
 
   }
-  
+
   #more_icon{
     /* border: 1px solid black; */
     border-radius: 30%;
     padding: 10%;
     font-size: larger;
   }
- 
+
   #more_options{
     display: none;
     /* position: absolute; */
@@ -396,7 +396,7 @@ background-color: #f1f1f1;
     background: #00192D;
     border-radius: 10%;
     padding: 10px;
-    
+
   }
   #more_options a{
     text-decoration: none;
@@ -411,14 +411,14 @@ background-color: #f1f1f1;
       /* color: white; */
       border: none;
       cursor: pointer;
-      font-size: 100%; 
+      font-size: 100%;
         }
     #close-overlay-btn:hover {
         color: red;
         }
 
   .card-header.view_announcement {
-      position: relative; 
+      position: relative;
       display: flex;/* Add this for the absolute positioning of the close button */
   }
 
@@ -433,14 +433,14 @@ background-color: #f1f1f1;
       width: 48%;
   }
 
- 
+
 
   input {
       width: 100%;
       padding: 8px;
       border: 1px solid #ccc;
       border-radius: 5px;
-  } 
+  }
   .add_provider_btn{
     width: 10%;
       padding: 10px;
@@ -466,7 +466,7 @@ background-color: #f1f1f1;
   #close_provider_btn_container #close_btn:hover{
     color: red;
   }
-  
+
 
 
 
@@ -482,9 +482,9 @@ background-color: #f1f1f1;
   .contact_item{
     color: gray;
     font-size: smaller;
-  }   
-  
-  
+  }
+
+
   .btn:hover{
     color: #FFC107;
   }
@@ -521,7 +521,7 @@ background-color: #f1f1f1;
     font-family: 'Poppins', sans-serif;
     font-size: small;
     }
-    
+
     /* Popup content */
     .popup-content {
     background: white;
@@ -531,7 +531,7 @@ background-color: #f1f1f1;
     text-align: left;
     position: relative;
     }
-    
+
     /* Close button */
     .close-btn {
     position: absolute;
@@ -542,7 +542,7 @@ background-color: #f1f1f1;
     border: none;
     background: none;
     }
-    
+
     /* Form styling */
     .complaint-form input, .complaint-form textarea {
     width: 100%;
@@ -551,7 +551,7 @@ background-color: #f1f1f1;
     border: 1px solid #ccc;
     border-radius: 5px;
     }
-    
+
     /* Submit button */
     .submit-btn {
     background-color: #00192D;
@@ -563,7 +563,7 @@ background-color: #f1f1f1;
     border-radius: 5px;
     }
 
-    
+
 
 /* viewpopup */
 .viewpopup-overlay{
@@ -590,7 +590,7 @@ background-color: #f1f1f1;
 }
 /* view popup */
       /* the schedule section css */
-      
+
       /* Submit button */
  .submit-btn {
   background-color: #00192D;
@@ -601,7 +601,7 @@ background-color: #f1f1f1;
   width: 100%;
   border-radius: 5px;
   }
-  
+
 .notificationpopup-overlay{
   position: fixed;
   top: 0;
@@ -667,4 +667,27 @@ background-color: #f1f1f1;
   font-weight: bold;
   color: green; /* Change color based on condition */
 }
+.file-input {
+  display: none;
+}
+
+.attachment-icon {
+  font-size: 22px;
+  color: #4CAF50;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.attachment-icon:hover {
+  color: #45a049;
+}
+.attachment-container {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 300px;
+}
+
 /* end */

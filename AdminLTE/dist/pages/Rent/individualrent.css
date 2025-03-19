@@ -1,0 +1,55 @@
+.radio-container {
+  display: flex;
+  gap: 20px;
+}
+
+/* Styling for the custom circular radio button */
+.radio-button {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;  /* Makes it circular */
+  border: 3px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+  display: inline-block;
+  position: relative;
+}
+
+/* Inner circle when the button is selected */
+.radio-button.selected {
+  background-color: #4CAF50; /* Green */
+  border-color: #4CAF50;
+}
+
+/* Inner dot when the button is selected */
+.radio-button.selected::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #fff;
+}
+
+/* Optional: Hover effect */
+.radio-button:hover {
+  background-color: #e7e7e7;
+}
+.status.not-paid {
+  background-color: #ff4d4d; /* Red color for 'Not Paid' */
+  color: white;
+  border: 2px solid #e60000;
+}
+
+.status.not-paid:hover {
+  background-color: #e60000;
+}
+.status.not-paid {
+  background-color: #ff4d4d; /* Red background */
+  color: white;
+  border: 2px solid #e60000; /* Darker red border */
+}
