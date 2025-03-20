@@ -78,6 +78,7 @@
   padding-bottom: 0.75rem;
   transition: 0.3s ease-in-out;
   flex-grow: 1;
+  
 }
 .app-main .app-content-header {
   padding: 1rem 0.5rem;
@@ -357,7 +358,7 @@
 
                   <div class="col-md-12 message-container">
                     <!-- <div class="container" style="border:1px solid #E2E2E2" > -->
-                      <div class="row" style="border:1px solid #E2E2E2; height:20%">
+                      <div class="row" style="border:1px solid #E2E2E2; max-height: fit-content; align-items: center;">
                         <div class="col-12 message-container-header-section">
                           <div class="row">
                             <div class="col-md-7">
@@ -386,7 +387,7 @@
 
                         <!-- Start Row messages-summmary -->
 
-                      <div class="row align-items-stretch" style="border:1px solid #E2E2E2; padding: 0 !important; height:80%">
+                      <div class="row align-items-stretch" style="border:1px solid #E2E2E2; padding: 0 !important; height:85%; flex-grow: 1; background-color: rgba(128, 128, 128, 0.1);">
 
                         <div id="message-summary" class="col-md-12  message-summary">
                           <div class="message-list p-2" style="display: flex; justify-content: space-between;">
@@ -396,7 +397,7 @@
                            </div>
                           </div>
 
-                          <table class="table table-hover table-summary-messages" style="border-radius: 20px; flex-grow: 1; height:100%">
+                          <table class="table table-hover table-summary-messages" style="border-radius: 20px; flex-grow: 1;">
                               <thead class="">
                                   <tr>
                                       <th>SENT</th>
@@ -467,6 +468,37 @@
                                         <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
                                       </td>
                                   </tr>
+                                  <tr>
+                                    <td class="timestamp">
+                                      <div class="date">13-03-2025</div>
+                                      <div class="time">07:45PM</div>
+                                    </td>
+                                      <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
+                                      <td>
+                                        <div class="sender">Me</div>
+                                        <div class="sender-email"></div>
+                                      </td>
+                                      <td >
+                                        <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                                        <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                    <td class="timestamp">
+                                      <div class="date">13-03-2025</div>
+                                      <div class="time">07:45PM</div>
+                                    </td>
+                                      <td class="title">Request for Marriage</td>
+                                      <td>
+                                        <div class="sender">John Kelly</div>
+                                        <div class="sender-email"><i class="fa fa-envelope"></i>kelly1@gmail.com</div>
+                                      </td>
+                                      <td >
+                                        <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                                        <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
+                                      </td>
+                                  </tr>
+
                                   <tr>
                                     <td class="timestamp">
                                       <div class="date">13-03-2025</div>
