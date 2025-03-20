@@ -317,11 +317,9 @@
                 </div>
               </div>
 
-              <div class="col-sm-4">
-                <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                </ol>
+              <div class="col-sm-4 d-flex justify-content-end">
+                <button  onclick="opennewtextPopup()" class="automated_message">    Automated Messages</button>
+
               </div>
 
             </div>
@@ -336,14 +334,15 @@
 
                 <!--begin::Row-->
                 <!-- Message Container -->
-                 
+
               <div class="row" >
+
                   <div class="col-md-12 message-container">
                     <!-- <div class="container" style="border:1px solid #E2E2E2" > -->
                       <div class="row" style="border:1px solid #E2E2E2" >
                         <div class="col-12 message-container-header-section">
                           <div class="row">
-                            <div class="col-md-8">
+                            <div class="col-md-7">
                               <select id="categoryFilter">
                                 <option value="">-- Select Building--</option>
                                 <option value="technology">All</option>
@@ -354,11 +353,14 @@
                               <input type="text" class="search-input" placeholder="Search Tenant...">
 
 
-
                             </div>
-                            <div class="col-md-4 d-flex justify-content-end RecentChatNewText-btns" style="align-items: center;">
+                            <div class="col-md-5 d-flex justify-content-end RecentChatNewText-btns" style="align-items: center;">
                               <button id="RecentChats" onclick="recentChats()" class="btn recentChats mt-2"> <i class="fa-solid fa-arrow-left"></i> </button>
-                              
+                              <label class="form-label startDate">Start Date</label>
+                              <input type="date" class="form-control" id="endDate" placeholder="end">
+
+                              <label class="form-label endDate">End Date</label>
+                              <input type="date" class="form-control" id="endDate" placeholder="end">
                             </div>
                           </div>
                         </div>
@@ -375,7 +377,7 @@
                             <button  id="new_text" onclick="opennewtextPopup()" class="btn new_text">    <i class="bi bi-chat" ></i> New Chat</button>
                            </div>
                           </div>
-                           
+
                           <table class="table table-hover table-summary-messages" style="border-radius: 20px;">
                               <thead class="">
                                   <tr>
@@ -389,7 +391,7 @@
                                   <tr class="table-row">
                                       <td class="timestamp">
                                         <div class="date">13-03-2025</div>
-                                        <div class="time">07:45PM</div>                     
+                                        <div class="time">07:45PM</div>
                                       </td>
                                       <td class="title">Request to Vacate Room</td>
                                       <td>
@@ -398,14 +400,14 @@
 
                                       </td>
                                       <td >
-                                        <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>   
-                                        <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>  
+                                        <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                                        <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
                                       </td>
                                   </tr>
                                   <tr>
                                     <td class="timestamp">
                                       <div class="date">13-03-2025</div>
-                                      <div class="time">07:45PM</div>                     
+                                      <div class="time">07:45PM</div>
                                     </td>
                                       <td class="title">Request to Fix Leaking shower</td>
                                       <td>
@@ -413,14 +415,14 @@
                                         <div class="sender-email"><i class="fa fa-envelope"></i> Ronald12@gmail.com</div>
                                       </td>
                                       <td >
-                                        <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>   
-                                        <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>  
+                                        <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                                        <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
                                       </td>
                                   </tr>
                                   <tr>
                                     <td class="timestamp">
                                       <div class="date">13-03-2025</div>
-                                      <div class="time">07:45PM</div>                     
+                                      <div class="time">07:45PM</div>
                                     </td>
                                       <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
                                       <td>
@@ -428,29 +430,29 @@
                                         <div class="sender-email"><i class="fa fa-envelope"></i>Nabwana@gmail.com</div>
                                       </td>
                                       <td >
-                                        <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>   
-                                        <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>  
+                                        <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                                        <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
                                       </td>
                                   </tr>
                                   <tr>
                                     <td class="timestamp">
                                       <div class="date">13-03-2025</div>
-                                      <div class="time">07:45PM</div>                     
+                                      <div class="time">07:45PM</div>
                                     </td>
                                       <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
                                       <td>
                                         <div class="sender">Hesbon Wanjiku</div>
-                                        <div class="sender-email"><i class="fa fa-envelope"></i>wa123@gmail.com</div>  
+                                        <div class="sender-email"><i class="fa fa-envelope"></i>wa123@gmail.com</div>
                                       </td>
                                       <td >
-                                        <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>   
-                                        <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>  
+                                        <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                                        <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
                                       </td>
                                   </tr>
                                   <tr>
                                     <td class="timestamp">
                                       <div class="date">13-03-2025</div>
-                                      <div class="time">07:45PM</div>                     
+                                      <div class="time">07:45PM</div>
                                     </td>
                                       <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
                                       <td>
@@ -458,14 +460,14 @@
                                         <div class="sender-email"></div>
                                       </td>
                                       <td >
-                                        <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>   
-                                        <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>  
+                                        <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                                        <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
                                       </td>
                                   </tr>
                                   <tr>
                                     <td class="timestamp">
                                       <div class="date">13-03-2025</div>
-                                      <div class="time">07:45PM</div>                     
+                                      <div class="time">07:45PM</div>
                                     </td>
                                       <td class="title">Request for Marriage</td>
                                       <td>
@@ -473,15 +475,15 @@
                                         <div class="sender-email"><i class="fa fa-envelope"></i>kelly1@gmail.com</div>
                                       </td>
                                       <td >
-                                        <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>   
-                                        <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>  
+                                        <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                                        <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
                                       </td>
                                   </tr>
                               </tbody>
                           </table>
 
 
-                          
+
                         </div>
 
                       </div>
@@ -649,8 +651,8 @@
     <option value="Moderate">EBENEZER</option>
     <option value="Low">Alpha</option>
   </select>
-  
-  
+
+
   <select id="property" required >
     <option value="" disabled selected>Select Unit</option>
     <option value="High">All</option>
@@ -658,7 +660,7 @@
     <option value="Moderate">C17</option>
     <option value="Low">E13</option>
   </select>
-  
+
   <select id="property" required >
     <option value="" disabled selected>Tenant</option>
     <option value="High">Nucho</option>
@@ -667,7 +669,7 @@
     <option value="Low">yoyo</option>
   </select>
 </div>
-  
+
 
     <textarea id="notes" name="notes" rows="10" cols="98" placeholder="Enter message..." style="width: 590px; height: 150px; font-size: 16px; border-radius: 10px;"></textarea>
   <div class="d-flex justify-content-end">
@@ -675,7 +677,7 @@
     <button type="submit" class="btn submit-btn"><i class="fa fa-paper-plane"></i> </button>
     <button type="submit" class="btn text-bg-danger" ><i class="fa fa-times-circle"></i> </button>
   </div>
-      
+
   </div>
 </div>
 <!-- End NewText popup -->
