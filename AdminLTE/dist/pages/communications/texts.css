@@ -197,17 +197,19 @@ input, select {
     background-color: transparent;
     color: #E63946 ;
   }
-  .view:hover{
-    border: 1px solid #00192D;
-    background-color: transparent;
-    color: green;
-    cursor: pointer;
-  }
+
   .delete:hover{
     border: 1px solid #00192D;
     background-color: transparent;
     color: red;
     cursor: pointer;
+  }
+  .automated_message{
+    padding: 2px 4px;
+    font-size: 12px;
+    background-color: transparent;
+    color: green;
+    border: 1px solid #FFC107;
   }
                                     /* MESSAGE CONTAINER STYLES */
 .message-container{
@@ -414,7 +416,7 @@ background-color: white;
   }
   td{
     font-size: 14px !important;
-    
+
     align-items: center;
   }
 
