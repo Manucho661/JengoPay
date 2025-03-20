@@ -410,9 +410,12 @@ background-color: white;
   }
   th, td {
     text-align: left !important; /* Align text for readability */
+    vertical-align: middle; /* Centers text vertically */
   }
   td{
     font-size: 14px !important;
+    
+    align-items: center;
   }
 
   th{
