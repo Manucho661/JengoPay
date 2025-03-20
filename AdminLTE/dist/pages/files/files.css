@@ -1,0 +1,21 @@
+#more_options {
+  display: none;
+  position: absolute;
+  background:white;
+  color:#00192D;
+  border: 1px solid #ccc;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  padding: 5px;
+  top: 20px;
+  right: 0;
+  width: 80px;
+}
+#more_options a {
+  display: block;
+  padding: 5px;
+  text-decoration: none;
+  /* color: black; */
+}
+#more_options a:hover {
+  color:#d39e00;
+}

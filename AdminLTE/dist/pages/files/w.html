@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkbox Example</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>/* Basic Styles for the Body */
+      body {
+          font-family: Arial, sans-serif;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          margin: 0;
+          background-color: #f0f0f0;
+      }
+
+      /* Styling the Checkbox Container */
+      .checkbox-container {
+          text-align: center;
+          background-color: #fff;
+          padding: 30px;
+          border-radius: 10px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          max-width: 400px;
+          width: 100%;
+      }
+
+      /* Heading Style */
+      h2 {
+          font-size: 24px;
+          margin-bottom: 20px;
+      }
+
+      /* Label Styling */
+      label {
+          font-size: 18px;
+          margin: 10px 0;
+          display: block;
+      }
+
+      /* Submit Button Style */
+      button {
+          background-color: #007BFF;
+          color: white;
+          border: none;
+          padding: 12px 24px;
+          font-size: 16px;
+          border-radius: 5px;
+          cursor: pointer;
+          width: 100%;
+          transition: background-color 0.3s;
+      }
+
+      button:hover {
+          background-color: #0056b3;
+      }
+
+      button:active {
+          background-color: #00408a;
+      }
+
+      /* Status Message Style */
+      #statusMessage {
+          margin-top: 20px;
+          font-size: 18px;
+          font-weight: bold;
+          color: #333;
+      }
+      </style>
+</head>
+<body>
+    <div class="checkbox-container">
+        <h2>Select Your Interests</h2>
+        <form id="checkboxForm">
+            <label>
+                <input type="checkbox" name="interest" value="Sports" /> Sports
+            </label><br>
+            <label>
+                <input type="checkbox" name="interest" value="Music" /> Music
+            </label><br>
+            <label>
+                <input type="checkbox" name="interest" value="Traveling" /> Traveling
+            </label><br>
+            <label>
+                <input type="checkbox" name="interest" value="Technology" /> Technology
+            </label><br>
+            <button type="submit">Submit</button>
+        </form>
+        <div id="statusMessage"></div>
+    </div>
+
+    <script src="app.js">document.getElementById("checkboxForm").addEventListener("submit", function(e) {
+      e.preventDefault(); // Prevent the form from submitting
+
+      // Get the selected checkboxes
+      const selectedInterests = [];
+      const checkboxes = document.querySelectorAll('input[name="interest"]:checked');
+      checkboxes.forEach(function(checkbox) {
+          selectedInterests.push(checkbox.value);
+      });
+
+      // Display selected interests
+      const statusMessage = document.getElementById("statusMessage");
+      if (selectedInterests.length > 0) {
+          statusMessage.textContent = "You selected: " + selectedInterests.join(", ");
+          statusMessage.style.color = "#28a745"; // Green for success
+      } else {
+          statusMessage.textContent = "No interests selected.";
+          statusMessage.style.color = "#dc3545"; // Red for error
+      }
+  });
+  </script>
+</body>
+</html>
