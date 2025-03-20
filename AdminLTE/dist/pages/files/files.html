@@ -66,94 +66,6 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<style>
-   .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .overlay-content {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            width: 400px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-        }
-
-        /* Heading */
-        .overlay-content h2 {
-            text-align: center;
-            font-family: 'Arial', sans-serif;
-            color: #333;
-        }
-
-        /* Message Input Area */
-        textarea {
-            width: 100%;
-            height: 100px;
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-            font-family: 'Arial', sans-serif;
-            font-size: 14px;
-        }
-
-        /* Recipient Selector */
-        select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 15px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-            font-family: 'Arial', sans-serif;
-        }
-
-        /* Send Button */
-        .send-button {
-            width: 100%;
-            padding: 12px;
-            background-color: #007BFF;
-            color: white;
-            font-size: 16px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: background-color 0.3s ease;
-        }
-
-        .send-button:hover {
-            background-color: #0056b3;
-        }
-        .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    background-color: red;
-    border-radius: 20px;
-  }
-  .notification-title {
-    color: #00192D;
-    font-size: 15px;
-    font-weight: bold;
-
-}
-
-</style>
 
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -407,28 +319,45 @@
             <div class="row" >
 
               <div class="col-md-12 message-container">
-                <!-- <div class="container" style="border:1px solid #E2E2E2" > -->
-                  <div class="row" style="border:1px solid #E2E2E2" >
-                    <div class="col-12 message-container-header-section">
+
                       <div class="row">
                         <div class="col-md-4">
-                          <select id="categoryFilter">
-                            <option value="">-- Select Building--</option>
-                            <option value="technology">All</option>
-                            <option value="health">Manucho</option>
-                            <option value="business">Ebenezer</option>
-                            <option value="education">Crown Z</option>
-                          </select>
-                          </div>
+                    <!-- <label for="property">Property:</label> -->
+                    <select id="property" name="property" required style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; margin-bottom:5px;">
+                      <option value="" disabled selected>Select Property</option>
+                      <option value="High">Manucho</option>
+                      <option value="Moderate">Ben 10</option>
+                      <option value="Low">Alpha</option>
+                    </select>
+</div>
+<div class="col-md-4">
+  <!-- <label for="property">All Categories:</label> -->
+  <select id="property" name="property" required style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; margin-bottom:5px;">
+    <option value="" disabled selected>All Categories</option>
+    <option value="High">All Categories</option>
+    <option value="High">Leases</option>
+    <option value="Moderate">Applicant File</option>
+    <option value="Low">Shared Reports</option>
+  </select>
+</div>
+</div>
 
+<form action="/upload" method="POST" enctype="multipart/form-data">
+  <label for="fileUpload" class="attachment-icon">
+      📎 Upload file<!-- Attachment Icon -->
+  </label>
+  <input type="file" id="fileUpload" name="fileUpload" class="file-input" style="display:none;" onchange="submitForm()">
+</form>
 
+<br>
+<!-- <hr> -->
                     <!-- Start Row messages-summmary -->
 
                   <div class="row align-items-stretch" style="border:1px solid #E2E2E2; padding: 0 !important;">
 
                     <div id="message-summary" class="col-md-12  message-summary">
                       <div class="message-list p-2" style="display: flex; justify-content: space-between;">
-                        <div class="recent-messages-header">Recent Messages</div>
+                        <div class="recent-messages-header">Recent Files</div>
                        <div>
                        </div>
                       </div>
@@ -455,7 +384,7 @@
                               <td>
                                 <div id="more_icon">&#x2026;</div>
                                 <br>
-                                <div id="more_options">
+                                <div id="more_options" style="color: #00192D;">
                                   <a href="#">View</a>
                                   <a href="#">Download</a>
                                   <a href="#">Delete</a>
@@ -464,20 +393,214 @@
                               </tr>
 
 
-                              <tr>
-
+                              <tr class="table-row">
+                                <td><label>
+                                  <input type="checkbox" name="file" value="file"/>
+                                </label>
+                                </td>
+                                <td>
+                                  Lease Agreement
+                                </td>
+                                <td>Applicant File</td>
+                                <td>
+                                  <div id="more_icon">&#x2026;</div>
+                                  <br>
+                                  <div id="more_options" style="color: #00192D;">
+                                    <a href="#">View</a>
+                                    <a href="#">Download</a>
+                                    <a href="#">Delete</a>
+                                  </div>
+                                </td>
                               </tr>
-                              <tr>
-
+                              <tr class="table-row">
+                                <td><label>
+                                  <input type="checkbox" name="file" value="file"/>
+                                </label>
+                                </td>
+                                <td>
+                                  Lease Agreement
+                                </td>
+                                <td>Shared Reports</td>
+                                <td>
+                                  <div id="more_icon">&#x2026;</div>
+                                  <br>
+                                  <div id="more_options" style="color: #00192D;">
+                                    <a href="#">View</a>
+                                    <a href="#">Download</a>
+                                    <a href="#">Delete</a>
+                                  </div>
+                                </td>
                               </tr>
-                              <tr>
-
+                              <tr class="table-row">
+                                <td><label>
+                                  <input type="checkbox" name="file" value="file"/>
+                                </label>
+                                </td>
+                                <td>
+                                  Lease Agreement
+                                </td>
+                                <td>Shared Reports</td>
+                                <td>
+                                  <div id="more_icon">&#x2026;</div>
+                                  <br>
+                                  <div id="more_options" style="color: #00192D;">
+                                    <a href="#">View</a>
+                                    <a href="#">Download</a>
+                                    <a href="#">Delete</a>
+                                  </div>
+                                </td>
                               </tr>
-                              <tr>
-
+                              <tr class="table-row">
+                                <td><label>
+                                  <input type="checkbox" name="file" value="file"/>
+                                </label>
+                                </td>
+                                <td>
+                                  Lease Agreement
+                                </td>
+                                <td>Applicant File</td>
+                                <td>
+                                  <div id="more_icon">&#x2026;</div>
+                                  <br>
+                                  <div id="more_options" style="color: #00192D;">
+                                    <a href="#">View</a>
+                                    <a href="#">Download</a>
+                                    <a href="#">Delete</a>
+                                  </div>
+                                </td>
                               </tr>
-                              <tr>
-
+                              <tr class="table-row">
+                                <td><label>
+                                  <input type="checkbox" name="file" value="file"/>
+                                </label>
+                                </td>
+                                <td>
+                                  Lease Agreement
+                                </td>
+                                <td>Leases</td>
+                                <td>
+                                  <div id="more_icon">&#x2026;</div>
+                                  <br>
+                                  <div id="more_options" style="color: #00192D;">
+                                    <a href="#">View</a>
+                                    <a href="#">Download</a>
+                                    <a href="#">Delete</a>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr class="table-row">
+                                <td><label>
+                                  <input type="checkbox" name="file" value="file"/>
+                                </label>
+                                </td>
+                                <td>
+                                  Lease Agreement
+                                </td>
+                                <td>Leases</td>
+                                <td>
+                                  <div id="more_icon">&#x2026;</div>
+                                  <br>
+                                  <div id="more_options" style="color: #00192D;">
+                                    <a href="#">View</a>
+                                    <a href="#">Download</a>
+                                    <a href="#">Delete</a>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr class="table-row">
+                                <td><label>
+                                  <input type="checkbox" name="file" value="file"/>
+                                </label>
+                                </td>
+                                <td>
+                                  Lease Agreement
+                                </td>
+                                <td>Leases</td>
+                                <td>
+                                  <div id="more_icon">&#x2026;</div>
+                                  <br>
+                                  <div id="more_options" style="color: #00192D;">
+                                    <a href="#">View</a>
+                                    <a href="#">Download</a>
+                                    <a href="#">Delete</a>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr class="table-row">
+                                <td><label>
+                                  <input type="checkbox" name="file" value="file"/>
+                                </label>
+                                </td>
+                                <td>
+                                  Lease Agreement
+                                </td>
+                                <td>Leases</td>
+                                <td>
+                                  <div id="more_icon">&#x2026;</div>
+                                  <br>
+                                  <div id="more_options" style="color: #00192D;">
+                                    <a href="#">View</a>
+                                    <a href="#">Download</a>
+                                    <a href="#">Delete</a>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr class="table-row">
+                                <td><label>
+                                  <input type="checkbox" name="file" value="file"/>
+                                </label>
+                                </td>
+                                <td>
+                                  Lease Agreement
+                                </td>
+                                <td>Leases</td>
+                                <td>
+                                  <div id="more_icon">&#x2026;</div>
+                                  <br>
+                                  <div id="more_options" style="color: #00192D;">
+                                    <a href="#">View</a>
+                                    <a href="#">Download</a>
+                                    <a href="#">Delete</a>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr class="table-row">
+                                <td><label>
+                                  <input type="checkbox" name="file" value="file"/>
+                                </label>
+                                </td>
+                                <td>
+                                  Lease Agreement
+                                </td>
+                                <td>Leases</td>
+                                <td>
+                                  <div id="more_icon">&#x2026;</div>
+                                  <br>
+                                  <div id="more_options" style="color: #00192D;">
+                                    <a href="#">View</a>
+                                    <a href="#">Download</a>
+                                    <a href="#">Delete</a>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr class="table-row">
+                                <td><label>
+                                  <input type="checkbox" name="file" value="file"/>
+                                </label>
+                                </td>
+                                <td>
+                                  Lease Agreement
+                                </td>
+                                <td>Leases</td>
+                                <td>
+                                  <div id="more_icon">&#x2026;</div>
+                                  <br>
+                                  <div id="more_options" style="color: #00192D;">
+                                    <a href="#">View</a>
+                                    <a href="#">Download</a>
+                                    <a href="#">Delete</a>
+                                  </div>
+                                </td>
                               </tr>
                           </tbody>
                       </table>
