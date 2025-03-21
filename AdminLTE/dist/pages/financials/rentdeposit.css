@@ -1,0 +1,38 @@
+
+        /* body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        } */
+        h1 {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        /* table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color:#00192D;
+        } */
+        /* .btn {
+          position: start;
+            background-color: #00192D;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 20px auto;
+            display: block;
+            width: 200px;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        } */

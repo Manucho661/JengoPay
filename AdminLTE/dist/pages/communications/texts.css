@@ -275,7 +275,7 @@ background-color: white;
 }
 .individual-topic-profiles{
   position: relative;
-  
+
 }
 .individual-topic-profile-container{
   margin-left: 10px;
@@ -299,7 +299,7 @@ background-color: white;
 .individual-topic{
   font-weight: 600;
   font-size: medium;
-  
+
 }
 .individual-name{
 
@@ -406,8 +406,8 @@ background-color: white;
   padding: 4px;
   border-radius: 5px;
   border: 1px solid #ccc;
-   min-height: 20px; 
-   max-height: 100px; 
+   min-height: 20px;
+   max-height: 100px;
   overflow-y: auto;
   outline: none;
 }
@@ -417,14 +417,20 @@ background-color: white;
   background: #fff;
   border-top: 1px solid #ddd;
 }
+.RecentChatNewText-btns{
+  display: flex;
+  justify-content: end;
+}
  /* Responsive Behavior */
  @media (max-width: 768px) {
 
-  .RecentChatNewText-btns{
-    display: flex !important;
-    justify-content: space-between !important;
+  .date{
+    display: block !important;
+    margin-right: 10px;
   }
-
+  .RecentChatNewText-btns{
+    justify-content: start;
+  }
 }
 
                                       /*MESSAGES SUMMARY  */
