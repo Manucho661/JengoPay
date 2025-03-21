@@ -67,94 +67,6 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<style>
-   .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .overlay-content {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            width: 400px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-        }
-
-        /* Heading */
-        .overlay-content h2 {
-            text-align: center;
-            font-family: 'Arial', sans-serif;
-            color: #333;
-        }
-
-        /* Message Input Area */
-        textarea {
-            width: 100%;
-            height: 100px;
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-            font-family: 'Arial', sans-serif;
-            font-size: 14px;
-        }
-
-        /* Recipient Selector */
-        select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 15px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-            font-family: 'Arial', sans-serif;
-        }
-
-        /* Send Button */
-        .send-button {
-            width: 100%;
-            padding: 12px;
-            background-color: #007BFF;
-            color: white;
-            font-size: 16px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: background-color 0.3s ease;
-        }
-
-        .send-button:hover {
-            background-color: #0056b3;
-        }
-        .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    background-color: red;
-    border-radius: 20px;
-  }
-  .notification-title {
-    color: #00192D;
-    font-size: 15px;
-    font-weight: bold;
-
-}
-
-</style>
 
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -492,48 +404,47 @@
               </tr>
             </thead>
             <tbody>
-
               <tr>
-                  <th scope="row">1/7/11</th>
+                  <td scope="row">1/7/11</td>
                       <td>Manucho Apartments</td>
                       <td>KSH 10,000</td>
-                      <td> <button class="status not-paid" style=" background-color: #ff4d4d; /* Red background */
-  color: white;
-  border: 2px solid white; /* Darker red border */">
-                        <i class="fa fa-times-circle"></i> Not Paid
-                    </button> </td>
-                    <td id="more">
-                      <div id="more_icon">&#x2026;</div>
-                      <br>
-                      <div id="more_options">
-                        <a href="#"class="">Invoice</a>
-                        <a href="#" id="showReceiptLink">Receipt</a>
-                        <a href="#">Delete</a>
-                        <a href="#">Edit</a>
-                      </div>
-                     </td>
+                      <td><button class="status not-paid" style=" background-color: #ff4d4d; /* Red background */
+                      color: white;
+                      border: 2px solid white; /* Darker red border */">
+                      <i class="fa fa-times-circle"></i> Not Paid
+                    </button></td>
+                    <td>
+                    <div id="more_icon">&#x2026;</div>
+                    <br>
+                    <div id="more_options">
+                       <a href="#">View</a>
+                       <a href="#">Edit</a>
+                       <a href="#">Delete</a>
+                       <a href="#">Others</a>
+                    </div>
+                  </td>
               </tr>
 
               <tr>
-              <th scope="row">2/7/11</th>
+              <td scope="row">2/7/11</td>
               <td>Ebenezar Apartments</td>
               <td>KSH 20,000</td>
               <td> <button class="status completed" style=" background-color: green; /* Red background */
   color: white;
   border: 2px solid white; /* Darker red border */"><i class="fa fa-check-circle"></i> Paid </button>  </td>
-              <td id="more">
-                <div id="more_icon">&#x2026;</div>
-                <br>
-                <div id="more_options">
-                  <a href="#"class="">Invoice</a>
-                  <a href="#" id="showReceiptLink">Receipt</a>
-                  <a href="#">Delete</a>
-                  <a href="#">Edit</a>
-                </div>
-               </td>
+  <td>
+  <div id="more_icon">&#x2026;</div>
+  <br>
+  <div id="more_options">
+     <a href="#">View</a>
+     <a href="#">Edit</a>
+     <a href="#">Delete</a>
+     <a href="#">Others</a>
+  </div>
+</td>
               </tr>
               <tr>
-                  <th scope="row">3/7/11</th>
+                  <td scope="row">3/7/11</td>
               <td>Kernick Apartment</td>
               <td>KSH 30,000</td>
               <td> <button class="status not-paid" style=" background-color: #ff4d4d; /* Red background */
@@ -541,19 +452,19 @@
                 border: 2px solid white; /* Darker red border */">
                                       <i class="fa fa-times-circle"></i> Not Paid
                                   </button> </td>
-              <td id="more">
-                <div id="more_icon">&#x2026;</div>
-                <br>
-                <div id="more_options">
-                   <a  href="#">Assign</a>
-                   <a href="#">Update</a>
-                   <a href="#">Delete</a>
-                   <a href="#">View</a>
-                </div>
-               </td>
+                                  <td>
+                                  <div id="more_icon">&#x2026;</div>
+                                  <br>
+                                  <div id="more_options">
+                                     <a href="#">View</a>
+                                     <a href="#">Edit</a>
+                                     <a href="#">Delete</a>
+                                     <a href="#">Others</a>
+                                  </div>
+                                </td>
                   </tr>
                   <tr>
-                    <th scope="row">3/7/11</th>
+                    <td scope="row">3/7/11</td>
                 <td>Kernick Apartment</td>
                 <td>KSH 30,000</td>
                 <td> <button class="status not-paid" style=" background-color: #ff4d4d; /* Red background */
@@ -561,19 +472,19 @@
                   border: 2px solid white; /* Darker red border */">
                                         <i class="fa fa-times-circle"></i> Not Paid
                                     </button> </td>
-                <td id="more">
-                  <div id="more_icon">&#x2026;</div>
-                  <br>
-                  <div id="more_options">
-                     <a  href="#">Assign</a>
-                     <a href="#">Update</a>
-                     <a href="#">Delete</a>
-                     <a href="#">View</a>
-                  </div>
-                 </td>
+                                    <td>
+                                    <div id="more_icon">&#x2026;</div>
+                                    <br>
+                                    <div id="more_options">
+                                       <a href="#" >View</a>
+                                       <a href="#">Edit</a>
+                                       <a href="#">Delete</a>
+                                       <a href="#">Others</a>
+                                    </div>
+                                  </td>
                     </tr>
                     <tr>
-                      <th scope="row">3/7/11</th>
+                      <td scope="row">3/7/11</td>
                   <td>Kernick Apartment</td>
                   <td>KSH 30,000</td>
                   <td> <button class="status not-paid" style=" background-color: #ff4d4d; /* Red background */
@@ -581,70 +492,70 @@
                     border: 2px solid white; /* Darker red border */">
                                           <i class="fa fa-times-circle"></i> Not Paid
                                       </button> </td>
-                  <td id="more">
-                    <div id="more_icon">&#x2026;</div>
-                    <br>
-                    <div id="more_options">
-                       <a  href="#">Assign</a>
-                       <a href="#">Update</a>
-                       <a href="#">Delete</a>
-                       <a href="#">View</a>
-                    </div>
-                   </td>
+                                      <td>
+                                      <div id="more_icon">&#x2026;</div>
+                                      <br>
+                                      <div id="more_options">
+                                         <a href="#" >View</a>
+                                         <a href="#">Edit</a>
+                                         <a href="#">Delete</a>
+                                         <a href="#">Others</a>
+                                      </div>
+                                    </td>
                       </tr>
                       <tr>
-                        <th scope="row">3/7/11</th>
+                        <td scope="row">3/7/11</td>
                     <td>Kernick Apartment</td>
                     <td>KSH 30,000</td>
                     <td> <button class="status completed" style=" background-color: green; /* Red background */
                       color: white;
-                      border: 2px solid white; /* Darker red border */"><i class="fa fa-check-circle"></i> Paid </button>  </td>
-                    <td id="more">
+                      border: 2px solid white; /* Darker red border */"><i class="fa fa-check-circle"></i> Paid </button></td>
+                      <td>
                       <div id="more_icon">&#x2026;</div>
                       <br>
                       <div id="more_options">
-                         <a  href="#">Assign</a>
-                         <a href="#">Update</a>
+                         <a href="#" >View</a>
+                         <a href="#">Edit</a>
                          <a href="#">Delete</a>
-                         <a href="#">View</a>
+                         <a href="#">Others</a>
                       </div>
-                     </td>
+                    </td>
                         </tr>
                         <tr>
-                          <th scope="row">2/7/11</th>
+                          <td scope="row">2/7/11</td>
                           <td>Ebenezar Apartments</td>
                           <td>KSH 20,000</td>
                           <td> <button class="status completed" style=" background-color: green; /* Red background */
                             color: white;
                             border: 2px solid white; /* Darker red border */"><i class="fa fa-check-circle"></i> Paid </button>  </td>
-                          <td id="more">
+                            <td>
                             <div id="more_icon">&#x2026;</div>
                             <br>
                             <div id="more_options">
-                              <a href="#"class="">Invoice</a>
-                              <a href="#" id="showReceiptLink">Receipt</a>
-                              <a href="#">Delete</a>
-                              <a href="#">Edit</a>
+                               <a href="#">View</a>
+                               <a href="#">Edit</a>
+                               <a href="#">Delete</a>
+                               <a href="#">Others</a>
                             </div>
-                           </td>
+                          </td>
                           </tr>
                           <tr>
-                            <th scope="row">2/7/11</th>
+                            <td scope="row">2/7/11</td>
                             <td>Ebenezar Apartments</td>
                             <td>KSH 20,000</td>
                             <td> <button class="status completed" style=" background-color: green; /* Red background */
                               color: white;
                               border: 2px solid white; /* Darker red border */"><i class="fa fa-check-circle"></i> Paid </button>  </td>
-                            <td id="more">
+                              <td>
                               <div id="more_icon">&#x2026;</div>
                               <br>
                               <div id="more_options">
-                                <a href="#"class="">Invoice</a>
-                                <a href="#" id="showReceiptLink">Receipt</a>
-                                <a href="#">Delete</a>
-                                <a href="#">Edit</a>
+                                 <a href="#">View</a>
+                                 <a href="#">Edit</a>
+                                 <a href="#">Delete</a>
+                                 <a href="#">Others</a>
                               </div>
-                             </td>
+                            </td>
                             </tr>
             </tbody>
           </table>
@@ -664,8 +575,6 @@
                 </div>
               </div>
             </div>
-
-
 
 <script>
   $(document).ready(function() {
@@ -882,23 +791,15 @@ $(document).ready(function() {
 
 
 <script>
-
-  // JavaScript to handle hover and hide functionality
-  const  more= document.getElementById("more");
-  const more_icon = document.getElementById("more_icon");
-  const more_options = document.getElementById("more_options");
-
-  // Show panel when hovering over the accordion
-  more_icon.addEventListener("mouseenter", () => {
-    more_options.style.display = "block";
+  document.getElementById("more_icon").addEventListener("click", function(event) {
+      let options = document.getElementById("more_options");
+      options.style.display = options.style.display === "block" ? "none" : "block";
+      event.stopPropagation();
   });
 
-  // Hide panel when moving out of both accordion and panel
-   more.addEventListener("mouseleave", () => {
-    more_options.style.display = "none";
-});
-
-
+  document.addEventListener("click", function() {
+      document.getElementById("more_options").style.display = "none";
+  });
 </script>
 
 <!-- End script for data_table -->
