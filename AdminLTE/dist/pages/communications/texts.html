@@ -349,11 +349,11 @@
                 <!--begin::Row-->
                 <!-- Message Container -->
 
-              <div class="row" style="height: 100%;">
+              <div class="row" style="height: 100%;" >
 
                   <div class="col-md-12 message-container">
                     <!-- <div class="container" style="border:1px solid #E2E2E2" > -->
-                      <div class="row filter-section">
+                      <div class="row filter-section" id="filter-section">
                         <div class="col-12 message-container-header-section">
                           <div class="row">
                             <div class="col-md-8">
@@ -385,9 +385,9 @@
                       </div>
 
                         <!-- Start Row messages-summmary -->
-                         <div class="row" style="display: none;" >
+                         <div class="row" style="display: none;" id="go-back" >
                           <div class="col-md-12 d-flex">
-                            <button class="btn go-back mb-1"> <i class="fa-solid fa-arrow-left"></i>  Go Back</button>
+                            <button class="btn go-back mb-1" onclick="myBack()" > <i class="fa-solid fa-arrow-left"></i>  Go Back</button>
                           </div>
 
                          </div>
@@ -549,15 +549,15 @@
 
                         <!-- End Row messages-summmary -->
 
-                      <div class="row align-items-stretch" id="individual-message-summmary" style="border:1px solid #E2E2E2; padding: 0 !important; display: none;">
+                      <div class="row h-100 align-items-stretch" id="individual-message-summmary" style="border:1px solid #E2E2E2; padding: 0 !important; display: none; max-height: 95%;">
 
-                            <div id="message-profiles" class="col-md-4  message-profiles">
+                            <div id="message-profiles" class="col-md-4  message-profiles" style="height: 100%;" >
 
                               <div class="topic-profiles-header-section d-flex">
                                 <div class="content d-flex">
                                   <div class="individual-details-container">
                                     <div class="content d-flex">
-                                      <div class="profile-initials">JM</div>
+                                      <div class="profile-initials" id="profile-initials">JM</div>
                                       <div class="individual-residence d-flex">
                                         <div class="individual-name body">Emmanuel,</div>
                                         <div class="residence mt-2">EBENEZER, C12</div>
@@ -633,14 +633,13 @@
 
                             </div>
 
-                            <div id="messageBody" class="col-md-8  message-body" style="padding: 0 !important;">
+                            <div id="messageBody" class="col-md-8 message-body" style="padding: 0 !important; display: block; ">
                               <div class="individual-message-body-header">
                                 <div class="individual-details-container">
                                   <div class="content">
 
                                     <div class="individual-residence">
                                       <div class="individual-topic body">Rental Arrears</div>
-
                                     </div>
 
 
@@ -655,10 +654,10 @@
                                   <div class="message incoming">Hello! How are you?</div>
                                   <div class="message outgoing">I'm doing great, thanks!</div>
                                 </div>
-                                <div class="input-area">
+                               <div class="input-area">
                                   <div class="input-box" id="inputBox" contenteditable="true"></div>
                                   <button class="btn message-send-button" onclick="sendMessage()"><i class="fa fa-paper-plane"></i> </button>
-                              </div>
+                              </div> 
 
                               </div>
                             </div>
@@ -703,8 +702,6 @@
 
 <!-- Script source File -->
 <script src="text.js"></script>
-
-
 
 <!-- PopUp Scripts -->
 
@@ -797,6 +794,11 @@
 
 <script>
 
+  // Major Variables.
+  const all_messages_summary =  document.getElementById('all-messages-summary');
+  const individual_message_summary = document.getElementById('individual-message-summmary');
+  
+
   // const   next_text = document.getElementById('respond_btn');
   const   respond_window = document.getElementById('respond');
   const   close_text_overlay = document.getElementById("closeTextWindow");
@@ -854,8 +856,10 @@
 
 
                               // SHOWING THE CHATBOT.
-                              const all_messages_summary =  document.getElementById('all-messages-summary');
-                              const individual_message_summary = document.getElementById('individual-message-summmary');
+                              
+                              const filter_section = document.getElementById('filter-section');
+                              const go_back = document.getElementById('go-back');
+
                               document.querySelectorAll('.view').forEach(item => {
                     item.addEventListener('click', function () {
                       const all_messages_summary = document.getElementById('all-messages-summary');
@@ -864,22 +868,54 @@
                       const row = this.closest('tr'); // This refers to the clicked button
                       const cells = row.querySelectorAll('td');
 
-                      const secondLast = cells[cells.length - 2].textContent;
+                      const secondLast = cells[cells.length - 2];
+                      const senderDiv = secondLast.querySelector('.sender');
+                      const sender = senderDiv ? senderDiv.textContent.split(' ')[0]  : 'Unknown Sender'; // Safe fallback
                       const thirdLast = cells[cells.length - 3].textContent;
-
                       console.log("Third Last:", thirdLast);
-                      console.log("Second Last:", secondLast);
+                      // console.log("Second Last:", secondLast);
+                      
+                      // Find the `.individual-name.body` and update it (name of the tenant)
+                        let targetName = document.querySelector('.individual-name.body');
+                        if (targetName) {
+                            targetName.textContent = sender;
+                        }
+
+                        // Profile Initials
+                        let targetName3 = document.getElementById('profile-initials');
+                            const words = senderDiv.textContent.trim().split(' ');
+                            const firstInitial = words[0] ? words[0][0] : '';
+                            const secondInitial = words[1] ? words[1][0] : '';
+                            const full_initials = firstInitial + secondInitial || 'Unknown Sender';
+                            if (targetName3) {
+                            targetName3.textContent = full_initials;
+                        }
+
+                        let targetName2 = document.querySelector('.individual-topic.body');
+                        if (targetName2) {
+                            targetName2.textContent = thirdLast;
+                        }
 
                       all_messages_summary.style.display = "none";
+                      filter_section.style.display = "none";
                       individual_message_summary.style.display = "flex";
-
-                      // Optional: Use the data somewhere
-
+                      go_back.style.display = "flex";
+                      
+                      
   });
 });
+
+          // Back to messages summary.
+          function myBack() {
+            
+            const individual_message_summary = document.getElementById('individual-message-summmary').style.display="none";
+            const all_messages_summary = document.getElementById('all-messages-summary').style.display="flex";
+                  }
+
+
       // Hover and active effect
       // Select all message elements
-      document.querySelectorAll('.individual-topic-profiles').forEach(item => {
+    document.querySelectorAll('.individual-topic-profiles').forEach(item => {
     item.addEventListener('click', () => {
         // Remove 'active' class from all and add to clicked one
         document.querySelectorAll('.individual-topic-profiles').forEach(el => el.classList.remove('active'));
@@ -889,8 +925,7 @@
         let clickedName = item.querySelector('.individual-topic').textContent;
 
         // Random residence names
-        let residenceOptions = ["CROWN Z, C9", "OAKWOOD, A5", "CROWN Z, C480",  "HILLCREST, B12","HILLCREST, B300", "SUNSET VILLA, D3"];
-        let randomResidence = residenceOptions[Math.floor(Math.random() * residenceOptions.length)];
+        
 
         // Find the `.individual-topic.body` and update it
         let targetName = document.querySelector('.individual-topic.body');
@@ -899,15 +934,12 @@
         }
 
         // Find the `.residence` element and update it with a random residence
-        let targetResidence = document.querySelector('.residence');
-        if (targetResidence) {
-            targetResidence.textContent = randomResidence;
-        }
+        
     });
 });
 
           // Effect on Smaller Screens
-          const recentChats = document.getElementById("RecentChats");
+const recentChats = document.getElementById("RecentChats");
 const messageProfiles = document.getElementById("message-profiles");
 const messageBody = document.getElementById("messageBody");
 const individualProfiles = document.querySelectorAll(".individual-topic-profiles");
@@ -917,7 +949,7 @@ function updateLayout() {
     if (window.innerWidth > 768) {
         messageProfiles.style.display = "block";
         recentChats.style.display = "none";
-        messageBody.style.display = "block";
+        messageBody.style.display = "flex";
     } else {
         messageProfiles.style.display = "none";
         recentChats.style.display = "block";
@@ -956,9 +988,6 @@ recentChats.addEventListener("click", showMessageProfiles);
 individualProfiles.forEach(profile => {
     profile.addEventListener("click", showMessageBody);
 });
-
-
-
   </script>
   <!-- End  -->
 
