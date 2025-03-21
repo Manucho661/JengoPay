@@ -329,7 +329,7 @@
                             <label class="text text-center"><i class="fa-solid fa-circle-check"></i> <b>COMPLETED</b>   </label>
                               <span class="value text-center"> <b>30 </b> </span>
                           </div>
-                          
+
                           <div class="col-md-3">
                             <label class="text text-center"> <i class="fas fa-spinner fa-spin icon"></i> <b>In Progress</b>  </label>
                             <span class="value"> <b>39</b>  </span>
@@ -340,7 +340,7 @@
                             <span class="value"> <b>25</b>  </span>
                           </div>
                         </div>
-                          
+
                       </div>
 
                 </div>
@@ -350,7 +350,7 @@
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
                   <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                </ol> 
+                </ol>
               </div>
 
             </div>
@@ -367,7 +367,7 @@
             <!--begin::Row-->
             <div class="row first mb-2 mt-2 rounded-circle">
 
-              
+
               <!-- /.col -->
             </div>
             <!--end::Row-->
@@ -385,10 +385,12 @@
                         <table id="maintenance" class="table table-striped" style="width: 100%;">
                           <thead>
                             <tr>
-                              <th>REQUEST_DATE</th>                       
+                              <th>REQUESTDATE</th>
+                              <th>ID</th>
                               <th>CATEGORY</th>
                               <th>PAYMENT</th>
                               <th>PROVIDER</th>
+                              <th>Priority</th>
                               <th>STATUS</th>
                                 <th>ACTIONS</th>
 
@@ -397,39 +399,39 @@
                           <tbody>
                             <tr>
                               <td>11-10-2025</td>
-                              
-                              
-                          
+                              <td>23423</td>
                               <td>Broken handle</td>
-                              <td><button class="btn  mt-0" id="example" data-bs-toggle="modal" data-bs-target="#leaseModal" style="color: #FFC107;">
-                              PAY</button></td>
+                              <td><button class="payment pending" id="example" data-bs-toggle="modal" data-bs-target="#leaseModal"> <i class="fa fa-exclamation-circle"></i>
+                              PENDING</button></td>
                               <!-- <td><button onclick="toggleOverlay()">Paid</button></td> -->
+                              <td>Kitu Moto</td>
                               <td>low</td>
+                              <td > <button class="status completed"><i class="fa fa-check-circle"></i> COMPLETED </button>  </td>
 
-                              <td><button class="text-bg-danger"><i class="bi bi-x-circle-fill"></i>!INCOMPLETE</button></td>
                               <td>
-                                <button  onclick="openassignPopup()"  class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                                <button  onclick=" openassignPopup()"  class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
                                 </button>
-                                <button onclick="openrequestPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
+                                <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
 
                               </td>
                             </tr>
                             <tr>
                               <td>11-10-2025</td>
-                            
-                            
-                              
-                              
-                              <td>Leaking roof</td>
-                              <td><button  class="btn  mt-0" id="example" style="color: #FFC107;">PAID</button></td>
-                              <td>high</td>
+                            <td>12432</td>
 
-                              <td> <button class="text-bg-success"><i class="fa-solid fa-circle-check"></i> DONE</button>  </td>
-                              <td>
-                                <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                              </button> -->
+
+
+                              <td>Leaking roof</td>
+                              <td><button  class=" payment paid" id="example"> <i class="fa fa-check-circle"></i>  PAID</button></td>
+                              <td>Not Assigned </td>
+                              <td>High</td>
+
+                              <td > <button class="status incomplete" ><i class="fa fa-times-circle"></i> INCOMPLETE </button> </td>
+
+                              <td><button onclick=" openassignPopup()" class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                              </button>
                               <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
-          
+
                                 </td>
                             </tr>
                             <!-- Add more rows as needed -->
@@ -437,17 +439,8 @@
 
                         </table>
                       </div>
-
-
-
                     </div>
-
-
-
-                    
                 </div>
-
-
             </div>
               <!-- /.col -->
             </div>
@@ -459,9 +452,6 @@
       </main>
       <!--end::App Main-->
       <!--begin::Footer-->
-
-
-
       <footer class="app-footer">
         <!--begin::To the end-->
         <div class="float-end d-none d-sm-inline">Anything you want</div>
@@ -478,21 +468,12 @@
     </div>
     <!--end::App Wrapper-->
 
-
-
-
 <!-- Overlay Cards -->
-
 <!-- create Announcement -->
-
-
-
-
-
  <!-- Start View announcement -->
- <div class="view_announcement" id="view_announcement">
+ <!-- <div class="view_announcement" id="view_announcement">
   <div class="card content">
-   <div class="card-header view_announcement bg-secondary text-white">
+   <div class="card-header view_announcement bg-secondary text-white display:none">
        <h5 class="mb-0">Rent Payments</h5>
        <div id="close-overlay-btn" class="close-btn" > <b> &times;</b> </div>
 
@@ -503,10 +484,10 @@
            be able to complete their dues on 24/01/17 should communicate to management before the due date.
            Else, you face an eviction risk if you fail to pay your dues before the said date without a reasonable reason</p>
 
-           <p class="timestamp" id="timestamp"></p> <!-- Timestamp -->
+           <p class="timestamp" id="timestamp"></p>  Timestamp -->
 
 
-       <div class="Recipients border-top border-gray "> <p><strong>Recipients|</strong> All Employees</p>  </div>
+       <!-- <div class="Recipients border-top border-gray "> <p><strong>Recipients|</strong> All Employees</p>  </div>
 
    </div>
    <div class="card-footer view_announcement d-flex">
@@ -514,10 +495,10 @@
        <button class="btn btn-secondary btn-sm">Resend</button>
    </div>
  </div>
- </div>
+ </div> -->
 
   <!-- Lease Modal -->
-<div class="modal fadey" id="leaseyModal" tabindex="-1" aria-labelledby="leaseyModalLabel" aria-hidden="true">
+<!-- <div class="modal fadey" id="leaseyModal" tabindex="-1" aria-labelledby="leaseyModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -557,7 +538,7 @@
 
                   <button type="submit" class="submit-btn" style="border-radius: 10px; background-color: #00192D; width: 50%; margin-left: 6rem;" >Assign</button>
               </form>
-          </div>
+          </div> -->
 
           <!-- <div id="assignedTasks">
               <h2>Assigned Tasks</h2>
@@ -571,7 +552,7 @@
   </div>
 </div>
 
-  <!-- Lease Modal -->
+  <!-- Lease Modal
   <div class="modal fade" id="leaseModal" tabindex="-1" aria-labelledby="leaseModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -581,15 +562,15 @@
         </div>
         <div class="modal-body">
           <form class="beasy">
-             <!-- Landlord Information Section -->
+             Landlord Information Section -->
       <!-- Service Provider Information Section -->
-      <div class="form-section">
+      <!-- <div class="form-section">
         <h3 class="text-warning">Landlord Information</h3>
-         <a href="#"><p>Martin White</p></a>
+         <a href="#"><p>Martin White</p></a> -->
         <!-- <label for="landlordName">Landlord Name(Martin White)</label> -->
         <!-- <input type="text" id="landlordName" name="landlordName" placeholder="Enter your full name" required> -->
 
-        <h3 class="text-warning">Select Service Providers Information</h3>
+        <!-- <h3 class="text-warning">Select Service Providers Information</h3>
         <label for="paymentMethod">Choose:</label>
         <select id="paymentMethod" name="paymentMethod" required>
           <option value="bank_transfer">ABX Electricals</option>
@@ -607,9 +588,9 @@
           <option value="mpesa_transfer" class="bossy">Global Pay</option>
           <option value="mpesa_transfer" class="bossy">Cash</option>
 
-        </select>
+        </select> -->
          <!-- Submit Button -->
-         <button type="submit" class="bossy"> MAKE PAYMENT</button>
+         <!-- <button type="submit" class="bossy"> MAKE PAYMENT</button> -->
       </div>
 
 
@@ -634,18 +615,15 @@
 
 <!-- End view announcement -->
  <!-- assign popup -->
-<div class="assignpopup-overlay" id="assignPopup">
+<!-- <div class="assignpopup-overlay" id="assignPopup">
   <div class="assignpopup-content">
     <button class="close-btn text-secondary" onclick="closeassignPopup()">×</button>
 
- 
+
     <div class="bg-white rounded-lg  text-sm">
       <button class="close-btn text-secondary" onclick="closeassignPopup()">×</button>
-
       <h2 class="text-lg font-semibold text-gray-700 text-left mb-3">Assign a Plumber</h2>
-
     <form>
-      
       <div class="grid grid-cols-2 gap-2 flex items-center justify-center">
           <div>
               <label class="block text-gray-600">Requested By:</label>
@@ -714,15 +692,15 @@
   </form>
   </div>
   </div>
-</div>
+</div> -->
 <!-- End assign popup -->
 
 <!-- notification popup -->
-<div class="requestpopup-overlay" id="requestPopup">
-  <div class="requestpopup-content">  
+<!-- <div class="requestpopup-overlay" id="requestPopup">
+  <div class="requestpopup-content"> -->
 <!-- Close Button Positioned to the Right -->
-<button class="close-btn text-secondary"   
-style="position: absolute; top: 10px; right: 10px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; font-size: 20px; cursor: pointer;" 
+<!-- <button class="close-btn text-secondary"
+style="position: absolute; top: 10px; right: 10px; width: 30px; height: 30px; display: none; align-items: center; justify-content: center; border: none; background: transparent; font-size: 20px; cursor: pointer;"
 onclick="closerequestPopup()">×</button>
 
     <p>Plumbing Issue Request Details</p>
@@ -742,9 +720,9 @@ onclick="closerequestPopup()">×</button>
           <p>Imela Apartments</p>
         </div>
         </div>
-</form>
+</form> -->
 
-<form action="#" method="POST" class="teny-card mb-2">
+<!-- <form action="#" method="POST" class="teny-card mb-2">
         <b><p style="text-align: left;">Plumbing Issue & Description:</p></b>
         <p>Plumbing Requested Issue: Pipe Leakage</p>
       <div class="form-group">
@@ -756,14 +734,14 @@ onclick="closerequestPopup()">×</button>
 
       <form action="#" method="POST" class="teny-card mb-2">
        <b><p style="text-align: left;">Urgence Level Request Date and Photos</p></b>
-       
-      <div class="form-group">
+
+      <div class="form-group"> -->
         <!-- <p>Urgence Level Request Date and Photos</p> -->
-        <div  class="riy">
+        <!-- <div  class="riy">
       Urgence Level : <button style="background-color: red;color: white;border-radius: 10px;"> !Immediate Attention Required:</button>
       <p>Date of Request: 21, Feb 2025</p>
     </div>
-      </form>
+      </form> -->
 
       <!-- <form action="#" method="POST" class="tenant-card">
         <p>Photos</p>
@@ -772,8 +750,8 @@ onclick="closerequestPopup()">×</button>
       </form>
        -->
       <!-- <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SEND</button> -->
-  </div>
-</div>
+  <!-- </div>
+</div> -->
 <!-- End Notification popup -->
 <!-- end overlay card. -->
 
@@ -799,7 +777,7 @@ onclick="closerequestPopup()">×</button>
 </script>
 
 <!-- create assign-->
- 
+
 <!-- request view popup -->
 <script>
   // Function to open Assign popup
@@ -933,9 +911,9 @@ onclick="closerequestPopup()">×</button>
       });
   });
 </script>
-          
+
 <script>
-  
+
   </script>
 
     </script>
