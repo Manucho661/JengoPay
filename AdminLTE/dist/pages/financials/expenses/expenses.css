@@ -1,5 +1,100 @@
-/* add expense styles */
+/* Overlay background */
+.expenses-overlay {
+  display: none; /* Hidden by default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
 
+/* Center the content */
+.expenses-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 800px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #333;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: #e74c3c;
+}
+
+/* Title of the form */
+.assign-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 1.8rem;
+}
+/* Form styling */
+.wide-form .form-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+/* Label styling */
+.wide-form label {
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 5px;
+  display: block;
+}
+
+/* Input field styling */
+.wide-form input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.wide-form input:disabled {
+  background-color: #f5f5f5;
+}
+
+/* Columns */
+.col-md-6 {
+  width: 48%;
+}
+
+@media (max-width: 768px) {
+  .col-md-6 {
+    width: 100%;
+  }
+}
+
+.edit-btn {
+  background-color:#00192D;
+  color:#d39e00;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 5px;
+}
+.edit-btn:hover {
+  background-color: #e84118;
+}
 .form-container {
     background: white;
     padding: 25px;
@@ -49,22 +144,22 @@ th, td {
     text-align: left !important; /* Align text for readability */
     font-size: 12px !important;
   }
-  
-  th:nth-child(1), td:nth-child(1) { 
+
+  th:nth-child(1), td:nth-child(1) {
     text-align: center !important; /* Center align numbers like serial numbers */
   }
-  
-  th:nth-child(3), td:nth-child(3) { 
+
+  th:nth-child(3), td:nth-child(3) {
     text-align: center !important; /* Center align payment status */
   }
-  
-  th:nth-child(4), td:nth-child(4) { 
+
+  th:nth-child(4), td:nth-child(4) {
     text-align: left !important; /* Align provider names to the left */
   }
   th, td {
     padding: 12px 15px !important; /* Top-bottom: 12px, Left-right: 15px */
   }
-  
+
   th, td {
     white-space: nowrap !important;
     overflow: hidden !important;
@@ -85,7 +180,7 @@ div.dt-buttons{
     background-color: #00192D !important;
     font-size: 12px !important;
   }
-  
+
   div.dt-button-collection {
     background-color: #00192D !important;  /* Change to your preferred color */
     border: 1px solid #ccc !important;
@@ -100,7 +195,7 @@ div.dt-buttons{
     font-size: 12px !important;
 
   }
-  
+
   /* Change hover effect */
   div.dt-button-collection .dt-button:hover {
     background-color: #FFC107 !important;
@@ -109,7 +204,7 @@ div.dt-buttons{
     font-size: 12px !important;
 
   }
-  
+
 
   .contact_section_header{
     border-bottom: 1px solid rgba(128, 128, 128, 0.5);
@@ -131,13 +226,13 @@ div.dt-buttons{
     color: #767676;
     color: #00192D;
     font-family: 'Poppins', sans-serif;
-  
+
     }
-    
+
     .text a{
       text-decoration: none;
     }
-    
+
     .paginate_button.page-item.active a {
         background-color: #FFC107 !important;
     }
@@ -146,50 +241,50 @@ div.dt-buttons{
     .summary-section {
         display: flex;
         justify-content: start; /* Aligns left */
-         gap: 15px;  
+         gap: 15px;
         margin-bottom: 10px; /* Moves closer to table */
-         font-size: 16px; 
-         font-weight: bold; 
+         font-size: 16px;
+         font-weight: bold;
         border-right: #f4f4f4;
       }
-      
-      
+
+
       /* General Styling for Summary Items */
       .summary-item {
-         padding: 5px 10px; 
+         padding: 5px 10px;
         border-radius: 5px;
         display: flex;
         align-items: center;
-       gap: 5px; 
+       gap: 5px;
        display: flex;
        justify-content: center;
        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 
       }
-      
+
       /* Color Coding */
       .total { background-color:#00192D ; color: white; } /* Neutral */
-      
 
-      
+
+
       .amount {
         display: inline-flex;
         align-items: center;
         font-weight: bold;
         padding: 6px 12px;
-         border-radius: 4px;  
+         border-radius: 4px;
         font-size: 14px;
       }
       .amount.total {
         background-color: #d32f2f; /* Light green */
-        
+
         color: white;
         border: none;
         padding: 6px 12px; /* Smaller padding for better proportion */
     font-size: 14px; /* Reduce font size to blend with table text */
     font-weight: bold; /* Keep it readable but not overwhelming */
-    border-radius: 5px; 
-        
+    border-radius: 5px;
+
       }
       .add-expense-btn{
         display: block; /* Ensures it takes up full width if needed */
@@ -212,5 +307,5 @@ div.dt-buttons{
       }
 
       .value{
-        
+
       }
