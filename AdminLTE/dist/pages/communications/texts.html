@@ -633,7 +633,7 @@
 
                             </div>
 
-                            <div id="messageBody" class="col-md-8 message-body" style="padding: 0 !important; display: block; ">
+                            <div id="messageBody" class="col-md-8 message-body" style="padding: 0 !important;">
                               <div class="individual-message-body-header">
                                 <div class="individual-details-container">
                                   <div class="content">
@@ -892,7 +892,7 @@
                         }
 
                         let targetName2 = document.querySelector('.individual-topic.body');
-                        if (targetName2) {
+                        if (targetName2 ) {
                             targetName2.textContent = thirdLast;
                         }
 
@@ -910,6 +910,8 @@
             
             const individual_message_summary = document.getElementById('individual-message-summmary').style.display="none";
             const all_messages_summary = document.getElementById('all-messages-summary').style.display="flex";
+            const fliter_section = document.getElementById('filter-section').style.display="flex";
+            const go_back = document.getElementById('go-back').style.display="none";
                   }
 
 
@@ -953,7 +955,7 @@ function updateLayout() {
     } else {
         messageProfiles.style.display = "none";
         recentChats.style.display = "block";
-        // messageBody.style.display = "none";
+        messageBody.style.display = "none";
     }
 }
 
