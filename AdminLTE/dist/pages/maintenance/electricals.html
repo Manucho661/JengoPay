@@ -320,28 +320,23 @@
                         <div class="row Summary mt-6" >
                           <!-- Summary -->
 
-                            <div class="col-md-12 ">
-                              <div class="summary-section text-center p-2 row">
-                                <div class="col-6 col-md-3 summary-item total">
-                                    <i class="fas fa-calculator"></i>
-                                    <div class="label">Total <b class="value" >100</b>  </div>
-
-                                </div>
-                                <div class="col-6 col-md-3 summary-item completed">
-                                    <i class="fa-solid fa-circle-check"></i>
-                                    <div class="label">Completed <b class="value">30</b></div>
-
-                                </div>
-                                <div class="col-6 col-md-3 summary-item in-progress">
-                                    <i class="fas fa-spinner fa-spin"></i>
-                                    <div class="label">In Progress <b class="value">20</b></div>
-
-                              </div>
+                          <div class="col-md-12 ">
+                            <div class="summary-section text-center p-2 row">
+                            <div class="col-6 col-md-3 summary-item total">
+                                <i class="fas fa-calculator"></i>
+                                <div class="label">Total <b class="value" >100</b>  </div>
 
                             </div>
+                            <div class="col-6 col-md-3 summary-item completed">
+                                <i class="fa-solid fa-circle-check"></i>
+                                <div class="label">Completed <b class="value">30</b></div>
 
-
-
+                            </div>
+                            <div class="col-6 col-md-3 summary-item in-progress">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <div class="label">In Progress <b class="value">20</b></div>
+                            </div>
+                        </div>
 
                                 <!-- <span class="value text-center"> <b>100 </b> </span> -->
                         </div>
@@ -382,15 +377,17 @@
                       <b>All Appliance Requests</b>
                     </div>
 
-                    <div class="card-body" style=" " >
-                      <div class="container" style="width: 100%; height:100%;">
-                        <table id="maintenance" class="table table-striped" style="width: 100%; padding:10px; height:100%;">
+                    <div class="card-body" >
+                    <div class="container" style="width: fit-content; height:100%;">
+                        <table id="maintenance" class="table table-striped" style="width: 100%;">
                           <thead>
                             <tr>
-                              <th>REQUEST DATE</th>
+                              <th>REQUESTDATE</th>
+                              <th>ID</th>
                               <th>CATEGORY</th>
                               <th>PAYMENT</th>
                               <th>PROVIDER</th>
+                              <th>Priority</th>
                               <th>STATUS</th>
                                 <th>ACTIONS</th>
 
@@ -399,18 +396,17 @@
                           <tbody>
                             <tr>
                               <td>11-10-2025</td>
-
-
-
-                              <td> <b>Broken handle</b> </td>
+                              <td>23423</td>
+                              <td>Broken handle</td>
                               <td><button class="payment pending" id="example" data-bs-toggle="modal" data-bs-target="#leaseModal"> <i class="fa fa-exclamation-circle"></i>
                               PENDING</button></td>
                               <!-- <td><button onclick="toggleOverlay()">Paid</button></td> -->
+                              <td>Kitu Moto</td>
                               <td>low</td>
                               <td > <button class="status completed"><i class="fa fa-check-circle"></i> COMPLETED </button>  </td>
 
                               <td>
-                                <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                                <button  onclick=" openassignPopup()"  class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
                                 </button>
                                 <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
 
@@ -418,17 +414,18 @@
                             </tr>
                             <tr>
                               <td>11-10-2025</td>
-
+                            <td>12432</td>
 
 
 
                               <td>Leaking roof</td>
                               <td><button  class=" payment paid" id="example"> <i class="fa fa-check-circle"></i>  PAID</button></td>
-                              <td>high</td>
+                              <td>Not Assigned </td>
+                              <td>High</td>
 
                               <td > <button class="status incomplete" ><i class="fa fa-times-circle"></i> INCOMPLETE </button> </td>
 
-                              <td><button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                              <td><button onclick=" openassignPopup()" class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
                               </button>
                               <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
 
