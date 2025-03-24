@@ -63,7 +63,7 @@
     user-select: none;
     white-space: nowrap;
     border-radius: 3px;
-    font-size: 16px;
+    font-size: 25px;
     background: #666666;
     color: #ffffff;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
@@ -123,7 +123,7 @@
 
 #propertyIcon {
     margin-top: 3px;
-    font-size: 50px;
+    font-size: 25px;
 }
 
 
@@ -171,7 +171,7 @@
 }
 
 .details-btn:hover {
-    
+
     border: 2px solid #00192D !important;
     font-weight: bold;
     background: none;

@@ -17,7 +17,7 @@
       content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard"
     />
     <!--end::Primary Meta Tags-->
-    <!--begin::Fonts-->    
+    <!--begin::Fonts-->
 
 
     <link
@@ -64,21 +64,25 @@
    <link rel="stylesheet" href="">
 
     <!-- scripts for data_table -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
 
     <!-- Include XLSX and FileSaver.js for Excel export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    
-    
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
   </head>
 
   <style>
+body{
+  font-size: 16px;
+}
+
     .sub-category{
       padding-left: 35px !important;
     }
@@ -324,7 +328,7 @@
           <!--begin::Container-->
           <div class="container-fluid">
             <!--begin::Row-->
-            
+
 
             <div class="row">
               <div class="col-sm-8">
@@ -335,12 +339,12 @@
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
                   <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                </ol> 
-              </div> 
+                </ol>
+              </div>
 
             </div>
             <!--end::Row-->
-            
+
             <!-- /end row -->
           </div>
           <!--end::Container-->
@@ -354,14 +358,14 @@
             <!--begin::Row-->
             <div class="row first mb-2 mt-2 rounded-circle">
 
-              
+
               <!-- /.col -->
             </div>
             <!--end::Row-->
 
             <!--begin::Row-->
             <div class="row table_buttons mb-2 " >
-              
+
                 <div class="col-md-6">
                   <div class="filter-container">
                     <div>
@@ -383,13 +387,13 @@
                 </div>
 
                 </div>
-                <div class="col-md-6 d-flex justify-content-end" style="position: relative;" > 
+                <div class="col-md-6 d-flex justify-content-end" style="position: relative;" >
                   <div style="position: absolute; bottom: 0;">
-                    <button  class="pdf_button"  style="height: fit-content; padding: 4px;" id="downloadBtn"> <i class="fas fa-file-pdf" style="font-size: 30px; padding: 5x; color: white"></i>  </button> 
+                    <button  class="pdf_button"  style="height: fit-content; padding: 4px;" id="downloadBtn"> <i class="fas fa-file-pdf" style="font-size: 30px; padding: 5x; color: white"></i>  </button>
                     <button class="excel_button" style="height: fit-content; padding: 4px;" onclick="exportToExcel()"> <i class="fas fa-file-excel" style="font-size: 30px;  color: white"></i> </button>
                   </div>
-                 
-                </div> 
+
+                </div>
             </div>
             <!--end::Row-->
 
@@ -409,7 +413,7 @@
                         </thead>
                         <tbody>
                             <!-- Assets Section -->
-                           
+
 
                             <tr>
                                 <td class="non-current-assets fw-bold">Operating Activities</td>
@@ -439,21 +443,21 @@
                                 <td class="sub-category">Sale of old equipment </td>
                                 <td>10,000</td>
                             </tr>
-                            
+
                             <tr class="sub-current-assets total "  class="fw-bold" >
                                 <td class="sub-category">Net cash from investing activities </td>
                                 <td>(5,000)</td>
                             </tr>
-                            
-                            
+
+
                             <!-- Financing Section -->
-                            
-                            
+
+
                             <tr>
                               <td class="current-assets fw-bold">Financing Activities</td>
                               <td></td>
                            </tr>
-                            
+
                             <tr class="sub-current-assets">
                                 <td class="sub-category" >Loan received from the bank</td>
                                 <td>5,000</td>
@@ -513,7 +517,7 @@
 
 
 <!-- Overlay Cards -->
- 
+
 
   <!-- Lease Modal -->
 <div class="modal fadey" id="leaseyModal" tabindex="-1" aria-labelledby="leaseyModalLabel" aria-hidden="true">
@@ -751,7 +755,7 @@
 
 
 
-<!-- 
+<!--
   Add expense scripts.
 
 -->
@@ -811,7 +815,7 @@
 
 
 <!-- BalanceTable scripts -->
-          
+
   <script>
     function exportToPDF() {
             const { jsPDF } = window.jspdf;
@@ -821,7 +825,7 @@
 
             let table = document.getElementById("myTable");
             let rows = [];
-            
+
             for (let i = 0; i < table.rows.length; i++) {
                 let row = [];
                 for (let j = 0; j < table.rows[i].cells.length; j++) {
@@ -867,7 +871,7 @@
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
       crossorigin="anonymous"
-    ></script>    
+    ></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 
@@ -915,7 +919,7 @@
               "initComplete": function() {
                   // Move the buttons to the first .col-md-6
                   table.buttons().container().appendTo('#balanceSheet_wrapper .col-md-6:eq(0)');
-      
+
                   // Move the search box to the second .col-md-6
                   $('#balanceSheet_filter').appendTo('#balanceSheet_wrapper .col-md-6:eq(1)');
               }
@@ -938,7 +942,7 @@
       // - MONTHLY SALES CHART -
       //-----------------------
 
-      
+
 
       //-----------------
       // - END PIE CHART -
@@ -948,7 +952,7 @@
 
 <!-- Balance Sheet PDF script -->
 <script>
-   
+
   document.getElementById('downloadBtn').addEventListener('click', async function () {
    const { jsPDF } = window.jspdf;
    const doc = new jsPDF();
@@ -966,7 +970,7 @@
    let boldRows = [];
    let sectionHeaders = [];
    let slightlyBoldRows = [];
-   
+
    // Categories that should NOT be indented
    let nonIndentedCategories = [
        "non-current assets:",
@@ -997,10 +1001,10 @@
 
        // Slightly bold rows (category totals)
        if ([
-           "total non-current assets", 
+           "total non-current assets",
            "net cash from operating activities",
-           "net cash from investing activities", 
-           "net cash from financing activities", 
+           "net cash from investing activities",
+           "net cash from financing activities",
            "total equity",
            "total current liabilities"
        ].includes(firstCellText)) {
@@ -1023,7 +1027,7 @@
    doc.text("For the year Ending December 31, 2024", 105, 14, { align: "center" });
 
 
-   doc.autoTable({        
+   doc.autoTable({
        startY: 15, // Moves the table down to create space for headers
        head: [['Description', 'Amount (KSH)']],
        body: data,
@@ -1061,21 +1065,21 @@
 
                // Indent sub-items but NOT Non-current Assets, Current Assets, Non-current Liabilities, Current Liabilities
                if (
-                   colIndex === 0 && 
-                   !sectionHeaders.includes(rowIndex) && 
-                   !boldRows.includes(rowIndex) && 
+                   colIndex === 0 &&
+                   !sectionHeaders.includes(rowIndex) &&
+                   !boldRows.includes(rowIndex) &&
                    !nonIndentedCategories.includes(text)
                ) {
                    data.cell.styles.cellPadding = { left: 10, right: 2, top: 2, bottom: 2 }
                }
 
                if(
-                colIndex === 0 && 
-                   !sectionHeaders.includes(rowIndex) && 
-                   !boldRows.includes(rowIndex) && 
+                colIndex === 0 &&
+                   !sectionHeaders.includes(rowIndex) &&
+                   !boldRows.includes(rowIndex) &&
                    nonIndentedCategories.includes(text)
                ){
-                data.cell.styles.fontStyle = 'bold'; 
+                data.cell.styles.fontStyle = 'bold';
                }
 
            }
@@ -1085,7 +1089,7 @@
    doc.save('cashflow.pdf');
 });
 
-</script>    
+</script>
 
 
 

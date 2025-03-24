@@ -67,6 +67,11 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <style>
+          body{
+            font-size: 16px;
+          }
+        </style>
 
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -352,12 +357,15 @@
 
                 <div class="col-md-3">
                   <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> <a href=""> Start_Date  </a>  </label>
-                  <span class="value"> 5-23-1995 </span>
+                  <span class="value"> 5-23-2024 </span>
                 </div>
 
                 <div class="col-md-3">
-                    <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> End_Date  </label>
-                    <span class="value"> 6-7-2020 </span>
+                    <label class="text text-center"><i class="fas fa-circle icon online"></i>
+                       Status
+                       <span class="status-label">
+                    </label>
+
                 </div>
 
                 <!-- <div class="col-md-3">
@@ -389,7 +397,6 @@
   </div> -->
 
   <div class="row mt-3"> <!-- second row -->
-
     <div class="col-md-12">
       <div class="card">
         <div class="card-body">
@@ -430,18 +437,18 @@
               <td>Ebenezar Apartments</td>
               <td>KSH 20,000</td>
               <td> <button class="status completed" style=" background-color: green; /* Red background */
-  color: white;
-  border: 2px solid white; /* Darker red border */"><i class="fa fa-check-circle"></i> Paid </button>  </td>
-  <td>
-  <div id="more_icon">&#x2026;</div>
-  <br>
-  <div id="more_options">
-     <a href="#">View</a>
-     <a href="#">Edit</a>
-     <a href="#">Delete</a>
-     <a href="#">Others</a>
-  </div>
-</td>
+                    color: white;
+                    border: 2px solid white; /* Darker red border */"><i class="fa fa-check-circle"></i> Paid </button>  </td>
+                    <td>
+                    <div id="more_icon">&#x2026;</div>
+                    <br>
+                    <div id="more_options">
+                      <a href="#">View</a>
+                      <a href="#">Edit</a>
+                      <a href="#">Delete</a>
+                      <a href="#">Others</a>
+                    </div>
+                  </td>
               </tr>
               <tr>
                   <td scope="row">3/7/11</td>
@@ -791,14 +798,17 @@ $(document).ready(function() {
 
 
 <script>
-  document.getElementById("more_icon").addEventListener("click", function(event) {
-      let options = document.getElementById("more_options");
-      options.style.display = options.style.display === "block" ? "none" : "block";
-      event.stopPropagation();
-  });
+  // JavaScript to toggle the visibility of the options
+  const moreIcon = document.getElementById('more_icon');
+  const moreOptions = document.getElementById('more_options');
 
-  document.addEventListener("click", function() {
-      document.getElementById("more_options").style.display = "none";
+  // Toggle visibility on click
+  moreIcon.addEventListener('click', function() {
+      if (moreOptions.style.display === 'block') {
+          moreOptions.style.display = 'none'; // Hide the options
+      } else {
+          moreOptions.style.display = 'block'; // Show the options
+      }
   });
 </script>
 
@@ -866,6 +876,25 @@ $(document).ready(function() {
         }
       });
     </script>
+
+    <script>
+      // Example of dynamically changing the status to 'offline'
+      function setStatus(status) {
+          const icon = document.querySelector('.icon');
+          const label = document.querySelector('.status-label');
+
+          // Reset classes
+          icon.classList.remove('online', 'offline', 'busy', 'away');
+
+          // Add new status class based on argument
+          icon.classList.add(status);
+          label.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+      }
+
+      // Change status after 3 seconds to 'busy'
+      setTimeout(() => setStatus('busy'), 3000);
+  </script>
+
     <!-- Bootstrap Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!--end::OverlayScrollbars Configure-->

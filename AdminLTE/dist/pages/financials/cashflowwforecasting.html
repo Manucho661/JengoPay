@@ -67,6 +67,10 @@
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
+body{
+  font-size: 16px;
+}
+
    .overlay {
             position: absolute;
             top: 0;
@@ -441,7 +445,7 @@ canvas {
 
                         <div class="row mt-6" >
                           <!-- Summary -->
-                        
+
                           <!-- <div class="col-md-3">
                               <label class="text text-center"> <i class="fas fa-home unit-type"></i>  OCCUPANCY_RATE  </label>
                               <span class="value"> <b>30%</b> </span>
@@ -450,7 +454,7 @@ canvas {
                             <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> <a href=""> Roll_Over  </a>  </label>
                             <span class="value"> <b>MONTHLY</b> </span>
                           </div> -->
-                         
+
 
 
                         </div>
@@ -469,9 +473,9 @@ canvas {
 
                       </div> -->
                 </div>
-                
+
               </div>
-              
+
               <div class="col-sm-4 d-block">
                 <div class="row float-sm-end">
                       <ol class="breadcrumb">
@@ -487,7 +491,7 @@ canvas {
                         <a href="">PINK_HOUSE</a>
                     </div>
                   </div>
-                
+
                 </div>
               </div>
             </div>
@@ -504,7 +508,7 @@ canvas {
                     <button id="agreements_btn" class="btn"> <i class="fas fa-money-bill-wave money-icon"></i> <a href="agreements.html"> <b> Future Net Profit </b> </a>  </button>
 
 
-      
+
                        <button id="generateReport" class="btn" style="color: #FFC107;">  <i class="fas fa-download"></i> <a href="#"> <b> cashflowforecasting </b> </a> </button>
 
 
@@ -546,7 +550,7 @@ canvas {
 
                                 <div class="row mt-6" >
                                 <!-- Summary -->
-                                  
+
 
                             </div>
                         </div>
@@ -566,7 +570,7 @@ canvas {
             </div>
 
 
-            
+
                   <div class="card-footer">
 
                   </div>
@@ -853,7 +857,7 @@ $(document).ready(function() {
               backgroundColor: 'rgba(0, 25, 45, 0.2)',
               borderColor: '#00192D',
               borderWidth: 1,
-              
+
           }]
       },
       options: {
@@ -864,7 +868,7 @@ $(document).ready(function() {
                   ticks: {
                       callback: function(value, index, values) {
                           return '$' + value + 'M';
-                      }, 
+                      },
                        color: '#FFC107' // Change this to the desired color
                   },
               },
@@ -903,7 +907,7 @@ $(document).ready(function() {
                       callback: function(value, index, values) {
                           return '$' + value + 'M';
                       },
-                    color: '#FFC107' // Change this to the desired color            
+                    color: '#FFC107' // Change this to the desired color
                   }
                 },
                 x: {
@@ -943,7 +947,7 @@ $(document).ready(function() {
                       callback: function(value, index, values) {
                           return '$' + value + 'M';
                       },
-                    color: '#FFC107' // Change this to the desired color            
+                    color: '#FFC107' // Change this to the desired color
 
                   }
               },

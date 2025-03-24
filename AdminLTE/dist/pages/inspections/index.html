@@ -18,6 +18,11 @@
     />
     <!--end::Primary Meta Tags-->
     <!--begin::Fonts-->
+                                                    <!-- LINKS -->
+
+    <!-- for bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
@@ -58,9 +63,13 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
+
+
+                                          <!-- For bs-stepper library -->
+    <link href="https://cdn.jsdelivr.net/npm/bs-stepper/dist/css/bs-stepper.min.css" rel="stylesheet">
 
     <style>
       body{
@@ -385,20 +394,51 @@
             <!-- /end row -->
 
             <!-- Begin row -->
-<!-- begin row -->
-          <div class="row mt-2 mb-2 bg-white">
-
-              <div class="card" style="border: transparent;">
-                <div class="card-header">
-                    <a class="btn-link add-expense-btn" data-bs-toggle="collapse" href="#addExpense" aria-expanded="false" aria-controls="addExpenseAccordion" style="color: #00192D; font-weight:600; font-size: 16px; text-decoration: none;">
-                        <span id="toggleIcon">+</span> Click Here to Schedule a New Inspection
+      <!-- begin row -->
+          <div class="row mt-2 mb-2 add-inspection-container">
+            <div class="col-md-12 add-inspection-btn bg-white p-2">
+             
+                    <a class="btn-link add-inspection-btn " 
+                        data-bs-toggle="collapse" 
+                        href="#selectInspectionSection" 
+                        aria-expanded="false" 
+                        aria-controls="moveInSection"
+                        onclick="hideOther('moveOutSection')"
+                        style="color: #00192D; font-weight:600; font-size: 16px; text-decoration: none;">
+                      <span>+</span> Click here to Add an Inspection
                     </a>
+            </div>
+
+              <div class="col-md-12 collapse bg-white selectInspectionSection" id="selectInspectionSection" >
+                      <div class="card-header">
+                        <div class="title select-section-title"> Select Inspection Type:</div>
+                        
+                        <a class="btn-link moveOut-btn select-btn" 
+                        data-bs-toggle="collapse" 
+                        href="#moveInSection" 
+                        aria-expanded="false" 
+                        aria-controls="moveInSection"
+                        onclick="hideOther('moveOutSection')"
+                        style="">
+                        <i class="fas fa-arrow-right" style="color: green;"></i> Move In </a>
+                       
+                    <!-- Move Out Button -->
+                       <a class="btn-link moveIn-btn select-btn" 
+                        data-bs-toggle="collapse" 
+                        href="#moveOutSection" 
+                        aria-expanded="false" 
+                        aria-controls="moveOutSection"
+                        onclick="hideOther('moveInSection')"
+                        style="">
+                         <i class="fas fa-door-open" style="color: red;"></i> Move Out
+                      </a>
+
                 </div>
 
-                <div class="card-body collapse" id="addExpense">
+                <div class="col-md-12 collapse" id="moveInSection" >
                   <div class="card">
-                    <div class="card-header" style="background: linear-gradient(to right, #00192D, #003D5B, #00788D);">
-                        <h6 class="text-white">Enter Inspection Details</h6>
+                    <div class="card-header" style="background: linear-gradient(to right, #00192D, #003D5B, #00788D); display: none;">
+                        <h6 class="text-white">Move out</h6>
                     </div>
                     <div class="card-body">
                         <div class="form-container">
@@ -406,7 +446,88 @@
                                 <div class="row g-3">
                                     <!-- No -->
                                     <div class="col-md-3">
-                                        <label class="form-label"><b>Inspection No</b></label>
+                                        <label class="form-label"><b>Inspection out</b></label>
+                                        <input type="number" class="form-control" placeholder="123">
+                                    </div>
+
+                                    <!-- Expense of the Month -->
+                                    <div class="col-md-5">
+                                        <label class="form-label"><b>Inspection for the Month of</b></label>
+                                        <select class="form-select">
+                                            <option selected disabled>Select Month</option>
+                                            <option>January</option>
+                                            <option>February</option>
+                                            <option>March</option>
+                                            <option>April</option>
+                                            <option>May</option>
+                                            <option>June</option>
+                                            <option>July</option>
+                                            <option>August</option>
+                                            <option>September</option>
+                                            <option>October</option>
+                                            <option>November</option>
+                                            <option>December</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Year -->
+                                    <div class="col-md-4">
+                                        <label class="form-label"><b>Year</b></label>
+                                        <input type="number" class="form-control" placeholder="2025">
+                                    </div>
+                                </div>
+
+                                
+                                <div class="row g-3 mt-2">
+                                    <div class="col-md-6">
+                                        <label class="form-label"><b>Date</b></label>
+                                        <input type="date" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                      <label class="form-label"><b>Property</b></label>
+                                      <input type="text" class="form-control">
+                                  </div>
+                                </div>
+
+                                <div class="row g-3 mt-2">
+                                  <div class="col-md-6">
+                                      <label class="form-label"><b>Add Image</b></label>
+                                      <input type="file" class="form-control">
+                                  </div>
+
+                              </div>
+
+
+
+                                <!-- Expense Table -->
+
+
+                                <div class="row g-3 mt-2">
+                                    <div class="col-6">
+                                        <button class="btn btn-sm" style="background-color: #00192D; color: white;">Add More</button>
+                                    </div>
+                                    <div class="col-6 mt-2 d-flex justify-content-end">
+                                        <button class="btn btn-sm " style="height: fit-content; background-color: #00192D; color: azure;"> Submit</button>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 collapse" id="moveOutSection">
+                  <div class="card">
+                    <div class="card-header" style="background: linear-gradient(to right, #00192D, #003D5B, #00788D); display: none;">
+                        <h6 class="text-white">Move out</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-container">
+                            <form>
+                                <div class="row g-3">
+                                    <!-- No -->
+                                    <div class="col-md-3">
+                                        <label class="form-label"><b>Inspection out</b></label>
                                         <input type="number" class="form-control" placeholder="123">
                                     </div>
 
@@ -473,7 +594,7 @@
                             </form>
                         </div>
                     </div>
-                </div>
+                  </div>
                 </div>
               </div>
 
@@ -487,8 +608,8 @@
 
             <div class="row second rounded-2" >
                 <!-- Start col -->
-                <div class="col-md-12">
-                  <div class="row bg-white" style="border:1px solid #E2E2E2" >
+                <div class="col-md-12  ">
+                  <div class="row bg-white " style="border:1px solid #E2E2E2" >
                     <div class="col-12 p-2">
                       <div class="row">
                         <div class="col-md-122">
@@ -639,28 +760,34 @@
       <!--end::Footer-->
     </div>
     <!--end::App Wrapper-->
-    <!--begin::Script-->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    
 
+  <!-- J  A V A S C R I PT -->
 
+                                                <!-- LINKS -->
 
-
-
-<!-- Overlays -->
-
-<!-- Script source File -->
-
-<script>
-  function uploadFile() {
-      const fileInput = document.getElementById('fileUpload');
-      if (fileInput.files.length > 0) {
-          // Handle file upload logic here (e.g., send it to the server)
-          alert("File Selected: " + fileInput.files[0].name);
-      }
-  }
+<script
+      src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
+      integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
+      crossorigin="anonymous">
 </script>
+    <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
+<script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous">
+</script>
+    <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
+<script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+      integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+      crossorigin="anonymous">
+</script>
+    <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
+<script src="../../../dist/js/adminlte.js"></script>
+    <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
 
-
+<!-- links for dataTaable buttons -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
@@ -673,264 +800,150 @@
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
+<!--End links for dataTaable buttons -->
+
+<!-- index.js -->
+<script src="index.js"></script>
+<!-- End index.js -->
+
+<!-- End links -->
 
 
-<script src="text.js"></script>
+                                  <!-- FILE UPLOAD -->
 
-
-
- <!-- Begin script for datatable -->
- <script>
-
-  $(document).ready(function() {
-      var table = $('#maintenance').DataTable({
-          "lengthChange": false,
-          "dom": 'Bfrtip',
-          "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
-          "initComplete": function() {
-              // Move the buttons to the first .col-md-6
-              table.buttons().container().appendTo('#maintenance_wrapper .col-md-6:eq(0)');
-
-              // Move the search box to the second .col-md-6
-              $('#maintenance_filter').appendTo('#maintenance_wrapper .col-md-6:eq(1)');
-          }
-      });
-  });
-
-      </script>
-
-
-
-<!-- !-- create new text -->
 <script>
-  // Function to open the complaint popup
-  function opennewtextPopup() {
-    document.getElementById("newtextPopup").style.display = "flex";
-  }
-
-  // Function to close the complaint popup
-  function closenewtextPopup() {
-    document.getElementById("newtextPopup").style.display = "none";
-  }
-</script>
-<!-- create new text -->
-
- <!-- Chat Script -->
- <script>
-  function openChat() {
-      document.getElementById("chatOverlay").style.display = "flex";
-  }
-  function closeChat() {
-      document.getElementById("chatOverlay").style.display = "none";
-  }
-  function sendMessage() {
-      let messageInput = document.getElementById("messageInput");
-      let messageText = messageInput.value.trim();
-      if (messageText !== "") {
-          let chatBody = document.getElementById("chatBody");
-          let messageElement = document.createElement("div");
-          messageElement.classList.add("message", "outgoing");
-          messageElement.textContent = messageText;
-          chatBody.appendChild(messageElement);
-          chatBody.scrollTop = chatBody.scrollHeight;
-          messageInput.value = "";
+  function uploadFile() {
+      const fileInput = document.getElementById('fileUpload');
+      if (fileInput.files.length > 0) {
+          // Handle file upload logic here (e.g., send it to the server)
+          alert("File Selected: " + fileInput.files[0].name);
       }
   }
 </script>
- <!-- End Chat Script -->
 
+
+                                  <!-- ADD INSPECTION CONTAINER SCRIPTS-->
+
+<!-- Script to collapse the other section when one is opened -->
+<script>
+                      function hideOther(idToHide) {
+                        const other = document.getElementById(idToHide);
+                        if (other && other.classList.contains('show')) {
+                          new bootstrap.Collapse(other, { toggle: true }).hide();
+                        }
+                      }
+</script>
+<!-- Active effect for the select add-inspection buttons -->
+<script>
+                      const buttons = document.querySelectorAll('.select-btn');
+
+                      buttons.forEach(btn => {
+                        btn.addEventListener('click', () => {
+                          // Remove 'active' from all buttons
+                          buttons.forEach(b => b.classList.remove('active'));
+                          
+                          // Add 'active' to clicked button
+                          btn.classList.add('active');
+                        });
+                      });
+</script>
+
+
+
+                                  <!-- DATE TABLES -->
 <script>
 
-  // const   next_text = document.getElementById('respond_btn');
-  const   respond_window = document.getElementById('respond');
-  const   close_text_overlay = document.getElementById("closeTextWindow");
+                        $(document).ready(function() {
+                            var table = $('#maintenance').DataTable({
+                                "lengthChange": false,
+                                "dom": 'Bfrtip',
+                                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+                                "initComplete": function() {
+                                    // Move the buttons to the first .col-md-6
+                                    table.buttons().container().appendTo('#maintenance_wrapper .col-md-6:eq(0)');
 
-  next_text.addEventListener('click', ()=>{
+                                    // Move the search box to the second .col-md-6
+                                    $('#maintenance_filter').appendTo('#maintenance_wrapper .col-md-6:eq(1)');
+                                }
+                            });
+                          });
+</script>
 
-     respond_window.style.display= "flex";
-     document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
-     const now = new Date();
-            const formattedTime = now.toLocaleString(); // Format the date and time
-            timestamp.textContent = `Sent on: ${formattedTime}`;
 
 
-  });
+ 
+<script>
 
-  close_text_overlay.addEventListener('click', ()=>{
+                  // const   next_text = document.getElementById('respond_btn');
+                  const   respond_window = document.getElementById('respond');
+                  const   close_text_overlay = document.getElementById("closeTextWindow");
 
-    respond_window.style.display= "none";
-     document.querySelector('.app-wrapper').style.opacity = '1';
-     });
+                  next_text.addEventListener('click', ()=>{
+
+                    respond_window.style.display= "flex";
+                    document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
+                    const now = new Date();
+                            const formattedTime = now.toLocaleString(); // Format the date and time
+                            timestamp.textContent = `Sent on: ${formattedTime}`;
+
+
+                  });
+
+                  close_text_overlay.addEventListener('click', ()=>{
+
+                    respond_window.style.display= "none";
+                    document.querySelector('.app-wrapper').style.opacity = '1';
+                    });
 
 </script>
 
 
 
-<!--Begin sidebar script -->
+                                    <!-- SIDE BAR -->
 <script>
-  fetch('../bars/sidebar.html')  // Fetch the file
-      .then(response => response.text()) // Convert it to text
-      .then(data => {
-          document.getElementById('sidebar').innerHTML = data; // Insert it
-      })
-      .catch(error => console.error('Error loading the file:', error)); // Handle errors
+                  fetch('../bars/sidebar.html')  // Fetch the file
+                      .then(response => response.text()) // Convert it to text
+                      .then(data => {
+                          document.getElementById('sidebar').innerHTML = data; // Insert it
+                      })
+                  .catch(error => console.error('Error loading the file:', error)); // Handle errors
 </script>
 <!-- end sidebar script -->
 
 
-                      <!-- SCRIPT FOR MESSAGES -->
-    <!-- Begin -->
-    <script>
-      function sendMessage() {
-          const inputBox = document.getElementById("inputBox");
-          const messages = document.getElementById("messages");
-          const text = inputBox.innerText.trim();
-          if (text !== "") {
-              const messageDiv = document.createElement("div");
-              messageDiv.classList.add("message", "outgoing");
-              messageDiv.textContent = text;
-              messages.appendChild(messageDiv);
-              inputBox.innerText = "";
-              messages.scrollTop = messages.scrollHeight;
-          }
-      }
+                                            
+<script>
+                      const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
+                      const Default = {
+                        scrollbarTheme: 'os-theme-light',
+                        scrollbarAutoHide: 'leave',
+                        scrollbarClickScroll: true,
+                      };
+                      document.addEventListener('DOMContentLoaded', function () {
+                        const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
+                        if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
+                          OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+                            scrollbars: {
+                              theme: Default.scrollbarTheme,
+                              autoHide: Default.scrollbarAutoHide,
+                              clickScroll: Default.scrollbarClickScroll,
+                            },
+                          });
+                        }
+                      });
+</script>
 
 
-      // Hover and active effect
-      // Select all message elements
-      document.querySelectorAll('.individual-message-profiles').forEach(item => {
-    item.addEventListener('click', () => {
-        // Remove 'active' class from all and add to clicked one
-        document.querySelectorAll('.individual-message-profiles').forEach(el => el.classList.remove('active'));
-        item.classList.add('active');
-
-        // Get the clicked individual's name
-        let clickedName = item.querySelector('.individual-name').textContent;
-
-        // Random residence names
-        let residenceOptions = ["CROWN Z, C9", "OAKWOOD, A5", "CROWN Z, C480",  "HILLCREST, B12","HILLCREST, B300", "SUNSET VILLA, D3"];
-        let randomResidence = residenceOptions[Math.floor(Math.random() * residenceOptions.length)];
-
-        // Find the `.individual-name.body` and update it
-        let targetName = document.querySelector('.individual-name.body');
-        if (targetName) {
-            targetName.textContent = clickedName;
-        }
-
-        // Find the `.residence` element and update it with a random residence
-        let targetResidence = document.querySelector('.residence');
-        if (targetResidence) {
-            targetResidence.textContent = randomResidence;
-        }
-    });
-});
-
-          // Effect on Smaller Screens
-          const recentChats = document.getElementById("RecentChats");
-const messageProfiles = document.getElementById("message-profiles");
-const messageBody = document.getElementById("messageBody");
-const individualProfiles = document.querySelectorAll(".individual-message-profiles");
-
-// Function to handle resizing
-function updateLayout() {
-    if (window.innerWidth > 768) {
-        messageProfiles.style.display = "block";
-        recentChats.style.display = "none";
-        messageBody.style.display = "block";
-    } else {
-        messageProfiles.style.display = "none";
-        recentChats.style.display = "block";
-        // messageBody.style.display = "none";
-    }
-}
-
-// Function to show messageProfiles when clicking recentChats (only for small screens)
-function showMessageProfiles() {
-    if (window.innerWidth <= 768) {
-        messageProfiles.style.display = "block";
-        recentChats.style.display = "none";
-        messageBody.style.display = "none";
-    }
-}
-
-// Function to show messageBody and recentChats when clicking an individual message profile
-function showMessageBody() {
-    if (window.innerWidth <= 768) {
-        messageProfiles.style.display = "none";
-        recentChats.style.display = "block";
-        messageBody.style.display = "block";
-    }
-}
-
-// Initial check when the page loads
-updateLayout();
-
-// Listen for window resize events
-window.addEventListener("resize", updateLayout);
-
-// Add click event to recentChats (only for small screens)
-recentChats.addEventListener("click", showMessageProfiles);
-
-// Add click event to all individual profiles
-individualProfiles.forEach(profile => {
-    profile.addEventListener("click", showMessageBody);
-});
-
-
-
-  </script>
-  <!-- End  -->
-
-    <script
-      src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-      integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
-      crossorigin="anonymous"
-    ></script>
-    <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-    <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-      crossorigin="anonymous"
-    ></script>
-    <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-      integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-      crossorigin="anonymous"
-    ></script>
-    <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <script src="../../../dist/js/adminlte.js"></script>
-    <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
-    <script>
-      const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-      const Default = {
-        scrollbarTheme: 'os-theme-light',
-        scrollbarAutoHide: 'leave',
-        scrollbarClickScroll: true,
-      };
-      document.addEventListener('DOMContentLoaded', function () {
-        const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-        if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
-          OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-            scrollbars: {
-              theme: Default.scrollbarTheme,
-              autoHide: Default.scrollbarAutoHide,
-              clickScroll: Default.scrollbarClickScroll,
-            },
-          });
-        }
-      });
-    </script>
     <!-- Bootstrap Bundle with Popper -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!--end::OverlayScrollbars Configure-->
     <!-- OPTIONAL SCRIPTS -->
     <!-- apexcharts -->
-    <script
+<script
       src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
       integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
       crossorigin="anonymous"
-    ></script>
+></script>
 
     <!--end::Script-->
   </body>

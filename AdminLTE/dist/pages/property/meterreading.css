@@ -375,7 +375,7 @@ body {
   }
 
 /* Shift Tenant */
-.shiftpopup-overlay{
+.shiftpopup{
   position: fixed;
 top: 0;
 left: 0;
@@ -387,8 +387,39 @@ display: none; /* Initially hidden */
 justify-content: center;
 align-items: center;
 font-family: 'Poppins', sans-serif;
-font-size: small;
+/* font-size: small; */
 }
+
+#close-btns {
+  background: none;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #333;
+  position: absolute;
+  top: 1rem;
+  right: 6rem;
+  width: 3rem;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.3s, color 0.3s;
+}
+
+.edit-btn {
+  background-color:#00192D;
+  color:#d39e00;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 5px;
+}
+.edit-btn:hover {
+  background-color: #e84118;
+}
+
 .shiftpopup-content{
 background: white;
 padding: 20px;
@@ -430,17 +461,18 @@ position: relative;
     /* text-align: left; */
     /* position: relative; */
   }
-  .close-overlay-btn {
+  /* .close-overlay-btn { */
     /* top: 0; */
-    color: white;
     /* color: white; */
-    border: none;
+    /* color: white; */
+    /* border: none;
     cursor: pointer;
-    font-size: 100%;
-      }
-  .close-overlay-btn:hover {
+    font-size: 100%; */
+      /* } */
+
+  /* .close-overlay-btn:hover {
       color: red;
-      }
+      } */
     /* end assign */
     .requestpopup-overlay{
       position: fixed;
