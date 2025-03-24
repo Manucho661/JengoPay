@@ -80,6 +80,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <!-- Include jsPDF autoTable plugin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+    <style>
+      body{
+        font-size: 16px;
+      }
+    </style>
 </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -380,6 +385,7 @@
               <table id="myTable">
                   <thead>
                       <tr class="balancesheet-header">
+                          <th>#</th>
                           <th>Tenant ID</th>
                           <th>Name</th>
                           <th>Apartment</th>
@@ -452,6 +458,7 @@
   // Sample Data: List of tenants and their rent deposit details
   const tenants = [
       {
+          id:'1',
           tenant_id: 'T1001',
           name: 'John Doe',
           apartment: 'A1',
@@ -462,6 +469,8 @@
           date_paid: '2025-03-01'
       },
       {
+
+          id:'2',
           tenant_id: 'T1002',
           name: 'Jane Smith',
           apartment: 'B3',
@@ -471,7 +480,10 @@
           deductions: 0,
           date_paid: '2025-03-05'
       }
-      , {
+      ,
+
+      {
+        id:'3',
         tenant_id: 'T1002',
         name: 'Jane Smith',
         apartment: 'B3',
@@ -481,7 +493,9 @@
         deductions: 0,
         date_paid: '2025-03-05'
     },
+
     {
+      id:'4',
       tenant_id: 'T1002',
       name: 'Jane Smith',
       apartment: 'B3',
@@ -492,6 +506,7 @@
       date_paid: '2025-03-05'
   },
   {
+    id:'5',
     tenant_id: 'T1002',
     name: 'Jane Smith',
     apartment: 'B3',
@@ -502,6 +517,7 @@
     date_paid: '2025-03-05'
 },
 {
+  id:'6',
   tenant_id: 'T1002',
   name: 'Jane Smith',
   apartment: 'B3',
@@ -512,6 +528,7 @@
   date_paid: '2025-03-05'
 },
 {
+  id:'7',
   tenant_id: 'T1002',
   name: 'Jane Smith',
   apartment: 'B3',
@@ -522,6 +539,7 @@
   date_paid: '2025-03-05'
 },
 {
+  id:'8',
   tenant_id: 'T1002',
   name: 'Jane Smith',
   apartment: 'B3',
@@ -532,6 +550,7 @@
   date_paid: '2025-03-05'
 },
 {
+  id:'9',
   tenant_id: 'T1002',
   name: 'Jane Smith',
   apartment: 'B3',
@@ -542,6 +561,7 @@
   date_paid: '2025-03-05'
 },
 {
+  id:'10',
   tenant_id: 'T1002',
   name: 'Jane Smith',
   apartment: 'B3',
@@ -552,6 +572,7 @@
   date_paid: '2025-03-05'
 },
 {
+  id:'11',
   tenant_id: 'T1002',
   name: 'Jane Smith',
   apartment: 'B3',
@@ -562,6 +583,7 @@
   date_paid: '2025-03-05'
 },
 {
+  id:'12',
   tenant_id: 'T1002',
   name: 'Jane Smith',
   apartment: 'B3',
@@ -579,6 +601,7 @@
       tenants.forEach(tenant => {
           const row = document.createElement('tr');
           row.innerHTML = `
+              <td>${tenant.id}</td>
               <td>${tenant.tenant_id}</td>
               <td>${tenant.name}</td>
               <td>${tenant.apartment}</td>

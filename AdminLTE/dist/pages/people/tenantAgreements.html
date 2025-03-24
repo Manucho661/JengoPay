@@ -62,7 +62,11 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
+<style>
+  body{
+    font-size: 16px;
+  }
+</style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -300,30 +304,20 @@
             <!--begin::Row-->
             <div class="row">
               <div class="col-sm-8">
-
-                <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> Tenants</h3>
-
-
+                <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> Tenant Agreements</h3>
                     <div class="row mt-2  ">
                       <div class="col-md-12 Summary ">
-
-
-
                         <div class="row mt-6" >
                           <!-- Summary -->
                           <div class="col-md-3  ">
-                            <label class="text text-center">  <i class="fas fa-calculator"></i>  <a href="index.html"> TOTAL</a>  </label>
-                              <span class="value text-center">60000 </span>
+                            <label class="text text-center">  <i class="fas fa-calculator"></i>  <a href="index.html"> TOTAL Agreements</a>  </label>
+                              <span class="value text-center">1000 </span>
                           </div>
-
-
                           <div class="col-md-3">
                             <!-- <button class="btn text text-danger"><i class="bi bi-pencil"></i> </i> EDIT</button> -->
                           </div>
                         </div>
-
                       </div>
-
                 </div>
               </div>
 
@@ -344,12 +338,9 @@
           <div class="container-fluid">
             <!-- Info boxes -->
             <div class="row first mb-2 mt-2 ">
-
                 <div class="col-md-12 d-flex justify-content-end">
-
                     <button id="add_provider_btn" class="btn me-3 " style="background-color: #00192D; color: white; font-size: small;">  <i class="bi bi-plus"></i>
                       <b class="button_item" class="open-btn" onclick="openPopup()"> New_agreement</b></button>
-
                     <button id="add_provider_btn" class="btn" style="background-color: #00192D; color: white; font-size: small;">  <i class="bi bi-bell"></i>
                     <b class="button_item" class="open-btn" onclick="opennotificationPopup()"> Create_Notification </b></button>
 
@@ -366,17 +357,16 @@
               <div class="col-md-12 " >
                     <div class="card second_col ">
                         <div class="card-header">
-
-
                         </div>
-
                         <div class="card-body">
                           <table id="agreements" class="display" >
                             <thead>
                               <tr>
                                   <th scope="col">DATE</th>
-                                      <th scope="col">FIRST PARTY (YOU)</th>
-                                      <th scope="col">SECOND PARTY (TENANT)</th>
+                                      <th scope="col">LANDLORD(YOU)</th>
+                                      <th scope="col">TENANT</th>
+                                      <th scope="col">TYPE</th>
+                                      <th scope="col">UNIT</th>
                                       <th scope="col">DEPOSIT</th>
                                       <th scope="col">ACTION</th>
                               </tr>
@@ -386,6 +376,8 @@
                                   <td scope="row">1/7/11</td>
                                       <td>JOSEPH KAIRO</td>
                                       <td>Emmanuel Wanyonyi</td>
+                                      <td>Bed Sitter</td>
+                                      <td>A12</td>
                                       <td>KSH 10,000</td>
                                       <td>
                                       <div id="more_icon">&#x2026;</div>
@@ -397,13 +389,13 @@
                                            <a href="#">Others</a>
                                         </div>
                                        </td>
-
                               </tr>
                               <tr>
-
                               <td scope="row">1/7/11</td>
                                       <td>JOSEPH KAIRO</td>
-                                      <td>Emmanuel Wanyonyi</td>
+                                      <td>EmmanueL NGURO</td>
+                                      <td>One Bedroom</td>
+                                      <td>A13</td>
                                       <td>KSH 10,000</td>
                                       <td>
                                         <div id="more_icon">&#x2026;</div>
@@ -412,19 +404,15 @@
                                              <a href="#" onclick="openviewagreementPopup()">View</a>
                                              <a href="#">Edit</a>
                                              <a href="#">Delete</a>
-
-
                                           </div>
-
-
-
                                          </td>
                               </tr>
                               <tr>
-
                                 <td scope="row">1/7/11</td>
-                                <td>JOSEPH KAIRO</td>
+                                <td>JEFF KOINANGE</td>
                                 <td>Emmanuel Wanyonyi</td>
+                                <td>Bed Sitter</td>
+                                <td>A14</td>
                                 <td>KSH 10,000</td>
                                 <td>
                                   <div id="more_icon">&#x2026;</div>
@@ -434,19 +422,83 @@
                                        <a href="#">Edit</a>
                                        <a href="#">Delete</a>
                                        <a href="#">Others/a>
-
-
                                     </div>
-
-
-
                                    </td>
-
-
                                   </tr>
+                                  <tr>
+                                    <td scope="row">1/7/11</td>
+                                    <td>JEFF KOINANGE</td>
+                                    <td>Emmanuel Wanyonyi</td>
+                                    <td>Bed Sitter</td>
+                                    <td>A14</td>
+                                    <td>KSH 10,000</td>
+                                    <td>
+                                      <div id="more_icon">&#x2026;</div>
+                                        <br>
+                                        <div id="more_options">
+                                           <a href="#" onclick="openviewagreementPopup()">View</a>
+                                           <a href="#">Edit</a>
+                                           <a href="#">Delete</a>
+                                           <a href="#">Others/a>
+                                        </div>
+                                       </td>
+                                      </tr>
+                                      <tr>
+                                        <td scope="row">1/7/11</td>
+                                        <td>JEFF KOINANGE</td>
+                                        <td>Emmanuel Wanyonyi</td>
+                                        <td>Bed Sitter</td>
+                                        <td>A14</td>
+                                        <td>KSH 10,000</td>
+                                        <td>
+                                          <div id="more_icon">&#x2026;</div>
+                                            <br>
+                                            <div id="more_options">
+                                               <a href="#" onclick="openviewagreementPopup()">View</a>
+                                               <a href="#">Edit</a>
+                                               <a href="#">Delete</a>
+                                               <a href="#">Others/a>
+                                            </div>
+                                           </td>
+                                          </tr>
+                                          <tr>
+                                            <td scope="row">1/7/11</td>
+                                            <td>JEFF KOINANGE</td>
+                                            <td>Emmanuel Wanyonyi</td>
+                                            <td>Bed Sitter</td>
+                                            <td>A14</td>
+                                            <td>KSH 10,000</td>
+                                            <td>
+                                              <div id="more_icon">&#x2026;</div>
+                                                <br>
+                                                <div id="more_options">
+                                                   <a href="#" onclick="openviewagreementPopup()">View</a>
+                                                   <a href="#">Edit</a>
+                                                   <a href="#">Delete</a>
+                                                   <a href="#">Others/a>
+                                                </div>
+                                               </td>
+                                              </tr>
+                                              <tr>
+                                                <td scope="row">1/7/11</td>
+                                                <td>JEFF KOINANGE</td>
+                                                <td>Emmanuel Wanyonyi</td>
+                                                <td>Bed Sitter</td>
+                                                <td>A14</td>
+                                                <td>KSH 10,000</td>
+                                                <td>
+                                                  <div id="more_icon">&#x2026;</div>
+                                                    <br>
+                                                    <div id="more_options">
+                                                       <a href="#" onclick="openviewagreementPopup()">View</a>
+                                                       <a href="#">Edit</a>
+                                                       <a href="#">Delete</a>
+                                                       <a href="#">Others/a>
+                                                    </div>
+                                                   </td>
+                                                  </tr>
                             </tbody>
                           </table>
-
                         </div>
 
 

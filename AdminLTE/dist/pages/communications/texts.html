@@ -69,6 +69,10 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <style>
+  body{
+    font-size: 16px;
+
+  }
 .app-main {
   position: relative;
   display: flex;
@@ -657,7 +661,7 @@
                                <div class="input-area">
                                   <div class="input-box" id="inputBox" contenteditable="true"></div>
                                   <button class="btn message-send-button" onclick="sendMessage()"><i class="fa fa-paper-plane"></i> </button>
-                              </div> 
+                              </div>
 
                               </div>
                             </div>
@@ -797,7 +801,7 @@
   // Major Variables.
   const all_messages_summary =  document.getElementById('all-messages-summary');
   const individual_message_summary = document.getElementById('individual-message-summmary');
-  
+
 
   // const   next_text = document.getElementById('respond_btn');
   const   respond_window = document.getElementById('respond');
@@ -856,7 +860,7 @@
 
 
                               // SHOWING THE CHATBOT.
-                              
+
                               const filter_section = document.getElementById('filter-section');
                               const go_back = document.getElementById('go-back');
 
@@ -874,7 +878,7 @@
                       const thirdLast = cells[cells.length - 3].textContent;
                       console.log("Third Last:", thirdLast);
                       // console.log("Second Last:", secondLast);
-                      
+
                       // Find the `.individual-name.body` and update it (name of the tenant)
                         let targetName = document.querySelector('.individual-name.body');
                         if (targetName) {
@@ -900,14 +904,14 @@
                       filter_section.style.display = "none";
                       individual_message_summary.style.display = "flex";
                       go_back.style.display = "flex";
-                      
-                      
+
+
   });
 });
 
           // Back to messages summary.
           function myBack() {
-            
+
             const individual_message_summary = document.getElementById('individual-message-summmary').style.display="none";
             const all_messages_summary = document.getElementById('all-messages-summary').style.display="flex";
             const fliter_section = document.getElementById('filter-section').style.display="flex";
@@ -927,7 +931,7 @@
         let clickedName = item.querySelector('.individual-topic').textContent;
 
         // Random residence names
-        
+
 
         // Find the `.individual-topic.body` and update it
         let targetName = document.querySelector('.individual-topic.body');
@@ -936,7 +940,7 @@
         }
 
         // Find the `.residence` element and update it with a random residence
-        
+
     });
 });
 

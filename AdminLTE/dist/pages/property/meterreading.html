@@ -63,6 +63,12 @@
 
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+        <style>
+          body{
+            font-size: 16px;
+          }
+        </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -372,7 +378,7 @@
         <td>11</td>
         <td>1</td>
         <td>
-         <button   class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file" onclick="openshiftPopup()"></i></button>
+         <button  onclick="openshiftPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file" ></i></button>
           <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>
           </td>
       </tr>
@@ -386,7 +392,7 @@
         <td>20</td>
         <td>1</td>
         <td>
-         <button onclick="openmeterPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
+         <button onclick="openshiftPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
           <button   class="btn btn-sm" style="background-color: #193042; color:#fff;">    <i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>
           </td>
       </tr>
@@ -401,7 +407,7 @@
         <td>22</td>
         <td>1</td>
         <td>
-          <button onclick="openmeterPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
+          <button onclick="openshiftPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
           <button   class="btn btn-sm" style="background-color: #193042; color:#fff;">    <i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>
           </td>
       </tr>
@@ -416,7 +422,7 @@
         <td>13</td>
         <td>1</td>
         <td>
-          <button onclick="openmeterPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
+          <button onclick="openshiftPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
           <button   class="btn btn-sm" style="background-color: #193042; color:#fff;"><i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>          </td>
       </tr>
       <!-- Add more rows as needed -->
@@ -472,35 +478,43 @@
 
 
 <!-- Shift Tenant -->
-<div class="shiftpopup-overlay" id="shiftPopup">
+<div class="shiftpopup" id="shiftPopup">
   <div class="shiftpopup-content">
-    <button class="close-btn text-secondary" onclick="closeshiftPopup()">×</button>
-    <div class="shift">
-    <h2 style="color: #00192D;">Shift Tenant</h2>
-    <label for="tenant">Select Tenant:</label>
+    <button id="close-btns" class="text-secondary" onclick="closeshiftPopup()">×</button>
+    <h2 class="assign-title">Detailed Information Of Meter Reading</h2>
+    <button class="edit-btn"><i class="fas fa-edit"></i>EDIT</button>
+    <form class="wide-form">
+      <div class="form-group">
+        <b><label for="dateInput" class="filter-label">Reading Date</label></b>
+        <input type="" id="dateInput" class="form-control" placeholder="11-02-2023" required disabled/>
+        <label for="units">Unit:</label>
+        <select id="units" required disabled>
+            <option>D17</option>
+            <option>B18</option>
+            <option>B11</option>
+            <option>C10</option>
+        </select>
+    </div>
+        <div class="form-group">
+            <label for="meter_type">Meter Type:</label>
+            <select id="meter_type" required disabled>
+              <option>Water</option>
+              <option>Electrical</option>
+          </select>
+        </div>
 
-    <select id="tenant">
-        <option value="John Doe">John Doe</option>
-        <option value="Jane Smith">Jane Smith</option>
-        <option value="Mike Johnson">Mike Johnson</option>
-    </select>
+        <div class="form-group">
+            <label for="previous_reading">Previous Reading:</label>
+            <input type="number" id="previous_reading" name="previous_reading" placeholder="11" required disabled>
+        </div>
 
-    <label for="property">Select New Property/Unit:</label>
-    <select id="property">
-        <option value="Apartment 101">Apartment 101</option>
-        <option value="House B3">House B3</option>
-        <option value="Condo 23A">Condo 23A</option>
-    </select>
-    <label for="property">Select Unit:</label>
-    <select id="property" style="width: 100%;padding: 10px;margin-bottom: 15px;border-radius: 5px;border: 1px solid #ccc;">
-        <option value="Apartment 101">A55</option>
-        <option value="House B3">B3</option>
-        <option value="Condo 23A">CA</option>
-    </select>
-    <br>
+        <div class="form-group">
+            <label for="current_reading">Current Reading:</label>
+            <input type="number" id="current_reading" name="current_reading" placeholder="15" required disabled>
+        </div>
 
-    <button  type="submit" class="submit-btn" onclick="shiftTenant()"  style="background-color: #00192D; color: #f1f1f1;">Confirm Shift</button>
-
+       <button type="submit" class="submit-btn">Submit</button>
+    </form>
   </div>
   </div>
 </div>
@@ -508,7 +522,7 @@
 
 
   <!-- meterreading popup -->
-  <div class="meterpopup-overlay" id="meterPopup">
+   <div class="meterpopup-overlay" id="meterPopup">
     <div class="meterpopup-content wide-form">
         <button class="close-btn text-secondary" onclick="meterreadingclosePopup()">×</button>
         <h2 class="assign-title">Add A Meter Reading</h2>
