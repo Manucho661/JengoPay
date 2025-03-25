@@ -73,7 +73,7 @@ select {
 input:focus, select:focus, textarea:focus {
   border-color: #FFC107 !important;
   outline: none;
-   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 .form-control:focus{
   border-color: #FFC107 !important;
@@ -119,8 +119,8 @@ input, select {
   .submit-btn {
     margin-right: 5px;
     }
-    
- 
+
+
 .add-inspection-btn{
   font-family: 'Poppins', sans-serif;
     font-weight: 600;
@@ -135,9 +135,9 @@ input, select {
 
 }
 .select-btn{
-  color: #00192D; 
-  font-weight:600; 
-  font-size: 16px; 
+  color: #00192D;
+  font-weight:600;
+  font-size: 16px;
   padding: 2px;
 
   text-decoration: none !important;
@@ -246,12 +246,12 @@ input, select {
 }
 .add-inspection-btn{
   border-top-left-radius: 10px;
-  border-top-right-radius: 10px; 
+  border-top-right-radius: 10px;
 }
 .select-section-title{
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
-  letter-spacing: .5px; 
+  letter-spacing: .5px;
 }
 .selectInspectionSection{
   border-top: 1px solid #ccc;
@@ -263,7 +263,7 @@ input, select {
 }
 
 .active .bs-stepper-circle{
-    background-color: #00192D  !important;  
+    background-color: #00192D  !important;
 }
 
 .inpection-section-headers {
@@ -325,23 +325,23 @@ background-color: #f1f1f1;
 }
 .inspection-table thead{
   background-color: #FFECB3;
-  
+
 
 }
 
 .inspection-table th{
   font-weight: 600;
-  color: #FFA000; 
+  color: #FFA000;
 }
 .inspection-table tr:nth-child(even) {
   background-color: #f9f8fd;
 }
-.inspection-table 
+.inspection-table
 
 .radio-group label {
   margin-right: 15px;
   cursor: pointer;
-  
+
 }
 
 textarea {
@@ -551,7 +551,7 @@ input[type="radio"] {
 }
 
 .attachment-icon {
-  font-size: 22px;
+  font-size: 15px;
   color: #4CAF50;
   cursor: pointer;
   transition: color 0.3s;
