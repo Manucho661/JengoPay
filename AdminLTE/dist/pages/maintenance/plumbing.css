@@ -4,7 +4,7 @@ body {
     background-color: black;
     font-size: 12px;
   }
-  
+
   .panel {
     display: none; /* Initially hidden */
     background-color: #00192D;
@@ -18,7 +18,7 @@ body {
     padding: 2%;
     color: white;
     border-radius: 4%;
-  
+
   }
   .panel a {
     display: block;
@@ -28,11 +28,11 @@ body {
     transition: 0.3s;
     color: whitesmoke;
   }
-  
+
   .panel a:hover{
   color: #FFC107;
   }
-  
+
   /* Announcement Overlay styles */
   #view_announcement {
     /* width: 50%; Adjust the card width as needed */
@@ -47,10 +47,10 @@ body {
     height: 100%;
     justify-content: center;
     align-items: center;
-  
+
   }
   .card.content{
-  
+
   position: relative;
     background: white;
     border-radius: 5px;
@@ -61,40 +61,40 @@ body {
     font-size: 90%;
     color: gray;
   }
-  
+
   .card-footer.view_announcement {
     justify-content: flex-end;
-  
+
   }
-  
+
   .card-footer .btn + .btn {
     margin-left: 10px; /* Adds spacing between the buttons */
   }
-  
+
   .close-btn{
      position: absolute;
-  
+
     right: 15px;
-  
+
     color: white;
     cursor: pointer;
-  
+
   }
-  
+
   #more{
   display: flex;
    justify-content: center;
   cursor: pointer;
-  
+
   }
-  
+
   #more_icon{
   /* border: 1px solid black; */
   border-radius: 30%;
   padding: 10%;
   font-size: larger;
   }
-  
+
   #more_options{
   display: none;
   /* position: absolute; */
@@ -102,7 +102,7 @@ body {
   background: #00192D;
   border-radius: 10%;
   padding: 10px;
-  
+
   }
   #more_options a{
   text-decoration: none;
@@ -122,7 +122,7 @@ body {
   #close-overlay-btn:hover {
       color: red;
       }
-  
+
   .card-header.view_announcement {
     position: relative;
     display: flex;/* Add this for the absolute positioning of the close button */
@@ -132,15 +132,15 @@ body {
   color: blueviolet;
   font-weight: 500;
   cursor: pointer;
-  
+
   }
   #more_announcement_btn:hover{
   background-color: rgba(128, 128, 128, 0.2);
   color: #FFC107;
   }
-  
- 
-  
+
+
+
   h2 {
   text-align: center;
   margin-bottom: 20px;
@@ -153,7 +153,7 @@ body {
   margin-bottom: 8px;
   display: block;
   }
-  
+
   input[type="text"], input[type="email"], input[type="password"], select, textarea {
   width: 60%;
   padding: 8px;
@@ -161,17 +161,17 @@ body {
   border: 1px solid #ccc;
   border-radius: 4px;
   }
-  
+
   input[type="radio"], input[type="checkbox"] {
   margin-right: 8px;
   }
-  
-  
-  
+
+
+
   button:hover {
   background-color:#00192D;
   }
-  
+
   /* .form-container {
   background-color: #ffffff;
   padding: 30px;
@@ -180,18 +180,18 @@ body {
   max-width: 600px;
   margin: 30px auto;
   } */
-  
+
   h2 {
   text-align: center;
   margin-bottom: 20px;
   }
-  
+
   label {
   font-size: 16px;
   margin-bottom: 8px;
   display: block;
   }
-  
+
   /* input[type="text"], input[type="email"], input[type="number"], select, textarea {
   width: 70%;
   padding: 8px;
@@ -199,15 +199,15 @@ body {
   border: 1px solid #ccc;
   border-radius: 4px;
   }  */
-  
+
   /* textarea {
   resize: vertical;
   } */
-  
-  
+
+
   /* Main form container */
- 
-  
+
+
   /* Form Section Titles */
   .form-section h3 {
   font-size: 1.25em;
@@ -216,7 +216,7 @@ body {
   border-bottom: 2px solid #f1f1f1;
   padding-bottom: 5px;
   }
-  
+
   /* Optional: Make the button more prominent */
   .bossy {
   background-color: #00192D;
@@ -230,7 +230,7 @@ body {
   width: 65%;
   height: 2%;
   }
-  
+
   .bossy:hover {
   background-color: #00192D;
   }
@@ -248,7 +248,7 @@ body {
   letter-spacing: 1px;
   transition: color 0.3s ease, transform 0.3s ease;
   }
-  
+
   .text-warning:hover {
   color: #FFC107; /* Slightly darker yellow on hover */
   transform: scale(1.05); /* Slight scale effect on hover */
@@ -265,7 +265,7 @@ body {
   margin-top: 8px;
   transition: border-color 0.3s ease;
   }
-  
+
   .text{
     display: block;
     margin-bottom: 5px;
@@ -277,7 +277,7 @@ body {
     color: #767676;
     color: #00192D;
     font-family: 'Poppins', sans-serif;
-  
+
     }
     .value{
         /* font-size: 12px; */
@@ -290,23 +290,23 @@ body {
     .text a{
       text-decoration: none;
     }
-  
-  
+
+
     .row.first{
       box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
-  
+
   }
   .contact_section_header{
     border-bottom: 1px solid rgba(128, 128, 128, 0.5);
     font-family: 'Poppins', sans-serif;
     font-size: 22px;
     font-weight: 600;
-  
+
   }
   a{
     color: #00192D;
   }
-  
+
   #Service_Provider_btn{
     background-color: #00192D;
     color: white;
@@ -325,18 +325,18 @@ body {
     font-size: 12px !important;
   }
   h1 {
-    
+
   }
-  
-  
-  
-  
+
+
+
+
   .dt-buttons {
     display: flex;
     justify-content: start; /* or center */
     gap: 5px;
   }
-  
+
   div.dt-button-collection {
     background-color: #00192D !important;  /* Change to your preferred color */
     border: 1px solid #ccc !important;
@@ -347,16 +347,16 @@ body {
     color: white !important; /* Ensure text is visible */
     border: none !important;
   }
-  
+
   /* Change hover effect */
   div.dt-button-collection .dt-button:hover {
     background-color: #FFC107 !important;
     color: white !important;
     border-radius: 3px;
   }
-  
-  
-  
+
+
+
   .paginate_button.page-item.active a{
     background-color: #FFC107 !important;
   }
@@ -368,7 +368,7 @@ body {
   }
   .card.content{
     /* box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); x-offset, y-offset, blur-radius, color */
-  
+
   }
   td button{
     background-color: #00192D;
@@ -383,9 +383,9 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 10000; 
+    z-index: 10000;
     width: 100%;
-   height: 100%;  
+   height: 100%;
     background: rgba(0, 0, 0, 0.7); /* Dark overlay */
     display: none; /* Initially hidden */
     justify-content: center;
@@ -445,9 +445,9 @@ body {
       cursor: pointer;
       color: #333;
       position: absolute;
-      top: 20px;
-      right: 18rem;
-      width: 30px;
+      top: 15px;
+      right: 10rem;
+      width:1rem;
       height: 30px;
       display: flex;
       align-items: center;
@@ -455,7 +455,7 @@ body {
       border-radius: 50%;
       transition: background 0.3s, color 0.3s;
     }
-    
+
     .close-btn:hover {
       background: red;
       /* color: #000; */
@@ -504,7 +504,7 @@ body {
     text-align: left !important;
     background:whitesmoke !important;
   }
-  
+
   table{
     font-size: 12px !important; /* Reduce table font size */
   }
@@ -514,20 +514,20 @@ body {
     font-size: 12px !important; /* Reduce table font size */
 
   }
-  
-  th:nth-child(1), td:nth-child(1) { 
+
+  th:nth-child(1), td:nth-child(1) {
     text-align: center !important; /* Center align numbers like serial numbers */
     font-size: 12px !important; /* Reduce table font size */
 
   }
-  
-  th:nth-child(3), td:nth-child(3) { 
+
+  th:nth-child(3), td:nth-child(3) {
     text-align: center !important; /* Center align payment status */
     font-size: 12px !important; /* Reduce table font size */
 
   }
-  
-  th:nth-child(4), td:nth-child(4) { 
+
+  th:nth-child(4), td:nth-child(4) {
     text-align: left !important; /* Align provider names to the left */
     font-size: 12px !important; /* Reduce table font size */
 
@@ -537,7 +537,7 @@ body {
     font-size: 12px !important; /* Reduce table font size */
 
   }
-  
+
   th, td {
     white-space: nowrap !important;
     overflow: hidden !important;
@@ -551,65 +551,65 @@ body {
     background-color: #f4f4f4 !important; /* Light background for contrast */
     border-bottom: 2px solid #ddd !important;
   }
-  
-  
+
+
   .status {
     display: inline-flex;
     align-items: center;
     font-weight: bold;
     padding: 6px 12px;
-     border-radius: 4px;  
+     border-radius: 4px;
     font-size: 12px;
   }
   .status.completed {
     background-color: #2e7d32; /* Light green */
-    
+
     color: white;
-    
+
   }
-  
+
   .status.incomplete {
     background-color: #d32f2f; /* Light red */
     color: white; /* Darker red */
-  
+
   }
   .status i {
     margin-right: 5px;
   }
-  
+
   .payment {
     display: inline-flex;
     align-items: center;
     font-weight: bold;
-     padding: 6px 12px; 
+     padding: 6px 12px;
     border-radius: 4px; /* Rounded edges */
     font-size: 14px;
-     width: 100%; 
+     width: 100%;
   }
-  
+
   /* Pending Payment (Orange) */
   .payment.pending {
     background-color: #d39e00; /* Light yellow/orange */
     color: white; /* Dark orange */
     font-size: 12px !important;
-    
+
   }
-  
+
   /* Paid Payment (Green) */
   .payment.paid {
     background-color: #2e7d32; /* Light green */
     color: white; /* Dark green */
     font-size: 12px !important;
-   
+
   }
-  
+
   /* Icon styling */
   .payment i {
     margin-right: 5px;
   }
-  
-  
-  
+
+
+
   .summary-section {
     display: flex;
     justify-content: start; /* Aligns left */
@@ -618,8 +618,8 @@ body {
     font-size: 16px;
     font-weight: 600;
   }
-  
-  
+
+
   /* General Styling for Summary Items */
   .summary-item {
     padding: 5px 10px;
@@ -628,13 +628,13 @@ body {
     align-items: center;
     gap: 5px; /* Space between icon and text */
   }
-  
+
   /* Color Coding */
   .total { background-color: #f8f9fa; color: #333; } /* Neutral */
   .completed { background-color: #28a745; color: white; } /* Green */
   .in-progress { background-color: #007bff; color: white; } /* Blue */
   .incomplete { background-color: #dc3545; color: white; } /* Red */
-  
+
 /* Ensure this popup form is wide and does not conflict with other forms */
 .wide-form {
   width: 100%;

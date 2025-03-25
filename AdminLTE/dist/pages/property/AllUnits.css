@@ -802,13 +802,13 @@ input, select {
 }
 .edit-btn {
   background-color:#00192D;
-  color:#d39e00;
+  color:white;
   border: none;
   padding: 4px 8px;
   border-radius: 5px;
 }
 .edit-btn:hover {
-  background-color: #e84118;
+  background-color: #d39e00;
 }
 .property-title {
   font-size: 19px;
