@@ -310,13 +310,8 @@
               <div class="col-sm-8">
 
                 <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> Maintenance Requests/Electricals</h3>
-
-
                     <div class="row mt-2  ">
                       <div class="col-md-12  ">
-
-
-
                         <div class="row Summary mt-6" >
                           <!-- Summary -->
 
@@ -349,37 +344,139 @@
                 </div>
               </div>
 
-              <div class="col-sm-4">
+              <!-- <div class="col-sm-4">
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
                   <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
                 </ol>
-              </div>
-
+              </div> -->
             </div>
             <!--end::Row-->
           </div>
           <!--end::Container-->
         </div>
-        <div class="app-content" style="height: 80%;">
+        <div class="app-content">
           <!--begin::Container-->
-          <div class="container-fluid"  style=" height: 100%;">
+          <div class="container-fluid">
             <!-- Info boxes -->
 
             <!-- /.row -->
 
+
+            <!-- begin row -->
+            <div class="row mb-2">
+              <div>
+                <div class="card">
+                  <div class="card-header">
+                    <a class="btn btn-link add-expense-btn" data-bs-toggle="collapse" href="#addExpense" aria-expanded="false" aria-controls="addExpenseAccordion" style="color: #00192D; font-weight:bold; text-decoration: none;">
+                      <span id="toggleIcon">+</span> Add Payment
+                    </a>
+                  </div>
+                  <div class="card-body collapse" id="addExpense">
+                    <div class="card">
+                      <div class="card-header" style="background: linear-gradient(to right, #00192D, #003D5B, #00788D);"  >
+                        <h6 class="text-white">Add Payment Details</h6>
+                      </div>
+                      <div class="card-body">
+                        <div class="form-container">
+                          <form action="">
+                            <div class="row g-3">
+                              <!-- No -->
+                              <div class="col-md-4">
+                                  <label class="form-label"><b>Request ID</b></label>
+                                  <input type="number" class="form-control" placeholder="123" >
+                              </div>
+                              <!-- Expense of the Month -->
+                              <div class="col-md-4">
+                                <label class="form-label"><b>Invoice NO</b></label>
+                                <input type="number" class="form-control" placeholder="123">
+                              </div>
+
+                              <!-- Cheque No -->
+                              <div class="col-md-4">
+                                <label class="form-label"><b>Cheque No</b></label>
+                                <input type="number" class="form-control" placeholder="000001" >
+                            </div>
+
+
+                            <div class="row g-3 mt-2">
+                            <div class="col-md-6">
+                              <label class="form-label"><b>Description</b></label>
+                              <input type="text" class="form-control" placeholder="Enter">
+                          </div>
+
+                              <!-- Year -->
+                              <div class="col-md-6">
+                                  <label class="form-label"><b>Amount</b></label>
+                                  <input type="number" class="form-control" placeholder="2000">
+                              </div>
+                          </div>
+
+                          <div class="row g-3 mt-2">
+
+                              <div class="col-md-6">
+                                <label class="form-label"> <b>Payment Method</b> </label>
+                                <select class="form-select">
+
+                                <option selected disabled>Payment</option>
+                                <option>Cash</option>
+                                <option>Bank</option>
+                                <option>M-pesa</option>
+
+                            </select>
+                              </div>
+
+                              <div class="col-md-6">
+                                <label class="form-label"><b>Entry Date</b></label>
+                                <input type="date" class="form-control">
+                              </div>
+                          </div>
+                          </div>
+                          </form>
+                          </div>
+                          </div>
+                          </form>
+
+
+                          <!-- Expense Table -->
+
+
+                          <div class="row g-3 mt-2">
+                              <div class="col-6">
+
+                              </div>
+                              <div class="col-6 mt-2 d-flex justify-content-end">
+                                  <button type="submit" class="btn btn-custom btn-sm" style="height: fit-content;"> Submit</button>
+                              </div>
+                          </div>
+                          </form>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+            </div>
+             </div>
+
+
+            <!-- End row -->
+
+            <br>
+            <!-- <hr> -->
+
             <!--begin::Row-->
-            <div class="row" style=" height: 100%;">
               <!-- Start col -->
-              <div class="col-md-12 " style=" height: 100%;" >
-                <div class="card Content" style=" height: 100%;" >
-                    <div class="card-header" style="  display:flex; flex-direction:column; justify-content:center;" >
+              <div class="row">
+              <div class="col-md-12">
+                <div class="card Content">
+                    <div class="card-header">
                       <b>All Appliance Requests</b>
                     </div>
-
-                    <div class="card-body" >
-                    <div class="container" style="width: fit-content; height:100%;">
-                        <table id="maintenance" class="table table-striped" style="width: 100%;">
+                    <div class="card-body" style="overflow: auto;">
+                      <div class="container">
+                        <table id="maintenance" class="table table-striped" >
                           <thead>
                             <tr>
                               <th>REQUESTDATE</th>
@@ -389,8 +486,7 @@
                               <th>PROVIDER</th>
                               <th>Priority</th>
                               <th>STATUS</th>
-                                <th>ACTIONS</th>
-
+                              <th>ACTIONS</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -431,22 +527,88 @@
 
                                 </td>
                             </tr>
+                            <tr>
+                              <td>11-10-2025</td>
+                            <td>12432</td>
+
+
+
+                              <td>Leaking roof</td>
+                              <td><button  class=" payment paid" id="example"> <i class="fa fa-check-circle"></i>  PAID</button></td>
+                              <td>Not Assigned </td>
+                              <td>High</td>
+
+                              <td > <button class="status incomplete" ><i class="fa fa-times-circle"></i> INCOMPLETE </button> </td>
+
+                              <td><button onclick=" openassignPopup()" class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                              </button>
+                              <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
+
+                                </td>
+                            </tr>
+                            <tr>
+                              <td>11-10-2025</td>
+                            <td>12432</td>
+
+
+
+                              <td>Leaking roof</td>
+                              <td><button  class=" payment paid" id="example"> <i class="fa fa-check-circle"></i>  PAID</button></td>
+                              <td>Not Assigned </td>
+                              <td>High</td>
+
+                              <td > <button class="status incomplete" ><i class="fa fa-times-circle"></i> INCOMPLETE </button> </td>
+
+                              <td><button onclick=" openassignPopup()" class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                              </button>
+                              <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
+
+                                </td>
+                            </tr>
+                            <tr>
+                              <td>11-10-2025</td>
+                            <td>12432</td>
+
+
+
+                              <td>Leaking roof</td>
+                              <td><button  class=" payment paid" id="example"> <i class="fa fa-check-circle"></i>  PAID</button></td>
+                              <td>Not Assigned </td>
+                              <td>High</td>
+
+                              <td > <button class="status incomplete" ><i class="fa fa-times-circle"></i> INCOMPLETE </button> </td>
+
+                              <td><button onclick=" openassignPopup()" class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                              </button>
+                              <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
+
+                                </td>
+                            </tr>
+                            <tr>
+                              <td>11-10-2025</td>
+                            <td>12432</td>
+
+
+
+                              <td>Leaking roof</td>
+                              <td><button  class=" payment paid" id="example"> <i class="fa fa-check-circle"></i>  PAID</button></td>
+                              <td>Not Assigned </td>
+                              <td>High</td>
+
+                              <td > <button class="status incomplete" ><i class="fa fa-times-circle"></i> INCOMPLETE </button> </td>
+
+                              <td><button onclick=" openassignPopup()" class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                              </button>
+                              <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
+
+                                </td>
+                            </tr>
                             <!-- Add more rows as needed -->
                           </tbody>
-
                         </table>
                       </div>
-
-
-
                     </div>
-
-
-
-
                 </div>
-
-
             </div>
               <!-- /.col -->
             </div>
