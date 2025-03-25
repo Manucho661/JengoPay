@@ -456,6 +456,20 @@
                             <span class="bs-stepper-label">Move Out</span>
                           </button>
                         </div>
+                        <div class="line"></div>
+                        <div class="step" data-target="#step3">
+                          <button class="step-trigger">
+                            <span class="bs-stepper-circle">3</span>
+                            <span class="bs-stepper-label">Move Out</span>
+                          </button>
+                        </div>
+                        <div class="line"></div>
+                        <div class="step" data-target="#step3">
+                          <button class="step-trigger">
+                            <span class="bs-stepper-circle">4</span>
+                            <span class="bs-stepper-label">Move Out</span>
+                          </button>
+                        </div>
                       </div>
                       <div id="step1" class="content">
                         <div class="inpection-section-headers">Property & Tenant Information</div>
@@ -499,22 +513,253 @@
                       <div id="step2" class="content">
                         <h5>Move Out Inspection</h5>
                         <form>
-                          <div class="mb-3">
-                            <label class="form-label">Inspection No</label>
-                            <input type="number" class="form-control" placeholder="456">
-                          </div>
-                          <div class="mb-3">
-                            <label class="form-label">Month</label>
-                            <select class="form-select">
-                              <option disabled selected>Select Month</option>
-                              <option>March</option>
-                              <option>April</option>
-                            </select>
-                          </div>
-                          <div class="mb-3">
-                            <label class="form-label">Year</label>
-                            <input type="number" class="form-control" placeholder="2025">
-                          </div>
+                          <table>
+                            <thead>
+                              <tr>
+                                <th>Item</th>
+                                <th>Condition at Move-In</th>
+                                <th>Comments</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>Walls & Paint</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="walls" value="Good"> Good</label>
+                                  <label><input type="radio" name="walls" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="walls" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea placeholder="Add comments..."></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>Ceiling</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="ceiling" value="Good"> Good</label>
+                                  <label><input type="radio" name="ceiling" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="ceiling" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>Flooring</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="flooring" value="Good"> Good</label>
+                                  <label><input type="radio" name="flooring" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="flooring" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>Doors & Locks</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="doors" value="Good"> Good</label>
+                                  <label><input type="radio" name="doors" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="doors" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>Windows & Glass</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="windows" value="Good"> Good</label>
+                                  <label><input type="radio" name="windows" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="windows" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>Lighting Fixtures</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="lights" value="Good"> Good</label>
+                                  <label><input type="radio" name="lights" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="lights" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>Electrical Outlets</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="outlets" value="Good"> Good</label>
+                                  <label><input type="radio" name="outlets" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="outlets" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>Curtain Rods</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="curtains" value="Good"> Good</label>
+                                  <label><input type="radio" name="curtains" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="curtains" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <button type="button" class="btn btn-primary d-flex justify-content-end" onclick="stepper.next()">Next</button>
+                        </form>
+                      </div>
+                      <div id="step3" class="content">
+                        <h5>Move Out3 Inspection</h5>
+                        <form>
+                          <table>
+                            <thead>
+                              <tr>
+                                <th>Item</th>
+                                <th>Condition at Move-In</th>
+                                <th>Comments</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>Cabinets and  Shelving</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="walls" value="Good"> Good</label>
+                                  <label><input type="radio" name="walls" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="walls" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea placeholder="Add comments..."></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>CounterTops</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="ceiling" value="Good"> Good</label>
+                                  <label><input type="radio" name="ceiling" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="ceiling" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>Sink and Taps</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="flooring" value="Good"> Good</label>
+                                  <label><input type="radio" name="flooring" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="flooring" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>Plumbing(Leaks, Drainage)</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="doors" value="Good"> Good</label>
+                                  <label><input type="radio" name="doors" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="doors" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>Cooker/Oven (If Applicable)</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="windows" value="Good"> Good</label>
+                                  <label><input type="radio" name="windows" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="windows" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>Refrigerator</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="lights" value="Good"> Good</label>
+                                  <label><input type="radio" name="lights" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="lights" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>Lighting Fixture</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="outlets" value="Good"> Good</label>
+                                  <label><input type="radio" name="outlets" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="outlets" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                              
+                            </tbody>
+                          </table>
+                          <button type="button" class="btn btn-secondary" onclick="stepper.previous()">Back</button>
+                          <button type="submit" class="btn btn-success">Submit</button>
+                        </form>
+                      </div>
+
+                      <div id="step4" class="content">
+                        <h5>Move Out3 Inspection</h5>
+                        <form>
+                          <table>
+                            <thead>
+                              <tr>
+                                <th>Item</th>
+                                <th>Condition at Move-In</th>
+                                <th>Comments</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>Cabinets and  Shelving</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="walls" value="Good"> Good</label>
+                                  <label><input type="radio" name="walls" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="walls" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea placeholder="Add comments..."></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>CounterTops</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="ceiling" value="Good"> Good</label>
+                                  <label><input type="radio" name="ceiling" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="ceiling" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>Sink and Taps</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="flooring" value="Good"> Good</label>
+                                  <label><input type="radio" name="flooring" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="flooring" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>Plumbing(Leaks, Drainage)</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="doors" value="Good"> Good</label>
+                                  <label><input type="radio" name="doors" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="doors" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>Cooker/Oven (If Applicable)</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="windows" value="Good"> Good</label>
+                                  <label><input type="radio" name="windows" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="windows" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>Refrigerator</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="lights" value="Good"> Good</label>
+                                  <label><input type="radio" name="lights" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="lights" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>Lighting Fixture</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="outlets" value="Good"> Good</label>
+                                  <label><input type="radio" name="outlets" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="outlets" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                              
+                            </tbody>
+                          </table>
                           <button type="button" class="btn btn-secondary" onclick="stepper.previous()">Back</button>
                           <button type="submit" class="btn btn-success">Submit</button>
                         </form>
