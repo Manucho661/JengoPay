@@ -22,7 +22,7 @@
 
     <!-- for bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
@@ -397,11 +397,11 @@
       <!-- begin row -->
           <div class="row mt-2 mb-2 add-inspection-container">
             <div class="col-md-12 add-inspection-btn bg-white p-2">
-             
-                    <a class="btn-link add-inspection-btn " 
-                        data-bs-toggle="collapse" 
-                        href="#selectInspectionSection" 
-                        aria-expanded="false" 
+
+                    <a class="btn-link add-inspection-btn "
+                        data-bs-toggle="collapse"
+                        href="#selectInspectionSection"
+                        aria-expanded="false"
                         aria-controls="moveInSection"
                         onclick="hideOther('moveOutSection')"
                         style="color: #00192D; font-weight:600; font-size: 16px; text-decoration: none;">
@@ -412,21 +412,21 @@
               <div class="col-md-12 collapse bg-white selectInspectionSection" id="selectInspectionSection" >
                       <div class="card-header">
                         <div class="title select-section-title"> Select Inspection Type:</div>
-                        
-                        <a class="btn-link moveOut-btn select-btn" 
-                        data-bs-toggle="collapse" 
-                        href="#moveInSection" 
-                        aria-expanded="false" 
+
+                        <a class="btn-link moveOut-btn select-btn"
+                        data-bs-toggle="collapse"
+                        href="#moveInSection"
+                        aria-expanded="false"
                         aria-controls="moveInSection"
                         onclick="hideOther('moveOutSection')"
                         style="">
                         <i class="fas fa-arrow-right" style="color: green;"></i> Move In </a>
-                       
+
                     <!-- Move Out Button -->
-                       <a class="btn-link moveIn-btn select-btn" 
-                        data-bs-toggle="collapse" 
-                        href="#moveOutSection" 
-                        aria-expanded="false" 
+                       <a class="btn-link moveIn-btn select-btn"
+                        data-bs-toggle="collapse"
+                        href="#moveOutSection"
+                        aria-expanded="false"
                         aria-controls="moveOutSection"
                         onclick="hideOther('moveInSection')"
                         style="">
@@ -441,79 +441,86 @@
                         <h6 class="text-white">Move out</h6>
                     </div>
                     <div class="card-body">
-                        <div class="form-container">
-                            <form>
-                                <div class="row g-3">
-                                    <!-- No -->
-                                    <div class="col-md-3">
-                                        <label class="form-label"><b>Inspection out</b></label>
-                                        <input type="number" class="form-control" placeholder="123">
-                                    </div>
-
-                                    <!-- Expense of the Month -->
-                                    <div class="col-md-5">
-                                        <label class="form-label"><b>Inspection for the Month of</b></label>
-                                        <select class="form-select">
-                                            <option selected disabled>Select Month</option>
-                                            <option>January</option>
-                                            <option>February</option>
-                                            <option>March</option>
-                                            <option>April</option>
-                                            <option>May</option>
-                                            <option>June</option>
-                                            <option>July</option>
-                                            <option>August</option>
-                                            <option>September</option>
-                                            <option>October</option>
-                                            <option>November</option>
-                                            <option>December</option>
-                                        </select>
-                                    </div>
-
-                                    <!-- Year -->
-                                    <div class="col-md-4">
-                                        <label class="form-label"><b>Year</b></label>
-                                        <input type="number" class="form-control" placeholder="2025">
-                                    </div>
-                                </div>
-
-                                
-                                <div class="row g-3 mt-2">
-                                    <div class="col-md-6">
-                                        <label class="form-label"><b>Date</b></label>
-                                        <input type="date" class="form-control">
-                                    </div>
-                                    <div class="col-md-6">
-                                      <label class="form-label"><b>Property</b></label>
-                                      <input type="text" class="form-control">
-                                  </div>
-                                </div>
-
-                                <div class="row g-3 mt-2">
-                                  <div class="col-md-6">
-                                      <label class="form-label"><b>Add Image</b></label>
-                                      <input type="file" class="form-control">
-                                  </div>
-
-                              </div>
-
-
-
-                                <!-- Expense Table -->
-
-
-                                <div class="row g-3 mt-2">
-                                    <div class="col-6">
-                                        <button class="btn btn-sm" style="background-color: #00192D; color: white;">Add More</button>
-                                    </div>
-                                    <div class="col-6 mt-2 d-flex justify-content-end">
-                                        <button class="btn btn-sm " style="height: fit-content; background-color: #00192D; color: azure;"> Submit</button>
-                                    </div>
-                                </div>
-
-                            </form>
+                    <div id="stepper" class="bs-stepper">
+                      <div class="bs-stepper-header">
+                        <div class="step" data-target="#step1">
+                          <button class="step-trigger">
+                            <span class="bs-stepper-circle">1</span>
+                            <span class="bs-stepper-label">Move In</span>
+                          </button>
                         </div>
+                        <div class="line"></div>
+                        <div class="step" data-target="#step2">
+                          <button class="step-trigger">
+                            <span class="bs-stepper-circle">2</span>
+                            <span class="bs-stepper-label">Move Out</span>
+                          </button>
+                        </div>
+                      </div>
+                      <div id="step1" class="content">
+                        <div class="inpection-section-headers">Property & Tenant Information</div>
+
+                        <form>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <label class="form-label">Property Name</label>
+                              <input type="text" class="form-control" placeholder="Ebenezer">
+                            </div>
+                            <div class="col-md-6">
+                              <label class="form-label">Unity Number</label>
+                              <input type="number" class="form-control" placeholder="Ebenezer">
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-md-6">
+                              <label class="form-label">Landlord Name</label>
+                              <input type="text" class="form-control" placeholder="Ebenezer">
+                            </div>
+                            <div class="col-md-6">
+                              <label class="form-label">Tenant Name</label>
+                              <input type="text" class="form-control" placeholder="Ebenezer">
+                            </div>
+
+                          </div>
+
+                          <div class="row">
+
+                            <div class="col-md-6">
+                              <label class="form-label"></label>
+                              <input type="date" class="form-control" placeholder="Ebenezer">
+                            </div>
+
+                          </div>
+
+                          <button type="button" class="btn btn-primary d-flex justify-content-end" onclick="stepper.next()">Next</button>
+                        </form>
+                      </div>
+                      <div id="step2" class="content">
+                        <h5>Move Out Inspection</h5>
+                        <form>
+                          <div class="mb-3">
+                            <label class="form-label">Inspection No</label>
+                            <input type="number" class="form-control" placeholder="456">
+                          </div>
+                          <div class="mb-3">
+                            <label class="form-label">Month</label>
+                            <select class="form-select">
+                              <option disabled selected>Select Month</option>
+                              <option>March</option>
+                              <option>April</option>
+                            </select>
+                          </div>
+                          <div class="mb-3">
+                            <label class="form-label">Year</label>
+                            <input type="number" class="form-control" placeholder="2025">
+                          </div>
+                          <button type="button" class="btn btn-secondary" onclick="stepper.previous()">Back</button>
+                          <button type="submit" class="btn btn-success">Submit</button>
+                        </form>
+                      </div>
                     </div>
+                   </div>
                   </div>
                 </div>
                 <div class="col-md-12 collapse" id="moveOutSection">
@@ -760,11 +767,21 @@
       <!--end::Footer-->
     </div>
     <!--end::App Wrapper-->
-    
+
+    <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
+  <script>
+    // Initialize Stepper
+    const stepper = new Stepper(document.querySelector('#stepper'))
+  </script>
 
   <!-- J  A V A S C R I PT -->
 
                                                 <!-- LINKS -->
+ <!-- steeper plugin -->
+ <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
+
 
 <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
@@ -841,7 +858,7 @@
                         btn.addEventListener('click', () => {
                           // Remove 'active' from all buttons
                           buttons.forEach(b => b.classList.remove('active'));
-                          
+
                           // Add 'active' to clicked button
                           btn.classList.add('active');
                         });
@@ -871,7 +888,7 @@
 
 
 
- 
+
 <script>
 
                   // const   next_text = document.getElementById('respond_btn');
@@ -911,7 +928,7 @@
 <!-- end sidebar script -->
 
 
-                                            
+
 <script>
                       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
                       const Default = {

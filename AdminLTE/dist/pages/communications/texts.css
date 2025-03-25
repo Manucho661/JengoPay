@@ -143,7 +143,7 @@ input, select {
   font-weight: bold;
   margin-right: 10px;
   font-style: italic;
-  
+
 }
                                     /* BUTTONS */
 
@@ -233,7 +233,7 @@ input, select {
 .message-body{
   background-color: #f2f2f2;
   position: relative;
-  height: 100%; 
+  height: 100%;
 
 }
 .message-profiles{
@@ -241,9 +241,10 @@ border-right:1px solid #E2E2E2; padding: 0 !important;
 background-color: white;
 
 }
+
+/* Message Container section */
 .message-container-header-section{
   padding: 10px;
-
 }
 .topic-profiles-header-section{
   padding: 10px;
@@ -257,6 +258,27 @@ background-color: white;
   display: flex;
  flex-direction: column;
  justify-content: center;
+}
+
+.initial-topic-separator{
+  color: gray;
+  color: #28a745;
+}
+.profile-initials.initials-topic{
+  position: 20px;
+  border-radius: 100%;
+  /* border: 2px solid #FFC107; */
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* justify-self: center; */
+  padding: 8px;
+  height: 2rem;
+  width: 2rem;
+  font-size: small;
+  font-weight: normal;
+  align-items: center;
+  /* display: none; */
+  vertical-align: middle;
 }
 .other-topics-section{
 
@@ -274,6 +296,7 @@ background-color: white;
   font-size: small;
   font-weight: normal;
   align-items: center;
+  font-weight: 600;
 }
 .individual-topic-profiles{
   position: relative;
@@ -377,9 +400,9 @@ background-color: white;
 .individual-message-body{
   /* height: 100%; */
   /* flex-grow: 1; */
-   position: relative; 
+   position: relative;
   /* display: flex; */
-  height: 90%;  
+  height: 90%;
   /* background-color: #E63946; */
 
 }
@@ -414,7 +437,7 @@ background-color: white;
   align-self: flex-end;
 }
 .input-box {
-   flex: 1; 
+   flex: 1;
   padding: 4px;
   border-radius: 5px;
   border: 1px solid #ccc;
@@ -423,7 +446,7 @@ background-color: white;
   overflow-y: auto;
   outline: none;
   /* position: absolute; */
-  
+
 
 }
 .input-area {
@@ -431,8 +454,8 @@ background-color: white;
   padding: 10px;
   background: #fff;
   border-top: 1px solid #ddd;
-   position: absolute; 
-  bottom: 0; 
+   position: absolute;
+  bottom: 0;
   width: 100%;
 }
 .RecentChatNewText-btns{
@@ -454,6 +477,7 @@ background-color: white;
                                       /*MESSAGES SUMMARY  */
   .all-messages-summary{
     border:1px solid #E2E2E2; padding: 0 !important; height:85%; flex-grow: 1; background-color: rgba(128, 128, 128, 0.1);
+    overflow: auto;
   }
 
                                       /* TABLE STYLES */
