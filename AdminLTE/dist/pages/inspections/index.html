@@ -435,6 +435,7 @@
 
                 </div>
 
+                                      <!-- MOVE IN INSPECTION COLUMN -->
                 <div class="col-md-12 collapse" id="moveInSection" >
                   <div class="card">
                     <div class="card-header" style="background: linear-gradient(to right, #00192D, #003D5B, #00788D); display: none;">
@@ -520,7 +521,7 @@
                             </div>
 
                             <div class="col-md-12 d-flex justify-content-end">
-                              <button type="button" class="btn btn-primary d-flex justify-content-end" onclick="stepper.next()">Next</button>
+                              <button type="button" class="btn btn-primary next-btn" onclick="stepper.next()">Next</button>
 
                             </div>
                           </div>
@@ -528,9 +529,9 @@
                         </form>
                       </div>
                       <div id="step2" class="content">
-                        <h5>Move Out Inspection</h5>
+                        <div class="inpection-section-headers">Living Room & Common Areas</div>
                         <form>
-                          <table>
+                          <table class="inspection-table">
                             <thead>
                               <tr>
                                 <th>Item</th>
@@ -613,13 +614,17 @@
                               </tr>
                             </tbody>
                           </table>
-                          <button type="button" class="btn btn-primary d-flex justify-content-end" onclick="stepper.next()">Next</button>
+                          <div class="col-md-12 d-flex justify-content-between">
+                            <button type="button" class="btn btn-primary next-btn" onclick="stepper.previous()">Back</button>
+                            <button type="button" class="btn btn-primary next-btn" onclick="stepper.next()">Next</button>
+                          </div>
+
                         </form>
                       </div>
                       <div id="step3" class="content">
-                        <h5>Move Out3 Inspection</h5>
+                        <div class="inpection-section-headers" >Kitchen </div>
                         <form>
-                          <table>
+                          <table class="inspection-table" >
                             <thead>
                               <tr>
                                 <th>Item</th>
@@ -694,15 +699,17 @@
                               
                             </tbody>
                           </table>
-                          <button type="button" class="btn btn-primary d-flex justify-content-end" onclick="stepper.next()">Next</button>
-                          <button type="submit" class="btn btn-success">Submit</button>
+                          <div class="col-md-12 d-flex justify-content-between">
+                            <button type="button" class="btn btn-primary next-btn" onclick="stepper.previous()">Back</button>
+                            <button type="button" class="btn btn-primary next-btn" onclick="stepper.next()">Next</button>
+                          </div>
                         </form>
                       </div>
 
                       <div id="step4" class="content">
-                        <h5>Move Out3 Inspection</h5>
+                        <div class="inpection-section-headers" >Bedrooms </div>
                         <form>
-                          <table>
+                          <table class="inspection-table" >
                             <thead>
                               <tr>
                                 <th>Item</th>
@@ -777,15 +784,19 @@
                               
                             </tbody>
                           </table>
-                          <button type="button" class="btn btn-secondary" onclick="stepper.next()">Next</button>
+                          <div class="col-md-12 d-flex justify-content-between">
+                            <button type="button" class="btn btn-primary next-btn" onclick="stepper.previous()">Back</button>
+                            <button type="button" class="btn btn-primary next-btn" onclick="stepper.next()">Next</button>
+                          </div>
                           
                         </form>
                       </div>
 
                       <div id="step5" class="content">
-                        <h5>Move Out3 Inspection</h5>
+                        <div class="inpection-section-headers" >Washrooms</div>
+
                         <form>
-                          <table>
+                          <table class="inspection-table">
                             <thead>
                               <tr>
                                 <th>Item</th>
@@ -852,48 +863,61 @@
                               
                             </tbody>
                           </table>
-                          <button type="button" class="btn btn-primary d-flex justify-content-end" onclick="stepper.next()">Next</button>
-
-                          <button type="submit" class="btn btn-success">Submit</button>
+                          <div class="col-md-12 d-flex justify-content-between">
+                            <button type="button" class="btn btn-primary next-btn" onclick="stepper.previous()">Back</button>
+                            <button type="button" class="btn btn-primary next-btn" onclick="stepper.next()">Next</button>
+                          </div>
                         </form>
                       </div>
 
                       <div id="step6" class="content">
-                        <h5>Move Out3 Inspection</h5>
                         <form>
                           <div class="section">
-                            <h3>3. Additional Notes & Observations</h3>
+                            <div class="inpection-section-headers" >Additional Notes & Observations</div>
                             <textarea name="additional_notes" placeholder="Write any notes here..."></textarea>
                           </div>
                       
                           <div class="section">
-                            <h3>4. Signatures</h3>
+                            <div class="inpection-section-headers" >Signatures</div>
                       
                             <div class="signatures">
-                              <div class="signature-row">
-                                <label for="landlord_name">Landlord Name:</label>
-                                <input type="text" id="landlord_name" name="landlord_name">
-                      
-                                <label for="landlord_signature">Signature:</label>
-                                <input type="text" id="landlord_signature" name="landlord_signature">
-                      
-                                <label for="landlord_date">Date:</label>
-                                <input type="date" id="landlord_date" name="landlord_date">
+                              <div class="row">
+                                  <div class="col-md-4">
+                                    <label for="landlord_name">Landlord Name:</label>
+                                    <input type="text" id="landlord_name" name="landlord_name">
+                                  </div>
+                                  <div class="col-md-4">
+                                    <label for="landlord_signature">Signature:</label>
+                                    <input type="text" id="landlord_signature" name="landlord_signature">  
+                                  </div>
+                                  <div class="col-md-4">
+                                    <label for="landlord_date">Date:</label>
+                                  <input type="date" id="landlord_date" name="landlord_date">
+                                </div>                                
                               </div>
                       
-                              <div class="signature-row">
-                                <label for="tenant_name">Tenant Name:</label>
-                                <input type="text" id="tenant_name" name="tenant_name">
-                      
-                                <label for="tenant_signature">Signature:</label>
-                                <input type="text" id="tenant_signature" name="tenant_signature">
-                      
-                                <label for="tenant_date">Date:</label>
-                                <input type="date" id="tenant_date" name="tenant_date">
+                              <div class="row">
+                                <div class="col-md-4">
+                                  <label for="tenant_name">Tenant Name:</label>
+                                  <input type="text" id="tenant_name" name="tenant_name">
+                                </div>
+                                <div class="col-md-4">
+                                  <label for="tenant_signature">Signature:</label>
+                                  <input type="text" id="tenant_signature" name="tenant_signature">
+                                </div>
+                                <div class="col-md-4">
+                                  <label for="tenant_date">Date:</label>
+                                  <input type="date" id="tenant_date" name="tenant_date">
+                                </div>             
                               </div>
                             </div>
-                          </div>                      
-                          <button type="submit" class="btn btn-success">Submit</button>
+                          </div>  
+                          <div class="col-md-12 d-flex justify-content-between mt-2">
+                            <button type="button" class="btn btn-primary next-btn" onclick="stepper.previous()">Back</button>
+                            <button type="button" class="btn btn-primary next-btn" onclick="stepper.nex()">Cancel</button>
+                            <button type="submit" class="btn btn-success next-btn">Submit</button>
+                          </div>              
+                          
                         </form>
                       </div>
 
@@ -907,77 +931,27 @@
                         <h6 class="text-white">Move out</h6>
                     </div>
                     <div class="card-body">
-                        <div class="form-container">
-                            <form>
-                                <div class="row g-3">
-                                    <!-- No -->
-                                    <div class="col-md-3">
-                                        <label class="form-label"><b>Inspection out</b></label>
-                                        <input type="number" class="form-control" placeholder="123">
-                                    </div>
+                      <div id="stepper" class="bs-stepper">
 
-                                    <!-- Expense of the Month -->
-                                    <div class="col-md-5">
-                                        <label class="form-label"><b>Inspection for the Month of</b></label>
-                                        <select class="form-select">
-                                            <option selected disabled>Select Month</option>
-                                            <option>January</option>
-                                            <option>February</option>
-                                            <option>March</option>
-                                            <option>April</option>
-                                            <option>May</option>
-                                            <option>June</option>
-                                            <option>July</option>
-                                            <option>August</option>
-                                            <option>September</option>
-                                            <option>October</option>
-                                            <option>November</option>
-                                            <option>December</option>
-                                        </select>
-                                    </div>
-
-                                    <!-- Year -->
-                                    <div class="col-md-4">
-                                        <label class="form-label"><b>Year</b></label>
-                                        <input type="number" class="form-control" placeholder="2025">
-                                    </div>
-                                </div>
-
-                                <div class="row g-3 mt-2">
-                                    <div class="col-md-6">
-                                        <label class="form-label"><b>Date</b></label>
-                                        <input type="date" class="form-control">
-                                    </div>
-                                    <div class="col-md-6">
-                                      <label class="form-label"><b>Property</b></label>
-                                      <input type="text" class="form-control">
-                                  </div>
-                                </div>
-
-                                <div class="row g-3 mt-2">
-                                  <div class="col-md-6">
-                                      <label class="form-label"><b>Add Image</b></label>
-                                      <input type="file" class="form-control">
-                                  </div>
-
-                              </div>
-
-
-
-                                <!-- Expense Table -->
-
-
-                                <div class="row g-3 mt-2">
-                                    <div class="col-6">
-                                        <button class="btn btn-sm" style="background-color: #00192D; color: white;">Add More</button>
-                                    </div>
-                                    <div class="col-6 mt-2 d-flex justify-content-end">
-                                        <button class="btn btn-sm " style="height: fit-content; background-color: #00192D; color: azure;"> Submit</button>
-                                    </div>
-                                </div>
-
-                            </form>
+                        <div class="step" data-target="#step1">
+                          <button class="step-trigger">
+                            <span class="bs-stepper-circle">1</span>
+                            <span class="bs-stepper-label">Move In</span>
+                          </button>
                         </div>
+                        <div class="line"></div>
+                        <div class="step" data-target="#step2">
+                          <button class="step-trigger">
+                            <span class="bs-stepper-circle">2</span>
+                            <span class="bs-stepper-label">Move In</span>
+                          </button>
+                        </div>
+                      </div>
+                        
+
+
+                      </div>
+                      
                     </div>
                   </div>
                 </div>
@@ -1017,7 +991,7 @@
 
 
                           <div class="card-body" style="overflow-x: scroll;">
-                          <table id="maintenance" class="display">
+                          <table id="maintenance" class="display summary-table">
                               <thead class="mb-2">
                               <tr>
                                   <th>Date</th>
