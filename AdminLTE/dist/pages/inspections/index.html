@@ -453,21 +453,35 @@
                         <div class="step" data-target="#step2">
                           <button class="step-trigger">
                             <span class="bs-stepper-circle">2</span>
-                            <span class="bs-stepper-label">Move Out</span>
+                            <span class="bs-stepper-label">Move In</span>
                           </button>
                         </div>
                         <div class="line"></div>
                         <div class="step" data-target="#step3">
                           <button class="step-trigger">
                             <span class="bs-stepper-circle">3</span>
-                            <span class="bs-stepper-label">Move Out</span>
+                            <span class="bs-stepper-label">Move In</span>
                           </button>
                         </div>
                         <div class="line"></div>
-                        <div class="step" data-target="#step3">
+                        <div class="step" data-target="#step4">
                           <button class="step-trigger">
                             <span class="bs-stepper-circle">4</span>
-                            <span class="bs-stepper-label">Move Out</span>
+                            <span class="bs-stepper-label">Move In</span>
+                          </button>
+                        </div>
+                        <div class="line"></div>
+                        <div class="step" data-target="#step5">
+                          <button class="step-trigger">
+                            <span class="bs-stepper-circle">5</span>
+                            <span class="bs-stepper-label">Move In</span>
+                          </button>
+                        </div>
+                        <div class="line"></div>
+                        <div class="step" data-target="#step6">
+                          <button class="step-trigger">
+                            <span class="bs-stepper-circle">6</span>
+                            <span class="bs-stepper-label">Move In</span>
                           </button>
                         </div>
                       </div>
@@ -501,13 +515,16 @@
                           <div class="row">
 
                             <div class="col-md-6">
-                              <label class="form-label"></label>
+                              <label class="form-label"> Inpection Date</label>
                               <input type="date" class="form-control" placeholder="Ebenezer">
                             </div>
 
+                            <div class="col-md-12 d-flex justify-content-end">
+                              <button type="button" class="btn btn-primary d-flex justify-content-end" onclick="stepper.next()">Next</button>
+
+                            </div>
                           </div>
 
-                          <button type="button" class="btn btn-primary d-flex justify-content-end" onclick="stepper.next()">Next</button>
                         </form>
                       </div>
                       <div id="step2" class="content">
@@ -677,7 +694,7 @@
                               
                             </tbody>
                           </table>
-                          <button type="button" class="btn btn-secondary" onclick="stepper.previous()">Back</button>
+                          <button type="button" class="btn btn-primary d-flex justify-content-end" onclick="stepper.next()">Next</button>
                           <button type="submit" class="btn btn-success">Submit</button>
                         </form>
                       </div>
@@ -695,7 +712,7 @@
                             </thead>
                             <tbody>
                               <tr>
-                                <td>Cabinets and  Shelving</td>
+                                <td>Wells and Paint</td>
                                 <td class="radio-group">
                                   <label><input type="radio" name="walls" value="Good"> Good</label>
                                   <label><input type="radio" name="walls" value="Fair"> Fair</label>
@@ -704,7 +721,7 @@
                                 <td><textarea placeholder="Add comments..."></textarea></td>
                               </tr>
                               <tr>
-                                <td>CounterTops</td>
+                                <td>Ceiling</td>
                                 <td class="radio-group">
                                   <label><input type="radio" name="ceiling" value="Good"> Good</label>
                                   <label><input type="radio" name="ceiling" value="Fair"> Fair</label>
@@ -713,7 +730,90 @@
                                 <td><textarea></textarea></td>
                               </tr>
                               <tr>
-                                <td>Sink and Taps</td>
+                                <td>Flooring</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="flooring" value="Good"> Good</label>
+                                  <label><input type="radio" name="flooring" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="flooring" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>Window and Glass</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="doors" value="Good"> Good</label>
+                                  <label><input type="radio" name="doors" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="doors" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>Wardrobes</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="windows" value="Good"> Good</label>
+                                  <label><input type="radio" name="windows" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="windows" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>Curtain Rods</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="lights" value="Good"> Good</label>
+                                  <label><input type="radio" name="lights" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="lights" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>Lighting Fixtures</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="outlets" value="Good"> Good</label>
+                                  <label><input type="radio" name="outlets" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="outlets" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                              
+                            </tbody>
+                          </table>
+                          <button type="button" class="btn btn-secondary" onclick="stepper.next()">Next</button>
+                          
+                        </form>
+                      </div>
+
+                      <div id="step5" class="content">
+                        <h5>Move Out3 Inspection</h5>
+                        <form>
+                          <table>
+                            <thead>
+                              <tr>
+                                <th>Item</th>
+                                <th>Condition at Move-In</th>
+                                <th>Comments</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>Sinks and Taps</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="walls" value="Good"> Good</label>
+                                  <label><input type="radio" name="walls" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="walls" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea placeholder="Add comments..."></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>WC/Toilet</td>
+                                <td class="radio-group">
+                                  <label><input type="radio" name="ceiling" value="Good"> Good</label>
+                                  <label><input type="radio" name="ceiling" value="Fair"> Fair</label>
+                                  <label><input type="radio" name="ceiling" value="Poor"> Poor</label>
+                                </td>
+                                <td><textarea></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>Showerhead</td>
                                 <td class="radio-group">
                                   <label><input type="radio" name="flooring" value="Good"> Good</label>
                                   <label><input type="radio" name="flooring" value="Fair"> Fair</label>
@@ -731,7 +831,7 @@
                                 <td><textarea></textarea></td>
                               </tr>
                               <tr>
-                                <td>Cooker/Oven (If Applicable)</td>
+                                <td>Bathroom Tiles and Grouting</td>
                                 <td class="radio-group">
                                   <label><input type="radio" name="windows" value="Good"> Good</label>
                                   <label><input type="radio" name="windows" value="Fair"> Fair</label>
@@ -739,17 +839,9 @@
                                 </td>
                                 <td><textarea></textarea></td>
                               </tr>
+                             
                               <tr>
-                                <td>Refrigerator</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="lights" value="Good"> Good</label>
-                                  <label><input type="radio" name="lights" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="lights" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-                              <tr>
-                                <td>Lighting Fixture</td>
+                                <td>Lighting Fixtures</td>
                                 <td class="radio-group">
                                   <label><input type="radio" name="outlets" value="Good"> Good</label>
                                   <label><input type="radio" name="outlets" value="Fair"> Fair</label>
@@ -760,10 +852,51 @@
                               
                             </tbody>
                           </table>
-                          <button type="button" class="btn btn-secondary" onclick="stepper.previous()">Back</button>
+                          <button type="button" class="btn btn-primary d-flex justify-content-end" onclick="stepper.next()">Next</button>
+
                           <button type="submit" class="btn btn-success">Submit</button>
                         </form>
                       </div>
+
+                      <div id="step6" class="content">
+                        <h5>Move Out3 Inspection</h5>
+                        <form>
+                          <div class="section">
+                            <h3>3. Additional Notes & Observations</h3>
+                            <textarea name="additional_notes" placeholder="Write any notes here..."></textarea>
+                          </div>
+                      
+                          <div class="section">
+                            <h3>4. Signatures</h3>
+                      
+                            <div class="signatures">
+                              <div class="signature-row">
+                                <label for="landlord_name">Landlord Name:</label>
+                                <input type="text" id="landlord_name" name="landlord_name">
+                      
+                                <label for="landlord_signature">Signature:</label>
+                                <input type="text" id="landlord_signature" name="landlord_signature">
+                      
+                                <label for="landlord_date">Date:</label>
+                                <input type="date" id="landlord_date" name="landlord_date">
+                              </div>
+                      
+                              <div class="signature-row">
+                                <label for="tenant_name">Tenant Name:</label>
+                                <input type="text" id="tenant_name" name="tenant_name">
+                      
+                                <label for="tenant_signature">Signature:</label>
+                                <input type="text" id="tenant_signature" name="tenant_signature">
+                      
+                                <label for="tenant_date">Date:</label>
+                                <input type="date" id="tenant_date" name="tenant_date">
+                              </div>
+                            </div>
+                          </div>                      
+                          <button type="submit" class="btn btn-success">Submit</button>
+                        </form>
+                      </div>
+
                     </div>
                    </div>
                   </div>

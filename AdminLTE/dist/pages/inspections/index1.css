@@ -225,9 +225,7 @@ input, select {
 }
 .add-inspection-btn{
   border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  
-  
+  border-top-right-radius: 10px; 
 }
 .select-section-title{
   font-family: 'Poppins', sans-serif;
@@ -242,39 +240,25 @@ input, select {
   margin-left: 20%;
   margin-right: 20px;
 }
-  .filter-container{
 
-      /* width: 250px; */
+.active .bs-stepper-circle{
+    background-color: #00192D  !important;  
+}
 
-      color: white;
-      position: relative; /* To position the panel below */
+.inpection-section-headers {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  background-color: #FFF8E1;
+  color: #FFC107;
+  padding: 8px 13px;
+  border-left:8px solid #FFA000;;
+  border-radius: 8px;
 
-  }
-  .nav-bar {
-      display: flex;
-      border-bottom: 1px solid #e0e0e0;
-  }
-  .nav-item {
-      padding: 10px 20px;
-      text-decoration: none;
-      color: #666;
-      font-size: 16px;
-      position: relative;
-  }
-  .nav-item.active {
-      color: #000;
-      font-weight: bold;
-  }
-  .nav-item.active::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background-color: #FFC107; /* Green underline */
-  }
+}
 
+.bs-stepper-label{
+  color: #00192D !important;
+}
 
   table {
 border-collapse: collapse;
