@@ -322,6 +322,47 @@
             <!--begin::Row-->
             <h3 class="mb-0 contact_section_header"> <i class="fas fa-file-invoice-dollar" style=" color:#FFC107;"></i>Rent Deposit Report</h3>
 <br>
+
+<div class="row Summary mt-6" >
+  <!-- Summary -->
+
+<div class="col-md-12 ">
+<div class="summary-section text-center p-2 row">
+
+<div class="col-6 col-md-3 ">
+  <div class="summary-item total">
+    <i class="fas fa-calculator icon"></i>
+    <div class="label">Total <b class="value" >100</b>  </div>
+
+  </div>
+
+</div>
+<div class="col-6 col-md-3">
+  <div class="summary-item completed">
+    <i class="fa-solid fa-circle-check icon"></i>
+    <div class="label">Completed <b class="value">30</b></div>
+  </div>
+</div>
+
+<div class="col-6 col-md-3 ">
+  <div class="summary-item in-progress">
+    <i class="fas fa-spinner fa-spin icon"></i>
+    <div class="label">In Progress <b class="value">20</b></div>
+  </div>
+</div>
+
+<div class="col-6 col-md-3 ">
+  <div class="summary-item incomplete">
+    <i class="far fa-check-circle icon"></i>
+    <div class="label">Incomplete <b class="value">20</b></div>
+  </div>
+</div>
+</div>
+
+</div>
+
+
+
             <div class="row table_buttons mb-2">
               <div class="col-md-2">
                 <div class="filter-container">
@@ -385,15 +426,16 @@
               <table id="myTable">
                   <thead>
                       <tr class="balancesheet-header">
-                          <th>#</th>
+                         <th>#</th>
                          <th>Tenant ID</th>
                           <th>Name</th>
                           <th>Apartment</th>
                           <th>Unit</th>
-                          <th>Rent Paid</th>
                           <th>Deposit Paid</th>
                           <th>Deductions</th>
+                          <th>Rent Refunds</th>
                           <th>Date Paid</th>
+                          <th>Status</th>
                       </tr>
                   </thead>
                   <tbody>
@@ -463,22 +505,24 @@
           name: 'John Doe',
           apartment: 'A1',
           unit:'b2',
-          rent_paid: 1200,
           deposit_paid: 1500,
           deductions: 200,
-          date_paid: '2025-03-01'
+          rent_refunds:1300,
+          date_paid: '2025-03-01',
+          status:'paid',
       },
       {
 
-          id:'2',
+          id:'3',
           tenant_id: 'T1002',
           name: 'Jane Smith',
           apartment: 'B3',
           unit:'b2',
-          rent_paid: 1100,
           deposit_paid: 1400,
           deductions: 0,
-          date_paid: '2025-03-05'
+          rent_refunds:0,
+          date_paid: '2025-03-05',
+          status:'pending'
       }
       ,
 
@@ -488,10 +532,11 @@
         name: 'Jane Smith',
         apartment: 'B3',
         unit:'b2',
-        rent_paid: 1100,
         deposit_paid: 1400,
         deductions: 0,
-        date_paid: '2025-03-05'
+        rent_refunds:0,
+        date_paid: '2025-03-05',
+         status:'pending'
     },
 
     {
@@ -500,10 +545,11 @@
       name: 'Jane Smith',
       apartment: 'B3',
       unit:'b2',
-      rent_paid: 1100,
       deposit_paid: 1400,
       deductions: 0,
-      date_paid: '2025-03-05'
+      rent_refunds:0,
+      date_paid: '2025-03-05',
+       status:'pending'
   },
   {
     id:'5',
@@ -511,10 +557,11 @@
     name: 'Jane Smith',
     apartment: 'B3',
     unit:'b2',
-    rent_paid: 1100,
     deposit_paid: 1400,
     deductions: 0,
-    date_paid: '2025-03-05'
+    rent_refunds:0,
+    date_paid: '2025-03-05',
+     status:'pending'
 },
 {
   id:'6',
@@ -522,10 +569,11 @@
   name: 'Jane Smith',
   apartment: 'B3',
   unit:'b2',
-  rent_paid: 1100,
   deposit_paid: 1400,
   deductions: 0,
-  date_paid: '2025-03-05'
+  rent_refunds:0,
+  date_paid: '2025-03-05',
+   status:'pending'
 },
 {
   id:'7',
@@ -533,10 +581,11 @@
   name: 'Jane Smith',
   apartment: 'B3',
   unit:'b2',
-  rent_paid: 1100,
   deposit_paid: 1400,
   deductions: 0,
-  date_paid: '2025-03-05'
+  rent_refunds:0,
+  date_paid: '2025-03-05',
+   status:'pending'
 },
 {
   id:'8',
@@ -544,10 +593,11 @@
   name: 'Jane Smith',
   apartment: 'B3',
   unit:'b2',
-  rent_paid: 1100,
   deposit_paid: 1400,
   deductions: 0,
-  date_paid: '2025-03-05'
+  rent_refunds:0,
+  date_paid: '2025-03-05',
+   status:'pending'
 },
 {
   id:'9',
@@ -555,10 +605,11 @@
   name: 'Jane Smith',
   apartment: 'B3',
   unit:'b2',
-  rent_paid: 1100,
   deposit_paid: 1400,
   deductions: 0,
-  date_paid: '2025-03-05'
+  rent_refunds:0,
+  date_paid: '2025-03-05',
+   status:'pending'
 },
 {
   id:'10',
@@ -566,10 +617,11 @@
   name: 'Jane Smith',
   apartment: 'B3',
   unit:'b2',
-  rent_paid: 1100,
   deposit_paid: 1400,
   deductions: 0,
-  date_paid: '2025-03-05'
+  rent_refunds:0,
+  date_paid: '2025-03-05',
+   status:'pending'
 },
 {
   id:'11',
@@ -577,10 +629,11 @@
   name: 'Jane Smith',
   apartment: 'B3',
   unit:'b2',
-  rent_paid: 1100,
   deposit_paid: 1400,
   deductions: 0,
-  date_paid: '2025-03-05'
+  rent_refunds:0,
+  date_paid: '2025-03-05',
+   status:'pending'
 },
 {
   id:'12',
@@ -588,10 +641,11 @@
   name: 'Jane Smith',
   apartment: 'B3',
   unit:'b2',
-  rent_paid: 1100,
   deposit_paid: 1400,
   deductions: 0,
-  date_paid: '2025-03-05'
+  rent_refunds:0,
+  date_paid: '2025-03-05',
+   status:'pending'
 }
   ];
 
@@ -606,10 +660,11 @@
               <td>${tenant.name}</td>
               <td>${tenant.apartment}</td>
               <td>${tenant.unit}</td>
-              <td>${tenant.rent_paid}</td>
               <td>${tenant.deposit_paid}</td>
               <td>${tenant.deductions}</td>
+              <td>${tenant.rent_refunds}</td>
               <td>${tenant.date_paid}</td>
+              <td>${tenant.status}</td>
           `;
           tableBody.appendChild(row);
       });
@@ -746,7 +801,7 @@
     <script>
 
             document.addEventListener("DOMContentLoaded", function() {
-            let table = $('#maintenanc').DataTable({
+            let table = $('#maintenance').DataTable({
                 lengthChange: false, // Removes "Show [X] entries"
                 dom: 't<"bottom"p>', // Removes default search bar & keeps only table + pagination
             });
@@ -911,7 +966,7 @@
 
      doc.autoTable({
          startY: 20, // Moves the table down to create space for headers
-         head: [['#','Tenant ID', 'Name','Apartment','Unit','Rent Paid','Deposit Paid','Deductions','Date Paid']],
+         head: [['#','Tenant ID', 'Name','Apartment','Unit','Deposit Paid','Deductions','Rent Refunds','Date Paid']],
          body: data,
 
          headStyles: {
