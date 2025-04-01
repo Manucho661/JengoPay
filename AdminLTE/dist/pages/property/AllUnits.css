@@ -168,9 +168,9 @@ body {
 
 
 
-  button:hover {
+  /* button:hover {
   background-color:#00192D;
-  }
+  } */
 
   /* .form-container {
   background-color: #ffffff;
@@ -401,7 +401,7 @@ body {
     /* height: 100%; */
     width: 60%;
     text-align: left;
-    /* position: relative; */
+    position: relative;
   }
   /* .close-overlay-btn {
     top: 0;
@@ -438,23 +438,27 @@ body {
         text-align: left;
         position: relative;
     }
+
     .close-btn {
+      /* position: fixed; */
       background: none;
       border: none;
       font-size: 20px;
       font-weight: bold;
       cursor: pointer;
-      color: #333;
+      /* color: #333; */
       position: absolute;
-      top: 10rem;
-      right: 40rem;
-      width: 30px;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      transition: background 0.3s, color 0.3s;
+      top: 0;
+      right: 0;
+      /* top: 10rem; */
+      /* right: 40rem; */
+      /* width: 30px; */
+      /* height: 30px; */
+      /* display: flex; */
+      /* align-items: center; */
+      /* justify-content: center; */
+      /* border-radius: 50%; */
+      /* transition: background 0.3s, color 0.3s; */
     }
 
     .close-btn:hover {

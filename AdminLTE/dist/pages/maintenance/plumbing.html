@@ -309,15 +309,9 @@
             <!--begin::Row-->
             <div class="row">
               <div class="col-sm-8">
-
                 <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> Maintenance Requests/Plumbing</h3>
-
-
                     <div class="row mt-2  ">
-                      <div class="col-md-12  ">
-
-
-
+                      <div class="col-md-12 ">
                         <div class="row Summary mt-6" >
                           <!-- Summary -->
 
@@ -374,7 +368,7 @@
 
             <!-- begin row -->
              <div class="row mb-2">
-              <div class="">
+              <div>
                 <div class="card">
                   <div class="card-header">
                     <a class="btn btn-link add-expense-btn" data-bs-toggle="collapse" href="#addExpense" aria-expanded="false" aria-controls="addExpenseAccordion" style="color: #00192D; font-weight:bold; text-decoration: none;">
@@ -395,8 +389,6 @@
                                   <label class="form-label"><b>Request ID</b></label>
                                   <input type="number" class="form-control" placeholder="123" >
                               </div>
-
-
                               <!-- Expense of the Month -->
                               <div class="col-md-4">
                                 <label class="form-label"><b>Invoice NO</b></label>
@@ -408,6 +400,7 @@
                                 <label class="form-label"><b>Cheque No</b></label>
                                 <input type="number" class="form-control" placeholder="000001" >
                             </div>
+
 
                             <div class="row g-3 mt-2">
                             <div class="col-md-6">
@@ -441,7 +434,11 @@
                                 <input type="date" class="form-control">
                               </div>
                           </div>
-
+                          </div>
+                          </form>
+                          </div>
+                          </div>
+                          </form>
 
 
                           <!-- Expense Table -->
@@ -466,20 +463,23 @@
             </div>
              </div>
 
+
             <!-- End row -->
 
+            <br>
+            <!-- <hr> -->
+
             <!--begin::Row-->
-            <div class="row">
               <!-- Start col -->
-              <div class="col-md-12 " style="overflow-x: scroll;">
+              <div class="row">
+              <div class="col-md-12">
                 <div class="card Content">
                     <div class="card-header">
                       <b>All Appliance Requests</b>
                     </div>
-
-                    <div class="card-body" >
+                    <div class="card-body" style="overflow: auto;">
                       <div class="container">
-                        <table id="maintenance" class="table table-striped" style="width: 100%;">
+                        <table id="maintenance" class="table table-striped" >
                           <thead>
                             <tr>
                               <th>REQUESTDATE</th>
@@ -489,8 +489,7 @@
                               <th>PROVIDER</th>
                               <th>Priority</th>
                               <th>STATUS</th>
-                                <th>ACTIONS</th>
-
+                              <th>ACTIONS</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -506,11 +505,87 @@
                               <td > <button class="status completed"><i class="fa fa-check-circle"></i> COMPLETED </button>  </td>
 
                               <td>
-                                <button  onclick=" openassignPopup()"  class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                                <button  onclick="openassignPopup()"  class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
                                 </button>
-                                <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
+                                <button onclick="openplummbingdetailsPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
 
                               </td>
+                            </tr>
+                            <tr>
+                              <td>11-10-2025</td>
+                            <td>12432</td>
+
+
+
+                              <td>Leaking roof</td>
+                              <td><button  class=" payment paid" id="example"> <i class="fa fa-check-circle"></i>  PAID</button></td>
+                              <td>Not Assigned </td>
+                              <td>High</td>
+
+                              <td > <button class="status incomplete" ><i class="fa fa-times-circle"></i> INCOMPLETE </button> </td>
+
+                              <td><button onclick=" openassignPopup()" class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                              </button>
+                              <button onclick="openplummbingdetailsPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
+
+                                </td>
+                            </tr>
+                            <tr>
+                              <td>11-10-2025</td>
+                            <td>12432</td>
+
+
+
+                              <td>Leaking roof</td>
+                              <td><button  class=" payment paid" id="example"> <i class="fa fa-check-circle"></i>  PAID</button></td>
+                              <td>Not Assigned </td>
+                              <td>High</td>
+
+                              <td > <button class="status incomplete" ><i class="fa fa-times-circle"></i> INCOMPLETE </button> </td>
+
+                              <td><button onclick=" openassignPopup()" class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                              </button>
+                              <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
+
+                                </td>
+                            </tr>
+                            <tr>
+                              <td>11-10-2025</td>
+                            <td>12432</td>
+
+
+
+                              <td>Leaking roof</td>
+                              <td><button  class=" payment paid" id="example"> <i class="fa fa-check-circle"></i>  PAID</button></td>
+                              <td>Not Assigned </td>
+                              <td>High</td>
+
+                              <td > <button class="status incomplete" ><i class="fa fa-times-circle"></i> INCOMPLETE </button> </td>
+
+                              <td><button onclick=" openassignPopup()" class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                              </button>
+                              <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
+
+                                </td>
+                            </tr>
+                            <tr>
+                              <td>11-10-2025</td>
+                            <td>12432</td>
+
+
+
+                              <td>Leaking roof</td>
+                              <td><button  class=" payment paid" id="example"> <i class="fa fa-check-circle"></i>  PAID</button></td>
+                              <td>Not Assigned </td>
+                              <td>High</td>
+
+                              <td > <button class="status incomplete" ><i class="fa fa-times-circle"></i> INCOMPLETE </button> </td>
+
+                              <td><button onclick=" openassignPopup()" class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                              </button>
+                              <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
+
+                                </td>
                             </tr>
                             <tr>
                               <td>11-10-2025</td>
@@ -621,10 +696,9 @@
 
 
   <!-- assign task popup -->
-
   <div class="assignpopup-overlay" id="assignPopup">
     <div class="assignpopup-content wide-form">
-        <button class="close-btn text-secondary" onclick="closeassignPopup()">×</button>
+        <button id="close-btn" class="text-secondary" onclick="closeassignPopup()">×</button>
         <h2 class="assign-title">Assign Task</h2>
         <form class="wide-form">
             <div class="form-group">
@@ -713,6 +787,86 @@
     </div>
 </div>
 <!-- end -->
+
+<!--  Detailed Information About Plumbing popup -->
+<div class="plumbingdetails-overlay" id="plumbingdetailsPopup">
+  <div class="plumbingdetails-content wide-form">
+      <button id="close-btn" class="text-secondary" onclick="closeplumbingdetailsPopup()">×</button>
+      <h2 class="assign-title">Detailed Information About Plumbing</h2>
+      <form >
+        <div class="row ">
+
+          <div class="col-md-6">
+            <b><label for="request_date">Requested By:</label></b>
+            <input type="text" id="request_date" name="request_date" placeholder="Martin Wambua" required disabled>
+          </div>
+          <div class="col-md-6">
+            <b><label for="request_date">Phone Number:</label></b>
+            <input type="text" id="request_date" name="request_date" placeholder="0714254565" required disabled>
+          </div>
+          <div class="col-md-6">
+            <b><label for="request_date">Email:</label></b>
+            <input type="text" id="request_date" name="request_date" placeholder="matty@gmail.com" required disabled>
+          </div>
+          <div class="col-md-6">
+            <b><label for="request_date">House No:</label></b>
+            <input type="text" id="request_date" name="request_date" placeholder="011A" required disabled>
+          </div>
+          <div class="col-md-6">
+            <b><label for="request_date">Request Date:</label></b>
+            <input type="text" id="request_date" name="request_date" placeholder="11-10-2025" required disabled>
+          </div>
+          <div class="col-md-6">
+            <b><label for="request_date">Building:</label></b>
+            <input type="text" id="request_date" name="request_date" placeholder="Crown Z Towers" required disabled>
+          </div>
+          <div class="col-md-6">
+            <b><label for="request_date">Plumbing Issue:</label></b>
+            <input type="text" id="request_date" name="request_date" placeholder="leaking pipe" required disabled>
+          </div>
+          <div class="col-md-6">
+            <b><label for="request_date">Description:</label></b>
+            <input type="text" id="request_date" name="request_date" placeholder="11-10-2025" required disabled>
+          </div>
+          <div class="col-md-6">
+            <b><label for="request_date">Urgency Level:</label></b>
+            <input type="text" id="request_date" name="request_date" placeholder="Immediate Attention Needed" required disabled>
+          </div>
+          <div class="col-md-6">
+            <b><label for="request_date">Service Provider</label></b>
+            <input type="text" id="request_date" name="request_date" placeholder="Next Plumbers" required disabled>
+          </div>
+          <div class="col-md-6">
+            <b><label for="category">Category:</label></b>
+            <input type="text" id="category" name="category" placeholder="Broken handle" required disabled>
+          </div>
+
+          <div class="col-md-6">
+            <b><label for="id">ID:</label></b>
+            <input type="text" id="id" name="id" placeholder="001" required disabled>
+          </div>
+
+          <div class="col-md-6">
+            <b><label for="payment_status">Payment:</label></b>
+            <input type="text" id="payment_status" name="payment_status" placeholder="!pending" required disabled>
+        </div>
+
+        <div class="col-md-6">
+          <b><label for="provider">Provider</label></b>
+          <input type="text" id="provider" name="provider" placeholder="Kitu Moto" required disabled>
+      </div>
+      <div class="col-md-6">
+       <b><label for="priority">Priority</label></b>
+        <input type="text" id="priority" name="priority" placeholder="low" required disabled>
+    </div>
+    <div class="col-md-6">
+      <b><label for="status">Status</label></b>
+      <input type="text" id="status" name="status" placeholder="Completed" required disabled>
+  </div>
+      </form>
+  </div>
+</div>
+<!-- Detailed Information About Plumbing end -->
 
           <!-- <div id="assignedTasks">
               <h2>Assigned Tasks</h2>
@@ -851,6 +1005,18 @@
       }
   }
   </script>
+
+<script>
+  // Function to open the complaint popup
+  function openplummbingdetailsPopup() {
+    document.getElementById("plumbingdetailsPopup").style.display = "flex";
+  }
+
+  // Function to close the complaint popup
+  function closeplumbingdetailsPopup() {
+    document.getElementById("plumbingdetailsPopup").style.display = "none";
+  }
+</script>
 
 <script>
   // Function to open the complaint popup

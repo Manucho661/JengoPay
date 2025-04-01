@@ -351,7 +351,7 @@
 
 
 <div class="justify-content-end d-flex">
-<button onclick="meterreadingopenPopup()" style="color: #FFC107; background-color: #00192D; border-radius:10px;">
+<button onclick="meterreadingopenPopup()" class="edit-btn">
     <i class="fas fa-plus"></i>
     Add Meter Reading</button></a>
   </div>
@@ -524,10 +524,8 @@
   <!-- meterreading popup -->
    <div class="meterpopup-overlay" id="meterPopup">
     <div class="meterpopup-content wide-form">
-        <button class="close-btn text-secondary" onclick="meterreadingclosePopup()">×</button>
+        <button id="close-btns" class="text-secondary" onclick="meterreadingclosePopup()">×</button>
         <h2 class="assign-title">Add A Meter Reading</h2>
-
-
         <form class="wide-form">
           <div class="form-group">
             <b><label for="dateInput" class="filter-label">Reading Date</label></b>

@@ -64,11 +64,6 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-        <style>
-          body{
-            font-size: 16px;
-          }
-        </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -316,9 +311,79 @@
         </div>
         <div  class="app-content">
           <div class="container-fluid">
-            <div class="row" >
-              <div class="col-md-12 message-container">
+            <div class="row">
 
+              <div class="col-md-4">
+                <div class="card shadow-lg" style="width: 18rem; border-radius: 15px; background: #f9f9f9;">
+                  <div class="card-body">
+                    <h5 class="card-title d-flex align-items-center">
+                      <i class="fas fa-file mr-2" style="font-size: 1.5rem;"></i>
+                      <span>All Files</span>
+                    </h5>
+                    <!-- <h6 class="card-subtitle mb-2 text-muted">Storage Overview</h6> -->
+                    <br>
+                    <!-- Text for used and remaining space -->
+                    <span id="used-text" style="font-size: 14px; color: #333;">Used Space: 150.00 MB</span><br>
+                    <span id="remaining-text" style="font-size: 14px; color: #333;">Remaining: 50.00 GB</span>
+
+                    <!-- Space Utilization Bar -->
+                    <div class="progress mt-3" style="height: 20px; border-radius: 10px; background-color: #e0e0e0;">
+                      <div class="progress-bar" id="progress-bar" role="progressbar" style="width: 75%; background-color: #d39e00; border-radius: 10px;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="col-md-4">
+                <div class="card shadow-lg" style="width: 18rem; border-radius: 15px; background: #f9f9f9;">
+                  <div class="card-body">
+                    <h5 class="card-title d-flex align-items-center">
+                      <i class="fas fa-file mr-2" style="font-size: 1.5rem;"></i>
+                      <span>Images</span>
+                    </h5>
+                    <!-- <h6 class="card-subtitle mb-2 text-muted">Storage Overview</h6> -->
+                    <br>
+                    <!-- Text for used and remaining space -->
+                    <span id="used-text" style="font-size: 14px; color: #333;">Used Space: 150.00 MB</span><br>
+                    <span id="remaining-text" style="font-size: 14px; color: #333;">Remaining: 50.00GB</span>
+
+                    <!-- Space Utilization Bar -->
+                    <div class="progress mt-3" style="height: 20px; border-radius: 10px; background-color: #e0e0e0;">
+                      <div class="progress-bar" id="progress-bar" role="progressbar" style="width: 75%; background-color: #d39e00; border-radius: 10px;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+         <div class="col-md-4">
+  <div class="card shadow-lg" style="width: 18rem; border-radius: 15px; background: #f9f9f9;">
+    <div class="card-body">
+      <h5 class="card-title d-flex align-items-center">
+        <i class="fas fa-file mr-2" style="font-size: 1.5rem;"></i>
+        <span>Docs</span>
+      </h5>
+      <!-- <h6 class="card-subtitle mb-2 text-muted">Storage Overview</h6> -->
+      <br>
+      <!-- Text for used and remaining space -->
+      <span id="used-text" style="font-size: 14px; color: #333;">Used Space: 150.00 MB</span><br>
+      <span id="remaining-text" style="font-size: 14px; color: #333;">Remaining: 50.00GB</span>
+
+      <!-- Space Utilization Bar -->
+      <div class="progress mt-3" style="height: 20px; border-radius: 10px; background-color: #e0e0e0;">
+        <div class="progress-bar" id="progress-bar" role="progressbar" style="width: 75%; background-color: #d39e00; border-radius: 10px;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<br>
+
+
+              <div class="col-md-12 message-container"><br>
                       <div class="row">
                         <div class="col-md-4">
                     <!-- <label for="property">Property:</label> -->
@@ -370,9 +435,17 @@
                           <thead class="">
                               <tr>
                                 <th scope="col">Select File</th>
+                                <th>Type</th>
                                   <th>Title</th>
-                                  <th>Category</th>
+                                  <!-- <th>Category</th> -->
+                                  <th>
+                                    <i class="fas fa-arrow-up" style="font-size: 1rem; color: black;"></i>
+                                   Size</th>
+                                  <th>
+                                    <i class="fas fa-arrow-up" style="font-size: 1rem; color: black;"></i>
+                                    Date</th>
                                   <th>ACTION</th>
+
                               </tr>
                           </thead>
                           <tbody>
@@ -381,10 +454,13 @@
                                 <input type="checkbox" name="file" value="file"/>
                               </label>
                               </td>
+                              <td>pdf</td>
                               <td>
                                 Lease Agreement
                               </td>
-                              <td>Leases</td>
+                              <td>42.37MB</td>
+                              <td>May24,2024</td>
+                              <!-- <td>Leases</td> -->
                               <td>
                                 <div id="more_icon">&#x2026;</div>
                                 <br>
@@ -402,10 +478,13 @@
                                   <input type="checkbox" name="file" value="file"/>
                                 </label>
                                 </td>
+                                <td>jpg</td>
                                 <td>
                                   Lease Agreement
                                 </td>
-                                <td>Applicant File</td>
+                                <td>42.37MB</td>
+                                <td>May24,2024</td>
+                                <!-- <td>Applicant File</td> -->
                                 <td>
                                   <div id="more_icon">&#x2026;</div>
                                   <br>
@@ -421,10 +500,13 @@
                                   <input type="checkbox" name="file" value="file"/>
                                 </label>
                                 </td>
+                                <td>png</td>
                                 <td>
                                   Lease Agreement
                                 </td>
-                                <td>Shared Reports</td>
+                                <td>42.37MB</td>
+                                <td>May25,2024</td>
+                                <!-- <td>Shared Reports</td> -->
                                 <td>
                                   <div id="more_icon">&#x2026;</div>
                                   <br>
@@ -440,10 +522,13 @@
                                   <input type="checkbox" name="file" value="file"/>
                                 </label>
                                 </td>
+                                <td>pdf</td>
                                 <td>
                                   Lease Agreement
                                 </td>
-                                <td>Shared Reports</td>
+                                <td>42.37MB</td>
+                                <td>May24,2024</td>
+                                <!-- <td>Shared Reports</td> -->
                                 <td>
                                   <div id="more_icon">&#x2026;</div>
                                   <br>
@@ -459,10 +544,13 @@
                                   <input type="checkbox" name="file" value="file"/>
                                 </label>
                                 </td>
+                                <td>jpg</td>
                                 <td>
                                   Lease Agreement
                                 </td>
-                                <td>Applicant File</td>
+                                <td>42.37MB</td>
+                                <td>May24,2024</td>
+                                <!-- <td>Applicant File</td> -->
                                 <td>
                                   <div id="more_icon">&#x2026;</div>
                                   <br>
@@ -478,10 +566,13 @@
                                   <input type="checkbox" name="file" value="file"/>
                                 </label>
                                 </td>
+                                <td>png</td>
                                 <td>
                                   Lease Agreement
                                 </td>
-                                <td>Leases</td>
+                                <td>42.37MB</td>
+                                <td>May24,2024</td>
+                                <!-- <td>Leases</td> -->
                                 <td>
                                   <div id="more_icon">&#x2026;</div>
                                   <br>
@@ -497,10 +588,13 @@
                                   <input type="checkbox" name="file" value="file"/>
                                 </label>
                                 </td>
+                                <td>pdf</td>
                                 <td>
                                   Lease Agreement
                                 </td>
-                                <td>Leases</td>
+                                <td>42.37MB</td>
+                                <td>May24,2024</td>
+                                <!-- <td>Leases</td> -->
                                 <td>
                                   <div id="more_icon">&#x2026;</div>
                                   <br>
@@ -516,10 +610,13 @@
                                   <input type="checkbox" name="file" value="file"/>
                                 </label>
                                 </td>
+                                <td>jpg</td>
                                 <td>
                                   Lease Agreement
                                 </td>
-                                <td>Leases</td>
+                                <td>42.37MB</td>
+                                <td>May24,2024</td>
+                                <!-- <td>Leases</td> -->
                                 <td>
                                   <div id="more_icon">&#x2026;</div>
                                   <br>
@@ -535,10 +632,13 @@
                                   <input type="checkbox" name="file" value="file"/>
                                 </label>
                                 </td>
+                                <td>png</td>
                                 <td>
                                   Lease Agreement
                                 </td>
-                                <td>Leases</td>
+                                <td>42.37MB</td>
+                                <td>May24,2024</td>
+                                <!-- <td>Leases</td> -->
                                 <td>
                                   <div id="more_icon">&#x2026;</div>
                                   <br>
@@ -554,10 +654,13 @@
                                   <input type="checkbox" name="file" value="file"/>
                                 </label>
                                 </td>
+                                <td>pdf</td>
                                 <td>
                                   Lease Agreement
                                 </td>
-                                <td>Leases</td>
+                                <td>42.37MB</td>
+                                <td>May24,2024</td>
+                                <!-- <td>Leases</td> -->
                                 <td>
                                   <div id="more_icon">&#x2026;</div>
                                   <br>
@@ -573,10 +676,13 @@
                                   <input type="checkbox" name="file" value="file"/>
                                 </label>
                                 </td>
+                                <td>jpg</td>
                                 <td>
                                   Lease Agreement
                                 </td>
-                                <td>Leases</td>
+                                <td>42.37MB</td>
+                                <td>May24,2024</td>
+                                <!-- <td>Leases</td> -->
                                 <td>
                                   <div id="more_icon">&#x2026;</div>
                                   <br>
@@ -592,10 +698,13 @@
                                   <input type="checkbox" name="file" value="file"/>
                                 </label>
                                 </td>
+                                <td>pdf</td>
                                 <td>
                                   Lease Agreement
                                 </td>
-                                <td>Leases</td>
+                                <td>42.37MB</td>
+                                <td>May24,2024</td>
+                                <!-- <td>Leases</td> -->
                                 <td>
                                   <div id="more_icon">&#x2026;</div>
                                   <br>
@@ -819,6 +928,27 @@
   function closeOverlay() {
     document.querySelector('.overlay').style.display = 'none';
   }
+</script>
+
+<script>
+  // Example values for storage space
+  let totalSpace = 100; // Total space in GB
+  let usedSpace = 60;   // Used space in GB
+
+  function updateStorageBar(used, total) {
+    let usedPercentage = (used / total) * 100; // Calculate percentage of space used
+    let remainingSpace = total - used;
+
+    // Update the width of the used space bar
+    document.getElementById("used-space").style.width = `${usedPercentage}%`;
+
+    // Update the text displaying used and remaining space
+    document.getElementById("used-text").textContent = `Used: ${used} GB`;
+    document.getElementById("remaining-text").textContent = `Remaining: ${remainingSpace} GB`;
+  }
+
+  // Call function to update the storage space display
+  updateStorageBar(usedSpace, totalSpace);
 </script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

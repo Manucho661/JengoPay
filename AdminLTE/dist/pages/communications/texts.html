@@ -711,7 +711,7 @@
 <div class="newtextpopup-overlay" id="newtextPopup">
   <div class="newtextpopup-content">
     <button class="close-btn" onclick="closenewtextPopup()">×</button>
-    <h class="text-message-header">New Text</h3>
+    <h3 class="text-message-header">New Text</h3>
 <div class="recepients-container d-flex">
   <label class="recepients" for="property">To</label>
   <select id="property" required >
@@ -742,7 +742,11 @@
 
 
     <textarea id="notes" name="notes" rows="10" cols="98" placeholder="Enter message..." style="width: 590px; height: 150px; font-size: 16px; border-radius: 10px;"></textarea>
-  <div class="d-flex justify-content-end">
+     <label for="file"></label>
+    <input type="file" name="file">
+
+    <div class="d-flex justify-content-end">
+
 
     <button type="submit" class="btn submit-btn"><i class="fa fa-paper-plane"></i> </button>
     <button type="submit" class="btn text-bg-danger" ><i class="fa fa-times-circle"></i> </button>
