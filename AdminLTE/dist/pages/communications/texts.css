@@ -31,10 +31,7 @@ body {
    border-bottom: 1px solid rgba(128, 128, 128, 0.5);
    width: 100px;
 }
-.recepients{
-  font-size: 12px;
-  margin-right: 5px;
-}
+
 .newtextpopup-overlay{
   position: fixed;
   top: 0;
@@ -49,14 +46,44 @@ body {
   font-family: 'Poppins', sans-serif;
   font-size: small;
   }
-  .newtextpopup-content{
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
+  .newtextpopup-overlay .card{
     width: 50%;
-    text-align: left;
-    position: relative;
   }
+
+  .new-message-header{
+    /* margin: -30px -30px 30px; */
+    padding: 20px 50px 20px 30px;
+    line-height: 22px;
+    font-size: 18px;
+    font-weight: 700;
+    font-family: ProximaNova, arial, sans-serif;
+    color: #4f4f52;
+    /* word-wrap: break-word; */
+    /* background-color: #f9f9f9; */
+    /* border-radius: 5px 5px 0 0; */
+    /* border-bottom: 2px solid #E2E2E2; */
+  }
+
+  .new-message-body{
+    padding:  15px;
+  }
+  .field-group{
+    padding: 10px;
+  }
+
+   .field-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+   .field-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+  
 
                                         /* SELECT, INPUT, TEXT_AREA */
   input, textarea {
@@ -65,6 +92,8 @@ body {
     margin-top: 5px;
     border: 1px solid #00192D;
     border-radius: 4px;
+    color: #4f4f52;
+
 }
 
 input:hover{
@@ -120,7 +149,7 @@ input:focus, select:focus {
 }
 
 input, select {
-  width: 30%;
+  width:30%;
   padding: 10px;
   border: 1px solid #00192D;
   border-radius: 5px;
@@ -144,6 +173,27 @@ input, select {
   margin-right: 10px;
   font-style: italic;
 
+}
+.attach-file{
+  border: none;
+  width: 50%;
+
+}
+.attach-file:hover{
+border: none;
+}
+
+.field-group label{
+  display: block;
+  color: #4f4f52;
+}
+.new-message-body .field-group input, select{
+  width: 100%; 
+  color: #4f4f52;
+
+}
+.categoryFilter{
+  width: 30%;
 }
                                     /* BUTTONS */
 
@@ -194,6 +244,9 @@ input, select {
     font-size: 12px;
     background-color: transparent;
     color: green;
+  }
+  .attach{
+    padding: 0px;
   }
   .delete{
     padding: 2px 8px;

@@ -361,7 +361,7 @@
                         <div class="col-12 message-container-header-section">
                           <div class="row">
                             <div class="col-md-8">
-                              <select id="categoryFilter">
+                              <select id="categoryFilter" class="categoryFilter">
                                 <option value="">-- Select Building--</option>
                                 <option value="technology">All</option>
                                 <option value="health">Manucho</option>
@@ -708,7 +708,61 @@
 <!-- PopUp Scripts -->
 
 <!-- new text popup -->
-<div class="newtextpopup-overlay" id="newtextPopup">
+                <div class="newtextpopup-overlay" id="newtextPopup">
+                  
+                    <div  class="card ">
+                      <div class="card-header new-message-header">
+                        New Message
+                      </div>
+                      <div class="card-body new-message-body">
+                        <div class="field-group">
+                          <label for="recipient">Recipient</label>
+                          <select id="recipient" class="recipient">
+                            <option value="">-- Select Tenant --</option>
+                            <option value="all">All Tenants</option>
+                            <option value="john-doe">John Doe</option>
+                            <option value="jane-smith">Jane Smith</option>
+                          </select>
+                        </div>
+
+                        <div class="field-group">
+                          <label for="recipient">Recipient</label>
+                          <select id="recipient" class="recipient">
+                            <option value="">-- Select Tenant --</option>
+                            <option value="all" onclick="">All Tenants</option>
+                            <option value="john-doe">John Doe</option>
+                            <option value="jane-smith">Jane Smith</option>
+                          </select>
+                        </div>
+
+                        <div class="field-group">
+                          <label for="subject">Subject (optional)</label>
+                          <input type="text" id="subject" class="subject" placeholder="Enter subject..." />
+                        </div>
+
+                        <div class="field-group">
+                          <label for="message">Message</label>
+                          <textarea id="message" placeholder="Type your message here..."></textarea>
+                        </div>
+
+                        <div class="field-group" style="display: block;">
+                          <label for="attachment">Attachment (optional)</label>
+                          <input type="file" id="attachment" class="attach-file" />
+                           
+                        </div>
+
+                        <div class="actions">
+                          <button class="draft-btn">Save Draft</button>
+                          <button class="send-btn">Send Message</button>
+                        </div>
+
+                      </div>
+
+                    </div>
+                    
+                </div>
+
+<div class="newtextpopup-overlay" id="newtextPopupq">
   <div class="newtextpopup-content">
     <button class="close-btn" onclick="closenewtextPopup()">×</button>
     <h3 class="text-message-header">New Text</h3>
@@ -742,11 +796,11 @@
 
 
     <textarea id="notes" name="notes" rows="10" cols="98" placeholder="Enter message..." style="width: 590px; height: 150px; font-size: 16px; border-radius: 10px;"></textarea>
-     <label for="file"></label>
-    <input type="file" name="file">
-
-    <div class="d-flex justify-content-end">
-
+    
+    <label for="file">Attachment</label> 
+    <input class="attach" type="file" name="file">
+    
+  <div class="d-flex justify-content-end">
 
     <button type="submit" class="btn submit-btn"><i class="fa fa-paper-plane"></i> </button>
     <button type="submit" class="btn text-bg-danger" ><i class="fa fa-times-circle"></i> </button>
@@ -771,6 +825,11 @@
   function closenewtextPopup() {
     document.getElementById("newtextPopup").style.display = "none";
   }
+
+  function toggleShrink() {
+            let box = document.getElementById("box2");
+            box.classList.toggle("shrink");
+        }
 </script>
 <!-- create new text -->
 
