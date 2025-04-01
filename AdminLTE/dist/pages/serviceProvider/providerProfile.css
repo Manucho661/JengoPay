@@ -394,7 +394,7 @@ justify-content: end;
 
     /* start provider css */
     .Providerpopup-overlay{
-    overflow: auto;
+  overflow: auto;
   position: fixed;
   top: 0;
   left: 0;

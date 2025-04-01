@@ -474,7 +474,7 @@
                                 <div id="more_icon">&#x2026;</div>
                                 <br>
                                 <div id="more_options" style="color: #00192D;">
-                                  <a href="#">View</a>
+                                  <a class="content" id="showPopup">View</a>
                                   <a href="#">Download</a>
                                   <a href="#">Delete</a>
                                 </div>
@@ -794,11 +794,16 @@
                     <div class="preview-container">
                         <img id="imagePreview" alt="Image Preview">
                     </div>
-
-
-
                   <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
                 </form>
+              </div>
+
+
+              <!-- Side Popup -->
+              <div id="sidePopup" class="side-popup">
+                <button id="closePopup" class="close-btn">X</button>
+                <h2>Side Popup Content</h2>
+                <p>This is a slide-in popup from the side.</p>
               </div>
 
 <!-- units popup -->
@@ -919,6 +924,22 @@
         document.getElementById("complaintPopup").style.display = "none";
       }
     </script>
+
+    <script>// Get the elements
+      const showPopupButton = document.getElementById('showPopup');
+      const closePopupButton = document.getElementById('closePopup');
+      const sidePopup = document.getElementById('sidePopup');
+
+      // Show the side popup
+      showPopupButton.addEventListener('click', () => {
+        sidePopup.style.right = '0'; // Slide it in from the side
+      });
+
+      // Close the side popup
+      closePopupButton.addEventListener('click', () => {
+        sidePopup.style.right = '-300px'; // Slide it back offscreen
+      });
+      </script>
 
  <!-- dowload as pdf -->
  <script>

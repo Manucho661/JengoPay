@@ -3,86 +3,85 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Storage Space Utilization</title>
-  <style>
+  <title>Side Popup</title>
+  <!-- <link rel="stylesheet" href="style.css"> -->
+   <style>/* Basic styling for content */
     body {
       font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       margin: 0;
-      background-color: #f5f5f5;
+      padding: 0;
     }
 
-    .storage-container {
-      width: 80%;
-      max-width: 600px;
-      background-color: #e0e0e0;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    .content {
+      padding: 20px;
     }
 
-    .storage-bar {
-      height: 30px;
-      border-radius: 10px;
-      width: 100%;
-      background-color: #ddd;
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
     }
 
-    .used-space {
+    /* Style for the side popup */
+    .side-popup {
+      position: fixed;
+      top: 0;
+      right: -300px; /* Hide the popup offscreen initially */
+      width: 300px;
       height: 100%;
-      border-radius: 10px;
-      background-color: #4caf50; /* Green for used space */
+      background-color: #333;
+      color: white;
+      padding: 20px;
+      transition: right 0.3s ease-in-out; /* Smooth slide-in effect */
     }
 
-    .remaining-space {
-      height: 100%;
-      border-radius: 10px;
-      background-color: #f44336; /* Red for remaining space */
+    .side-popup h2 {
+      margin-top: 0;
     }
 
-    .storage-info {
+    .side-popup p {
+      margin-bottom: 20px;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: red;
+      color: white;
+      border: none;
       padding: 10px;
-      display: flex;
-      justify-content: space-between;
-      font-size: 14px;
+      font-size: 16px;
+      cursor: pointer;
     }
-
-  </style>
+    </style>
 </head>
 <body>
-
-  <div class="storage-container">
-    <div class="storage-bar">
-      <div id="used-space" class="used-space"></div>
-    </div>
-    <div class="storage-info">
-      <span id="used-text">Used: 0 GB</span>
-      <span id="remaining-text">Remaining: 0 GB</span>
-    </div>
+  <!-- Main Content -->
+  <div class="content">
+    <button id="showPopup">Show Popup</button>
   </div>
 
-  <script>
-    // Example values for storage space
-    let totalSpace = 100; // Total space in GB
-    let usedSpace = 60;   // Used space in GB
+  <!-- Side Popup -->
+  <div id="sidePopup" class="side-popup">
+    <button id="closePopup" class="close-btn">X</button>
+    <h2>Side Popup Content</h2>
+    <p>This is a slide-in popup from the side.</p>
+  </div>
 
-    function updateStorageBar(used, total) {
-      let usedPercentage = (used / total) * 100; // Calculate percentage of space used
-      let remainingSpace = total - used;
+  <script>// Get the elements
+    const showPopupButton = document.getElementById('showPopup');
+    const closePopupButton = document.getElementById('closePopup');
+    const sidePopup = document.getElementById('sidePopup');
 
-      // Update the width of the used space bar
-      document.getElementById("used-space").style.width = `${usedPercentage}%`;
+    // Show the side popup
+    showPopupButton.addEventListener('click', () => {
+      sidePopup.style.right = '0'; // Slide it in from the side
+    });
 
-      // Update the text displaying used and remaining space
-      document.getElementById("used-text").textContent = `Used: ${used} GB`;
-      document.getElementById("remaining-text").textContent = `Remaining: ${remainingSpace} GB`;
-    }
-
-    // Call function to update the storage space display
-    updateStorageBar(usedSpace, totalSpace);
-  </script>
-
+    // Close the side popup
+    closePopupButton.addEventListener('click', () => {
+      sidePopup.style.right = '-300px'; // Slide it back offscreen
+    });
+    </script>
 </body>
 </html>
