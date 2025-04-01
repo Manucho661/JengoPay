@@ -6,12 +6,12 @@
     background-color: #fff;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   }
-  
+
   h1 {
     text-align: center;
     color: #333;
   }
-  
+
   .form-section {
     margin-bottom: 20px;
   }
@@ -21,7 +21,7 @@
     font-size: 20px;
     color: #333;
   }
-  
+
   .form-section input, .form-section select, .form-section textarea {
     width: 100%;
     padding: 10px;
@@ -163,16 +163,25 @@ th, td {
     margin-top: 20px;
     font-size: 12px;
 }
+
 .add-btn {
   margin-top: 10px;
   padding: 10px;
-  background:  #00192D;;
-  color:#FFC107;
+  background: #00192D;
+  color: #FFC107;
   border: none;
   cursor: pointer;
   border-radius: 10px;
-  margin-right: 50rem;
+  margin-right: 90%;  /* Adjusted from 50rem to 50px for more reasonable spacing */
+  font-size: 16px;     /* Added font size for consistency */
+  text-align:left;  /* Centers text if necessary */
 }
+
+.add-btn:hover {
+  background-color: #004C74;  /* Adds a hover effect */
+}
+
+
 #columnFilter {
   position: absolute;
   right: 0;
@@ -220,7 +229,7 @@ th, td {
             border-collapse: collapse;
             table-layout: fixed;
         }
-        .invoice-table th, 
+        .invoice-table th,
         .invoice-table td {
             border: 1px solid #ddd;
             padding: 8px;
@@ -231,15 +240,15 @@ th, td {
             background-color: #f4f4f4;
             font-weight: bold;
         }
-        
+
         div.dt-buttons{
           background-color: #00192D !important ;
         }
         div.dt-buttons .btn{
           background-color: #00192D !important
         }
-        
-        
+
+
         div.dt-button-collection {
           background-color: #00192D !important;  /* Change to your preferred color */
           border: 1px solid #ccc !important;
@@ -250,7 +259,7 @@ th, td {
           color: white !important; /* Ensure text is visible */
           border: none !important;
         }
-        
+
         /* Change hover effect */
         div.dt-button-collection .dt-button:hover {
           background-color: #FFC107 !important;
@@ -261,26 +270,26 @@ th, td {
         table{
           font-size: 12px !important; /* Reduce table font size */
         }
-      
+
         th, td {
           text-align: left !important; /* Align text for readability */
         }
-        
-        th:nth-child(1), td:nth-child(1) { 
+
+        th:nth-child(1), td:nth-child(1) {
           text-align: center !important; /* Center align numbers like serial numbers */
         }
-        
-        th:nth-child(3), td:nth-child(3) { 
+
+        th:nth-child(3), td:nth-child(3) {
           text-align: center !important; /* Center align payment status */
         }
-        
-        th:nth-child(4), td:nth-child(4) { 
+
+        th:nth-child(4), td:nth-child(4) {
           text-align: left !important; /* Align provider names to the left */
         }
         th, td {
           padding: 12px 15px !important; /* Top-bottom: 12px, Left-right: 15px */
         }
-        
+
         th, td {
           white-space: nowrap !important;
           overflow: hidden !important;
@@ -304,11 +313,11 @@ th, td {
           border: none;
           transition: all 0.3s ease-in-out;
       }
-      
+
       .print-btn i {
           font-size: 16px;
       }
-      
+
       .print-btn:hover {
           opacity: 0.8;
           cursor: pointer;

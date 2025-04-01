@@ -65,6 +65,22 @@
       body{
         font-size: 16px;
       }
+      .preview-container {
+        margin-top: 20px;
+        width: 300px;
+        height: 300px;
+        border: 2px dashed #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background-color: #fff;
+    }
+    img {
+        max-width: 100%;
+        max-height: 100%;
+        display: none;
+    }
     </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -404,7 +420,16 @@
                             <tbody>
                             <tr >
                                 <td>002</td>
-                                <td>John Doe</td>
+                                <td>John Doe
+                                <!-- Rating Section (stars) -->
+                                <div class="stars">
+                                  <span class="star" data-value="1">&#9733;</span>
+                                  <span class="star" data-value="2">&#9733;</span>
+                                  <span class="star" data-value="3">&#9733;</span>
+                                  <span class="star" data-value="4">&#9733;</span>
+                                  <span class="star" data-value="5">&#9733;</span>
+                                </div>
+                                </td>
                                 <td>0756752987</td>
                                 <td class="text-primary"> <i class="fas fa-envelope"></i>  emmanu@gmail.com</td>
                                 <!-- <td>Electrician</td> -->
@@ -423,7 +448,17 @@
                             </tr>
                             <tr>
                                 <td>002</td>
-                                <td>John Doe</td>
+                                <td>John Doe
+                                <!-- Rating Section (stars) -->
+                                <div class="stars">
+                                  <span class="star" data-value="1">&#9733;</span>
+                                  <span class="star" data-value="2">&#9733;</span>
+                                  <span class="star" data-value="3">&#9733;</span>
+                                  <span class="star" data-value="4">&#9733;</span>
+                                  <span class="star" data-value="5">&#9733;</span>
+                                </div>
+
+                                </td>
                                 <td>0756752987</td>
                                 <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
                                 <!-- <td>Plumber</td> -->
@@ -440,6 +475,151 @@
                                            </div>
                                    </td>
                             </tr>
+                            <tr>
+                              <td>002</td>
+                              <td>John Doe
+                              <!-- Rating Section (stars) -->
+                              <div class="stars">
+                                <span class="star" data-value="1">&#9733;</span>
+                                <span class="star" data-value="2">&#9733;</span>
+                                <span class="star" data-value="3">&#9733;</span>
+                                <span class="star" data-value="4">&#9733;</span>
+                                <span class="star" data-value="5">&#9733;</span>
+                              </div>
+
+                              </td>
+                              <td>0756752987</td>
+                              <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
+                              <!-- <td>Plumber</td> -->
+                              <td id="more">
+                                <div id="more_icon">&#x2026;</div>
+                                         <br>
+                                         <div id="more_options">
+                                            <a href="../serviceProvider/individualProviderProfile.html">View</a>
+                                            <a href="#">Edit</a>
+                                            <a href="#">Delete</a>
+                                            <a href="#">Others</a>
+
+
+                                         </div>
+                                 </td>
+                          </tr>
+                          <tr>
+                            <td>002</td>
+                            <td>John Doe
+                            <!-- Rating Section (stars) -->
+                            <div class="stars">
+                              <span class="star" data-value="1">&#9733;</span>
+                              <span class="star" data-value="2">&#9733;</span>
+                              <span class="star" data-value="3">&#9733;</span>
+                              <span class="star" data-value="4">&#9733;</span>
+                              <span class="star" data-value="5">&#9733;</span>
+                            </div>
+
+                            </td>
+                            <td>0756752987</td>
+                            <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
+                            <!-- <td>Plumber</td> -->
+                            <td id="more">
+                              <div id="more_icon">&#x2026;</div>
+                                       <br>
+                                       <div id="more_options">
+                                          <a href="../serviceProvider/individualProviderProfile.html">View</a>
+                                          <a href="#">Edit</a>
+                                          <a href="#">Delete</a>
+                                          <a href="#">Others</a>
+
+
+                                       </div>
+                               </td>
+                        </tr>
+                        <tr>
+                          <td>002</td>
+                          <td>John Doe
+                          <!-- Rating Section (stars) -->
+                          <div class="stars">
+                            <span class="star" data-value="1">&#9733;</span>
+                            <span class="star" data-value="2">&#9733;</span>
+                            <span class="star" data-value="3">&#9733;</span>
+                            <span class="star" data-value="4">&#9733;</span>
+                            <span class="star" data-value="5">&#9733;</span>
+                          </div>
+
+                          </td>
+                          <td>0756752987</td>
+                          <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
+                          <!-- <td>Plumber</td> -->
+                          <td id="more">
+                            <div id="more_icon">&#x2026;</div>
+                                     <br>
+                                     <div id="more_options">
+                                        <a href="../serviceProvider/individualProviderProfile.html">View</a>
+                                        <a href="#">Edit</a>
+                                        <a href="#">Delete</a>
+                                        <a href="#">Others</a>
+
+
+                                     </div>
+                             </td>
+                      </tr>
+                      <tr>
+                        <td>002</td>
+                        <td>John Doe
+                        <!-- Rating Section (stars) -->
+                        <div class="stars">
+                          <span class="star" data-value="1">&#9733;</span>
+                          <span class="star" data-value="2">&#9733;</span>
+                          <span class="star" data-value="3">&#9733;</span>
+                          <span class="star" data-value="4">&#9733;</span>
+                          <span class="star" data-value="5">&#9733;</span>
+                        </div>
+
+                        </td>
+                        <td>0756752987</td>
+                        <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
+                        <!-- <td>Plumber</td> -->
+                        <td id="more">
+                          <div id="more_icon">&#x2026;</div>
+                                   <br>
+                                   <div id="more_options">
+                                      <a href="../serviceProvider/individualProviderProfile.html">View</a>
+                                      <a href="#">Edit</a>
+                                      <a href="#">Delete</a>
+                                      <a href="#">Others</a>
+
+
+                                   </div>
+                           </td>
+                    </tr>
+                    <tr>
+                      <td>002</td>
+                      <td>Jo Doe
+                      <!-- Rating Section (stars) -->
+                      <div class="stars">
+                        <span class="star" data-value="1">&#9733;</span>
+                        <span class="star" data-value="2">&#9733;</span>
+                        <span class="star" data-value="3">&#9733;</span>
+                        <span class="star" data-value="4">&#9733;</span>
+                        <span class="star" data-value="5">&#9733;</span>
+                      </div>
+
+                      </td>
+                      <td>0756752987</td>
+                      <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
+                      <!-- <td>Plumber</td> -->
+                      <td id="more">
+                        <div id="more_icon">&#x2026;</div>
+                                 <br>
+                                 <div id="more_options">
+                                    <a href="../serviceProvider/individualProviderProfile.html">View</a>
+                                    <a href="#">Edit</a>
+                                    <a href="#">Delete</a>
+                                    <a href="#">Others</a>
+
+
+                                 </div>
+                         </td>
+                  </tr>
                             <!-- Add more rows as needed -->
                             </tbody>
 
@@ -469,9 +649,9 @@
                             <table  class="table-striped">
                                 <thead>
                                 <tr>
-                                    <th> <i class="fas fa-th-large"></i>  Category</th>
+                                    <th> <i class="fas fa-th-large"></i>Category</th>
                                     <th>Number</th>
-                                    <th >  Action</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                                 <tr>
@@ -529,7 +709,48 @@
                                         <div id="more_icon" class="rounded-circle" >&#x2026;</div>
                                     </td>
                                 </tr>
-
+                                <tr>
+                                  <td>Mama Mboga</td>
+                                  <td>3</td>
+                                  <td id="more">
+                                    <div id="more_icon">&#x2026;</div>
+                                             <br>
+                                             <div id="more_options">
+                                                <a href="../serviceProvider/individualProviderProfile.html">View</a>
+                                                <a href="#">Edit</a>
+                                                <a href="#">Delete</a>
+                                                <a href="#">Others</a>
+                                             </div>
+                                     </td>
+                              </tr>
+                              <tr>
+                                <td>Butchery</td>
+                                <td>3</td>
+                                <td id="more">
+                                  <div id="more_icon">&#x2026;</div>
+                                           <br>
+                                           <div id="more_options">
+                                              <a href="../serviceProvider/individualProviderProfile.html">View</a>
+                                              <a href="#">Edit</a>
+                                              <a href="#">Delete</a>
+                                              <a href="#">Others</a>
+                                           </div>
+                                   </td>
+                            </tr>
+                            <tr>
+                              <td>Gas Supplier</td>
+                              <td>3</td>
+                              <td id="more">
+                                <div id="more_icon">&#x2026;</div>
+                                         <br>
+                                         <div id="more_options">
+                                            <a href="../serviceProvider/individualProviderProfile.html">View</a>
+                                            <a href="#">Edit</a>
+                                            <a href="#">Delete</a>
+                                            <a href="#">Others</a>
+                                         </div>
+                                 </td>
+                          </tr>
                             </table>
 
 
@@ -634,21 +855,36 @@
     <button class="close-btn text-secondary" onclick="closeProviderPopup()">×</button>
     <h2 style="color: #00192D;">Add Provider</h2>
     <form class="provider-form">
-      <label for="property">Property:</label>
+      <label for="property">Category:</label>
       <select id="property" required>
         <option value="">Select Category</option>
         <option value="High">Plumbing</option>
         <option value="Moderate">Electrician</option>
         <option value="Low">Landscaping</option>
       </select>
-        <label for="name">First Name</label>
+        <label for="name"> Name</label>
         <input type="text" id="text" name="text" required>
         <label for="name">Phone</label>
-        <input type="name" id="name" name="name" required>
+        <input type="text" id="name" name="name" required>
         <label for="name">Email</label>
-        <input type="number" id="number" name="number" required>
+        <input type="text" id="number" name="number" required>
+        <label for="location">Location</label>
+        <input type="text" id="location" name="location" required>
 
+        <label for="communication">Preferred Mode Of Communication</label>
+        <select id="communication" required>
+          <option value="communication">Select Category</option>
+          <option value="call">Call</option>
+          <option value="messages">Messages</option>
+          <option value="email">Email</option>
+        </select>
 
+        <input type="file" id="imageUpload" accept="image/*">
+        <div class="preview-container">
+            <img id="imagePreview" alt="Image Preview">
+        </div>
+
+<br>
 
       <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button><br>
     </form>
@@ -661,7 +897,20 @@
 
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
-
+ <script>
+        document.getElementById('imageUpload').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
 
 
 <!-- Overlay scripts -->
@@ -723,6 +972,73 @@
  </script>
 
  <!-- End view announcement script -->
+
+ <script src="#">
+  // Get the stars and form elements
+  const stars = document.querySelectorAll('.star');
+  const reviewForm = document.getElementById('review-form');
+  const reviewTextarea = document.getElementById('review');
+  const reviewsList = document.getElementById('reviews-list');
+  let ratingValue = 0;
+
+  // Handle the star rating
+  stars.forEach(star => {
+    star.addEventListener('click', () => {
+      ratingValue = parseInt(star.getAttribute('data-value'));
+
+      // Clear previously selected stars
+      stars.forEach(s => s.classList.remove('selected'));
+
+      // Select the stars up to the clicked one
+      for (let i = 0; i < ratingValue; i++) {
+        stars[i].classList.add('selected');
+      }
+    });
+
+    // Highlight stars on hover
+    star.addEventListener('mouseover', () => {
+      const hoverValue = parseInt(star.getAttribute('data-value'));
+      stars.forEach((s, index) => {
+        s.classList.toggle('selected', index < hoverValue);
+      });
+    });
+
+    // Reset star highlight when mouse leaves
+    star.addEventListener('mouseout', () => {
+      stars.forEach(s => s.classList.remove('selected'));
+      for (let i = 0; i < ratingValue; i++) {
+        stars[i].classList.add('selected');
+      }
+    });
+  });
+
+  // Handle the review form submission
+  reviewForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const reviewText = reviewTextarea.value.trim();
+    if (ratingValue === 0 || reviewText === '') {
+      alert('Please provide both a rating and a review!');
+      return;
+    }
+
+    const newReview = document.createElement('div');
+    newReview.classList.add('review-item');
+
+    newReview.innerHTML = `
+      <strong>Rating: ${ratingValue} ★</strong>
+      <p>${reviewText}</p>
+    `;
+
+    reviewsList.appendChild(newReview);
+
+    // Clear the form after submission
+    reviewTextarea.value = '';
+    ratingValue = 0;
+    stars.forEach(star => star.classList.remove('selected'));
+  });
+    </script>
+
 
 
     <script

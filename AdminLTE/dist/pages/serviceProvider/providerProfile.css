@@ -394,6 +394,7 @@ justify-content: end;
 
     /* start provider css */
     .Providerpopup-overlay{
+    overflow: auto;
   position: fixed;
   top: 0;
   left: 0;
@@ -408,6 +409,7 @@ justify-content: end;
   font-size: small;
     }
     .Providerpopup-content{
+      margin-top: 5%;
       background: white;
       padding: 20px;
       border-radius: 8px;
@@ -444,4 +446,16 @@ justify-content: end;
   }
   #more_options a:hover {
       color:#FFC107;
+  }
+  .stars {
+    /* display: flex; */
+    /* justify-content: center; */
+    gap: 5px;
+    font-size: 20px;
+    color: #ccc;
+  }
+
+  .star:hover, .star.selected {
+    color:green;
+    cursor: pointer;
   }
