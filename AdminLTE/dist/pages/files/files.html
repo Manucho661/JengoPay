@@ -383,6 +383,11 @@
 <br>
 
 
+<div class="justify-content-end d-flex" >
+    <button onclick="openfilePopup()" class="edit-btn">
+    <i class="fas fa-plus"></i>
+    Add File</button>
+  </div>
               <div class="col-md-12 message-container"><br>
                       <div class="row">
                         <div class="col-md-4">
@@ -436,6 +441,8 @@
                               <tr>
                                 <th scope="col">Select File</th>
                                 <th>Type</th>
+                                <th>Tenant</th>
+                                <th>Unit</th>
                                   <th>Title</th>
                                   <!-- <th>Category</th> -->
                                   <th>
@@ -455,6 +462,8 @@
                               </label>
                               </td>
                               <td>pdf</td>
+                              <td>Paul</td>
+                              <td>A12</td>
                               <td>
                                 Lease Agreement
                               </td>
@@ -479,6 +488,8 @@
                                 </label>
                                 </td>
                                 <td>jpg</td>
+                                <td>Erastus</td>
+                                <td>A13</td>
                                 <td>
                                   Lease Agreement
                                 </td>
@@ -501,6 +512,8 @@
                                 </label>
                                 </td>
                                 <td>png</td>
+                                <td>maina</td>
+                                <td>A14</td>
                                 <td>
                                   Lease Agreement
                                 </td>
@@ -523,6 +536,8 @@
                                 </label>
                                 </td>
                                 <td>pdf</td>
+                                <td>Aaron</td>
+                                <td>A15</td>
                                 <td>
                                   Lease Agreement
                                 </td>
@@ -545,10 +560,13 @@
                                 </label>
                                 </td>
                                 <td>jpg</td>
+                                <td>Peter</td>
+                                <td>A16</td>
                                 <td>
                                   Lease Agreement
                                 </td>
                                 <td>42.37MB</td>
+                                
                                 <td>May24,2024</td>
                                 <!-- <td>Applicant File</td> -->
                                 <td>
@@ -567,6 +585,8 @@
                                 </label>
                                 </td>
                                 <td>png</td>
+                                <td>Peter</td>
+                                <td>A16</td>
                                 <td>
                                   Lease Agreement
                                 </td>
@@ -589,6 +609,8 @@
                                 </label>
                                 </td>
                                 <td>pdf</td>
+                                <td>Peter</td>
+                                <td>A16</td>
                                 <td>
                                   Lease Agreement
                                 </td>
@@ -611,10 +633,13 @@
                                 </label>
                                 </td>
                                 <td>jpg</td>
+                                <td>Peter</td>
+                                <td>A16</td>
                                 <td>
                                   Lease Agreement
                                 </td>
                                 <td>42.37MB</td>
+
                                 <td>May24,2024</td>
                                 <!-- <td>Leases</td> -->
                                 <td>
@@ -633,6 +658,8 @@
                                 </label>
                                 </td>
                                 <td>png</td>
+                                <td>Peter</td>
+                                <td>A16</td>
                                 <td>
                                   Lease Agreement
                                 </td>
@@ -655,6 +682,8 @@
                                 </label>
                                 </td>
                                 <td>pdf</td>
+                                <td>Peter</td>
+                                <td>A16</td>
                                 <td>
                                   Lease Agreement
                                 </td>
@@ -677,6 +706,8 @@
                                 </label>
                                 </td>
                                 <td>jpg</td>
+                                <td>Peter</td>
+                                <td>A16</td>
                                 <td>
                                   Lease Agreement
                                 </td>
@@ -699,6 +730,8 @@
                                 </label>
                                 </td>
                                 <td>pdf</td>
+                                <td>Peter</td>
+                                <td>A16</td>
                                 <td>
                                   Lease Agreement
                                 </td>
@@ -728,27 +761,41 @@
             </div>
 
 
-<!-- notification popup -->
-<!-- <div class="notificationpopup-overlay" id="notificationPopup">
-  <div class="notificationpopup-content">
-    <button class="close-btn text-secondary" onclick="closenotificationPopup()">×</button>
-    <h2 style="color: #00192D;">Notification</h2>
+            <div class="filepopup-overlay"  id="complaintPopup">
+              <div class="filepopup-content">
+                <button class="close-btn text-secondary" onclick="closefilePopup()">×</button>
+                <form class="tenant-form ">
+                  <h2 class="text-start addTenantHeader">Add File</h2>
 
-    <label for="property">Recepients:</label>
-    <select id="property" class="property"><br>
-      <option value=""disabled>Select Recepient</option>
-      <option value="High">Manucho</option>
-      <option value="Moderate">Ben 10</option>
-      <option value="Low">Alpha</option>
-    </select>
+                  <b><label for="property">Property:</label></b>
+                    <select id="property" name="property" required style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;">
+                      <option value="" disabled selected>Select Property</option>
+                      <option value="High">Manucho</option>
+                      <option value="Moderate">Ben 10</option>
+                      <option value="Low">Alpha</option>
+                    </select>
 
-    <textarea id="notes" name="notes" rows="10" cols="98" placeholder="Enter any additional information..."></textarea>
+                    <b><label for="unit">Unit:</label></b>
+                    <select id="property" name="property" required style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;">
+                      <option value="" disabled selected>Select Unit</option>
+                      <option value="High">A11</option>
+                      <option value="Moderate">A12</option>
+                      <option value="Low">A13</option>
+                    </select>             
 
-      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
-  </div>
-</div> -->
-<!-- End Notification popup -->
+                    <b><label for="unit">Title:</label></b>
+                    <input type="text" id="title" name="title" required>
 
+                    <label for="file"></label>
+                    <input type="file">
+            
+                     <b><label for="name">Tenant:</label></b>
+                    <input type="text" id="name" name="name" required>
+             
+                    
+                  <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
+                </form>
+              </div>
 
 <!-- units popup -->
 <!-- <div class="units-overlay" id="complaintPopup">
@@ -840,6 +887,18 @@
     <!--end::App Wrapper-->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
+
+    <script>
+      // Function to open the complaint popup
+      function openfilePopup() {
+        document.getElementById("complaintPopup").style.display = "flex";
+      }
+
+      // Function to close the complaint popup
+      function closefilePopup() {
+        document.getElementById("complaintPopup").style.display = "none";
+      }
+    </script>
 
  <!-- dowload as pdf -->
  <script>
