@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Storage Space Utilization</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f5f5f5;
+    }
+
+    .storage-container {
+      width: 80%;
+      max-width: 600px;
+      background-color: #e0e0e0;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .storage-bar {
+      height: 30px;
+      border-radius: 10px;
+      width: 100%;
+      background-color: #ddd;
+    }
+
+    .used-space {
+      height: 100%;
+      border-radius: 10px;
+      background-color: #4caf50; /* Green for used space */
+    }
+
+    .remaining-space {
+      height: 100%;
+      border-radius: 10px;
+      background-color: #f44336; /* Red for remaining space */
+    }
+
+    .storage-info {
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="storage-container">
+    <div class="storage-bar">
+      <div id="used-space" class="used-space"></div>
+    </div>
+    <div class="storage-info">
+      <span id="used-text">Used: 0 GB</span>
+      <span id="remaining-text">Remaining: 0 GB</span>
+    </div>
+  </div>
+
+  <script>
+    // Example values for storage space
+    let totalSpace = 100; // Total space in GB
+    let usedSpace = 60;   // Used space in GB
+
+    function updateStorageBar(used, total) {
+      let usedPercentage = (used / total) * 100; // Calculate percentage of space used
+      let remainingSpace = total - used;
+
+      // Update the width of the used space bar
+      document.getElementById("used-space").style.width = `${usedPercentage}%`;
+
+      // Update the text displaying used and remaining space
+      document.getElementById("used-text").textContent = `Used: ${used} GB`;
+      document.getElementById("remaining-text").textContent = `Remaining: ${remainingSpace} GB`;
+    }
+
+    // Call function to update the storage space display
+    updateStorageBar(usedSpace, totalSpace);
+  </script>
+
+</body>
+</html>
