@@ -142,7 +142,7 @@ select {
   background-size: 16px;
   padding-right: 30px;
 }
-input:focus, select:focus {
+input:focus, select:focus, textarea:focus {
   border-color: #FFC107;
   outline: none;
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
@@ -177,6 +177,9 @@ input, select {
 .attach-file{
   border: none;
   width: 50%;
+  font-size: 14px;
+  
+ 
 
 }
 .attach-file:hover{
@@ -195,7 +198,34 @@ border: none;
 .categoryFilter{
   width: 30%;
 }
-                                    /* BUTTONS */
+.recipient{
+   width: 100%; 
+  padding: 10px;
+  transition: width 0.5s ease-in-out;
+
+}
+.recipient.shrink{
+  width: 50%;
+}
+
+.field-group.first{
+  width: 100%;
+  transition: width 0.5s ease-in-out;
+}
+.field-group.first.shrink{
+  width: 50%;
+}
+.field-group.second{
+  width: 50%;
+  transition: width 0.5s ease-in-out;
+}
+.field-group.second.shrink{
+  width: 25%;
+}
+.field-group.third{
+  width: 25%;
+}
+                                 /* BUTTONS */
 
   .btn{
     font: bold !important;
@@ -278,6 +308,26 @@ border: none;
     color: green;
     border: 1px solid #FFC107;
   }
+
+  .draft-btn{
+    padding: 2px 4px;
+    font-size: 12px;
+    background-color: transparent;
+    color: green;
+    border: 1px solid #FFC107;
+    margin-right: 4px;
+    border-radius: 5px;
+  }
+  .send-btn{
+    padding: 2px 4px;
+    font-size: 12px;
+    background-color: transparent;
+    color: green;
+    border: 1px solid #FFC107;
+    border-radius: 5px;
+  }
+  
+
                                     /* MESSAGE CONTAINER STYLES */
 .message-container{
   /* box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); x-offset, y-offset, blur-radius, color */
@@ -624,3 +674,6 @@ background-color: white;
   .filter-section{
     border:1px solid #E2E2E2; max-height: fit-content; align-items: center;
   }
+
+
+  

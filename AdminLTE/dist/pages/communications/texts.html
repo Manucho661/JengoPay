@@ -24,6 +24,9 @@
       integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
       crossorigin="anonymous"
     />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+
     <!--end::Fonts-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <link
@@ -332,7 +335,7 @@
             <div class="row">
               <div class="col-sm-8">
 
-                <h3 class="mb-0 contact_section_header"> <i class="fas fa-comments title-icon"></i></i> Text Messages</h3>
+                <h3 class="mb-0 contact_section_header"> <i class="fas fa-comments title-icon"></i></i> In App Messages</h3>
               </div>
 
               <div class="col-sm-4 d-flex justify-content-end">
@@ -713,30 +716,48 @@
                     <div  class="card ">
                       <div class="card-header new-message-header">
                         New Message
+                        <button class="close-btn" onclick="closenewtextPopup()">×</button>
                       </div>
                       <div class="card-body new-message-body">
-                        <div class="field-group">
-                          <label for="recipient">Recipient</label>
-                          <select id="recipient" class="recipient">
-                            <option value="">-- Select Tenant --</option>
-                            <option value="all">All Tenants</option>
-                            <option value="john-doe">John Doe</option>
-                            <option value="jane-smith">Jane Smith</option>
-                          </select>
+                        <div class="row">
+                         
+                          <div class="col-md-12" style="display: flex;">
+                            
+                            <div id="field-group-first" class="field-group first" >
+                              <label for="recipient" style="color: black;">  Recipient  <i class="fas fa-mouse-pointer title-icon" style="transform: rotate(110deg);"></i>                                Building</label>
+                              <select id="recipient" onchange="toggleShrink()" class="recipient" >
+                                <option value=""> Select Building </option>
+                                <option value="all"  >All Tenants</option>
+                                <option value="john-doe">Manucho</option>
+                                <option value="jane-smith">Ebenezer</option>
+                              </select>
+                            </div>
+
+                            <div id="field-group-second" class="field-group second" style="display:none" >
+                              <label for="recipient">Unit</label>
+                              <select id="recipient-units" onchange="toggleShrink1()" class="recipient" >
+                                <option value="">-- Select Unit --</option>
+                                <option value="all">All Tenants</option>
+                                <option value="john-doe">C12</option>
+                                <option value="jane-smith">E278</option>
+                              </select>
+                            </div>
+                           
+                            <div id="field-group-third" class="field-group third" style="display:none" >
+                              <label for="tenant">Tenant</label>
+                              <select id="Tenant" onchange="toggleShrink2()" class="tenant" >
+                                <option value="">Joseph</option>
+                                
+                              </select>
+                            </div>
+                            
+                          </div>
+                          
                         </div>
 
                         <div class="field-group">
-                          <label for="recipient">Recipient</label>
-                          <select id="recipient" class="recipient">
-                            <option value="">-- Select Tenant --</option>
-                            <option value="all" onclick="">All Tenants</option>
-                            <option value="john-doe">John Doe</option>
-                            <option value="jane-smith">Jane Smith</option>
-                          </select>
-                        </div>
-
-                        <div class="field-group">
-                          <label for="subject">Subject (optional)</label>
+                        
+                          <label for="subject new-message">Subject (optional)</label>
                           <input type="text" id="subject" class="subject" placeholder="Enter subject..." />
                         </div>
 
@@ -747,13 +768,13 @@
 
                         <div class="field-group" style="display: block;">
                           <label for="attachment">Attachment (optional)</label>
-                          <input type="file" id="attachment" class="attach-file" />
-                           
+                          <input type="file" id="attachment" class="attach-file"/>
                         </div>
 
-                        <div class="actions">
-                          <button class="draft-btn">Save Draft</button>
-                          <button class="send-btn">Send Message</button>
+                        <div class="actions d-flex justify-content-end">
+                          <button class="draft-btn text-danger btn">Cancel</button>
+                          <button class="draft-btn btn">Save Draft</button>
+                          <button class="send-btn btn">Send</button>
                         </div>
 
                       </div>
@@ -827,35 +848,44 @@
   }
 
   function toggleShrink() {
-            let box = document.getElementById("box2");
-            box.classList.toggle("shrink");
+            let recipientBox = document.getElementById("recipient");
+            let first_field_group = document.getElementById("field-group-first");
+            let field_group_third = document.getElementById("field-group-third");
+            let field_group_second = document.getElementById("field-group-second");
+            
+            if (recipientBox.value === "all") {  
+              first_field_group.classList.remove("shrink"); // shrink if the option is not all
+              field_group_second.style.display= "none";
+              field_group_third.style.display= "none";
+              
+          } else {
+            first_field_group.classList.add("shrink"); // Do not shrink is the option is all
+            field_group_second.style.display= "block";
+          }
+
+        }
+
+
+        function toggleShrink1() {
+            let recipientBox_units = document.getElementById("recipient-units");
+           
+            let field_group_second = document.getElementById("field-group-second");
+            let field_group_third = document.getElementById("field-group-third");
+            
+            if (recipientBox_units.value === "all") {  
+              field_group_second.classList.remove("shrink"); // shrink if the option is not all
+              field_group_third.style.display= "none";
+              
+          } else {
+            field_group_second.classList.add("shrink"); // Do not shrink is the option is all
+            field_group_third.style.display= "block";
+          }
+
         }
 </script>
-<!-- create new text -->
+<!-- end create new text -->
 
- <!-- Chat Script -->
- <script>
-  function openChat() {
-      document.getElementById("chatOverlay").style.display = "flex";
-  }
-  function closeChat() {
-      document.getElementById("chatOverlay").style.display = "none";
-  }
-  function sendMessage() {
-      let messageInput = document.getElementById("messageInput");
-      let messageText = messageInput.value.trim();
-      if (messageText !== "") {
-          let chatBody = document.getElementById("chatBody");
-          let messageElement = document.createElement("div");
-          messageElement.classList.add("message", "outgoing");
-          messageElement.textContent = messageText;
-          chatBody.appendChild(messageElement);
-          chatBody.scrollTop = chatBody.scrollHeight;
-          messageInput.value = "";
-      }
-  }
-</script>
- <!-- End Chat Script -->
+ 
 
 <script>
 
