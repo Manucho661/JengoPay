@@ -857,6 +857,22 @@
 </div> -->
 <!-- end -->
 
+<script>// Get the elements
+  const showPopupButton = document.getElementById('showPopup');
+  const closePopupButton = document.getElementById('closePopup');
+  const sidePopup = document.getElementById('sidePopup');
+
+  // Show the side popup
+  showPopupButton.addEventListener('click', () => {
+    sidePopup.style.right = '0'; // Slide it in from the side
+  });
+
+  // Close the side popup
+  closePopupButton.addEventListener('click', () => {
+    sidePopup.style.right = '-300px'; // Slide it back offscreen
+  });
+  </script>
+
 
 <script>
   document.getElementById('imageUpload').addEventListener('change', function(event) {
