@@ -130,82 +130,42 @@ body{
   font-size: 5px;
   color: #555;
 }
+.preview-container {
+  margin-top: 20px;
+  width: 300px;
+  height: 300px;
+  border: 2px dashed #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: #fff;
+}
+img {
+  max-width: 100%;
+  max-height: 100%;
+  display: none;
+}
+.edit-btn {
+  background-color:#00192D;
+  color:#d39e00;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 5px;
+}
+.edit-btn:hover {
+  background-color: white;
+}
 
-
-
-<div class="card">
-                  <!-- <img src="https://via.placeholder.com/200x120" alt="Card Image"> -->
-                  <div class="card-content">
-                    <div class="card-title">
-                      <i class="fas fa-file"></i>
-                      All Files
-                      <br>
-                      295files
-                      <div class="storage-container">
-                        <div class="storage-info">
-                          <span id="used-text">used space:150.00MB</span>
-                          <span id="remaining-text">Remaining: 0 GB</span>
-                        </div>
-                        <div class="storage-bar">
-                          <div id="used-space" class="used-space"></div>
-                        </div>
-
-                      </div>
-                    </div>
-                    <div class="card-text"></div>
-                  </div>
-                </div>
-              </div>
-                <div class="col-md-4">
-                <div class="card">
-                  <!-- <img src="https://via.placeholder.com/200x120" alt="Card Image"> -->
-                  <div class="card-content">
-                    <div class="card-title">
-                      <i class="fas fa-file"></i> Images
-                      <br>
-                        295files
-                        <div class="storage-container">
-                          <div class="storage-info">
-                            <!-- <p>150.00MB/1.00GB</p> -->
-                          <span id="used-text">used space:150.00MB</span>
-                          <br>
-                          <span id="remaining-text">Remaining: 0 GB</span>
-                          </div>
-                          <div class="storage-bar">
-                            <div id="used-space" class="used-space"></div>
-                          </div>
-
-                        </div>
-                    </div>
-                    <div class="card-text">
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="card">
-                  <!-- <img src="https://via.placeholder.com/200x120" alt="Card Image"> -->
-                  <div class="card-content">
-                    <div class="card-title">
-                      <i class="fas fa-file"></i> Documents
-                      <br>
-                      295files
-                      <div class="storage-container">
-                        <div class="storage-info">
-                          <span id="used-text">used space:150.00MB</span>
-
-                          <span id="remaining-text">Remaining:0 GB</span>
-                        </div>
-                        <div class="storage-bar">
-                          <div id="used-space" class="used-space"></div>
-                        </div>
-
-                      </div>
-                    </div>
-                    <div class="card-text"></div>
-                  </div>
-                </div>
-              </div>
-
-              </div>
+.submit-btn {
+  background-color: #00192D;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  border-radius: 5px;
+  }
+.submit-btn:hover {
+  background-color: #004C74; /* Hover effect */
+}
