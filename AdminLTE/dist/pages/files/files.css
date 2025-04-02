@@ -181,11 +181,12 @@ button {
 /* Style for the side popup */
 .side-popup {
   position: fixed;
+  /* color: black; */
   top: 0;
   right: -300px; /* Hide the popup offscreen initially */
   width: 300px;
   height: 100%;
-  background-color: #333;
+  background-color:black;
   color: white;
   padding: 20px;
   transition: right 0.3s ease-in-out; /* Smooth slide-in effect */
@@ -199,7 +200,18 @@ button {
   margin-bottom: 20px;
 }
 
-.close-btn {
+#closePopup{
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  /* background: red; */
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+/* .close-btn {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -209,4 +221,4 @@ button {
   padding: 10px;
   font-size: 16px;
   cursor: pointer;
-}
+} */
