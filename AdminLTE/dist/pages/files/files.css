@@ -132,8 +132,8 @@ body{
 }
 .preview-container {
   margin-top: 20px;
-  width: 300px;
-  height: 300px;
+  width: 150px;
+  height: 100px;
   border: 2px dashed #ccc;
   display: flex;
   align-items: center;
