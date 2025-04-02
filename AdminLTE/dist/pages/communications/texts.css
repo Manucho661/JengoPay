@@ -21,7 +21,7 @@ body {
 }
 
 
-                                      /* NEW MESSAGE POP-UP */
+/* NEW MESSAGE POP-UP */
 
 .text-message-header{
    color: #00192D;
@@ -48,11 +48,15 @@ body {
   overflow: auto !important;
   
   }
+
+
   .newtextpopup-overlay .card{
     width: 50%;
     margin-top: 4% !important; 
     
   }
+
+
 
   .new-message-header{
     
@@ -84,7 +88,7 @@ body {
       resize: vertical;
       min-height: 100px;
     }
-  
+
 
                                         /* SELECT, INPUT, TEXT_AREA */
   input, textarea {
@@ -179,8 +183,8 @@ input, select {
   border: none;
   width: 50%;
   font-size: 14px;
-  
- 
+
+
 
 }
 .attach-file:hover{
@@ -192,7 +196,7 @@ border: none;
   color: #4f4f52;
 }
 .new-message-body .field-group input, select{
-  width: 100%; 
+  width: 100%;
   color: #4f4f52;
 
 }
@@ -200,7 +204,7 @@ border: none;
   width: 30%;
 }
 .recipient{
-   width: 100%; 
+   width: 100%;
   padding: 10px;
   transition: width 0.5s ease-in-out;
 
@@ -332,7 +336,7 @@ border: none;
     border: 1px solid #FFC107;
     border-radius: 5px;
   }
-  
+
 
                                     /* MESSAGE CONTAINER STYLES */
 .message-container{
@@ -682,4 +686,3 @@ background-color: white;
   }
 
 
-  
