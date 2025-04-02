@@ -91,9 +91,9 @@
   padding: 1rem 0.5rem;
 }
 .preview-container {
-  margin-top: 20px;
-  width: 300px;
-  height: 200px;
+  /* margin-top: 20px; */
+  width: 30px;
+  height: 20px;
   border: 2px dashed #ccc;
   display: flex;
   align-items: center;
@@ -728,7 +728,7 @@ img {
 <!-- new text popup -->
                 <div class="newtextpopup-overlay" id="newtextPopup">
 
-                    <div  class="card ">
+                    <div  class="card" style="margin-top: 20px;">
                       <div class="card-header new-message-header">
                         New Message
                         <button class="close-btn" onclick="closenewtextPopup()">×</button>
@@ -786,9 +786,12 @@ img {
                           <input type="file" id="imageUpload" accept="image/*" class="attach-file"/>
                         </div>
 
-                        <div class="preview-container">
-                          <img id="imagePreview" alt="Image Preview">
-                      </div>
+                        <div class="field-group">
+                          <div class="preview-container" style="width: 80px; height: 80px;">
+                            <img id="imagePreview" alt="Image Preview">
+                          </div> 
+                        </div>
+                        
 
                         <div class="actions d-flex justify-content-end">
                           <button class="draft-btn text-danger btn">Cancel</button>
