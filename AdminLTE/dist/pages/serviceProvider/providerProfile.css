@@ -28,31 +28,123 @@ body {
     position: relative; /* To position the panel below */
 
 }
+                                                            /* SUMMARY SECTION */
+  /* General Styling for Summary Items */
+  .summary-item {
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Space between icon and text */
+  }
 
-table {
-border-collapse: collapse;
-width: 100%;
+  /* Color Coding */
+  .total { background-color: #f8f9fa; color: #333; } /* Neutral */
+  .completed { background-color: #28a745; color: white; } /* Green */
+  .in-progress { background-color: #007bff; color: white; } /* Blue */
+  .incomplete { background-color: #dc3545; color: white; } /* Red */                                                          
+
+
+                                                            /* BUTTONS */
+
+  .btn{
+    font: bold !important;
+    letter-spacing: 0.15em;
+    padding: 6px 14px;
+    height: fit-content;
+    background-color: #00192D;
+    color: white;
+    cursor: pointer;
+  }
+  .btn:hover {
+    background-color: #002a4d; /* Slightly lighter blue */
+    transform: scale(1.05); /* Slightly enlarge */
+    color: #FFC107;
+  }
+  .action-btn {
+    border: none;
+    background: none;
+    font-size: 18px;
+    cursor: pointer;
+}
+  .new-category
+  {
+    padding: 2px 4px;
+    font-size: 12px;
+    background-color: transparent;
+    color: green;
+    border: 1px solid #FFC107;
+  }
+  
+  .save-btn{
+    padding: 2px 4px;
+    font-size: 17px;
+    background-color: transparent;
+    color: green;
+    border: 1px solid #FFC107;
+  }
+  .view{
+    padding: 2px 8px;
+    font-size: 12px;
+    background-color: transparent;
+    color: green;
+  }
+  
+                                      /* TABLE */
+.table-summary-messages{
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+  border-radius: 200px !important;
+}
+table{
+  border-radius: 200px !important;
+}
+th, td {
+  text-align: left !important; /* Align text for readability */
+  vertical-align: middle; /* Centers text vertically */
+}
+td{
+  font-size: 14px !important;
+
+  align-items: center;
+}
+
+th{
+  font-size: 12px !important;
+  letter-spacing: .5px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+th:nth-child(1), td:nth-child(1) {
+  text-align: center !important; /* Center align numbers like serial numbers */
+}
+
+
+th:nth-child(4), td:nth-child(4) {
+  text-align: left !important; /* Align provider names to the left */
+}
+th, td {
+  padding: 12px 15px !important; /* Top-bottom: 12px, Left-right: 15px */
+
+}
+
+th, td {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important; /* Add '...' if text overflows */
 }
 th {
-background-color: #FFC107;
-color: #00192D;
-text-align: left;
-padding: 0.5em;
-font-size: 0.9rem;
+  font-weight: 600 !important;
+  /* text-transform: uppercase !important; */
+  /* background-color: #f4f4f4 !important; Light background for contrast */
+  border-bottom: 2px solid #ddd !important;
+  background: #023E6A    !important ;
+  color: white !important;
 }
-td {
-padding: 0.5em;
-text-align: left;
-font-size: 0.9rem;
-
+/* contents */
+td{
+  background: #EFF2F5;
 }
-tr:nth-child(even) {
-background-color: #f9f9f9;
-}
-tr:hover {
-background-color: #f1f1f1;
-}
-
+                                    
 
 .filter:hover {
     color: #FFC107;
@@ -105,22 +197,7 @@ background-color: #f1f1f1;
 position: relative;
 }
 
-/* Announcement Overlay styles */
-#view_announcement {
-    /* width: 50%; Adjust the card width as needed */
-    /* max-width: 500px; Ensures the card doesn't grow too wide */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    display: none;
-    z-index: 10000;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
 
-}
 .card.content{
 
   position: relative;
@@ -136,10 +213,6 @@ position: relative;
     color: gray;
 }
 
-.card-footer.view_announcement {
-    justify-content: flex-end;
-
-}
 
 .card-footer .btn + .btn {
     margin-left: 10px; /* Adds spacing between the buttons */
@@ -235,6 +308,14 @@ input {
     border: 1px solid #ccc;
     border-radius: 5px;
 }
+.search-input{
+  padding: 3px;
+}
+.categoryFilter{
+  padding: 3px 30px;
+}
+
+
 .add_provider_btn{
   width: 10%;
     padding: 10px;
@@ -245,6 +326,7 @@ input {
     cursor: pointer;
     font-size: 16px;
 }
+
 .add_provider_btn-container{
     display: flex;
     justify-content: flex-end; /* Moves the button to the right */
@@ -331,7 +413,8 @@ justify-content: end;
   .contact_section_header{
     border-bottom: 1px solid rgba(128, 128, 128, 0.5);
     font-family: 'Poppins', sans-serif;
-
+    font-weight: 600;
+     letter-spacing: .5px;
   }
 
   .col-md-12.Summary{
@@ -339,8 +422,10 @@ justify-content: end;
     padding: 10px;
     border-radius: 10px;
   }
-  /* start category */
-.Categorypopup-overlay{
+
+                                            /* POPUPS */
+  /*  category */
+.categoryPopup-overlay{
   position: fixed;
   top: 0;
   left: 0;
@@ -354,14 +439,26 @@ justify-content: end;
   font-family: 'Poppins', sans-serif;
   font-size: small;
 }
-.Categorypopup-content{
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 50%;
-  text-align: left;
-  position: relative;
+
+.categoryPopup-overlay .card{
+  width: 30%;
+  /* margin-top: 4% !important;  */
+  
 }
+
+.new-category-header{
+  padding: 20px 50px 20px 30px;
+  line-height: 22px;
+  font-size: 18px;
+  font-weight: 700;
+  font-family: ProximaNova, arial, sans-serif;
+  color: #4f4f52;
+}
+
+
+
+
+
  /* Close button */
  .close-btn {
   position: absolute;
@@ -370,7 +467,12 @@ justify-content: end;
   font-size: 20px;
   cursor: pointer;
   border: none;
-  background: none;
+  color: #00192D;
+  border-radius: 100%;
+  }
+
+  .close-btn:hover{
+    color: red;
   }
    /* Submit button */
    .submit-btn {
