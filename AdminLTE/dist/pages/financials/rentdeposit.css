@@ -3,6 +3,13 @@
             font-family: Arial, sans-serif;
             margin: 20px;
         } */
+
+        .completed{
+          background-color: green;
+        }
+        .incomplete{
+          background-color:#d39e00;
+        }
         h1 {
             text-align: center;
         }
