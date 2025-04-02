@@ -132,8 +132,13 @@ body{
 }
 .preview-container {
   margin-top: 20px;
+<<<<<<< HEAD
   width: 150px;
   height: 100px;
+=======
+  width: 120px;
+  height: 80px;
+>>>>>>> 8a8f0d71a7f2c5f3341f701221a0691728aa7714
   border: 2px dashed #ccc;
   display: flex;
   align-items: center;
@@ -145,6 +150,13 @@ img {
   max-width: 100%;
   max-height: 100%;
   display: none;
+}
+.edi-btn{
+  background-color:#00192D;
+  color:#d39e00;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 5px;
 }
 .edit-btn {
   background-color:#00192D;
@@ -180,13 +192,13 @@ button {
 
 /* Style for the side popup */
 .side-popup {
+  color: black;
   position: fixed;
-  /* color: black; */
   top: 0;
   right: -300px; /* Hide the popup offscreen initially */
   width: 300px;
   height: 100%;
-  background-color:black;
+  background-color:grey;
   color: white;
   padding: 20px;
   transition: right 0.3s ease-in-out; /* Smooth slide-in effect */
