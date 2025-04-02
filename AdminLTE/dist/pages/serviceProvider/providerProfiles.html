@@ -143,7 +143,16 @@ display: flex;
   font-weight: 400px;
   font-size: 14px;
 }
-
+#star-rating {
+    color:#FFC107 ;
+}
+#more_options{
+  background-color: #00192D;
+  color: #f1f1f1;
+}
+#more_options a{
+color: #f1f1f1;
+}
     </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -586,7 +595,7 @@ display: flex;
                                 <th>PROVIDER</th>
                                 <th>Phone</th>
                                 <th>Email</th>
-                                <!-- <th>Category</th> -->
+                                 <th>Rating</th>
                                 <th>ACTION</th>
 
                             </tr>
@@ -606,19 +615,21 @@ display: flex;
                                 </td>
                                 <td>0756752987</td>
                                 <td class="text-primary"> <i class="fas fa-envelope"></i>  emmanu@gmail.com</td>
-                                <!-- <td>Electrician</td> -->
+                                <td>5 <i class="fa fa-star " id="star-rating"></i>(5)</td>
                                 <td id="more">
                                <div id="more_icon">
-                                <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                                        
+                                <button class="btn btn-primary view"> <i class="fas fa-sms"></i> Text </button>
+                                <button class="btn btn-primary view">  <i class="fas fa-envelope"></i>   email </button>        
                                 <button class="action-btn">⋮</button>
                               </div>
                                         <br>
                                         <div id="more_options">
-                                           <a href="../serviceProvider/individualProviderProfile.html">View</a>
-                                           <a href="#">Edit</a>
-                                           <a href="#">Delete</a>
-                                           <a href="#">Others</a>
+                                           
+                                          <a href="../serviceProvider/individualProviderProfile.html">View</a>
+                                          <a href="#">Edit</a>
+                                          <a href="#">Delete</a>
+                                          <a href="#">Others</a>
+                                           
 
 
                                         </div>
@@ -639,10 +650,11 @@ display: flex;
                                 </td>
                                 <td>0756752987</td>
                                 <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
-                                <!-- <td>Plumber</td> -->
+                                <td>5 <i class="fa fa-star " id="star-rating"></i>(4)</td>
                                 <td id="more">
                                   <div id="more_icon">
-                                    <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                                    <button class="btn btn-primary view">  <i class="fas fa-sms"></i>   Text </button>
+                                    <button class="btn btn-primary view">  <i class="fas fa-envelope"></i>   Text </button>
                                     <button class="action-btn">⋮</button>
                                   </div>
                                            <br>
@@ -671,10 +683,11 @@ display: flex;
                               </td>
                               <td>0756752987</td>
                               <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
-                              <!-- <td>Plumber</td> -->
+                              <td>5 <i class="fa fa-star " id="star-rating"></i>(2)</td>
                               <td id="more">
                                 <div id="more_icon">
-                                  <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                                  <button class="btn btn-primary view"> <i class="fas fa-sms"></i>  Text </button>
+                                  <button class="btn btn-primary view"><i class="fas fa-envelope"></i> Email </button>
                                   <button class="action-btn">⋮</button>
                                 </div>
                                          <br>
@@ -703,10 +716,11 @@ display: flex;
                             </td>
                             <td>0756752987</td>
                             <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
-                            <!-- <td>Plumber</td> -->
+                            <td>5 <i class="fa fa-star " id="star-rating"></i>(1)</td>
                             <td id="more">
                               <div id="more_icon">
-                                <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                                <button class="btn btn-primary view"><i class="fas fa-sms"></i>  View </button>
+                                <button class="btn btn-primary view"><i class="fas fa-envelope"></i> Email </button>
                                 <button class="action-btn">⋮</button>
                               </div>
                                        <br>
@@ -735,10 +749,11 @@ display: flex;
                           </td>
                           <td>0756752987</td>
                           <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
-                          <!-- <td>Plumber</td> -->
+                          <td>5 <i class="fa fa-star " id="star-rating"></i>(3)</td>
                           <td id="more">
                             <div id="more_icon">
-                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                              <button class="btn btn-primary view"><i class="fas fa-sms"></i> View </button>
+                              <button class="btn btn-primary view"><i class="fas fa-envelope"></i> Email </button>
                               <button class="action-btn">⋮</button>
                             </div>
                                      <br>
