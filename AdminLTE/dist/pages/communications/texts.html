@@ -90,7 +90,22 @@
 .app-main .app-content-header {
   padding: 1rem 0.5rem;
 }
-
+.preview-container {
+  margin-top: 20px;
+  width: 300px;
+  height: 200px;
+  border: 2px dashed #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: #fff;
+}
+img {
+  max-width: 100%;
+  max-height: 100%;
+  display: none;
+}
 .app-main .app-content{
 
 }
@@ -712,7 +727,7 @@
 
 <!-- new text popup -->
                 <div class="newtextpopup-overlay" id="newtextPopup">
-                  
+
                     <div  class="card ">
                       <div class="card-header new-message-header">
                         New Message
@@ -720,11 +735,11 @@
                       </div>
                       <div class="card-body new-message-body">
                         <div class="row">
-                         
+
                           <div class="col-md-12" style="display: flex;">
-                            
+
                             <div id="field-group-first" class="field-group first" >
-                              <label for="recipient" style="color: black;">  Recipient  <i class="fas fa-mouse-pointer title-icon" style="transform: rotate(110deg);"></i>                                Building</label>
+                              <label for="recipient" style="color: black;">  Recepient  <i class="fas fa-mouse-pointer title-icon" style="transform: rotate(110deg);"></i>                                Building</label>
                               <select id="recipient" onchange="toggleShrink()" class="recipient" >
                                 <option value=""> Select Building </option>
                                 <option value="all"  >All Tenants</option>
@@ -742,21 +757,21 @@
                                 <option value="jane-smith">E278</option>
                               </select>
                             </div>
-                           
+
                             <div id="field-group-third" class="field-group third" style="display:none" >
                               <label for="tenant">Tenant</label>
                               <select id="Tenant" onchange="toggleShrink2()" class="tenant" >
                                 <option value="">Joseph</option>
-                                
+
                               </select>
                             </div>
-                            
+
                           </div>
-                          
+
                         </div>
 
                         <div class="field-group">
-                        
+
                           <label for="subject new-message">Subject (optional)</label>
                           <input type="text" id="subject" class="subject" placeholder="Enter subject..." />
                         </div>
@@ -768,8 +783,12 @@
 
                         <div class="field-group" style="display: block;">
                           <label for="attachment">Attachment (optional)</label>
-                          <input type="file" id="attachment" class="attach-file"/>
+                          <input type="file" id="imageUpload" accept="image/*" class="attach-file"/>
                         </div>
+
+                        <div class="preview-container">
+                          <img id="imagePreview" alt="Image Preview">
+                      </div>
 
                         <div class="actions d-flex justify-content-end">
                           <button class="draft-btn text-danger btn">Cancel</button>
@@ -780,7 +799,7 @@
                       </div>
 
                     </div>
-                    
+
                 </div>
 
 <div class="newtextpopup-overlay" id="newtextPopupq">
@@ -817,10 +836,10 @@
 
 
     <textarea id="notes" name="notes" rows="10" cols="98" placeholder="Enter message..." style="width: 590px; height: 150px; font-size: 16px; border-radius: 10px;"></textarea>
-    
-    <label for="file">Attachment</label> 
+
+    <label for="file">Attachment</label>
     <input class="attach" type="file" name="file">
-    
+
   <div class="d-flex justify-content-end">
 
     <button type="submit" class="btn submit-btn"><i class="fa fa-paper-plane"></i> </button>
@@ -852,12 +871,12 @@
             let first_field_group = document.getElementById("field-group-first");
             let field_group_third = document.getElementById("field-group-third");
             let field_group_second = document.getElementById("field-group-second");
-            
-            if (recipientBox.value === "all") {  
+
+            if (recipientBox.value === "all") {
               first_field_group.classList.remove("shrink"); // shrink if the option is not all
               field_group_second.style.display= "none";
               field_group_third.style.display= "none";
-              
+
           } else {
             first_field_group.classList.add("shrink"); // Do not shrink is the option is all
             field_group_second.style.display= "block";
@@ -868,14 +887,14 @@
 
         function toggleShrink1() {
             let recipientBox_units = document.getElementById("recipient-units");
-           
+
             let field_group_second = document.getElementById("field-group-second");
             let field_group_third = document.getElementById("field-group-third");
-            
-            if (recipientBox_units.value === "all") {  
+
+            if (recipientBox_units.value === "all") {
               field_group_second.classList.remove("shrink"); // shrink if the option is not all
               field_group_third.style.display= "none";
-              
+
           } else {
             field_group_second.classList.add("shrink"); // Do not shrink is the option is all
             field_group_third.style.display= "block";
@@ -885,7 +904,23 @@
 </script>
 <!-- end create new text -->
 
- 
+<!-- image preview -->
+<script>
+  document.getElementById('imageUpload').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+              const preview = document.getElementById('imagePreview');
+              preview.src = e.target.result;
+              preview.style.display = 'block';
+          }
+          reader.readAsDataURL(file);
+      }
+  });
+</script>
+
+<!-- end -->
 
 <script>
 
