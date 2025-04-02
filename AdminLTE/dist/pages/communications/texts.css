@@ -55,17 +55,14 @@ body {
   }
 
   .new-message-header{
-    /* margin: -30px -30px 30px; */
+    
     padding: 20px 50px 20px 30px;
     line-height: 22px;
     font-size: 18px;
     font-weight: 700;
     font-family: ProximaNova, arial, sans-serif;
     color: #4f4f52;
-    /* word-wrap: break-word; */
-    /* background-color: #f9f9f9; */
-    /* border-radius: 5px 5px 0 0; */
-    /* border-bottom: 2px solid #E2E2E2; */
+    
   }
 
   .new-message-body{
@@ -240,6 +237,9 @@ border: none;
     color: white;
     cursor: pointer;
   }
+  
+
+
   .btn:hover {
     background-color: #002a4d; /* Slightly lighter blue */
     transform: scale(1.05); /* Slightly enlarge */
@@ -269,6 +269,8 @@ border: none;
   border: none;
   background: none;
   }
+  
+
   .recentChats{
     display: none;
     margin-top: 2px;

@@ -81,11 +81,74 @@
         max-height: 100%;
         display: none;
     }
+    .category-number {
+  display: flex;
+  gap: 20px;
+}
+
+.category, .number {
+  display: block; /* Ensures elements respect the gap */
+}
+.category-number{
+  color: rgb(41, 41, 41); 
+  /* color: gray; */
+  font-size: 14px;
+  font-weight: 400px;
+}
+.number{
+  color: #00192D;; 
+  font-weight: 600;
+}
+.iHjPfu {
+    margin: 0px;
+    padding: 0px;
+    background: transparent;
+    max-width: 100%;
+    transition: 0.3s ease-out;
+    color: #FFC107;
+}.hQYLxw {
+    display: inline-block;
+    vertical-align: middle;
+    overflow: hidden;
+}
+.summary-item {
+  /* box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); x-offset, y-offset, blur-radius, color */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid transparent;
+  background-color: white;
+
+}
+.summary-item:hover{
+  border-color: #FFC107;
+  cursor: pointer;
+  color: white;
+  background-color:#FFC107;
+
+}
+.categories-section{
+  font-weight: 600;
+  font-size: 16px;
+  color: #FFC107;
+}
+.card-header.providers{
+  display: flex;
+  justify-content: start;
+  gap: 15px;
+}
+.category-header-section{
+margin-right: 15px;
+display: flex;
+}
+.mainTitle{
+  font-weight: 400px;
+  font-size: 14px;
+}
+
     </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
-    <div class="app-wrapper">
+    <div class="app-wrapper" style="background-color:rgba(128,128,128, 0.1) ;">
       <!--begin::Header-->
       <nav class="app-header navbar navbar-expand bg-body">
         <!--begin::Container-->
@@ -320,57 +383,14 @@
             <div class="row  " >
               <div class="col-sm-8">
 
-                <h3 class="mb-0 contact_section_header"> <i class="fas fa-user-tie icon"></i> Service Providers</h3>
-
-
-                    <div class="row mt-2  ">
-                      <div class="col-md-12 Summary ">
-
-                        <div class="row mt-6 ">
-                            <!-- Summary -->
-                            <div class="col-md-3 ">
-                                <label class="text text-center">  <i class="fas fa-calculator"></i>   TOTAL </label>
-                                <span class="value text-center"> <b>500</b>  </span>
-                            </div>
-
-                            <div class="col-md-4">
-               <label class="text text-center"> <i class="fas fa-file-alt"></i>  New_Applications  </label>
-                                <span class="value"> <b>56</b>  </span>
-                            </div>
-
-                        </div>
-
-
-
-                      </div>
-                      <!-- <div class="col-md-6">
-
-                        <div class="contact">
-                          <p class="contact_item" >Email</p>
-                          <p class="contact_value" >nucho@gmail</p>
-                        </div>
-                        <div class="contact">
-                          <p  class="contact_item" >Address</p>
-                          <p  class="contact_value" >50202|202|Califonia</p>
-                        </div>
-
-                      </div> -->
-                </div>
+                <h3 class="mb-0 contact_section_header"> <i class="fas fa-user-tie icon" style="color:#FFC107"></i> Service Providers</h3>
               </div>
-              <div class="col-sm-4">
 
-
-                <div class="row float-sm-end">
-                    <!-- <ol class="breadcrumb float-sm-end">
-                        <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                      </ol> -->
-                </div>
-
-                <div class="row d-flex">
-                </div>
+              <div class="col-sm-4 d-flex justify-content-end">
+                <button   class="btn new-category" onclick="openCategoryPopup()">    New Category</button>
 
               </div>
+              
             </div>
             <!--end::Row-->
           </div>
@@ -379,17 +399,152 @@
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
+            <div class="categories-section">Explore Providers By Category</div>
+            <!-- start Row -->
+             <div class="row  " >
+            
+                        
+                  <div class="col-md-3 ">
+                      <div class="summary-item d-flex justify-content-between bg-white">
+                        <!-- <i class="fas fa-calculator"></i> -->
+                          <div class="category-number" style="display: flex; gap: 5px;   align-items: center;">
+                            <div class="category">Plumbers,</div>
+                            <div class="number">43</div>
+                          </div>
+                          <div>
+
+                          <svg viewBox="0 0 24 24" height="100%" width="24" aria-hidden="true" focusable="false" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="StyledIconBase-sc-ea9ulj-0 hQYLxw Icon__StyledIcon-sc-1yzzdph-0 iHjPfu"><path d="m11.293 17.293 1.414 1.414L19.414 12l-6.707-6.707-1.414 1.414L15.586 11H6v2h9.586z"></path></svg>
+                          </div>
+                        
+                      </div>
+                  
+
+                  </div>
+                  <div class="col-md-3">
+                    <div class="summary-item d-flex justify-content-between bg-white">
+                      <!-- <i class="fas fa-calculator"></i> -->
+                        <div class="category-number" style="display: flex; gap: 5px;   align-items: center;">
+                          <div class="category">Land Scapers,</div>
+                          <div class="number">34</div>
+                        </div>
+                        <div>
+
+                        <svg viewBox="0 0 24 24" height="100%" width="24" aria-hidden="true" focusable="false" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="StyledIconBase-sc-ea9ulj-0 hQYLxw Icon__StyledIcon-sc-1yzzdph-0 iHjPfu"><path d="m11.293 17.293 1.414 1.414L19.414 12l-6.707-6.707-1.414 1.414L15.586 11H6v2h9.586z"></path></svg>
+                        </div>
+                      
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="summary-item d-flex justify-content-between bg-white">
+                      <!-- <i class="fas fa-calculator"></i> -->
+                        <div class="category-number" style="display: flex; gap: 5px;   align-items: center;">
+                          <div class="category">Masons,</div>
+                          <div class="number">74</div>
+                        </div>
+                        <div>
+
+                        <svg viewBox="0 0 24 24" height="100%" width="24" aria-hidden="true" focusable="false" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="StyledIconBase-sc-ea9ulj-0 hQYLxw Icon__StyledIcon-sc-1yzzdph-0 iHjPfu"><path d="m11.293 17.293 1.414 1.414L19.414 12l-6.707-6.707-1.414 1.414L15.586 11H6v2h9.586z"></path></svg>
+                        </div>
+                      
+                    </div>
+
+                  </div>
+                  <div class="col-md-3">
+                    <div class="summary-item d-flex justify-content-between bg-white">
+                      <!-- <i class="fas fa-calculator"></i> -->
+                        <div class="category-number" style="display: flex; gap: 5px;   align-items: center;">
+                          <div class="category">Electricians,</div>
+                          <div class="number">34</div>
+                        </div>
+                        <div>
+
+                        <svg viewBox="0 0 24 24" height="100%" width="24" aria-hidden="true" focusable="false" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="StyledIconBase-sc-ea9ulj-0 hQYLxw Icon__StyledIcon-sc-1yzzdph-0 iHjPfu"><path d="m11.293 17.293 1.414 1.414L19.414 12l-6.707-6.707-1.414 1.414L15.586 11H6v2h9.586z"></path></svg>
+                        </div>
+                      
+                    </div>
+                  </div>            
+            </div>
+
+
+
+            <!-- End Row -->
+
+
+            <!-- Start Row -->
+             <div class="row mt-2 " >
+            
+                        
+                  <div class="col-md-3 ">
+                    <div class="summary-item d-flex justify-content-between bg-white">
+                      <!-- <i class="fas fa-calculator"></i> -->
+                        <div class="category-number" style="display: flex; gap: 5px;   align-items: center;">
+                          <div class="category">Gas Suppliers,</div>
+                          <div class="number">10</div>
+                        </div>
+                        <div>
+
+                        <svg viewBox="0 0 24 24" height="100%" width="24" aria-hidden="true" focusable="false" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="StyledIconBase-sc-ea9ulj-0 hQYLxw Icon__StyledIcon-sc-1yzzdph-0 iHjPfu"><path d="m11.293 17.293 1.414 1.414L19.414 12l-6.707-6.707-1.414 1.414L15.586 11H6v2h9.586z"></path></svg>
+                        </div>
+                      
+                    </div>
+                
+
+                </div>
+                <div class="col-md-3">
+                  <div class="summary-item d-flex justify-content-between bg-white">
+                    <!-- <i class="fas fa-calculator"></i> -->
+                      <div class="category-number" style="display: flex; gap: 5px;   align-items: center;">
+                        <div class="category">Butcher,</div>
+                        <div class="number">49</div>
+                      </div>
+                      <div>
+
+                      <svg viewBox="0 0 24 24" height="100%" width="24" aria-hidden="true" focusable="false" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="StyledIconBase-sc-ea9ulj-0 hQYLxw Icon__StyledIcon-sc-1yzzdph-0 iHjPfu"><path d="m11.293 17.293 1.414 1.414L19.414 12l-6.707-6.707-1.414 1.414L15.586 11H6v2h9.586z"></path></svg>
+                      </div>
+                    
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="summary-item d-flex justify-content-between bg-white">
+                    <!-- <i class="fas fa-calculator"></i> -->
+                      <div class="category-number" style="display: flex; gap: 5px;   align-items: center;">
+                        <div class="category">Mama Mbogo,</div>
+                        <div class="number">79</div>
+                      </div>
+                      <div>
+
+                      <svg viewBox="0 0 24 24" height="100%" width="24" aria-hidden="true" focusable="false" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="StyledIconBase-sc-ea9ulj-0 hQYLxw Icon__StyledIcon-sc-1yzzdph-0 iHjPfu"><path d="m11.293 17.293 1.414 1.414L19.414 12l-6.707-6.707-1.414 1.414L15.586 11H6v2h9.586z"></path></svg>
+                      </div>
+                    
+                  </div>
+
+                </div>
+                <div class="col-md-3">
+                  <div class="summary-item d-flex justify-content-between bg-white">
+                    <!-- <i class="fas fa-calculator"></i> -->
+                      <div class="category-number" style="display: flex; gap: 5px;   align-items: center;">
+                        <div class="category">Others,</div>
+                        <div class="number">50</div>
+                      </div>
+                      <div>
+
+                      <svg viewBox="0 0 24 24" height="100%" width="24" aria-hidden="true" focusable="false" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="StyledIconBase-sc-ea9ulj-0 hQYLxw Icon__StyledIcon-sc-1yzzdph-0 iHjPfu"><path d="m11.293 17.293 1.414 1.414L19.414 12l-6.707-6.707-1.414 1.414L15.586 11H6v2h9.586z"></path></svg>
+                      </div>
+                    
+                  </div>
+                </div>            
+          </div>
+
+
+
+            <!-- End Row -->
+             
             <!-- Info boxes -->
             <div class="row first mb-2 mt-2 ">
 
                 <div class="col-md-12">
 
-                  <div>
-                    <button class="btn" style="background-color: #00192D; color: white; font-size: small; margin-right: 2%;" onclick="openCategoryPopup()">  <i class="fas fa-plus icon"></i>
-                        <b > Add Category </b></button>
-                  <button class="btn" style="background-color: #00192D; color: white; font-size: small;" onclick="openProviderPopup()">  <i class="fas fa-plus icon"></i>
-                    <b> Add Provider </b></button>
-                    </div>
+                  
                 </div>
               <!-- /.col -->
             </div>
@@ -400,16 +555,35 @@
             <!--begin::Row-->
             <div class="row second">
               <!-- Start col -->
-              <div class="col-md-8" >
+              <div class="col-md-12" >
                     <div class="card second_col ">
-                        <div class="card-header">
+                        <div class="card-header providers" style="padding: 10px !important;">
+                          <div class="category-header-section"> 
+                            
+                            <select id="categoryFilter" class="categoryFilter">
+                              <option value="">-- Select Category--</option>
+                              <option value="technology">All</option>
+                              <option value="health">Plumbers</option>
+                              <option value="business">Masons</option>
+                              <option value="education">Mama Mboga</option>
+                            </select>
+
+                          </div>
+                          <div style="display:flex; gap:15px">
+                              <div><input type="text" class="search-input" placeholder="Search provider..."></div>
+                              <div> <button class="btn" style="color: white; font-size: small;" onclick="openProviderPopup()">  <i class="fas fa-plus icon"></i>
+                                <b> Add Provider </b></button>
+                              </div>
+                          
+                          </div>
+                          
                         </div>
-                        <div class="card-body">
-                        <table id="maintenance" class="display">
+                        <div class="card-body" style="padding: 0 !important;">
+                        <table class="table table-hover table-summary-messages" >
                             <thead class="mb-2">
                             <tr>
-                                <th>ID</th>
-                                <th>First Name</th>
+                                
+                                <th>PROVIDER</th>
                                 <th>Phone</th>
                                 <th>Email</th>
                                 <!-- <th>Category</th> -->
@@ -419,7 +593,7 @@
                             </thead>
                             <tbody>
                             <tr >
-                                <td>002</td>
+                                
                                 <td>John Doe
                                 <!-- Rating Section (stars) -->
                                 <div class="stars">
@@ -434,7 +608,11 @@
                                 <td class="text-primary"> <i class="fas fa-envelope"></i>  emmanu@gmail.com</td>
                                 <!-- <td>Electrician</td> -->
                                 <td id="more">
-                               <div id="more_icon">&#x2026;</div>
+                               <div id="more_icon">
+                                <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                                        
+                                <button class="action-btn">⋮</button>
+                              </div>
                                         <br>
                                         <div id="more_options">
                                            <a href="../serviceProvider/individualProviderProfile.html">View</a>
@@ -447,7 +625,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>002</td>
+                                
                                 <td>John Doe
                                 <!-- Rating Section (stars) -->
                                 <div class="stars">
@@ -463,7 +641,10 @@
                                 <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
                                 <!-- <td>Plumber</td> -->
                                 <td id="more">
-                                  <div id="more_icon">&#x2026;</div>
+                                  <div id="more_icon">
+                                    <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                                    <button class="action-btn">⋮</button>
+                                  </div>
                                            <br>
                                            <div id="more_options">
                                               <a href="../serviceProvider/individualProviderProfile.html">View</a>
@@ -476,7 +657,7 @@
                                    </td>
                             </tr>
                             <tr>
-                              <td>002</td>
+                              
                               <td>John Doe
                               <!-- Rating Section (stars) -->
                               <div class="stars">
@@ -492,7 +673,10 @@
                               <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
                               <!-- <td>Plumber</td> -->
                               <td id="more">
-                                <div id="more_icon">&#x2026;</div>
+                                <div id="more_icon">
+                                  <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                                  <button class="action-btn">⋮</button>
+                                </div>
                                          <br>
                                          <div id="more_options">
                                             <a href="../serviceProvider/individualProviderProfile.html">View</a>
@@ -505,7 +689,7 @@
                                  </td>
                           </tr>
                           <tr>
-                            <td>002</td>
+                            
                             <td>John Doe
                             <!-- Rating Section (stars) -->
                             <div class="stars">
@@ -521,7 +705,10 @@
                             <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
                             <!-- <td>Plumber</td> -->
                             <td id="more">
-                              <div id="more_icon">&#x2026;</div>
+                              <div id="more_icon">
+                                <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                                <button class="action-btn">⋮</button>
+                              </div>
                                        <br>
                                        <div id="more_options">
                                           <a href="../serviceProvider/individualProviderProfile.html">View</a>
@@ -534,7 +721,7 @@
                                </td>
                         </tr>
                         <tr>
-                          <td>002</td>
+                      
                           <td>John Doe
                           <!-- Rating Section (stars) -->
                           <div class="stars">
@@ -550,7 +737,10 @@
                           <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
                           <!-- <td>Plumber</td> -->
                           <td id="more">
-                            <div id="more_icon">&#x2026;</div>
+                            <div id="more_icon">
+                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                              <button class="action-btn">⋮</button>
+                            </div>
                                      <br>
                                      <div id="more_options">
                                         <a href="../serviceProvider/individualProviderProfile.html">View</a>
@@ -562,64 +752,8 @@
                                      </div>
                              </td>
                       </tr>
-                      <tr>
-                        <td>002</td>
-                        <td>John Doe
-                        <!-- Rating Section (stars) -->
-                        <div class="stars">
-                          <span class="star" data-value="1">&#9733;</span>
-                          <span class="star" data-value="2">&#9733;</span>
-                          <span class="star" data-value="3">&#9733;</span>
-                          <span class="star" data-value="4">&#9733;</span>
-                          <span class="star" data-value="5">&#9733;</span>
-                        </div>
-
-                        </td>
-                        <td>0756752987</td>
-                        <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
-                        <!-- <td>Plumber</td> -->
-                        <td id="more">
-                          <div id="more_icon">&#x2026;</div>
-                                   <br>
-                                   <div id="more_options">
-                                      <a href="../serviceProvider/individualProviderProfile.html">View</a>
-                                      <a href="#">Edit</a>
-                                      <a href="#">Delete</a>
-                                      <a href="#">Others</a>
-
-
-                                   </div>
-                           </td>
-                    </tr>
-                    <tr>
-                      <td>002</td>
-                      <td>Jo Doe
-                      <!-- Rating Section (stars) -->
-                      <div class="stars">
-                        <span class="star" data-value="1">&#9733;</span>
-                        <span class="star" data-value="2">&#9733;</span>
-                        <span class="star" data-value="3">&#9733;</span>
-                        <span class="star" data-value="4">&#9733;</span>
-                        <span class="star" data-value="5">&#9733;</span>
-                      </div>
-
-                      </td>
-                      <td>0756752987</td>
-                      <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
-                      <!-- <td>Plumber</td> -->
-                      <td id="more">
-                        <div id="more_icon">&#x2026;</div>
-                                 <br>
-                                 <div id="more_options">
-                                    <a href="../serviceProvider/individualProviderProfile.html">View</a>
-                                    <a href="#">Edit</a>
-                                    <a href="#">Delete</a>
-                                    <a href="#">Others</a>
-
-
-                                 </div>
-                         </td>
-                  </tr>
+                      
+                    
                             <!-- Add more rows as needed -->
                             </tbody>
 
@@ -629,139 +763,10 @@
 
                         </div>
 
-
-
-                        <div class="card-footer">
-
-                        </div>
-
                     </div>
                 </div>
 
-                <div class="col-md-4" class="first_col">
-                    <div class="card second_col">
-                        <div class="card-header">
-                             <div class="card-text">
-                                Vendor Distribution
-                             </div>
-                        </div>
-                        <div class="card-body">
-                            <table  class="table-striped">
-                                <thead>
-                                <tr>
-                                    <th> <i class="fas fa-th-large"></i>Category</th>
-                                    <th>Number</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                                <tr>
-                                    <td>Plumbing</td>
-                                    <td>5</td>
-                                    <td id="more">
-                                      <div id="more_icon">&#x2026;</div>
-                                               <br>
-                                               <div id="more_options">
-                                                  <a href="../serviceProvider/individualProviderProfile.html">View</a>
-                                                  <a href="#">Edit</a>
-                                                  <a href="#">Delete</a>
-                                                  <a href="#">Others</a>
-
-
-                                               </div>
-                                       </td>
-                                </tr>
-                                <tr>
-                                    <td>Electricians</td>
-                                    <td>5</td>
-                                    <td id="more">
-                                      <div id="more_icon">&#x2026;</div>
-                                               <br>
-                                               <div id="more_options">
-                                                  <a href="../serviceProvider/individualProviderProfile.html">View</a>
-                                                  <a href="#">Edit</a>
-                                                  <a href="#">Delete</a>
-                                                  <a href="#">Others</a>
-
-
-                                               </div>
-                                       </td>
-                                </tr>
-                                <tr>
-                                    <td>Landscaping</td>
-                                    <td>3</td>
-                                    <td id="more">
-                                      <div id="more_icon">&#x2026;</div>
-                                               <br>
-                                               <div id="more_options">
-                                                  <a href="../serviceProvider/individualProviderProfile.html">View</a>
-                                                  <a href="#">Edit</a>
-                                                  <a href="#">Delete</a>
-                                                  <a href="#">Others</a>
-
-
-                                               </div>
-                                       </td>
-                                </tr>
-                                <tr>
-                                    <td>Masons</td>
-                                    <td>No vendor is assigned to this category </td>
-                                    <td id="more">
-                                        <div id="more_icon" class="rounded-circle" >&#x2026;</div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                  <td>Mama Mboga</td>
-                                  <td>3</td>
-                                  <td id="more">
-                                    <div id="more_icon">&#x2026;</div>
-                                             <br>
-                                             <div id="more_options">
-                                                <a href="../serviceProvider/individualProviderProfile.html">View</a>
-                                                <a href="#">Edit</a>
-                                                <a href="#">Delete</a>
-                                                <a href="#">Others</a>
-                                             </div>
-                                     </td>
-                              </tr>
-                              <tr>
-                                <td>Butchery</td>
-                                <td>3</td>
-                                <td id="more">
-                                  <div id="more_icon">&#x2026;</div>
-                                           <br>
-                                           <div id="more_options">
-                                              <a href="../serviceProvider/individualProviderProfile.html">View</a>
-                                              <a href="#">Edit</a>
-                                              <a href="#">Delete</a>
-                                              <a href="#">Others</a>
-                                           </div>
-                                   </td>
-                            </tr>
-                            <tr>
-                              <td>Gas Supplier</td>
-                              <td>3</td>
-                              <td id="more">
-                                <div id="more_icon">&#x2026;</div>
-                                         <br>
-                                         <div id="more_options">
-                                            <a href="../serviceProvider/individualProviderProfile.html">View</a>
-                                            <a href="#">Edit</a>
-                                            <a href="#">Delete</a>
-                                            <a href="#">Others</a>
-                                         </div>
-                                 </td>
-                          </tr>
-                            </table>
-
-
-                        </div>
-
-
-                    </div>
-
-
-
-                </div>
+                
 
 
             </div>
@@ -801,53 +806,41 @@
 
 <!-- create Announcement -->
 
+<!-- new Category popup -->
+<div class="categoryPopup-overlay" id="CategoryPopup">
 
+  <div  class="card" style="margin-top: 20px;">
+    <div class="card-header new-category-header">
+      New Category
+      <button class="close-btn bg-body-secondary" onclick="closeCategoryPopup()">×</button>
+    </div>
+    <div class="card-body new-message-body">
 
+      <div class="field-group">
 
+        <label for="subject new-message">Service Provider</label>
+        <input type="number" id="number" class="category-number" placeholder="Enter number..." />
+      </div><div class="field-group">
 
- <!-- Start View announcement -->
- <div class="view_announcement" id="view_announcement">
-  <div class="card content">
-   <div class="card-header view_announcement bg-secondary text-white">
-       <h5 class="mb-0">Rent Payments</h5>
-       <div id="close-overlay-btn" class="close-btn" > <b> &times;</b> </div>
+        <label for="subject new-message">Category</label>
+        <input type="text" id="category-text" class="category-text" placeholder="Enter number..." />
+      </div> 
+      <div class="actions d-flex justify-content-end">
+        
+        <button class="save-btn btn mt-2">save</button>
+      </div>
 
-   </div>
-   <div class="card-body">
-       <p class="card-text">
-           All Rent Payments should be made before 24/01/17. Anyone who feels that they might not
-           be able to complete their dues on 24/01/17 should communicate to management before the due date.
-           Else, you face an eviction risk if you fail to pay your dues before the said date without a reasonable reason</p>
+    </div>
 
-           <p class="timestamp" id="timestamp"></p> <!-- Timestamp -->
-
-
-       <div class="Recipients border-top border-gray "> <p><strong>Recipients|</strong> All Employees</p>  </div>
-
-   </div>
-   <div class="card-footer view_announcement d-flex">
-       <button class="btn btn-danger btn-sm">Delete</button>
-       <button class="btn btn-secondary btn-sm">Resend</button>
-   </div>
- </div>
- </div>
-
-<!-- Category popup -->
-<div class="Categorypopup-overlay" id="CategoryPopup">
-  <div class="Categorypopup-content">
-    <button class="close-btn text-secondary" onclick="closeCategoryPopup()">×</button>
-    <h2 style="color: #00192D;">Add Category</h2>
-    <form class="category-form">
-        <label for="name">Service Providers</label>
-        <input type="number" id="number" name="number" required>
-        <label for="text">Category</label>
-
-        <input type="text" id="text" name="text" required><br>
-      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">ADD</button><br>
-    </form>
   </div>
+
 </div>
+
+
 <!-- End Category popup -->
+
+
+
 
 <!-- Provider popup -->
 <div class="Providerpopup-overlay" id="ProviderPopup">
