@@ -42,7 +42,7 @@ body {
   .total { background-color: #f8f9fa; color: #333; } /* Neutral */
   .completed { background-color: #28a745; color: white; } /* Green */
   .in-progress { background-color: #007bff; color: white; } /* Blue */
-  .incomplete { background-color: #dc3545; color: white; } /* Red */                                                          
+  .incomplete { background-color: #dc3545; color: white; } /* Red */
 
 
                                                             /* BUTTONS */
@@ -75,7 +75,7 @@ body {
     color: green;
     border: 1px solid #FFC107;
   }
-  
+
   .save-btn{
     padding: 2px 4px;
     font-size: 17px;
@@ -89,7 +89,7 @@ body {
     background-color: transparent;
     color: green;
   }
-  
+
                                       /* TABLE */
 .table-summary-messages{
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
@@ -144,7 +144,7 @@ th {
 td{
   background: #EFF2F5;
 }
-                                    
+
 
 .filter:hover {
     color: #FFC107;
@@ -443,7 +443,7 @@ justify-content: end;
 .categoryPopup-overlay .card{
   width: 30%;
   /* margin-top: 4% !important;  */
-  
+
 }
 
 .new-category-header{
@@ -495,7 +495,9 @@ justify-content: end;
     /* end category css */
 
     /* start provider css */
-    .Providerpopup-overlay{
+
+
+  .Providerpopup-overlay{
   overflow: auto;
   position: fixed;
   top: 0;
@@ -509,13 +511,14 @@ justify-content: end;
   align-items: center;
   font-family: 'Poppins', sans-serif;
   font-size: small;
-    }
+}
+
     .Providerpopup-content{
-      margin-top: 5%;
+      margin-top: 35%;
       background: white;
       padding: 20px;
       border-radius: 8px;
-      width: 50%;
+      width: 30%;
       text-align: left;
       position: relative;
     }
