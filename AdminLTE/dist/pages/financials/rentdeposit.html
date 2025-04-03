@@ -353,8 +353,8 @@
 
 <div class="col-6 col-md-6 ">
   <div class="summary-item in-progress">
-    <i class="fas fa-spinner fa-spin icon"></i>
-    <div class="label"> Total Amount Pending <b class="value">Ksh  30</b></div>
+    <i class="fas fa-calculator icon"></i>
+    <div class="label"> Total Rent Refunds <b class="value">Ksh  30,000</b></div>
   </div>
 </div>
 </div>
@@ -367,7 +367,7 @@
               <div class="col-md-2">
                 <div class="filter-container">
                   <div>
-                    <label for="categoryFilter" class="filter-label">Property</label>
+                    <label for="categoryFilter" class="filter-label">Building</label>
                     <br>
                     <select id="categoryFilter">
                         <option value="">-- Select --</option>
@@ -429,7 +429,7 @@
                          <th>#</th>
                          <th>Tenant ID</th>
                           <th>Name</th>
-                          <th>Apartment</th>
+                          <th>Building</th>
                           <th>Unit</th>
                           <th>Deposit Paid</th>
                           <th>Deductions</th>
@@ -503,7 +503,7 @@
           id:'1',
           tenant_id: 'T1001',
           name: 'John Doe',
-          apartment: 'A1',
+          building: 'Crown Z Towers',
           unit:'b2',
           deposit_paid: 1500,
           deductions: 200,
@@ -516,7 +516,7 @@
           id:'3',
           tenant_id: 'T1002',
           name: 'Jane Smith',
-          apartment: 'B3',
+          building: 'Crown M Towers',
           unit:'b2',
           deposit_paid: 1400,
           deductions: 0,
@@ -530,7 +530,7 @@
         id:'3',
         tenant_id: 'T1002',
         name: 'Jane Smith',
-        apartment: 'B3',
+        building: 'Crown T Towers',
         unit:'b2',
         deposit_paid: 1400,
         deductions: 0,
@@ -543,7 +543,7 @@
       id:'4',
       tenant_id: 'T1002',
       name: 'Jane Smith',
-      apartment: 'B3',
+      building: 'Crown B Towers',
       unit:'b2',
       deposit_paid: 1400,
       deductions: 0,
@@ -555,7 +555,7 @@
     id:'5',
     tenant_id: 'T1002',
     name: 'Jane Smith',
-    apartment: 'B3',
+    building: 'Crown Y Towers',
     unit:'b2',
     deposit_paid: 1400,
     deductions: 0,
@@ -567,7 +567,7 @@
   id:'6',
   tenant_id: 'T1002',
   name: 'Jane Smith',
-  apartment: 'B3',
+  building: 'Crown PER Towers',
   unit:'b2',
   deposit_paid: 1400,
   deductions: 0,
@@ -579,7 +579,7 @@
   id:'7',
   tenant_id: 'T1002',
   name: 'Jane Smith',
-  apartment: 'B3',
+  building: 'Crown Q Towers',
   unit:'b2',
   deposit_paid: 1400,
   deductions: 0,
@@ -591,7 +591,7 @@
   id:'8',
   tenant_id: 'T1002',
   name: 'Jane Smith',
-  apartment: 'B3',
+  building: 'Crown A Towers',
   unit:'b2',
   deposit_paid: 1400,
   deductions: 0,
@@ -603,7 +603,7 @@
   id:'9',
   tenant_id: 'T1002',
   name: 'Jane Smith',
-  apartment: 'B3',
+  building: 'Crown Z Towers',
   unit:'b2',
   deposit_paid: 1400,
   deductions: 0,
@@ -615,7 +615,7 @@
   id:'10',
   tenant_id: 'T1002',
   name: 'Jane Smith',
-  apartment: 'B3',
+  building: 'Crown Z Towers',
   unit:'b2',
   deposit_paid: 1400,
   deductions: 0,
@@ -627,7 +627,7 @@
   id:'11',
   tenant_id: 'T1002',
   name: 'Jane Smith',
-  apartment: 'B3',
+  building: 'Crown Z Towers',
   unit:'b2',
   deposit_paid: 1400,
   deductions: 0,
@@ -639,7 +639,7 @@
   id:'12',
   tenant_id: 'T1002',
   name: 'Jane Smith',
-  apartment: 'B3',
+  building: 'Crown Z Towers',
   unit:'b2',
   deposit_paid: 1400,
   deductions: 0,
@@ -658,7 +658,7 @@
               <td>${tenant.id}</td>
               <td>${tenant.tenant_id}</td>
               <td>${tenant.name}</td>
-              <td>${tenant.apartment}</td>
+              <td>${tenant.building}</td>
               <td>${tenant.unit}</td>
               <td>${tenant.deposit_paid}</td>
               <td>${tenant.deductions}</td>
