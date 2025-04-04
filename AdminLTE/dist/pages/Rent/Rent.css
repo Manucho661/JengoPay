@@ -410,3 +410,33 @@ table {
       background-color: white;
     }
 
+    .row {
+      display: flex;
+      justify-content: space-between;
+  }
+
+  .col-md-4 {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 10px;
+  }
+  .filter-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    /* align-items: center; */
+
+  }
+
+  #categoryFilter{
+    margin-right: 5px;
+  }
+  select, input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  .select {width: 100%;}

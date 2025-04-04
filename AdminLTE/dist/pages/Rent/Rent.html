@@ -410,12 +410,13 @@
             <div class="row  " >
               <div class="col-sm-8">
 
-                <h3 class="mb-0 contact_section_header"> <i class="fas fa-house-user"></i>  Rental Charges  | Crown Z</h3>
-<br>
+                <b><h3 class="mb-0 contact_section_header"> <i class="fas fa-coins mr-2" style="font-size: 1.5rem;"></i> Rental Charges  | Crown Z TOWERS</h3>
+                </b>
+                  <br>
 <div  class="app-content">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-8">
         <div class="card shadow-lg" style="width: 18rem; border-radius: 15px; background: #f9f9f9;">
           <div class="card-body">
             <h5 class="card-title d-flex align-items-center">
@@ -438,7 +439,7 @@
 
 
 
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div class="card shadow-lg" style="width: 18rem; border-radius: 15px; background: #f9f9f9;">
           <div class="card-body">
             <h5 class="card-title d-flex align-items-center">
@@ -460,10 +461,12 @@
       </div>
 
 
+
+
       <br>
       <!-- /          </div> -->
 
-                      </div> -->
+                      </div>
                       <!-- <div class="col-md-6">
 
                         <div class="contact">
@@ -496,46 +499,44 @@
 
             <!-- End first Row -->
 
-
-
-
             <!-- Second row start -->
-
-            <div class="row first mb-2 ">
+            <div class="row first mb-2 mt-3">
               <div class="col-md-4">
+
                   <div>
-
-                      <select id="categoryFilter">
-                          <option value="">-- Select Property--</option>
-                          <option value="technology">All</option>
-                          <option value="health">Manucho</option>
-                          <option value="business">Ebenezer</option>
-                          <option value="education">Crown Z</option>
-                      </select>
-                    </div>
-              </div>
-
-             <div class="row first mb-2 mt-3">
-
-                <!-- <div class="col-md-6 d-flex justify-content-between">
-                  <button id="rent_details_btn" class="btn">  <i class="fas fa-calendar-check icon"></i> <a href="profile.html"> <b> Records </b> </a> </button>
-
-                  <button id="agreements_btn" class="btn"><i class="fas fa-calendar-check icon"></i>
-                       <a href="agreements.html"> <b> Agreements </b> </a>  </button>
-
-
-
-
-                </div> -->
-
-                <div class="col-md-6">
-                  <div style="display: flex; justify-content: end;">
-
+                    <label for="categoryFilter" class="filter-label">Property</label>
+                    <br>
+                    <select id="categoryFilter">
+                        <option value="">-- Select --</option>
+                        <option value="technology">All</option>
+                        <option value="health">Manucho</option>
+                        <option value="business">Ebenezer</option>
+                        <option value="education">Crown Z</option>
+                    </select>
 
                   </div>
-                </div>
-              <!-- /.col -->
-            </div>
+                 
+              </div>
+
+              <div class="col-md-4">
+                  Start Date
+                  <label for="filterDate" class="filter-label"></label>
+                  <input type="date" id="filterDate" />
+              </div>
+
+              <div class="col-md-4" style="padding: 10px;">
+                End Date
+                  <label for="filterDate" class="filter-label"></label>
+                  <input type="date" id="filterDate" />
+              </div>
+          </div>
+
+
+
+
+
+
+
 
 
                       <div class="row mt-3"> <!-- second row -->
@@ -560,7 +561,7 @@
                                 </tr>
                         </thead>
                         <tbody>
-                            <tr onclick="window.location.href='individualrent.html'">
+                            <tr onclick="window.location.href=''">
                                 <th scope="row">KSH 9,000</th>
                                     <td>KELVIN</td>
                                     <td>CROWN Z TOWERS</td>
@@ -578,7 +579,7 @@
 
                                   </td>
                             </tr>
-                            <tr onclick="window.location.href='individualrent.html'">
+                            <tr onclick="window.location.href=''">
                               <th scope="row">KSH 15,000</th>
                                   <td>KELVIN</td>
                                   <td>CROWN Z TOWERS</td>
@@ -596,7 +597,7 @@
 
                                 </td>
                           </tr>
-                          <tr onclick="window.location.href='individualrent.html'">
+                          <tr onclick="window.location.href=''">
                             <th scope="row">KSH 25,000</th>
                                 <td>KELVIN</td>
                                 <td>CROWN Z TOWERS</td>
@@ -615,7 +616,7 @@
                               </td>
                         </tr>
 
-                        <tr onclick="window.location.href='individualrent.html'">
+                        <tr onclick="window.location.href=''">
                           <th scope="row">KSH 35,000</th>
                               <td>KELVIN</td>
                               <td>CROWN Z TOWERS</td>
@@ -630,9 +631,100 @@
                               </button> -->
                               <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
                               <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
-
                             </td>
                       </tr>
+
+
+                      <tr onclick="window.location.href=''">
+                        <th scope="row">KSH 35,000</th>
+                            <td>KELVIN</td>
+                            <td>CROWN Z TOWERS</td>
+                            <td>B67</td>
+                            <td>Three Bedroom</td>
+                            <td>KELVIN</td>
+                            <td>4</td>
+                            <td>27-03-2025</td>
+                            <td>Mr Maina</td>
+                          <td>
+                            <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                            </button> -->
+                            <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
+                            <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
+
+                          </td>
+                    </tr>
+                    <tr onclick="window.location.href=''">
+                      <th scope="row">KSH 35,000</th>
+                          <td>KELVIN</td>
+                          <td>CROWN Z TOWERS</td>
+                          <td>B67</td>
+                          <td>Three Bedroom</td>
+                          <td>KELVIN</td>
+                          <td>4</td>
+                          <td>27-03-2025</td>
+                          <td>Mr Maina</td>
+                        <td>
+                          <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                          </button> -->
+                          <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
+                          <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
+
+                        </td>
+                  </tr>
+                  <tr onclick="window.location.href=''">
+                    <th scope="row">KSH 35,000</th>
+                        <td>KELVIN</td>
+                        <td>CROWN Z TOWERS</td>
+                        <td>B67</td>
+                        <td>Three Bedroom</td>
+                        <td>KELVIN</td>
+                        <td>4</td>
+                        <td>27-03-2025</td>
+                        <td>Mr Maina</td>
+                      <td>
+                        <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                        </button> -->
+                        <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
+                        <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
+
+                      </td>
+                </tr>
+                <tr onclick="window.location.href=''">
+                  <th scope="row">KSH 35,000</th>
+                      <td>KELVIN</td>
+                      <td>CROWN Z TOWERS</td>
+                      <td>B67</td>
+                      <td>Three Bedroom</td>
+                      <td>KELVIN</td>
+                      <td>4</td>
+                      <td>27-03-2025</td>
+                      <td>Mr Maina</td>
+                    <td>
+                      <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                      </button> -->
+                      <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
+                      <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
+
+                    </td>
+              </tr>
+              <tr onclick="window.location.href=''">
+                <th scope="row">KSH 35,000</th>
+                    <td>KELVIN</td>
+                    <td>CROWN Z TOWERS</td>
+                    <td>B67</td>
+                    <td>Three Bedroom</td>
+                    <td>KELVIN</td>
+                    <td>4</td>
+                    <td>27-03-2025</td>
+                    <td>Mr Maina</td>
+                  <td>
+                    <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                    </button> -->
+                    <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
+                    <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
+
+                  </td>
+            </tr>
                         </tbody>
                     </table>
                   </div>
