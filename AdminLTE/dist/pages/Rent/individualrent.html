@@ -339,9 +339,27 @@
                   </div>
 
                   <div class="col-md-3">
+                    <label class="text text-center"> <i class="fas fa-money-bill-alt"></i>Unit</label>
+                    <span class="value">B89</span>
+                </div>
+
+                <div class="col-md-3">
+                  <label class="text text-center"> <i class="fas fa-money-bill-alt"></i>Tenant</label>
+                  <span class="value">Emmanuel</span>
+              </div>
+
+                <div class="col-md-3">
+                  <label class="text text-center"> <i class="fas fa-money-bill-alt"></i>Type</label>
+                  <span class="value">Bedsitter</span>
+              </div>
+
+
+                  <div class="col-md-3">
                       <label class="text text-center"> <i class="fas fa-money-bill-alt"></i>Monthly Rent</label>
                       <span class="value">Ksh 10,000</span>
                   </div>
+
+
                   <div class="col-md-3">
                     <label class="text text-center">  <i class="fas fa-id-card"></i>   IDENTIFICATION NUMBER </label>
                     <span class="value">012020202 </span>
@@ -403,18 +421,31 @@
           <table id="rent" class="display" style="font-size: small;" >
             <thead>
               <tr>
-                      <th scope="col">DATE</th>
-                      <th scope="col">PROPERTY</th>
-                      <th scope="col">MONTHLY RENT</th>
-                      <th scope="col">Payment Status</th>
-                      <th scope="col">ACTION</th>
+                <th scope="col">PAYMENT AMOUNT</th>
+                <th scope="col">PAID BY</th>
+                <th scope="col">BUILDING</th>
+                <th scope="col">UNIT</th>
+                <th scope="col">TYPE</th>
+                <th scope="col">TENANT</th>
+                <th scope="col">DAYS OVERDUE</th>
+                <th scope="col">PAID ON</th>
+                <th scope="col">RECEIVED BY</th>
+                <th scope="col">STATUS</th>
+                <th scope="col">ACTION</th>
+
               </tr>
             </thead>
             <tbody>
               <tr>
-                  <td scope="row">1/7/11</td>
-                      <td>Manucho Apartments</td>
-                      <td>KSH 10,000</td>
+                  <td scope="row">Ksh 10,000</td>
+                      <td>29-01-2025</td>
+                      <td>Crown Z Towers</td>
+                      <td>B28</td>
+                      <td>Bed Sitter</td>
+                      <td>Fred Matiangi</td>
+                      <td>4</td>
+                      <td>29-01-2025</td>
+                      <td>Mwangi</td>
                       <td><button class="status not-paid" style=" background-color: #ff4d4d; /* Red background */
                       color: white;
                       border: 2px solid white; /* Darker red border */">
@@ -433,137 +464,193 @@
               </tr>
 
               <tr>
-              <td scope="row">2/7/11</td>
-              <td>Ebenezar Apartments</td>
-              <td>KSH 20,000</td>
-              <td> <button class="status completed" style=" background-color: green; /* Red background */
-                    color: white;
-                    border: 2px solid white; /* Darker red border */"><i class="fa fa-check-circle"></i> Paid </button>  </td>
-                    <td>
-                    <div id="more_icon">&#x2026;</div>
-                    <br>
-                    <div id="more_options">
-                      <a href="#">View</a>
-                      <a href="#">Edit</a>
-                      <a href="#">Delete</a>
-                      <a href="#">Others</a>
-                    </div>
-                  </td>
-              </tr>
-              <tr>
-                  <td scope="row">3/7/11</td>
-              <td>Kernick Apartment</td>
-              <td>KSH 30,000</td>
-              <td> <button class="status not-paid" style=" background-color: #ff4d4d; /* Red background */
-                color: white;
-                border: 2px solid white; /* Darker red border */">
-                                      <i class="fa fa-times-circle"></i> Not Paid
-                                  </button> </td>
-                                  <td>
-                                  <div id="more_icon">&#x2026;</div>
-                                  <br>
-                                  <div id="more_options">
-                                     <a href="#">View</a>
-                                     <a href="#">Edit</a>
-                                     <a href="#">Delete</a>
-                                     <a href="#">Others</a>
-                                  </div>
-                                </td>
-                  </tr>
-                  <tr>
-                    <td scope="row">3/7/11</td>
-                <td>Kernick Apartment</td>
-                <td>KSH 30,000</td>
-                <td> <button class="status not-paid" style=" background-color: #ff4d4d; /* Red background */
-                  color: white;
-                  border: 2px solid white; /* Darker red border */">
-                                        <i class="fa fa-times-circle"></i> Not Paid
-                                    </button> </td>
-                                    <td>
-                                    <div id="more_icon">&#x2026;</div>
-                                    <br>
-                                    <div id="more_options">
-                                       <a href="#" >View</a>
-                                       <a href="#">Edit</a>
-                                       <a href="#">Delete</a>
-                                       <a href="#">Others</a>
-                                    </div>
-                                  </td>
-                    </tr>
-                    <tr>
-                      <td scope="row">3/7/11</td>
-                  <td>Kernick Apartment</td>
-                  <td>KSH 30,000</td>
-                  <td> <button class="status not-paid" style=" background-color: #ff4d4d; /* Red background */
+                <td scope="row">Ksh 10,000</td>
+                    <td>29-01-2025</td>
+                    <td>Crown Z Towers</td>
+                    <td>B28</td>
+                    <td>Bed Sitter</td>
+                    <td>Fred Matiangi</td>
+                    <td>4</td>
+                    <td>29-01-2025</td>
+                    <td>Mwangi</td>
+                    <td><button class="status not-paid" style=" background-color: #ff4d4d; /* Red background */
                     color: white;
                     border: 2px solid white; /* Darker red border */">
-                                          <i class="fa fa-times-circle"></i> Not Paid
-                                      </button> </td>
-                                      <td>
-                                      <div id="more_icon">&#x2026;</div>
-                                      <br>
-                                      <div id="more_options">
-                                         <a href="#" >View</a>
-                                         <a href="#">Edit</a>
-                                         <a href="#">Delete</a>
-                                         <a href="#">Others</a>
-                                      </div>
-                                    </td>
-                      </tr>
-                      <tr>
-                        <td scope="row">3/7/11</td>
-                    <td>Kernick Apartment</td>
-                    <td>KSH 30,000</td>
-                    <td> <button class="status completed" style=" background-color: green; /* Red background */
-                      color: white;
-                      border: 2px solid white; /* Darker red border */"><i class="fa fa-check-circle"></i> Paid </button></td>
+                    <i class="fa fa-times-circle"></i> Not Paid
+                  </button></td>
+                  <td>
+                  <div id="more_icon">&#x2026;</div>
+                  <br>
+                  <div id="more_options">
+                     <a href="#">View</a>
+                     <a href="#">Edit</a>
+                     <a href="#">Delete</a>
+                     <a href="#">Others</a>
+                  </div>
+                </td>
+            </tr>
+
+              <tr>
+                <td scope="row">Ksh 10,000</td>
+                    <td>29-01-2025</td>
+                    <td>Crown Z Towers</td>
+                    <td>B28</td>
+                    <td>Bed Sitter</td>
+                    <td>Fred Matiangi</td>
+                    <td>4</td>
+                    <td>29-01-2025</td>
+                    <td>Mwangi</td>
+                    <td><button class="status not-paid" style=" background-color: #ff4d4d; /* Red background */
+                    color: white;
+                    border: 2px solid white; /* Darker red border */">
+                    <i class="fa fa-times-circle"></i> Not Paid
+                  </button></td>
+                  <td>
+                  <div id="more_icon">&#x2026;</div>
+                  <br>
+                  <div id="more_options">
+                     <a href="#">View</a>
+                     <a href="#">Edit</a>
+                     <a href="#">Delete</a>
+                     <a href="#">Others</a>
+                  </div>
+                </td>
+            </tr>
+
+                  <tr>
+                    <td scope="row">Ksh 10,000</td>
+                        <td>29-01-2025</td>
+                        <td>Crown Z Towers</td>
+                        <td>B28</td>
+                        <td>Bed Sitter</td>
+                        <td>Fred Matiangi</td>
+                        <td>4</td>
+                        <td>29-01-2025</td>
+                        <td>Mwangi</td>
+                        <td><button class="status not-paid" style=" background-color: #ff4d4d; /* Red background */
+                        color: white;
+                        border: 2px solid white; /* Darker red border */">
+                        <i class="fa fa-times-circle"></i> Not Paid
+                      </button></td>
                       <td>
                       <div id="more_icon">&#x2026;</div>
                       <br>
                       <div id="more_options">
-                         <a href="#" >View</a>
+                         <a href="#">View</a>
                          <a href="#">Edit</a>
                          <a href="#">Delete</a>
                          <a href="#">Others</a>
                       </div>
                     </td>
-                        </tr>
-                        <tr>
-                          <td scope="row">2/7/11</td>
-                          <td>Ebenezar Apartments</td>
-                          <td>KSH 20,000</td>
-                          <td> <button class="status completed" style=" background-color: green; /* Red background */
-                            color: white;
-                            border: 2px solid white; /* Darker red border */"><i class="fa fa-check-circle"></i> Paid </button>  </td>
-                            <td>
-                            <div id="more_icon">&#x2026;</div>
-                            <br>
-                            <div id="more_options">
-                               <a href="#">View</a>
-                               <a href="#">Edit</a>
-                               <a href="#">Delete</a>
-                               <a href="#">Others</a>
-                            </div>
-                          </td>
-                          </tr>
-                          <tr>
-                            <td scope="row">2/7/11</td>
-                            <td>Ebenezar Apartments</td>
-                            <td>KSH 20,000</td>
-                            <td> <button class="status completed" style=" background-color: green; /* Red background */
-                              color: white;
-                              border: 2px solid white; /* Darker red border */"><i class="fa fa-check-circle"></i> Paid </button>  </td>
-                              <td>
-                              <div id="more_icon">&#x2026;</div>
-                              <br>
-                              <div id="more_options">
-                                 <a href="#">View</a>
-                                 <a href="#">Edit</a>
-                                 <a href="#">Delete</a>
-                                 <a href="#">Others</a>
-                              </div>
-                            </td>
-                            </tr>
+                </tr>
+
+                <tr>
+                  <td scope="row">Ksh 10,000</td>
+                      <td>29-01-2025</td>
+                      <td>Crown Z Towers</td>
+                      <td>B28</td>
+                      <td>Bed Sitter</td>
+                      <td>Fred Matiangi</td>
+                      <td>4</td>
+                      <td>29-01-2025</td>
+                      <td>Mwangi</td>
+                      <td><button class="status not-paid" style=" background-color: #ff4d4d; /* Red background */
+                      color: white;
+                      border: 2px solid white; /* Darker red border */">
+                      <i class="fa fa-times-circle"></i> Not Paid
+                    </button></td>
+                    <td>
+                    <div id="more_icon">&#x2026;</div>
+                    <br>
+                    <div id="more_options">
+                       <a href="#">View</a>
+                       <a href="#">Edit</a>
+                       <a href="#">Delete</a>
+                       <a href="#">Others</a>
+                    </div>
+                  </td>
+              </tr>
+
+              <tr>
+                <td scope="row">Ksh 10,000</td>
+                    <td>29-01-2025</td>
+                    <td>Crown Z Towers</td>
+                    <td>B28</td>
+                    <td>Bed Sitter</td>
+                    <td>Fred Matiangi</td>
+                    <td>4</td>
+                    <td>29-01-2025</td>
+                    <td>Mwangi</td>
+                    <td><button class="status not-paid" style=" background-color: #ff4d4d; /* Red background */
+                    color: white;
+                    border: 2px solid white; /* Darker red border */">
+                    <i class="fa fa-times-circle"></i> Not Paid
+                  </button></td>
+                  <td>
+                  <div id="more_icon">&#x2026;</div>
+                  <br>
+                  <div id="more_options">
+                     <a href="#">View</a>
+                     <a href="#">Edit</a>
+                     <a href="#">Delete</a>
+                     <a href="#">Others</a>
+                  </div>
+                </td>
+            </tr>
+
+            <tr>
+              <td scope="row">Ksh 10,000</td>
+                  <td>29-01-2025</td>
+                  <td>Crown Z Towers</td>
+                  <td>B28</td>
+                  <td>Bed Sitter</td>
+                  <td>Fred Matiangi</td>
+                  <td>4</td>
+                  <td>29-01-2025</td>
+                  <td>Mwangi</td>
+                  <td><button class="status not-paid" style=" background-color: #ff4d4d; /* Red background */
+                  color: white;
+                  border: 2px solid white; /* Darker red border */">
+                  <i class="fa fa-times-circle"></i> Not Paid
+                </button></td>
+                <td>
+                <div id="more_icon">&#x2026;</div>
+                <br>
+                <div id="more_options">
+                   <a href="#">View</a>
+                   <a href="#">Edit</a>
+                   <a href="#">Delete</a>
+                   <a href="#">Others</a>
+                </div>
+              </td>
+          </tr>
+          <tr>
+            <td scope="row">Ksh 10,000</td>
+                <td>29-01-2025</td>
+                <td>Crown Z Towers</td>
+                <td>B28</td>
+                <td>Bed Sitter</td>
+                <td>Fred Matiangi</td>
+                <td>4</td>
+                <td>29-01-2025</td>
+                <td>Mwangi</td>
+                <td><button class="status not-paid" style=" background-color: #ff4d4d; /* Red background */
+                color: white;
+                border: 2px solid white; /* Darker red border */">
+                <i class="fa fa-times-circle"></i> Not Paid
+              </button></td>
+              <td>
+              <div id="more_icon">&#x2026;</div>
+              <br>
+              <div id="more_options">
+                 <a href="#">View</a>
+                 <a href="#">Edit</a>
+                 <a href="#">Delete</a>
+                 <a href="#">Others</a>
+              </div>
+            </td>
+        </tr>
+
             </tbody>
           </table>
         </div>
