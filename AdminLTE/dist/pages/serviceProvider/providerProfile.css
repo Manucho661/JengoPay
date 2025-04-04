@@ -2,20 +2,8 @@ body {
     font-family: Arial, sans-serif;
     columns: gray;
 }
-.row.first{
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
-
-}
-.first_col{
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
-    transition: transform 0.3s ease-in-out; /* Smooth transition */
-
-}
-.first_col:hover{
-    transform: scale(1.05); /* Slightly increase size on hover */
 
 
-}
 .second_col{
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
 }

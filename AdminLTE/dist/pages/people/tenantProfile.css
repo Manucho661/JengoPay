@@ -6,12 +6,35 @@ body{
     font-family: 'Poppins', sans-serif;
     background-color: rgba(128, 128, 128, 0.1);
 }
+/* Rough work */
+
+.personal-item {
+  
+  border: 1px solid transparent;
+  background-color: white;
+  border-radius: 4px;
+
+}
+.personal-info.col-md-3{
+  margin-top: 10px;
+}
+
+
+                     /* GENERAL STYLES */
+.contact_section_header{
+  border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+  font-weight: 600;
+  width: 80%;
+  color: #00192D;
+  
+}
+
 
                                         /* HEADER SECTION */
 .section_header.tenantName{
 
   border-bottom: 1px solid rgba(128, 128, 128, 0.5);
-  background-color: #F6F8FA;
+  
   font-weight: 600;
      letter-spacing: .5px;
 }                                      
@@ -62,6 +85,8 @@ padding-left: 2px;
 border-left:5px solid #F28B88;
 box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
 }
+
+
 .icon-category-number .rent-type{
   font-weight: 600;
   font-size: 16px;
@@ -103,53 +128,9 @@ padding: 0px 4px;
 height: fit-content;
 margin-top: 2px;
 }
-  /* Hide everything except receipt when printing */
-  @media print {
-      body * {
-          visibility: hidden;
-      }
-      .receipt-container, .receipt-container * {
-          visibility: visible;
-      }
-      .receipt-container {
-          position: absolute;
-          left: 0;
-          top: 0;
-          width: 100%;
-      }
-      .print-btn {
-        border-radius: 10px;
-          display: none; /* Hide the button when printing */
-      }
-  }
-
-
-/* summary */
-  .text{
-    display: block;
-    margin-bottom: 5px;
-    line-height: 11px; 
-    font-size: 11px;
-    font-weight: 600; 
-    letter-spacing: .5px; 
-    text-transform: uppercase;
-    color: #767676;
-    color: #00192D;
-    font-family: 'Poppins', sans-serif;
-
-    }
-    .value{
-        font-size: 11px; 
-        display: flex;
-        justify-content: center;
-        color: #FFC107;
-        
-        border-radius: 10px;
-    }
-
-    a{
-      color: #00192D;
-    }
+                            /*PERSONAL INFO  */
+  
+  
     
     .summaryItem{
         /* box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); */
@@ -315,16 +296,6 @@ cursor: pointer;
 background-color: red;
 border-radius: 20px;
 }
-/* #invoicy-container {
-background: white;
-width: 400px;
-height: 480px;
- max-width: 80%; 
-padding: 20px;
-border-radius: 10px;
-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-text-align: center;
-} */
 
 .receipt p {
   margin: 10px 0;
@@ -351,14 +322,6 @@ text-align: center;
   /* font-weight: bold; */
   text-align: center;
 }
-/* #inform{
-  font-family: Arial, sans-serif;
-  margin: 20px;
-  padding: 20px;
-  border: 1px solid #ddd;
-  max-width: 400px;
-} */
-/* Complaint section Css */
 
 .popup-overlay {
   position: fixed;
@@ -422,10 +385,7 @@ text-align: center;
     padding-top: 10px;
 }
 
-.row.Summary{
-  /* box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); x-offset, y-offset, blur-radius, color */
 
-}
 .col-md-12.Summary{
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
   padding: 10px;
@@ -462,16 +422,7 @@ background-color: #fff;
 border-radius: 10px;
 }
 
-/* Close button
-.close-btn {
-position: absolute;
-top: 10px;
-right: 15px;
-font-size: 20px;
-cursor: pointer;
-border: none;
-background: none;
-} */
+
 table {
   width: 50%;
   border-collapse: collapse;
@@ -524,16 +475,7 @@ background-color: #fff;
 border-radius: 10px;
 }
 
-/* Close button
-.close-btn {
-position: absolute;
-top: 10px;
-right: 15px;
-font-size: 20px;
-cursor: pointer;
-border: none;
-background: none;
-} */
+
 table {
   width: 100%;
   border-collapse: collapse;
