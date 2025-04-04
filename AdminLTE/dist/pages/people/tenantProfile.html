@@ -56,7 +56,7 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="individualprofile.css">
+    <link rel="stylesheet" href="tenantProfile.css">
 
 
     <!-- scripts for data_table -->
@@ -431,66 +431,226 @@
           <div class="container-fluid">
             <!-- First Row -->
             <div class="row  " >
-              <div class="col-sm-8">
+              <div class="col-sm-6">
+                <h3 class="section_header tenantName"><i class="fas fa-user-tie icon" style="color:#FFC107"></i> Mary Joseph</h3>
 
-                <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> JOSEPH</h3>
+                <!-- <h3 >   </h3> -->
 
 
                     <div class="row mt-2  ">
-                      <div class="col-md-12 Summary ">
-
-                        <div class="row mt-6 ">
-                            <!-- Summary -->
-                            <div class="col-md-3 ">
-                                <label class="text text-center">  <i class="fas fa-briefcase icon"></i>   Occupation </label>
-                                <span class="value text-center">Teacher</span>
-                            </div>
-
-                            <div class="col-md-3">
-                                <label class="text text-center"> <i class="fas fa-baby icon"></i>   BIRTH  </label>
-                                <span class="value"> 5-23-1995 </span>
-                            </div>
-                            <div class="col-md-3">
-                              <label class="text text-center">  <i class="fas fa-id-card"></i>  IDENTIFICATION NUMBER </label>
-                              <span class="value">012020202 </span>
-                            </div>
-                        </div>
-
-                        <div class="row mt-6" >
-                          <!-- Summary -->
-                          <div class="col-md-3  ">
-                              <label class="text text-center"> <i class="fas fa-globe icon"></i>   ORIGIN </label>
-                              <span class="value text-center">Kenyan </span>
-                          </div>
-
-                          <div class="col-md-3">
-                              <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> End_Date  </label>
-                              <span class="value"> 6-7-2020 </span>
-                          </div>
-                          <div class="col-md-3">
-                            <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> <a href=""> Start_Date  </a>  </label>
-                            <span class="value"> 5-23-1995 </span>
-                          </div>
-                          <div class="col-md-3">
-                            <button class="btn text text-danger">  <i class="fas fa-trash"></i> Remove Joseph</button>
-                          </div>
-                        </div>
-
-                      </div>
-
+                      
                 </div>
               </div>
-              <div class="col-sm-4">
-                <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                </ol>
+              <div class="col-sm-6">
+                <div class="headerButtons">
+                  <div class="shift">
+                    <button   class="btn shift-tenant" style="height: fit-content;"> Shift Joseph</button>
+                  </div>
+                  
+                  <div class="vacate">
+                    <button   class="btn vacate-tenant" style="height: fit-content;"> Vacate Joseph</button>
+                  </div>
+                     
+                </div>
+                
               </div>
             </div>
 
             <!-- End first Row -->
 
-            <!-- Second row start --><div class="row first mb-2 mt-3 rounded-circle">
+            <!-- start Row -->
+            <div class="row summary " >
+
+
+              <div class="col-md-3">
+                  <!-- <div class="summary-item d-flex justify-content-between bg-white"> -->
+                    <div class="icon-category-number" style="display: flex; gap: 10px;   align-items: center; ">
+                      <div class="icon"> <i class="fas fa-coins"></i></div>
+                      <div>
+                        <div class="rent-type-date-paid">
+                          <div class="rent-type">Deposit</div>
+                          <div class="date-paid">
+                           
+                            <div><i>12-2023</i></div>
+                          </div>
+                        </div>
+                        
+                        <div class="number"> $&nbsp;11000</div>
+                      </div>
+                    </div>
+                      
+              </div>
+              <div class="col-md-3">
+                <div class="icon-category-number" style="display: flex; gap: 10px;   align-items: center; ">
+                  <div class="icon"> <i class="fas fa-coins"></i></div>
+                  <div>
+                    <div class="rent-type-duration-stayed">
+                      <div class="rent-type">Total Paid Rent</div>
+                      <div class="duration-stayed"> 14 Mons</div>
+                    </div>
+                    
+                    <div class="number"> $&nbsp;11000</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 outstanding-rent">
+                
+                <div class="icon-category-number outstanding-rent" style="display: flex; gap: 10px;   align-items: center; ">
+                  <div class="icon"> <i class="fas fa-coins"></i></div>
+                  <div>
+                    <div class="rent-type">Outstanding Balance</div>
+                    <div class="number"> $&nbsp;11000</div>
+                  </div>
+                </div>
+
+              </div>
+              <div class="col-md-3">
+                <div class="icon-category-number" style="display: flex; gap: 10px;   align-items: center; ">
+                  <div class="icon"> <i class="fas fa-coins"></i></div>
+                  <div>
+                    <div class="rent-type refundable">Total Refundable</div>
+                    <div class="number"> $&nbsp;11000</div>
+                  </div>
+                </div>
+              </div>
+          </div>
+
+
+
+        <!-- End Row -->
+
+            <!-- start row -->
+             <div class="row">
+              <h3 class="mb-0 contact_section_header"> </i> Personal Info</h3>
+              <div class="col-md-3">
+                <div class="occupation"> <i class="fas fa-briefcase icon"></i> Occupation </div>
+                <div class="name text-center">Teacher</div>
+
+              </div>
+
+              <div class="col-md-3">
+                <div class="occupation"> <i class="fas fa-globe icon"></i>  Origin</div>
+                <div class="name text-center">Kenyan</div>
+
+              </div>
+
+              <div class="col-md-3">
+                <div class="occupation"> <i class="fas fa-id-card"></i> Identification Number </div>
+                <div class="name text-center">Teacher</div>
+
+              </div>
+
+
+             </div>
+             <!-- end row -->
+
+             <!-- start row -->
+             <div class="row">
+              <h3 class="mb-0 contact_section_header"> </i> Contact Info</h3>
+              <div class="col-md-3">
+                <div class="occupation"> <i class="fas fa-briefcase icon"></i> Occupation </div>
+                <div class="name text-center">Teacher</div>
+
+              </div>
+
+              <div class="col-md-3">
+                <div class="occupation"> <i class="fas fa-globe icon"></i>  Origin</div>
+                <div class="name text-center">Kenyan</div>
+
+              </div>
+
+              <div class="col-md-3">
+                <div class="occupation"> <i class="fas fa-id-card"></i> Identification Number </div>
+                <div class="name text-center">Teacher</div>
+
+              </div>
+
+
+             </div>
+             <!-- end row -->
+
+             
+
+             <!-- start row -->
+
+             <div class="row">
+              <h3 class="mb-0 contact_section_header"> </i> Rent Details</h3>
+              <div class="col-md-3">
+                <div class="occupation"> <i class="fas fa-briefcase icon"></i> Occupation </div>
+                <div class="name text-center">Teacher</div>
+
+              </div>
+
+              <div class="col-md-3">
+                <div class="occupation"> <i class="fas fa-globe icon"></i>  Origin</div>
+                <div class="name text-center">Kenyan</div>
+
+              </div>
+
+              <div class="col-md-3">
+                <div class="occupation"> <i class="fas fa-id-card"></i> Identification Number </div>
+                <div class="name text-center">Teacher</div>
+
+              </div>
+
+
+             </div>
+             <!-- end row -->
+
+             <!-- start row -->
+             <div class="row">
+              <h3 class="mb-0 contact_section_header"> </i> Pets</h3>
+              <div class="col-md-3">
+                <div class="occupation"> <i class="fas fa-briefcase icon"></i> Occupation </div>
+                <div class="name text-center">Teacher</div>
+
+              </div>
+
+              <div class="col-md-3">
+                <div class="occupation"> <i class="fas fa-globe icon"></i>  Origin</div>
+                <div class="name text-center">Kenyan</div>
+
+              </div>
+
+              <div class="col-md-3">
+                <div class="occupation"> <i class="fas fa-id-card"></i> Identification Number </div>
+                <div class="name text-center">Teacher</div>
+
+              </div>
+
+
+             </div>
+             <!-- end row -->
+
+             <!-- start row -->
+             <div class="row">
+              <h3 class="mb-0 contact_section_header"> </i> Files</h3>
+              <div class="col-md-3">
+                <div class="occupation"> <i class="fas fa-briefcase icon"></i> Occupation </div>
+                <div class="name text-center">Teacher</div>
+
+              </div>
+
+              <div class="col-md-3">
+                <div class="occupation"> <i class="fas fa-globe icon"></i>  Origin</div>
+                <div class="name text-center">Kenyan</div>
+
+              </div>
+
+              <div class="col-md-3">
+                <div class="occupation"> <i class="fas fa-id-card"></i> Identification Number </div>
+                <div class="name text-center">Teacher</div>
+
+              </div>
+
+
+             </div>
+             <!-- end row -->
+
+             
+
+            <!-- Second row start -->
+             <div class="row first mb-2 mt-3 ">
 
                 <div class="col-md-6 d-flex justify-content-between">
                   <button id="rent_details_btn" class="btn">  <i class="fas fa-calendar-check icon"></i> <a href="profile.html"> <b> Bills_Records </b> </a> </button>
