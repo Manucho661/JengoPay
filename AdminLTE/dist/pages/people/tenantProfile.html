@@ -628,7 +628,7 @@
 
 
 
-                    <div class="col-md-12">
+                    <div class="col-md-9">
                       <div class="row">
                         <div class="col-md-8">
                           <select id="categoryFilter" class="categoryFilter">
@@ -641,8 +641,9 @@
 
 
                         </div>
-                        <div class="col-md-4 RecentChatNewText-btns" style="align-items: center; ">
-                          <button>Download</button>
+                        <div class="col-md-4 d-flex justify-content-end" style="align-items: center; ">
+                          <button class="pdf" ><i class="fas fa-file-pdf" style="color: red;"></i></button>
+                          <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button>
                       </div>
                     </div>
                     <div class="col-md-12">
@@ -650,12 +651,52 @@
                             <thead>
                               <tr>
                                 <th>Month</th>
-                                <th>Due</th>
+                                <th>Rent Due</th>
                                 <th>PAID</th>
+                                <th>PENALITY</th>
                                 <th>ARREAS</th>
                                 <th>OPTIONS</th>
                               </tr>
                             </thead>
+                            <tbody>
+
+                              <tr>
+
+                                <tr >
+
+                                  <td class="month">JANUARY
+                                  <!-- Rating Section (stars) -->
+
+                                  </td>
+                                  <td class="rent">$ 50,000</td>
+                                  <td class="rent paid">
+                                    <div class="amount date d-flex ">
+                                     <div class="amount">$ 50,000 </div>
+                                     <div class="date"> 31-4-2023 </div>
+                                    </div>
+
+
+                                  </td>
+                                  <td>
+                                    <div class="pen amount d-flex">
+
+                                      <div class="amount">$1000</div>
+                                    </div>
+
+                                  </td>
+                                  <td> $ 0</td>
+                                  <td>
+
+                                  <button class="btn btn-primary view"> <i class="fas fa-sms"></i> Reciept </button>
+
+
+                                  </td>
+                              </tr>
+                              <tr>
+
+
+                              </tr>
+                            </tbody>
                           </table>
                     </div>
                 </div>
@@ -747,116 +788,9 @@
               <!-- /.col -->
             </div>
 
-            <div class="row mt-3"> <!-- second row -->
-
-              <div class="col-md-12">
-                <div class="card">
-                  <div class="card-body">
-                    <table id="rent" class="display" style="font-size: small;" >
-                      <thead>
-                        <tr>
-                            <th scope="col">DATE PAID</th>
-                                <th scope="col">AMOUNT PAID</th>
-                                <th scope="col">ARREAS</th>
-                                <th scope="col">ACTION</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                            <th scope="row">1/7/11</th>
-                                <td>KSH 10,000</td>
-                                <td>KSH 10,000</td>
-                                <td id="more">
-                                  <div id="more_icon">&#x2026;</div>
-                                  <br>
-                                  <div id="more_options">
-
-                                     <a href="#"class="" onclick="showOverlay()">Invoice</a>
-                                     <a href="#" id="showReceiptLink" onclick="openPopup()">Receipt</a>
-
-                                     <a href="#">Delete</a>
-                                     <a href="#">Edit</a>
-
-
-                                  </div>
-                                 </td>
-
-                        </tr>
-                        <tr>
-                        <th scope="row">2/7/11</th>
-                        <td>KSH 20,0000</td>
-                        <td>KSH 0</td>
-                        <td id="more">
-                          <div id="more_icon">&#x2026;</div>
-                          <br>
-                          <div id="more_options">
-                            <a href="#"class="" onclick="showOverlay()">Invoice</a>
-                            <a href="#" id="showReceiptLink" onclick="openPopup()">Receipt</a>
-                            <a href="#">Delete</a>
-                            <a href="#">Edit</a>
-                          </div>
-                         </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3/7/11</th>
-                        <td>KSH 10000</td>
-                        <td>KSH 0</td>
-                        <td id="more">
-                          <div id="more_icon">&#x2026;</div>
-                          <br>
-                          <div id="more_options">
-                             <a  href="#">Assign</a>
-                             <a href="#">Update</a>
-                             <a href="#">Delete</a>
-                             <a href="#">View</a>
-
-
-                          </div>
-                         </td>
 
 
 
-                            </tr>
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <div class="card-footer">
-
-                  </div>
-
-                </div>
-              </div>
-            </div>
-
-            <!-- maintenance &repair cost overlay -->
-<div class="maintenancepopup-overlay" id="maintenancePopup">
-  <div class="maintenancepopup-content">
-    <button class="close-btn text-secondary" onclick="closemaintenancePopup()">×</button>
-    <h2 style="color: #00192D; font-size: medium;">Maintenance & Repair Cost</h2>
-    <div class="info">
-        <p><strong>Invoice No:</strong> #987654</p>
-        <p><strong>Date:</strong> 2025-02-13</p>
-        <p><strong>Property:</strong> Greenview Apartments</p>
-        <p><strong>Unit:</strong>A12</p>
-
-
-    </div>
-    <div class="cost-details">
-        <p><strong>Issue Description:</strong> Broken door handle</p>
-        <p><strong>Service Provider:</strong> ABC Repairs Ltd.</p>
-        <p><strong>Estimated Cost:</strong> KSH 4,500</p>
-        <p><strong>Actual Cost:</strong> KSH 5,000</p>
-        <p class="total"><strong>Total Cost:</strong> KSH 5,000</p>
-    </div>
-    <p style="text-align: center;">Thank you!</p>
-
-    <button class="receipt-btn" id="downloadReceiptBtn" style="color: #FFC107;">Download</button>
-
-
-  </div>
-</div>
-<!-- End maintenanceoverlay -->
 
 
 <!-- Farst Overlay (Receipt) -->

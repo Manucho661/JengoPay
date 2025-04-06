@@ -40,66 +40,82 @@ body{
 }
 
                                           /* BUTTONS */
-.btn{
-  font: bold !important;
-  letter-spacing: 0.15em;
-  /* padding: 6px 14px; */
-  height: fit-content;
-  background-color: #002a4d;
+                                                            .btn{
+                                                              font: bold !important;
+                                                              letter-spacing: 0.15em;
+                                                              /* padding: 6px 14px; */
+                                                              height: fit-content;
+                                                              background-color: #002a4d;
 
-  cursor: pointer;
-  color: #FFC107;
-}
-.headerButtons{
-  display: flex;
-  justify-content: end;
-  gap: 15px;
-}
-.shift-tenant{
-      height: fit-content;
-      padding: 2px 8px;
-      font-size: 12px;
-      /* background-color: transparent; */
-      /* color: green; */
-      border: 1px solid #002a4d;
-}
-.vacate-tenant{
-      height: fit-content;
-      padding: 2px 8px;
-      font-size: 12px;
-      border: 1px solid #002a4d;
-}
-.btn:hover {
-  background-color: #002a4d; /* Slightly lighter blue */
-  transform: scale(1.05); /* Slightly enlarge */
-  color: #FFC107;
-}
-.edit-btn.personal-info{
-  height: fit-content;
-      padding: 2px 6px;
-      font-size: 12px;
-      background-color: transparent;
-       color: green;
-      border: 1px solid #002a4d;
-}
-.edit-btn:hover{
-  background-color: #002a4d; /* Slightly lighter blue */
-  transform: scale(1.05); /* Slightly enlarge */
-  color: #FFC107;
-}
-.btn.view.id{
-  padding: 0px 3px;
-  font-size: 12px;
-  background-color: transparent;
-  color: green;
- border: 1px solid #FFC107;
- height: fit-content;
-}
-.btn.view.id:hover{
-  background-color: #002a4d; /* Slightly lighter blue */
-  transform: scale(1.05); /* Slightly enlarge */
-  color: #FFC107;
-}                                               /* SUMMARY SECTION */
+                                                              cursor: pointer;
+                                                              color: #FFC107;
+                                                            }
+                                                            .headerButtons{
+                                                              display: flex;
+                                                              justify-content: end;
+                                                              gap: 15px;
+                                                            }
+                                                            .shift-tenant{
+                                                                  height: fit-content;
+                                                                  padding: 2px 8px;
+                                                                  font-size: 12px;
+                                                                  /* background-color: transparent; */
+                                                                  /* color: green; */
+                                                                  border: 1px solid #002a4d;
+                                                            }
+                                                            .vacate-tenant{
+                                                                  height: fit-content;
+                                                                  padding: 2px 8px;
+                                                                  font-size: 12px;
+                                                                  border: 1px solid #002a4d;
+                                                            }
+                                                            .btn:hover {
+                                                              background-color: #002a4d; /* Slightly lighter blue */
+                                                              transform: scale(1.05); /* Slightly enlarge */
+                                                              color: #FFC107;
+                                                            }
+                                                            .edit-btn.personal-info{
+                                                              height: fit-content;
+                                                                  padding: 2px 6px;
+                                                                  font-size: 12px;
+                                                                  background-color: transparent;
+                                                                  color: green;
+                                                                  border: 1px solid #002a4d;
+                                                            }
+                                                            .edit-btn:hover{
+                                                              background-color: #002a4d; /* Slightly lighter blue */
+                                                              transform: scale(1.05); /* Slightly enlarge */
+                                                              color: #FFC107;
+                                                            }
+                                                            .btn.view.id{
+                                                              padding: 0px 3px;
+                                                              font-size: 12px;
+                                                              background-color: transparent;
+                                                              color: green;
+                                                            border: 1px solid #FFC107;
+                                                            height: fit-content;
+                                                            }
+                                                            .btn.view.id:hover{
+                                                              background-color: #002a4d; /* Slightly lighter blue */
+                                                              transform: scale(1.05); /* Slightly enlarge */
+                                                              color: #FFC107;
+                                                            }
+                                                            .pdf {
+                                                              border: 1px solid #FFC107;
+                                                              margin-right: 3px;
+                                                            }
+                                                            .excel{
+                                                              border: 1px solid #FFC107;
+                                                            }
+                                                            .pdf:hover{
+                                                              border: 1px solid #002a4d;
+                                                              box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+                                                            }
+                                                            .excel:hover{
+                                                              border: 1px solid #002a4d;
+                                                              box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+                                                            }
+                                                            /* SUMMARY SECTION */
 
 .col-md-3 .icon-category-number {
 background-color: white;
@@ -150,41 +166,41 @@ padding: 0px 4px;
 height: fit-content;
 margin-top: 2px;
 }
-                            /*PERSONAL INFO  */
+                                    /*PERSONAL INFO  */
 
-  .personal-info-icon{
-    color: #FFC107;
-  }
-  .personal-item{
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
-  }
-  .personal-info.item-name{
-    /* color: rgb(41, 41, 41); */
-    color: #767676;
-    font-weight: 600;
-    font-size: 14px;
-  }
+                                              .personal-info-icon{
+                                                color: #FFC107;
+                                              }
+                                              .personal-item{
+                                                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+                                              }
+                                              .personal-info.item-name{
+                                                /* color: rgb(41, 41, 41); */
+                                                color: #767676;
+                                                font-weight: 600;
+                                                font-size: 14px;
+                                              }
 
-.personal-info-icon.email{
-  color: #0072C6;
-}
-.email{
-  color: #0072C6;
-  font-size: 14px;
-}
-.email:hover{
-  text-decoration: underline;
-  cursor: pointer;
-}
-.phone{
-  color: #0072C6;
-  font-size: 14px;
-}
-.phone:hover{
-  text-decoration: underline;
-  cursor: pointer;
-}
-/* more options btn for datatable */
+                                            .personal-info-icon.email{
+                                              color: #0072C6;
+                                            }
+                                            .email{
+                                              color: #0072C6;
+                                              font-size: 14px;
+                                            }
+                                            .email:hover{
+                                              text-decoration: underline;
+                                              cursor: pointer;
+                                            }
+                                            .phone{
+                                              color: #0072C6;
+                                              font-size: 14px;
+                                            }
+                                            .phone:hover{
+                                              text-decoration: underline;
+                                              cursor: pointer;
+                                            }
+
 
                                             /* RENT DETAILS */
 .summary.title{
@@ -198,36 +214,122 @@ margin-top: 2px;
     font-weight: 600;
     font-size: 14px;
 }
-  #more_options{
-    display: none;
-    z-index: 1000;
-    background: #00192D;
-    border-radius: 10%;
-    padding: 10px;
-  }
+                                          /* SELECT, INPUT, TEXT_AREA */
+input, textarea {
+width: 100%;
+padding: 8px;
+margin-top: 5px;
+border: 1px solid #00192D;
+border-radius: 4px;
+color: #4f4f52;
 
-  #more_icon{
-    /* border: 1px solid black; */
-    border-radius: 30%;
-    padding: 10%;
-    font-size: larger;
-  }
+}
 
-  #more{
-    display: flex;
-     justify-content: center;
-    cursor: pointer;
+input:hover{
+border: 1px solid #FFC107;
+}
+select:hover{
+border: 1px solid #FFC107;
+}
 
-  }
-  #more_options a:hover{
-    color: #FFC107;
-  }
+input:focus, select:focus, textarea:focus {
+  border-color: #FFC107;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+select {
+  background-size: 16px;
+  padding-right: 30px;
+ border-radius: 4px;
+ width: fit-content;
+ padding:  10px;
+}
 
-  #more_options a{
-    text-decoration: none;
-    color: white;
-    display: block;
-  }
+                                                         /* TABLE */
+                                                         table{
+                                                          border-radius: 200px !important;
+                                                        }
+                                                        th, td {
+                                                          text-align: left !important; /* Align text for readability */
+                                                          vertical-align: middle; /* Centers text vertically */
+                                                        }
+                                                        td{
+                                                          font-size: 14px !important;
+
+                                                          align-items: center;
+                                                        }
+
+                                                        th{
+                                                          font-size: 12px !important;
+                                                          letter-spacing: .5px;
+                                                          font-weight: 600;
+                                                          text-transform: uppercase;
+                                                        }
+                                                        th:nth-child(1), td:nth-child(1) {
+                                                          text-align: center !important; /* Center align numbers like serial numbers */
+                                                        }
+
+
+                                                        th:nth-child(4), td:nth-child(4) {
+                                                          text-align: left !important; /* Align provider names to the left */
+                                                        }
+                                                        th, td {
+                                                          padding: 12px 15px !important; /* Top-bottom: 12px, Left-right: 15px */
+
+                                                        }
+
+                                                        th, td {
+                                                          white-space: nowrap !important;
+                                                          overflow: hidden !important;
+                                                          text-overflow: ellipsis !important; /* Add '...' if text overflows */
+                                                        }
+                                                        th {
+                                                          font-weight: 600 !important;
+                                                          /* text-transform: uppercase !important; */
+                                                          /* background-color: #f4f4f4 !important; Light background for contrast */
+                                                          border-bottom: 2px solid #ddd !important;
+                                                          background: #023E6A    !important ;
+                                                          color: white !important;
+                                                        }
+                                                        /* contents */
+                                                        td{
+                                                          background: #EFF2F5;
+                                                        }
+                                                        .month{
+                                                          color: rgb(41, 41, 41);
+                                                        }
+                                                        .rent{
+                                                          color: black;
+                                                          font-weight: 600;
+                                                          font-size: 16px;
+                                                        }
+                                                        .rent.paid{
+                                                          color: #FFC107;
+                                                          font-weight: 600;
+                                                          font-size: 16px;
+                                                        }
+                                                        .amount.date .date{
+                                                          font-weight: 400px;
+                                                          font-size: 10px;
+                                                          color: green;
+                                                          background-color: rgba(128,128,128,0.2);
+                                                          padding-bottom: 0px;
+                                                          border-radius: 10px;
+                                                        vertical-align: middle;
+                                                        padding: 0px 4px;
+                                                        height: fit-content;
+                                                        margin-top: 2px;
+                                                        margin-left: 2px;
+
+                                                        }
+                                                        .pen.amount{
+                                                          background-color: #e74c3c;
+                                                          width: fit-content;
+                                                          padding:0 10px;
+                                                          border-radius: 2px;
+                                                          color: white;
+                                                        }
+
 
   #agreements_btn{
     background-color: #00192D; color: white; font-size: small;
@@ -283,57 +385,7 @@ cursor: pointer;
 background-color: red;
 border-radius: 20px;
 }
-table {
-    width: 50%;
-    border-collapse: collapse;
-    margin: 20px 0;
-}
-table, th, td {
-    border: 1px solid #ddd;
-}
-th, td {
-    padding: 10px;
-    text-align: left;
-}
-th {
-    background-color: #f2f2f2;
-}
-.total-row {
-    font-weight: bold;
-}
 
-/* Receipt Overlay Styling */
-.receipt-overlay {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background-color: rgba(0, 0, 0, 0.6);
-display: none;  /* Hide by default */
-justify-content: center;
-align-items: center;
-z-index: 10000;
-}
-
-/* Content inside the overlay */
-.receiptoverlay-content {
-text-align: center;
-background-color: white;
-padding: 30px;
-border-radius: 10px;
-}
-
-/* Button for the receipt */
-.receipt-btn {
-padding: 15px 30px;
-font-size: 16px;
-background-color: #00192D;
-color: white;
-border-radius: 10px;
-border: none;
-cursor: pointer;
-}
 
 /* Close button for the overlay */
 .close-overlay-btn {
@@ -409,42 +461,13 @@ border-radius: 20px;
   border: none;
   background: none;
   }
-  .maintenancepopup-overlay{
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 10000;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7); /* Dark overlay */
-    display: none; /* Initially hidden */
-    justify-content: center;
-    align-items: center;
-    font-family: 'Poppins', sans-serif;
-    font-size: small;
-  }
-  .maintenancepopup-content{
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 50%;
-    text-align: center;
-    position: relative;
-  }
+
   .cost-details {
     border-top: 2px dashed #000;
     padding-top: 10px;
 }
 
 
-.col-md-12.Summary{
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
-  padding: 10px;
-  border-radius: 10px;
-}
-#invoice{
-  justify-content: start;
-}
 
 .overlay {
   /* position: absolute; */
@@ -492,13 +515,7 @@ th {
 .total-row {
   font-weight: bold;
 }
-.downloadi {
-padding: 15px 30px; /* Add padding to the button */
-font-size: 16px; /* Optional: adjust font size */
-cursor: pointer; /* Change cursor to pointer on hover */
-border-radius: 10px;
-border: none;
-}
+
 .overlay {
   /* position: absolute; */
   top: 0;
@@ -531,24 +548,4 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin: 20px 0;
-}
-table, th, td {
-  border: 1px solid #ddd;
-}
-th, td {
-  padding: 10px;
-  text-align: left;
-}
-th {
-  background-color: #f2f2f2;
-}
-.total-row {
-  font-weight: bold;
-}
-.downloadi {
-padding: 15px 30px; /* Add padding to the button */
-font-size: 16px; /* Optional: adjust font size */
-cursor: pointer; /* Change cursor to pointer on hover */
-border-radius: 10px;
-border: none;
 }
