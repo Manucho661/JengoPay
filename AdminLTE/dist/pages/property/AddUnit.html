@@ -454,26 +454,26 @@
 <div class="row">
   <div class="col-md-4">
   <label for="location">Unit Number*</label>
-  <input type="text" id="unit_number" name="unit_number" placeholder="Enter Unit Number">
+  <input type="text" id="unit_number" name="unit_number" placeholder="Enter Unit Number" required>
 </div>
 
 
 <div class="col-md-4">
   <label for="size">Size(Optional)*</label>
-  <input type="number" id="size" name="size" placeholder="Enter Size">
+  <input type="number" id="size" name="size" placeholder="Enter Size" required>
   </div>
 
 
 <div class="col-md-4">
 <label for="size">Floor Number*</label>
-<input type="" id="size" name="size" placeholder="Enter Floor Size">
+<input type="" id="size" name="size" placeholder="Enter Floor Size" required>
 </div>
 
 <b><p>What is the listing information?</p></b>
 <div class="col-md-4">
 <form>
     <label for="rooms">Rooms*</label>
-    <select id="rooms" name="property">
+    <select id="rooms" name="property" required>
     <option value="Bedsitter">Bedsitter</option>
     <option value="One bedroom">One bedroom</option>
     <option value="Two bedroom">Two Bedroom</option>
@@ -489,7 +489,7 @@
 <div class="col-md-4">
     <form>
         <label for="rooms">Room Type*</label>
-        <select id="rooms" name="property">
+        <select id="rooms" name="property" required>
         <option value="Rental">Rental</option>
         <option value="Air BnB">Air Bnb</option>
         <option value="Banking Hall">Banking Hall</option>
@@ -502,7 +502,7 @@
     <div class="col-md-4">
         <form>
             <label for="rooms">Bathrooms*</label>
-            <select id="rooms" name="property">
+            <select id="rooms" name="property" required>
             <option value="One bedroom">One Bathroom</option>
             <option value="Two bedroom">Two Bathroom</option>
             <option value="Two bedroom">ThreeBathroom</option>
@@ -515,7 +515,7 @@
         <div class="col-md-4">
           <form>
               <label for="kitchen">Kitchen*</label>
-              <select id="kitchen" name="property">
+              <select id="kitchen" name="property" required>
               <option value="open">Open</option>
               <option value="closed">Closed</option>
               </select>
@@ -525,7 +525,7 @@
           <div class="col-md-4">
             <form>
                 <label for="balcony">Balcony*</label>
-                <select id="balcony" name="property">
+                <select id="balcony" name="property" required>
                 <option value="one">One </option>
                 <option value="two">Two </option>
                 <option value="three">Three</option>
@@ -538,7 +538,7 @@
             <div class="col-md-4">
               <form>
                   <label for="Rent Amount">Rent Amount*</label>
-                  <input type="number" id="rent_amount" name="rent_amount" placeholder="Enter Amount">
+                  <input type="number" id="rent_amount" name="rent_amount" placeholder="Enter Amount" required>
 
               </form>
               </div>
@@ -546,7 +546,7 @@
             <div class="col-md-12">
               <form>
                 <label for="description" class="filter-label">Description</label>
-                <input type="text" id="description" class="form-control" placeholder="Enter a brief description" />
+                <input type="text" id="description" class="form-control" placeholder="Enter a brief description" required/>
                   </select>
               </form>
               </div>
