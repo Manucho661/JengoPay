@@ -521,10 +521,10 @@
 
                               <div class="personal-item d-flex justify-content-between bg-white">
                               <!-- <i class="fas fa-calculator"></i> -->
-                                <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
-                                  <div class="category"> <i class="fa fa-envelope personal-info-icon "></i>
+                                <div class="labal-value p-2" style="display: flex; gap: 5px;   align-items: center;">
+                                  <div class="label"> <i class="fa fa-envelope personal-info-icon "></i>
                                     <span class="personal-info item-name email" > Email,</span> </div>
-                                  <div class="email"><b>joseph12@gmail.com</b></div>
+                                  <div class="value"><b>jos1@gmail.com</b></div>
                                 </div>
                               </div>
 
@@ -626,106 +626,117 @@
                    <span class="details title">Details</span>
                   <div class="row " style="padding-top: 10px;">
 
-                      <div class="col-md-9 bg-white" style="border-radius: 5px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);;">
-                        <div class="row p-2" style="border-bottom: 1px solid rgba(128, 128, 128, 0.5)" >
-                          <div class="col-md-8">
-                            <select id="categoryFilter" class="categoryFilter">
-                              <option value="">-- Select Year--</option>
-                              <option value="2024">2024</option>
-                              <option value="2023">2023</option>
+                      <div class="col-md-9" >
 
-                            </select>
-
-
-
+                        <div class="bg-white">
+                          <div class="row p-2">
+                            <div class="col-md-8" >
+                             
+                              <select id="categoryFilter" class="categoryFilter">
+                                <option value="">-- Select Year--</option>
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+  
+                              </select>
+  
+                            </div>
+                            <div class="col-md-4 d-flex justify-content-end" style="align-items: center; ">
+                              <button class="pdf" ><i class="fas fa-file-pdf" style="color: red;"></i></button>
+                              <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button>
                           </div>
-                          <div class="col-md-4 d-flex justify-content-end" style="align-items: center; ">
-                            <button class="pdf" ><i class="fas fa-file-pdf" style="color: red;"></i></button>
-                            <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button>
+
+                          <div class="row">
+                            <div class="col-md-12">
+                              <table>
+                                <thead>
+                                  <tr>
+                                    <th>Month</th>
+                                    <th>Rent Due</th>
+                                    <th>PAID</th>
+                                    <th>PENALT</th>
+                                    <th>ARREAS</th>
+                                    <th>OPTIONS</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+
+
+
+                                    <tr >
+
+                                      <td class="month">JANUARY
+                                      <!-- Rating Section (stars) -->
+
+                                      </td>
+                                      <td class="rent">$ 50,000</td>
+                                      <td class="rent paid">
+                                        <div class="amount date d-flex ">
+                                        <div class="amount">$ 50,000 </div>
+                                        <div class="date"> 31-4-2023 </div>
+                                        </div>
+
+
+                                      </td>
+                                      <td>
+                                        <div class="pen amount d-flex">
+
+                                          <div class="amount">$1000</div>
+                                        </div>
+
+                                      </td>
+                                      <td class="rent arrears"> $ 51,000</td>
+                                      <td>
+
+                                      <button class="btn reciept"> <i class="fas fa-receipt"></i> Reciept </button>
+
+
+                                      </td>
+                                  </tr>
+                                  <tr>
+
+                                    <td class="month">FEBRUARY
+                                      <!-- Rating Section (stars) -->
+
+                                      </td>
+                                      <td class="rent">$ 50,000</td>
+                                      <td class="rent paid">
+                                        <div class="amount date d-flex ">
+                                        <div class="amount">$ 50,000 </div>
+                                        <div class="date"> 31-4-2023 </div>
+                                        </div>
+
+
+                                      </td>
+                                      <td>
+                                        <div class="pen amount d-flex">
+
+                                          <div class="amount">$0</div>
+                                        </div>
+
+                                      </td>
+                                      <td class="rent arrears"> $ 0</td>
+                                      <td>
+
+                                      <button class="btn reciept"> <i class="fas fa-receipt"></i> Reciept </button>
+
+
+                                      </td>
+
+                                  </tr>
+                                </tbody>
+                              </table>
                         </div>
 
-                        </div class="row">
-                          <div class="col-md-12">
-                                <table>
-                                  <thead>
-                                    <tr>
-                                      <th>Month</th>
-                                      <th>Rent Due</th>
-                                      <th>PAID</th>
-                                      <th>PENALT</th>
-                                      <th>ARREAS</th>
-                                      <th>OPTIONS</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-
-
-
-                                      <tr >
-
-                                        <td class="month">JANUARY
-                                        <!-- Rating Section (stars) -->
-
-                                        </td>
-                                        <td class="rent">$ 50,000</td>
-                                        <td class="rent paid">
-                                          <div class="amount date d-flex ">
-                                          <div class="amount">$ 50,000 </div>
-                                          <div class="date"> 31-4-2023 </div>
-                                          </div>
-
-
-                                        </td>
-                                        <td>
-                                          <div class="pen amount d-flex">
-
-                                            <div class="amount">$1000</div>
-                                          </div>
-
-                                        </td>
-                                        <td class="rent arrears"> $ 51,000</td>
-                                        <td>
-
-                                        <button class="btn reciept"> <i class="fas fa-receipt"></i> Reciept </button>
-
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-
-                                      <td class="month">FEBRUARY
-                                        <!-- Rating Section (stars) -->
-
-                                        </td>
-                                        <td class="rent">$ 50,000</td>
-                                        <td class="rent paid">
-                                          <div class="amount date d-flex ">
-                                          <div class="amount">$ 50,000 </div>
-                                          <div class="date"> 31-4-2023 </div>
-                                          </div>
-
-
-                                        </td>
-                                        <td>
-                                          <div class="pen amount d-flex">
-
-                                            <div class="amount">$0</div>
-                                          </div>
-
-                                        </td>
-                                        <td class="rent arrears"> $ 0</td>
-                                        <td>
-
-                                        <button class="btn reciept"> <i class="fas fa-receipt"></i> Reciept </button>
-
-
-                                        </td>
-
-                                    </tr>
-                                  </tbody>
-                                </table>
                           </div>
+                          
                         </div>
+
+
+                          
+                        </div>
+                        
+
+                        
                       </div>
                       </div>
                   </div>
