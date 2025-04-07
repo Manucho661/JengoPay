@@ -172,10 +172,33 @@
           label{
               text-align: left;
           }
-
+          .container {
+            max-width: 900px;
+        }
+        .form-label {
+            font-size: 1.1rem;
+        }
+        .table th, .table td {
+            vertical-align: middle;
+        }
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f9f9f9;
+        }
+        .table th {
+            text-align: center;
+        }
+        .btn-primary, .btn-success {
+            font-size: 1.1rem;
+            padding: 12px;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover, .btn-success:hover {
+            transform: scale(1.05);
+        }
+        .shadow-sm {
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        }
       </style>
-
-</style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -430,7 +453,7 @@
           <div class="container-fluid">
             <div class="container-fluid">
               <div class="property-title">Crown Z Towers</div>
-              <p>Residential |
+              <p style="color: #FFC107;">Residential |
                 <button class="edit-btn">
                   <i class="fas fa-edit"></i>
                   EDIT</button>
@@ -457,67 +480,70 @@
 </div>
 
 
-<div class="container mt-4">
-    <h2>Create Charges</h2>
+<div class="container mt-4 p-4 shadow-sm rounded bg-light">
+  <h2 class="text-center text-primary mb-4">Create Charges</h2>
 
-    <!-- Add Charge Section -->
-    <div class="mb-3">
-        <label for="chargeName" class="form-label">Charge Name</label>
-        <input type="text" id="chargeName" class="form-control" placeholder="Enter charge name">
-    </div>
+  <!-- Add Charge Section -->
+  <div class="mb-4">
+      <label for="chargeName" class="form-label fw-bold">Charge Name</label>
+      <input type="text" id="chargeName" class="form-control shadow-sm" placeholder="Enter charge name">
+  </div>
 
-    <div class="row">
-        <div class="col-md-4">
-            <label for="unitPrice" class="form-label">Unit Price</label>
-            <input type="number" id="unitPrice" class="form-control" placeholder="Enter unit price">
-        </div>
-        <div class="col-md-4">
-            <label for="consumption_units" class="form-label">Consumption Units</label>
-            <input type="number" id="quantity" class="form-control" placeholder="Enter Consumption Units">
-        </div>
-        <div class="col-md-4">
-            <label class="form-label">&nbsp;</label>
-            <button class="btn btn-primary w-100" onclick="addCharge()">
-                <i class="fas fa-plus"></i> Add Charge
-            </button>
-        </div>
-    </div>
+  <div class="row mb-4">
+      <div class="col-md-4">
+          <label for="unitPrice" class="form-label fw-bold">Unit Price (Ksh)</label>
+          <input type="number" id="unitPrice" class="form-control shadow-sm" placeholder="Enter unit price">
+      </div>
+      <div class="col-md-4">
+          <label for="consumption_units" class="form-label fw-bold">Consumption Units</label>
+          <input type="number" id="quantity" class="form-control shadow-sm" placeholder="Enter Consumption Units">
+      </div>
+      <div class="col-md-4 d-flex align-items-end">
+          <button class="btn btn-primary w-100 shadow-sm" onclick="addCharge()">
+              <i class="fas fa-plus"></i> Add Charge
+          </button>
+      </div>
+  </div>
 
-    <!-- Charges Summary Table -->
-    <h4 class="mt-4">Charges Summary</h4>
-    <table class="table table-bordered mt-2">
-        <thead>
-            <tr>
-                <th>Charge Name</th>
-                <th>Unit Price (Ksh)</th>
-                <th>Consumption Units</th>
-                <th>Total (Ksh)</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody id="chargesTable">
-            <!-- Dynamic Rows Will Be Added Here -->
-        </tbody>
-    </table>
+  <!-- Charges Summary Table -->
+  <h4 class="mt-4 text-secondary">Charges Summary</h4>
+  <table class="table table-striped table-bordered mt-2 shadow-sm">
+      <thead class="bg-info text-white">
+          <tr>
+              <th>Charge Name</th>
+              <th>Unit Price (Ksh)</th>
+              <th>Consumption Units</th>
+              <th>Total (Ksh)</th>
+              <th>Action</th>
+          </tr>
+      </thead>
+      <tbody id="chargesTable">
+          <!-- Dynamic Rows Will Be Added Here -->
+      </tbody>
+  </table>
 
-    <!-- Tax, Discount, and Final Calculation -->
-    <div class="row">
-        <div class="col-md-4">
-            <label for="tax" class="form-label">Tax (%)</label>
-            <input type="number" id="tax" class="form-control" value="16" oninput="calculateTotal()">
-        </div>
-        <div class="col-md-4">
-            <label for="discount" class="form-label">Discount (Ksh)</label>
-            <input type="number" id="discount" class="form-control" value="0" oninput="calculateTotal()">
-        </div>
-        <div class="col-md-4">
-            <label class="form-label">Total Amount (Ksh)</label>
-            <input type="text" id="totalAmount" class="form-control" readonly>
-        </div>
-    </div>
+  <!-- Tax, Discount, and Final Calculation -->
+  <div class="row mt-4">
+      <div class="col-md-4">
+          <label for="tax" class="form-label fw-bold">Tax (%)</label>
+          <input type="number" id="tax" class="form-control shadow-sm" value="16" oninput="calculateTotal()">
+      </div>
+      <div class="col-md-4">
+          <label for="discount" class="form-label fw-bold">Discount (Ksh)</label>
+          <input type="number" id="discount" class="form-control shadow-sm" value="0" oninput="calculateTotal()">
+      </div>
+      <div class="col-md-4">
+          <label class="form-label fw-bold">Total Amount (Ksh)</label>
+          <input type="text" id="totalAmount" class="form-control shadow-sm" readonly>
+      </div>
+  </div>
 
-    <a href="../financials/invoices.html"><button class="btn btn-success mt-3" onclick="generateInvoice()">
-        <i class="fas fa-file-invoice"></i> Send To Invoice
+  <a href="../financials/invoices.html">
+      <button class="btn btn-success mt-3 w-100 shadow-sm" onclick="generateInvoice()">
+          <i class="fas fa-file-invoice"></i> Send To Invoice
+      </button>
+  </a>
+<!-- </div>a-file-invoice"></i> Send To Invoice -->
     </button></a>
 
     <!-- Invoice Display -->
