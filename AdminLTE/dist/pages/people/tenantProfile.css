@@ -115,6 +115,14 @@ body{
                                                               border: 1px solid #002a4d;
                                                               box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
                                                             }
+                                                            .reciept{
+                                                              padding: 0px 3px;
+                                                              font-size: 12px;
+                                                              background-color: transparent;
+                                                              color: green;
+                                                            border: 1px solid #FFC107;
+                                                            height: fit-content;
+                                                            }
                                                             /* SUMMARY SECTION */
 
 .col-md-3 .icon-category-number {
@@ -203,6 +211,13 @@ margin-top: 2px;
 
 
                                             /* RENT DETAILS */
+  .contact_section_header.details{
+    border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+    font-weight: 600;
+    width: 100%;
+    /* color: #00192D; */
+
+  }
 .summary.title{
   color: #767676;
     font-weight: 600;
@@ -328,6 +343,11 @@ select {
                                                           padding:0 10px;
                                                           border-radius: 2px;
                                                           color: white;
+                                                        }
+                                                        .rent.arrears{
+                                                          color: black;
+                                                          font-weight: 600;
+                                                          font-size: 16px;
                                                         }
 
 

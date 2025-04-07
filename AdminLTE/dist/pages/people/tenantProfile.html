@@ -566,142 +566,171 @@
 
              <!-- start row -->
 
-             <div class="row mt-3">
-                              <h6 class=" contact_section_header mb-2 mt-2"> </i> Rent Details</h6>
-              <div class="col-md-12 ">
-                <div class="row summary">
-                       <span class="summary title">Summary</span>
-                    <div class="col-md-3">
-                      <!-- <div class="summary-item d-flex justify-content-between bg-white"> -->
-                      <div class="icon-category-number Deposit" style="display: flex; gap: 10px;   align-items: center; ">
-                        <div class="icon"> <i class="fas fa-coins"></i></div>
-                        <div>
-                          <div class="rent-type-date-paid">
-                            <div class="rent-type">Deposit</div>
-                            <div class="date-paid">
+              <div class="row mt-3">
+                              <h6 class=" contact_section_header details mb-2 mt-2"> </i> Rent Details</h6>
+                <div class="col-md-12 ">
+                  <div class="row  mb-2">
+                        <span class="summary title">Summary</span>
+                      <div class="col-md-3">
+                        <!-- <div class="summary-item d-flex justify-content-between bg-white"> -->
+                        <div class="icon-category-number Deposit" style="display: flex; gap: 10px;   align-items: center; ">
+                          <div class="icon"> <i class="fas fa-coins"></i></div>
+                          <div>
+                            <div class="rent-type-date-paid">
+                              <div class="rent-type">Deposit</div>
+                              <div class="date-paid">
 
-                              <div><i>12-2023</i></div>
+                                <div><i>12-2023</i></div>
+                              </div>
                             </div>
+
+                            <div class="number"> $&nbsp;11000</div>
                           </div>
-
-                          <div class="number"> $&nbsp;11000</div>
                         </div>
                       </div>
-                    </div>
-                    <div class="col-md-3">
-                      <div class="icon-category-number paid-rent" style="display: flex; gap: 10px;   align-items: center; ">
-                        <div class="icon"> <i class="fas fa-coins"></i></div>
-                        <div>
-                          <div class="rent-type-duration-stayed">
-                            <div class="rent-type">Total Paid Rent</div>
-                            <div class="duration-stayed"> 14 Mons</div>
+                      <div class="col-md-3">
+                        <div class="icon-category-number paid-rent" style="display: flex; gap: 10px;   align-items: center; ">
+                          <div class="icon"> <i class="fas fa-coins"></i></div>
+                          <div>
+                            <div class="rent-type-duration-stayed">
+                              <div class="rent-type">Total Paid Rent</div>
+                              <div class="duration-stayed"> 14 Mons</div>
+                            </div>
+
+                            <div class="number"> $&nbsp;11000</div>
                           </div>
-
-                          <div class="number"> $&nbsp;11000</div>
                         </div>
                       </div>
-                    </div>
-                    <div class="col-md-3 outstanding-rent">
+                      <div class="col-md-3 outstanding-rent">
 
-                      <div class="icon-category-number outstanding-rent" style="display: flex; gap: 10px;   align-items: center; ">
-                        <div class="icon"> <i class="fas fa-coins"></i></div>
-                        <div>
-                          <div class="rent-type">Outstanding Balance</div>
-                          <div class="number"> $&nbsp;11000</div>
+                        <div class="icon-category-number outstanding-rent" style="display: flex; gap: 10px;   align-items: center; ">
+                          <div class="icon"> <i class="fas fa-coins"></i></div>
+                          <div>
+                            <div class="rent-type">Outstanding Balance</div>
+                            <div class="number"> $&nbsp;11000</div>
+                          </div>
+                        </div>
+
+                      </div>
+                      <div class="col-md-3">
+                        <div class="icon-category-number" style="display: flex; gap: 10px;   align-items: center; ">
+                          <div class="icon"> <i class="fas fa-coins"></i></div>
+                          <div>
+                            <div class="rent-type refundable">Total Refundable</div>
+                            <div class="number"> $&nbsp;11000</div>
+                          </div>
                         </div>
                       </div>
+                  </div>
 
-                    </div>
-                    <div class="col-md-3">
-                      <div class="icon-category-number" style="display: flex; gap: 10px;   align-items: center; ">
-                        <div class="icon"> <i class="fas fa-coins"></i></div>
-                        <div>
-                          <div class="rent-type refundable">Total Refundable</div>
-                          <div class="number"> $&nbsp;11000</div>
+                   <span class="details title">Details</span>
+                  <div class="row " style="padding-top: 10px;">
+
+                      <div class="col-md-9 bg-white" style="border-radius: 5px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);;">
+                        <div class="row p-2" style="border-bottom: 1px solid rgba(128, 128, 128, 0.5)" >
+                          <div class="col-md-8">
+                            <select id="categoryFilter" class="categoryFilter">
+                              <option value="">-- Select Year--</option>
+                              <option value="2024">2024</option>
+                              <option value="2023">2023</option>
+
+                            </select>
+
+
+
+                          </div>
+                          <div class="col-md-4 d-flex justify-content-end" style="align-items: center; ">
+                            <button class="pdf" ><i class="fas fa-file-pdf" style="color: red;"></i></button>
+                            <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button>
+                        </div>
+
+                        </div class="row">
+                          <div class="col-md-12">
+                                <table>
+                                  <thead>
+                                    <tr>
+                                      <th>Month</th>
+                                      <th>Rent Due</th>
+                                      <th>PAID</th>
+                                      <th>PENALT</th>
+                                      <th>ARREAS</th>
+                                      <th>OPTIONS</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+
+
+
+                                      <tr >
+
+                                        <td class="month">JANUARY
+                                        <!-- Rating Section (stars) -->
+
+                                        </td>
+                                        <td class="rent">$ 50,000</td>
+                                        <td class="rent paid">
+                                          <div class="amount date d-flex ">
+                                          <div class="amount">$ 50,000 </div>
+                                          <div class="date"> 31-4-2023 </div>
+                                          </div>
+
+
+                                        </td>
+                                        <td>
+                                          <div class="pen amount d-flex">
+
+                                            <div class="amount">$1000</div>
+                                          </div>
+
+                                        </td>
+                                        <td class="rent arrears"> $ 51,000</td>
+                                        <td>
+
+                                        <button class="btn reciept"> <i class="fas fa-receipt"></i> Reciept </button>
+
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+
+                                      <td class="month">FEBRUARY
+                                        <!-- Rating Section (stars) -->
+
+                                        </td>
+                                        <td class="rent">$ 50,000</td>
+                                        <td class="rent paid">
+                                          <div class="amount date d-flex ">
+                                          <div class="amount">$ 50,000 </div>
+                                          <div class="date"> 31-4-2023 </div>
+                                          </div>
+
+
+                                        </td>
+                                        <td>
+                                          <div class="pen amount d-flex">
+
+                                            <div class="amount">$0</div>
+                                          </div>
+
+                                        </td>
+                                        <td class="rent arrears"> $ 0</td>
+                                        <td>
+
+                                        <button class="btn reciept"> <i class="fas fa-receipt"></i> Reciept </button>
+
+
+                                        </td>
+
+                                    </tr>
+                                  </tbody>
+                                </table>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                </div>
-
-                <div class="row mt-2">
-                  <span class="details title">Details</span>
-
-
-
-                    <div class="col-md-9">
-                      <div class="row">
-                        <div class="col-md-8">
-                          <select id="categoryFilter" class="categoryFilter">
-                            <option value="">-- Select Year--</option>
-                            <option value="2024">2024</option>
-                            <option value="2023">2023</option>
-
-                          </select>
-
-
-
-                        </div>
-                        <div class="col-md-4 d-flex justify-content-end" style="align-items: center; ">
-                          <button class="pdf" ><i class="fas fa-file-pdf" style="color: red;"></i></button>
-                          <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button>
                       </div>
-                    </div>
-                    <div class="col-md-12">
-                          <table>
-                            <thead>
-                              <tr>
-                                <th>Month</th>
-                                <th>Rent Due</th>
-                                <th>PAID</th>
-                                <th>PENALITY</th>
-                                <th>ARREAS</th>
-                                <th>OPTIONS</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-
-                              <tr>
-
-                                <tr >
-
-                                  <td class="month">JANUARY
-                                  <!-- Rating Section (stars) -->
-
-                                  </td>
-                                  <td class="rent">$ 50,000</td>
-                                  <td class="rent paid">
-                                    <div class="amount date d-flex ">
-                                     <div class="amount">$ 50,000 </div>
-                                     <div class="date"> 31-4-2023 </div>
-                                    </div>
-
-
-                                  </td>
-                                  <td>
-                                    <div class="pen amount d-flex">
-
-                                      <div class="amount">$1000</div>
-                                    </div>
-
-                                  </td>
-                                  <td> $ 0</td>
-                                  <td>
-
-                                  <button class="btn btn-primary view"> <i class="fas fa-sms"></i> Reciept </button>
-
-
-                                  </td>
-                              </tr>
-                              <tr>
-
-
-                              </tr>
-                            </tbody>
-                          </table>
-                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
 
                  <!-- end row -->
                  <!-- start row -->
