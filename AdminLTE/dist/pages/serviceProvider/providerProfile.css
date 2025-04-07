@@ -9,12 +9,9 @@ body {
 }
 
 .filter-container{
-
     /* width: 250px; */
-
     color: white;
     position: relative; /* To position the panel below */
-
 }
                                                             /* SUMMARY SECTION */
   /* General Styling for Summary Items */

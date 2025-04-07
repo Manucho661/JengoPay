@@ -113,6 +113,12 @@ body{
                                                             border: 1px solid #FFC107;
                                                             height: fit-content;
                                                             }
+                                                            .btn.change{
+                                                              height: fit-content;
+                                                              padding: 2px 8px;
+                                                              font-size: 12px;
+                                                              border: 1px solid #002a4d; 
+                                                            }
                                                             /* SUMMARY SECTION */
 
 .col-md-3 .icon-category-number {
@@ -348,6 +354,30 @@ select {
                                                           font-size: 16px;
                                                         }
 
+                                                        /* Penalit */
+                                                        .penalt_desc{
+                                                          display: flex;
+                                                          gap: 5px;
+                                                        }
+                                                        .pen-rate{
+                                                          background-color: #e74c3c;
+                                                          width: fit-content;
+                                                          padding:0 10px;
+                                                          border-radius: 2px;
+                                                          color: white;
+                                                        
+                                                        }
+                                                        .penalt.rate.lable{
+                                                          color: #767676;
+                                                          font-weight: 600;
+                                                          font-size: 14px;
+                                                        }
+                                                        .pen-desc{
+                                                          color: rgb(41, 41, 41);
+                                                        }
+
+
+
 
   #agreements_btn{
     background-color: #00192D; color: white; font-size: small;
@@ -516,7 +546,7 @@ border-radius: 10px;
 
 
 table {
-  width: 50%;
+  
   border-collapse: collapse;
   margin: 20px 0;
 }
