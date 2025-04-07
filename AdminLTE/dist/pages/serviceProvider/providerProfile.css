@@ -46,12 +46,14 @@ body {
     transform: scale(1.05); /* Slightly enlarge */
     color: #FFC107;
   }
+
   .action-btn {
     border: none;
     background: none;
     font-size: 18px;
     cursor: pointer;
-}
+  }
+
   .new-category
   {
     padding: 2px 4px;

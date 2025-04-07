@@ -57,7 +57,8 @@ body{
                                                                   height: fit-content;
                                                                   padding: 2px 8px;
                                                                   font-size: 12px;
-                                                                  border: 1px solid #002a4d;
+                                                                  background-color: #e74c3c;
+                                                                  color: white;
                                                             }
                                                             .btn:hover {
                                                               background-color: #002a4d; /* Slightly lighter blue */
@@ -68,8 +69,9 @@ body{
                                                               height: fit-content;
                                                                   padding: 2px 6px;
                                                                   font-size: 12px;
-                                                                  background-color: transparent;
-                                                                  color: green;
+
+                                                                  /* background-color: transparent; */
+                                                                  /* color: green; */
                                                                   border: 1px solid #002a4d;
                                                             }
                                                             .edit-btn:hover{
@@ -106,7 +108,7 @@ body{
                                                               box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
                                                             }
                                                             .reciept{
-                                                              padding: 0px 3px;
+                                                              padding: 0px 4px;
                                                               font-size: 12px;
                                                               background-color: transparent;
                                                               color: green;
@@ -114,32 +116,39 @@ body{
                                                             height: fit-content;
                                                             }
                                                             .btn.change{
-                                                              height: fit-content;
-                                                              padding: 2px 8px;
+                                                              padding: 0px 3px;
                                                               font-size: 12px;
-                                                              border: 1px solid #002a4d; 
+                                                              background-color: green;
+                                                              color: white;
+                                                            /* border: 1px solid #FFC107; */
+                                                            height: fit-content;
+                                                            
                                                             }
                                                             /* SUMMARY SECTION */
 
 .col-md-3 .icon-category-number {
 background-color: white;
 padding-left: 2px;
-border-left:5px solid #F28B88;
-box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+/* border-left:5px solid #F28B88; */
+ box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15); 
 }
-
+.icon-category-number .icon{
+  color: #FFC107;
+}
 
 .icon-category-number .rent-type{
   font-weight: 600;
   font-size: 16px;
-  /* color: #FFC107; */
+  color: #767676;
 }
 .icon-category-number .number{
   font-weight: 600;
   font-size: 16px;
-  color: #FFC107;
+  color: rgb(41, 41, 41);
+  /* color: #FFB000; */
 }
 .rent-type-duration-stayed{
+
   display: flex;
   gap: 3px;
 }
@@ -231,8 +240,9 @@ margin-top: 2px;
 .details.title{
   color: #767676;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 14px;   
 }
+
                                           /* SELECT, INPUT, TEXT_AREA */
 input, textarea {
 width: 100%;
@@ -241,7 +251,6 @@ margin-top: 5px;
 border: 1px solid #00192D;
 border-radius: 4px;
 color: #4f4f52;
-
 }
 
 input:hover{
@@ -323,7 +332,7 @@ select {
                                                           font-size: 16px;
                                                         }
                                                         .rent.paid{
-                                                          color: #FFC107;
+                                                          
                                                           font-weight: 600;
                                                           font-size: 16px;
                                                         }
