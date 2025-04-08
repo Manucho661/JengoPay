@@ -82,9 +82,9 @@ body{
                                                             .btn.view.id{
                                                               padding: 0px 3px;
                                                               font-size: 12px;
-                                                              background-color: transparent;
-                                                              color: green;
-                                                            border: 1px solid #FFC107;
+                                                              background-color: #00192D;
+                                                              color: #FFC107;
+                                                            /* border: 1px solid #FFC107; */
                                                             height: fit-content;
                                                             }
                                                             .btn.view.id:hover{
@@ -108,21 +108,22 @@ body{
                                                               box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
                                                             }
                                                             .reciept{
-                                                              padding: 0px 4px;
+                                                              padding: 2px 8px;
                                                               font-size: 12px;
-                                                              background-color: transparent;
-                                                              color: green;
-                                                            border: 1px solid #FFC107;
+                                                              background-color: #00192D;
+                                                              color: #FFC107;
+                                                            /* border: 1px solid #FFC107; */
                                                             height: fit-content;
                                                             }
                                                             .btn.change{
                                                               padding: 0px 3px;
                                                               font-size: 12px;
-                                                              background-color: green;
-                                                              color: white;
+                                                              background-color: #00192D;
+                                                              color: #FFC107;
+                                                              /* color: white; */
                                                             /* border: 1px solid #FFC107; */
                                                             height: fit-content;
-                                                            
+
                                                             }
                                                             /* SUMMARY SECTION */
 
@@ -130,7 +131,7 @@ body{
 background-color: white;
 padding-left: 2px;
 /* border-left:5px solid #F28B88; */
- box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15); 
+ box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
 }
 .icon-category-number .icon{
   color: #FFC107;
@@ -199,7 +200,7 @@ margin-top: 2px;
                                               color: #0072C6;
                                               overflow: hidden;
                                             }
-                                            
+
                                             .email:hover{
                                               text-decoration: underline;
                                               cursor: pointer;
@@ -220,7 +221,7 @@ margin-top: 2px;
                                               text-decoration: underline;
                                               cursor: pointer;
                                             }
-                                            
+
 
 
                                             /* RENT DETAILS */
@@ -240,7 +241,7 @@ margin-top: 2px;
 .details.title{
   color: #767676;
     font-weight: 600;
-    font-size: 14px;   
+    font-size: 14px;
 }
 
                                           /* SELECT, INPUT, TEXT_AREA */
@@ -316,7 +317,7 @@ select {
                                                           /* text-transform: uppercase !important; */
                                                           /* background-color: #f4f4f4 !important; Light background for contrast */
                                                           border-bottom: 2px solid #ddd !important;
-                                                          background: #023E6A    !important ;
+                                                          background: #00192D    !important ;
                                                           color: white !important;
                                                         }
                                                         /* contents */
@@ -332,7 +333,7 @@ select {
                                                           font-size: 16px;
                                                         }
                                                         .rent.paid{
-                                                          
+
                                                           font-weight: 600;
                                                           font-size: 16px;
                                                         }
@@ -374,7 +375,7 @@ select {
                                                           padding:0 10px;
                                                           border-radius: 2px;
                                                           color: white;
-                                                        
+
                                                         }
                                                         .penalt.rate.lable{
                                                           color: #767676;
@@ -382,7 +383,9 @@ select {
                                                           font-size: 14px;
                                                         }
                                                         .pen-desc{
-                                                          color: rgb(41, 41, 41);
+                                                          color: #767676;
+                                                          font-size: 14px;
+                                                          font-weight: 500;
                                                         }
 
 
@@ -555,7 +558,7 @@ border-radius: 10px;
 
 
 table {
-  
+
   border-collapse: collapse;
   margin: 20px 0;
 }
