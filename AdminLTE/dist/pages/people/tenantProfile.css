@@ -27,8 +27,16 @@ body{
 
   font-weight: 600;
      letter-spacing: .5px;
+     margin-right: 2px;
 }
-
+.active{
+  color: green;
+ background-color: rgba(128,128,128,0.2);
+ height: fit-content;
+ padding: 0 4px;
+ border-radius: 5px;
+ font-weight: 500;
+}
                                           /* BUTTONS */
                                                             .btn{
                                                               font: bold !important;
@@ -132,6 +140,7 @@ background-color: white;
 padding-left: 2px;
 /* border-left:5px solid #F28B88; */
  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+ border-radius: 5px;
 }
 .icon-category-number .icon{
   color: #FFC107;
@@ -141,6 +150,7 @@ padding-left: 2px;
   font-weight: 600;
   font-size: 16px;
   color: #767676;
+  border-radius: 5px;
 }
 .icon-category-number .number{
   font-weight: 600;
@@ -188,6 +198,7 @@ margin-top: 2px;
                                               .personal-item{
                                                 box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
                                                 overflow: hidden;
+                                                border-radius: 5px;
                                               }
                                               .personal-info.item-name{
                                                 /* color: rgb(41, 41, 41); */
