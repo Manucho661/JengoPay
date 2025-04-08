@@ -877,8 +877,48 @@ color: #f1f1f1;
         <input type="text" id="name" name="name" required>
         <label for="name">Email</label>
         <input type="text" id="number" name="number" required>
-        <label for="name">Preferred B/S Name</label>
+        <div id="field-group-first" class="field-group first">
+          <label for="recipient" style="color: black;">
+            Type of provider
+            <i class="fas fa-mouse-pointer title-icon" style="transform: rotate(110deg);"></i>
+            Building
+          </label>
+          <select id="recipient" onchange="toggleShrink()" class="recipient">
+            <option value="select">Select Provider</option>
+            <option value="freelancers">Freelancers</option>
+            <option value="company">Company</option>
+          </select>
+        </div>
+
+        <!-- Freelancer details, shown only when "Freelancers" is selected -->
+        <div id="freelancer-details" class="field-group second" style="display:none">
+          <label for="name">Preferred B/S Name</label>
         <input type="text" id="text" name="text" required>
+
+          <label for="recipient">Kra Pin(Optional)</label>
+          <input type="text" id="number" name="kra_pin" required>
+
+        </div>
+
+        <!-- Company details, shown only when "Company" is selected -->
+        <div id="company-details" class="field-group second" style="display:none">
+          <label for="recipient">Company Registration Number</label>
+          <input type="text" id="company-number" name="company_registration_number" required>
+
+          <label for="recipient">Company Kra Pin</label>
+          <input type="text" id="company-kra-pin" name="company_kra_pin" required>
+
+          <label for="recipient">Company Business Licence</label>
+          <input type="text" id="company-licence" name="company_business_licence" required>
+
+          <label for="name">Preferred B/S Name</label>
+          <input type="text" id="text" name="text" required>
+
+          <label for="file">Attachment</label>
+          <input type="file">
+        </div>
+
+
         <label for="location">Location</label>
         <input type="text" id="location" name="location" required>
         <label for="communication">Preferred Mode Of Communication</label>
@@ -951,6 +991,25 @@ color: #f1f1f1;
   }
 </script>
 <!-- end Provider overlay -->
+
+<script>
+  function toggleShrink() {
+    const recipient = document.getElementById('recipient').value;
+
+    // Hide both freelancer and company details initially
+    document.getElementById('freelancer-details').style.display = 'none';
+    document.getElementById('company-details').style.display = 'none';
+
+    // Show the respective section based on the selected provider
+    if (recipient === 'freelancers') {
+      document.getElementById('freelancer-details').style.display = 'block';  // Show freelancer fields
+    } else if (recipient === 'company') {
+      document.getElementById('company-details').style.display = 'block';  // Show company fields
+    }
+  }
+</script>
+
+
 
  <!-- View announcements script -->
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
