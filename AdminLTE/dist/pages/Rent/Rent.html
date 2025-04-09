@@ -56,7 +56,7 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="singleProperty.css">
+    <link rel="stylesheet" href="Rent.css">
 
 
     <!-- scripts for data_table -->
@@ -67,7 +67,94 @@
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-   
+  body{
+    font-size: 16px;
+  }
+   .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .overlay-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            width: 400px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        /* Heading */
+        .overlay-content h2 {
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            color: #333;
+        }
+
+        /* Message Input Area */
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-family: 'Arial', sans-serif;
+            font-size: 14px;
+        }
+
+        /* Recipient Selector */
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Send Button */
+        .send-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .send-button:hover {
+            background-color: #0056b3;
+        }
+        .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: red;
+    border-radius: 20px;
+  }
+  .notification-title {
+    color: #00192D;
+    font-size: 15px;
+    font-weight: bold;
+
+}
 
 </style>
 
@@ -322,49 +409,62 @@
             <!-- First Row -->
             <div class="row  " >
               <div class="col-sm-8">
+                <b><h3 class="mb-0 contact_section_header"> <i class="fas fa-coins mr-2" style="font-size: 1.5rem;"></i> Rental Charges  | Crown Z TOWERS</h3>
+                </b>
+                  <br>
+                      <div  class="app-content">
+                        <div class="container-fluid border-side-color">
+                          <div class="row ">
+                            <div class="col-md-8 border-left:5px solid #F28B88;">
+                              <div class="card shadow-lg icon-category-number" style="width: 18rem; border-radius: 15px; background: #f9f9f9;">
+                                <div class="card-body">
+                                  <h5 class="card-title d-flex align-items-center">
+                                    <i class="fas fa-coins mr-2" style="font-size: 1.5rem;"></i>
+              <span>KSH 2,000</span>
+            </h5>
+            
+            <!-- <h6 class="card-subtitle mb-2 text-muted">Storage Overview</h6> -->
+            <br>
+            <!-- Text for used and remaining space -->
+            <span id="used-text" style="font-size: 14px; color:#FFC107;">PAID  LAST 30 DAYS</span><br>
+            <!-- <span id="remaining-text" style="font-size: 14px; color: #333;">Remaining: 50.00 GB</span> -->
 
-                <h3 class="mb-0 contact_section_header"> <i class="fas fa-house-user"></i>  Rental Roll  | Ebenezer</h3>
-
-
-                    <div class="row mt-2  ">
-                      <div class="col-md-12  ">
-
-                        <div class="row mt-6 ">
-                            <!-- Summary -->
-                            <div class="col-md-3 ">
-                                <label class="text text-center">  <i class="fas fa-map-marker-alt"></i>  UNITS </label>
-                                <span class="value text-center"> 50 </span>
-                            </div>
-
-                            <div class="col-md-3">
-                                <label class="text text-center"> <i class="fas fa-building unit-icon"></i> OCCUPIED  </label>
-                                <span class="value"> 20 </span>
-                            </div>
-
-                        </div>
-
-                        <div class="row mt-6" >
-                          <!-- Summary -->
-                          <div class="col-md-3  ">
-                              <label class="text text-center">      <i class="fas fa-money-bill money-icon"></i>
-                                Amount_Per_Unit </label>
-                              <span class="value text-center"> <b>Ksh 5000</b>  </span>
-                          </div>
-
-                          <div class="col-md-3">
-                              <label class="text text-center"> <i class="fas fa-home unit-type"></i>  TOTAL PAID  </label>
-                              <span class="value"> <b>50,0000,0000</b> </span>
-                          </div>
-                          <div class="col-md-3">
-                            <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> <a href=""> Roll_Over  </a>  </label>
-                            <span class="value"> Monthly </span>
-                          </div>
-                          <div class="col-md-3">
-                            <button class="btn text text-danger"> <i class="fas fa-edit"></i>  Edit</button>
-                          </div>
+            <!-- Space Utilization Bar -->
+            <!-- <div class="progress mt-3" style="height: 20px; border-radius: 10px; background-color: #e0e0e0;"> -->
+              <!-- <div class="progress-bar" id="progress-bar" role="progressbar" style="width: 75%; background-color: #d39e00; border-radius: 10px;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div> -->
+            <!-- </div> -->
+          </div>
+        </div>
+      </div>
 
 
-                        </div>
+
+      <div class="col-md-4">
+        <div class="card shadow-lg" style="width: 18rem; border-radius: 15px; background: #f9f9f9;">
+          <div class="card-body">
+            <h5 class="card-title d-flex align-items-center">
+              <i class="fas fa-coins mr-2" style="font-size: 1.5rem;"></i>
+              <span>KSH 0</span>
+            </h5>
+            <!-- <h6 class="card-subtitle mb-2 text-muted">Storage Overview</h6> -->
+            <br>
+            <!-- Text for used and remaining space -->
+            <span id="used-text" style="font-size: 14px; color:#FFC107;">DUE LAST 30 DAYS</span><br>
+            <!-- <span id="remaining-text" style="font-size: 14px; color: #333;">Remaining: 50.00GB</span> -->
+
+            <!-- Space Utilization Bar -->
+            <!-- <div class="progress mt-3" style="height: 20px; border-radius: 10px; background-color: #e0e0e0;">
+              <div class="progress-bar" id="progress-bar" role="progressbar" style="width: 75%; background-color: #d39e00; border-radius: 10px;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+
+
+
+
+      <br>
+      <!-- /          </div> -->
 
                       </div>
                       <!-- <div class="col-md-6">
@@ -399,142 +499,233 @@
 
             <!-- End first Row -->
 
-
             <!-- Second row start -->
-             <div class="row first mb-2 mt-3">
-
-                <div class="col-md-6 d-flex justify-content-between">
-                  <button id="rent_details_btn" class="btn">  <i class="fas fa-calendar-check icon"></i> <a href="profile.html"> <b> Records </b> </a> </button>
-
-                  <button id="agreements_btn" class="btn"><i class="fas fa-calendar-check icon"></i>
-                       <a href="agreements.html"> <b> Agreements </b> </a>  </button>
-      
-                      
-
-
-                </div>
-
-                <div class="col-md-6">
-                  <div style="display: flex; justify-content: end;">
-
+            <div class="row first mb-2 mt-3">
+              <div class="col-md-4">
+                  <div>
+                   <b> <label for="categoryFilter" class="filter-label">Property</label></b>
+                    <br>
+                    <select id="categoryFilter">
+                        <option value="">-- Select --</option>
+                        <option value="technology">All</option>
+                        <option value="health">Manucho</option>
+                        <option value="business">Ebenezer</option>
+                        <option value="education">Crown Z</option>
+                    </select>
 
                   </div>
-                </div>
-              <!-- /.col -->
-            </div>
+
+              </div>
+
+              <div class="col-md-4">
+                <b>   Start Date
+                  <label for="filterDate" class="filter-label"></label>
+                  </b>
+                  <input type="date" id="filterDate" />
+              </div>
+
+              <div class="col-md-4" style="padding: 10px;">
+                <b>End Date
+                  <label for="filterDate" class="filter-label"></label>
+                </b>
+                  <input type="date" id="filterDate" />
+              </div>
+          </div>
 
 
-            <div class="row mt-3"> <!-- second row -->
-
-              <div class="col-md-12">
-                <div class="card">
 
 
-                  <div class="card-body">
-                    <table id="rent" class="display" style="font-size: small;" >
-                        <thead>
-                            <tr>
-                                <th scope="col">TENANT</th>
-                                    <th scope="col">AMOUNT PAID</th>
-                                    <th scope="col">PAYMENT DATE</th>
-                                    <th scope="col">RENT OVERDUE</th>
-                                    <th scope="col">DAYS OVERDUE</th>
 
-                                    <th scope="col">ACTION</th>
 
-                            </tr>
+
+
+
+                      <div class="row mt-3"> <!-- second row -->
+
+                        <div class="col-md-12">
+                          <div class="card">
+                      <div class="card-body">
+                        <table id="rent" class="display" style="font-size: small;" >
+                            <thead>
+                                <tr>
+                                       <th scope="col">PAYMENT AMOUNT</th>
+                                        <th scope="col">PAID BY</th>
+                                        <th scope="col">BUILDING</th>
+                                        <th scope="col">UNIT</th>
+                                        <th scope="col">TYPE</th>
+                                        <th scope="col">TENANT</th>
+                                        <th scope="col">DAYS OVERDUE</th>
+                                        <th scope="col">PAID ON</th>
+                                        <th scope="col">RECEIVED BY</th>
+                                        <th scope="col">ACTION</th>
+
+                                </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <th scope="row">KELVIN</th>
-                                    <td>KSH 10,000</td>
-                                    <td>1/3/2030</td>
-                                    <td>KSH 10,000</td>
-                                    <td> 12</td>
-                                  <td>  
+                            <tr onclick="window.location.href=''">
+                                <th scope="row">KSH 9,000</th>
+                                    <td>KELVIN</td>
+                                    <td>CROWN Z TOWERS</td>
+                                    <td>B67</td>
+                                    <td>Bed Sitter</td>
+                                    <td>KELVIN</td>
+                                    <td>4</td>
+                                    <td>27-03-2025</td>
+                                    <td>Mr Maina</td>
+                                  <td>
                                     <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
                                     </button> -->
-                                    <button class="btn btn-sm" style="background-color: #FFC107; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-bell"></i></button>
-                                    <a href="view_monthly_exp_details.php" class="btn btn-sm view-btn"> <i class="fa fa-eye"></i> View</a>
+                                    <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
+                                    <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
 
                                   </td>
                             </tr>
-                            <tr>
-                            <th scope="row">JOEL</th>
-                            <td>KSH 20,0000</td>
-                            <td>1/3/2029</td>
-                            <td>1000</td>
-                            <td>12</td>
-                            <td> 
-                              <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                              </button> -->
-                              <button class="btn btn-sm" style="background-color: #FFC107; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-bell"></i></button>
-
-                              <a href="view_monthly_exp_details.php" class="btn btn-sm view-btn"> <i class="fa fa-eye"></i> View</a>
-                            </td>
-
-
-                            </tr>
-                            <tr>
-                                <th scope="row">FRED</th>
-                            <td>KSH 10000</td>
-                            <td>2/4/2020</td>
-                            <td> 10000</td>
-                            <td>13</td>
-
-                            <td> 
-                              <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                              </button> -->
-                              <button class="btn btn-sm" style="background-color: #FFC107; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-bell"></i></button>
-
-                              <a href="view_monthly_exp_details.php" class="btn btn-sm view-btn"> <i class="fa fa-eye"></i> View</a>
-                            </td>
-
-                                </tr>
-
-                                <tr>
-                                    <th scope="row">FRED</th>
-                                <td>KSH 10000</td>
-                                <td>2/4/2020</td>
-                                <td> 10000</td>
-                                <td>13</td>
-
-                                <td> 
+                            <tr onclick="window.location.href=''">
+                              <th scope="row">KSH 15,000</th>
+                                  <td>KELVIN</td>
+                                  <td>CROWN Z TOWERS</td>
+                                  <td>B67</td>
+                                  <td>One Bedroom</td>
+                                  <td>KELVIN</td>
+                                  <td>4</td>
+                                  <td>27-03-2025</td>
+                                  <td>Mr Maina</td>
+                                <td>
                                   <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
                                   </button> -->
-                                  <button class="btn btn-sm" style="background-color: #FFC107; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-bell"></i></button>
+                                  <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
+                                  <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
 
-                                  <a href="view_monthly_exp_details.php" class="btn btn-sm view-btn"> <i class="fa fa-eye"></i> View</a>
-                                </td>  
-                                    </tr>
+                                </td>
+                          </tr>
+                          <tr onclick="window.location.href=''">
+                            <th scope="row">KSH 25,000</th>
+                                <td>KELVIN</td>
+                                <td>CROWN Z TOWERS</td>
+                                <td>B67</td>
+                                <td>Two Bedroom</td>
+                                <td>KELVIN</td>
+                                <td>4</td>
+                                <td>27-03-2025</td>
+                                <td>Mr Maina</td>
+                              <td>
+                                <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                                </button> -->
+                                <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
+                                <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
 
-                                    <tr>
-                                        <th scope="row">FRED</th>
-                                    <td>KSH 10000</td>
-                                    <td>2/4/2020</td>
-                                    <td> 10000</td>
-                                    <td>13</td>
+                              </td>
+                        </tr>
 
-                                    <td>
-                                      <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                                      </button> -->
-                                      <button class="btn btn-sm" style="background-color: #FFC107; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-bell"></i></button>
+                        <tr onclick="window.location.href=''">
+                          <th scope="row">KSH 35,000</th>
+                              <td>KELVIN</td>
+                              <td>CROWN Z TOWERS</td>
+                              <td>B67</td>
+                              <td>Three Bedroom</td>
+                              <td>KELVIN</td>
+                              <td>4</td>
+                              <td>27-03-2025</td>
+                              <td>Mr Maina</td>
+                            <td>
+                              <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                              </button> -->
+                              <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
+                              <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
+                            </td>
+                      </tr>
 
-                                      <a href="view_monthly_exp_details.php" class="btn btn-sm view-btn"> <i class="fa fa-eye"></i> View</a>
-                                    </td>  
-                                        </tr>
-                                        <tr>
-                                        <th scope="row">FRED</th>
-                                        <td>KSH 10000</td>
-                                        <td>2/4/2020</td>
-                                        <td> 10000</td>
-                                        <td>13</td>
 
-                                        <td>                               
-                                          <button class="btn btn-sm" style="background-color: #FFC107; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-bell"></i></button>
-                                          <a href="view_monthly_exp_details.php" class="btn btn-sm view-btn"> <i class="fa fa-eye"></i> View</a>
-                                        </td>  
-                                            </tr>
+                      <tr onclick="window.location.href=''">
+                        <th scope="row">KSH 35,000</th>
+                            <td>KELVIN</td>
+                            <td>CROWN Z TOWERS</td>
+                            <td>B67</td>
+                            <td>Three Bedroom</td>
+                            <td>KELVIN</td>
+                            <td>4</td>
+                            <td>27-03-2025</td>
+                            <td>Mr Maina</td>
+                          <td>
+                            <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                            </button> -->
+                            <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
+                            <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
+
+                          </td>
+                    </tr>
+                    <tr onclick="window.location.href=''">
+                      <th scope="row">KSH 35,000</th>
+                          <td>KELVIN</td>
+                          <td>CROWN Z TOWERS</td>
+                          <td>B67</td>
+                          <td>Three Bedroom</td>
+                          <td>KELVIN</td>
+                          <td>4</td>
+                          <td>27-03-2025</td>
+                          <td>Mr Maina</td>
+                        <td>
+                          <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                          </button> -->
+                          <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
+                          <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
+
+                        </td>
+                  </tr>
+                  <tr onclick="window.location.href=''">
+                    <th scope="row">KSH 35,000</th>
+                        <td>KELVIN</td>
+                        <td>CROWN Z TOWERS</td>
+                        <td>B67</td>
+                        <td>Three Bedroom</td>
+                        <td>KELVIN</td>
+                        <td>4</td>
+                        <td>27-03-2025</td>
+                        <td>Mr Maina</td>
+                      <td>
+                        <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                        </button> -->
+                        <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
+                        <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
+
+                      </td>
+                </tr>
+                <tr onclick="window.location.href=''">
+                  <th scope="row">KSH 35,000</th>
+                      <td>KELVIN</td>
+                      <td>CROWN Z TOWERS</td>
+                      <td>B67</td>
+                      <td>Three Bedroom</td>
+                      <td>KELVIN</td>
+                      <td>4</td>
+                      <td>27-03-2025</td>
+                      <td>Mr Maina</td>
+                    <td>
+                      <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                      </button> -->
+                      <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
+                      <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
+
+                    </td>
+              </tr>
+              <tr onclick="window.location.href=''">
+                <th scope="row">KSH 35,000</th>
+                    <td>KELVIN</td>
+                    <td>CROWN Z TOWERS</td>
+                    <td>B67</td>
+                    <td>Three Bedroom</td>
+                    <td>KELVIN</td>
+                    <td>4</td>
+                    <td>27-03-2025</td>
+                    <td>Mr Maina</td>
+                  <td>
+                    <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                    </button> -->
+                    <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
+                    <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
+
+                  </td>
+            </tr>
                         </tbody>
                     </table>
                   </div>
@@ -568,6 +759,58 @@
   </div>
 </div>
 <!-- End Notification popup -->
+
+
+<!-- units popup -->
+<div class="units-overlay" id="complaintPopup">
+  <div class="units-content wide-form">
+      <button class="close-btn" onclick="closeunitsPopup()">×</button>
+      <h2 class="assign-title">Detailed Rent Information</h2>
+      <form class="wide-form">
+        <div class="form-group">
+          <div class="row g-3">
+
+            <div class="col-md-6">
+              <label for="property">Property:</label>
+              <input type="text" id="property " name="property" placeholder="Manucho Apartments" required disabled>
+            </div>
+
+            <div class="col-md-6">
+            <label for="tenant">Tenant:</label>
+            <input type="text" id="tenant " name="tenant" placeholder="FRED MBURU" required disabled>
+          </div>
+
+          <div class="col-md-6">
+            <label for="unit">Unit</label>
+            <input type="text" id="unit" name="unit"  placeholder="B11" disabled>
+    </div>
+
+
+          <div class="col-md-6">
+            <label for="text">Amount Paid:</label>
+            <input type="text" id="amount" name="amount" placeholder="Ksh 10000" required disabled>
+          </div>
+
+          <div class="col-md-6">
+            <label for="payment_date">Payment Date</label>
+            <input type="text" id="date" name="date" placeholder="11-03-2025" required disabled>
+        </div>
+
+        <div class="col-md-6">
+            <label for="rent_overdue">Rent Overdue</label>
+            <input type="text" id="rent_overdue" name="rent_overdue"  placeholder="Ksh0" disabled>
+    </div>
+
+    <div class="col-md-6">
+      <label for="days_overdue">Days Overdue</label>
+      <input type="text" id="days_overdue" name="days_overdue" placeholder="0" disabled>
+</div>
+
+
+      </form>
+  </div>
+</div>
+<!-- end -->
 
 <script>
   $(document).ready(function() {
@@ -666,6 +909,18 @@
   }
 </script>
 
+<script>
+  // Function to open the complaint popup
+  function openPopup() {
+    document.getElementById("complaintPopup").style.display = "flex";
+  }
+
+  // Function to close the complaint popup
+  function closeunitsPopup() {
+    document.getElementById("complaintPopup").style.display = "none";
+  }
+</script>
+
     <!-- script for notification overlay -->
 
     <script>
@@ -731,7 +986,7 @@ $(document).ready(function() {
 
 </script> -->
 
-</script>
+
 
 <script>
 
@@ -766,6 +1021,8 @@ $(document).ready(function() {
       .catch(error => console.error('Error loading the file:', error)); // Handle errors
 </script>
 <!-- end sidebar script -->
+
+
 
 
 
