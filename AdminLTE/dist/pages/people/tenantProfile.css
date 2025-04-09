@@ -158,11 +158,12 @@ padding-left: 2px;
   color: rgb(41, 41, 41);
   /* color: #FFB000; */
 }
-.rent-type-duration-stayed{
 
+.rent-type-duration-stayed{
   display: flex;
   gap: 3px;
 }
+
 .duration-stayed{
   font-weight: 400px;
   font-size: 14px;
