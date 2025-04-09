@@ -395,10 +395,10 @@ color: #f1f1f1;
                 <h3 class="mb-0 contact_section_header"> <i class="fas fa-user-tie icon" style="color:#FFC107"></i> Service Providers</h3>
               </div>
 
-              <div class="col-sm-4 d-flex justify-content-end">
+              <!-- <div class="col-sm-4 d-flex justify-content-end">
                 <button   class="btn new-category" onclick="openCategoryPopup()">    New Category</button>
 
-              </div>
+              </div> -->
 
             </div>
             <!--end::Row-->
@@ -580,9 +580,9 @@ color: #f1f1f1;
                           </div>
                           <div style="display:flex; gap:15px">
                               <div><input type="text" class="search-input" placeholder="Search provider..."></div>
-                              <div> <button class="btn" style="color: white; font-size: small;" onclick="openProviderPopup()">  <i class="fas fa-plus icon"></i>
+                              <!-- <div> <button class="btn" style="color: white; font-size: small;" onclick="openProviderPopup()">  <i class="fas fa-plus icon"></i>
                                 <b> Add Provider </b></button>
-                              </div>
+                              </div> -->
 
                           </div>
 
@@ -592,10 +592,10 @@ color: #f1f1f1;
                             <thead class="mb-2">
                             <tr>
 
-                                <th>PROVIDER</th>
-                                <th>Phone</th>
-                                <th>Email</th>
-                                 <th>Rating</th>
+                                <th>Provider Name</th>
+                                <th>Location</th>
+                                <th>Services</th>
+                                 <th>Ratings</th>
                                 <th>ACTION</th>
 
                             </tr>
@@ -613,8 +613,8 @@ color: #f1f1f1;
                                   <span class="star" data-value="5">&#9733;</span>
                                 </div>
                                 </td>
-                                <td>0756752987</td>
-                                <td class="text-primary"> <i class="fas fa-envelope"></i>  emmanu@gmail.com</td>
+                                <td>ruiru</td>
+                                <td  style="color: #FFC107;"> <i class="fas fa-wrench"></i>Plumbing</td>
                                 <td>5 <i class="fa fa-star " id="star-rating"></i>(5)</td>
                                 <td id="more">
                                <div id="more_icon">
@@ -649,7 +649,7 @@ color: #f1f1f1;
 
                                 </td>
                                 <td>0756752987</td>
-                                <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
+                                <td style="color: #FFC107;"><i class="fas fa-fire"></i> Gas Supply</td>
                                 <td>5 <i class="fa fa-star " id="star-rating"></i>(4)</td>
                                 <td id="more">
                                   <div id="more_icon">
@@ -682,7 +682,7 @@ color: #f1f1f1;
 
                               </td>
                               <td>0756752987</td>
-                              <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
+                              <td style="color: #FFC107;"><i class="fas fa-drumstick-bite"></i>Butcher</td>
                               <td>5 <i class="fa fa-star " id="star-rating"></i>(2)</td>
                               <td id="more">
                                 <div id="more_icon">
@@ -715,7 +715,7 @@ color: #f1f1f1;
 
                             </td>
                             <td>0756752987</td>
-                            <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
+                            <td style="color: #FFC107;"> <i class="fas fa-bolt"></i>  Electrician</td>
                             <td>5 <i class="fa fa-star " id="star-rating"></i>(1)</td>
                             <td id="more">
                               <div id="more_icon">
@@ -748,7 +748,7 @@ color: #f1f1f1;
 
                           </td>
                           <td>0756752987</td>
-                          <td class="text-primary"> <i class="fas fa-envelope"></i>  Kelvin@gmail.com</td>
+                          <td style="color: #FFC107;"><i class="fas fa-wrench"></i> Kelvin@gmail.com</td>
                           <td>5 <i class="fa fa-star " id="star-rating"></i>(3)</td>
                           <td id="more">
                             <div id="more_icon">
@@ -881,7 +881,7 @@ color: #f1f1f1;
           <label for="recipient" style="color: black;">
             Type of provider
             <i class="fas fa-mouse-pointer title-icon" style="transform: rotate(110deg);"></i>
-           
+
           </label>
           <select id="recipient" onchange="toggleShrink()" class="recipient">
             <option value="select">Select Provider</option>

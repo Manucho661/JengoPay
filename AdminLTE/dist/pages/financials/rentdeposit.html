@@ -495,203 +495,131 @@
  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.24/jspdf.plugin.autotable.js"></script>
 
-
  <script>
-  // Sample Data: List of tenants and their rent deposit details
   const tenants = [
-      {
-          id:'1',
-          tenant_id: 'T1001',
-          name: 'John Doe',
-          building: 'Crown Z Towers',
-          unit:'b2',
-          deposit_paid: 1500,
-          deductions: 200,
-          rent_refunds:1300,
-          date_paid: '2025-03-01',
-          status:'paid',
-      },
-      {
-
-          id:'2',
-          tenant_id: 'T1002',
-          name: 'Jane Smith',
-          building: 'Crown M Towers',
-          unit:'b2',
-          deposit_paid: 1400,
-          deductions: 0,
-          rent_refunds:0,
-          date_paid: '2025-03-05',
-          status:'pending'
-      }
-      ,
-
-      {
-        id:'3',
-        tenant_id: 'T1002',
-        name: 'Jane Smith',
-        building: 'Crown T Towers',
-        unit:'b2',
-        deposit_paid: 1400,
-        deductions: 0,
-        rent_refunds:0,
-        date_paid: '2025-03-05',
-         status:'pending'
-    },
-
     {
-      id:'4',
+      id: '1',
+      tenant_id: 'T1001',
+      name: 'John Doe',
+      building: 'Crown Z Towers',
+      unit: 'b2',
+      deposit_paid: 1500,
+      deductions: 200,
+      rent_refunds: 1300,
+      date_paid: '2025-03-01',
+      status: 'paid',
+    },
+    {
+      id: '2',
       tenant_id: 'T1002',
       name: 'Jane Smith',
-      building: 'Crown B Towers',
-      unit:'b2',
-      deposit_paid: 1400,
-      deductions: 0,
-      rent_refunds:0,
+      building: 'Sunset Apartments',
+      unit: 'a1',
+      deposit_paid: 1000,
+      deductions: 150,
+      rent_refunds: 900,
       date_paid: '2025-03-05',
-       status:'pending'
-  },
+      status: 'unpaid',
+    },
+    {
+      id: '3',
+      tenant_id: 'T1002',
+      name: 'Jane Smith',
+      building: 'Sunset Apartments',
+      unit: 'a1',
+      deposit_paid: 1000,
+      deductions: 150,
+      rent_refunds: 900,
+      date_paid: '2025-03-05',
+      status: 'unpaid',
+    },
+    {
+      id: '4',
+      tenant_id: 'T1002',
+      name: 'Jane Smith',
+      building: 'Sunset Apartments',
+      unit: 'a1',
+      deposit_paid: 1000,
+      deductions: 150,
+      rent_refunds: 900,
+      date_paid: '2025-03-05',
+      status: 'unpaid',
+    },
   {
-    id:'5',
-    tenant_id: 'T1002',
-    name: 'Jane Smith',
-    building: 'Crown Y Towers',
-    unit:'b2',
-    deposit_paid: 1400,
-    deductions: 0,
-    rent_refunds:0,
-    date_paid: '2025-03-05',
-     status:'pending'
-},
-{
-  id:'6',
-  tenant_id: 'T1002',
-  name: 'Jane Smith',
-  building: 'Crown PER Towers',
-  unit:'b2',
-  deposit_paid: 1400,
-  deductions: 0,
-  rent_refunds:0,
-  date_paid: '2025-03-05',
-   status:'pending'
-},
-{
-  id:'7',
-  tenant_id: 'T1002',
-  name: 'Jane Smith',
-  building: 'Crown Q Towers',
-  unit:'b2',
-  deposit_paid: 1400,
-  deductions: 0,
-  rent_refunds:0,
-  date_paid: '2025-03-05',
-   status:'pending'
-},
-{
-  id:'8',
-  tenant_id: 'T1002',
-  name: 'Jane Smith',
-  building: 'Crown A Towers',
-  unit:'b2',
-  deposit_paid: 1400,
-  deductions: 0,
-  rent_refunds:0,
-  date_paid: '2025-03-05',
-   status:'pending'
-},
-{
-  id:'9',
-  tenant_id: 'T1002',
-  name: 'Jane Smith',
+    id: '5',
+    tenant_id: 'T1001',
+    name: 'John Doe',
+    building: 'Crown Z Towers',
+    unit: 'b2',
+    deposit_paid: 1500,
+    deductions: 200,
+    rent_refunds: 1300,
+    date_paid: '2025-03-01',
+    status: 'paid',
+  },
+
+  {  id: '6',
+  tenant_id: 'T1001',
+  name: 'John Doe',
   building: 'Crown Z Towers',
-  unit:'b2',
-  deposit_paid: 1400,
-  deductions: 0,
-  rent_refunds:0,
-  date_paid: '2025-03-05',
-   status:'pending'
+  unit: 'b2',
+  deposit_paid: 1500,
+  deductions: 200,
+  rent_refunds: 1300,
+  date_paid: '2025-03-01',
+  status: 'paid',
 },
-{
-  id:'10',
-  tenant_id: 'T1002',
-  name: 'Jane Smith',
-  building: 'Crown Z Towers',
-  unit:'b2',
-  deposit_paid: 1400,
-  deductions: 0,
-  rent_refunds:0,
-  date_paid: '2025-03-05',
-   status:'pending'
-},
-{
-  id:'11',
-  tenant_id: 'T1002',
-  name: 'Jane Smith',
-  building: 'Crown Z Towers',
-  unit:'b2',
-  deposit_paid: 1400,
-  deductions: 0,
-  rent_refunds:0,
-  date_paid: '2025-03-05',
-   status:'pending'
-},
-{
-  id:'12',
-  tenant_id: 'T1002',
-  name: 'Jane Smith',
-  building: 'Crown Z Towers',
-  unit:'b2',
-  deposit_paid: 1400,
-  deductions: 0,
-  rent_refunds:0,
-  date_paid: '2025-03-05',
-   status:'pending'
-}
   ];
 
   // Function to render the table with tenant data
   function renderTable() {
-      const tableBody = document.querySelector('#myTable tbody');
-      tenants.forEach(tenant => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-              <td>${tenant.id}</td>
-              <td>${tenant.tenant_id}</td>
-              <td>${tenant.name}</td>
-              <td>${tenant.building}</td>
-              <td>${tenant.unit}</td>
-              <td>${tenant.deposit_paid}</td>
-              <td>${tenant.deductions}</td>
-              <td>${tenant.rent_refunds}</td>
-              <td>${tenant.date_paid}</td>
-              <td>${tenant.status}</td>
-          `;
-          tableBody.appendChild(row);
-      });
+    const tableBody = document.querySelector('#myTable tbody');
+    tenants.forEach(tenant => {
+      const row = document.createElement('tr');
+
+      // Check if the tenant status is 'paid' and add corresponding classes
+      const statusClass = tenant.status === 'paid' ? 'paid' : 'unpaid';
+
+      row.innerHTML = `
+        <td>${tenant.id}</td>
+        <td>${tenant.tenant_id}</td>
+        <td>${tenant.name}</td>
+        <td>${tenant.building}</td>
+        <td>${tenant.unit}</td>
+        <td>${tenant.deposit_paid}</td>
+        <td>${tenant.deductions}</td>
+        <td>${tenant.rent_refunds}</td>
+        <td>${tenant.date_paid}</td>
+        <td class="status ${statusClass}">${tenant.status}</td>
+      `;
+
+      tableBody.appendChild(row);
+    });
   }
 
   // Function to generate PDF using jsPDF
   function generatePDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
 
-      // Title of the PDF
-      doc.text('Rent Deposit Report', 14, 16);
-      doc.setFontSize(12);
+    // Title of the PDF
+    doc.text('Rent Deposit Report', 14, 16);
+    doc.setFontSize(12);
 
-      // Get the table content and add it to the PDF
-      const table = document.getElementById('myTable');
-      doc.autoTable({ html: table, startY: 30 });
+    // Get the table content and add it to the PDF
+    const table = document.getElementById('myTable');
+    doc.autoTable({ html: table, startY: 30 });
 
-      // Save the PDF
-      doc.save('rent_deposit_report.pdf');
+    // Save the PDF
+    doc.save('rent_deposit_report.pdf');
   }
 
   // Initialize the report by rendering the table
   renderTable();
 </script>
 
-
+<!-- Include jsPDF Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
  <script>
   const   more_announcement = document.getElementById('more_announcement_btn');
   const   view_announcement = document.getElementById('view_announcement');
