@@ -6,16 +6,26 @@ body{
     font-family: 'Poppins', sans-serif;
     background-color: #fff;
 }
-.summaryItem{
-    font-family: 'Playfair Display', serif; /* Elegant for creative projects */
-font-size: 25px;
-font-weight: bold;
 
-font-weight: 400; /* Lighter weight for a faint look */
-letter-spacing: 1px; /* Slight spacing for an airy feel */
-color:gray;
-
+                                                        /* HEADER SECTION */
+.contact_section_header{
+  font-weight: 600;
+  letter-spacing: .5px;
+  margin-right: 2px;
 }
+
+/* SUMMARY SECTION */
+
+.summary-item{
+    background-color: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15); 
+    border-radius: 5px;
+    padding-left: 2px;
+}
+.summary-item .icon{
+color: #FFC107;
+}
+
 .summaryItemOne{
     font-family: 'Playfair Display', serif; /* Elegant for creative projects */
 font-size: 25px;
@@ -182,10 +192,7 @@ table {
     a{
       color: #00192D;
     }
-    .contact_section_header{
-        border-bottom: 1px solid rgba(128, 128, 128, 0.5);
-        background-color: #F6F8FA;
-      }
+    
     .summaryItem{
         /* box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); */
         padding: 5px;
