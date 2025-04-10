@@ -1,25 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>File Upload Size and Preview</title>
-</head>
-<body>
-
-  <!-- File input for any file type -->
-  <input type="file" id="fileInput" onchange="loadFileToAttach(event)" class="form-control">
-
-  <!-- Image preview (only visible if an image is uploaded) -->
-  <img id="imageOutput" style="width:200px; display:none;" class="img">
-
-  <!-- PDF preview (only visible if a PDF is uploaded) -->
-  <embed id="pdfOutput" style="width:100%; height:500px; display:none;" />
-
-  <!-- File size display -->
-  <p id="fileSize"></p>
-
-  <script>
+{/* <script> */}
     // Adding event listener to the file input for file size and preview
     document.getElementById('fileInput').addEventListener('change', function (event) {
       const file = event.target.files[0];  // Access the first selected file
@@ -68,7 +47,3 @@
       var output = document.getElementById('pdfOutput'); // Get the <embed> element
       output.src = URL.createObjectURL(event.target.files[0]); // Set the PDF source
     };
-  </script>
-
-</body>
-</html>

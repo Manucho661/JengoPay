@@ -58,13 +58,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="files.css">
 
+
     <!-- scripts for data_table -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="announcements.css">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  </head>
+  <script src="preview.js"></script>
+      </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
@@ -419,12 +421,7 @@
   <input type="text" class="search-input" placeholder="Search..." style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; margin-bottom:5px;">
 </div>
 
-<form action="/upload" method="POST" enctype="multipart/form-data">
-  <label for="fileUpload" class="attachment-icon">
-      📎 Upload file<!-- Attachment Icon -->
-  </label>
-  <input type="file" id="fileUpload" name="fileUpload" class="file-input" style="display:none;" onchange="submitForm()">
-</form>
+
 
 <br>
 <!-- <hr> -->
@@ -786,19 +783,21 @@
                       <option value="Low">A13</option>
                     </select>
 
-                    <b><label for="unit">Title:</label></b>
-                    <input type="text" id="title" name="title" required>
-
                     <b><label for="name">Tenant:</label></b>
                     <input type="text" id="name" name="name" required>
 
 
-                    <input type="file" id="imageUpload" accept="image/*">
-                    <div class="preview-container">
-                        <img id="imagePreview" alt="Image Preview">
-                    </div>
+                    <b><label for="unit">Title:</label></b>
+                    <input type="text" id="title" name="title" required>
 
-                    <br>
+
+                      <!-- File input for multiple file types -->
+                      <input type="file" id="fileInput" onchange="handleFiles(event)" class="form-control" multiple>
+
+                      <!-- Section to display selected files' previews and sizes -->
+                      <div id="filePreviews"></div>
+
+
                   <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
                 </form>
               </div>
@@ -886,6 +885,7 @@
 </div> -->
 <!-- end -->
 
+
 <script>// Get the elements
   const showPopupButton = document.getElementById('showPopup');
   const closePopupButton = document.getElementById('closePopup');
@@ -903,7 +903,7 @@
   </script>
 
 
-<script>
+<!-- <script>
   document.getElementById('imageUpload').addEventListener('change', function(event) {
       const file = event.target.files[0];
       if (file) {
@@ -916,7 +916,7 @@
           reader.readAsDataURL(file);
       }
   });
-</script>
+</s> -->
 
 <script>
   $(document).ready(function() {
