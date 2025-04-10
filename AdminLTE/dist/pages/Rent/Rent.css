@@ -6,6 +6,28 @@ body{
     font-family: 'Poppins', sans-serif;
     background-color: rgba(128, 128, 128, 0.1);
 }
+/* ROUGH WORK */
+
+
+                                     /* HEADER SECTION */
+.contact_section_header{
+font-family: 'Poppins', sans-serif;
+font-weight: 600;
+letter-spacing: .5px;
+      }
+
+      .contact_section_header .icon{
+     color: #FFC107;
+      }
+
+
+                                      /* SUMMARY */
+.summary{
+  background: white;
+}
+
+
+
 .summaryItem{
     font-family: 'Playfair Display', serif; /* Elegant for creative projects */
 font-size: 25px;
@@ -26,6 +48,7 @@ letter-spacing: 1px; /* Slight spacing for an airy feel */
 color: #00192D;
 
 }
+
 .custom-btn{
     background-color: #00192D;
 border-color: #00192D;
