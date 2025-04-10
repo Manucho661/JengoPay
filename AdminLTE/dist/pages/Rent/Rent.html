@@ -66,102 +66,12 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<style>
-  body{
-    font-size: 16px;
-  }
-   .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
 
-        .overlay-content {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            width: 400px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-        }
-
-        /* Heading */
-        .overlay-content h2 {
-            text-align: center;
-            font-family: 'Arial', sans-serif;
-            color: #333;
-        }
-
-        /* Message Input Area */
-        textarea {
-            width: 100%;
-            height: 100px;
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-            font-family: 'Arial', sans-serif;
-            font-size: 14px;
-        }
-
-        /* Recipient Selector */
-        select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 15px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-            font-family: 'Arial', sans-serif;
-        }
-
-        /* Send Button */
-        .send-button {
-            width: 100%;
-            padding: 12px;
-            background-color: #007BFF;
-            color: white;
-            font-size: 16px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: background-color 0.3s ease;
-        }
-
-        .send-button:hover {
-            background-color: #0056b3;
-        }
-        .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    background-color: red;
-    border-radius: 20px;
-  }
-  .notification-title {
-    color: #00192D;
-    font-size: 15px;
-    font-weight: bold;
-
-}
-
-</style>
 
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
-    <div class="app-wrapper">
+    <div class="app-wrapper" style="background-color:rgba(128,128,128, 0.1) ;" >
       <!--begin::Header-->
       <nav class="app-header navbar navbar-expand bg-body">
         <!--begin::Container-->
@@ -407,15 +317,15 @@
 
           <div class="container-fluid">
             <!-- First Row -->
-            <div class="row  " >
+            <div class="row">
+
               <div class="col-sm-8">
-                <div>
+                <div class="d-flex">
                   <h3 class="mb-0 contact_section_header"> <i class="fas fa-coins icon"></i> Rental Charges </h3>
+                  <h6 class="month">April</h6>
                 </div>
               </div>
               <div class="col-sm-4">
-
-
                 <div class="row float-sm-end">
                      <ol class="breadcrumb float-sm-end">
                         <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
@@ -431,97 +341,220 @@
 
             <!-- End first Row -->
 
-            <!-- ROW -->
-            <div>
-
-              <div  class="app-content">
-                <div class="container-fluid border-side-color">
-                  <div class="row ">
-                    <div class="col-md-8 border-left:5px solid #F28B88;">
-                      <div class="card shadow-lg icon-category-number" style="width: 18rem; border-radius: 15px; background: #f9f9f9;">
-                        <div class="card-body">
-                          <h5 class="card-title d-flex align-items-center">
-                            <i class="fas fa-coins mr-2" style="font-size: 1.5rem;"></i>
-                          <span>KSH 2,000</span>
-                        </h5>
-
-                                <!-- <h6 class="card-subtitle mb-2 text-muted">Storage Overview</h6> -->
-                                <br>
-                                <!-- Text for used and remaining space -->
-                                <span id="used-text" style="font-size: 14px; color:#FFC107;">PAID  LAST 30 DAYS</span><br>
-                                <!-- <span id="remaining-text" style="font-size: 14px; color: #333;">Remaining: 50.00 GB</span> -->
-
-                                <!-- Space Utilization Bar -->
-                                <!-- <div class="progress mt-3" style="height: 20px; border-radius: 10px; background-color: #e0e0e0;"> -->
-                                  <!-- <div class="progress-bar" id="progress-bar" role="progressbar" style="width: 75%; background-color: #d39e00; border-radius: 10px;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div> -->
-                                <!-- </div> -->
-  </div>
-</div>
-</div>
-
-
-
-<div class="col-md-4">
-<div class="card shadow-lg" style="width: 18rem; border-radius: 15px; background: #f9f9f9;">
-  <div class="card-body">
-    <h5 class="card-title d-flex align-items-center">
-      <i class="fas fa-coins mr-2" style="font-size: 1.5rem;"></i>
-      <span>KSH 0</span>
-    </h5>
-    <!-- <h6 class="card-subtitle mb-2 text-muted">Storage Overview</h6> -->
-    <br>
-    <!-- Text for used and remaining space -->
-    <span id="used-text" style="font-size: 14px; color:#FFC107;">DUE LAST 30 DAYS</span><br>
-    <!-- <span id="remaining-text" style="font-size: 14px; color: #333;">Remaining: 50.00GB</span> -->
-
-    <!-- Space Utilization Bar -->
-    <!-- <div class="progress mt-3" style="height: 20px; border-radius: 10px; background-color: #e0e0e0;">
-      <div class="progress-bar" id="progress-bar" role="progressbar" style="width: 75%; background-color: #d39e00; border-radius: 10px;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-    </div> -->
-  </div>
-</div>
-</div>
-
-
-
-
-<br>
-<!-- /          </div> -->
-
-              </div>
-              <!-- <div class="col-md-6">
-
-                <div class="contact">
-                  <p class="contact_item" >Email</p>
-                  <p class="contact_value" >nucho@gmail</p>
-                </div>
-                <div class="contact">
-                  <p  class="contact_item" >Address</p>
-                  <p  class="contact_value" >50202|202|Califonia</p>
-                </div>
-
-              </div> -->
-        </div>
-
-            </div>
-            <!-- END ROW -->
-
 
             <!-- START ROW -->
                                            <!-- SUMMARY -->
             <div class="row">
+              <h6 class="mb-0 contact_section_header summary mb-2"> </i> Summary</h6>
 
-              <div class="summary collected" style="display: flex; gap: 10px;   align-items: center; ">
-                <div class="icon"> <i class="fas fa-coins"></i></div>
-                <div>
-                  <div class="label">COLLECTED</div>
-                  <div class="value"> $&nbsp;1000</div>
+              <div class="col-md-3">
+                <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; ">
+                  <div class="icon"> <i class="fas fa-coins"></i></div>
+                  <div>
+                    <div class="label">Collected</div>
+                    <div class="value"> $&nbsp;100,000</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-3">
+                <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; ">
+                  <div class="icon"> <i class="fas fa-coins"></i></div>
+                  <div>
+                    <div class="label">Arreas</div>
+                    <div class="value"> $&nbsp;30,000</div>
+                  </div>
                 </div>
               </div>
 
+              <div class="col-md-3">
+                <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; ">
+                  <div class="icon"> <i class="fas fa-coins"></i></div>
+                  <div>
+                    <div class="label">Overpayment</div>
+                    <div class="value"> $&nbsp;20,000</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+
+              </div>
             </div>
             <!-- END ROW -->
 
+            <!-- START ROW -->
+             <div class="row mt-5">
+
+              <div class="col-md-12 rent-info filter"  >
+                <!-- <div class="row"> -->
+                  <div class="">
+                    <div class="col-md-8">
+                      <select id="categoryFilter" class="categoryFilter">
+                        <option value="">-- Select Building--</option>
+                        <option value="technology">All</option>
+                        <option value="health">Manucho</option>
+                        <option value="business">Ebenezer</option>
+                        <option value="education">Crown Z</option>
+                      </select>
+  
+                    </div>
+                    <!-- <div class="col-md-4" style="align-items: end;">
+                      <div class="pdf-excel">
+                        <button class="pdf" ><i class="fas fa-file-pdf" style="color: red;"></i></button>
+                        <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button>
+                      </div>
+                    </div> -->
+                  </div>                  
+                <!-- </div> -->
+              </div>
+              
+              <!-- <div class="col-md-12">
+                <div class="message-list p-2" style="display: flex; justify-content: space-between;">
+                  <div class="recent-messages-header">Recent Messages</div>
+                 <div>
+                  <button  id="new_text" onclick="opennewtextPopup()" class="btn new-text">    <i class="bi bi-plus" ></i> New Chat</button>
+                 </div>
+                </div>
+
+                <table class="table table-hover table-summary-messages" style="border-radius: 20px; flex-grow: 1;">
+                    <thead class="">
+                        <tr>
+                            <th>SENT</th>
+                            <th>Title</th>
+                            <th>SENT BY</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-row">
+                            <td class="timestamp">
+                              <div class="date">13-03-2025</div>
+                              <div class="time">07:45PM</div>
+                            </td>
+                            <td class="title">Request to Vacate Room</td>
+                            <td>
+                              <div class="sender">Me</div>
+                              <div class="sender-email"></div>
+
+                            </td>
+                            <td >
+                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                              <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                          <td class="timestamp">
+                            <div class="date">13-03-2025</div>
+                            <div class="time">07:45PM</div>
+                          </td>
+                            <td class="title">Request to Fix Leaking shower</td>
+                            <td>
+                              <div class="sender">Christiano Ronaldo</div>
+                              <div class="sender-email"><i class="fa fa-envelope"></i> Ronald12@gmail.com</div>
+                            </td>
+                            <td >
+                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                              <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                          <td class="timestamp">
+                            <div class="date">13-03-2025</div>
+                            <div class="time">07:45PM</div>
+                          </td>
+                            <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
+                            <td>
+                              <div class="sender">Sherly Nabwana</div>
+                              <div class="sender-email"><i class="fa fa-envelope"></i>Nabwana@gmail.com</div>
+                            </td>
+                            <td >
+                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                              <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                          <td class="timestamp">
+                            <div class="date">13-03-2025</div>
+                            <div class="time">07:45PM</div>
+                          </td>
+                            <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
+                            <td>
+                              <div class="sender">Hesbon Wanjiku</div>
+                              <div class="sender-email"><i class="fa fa-envelope"></i>wa123@gmail.com</div>
+                            </td>
+                            <td >
+                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                              <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                          <td class="timestamp">
+                            <div class="date">13-03-2025</div>
+                            <div class="time">07:45PM</div>
+                          </td>
+                            <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
+                            <td>
+                              <div class="sender">Me</div>
+                              <div class="sender-email"></div>
+                            </td>
+                            <td >
+                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                              <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                          <td class="timestamp">
+                            <div class="date">13-03-2025</div>
+                            <div class="time">07:45PM</div>
+                          </td>
+                            <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
+                            <td>
+                              <div class="sender">Sherly Nabwana</div>
+                              <div class="sender-email"><i class="fa fa-envelope"></i>Nabwana@gmail.com</div>
+                            </td>
+                            <td >
+                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                              <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                          <td class="timestamp">
+                            <div class="date">13-03-2025</div>
+                            <div class="time">07:45PM</div>
+                          </td>
+                            <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
+                            <td>
+                              <div class="sender">Hesbon Wanjiku</div>
+                              <div class="sender-email"><i class="fa fa-envelope"></i>wa123@gmail.com</div>
+                            </td>
+                            <td >
+                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                              <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                          <td class="timestamp">
+                            <div class="date">13-03-2025</div>
+                            <div class="time">07:45PM</div>
+                          </td>
+                            <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
+                            <td>
+                              <div class="sender">Me</div>
+                              <div class="sender-email"></div>
+                            </td>
+                            <td >
+                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                              <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+              </div> -->
+
+             </div>
+            <!-- END ROW -->
             <!-- Second row start -->
             <div class="row first mb-2 mt-3">
               <div class="col-md-4">
@@ -762,30 +795,8 @@
             </div>
 
 
-<!-- notification popup -->
-<div class="notificationpopup-overlay" id="notificationPopup">
-  <div class="notificationpopup-content">
-    <button class="close-btn text-secondary" onclick="closenotificationPopup()">×</button>
-    <h2 style="color: #00192D;">Notification</h2>
-
-    <label for="property">Recepients:</label>
-    <select id="property" class="property"><br>
-      <option value=""disabled>Select Recepient</option>
-      <option value="High">Manucho</option>
-      <option value="Moderate">Ben 10</option>
-      <option value="Low">Alpha</option>
-    </select>
-
-    <textarea id="notes" name="notes" rows="10" cols="98" placeholder="Enter any additional information..."></textarea>
-
-      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
-  </div>
-</div>
-<!-- End Notification popup -->
-
-
 <!-- units popup -->
-<div class="units-overlay" id="complaintPopup">
+<!-- <div class="units-overlay" id="complaintPopup">
   <div class="units-content wide-form">
       <button class="close-btn" onclick="closeunitsPopup()">×</button>
       <h2 class="assign-title">Detailed Rent Information</h2>
@@ -827,7 +838,7 @@
     <div class="col-md-6">
       <label for="days_overdue">Days Overdue</label>
       <input type="text" id="days_overdue" name="days_overdue" placeholder="0" disabled>
-</div>
+</div> -->
 
 
       </form>
