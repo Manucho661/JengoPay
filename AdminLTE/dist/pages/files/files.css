@@ -1,6 +1,5 @@
 .filepopup-overlay{
   position: fixed;
-  /* margin-top: 60px; */
   top: 0;
   left: 0;
   z-index: 10000;
@@ -12,7 +11,7 @@
   align-items: center;
   font-family: 'Poppins', sans-serif;
   font-size: small;
-  overflow: scroll;
+  overflow: auto !important;
 }
 .filepopup-content{
   margin-top: 15vh !important;

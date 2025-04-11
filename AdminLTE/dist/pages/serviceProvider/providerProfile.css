@@ -9,12 +9,9 @@ body {
 }
 
 .filter-container{
-
     /* width: 250px; */
-
     color: white;
     position: relative; /* To position the panel below */
-
 }
                                                             /* SUMMARY SECTION */
   /* General Styling for Summary Items */
@@ -49,12 +46,14 @@ body {
     transform: scale(1.05); /* Slightly enlarge */
     color: #FFC107;
   }
+
   .action-btn {
     border: none;
     background: none;
     font-size: 18px;
     cursor: pointer;
-}
+  }
+
   .new-category
   {
     padding: 2px 4px;

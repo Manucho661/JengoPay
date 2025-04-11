@@ -138,7 +138,7 @@
             justify-content: space-between;
         }
 .btns{
-  margin-top: 10px;
+            margin-top: 10px;
             display: inline-block;
             padding: 10px 15px;
             background-color:#00192D;
@@ -182,7 +182,7 @@
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
-    <div class="app-wrapper"style="background-color:rgba(128,128,128, 0.1) ;" >
+    <div class="app-wrapper" style="background-color:rgba(128,128,128, 0.1);" >
       <!--begin::Header-->
       <nav class="app-header navbar navbar-expand bg-body">
         <!--begin::Container-->
@@ -434,7 +434,10 @@
             <!-- First Row -->
             <div class="row  " >
               <div class="col-sm-6">
-                <h3 class="section_header tenantName"><i class="fas fa-user-tie icon" style="color:#FFC107"></i> Mary Joseph</h3>
+                <div class="d-flex">
+                  <h3 class="section_header tenantName"><i class="fas fa-user-tie icon" style="color:#FFC107"></i> Mary Joseph</h3>
+                  <h6 class="active">Active</h6>
+                </div>
 
                 <!-- <h3 >   </h3> -->
 
@@ -446,11 +449,11 @@
               <div class="col-sm-6">
                 <div class="headerButtons">
                   <div class="shift">
-                    <button   class="btn shift-tenant" style="height: fit-content;"> Shift Joseph</button>
+                    <button   class="btn shift-tenant rounded" style="height: fit-content;"> Transfer Joseph</button>
                   </div>
 
                   <div class="vacate">
-                    <button   class="btn vacate-tenant" style="height: fit-content;"> Vacate Joseph</button>
+                    <button   class="btn vacate-tenant rounded " style="height: fit-content;"> Vacate Joseph</button>
                   </div>
 
                 </div>
@@ -500,7 +503,7 @@
                                   <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
                                     <div class="category"> <i class="fas fa-id-card personal-info-icon "></i> <span class="personal-info item-name">ID NO,</span></div>
                                     <div class="number"><b>45862394</b></div>
-                                    <button class="btn view id"> view ID</button>
+                                    <button class="btn view id rounded "> view </button>
                                   </div>
                                 </div>
                               </div>
@@ -508,7 +511,7 @@
                               <div class="col-md-3">
                                 <div class="personal-item-edit d-flex justify-content-between">
                                 <!-- <i class="fas fa-calculator"></i> -->
-                                <button class="btn edit-btn personal-info"><i class="fas fa-edit icon"></i> Edit </button>
+                                <button class="btn edit-btn personal-info rounded"><i class="fas fa-edit icon"></i> Edit </button>
 
                               </div>
                       </div>
@@ -547,8 +550,8 @@
                             <div class="personal-item d-flex justify-content-between bg-white">
                             <!-- <i class="fas fa-calculator"></i> -->
                               <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
-                                <div class="category"> <i class="fas fa-id-card personal-info-icon "></i> <span class="personal-info item-name">ID Number,</span></div>
-                                <div class="number"><b>45862394</b></div>
+                                <div class="category"> <i class="fas fa-id-card personal-info-icon "></i> <span class="personal-info item-name">Address,</span></div>
+                                <div class="number"><b>50202, Chwele</b></div>
                               </div>
                             </div>
                           </div>
@@ -566,10 +569,10 @@
 
              <!-- start row -->
 
-              <div class="row mt-3">
+              <div class="row mt-4 mb-3">
                 <h6 class=" contact_section_header details mb-2 mt-2"> </i> Rent Details</h6>
                 <div class="col-md-12 ">
-                  <div class="row  mb-2">
+                  <div class="row  mb-4">
                         <span class="summary title">Summary</span>
                       <div class="col-md-3">
                         <!-- <div class="summary-item d-flex justify-content-between bg-white"> -->
@@ -579,7 +582,7 @@
                             <div class="rent-type-date-paid">
                               <div class="rent-type">Deposit</div>
                               <div class="date-paid">
-                                <div><i>12-2023</i></div>
+                                <div><i>2023-12</i></div>
                               </div>
                             </div>
 
@@ -596,7 +599,7 @@
                               <div class="duration-stayed"> 14 Mons</div>
                             </div>
 
-                            <div class="number"> $&nbsp;11000</div>
+                            <div class="number"> $&nbsp;12000</div>
                           </div>
                         </div>
                       </div>
@@ -606,7 +609,7 @@
                           <div class="icon"> <i class="fas fa-coins"></i></div>
                           <div>
                             <div class="rent-type">Outstanding Balance</div>
-                            <div class="number"> $&nbsp;11000</div>
+                            <div class="number"> $&nbsp;1000</div>
                           </div>
                         </div>
 
@@ -616,35 +619,35 @@
                           <div class="icon"> <i class="fas fa-coins"></i></div>
                           <div>
                             <div class="rent-type refundable">Total Refundable</div>
-                            <div class="number"> $&nbsp;11000</div>
+                            <div class="number"> $&nbsp;4000</div>
                           </div>
                         </div>
                       </div>
                   </div>
 
-                   <span class="details title">Details</span>
-                  <div class="row " style="padding-top: 10px;">
+                   <span class="details title mt-3">Details</span>
+                  <div class="row">
 
-                      <div class="col-md-9" >
+                      <div class="col-md-9 " >
 
-                        <div class="bg-white">
+                        <div class="bg-white " style="box-shadow:0 4px 10px rgba(0, 0, 0, 0.1) ; border-radius: 5px;">
                           <div class="row p-2">
                             <div class="col-md-8" >
-                             
+
                               <select id="categoryFilter" class="categoryFilter">
                                 <option value="">-- Select Year--</option>
                                 <option value="2024">2024</option>
                                 <option value="2023">2023</option>
-  
                               </select>
-  
+
                             </div>
                             <div class="col-md-4 d-flex justify-content-end" style="align-items: center; ">
                               <button class="pdf" ><i class="fas fa-file-pdf" style="color: red;"></i></button>
                               <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button>
                           </div>
+                          </div>
 
-                          <div class="row">
+                          <div class="row p-2">
                             <div class="col-md-12">
                               <table>
                                 <thead>
@@ -671,7 +674,7 @@
                                       <td class="rent paid">
                                         <div class="amount date d-flex ">
                                         <div class="amount">$ 50,000 </div>
-                                        <div class="date"> 31-4-2023 </div>
+                                        <div class="date"> 2025-04-31 </div>
                                         </div>
 
 
@@ -727,16 +730,26 @@
                         </div>
 
                           </div>
-                          
+
                         </div>
 
 
-                          
-                        </div>
-                        
 
-                        
+
                       </div>
+
+                      <div class="col-md-3" >
+                        <div class="p-2" style="background-color:white; box-shadow:  0px 4px 10px rgba(0, 0, 0, 0.15); border-radius: 5px; ">
+                          <div class="penalt rate lable ">Penalt Rate</div>
+                        <div class="penalt_desc d-flex">
+                          <div class="pen-rate">10%</div>
+                          <div class="pen-desc">of the total rent</div>
+                        </div>
+
+
+                        <div class="change-btn d-flex justify-content-end"><button class="btn change rounded">Edit</button></div>
+                        </div>
+
                       </div>
                   </div>
                 </div>
@@ -744,91 +757,70 @@
 
                  <!-- end row -->
                  <!-- start row -->
+                  <div class="row mt-3">
+                       <h6 class="mb-0 contact_section_header"> </i> Pets</h6>
+                       <div class="col-md-9 pets">
+                        <table>
+                          <thead>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Weight</th>
+                            <th>License Number</th>
+                          </thead>
+                          <tbody>
+                            <tr> <td colspan="4">No pets info</td></tr>
+
+                          </tbody>
+                        </table>
+
+                       </div>
+
+                       <div class="col-md-3">
+                        <button class="btn edit-btn personal-info"><i class="fas fa-plus icon"></i> ADD </button>
+                       </div>
+
+                  </div>
+
                   <div class="row">
-                       <h3 class="mb-0 contact_section_header"> </i> Pets</h3>
+                    <h6 class="mb-0 contact_section_header"> </i> Files</h6>
+                    <div class="col-md-6">
+                      <table>
+                        <thead>
+                          <th>File</th>
+
+                          <th>Actions</th>
+
+                        </thead>
+
+                        <tbody>
+                          <tr>
+                          <td> <i class="fa fa-file-pdf"></i> Rental Agreement</td>
+                          <td>
+
+                            <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm" style="background-color: #0C5662; color:#FFCCCC; margin-right: 2px;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-trash"></i></button>
+
+                                                      <!-- File Upload Section -->
+
+                          </td>
+                          </tr>
+                        </tbody>
+
+                      </table>
+                    </div>
                     <div class="col-md-3">
-                     <div class="occupation"> <i class="fas fa-briefcase icon"></i> Occupation </div>
-                    <div class="name text-center">Teacher</div>
+                      <button class="btn edit-btn personal-info"><i class="fas fa-plus icon"></i> Add </button>
+                    </div>
+
+
                   </div>
-
-                  <div class="col-md-3">
-                    <div class="occupation"> <i class="fas fa-globe icon"></i>  Origin</div>
-                    <div class="name text-center">Kenyan</div>
-                  </div>
-
-                  <div class="col-md-3">
-                    <div class="occupation"> <i class="fas fa-id-card"></i> Identification Number </div>
-                    <div class="name text-center">Teacher</div>
-                  </div>
-                </div>
-
-                <div class="row">
-
-                </div>
-
-              </div>
-
-
-
-
-             </div>
-             <!-- end row -->
-
-
-
-             <!-- start row -->
-             <div class="row">
-              <h4 class="mb-0 contact_section_header"> </i> Files</h4>
-              <div class="col-md-3">
-                <div class="occupation"> <i class="fas fa-briefcase icon"></i> Occupation </div>
-                <div class="name text-center">Teacher</div>
-
-              </div>
-
-              <div class="col-md-3">
-                <div class="occupation"> <i class="fas fa-globe icon"></i>  Origin</div>
-                <div class="name text-center">Kenyan</div>
-
-              </div>
-
-              <div class="col-md-3">
-                <div class="occupation"> <i class="fas fa-id-card"></i> Identification Number </div>
-                <div class="name text-center">Teacher</div>
-
-              </div>
-
-
-             </div>
-             <!-- end row -->
-
-
-
-            <!-- Second row start -->
-             <div class="row first mb-2 mt-3 ">
-
-                <div class="col-md-6 d-flex justify-content-between">
-                  <button id="rent_details_btn" class="btn">  <i class="fas fa-calendar-check icon"></i> <a href="profile.html"> <b> Bills_Records </b> </a> </button>
-
-                  <button id="agreements_btn" class="btn"><i class="fas fa-calendar-check icon"></i>
-                       <a href="agreements.html"> <b> Agreements </b> </a>  </button>
-
-                        <button id="agreements_btn" class="btn"><i class="fas fa-calendar-check icon"></i>
-                        <a href="test.html"> <b> SHIFT Tenant  </b> </a>  </button>
 
 
                 </div>
 
-                <div class="col-md-6">
-                  <div style="display: flex; justify-content: end;">
 
-
-                  </div>
-                </div>
-              <!-- /.col -->
-            </div>
-
-
-
+              </div>
 
 
 

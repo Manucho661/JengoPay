@@ -416,6 +416,10 @@ img {
 
                          <!-- end row -->
 
+                         <!-- Start Row -->
+                          
+
+                         <!-- End Row -->
 
                          <!-- start row -->
 
@@ -562,8 +566,6 @@ img {
                                   </tr>
                               </tbody>
                           </table>
-
-
 
                         </div>
 
@@ -780,17 +782,11 @@ img {
                           <label for="message">Message</label>
                           <textarea id="message" placeholder="Type your message here..."></textarea>
                         </div>
+  <!-- File input for multiple file types -->
+  <input type="file" id="fileInput" onchange="handleFiles(event)" class="form-control" multiple>
 
-                        <div class="field-group" style="display: block;">
-                          <label for="attachment">Attachment (optional)</label>
-                          <input type="file" id="imageUpload" accept="image/*" class="attach-file"/>
-                        </div>
-
-                        <div class="field-group">
-                          <div class="preview-container" style="width: 80px; height: 80px;">
-                            <img id="imagePreview" alt="Image Preview">
-                          </div>
-                        </div>
+  <!-- Section to display selected files' previews and sizes -->
+  <div id="filePreviews"></div>
 
 
                         <div class="actions d-flex justify-content-end">
@@ -813,6 +809,60 @@ img {
 
 
 <!-- !-- create new text -->
+
+<script>
+  // Function to handle multiple files selection
+  function handleFiles(event) {
+    const files = event.target.files;  // Get all selected files
+    const previewContainer = document.getElementById('filePreviews');
+    previewContainer.innerHTML = '';  // Clear previous previews
+
+    Array.from(files).forEach(file => {
+      const fileSizeInMB = (file.size / (1024 * 1024)).toFixed(2);  // Convert to MB
+      const fileType = file.type;
+
+      // Create a container for each file's preview and size
+      const fileContainer = document.createElement('div');
+      fileContainer.style.marginBottom = '20px';
+
+      // Display the file size
+      const fileSizeElement = document.createElement('p');
+      fileSizeElement.textContent = `File size: ${fileSizeInMB} MB`;
+      fileContainer.appendChild(fileSizeElement);
+
+      // Preview the file based on type
+      if (fileType.startsWith('image/')) {
+        // If it's an image, show the image preview
+        const img = document.createElement('img');
+        img.style.width = '200px';
+        img.style.display = 'block';
+        img.src = URL.createObjectURL(file);
+        img.onload = function() {
+          URL.revokeObjectURL(img.src); // Free memory
+        };
+        fileContainer.appendChild(img);
+      } else if (fileType === 'application/pdf') {
+        // If it's a PDF, show the PDF preview
+        const pdfEmbed = document.createElement('embed');
+        pdfEmbed.style.width = '100%';
+        pdfEmbed.style.height = '300px';
+        pdfEmbed.src = URL.createObjectURL(file);
+        fileContainer.appendChild(pdfEmbed);
+      } else {
+        // For other types of files, just show the file name
+        const fileName = document.createElement('p');
+        fileName.textContent = `File: ${file.name}`;
+        fileContainer.appendChild(fileName);
+      }
+
+      // Append the file container to the previews section
+      previewContainer.appendChild(fileContainer);
+    });
+  }
+</script>
+
+
+
 <script>
   // Function to open the complaint popup
   function opennewtextPopup() {

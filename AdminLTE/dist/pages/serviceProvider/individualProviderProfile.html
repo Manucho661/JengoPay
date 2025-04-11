@@ -43,7 +43,6 @@
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
-    <link rel="stylesheet" href="individualProviderProfile.css" />
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -52,26 +51,138 @@
       integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
       crossorigin="anonymous"
     />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="vendorProfile.css">
-
-<!-- scripts for data_table -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<style>
-  body{
-    font-size: 16px;
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="individualProviderProfile.css">
 
-  }
+
+    <!-- scripts for data_table -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="announcements.css">
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<style>
+   .overlay {
+            /* position: absolute; */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            display: none;
+            justify-content: center;
+            align-items: center;
+            /* z-index: 1000; */
+    }
+
+    /* Overlay content */
+    .overlay-content {
+      background-color: #fff;
+            padding: 30px;
+            /* border-radius: 8px; */
+            width: 50%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            text-align: center;
+  /* background-color: white; */
+  /* padding: 30px; */
+  border-radius: 10px;
+    }
+
+     /* Close button
+  .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  } */
+    table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .total-row {
+            font-weight: bold;
+        }
+        .downloadi {
+          padding: 15px 30px; /* Add padding to the button */
+  font-size: 16px; /* Optional: adjust font size */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  border-radius: 10px;
+  border: none;
+}
+.invoice-header {
+            display: flex;
+            justify-content: space-between;
+        }
+        .invoice-headering {
+            display: flex;
+            justify-content: space-between;
+        }
+.btns{
+            margin-top: 10px;
+            display: inline-block;
+            padding: 10px 15px;
+            background-color:#00192D;
+            color:#FFC107;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+}
+.total {
+            text-align: right;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .invoice-details {
+            margin-bottom: 20px;
+        }
+
+        .invoice-details p {
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        @media print {
+            .overlay {
+                display: block !important;
+                position: absolute;
+            }
+            .close-btn, .btns {
+                display: none;
+            }
+            .overlay-content {
+                width: 100%;
+                max-width: 100%;
+                box-shadow: none;
+            }
+          }
+          .btn-print {
+                display: none;
+            }
 </style>
+
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
-    <div class="app-wrapper">
+    <div class="app-wrapper"style="background-color:rgba(128,128,128, 0.1) ;" >
       <!--begin::Header-->
       <nav class="app-header navbar navbar-expand bg-body">
         <!--begin::Container-->
@@ -108,7 +219,7 @@
                   <div class="d-flex">
                     <div class="flex-shrink-0">
                       <img
-                        src="../../dist/assets/img/user1-128x128.jpg"
+                        src="../../../dist/assets/img/user1-128x128.jpg"
                         alt="User Avatar"
                         class="img-size-50 rounded-circle me-3"
                       />
@@ -134,7 +245,7 @@
                   <div class="d-flex">
                     <div class="flex-shrink-0">
                       <img
-                        src="../../dist/assets/img/user8-128x128.jpg"
+                        src="../../../dist/assets/img/user8-128x128.jpg"
                         alt="User Avatar"
                         class="img-size-50 rounded-circle me-3"
                       />
@@ -160,7 +271,7 @@
                   <div class="d-flex">
                     <div class="flex-shrink-0">
                       <img
-                        src="../../dist/assets/img/user3-128x128.jpg"
+                        src="../../../dist/assets/img/user3-128x128.jpg"
                         alt="User Avatar"
                         class="img-size-50 rounded-circle me-3"
                       />
@@ -225,17 +336,17 @@
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <img
-                  src="../17.jpg"
+                  src="../../../dist/assets/img/user2-160x160.jpg"
                   class="user-image rounded-circle shadow"
                   alt="User Image"
                 />
-                <span class="d-none d-md-inline">  <b>JENGO PAY</b>  </span>
+                <span class="d-none d-md-inline">Alexander Pierce</span>
               </a>
               <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                 <!--begin::User Image-->
                 <li class="user-header text-bg-primary">
                   <img
-                    src="../../dist/assets/img/user2-160x160.jpg"
+                    src="../../../dist/assets/img/user2-160x160.jpg"
                     class="rounded-circle shadow"
                     alt="User Image"
                   />
@@ -291,9 +402,11 @@
           <!--end::Brand Link-->
         </div>
         <!--end::Sidebar Brand-->
+
         <!--begin::Sidebar Wrapper-->
         <div id="sidebar"></div> <!-- This is where the sidebar is inserted -->
         <!--end::Sidebar Wrapper-->
+
       </aside>
       <!--end::Sidebar-->
       <!--begin::App Main-->
@@ -304,530 +417,902 @@
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-              <div class="col-sm-6 ">
+              <div class="col-sm-6"><h3 class="mb-0"></h3></div>
+              <div class="col-sm-6">
 
-                <h3 class="mb-0 contact_section_header"> <i class="fas fa-user"></i>Joel Keith</h3>
+              </div>
+            </div>
+            <!--end::Row-->
+          </div>
+          <!--end::Container-->
+        </div>
+        <div  class="app-content">
 
+          <div class="container-fluid">
 
-                    <div class="row mt-2">
-                      <div class="col-md-12">
+                                                     <!-- HEADER SECTION -->
+            <!-- First Row -->
+            <div class="row  " >
+              <div class="col-sm-6">
+                <div class="d-flex">
+                  <h3 class="section_header tenantName"><i class="fas fa-user-tie icon" style="color:#FFC107"></i>
+                    Mama Njeri Plumbers</h3>
+                  <h6 class="active">Active</h6>
+                </div>
 
-                        <div class="contact">
-                        <p class="contact_item"> <b>PHONE</b> - &nbsp; </p><p class="contact_value">   0757414721 &nbsp; <b class="text-warning">|</b> </p>   &nbsp;<p class="contact_item"> <b>EMAIL </b>  - &nbsp; </p><p class="contact_value text-primary">emmanuel@gmail.com</p>
-                        </div>
-                        <div class="contact">
-                          <p class="contact_item" > <b>WEBSITE</b>  - &nbsp; </p><p class="contact_value text-primary" >nucho.co.ke.com &nbsp; <b class="text-warning">|</b> </p> &nbsp;&nbsp; <p class="contact_item"> <b>ADDRESS</b>  - </p><p class="contact_value">Nairobi,Kenya</p>
-
-                        </div>
-
-                      </div>
-                      <!-- <div class="col-md-6">
-
-                        <div class="contact">
-                          <p class="contact_item" >Email</p>
-                          <p class="contact_value" >nucho@gmail</p>
-                        </div>
-                        <div class="contact">
-                          <p  class="contact_item" >Address</p>
-                          <p  class="contact_value" >50202|202|Califonia</p>
-                        </div>
-
-                      </div> -->
+                <!-- <h3 >   </h3> -->
 
 
-
+                    <div class="row mt-2  ">
 
                 </div>
               </div>
               <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                </ol>
+                <div class="headerButtons">
+                  <!-- <div class="shift">
+                    <button   class="btn shift-tenant rounded" style="height: fit-content;"> Transfer Joseph</button>
+                  </div>
+
+                  <div class="vacate">
+                    <button   class="btn vacate-tenant rounded " style="height: fit-content;"> Vacate Joseph</button>
+                  </div> -->
+
+                </div>
+
               </div>
             </div>
-            <!--end::Row-->
-          </div>
-          <!--end::Container-->
-        </div>
-        <div class="app-content">
-          <!--begin::Container-->
-          <div class="container-fluid">
-            <!-- Info boxes -->
-            <div class="row first mb-2 mt-2 rounded-circle">
 
-                <div class="col-md-6">
-                  <div style="display: flex;">
-                    <button class="btn text-warning" style="background-color: #00192D; font-size: small; margin-right: 2%;">   <i class="fas fa-tasks"></i>
-                        <b class="button_item"> <a class="link_item" href="financials.html"> Assigned Contracts </a>  </b></button>
-                    <button id="add_provider_btn" class="btn" style="background-color: #00192D; color: white; font-size: small; margin-right: 2%;">   <i class="fas fa-arrow-left"></i>
-                    <b class="button_item"> <a class="link_item" href="previous.html"> Previous Contracts </a>  </b></button>
-                    <button id="add_provider_btn" class="btn" style="background-color: #00192D; color: white; font-size: small;">  <i class="fas fa-coins"></i>
-                      <b class="button_item" > <a class="link_item" href="financials.html"> Financials </a> </b></button>
-                  </div>
+            <!-- End first Row -->
 
-                </div>
 
-                <div class="col-md-6">
-                  <div style="display: flex; justify-content: end;">
+                                                      <!-- SUMMARY SECTION -->
+            <!-- start Row -->
 
-                    <button id="add_provider_btn" class="btn" style="background-color: #00192D; color: white; font-size: small;">  <i class="fas fa-exclamation-circle"></i>
-                    <b class="button_item" class="open-btn" onclick="openPopup()"> Raise a Complaint </b></button>
-                  </div>
-                </div>
-              <!-- /.col -->
-            </div>
-            <!-- /.row -->
-            <!--begin::Row-->
+                                                   <!--PERSONAL INFO  -->
 
-            <!--end::Row-->
-            <!--begin::Row-->
-            <div class="row second">
-              <!-- Start col -->
-              <div class="col-md-12 " >
-                    <div class="card second_col ">
-                        <div class="card-header">
-                        <div class="filter-container" id="filter-container">
+              <!-- start row -->
+                <div class="row mt-3 personal-info">
+                      <h6 class="mb-0 contact_section_header mb-2"> </i> Personal Info</h6>
+                  <div class="col-md-12">
+                      <div class="row">
 
-                            <div class="filter" id="filter">
-                            <i class="bi bi-filter"></i>
-                            Filter | All Categories <i class="fas fa-chevron-down"></i>
+                              <div class="col-md-3">
 
-                            </div>
-                            <div class="panel" id="panel">
-                            <a href="#">All Properties</a>
-                            <a href="#">Crown Z</a>
-                            <a href="#">Manucho</a>
-                            <a href="#">MM Towers</a>
-
-                            </div>
-
-                        </div>
-
-                        </div>
-
-                        <div class="card-body">
-                        <table id="maintenance" class="display">
-                            <thead class="mb-2">
-                            <tr>
-                                <th>ID</th>
-                                <th>Title</th>
-                                <th>Duration</th>
-                                <th>Status</th>
-                                <th>Payment</th>
-                                <th>Property</th>
-                                <th>Action</th>
-
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr >
-                                <td>002</td>
-                                <td>Broken Door Handle</td>
-                                <td>11-10-2025 t0 11-10-2025</td>
-                                <td style=" color:#FFC107;">
-                                    <i class="fas fa-spinner fa-spin"></i>
-                                In Progress <b class="value">20</b>
-                                </td>
-                                <td class="text-primary">Paid</td>
-                                <td>Ebenezer House</td>
-                                <br>
-                                <td id="more">
-                                  <div  id="more_icon">&#x2026;</div>
-                                           <br>
-                                           <div id="more_options">
-                                              <a href="#" onclick="openindividualPopup()">View</a>
-                                              <a href="#">Update</a>
-                                              <a href="#">Review</a>
-                                              <a href="#">Others</a>
-                                           </div>
-                                   </td>
-                            </tr>
-                            <tr>
-                                <td>002</td>
-                                <td> Leaking tap </td>
-                                <td> 11-10-2025 t0 11-10-2025 </td>
-                                <td style="color:#FFC107;"> <i class="fas fa-spinner fa-spin"></i>
-                                  In Progress <b class="value">20</b>  </td>
-                                <td class="text-danger">Pay</td>
-                                <td>Manucho APARTMENTS</td>
-                                <td id="more">
-                                <div id="more_icon" class="rounded-circle">&#x2026;</div>
-                                <br>
-                                           <div id="more_options">
-                                              <a href="" onclick="openindividualPopup()">View</a>
-                                              <a href="#">Update</a>
-                                              <a href="#">Review</a>
-                                              <a href="#">Others</a>
-                                           </div>
-                                </td>
-                            </tr>
-                            <tr>
-                              <td>002</td>
-                              <td> Broken nob</td>
-                              <td> 11-10-2025 t0 11-10-2025 </td>
-                              <td style="color:#FFC107;"> <i class="fas fa-spinner fa-spin"></i>
-                                In Progress <b class="value">20</b>  </td>
-                              <td class="text-primary" >Paid</td>
-                              <td>Manucho APARTMENTS</td>
-                              <td id="more">
-                              <div id="more_icon" class="rounded-circle" >&#x2026;</div>
-                              <br>
-                              <div id="more_options">
-                                 <a href="" onclick="openindividualPopup()">View</a>
-                                 <a href="#">Update</a>
-                                 <a href="#">Review</a>
-                                 <a href="#">Others</a>
+                                <div class="personal-item d-flex justify-content-between bg-white">
+                                <!-- <i class="fas fa-calculator"></i> -->
+                                  <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
+                                    <div class="category"><i class="fas fa-briefcase personal-info-icon"></i> <span class="personal-info item-name" > Category</span> </div>
+                                    <div class="number"><b>Plumber</b></div>
+                                  </div>
+                                </div>
                               </div>
-                              </td>
-                          </tr>
-                          <tr>
-                            <td>002</td>
-                            <td>  Leaking tap  </td>
-                            <td> 11-10-2025 t0 11-10-2025 </td>
-                            <td style="color:#FFC107;"> <i class="fas fa-spinner fa-spin"></i>
-                              In Progress <b class="value">20</b>  </td>
-                            <td class="text-primary" >Paid</td>
-                            <td>Manucho APARTMENTS</td>
-                            <td id="more">
-                            <div id="more_icon" class="rounded-circle" >&#x2026;</div>
-                            <br>
-                            <div id="more_options">
-                               <a href="" onclick="openindividualPopup()">View</a>
-                               <a href="#">Update</a>
-                               <a href="#">Review</a>
-                               <a href="#">Others</a>
-                            </div>
-                            </td>
-                        </tr>
-                        <tr>
-                          <td>002</td>
-                          <td>  Leaking tap </td>
-                          <td> 11-10-2025 t0 11-10-2025 </td>
-                          <td style="color:#FFC107;"> <i class="fas fa-spinner fa-spin"></i>
-                            In Progress <b class="value">20</b>  </td>
-                          <td class="text-primary" >Paid</td>
-                          <td>Manucho APARTMENTS</td>
-                          <td id="more">
-                          <div id="more_icon" class="rounded-circle" >&#x2026;</div>
-                          <br>
-                          <div id="more_options">
-                             <a href="" onclick="openindividualPopup()">View</a>
-                             <a href="#">Update</a>
-                             <a href="#">Review</a>
-                             <a href="#">Others</a>
-                          </div>
-                          </td>
-                      </tr>
-                      <tr>
-                        <td>002</td>
-                        <td> Broken Door Handle </td>
-                        <td> 11-10-2025 t0 11-10-2025 </td>
-                        <td style="color:#FFC107;"> <i class="fas fa-spinner fa-spin"></i>
-                          In Progress <b class="value">20</b>  </td>
-                        <td class="text-primary" >Paid</td>
-                        <td>Manucho APARTMENTS</td>
-                        <td id="more">
-                        <div id="more_icon" class="rounded-circle" >&#x2026;</div>
-                        <br>
-                        <div id="more_options">
-                           <a href="" onclick="openindividualPopup()">View</a>
-                           <a href="#">Update</a>
-                           <a href="#">Review</a>
-                           <a href="#">Others</a>
-                        </div>
-                        </td>
-                    </tr>
-                    <tr>
-                      <td>002</td>
-                      <td> Broken Door Handle </td>
-                      <td> 11-10-2025 t0 11-10-2025 </td>
-                      <td style="color:#FFC107;"> <i class="fas fa-spinner fa-spin"></i>
-                        In Progress <b class="value">20</b>  </td>
-                      <td class="text-primary" >Paid</td>
-                      <td>Manucho APARTMENTS</td>
-                      <td id="more">
-                      <div id="more_icon" class="rounded-circle" >&#x2026;</div>
-                      <br>
-                      <div id="more_options">
-                         <a href="" onclick="openindividualPopup()">View</a>
-                         <a href="#">Update</a>
-                         <a href="#">Review</a>
-                         <a href="#">Others</a>
-                      </div>
-                      </td>
-                  </tr>
-                  <tr>
-                    <td>002</td>
-                    <td> Broken Door Handle </td>
-                    <td> 11-10-2025 t0 11-10-2025 </td>
-                    <td style="color:#FFC107;"> <i class="fas fa-spinner fa-spin"></i>
-                      In Progress <b class="value">20</b>  </td>
-                    <td class="text-primary" >Paid</td>
-                    <td>Manucho APARTMENTS</td>
-                    <td id="more">
-                    <div id="more_icon" class="rounded-circle" >&#x2026;</div>
-                    <br>
-                    <div id="more_options">
-                       <a href="" onclick="openindividualPopup()">View</a>
-                       <a href="#">Update</a>
-                       <a href="#">Review</a>
-                       <a href="#">Others</a>
-                    </div>
-                    </td>
-                </tr>
-                            <!-- Add more rows as needed -->
-                            </tbody>
 
+                              <div class="col-md-3">
+
+                                <div class="personal-item d-flex justify-content-between bg-white">
+                                  <!-- <i class="fas fa-calculator"></i> -->
+                                    <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
+                                      <div class="category"><i class="fas fa-globe icon personal-info-icon "></i> <span class="personal-info item-name" >Origin,</span>  </div>
+                                      <div class="number"><b>Kenyan</b></div>
+                                    </div>
+                                </div>
+                              </div>
+
+                              <div class="col-md-3">
+                                <div class="personal-item d-flex justify-content-between bg-white">
+                                <!-- <i class="fas fa-calculator"></i> -->
+                                  <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
+                                    <div class="category"> <i class="fas fa-id-card personal-info-icon "></i> <span class="personal-info item-name">Location,</span></div>
+                                    <div class="number"><b>Ruiru</b></div>
+                                    <!-- <button class="btn view id rounded "> view </button> -->
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="col-md-3">
+                                <div class="personal-item-edit d-flex justify-content-between">
+                                <!-- <i class="fas fa-calculator"></i> -->
+                                <button class="btn edit-btn personal-info rounded"><i class="fas fa-edit icon"></i> Edit </button>
+
+                              </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 mt-2">
+                      <div class="row">
+
+                            <div class="col-md-3">
+
+                              <div class="personal-item d-flex justify-content-between bg-white">
+                              <!-- <i class="fas fa-calculator"></i> -->
+                                <div class="labal-value p-2" style="display: flex; gap: 5px;   align-items: center;">
+                                  <div class="label"> <i class="fa fa-envelope personal-info-icon "></i>
+                                    <span class="personal-info item-name email" > KRA PIN,</span> </div>
+                                  <div class="value"><b>A1234HJT66</b></div>
+                                </div>
+                              </div>
+
+
+
+                            </div>
+
+                            <div class="col-md-3">
+
+                              <div class="personal-item d-flex justify-content-between bg-white">
+                                <!-- <i class="fas fa-calculator"></i> -->
+                                  <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
+                                    <div class="category"><i class="fas fa-phone icon personal-info-icon "></i> <span class="personal-info item-name">Preferred B/S Name</span>  </div>
+                                    <div class="phone"><b>Mama Njeri Plumbers</b></div>
+                                  </div>
+                              </div>
+                            </div>
+
+                          <div class="col-md-3">
+                            <div class="personal-item d-flex justify-content-between bg-white">
+                            <!-- <i class="fas fa-calculator"></i> -->
+                              <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
+                                <div class="category"> <i class="fas fa-id-card personal-info-icon "></i> <span class="personal-info item-name">Provider,</span></div>
+                                <div class="number"><b>Freelancer</b></div>
+                              </div>
+                            </div>
+                          </div>
+
+
+                      </div>
+                  </div>
+                </div>
+              </div>
+             <!-- end row -->
+
+             <!-- start row -->
+
+              <div class="row mt-4 mb-3">
+                <h6 class=" contact_section_header details mb-2 mt-2"></i>Work Details</h6>
+                <div class="col-md-12 ">
+                  <div class="row  mb-4">
+                        <span class="summary title">Summary</span>
+                      <div class="col-md-3">
+                        <!-- <div class="summary-item d-flex justify-content-between bg-white"> -->
+                        <div class="icon-category-number Deposit" style="display: flex; gap: 10px;   align-items: center; ">
+                          <div class="icon"> <i class="fas fa-tasks"></i> </div>
+                          <div>
+                            <div class="rent-type-date-paid">
+                              <div class="rent-type"> Completed Tasks</div>
+                              <div class="date-paid">
+                                <!-- <div><i>2023-12</i></div> -->
+                              </div>
+                            </div>
+
+                            <div class="number"> &nbsp;11</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="icon-category-number paid-rent" style="display: flex; gap: 10px;   align-items: center; ">
+                          <div class="icon"> <i class="fas fa-tasks"></i></div>
+                          <div>
+                            <div class="rent-type-duration-stayed">
+                              <div class="rent-type">Pending Tasks</div>
+                              <div class="duration-stayed"> 1</div>
+                            </div>
+
+                            <div class="number">&nbsp;1</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3 outstanding-rent">
+
+                        <div class="icon-category-number outstanding-rent" style="display: flex; gap: 10px;   align-items: center; ">
+                          <div class="icon"> <i class="fas fa-tasks"></i></div>
+                          <div>
+                            <div class="rent-type">Paid Tasks</div>
+                            <div class="number"> &nbsp;30</div>
+                          </div>
+                        </div>
+
+                      </div>
+                      <div class="col-md-3">
+                        <div class="icon-category-number" style="display: flex; gap: 10px;   align-items: center; ">
+                          <div class="icon"><i class="fas fa-tasks"></i></div>
+                          <div>
+                            <div class="rent-type refundable">Due Paid Tasks</div>
+                            <div class="number"> &nbsp;10</div>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+
+
+
+
+
+
+
+                   <span class="details title mt-3">Details</span>
+                  <div class="row">
+                      <div class="col-md-9 " >
+                        <div class="bg-white " style="box-shadow:0 4px 10px rgba(0, 0, 0, 0.1) ; border-radius: 5px;">
+                          <div class="row p-2">
+                            <div class="col-md-8" >
+
+                              <select id="categoryFilter" class="categoryFilter">
+                                <option value="">-- Select Year--</option>
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+
+                              </select>
+
+                            </div>
+                            <div class="col-md-4 d-flex justify-content-end" style="align-items: center;">
+                              <button class="pdf" ><i class="fas fa-file-pdf" style="color: red;"></i></button>
+                              <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button>
+                          </div>
+                          </div>
+
+                          <div class="row p-2">
+                            <div class="col-md-12">
+                              <table>
+                                <thead>
+                                  <tr>
+                                    <th>Ratings</th>
+                                    <th>Building</th>
+                                    <th>Unit</th>
+                                    <!-- <th>Type</th> -->
+                                    <th>Tenant</th>
+                                    <!-- <th>Paid Amount</th> -->
+                                    <!-- <th>Pending Amount</th> -->
+                                    <th>Status</th>
+                                    <!-- <th>ARREAS</th> -->
+                                    <th>OPTIONS</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                    <tr >
+                                      <td class="#">
+                                      <!-- Rating Section (stars) -->
+                                      <div class="stars">
+                                        <span class="star" style="color: #FFC107;" data-value="1">&#9733;</span>
+                                        <span class="star" style="color: #FFC107;" data-value="2">&#9733;</span>
+                                        <span class="star" style="color: #FFC107;" data-value="3">&#9733;</span>
+                                        <span class="star" style="color: #FFC107;" data-value="4">&#9733;</span>
+                                        <span class="star" style="color: #FFC107;" data-value="5">&#9733;</span>
+                                      </div>
+                                      </td>
+                                      <td class="rent">Crown Z Towers</td>
+                                      <td class="rent paid">
+                                        <div class="amount date d-flex ">
+                                        <div class="amount">A12</div>
+                                        <!-- <div class="date"> 2025-04-31 </div> -->
+                                        </div>
+                                      </td>
+                                      <!-- <td>Bed-Sitter</td> -->
+                                      <td>Maina</td>
+                                      <!-- <td>Ksh 1000</td> -->
+                                      <!-- <td>Ksh 0</td> -->
+                                      <td>
+                                        <div class="pen mount d-flex">
+                                          <div class="amount">
+                                            <i class="fas fa-check-circle"></i>
+                                            Completed</div>
+                                        </div>
+                                      </td>
+                                      <!-- <td class="rent arrears"> $ 51,000</td> -->
+                                      <td>
+                                      <button class="btn reciept"> <i class="fas fa-receipt"></i> Reciept </button>
+                                      </td>
+                                  </tr>
+                                  <tr >
+                                    <td class="#">
+                                    <!-- Rating Section (stars) -->
+                                    <div class="stars">
+                                      <span class="star" style="color: #FFC107;"  data-value="1">&#9733;</span>
+                                      <span class="star" style="color: #FFC107;"  data-value="2">&#9733;</span>
+                                      <span class="star" style="color: #FFC107;"  data-value="3">&#9733;</span>
+                                      <span class="star" style="color: #FFC107;"  data-value="4">&#9733;</span>
+                                      </div>
+                                    </td>
+                                    <td class="rent">Manucho</td>
+                                    <td class="rent paid">
+                                      <div class="amount date d-flex ">
+                                      <div class="amount">A12</div>
+                                      <!-- <div class="date"> 2025-04-31 </div> -->
+                                      </div>
+                                    </td>
+                                    <!-- <td>One-Bedroom</td> -->
+                                    <td>Mali</td>
+                                    <!-- <td>Ksh 0</td> -->
+                                    <!-- <td>Ksh 500</td> -->
+                                    <td>
+                                      <div class="pen amount d-flex">
+
+                                        <div class="amount">!Pending</div>
+                                      </div>
+
+                                    </td>
+                                    <!-- <td class="rent arrears"> $ 51,000</td> -->
+                                    <td>
+
+                                    <button class="btn reciept"> <i class="fas fa-receipt"></i> Reciept </button>
+
+
+                                    </td>
+                                </tr>
+                                <tr >
+                                  <td class="#">
+                                  <!-- Rating Section (stars) -->
+                                  <div class="stars">
+                                    <span class="star" style="color: #FFC107;" data-value="1">&#9733;</span>
+                                    <span class="star" style="color: #FFC107;" data-value="2">&#9733;</span>
+                                    <span class="star" style="color: #FFC107;" data-value="3">&#9733;</span>
+                                    <span class="star" style="color: #FFC107;" data-value="4">&#9733;</span>
+                                    <span class="star" style="color: #FFC107;" data-value="5">&#9733;</span>
+                                  </div>
+                                  </td>
+                                  <td class="rent">Crown Z Towers</td>
+                                  <td class="rent paid">
+                                    <div class="amount date d-flex ">
+                                    <div class="amount">A12</div>
+                                    <!-- <div class="date"> 2025-04-31 </div> -->
+                                    </div>
+                                  </td>
+                                  <!-- <td>Bed-Sitter</td> -->
+                                  <td>Maina</td>
+                                  <!-- <td>Ksh 1000</td> -->
+                                  <!-- <td>Ksh 0</td> -->
+                                  <td>
+                                    <div class="pen mount d-flex">
+                                      <div class="amount">
+                                        <i class="fas fa-check-circle"></i>
+                                        Completed</div>
+                                    </div>
+                                  </td>
+                                  <!-- <td class="rent arrears"> $ 51,000</td> -->
+                                  <td>
+                                  <button class="btn reciept"> <i class="fas fa-receipt"></i> Reciept </button>
+                                  </td>
+                              </tr>
+                              <tr >
+                                <td class="#">
+                                <!-- Rating Section (stars) -->
+                                <div class="stars">
+                                  <span class="star" style="color: #FFC107;"  data-value="1">&#9733;</span>
+                                  <span class="star" style="color: #FFC107;"  data-value="2">&#9733;</span>
+                                  <span class="star" style="color: #FFC107;"  data-value="3">&#9733;</span>
+                                  <span class="star" style="color: #FFC107;"  data-value="4">&#9733;</span>
+                                  </div>
+                                </td>
+                                <td class="rent">Manucho</td>
+                                <td class="rent paid">
+                                  <div class="amount date d-flex ">
+                                  <div class="amount">A12</div>
+                                  <!-- <div class="date"> 2025-04-31 </div> -->
+                                  </div>
+                                </td>
+                                <!-- <td>One-Bedroom</td> -->
+                                <td>Mali</td>
+                                <!-- <td>Ksh 0</td> -->
+                                <!-- <td>Ksh 500</td> -->
+                                <td>
+                                  <div class="pen amount d-flex">
+
+                                    <div class="amount">!Pending</div>
+                                  </div>
+
+                                </td>
+                                <!-- <td class="rent arrears"> $ 51,000</td> -->
+                                <td>
+
+                                <button class="btn reciept"> <i class="fas fa-receipt"></i> Reciept </button>
+
+
+                                </td>
+                            </tr>
+                                </tbody>
+                              </table>
+                        </div>
+
+                          </div>
+
+                        </div>
+
+
+
+
+                      </div>
+
+                              <div class="col-md-3">
+                            <div class="p-3" style="background-color: #f9f9f9; box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); border-radius: 10px; padding: 20px;">
+                                <!-- Accepted Tasks Section -->
+                                <div class="penalt rate label mb-3">
+                                    <i class="fas fa-check-circle" style="color: #4caf50; font-size: 24px;"></i>
+                                    <b style="font-size: 18px; color: #333;"> Accepted Tasks</b>
+                                </div>
+                                <div class="penalt_desc d-flex justify-content-between align-items-center" style="font-size: 16px;">
+                                    <div class="penik-rate" style="font-weight: bold; color:black;">10</div>
+                                </div>
+
+                                <!-- Declined Tasks Section -->
+                                <div class="penalt rate label mt-3">
+                                    <i class="fas fa-times" style="color: #f44336; font-size: 24px;"></i>
+                                    <b style="font-size: 18px; color: #333;"> Declined Tasks</b>
+                                </div>
+                                <div class="penalt_desc d-flex justify-content-between align-items-center" style="font-size: 16px;">
+                                    <div class="pen-rate" style="font-weight: bold; color:black;">2</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- <div class="change-btn d-flex justify-content-end"><button class="btn change rounded">Edit</button></div> -->
+                        </div>
+
+                      </div>
+                  </div>
+                </div>
+              </div>
+
+                 <!-- end row -->
+                 <!-- start row -->
+                  <div class="row mt-3">
+                       <h6 class="mb-0 contact_section_header"> </i> Previous Contracts<h6>
+                       <div class="col-md-9 pets">
+                        <table>
+                          <thead>
+                            <th>#</th>
+                            <th>Building</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Duration</th>
+                            <th>Task</th>
+                            <!-- <th>License Number</th> -->
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>1</td>
+                              <td>Buningo Towers</td>
+                              <td><div class="date"> 31-04-2025 </div></td>
+                              <td><div class="date"> 31-05-2025 </div></td>
+                              <td>4 Weeks</td>
+                              <td>Repaired Sockets</td>
+                            </tr>
+                            <tr>
+                              <td>2</td>
+                              <td>Buningo Towers</td>
+                              <td><div class="date"> 31-04-2025 </div></td>
+                              <td><div class="date"> 31-05-2025 </div></td>
+                              <td>4 Weeks</td>
+                              <td>Repaired Sockets</td>
+                            </tr>
+                            <tr>
+                              <td>3</td>
+                              <td>Buningo Towers</td>
+                              <td><div class="date"> 31-04-2025 </div></td>
+                              <td><div class="date"> 31-05-2025 </div></td>
+                              <td>4 Weeks</td>
+                              <td>Repaired Sockets</td>
+                            </tr>
+
+                          </tbody>
                         </table>
 
+                       </div>
 
+                       <div class="col-md-3">
+                        <button class="btn edit-btn personal-info"><i class="fas fa-plus icon"></i> ADD </button>
+                       </div>
 
-                        </div>
+                  </div>
 
+                  <div class="row">
+                    <h6 class="mb-0 contact_section_header"> </i> Files</h6>
+                    <div class="col-md-6">
+                      <table>
+                        <thead>
+                          <th>File</th>
 
+                          <th>Actions</th>
 
-                        <div class="card-footer">
+                        </thead>
 
-                        </div>
+                        <tbody>
+                          <tr>
+                          <td> <i class="fa fa-file-pdf"></i>Report</td>
+                          <td>
 
+                            <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm" style="background-color: #0C5662; color:#FFCCCC; margin-right: 2px;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-trash"></i></button>
+
+                                                      <!-- File Upload Section -->
+
+                          </td>
+                          </tr>
+                        </tbody>
+
+                      </table>
                     </div>
+                    <div class="col-md-3">
+                      <button class="btn edit-btn personal-info"><i class="fas fa-plus icon"></i> Add </button>
+                    </div>
+
+
+                  </div>
+
+
                 </div>
 
 
-            </div>
-              <!-- /.col -->
-            </div>
-            <!--end::Row-->
-          </div>
-          <!--end::Container-->
-        </div>
-        <!--end::App Content-->
-      </main>
-      <!--end::App Main-->
-      <!--begin::Footer-->
+              </div>
 
 
 
-      <footer class="app-footer">
-        <!--begin::To the end-->
-        <div class="float-end d-none d-sm-inline">Anything you want</div>
-        <!--end::To the end-->
-        <!--begin::Copyright-->
-        <strong>
-          Copyright &copy; 2014-2024&nbsp;
-          <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;"> JENGO PAY</a>.
-        </strong>
-        All rights reserved.
-        <!--end::Copyright-->
-      </footer>
-      <!--end::Footer-->
-    </div>
-    <!--end::App Wrapper-->
-
-
-
-
-<!-- Overlay Cards -->
-
-<!-- create Announcement -->
-
-
-
-
-
- <!-- Start View announcement -->
- <div class="view_announcement" id="view_announcement">
-  <div class="card content">
-   <div class="card-header view_announcement bg-secondary text-white">
-       <h5 class="mb-0">Rent Payments</h5>
-       <div id="close-overlay-btn" class="close-btn" > <b> &times;</b> </div>
-
-   </div>
-   <div class="card-body">
-       <p class="card-text">
-           All Rent Payments should be made before 24/01/17. Anyone who feels that they might not
-           be able to complete their dues on 24/01/17 should communicate to management before the due date.
-           Else, you face an eviction risk if you fail to pay your dues before the said date without a reasonable reason</p>
-
-           <p class="timestamp" id="timestamp"></p> <!-- Timestamp -->
-
-
-       <div class="Recipients border-top border-gray "> <p><strong>Recipients|</strong> All Employees</p>  </div>
-
-   </div>
-   <div class="card-footer view_announcement d-flex">
-       <button class="btn btn-danger btn-sm">Delete</button>
-       <button class="btn btn-secondary btn-sm">Resend</button>
-   </div>
- </div>
- </div>
-
-<!-- End view announcement -->
-
-<!-- Complaint part -->
-
+<!-- Farst Overlay (Receipt) -->
 <div class="popup-overlay" id="complaintPopup">
   <div class="popup-content">
     <button class="close-btn text-secondary" onclick="closePopup()">×</button>
-    <h2 style="color: #00192D;">Complaint</h2>
-    <form class="complaint-form">
-      <label for="category">Complaint Category:</label>
-        <select id="category" required>
-          <option value="">Select Category</option>
-          <option value="Billing Issue">Billing Issue</option>
-          <option value="Technical Problem">Technical Problem</option>
-          <option value="Customer Service">Customer Service</option>
-          <option value="Others">Others</option>
-        </select>
+        <h2 style="color: #00192D; font-size: medium;">Payment Receipt</h2>
+        <div class="info" id="inform">
+            <p><strong>Receipt No:</strong>#123456</p>
+            <p><strong>Date:</strong> 2025-02-13</p>
+            <p><strong>Tenant:</strong> John Doe</p>
+        </div>
+        <div class="receipt">
+          <p><strong>Property:</strong>Manucho</p>
+          <p><strong>House Unit:</strong>A12</p>
+          <p><strong>Mpesa:</strong> KSH 10,0000</p>
+          <p><strong>Transaction:</strong> TBM34KGNJ8</p>
+          <p class="total"><strong>Total:</strong> KSH10,000.00</p>
 
-        <label for="priority">Priority Level:</label>
-        <select id="priority" required>
-          <option value="">Select Priority</option>
-          <option value="High">High</option>
-          <option value="Moderate">Moderate</option>
-          <option value="Low">Low</option>
-        </select>
-
-
-      <label for="complaint">Complaint Description:</label>
-      <textarea id="complaint" rows="4" placeholder="Describe your complaint" required></textarea>
-
-      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">Submit Complaint</button>
-    </form>
+        </div>
+        <p style="text-align: center;" style="color:#00192D;">Thank you for your payment!</p>
+        <div style="display: flex; justify-content: flex-end;">
+          <button style="background-color: white; color:#FFC107; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">
+            DOWNLOAD
+          </button>
+      </div>
   </div>
 </div>
-<!-- End complaint part -->
+<!-- end -->
 
-<!-- Service Provider part -->
-<div class="viewprovider-overlay" id="viewproviderPopup">
-  <div class="viewproviderpopup-content">
-    <button class="close-btn text-secondary" onclick="closeindividualPopup()">×</button>
-    <h2 style="color: #00192D;">Detailed Information For Service Provider Details</h2>
-    <div class="row g-3">
-    <div class="col-md-6">
-      <label for="service_provider">Service Provider:</label>
-      <input type="text" id="service_provider" name="service_provider" placeholder="John Keith" required disabled>
-    </div>
-    <div class="col-md-6">
-      <label for="phone_number">Phone Number:</label>
-      <input type="text" id="phone_number" name="phone_number" placeholder="0757414721" required disabled>
-    </div>
-    <div class="col-md-6">
-      <label for="service_email">Email:</label>
-      <input type="text" id="service_email" name="service_email" placeholder="emmanuel@gmail.com" required disabled>
-    </div>
+<!-- The invoice Overlay -->
+<div id="invoiceOverlay" class="overlay">
+  <div class="overlay-content">
+      <button class="close-btn" onclick="closeOverlay()">×</button>
+      <div id="invoice" style="text-align: start;">
+          <b><h2 style="color:#00192D; font-size: medium;"><strong>Invoice Details</strong></h2></b>
+      </div>
 
-    <div class="col-md-6">
-      <label for="id">ID:</label>
-      <input type="text" id="id" name="id" placeholder="001" required disabled>
-    </div>
+      <div class="invoice-header">
+          <div>
+            <strong>Bill To:</strong><br>
+            John Doe<br>
+            Manucho Apartments<br>
+            Email: johndoe@example.com
+          </div>
+          <div>
+              <strong>INVOICE</strong><br>
+            <b>  Invoice Date <span>18-02-2025</span><br></b>
+              <b>Due Date<span>25-03-2025</span><br></b>
+              <!-- Email<span>johndoe@example.com</span>  -->
+          </div>
+      </div>
 
-    <div class="col-md-6">
-      <label for="title">Title</label>
-      <input type="text" id="title" name="title" placeholder="Broken Door Handle" required disabled>
+      <table>
+        <thead>
+            <tr>
+              <th>Qty</th>
+                <th>Description</th>
+                <th>Unit Price</th>
+               <th>Amount</th>
+               <!-- <th style="color:#FFC107 ;">Late fees</th> -->
+               <!-- <th>Maintenance</th> -->
+
+
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+               <td>1.00</td>
+               <td>Rent For February</td>
+               <td>KSH20,000</td>
+               <td>KSH20,000</td>
+               <!-- <td>ksh</td> -->
+               </tr>
+               <tr>
+                <td>10</td>
+                <td>Water Bill</td>
+                <td>KSH200.00</td>
+                <td>KSH200.00</td>
+                <!-- <td>ksh</td> -->
+                </tr>
+                <tr>
+                  <td>1.00</td>
+                  <td>Garbage Collection</td>
+                  <td>KSH250.00</td>
+                  <td>KSH250.00</td>
+                  <!-- <td>ksh</td> -->
+                  </tr>
+                  <tr>
+                    <td>1.00</td>
+                    <td>Late Payment Fees</td>
+                    <td>KSH250.00</td>
+                    <td>KSH250.00</td>
+                    <!-- <td>ksh</td> -->
+                    </tr>
+        </tbody>
+        <tfoot>
+            <tr class="total-row">
+                <td colspan="3" style="text-align: right;">Subtotal</td>
+                <td>KSH39,000</td>
+            </tr>
+            <tr class="total-row">
+              <td colspan="3" style="text-align: right;">*VAT(16%)</td>
+              <td>KSH40,000</td>
+          </tr>
+            <tr class="total-row">
+                <td colspan="3" style="text-align: right;">Total</td>
+                <td>KSH200</td>
+            </tr>
+        </tfoot>
+      </table>
+
+      <div class="">
+        POWERED BY
+        <button class="btns">
+          BTJENGOPAY
+        </button>
+      <div>
+
+
+      <!-- <p class="total">Grand Total: Ksh <span id="grand-total"></span></p> -->
+
+      <!-- <button class="btn-print" onclick="printReceipt()">Print Receipt</button> -->
+
+
+      <div class="invoice-header">
+          <button class="btns" onclick="printInvoice()">
+              <i class="fa fa-print"></i> Print Invoice
+          </button>
+          <button class="btns" onclick="downloadpdf()">
+            <i class="fa fa-file-pdf"></i> Generate PDF
+          </button>
+          <button class="btns" onclick="exportexcel()">
+            <i class="fa fa-file-export"></i> Export Excel
+          </button>
+
+      </div>
+
+
+
   </div>
-
-  <div class="col-md-6">
-      <label for="duration">Duration</label>
-      <input type="text" id="duration" name="duration"  placeholder="11-10-2025 t0 11-10-2025" disabled>
 </div>
 
-<div class="col-md-6">
-<label for="status">In Progress</label>
-<input type="text" id="in_progress" name="in_progress" placeholder="In Progress" disabled>
-</div>
-
-<div class="col-md-6">
-<label for="payment">Payment Status</label>
-<input type="text" id="payment" name="payment" placeholder="paid" disabled>
-</div>
-
-<div class="col-md-12">
-  <label for="payment">Property</label>
-  <input type="text" id="property" name="property" placeholder="Ebenezer House" disabled>
-  </div>
-
-      <!-- <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">Submit Complaint</button> -->
-    </form>
+      <!-- <div style="display: flex; justify-content: flex-end;">
+        <button style="background-color: white; color:#FFC107; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">
+          DOWNLOAD
+        </button>
+    </div>
+     -->
   </div>
 </div>
-<!-- End Service Provider part -->
 
 
 
 
-<!-- end overlay card. -->
 
+
+
+
+<!--
+        <div class="overlaying" id="overlaying">
+          <div class="invoicy-container">
+          <div class="receipt-container" id="receipt">
+            <button class="close-btn" onclick="closeOverlay()">×</button>
+            <h2>Payment Receipt</h2>
+            <p> Nairobi,  KENYA</p>
+            <p><strong>Date:</strong> <span id="date"></span></p>
+
+            <table>
+              <td>Manucho Apartments</td>
+              <td>John</td>
+              <th>A11</th>
+              <td>KSH80,000</td>
+              <td>KSH80,000</td>
+              <td>MPESA</td>
+              <td>TBM34KGNJ8</td>
+              <td>10-12-2025</td>
+              <td>KSH0</td>
+            </table>
+        </div>
+
+        <button class="print-btn" onclick="printReceipt()">Print Receipt</button>
+     -->
+
+
+    <!--end::App Wrapper-->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
 
+    <!-- invoice -->
+    <script>
+      // Set current date for the invoice
+      document.getElementById('invoice-date').textContent = new Date().toLocaleDateString();
+
+      // // Calculate and update grand total
+      // function calculateTotal() {
+      //     let total = 0;
+      //     document.querySelectorAll(".total-price").forEach(cell => {
+      //         total += parseFloat(cell.textContent);
+      //     });
+      //     document.getElementById("grand-total").textContent = total.toFixed(2);
+      // }
+      // calculateTotal();
+
+      // Function to print invoice
+    function printInvoice() {
+        // Hide close button and print button before printing
+        document.querySelector(".close-btn").style.display = "none";
+        document.querySelector(".btns").style.display = "none";
+
+        // Print the invoice content
+        window.print();
+
+        // After print, restore the content visibility
+        window.onafterprint = function() {
+            document.querySelector(".close-btn").style.display = "block";
+            document.querySelector(".btns").style.display = "block";
+        };
+    }
+  </script>
+<!-- invoice end -->
 
 
-<!-- Overlay scripts -->
- <!-- View announcements script -->
- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+<!--Begin sidebar script -->
+<script>
+  fetch('../bars/sidebar.html')  // Fetch the file
+      .then(response => response.text()) // Convert it to text
+      .then(data => {
+          document.getElementById('sidebar').innerHTML = data; // Insert it
+      })
+      .catch(error => console.error('Error loading the file:', error)); // Handle errors
+</script>
+<!-- end sidebar script -->
 
- <script>
-  const   more_announcement = document.getElementById('more_announcement_btn');
-  const   view_announcement = document.getElementById('view_announcement');
-  const   close_overlay = document.getElementById("close-overlay-btn");
+    <!-- <script>
+      // Function to print the receipt
+      function printReceipt() {
+          window.print(); // Opens the print dialog
+      }
 
-  more_announcement.addEventListener('click', ()=>{
+      // Set current date on the receipt
+      document.getElementById("date").textContent = new Date().toLocaleDateString();
+  </script> -->
 
-     view_announcement.style.display= "flex";
-     document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
-     const now = new Date();
-            const formattedTime = now.toLocaleString(); // Format the date and time
-            timestamp.textContent = `Sent on: ${formattedTime}`;
-
-
-  });
-
-     close_overlay.addEventListener('click', ()=>{
-
-     view_announcement.style.display= "none";
-     document.querySelector('.app-wrapper').style.opacity = '1';
-
-
-     });
- </script>
-
- <!-- End view announcement script -->
-
-<!-- Complaint script -->
+<!--  Maintenance script -->
 <script>
   // Function to open the complaint popup
-  function openindividualPopup() {
-    document.getElementById("viewproviderPopup").style.display = "flex";
+  function maintenancePopup() {
+    document.getElementById("maintenancePopup").style.display = "flex";
   }
 
   // Function to close the complaint popup
-  function closeindividualPopup() {
-    document.getElementById("viewproviderPopup").style.display = "none";
+  function closemaintenancePopup() {
+    document.getElementById("maintenancePopup").style.display = "none";
   }
 </script>
 
+<!-- end Maintenance script -->
 
-<!-- Complain script -->
-<!-- Complaint script -->
+<!-- reciept overlay -->
 <script>
-  // Function to open the complaint popup
+  // Function to open the receipt popup
   function openPopup() {
     document.getElementById("complaintPopup").style.display = "flex";
   }
 
-  // Function to close the complaint popup
+  // Function to close the receipt popup
   function closePopup() {
     document.getElementById("complaintPopup").style.display = "none";
   }
 </script>
+<!-- end receipt overlay -->
+<!-- invoice overlay -->
+<script>
+  function showOverlay() {
+    document.getElementById('invoiceOverlay').style.display = 'flex';
+  }
+
+  // function closeOverlay() {
+  //   document.getElementById('.overlay').style.display = 'none';
+  // }
+</script>
 
 
-<!-- End complaint script -->
-<!-- End Complain script -->
+ <!-- close overlay -->
+<script>
+  function closeOverlay() {
+    document.querySelector('.overlay').style.display = 'none';
+  }
+</script>
 
+<script>
+  // Get the overlay and link elements
+const receiptOverlay = document.getElementById('receiptOverlay');
+const showReceiptLink = document.getElementById('showReceiptLink');
+const downloadReceiptBtn = document.getElementById('downloadReceiptBtn');
+const closeReceiptBtn = document.getElementById('closeReceiptBtn');
+
+// Show the receipt overlay when clicking the "Show Receipt" link
+showReceiptLink.addEventListener('click', function(event) {
+  event.preventDefault();  // Prevent the default link behavior (navigation)
+  receiptOverlay.style.display = 'flex';  // Show the overlay
+});
+
+// Hide the receipt overlay when clicking the "Download Receipt" button
+downloadReceiptBtn.addEventListener('click', function() {
+  alert('Downloading receipt...');  // Example action (you can add actual download functionality here)
+  receiptOverlay.style.display = 'none';  // Hide the overlay after download
+});
+
+// Close the receipt overlay when clicking the "Close" button
+closeReceiptBtn.addEventListener('click', function() {
+  receiptOverlay.style.display = 'none';  // Hide the overlay
+});
+
+</script>
+
+<!-- Begin script for datatable -->
+<script>
+  $(document).ready(function() {
+   $('#rent').DataTable({
+       "paging": true,
+       "searching": true,
+       "info": true,
+       "lengthMenu": [5, 10, 25, 50],
+       "language": {
+           "search": "Filter records:",
+           "lengthMenu": "Show _MENU_ entries"
+       }
+   });
+});
+
+$(document).ready(function() {
+   $('#agreements').DataTable({
+       "paging": true,
+       "searching": true,
+       "info": true,
+       "lengthMenu": [5, 10, 25, 50],
+       "language": {
+           "search": "Filter records:",
+           "lengthMenu": "Show _MENU_ entries"
+       }
+   });
+});
+
+</script>
+
+<script>
+
+  // JavaScript to handle hover and hide functionality
+  const  more= document.getElementById("more");
+  const more_icon = document.getElementById("more_icon");
+  const more_options = document.getElementById("more_options");
+
+  // Show panel when hovering over the accordion
+  more_icon.addEventListener("mouseenter", () => {
+    more_options.style.display = "block";
+  });
+
+  // Hide panel when moving out of both accordion and panel
+   more.addEventListener("mouseleave", () => {
+    more_options.style.display = "none";
+});
+
+
+</script>
+
+<!-- End script for data_table -->
 
 
     <script
@@ -842,101 +1327,13 @@
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-
-<!-- script for occordion -->
-<script>
-
-        // JavaScript to handle hover and hide functionality
-        const filterContainer = document.getElementById("filter-container");
-        const accordion = document.getElementById("filter");
-        const panel = document.getElementById("panel");
-
-        // Show panel when hovering over the accordion
-        accordion.addEventListener("mouseenter", () => {
-            panel.style.display = "block";
-        });
-
-        // Hide panel when moving out of both accordion and panel
-         filterContainer.addEventListener("mouseleave", () => {
-             panel.style.display = "none";
-      });
-
-
-</script>
-<!-- End for Occordion script -->
-
-<!-- script for popups  -->
-
-
-
-
-<!-- more options -->
-<script>
-  document.getElementById("more_icon").addEventListener("click", function(event) {
-      let options = document.getElementById("more_options");
-      options.style.display = options.style.display === "block" ? "none" : "block";
-      event.stopPropagation();
-  });
-
-  document.addEventListener("click", function() {
-      document.getElementById("more_options").style.display = "none";
-  });
-</script>
-    <!-- Begin script for datatable -->
-    <script>
-
-       $(document).ready(function() {
-        $('#maintenance').DataTable({
-            "paging": true,
-            "searching": true,
-            "info": true,
-            "lengthMenu": [5, 10, 25, 60],
-            "language": {
-                "search": "Filter records:",
-                "lengthMenu": "Show _MENU_ entries"
-            }
-        });
-    });
-
-    </script>
-            <script>
-
-                $(document).ready(function() {
-                $('#vendor_distribution1').DataTable({
-                    // "paging": true,
-                    // "searching": true,
-                    // "info": true,
-                    // "lengthMenu": [5, 10, 25, 60],
-                    // "language": {
-                    //     "search": "Filter records:",
-                    //     "lengthMenu": "Show _MENU_ entries"
-                    // }
-                });
-            });
-
-            </script>
-
-    <!-- End script for data_table -->
-
-<!--Begin sidebar script -->
-<script>
-  fetch('../bars/sidebar.html')  // Fetch the file
-      .then(response => response.text()) // Convert it to text
-      .then(data => {
-          document.getElementById('sidebar').innerHTML = data; // Insert it
-      })
-      .catch(error => console.error('Error loading the file:', error)); // Handle errors
-</script>
-<!-- end sidebar script -->
-
-
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <script src="../../../../dist/js/adminlte.js"></script>
+    <script src="../../../dist/js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
@@ -958,6 +1355,8 @@
         }
       });
     </script>
+    <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!--end::OverlayScrollbars Configure-->
     <!-- OPTIONAL SCRIPTS -->
     <!-- apexcharts -->
@@ -1114,6 +1513,26 @@
       //-----------------
       // - END PIE CHART -
       //-----------------
+    </script>
+    <script>
+      document.getElementById("exportButton").addEventListener("click", function() {
+        // Example data (can be your table data or an array of objects)
+        const data = [
+          { Name: "John", Age: 30, City: "New York" },
+          { Name: "Jane", Age: 25, City: "London" },
+          { Name: "Mark", Age: 35, City: "Paris" }
+        ];
+
+        // Convert data to a worksheet
+        const ws = XLSX.utils.json_to_sheet(data);
+
+        // Create a new workbook and append the worksheet
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+        // Export the workbook as an Excel file
+        XLSX.writeFile(wb, "ExportedData.xlsx");
+      });
     </script>
     <!--end::Script-->
   </body>

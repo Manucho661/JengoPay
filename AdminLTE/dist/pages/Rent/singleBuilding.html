@@ -56,8 +56,7 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="Rent.css">
-    <link rel="stylesheet" href="individualrent.html">
+    <link rel="stylesheet" href="individualBuilding.css">
 
 
     <!-- scripts for data_table -->
@@ -67,11 +66,10 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-        <style>
-          body{
-            font-size: 16px;
-          }
-        </style>
+<style>
+   
+
+</style>
 
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -321,354 +319,267 @@
         <div  class="app-content">
 
           <div class="container-fluid">
-   <!-- First Row -->
-   <div class="row  " >
-    <div class="col-sm-8">
+            <!-- First Row -->
+            <div class="row" >
+              <div class="col-sm-8">
+                <div class="d-flex">
+                  <h3 class="contact_section_header"> <i class="fas fa-house-user icon"></i>  
+                    Rental Roll &nbsp;/&nbsp;<span class="building">Ebenezer</span></h3>
+                    <h6 class="month">April</h6>
+                </div>               
+                
+              </div>
+              <div class="col-sm-4">
 
-      <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> FRED MATIANGI</h3>
 
-
-          <div class="row mt-2  ">
-            <div class="col-md-12 Summary ">
-
-              <div class="row mt-6 ">
-                  <!-- Summary -->
-                  <div class="col-md-3 ">
-                      <label class="text text-center">  <i class="fas fa-home"></i>    Property Name</label>
-                      <span class="value text-center">Manucho Apartments</span>
-                  </div>
-
-                  <div class="col-md-3">
-                    <label class="text text-center"> <i class="fas fa-money-bill-alt"></i>Unit</label>
-                    <span class="value">B89</span>
+                <div class="row float-sm-end">
+                     <ol class="breadcrumb float-sm-end">
+                        <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                      </ol> 
                 </div>
 
-                <div class="col-md-3">
-                  <label class="text text-center"> <i class="fas fa-money-bill-alt"></i>Tenant</label>
-                  <span class="value">Emmanuel</span>
-              </div>
-
-                <div class="col-md-3">
-                  <label class="text text-center"> <i class="fas fa-money-bill-alt"></i>Type</label>
-                  <span class="value">Bedsitter</span>
-              </div>
-
-
-                  <div class="col-md-3">
-                      <label class="text text-center"> <i class="fas fa-money-bill-alt"></i>Monthly Rent</label>
-                      <span class="value">Ksh 10,000</span>
-                  </div>
-
-
-                  <div class="col-md-3">
-                    <label class="text text-center">  <i class="fas fa-id-card"></i>   IDENTIFICATION NUMBER </label>
-                    <span class="value">012020202 </span>
-                  </div>
-              </div>
-
-              <div class="row mt-6" >
-                <!-- Summary -->
-                <!-- <div class="col-md-3  ">
-                    <label class="text text-center"> <i class="fas fa-globe icon"></i>   ORIGIN </label>
-                    <span class="value text-center">Kenyan </span>
-                </div> -->
-
-                <div class="col-md-3">
-                  <label class="text text-center"> <i class="fas fa-calendar-check icon"></i> <a href=""> Start_Date  </a>  </label>
-                  <span class="value"> 5-23-2024 </span>
+                <div class="row d-flex">
                 </div>
 
-                <div class="col-md-3">
-                    <label class="text text-center"><i class="fas fa-circle icon online"></i>
-                       Status
-                       <span class="status-label">
-                    </label>
-
-                </div>
-
-                <!-- <div class="col-md-3">
-                  <button class="btn text text-danger">  <i class="fas fa-trash"></i> Remove Joseph</button>
-                </div> -->
               </div>
-
             </div>
 
-      </div>
-    </div>
-    <div class="col-sm-4">
-      <ol class="breadcrumb float-sm-end">
-        <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-      </ol>
-    </div>
-  </div>
+            <!-- End first Row -->
 
-  <!-- End first Row -->
+            <!-- ROW -->
+                    <div class="row mt-2">
+                      <h6 class="contact_section_header summary mb-2"> </i> Summary</h6>
+                      <div class="col-md-12">
 
- <!-- Second row start --><div class="row first mb-2 mt-3">
+                        <div class="row">
 
-  <!-- <div class="col-md-6 d-flex justify-content-between">
-    <button id="rent_details_btn" class="btn">  <i class="fas fa-calendar-check icon"></i> <a href="profile.html"> <b> Bills_Records </b> </a> </button>
+                          <div class="col-md-3 units">
 
-    <button id="agreements_btn" class="btn"><i class="fas fa-calendar-check icon"></i>
-         <a href="agreements.html"> <b> Agreements </b> </a>  </button>
-  </div> -->
+                            <div class="summary-item units" style="display: flex; gap: 10px;   align-items: center; ">
+                              <div class="icon"> <i class="fas fa-building"></i></div>
+                              
+                                <div class="label">Units,</div>
+                                <div class="value"> &nbsp;50</div>
+                            </div>
+    
+                          </div>
 
-  <div class="row mt-3"> <!-- second row -->
-    <div class="col-md-12">
-      <div class="card">
-        <div class="card-body">
-          <table id="rent" class="display" style="font-size: small;" >
-            <thead>
-              <tr>
-                <th scope="col">PAYMENT AMOUNT</th>
-                <th scope="col">PAID BY</th>
-                <th scope="col">BUILDING</th>
-                <th scope="col">UNIT</th>
-                <th scope="col">TYPE</th>
-                <th scope="col">TENANT</th>
-                <th scope="col">DAYS OVERDUE</th>
-                <th scope="col">PAID ON</th>
-                <th scope="col">RECEIVED BY</th>
-                <th scope="col">STATUS</th>
-                <th scope="col">ACTION</th>
+                          <div class="col-md-3 occupied">
 
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                  <td scope="row">Ksh 10,000</td>
-                      <td>29-01-2025</td>
-                      <td>Crown Z Towers</td>
-                      <td>B28</td>
-                      <td>Bed Sitter</td>
-                      <td>Fred Matiangi</td>
-                      <td>4</td>
-                      <td>29-01-2025</td>
-                      <td>Mwangi</td>
-                      <td><button class="status not-paid" style=" background-color: #ff4d4d; /* Red background */
-                      color: white;
-                      border: 2px solid white; /* Darker red border */">
-                      <i class="fa fa-times-circle"></i> Not Paid
-                    </button></td>
-                    <td>
-                    <div id="more_icon">&#x2026;</div>
-                    <br>
-                    <div id="more_options">
-                       <a href="#">View</a>
-                       <a href="#">Edit</a>
-                       <a href="#">Delete</a>
-                       <a href="#">Others</a>
-                    </div>
-                  </td>
-              </tr>
+                            <div class="summary-item occupied" style="display: flex; gap: 10px;   align-items: center; ">
+                              <div class="icon"> <i class="fas fa-building"></i></div>
+                              
+                                <div class="label">occupied,</div>
+                                <div class="value"> &nbsp;20</div>
+                              
+                            </div>
+    
+                          </div>
 
-              <tr>
-                <td scope="row">Ksh 10,000</td>
-                    <td>29-01-2025</td>
-                    <td>Crown Z Towers</td>
-                    <td>B28</td>
-                    <td>Bed Sitter</td>
-                    <td>Fred Matiangi</td>
-                    <td>4</td>
-                    <td>29-01-2025</td>
-                    <td>Mwangi</td>
-                    <td><button class="status not-paid" style=" background-color: #ff4d4d; /* Red background */
-                    color: white;
-                    border: 2px solid white; /* Darker red border */">
-                    <i class="fa fa-times-circle"></i> Not Paid
-                  </button></td>
-                  <td>
-                  <div id="more_icon">&#x2026;</div>
-                  <br>
-                  <div id="more_options">
-                     <a href="#">View</a>
-                     <a href="#">Edit</a>
-                     <a href="#">Delete</a>
-                     <a href="#">Others</a>
-                  </div>
-                </td>
-            </tr>
+                          <div class="col-md-3 units">
 
-              <tr>
-                <td scope="row">Ksh 10,000</td>
-                    <td>29-01-2025</td>
-                    <td>Crown Z Towers</td>
-                    <td>B28</td>
-                    <td>Bed Sitter</td>
-                    <td>Fred Matiangi</td>
-                    <td>4</td>
-                    <td>29-01-2025</td>
-                    <td>Mwangi</td>
-                    <td><button class="status not-paid" style=" background-color: #ff4d4d; /* Red background */
-                    color: white;
-                    border: 2px solid white; /* Darker red border */">
-                    <i class="fa fa-times-circle"></i> Not Paid
-                  </button></td>
-                  <td>
-                  <div id="more_icon">&#x2026;</div>
-                  <br>
-                  <div id="more_options">
-                     <a href="#">View</a>
-                     <a href="#">Edit</a>
-                     <a href="#">Delete</a>
-                     <a href="#">Others</a>
-                  </div>
-                </td>
-            </tr>
+                            <div class="summary-item paid" style="display: flex; gap: 10px;   align-items: center; ">
+                              <div class="icon"> <i class="fas fa-coins"></i></div>
+                              
+                                <div class="label">Paid,</div>
+                                <div class="value">$&nbsp;30,000</div>
+                              
+                            </div>
+    
+                          </div>
 
-                  <tr>
-                    <td scope="row">Ksh 10,000</td>
-                        <td>29-01-2025</td>
-                        <td>Crown Z Towers</td>
-                        <td>B28</td>
-                        <td>Bed Sitter</td>
-                        <td>Fred Matiangi</td>
-                        <td>4</td>
-                        <td>29-01-2025</td>
-                        <td>Mwangi</td>
-                        <td><button class="status not-paid" style=" background-color: #ff4d4d; /* Red background */
-                        color: white;
-                        border: 2px solid white; /* Darker red border */">
-                        <i class="fa fa-times-circle"></i> Not Paid
-                      </button></td>
-                      <td>
-                      <div id="more_icon">&#x2026;</div>
-                      <br>
-                      <div id="more_options">
-                         <a href="#">View</a>
-                         <a href="#">Edit</a>
-                         <a href="#">Delete</a>
-                         <a href="#">Others</a>
+                          <div class="col-md-3 units">
+
+                            <div class="summary-item pending" style="display: flex; gap: 10px;   align-items: center; ">
+                              <div class="icon"> <i class="fas fa-coins"></i></div>
+                              
+                                <div class="label">Pending,</div>
+                                <div class="value">$&nbsp;20,000</div>
+                              
+                            </div>
+    
+                          </div>
+
+                        </div>
+
                       </div>
-                    </td>
-                </tr>
 
-                <tr>
-                  <td scope="row">Ksh 10,000</td>
-                      <td>29-01-2025</td>
-                      <td>Crown Z Towers</td>
-                      <td>B28</td>
-                      <td>Bed Sitter</td>
-                      <td>Fred Matiangi</td>
-                      <td>4</td>
-                      <td>29-01-2025</td>
-                      <td>Mwangi</td>
-                      <td><button class="status not-paid" style=" background-color: #ff4d4d; /* Red background */
-                      color: white;
-                      border: 2px solid white; /* Darker red border */">
-                      <i class="fa fa-times-circle"></i> Not Paid
-                    </button></td>
-                    <td>
-                    <div id="more_icon">&#x2026;</div>
-                    <br>
-                    <div id="more_options">
-                       <a href="#">View</a>
-                       <a href="#">Edit</a>
-                       <a href="#">Delete</a>
-                       <a href="#">Others</a>
+                      
                     </div>
-                  </td>
-              </tr>
 
-              <tr>
-                <td scope="row">Ksh 10,000</td>
-                    <td>29-01-2025</td>
-                    <td>Crown Z Towers</td>
-                    <td>B28</td>
-                    <td>Bed Sitter</td>
-                    <td>Fred Matiangi</td>
-                    <td>4</td>
-                    <td>29-01-2025</td>
-                    <td>Mwangi</td>
-                    <td><button class="status not-paid" style=" background-color: #ff4d4d; /* Red background */
-                    color: white;
-                    border: 2px solid white; /* Darker red border */">
-                    <i class="fa fa-times-circle"></i> Not Paid
-                  </button></td>
-                  <td>
-                  <div id="more_icon">&#x2026;</div>
-                  <br>
-                  <div id="more_options">
-                     <a href="#">View</a>
-                     <a href="#">Edit</a>
-                     <a href="#">Delete</a>
-                     <a href="#">Others</a>
-                  </div>
-                </td>
-            </tr>
 
-            <tr>
-              <td scope="row">Ksh 10,000</td>
-                  <td>29-01-2025</td>
-                  <td>Crown Z Towers</td>
-                  <td>B28</td>
-                  <td>Bed Sitter</td>
-                  <td>Fred Matiangi</td>
-                  <td>4</td>
-                  <td>29-01-2025</td>
-                  <td>Mwangi</td>
-                  <td><button class="status not-paid" style=" background-color: #ff4d4d; /* Red background */
-                  color: white;
-                  border: 2px solid white; /* Darker red border */">
-                  <i class="fa fa-times-circle"></i> Not Paid
-                </button></td>
-                <td>
-                <div id="more_icon">&#x2026;</div>
-                <br>
-                <div id="more_options">
-                   <a href="#">View</a>
-                   <a href="#">Edit</a>
-                   <a href="#">Delete</a>
-                   <a href="#">Others</a>
+
+            <!-- END ROW -->
+
+            <!-- Second row start -->
+             <div class="row first mb-2 mt-3">
+
+                <div class="col-md-6 d-flex justify-content-between">
+                  <button id="rent_details_btn" class="btn">  <i class="fas fa-calendar-check icon"></i> <a href="profile.html"> <b> Records </b> </a> </button>
+
+                  <button id="agreements_btn" class="btn"><i class="fas fa-calendar-check icon"></i>
+                       <a href="agreements.html"> <b> Agreements </b> </a>  </button>
+      
+                      
+
+
                 </div>
-              </td>
-          </tr>
-          <tr>
-            <td scope="row">Ksh 10,000</td>
-                <td>29-01-2025</td>
-                <td>Crown Z Towers</td>
-                <td>B28</td>
-                <td>Bed Sitter</td>
-                <td>Fred Matiangi</td>
-                <td>4</td>
-                <td>29-01-2025</td>
-                <td>Mwangi</td>
-                <td><button class="status not-paid" style=" background-color: #ff4d4d; /* Red background */
-                color: white;
-                border: 2px solid white; /* Darker red border */">
-                <i class="fa fa-times-circle"></i> Not Paid
-              </button></td>
-              <td>
-              <div id="more_icon">&#x2026;</div>
-              <br>
-              <div id="more_options">
-                 <a href="#">View</a>
-                 <a href="#">Edit</a>
-                 <a href="#">Delete</a>
-                 <a href="#">Others</a>
-              </div>
-            </td>
-        </tr>
 
-            </tbody>
-          </table>
-        </div>
+                <div class="col-md-6">
+                  <div style="display: flex; justify-content: end;">
 
-        <div class="card-footer">
 
-        </div>
+                  </div>
+                </div>
+              <!-- /.col -->
+            </div>
 
-      </div>
-    </div>
-  </div>
 
-<!-- /.col -->
-</div>
+            <div class="row mt-3"> <!-- second row -->
+
+              <div class="col-md-12">
+                <div class="card">
+
+
+                  <div class="card-body">
+                    <table id="rent" class="display" style="font-size: small;" >
+                        <thead>
+                            <tr>
+                                <th scope="col">TENANT</th>
+                                    <th scope="col">AMOUNT PAID</th>
+                                    <th scope="col">PAYMENT DATE</th>
+                                    <th scope="col">RENT OVERDUE</th>
+                                    <th scope="col">DAYS OVERDUE</th>
+
+                                    <th scope="col">ACTION</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">KELVIN</th>
+                                    <td>KSH 10,000</td>
+                                    <td>1/3/2030</td>
+                                    <td>KSH 10,000</td>
+                                    <td> 12</td>
+                                  <td>  
+                                    <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                                    </button> -->
+                                    <button class="btn btn-sm" style="background-color: #FFC107; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-bell"></i></button>
+                                    <a href="view_monthly_exp_details.php" class="btn btn-sm view-btn"> <i class="fa fa-eye"></i> View</a>
+
+                                  </td>
+                            </tr>
+                            <tr>
+                            <th scope="row">JOEL</th>
+                            <td>KSH 20,0000</td>
+                            <td>1/3/2029</td>
+                            <td>1000</td>
+                            <td>12</td>
+                            <td> 
+                              <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                              </button> -->
+                              <button class="btn btn-sm" style="background-color: #FFC107; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-bell"></i></button>
+
+                              <a href="view_monthly_exp_details.php" class="btn btn-sm view-btn"> <i class="fa fa-eye"></i> View</a>
+                            </td>
+
+
+                            </tr>
+                            <tr>
+                                <th scope="row">FRED</th>
+                            <td>KSH 10000</td>
+                            <td>2/4/2020</td>
+                            <td> 10000</td>
+                            <td>13</td>
+
+                            <td> 
+                              <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                              </button> -->
+                              <button class="btn btn-sm" style="background-color: #FFC107; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-bell"></i></button>
+
+                              <a href="view_monthly_exp_details.php" class="btn btn-sm view-btn"> <i class="fa fa-eye"></i> View</a>
+                            </td>
+
+                                </tr>
+
+                                <tr>
+                                    <th scope="row">FRED</th>
+                                <td>KSH 10000</td>
+                                <td>2/4/2020</td>
+                                <td> 10000</td>
+                                <td>13</td>
+
+                                <td> 
+                                  <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                                  </button> -->
+                                  <button class="btn btn-sm" style="background-color: #FFC107; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-bell"></i></button>
+
+                                  <a href="view_monthly_exp_details.php" class="btn btn-sm view-btn"> <i class="fa fa-eye"></i> View</a>
+                                </td>  
+                                    </tr>
+
+                                    <tr>
+                                        <th scope="row">FRED</th>
+                                    <td>KSH 10000</td>
+                                    <td>2/4/2020</td>
+                                    <td> 10000</td>
+                                    <td>13</td>
+
+                                    <td>
+                                      <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                                      </button> -->
+                                      <button class="btn btn-sm" style="background-color: #FFC107; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-bell"></i></button>
+
+                                      <a href="view_monthly_exp_details.php" class="btn btn-sm view-btn"> <i class="fa fa-eye"></i> View</a>
+                                    </td>  
+                                        </tr>
+                                        <tr>
+                                        <th scope="row">FRED</th>
+                                        <td>KSH 10000</td>
+                                        <td>2/4/2020</td>
+                                        <td> 10000</td>
+                                        <td>13</td>
+
+                                        <td>                               
+                                          <button class="btn btn-sm" style="background-color: #FFC107; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-bell"></i></button>
+                                          <a href="view_monthly_exp_details.php" class="btn btn-sm view-btn"> <i class="fa fa-eye"></i> View</a>
+                                        </td>  
+                                            </tr>
+                        </tbody>
+                    </table>
+                  </div>
+
+                  <div class="card-footer">
+
+                  </div>
 
                 </div>
               </div>
             </div>
+
+
+<!-- notification popup -->
+<div class="notificationpopup-overlay" id="notificationPopup">
+  <div class="notificationpopup-content">
+    <button class="close-btn text-secondary" onclick="closenotificationPopup()">×</button>
+    <h2 style="color: #00192D;">Notification</h2>
+
+    <label for="property">Recepients:</label>
+    <select id="property" class="property"><br>
+      <option value=""disabled>Select Recepient</option>
+      <option value="High">Manucho</option>
+      <option value="Moderate">Ben 10</option>
+      <option value="Low">Alpha</option>
+    </select>
+
+    <textarea id="notes" name="notes" rows="10" cols="98" placeholder="Enter any additional information..."></textarea>
+
+      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
+  </div>
+</div>
+<!-- End Notification popup -->
 
 <script>
   $(document).ready(function() {
@@ -754,30 +665,6 @@
 <!-- end download as pdf -->
 
 
-<script>
-  // Simulating payment status (this could come from a server or a variable)
-  var paymentStatus = 'paid';  // Change this value to 'not_paid' or 'paid' as needed
-
-  // Function to set the payment status based on the predefined variable
-  function setPaymentStatus(status) {
-      const statusIcon = document.getElementById('paymentStatusIcon');
-      const statusText = document.getElementById('paymentStatusText');
-
-      if (status === 'paid') {
-          statusIcon.classList.remove('fa-times-circle', 'not-paid');
-          statusIcon.classList.add('fa-check-circle', 'paid');
-          statusText.textContent = 'Payment Status: Paid';
-      } else if (status === 'not_paid') {
-          statusIcon.classList.remove('fa-check-circle', 'paid');
-          statusIcon.classList.add('fa-times-circle', 'not-paid');
-          statusText.textContent = 'Payment Status: Not Paid';
-      }
-  }
-
-  // Automatically set the payment status when the page loads
-  setPaymentStatus(paymentStatus);
-</script>
-
 <!-- create notification -->
 <script>
   // Function to open the complaint popup
@@ -788,18 +675,6 @@
   // Function to close the complaint popup
   function closenotificationPopup() {
     document.getElementById("notificationPopup").style.display = "none";
-  }
-</script>
-
-<script>
-  // Function to open the complaint popup
-  function openPopup() {
-    document.getElementById("complaintPopup").style.display = "flex";
-  }
-
-  // Function to close the complaint popup
-  function closeunitsPopup() {
-    document.getElementById("complaintPopup").style.display = "none";
   }
 </script>
 
@@ -868,35 +743,26 @@ $(document).ready(function() {
 
 </script> -->
 
-
-<script>
-  // Function to handle the selection and toggle
-  function toggleSelection(button) {
-      // Remove 'selected' class from all radio buttons
-      var buttons = document.querySelectorAll('.radio-button');
-      buttons.forEach(function(btn) {
-          btn.classList.remove('selected');
-      });
-
-      // Add 'selected' class to the clicked radio button
-      button.classList.add('selected');
-  }
 </script>
 
-
 <script>
-  // JavaScript to toggle the visibility of the options
-  const moreIcon = document.getElementById('more_icon');
-  const moreOptions = document.getElementById('more_options');
 
-  // Toggle visibility on click
-  moreIcon.addEventListener('click', function() {
-      if (moreOptions.style.display === 'block') {
-          moreOptions.style.display = 'none'; // Hide the options
-      } else {
-          moreOptions.style.display = 'block'; // Show the options
-      }
+  // JavaScript to handle hover and hide functionality
+  const  more= document.getElementById("more");
+  const more_icon = document.getElementById("more_icon");
+  const more_options = document.getElementById("more_options");
+
+  // Show panel when hovering over the accordion
+  more_icon.addEventListener("mouseenter", () => {
+    more_options.style.display = "block";
   });
+
+  // Hide panel when moving out of both accordion and panel
+   more.addEventListener("mouseleave", () => {
+    more_options.style.display = "none";
+});
+
+
 </script>
 
 <!-- End script for data_table -->
@@ -914,14 +780,6 @@ $(document).ready(function() {
 <!-- end sidebar script -->
 
 
-<script>
-  fetch('../chatbot/index.html')  // Fetch the file
-      .then(response => response.text()) // Convert it to text
-      .then(data => {
-          document.getElementById('index').innerHTML = data; // Insert it into the 'index' element
-      })
-      .catch(error => console.error('Error loading the file:', error)); // Handle errors
-</script>
 
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
@@ -963,25 +821,6 @@ $(document).ready(function() {
         }
       });
     </script>
-
-    <script>
-      // Example of dynamically changing the status to 'offline'
-      function setStatus(status) {
-          const icon = document.querySelector('.icon');
-          const label = document.querySelector('.status-label');
-
-          // Reset classes
-          icon.classList.remove('online', 'offline', 'busy', 'away');
-
-          // Add new status class based on argument
-          icon.classList.add(status);
-          label.textContent = status.charAt(0).toUpperCase() + status.slice(1);
-      }
-
-      // Change status after 3 seconds to 'busy'
-      setTimeout(() => setStatus('busy'), 3000);
-  </script>
-
     <!-- Bootstrap Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!--end::OverlayScrollbars Configure-->
