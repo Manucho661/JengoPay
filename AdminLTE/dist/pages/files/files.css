@@ -129,15 +129,15 @@ body{
   font-size: 5px;
   color: #555;
 }
+#filePreviews{
+  display: flex;
+  }
 .preview-container {
   margin-top: 20px;
-<<<<<<< HEAD
   width: 150px;
   height: 100px;
-=======
   width: 120px;
   height: 80px;
->>>>>>> 8a8f0d71a7f2c5f3341f701221a0691728aa7714
   border: 2px dashed #ccc;
   display: flex;
   align-items: center;
