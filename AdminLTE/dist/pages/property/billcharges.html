@@ -413,7 +413,7 @@
                 <i class="fas fa-edit"></i>
                 EDIT</button>
             </p>
-            <a href="../property/waterbillcharges.html"><button class="edit-btn">
+            <a href="../property/billcharges.html"><button class="edit-btn">
               <i class="fas fa-edit"></i>
               Meter Charges</button></a>
 
@@ -440,25 +440,28 @@
 
 <!-- Add Charge Section -->
 <div class="mb-4">
-    <label for="chargeName" class="form-label fw-bold">Charge Name</label>
-    <input type="text" id="chargeName" class="form-control shadow-sm" placeholder="Enter charge name">
+  <label for="chargeName" class="form-label fw-bold">Charge Name</label>
+  <input type="text" id="chargeName" class="form-control shadow-sm" placeholder="Enter charge name">
 </div>
 
 <div class="row mb-4">
-    <div class="col-md-4">
-        <label for="unitPrice" class="form-label fw-bold">Unit Price (Ksh)</label>
-        <input type="number" id="unitPrice" class="form-control shadow-sm" placeholder="Enter unit price">
-    </div>
-    <div class="col-md-4">
-        <label for="consumption_units" class="form-label fw-bold">Consumption Units</label>
-        <input type="number" id="quantity" class="form-control shadow-sm" placeholder="Enter Consumption Units">
-    </div>
-    <div class="col-md-4 d-flex align-items-end">
-        <button class="btn btn-primary w-100 shadow-sm" onclick="addCharge()">
-            <i class="fas fa-plus"></i> Add Charge
-        </button>
-    </div>
+  <div class="col-md-4">
+      <label for="unitPrice" class="form-label fw-bold">Unit Price (Ksh)</label>
+      <input type="number" id="unitPrice" class="form-control shadow-sm" placeholder="Enter unit price">
+  </div>
+  <div class="col-md-4">
+      <label for="quantity" class="form-label fw-bold">Consumption Units</label>
+      <input type="number" id="quantity" class="form-control shadow-sm" placeholder="Enter Consumption Units">
+  </div>
+  <div class="col-md-4 d-flex align-items-end">
+      <button class="btn btn-primary w-100 shadow-sm" onclick="addCharge()">
+          <i class="fas fa-plus"></i> Add Charge
+      </button>
+  </div>
 </div>
+
+<!-- List of Charges -->
+<div id="chargeList" class="mb-3"></div>
 
 <!-- Charges Summary Table -->
 <h4 class="mt-4 text-secondary">Charges Summary</h4>
@@ -478,7 +481,7 @@
 </table>
 
 <!-- Tax, Discount, and Final Calculation -->
-<div class="row mt-4">
+<!-- <div class="row mt-4">
     <div class="col-md-4">
         <label for="tax" class="form-label fw-bold">Tax (%)</label>
         <input type="number" id="tax" class="form-control shadow-sm" value="16" oninput="calculateTotal()">
@@ -486,11 +489,14 @@
     <div class="col-md-4">
         <label for="discount" class="form-label fw-bold">Discount (Ksh)</label>
         <input type="number" id="discount" class="form-control shadow-sm" value="0" oninput="calculateTotal()">
-    </div>
-    <div class="col-md-4">
-        <label class="form-label fw-bold">Total Amount (Ksh)</label>
-        <input type="text" id="totalAmount" class="form-control shadow-sm" readonly>
-    </div>
+    </div> -->
+  <!-- Total -->
+  <div class="col-md-4 mt-3">
+    <label class="form-label fw-bold">Total Amount (Ksh)</label>
+    <input type="text" id="totalAmount" class="form-control shadow-sm" readonly>
+</div>
+
+
 </div>
 
 <a href="../financials/invoices.html">
@@ -569,6 +575,69 @@
 <!-- end -->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <script>
+      let charges = [];
+
+      function addCharge() {
+          const name = document.getElementById('chargeName').value.trim();
+          const price = parseFloat(document.getElementById('unitPrice').value);
+          const quantity = parseFloat(document.getElementById('quantity').value);
+
+          if (!name || isNaN(price) || isNaN(quantity)) {
+              alert("Please fill in all fields correctly.");
+              return;
+          }
+
+          const amount = price * quantity;
+
+          // Add charge to the array
+          const charge = {
+              id: Date.now(), // unique ID for deletion
+              name,
+              price,
+              quantity,
+              amount
+          };
+          charges.push(charge);
+
+          // Add to table
+          const row = document.createElement('tr');
+          row.setAttribute('data-id', charge.id);
+          row.innerHTML = `
+              <td>${charge.name}</td>
+              <td>Ksh ${charge.price.toFixed(2)}</td>
+              <td>${charge.quantity}</td>
+              <td><strong>Ksh ${charge.amount.toFixed(2)}</strong></td>
+              <td><button class="btn btn-sm btn-danger" onclick="deleteCharge(${charge.id})">Delete</button></td>
+          `;
+          document.getElementById('chargesTable').appendChild(row);
+
+          // Update total
+          calculateTotal();
+
+          // Clear inputs
+          document.getElementById('chargeName').value = '';
+          document.getElementById('unitPrice').value = '';
+          document.getElementById('quantity').value = '';
+      }
+
+      function calculateTotal() {
+          const total = charges.reduce((sum, charge) => sum + charge.amount, 0);
+          document.getElementById('totalAmount').value = total.toFixed(2);
+      }
+
+      function deleteCharge(id) {
+          // Remove from array
+          charges = charges.filter(charge => charge.id !== id);
+
+          // Remove from table
+          const row = document.querySelector(`#chargesTable tr[data-id='${id}']`);
+          if (row) row.remove();
+
+          // Recalculate total
+          calculateTotal();
+      }
+  </script>
 
     <script>
       let charges = [];
@@ -614,16 +683,11 @@
           updateTable();
           calculateTotal();
       }
-
       function calculateTotal() {
-          let subtotal = charges.reduce((sum, charge) => sum + charge.total, 0);
-          let tax = parseFloat(document.getElementById("tax").value) || 0;
-          let discount = parseFloat(document.getElementById("discount").value) || 0;
+        const total = charges.reduce((sum, charge) => sum + charge.amount, 0);
+        document.getElementById('totalAmount').value = total.toFixed(2);
+    }
 
-          let taxAmount = (subtotal * tax) / 100;
-          let totalAmount = subtotal + taxAmount - discount;
-          document.getElementById("totalAmount").value = totalAmount.toFixed(2);
-      }
 
       // function generateInvoice() {
       //     if (charges.length === 0) {
@@ -875,6 +939,39 @@ setInterval(() => {
 }, 3000);
 
 </script>
+
+<script>
+  const amountContainer = document.getElementById('amountContainer');
+  const totalAmount = document.getElementById('totalAmount');
+
+  // Function to calculate total
+  function calculateTotal() {
+    const total = charges.reduce((sum, charge) => sum + charge.amount, 0);
+    document.getElementById('totalAmount').value = total.toFixed(2);
+}
+
+
+  // Event delegation for dynamically added inputs
+  amountContainer.addEventListener('input', function (e) {
+      if (e.target.classList.contains('amount')) {
+          calculateTotal();
+      }
+  });
+
+  // Add new amount input dynamically
+  document.getElementById('addAmount').addEventListener('click', () => {
+      const div = document.createElement('div');
+      div.className = 'col-md-4 mt-2';
+      div.innerHTML = `
+          <label class="form-label">Amount (Ksh)</label>
+          <input type="number" class="form-control amount shadow-sm" placeholder="Enter amount">
+      `;
+      amountContainer.appendChild(div);
+  });
+
+  // Optional: initialize with one input
+  document.getElementById('addAmount').click();
+</script>>
 
 <script>
 const cty = document.getElementById('rentalTrends').getContext('2d');
