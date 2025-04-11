@@ -67,7 +67,14 @@
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-
+<style>
+ select {
+  color:#767676;  /* Dodger Blue, for example */
+}
+select:hover {
+  color: #000 !important; /* black or any color you want */
+}
+</style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -356,7 +363,7 @@
                   </div>
                 </div>
               </div>
-              
+
               <div class="col-md-3">
                 <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; ">
                   <div class="icon"> <i class="fas fa-coins"></i></div>
@@ -386,18 +393,44 @@
             <!-- START ROW -->
              <div class="row mt-5">
 
-              <div class="col-md-12 rent-info filter"  >
+
                 <!-- <div class="row"> -->
-                  <div class="">
-                    <div class="col-md-8">
-                      <select id="categoryFilter" class="categoryFilter">
-                        <option value="">-- Select Building--</option>
-                        <option value="technology">All</option>
-                        <option value="health">Manucho</option>
-                        <option value="business">Ebenezer</option>
-                        <option value="education">Crown Z</option>
-                      </select>
-  
+
+                    <div class="col-md-12">
+                      <div class="rent-info">
+                          <div class="rent-info filter ">
+                            <div>
+                              <select id="categoryFilter" class="categoryFilter">
+                                <option value="">-- Select Building--</option>
+                                <option value="technology">All</option>
+                                <option value="health">Manucho</option>
+                                <option value="business">Ebenezer</option>
+                                <option value="education">Crown Z</option>
+                              </select>
+
+                              <select id="categoryFilter" class="categoryFilter">
+                                <option value="">-- Select Year--</option>
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+                              </select>
+
+                              <select id="categoryFilter" class="categoryFilter">
+                                <option value="">-- Select Month--</option>
+                                <option value="2024" >January</option>
+                                <option value="2023">february</option>
+                              </select>
+                            </div>
+
+                            <div class="pdf-excel">
+                              <button class="pdf" ><i class="fas fa-file-pdf" style="color: red;"></i></button>
+                              <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button>
+                            </div>
+                          </div>
+                          <div class="rentTable">
+                            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Cum, voluptatibus adipisci! Voluptas fugit itaque officia repudiandae iusto numquam labore pariatur cupiditate deleniti, mollitia excepturi tenetur possimus saepe soluta aliquam eligendi?
+
+                          </div>
+                      </div>
                     </div>
                     <!-- <div class="col-md-4" style="align-items: end;">
                       <div class="pdf-excel">
@@ -405,10 +438,10 @@
                         <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button>
                       </div>
                     </div> -->
-                  </div>                  
+
                 <!-- </div> -->
-              </div>
-              
+
+
               <!-- <div class="col-md-12">
                 <div class="message-list p-2" style="display: flex; justify-content: space-between;">
                   <div class="recent-messages-header">Recent Messages</div>
@@ -555,45 +588,6 @@
 
              </div>
             <!-- END ROW -->
-            <!-- Second row start -->
-            <div class="row first mb-2 mt-3">
-              <div class="col-md-4">
-                  <div>
-                   <b> <label for="categoryFilter" class="filter-label">Property</label></b>
-                    <br>
-                    <select id="categoryFilter">
-                        <option value="">-- Select --</option>
-                        <option value="technology">All</option>
-                        <option value="health">Manucho</option>
-                        <option value="business">Ebenezer</option>
-                        <option value="education">Crown Z</option>
-                    </select>
-
-                  </div>
-
-              </div>
-
-              <div class="col-md-4">
-                <b>   Start Date
-                  <label for="filterDate" class="filter-label"></label>
-                  </b>
-                  <input type="date" id="filterDate" />
-              </div>
-
-              <div class="col-md-4" style="padding: 10px;">
-                <b>End Date
-                  <label for="filterDate" class="filter-label"></label>
-                </b>
-                  <input type="date" id="filterDate" />
-              </div>
-          </div>
-
-
-
-
-
-
-
 
 
                       <div class="row mt-3"> <!-- second row -->

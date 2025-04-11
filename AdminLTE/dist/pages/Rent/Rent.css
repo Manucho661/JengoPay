@@ -33,20 +33,20 @@ letter-spacing: .5px;
   margin-top: 2px;
   margin-left: 2px;
   }
-          
+
 
                                       /* SUMMARY */
  .contact_section_header.summary{
   border-bottom: 1px solid rgba(128, 128, 128, 0.5);
 
-   width:80%; 
- }                                     
+   width:80%;
+ }
 .summary-item{
   background: white;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
   padding-left: 5px;
   border-radius: 5px;
- 
+
 }
 .summary-item .label{
   font-weight: 600;
@@ -64,11 +64,9 @@ letter-spacing: .5px;
   font-size: 16px;
 }
 
-                                                   /* SELECT, INPUT, TEXT_AREA */ 
+                                                   /* SELECT, INPUT, TEXT_AREA */
 
 select {
-  appearance: none; /* Hides default arrow in some browsers */
-  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="%23FFC107" d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
   background-size: 16px;
   padding-right: 30px;
 }
@@ -79,7 +77,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 input, select {
-  width:30%;
+  /* width:30%; */
   padding: 10px;
   border: 1px solid #00192D;
   border-radius: 5px;
@@ -118,7 +116,7 @@ table {
       background: #ffeb3b;
   }
   /* Hide everything except receipt when printing */
- 
+
 
 
 
@@ -151,6 +149,19 @@ table {
                                                         /* RENT INFO */
   .rent-info.filter{
      background-color: white;
-     padding: 5px; 
+     padding: 5px;
      border-radius: 5px;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+  }
+  .pdf {
+    border: 1px solid #FFC107;
+    margin-right: 3px;
+  }
+  .excel{
+    border: 1px solid #FFC107;
+  }
+  .rent-info{
+    background-color: white;
   }
