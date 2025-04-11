@@ -858,8 +858,8 @@ display: flex;
 
       } else if (fileType === 'application/pdf') {
         const pdfEmbed = document.createElement('embed');
-        pdfEmbed.style.width = '50%';
-        pdfEmbed.style.height = '50%';
+        pdfEmbed.style.width = '100%';
+        pdfEmbed.style.height = '100%';
         pdfEmbed.src = URL.createObjectURL(file);
         fileContainer.appendChild(pdfEmbed);
 
