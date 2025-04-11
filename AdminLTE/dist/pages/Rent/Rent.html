@@ -70,6 +70,7 @@
 <style>
  select {
   color:#767676;  /* Dodger Blue, for example */
+  /* border-radius: 0px !important; */
 }
 select:hover {
   color: #000 !important; /* black or any color you want */
@@ -232,7 +233,7 @@ select:hover {
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <img
-                  src="../../dist/assets/img/user2-160x160.jpg"
+                  src="../../../dist/assets/img/user2-160x160.jpg"
                   class="user-image rounded-circle shadow"
                   alt="User Image"
                 />
@@ -286,7 +287,7 @@ select:hover {
           <a href="./index.html" class="brand-link">
             <!--begin::Brand Image-->
             <img
-              src="../../dist/assets/img/AdminLTELogo.png"
+              src="../../../dist/assets/img/AdminLTELogo.png"
               alt="AdminLTE Logo"
               class="brand-image opacity-75 shadow"
             />
@@ -329,7 +330,7 @@ select:hover {
               <div class="col-sm-8">
                 <div class="d-flex">
                   <h3 class="mb-0 contact_section_header"> <i class="fas fa-coins icon"></i> Rental Charges </h3>
-                  <h6 class="month">April</h6>
+                  <h6 class="month" style="color: green;">April-2025</h6>
                 </div>
               </div>
               <div class="col-sm-4">
@@ -368,6 +369,15 @@ select:hover {
                 <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; ">
                   <div class="icon"> <i class="fas fa-coins"></i></div>
                   <div>
+                    <div class="label">Penalities</div>
+                    <div class="value penalities"> $&nbsp;1,000</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; ">
+                  <div class="icon"> <i class="fas fa-coins"></i></div>
+                  <div>
                     <div class="label">Arreas</div>
                     <div class="value"> $&nbsp;30,000</div>
                   </div>
@@ -384,17 +394,16 @@ select:hover {
                 </div>
               </div>
 
-              <div class="col-md-3">
-
-              </div>
+             
             </div>
             <!-- END ROW -->
 
             <!-- START ROW -->
-             <div class="row mt-5">
+             <div class="row mt-4">
 
 
-                <!-- <div class="row"> -->
+                <!-- <div class="row"> -->              
+                  <h6 class="mb-0 contact_section_header summary mb-2"> </i> Details</h6>
 
                     <div class="col-md-12">
                       <div class="rent-info">
@@ -426,413 +435,107 @@ select:hover {
                               <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button>
                             </div>
                           </div>
-                          <div class="rentTable">
-                            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Cum, voluptatibus adipisci! Voluptas fugit itaque officia repudiandae iusto numquam labore pariatur cupiditate deleniti, mollitia excepturi tenetur possimus saepe soluta aliquam eligendi?
+                          <div class="rentTable section">
+                            <table id="rent" class="tableRent" style="font-size: small;" >
+                              <thead>
+                                  <tr>
+                                          <th scope="col">Building</th>
+                                          <th scope="col">Collected</th>
+                                          <th scope="col">Penalities</th>
+                                          <th scope="col">Arreas</th>
+                                          <th scope="col">Overpayment</th>
+                                          <th scope="col">Action</th>
+                                          
+                                  </tr>
+                              </thead>
+                              <tbody>
+                               <tr onclick="window.location.href=''">
+                                  <th >Manucho</th>
+                                      <td class="rent paid">$&nbsp;80,000</td>
+
+                                      <td >
+                                        <div class="rent penalit">$&nbsp;2000</div>
+                                      </td>
+
+                                      <td class="rent collected">$&nbsp; 3,000</td>
+                                      <td class="rent overpayment">$&nbsp; 500</td>
+                                      
+                                    <td>
+                                      <button class="btn view">View</button>
+                                    </td>
+                                </tr>
+                                <tr onclick="window.location.href=''">
+                                <th >Ebenezer</th>
+                                    <td class="rent paid">$&nbsp;70,000</td>
+                                    <td>
+                                      <div class="rent penalit">$&nbsp;1000</div>
+                                      </td>
+                                    <td class="rent collected">$&nbsp;2,000</td>
+                                    <td class="rent overpayment">$&nbsp; 500</td>                                    
+                                  <td>
+                                    <button class="btn view">View</button>
+                                  </td>
+                                </tr>
+                                <tr onclick="window.location.href=''">
+                                  <th >Pink House</th>
+                                  <td class="rent paid"> $&nbsp;90,000</td>
+                                  <td> 
+                                    <div class="rent penalit">$&nbsp;1000</div>
+                                  </td>
+                                  <td class="rent collected">$&nbsp;5,000</td>
+                                  <td class="rent overpayment">$&nbsp;300</td>
+                                  
+                                <td>
+                                  <button class="btn view">View</button>
+
+                                </td>
+                            </tr>
+  
+                              <tr onclick="window.location.href=''">
+                                <th >Orange House</th>
+                                <td class="rent paid"> $&nbsp;50,000</td>
+                                <td  > 
+
+                                  <div class="rent penalit">$&nbsp;1000</div>
+
+                                </td>
+                                <td class="rent collected">$&nbsp;9,000</td>
+                                <td class="rent overpayment">$&nbsp;300</td>
+                               
+                              <td>
+                                <button class="btn view">View</button>
+                              </td>
+                                </tr>
+  
+  
+                          <tr onclick="window.location.href=''">
+                            <th>Carolina</th>
+                              <td class="rent paid">$&nbsp;40,000</td>
+                              <td> 
+                                <div class="rent penalit">$&nbsp;1000</div>
+                              </td>
+                              <td class="rent collected">$&nbsp;9,000</td>
+                              <td class="rent overpayment" >$&nbsp;1000</td>                              
+                            <td>
+                              <button class="btn view">View</button>
+                            </td>
+                          </tr>    
+                          </tbody>
+                      </table>
 
                           </div>
                       </div>
                     </div>
-                    <!-- <div class="col-md-4" style="align-items: end;">
-                      <div class="pdf-excel">
-                        <button class="pdf" ><i class="fas fa-file-pdf" style="color: red;"></i></button>
-                        <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button>
-                      </div>
-                    </div> -->
-
-                <!-- </div> -->
-
-
-              <!-- <div class="col-md-12">
-                <div class="message-list p-2" style="display: flex; justify-content: space-between;">
-                  <div class="recent-messages-header">Recent Messages</div>
-                 <div>
-                  <button  id="new_text" onclick="opennewtextPopup()" class="btn new-text">    <i class="bi bi-plus" ></i> New Chat</button>
-                 </div>
-                </div>
-
-                <table class="table table-hover table-summary-messages" style="border-radius: 20px; flex-grow: 1;">
-                    <thead class="">
-                        <tr>
-                            <th>SENT</th>
-                            <th>Title</th>
-                            <th>SENT BY</th>
-                            <th>ACTION</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="table-row">
-                            <td class="timestamp">
-                              <div class="date">13-03-2025</div>
-                              <div class="time">07:45PM</div>
-                            </td>
-                            <td class="title">Request to Vacate Room</td>
-                            <td>
-                              <div class="sender">Me</div>
-                              <div class="sender-email"></div>
-
-                            </td>
-                            <td >
-                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                              <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                          <td class="timestamp">
-                            <div class="date">13-03-2025</div>
-                            <div class="time">07:45PM</div>
-                          </td>
-                            <td class="title">Request to Fix Leaking shower</td>
-                            <td>
-                              <div class="sender">Christiano Ronaldo</div>
-                              <div class="sender-email"><i class="fa fa-envelope"></i> Ronald12@gmail.com</div>
-                            </td>
-                            <td >
-                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                              <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                          <td class="timestamp">
-                            <div class="date">13-03-2025</div>
-                            <div class="time">07:45PM</div>
-                          </td>
-                            <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
-                            <td>
-                              <div class="sender">Sherly Nabwana</div>
-                              <div class="sender-email"><i class="fa fa-envelope"></i>Nabwana@gmail.com</div>
-                            </td>
-                            <td >
-                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                              <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                          <td class="timestamp">
-                            <div class="date">13-03-2025</div>
-                            <div class="time">07:45PM</div>
-                          </td>
-                            <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
-                            <td>
-                              <div class="sender">Hesbon Wanjiku</div>
-                              <div class="sender-email"><i class="fa fa-envelope"></i>wa123@gmail.com</div>
-                            </td>
-                            <td >
-                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                              <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                          <td class="timestamp">
-                            <div class="date">13-03-2025</div>
-                            <div class="time">07:45PM</div>
-                          </td>
-                            <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
-                            <td>
-                              <div class="sender">Me</div>
-                              <div class="sender-email"></div>
-                            </td>
-                            <td >
-                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                              <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                          <td class="timestamp">
-                            <div class="date">13-03-2025</div>
-                            <div class="time">07:45PM</div>
-                          </td>
-                            <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
-                            <td>
-                              <div class="sender">Sherly Nabwana</div>
-                              <div class="sender-email"><i class="fa fa-envelope"></i>Nabwana@gmail.com</div>
-                            </td>
-                            <td >
-                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                              <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                          <td class="timestamp">
-                            <div class="date">13-03-2025</div>
-                            <div class="time">07:45PM</div>
-                          </td>
-                            <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
-                            <td>
-                              <div class="sender">Hesbon Wanjiku</div>
-                              <div class="sender-email"><i class="fa fa-envelope"></i>wa123@gmail.com</div>
-                            </td>
-                            <td >
-                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                              <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                          <td class="timestamp">
-                            <div class="date">13-03-2025</div>
-                            <div class="time">07:45PM</div>
-                          </td>
-                            <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
-                            <td>
-                              <div class="sender">Me</div>
-                              <div class="sender-email"></div>
-                            </td>
-                            <td >
-                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                              <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-              </div> -->
+                    
 
              </div>
             <!-- END ROW -->
 
 
-                      <div class="row mt-3"> <!-- second row -->
-
-                        <div class="col-md-12">
-                          <div class="card">
-                      <div class="card-body">
-                        <table id="rent" class="display" style="font-size: small;" >
-                            <thead>
-                                <tr>
-                                       <th scope="col">PAYMENT AMOUNT</th>
-                                        <th scope="col">PAID BY</th>
-                                        <th scope="col">BUILDING</th>
-                                        <th scope="col">UNIT</th>
-                                        <th scope="col">TYPE</th>
-                                        <th scope="col">TENANT</th>
-                                        <th scope="col">DAYS OVERDUE</th>
-                                        <th scope="col">PAID ON</th>
-                                        <th scope="col">RECEIVED BY</th>
-                                        <th scope="col">ACTION</th>
-
-                                </tr>
-                        </thead>
-                        <tbody>
-                            <tr onclick="window.location.href=''">
-                                <th scope="row">KSH 9,000</th>
-                                    <td>KELVIN</td>
-                                    <td>CROWN Z TOWERS</td>
-                                    <td>B67</td>
-                                    <td>Bed Sitter</td>
-                                    <td>KELVIN</td>
-                                    <td>4</td>
-                                    <td>27-03-2025</td>
-                                    <td>Mr Maina</td>
-                                  <td>
-                                    <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                                    </button> -->
-                                    <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
-                                    <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
-
-                                  </td>
-                            </tr>
-                            <tr onclick="window.location.href=''">
-                              <th scope="row">KSH 15,000</th>
-                                  <td>KELVIN</td>
-                                  <td>CROWN Z TOWERS</td>
-                                  <td>B67</td>
-                                  <td>One Bedroom</td>
-                                  <td>KELVIN</td>
-                                  <td>4</td>
-                                  <td>27-03-2025</td>
-                                  <td>Mr Maina</td>
-                                <td>
-                                  <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                                  </button> -->
-                                  <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
-                                  <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
-
-                                </td>
-                          </tr>
-                          <tr onclick="window.location.href=''">
-                            <th scope="row">KSH 25,000</th>
-                                <td>KELVIN</td>
-                                <td>CROWN Z TOWERS</td>
-                                <td>B67</td>
-                                <td>Two Bedroom</td>
-                                <td>KELVIN</td>
-                                <td>4</td>
-                                <td>27-03-2025</td>
-                                <td>Mr Maina</td>
-                              <td>
-                                <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                                </button> -->
-                                <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
-                                <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
-
-                              </td>
-                        </tr>
-
-                        <tr onclick="window.location.href=''">
-                          <th scope="row">KSH 35,000</th>
-                              <td>KELVIN</td>
-                              <td>CROWN Z TOWERS</td>
-                              <td>B67</td>
-                              <td>Three Bedroom</td>
-                              <td>KELVIN</td>
-                              <td>4</td>
-                              <td>27-03-2025</td>
-                              <td>Mr Maina</td>
-                            <td>
-                              <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                              </button> -->
-                              <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
-                              <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
-                            </td>
-                      </tr>
-
-
-                      <tr onclick="window.location.href=''">
-                        <th scope="row">KSH 35,000</th>
-                            <td>KELVIN</td>
-                            <td>CROWN Z TOWERS</td>
-                            <td>B67</td>
-                            <td>Three Bedroom</td>
-                            <td>KELVIN</td>
-                            <td>4</td>
-                            <td>27-03-2025</td>
-                            <td>Mr Maina</td>
-                          <td>
-                            <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                            </button> -->
-                            <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
-                            <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
-
-                          </td>
-                    </tr>
-                    <tr onclick="window.location.href=''">
-                      <th scope="row">KSH 35,000</th>
-                          <td>KELVIN</td>
-                          <td>CROWN Z TOWERS</td>
-                          <td>B67</td>
-                          <td>Three Bedroom</td>
-                          <td>KELVIN</td>
-                          <td>4</td>
-                          <td>27-03-2025</td>
-                          <td>Mr Maina</td>
-                        <td>
-                          <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                          </button> -->
-                          <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
-                          <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
-
-                        </td>
-                  </tr>
-                  <tr onclick="window.location.href=''">
-                    <th scope="row">KSH 35,000</th>
-                        <td>KELVIN</td>
-                        <td>CROWN Z TOWERS</td>
-                        <td>B67</td>
-                        <td>Three Bedroom</td>
-                        <td>KELVIN</td>
-                        <td>4</td>
-                        <td>27-03-2025</td>
-                        <td>Mr Maina</td>
-                      <td>
-                        <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                        </button> -->
-                        <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
-                        <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
-
-                      </td>
-                </tr>
-                <tr onclick="window.location.href=''">
-                  <th scope="row">KSH 35,000</th>
-                      <td>KELVIN</td>
-                      <td>CROWN Z TOWERS</td>
-                      <td>B67</td>
-                      <td>Three Bedroom</td>
-                      <td>KELVIN</td>
-                      <td>4</td>
-                      <td>27-03-2025</td>
-                      <td>Mr Maina</td>
-                    <td>
-                      <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                      </button> -->
-                      <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
-                      <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
-
-                    </td>
-              </tr>
-              <tr onclick="window.location.href=''">
-                <th scope="row">KSH 35,000</th>
-                    <td>KELVIN</td>
-                    <td>CROWN Z TOWERS</td>
-                    <td>B67</td>
-                    <td>Three Bedroom</td>
-                    <td>KELVIN</td>
-                    <td>4</td>
-                    <td>27-03-2025</td>
-                    <td>Mr Maina</td>
-                  <td>
-                    <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                    </button> -->
-                    <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
-                    <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
-
-                  </td>
-            </tr>
-                        </tbody>
-                    </table>
-                  </div>
-
-                  <div class="card-footer">
-
-                  </div>
-
-                </div>
-              </div>
+                      
             </div>
 
 
-<!-- units popup -->
-<!-- <div class="units-overlay" id="complaintPopup">
-  <div class="units-content wide-form">
-      <button class="close-btn" onclick="closeunitsPopup()">×</button>
-      <h2 class="assign-title">Detailed Rent Information</h2>
-      <form class="wide-form">
-        <div class="form-group">
-          <div class="row g-3">
-
-            <div class="col-md-6">
-              <label for="property">Property:</label>
-              <input type="text" id="property " name="property" placeholder="Manucho Apartments" required disabled>
-            </div>
-
-            <div class="col-md-6">
-            <label for="tenant">Tenant:</label>
-            <input type="text" id="tenant " name="tenant" placeholder="FRED MBURU" required disabled>
-          </div>
-
-          <div class="col-md-6">
-            <label for="unit">Unit</label>
-            <input type="text" id="unit" name="unit"  placeholder="B11" disabled>
-    </div>
-
-
-          <div class="col-md-6">
-            <label for="text">Amount Paid:</label>
-            <input type="text" id="amount" name="amount" placeholder="Ksh 10000" required disabled>
-          </div>
-
-          <div class="col-md-6">
-            <label for="payment_date">Payment Date</label>
-            <input type="text" id="date" name="date" placeholder="11-03-2025" required disabled>
-        </div>
-
-        <div class="col-md-6">
-            <label for="rent_overdue">Rent Overdue</label>
-            <input type="text" id="rent_overdue" name="rent_overdue"  placeholder="Ksh0" disabled>
-    </div>
-
-    <div class="col-md-6">
-      <label for="days_overdue">Days Overdue</label>
-      <input type="text" id="days_overdue" name="days_overdue" placeholder="0" disabled>
-</div> -->
 
 
       </form>
@@ -840,47 +543,21 @@ select:hover {
 </div>
 <!-- end -->
 
-<script>
-  $(document).ready(function() {
-      $('#rent').DataTable({
-          "lengthChange": false,
-          "dom": 'Bfrtip',
-          "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-      });
-  });
-</script>
+<footer class="app-footer">
+  <!--begin::To the end-->
+  <div class="float-end d-none d-sm-inline">Anything you want</div>
+  <!--end::To the end-->
+  <!--begin::Copyright-->
+  <strong>
+    Copyright &copy; 2014-2024&nbsp;
+    <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;"> JENGO PAY</a>.
+  </strong>
+  All rights reserved.
+  <!--end::Copyright-->
+</footer>
+<!--end::Footer-->
+</div>
 
-<!--
-        <div class="overlaying" id="overlaying">
-          <div class="invoicing-container">
-          <div class="receipt-container" id="receipt">
-            <button class="close-btn" onclick="closeOverlay()">×</button>
-            <h2>Payment Receipt</h2>
-            <p> Nairobi,  KENYA</p>
-            <p><strong>Date:</strong> <span id="date"></span></p>
-
-            <table>
-              <td>Manucho Apartments</td>
-              <td>John</td>
-              <th>A11</th>
-              <td>KSH80,000</td>
-              <td>KSH80,000</td>
-              <td>MPESA</td>
-              <td>TBM34KGNJ8</td>
-              <td>10-12-2025</td>
-              <td>KSH0</td>
-            </table>
-        </div>
-
-        <button class="print-btn" onclick="printReceipt()">Print Receipt</button>
-     -->
-
-
-    <!--end::App Wrapper-->
-    <!--begin::Script-->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
-
- <!-- dowload as pdf -->
  <script>
   document.getElementById("generateReport").addEventListener("click", function () {
       const { jsPDF } = window.jspdf;

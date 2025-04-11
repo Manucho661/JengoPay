@@ -38,7 +38,6 @@ letter-spacing: .5px;
                                       /* SUMMARY */
  .contact_section_header.summary{
   border-bottom: 1px solid rgba(128, 128, 128, 0.5);
-
    width:80%;
  }
 .summary-item{
@@ -62,6 +61,14 @@ letter-spacing: .5px;
   color: #00192D;
   font-weight: 600;
   font-size: 16px;
+}
+.summary-item .value.penalities{
+background-color: #F87171	;
+border-radius: 5px;
+height: fit-content;
+color: white;
+margin-bottom: 2px;
+padding-left: 2px;
 }
 
                                                    /* SELECT, INPUT, TEXT_AREA */
@@ -93,75 +100,147 @@ select:hover{
   border: 1px solid #FFC107;
 }
 
-/* Invoice Table */
-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-  }
+                                                  /* TABLE */
+                                                  table{
+                                                    border-radius: 200px !important;
+                                                    width: 100%;
+                                                  }
+                                                  table, th, td {
+                                                    border: 1px solid #ddd;
+                                                }
+                                                  th, td {
+                                                    text-align: left !important; /* Align text for readability */
+                                                    vertical-align: middle; /* Centers text vertically */
+                                                  }
+                                                  thead{
+                                                    position: sticky;
+                                                  }
+                                                  td{
+                                                    font-size: 14px !important;
 
-  th, td {
-      border-bottom: 1px solid #ddd;
-      padding: 8px;
-      text-align: left;
-  }
+                                                    /* align-items: center; */
+                                                  }
 
-  th {
-      background: #f4f4f4;
-      font-weight: bold;
-  }
-
-  .total {
-      font-weight: bold;
-      background: #ffeb3b;
-  }
-  /* Hide everything except receipt when printing */
+                                                  th{
+                                                    font-size: 12px !important;
+                                                    letter-spacing: .5px;
+                                                    font-weight: 600;
+                                                    text-transform: uppercase;
+                                                  }
+                                                  
 
 
+                                                  th:nth-child(4), td:nth-child(4) {
+                                                    text-align: left !important; /* Align provider names to the left */
+                                                  }
+                                                  th, td {
+                                                    padding: 12px 15px !important; /* Top-bottom: 12px, Left-right: 15px */
 
+                                                  }
 
- #generateReport{
-  /* background-color: #00192D;  */
-    color:  #FFC107;
-    font-size: small;
- }
-  #rent_details_btn{
-    background-color: #00192D;
-    color: white;
-    font-size: small;
-  }
-  #rent_details_btn a{
-    color: #FFC107;
-  }
+                                                  th, td {
+                                                    white-space: nowrap !important;
+                                                    overflow: hidden !important;
+                                                    text-overflow: ellipsis !important; /* Add '...' if text overflows */
+                                                  }
+                                                  th {
+                                                    font-weight: 600 !important;
+                                                    /* text-transform: uppercase !important; */
+                                                    /* background-color: #f4f4f4 !important; Light background for contrast */
+                                                    border-bottom: 2px solid #ddd !important;
+                                                    background: #00192D    !important ;
+                                                    color: white !important;
+                                                  }
+                                                  /* contents */
+                                                  td{
+                                                    background: #EFF2F5;
+                                                  }
+                                                  .month{
+                                                    color: rgb(41, 41, 41);
+                                                  }
+                                                  .rent{
+                                                    color: black;
+                                                    font-weight: 600;
+                                                    font-size: 16px;
+                                                  }
+                                                  .rent.paid{
 
-  #agreements_btn a{
-    color: white;
-  }
-  #announcement_btn{
-    background-color: #00192D;
-    color: white;
-    font-size: small;
-  }
-  #announcement_btn a{
-    color: #FFC107;
-  }
+                                                    font-weight: 600;
+                                                    font-size: 16px;
+                                                  }
+                                                  .amount.date .date{
+                                                    font-weight: 400px;
+                                                    font-size: 10px;
+                                                    color: green;
+                                                    background-color: rgba(128,128,128,0.2);
+                                                    padding-bottom: 0px;
+                                                    border-radius: 10px;
+                                                  vertical-align: middle;
+                                                  padding: 0px 4px;
+                                                  height: fit-content;
+                                                  margin-top: 2px;
+                                                  margin-left: 2px;
+
+                                                  }
+                                                  .pen.amount{
+                                                    background-color: #e74c3c;
+                                                    width: fit-content;
+                                                    padding:0 10px;
+                                                    border-radius: 2px;
+                                                    color: white;
+                                                  }
+                                                  .rent.arrears{
+                                                    color: black;
+                                                    font-weight: 600;
+                                                    font-size: 16px;
+                                                  }
+
+                                                  /* Penalit */
+                                                  .rent.penalit{
+                                                    background-color: #F87171	;
+                                                    width: fit-content;
+                                                    padding:0 10px;
+                                                    border-radius: 2px;
+                                                    color: white;
+                                                  }
+                                                  
+                                                  
+
+                                                  
 
                                                         /* RENT INFO */
   .rent-info.filter{
      background-color: white;
      padding: 5px;
-     border-radius: 5px;
+     
      display: flex;
      justify-content: space-between;
      align-items: center;
+     border-bottom: 1px solid gray;
   }
   .pdf {
     border: 1px solid #FFC107;
     margin-right: 3px;
+    border-radius: 5px;
   }
   .excel{
     border: 1px solid #FFC107;
+    border-radius: 5px;
   }
   .rent-info{
     background-color: white;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
   }
+
+
+                                                          /* BUTTON */
+                                                          .view{
+                                                            height: fit-content;
+                                                            padding: 2px 8px;
+                                                            font-size: 12px;
+                                                            background-color: transparent;
+                                                            color: #00192D;
+                                                            border: 1px solid #FFC107;
+                                                      }
+                                                      
