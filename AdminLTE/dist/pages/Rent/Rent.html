@@ -411,8 +411,9 @@ select:hover {
                             <div class="filter-boxes d-flex">
 
                               <div class="select-option-container mt-3">
-                                <div class="custom-select">--Select Building--</div>
+                                <div class="custom-select">All Buildings</div>
                                 <div class="select-options mt-1">
+                                  <div class="selected" data-value="item1">All Buildings</div>
                                   <div data-value="item1">Manucho</div>
                                   <div data-value="item2">Ebenezer</div>
                                   <div data-value="item3">Crown Z</div>
@@ -420,17 +421,18 @@ select:hover {
                               </div>
 
                               <div class="select-option-container mt-3">
-                                <div class="custom-select">--Select Year--</div>
+                                <div class="custom-select">2025</div>
                                 <div class="select-options mt-1">
-                                  <div data-value="item1">2025</div>
+                                  <div class="selected"  data-value="item1">2025</div>
                                   <div data-value="item2">2024</div>
                                   <div data-value="item3">2023</div>
                                 </div>
                               </div>
 
                               <div class="select-option-container mt-3">
-                                <div class="custom-select">--Select Month--</div>
+                                <div class="custom-select">April</div>
                                 <div class="select-options mt-1">
+                                  <div class="selected" data-value="item1">April</div>
                                   <div data-value="item1">January</div>
                                   <div data-value="item2">February</div>
                                   <div data-value="item3">March</div>
@@ -602,6 +604,12 @@ document.querySelectorAll('.select-option-container').forEach(container => {
         optionsContainer.style.display = 'none';
         select.classList.remove('open');
       });
+
+      option.addEventListener('mouseenter', () => {
+        options.forEach(opt => opt.classList.remove('selected'));
+        option.classList.add('selected');
+      });
+
     });
   });
 

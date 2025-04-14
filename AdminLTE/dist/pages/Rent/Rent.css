@@ -310,7 +310,7 @@ position: relative;
       z-index: 10;
       max-height: 200px;
       overflow-y: auto;
-      border-radius: 0 0 5px 5px;
+      border-radius: 5px;
       color: gray;
       
       display: none;   
@@ -322,9 +322,14 @@ position: relative;
       cursor: pointer;
       transition: background 0.3s;
     }
-.select-options div:hover {
+.select-options div.selected {
       background-color: #00192D;
       color: #FFC107;
+  }
+      
+.select-options div:hover {
+      background-color: #00192D !important;
+      color: #FFC107 !important;
 
 }
 .filter-boxes{
