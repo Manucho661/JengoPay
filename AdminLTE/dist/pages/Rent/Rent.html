@@ -406,26 +406,36 @@ select:hover {
                     <div class="col-md-12">
                       <div class="rent-info">
                           <div class="rent-info filter ">
-                            <div>
-                              <select id="categoryFilter" class="categoryFilter">
-                                <option value="">-- Select Building--</option>
-                                <option value="technology">All</option>
-                                <option value="health">Manucho</option>
-                                <option value="business">Ebenezer</option>
-                                <option value="education">Crown Z</option>
-                              </select>
+                            <div class="filter-boxes d-flex">
 
-                              <select id="categoryFilter" class="categoryFilter">
-                                <option value="">-- Select Year--</option>
-                                <option value="2024">2024</option>
-                                <option value="2023">2023</option>
-                              </select>
+                              <div class="select-option-container mt-3">
+                                <div class="custom-select">All Buildings</div>
+                                <div class="select-options mt-1">
+                                  <div class="selected" data-value="item1">All Buildings</div>
+                                  <div data-value="item1">Manucho</div>
+                                  <div data-value="item2">Ebenezer</div>
+                                  <div data-value="item3">Crown Z</div>
+                                </div>
+                              </div>
 
-                              <select id="categoryFilter" class="categoryFilter">
-                                <option value="">-- Select Month--</option>
-                                <option value="2024" >January</option>
-                                <option value="2023">february</option>
-                              </select>
+                              <div class="select-option-container mt-3">
+                                <div class="custom-select">2025</div>
+                                <div class="select-options mt-1">
+                                  <div class="selected"  data-value="item1">2025</div>
+                                  <div data-value="item2">2024</div>
+                                  <div data-value="item3">2023</div>
+                                </div>
+                              </div>
+
+                              <div class="select-option-container mt-3">
+                                <div class="custom-select">April</div>
+                                <div class="select-options mt-1">
+                                  <div class="selected" data-value="item1">April</div>
+                                  <div data-value="item1">January</div>
+                                  <div data-value="item2">February</div>
+                                  <div data-value="item3">March</div>
+                                </div>
+                              </div>
                             </div>
 
                             <div class="pdf-excel">
@@ -556,6 +566,64 @@ select:hover {
 <!--end::Footer-->
 </div>
 
+                                           <!-- SELECT ELEMENT SCRIPT -->
+
+<script>
+document.querySelectorAll('.select-option-container').forEach(container => {
+    const select = container.querySelector('.custom-select');
+    const optionsContainer = container.querySelector('.select-options');
+    const options = optionsContainer.querySelectorAll('div');
+
+    // Toggle dropdown on select click
+    select.addEventListener('click', () => {
+      const isOpen = optionsContainer.style.display === 'block';
+
+      // Close all other dropdowns before opening a new one
+      document.querySelectorAll('.select-options').forEach(opt => opt.style.display = 'none');
+      document.querySelectorAll('.custom-select').forEach(sel => {
+        sel.classList.remove('open');
+      
+      });
+
+      // Toggle current dropdown
+      optionsContainer.style.display = isOpen ? 'none' : 'block';
+      select.classList.toggle('open', !isOpen);
+    });
+
+    // Option click handler
+    options.forEach(option => {
+      option.addEventListener('click', () => {
+        select.textContent = option.textContent;
+        select.setAttribute('data-value', option.getAttribute('data-value'));
+
+        options.forEach(opt => opt.classList.remove('selected'));
+        option.classList.add('selected');
+
+        optionsContainer.style.display = 'none';
+        select.classList.remove('open');
+      });
+
+      option.addEventListener('mouseenter', () => {
+        options.forEach(opt => opt.classList.remove('selected'));
+        option.classList.add('selected');
+      });
+
+    });
+  });
+
+  // Close dropdowns on outside click
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.select-option-container')) {
+      document.querySelectorAll('.select-options').forEach(opt => opt.style.display = 'none');
+      document.querySelectorAll('.custom-select').forEach(sel => {
+        sel.classList.remove('open');
+        sel.style.borderRadius = '5px';
+      });
+    }
+  });
+                    
+</script>
+
  <script>
   document.getElementById("generateReport").addEventListener("click", function () {
       const { jsPDF } = window.jspdf;
@@ -658,36 +726,7 @@ select:hover {
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
 
 
-<!-- Begin script for datatable
-<script>
-  $(document).ready(function() {
-   $('#rent').DataTable({
-       "paging": true,
-       "searching": true,
-       "info": true,
-       "lengthMenu": [5, 10, 25, 50],
-       "language": {
-           "search": "Filter records:",
-           "lengthMenu": "Show _MENU_ entries"
-       }
-   });
-}); -->
 
-<!-- <script>
-$(document).ready(function() {
-   $('#agreements').DataTable({
-       "paging": true,
-       "searching": true,
-       "info": true,
-       "lengthMenu": [5, 10, 25, 50],
-       "language": {
-           "filter": "Search ",
-           "lengthMenu": "Show _MENU_ entries"
-       }
-   });
-});
-
-</script> -->
 
 
 
@@ -779,175 +818,7 @@ $(document).ready(function() {
       integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
       crossorigin="anonymous"
     ></script>
-    <script>
-      // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
-      // IT'S ALL JUST JUNK FOR DEMO
-      // ++++++++++++++++++++++++++++++++++++++++++
-
-      /* apexcharts
-       * -------
-       * Here we will create a few charts using apexcharts
-       */
-
-      //-----------------------
-      // - MONTHLY SALES CHART -
-      //-----------------------
-
-      const sales_chart_options = {
-        series: [
-          {
-            name: 'Digital Goods',
-            data: [28, 48, 40, 19, 86, 27, 90],
-          },
-          {
-            name: 'Electronics',
-            data: [65, 59, 80, 81, 56, 55, 40],
-          },
-        ],
-        chart: {
-          height: 180,
-          type: 'area',
-          toolbar: {
-            show: false,
-          },
-        },
-        legend: {
-          show: false,
-        },
-        colors: ['#0d6efd', '#20c997'],
-        dataLabels: {
-          enabled: false,
-        },
-        stroke: {
-          curve: 'smooth',
-        },
-        xaxis: {
-          type: 'datetime',
-          categories: [
-            '2023-01-01',
-            '2023-02-01',
-            '2023-03-01',
-            '2023-04-01',
-            '2023-05-01',
-            '2023-06-01',
-            '2023-07-01',
-          ],
-        },
-        tooltip: {
-          x: {
-            format: 'MMMM yyyy',
-          },
-        },
-      };
-
-      const sales_chart = new ApexCharts(
-        document.querySelector('#sales-chart'),
-        sales_chart_options,
-      );
-      sales_chart.render();
-
-      //---------------------------
-      // - END MONTHLY SALES CHART -
-      //---------------------------
-
-      function createSparklineChart(selector, data) {
-        const options = {
-          series: [{ data }],
-          chart: {
-            type: 'line',
-            width: 150,
-            height: 30,
-            sparkline: {
-              enabled: true,
-            },
-          },
-          colors: ['var(--bs-primary)'],
-          stroke: {
-            width: 2,
-          },
-          tooltip: {
-            fixed: {
-              enabled: false,
-            },
-            x: {
-              show: false,
-            },
-            y: {
-              title: {
-                formatter: function (seriesName) {
-                  return '';
-                },
-              },
-            },
-            marker: {
-              show: false,
-            },
-          },
-        };
-
-        const chart = new ApexCharts(document.querySelector(selector), options);
-        chart.render();
-      }
-
-      const table_sparkline_1_data = [25, 66, 41, 89, 63, 25, 44, 12, 36, 9, 54];
-      const table_sparkline_2_data = [12, 56, 21, 39, 73, 45, 64, 52, 36, 59, 44];
-      const table_sparkline_3_data = [15, 46, 21, 59, 33, 15, 34, 42, 56, 19, 64];
-      const table_sparkline_4_data = [30, 56, 31, 69, 43, 35, 24, 32, 46, 29, 64];
-      const table_sparkline_5_data = [20, 76, 51, 79, 53, 35, 54, 22, 36, 49, 64];
-      const table_sparkline_6_data = [5, 36, 11, 69, 23, 15, 14, 42, 26, 19, 44];
-      const table_sparkline_7_data = [12, 56, 21, 39, 73, 45, 64, 52, 36, 59, 74];
-
-      createSparklineChart('#table-sparkline-1', table_sparkline_1_data);
-      createSparklineChart('#table-sparkline-2', table_sparkline_2_data);
-      createSparklineChart('#table-sparkline-3', table_sparkline_3_data);
-      createSparklineChart('#table-sparkline-4', table_sparkline_4_data);
-      createSparklineChart('#table-sparkline-5', table_sparkline_5_data);
-      createSparklineChart('#table-sparkline-6', table_sparkline_6_data);
-      createSparklineChart('#table-sparkline-7', table_sparkline_7_data);
-
-      //-------------
-      // - PIE CHART -
-      //-------------
-
-      const pie_chart_options = {
-        series: [700, 500, 400, 600, 300, 100],
-        chart: {
-          type: 'donut',
-        },
-        labels: ['Chrome', 'Edge', 'FireFox', 'Safari', 'Opera', 'IE'],
-        dataLabels: {
-          enabled: false,
-        },
-        colors: ['#0d6efd', '#20c997', '#ffc107', '#d63384', '#6f42c1', '#adb5bd'],
-      };
-
-      const pie_chart = new ApexCharts(document.querySelector('#pie-chart'), pie_chart_options);
-      pie_chart.render();
-
-      //-----------------
-      // - END PIE CHART -
-      //-----------------
-    </script>
-    <script>
-      document.getElementById("exportButton").addEventListener("click", function() {
-        // Example data (can be your table data or an array of objects)
-        const data = [
-          { Name: "John", Age: 30, City: "New York" },
-          { Name: "Jane", Age: 25, City: "London" },
-          { Name: "Mark", Age: 35, City: "Paris" }
-        ];
-
-        // Convert data to a worksheet
-        const ws = XLSX.utils.json_to_sheet(data);
-
-        // Create a new workbook and append the worksheet
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-
-        // Export the workbook as an Excel file
-        XLSX.writeFile(wb, "ExportedData.xlsx");
-      });
-    </script>
+    
     <!--end::Script-->
   </body>
   <!--end::Body-->
