@@ -342,55 +342,51 @@
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
-            <!-- Begin row -->
-
-
-            <!-- End row -->
-
             <!-- BEGIN ROW -->
-            <div class="row Summary mt-6" >
-                          <!-- Summary -->
+            <div class="row">
+              <h6 class="mb-0 contact_section_header summary mb-2"> </i> SUMMARY</h6>
 
-                    <div class="col-md-12 ">
-                      <div class="summary-section text-center p-2 row">
+              <div class="col-md-3">
+                <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; background-color:white;">
+                  <div class="icon"> <i class="fas fa-clipboard-check"></i></div>
+                  <div>
+                    <div class="label" style="font-weight: bold;">Scheduled Inspections</div>
+                    <div class="value" style="background-color:green;">&nbsp;1,000</div>
+                  </div>
+                </div>
+              </div>
 
-                        <div class="col-6 col-md-3 ">
-                          <div class="summary-item total">
-                            <i class="fas fa-calculator icon"></i>
-                            <div class="label">Total <b class="value" >100</b>  </div>
+              <div class="col-md-3">
+                <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; background-color:white; ">
+                  <div class="icon"><i class="fas fa-check-circle"></i></div>
+                  <div>
+                    <div class="label" style="font-weight: bold;">Completed Inspections </div>
+                    <div class="value penalities" style="background-color:green;"> &nbsp;300</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; background-color:white;">
+                  <div class="icon"> <i class="fas fa-spinner fa-spin"></i>  </div>
+                  <div>
+                    <div class="label" style="font-weight: bold;">In Progress Inspections</div>
+                    <div class="value" style="background-color:#FFC107; color:#00192D;"  > &nbsp;200</div>
+                  </div>
+                </div>
+              </div>
 
-                          </div>
-
-                        </div>
-                        <div class="col-6 col-md-3">
-                          <div class="summary-item completed">
-                            <i class="fa-solid fa-circle-check icon"></i>
-                            <div class="label">Completed <b class="value">30</b></div>
-                          </div>
-                        </div>
-
-                        <div class="col-6 col-md-3 ">
-                          <div class="summary-item in-progress">
-                            <i class="fas fa-spinner fa-spin icon"></i>
-                            <div class="label">In Progress <b class="value">20</b></div>
-                          </div>
-                        </div>
-
-                        <div class="col-6 col-md-3 ">
-                          <div class="summary-item incomplete">
-                            <i class="far fa-check-circle icon"></i>
-                            <div class="label">Incomplete <b class="value">20</b></div>
-                          </div>
-                        </div>
-                      </div>
-
-                    </div>
-
-
-
-
-                                <!-- <span class="value text-center"> <b>100 </b> </span> -->
+              <div class="col-md-3">
+                <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; background-color:white; ">
+                  <div class="icon" style="font-weight: bold;"><i class="fas fa-question-circle"></i>    </div>
+                  <div>
+                    <div class="label" style="font-weight: bold;">Incomplete Inspections</div>
+                    <div class="value" style="background-color:red; color:#00192D;">&nbsp;20</div>
+                  </div>
+                </div>
+              </div>
             </div>
+
+
             <!-- /end row -->
 
             <!-- Begin row -->
@@ -415,13 +411,13 @@
                       <div class="row g-3">
                           <!-- No -->
                           <div class="col-md-3">
-                              <label class="form-label"><b>Expense No</b></label>
+                              <label class="form-label"><b>Inspection No</b></label>
                               <input type="number" class="form-control" placeholder="123">
                           </div>
 
                           <!-- Expense of the Month -->
                           <div class="col-md-5">
-                              <label class="form-label"><b>Expense for the Month of</b></label>
+                              <label class="form-label"><b> Month</b></label>
                               <select class="form-select">
                                   <option selected disabled>Select Month</option>
                                   <option>January</option>
@@ -455,7 +451,7 @@
 
 
 
-                      <!-- Expense Table -->
+                      <!-- Expense Table
                       <div class="row g-3 mt-2">
                           <h6 class="text-center" style="color:linear-gradient(to right, #00192D, #003D5B, #00788D) ;"> <b>Add the Spend items in the fields below</b> </h6>
                           <table class="table table-bordered table-hover table-striped">
@@ -501,16 +497,16 @@
                                   </tr>
                               </tbody>
                           </table>
-                      </div>
+                      </div> -->
 
                       <div class="row g-3 mt-2">
-                          <div class="col-6">
+                          <!-- <div class="col-6">
                               <button type="button" class="btn btn-custom btn-sm" id="addRow">
                                 <i class="fa fa-plus"></i>
-                                Add More</button>
-                          </div>
-                          <div class="col-6 mt-2 d-flex justify-content-end">
-                              <button type="submit" class="btn btn-custom btn-sm" style="height: fit-content;"> Submit</button>
+                              SUBMIT</button>
+                          </div> -->
+                          <div class="col-12 mt-2 d-flex justify-content-end">
+                              <button type="submit" class="btn btn-custom btn-sm" style="height: fit-content; color:#FFC107;">  SUBMIT</button>
                           </div>
                       </div>
 
@@ -520,8 +516,10 @@
       </div>
       </div>
     </div>
-  </div>
-  </div>
+  <!-- </div> -->
+  <!-- </div> -->
+
+
 <!-- /end row -->
 
 
@@ -646,7 +644,7 @@
                           <div class="row">
 
                             <div class="col-md-6">
-                              <label class="form-label"> Inpection Date</label>
+                              <label class="form-label"> Inspection Date</label>
                               <input type="date" class="form-control" placeholder="Ebenezer">
                             </div>
 
@@ -689,7 +687,7 @@
                                 <td><textarea></textarea></td>
                               </tr>
                               <tr>
-                                <td>Flooring</td>
+                                <td>Floor</td>
                                 <td class="radio-group">
                                   <label><input type="radio" name="flooring" value="Good"> Good</label>
                                   <label><input type="radio" name="flooring" value="Fair"> Fair</label>
@@ -867,7 +865,7 @@
                                 <td><textarea></textarea></td>
                               </tr>
                               <tr>
-                                <td>Flooring</td>
+                                <td>Floor</td>
                                 <td class="radio-group">
                                   <label><input type="radio" name="flooring" value="Good"> Good</label>
                                   <label><input type="radio" name="flooring" value="Fair"> Fair</label>
@@ -1123,7 +1121,7 @@
                                 <input type="text" class="form-control" placeholder="Ebenezer">
                               </div>
                               <div class="col-md-6">
-                                <label class="form-label">Unity Number</label>
+                                <label class="form-label">Unit Number</label>
                                 <input type="number" class="form-control" placeholder="Ebenezer">
                               </div>
                             </div>
@@ -1143,7 +1141,7 @@
                             <div class="row">
 
                               <div class="col-md-6">
-                                <label class="form-label"> Inpection Date</label>
+                                <label class="form-label"> Inspection Date</label>
                                 <input type="date" class="form-control" placeholder="Ebenezer">
                               </div>
 
@@ -1187,7 +1185,7 @@
                                   <td><textarea></textarea></td>
                                 </tr>
                                 <tr>
-                                  <td>Flooring</td>
+                                  <td>Floor</td>
                                   <td class="radio-group">
                                     <label><input type="radio" name="flooring" value="Good"> Good</label>
                                     <label><input type="radio" name="flooring" value="Fair"> Fair</label>
@@ -1366,7 +1364,7 @@
                                   <td><textarea></textarea></td>
                                 </tr>
                                 <tr>
-                                  <td>Flooring</td>
+                                  <td>Floor</td>
                                   <td class="radio-group">
                                     <label><input type="radio" name="flooring" value="Good"> Good</label>
                                     <label><input type="radio" name="flooring" value="Fair"> Fair</label>
@@ -1651,24 +1649,28 @@
                               <thead class="mb-2">
                               <tr>
                                   <th>Date</th>
-                                  <th>Inspection NO</th>
-                                  <th>TYPE</th>
                                   <th>PROPERTY</th>
                                   <th>UNIT</th>
+                                  <th>TYPE</th>
+                                  <th>Inspection No</th>
                                   <th>INSPECTOR</th>
+                                  <th>Attached Files</th>
+                                  <th>STATUS</th>
                                   <th>ACTION</th>
-
                               </tr>
                               </thead>
                               <tbody>
                               <tr >
-                                  <td> 11/13/2024 </td>
-                                  <td>004DE</td>
-                                  <td>Regular</td>
+                                  <td>11/13/2024 </td>
                                   <td>Manucho APARTMENTS </td>
-                                  <td> C39</td>
+                                  <td>C39</td>
+                                  <td>Bed-sitter</td>
+                                  <td>123</td>
                                   <td>Keroche Farms</td>
-
+                                  <td></td>
+                                 <td><div class="status completed">
+                                  <i class="fas fa-clipboard-check"></i>
+                                  Completed Inspection</div></td>
                                   <td id="more">
                                     <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fas fa-eye"></i>
                                     </button>
@@ -1683,43 +1685,23 @@
                                 </form>
                                   </td>
                               </tr>
-                              <tr>
-                                <td> 11/13/2024 </td>
-                                <td>004DE</td>
-                                <td>Ad hoc</td>
+                              <tr >
+                                <td>11/13/2024 </td>
                                 <td>Manucho APARTMENTS </td>
-                                <td> C39</td>
+                                <td>C20</td>
+                                <td>Bed-sitter</td>
+                                <td>123</td>
                                 <td>Keroche Farms</td>
-
+                                <td></td>
+                                <td><div class="status in-progress">
+                                  <i class="fas fa-spinner fa-spin"></i>
+                                  In Progress Inspection</div></td>
                                 <td id="more">
                                   <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fas fa-eye"></i>
                                   </button>
-                                  <button class="btn btn-sm" style="background-color: #0C5662; color:#FFCCCC; margin-right: 2px;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-trash"></i></button>
-                                  <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-edit"></i></button>
-                                                              <!-- File Upload Section -->
-                                  <form action="/upload" method="POST" enctype="multipart/form-data">
-                                    <label for="fileUpload" class="attachment-icon">
-                                        📎 <!-- Attachment Icon -->
-                                    </label>
-                                    <input type="file" id="fileUpload" name="fileUpload" class="file-input" style="display:none;" onchange="submitForm()">
-                                </form>
-                                </td>
-                              </tr>
-
-                              <tr>
-                                <td> 11/13/2024 </td>
-                                <td>004DE</td>
-                                <td>Ad hoc</td>
-                                <td>Manucho APARTMENTS </td>
-                                <td> C39</td>
-                                <td>Keroche Farms</td>
-
-                                <td id="more">
-                                  <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fas fa-eye"></i>
-                                  </button>
-                                  <button class="btn btn-sm" style="background-color: #0C5662; color:#FFCCCC; margin-right: 2px;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-trash"></i></button>
-                                  <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-edit"></i></button>
-                                                            <!-- File Upload Section -->
+                                  <button class="btn btn-sm" style="background-color:  #193042; color:#FFCCCC; margin-right: 2px; " data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-trash"></i></button>
+                                  <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-edit"></i></button>
+                                                                <!-- File Upload Section -->
                                 <form action="/upload" method="POST" enctype="multipart/form-data">
                                   <label for="fileUpload" class="attachment-icon">
                                       📎 <!-- Attachment Icon -->
@@ -1728,6 +1710,32 @@
                               </form>
                                 </td>
                             </tr>
+
+                            <tr >
+                              <td>11/13/2024 </td>
+                              <td>Manucho APARTMENTS </td>
+                              <td>C25</td>
+                              <td>Bed-sitter</td>
+                              <td>123</td>
+                              <td>Keroche Farms</td>
+                              <td></td>
+                              <td> <div class="status incomplete">
+                                <i class="fas fa-question-circle"></i>
+                                Incomplete Inspection</div></td>
+                              <td id="more">
+                                <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-sm" style="background-color:  #193042; color:#FFCCCC; margin-right: 2px; " data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-trash"></i></button>
+                                <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-edit"></i></button>
+                                                              <!-- File Upload Section -->
+                              <form action="/upload" method="POST" enctype="multipart/form-data">
+                                <label for="fileUpload" class="attachment-icon">
+                                    📎 <!-- Attachment Icon -->
+                                </label>
+                                <input type="file" id="fileUpload" name="fileUpload" class="file-input" style="display:none;" onchange="submitForm()">
+                            </form>
+                              </td>
+                          </tr>
                               <!-- Add more rows as needed -->
                               </tbody>
 

@@ -785,12 +785,14 @@ display: flex;
                           <label for="message">Message</label>
                           <textarea id="message" placeholder="Type your message here..."></textarea>
                         </div>
-  <!-- File input for multiple file types -->
-  <input type="file" id="fileInput" onchange="handleFiles(event)" class="form-control" multiple>
+                        <!-- File input for multiple file types -->
 
-  <!-- Section to display selected files' previews and sizes -->
-  <div id="filePreviews"></div>
+                        <div style="padding-bottom: 2%;">
+                        <input type="file" id="fileInput" onchange="handleFiles(event)" class="form-control" multiple>
 
+                        <!-- Section to display selected files' previews and sizes -->
+                        <div id="filePreviews"></div>
+                      </div>
 
                         <div class="actions d-flex justify-content-end">
                           <button class="draft-btn text-danger btn">Cancel</button>
@@ -813,7 +815,6 @@ display: flex;
 
 <!-- !-- create new text -->
 
-<<<<<<< HEAD
 <script>
   // Function to handle multiple files selection
   function handleFiles(event) {
@@ -876,9 +877,7 @@ display: flex;
   }
 </script>
 
-=======
 <script src="view.js"></script>
->>>>>>> b4899408067f2b55474c46e9f637292a6f4c06d9
 
 
 <script>
