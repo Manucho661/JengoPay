@@ -1,0 +1,333 @@
+a{
+    text-decoration: none;
+}
+
+body{
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff;
+}
+
+                                                        /* HEADER SECTION */
+.contact_section_header{
+  font-weight: 600;
+  letter-spacing: .5px;
+  margin-right: 2px;
+  color: #767676;
+}
+
+.contact_section_header .icon{
+  color: #FFC107;
+}
+
+.contact_section_header .building{
+color: #00192D;
+}
+.month{
+  /* color: rgb(41, 41, 41); */
+  font-weight: 500px;
+  font-size: 14px;
+  color: green;
+  background-color: rgba(128,128,128,0.2);
+  padding-bottom: 0px;
+  border-radius: 10px;
+vertical-align: middle;
+padding: 0px 4px;
+height: fit-content;
+margin-top: 2px;
+margin-left: 2px;
+
+}
+                                                  
+                                                     /* SUMMARY */
+                                                    .contact_section_header.summary{
+                                                      border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+                                                      width:80%;
+                                                    }
+                                                    .summary-item{
+                                                      background: white;
+                                                      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+                                                      padding-left: 5px;
+                                                      border-radius: 5px;
+
+                                                    }
+                                                    .summary-item .label{
+                                                      font-weight: 600;
+                                                      font-size: 16px;
+                                                      color: #767676;
+                                                    }
+                                                    .summary-item .icon{
+                                                      font-weight: 600;
+                                                      font-size: 16px;
+                                                      color: #FFC107;
+                                                    }
+                                                    .summary-item .value{
+                                                      color: #00192D;
+                                                      font-weight: 600;
+                                                      font-size: 16px;
+                                                    }
+                                                    .summary-item .value.penalities{
+                                                    background-color: #F87171	;
+                                                    border-radius: 5px;
+                                                    height: fit-content;
+                                                    color: white;
+                                                    margin-bottom: 2px;
+                                                    padding-left: 2px;
+                                                    }   
+
+
+ /* TABLE */
+ table{
+  border-radius: 200px !important;
+  width: 100%;
+}
+table, th, td {
+  border: 1px solid #ddd;
+}
+th, td {
+  text-align: left !important; /* Align text for readability */
+  vertical-align: middle; /* Centers text vertically */
+}
+thead{
+  position: sticky;
+}
+td{
+  font-size: 14px !important;
+
+  /* align-items: center; */
+}
+
+th{
+  font-size: 12px !important;
+  letter-spacing: .5px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+
+
+th:nth-child(4), td:nth-child(4) {
+  text-align: left !important; /* Align provider names to the left */
+}
+th, td {
+  padding: 12px 15px !important; /* Top-bottom: 12px, Left-right: 15px */
+
+}
+
+th, td {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important; /* Add '...' if text overflows */
+}
+th {
+  font-weight: 600 !important;
+  /* text-transform: uppercase !important; */
+  /* background-color: #f4f4f4 !important; Light background for contrast */
+  border-bottom: 2px solid #ddd !important;
+  background: #00192D    !important ;
+  color: white !important;
+}
+/* contents */
+td{
+  background: #EFF2F5;
+}
+.month{
+  color: rgb(41, 41, 41);
+}
+.rent{
+  color: black;
+  font-weight: 600;
+  font-size: 16px;
+}
+.rent.paid{
+   display: flex; 
+  font-weight: 600;
+  font-size: 16px;
+  height: 100%;
+}
+.rent.paid .date{
+  font-weight: 400px;
+  font-size: 10px;
+  color: green;
+  background-color: rgba(128,128,128,0.2);
+  padding-bottom: 0px;
+  border-radius: 10px;
+vertical-align: middle;
+padding: 0px 4px;
+height: fit-content;
+margin-top: 2px;
+margin-left: 2px;
+
+}
+.pen.amount{
+  background-color: #e74c3c;
+  width: fit-content;
+  padding:0 10px;
+  border-radius: 2px;
+  color: white;
+}
+.deadline{
+  background-color: #e74c3c;
+  width: fit-content;
+  padding-bottom: 0px;
+  border-radius: 5px;
+vertical-align: middle;
+padding: 0px 4px;
+height: fit-content;
+margin-top: 2px;
+margin-left: 2px;
+font-size: 10px;
+padding: 2px 4px;
+
+}
+.rent.arrears{
+  color: black;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+/* Penalit */
+.rent.penalit{
+  /* background-color: #F87171	; */
+  width: fit-content;
+  padding:0 10px;
+  border-radius: 2px;
+  /* color: white; */
+  color: #00192D;
+}
+.rent.lateDays{
+color: #e74c3c;
+font-weight: 400px;
+font-size: 14px;
+}
+
+/* RENT INFO */
+.rent-info.filter{
+  background-color: white;
+  padding: 5px;
+  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid gray;
+}
+.pdf {
+ border: 1px solid #FFC107;
+ margin-right: 3px;
+ border-radius: 5px;
+}
+.excel{
+ border: 1px solid #FFC107;
+ border-radius: 5px;
+}
+.rent-info{
+ background-color: white;
+ border-top-right-radius: 5px;
+ border-top-left-radius: 5px;
+}
+
+/* SELECT ELEMENT CONTAINER */
+.select-option-container{
+
+  width: 170px; 
+ position: relative;
+ }
+ .caret{
+     font-size: 12px;
+     color: grey;
+ }
+ .custom-select{
+     position: relative;
+     padding:10px 20px;
+     color: #999;
+     border: 1px solid #00192D;
+     border-radius: 5px;
+     font-size: 16px;
+     background-color: #fff;
+     cursor: pointer;
+     margin-right: 20px;
+     width: 100%;
+     
+     
+ }
+ .custom-select:hover{
+   border: 1px solid #FFC107;
+ 
+ }
+ .custom-select:focus{
+   border-color: #FFC107;
+   outline: none;
+   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+ }
+ 
+ .custom-select:after{
+     border-bottom: 2px solid #999;
+     border-right: 2px solid #999;
+     content: '';
+     display: block;
+     height: 5px;
+     margin-top: -4px;
+     pointer-events: none;
+     position: absolute;
+     right: 12px;
+     top: 50%;
+     -webkit-transform-origin: 66% 66%;
+     -ms-transform-origin: 66% 66%;
+     transform-origin: 66% 66%;
+     -webkit-transform: rotate(45deg);
+     -ms-transform: rotate(45deg);
+     transform: rotate(45deg);
+     -webkit-transition: all 0.15s ease-in-out;
+     transition: all 0.15s ease-in-out;
+     width: 5px;
+ }
+ .custom-select.open:after {
+   transform: rotate(-135deg);
+ }
+ 
+ .select-options{
+       background-color: white;
+       position: absolute;
+       top: 100%;
+       left: 0;
+       right: 0;
+       background: white;
+       border: 1px solid #ccc;
+       border-top: none;
+       z-index: 10;
+       max-height: 200px;
+       overflow-y: auto;
+       border-radius: 5px;
+       color: gray;
+       
+       display: none;   
+       /* border-radius: 0 0 8px 8px; */
+ 
+ }
+ .select-options div {
+       padding: 12px;
+       cursor: pointer;
+       transition: background 0.3s;
+     }
+ .select-options div.selected {
+       background-color: #00192D;
+       color: #FFC107;
+   }
+       
+ .select-options div:hover {
+       background-color: #00192D !important;
+       color: #FFC107 !important;
+ 
+ }
+ .filter-boxes{
+   gap:15px;
+ }
+
+                              /* BUTTONS */
+                              .view{
+                                height: fit-content;
+                                padding: 2px 8px;
+                                font-size: 12px;
+                                background-color: transparent;
+                                color: #00192D;
+                                border: 1px solid #FFC107;
+                          }

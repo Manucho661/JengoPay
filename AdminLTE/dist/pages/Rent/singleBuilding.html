@@ -56,8 +56,7 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="individualBuilding.css">
-
+    <link rel="stylesheet" href="singleBuilding.css">
 
     <!-- scripts for data_table -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
@@ -74,10 +73,10 @@
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
-    <div class="app-wrapper">
-      <!--begin::Header-->
+    <div class="app-wrapper" style="background-color:rgba(128,128,128, 0.1);">
+           <!--begin::Header-->
       <nav class="app-header navbar navbar-expand bg-body">
-        <!--begin::Container-->
+             <!--begin::Container-->
         <div class="container-fluid">
           <!--begin::Start Navbar Links-->
           <ul class="navbar-nav">
@@ -325,7 +324,7 @@
                 <div class="d-flex">
                   <h3 class="contact_section_header"> <i class="fas fa-house-user icon"></i>  
                     Rental Roll &nbsp;/&nbsp;<span class="building">Ebenezer</span></h3>
-                    <h6 class="month">April</h6>
+                    <h6 class="month" style="color: green;">April-2025</h6>
                 </div>               
                 
               </div>
@@ -338,365 +337,287 @@
                         <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
                       </ol> 
                 </div>
-
-                <div class="row d-flex">
-                </div>
-
               </div>
             </div>
-
             <!-- End first Row -->
 
-            <!-- ROW -->
-                    <div class="row mt-2">
-                      <h6 class="contact_section_header summary mb-2"> </i> Summary</h6>
-                      <div class="col-md-12">
-
-                        <div class="row">
-
-                          <div class="col-md-3 units">
-
-                            <div class="summary-item units" style="display: flex; gap: 10px;   align-items: center; ">
-                              <div class="icon"> <i class="fas fa-building"></i></div>
+            <!-- START ROW -->
+                                           <!-- SUMMARY -->
+                                           <div class="row">
+                                            <h6 class="mb-0 contact_section_header summary mb-2"> </i> Summary</h6>
                               
-                                <div class="label">Units,</div>
-                                <div class="value"> &nbsp;50</div>
+                                            <div class="col-md-3">
+                                              <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; ">
+                                                <div class="icon"> <i class="fas fa-coins"></i></div>
+                                                <div>
+                                                  <div class="label">Collected</div>
+                                                  <div class="value"> $&nbsp;100,000</div>
+                                                </div>
+                                              </div>
+                                            </div>
+                              
+                                            <div class="col-md-3">
+                                              <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; ">
+                                                <div class="icon"> <i class="fas fa-coins"></i></div>
+                                                <div>
+                                                  <div class="label">Penalities</div>
+                                                  <div class="value penalities"> $&nbsp;1,000</div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                              <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; ">
+                                                <div class="icon"> <i class="fas fa-coins"></i></div>
+                                                <div>
+                                                  <div class="label">Arreas</div>
+                                                  <div class="value"> $&nbsp;30,000</div>
+                                                </div>
+                                              </div>
+                                            </div>
+                              
+                                            <div class="col-md-3">
+                                              <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; ">
+                                                <div class="icon"> <i class="fas fa-coins"></i></div>
+                                                <div>
+                                                  <div class="label">Overpayment</div>
+                                                  <div class="value"> $&nbsp;20,000</div>
+                                                </div>
+                                              </div>
+                                            </div>
+                              
+                                           
+                                          </div>
+                                          <!-- END ROW -->
+
+                                          <!-- START ROW -->
+             <div class="row mt-4">
+
+
+              <!-- <div class="row"> -->              
+                <h6 class="mb-0 contact_section_header summary mb-2"> </i> Details</h6>
+
+                  <div class="col-md-12">
+                    <div class="rent-info">
+                        <div class="rent-info filter ">
+                          <div class="filter-boxes d-flex">
+
+                            <div class="select-option-container mt-3">
+                              <div class="custom-select">All Buildings</div>
+                              <div class="select-options mt-1">
+                                <div class="selected" data-value="item1">All Buildings</div>
+                                <div data-value="item1">Manucho</div>
+                                <div data-value="item2">Ebenezer</div>
+                                <div data-value="item3">Crown Z</div>
+                              </div>
                             </div>
-    
+
+                            <div class="select-option-container mt-3">
+                              <div class="custom-select">2025</div>
+                              <div class="select-options mt-1">
+                                <div class="selected"  data-value="item1">2025</div>
+                                <div data-value="item2">2024</div>
+                                <div data-value="item3">2023</div>
+                              </div>
+                            </div>
+
+                            <div class="select-option-container mt-3">
+                              <div class="custom-select">April</div>
+                              <div class="select-options mt-1">
+                                <div class="selected" data-value="item1">April</div>
+                                <div data-value="item1">January</div>
+                                <div data-value="item2">February</div>
+                                <div data-value="item3">March</div>
+                              </div>
+                            </div>
                           </div>
 
-                          <div class="col-md-3 occupied">
-
-                            <div class="summary-item occupied" style="display: flex; gap: 10px;   align-items: center; ">
-                              <div class="icon"> <i class="fas fa-building"></i></div>
-                              
-                                <div class="label">occupied,</div>
-                                <div class="value"> &nbsp;20</div>
-                              
-                            </div>
-    
+                          <div class="pdf-excel">
+                            <button class="pdf" ><i class="fas fa-file-pdf" style="color: red;"></i></button>
+                            <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button>
                           </div>
-
-                          <div class="col-md-3 units">
-
-                            <div class="summary-item paid" style="display: flex; gap: 10px;   align-items: center; ">
-                              <div class="icon"> <i class="fas fa-coins"></i></div>
-                              
-                                <div class="label">Paid,</div>
-                                <div class="value">$&nbsp;30,000</div>
-                              
-                            </div>
-    
-                          </div>
-
-                          <div class="col-md-3 units">
-
-                            <div class="summary-item pending" style="display: flex; gap: 10px;   align-items: center; ">
-                              <div class="icon"> <i class="fas fa-coins"></i></div>
-                              
-                                <div class="label">Pending,</div>
-                                <div class="value">$&nbsp;20,000</div>
-                              
-                            </div>
-    
-                          </div>
-
                         </div>
+                        <div class="rentTable section">
+                          <table id="rent" class="tableRent" style="font-size: small;" >
+                            <thead>
+                                <tr>
+                                        <th scope="col">Tenant + unit</th>
+                                        <th scope="col">
+                                          <div>Paid</div>
+                                          
+                                        </th>
+                                        <th scope="col">Penalities</th>
+                                        <th scope="col">Arreas</th>
+                                        <th scope="col">Overpayment</th>
+                                        <th scope="col">Action</th>
+                                        
+                                </tr>
+                            </thead>
+                            <tbody>
+                             <tr onclick="window.location.href=''">
+                                <th>
+                                  <div class="d-flex justify-content-between">
+                                    <div>Manucho </div>
+                                    <div class="value" style="color:#FFC107">&nbsp;EB210</div> 
 
-                      </div>
+                                  </div>
+                                
+                                     
+                              
+                                                                  
+                                </th>
+                                    <td >
+                                      <div class="rent paid">
+                                        <div>$&nbsp;80,000</div>
+                                        <div class="date">25-April</div>
+                                      </div>
+                                      
+                                    </td>
 
-                      
-                    </div>
+                                    <td >
+                                      <div class="rent penalit">$&nbsp;2000 (<span class="rent lateDays">-5</span>)</div>
+                                    </td>
 
+                                    <td class="rent collected">$&nbsp; 3,000</td>
+                                    <td class="rent overpayment">$&nbsp; 500</td>
+                                    
+                                  <td>
+                                    <button class="btn view">View</button>
+                                  </td>
+                              </tr>
+                              <tr onclick="window.location.href=''">
+                              <th>
 
+                                <div class="d-flex justify-content-between">
+                                  <div>Sixtus </div>
+                                  <div class="value" style="color:#FFC107">&nbsp;EB320</div> 
 
-            <!-- END ROW -->
-
-            <!-- Second row start -->
-             <div class="row first mb-2 mt-3">
-
-                <div class="col-md-6 d-flex justify-content-between">
-                  <button id="rent_details_btn" class="btn">  <i class="fas fa-calendar-check icon"></i> <a href="profile.html"> <b> Records </b> </a> </button>
-
-                  <button id="agreements_btn" class="btn"><i class="fas fa-calendar-check icon"></i>
-                       <a href="agreements.html"> <b> Agreements </b> </a>  </button>
-      
-                      
-
-
-                </div>
-
-                <div class="col-md-6">
-                  <div style="display: flex; justify-content: end;">
-
-
-                  </div>
-                </div>
-              <!-- /.col -->
-            </div>
-
-
-            <div class="row mt-3"> <!-- second row -->
-
-              <div class="col-md-12">
-                <div class="card">
-
-
-                  <div class="card-body">
-                    <table id="rent" class="display" style="font-size: small;" >
-                        <thead>
-                            <tr>
-                                <th scope="col">TENANT</th>
-                                    <th scope="col">AMOUNT PAID</th>
-                                    <th scope="col">PAYMENT DATE</th>
-                                    <th scope="col">RENT OVERDUE</th>
-                                    <th scope="col">DAYS OVERDUE</th>
-
-                                    <th scope="col">ACTION</th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">KELVIN</th>
-                                    <td>KSH 10,000</td>
-                                    <td>1/3/2030</td>
-                                    <td>KSH 10,000</td>
-                                    <td> 12</td>
-                                  <td>  
-                                    <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                                    </button> -->
-                                    <button class="btn btn-sm" style="background-color: #FFC107; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-bell"></i></button>
-                                    <a href="view_monthly_exp_details.php" class="btn btn-sm view-btn"> <i class="fa fa-eye"></i> View</a>
+                                </div>
+                              </th>
+                                  <td>
+                                    <div class="rent paid">
+                                      <div>$&nbsp;70,000</div>
+                                      <div class="date">27-April</div>
+                                    </div>
 
                                   </td>
-                            </tr>
-                            <tr>
-                            <th scope="row">JOEL</th>
-                            <td>KSH 20,0000</td>
-                            <td>1/3/2029</td>
-                            <td>1000</td>
-                            <td>12</td>
-                            <td> 
-                              <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                              </button> -->
-                              <button class="btn btn-sm" style="background-color: #FFC107; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-bell"></i></button>
+                                  <td>
+                                    <div class="rent penalit">$&nbsp;0</div>
+                                    </td>
+                                  <td class="rent collected">$&nbsp;2,000</td>
+                                  <td class="rent overpayment">$&nbsp; 500</td>                                    
+                                <td>
+                                  <button class="btn view">View</button>
+                                </td>
+                              </tr>
+                              <tr onclick="window.location.href=''">
+                                <th> 
+                                  <div class="d-flex justify-content-between">
+                                    <div>Mark </div>
+                                    <div class="value" style="color:#FFC107">&nbsp;EB222</div> 
 
-                              <a href="view_monthly_exp_details.php" class="btn btn-sm view-btn"> <i class="fa fa-eye"></i> View</a>
-                            </td>
-
-
-                            </tr>
-                            <tr>
-                                <th scope="row">FRED</th>
-                            <td>KSH 10000</td>
-                            <td>2/4/2020</td>
-                            <td> 10000</td>
-                            <td>13</td>
-
-                            <td> 
-                              <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                              </button> -->
-                              <button class="btn btn-sm" style="background-color: #FFC107; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-bell"></i></button>
-
-                              <a href="view_monthly_exp_details.php" class="btn btn-sm view-btn"> <i class="fa fa-eye"></i> View</a>
-                            </td>
-
-                                </tr>
-
-                                <tr>
-                                    <th scope="row">FRED</th>
-                                <td>KSH 10000</td>
-                                <td>2/4/2020</td>
-                                <td> 10000</td>
-                                <td>13</td>
-
+                                  </div>
+                                </th>
+                                <td>
+                                  <div class="rent paid">
+                                    <div>$&nbsp;90,000</div>
+                                    <div class="date">27-April</div>
+                                  </div>
+                                </td>
                                 <td> 
-                                  <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                                  </button> -->
-                                  <button class="btn btn-sm" style="background-color: #FFC107; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-bell"></i></button>
+                                  <div class="rent penalit">$&nbsp;1000 (<span class="rent lateDays">-3</span>) </div>
+                                </td>
+                                <td class="rent collected">$&nbsp;5,000</td>
+                                <td class="rent overpayment">$&nbsp;300</td>
+                                
+                              <td>
+                                <button class="btn view">View</button>
 
-                                  <a href="view_monthly_exp_details.php" class="btn btn-sm view-btn"> <i class="fa fa-eye"></i> View</a>
-                                </td>  
-                                    </tr>
+                              </td>
+                          </tr>
 
-                                    <tr>
-                                        <th scope="row">FRED</th>
-                                    <td>KSH 10000</td>
-                                    <td>2/4/2020</td>
-                                    <td> 10000</td>
-                                    <td>13</td>
+                            <tr onclick="window.location.href=''">
+                              <th>
+                                <div class="d-flex justify-content-between">
+                                  <div>Linet </div>
+                                  <div class="value" style="color:#FFC107">&nbsp;EB180</div> 
 
-                                    <td>
-                                      <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                                      </button> -->
-                                      <button class="btn btn-sm" style="background-color: #FFC107; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-bell"></i></button>
+                                </div>
+                              
+                              </th>
+                              <td>
 
-                                      <a href="view_monthly_exp_details.php" class="btn btn-sm view-btn"> <i class="fa fa-eye"></i> View</a>
-                                    </td>  
-                                        </tr>
-                                        <tr>
-                                        <th scope="row">FRED</th>
-                                        <td>KSH 10000</td>
-                                        <td>2/4/2020</td>
-                                        <td> 10000</td>
-                                        <td>13</td>
+                                <div class="rent paid">
+                                  <div>$&nbsp;80,000</div>
+                                  <div class="date">2-May</div>
+                                </div>
+                              </td>
+                              <td  > 
 
-                                        <td>                               
-                                          <button class="btn btn-sm" style="background-color: #FFC107; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-bell"></i></button>
-                                          <a href="view_monthly_exp_details.php" class="btn btn-sm view-btn"> <i class="fa fa-eye"></i> View</a>
-                                        </td>  
-                                            </tr>
+                                <div class="rent penalit">$&nbsp;1000 (<span class="rent lateDays">-2</span>) </div>
+
+                              </td>
+                              <td class="rent collected">$&nbsp;9,000</td>
+                              <td class="rent overpayment">$&nbsp;300</td>
+                             
+                            <td>
+                              <button class="btn view">View</button>
+                            </td>
+                              </tr>
+
+
+                        <tr onclick="window.location.href=''">
+                          <th>
+
+                            <div class="d-flex justify-content-between">
+                              <div>Caroline </div>
+                              <div class="value" style="color:#FFC107">&nbsp;EB24</div> 
+
+                            </div>
+                          </th>
+                            <td>
+
+                              <div class="rent paid">
+                                <div>$&nbsp;90,000</div>
+                                <div class="date">2-May</div>
+                              </div>
+                            </td>
+                            <td> 
+                              <div class="rent penalit">$&nbsp;0</div>
+                            </td>
+                            <td class="rent collected">$&nbsp;9,000</td>
+                            <td class="rent overpayment" >$&nbsp;1000</td>                              
+                          <td>
+                            <button class="btn view">View</button>
+                          </td>
+                        </tr>    
                         </tbody>
                     </table>
+
+                        </div>
+                    </div>
                   </div>
+                  
 
-                  <div class="card-footer">
-
-                  </div>
-
-                </div>
-              </div>
-            </div>
-
-
-<!-- notification popup -->
-<div class="notificationpopup-overlay" id="notificationPopup">
-  <div class="notificationpopup-content">
-    <button class="close-btn text-secondary" onclick="closenotificationPopup()">×</button>
-    <h2 style="color: #00192D;">Notification</h2>
-
-    <label for="property">Recepients:</label>
-    <select id="property" class="property"><br>
-      <option value=""disabled>Select Recepient</option>
-      <option value="High">Manucho</option>
-      <option value="Moderate">Ben 10</option>
-      <option value="Low">Alpha</option>
-    </select>
-
-    <textarea id="notes" name="notes" rows="10" cols="98" placeholder="Enter any additional information..."></textarea>
-
-      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
-  </div>
-</div>
-<!-- End Notification popup -->
-
-<script>
-  $(document).ready(function() {
-      $('#rent').DataTable({
-          "lengthChange": false,
-          "dom": 'Bfrtip',
-          "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-      });
-  });
-</script>
-
-<!--
-        <div class="overlaying" id="overlaying">
-          <div class="invoicing-container">
-          <div class="receipt-container" id="receipt">
-            <button class="close-btn" onclick="closeOverlay()">×</button>
-            <h2>Payment Receipt</h2>
-            <p> Nairobi,  KENYA</p>
-            <p><strong>Date:</strong> <span id="date"></span></p>
-
-            <table>
-              <td>Manucho Apartments</td>
-              <td>John</td>
-              <th>A11</th>
-              <td>KSH80,000</td>
-              <td>KSH80,000</td>
-              <td>MPESA</td>
-              <td>TBM34KGNJ8</td>
-              <td>10-12-2025</td>
-              <td>KSH0</td>
-            </table>
+           </div>
+          <!-- END ROW -->
+         
+          </div>
         </div>
+      </div>
 
-        <button class="print-btn" onclick="printReceipt()">Print Receipt</button>
-     -->
-
-
-    <!--end::App Wrapper-->
-    <!--begin::Script-->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
-
- <!-- dowload as pdf -->
- <script>
-  document.getElementById("generateReport").addEventListener("click", function () {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-
-      // Title
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(18);
-      doc.text("Rent Deposit Report", 70, 20);
-
-      doc.setFontSize(12);
-      doc.setFont("helvetica", "normal");
-
-      // Report Data
-      let y = 40;
-      const lineSpacing = 10;
-      const reportData = [
-          ["Tenant Name:", "John Doe"],
-          ["Property:", "Greenview Apartments"],
-          ["Amount Collected:", "KSH 30,000"],
-          ["Date of Collection:", "2025-01-10"],
-          ["Maintenance Costs Deducted:", "KSH 5,000"],
-          ["Cleaning Fees:", "KSH 2,000"],
-          ["Amount Refunded:", "KSH 23,000"],
-          ["Date of Refund:", "2025-02-15"]
-      ];
-
-      reportData.forEach(row => {
-          doc.text(`${row[0]} ${row[1]}`, 20, y);
-          y += lineSpacing;
-      });
-
-      // Footer
-      doc.setFontSize(10);
-      doc.text("Generated by Greenview Apartments Management", 50, y + 10);
-
-      // Save PDF
-      doc.save("Rent_Deposit_Report.pdf");
-  });
-</script>
-<!-- end download as pdf -->
-
-
-<!-- create notification -->
-<script>
-  // Function to open the complaint popup
-  function opennotificationPopup() {
-    document.getElementById("notificationPopup").style.display = "flex";
-  }
-
-  // Function to close the complaint popup
-  function closenotificationPopup() {
-    document.getElementById("notificationPopup").style.display = "none";
-  }
-</script>
-
-    <!-- script for notification overlay -->
-
-    <script>
-      function showOverlay() {
-        document.getElementById('notificationOverlay').style.display = 'flex';
-      }
-
-      function closeOverlay() {
-        document.getElementById('notificationOverlay').style.display = 'none';
-      }
-    </script>
-
-
-<!-- close overlay -->
-<script>
-  function closeOverlay() {
-    document.querySelector('.overlay').style.display = 'none';
-  }
-</script>
+          <footer class="app-footer">
+            <!--begin::To the end-->
+            <div class="float-end d-none d-sm-inline">Anything you want</div>
+            <!--end::To the end-->
+            <!--begin::Copyright-->
+            <strong>
+              Copyright &copy; 2014-2024&nbsp;
+              <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;"> JENGO PAY</a>.
+            </strong>
+            All rights reserved.
+            <!--end::Copyright-->
+          </footer>
+          <!--end::Footer-->     
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -712,55 +633,11 @@
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
 
 
-<!-- Begin script for datatable
-<script>
-  $(document).ready(function() {
-   $('#rent').DataTable({
-       "paging": true,
-       "searching": true,
-       "info": true,
-       "lengthMenu": [5, 10, 25, 50],
-       "language": {
-           "search": "Filter records:",
-           "lengthMenu": "Show _MENU_ entries"
-       }
-   });
-}); -->
 
-<!-- <script>
-$(document).ready(function() {
-   $('#agreements').DataTable({
-       "paging": true,
-       "searching": true,
-       "info": true,
-       "lengthMenu": [5, 10, 25, 50],
-       "language": {
-           "filter": "Search ",
-           "lengthMenu": "Show _MENU_ entries"
-       }
-   });
-});
-
-</script> -->
 
 </script>
 
-<script>
 
-  // JavaScript to handle hover and hide functionality
-  const  more= document.getElementById("more");
-  const more_icon = document.getElementById("more_icon");
-  const more_options = document.getElementById("more_options");
-
-  // Show panel when hovering over the accordion
-  more_icon.addEventListener("mouseenter", () => {
-    more_options.style.display = "block";
-  });
-
-  // Hide panel when moving out of both accordion and panel
-   more.addEventListener("mouseleave", () => {
-    more_options.style.display = "none";
-});
 
 
 </script>
@@ -821,6 +698,62 @@ $(document).ready(function() {
         }
       });
     </script>
+
+<script>
+  document.querySelectorAll('.select-option-container').forEach(container => {
+      const select = container.querySelector('.custom-select');
+      const optionsContainer = container.querySelector('.select-options');
+      const options = optionsContainer.querySelectorAll('div');
+  
+      // Toggle dropdown on select click
+      select.addEventListener('click', () => {
+        const isOpen = optionsContainer.style.display === 'block';
+  
+        // Close all other dropdowns before opening a new one
+        document.querySelectorAll('.select-options').forEach(opt => opt.style.display = 'none');
+        document.querySelectorAll('.custom-select').forEach(sel => {
+          sel.classList.remove('open');
+        
+        });
+  
+        // Toggle current dropdown
+        optionsContainer.style.display = isOpen ? 'none' : 'block';
+        select.classList.toggle('open', !isOpen);
+      });
+  
+      // Option click handler
+      options.forEach(option => {
+        option.addEventListener('click', () => {
+          select.textContent = option.textContent;
+          select.setAttribute('data-value', option.getAttribute('data-value'));
+  
+          options.forEach(opt => opt.classList.remove('selected'));
+          option.classList.add('selected');
+  
+          optionsContainer.style.display = 'none';
+          select.classList.remove('open');
+        });
+  
+        option.addEventListener('mouseenter', () => {
+          options.forEach(opt => opt.classList.remove('selected'));
+          option.classList.add('selected');
+        });
+  
+      });
+    });
+  
+    // Close dropdowns on outside click
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.select-option-container')) {
+        document.querySelectorAll('.select-options').forEach(opt => opt.style.display = 'none');
+        document.querySelectorAll('.custom-select').forEach(sel => {
+          sel.classList.remove('open');
+          sel.style.borderRadius = '5px';
+        });
+      }
+    });
+                      
+  </script>
     <!-- Bootstrap Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!--end::OverlayScrollbars Configure-->
@@ -831,175 +764,8 @@ $(document).ready(function() {
       integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
       crossorigin="anonymous"
     ></script>
-    <script>
-      // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
-      // IT'S ALL JUST JUNK FOR DEMO
-      // ++++++++++++++++++++++++++++++++++++++++++
-
-      /* apexcharts
-       * -------
-       * Here we will create a few charts using apexcharts
-       */
-
-      //-----------------------
-      // - MONTHLY SALES CHART -
-      //-----------------------
-
-      const sales_chart_options = {
-        series: [
-          {
-            name: 'Digital Goods',
-            data: [28, 48, 40, 19, 86, 27, 90],
-          },
-          {
-            name: 'Electronics',
-            data: [65, 59, 80, 81, 56, 55, 40],
-          },
-        ],
-        chart: {
-          height: 180,
-          type: 'area',
-          toolbar: {
-            show: false,
-          },
-        },
-        legend: {
-          show: false,
-        },
-        colors: ['#0d6efd', '#20c997'],
-        dataLabels: {
-          enabled: false,
-        },
-        stroke: {
-          curve: 'smooth',
-        },
-        xaxis: {
-          type: 'datetime',
-          categories: [
-            '2023-01-01',
-            '2023-02-01',
-            '2023-03-01',
-            '2023-04-01',
-            '2023-05-01',
-            '2023-06-01',
-            '2023-07-01',
-          ],
-        },
-        tooltip: {
-          x: {
-            format: 'MMMM yyyy',
-          },
-        },
-      };
-
-      const sales_chart = new ApexCharts(
-        document.querySelector('#sales-chart'),
-        sales_chart_options,
-      );
-      sales_chart.render();
-
-      //---------------------------
-      // - END MONTHLY SALES CHART -
-      //---------------------------
-
-      function createSparklineChart(selector, data) {
-        const options = {
-          series: [{ data }],
-          chart: {
-            type: 'line',
-            width: 150,
-            height: 30,
-            sparkline: {
-              enabled: true,
-            },
-          },
-          colors: ['var(--bs-primary)'],
-          stroke: {
-            width: 2,
-          },
-          tooltip: {
-            fixed: {
-              enabled: false,
-            },
-            x: {
-              show: false,
-            },
-            y: {
-              title: {
-                formatter: function (seriesName) {
-                  return '';
-                },
-              },
-            },
-            marker: {
-              show: false,
-            },
-          },
-        };
-
-        const chart = new ApexCharts(document.querySelector(selector), options);
-        chart.render();
-      }
-
-      const table_sparkline_1_data = [25, 66, 41, 89, 63, 25, 44, 12, 36, 9, 54];
-      const table_sparkline_2_data = [12, 56, 21, 39, 73, 45, 64, 52, 36, 59, 44];
-      const table_sparkline_3_data = [15, 46, 21, 59, 33, 15, 34, 42, 56, 19, 64];
-      const table_sparkline_4_data = [30, 56, 31, 69, 43, 35, 24, 32, 46, 29, 64];
-      const table_sparkline_5_data = [20, 76, 51, 79, 53, 35, 54, 22, 36, 49, 64];
-      const table_sparkline_6_data = [5, 36, 11, 69, 23, 15, 14, 42, 26, 19, 44];
-      const table_sparkline_7_data = [12, 56, 21, 39, 73, 45, 64, 52, 36, 59, 74];
-
-      createSparklineChart('#table-sparkline-1', table_sparkline_1_data);
-      createSparklineChart('#table-sparkline-2', table_sparkline_2_data);
-      createSparklineChart('#table-sparkline-3', table_sparkline_3_data);
-      createSparklineChart('#table-sparkline-4', table_sparkline_4_data);
-      createSparklineChart('#table-sparkline-5', table_sparkline_5_data);
-      createSparklineChart('#table-sparkline-6', table_sparkline_6_data);
-      createSparklineChart('#table-sparkline-7', table_sparkline_7_data);
-
-      //-------------
-      // - PIE CHART -
-      //-------------
-
-      const pie_chart_options = {
-        series: [700, 500, 400, 600, 300, 100],
-        chart: {
-          type: 'donut',
-        },
-        labels: ['Chrome', 'Edge', 'FireFox', 'Safari', 'Opera', 'IE'],
-        dataLabels: {
-          enabled: false,
-        },
-        colors: ['#0d6efd', '#20c997', '#ffc107', '#d63384', '#6f42c1', '#adb5bd'],
-      };
-
-      const pie_chart = new ApexCharts(document.querySelector('#pie-chart'), pie_chart_options);
-      pie_chart.render();
-
-      //-----------------
-      // - END PIE CHART -
-      //-----------------
-    </script>
-    <script>
-      document.getElementById("exportButton").addEventListener("click", function() {
-        // Example data (can be your table data or an array of objects)
-        const data = [
-          { Name: "John", Age: 30, City: "New York" },
-          { Name: "Jane", Age: 25, City: "London" },
-          { Name: "Mark", Age: 35, City: "Paris" }
-        ];
-
-        // Convert data to a worksheet
-        const ws = XLSX.utils.json_to_sheet(data);
-
-        // Create a new workbook and append the worksheet
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-
-        // Export the workbook as an Excel file
-        XLSX.writeFile(wb, "ExportedData.xlsx");
-      });
-    </script>
+    
+    
     <!--end::Script-->
   </body>
   <!--end::Body-->
