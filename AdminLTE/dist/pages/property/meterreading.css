@@ -860,3 +860,46 @@ input, select {
   align-items: center;
   gap: 10px;
 }
+ /*PERSONAL INFO  */
+
+ .personal-info-icon{
+  color: #FFC107;
+}
+.personal-item{
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  border-radius: 5px;
+}
+.personal-info.item-name{
+  /* color: rgb(41, 41, 41); */
+  color: #767676;
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.personal-info-icon.email{
+color: #0072C6;
+overflow: hidden;
+}
+
+.email:hover{
+text-decoration: underline;
+cursor: pointer;
+}
+.phone{
+color: #0072C6;
+font-size: 20px;
+}
+.phone:hover{
+text-decoration: underline;
+cursor: pointer;
+}
+.labal-value .value{
+color: #0072C6;
+font-size:20px;
+}
+.labal-value .value:hover{
+text-decoration: underline;
+cursor: pointer;
+}
+

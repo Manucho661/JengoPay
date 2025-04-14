@@ -569,4 +569,28 @@ input[type="radio"] {
   width: 300px;
 }
 
+.status {
+  padding: 5px 10px;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+  display: inline-block;
+}
+
+.completed {
+  background-color: #4CAF50; /* Green */
+  color: black; /* Better contrast with dark text */
+}
+
+.in-progress {
+  background-color: #FFC107; /* Yellow */
+  color: black; /* Better contrast with dark text */
+}
+
+.incomplete {
+  background-color: #F44336; /* Red */
+  color: black; /* Better contrast with dark text */
+
+}
+
 /* end */
