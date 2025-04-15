@@ -186,7 +186,14 @@ padding: 0px 4px;
 height: fit-content;
 margin-top: 2px;
 }
-                                  /*PERSONAL INFO  */
+
+.completed {
+  background-color: #4CAF50; /* Green */
+  color: black; /* Better contrast with dark text */
+}
+
+
+/*PERSONAL INFO  */
 
                                             .personal-info-icon{
                                               color: #FFC107;
@@ -404,6 +411,9 @@ padding:  10px;
                                                       }
 
 
+                                                      .status completed{
+
+                                                      }
 
 
 #agreements_btn{
