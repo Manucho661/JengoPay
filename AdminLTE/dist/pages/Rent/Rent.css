@@ -15,7 +15,6 @@ font-family: 'Poppins', sans-serif;
 font-weight: 600;
 letter-spacing: .5px;
 }
-
 .contact_section_header .icon{
      color: #FFC107;
   }
@@ -127,7 +126,7 @@ select:hover{
                                                     font-weight: 600;
                                                     text-transform: uppercase;
                                                   }
-                                                  
+
 
 
                                                   th:nth-child(4), td:nth-child(4) {
@@ -203,16 +202,16 @@ select:hover{
                                                     border-radius: 2px;
                                                     color: white;
                                                   }
-                                                  
-                                                  
 
-                                                  
+
+
+
 
                                                         /* RENT INFO */
   .rent-info.filter{
      background-color: white;
      padding: 5px;
-     
+
      display: flex;
      justify-content: space-between;
      align-items: center;
@@ -243,4 +242,3 @@ select:hover{
                                                             color: #00192D;
                                                             border: 1px solid #FFC107;
                                                       }
-                                                      
