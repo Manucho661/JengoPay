@@ -67,9 +67,13 @@
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
+<!-- loading out and in progress -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css">
+
 <style>
  select {
   color:#767676;  /* Dodger Blue, for example */
+  /* border-radius: 0px !important; */
 }
 select:hover {
   color: #000 !important; /* black or any color you want */
@@ -232,7 +236,7 @@ select:hover {
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <img
-                  src="../../dist/assets/img/user2-160x160.jpg"
+                  src="../../../dist/assets/img/user2-160x160.jpg"
                   class="user-image rounded-circle shadow"
                   alt="User Image"
                 />
@@ -286,7 +290,7 @@ select:hover {
           <a href="./index.html" class="brand-link">
             <!--begin::Brand Image-->
             <img
-              src="../../dist/assets/img/AdminLTELogo.png"
+              src="../../../dist/assets/img/AdminLTELogo.png"
               alt="AdminLTE Logo"
               class="brand-image opacity-75 shadow"
             />
@@ -304,7 +308,7 @@ select:hover {
       </aside>
       <!--end::Sidebar-->
       <!--begin::App Main-->
-      <main class="app-main">
+      <main id="mainElement" class="app-main fade-out">
         <!--begin::App Content Header-->
         <div class="app-content-header">
           <!--begin::Container-->
@@ -329,7 +333,7 @@ select:hover {
               <div class="col-sm-8">
                 <div class="d-flex">
                   <h3 class="mb-0 contact_section_header"> <i class="fas fa-coins icon"></i> Rental Charges </h3>
-                  <h6 class="month">April</h6>
+                  <h6 class="month" style="color: green;">April-2025</h6>
                 </div>
               </div>
               <div class="col-sm-4">
@@ -355,7 +359,7 @@ select:hover {
               <h6 class="mb-0 contact_section_header summary mb-2"> </i> Summary</h6>
 
               <div class="col-md-3">
-                <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; ">
+                <div class="summary-item collected" style="display: flex; gap: 10px; align-items: center; ">
                   <div class="icon"> <i class="fas fa-coins"></i></div>
                   <div>
                     <div class="label">Collected</div>
@@ -364,6 +368,15 @@ select:hover {
                 </div>
               </div>
 
+              <div class="col-md-3">
+                <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; ">
+                  <div class="icon"> <i class="fas fa-coins"></i></div>
+                  <div>
+                    <div class="label">Penalities</div>
+                    <div class="value penalities"> $&nbsp;1,000</div>
+                  </div>
+                </div>
+              </div>
               <div class="col-md-3">
                 <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; ">
                   <div class="icon"> <i class="fas fa-coins"></i></div>
@@ -384,41 +397,48 @@ select:hover {
                 </div>
               </div>
 
-              <div class="col-md-3">
 
-              </div>
             </div>
             <!-- END ROW -->
 
             <!-- START ROW -->
-             <div class="row mt-5">
-
-
+             <div class="row mt-4">
                 <!-- <div class="row"> -->
+                  <h6 class="mb-0 contact_section_header summary mb-2"> </i> Details</h6>
 
                     <div class="col-md-12">
                       <div class="rent-info">
                           <div class="rent-info filter ">
-                            <div>
-                              <select id="categoryFilter" class="categoryFilter">
-                                <option value="">-- Select Building--</option>
-                                <option value="technology">All</option>
-                                <option value="health">Manucho</option>
-                                <option value="business">Ebenezer</option>
-                                <option value="education">Crown Z</option>
-                              </select>
+                            <div class="filter-boxes d-flex">
 
-                              <select id="categoryFilter" class="categoryFilter">
-                                <option value="">-- Select Year--</option>
-                                <option value="2024">2024</option>
-                                <option value="2023">2023</option>
-                              </select>
+                              <div class="select-option-container mt-3">
+                                <div class="custom-select">All Buildings</div>
+                                <div class="select-options mt-1">
+                                  <div class="selected" data-value="item1">All Buildings</div>
+                                  <div data-value="item1">Manucho</div>
+                                  <div data-value="item2">Ebenezer</div>
+                                  <div data-value="item3">Crown Z</div>
+                                </div>
+                              </div>
 
-                              <select id="categoryFilter" class="categoryFilter">
-                                <option value="">-- Select Month--</option>
-                                <option value="2024" >January</option>
-                                <option value="2023">february</option>
-                              </select>
+                              <div class="select-option-container mt-3">
+                                <div class="custom-select">2025</div>
+                                <div class="select-options mt-1">
+                                  <div class="selected"  data-value="item1">2025</div>
+                                  <div data-value="item2">2024</div>
+                                  <div data-value="item3">2023</div>
+                                </div>
+                              </div>
+
+                              <div class="select-option-container mt-3">
+                                <div class="custom-select">April</div>
+                                <div class="select-options mt-1">
+                                  <div class="selected" data-value="item1">April</div>
+                                  <div data-value="item1">January</div>
+                                  <div data-value="item2">February</div>
+                                  <div data-value="item3">March</div>
+                                </div>
+                              </div>
                             </div>
 
                             <div class="pdf-excel">
@@ -426,413 +446,106 @@ select:hover {
                               <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button>
                             </div>
                           </div>
-                          <div class="rentTable">
-                            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Cum, voluptatibus adipisci! Voluptas fugit itaque officia repudiandae iusto numquam labore pariatur cupiditate deleniti, mollitia excepturi tenetur possimus saepe soluta aliquam eligendi?
+                          <div class="rentTable section">
+                            <table id="rent" class="tableRent" style="font-size: small;" >
+                              <thead>
+                                  <tr>
+                                          <th scope="col">Building</th>
+                                          <th scope="col">Collected</th>
+                                          <th scope="col">Penalities</th>
+                                          <th scope="col">Arreas</th>
+                                          <th scope="col">Overpayment</th>
+                                          <th scope="col">Action</th>
+
+                                  </tr>
+                              </thead>
+                              <tbody>
+                               <tr >
+                                  <th >Manucho</th>
+                                      <td class="rent paid">$&nbsp;80,000</td>
+
+                                      <td >
+                                        <div class="rent penalit">$&nbsp;2000</div>
+                                      </td>
+
+                                      <td class="rent collected">$&nbsp; 3,000</td>
+                                      <td class="rent overpayment">$&nbsp; 500</td>
+
+                                    <td>                                     
+                                      <button class="btn view"> <a class="view-link" href="singleBuilding.html">View</a> </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                <th >Ebenezer</th>
+                                    <td class="rent paid">$&nbsp;70,000</td>
+                                    <td>
+                                      <div class="rent penalit">$&nbsp;1000</div>
+                                      </td>
+                                    <td class="rent collected">$&nbsp;2,000</td>
+                                    <td class="rent overpayment">$&nbsp; 500</td>
+                                  <td>
+                                    <button class="btn view"> <a class="view-link" href="singleBuilding.html">View</a> </button>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <th >Pink House</th>
+                                  <td class="rent paid"> $&nbsp;90,000</td>
+                                  <td>
+                                    <div class="rent penalit">$&nbsp;1000</div>
+                                  </td>
+                                  <td class="rent collected">$&nbsp;5,000</td>
+                                  <td class="rent overpayment">$&nbsp;300</td>
+
+                                <td>
+                                  <button class="btn view"> <a class="view-link" href="singleBuilding.html">View</a> </button>
+                                </td>
+                            </tr>
+
+                              <tr>
+                                <th >Orange House</th>
+                                <td class="rent paid"> $&nbsp;50,000</td>
+                                <td  >
+
+                                  <div class="rent penalit">$&nbsp;1000</div>
+
+                                </td>
+                                <td class="rent collected">$&nbsp;9,000</td>
+                                <td class="rent overpayment">$&nbsp;300</td>
+
+                              <td>
+                                <button class="btn view"> <a class="view-link" href="singleBuilding.html">View</a> </button>
+                              </td>
+                                </tr>
+
+
+                          <tr>
+                            <th>Carolina</th>
+                              <td class="rent paid">$&nbsp;40,000</td>
+                              <td>
+                                <div class="rent penalit">$&nbsp;1000</div>
+                              </td>
+                              <td class="rent collected">$&nbsp;9,000</td>
+                              <td class="rent overpayment">$&nbsp;1000</td>
+                            <td>
+                              <button class="btn view"> <a class="view-link" href="singleBuilding.html">View</a> </button>
+                            </td>
+                          </tr>
+                          </tbody>
+                      </table>
 
                           </div>
                       </div>
                     </div>
-                    <!-- <div class="col-md-4" style="align-items: end;">
-                      <div class="pdf-excel">
-                        <button class="pdf" ><i class="fas fa-file-pdf" style="color: red;"></i></button>
-                        <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button>
-                      </div>
-                    </div> -->
 
-                <!-- </div> -->
-
-
-              <!-- <div class="col-md-12">
-                <div class="message-list p-2" style="display: flex; justify-content: space-between;">
-                  <div class="recent-messages-header">Recent Messages</div>
-                 <div>
-                  <button  id="new_text" onclick="opennewtextPopup()" class="btn new-text">    <i class="bi bi-plus" ></i> New Chat</button>
-                 </div>
-                </div>
-
-                <table class="table table-hover table-summary-messages" style="border-radius: 20px; flex-grow: 1;">
-                    <thead class="">
-                        <tr>
-                            <th>SENT</th>
-                            <th>Title</th>
-                            <th>SENT BY</th>
-                            <th>ACTION</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="table-row">
-                            <td class="timestamp">
-                              <div class="date">13-03-2025</div>
-                              <div class="time">07:45PM</div>
-                            </td>
-                            <td class="title">Request to Vacate Room</td>
-                            <td>
-                              <div class="sender">Me</div>
-                              <div class="sender-email"></div>
-
-                            </td>
-                            <td >
-                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                              <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                          <td class="timestamp">
-                            <div class="date">13-03-2025</div>
-                            <div class="time">07:45PM</div>
-                          </td>
-                            <td class="title">Request to Fix Leaking shower</td>
-                            <td>
-                              <div class="sender">Christiano Ronaldo</div>
-                              <div class="sender-email"><i class="fa fa-envelope"></i> Ronald12@gmail.com</div>
-                            </td>
-                            <td >
-                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                              <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                          <td class="timestamp">
-                            <div class="date">13-03-2025</div>
-                            <div class="time">07:45PM</div>
-                          </td>
-                            <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
-                            <td>
-                              <div class="sender">Sherly Nabwana</div>
-                              <div class="sender-email"><i class="fa fa-envelope"></i>Nabwana@gmail.com</div>
-                            </td>
-                            <td >
-                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                              <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                          <td class="timestamp">
-                            <div class="date">13-03-2025</div>
-                            <div class="time">07:45PM</div>
-                          </td>
-                            <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
-                            <td>
-                              <div class="sender">Hesbon Wanjiku</div>
-                              <div class="sender-email"><i class="fa fa-envelope"></i>wa123@gmail.com</div>
-                            </td>
-                            <td >
-                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                              <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                          <td class="timestamp">
-                            <div class="date">13-03-2025</div>
-                            <div class="time">07:45PM</div>
-                          </td>
-                            <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
-                            <td>
-                              <div class="sender">Me</div>
-                              <div class="sender-email"></div>
-                            </td>
-                            <td >
-                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                              <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                          <td class="timestamp">
-                            <div class="date">13-03-2025</div>
-                            <div class="time">07:45PM</div>
-                          </td>
-                            <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
-                            <td>
-                              <div class="sender">Sherly Nabwana</div>
-                              <div class="sender-email"><i class="fa fa-envelope"></i>Nabwana@gmail.com</div>
-                            </td>
-                            <td >
-                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                              <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                          <td class="timestamp">
-                            <div class="date">13-03-2025</div>
-                            <div class="time">07:45PM</div>
-                          </td>
-                            <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
-                            <td>
-                              <div class="sender">Hesbon Wanjiku</div>
-                              <div class="sender-email"><i class="fa fa-envelope"></i>wa123@gmail.com</div>
-                            </td>
-                            <td >
-                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                              <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                          <td class="timestamp">
-                            <div class="date">13-03-2025</div>
-                            <div class="time">07:45PM</div>
-                          </td>
-                            <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
-                            <td>
-                              <div class="sender">Me</div>
-                              <div class="sender-email"></div>
-                            </td>
-                            <td >
-                              <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                              <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-              </div> -->
 
              </div>
             <!-- END ROW -->
 
 
-                      <div class="row mt-3"> <!-- second row -->
 
-                        <div class="col-md-12">
-                          <div class="card">
-                      <div class="card-body">
-                        <table id="rent" class="display" style="font-size: small;" >
-                            <thead>
-                                <tr>
-                                       <th scope="col">PAYMENT AMOUNT</th>
-                                        <th scope="col">PAID BY</th>
-                                        <th scope="col">BUILDING</th>
-                                        <th scope="col">UNIT</th>
-                                        <th scope="col">TYPE</th>
-                                        <th scope="col">TENANT</th>
-                                        <th scope="col">DAYS OVERDUE</th>
-                                        <th scope="col">PAID ON</th>
-                                        <th scope="col">RECEIVED BY</th>
-                                        <th scope="col">ACTION</th>
-
-                                </tr>
-                        </thead>
-                        <tbody>
-                            <tr onclick="window.location.href=''">
-                                <th scope="row">KSH 9,000</th>
-                                    <td>KELVIN</td>
-                                    <td>CROWN Z TOWERS</td>
-                                    <td>B67</td>
-                                    <td>Bed Sitter</td>
-                                    <td>KELVIN</td>
-                                    <td>4</td>
-                                    <td>27-03-2025</td>
-                                    <td>Mr Maina</td>
-                                  <td>
-                                    <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                                    </button> -->
-                                    <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
-                                    <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
-
-                                  </td>
-                            </tr>
-                            <tr onclick="window.location.href=''">
-                              <th scope="row">KSH 15,000</th>
-                                  <td>KELVIN</td>
-                                  <td>CROWN Z TOWERS</td>
-                                  <td>B67</td>
-                                  <td>One Bedroom</td>
-                                  <td>KELVIN</td>
-                                  <td>4</td>
-                                  <td>27-03-2025</td>
-                                  <td>Mr Maina</td>
-                                <td>
-                                  <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                                  </button> -->
-                                  <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
-                                  <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
-
-                                </td>
-                          </tr>
-                          <tr onclick="window.location.href=''">
-                            <th scope="row">KSH 25,000</th>
-                                <td>KELVIN</td>
-                                <td>CROWN Z TOWERS</td>
-                                <td>B67</td>
-                                <td>Two Bedroom</td>
-                                <td>KELVIN</td>
-                                <td>4</td>
-                                <td>27-03-2025</td>
-                                <td>Mr Maina</td>
-                              <td>
-                                <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                                </button> -->
-                                <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
-                                <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
-
-                              </td>
-                        </tr>
-
-                        <tr onclick="window.location.href=''">
-                          <th scope="row">KSH 35,000</th>
-                              <td>KELVIN</td>
-                              <td>CROWN Z TOWERS</td>
-                              <td>B67</td>
-                              <td>Three Bedroom</td>
-                              <td>KELVIN</td>
-                              <td>4</td>
-                              <td>27-03-2025</td>
-                              <td>Mr Maina</td>
-                            <td>
-                              <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                              </button> -->
-                              <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
-                              <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
-                            </td>
-                      </tr>
-
-
-                      <tr onclick="window.location.href=''">
-                        <th scope="row">KSH 35,000</th>
-                            <td>KELVIN</td>
-                            <td>CROWN Z TOWERS</td>
-                            <td>B67</td>
-                            <td>Three Bedroom</td>
-                            <td>KELVIN</td>
-                            <td>4</td>
-                            <td>27-03-2025</td>
-                            <td>Mr Maina</td>
-                          <td>
-                            <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                            </button> -->
-                            <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
-                            <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
-
-                          </td>
-                    </tr>
-                    <tr onclick="window.location.href=''">
-                      <th scope="row">KSH 35,000</th>
-                          <td>KELVIN</td>
-                          <td>CROWN Z TOWERS</td>
-                          <td>B67</td>
-                          <td>Three Bedroom</td>
-                          <td>KELVIN</td>
-                          <td>4</td>
-                          <td>27-03-2025</td>
-                          <td>Mr Maina</td>
-                        <td>
-                          <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                          </button> -->
-                          <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
-                          <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
-
-                        </td>
-                  </tr>
-                  <tr onclick="window.location.href=''">
-                    <th scope="row">KSH 35,000</th>
-                        <td>KELVIN</td>
-                        <td>CROWN Z TOWERS</td>
-                        <td>B67</td>
-                        <td>Three Bedroom</td>
-                        <td>KELVIN</td>
-                        <td>4</td>
-                        <td>27-03-2025</td>
-                        <td>Mr Maina</td>
-                      <td>
-                        <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                        </button> -->
-                        <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
-                        <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
-
-                      </td>
-                </tr>
-                <tr onclick="window.location.href=''">
-                  <th scope="row">KSH 35,000</th>
-                      <td>KELVIN</td>
-                      <td>CROWN Z TOWERS</td>
-                      <td>B67</td>
-                      <td>Three Bedroom</td>
-                      <td>KELVIN</td>
-                      <td>4</td>
-                      <td>27-03-2025</td>
-                      <td>Mr Maina</td>
-                    <td>
-                      <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                      </button> -->
-                      <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
-                      <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
-
-                    </td>
-              </tr>
-              <tr onclick="window.location.href=''">
-                <th scope="row">KSH 35,000</th>
-                    <td>KELVIN</td>
-                    <td>CROWN Z TOWERS</td>
-                    <td>B67</td>
-                    <td>Three Bedroom</td>
-                    <td>KELVIN</td>
-                    <td>4</td>
-                    <td>27-03-2025</td>
-                    <td>Mr Maina</td>
-                  <td>
-                    <!-- <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                    </button> -->
-                    <button  class="btn btn-sm" style="background-color:#FFC107; color: #fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work">  <i class="fas fa-bullhorn"></i> </button>
-                    <button onclick="openPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-eye"></i></button>
-
-                  </td>
-            </tr>
-                        </tbody>
-                    </table>
-                  </div>
-
-                  <div class="card-footer">
-
-                  </div>
-
-                </div>
-              </div>
             </div>
 
 
-<!-- units popup -->
-<!-- <div class="units-overlay" id="complaintPopup">
-  <div class="units-content wide-form">
-      <button class="close-btn" onclick="closeunitsPopup()">×</button>
-      <h2 class="assign-title">Detailed Rent Information</h2>
-      <form class="wide-form">
-        <div class="form-group">
-          <div class="row g-3">
-
-            <div class="col-md-6">
-              <label for="property">Property:</label>
-              <input type="text" id="property " name="property" placeholder="Manucho Apartments" required disabled>
-            </div>
-
-            <div class="col-md-6">
-            <label for="tenant">Tenant:</label>
-            <input type="text" id="tenant " name="tenant" placeholder="FRED MBURU" required disabled>
-          </div>
-
-          <div class="col-md-6">
-            <label for="unit">Unit</label>
-            <input type="text" id="unit" name="unit"  placeholder="B11" disabled>
-    </div>
-
-
-          <div class="col-md-6">
-            <label for="text">Amount Paid:</label>
-            <input type="text" id="amount" name="amount" placeholder="Ksh 10000" required disabled>
-          </div>
-
-          <div class="col-md-6">
-            <label for="payment_date">Payment Date</label>
-            <input type="text" id="date" name="date" placeholder="11-03-2025" required disabled>
-        </div>
-
-        <div class="col-md-6">
-            <label for="rent_overdue">Rent Overdue</label>
-            <input type="text" id="rent_overdue" name="rent_overdue"  placeholder="Ksh0" disabled>
-    </div>
-
-    <div class="col-md-6">
-      <label for="days_overdue">Days Overdue</label>
-      <input type="text" id="days_overdue" name="days_overdue" placeholder="0" disabled>
-</div> -->
 
 
       </form>
@@ -840,47 +553,83 @@ select:hover {
 </div>
 <!-- end -->
 
+<footer class="app-footer">
+  <!--begin::To the end-->
+  <div class="float-end d-none d-sm-inline">Anything you want</div>
+  <!--end::To the end-->
+  <!--begin::Copyright-->
+  <strong>
+    Copyright &copy; 2014-2024&nbsp;
+    <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;"> JENGO PAY</a>.
+  </strong>
+  All rights reserved.
+  <!--end::Copyright-->
+</footer>
+<!--end::Footer-->
+</div>
+
+<!-- LOADING AND OUT PROGRESS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+<!-- EnD LOADING AND OUT PROGRESS -->
+                                           <!-- SELECT ELEMENT SCRIPT -->
+<!-- SELECT ELEMENT SCRIPT -->
+
 <script>
-  $(document).ready(function() {
-      $('#rent').DataTable({
-          "lengthChange": false,
-          "dom": 'Bfrtip',
-          "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+document.querySelectorAll('.select-option-container').forEach(container => {
+    const select = container.querySelector('.custom-select');
+    const optionsContainer = container.querySelector('.select-options');
+    const options = optionsContainer.querySelectorAll('div');
+
+    // Toggle dropdown on select click
+    select.addEventListener('click', () => {
+      const isOpen = optionsContainer.style.display === 'block';
+
+      // Close all other dropdowns before opening a new one
+      document.querySelectorAll('.select-options').forEach(opt => opt.style.display = 'none');
+      document.querySelectorAll('.custom-select').forEach(sel => {
+        sel.classList.remove('open');
+
       });
+
+      // Toggle current dropdown
+      optionsContainer.style.display = isOpen ? 'none' : 'block';
+      select.classList.toggle('open', !isOpen);
+    });
+
+    // Option click handler
+    options.forEach(option => {
+      option.addEventListener('click', () => {
+        select.textContent = option.textContent;
+        select.setAttribute('data-value', option.getAttribute('data-value'));
+
+        options.forEach(opt => opt.classList.remove('selected'));
+        option.classList.add('selected');
+
+        optionsContainer.style.display = 'none';
+        select.classList.remove('open');
+      });
+
+      option.addEventListener('mouseenter', () => {
+        options.forEach(opt => opt.classList.remove('selected'));
+        option.classList.add('selected');
+      });
+
+    });
   });
+
+  // Close dropdowns on outside click
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.select-option-container')) {
+      document.querySelectorAll('.select-options').forEach(opt => opt.style.display = 'none');
+      document.querySelectorAll('.custom-select').forEach(sel => {
+        sel.classList.remove('open');
+        sel.style.borderRadius = '5px';
+      });
+    }
+  });
+
 </script>
 
-<!--
-        <div class="overlaying" id="overlaying">
-          <div class="invoicing-container">
-          <div class="receipt-container" id="receipt">
-            <button class="close-btn" onclick="closeOverlay()">×</button>
-            <h2>Payment Receipt</h2>
-            <p> Nairobi,  KENYA</p>
-            <p><strong>Date:</strong> <span id="date"></span></p>
-
-            <table>
-              <td>Manucho Apartments</td>
-              <td>John</td>
-              <th>A11</th>
-              <td>KSH80,000</td>
-              <td>KSH80,000</td>
-              <td>MPESA</td>
-              <td>TBM34KGNJ8</td>
-              <td>10-12-2025</td>
-              <td>KSH0</td>
-            </table>
-        </div>
-
-        <button class="print-btn" onclick="printReceipt()">Print Receipt</button>
-     -->
-
-
-    <!--end::App Wrapper-->
-    <!--begin::Script-->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
-
- <!-- dowload as pdf -->
  <script>
   document.getElementById("generateReport").addEventListener("click", function () {
       const { jsPDF } = window.jspdf;
@@ -983,36 +732,7 @@ select:hover {
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
 
 
-<!-- Begin script for datatable
-<script>
-  $(document).ready(function() {
-   $('#rent').DataTable({
-       "paging": true,
-       "searching": true,
-       "info": true,
-       "lengthMenu": [5, 10, 25, 50],
-       "language": {
-           "search": "Filter records:",
-           "lengthMenu": "Show _MENU_ entries"
-       }
-   });
-}); -->
 
-<!-- <script>
-$(document).ready(function() {
-   $('#agreements').DataTable({
-       "paging": true,
-       "searching": true,
-       "info": true,
-       "lengthMenu": [5, 10, 25, 50],
-       "language": {
-           "filter": "Search ",
-           "lengthMenu": "Show _MENU_ entries"
-       }
-   });
-});
-
-</script> -->
 
 
 
@@ -1104,176 +824,41 @@ $(document).ready(function() {
       integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
       crossorigin="anonymous"
     ></script>
-    <script>
-      // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
-      // IT'S ALL JUST JUNK FOR DEMO
-      // ++++++++++++++++++++++++++++++++++++++++++
 
-      /* apexcharts
-       * -------
-       * Here we will create a few charts using apexcharts
-       */
-
-      //-----------------------
-      // - MONTHLY SALES CHART -
-      //-----------------------
-
-      const sales_chart_options = {
-        series: [
-          {
-            name: 'Digital Goods',
-            data: [28, 48, 40, 19, 86, 27, 90],
-          },
-          {
-            name: 'Electronics',
-            data: [65, 59, 80, 81, 56, 55, 40],
-          },
-        ],
-        chart: {
-          height: 180,
-          type: 'area',
-          toolbar: {
-            show: false,
-          },
-        },
-        legend: {
-          show: false,
-        },
-        colors: ['#0d6efd', '#20c997'],
-        dataLabels: {
-          enabled: false,
-        },
-        stroke: {
-          curve: 'smooth',
-        },
-        xaxis: {
-          type: 'datetime',
-          categories: [
-            '2023-01-01',
-            '2023-02-01',
-            '2023-03-01',
-            '2023-04-01',
-            '2023-05-01',
-            '2023-06-01',
-            '2023-07-01',
-          ],
-        },
-        tooltip: {
-          x: {
-            format: 'MMMM yyyy',
-          },
-        },
-      };
-
-      const sales_chart = new ApexCharts(
-        document.querySelector('#sales-chart'),
-        sales_chart_options,
-      );
-      sales_chart.render();
-
-      //---------------------------
-      // - END MONTHLY SALES CHART -
-      //---------------------------
-
-      function createSparklineChart(selector, data) {
-        const options = {
-          series: [{ data }],
-          chart: {
-            type: 'line',
-            width: 150,
-            height: 30,
-            sparkline: {
-              enabled: true,
-            },
-          },
-          colors: ['var(--bs-primary)'],
-          stroke: {
-            width: 2,
-          },
-          tooltip: {
-            fixed: {
-              enabled: false,
-            },
-            x: {
-              show: false,
-            },
-            y: {
-              title: {
-                formatter: function (seriesName) {
-                  return '';
-                },
-              },
-            },
-            marker: {
-              show: false,
-            },
-          },
-        };
-
-        const chart = new ApexCharts(document.querySelector(selector), options);
-        chart.render();
-      }
-
-      const table_sparkline_1_data = [25, 66, 41, 89, 63, 25, 44, 12, 36, 9, 54];
-      const table_sparkline_2_data = [12, 56, 21, 39, 73, 45, 64, 52, 36, 59, 44];
-      const table_sparkline_3_data = [15, 46, 21, 59, 33, 15, 34, 42, 56, 19, 64];
-      const table_sparkline_4_data = [30, 56, 31, 69, 43, 35, 24, 32, 46, 29, 64];
-      const table_sparkline_5_data = [20, 76, 51, 79, 53, 35, 54, 22, 36, 49, 64];
-      const table_sparkline_6_data = [5, 36, 11, 69, 23, 15, 14, 42, 26, 19, 44];
-      const table_sparkline_7_data = [12, 56, 21, 39, 73, 45, 64, 52, 36, 59, 74];
-
-      createSparklineChart('#table-sparkline-1', table_sparkline_1_data);
-      createSparklineChart('#table-sparkline-2', table_sparkline_2_data);
-      createSparklineChart('#table-sparkline-3', table_sparkline_3_data);
-      createSparklineChart('#table-sparkline-4', table_sparkline_4_data);
-      createSparklineChart('#table-sparkline-5', table_sparkline_5_data);
-      createSparklineChart('#table-sparkline-6', table_sparkline_6_data);
-      createSparklineChart('#table-sparkline-7', table_sparkline_7_data);
-
-      //-------------
-      // - PIE CHART -
-      //-------------
-
-      const pie_chart_options = {
-        series: [700, 500, 400, 600, 300, 100],
-        chart: {
-          type: 'donut',
-        },
-        labels: ['Chrome', 'Edge', 'FireFox', 'Safari', 'Opera', 'IE'],
-        dataLabels: {
-          enabled: false,
-        },
-        colors: ['#0d6efd', '#20c997', '#ffc107', '#d63384', '#6f42c1', '#adb5bd'],
-      };
-
-      const pie_chart = new ApexCharts(document.querySelector('#pie-chart'), pie_chart_options);
-      pie_chart.render();
-
-      //-----------------
-      // - END PIE CHART -
-      //-----------------
-    </script>
-    <script>
-      document.getElementById("exportButton").addEventListener("click", function() {
-        // Example data (can be your table data or an array of objects)
-        const data = [
-          { Name: "John", Age: 30, City: "New York" },
-          { Name: "Jane", Age: 25, City: "London" },
-          { Name: "Mark", Age: 35, City: "Paris" }
-        ];
-
-        // Convert data to a worksheet
-        const ws = XLSX.utils.json_to_sheet(data);
-
-        // Create a new workbook and append the worksheet
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-
-        // Export the workbook as an Excel file
-        XLSX.writeFile(wb, "ExportedData.xlsx");
-      });
-    </script>
     <!--end::Script-->
+
+<!-- Loading out and in script -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Fade in effect on page load
+    const mainElement = document.getElementById("mainElement");
+
+    if (mainElement) {
+      mainElement.classList.remove("fade-out");
+    }
+
+    // Intercept link clicks
+    document.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", function (e) {
+        const target = this.getAttribute("target");
+        const href = this.getAttribute("href");
+
+        if (!target || target === "_self") {
+          e.preventDefault();
+          NProgress.start();
+          mainElement.classList.add("fade-out");
+
+          setTimeout(() => {
+            window.location.href = href;
+          }, 500);
+        }
+      });
+    });
+  });
+</script>
+
+<!-- End Loading out and in script -->
+
   </body>
   <!--end::Body-->
 </html>

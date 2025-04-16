@@ -6,10 +6,10 @@ body{
     font-family: 'Poppins', sans-serif;
     background-color: rgba(128, 128, 128, 0.1);
 }
-
-
-
-
+main{
+  transition: opacity 0.1s ease-in-out;
+  opacity: 1; 
+}
                      /* GENERAL STYLES */
 .contact_section_header{
   border-bottom: 1px solid rgba(128, 128, 128, 0.5);
@@ -76,10 +76,7 @@ body{
                                                             .edit-btn.personal-info{
                                                               height: fit-content;
                                                                   padding: 2px 6px;
-                                                                  font-size: 12px;
-
-                                                                  /* background-color: transparent; */
-                                                                  /* color: green; */
+                                                                  font-size: 12px;                                                                  
                                                                   border: 1px solid #002a4d;
                                                             }
                                                             .edit-btn:hover{
@@ -123,7 +120,7 @@ body{
                                                             /* border: 1px solid #FFC107; */
                                                             height: fit-content;
                                                             }
-                                                            .btn.change{
+                                                            .btn.edit{
                                                               padding: 0px 3px;
                                                               font-size: 12px;
                                                               background-color: #00192D;
@@ -342,16 +339,18 @@ select {
                                                         .month{
                                                           color: rgb(41, 41, 41);
                                                         }
+
                                                         .rent{
                                                           color: black;
                                                           font-weight: 600;
                                                           font-size: 16px;
                                                         }
-                                                        .rent.paid{
 
+                                                        .rent.paid{
                                                           font-weight: 600;
                                                           font-size: 16px;
                                                         }
+
                                                         .amount.date .date{
                                                           font-weight: 400px;
                                                           font-size: 10px;
@@ -366,6 +365,7 @@ select {
                                                         margin-left: 2px;
 
                                                         }
+
                                                         .pen.amount{
                                                           background-color: #e74c3c;
                                                           width: fit-content;
@@ -373,6 +373,7 @@ select {
                                                           border-radius: 2px;
                                                           color: white;
                                                         }
+
                                                         .rent.arrears{
                                                           color: black;
                                                           font-weight: 600;
