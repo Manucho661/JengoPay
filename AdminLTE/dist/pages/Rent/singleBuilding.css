@@ -31,14 +31,14 @@ color: #00192D;
 }
 .month{
   /* color: rgb(41, 41, 41); */
-  font-weight: 500px;
+  font-weight: 600px;
   font-size: 14px;
   color: green;
   background-color: rgba(128,128,128,0.2);
   padding-bottom: 0px;
   border-radius: 10px;
 vertical-align: middle;
-padding: 0px 4px;
+padding: 2px 6px;
 height: fit-content;
 margin-top: 2px;
 margin-left: 2px;
@@ -73,7 +73,7 @@ margin-left: 2px;
                                                       font-size: 16px;
                                                     }
                                                     .summary-item .value.penalities{
-                                                    background-color: #F87171	;
+                                                    background-color: #f87171	;
                                                     border-radius: 5px;
                                                     height: fit-content;
                                                     color: white;
@@ -164,7 +164,7 @@ margin-top: 2px;
 margin-left: 2px;
 }
 .rent.paid .date.late{
-  background-color: #F87171;
+  background-color: #f87171;
   color: white;
 }
 .pen.amount{
@@ -175,7 +175,7 @@ margin-left: 2px;
   color: white;
 }
 .deadline{
-  background-color: #F87171;
+  background-color: #fca5a5;
   width: fit-content;
   padding-bottom: 0px;
   border-radius: 5px;
@@ -200,12 +200,17 @@ padding: 2px 4px;
   gap: 5px;
 }
 .pen-rate{
-  background-color: #e74c3c;
-  width: fit-content;
-  padding:0 10px;
-  border-radius: 2px;
-  color: white;
-
+  background-color: #F87171;
+  padding-bottom: 0px;
+  border-radius: 10px;
+vertical-align: middle;
+padding: 0px 4px;
+height: fit-content;
+margin-top: 2px;
+margin-left: 2px;
+color: white;
+font-size: 12px;
+font-weight: 600;
 }
 .penalt.rate.lable{
   color: #767676;
@@ -228,11 +233,23 @@ padding: 2px 4px;
   color: #00192D;
 }
 .rent.lateDays{
-color: #e74c3c;
+color:#fca5a5;
 font-weight: 400px;
 font-size: 14px;
 }
-
+.deadline.date{
+  font-weight: 600px;
+  font-size: 12px;
+  color: green;
+  background-color: rgba(128,128,128,0.2);
+  padding-bottom: 0px;
+  border-radius: 10px;
+vertical-align: middle;
+padding: 0px 4px;
+height: fit-content;
+margin-top: 2px;
+margin-left: 2px;
+}
 /* RENT INFO */
 .rent-info.filter{
   background-color: white;
@@ -367,4 +384,14 @@ font-size: 14px;
                                 background-color: transparent;
                                 color: #00192D;
                                 border: 1px solid #FFC107;
+                              }
+                              .btn.edit{
+                                padding: 0px 3px;
+                                font-size: 12px;
+                                background-color: #00192D;
+                                color: #FFC107;
+                                /* color: white; */
+                              /* border: 1px solid #FFC107; */
+                              height: fit-content;
+
                               }
