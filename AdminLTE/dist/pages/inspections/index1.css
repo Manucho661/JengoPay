@@ -5,6 +5,26 @@ body {
       font-size: 10px;
   }
 
+/* Mobile-first approach */
+.element {
+  width: 100%;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .element {
+    width: 50%;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .element {
+    width: 33.33%;
+  }
+}
+
+
                             /* BODY TITLE SECTION */
   .contact_section_header{
      border-bottom: 1px solid rgba(128, 128, 128, 0.5);
