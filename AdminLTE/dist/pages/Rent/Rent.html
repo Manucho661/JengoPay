@@ -67,6 +67,9 @@
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
+<!-- loading out and in progress -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css">
+
 <style>
  select {
   color:#767676;  /* Dodger Blue, for example */
@@ -305,7 +308,7 @@ select:hover {
       </aside>
       <!--end::Sidebar-->
       <!--begin::App Main-->
-      <main class="app-main">
+      <main id="mainElement" class="app-main fade-out">
         <!--begin::App Content Header-->
         <div class="app-content-header">
           <!--begin::Container-->
@@ -457,7 +460,7 @@ select:hover {
                                   </tr>
                               </thead>
                               <tbody>
-                               <tr onclick="window.location.href=''">
+                               <tr >
                                   <th >Manucho</th>
                                       <td class="rent paid">$&nbsp;80,000</td>
 
@@ -468,11 +471,11 @@ select:hover {
                                       <td class="rent collected">$&nbsp; 3,000</td>
                                       <td class="rent overpayment">$&nbsp; 500</td>
 
-                                    <td>
-                                      <button class="btn view">View</button>
+                                    <td>                                     
+                                      <button class="btn view"> <a class="view-link" href="singleBuilding.html">View</a> </button>
                                     </td>
                                 </tr>
-                                <tr onclick="window.location.href=''">
+                                <tr>
                                 <th >Ebenezer</th>
                                     <td class="rent paid">$&nbsp;70,000</td>
                                     <td>
@@ -481,10 +484,10 @@ select:hover {
                                     <td class="rent collected">$&nbsp;2,000</td>
                                     <td class="rent overpayment">$&nbsp; 500</td>
                                   <td>
-                                    <button class="btn view">View</button>
+                                    <button class="btn view"> <a class="view-link" href="singleBuilding.html">View</a> </button>
                                   </td>
                                 </tr>
-                                <tr onclick="window.location.href=''">
+                                <tr>
                                   <th >Pink House</th>
                                   <td class="rent paid"> $&nbsp;90,000</td>
                                   <td>
@@ -494,12 +497,11 @@ select:hover {
                                   <td class="rent overpayment">$&nbsp;300</td>
 
                                 <td>
-                                  <button class="btn view">View</button>
-
+                                  <button class="btn view"> <a class="view-link" href="singleBuilding.html">View</a> </button>
                                 </td>
                             </tr>
 
-                              <tr onclick="window.location.href=''">
+                              <tr>
                                 <th >Orange House</th>
                                 <td class="rent paid"> $&nbsp;50,000</td>
                                 <td  >
@@ -511,21 +513,21 @@ select:hover {
                                 <td class="rent overpayment">$&nbsp;300</td>
 
                               <td>
-                                <button class="btn view">View</button>
+                                <button class="btn view"> <a class="view-link" href="singleBuilding.html">View</a> </button>
                               </td>
                                 </tr>
 
 
-                          <tr onclick="window.location.href=''">
+                          <tr>
                             <th>Carolina</th>
                               <td class="rent paid">$&nbsp;40,000</td>
                               <td>
                                 <div class="rent penalit">$&nbsp;1000</div>
                               </td>
                               <td class="rent collected">$&nbsp;9,000</td>
-                              <td class="rent overpayment" >$&nbsp;1000</td>
+                              <td class="rent overpayment">$&nbsp;1000</td>
                             <td>
-                              <button class="btn view">View</button>
+                              <button class="btn view"> <a class="view-link" href="singleBuilding.html">View</a> </button>
                             </td>
                           </tr>
                           </tbody>
@@ -566,6 +568,10 @@ select:hover {
 <!--end::Footer-->
 </div>
 
+<!-- LOADING AND OUT PROGRESS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+<!-- EnD LOADING AND OUT PROGRESS -->
+                                           <!-- SELECT ELEMENT SCRIPT -->
 <!-- SELECT ELEMENT SCRIPT -->
 
 <script>
@@ -820,6 +826,39 @@ document.querySelectorAll('.select-option-container').forEach(container => {
     ></script>
 
     <!--end::Script-->
+
+<!-- Loading out and in script -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Fade in effect on page load
+    const mainElement = document.getElementById("mainElement");
+
+    if (mainElement) {
+      mainElement.classList.remove("fade-out");
+    }
+
+    // Intercept link clicks
+    document.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", function (e) {
+        const target = this.getAttribute("target");
+        const href = this.getAttribute("href");
+
+        if (!target || target === "_self") {
+          e.preventDefault();
+          NProgress.start();
+          mainElement.classList.add("fade-out");
+
+          setTimeout(() => {
+            window.location.href = href;
+          }, 500);
+        }
+      });
+    });
+  });
+</script>
+
+<!-- End Loading out and in script -->
+
   </body>
   <!--end::Body-->
 </html>

@@ -6,10 +6,10 @@ body{
     font-family: 'Poppins', sans-serif;
     background-color: rgba(128, 128, 128, 0.1);
 }
-
-
-
-
+main{
+  transition: opacity 0.1s ease-in-out;
+  opacity: 1; 
+}
                      /* GENERAL STYLES */
 .contact_section_header{
   border-bottom: 1px solid rgba(128, 128, 128, 0.5);
@@ -120,7 +120,7 @@ body{
                                                             /* border: 1px solid #FFC107; */
                                                             height: fit-content;
                                                             }
-                                                            .btn.change{
+                                                            .btn.edit{
                                                               padding: 0px 3px;
                                                               font-size: 12px;
                                                               background-color: #00192D;

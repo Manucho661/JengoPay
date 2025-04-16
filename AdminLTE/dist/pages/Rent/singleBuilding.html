@@ -65,6 +65,10 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- loading out and in progress -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css">
+
 <style>
 
 
@@ -227,7 +231,7 @@
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <img
-                  src="../../dist/assets/img/user2-160x160.jpg"
+                  src="../../../dist/assets/img/user2-160x160.jpg"
                   class="user-image rounded-circle shadow"
                   alt="User Image"
                 />
@@ -299,7 +303,7 @@
       </aside>
       <!--end::Sidebar-->
       <!--begin::App Main-->
-      <main class="app-main">
+      <main id="mainElement" class="app-main fade-out" >
         <!--begin::App Content Header-->
         <div class="app-content-header">
           <!--begin::Container-->
@@ -322,9 +326,10 @@
             <div class="row" >
               <div class="col-sm-8">
                 <div class="d-flex">
-                  <h3 class="contact_section_header"> <i class="fas fa-house-user icon"></i>
+                  <h3 class="contact_section_header"> <i class="fas fa-coins icon"></i>
                     Rental Roll &nbsp;/&nbsp;<span class="building">Ebenezer</span></h3>
-                    <h6 class="month" style="color: green;">April-2025</h6>
+                    <h6 class="month" style="color: green;"><i class="fas fa-calendar-alt"></i>
+                      April-2025</h6>
                 </div>
 
               </div>
@@ -344,7 +349,27 @@
             <!-- START ROW -->
                                            <!-- SUMMARY -->
                                            <div class="row">
-                                            <h6 class="mb-0 contact_section_header summary mb-2"> </i> Summary</h6>
+                                            <h6 class="mb-0 contact_section_header summary mb-2" style="color: #00192D;"> </i> Summary</h6>
+
+                                            <div class="col-md-3">
+                                              <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; ">
+                                                <div class="icon"> <i class="fas fa-house"></i></div>
+                                                <div>
+                                                  <div class="label">Total Units</div>
+                                                  <div class="value"> &nbsp;100</div>
+                                                </div>
+                                              </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                              <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; ">
+                                                <div class="icon"> <i class="fas fa-house"></i></div>
+                                                <div>
+                                                  <div class="label">Occupied</div>
+                                                  <div class="value"> &nbsp;50</div>
+                                                </div>
+                                              </div>
+                                            </div>
 
                                             <div class="col-md-3">
                                               <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; ">
@@ -365,7 +390,7 @@
                                                 </div>
                                               </div>
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-3 mt-1">
                                               <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; ">
                                                 <div class="icon"> <i class="fas fa-coins"></i></div>
                                                 <div>
@@ -375,7 +400,7 @@
                                               </div>
                                             </div>
 
-                                            <div class="col-md-3">
+                                            <div class="col-md-3 mt-1">
                                               <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; ">
                                                 <div class="icon"> <i class="fas fa-coins"></i></div>
                                                 <div>
@@ -394,9 +419,9 @@
 
 
               <!-- <div class="row"> -->
-                <h6 class="mb-0 contact_section_header summary mb-2"> </i> Details</h6>
+                <h6 class="mb-0 contact_section_header summary mb-2 mt-2" style="color: #00192D;"> </i> Details</h6>
 
-                  <div class="col-md-12">
+                  <div class="col-md-9">
                     <div class="rent-info">
                         <div class="rent-info filter ">
                           <div class="filter-boxes d-flex">
@@ -447,7 +472,7 @@
                                           <div>Paid</div>
 
                                         </th>
-                                        <th scope="col">Penalities</th>
+                                        <th scope="col">Penalty&nbsp;(l.days)</th>
                                         <th scope="col">Arreas</th>
                                         <th scope="col">Overpayment</th>
                                         <th scope="col">Action</th>
@@ -455,7 +480,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                             <tr onclick="window.location.href=''">
+                             <tr>
                                 <th>
                                   <div class="d-flex justify-content-between">
                                     <div>Manucho </div>
@@ -470,7 +495,7 @@
                                     <td >
                                       <div class="rent paid">
                                         <div>$&nbsp;80,000</div>
-                                        <div class="date">25-April</div>
+                                        <div class="date late"> 25-April</div>
                                       </div>
 
                                     </td>
@@ -483,10 +508,11 @@
                                     <td class="rent overpayment">$&nbsp; 500</td>
 
                                   <td>
-                                    <button class="btn view">View</button>
+                                    <button class="btn view"> <a class="view-link" href="../people/tenantProfile.html">View</a> </button>
+
                                   </td>
                               </tr>
-                              <tr onclick="window.location.href=''">
+                              <tr >
                               <th>
 
                                 <div class="d-flex justify-content-between">
@@ -508,10 +534,10 @@
                                   <td class="rent collected">$&nbsp;2,000</td>
                                   <td class="rent overpayment">$&nbsp; 500</td>
                                 <td>
-                                  <button class="btn view">View</button>
+                                  <button class="btn view"> <a class="view-link" href="../people/tenantProfile.html">View</a> </button>
                                 </td>
                               </tr>
-                              <tr onclick="window.location.href=''">
+                              <tr>
                                 <th>
                                   <div class="d-flex justify-content-between">
                                     <div>Mark </div>
@@ -522,7 +548,7 @@
                                 <td>
                                   <div class="rent paid">
                                     <div>$&nbsp;90,000</div>
-                                    <div class="date">27-April</div>
+                                    <div class="date late">27-April</div>
                                   </div>
                                 </td>
                                 <td>
@@ -532,12 +558,11 @@
                                 <td class="rent overpayment">$&nbsp;300</td>
 
                               <td>
-                                <button class="btn view">View</button>
-
+                                <button class="btn view"> <a class="view-link" href="../people/tenantProfile.html">View</a> </button>
                               </td>
                           </tr>
 
-                            <tr onclick="window.location.href=''">
+                            <tr >
                               <th>
                                 <div class="d-flex justify-content-between">
                                   <div>Linet </div>
@@ -550,7 +575,7 @@
 
                                 <div class="rent paid">
                                   <div>$&nbsp;80,000</div>
-                                  <div class="date">2-May</div>
+                                  <div class="date late">2-May</div>
                                 </div>
                               </td>
                               <td  >
@@ -562,12 +587,12 @@
                               <td class="rent overpayment">$&nbsp;300</td>
 
                             <td>
-                              <button class="btn view">View</button>
+                              <button class="btn view"> <a class="view-link" href="../people/tenantProfile.html">View</a> </button>
                             </td>
                               </tr>
 
 
-                        <tr onclick="window.location.href=''">
+                        <tr >
                           <th>
 
                             <div class="d-flex justify-content-between">
@@ -589,7 +614,7 @@
                             <td class="rent collected">$&nbsp;9,000</td>
                             <td class="rent overpayment" >$&nbsp;1000</td>
                           <td>
-                            <button class="btn view">View</button>
+                            <button class="btn view"> <a class="view-link" href="../people/tenantProfile.html">View</a> </button>
                           </td>
                         </tr>
                         </tbody>
@@ -597,9 +622,32 @@
 
                         </div>
                     </div>
+
+                    
                   </div>
 
+                  <div class="col-md-3" >
 
+
+                    <div class="p-2" style="background-color:white; box-shadow:  0px 4px 10px rgba(0, 0, 0, 0.15); border-radius: 5px; ">
+                      <div class="penalt rate lable ">
+                        RENT PAYMENT DEADLINE </div>
+                      <div class="deadline date"><i class="fas fa-calendar-alt"></i>                        30-4-2023</div>
+                      <div class="change-btn d-flex justify-content-end"><button class="btn edit rounded">Edit</button></div>
+                    </div>
+
+
+                    <div class="p-2 mt-2" style="background-color:white; box-shadow:  0px 4px 10px rgba(0, 0, 0, 0.15); border-radius: 5px; ">
+                    
+                      <div class="penalt rate lable  ">PENALT RATE</div>
+                      <div class="penalt_desc d-flex">
+                          <div class="pen-rate">10%</div>
+                          <div class="pen-desc">of the total rent</div>
+                      </div>
+                     <div class="change-btn d-flex justify-content-end"><button class="btn edit rounded">Edit</button></div>
+                    </div>
+
+                  </div>
            </div>
           <!-- END ROW -->
 
@@ -621,7 +669,7 @@
           </footer>
           <!--end::Footer-->
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
@@ -659,6 +707,9 @@
 <!-- end sidebar script -->
 
 
+    <!-- LOADING AND OUT PROGRESS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+    <!-- EnD LOADING AND OUT PROGRESS -->
 
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
@@ -769,6 +820,39 @@
 
 
     <!--end::Script-->
+
+
+    <!-- Loading out and in script -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Fade in effect on page load
+        const mainElement = document.getElementById("mainElement");
+    
+        if (mainElement) {
+          mainElement.classList.remove("fade-out");
+        }
+    
+        // Intercept link clicks
+        document.querySelectorAll("a").forEach(link => {
+          link.addEventListener("click", function (e) {
+            const target = this.getAttribute("target");
+            const href = this.getAttribute("href");
+    
+            if (!target || target === "_self") {
+              e.preventDefault();
+              NProgress.start();
+              mainElement.classList.add("fade-out");
+    
+              setTimeout(() => {
+                window.location.href = href;
+              }, 500);
+            }
+          });
+        });
+      });
+    </script>
+    
+    <!-- End Loading out and in script -->
   </body>
   <!--end::Body-->
 </html>
