@@ -13,6 +13,24 @@
   font-size: small;
   overflow: auto !important;
 }
+/* Mobile-first approach */
+.element {
+  width: 100%;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .element {
+    width: 50%;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .element {
+    width: 33.33%;
+  }
+}
 .filepopup-content{
   margin-top: 15vh !important;
   border-radius: 8px;
