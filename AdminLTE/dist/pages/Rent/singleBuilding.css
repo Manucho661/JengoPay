@@ -81,8 +81,11 @@ margin-left: 2px;
                                                     padding-left: 2px;
                                                     }   
 
-
- /* TABLE */
+/* DATEILS */
+ /* TABLE SECTION*/
+ .rentTable{
+  overflow: auto;
+ }
  table{
   border-radius: 200px !important;
   width: 100%;
@@ -136,9 +139,7 @@ th {
 td{
   background: #EFF2F5;
 }
-.month{
-  color: rgb(41, 41, 41);
-}
+
 .rent{
   color: black;
   font-weight: 600;
@@ -212,8 +213,13 @@ color: white;
 font-size: 12px;
 font-weight: 600;
 }
-.penalt.rate.lable{
-  color: #767676;
+.rent-payment-deadline .label {
+  color: #00192D;
+  font-weight: 600;
+  font-size: 14px;
+}
+.penalty-rate .label{
+  color: #00192D;
   font-weight: 600;
   font-size: 14px;
 }
@@ -231,6 +237,7 @@ font-weight: 600;
   border-radius: 2px;
   /* color: white; */
   color: #00192D;
+
 }
 .rent.lateDays{
 color:#fca5a5;
@@ -274,7 +281,17 @@ margin-left: 2px;
  border-top-right-radius: 5px;
  border-top-left-radius: 5px;
 }
-
+.rent-payment-deadline{
+  background-color:white; 
+  box-shadow:  0px 4px 10px rgba(0, 0, 0, 0.15); 
+  border-radius: 5px;
+  color: #00192D;
+}
+.penalty-rate{
+  background-color:white; 
+  box-shadow:  0px 4px 10px rgba(0, 0, 0, 0.15); 
+  border-radius: 5px;
+}
 /* SELECT ELEMENT CONTAINER */
 .select-option-container{
 
@@ -351,7 +368,6 @@ margin-left: 2px;
        
        display: none;   
        /* border-radius: 0 0 8px 8px; */
- 
  }
  .select-options div {
        padding: 12px;
@@ -370,6 +386,7 @@ margin-left: 2px;
  }
  .filter-boxes{
    gap:15px;
+   display: flex;
  }
 
  .view-link{
@@ -395,3 +412,40 @@ margin-left: 2px;
                               height: fit-content;
 
                               }
+/* Media Queries */
+@media (max-width: 767.98px)  { 
+  body{
+    overflow-x: hidden;
+  }
+  .filter-boxes{
+     display: block;  
+  }
+  .select-option-container{
+    width: 100%;
+    margin-top: 5px;
+    white-space: nowrap;
+  }
+  .rent-info.filter{
+    display: block;
+  }
+  .pdf-excel{
+    margin-top: 5px;
+    display: flex;
+    justify-content: end;
+  }
+  .col-md-3{
+    margin-bottom: 7px;
+    
+  }
+  .col-sm-4.home{
+    display: flex;
+    justify-content: end;
+    overflow: hidden;
+  }
+  .summary-item{
+    overflow-x: hidden;
+  }
+  .rent-payment-deadline{
+    margin-top: 7px;
+  }
+  }

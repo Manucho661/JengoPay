@@ -328,14 +328,12 @@
                 <div class="d-flex">
                   <h3 class="contact_section_header"> <i class="fas fa-coins icon"></i>
                     Rental Roll &nbsp;/&nbsp;<span class="building">Ebenezer</span></h3>
-                    <h6 class="month" style="color: green;"><i class="fas fa-calendar-alt"></i>
+                    <h6 class="month"><i class="fas fa-calendar-alt"></i>
                       April-2025</h6>
                 </div>
 
               </div>
-              <div class="col-sm-4">
-
-
+              <div class="col-sm-4 home">
                 <div class="row float-sm-end">
                      <ol class="breadcrumb float-sm-end">
                         <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
@@ -424,11 +422,11 @@
                   <div class="col-md-9">
                     <div class="rent-info">
                         <div class="rent-info filter ">
-                          <div class="filter-boxes d-flex">
+                          <div class="filter-boxes">
 
                             <div class="select-option-container ">
 
-                              <div class="custom-select">All Buildings</div>
+                              <div class="custom-select" style="overflow: hidden;">All Buildings</div>
                               <div class="select-options mt-1">
                                 <div class="selected" data-value="item1">All Buildings</div>
                                 <div data-value="item1">Manucho</div>
@@ -463,7 +461,7 @@
                             <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button>
                           </div>
                         </div>
-                        <div class="rentTable section">
+                        <div class="rentTable section" >
                           <table id="rent" class="tableRent" style="font-size: small;" >
                             <thead>
                                 <tr>
@@ -629,20 +627,20 @@
                   <div class="col-md-3" >
 
 
-                    <div class="p-2" style="background-color:white; box-shadow:  0px 4px 10px rgba(0, 0, 0, 0.15); border-radius: 5px; ">
-                      <div class="penalt rate lable ">
+                    <div class="p-2 rent-payment-deadline">
+                      <div class="label ">
                         RENT PAYMENT DEADLINE </div>
-                      <div class="deadline date"><i class="fas fa-calendar-alt"></i>                        30-4-2023</div>
+                      <div class="deadline date"><i class="fas fa-calendar-alt"></i> 30-4-2023</div>
                       <div class="change-btn d-flex justify-content-end"><button class="btn edit rounded">Edit</button></div>
                     </div>
 
 
-                    <div class="p-2 mt-2" style="background-color:white; box-shadow:  0px 4px 10px rgba(0, 0, 0, 0.15); border-radius: 5px; ">
+                    <div class="penalty-rate p-2 mt-2 " >
                     
-                      <div class="penalt rate lable  ">PENALT RATE</div>
+                      <div class="label">PENALTY RATE</div>
                       <div class="penalt_desc d-flex">
                           <div class="pen-rate">10%</div>
-                          <div class="pen-desc">of the total rent</div>
+                          <div class="pen-desc " style="white-space: nowrap; overflow: hidden;">of the total rent</div>
                       </div>
                      <div class="change-btn d-flex justify-content-end"><button class="btn edit rounded">Edit</button></div>
                     </div>
