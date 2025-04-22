@@ -52,7 +52,7 @@
 {"county_id":"47","county_name":"NAIROBI"}
 ]
 },
-{"type":"table","name":"subcounties","database":"hci","data":
+{"type":"table","name":"subcounties","database":"bt_jengopay","data":
 [
 {"subcounty_id":"1","county_id":"1","constituency_name":"changamwe"},
 {"subcounty_id":"2","county_id":"1","constituency_name":"jomvu"},
@@ -344,7 +344,7 @@
 {"subcounty_id":"288","county_id":"47","constituency_name":"mathare"}
 ]
 },
-{"type":"table","name":"station","database":"hci","data":
+{"type":"table","name":"station","database":"bt_jengopay","data":
 [
 {"station_id":"1","subcounty_id":"1","constituency_name":"changamwe","ward":"port reitz"},
 {"station_id":"2","subcounty_id":"1","constituency_name":"changamwe","ward":"kipevu"},

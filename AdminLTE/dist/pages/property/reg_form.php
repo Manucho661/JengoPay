@@ -19,7 +19,8 @@ try {
     $building_type = $_POST['building_type'] ?? ''; // Default to empty string
 
 
-    $sql = "INSERT INTO building_identification (building_name, county, constituency, ward, floor_number, units_number, building_type)
+    $sql = "INSERT INTO building_identification
+    (building_name, county, constituency, ward, floor_number, units_number, building_type)
             VALUES (:building_name, :county, :constituency, :ward, :floor_number, :units_number, :building_type)";
 
 
@@ -40,6 +41,7 @@ try {
   echo "Connection failed: " . $e->getMessage();
 }
 ?>
+
 
 
 <!doctype html>
@@ -489,14 +491,15 @@ try {
               <label>County</label>
               <select name="county"  id="county" onchange="loadConstituencies()"  class="form-control select2 select2-danger"
                 data-dropdown-css-class="select2-danger"
-                style="width: 100%; height:300px !important;"  required>
+                style="width: 100%; height:300px !important;" required>
                 <option value="" hidden selected>-- Select Option --</option>
-                <option>Mombasa</option>
-                <option>Nairobi</option>
-                <option>Turkana</option>
-                <option>Bungoma</option>
-                <option>Nakuru</option>
-                <option>Kwale</option>
+                <?php
+                  $pdo = new PDO("mysql:host=localhost;dbname=bt_jengopay", "root", "");
+                  $stmt = $pdo->query("SELECT * FROM counties");
+                  while ($row = $stmt->fetch()) {
+                      echo "<option value='{$row['id']}'>{$row['name']}</option>";
+        }
+        ?>
               </select>
             </div>
           </div>
@@ -507,9 +510,16 @@ try {
                 <option value="" selected hidden>-- Choose
                   Constituency
                   --</option>
-                <option value="Nairobi">Westlands</option>
+                  <?php
+                  $pdo = new PDO("mysql:host=localhost;dbname=bt_jengopay", "root", "");
+                  $stmt = $pdo->query("SELECT * FROM constituencies");
+                  while ($row = $stmt->fetch()) {
+                      echo "<option value='{$row['id']}'>{$row['name']}</option>";
+        }
+        ?>
+                <!-- <option value="Nairobi">Westlands</option>
                 <option value="Kisumu">Starehe</option>
-                <option value="Vihiga">Embakasi</option>
+                <option value="Vihiga">Embakasi</option> -->
               </select>
               <b class="errorMessages" id="constituencyError"></b>
             </div>
@@ -521,9 +531,11 @@ try {
                 <option value="" selected hidden>-- Choose Ward
                   --
                 </option>
-                <option value="Nairobi">Kangemi</option>
+
+                
+                <!-- <option value="Nairobi">Kangemi</option>
                 <option value="Kisumu">Kiambu</option>
-                <option value="Vihiga">Pipeline</option>
+                <option value="Vihiga">Pipeline</option> -->
               </select>
               <b class="errorMessages" id="wardError"></b>
             </div>
@@ -1358,6 +1370,38 @@ function loadWards() {
   }
 }
 </script> -->
+
+
+<script>
+$(document).ready(function() {
+    $('#county').on('change', function() {
+        var countyId = $(this).val();
+        $('#constituency').html('<option>Loading...</option>');
+        $.ajax({
+            url: 'get_constituencies.php',
+            type: 'POST',
+            data: { county_id: countyId },
+            success: function(data) {
+                $('#constituency').html(data);
+                $('#ward').html('<option value="">-- Select Ward --</option>');
+            }
+        });
+    });
+
+    $('#constituency').on('change', function() {
+        var constituencyId = $(this).val();
+        $('#ward').html('<option>Loading...</option>');
+        $.ajax({
+            url: 'get_wards.php',
+            type: 'POST',
+            data: { constituency_id: constituencyId },
+            success: function(data) {
+                $('#ward').html(data);
+            }
+        });
+    });
+});
+</script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
