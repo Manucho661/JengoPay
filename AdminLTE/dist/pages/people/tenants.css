@@ -48,6 +48,13 @@ padding-left: 2px;
    color: #00192D;
 }
 
+main{
+  transition: opacity 0.4s ease-in-out;
+  opacity: 1;
+}
+main.fade-out {
+   opacity: 0;
+}
 
                                                 /* HEADER SECTION */
 
@@ -252,7 +259,13 @@ padding-left: 2px;
  td .phone:hover{
     text-decoration: underline;
     cursor: pointer;
+  }    
+
+  tr:hover {
+    background-color: #f9f9f9 !important;
+    cursor: pointer;
   }
+
   .phone .icon{
     color: #FFC107;
   }

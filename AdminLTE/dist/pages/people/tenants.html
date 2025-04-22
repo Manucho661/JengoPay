@@ -7,15 +7,20 @@
     <!--begin::Primary Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="title" content="AdminLTE | Dashboard v2" />
-    <meta name="author" content="ColorlibHQ" />
+    <meta name="author" content="ColorlibHQ"/>
+    
     <meta
       name="description"
       content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS."
     />
+
     <meta
       name="keywords"
       content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard"
     />
+
+    <!-- loading out and in progress -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css">
     <!--end::Primary Meta Tags-->
     <!--begin::Fonts-->
     <link
@@ -25,6 +30,7 @@
       crossorigin="anonymous"
     />
     <!--end::Fonts-->
+
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <link
       rel="stylesheet"
@@ -49,6 +55,9 @@
     <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
+
+
+
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
@@ -57,7 +66,7 @@
     />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-   <link rel="stylesheet" href="tenant.css">
+   <link rel="stylesheet" href="tenants.css">
 <!-- scripts for data_table -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
@@ -301,7 +310,7 @@
       </aside>
       <!--end::Sidebar-->
       <!--begin::App Main-->
-      <main class="app-main">
+      <main class="app-main" id="mainElement">
         <!--begin::App Content Header-->
         <div class="app-content-header">
           <!--begin::Container-->
@@ -422,24 +431,23 @@
                             <div id="custom-buttons"></div>
                       </div>
 
-
-
                     </div>
 
-                    <table class="table table-striped" id="maintenance">
+                    <table class="table table-hover" id="maintenance">
                         <thead class="thead bg-gradient" >
-                            <tr >
+                            <tr>
+
                               <th>Full Name</th>
                               <th>ID</th>
                               <th>RESIDENCE + UNIT</th>
                               <th>CONTACT</th>
                               <th>STATUS</th>
-                                <th>ACTIONS</th>
+                              <th>ACTIONS</th>
 
                             </tr>
                           </thead>
                           <tbody>
-                            <tr>
+                            <tr  onclick="goToDetails('user-1')">
                               <td>Edwin</td>
                               <td> 3801790</td>
                               <td>
@@ -456,7 +464,7 @@
                               <td> <button class="status completed"><i class="fa fa-check-circle"></i> Active </button>  </td>
 
                               <td>
-                                <a href="vacate_tenant.php" class="btn btn-sm" style="background-color: #00192D; color:#fff;" data-toggle="tooltip" title="Vacant Paul Pashan from the House"> <i class="fa fa-arrow-right"></i></a>
+                                <a href="vacate_tenant.php" class="btn btn-sm" style="background-color: #00192D; color:#fff;" data-toggle="tooltip" title="Vacant edwin from the House" onclick="event.stopPropagation();" > <i class="fa fa-arrow-right"></i></a>
                                 <button class="btn btn-sm" style="background-color: #AF2A28; color:#fff;"> <i class="fa fa-comment" data-toggle="tooltip" title="Send Paul Pashan an SMS"></i></button>
                                 <button style="background-color: #F74B00; color:#fff;" class="btn btn-sm" data-toggle="tooltip" title="Send Paul Pashan Email"><i class="fa fa-envelope"></i> </button>
                               </td>
@@ -598,6 +606,11 @@
   </div>
   </div>
 </div>
+
+<!-- LOADING AND OUT PROGRESS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+<!-- EnD LOADING AND OUT PROGRESS -->
+
 
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -848,9 +861,57 @@
     });
 
   </script>
-
-
     <!--end::Script-->
+
+
+
+    <!-- Tenant Page -->
+    <script>
+      function goToDetails(userId) {
+        window.location.href = `../people/tenant-profile.html?id=${userId}`;
+      }
+   </script>
+
+
+
+<!-- Loading out and in script -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Fade in effect on page load
+    const mainElement = document.getElementById("mainElement");
+
+    if (mainElement) {
+      mainElement.classList.remove("fade-out");
+    }
+
+    function navigateWithTransition(url) {
+    NProgress.start();                             // Start progress bar
+    mainElement.classList.add("fade-out");         // Fade out the main content
+
+    setTimeout(() => {
+      window.location.href = url;                  // Navigate after fade
+    }, 500); // Matches the CSS transition time
+  }
+
+
+    // Intercept link clicks
+    document.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", function (e) {
+        const target = this.getAttribute("target");
+        const href = this.getAttribute("href");
+
+        if (!target || target === "_self") {
+          e.preventDefault();
+          navigateWithTransition(href);              
+        }
+      });
+    });
+  });
+
+</script>
+
+
+
   </body>
   <!--end::Body-->
 </html>
