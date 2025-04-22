@@ -363,54 +363,55 @@
 
 
 
+            <!--end::Row-->
             <div class="row table_buttons mb-2">
-              <div class="col-md-2">
+              <div class="col-md-2 col-12">
                 <div class="filter-container">
                   <div>
                     <label for="categoryFilter" class="filter-label">Building</label>
                     <br>
-                    <select id="categoryFilter">
-                        <option value="">-- Select --</option>
-                        <option value="technology">All</option>
-                        <option value="health">Manucho</option>
-                        <option value="business">Ebenezer</option>
-                        <option value="education">Crown Z</option>
+                    <select id="categoryFilter" class="form-control">
+                      <option value="">-- Select --</option>
+                      <option value="technology">All</option>
+                      <option value="health">Manucho</option>
+                      <option value="business">Ebenezer</option>
+                      <option value="education">Crown Z</option>
                     </select>
                   </div>
 
                   <div>
-                      <label for="filterDate" class="filter-label">Start Date</label>
-                      <br>
-                      <input type="date" id="filterDate" />
+                    <label for="filterDate" class="filter-label">Start Date</label>
+                    <br>
+                    <input type="date" id="filterDate" class="form-control" />
                   </div>
 
                   <div style="padding: 10px;">
-                  <label for="filterDate" class="filter-label">End  Date</label>
-                  <br>
-                   <input type="date" id="filterDate"/>
+                    <label for="filterDate" class="filter-label">End Date</label>
+                    <br>
+                    <input type="date" id="filterDate" class="form-control"/>
                   </div>
                   <div>
                     <label for="search" class="filter-label">
                       <i class="fas fa-filter"></i>
                       Filter</label>
-
-                    <input type="text" class="search-input" placeholder="Search...">
+                    <input type="text" class="search-input form-control" placeholder="Search...">
                   </div>
-                 </div>
-                 </div>
+                </div>
+              </div>
 
-                  <div class="col-md-12 d-flex justify-content-end" style="position: relative;" >
-                    <div style="position: absolute; bottom: 0;">
-                     <button  class="pdf_button"  style="height: fit-content; padding: 4px;" id="downloadBtn"> <i class="fas fa-file-pdf" style="font-size: 30px; padding: 5x; color: white"></i></button>
-                      <button class="excel_button" style="height: fit-content; padding: 4px;" onclick="exportToExcel()"> <i class="fas fa-file-excel" style="font-size: 30px;  color: white"></i> </button>
-                    </div>
-                  </div>
-                  </div>
+              <div class="col-md-10 col-12 d-flex justify-content-end" style="position: relative; min-height: 100px;">
+                <div style="position: absolute; bottom: 0; right: 0; white-space: nowrap;">
+                  <button class="pdf_button" style="height: fit-content; padding: 4px;" id="downloadBtn">
+                    <i class="fas fa-file-pdf" style="font-size: 30px; padding: 5px; color: white"></i>
+                  </button>
+                  <button class="excel_button" style="height: fit-content; padding: 4px;" onclick="exportToExcel()">
+                    <i class="fas fa-file-excel" style="font-size: 30px; color: white"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
 
 
-
-
-            <!--end::Row-->
 
             <!-- /end row -->
           </div>
@@ -420,14 +421,13 @@
           <!--begin::Container-->
           <div class="container-fluid">
             <!--begin::Row-->
-            <div class="row first mb-2 mt-2 rounded-circle">
-
+            <div class="row first mb-2 mt-2" style="overflow-x: auto;">
               <!-- Table for Rent Deposit Report -->
               <table id="myTable">
                   <thead>
                       <tr class="balancesheet-header">
-                         <th>#</th>
-                         <th>Tenant ID</th>
+                          <th>#</th>
+                          <th>Tenant ID</th>
                           <th>Name</th>
                           <th>Building</th>
                           <th>Unit</th>
@@ -443,7 +443,7 @@
                   </tbody>
               </table>
               <!-- /.col -->
-            </div>
+          </div>
             <!--end::Row-->
                   </div>
                 </div>
