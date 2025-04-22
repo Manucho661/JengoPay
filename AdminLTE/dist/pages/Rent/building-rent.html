@@ -56,7 +56,7 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="singleBuilding.css">
+    <link rel="stylesheet" href="building-rent.css">
 
     <!-- scripts for data_table -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
@@ -428,10 +428,10 @@
 
                               <div class="custom-select" style="overflow: hidden;">All Buildings</div>
                               <div class="select-options mt-1">
-                                <div class="selected" data-value="item1">All Buildings</div>
-                                <div data-value="item1">Manucho</div>
-                                <div data-value="item2">Ebenezer</div>
-                                <div data-value="item3">Crown Z</div>
+                                <div class="selected" data-value="item1">All Units</div>
+                                <div data-value="item1">Single Rooms</div>
+                                <div data-value="item2">Bedsitters</div>
+
                               </div>
                             </div>
 
@@ -453,7 +453,7 @@
                                 <div data-value="item3">March</div>
                               </div>
                             </div>
-                           
+
                           </div>
 
                           <div class="pdf-excel">
@@ -506,7 +506,7 @@
                                     <td class="rent overpayment">$&nbsp; 500</td>
 
                                   <td>
-                                    <button class="btn view"> <a class="view-link" href="../people/tenantProfile.html">View</a> </button>
+                                    <button class="btn view"> <a class="view-link" href="../people/tenant-profile.html">View</a> </button>
 
                                   </td>
                               </tr>
@@ -532,7 +532,7 @@
                                   <td class="rent collected">$&nbsp;2,000</td>
                                   <td class="rent overpayment">$&nbsp; 500</td>
                                 <td>
-                                  <button class="btn view"> <a class="view-link" href="../people/tenantProfile.html">View</a> </button>
+                                  <button class="btn view"> <a class="view-link" href="../people/tenant-profile.html">View</a> </button>
                                 </td>
                               </tr>
                               <tr>
@@ -556,7 +556,7 @@
                                 <td class="rent overpayment">$&nbsp;300</td>
 
                               <td>
-                                <button class="btn view"> <a class="view-link" href="../people/tenantProfile.html">View</a> </button>
+                                <button class="btn view"> <a class="view-link" href="../people/tenant-profile.html">View</a> </button>
                               </td>
                           </tr>
 
@@ -585,7 +585,7 @@
                               <td class="rent overpayment">$&nbsp;300</td>
 
                             <td>
-                              <button class="btn view"> <a class="view-link" href="../people/tenantProfile.html">View</a> </button>
+                              <button class="btn view"> <a class="view-link" href="../people/tenant-profile.html">View</a> </button>
                             </td>
                               </tr>
 
@@ -612,7 +612,7 @@
                             <td class="rent collected">$&nbsp;9,000</td>
                             <td class="rent overpayment" >$&nbsp;1000</td>
                           <td>
-                            <button class="btn view"> <a class="view-link" href="../people/tenantProfile.html">View</a> </button>
+                            <button class="btn view"> <a class="view-link" href="../people/tenant-profile.html">View</a> </button>
                           </td>
                         </tr>
                         </tbody>
@@ -621,7 +621,7 @@
                         </div>
                     </div>
 
-                    
+
                   </div>
 
                   <div class="col-md-3" >
@@ -636,7 +636,7 @@
 
 
                     <div class="penalty-rate p-2 mt-2 " >
-                    
+
                       <div class="label">PENALTY RATE</div>
                       <div class="penalt_desc d-flex">
                           <div class="pen-rate">10%</div>
@@ -825,22 +825,22 @@
       document.addEventListener("DOMContentLoaded", () => {
         // Fade in effect on page load
         const mainElement = document.getElementById("mainElement");
-    
+
         if (mainElement) {
           mainElement.classList.remove("fade-out");
         }
-    
+
         // Intercept link clicks
         document.querySelectorAll("a").forEach(link => {
           link.addEventListener("click", function (e) {
             const target = this.getAttribute("target");
             const href = this.getAttribute("href");
-    
+
             if (!target || target === "_self") {
               e.preventDefault();
               NProgress.start();
               mainElement.classList.add("fade-out");
-    
+
               setTimeout(() => {
                 window.location.href = href;
               }, 500);
@@ -849,7 +849,7 @@
         });
       });
     </script>
-    
+
     <!-- End Loading out and in script -->
   </body>
   <!--end::Body-->
