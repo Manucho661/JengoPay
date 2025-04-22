@@ -374,41 +374,37 @@ display: flex;
                 <!--begin::Row-->
                 <!-- Message Container -->
 
-              <div class="row" style="height: 100%;" >
-
+                <div class="row" style="height: 100%;">
                   <div class="col-md-12 message-container">
-                    <!-- <div class="container" style="border:1px solid #E2E2E2" > -->
+                      <!-- <div class="container" style="border:1px solid #E2E2E2" > -->
                       <div class="row filter-section" id="filter-section">
-                        <div class="col-12 message-container-header-section">
-                          <div class="row">
-                            <div class="col-md-8">
-                              <select id="categoryFilter" class="categoryFilter">
-                                <option value="">-- Select Building--</option>
-                                <option value="technology">All</option>
-                                <option value="health">Manucho</option>
-                                <option value="business">Ebenezer</option>
-                                <option value="education">Crown Z</option>
-                              </select>
-                              <input type="text" class="search-input" placeholder="Search Tenant...">
-
-
-                            </div>
-                            <div class="col-md-4 RecentChatNewText-btns" style="align-items: center; ">
-
-                              <div class="date d-flex date">
-                                <label class="form-label startDate">Start Date</label>
-                                <input type="date" class="form-control" id="endDate" placeholder="end">
+                          <div class="col-12 message-container-header-section">
+                              <div class="row">
+                                  <div class="col-md-8 col-12">
+                                      <select id="categoryFilter" class="categoryFilter">
+                                          <option value="">-- Select Building--</option>
+                                          <option value="technology">All</option>
+                                          <option value="health">Manucho</option>
+                                          <option value="business">Ebenezer</option>
+                                          <option value="education">Crown Z</option>
+                                      </select>
+                                      <input type="text" class="search-input" placeholder="Search Tenant...">
+                                  </div>
+                                  <div class="col-md-4 col-12 RecentChatNewText-btns" style="align-items: center;">
+                                      <div class="date d-flex date">
+                                          <label class="form-label startDate">Start Date</label>
+                                          <input type="date" class="form-control" id="endDate" placeholder="end">
+                                      </div>
+                                      <div class="date d-flex date">
+                                          <label class="form-label endDate">End Date</label>
+                                          <input type="date" class="form-control" id="endDate" placeholder="end">
+                                      </div>
+                                  </div>
                               </div>
-                              <div class="date d-flex date">
-                                <label class="form-label endDate">End Date</label>
-                                <input type="date" class="form-control" id="endDate" placeholder="end">
-                              </div>
-
-                            </div>
                           </div>
-                        </div>
                       </div>
-
+                  </div>
+              <!-- </div> -->
                         <!-- Start Row messages-summmary -->
                          <div class="row" style="display: none;" id="go-back" >
                           <div class="col-md-12 d-flex">
@@ -425,155 +421,151 @@ display: flex;
                          <!-- End Row -->
 
                          <!-- start row -->
+                         <div class="row align-items-stretch all-messages-summary" id="all-messages-summary">
+                          <div id="message-summary" class="col-md-12  message-summary">
+                              <div class="message-list p-2" style="display: flex; justify-content: space-between;">
+                                  <div class="recent-messages-header">Recent Messages</div>
+                                  <div>
+                                      <button id="new_text" onclick="opennewtextPopup()" class="btn new-text"><i class="bi bi-plus"></i> New Chat</button>
+                                  </div>
+                              </div>
 
-                      <div class="row align-items-stretch all-messages-summary" id="all-messages-summary">
-
-                        <div id="message-summary" class="col-md-12  message-summary">
-                          <div class="message-list p-2" style="display: flex; justify-content: space-between;">
-                            <div class="recent-messages-header">Recent Messages</div>
-                           <div>
-                            <button  id="new_text" onclick="opennewtextPopup()" class="btn new-text">    <i class="bi bi-plus" ></i> New Chat</button>
-                           </div>
+                              <div class="table-responsive">
+                                  <table class="table table-hover table-summary-messages" style="border-radius: 20px; flex-grow: 1;">
+                                      <thead class="">
+                                          <tr>
+                                              <th>SENT</th>
+                                              <th>Title</th>
+                                              <th>SENT BY</th>
+                                              <th>ACTION</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                          <tr class="table-row">
+                                              <td class="timestamp">
+                                                  <div class="date">13-03-2025</div>
+                                                  <div class="time">07:45PM</div>
+                                              </td>
+                                              <td class="title">Request to Vacate Room</td>
+                                              <td>
+                                                  <div class="sender">Me</div>
+                                                  <div class="sender-email"></div>
+                                              </td>
+                                              <td>
+                                                  <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                                                  <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                              <td class="timestamp">
+                                                  <div class="date">13-03-2025</div>
+                                                  <div class="time">07:45PM</div>
+                                              </td>
+                                              <td class="title">Request to Fix Leaking shower</td>
+                                              <td>
+                                                  <div class="sender">Christiano Ronaldo</div>
+                                                  <div class="sender-email"><i class="fa fa-envelope"></i> Ronald12@gmail.com</div>
+                                              </td>
+                                              <td>
+                                                  <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                                                  <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                              <td class="timestamp">
+                                                  <div class="date">13-03-2025</div>
+                                                  <div class="time">07:45PM</div>
+                                              </td>
+                                              <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
+                                              <td>
+                                                  <div class="sender">Sherly Nabwana</div>
+                                                  <div class="sender-email"><i class="fa fa-envelope"></i>Nabwana@gmail.com</div>
+                                              </td>
+                                              <td>
+                                                  <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                                                  <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                              <td class="timestamp">
+                                                  <div class="date">13-03-2025</div>
+                                                  <div class="time">07:45PM</div>
+                                              </td>
+                                              <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
+                                              <td>
+                                                  <div class="sender">Hesbon Wanjiku</div>
+                                                  <div class="sender-email"><i class="fa fa-envelope"></i>wa123@gmail.com</div>
+                                              </td>
+                                              <td>
+                                                  <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                                                  <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                              <td class="timestamp">
+                                                  <div class="date">13-03-2025</div>
+                                                  <div class="time">07:45PM</div>
+                                              </td>
+                                              <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
+                                              <td>
+                                                  <div class="sender">Me</div>
+                                                  <div class="sender-email"></div>
+                                              </td>
+                                              <td>
+                                                  <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                                                  <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                              <td class="timestamp">
+                                                  <div class="date">13-03-2025</div>
+                                                  <div class="time">07:45PM</div>
+                                              </td>
+                                              <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
+                                              <td>
+                                                  <div class="sender">Sherly Nabwana</div>
+                                                  <div class="sender-email"><i class="fa fa-envelope"></i>Nabwana@gmail.com</div>
+                                              </td>
+                                              <td>
+                                                  <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                                                  <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                              <td class="timestamp">
+                                                  <div class="date">13-03-2025</div>
+                                                  <div class="time">07:45PM</div>
+                                              </td>
+                                              <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
+                                              <td>
+                                                  <div class="sender">Hesbon Wanjiku</div>
+                                                  <div class="sender-email"><i class="fa fa-envelope"></i>wa123@gmail.com</div>
+                                              </td>
+                                              <td>
+                                                  <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                                                  <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                              <td class="timestamp">
+                                                  <div class="date">13-03-2025</div>
+                                                  <div class="time">07:45PM</div>
+                                              </td>
+                                              <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
+                                              <td>
+                                                  <div class="sender">Me</div>
+                                                  <div class="sender-email"></div>
+                                              </td>
+                                              <td>
+                                                  <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
+                                                  <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
+                                              </td>
+                                          </tr>
+                                      </tbody>
+                                  </table>
+                              </div>
                           </div>
-
-                          <table class="table table-hover table-summary-messages" style="border-radius: 20px; flex-grow: 1;">
-                              <thead class="">
-                                  <tr>
-                                      <th>SENT</th>
-                                      <th>Title</th>
-                                      <th>SENT BY</th>
-                                      <th>ACTION</th>
-                                  </tr>
-                              </thead>
-                              <tbody>
-                                  <tr class="table-row">
-                                      <td class="timestamp">
-                                        <div class="date">13-03-2025</div>
-                                        <div class="time">07:45PM</div>
-                                      </td>
-                                      <td class="title">Request to Vacate Room</td>
-                                      <td>
-                                        <div class="sender">Me</div>
-                                        <div class="sender-email"></div>
-
-                                      </td>
-                                      <td >
-                                        <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                                        <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                                      </td>
-                                  </tr>
-                                  <tr>
-                                    <td class="timestamp">
-                                      <div class="date">13-03-2025</div>
-                                      <div class="time">07:45PM</div>
-                                    </td>
-                                      <td class="title">Request to Fix Leaking shower</td>
-                                      <td>
-                                        <div class="sender">Christiano Ronaldo</div>
-                                        <div class="sender-email"><i class="fa fa-envelope"></i> Ronald12@gmail.com</div>
-                                      </td>
-                                      <td >
-                                        <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                                        <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                                      </td>
-                                  </tr>
-                                  <tr>
-                                    <td class="timestamp">
-                                      <div class="date">13-03-2025</div>
-                                      <div class="time">07:45PM</div>
-                                    </td>
-                                      <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
-                                      <td>
-                                        <div class="sender">Sherly Nabwana</div>
-                                        <div class="sender-email"><i class="fa fa-envelope"></i>Nabwana@gmail.com</div>
-                                      </td>
-                                      <td >
-                                        <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                                        <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                                      </td>
-                                  </tr>
-                                  <tr>
-                                    <td class="timestamp">
-                                      <div class="date">13-03-2025</div>
-                                      <div class="time">07:45PM</div>
-                                    </td>
-                                      <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
-                                      <td>
-                                        <div class="sender">Hesbon Wanjiku</div>
-                                        <div class="sender-email"><i class="fa fa-envelope"></i>wa123@gmail.com</div>
-                                      </td>
-                                      <td >
-                                        <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                                        <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                                      </td>
-                                  </tr>
-                                  <tr>
-                                    <td class="timestamp">
-                                      <div class="date">13-03-2025</div>
-                                      <div class="time">07:45PM</div>
-                                    </td>
-                                      <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
-                                      <td>
-                                        <div class="sender">Me</div>
-                                        <div class="sender-email"></div>
-                                      </td>
-                                      <td >
-                                        <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                                        <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                                      </td>
-                                  </tr>
-                                  <tr>
-                                    <td class="timestamp">
-                                      <div class="date">13-03-2025</div>
-                                      <div class="time">07:45PM</div>
-                                    </td>
-                                      <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
-                                      <td>
-                                        <div class="sender">Sherly Nabwana</div>
-                                        <div class="sender-email"><i class="fa fa-envelope"></i>Nabwana@gmail.com</div>
-                                      </td>
-                                      <td >
-                                        <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                                        <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                                      </td>
-                                  </tr>
-                                  <tr>
-                                    <td class="timestamp">
-                                      <div class="date">13-03-2025</div>
-                                      <div class="time">07:45PM</div>
-                                    </td>
-                                      <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
-                                      <td>
-                                        <div class="sender">Hesbon Wanjiku</div>
-                                        <div class="sender-email"><i class="fa fa-envelope"></i>wa123@gmail.com</div>
-                                      </td>
-                                      <td >
-                                        <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                                        <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                                      </td>
-                                  </tr>
-                                  <tr>
-                                    <td class="timestamp">
-                                      <div class="date">13-03-2025</div>
-                                      <div class="time">07:45PM</div>
-                                    </td>
-                                      <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
-                                      <td>
-                                        <div class="sender">Me</div>
-                                        <div class="sender-email"></div>
-                                      </td>
-                                      <td >
-                                        <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                                        <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                                      </td>
-                                  </tr>
-                              </tbody>
-                          </table>
-
-                        </div>
-
                       </div>
-
                         <!-- End Row messages-summmary -->
 
                       <div class="row h-100 align-items-stretch" id="individual-message-summmary" style="border:1px solid #E2E2E2; padding: 0 !important; display: none; max-height: 95%;">

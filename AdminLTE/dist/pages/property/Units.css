@@ -5,6 +5,15 @@ body {
     font-size: 12px;
   }
 
+  .contact_section_header{
+    font-weight: 600;
+  letter-spacing: .5px;
+  margin-right: 2px;
+  }
+.contact_section_header .icon{
+  color: #FFC107;
+
+}
   .panel {
     display: none; /* Initially hidden */
     background-color: #00192D;
@@ -128,16 +137,8 @@ body {
     display: flex;/* Add this for the absolute positioning of the close button */
     font-weight: 600;
   }
-  #more_announcement_btn{
-  color: blueviolet;
-  font-weight: 500;
-  cursor: pointer;
 
-  }
-  #more_announcement_btn:hover{
-  background-color: rgba(128, 128, 128, 0.2);
-  color: #FFC107;
-  }
+
 
 
 
@@ -164,26 +165,6 @@ body {
 
   input[type="radio"], input[type="checkbox"] {
   margin-right: 8px;
-  }
-
-
-
-  /* button:hover {
-  background-color:#00192D;
-  } */
-
-  /* .form-container {
-  background-color: #ffffff;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  max-width: 600px;
-  margin: 30px auto;
-  } */
-
-  h2 {
-  text-align: center;
-  margin-bottom: 20px;
   }
 
   label {

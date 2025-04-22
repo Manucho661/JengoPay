@@ -61,11 +61,14 @@
 
     <!-- scripts for data_table -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="announcements.css">
+    
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- loading out and in progress -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css">
 
 <style>
  select {
@@ -305,7 +308,7 @@ select:hover {
       </aside>
       <!--end::Sidebar-->
       <!--begin::App Main-->
-      <main class="app-main">
+      <main id="mainElement" class="app-main fade-out">
         <!--begin::App Content Header-->
         <div class="app-content-header">
           <!--begin::Container-->
@@ -333,7 +336,7 @@ select:hover {
                   <h6 class="month" style="color: green;">April-2025</h6>
                 </div>
               </div>
-              <div class="col-sm-4">
+              <div class="col-sm-4 home">
                 <div class="row float-sm-end">
                      <ol class="breadcrumb float-sm-end">
                         <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
@@ -355,7 +358,7 @@ select:hover {
             <div class="row">
               <h6 class="mb-0 contact_section_header summary mb-2"> </i> Summary</h6>
 
-              <div class="col-md-3">
+              <div class="col-sm-12 col-md-3">
                 <div class="summary-item collected" style="display: flex; gap: 10px; align-items: center; ">
                   <div class="icon"> <i class="fas fa-coins"></i></div>
                   <div>
@@ -365,7 +368,7 @@ select:hover {
                 </div>
               </div>
 
-              <div class="col-md-3">
+              <div class="col-sm-12 col-md-3">
                 <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; ">
                   <div class="icon"> <i class="fas fa-coins"></i></div>
                   <div>
@@ -374,7 +377,7 @@ select:hover {
                   </div>
                 </div>
               </div>
-              <div class="col-md-3">
+              <div class="col-sm-12 col-md-3">
                 <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; ">
                   <div class="icon"> <i class="fas fa-coins"></i></div>
                   <div>
@@ -384,7 +387,7 @@ select:hover {
                 </div>
               </div>
 
-              <div class="col-md-3">
+              <div class="col-sm-12 col-md-3">
                 <div class="summary-item collected" style="display: flex; gap: 10px;   align-items: center; ">
                   <div class="icon"> <i class="fas fa-coins"></i></div>
                   <div>
@@ -406,7 +409,7 @@ select:hover {
                     <div class="col-md-12">
                       <div class="rent-info">
                           <div class="rent-info filter ">
-                            <div class="filter-boxes d-flex">
+                            <div class="filter-boxes">
 
                               <div class="select-option-container mt-3">
                                 <div class="custom-select">All Buildings</div>
@@ -441,7 +444,7 @@ select:hover {
                             <div class="pdf-excel">
                               <button class="pdf" ><i class="fas fa-file-pdf" style="color: red;"></i></button>
                               <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button>
-                            </div>
+                            </div> 
                           </div>
                           <div class="rentTable section">
                             <table id="rent" class="tableRent" style="font-size: small;" >
@@ -457,7 +460,7 @@ select:hover {
                                   </tr>
                               </thead>
                               <tbody>
-                               <tr onclick="window.location.href=''">
+                               <tr >
                                   <th >Manucho</th>
                                       <td class="rent paid">$&nbsp;80,000</td>
 
@@ -468,11 +471,11 @@ select:hover {
                                       <td class="rent collected">$&nbsp; 3,000</td>
                                       <td class="rent overpayment">$&nbsp; 500</td>
 
-                                    <td>
-                                      <button class="btn view">View</button>
+                                    <td>                                     
+                                      <button class="btn view"> <a class="view-link" href="singleBuilding.html">View</a> </button>
                                     </td>
                                 </tr>
-                                <tr onclick="window.location.href=''">
+                                <tr>
                                 <th >Ebenezer</th>
                                     <td class="rent paid">$&nbsp;70,000</td>
                                     <td>
@@ -481,10 +484,10 @@ select:hover {
                                     <td class="rent collected">$&nbsp;2,000</td>
                                     <td class="rent overpayment">$&nbsp; 500</td>
                                   <td>
-                                    <button class="btn view">View</button>
+                                    <button class="btn view"> <a class="view-link" href="singleBuilding.html">View</a> </button>
                                   </td>
                                 </tr>
-                                <tr onclick="window.location.href=''">
+                                <tr>
                                   <th >Pink House</th>
                                   <td class="rent paid"> $&nbsp;90,000</td>
                                   <td>
@@ -494,12 +497,11 @@ select:hover {
                                   <td class="rent overpayment">$&nbsp;300</td>
 
                                 <td>
-                                  <button class="btn view">View</button>
-
+                                  <button class="btn view"> <a class="view-link" href="singleBuilding.html">View</a> </button>
                                 </td>
                             </tr>
 
-                              <tr onclick="window.location.href=''">
+                              <tr>
                                 <th >Orange House</th>
                                 <td class="rent paid"> $&nbsp;50,000</td>
                                 <td  >
@@ -511,21 +513,21 @@ select:hover {
                                 <td class="rent overpayment">$&nbsp;300</td>
 
                               <td>
-                                <button class="btn view">View</button>
+                                <button class="btn view"> <a class="view-link" href="singleBuilding.html">View</a> </button>
                               </td>
                                 </tr>
 
 
-                          <tr onclick="window.location.href=''">
+                          <tr>
                             <th>Carolina</th>
                               <td class="rent paid">$&nbsp;40,000</td>
                               <td>
                                 <div class="rent penalit">$&nbsp;1000</div>
                               </td>
                               <td class="rent collected">$&nbsp;9,000</td>
-                              <td class="rent overpayment" >$&nbsp;1000</td>
+                              <td class="rent overpayment">$&nbsp;1000</td>
                             <td>
-                              <button class="btn view">View</button>
+                              <button class="btn view"> <a class="view-link" href="singleBuilding.html">View</a> </button>
                             </td>
                           </tr>
                           </tbody>
@@ -566,6 +568,10 @@ select:hover {
 <!--end::Footer-->
 </div>
 
+<!-- LOADING AND OUT PROGRESS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+<!-- EnD LOADING AND OUT PROGRESS -->
+                                           <!-- SELECT ELEMENT SCRIPT -->
 <!-- SELECT ELEMENT SCRIPT -->
 
 <script>
@@ -820,6 +826,50 @@ document.querySelectorAll('.select-option-container').forEach(container => {
     ></script>
 
     <!--end::Script-->
+
+<!-- Loading out and in script -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Fade in effect on page load
+    const mainElement = document.getElementById("mainElement");
+
+    if (mainElement) {
+      mainElement.classList.remove("fade-out");
+    }
+
+    // Intercept link clicks
+    document.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", function (e) {
+        const target = this.getAttribute("target");
+        const href = this.getAttribute("href");
+
+        if (!target || target === "_self") {
+          e.preventDefault();
+          NProgress.start();
+          mainElement.classList.add("fade-out");
+
+          setTimeout(() => {
+            window.location.href = href;
+          }, 500);
+        }
+      });
+    });
+  });
+  
+  
+  
+</script>
+
+
+
+
+<script>
+  window.addEventListener('resize', () => {
+  console.log("Viewport width:", window.innerWidth);
+  console.log("yoyo");
+});
+</script>
+
   </body>
   <!--end::Body-->
 </html>

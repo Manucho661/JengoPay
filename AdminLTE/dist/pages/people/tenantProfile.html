@@ -67,116 +67,7 @@
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
 <style>
-   .overlay {
-            /* position: absolute; */
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-            display: none;
-            justify-content: center;
-            align-items: center;
-            /* z-index: 1000; */
-    }
-
-    /* Overlay content */
-    .overlay-content {
-      background-color: #fff;
-            padding: 30px;
-            /* border-radius: 8px; */
-            width: 50%;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-            text-align: center;
-  /* background-color: white; */
-  /* padding: 30px; */
-  border-radius: 10px;
-    }
-
-     /* Close button
-  .close-btn {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 20px;
-  cursor: pointer;
-  border: none;
-  background: none;
-  } */
-    table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .total-row {
-            font-weight: bold;
-        }
-        .downloadi {
-          padding: 15px 30px; /* Add padding to the button */
-  font-size: 16px; /* Optional: adjust font size */
-  cursor: pointer; /* Change cursor to pointer on hover */
-  border-radius: 10px;
-  border: none;
-}
-.invoice-header {
-            display: flex;
-            justify-content: space-between;
-        }
-        .invoice-headering {
-            display: flex;
-            justify-content: space-between;
-        }
-.btns{
-            margin-top: 10px;
-            display: inline-block;
-            padding: 10px 15px;
-            background-color:#00192D;
-            color:#FFC107;
-            text-decoration: none;
-            border-radius: 5px;
-            cursor: pointer;
-}
-.total {
-            text-align: right;
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .invoice-details {
-            margin-bottom: 20px;
-        }
-
-        .invoice-details p {
-            margin: 10px 0;
-            font-size: 14px;
-        }
-        @media print {
-            .overlay {
-                display: block !important;
-                position: absolute;
-            }
-            .close-btn, .btns {
-                display: none;
-            }
-            .overlay-content {
-                width: 100%;
-                max-width: 100%;
-                box-shadow: none;
-            }
-          }
-          .btn-print {
-                display: none;
-            }
+   
 </style>
 
   </head>
@@ -633,22 +524,20 @@
                         <div class="bg-white " style="box-shadow:0 4px 10px rgba(0, 0, 0, 0.1) ; border-radius: 5px;">
                           <div class="row p-2">
                             <div class="col-md-8" >
-
                               <select id="categoryFilter" class="categoryFilter">
                                 <option value="">-- Select Year--</option>
                                 <option value="2024">2024</option>
                                 <option value="2023">2023</option>
                               </select>
-
                             </div>
                             <div class="col-md-4 d-flex justify-content-end" style="align-items: center; ">
                               <button class="pdf" ><i class="fas fa-file-pdf" style="color: red;"></i></button>
                               <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button>
-                          </div>
+                            </div>
                           </div>
 
                           <div class="row p-2">
-                            <div class="col-md-12">
+                            <div class="col-md-12 rent-table-details" >
                               <table>
                                 <thead>
                                   <tr>
@@ -739,15 +628,13 @@
                       </div>
 
                       <div class="col-md-3" >
-                        <div class="p-2" style="background-color:white; box-shadow:  0px 4px 10px rgba(0, 0, 0, 0.15); border-radius: 5px; ">
-                          <div class="penalt rate lable ">Penalt Rate</div>
+                        <div class="penalty-rate p-2 " style="background-color:white; box-shadow:  0px 4px 10px rgba(0, 0, 0, 0.15); border-radius: 5px; ">
+                          <div class="label">Penalt Rate</div>
                         <div class="penalt_desc d-flex">
                           <div class="pen-rate">10%</div>
                           <div class="pen-desc">of the total rent</div>
                         </div>
-
-
-                        <div class="change-btn d-flex justify-content-end"><button class="btn change rounded">Edit</button></div>
+                        <div class="change-btn d-flex justify-content-end"><button class="btn edit rounded">Edit</button></div>
                         </div>
 
                       </div>
