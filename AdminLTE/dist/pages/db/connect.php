@@ -1,6 +1,6 @@
 <?php
 $host = "";
-$dbname = "";
+$dbname = "bt_jengopay";
 $username = "root";
 $password = "";
 

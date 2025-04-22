@@ -1,3 +1,7 @@
+
+<?php
+ include '../db/connect.php';
+?>
 <!doctype html>
 <html lang="en">
   <!--begin::Head-->
@@ -67,7 +71,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
    <link rel="stylesheet" href="tenants.css">
-<!-- scripts for data_table -->
+     <!-- scripts for data_table -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
@@ -325,11 +329,10 @@
                 </div>
 
 
-              <div class="col-sm-4">
-                <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                </ol>
+              <div class="col-sm-4 d-flex justify-content-end">
+                  <div class="vacate">
+                    <button class="vacate-tenant rounded" style="height: fit-content;" onclick="openPopup()" > ADD TENANT</button>
+                  </div>
               </div>
 
             </div>
@@ -536,9 +539,10 @@
 <!-- Add Tenant -->
 <div class="popup-overlay"  id="complaintPopup">
   <div class="popup-content">
+
     <button class="close-btn text-secondary" onclick="closePopup()">×</button>
 
-    <form class="complaint-form ">
+    <form class="complaint-form" action="tena.php">
       <h2 class="text-start addTenantHeader">Add Tenant</h2>
         <label for="name">Tenant Name:</label>
         <input type="text" id="name" name="name" required>
@@ -559,15 +563,11 @@
           <option value="Moderate">Ben 10</option>
           <option value="Low">Alpha</option>
         </select>
-
-
-
-
         <label for="unit">Rental Unit:</label>
         <input type="text" id="unit" name="unit" required>
 
-
       <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
+
     </form>
   </div>
 </div>
@@ -915,3 +915,5 @@
   </body>
   <!--end::Body-->
 </html>
+
+
