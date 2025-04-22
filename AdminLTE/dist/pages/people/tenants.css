@@ -300,7 +300,6 @@ main.fade-out {
     /* padding: 6px 14px; */
     height: fit-content;
     background-color: #002a4d;
-
     cursor: pointer;
     color: #FFC107;
   }
@@ -336,21 +335,20 @@ main.fade-out {
     border-radius: 3px;
   }
 
-
-
-
 .btn.shift-tenant{
-
   border: 1px solid #002a4d;
   margin-right: 15px;
 }
 
-
-
-
-
-
-
+.btn.vacate-tenant{
+  font: bold !important;
+  letter-spacing: 0.15em;
+  /* padding: 6px 14px; */
+  height: fit-content;
+  background-color: #002a4d;
+  cursor: pointer;
+  color: #FFC107;
+}
 
 
 
