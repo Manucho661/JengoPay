@@ -54,7 +54,7 @@
 },
 {"type":"table","name":"subcounties","database":"bt_jengopay","data":
 [
-{"subcounty_id":"1","county_id":"1","constituency_name":"changamwe"},
+{"county_id":"1","constituency_name":"changamwe"},
 {"subcounty_id":"2","county_id":"1","constituency_name":"jomvu"},
 {"subcounty_id":"3","county_id":"1","constituency_name":"kisauni"},
 {"subcounty_id":"4","county_id":"1","constituency_name":"nyali"},

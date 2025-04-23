@@ -1,10 +1,8 @@
 <?php
-$pdo = new PDO("mysql:host=localhost;dbname=bt_jengopay", "root", "");
-$constituencyId = $_POST['constituency_id'];
-$stmt = $pdo->prepare("SELECT id, name FROM wards WHERE constituency_id = ?");
-$stmt->execute([$constituencyId]);
-
+$connection = new mysqli("localhost", "root", "", "bt_jengopay");
+$constituency_id = intval($_POST['constituency_id']);
+$query = $conn->query("SELECT id, name FROM wards WHERE constituency_id = $constituency_id");
 echo '<option value="">-- Select Ward --</option>';
-while ($row = $stmt->fetch()) {
+while ($row = $query->fetch_assoc()) {
     echo "<option value='{$row['id']}'>{$row['name']}</option>";
 }

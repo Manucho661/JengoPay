@@ -10,33 +10,222 @@ try {
   $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $building_name = $_POST['building_name'];
-    $county = $_POST['county'];
-    $constituency = $_POST['constituency'];
-    $ward = $_POST['ward'];
-    $floor_number = $_POST['floor_number'];
-    $units_number = $_POST['units_number'];
-    $building_type = $_POST['building_type'] ?? ''; // Default to empty string
 
 
-    $sql = "INSERT INTO building_identification
-    (building_name, county, constituency, ward, floor_number, units_number, building_type)
-            VALUES (:building_name, :county, :constituency, :ward, :floor_number, :units_number, :building_type)";
+    function uploadPhoto($fileInput, $targetDir = "uploads/") {
+      if (!isset($_FILES[$fileInput]) || $_FILES[$fileInput]['error'] !== UPLOAD_ERR_OK) {
+          return null;
+      }
 
+      $fileName = basename($_FILES[$fileInput]["name"]);
+      $targetFile = $targetDir . uniqid() . "_" . $fileName;
 
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([
-      ':building_name' => $building_name,
-      ':county' => $county,
-      ':constituency' => $constituency,
-      ':ward' => $ward,
-      ':floor_number' => $floor_number,
-      ':units_number' => $units_number,
-      ':building_type' => $building_type
-    ]);
+      if (!is_dir($targetDir)) {
+          mkdir($targetDir, 0755, true);
+      }
 
-    // echo "<p style='color:green;'>Data submitted successfully!</p>";
+      if (move_uploaded_file($_FILES[$fileInput]["tmp_name"], $targetFile)) {
+          return $targetFile;
+      }
+
+      return null;
   }
+
+
+
+      // Collect building data
+      $building_name = $_POST['building_name'];
+      $county = $_POST['county'];
+      $constituency = $_POST['constituency'];
+      $ward = $_POST['ward'];
+      $floor_number = $_POST['floor_number'];
+      $units_number = $_POST['units_number'];
+      $building_type = $_POST['building_type'] ?? '';
+      $ownership_info = $_POST['ownership_info'];
+      $title_deed_copy=uploadPhoto('title_deed_copy');
+      $other_document_copy = uploadPhoto('title_deed_copy');
+      $borehole_availability = $_POST['borehole_availability'] ?? '';
+      $solar_availability = $_POST['solar_availability'] ?? '';
+      $solar_brand = $_POST['solar_brand'] ?? '';
+      $installation_company = $_POST['installation_company'] ?? '';
+      $no_of_panels = $_POST['no_of_panels'] ?? '';
+      $solar_primary_use = $_POST['solar_primary_use'] ?? '';
+      $parking_lot = $_POST['parking_lot'] ?? '';
+      $alarm_system = $_POST['alarm_system'] ?? '';
+      $elevators = $_POST['elevators'] ?? '';
+      $psds_accessibility = $_POST['psds_accessibility'] ?? '';
+      $cctv = $_POST['cctv'] ?? '';
+      $insurance_cover = $_POST['insurance_cover'] ?? '';
+      $insurance_policy = $_POST['insurance_policy'] ?? '';
+      $insurance_provider = $_POST['insurance_provider'] ?? '';
+      $policy_from_date = $_POST['policy_from_date'] ?? null;
+      $policy_until_date = $_POST['policy_until_date'] ?? null;
+      $front_view_photo = uploadPhoto('front_view_photo');
+      $rear_view_photo = uploadPhoto('rear_view_photo');
+      $angle_view_photo = uploadPhoto('angle_view_photo');
+      $interior_view_photo = uploadPhoto('interior_view_photo');
+
+
+
+      // Default values for ownership columns
+      $first_name = $last_name = $phone_number = $kra_pin = $email = '';
+      $entity_name = $entity_phone = $entity_email = $entity_kra_pin = $entity_representative = $entity_rep_role = '';
+
+      if ($ownership_info == 'Individual') {
+          $first_name = $_POST['first_name'];
+          $last_name = $_POST['last_name'];
+          $phone_number = $_POST['phone_number'];
+          $kra_pin = $_POST['kra_pin'];
+          $email = $_POST['email'];
+      } elseif ($ownership_info == 'Entity') {
+          $entity_name = $_POST['entity_name'];
+          $entity_phone = $_POST['entity_phone'];
+          $entity_email = $_POST['entity_email'];
+          $entity_kra_pin = $_POST['entity_kra_pin'];
+          $entity_representative = $_POST['entity_representative'];
+          $entity_rep_role = $_POST['entity_rep_role'];
+      }
+
+      // File Uploads
+      $titleDeedPath = $otherDocPath = '';
+
+      if (isset($_FILES['title_deed_copy']) && $_FILES['title_deed_copy']['error'] === UPLOAD_ERR_OK) {
+          $titleDeedPath = 'uploads/' . basename($_FILES['title_deed_copy']['name']);
+          move_uploaded_file($_FILES['title_deed_copy']['tmp_name'], $titleDeedPath);
+      }
+
+      if (isset($_FILES['other_document_copy']) && $_FILES['other_document_copy']['error'] === UPLOAD_ERR_OK) {
+          $otherDocPath = 'uploads/' . basename($_FILES['other_document_copy']['name']);
+          move_uploaded_file($_FILES['other_document_copy']['tmp_name'], $otherDocPath);
+      }
+
+        // Approvals
+        $nca_approval = $_POST['nca_approval'] ?? 'No';
+        $nca_approval_no = $_POST['nca_approval_no'] ?? '';
+        $nca_approval_date = $_POST['nca_approval_date'] ?? '';
+
+        $local_gov_approval = $_POST['local_gov_approval'] ?? 'No';
+        $local_gov_approval_no = $_POST['local_gov_approval_no'] ?? '';
+        $local_gov_approval_date = $_POST['local_gov_approval_date'] ?? '';
+
+        $nema_approval = $_POST['nema_approval'] ?? 'No';
+        $nema_approval_no = $_POST['nema_approval_no'] ?? '';
+        $nema_approval_date = $_POST['nema_approval_date'] ?? '';
+
+        $building_tax_pin = $_POST['building_tax_pin'] ?? '';
+
+      // Insert all data
+      $sql = "INSERT INTO building_identification (
+                  building_name, county, constituency, ward, floor_number, units_number, building_type,
+                  ownership_info,
+                  first_name, last_name, phone_number, kra_pin, email,
+                  entity_name, entity_phone, entity_email, entity_kra_pin, entity_representative, entity_rep_role,
+                  title_deed_copy, other_document_copy ,borehole_availability, solar_availability, solar_brand, installation_company, no_of_panels, solar_primary_use,
+                  parking_lot, alarm_system, elevators, psds_accessibility, cctv,  nca_approval, nca_approval_no, nca_approval_date,
+                    local_gov_approval, local_gov_approval_no, local_gov_approval_date,
+                    nema_approval, nema_approval_no, nema_approval_date,
+                    building_tax_pin, insurance_cover, insurance_policy, insurance_provider, policy_from_date, policy_until_date,front_view_photo, rear_view_photo, angle_view_photo, interior_view_photo
+
+              ) VALUES (
+                  :building_name, :county, :constituency, :ward, :floor_number, :units_number, :building_type,
+                  :ownership_info,
+                  :first_name, :last_name, :phone_number, :kra_pin, :email,
+                  :entity_name, :entity_phone, :entity_email, :entity_kra_pin, :entity_representative, :entity_rep_role,
+                  :title_deed_copy, :other_document_copy , :borehole_availability, :solar_availability, :solar_brand, :installation_company, :no_of_panels, :solar_primary_use,
+                  :parking_lot, :alarm_system, :elevators, :psds_accessibility, :cctv , :nca_approval, :nca_approval_no, :nca_approval_date,
+                    :local_gov_approval, :local_gov_approval_no, :local_gov_approval_date,
+                    :nema_approval, :nema_approval_no, :nema_approval_date,
+                    :building_tax_pin,  :insurance_cover, :insurance_policy, :insurance_provider, :policy_from_date, :policy_until_date, :front_view_photo, :rear_view_photo, :angle_view_photo, :interior_view_photo
+              )";
+
+      $stmt = $pdo->prepare($sql);
+      $stmt->execute([
+          ':building_name' => $building_name,
+          ':county' => $county,
+          ':constituency' => $constituency,
+          ':ward' => $ward,
+          ':floor_number' => $floor_number,
+          ':units_number' => $units_number,
+          ':building_type' => $building_type,
+          ':ownership_info' => $ownership_info,
+          ':first_name' => $first_name,
+          ':last_name' => $last_name,
+          ':phone_number' => $phone_number,
+          ':kra_pin' => $kra_pin,
+          ':email' => $email,
+          ':entity_name' => $entity_name,
+          ':entity_phone' => $entity_phone,
+          ':entity_email' => $entity_email,
+          ':entity_kra_pin' => $entity_kra_pin,
+          ':entity_representative' => $entity_representative,
+          ':entity_rep_role' => $entity_rep_role,
+          ':title_deed_copy' => $titleDeedPath,
+          ':other_document_copy' => $otherDocPath,
+          ':borehole_availability' => $borehole_availability,
+          ':solar_availability' => $solar_availability,
+          ':solar_brand' => $solar_brand,
+          ':installation_company' => $installation_company,
+          ':no_of_panels' => $no_of_panels,
+          ':solar_primary_use' => $solar_primary_use,
+          ':parking_lot' => $parking_lot,
+          ':alarm_system' => $alarm_system,
+          ':elevators' => $elevators,
+          ':psds_accessibility' => $psds_accessibility,
+          ':cctv' => $cctv,
+          ':nca_approval' => $nca_approval,
+            ':nca_approval_no' => $nca_approval_no,
+            ':nca_approval_date' => $nca_approval_date,
+            ':local_gov_approval' => $local_gov_approval,
+            ':local_gov_approval_no' => $local_gov_approval_no,
+            ':local_gov_approval_date' => $local_gov_approval_date,
+            ':nema_approval' => $nema_approval,
+            ':nema_approval_no' => $nema_approval_no,
+            ':nema_approval_date' => $nema_approval_date,
+            ':building_tax_pin' => $building_tax_pin,
+            ':insurance_cover' => $insurance_cover,
+            ':insurance_policy' => $insurance_policy,
+            ':insurance_provider' => $insurance_provider,
+            ':policy_from_date' => $policy_from_date,
+            ':policy_until_date' => $policy_until_date,
+            ':front_view_photo' => $front_view_photo,
+            ':rear_view_photo' => $rear_view_photo,
+            ':angle_view_photo' => $angle_view_photo,
+            ':interior_view_photo' => $interior_view_photo
+
+
+
+      ]);
+
+      // echo "<p style='color:green;'>Data and files submitted successfully!</p>";
+  }
+ // Fetch property data
+// $stmt = $pdo->query("SELECT building_name, county, constituency, ward, building_type FROM building_identification ORDER BY id DESC");
+
+// while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+//     $location = $row['county'] . ', ' . $row['constituency'] . ', ' . $row['ward'];
+//     $buildingName = htmlspecialchars($row['building_name']);
+//     $buildingType = htmlspecialchars($row['building_type']);
+
+//     echo '
+//     <tr onclick="window.location.href=\'units.html\'">
+//         <td>' . $building_name . '</td>
+//         <td>' . $county . '</td>
+//         <td>Patrick Musila</td> <!-- You can replace this with dynamic tenant info later -->
+//         <td></td> <!-- Manager name can go here -->
+//         <td>' . $building_type . '</td>
+//         <td>
+//             <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View">
+//                 <i class="fas fa-eye"></i>
+//             </button>
+
+//             <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Provider">
+//                 <i class="fa fa-trash" style="font-size: 12px;"></i>
+//             </button>
+//         </td>
+//     </tr>';
+// }
+
+
 } catch (PDOException $e) {
   echo "Connection failed: " . $e->getMessage();
 }
@@ -474,73 +663,105 @@ try {
         <b>Building Identification</b>
       </div>
       <div class="card-body">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="form-group">
-              <label>Building Name</label> <sup class="text-danger"><b>*</b></sup>
-              <input type="text" class="form-control" id="buildingName" name="building_name"
-                placeholder="Building Name">
-            </div>
-          </div>
-        </div>
-        <h5 class="text-center" style="font-weight: bold;">Location
-          Information</h5>
-        <div class="row">
-          <div class="col-12 col-sm-4">
-            <div class="form-group">
-              <label>County</label>
-              <select name="county"  id="county" onchange="loadConstituencies()"  class="form-control select2 select2-danger"
-                data-dropdown-css-class="select2-danger"
-                style="width: 100%; height:300px !important;" required>
-                <option value="" hidden selected>-- Select Option --</option>
-                <?php
-                  $pdo = new PDO("mysql:host=localhost;dbname=bt_jengopay", "root", "");
-                  $stmt = $pdo->query("SELECT * FROM counties");
-                  while ($row = $stmt->fetch()) {
-                      echo "<option value='{$row['id']}'>{$row['name']}</option>";
-        }
-        ?>
-              </select>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label>Constituency</label>
-              <select name="constituency" id="constituency" onchange="loadWards()" class="form-control" required>
-                <option value="" selected hidden>-- Choose
-                  Constituency
-                  --</option>
-                  <?php
-                  $pdo = new PDO("mysql:host=localhost;dbname=bt_jengopay", "root", "");
-                  $stmt = $pdo->query("SELECT * FROM constituencies");
-                  while ($row = $stmt->fetch()) {
-                      echo "<option value='{$row['id']}'>{$row['name']}</option>";
-        }
-        ?>
-                <!-- <option value="Nairobi">Westlands</option>
-                <option value="Kisumu">Starehe</option>
-                <option value="Vihiga">Embakasi</option> -->
-              </select>
-              <b class="errorMessages" id="constituencyError"></b>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label>Ward</label>
-              <select name="ward" id="ward" class="form-control">
-                <option value="" selected hidden>-- Choose Ward
-                  --
-                </option>
+                            <div class="row">
+                              <div class="col-md-12">
+                                <div class="form-group">
+                                  <label>Building Name</label> <sup class="text-danger"><b>*</b></sup>
+                                  <input type="text" class="form-control" id="buildingName" name="building_name"
+                                    placeholder="Building Name">
+                                </div>
+                              </div>
+                            </div>
+                            <h5 class="text-center" style="font-weight: bold;">Location
+                              Information</h5>
+                            <div class="row">
+                              <div class="col-12 col-sm-4">
+                                <div class="form-group">
+                                  <label>County</label>
+                                  <select name="county" id="county" onchange="loadConstituency()"  class="form-control select2 select2-danger"
+                                    data-dropdown-css-class="select2-danger"
+                                    style="width: 100%; height:300px !important;">
+                                    <option value="" hidden selected>-- Select Option --</optio>
+                                    <option>Mombasa</option>
+                                    <option>Kwale</option>
+                                    <option>Kilifi</option>
+                                    <option>Tana River</option>
+                                    <option>Lamu</option>
+                                    <option>Taita Taveta</option>
+                                    <option>Garissa</option>
+                                    <option>Wajir</option>
+                                    <option>Mandera</option>
+                                    <option>Marsabit</option>
+                                    <option>Isiolo</option>
+                                    <option>Meru</option>
+                                    <option>Tharaka-Nithi</option>
+                                    <option>Embu</option>
+                                    <option>Kitui</option>
+                                    <option>Machakos</option>
+                                    <option>Makueni</option>
+                                    <option>Nyandarua</option>
+                                    <option>Nyeri</option>
+                                    <option>Kirinyaga</option>
+                                    <option>Murang'a</option>
+                                    <option>Kiambu</option>
+                                    <option>Turkana</option>
+                                    <option>West Pokot</option>
+                                    <option>Samburu</option>
+                                    <option>Trans Nzoia</option>
+                                    <option>Uasin Gishu</option>
+                                    <option>Elgeyo/Marakwet</option>
+                                    <option>Nandi</option>
+                                    <option>Baringo</option>
+                                    <option>Laikipia</option>
+                                    <option>Nakuru</option>
+                                    <option>Narok</option>
+                                    <option>Kajiado</option>
+                                    <option>Kericho</option>
+                                    <option>Bomet</option>
+                                    <option>Kakamega</option>
+                                    <option>Vihiga</option>
+                                    <option>Bungoma</option>
+                                    <option>Busia</option>
+                                    <option>Siaya</option>
+                                    <option>Kisumu</option>
+                                    <option>Homa Bay</option>
+                                    <option>Migori</option>
+                                    <option>Kisii</option>
+                                    <option>Nyamira</option>
+                                    <option>Nairobi</option>
 
-
-                <!-- <option value="Nairobi">Kangemi</option>
-                <option value="Kisumu">Kiambu</option>
-                <option value="Vihiga">Pipeline</option> -->
-              </select>
-              <b class="errorMessages" id="wardError"></b>
-            </div>
-          </div>
-        </div>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                  <label>Constituency</label>
+                                  <select name="constituency" id="constituency" onchange="loadWard()" class="form-control" required>
+                                    <option value="" selected hidden>-- Choose
+                                      Constituency
+                                      --</option>
+                                    <option value="Nairobi">Westlands</option>
+                                    <option value="Kisumu">Starehe</option>
+                                    <option value="Vihiga">Embakasi</option>
+                                  </select>
+                                  <b class="errorMessages" id="constituencyError"></b>
+                                </div>
+                              </div>
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                  <label>Ward</label>
+                                  <select name="ward" id="ward"    class="form-control">
+                                    <option value="" selected hidden>-- Choose Ward
+                                      --
+                                    </option>
+                                    <option value="Nairobi">Kangemi</option>
+                                    <option value="Kisumu">Kiambu</option>
+                                    <option value="Vihiga">Pipeline</option>
+                                  </select>
+                                  <b class="errorMessages" id="wardError"></b>
+                                </div>
+                              </div>
+                            </div>
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
@@ -590,7 +811,7 @@ try {
                 <div class="col-md-6">
                   <div class="icheck-dark d-inline">
                     <input type="radio" name="ownership_info" id="showIndividualOwnerRadio"
-                      onclick="showIndividualOwner();" value="Yes" value="Individual">
+                      onclick="showIndividualOwner();" value="Individual">
                     <label for="showIndividualOwnerRadio"> Individual
                     </label>
                   </div>
@@ -614,31 +835,31 @@ try {
                     <div class="col-md-6">
                       <div class="form-group">
                         <label>First Name</label>
-                        <input type="text" class="form-control" id="firstName"
+                        <input type="text" name="first_name" class="form-control" id="firstName"
                           placeholder="First Name">
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
                         <label>Last Name</label>
-                        <input type="text" class="form-control" id="lastName"
+                        <input type="text" name="last_name" class="form-control" id="lastName"
                           placeholder="Last Name">
                       </div>
                     </div>
                   </div>
                   <div class="form-group">
                     <label>Phone Number</label>
-                    <input type="text" class="form-control" id="phoneNumber"
+                    <input type="text" name="phone_number" class="form-control" id="phoneNumber"
                       placeholder="Phone Number">
                   </div>
                   <div class="form-group">
                     <label>Kra pin</label>
-                    <input type="text" class="form-control" id="kra_pin"
+                    <input type="text" name="kra_pin" class="form-control" id="kra_pin"
                       placeholder="Kra pin">
                   </div>
                   <div class="form-group">
                     <label>Email</label>
-                    <input type="text" class="form-control" id="ownerEmail" placeholder="Email">
+                    <input type="text"  name="email" class="form-control" id="ownerEmail" placeholder="Email">
                   </div>
                 </div>
                 <div class="card-footer text-right">
@@ -658,7 +879,7 @@ try {
                       <div class="form-group">
                         <label>Entity
                           Name</label>
-                        <input type="text" class="form-control" id="entityName"
+                        <input type="text" name="entity_name" class="form-control" id="entityName"
                           placeholder="Entity Name">
                       </div>
                     </div>
@@ -666,31 +887,31 @@ try {
                       <div class="form-group">
                         <label>Official Phone
                           Number</label>
-                        <input type="text" class="form-control" id="entityPhone"
+                        <input type="text" name="entity_phone" class="form-control" id="entityPhone"
                           placeholder="Official Phone Number">
                       </div>
                     </div>
                   </div>
                   <div class="form-group">
                     <label>Official Email</label>
-                    <input type="text" class="form-control" id="entityEmail"
+                    <input type="text"  name="entity_email" class="form-control" id="entityEmail"
                       placeholder="Entity Email">
                   </div>
                   <div class="form-group">
                     <label>Kra pin</label>
-                    <input type="text" class="form-control" id="kra_pin"
+                    <input type="text" name="entity_kra_pin" class="form-control" id="kra_pin"
                       placeholder="Kra pin">
                   </div>
                   <div class="form-group">
                     <label>Entity
                       Representative</label>
-                    <input type="text" class="form-control" id="entityRepresentative"
+                    <input type="text" name="entity_representative" class="form-control" id="entityRepresentative"
                       placeholder="Entity Representative">
                   </div>
 
                   <div class="form-group">
                     <label>Role</label>
-                    <select name="" id="entityRepRole" class="form-control">
+                    <select name="entity_rep_role" id="entityRepRole" class="form-control">
                       <option value="" selected hidden>
                         --Select Role --</option>
                       <option value="CEO">CEO</option>
@@ -751,7 +972,7 @@ try {
           <div class="col-md-6">
             <div class="form-group">
               <label>Is there a Borehole?</label>
-              <select name="" id="boreHoleVailability" class="form-control">
+              <select name="borehole_availability" id="boreHoleVailability" class="form-control">
                 <option value="" selected hidden>-- Select Option --</option>
                 <option value="Yes">Yes</option>
                 <option value="No">No</option>
@@ -782,22 +1003,22 @@ try {
                 <div class="card-body">
                   <div class="form-group">
                     <label>Solar Panel Brand</label>
-                    <input type="text" class="form-control" id="solarBrand"
+                    <input type="text" name="solar_brand" class="form-control" id="solarBrand"
                       placeholder="Solar Brand">
                   </div>
                   <div class="form-group">
                     <label>Installation Company</label>
-                    <input type="text" class="form-control" id="installationCompany"
+                    <input type="text" name="installation_company" class="form-control" id="installationCompany"
                       placeholder="Installation Company">
                   </div>
                   <div class="form-group">
                     <label>Number of Panels</label>
-                    <input type="text" class="form-control" id="noOfPanels"
+                    <input type="text" name="no_of_panels" class="form-control" id="noOfPanels"
                       placeholder="Number of Panels">
                   </div>
                   <div class="form-group">
                     <label>Primary Use</label>
-                    <select name="" id="solarPrimaryUse" class="form-control">
+                    <select name="solar_primary_use" id="solarPrimaryUse" class="form-control">
                       <option value="" selected hidden>-- Select Option --</option>
                       <option value="Lighting">Lighting</option>
                       <option value="Water Heating">Water Heating</option>
@@ -815,7 +1036,7 @@ try {
             </div>
             <div class="form-group">
               <label>Is there Parking Lot?</label>
-              <select name="" id="parkingLot" class="form-control">
+              <select name="parking_lot" id="parkingLot" class="form-control">
                 <option value="" selected hidden>-- Select Option --</option>
                 <option value="Yes">Yes</option>
                 <option value="No">No</option>
@@ -823,7 +1044,7 @@ try {
             </div>
             <div class="form-group">
               <label>Is there Alarm Security System?</label>
-              <select name="" id="alarmSystem" class="form-control">
+              <select name="alarm_system" id="alarmSystem" class="form-control">
                 <option value="" selected hidden>-- Select Option --</option>
                 <option value="Yes">Yes</option>
                 <option value="No">No</option>
@@ -833,7 +1054,7 @@ try {
           <div class="col-md-6">
             <div class="form-group">
               <label>Is there Elevator(s)?</label>
-              <select name="" id="elevators" class="form-control">
+              <select name="elevators" id="elevators" class="form-control">
                 <option value="" selected hidden>-- Select Option --</option>
                 <option value="Yes">Yes</option>
                 <option value="No">No</option>
@@ -841,7 +1062,7 @@ try {
             </div>
             <div class="form-group">
               <label>Is there PSD's Accessibility?</label>
-              <select name="" id="psds" class="form-control">
+              <select name="psds_accessibility" id="psds" class="form-control">
                 <option value="" selected hidden>-- Select Option --</option>
                 <option value="Yes">Yes</option>
                 <option value="No">No</option>
@@ -849,7 +1070,7 @@ try {
             </div>
             <div class="form-group">
               <label>Is there CCTV?</label>
-              <select name="" id="cctv" class="form-control">
+              <select name="cctv" id="cctv" class="form-control">
                 <option value="" selected hidden>-- Select Option --</option>
                 <option value="Yes">Yes</option>
                 <option value="No">No</option>
@@ -897,16 +1118,16 @@ try {
               <div class="card-body">
                 <div class="form-group">
                   <label>Approval Number</label>
-                  <input type="text" class="form-control" id="approvalNo"
+                  <input type="text" name="nca_approval_no"  class="form-control" id="approvalNo"
                     placeholder="Approval Number">
                 </div>
                 <div class="form-group">
                   <label>Approval Date</label>
-                  <input type="date" class="form-control" id="approvalDate">
+                  <input type="date" name="date" class="form-control" id="approvalDate">
                 </div>
                 <div class="formm-control">
                   <label>NCA Approval Copy</label>
-                  <input type="file" class="form-control" id="ncaApprovalCopy">
+                  <input type="file"  class="form-control" id="ncaApprovalCopy">
                 </div>
               </div>
               <div class="card-footer text-right">
@@ -939,11 +1160,11 @@ try {
                 <div class="card-body">
                   <div class="form-group">
                     <label>Approval Number</label>
-                    <input type="text" class="form-control" id="localGovApprovalNo">
+                    <input type="text" name="local_gov_approval_no" class="form-control" id="localGovApprovalNo">
                   </div>
                   <div class="form-group">
                     <label>Approval Date</label>
-                    <input type="date" class="form-control" id="localGovApprovalDate">
+                    <input type="date" name="local_gov_approval_date" class="form-control" id="localGovApprovalDate">
                   </div>
                   <div class="form-group">
                     <label>Approval Copy</label>
@@ -984,16 +1205,16 @@ try {
               <div class="card-body">
                 <div class="form-group">
                   <label>Approval Number</label>
-                  <input type="text" class="form-control" id="nemaApprovalNumber"
+                  <input type="text"  name="nema_approval_no" class="form-control" id="nemaApprovalNumber"
                     placeholder="Approval Number">
                 </div>
                 <div class="form-group">
                   <label>Approval Date</label>
-                  <input type="date" class="form-control" id="nemaApprovalDate">
+                  <input type="date" name="nema_approval_date" class="form-control" id="nemaApprovalDate">
                 </div>
                 <div class="form-group">
                   <label>Approval Copy</label>
-                  <input type="file" class="form-control" id="nemaApprovalCopy">
+                  <input type="file"  class="form-control" id="nemaApprovalCopy">
                 </div>
               </div>
               <div class="card-footer text-right">
@@ -1003,7 +1224,7 @@ try {
             </div>
             <div class="form-group">
               <label>TAX PIN for the Building</label>
-              <input type="text" class="form-control" id="buildingTaxPin"
+              <input type="text" name="building_tax_pin" class="form-control" id="buildingTaxPin"
                 placeholder="TAX PIN for the Building">
             </div>
           </div>
@@ -1043,25 +1264,25 @@ try {
                 </div>
               </div>
               <div class="card mt-2" id="specifyInsuranceCoverInfoCard" style="display: none;">
-                <div class="card-header"><b>Inurance Cover Details</b></div>
+                <div class="card-header"><b>Insurance Cover Details</b></div>
                 <div class="card-body">
                   <div class="form-group">
                     <label>Specify Insurance Policy</label>
-                    <input type="text" class="form-control" id="insurance_policy"
+                    <input type="text" name="insurance_policy" class="form-control" id="insurance_policy"
                       placeholder="Insurance Policy">
                   </div>
                   <div class="form-group">
                     <label>Insurance Policy Provider</label>
-                    <input type="text" class="form-control" id="insurance_provider"
+                    <input type="text" class="form-control" name="insurance_provider" id="insurance_provider"
                       placeholder="Insurance Policy Provider">
                   </div>
                   <div class="form-group">
                     <label>Covered From</label>
-                    <input type="date" class="form-control" id="policy_from_date">
+                    <input type="date" class="form-control"  name="policy_from_date"  id="policy_from_date">
                   </div>
                   <div class="form-group">
                     <label>Covered Until</label>
-                    <input type="date" class="form-control" id="policy_until_date">
+                    <input type="date" name="policy_until_date" class="form-control" id="policy_until_date">
                   </div>
                 </div>
                 <div class="card-footer text-right">
@@ -1088,21 +1309,21 @@ try {
           <div class="col-md-6">
             <div class="form-group">
               <label>Front View</label>
-              <input type="file" class="form-control" id="front_view_photo">
+              <input type="file" class="form-control"  name="front_view_photo" id="front_view_photo">
             </div>
             <div class="form-group">
               <label>Rear View</label>
-              <input type="file" class="form-control" id="front_view_photo">
+              <input type="file" class="form-control" name="rear_view_photo" id="front_view_photo">
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
               <label>Angle View</label>
-              <input type="file" class="form-control" id="angle_view_photo">
+              <input type="file" class="form-control" name="angle_view_photo" id="angle_view_photo">
             </div>
             <div class="form-group">
               <label>Interior</label>
-              <input type="file" class="form-control" id="interior_view_photo">
+              <input type="file" class="form-control" name="interior_view_photo" id="interior_view_photo">
             </div>
           </div>
         </div>
@@ -1178,81 +1399,44 @@ try {
          </tr>
        </thead>
        <tbody>
-         <tr onclick="window.location.href='units.html'">
-           <td>Crown Z Towers</td>
-           <td>Mai mahiu</td>
-           <td>Patrick Musila</td>
-           <td></td>
-           <td>Residential</td>
-           <td>
-            <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View"><i class="fas fa-eye"></i>
+        <?php
+        include '../../../../db/connect.php'; // Adjust path if needed
 
-             <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px;"></i>
+        $buildings = [];
+        $sql = "SELECT building_name, county, building_type  type FROM building_identification";
+        $result = mysqli_query($conn, $sql);
 
+        if ($result) {
+          while ($row = mysqli_fetch_assoc($result)) {
+            $buildings[] = [
+              'building_name' => $row['building_name'],
+              'county' => $row['county'],
+              'building_type' => $row['building_type']
+            ];
+          }
+        } else {
+          echo "Error: " . mysqli_error($conn);
+        }
 
-           </td>
-         </tr>
-         <tr onclick="window.location.href='units.html'">
-           <td>Ebenezer Apartments</td>
-           <td>Kikuyu</td>
-           <td>Patrick Musila</td>
-           <td></td>
-           <td>Commercial</td>
-           <td>
-            <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View"><i class="fas fa-eye"></i>
-             <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px;"></i>
-
-           </td>
-         </tr>
-         <tr onclick="window.location.href='units.html'">
-           <td>Manucho Apartments</td>
-           <td>Komarock</td>
-           <td>Patrick Musila</td>
-           <td></td>
-           <td>Residential</td>
-           <td>
-            <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View"><i class="fas fa-eye"></i>
-
-             <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px;"></i>
-
-           </td>
-         </tr>
-         <tr onclick="window.location.href='units.html'">
-           <td>Huduma Apartments</td>
-           <td>Huduma</td>
-           <td>Patrick Musila</td>
-           <td></td>
-           <td>Commercial</td>
-           <td>
-            <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View"><i class="fas fa-eye"></i>
-              <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px;"></i>
-
-           </td>
-         </tr>
-         <tr onclick="window.location.href='units.html'">
-           <td>Kona Moja Apartments</td>
-           <td>Westlands</td>
-           <td>Patrick Musila</td>
-           <td></td>
-           <td>Residential</td>
-           <td>
-            <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View"><i class="fas fa-eye"></i>
-              <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px;"></i>
-
+         foreach ($buildings as $building) {
+          echo '
+          <tr onclick="window.location.href=\'units.html\'">
+            <td>' . $building['building_name'] . '</td>
+            <td>' . $building['county'] . '</td>
+            <td>Patrick Musila</td> <!-- Replace with dynamic tenant if needed -->
+            <td></td> <!-- Manager goes here -->
+            <td>' . $building['building_type'] . '</td>
+            <td>
+              <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Provider">
+                <i class="fa fa-trash" style="font-size: 12px;"></i>
+              </button>
             </td>
-         </tr>
-         <tr onclick="window.location.href='units.html'">
-           <td>Crown Mawingu Towers</td>
-           <td>Limuru</td>
-           <td>Patrick Mwangi</td>
-           <td></td>
-           <td>Residential</td>
-           <td>
-            <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View"><i class="fas fa-eye"></i>
-              <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px;"></i>
-
-            </td>
-         </tr>
+          </tr>';
+        }
+        ?>
        </tbody>
      </table>
 
@@ -1302,105 +1486,427 @@ try {
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
 
 
-    <!-- <script>
-const locationData = {
+    <script>
+const data = {
+ "Mombasa": {
+    "Changamwe": ["Port Reitz", "Kipevu", "Airport", "Changamwe", "Chaani"],
+    "Jomvu": ["Jomvu Kuu", "Miritini", "Mikindani"],
+    "Kisauni": ["Mjambere", "Junda", "Bamburi", "Mwakirunge", "Mtopanga", "Magogoni"],
+    "Nyali": ["Frere Town", "Ziwa la Ngombe", "Mkomani", "Kongowea", "Kadzandani"],
+    "Likoni": ["Mtongwe", "Shika Adabu", "Bofu", "Likoni", "Timbwani"],
+    "Mvita": ["Ganjoni", "Majengo", "Tudor", "Tononoka", "Shimanzi/Ganjoni"]
+  },
+  "Kwale": {
+    "Msambweni": ["Gombato Bongwe", "Ukunda", "Kinondo", "Ramisi"],
+    "Lunga Lunga": ["Dzombo", "Pongwe/Kikoneni", "Mwereni", "Vanga"],
+    "Matuga": ["Tsimba Golini", "Waa", "Tiwi", "Kubo South", "Mkongani"],
+    "Kinango": ["Ndavaya", "Puma", "Kinango", "Chengoni/Samburu", "Mackinnon Road", "Mwavumbo"]
+  },
+  "Kilifi": {
+    "Kilifi North": ["Tezo", "Sokoni", "Kibarani", "Dabaso", "Matsangoni", "Watamu", "Mnarani"],
+    "Kilifi South": ["Junju", "Mwarakaya", "Shimo la Tewa", "Chasimba", "Mtepeni", "Madzimboni"],
+    "Kaloleni": ["Kayafungo", "Kaloleni", "Mwanamwinga", "Rabai/Kambe"],
+    "Rabai": ["Ruruma", "Rabai/Kisurutini", "Mwawesa", "Ruruma"],
+    "Ganze": ["Sokoke", "Bamba", "Jaribuni", "Ganze"],
+    "Malindi": ["Ganda", "Malindi Town", "Shella", "Jilore", "Kakuyuni"],
+    "Magarini": ["Marafa", "Magarini", "Gongoni", "Adu", "Garashi", "Sabaki"]
+  },
+  "Tana River": {
+    "Bura": ["Chewele", "Hirimani", "Bangale", "Madogo", "Bura"],
+    "Galole": ["Kinakomba", "Mikinduni", "Chewani", "Wayu"],
+    "Garsen": ["Garsen Central", "Garsen South", "Garsen North", "Kipini East", "Kipini West"]
+  },
+  "Lamu": {
+    "Lamu East": ["Faza", "Kiunga", "Basuba"],
+    "Lamu West": ["Shella", "Mkomani", "Hindi", "Mkunumbi", "Hongwe", "Bahari", "Witu"]
+  },
+  "Taita Taveta": {
+    "Taveta": ["Chala", "Mahoo", "Bomani", "Mboghoni"],
+    "Wundanyi": ["Wumingu/Kishushe", "Mwanda/Mgange", "Wundanyi/Mbale", "Werugha"],
+    "Mwatate": ["Ronge", "Mwatate", "Bura", "Chawia"],
+    "Voi": ["Mbololo", "Ngolia", "Kasigau", "Sagalla"]
+  },
+  "Garissa": {
+    "Garissa Township": ["Waberi", "Galbet", "Township", "Iftin"],
+    "Balambala": ["Balambala", "Saka", "Sankuri"],
+    "Lagdera": ["Modogashe", "Benane", "Goreale", "Maalimin", "Sabena", "Baraki"],
+    "Dadaab": ["Dadaab", "Labasigale", "Damajale", "Liboi", "Abakaile"],
+    "Fafi": ["Bura", "Dekaharia", "Jarajila", "Nanighi", "Fafi"],
+    "Ijara": ["Masalani", "Sangailu", "Ijara", "Hulugho"]
+  },
+  "Wajir": {
+    "Wajir North": ["Gurar", "Bute", "Korondile", "Malkagufu", "Batalu", "Danaba"],
+    "Wajir East": ["Wagberi", "Township", "Barwago", "Khorof/Harar"],
+    "Tarbaj": ["Elben", "Sarman", "Tarbaj", "Wargadud"],
+    "Wajir West": ["Arbajahan", "Hadado/Athibohol", "Ademasajide", "Ganyure/Wagalla"],
+    "Eldas": ["Elnur/Tula Tula", "Della", "Lakoley South/Basir", "Eldas"],
+    "Wajir South": ["Benane", "Habasswein", "Lagboghol South", "Burder", "Dadaja Bulla", "Ibrahim Ure"]
+  },
+  "Mandera": {
+    "Mandera West": ["Takaba South", "Takaba", "Lagsure", "Gither"],
+    "Banissa": ["Banissa", "Derkhale", "Guba", "Malkamari", "Malkamari"],
+    "Mandera North": ["Ashabito", "Guticha", "Rhamu", "Rhamu Dimtu", "Morothile"],
+    "Mandera South": ["Wargadud", "Kutulo", "Elwak South", "Elwak North", "Shimbir Fatuma"],
+    "Mandera East": ["Neboi", "Township", "Khalalio", "Libehia", "Sala"],
+    "Lafey": ["Fino", "Lafey", "Waranqara", "Alango Gof", "Sala"]
+  },
+  "Marsabit": {
+    "Moyale": ["Butiye", "Sololo", "Heillu/Manyatta", "Uran", "Obbu"],
+    "North Horr": ["Dukana", "Maikona", "Turbi", "Illeret"],
+    "Saku": ["Sagam", "Karare", "Marsabit Central"],
+    "Laisamis": ["Laisamis", "Korr/Ngurunit", "Logologo", "Loiyangalani"]
+  },
+  "Isiolo": {
+    "Isiolo North": ["Wabera", "Bulla Pesa", "Chari", "Cherab", "Ngare Mara", "Burat", "Oldonyiro"],
+    "Isiolo South": ["Garbatulla", "Kinna", "Sericho"]
+  },
+  "Tharaka-Nithi": {
+    "Chuka/Igambang'ombe": ["Chuka", "Igambang'ombe", "Karingani", "Magumoni"],
+    "Maara": ["Mitheru", "Muthambi", "Mwimbi", "Ganga"],
+    "Tharaka": ["Chiakariga", "Marimanti", "Mukothima", "Gatunga"]
+  },
+  "Embu": {
+    "Manyatta": ["Kithimu", "Ngandori East", "Ngandori West", "Central Ward"],
+    "Runyenjes": ["Kyeni North", "Kyeni South", "Gaturi South", "Gaturi North"],
+    "Mbeere North": ["Muminji", "Nthawa", "Mavuria"],
+    "Mbeere South": ["Makima", "Mwea", "Kiambere"]
+  },
+  "Meru": {
+  "Igembe South": ["Athiru Gaiti", "Akachiu", "Kanuni", "Maua", "Kiegoi/Antubochiu"],
+  "Igembe Central": ["Akirang'ondu", "Athiru", "Antuambui", "Njia", "Kangeta"],
+  "Igembe North": ["Ntunene", "Antuanga", "Antubetwe Kiongo", "Naathu", "Amwathi"],
+  "Tigania West": ["Athwana", "Akithii", "Kianjai", "Nkomo", "Mbeu"],
+  "Tigania East": ["Thangatha", "Mikinduri", "Karama", "Muthara", "Kiguchwa"],
+  "North Imenti": ["Municipality", "Ntima East", "Ntima West", "Nyaki East", "Nyaki West"],
+  "Buuri": ["Timau", "Kisima", "Kiirua/Naari", "Ruiri/Rwarera", "Kibirichia"],
+  "Central Imenti": ["Mwanganthia", "Abothuguchi Central", "Abothuguchi West", "Kiagu"],
+  "South Imenti": ["Mitunguu", "Igoji East", "Igoji West", "Abogeta East", "Abogeta West", "Nkuene"]
+},
+  "Kitui": {
+    "Kitui Central": ["Miambani", "Township", "Kyangwithya East", "Kyangwithya West"],
+    "Kitui East": ["Nzambani", "Chuluni", "Mutito", "Endau/Malalani"],
+    "Kitui South": ["Ikanga/Kyatune", "Mutomo", "Mutha", "Ikutha"],
+    "Kitui West": ["Mutonguni", "Matinyani", "Kisasi", "Kwa Mutonga/Kithumula"],
+    "Mwingi Central": ["Central", "Kivou", "Nguni", "Nuu"],
+    "Mwingi North": ["Kyuso", "Ngomeni", "Tharaka", "Mumoni"],
+    "Mwingi West": ["Migwani", "Kiomo/Kyethani", "Nzeluni", "Waita"]
+  },
+  "Machakos": {
+    "Machakos Town": ["Kalama", "Mua", "Mutituni", "Mumbuni North"],
+    "Mwala": ["Masii", "Muthetheni", "Wamunyu", "Kibauni"],
+    "Kangundo": ["Kangundo North", "Kangundo Central", "Kangundo East", "Kangundo South"],
+    "Matungulu": ["Matungulu North", "Matungulu East", "Matungulu West", "Tala"],
+    "Kathiani": ["Mitaboni", "Kathiani Central", "Upper Kaewa/Iveti", "Lower Kaewa/Kaani"],
+    "Mavoko": ["Athi River", "Kinanie", "Mlolongo", "Syokimau/Mulolongo"],
+    "Yatta": ["Ndalani", "Matuu", "Kithimani", "Katangi"]
+  },
+  "Makueni": {
+    "Makueni": ["Wote", "Mavindini", "Kathonzweni", "Mbitini"],
+    "Kibwezi East": ["Masongaleni", "Mtito Andei", "Thange", "Ivingoni/Nzambani"],
+    "Kibwezi West": ["Makindu", "Nguumo", "Nguu/Masumba", "Kikumbulyu North", "Kikumbulyu South"],
+    "Kaiti": ["Kilungu", "Ilima", "Ukia", "Kee"],
+    "Kilome": ["Mukaa", "Kasikeu", "Kiima Kiu/Kalanzoni"],
+    "Mbooni": ["Tulimani", "Mbooni", "Kithungo/Kitundu", "Kisau/Kithuki"]
+  },
+  "Nyandarua": {
+    "Ol Kalou": ["Githioro", "Karau", "Mirangine", "Rurii"],
+    "Ol Jorok": ["Gathanji", "Gatimu", "Weru", "Charagita"],
+    "Kinangop": ["Engineer", "Githabai", "North Kinangop", "Murungaru"],
+    "Kipipiri": ["Wanjohi", "Kipipiri", "Geta", "Githioro"],
+    "Ndaragwa": ["Leshau Pondo", "Kiriita", "Central", "Shamata"]
+  },
+  "Nyeri": {
+    "Tetu": ["Dedan Kimathi", "Aguthi-Gaaki", "Wamagana"],
+    "Kieni": ["Mweiga", "Naromoru/Kiamathaga", "Gatarakwa", "Thegu River"],
+    "Mathira": ["Karatina Town", "Ruguru", "Iriaini", "Konyu"],
+    "Othaya": ["Chinga", "Iriaini", "Karima", "Mahiga"],
+    "Mukurweini": ["Gikondi", "Rugi", "Mukurweini Central", "Mukure"],
+    "Nyeri Town": ["Rware", "Kamakwa/Mukaro", "Kiganjo/Mathari", "Gatitu/Muruguru"]
+  },
+  "Kirinyaga": {
+    "Mwea": ["Mutithi", "Tebere", "Wamumu", "Thiba"],
+    "Gichugu": ["Kabare", "Ngariama", "Karumandi", "Njukiini"],
+    "Ndia": ["Mukure", "Kiine", "Kariti", "Baragwi"],
+    "Kirinyaga Central": ["Inoi", "Mutira", "Kerugoya", "Kanyekini"]
+  },
+  "Murang'a": {
+    "Kangema": ["Kanyenyaini", "Muguru", "Rwathia"],
+    "Mathioya": ["Gitugi", "Kiru", "Kamacharia"],
+    "Kiharu": ["Mugoiri", "Mbiri", "Township", "Kimathi"],
+    "Kigumo": ["Kangari", "Kinyona", "Kagunduini", "Kagaa"],
+    "Maragua": ["Ichagaki", "Kimorori/Wempa", "Makuyu", "Kambiti"],
+    "Kandara": ["Gaichanjiru", "Ng'araria", "Muruka", "Ithiru"],
+    "Gatanga": ["Kakuzi/Mitubiri", "Kihumbuini", "Kariara", "Kang'ari"]
+  },
+  "Kiambu": {
+    "Gatundu South": ["Kiamwangi", "Kiganjo", "Ng'enda", "Ndarugu"],
+    "Gatundu North": ["Gituamba", "Mang'u", "Chania", "Kahuguini"],
+    "Juja": ["Theta", "Witeithie", "Murera", "Juja", "Kalimoni"],
+    "Thika Town": ["Township", "Kamenu", "Hospital", "Gatuanyaga", "Ngoliba"],
+    "Ruiru": ["Biashara", "Gitothua", "Gatongora", "Kahawa Sukari", "Kahawa Wendani", "Mwiki", "Mwihoko", "Kiuu"],
+    "Githunguri": ["Githunguri", "Githiga", "Ikinu", "Komothai", "Komo"],
+    "Kiambu": ["Ting'ang'a", "Ndumberi", "Riabai", "Kiambu Township"],
+    "Kiambaa": ["Cianda", "Karuri", "Ndenderu", "Muchatha", "Kihara"],
+    "Kikuyu": ["Kikuyu", "Sigona", "Karai", "Nachu", "Kinoo"],
+    "Kabete": ["Uthiru", "Kabete", "Gitaru", "Muguga", "Nyathuna"],
+    "Limuru": ["Limuru Central", "Limuru East", "Ngecha-Tigoni", "Biberioni", "Ndeiya"],
+    "Lari": ["Kinale", "Kamburu", "Nyanduma", "Kijabe", "Lari"]
+  },
+  "Turkana": {
+    "Turkana North": ["Kaeris", "Lapur", "Lake Zone", "Nakalale", "Kaaleng/Kaikor"],
+    "Turkana West": ["Kakuma", "Lopur", "Songot", "Kalobeyei", "Lokichoggio"],
+    "Turkana Central": ["Kanamkemer", "Kalokol", "Lodwar Township", "Kerio Delta", "Kotaruk/Lobei"],
+    "Loima": ["Loima", "Lokiriama/Lorengippi", "Turkwel", "Atapar"],
+    "Turkana South": ["Katilu", "Kaputir", "Lobokat", "Kalapata", "Lokichar"],
+    "Turkana East": ["Lokori/Kochodin", "Katilia", "Kapedo/Napeitom"]
+  },
+  "West Pokot": {
+    "Kapenguria": ["Kapenguria", "Riwo", "Mnagei", "Siyoi", "Endugh"],
+    "Sigor": ["Sekerr", "Masool", "Lomut", "Weiwei"],
+    "Kacheliba": ["Suam", "Kodich", "Kasei", "Kapchok", "Alale"],
+    "Pokot South": ["Chepareria", "Batei", "Lelan", "Tapach"]
+  },
+  "Samburu": {
+    "Samburu West": ["Lodokejek", "Maralal", "Loosuk", "Poro"],
+    "Samburu North": ["El-Barta", "Nachola", "Ndoto", "Nyiro"],
+    "Samburu East": ["Waso", "Wamba North", "Wamba West", "Wamba East"]
+  },
+  "Trans-Nzoia": {
+    "Kwanza": ["Kapomboi", "Kwanza", "Keiyo", "Bidii"],
+    "Endebess": ["Chepchoina", "Matumbei", "Endebess"],
+    "Saboti": ["Matisi", "Tuwani", "Saboti", "Machewa", "Matisi"],
+    "Kiminini": ["Waitaluk", "Kiminini", "Sirende", "Hospital", "Sikhendu"],
+    "Cherangany": ["Makutano", "Kaplamai", "Motosiet", "Sinyerere", "Chepsiro/Kiptoror"]
+  },
+  "Uasin Gishu": {
+    "Soy": ["Moi's Bridge", "Kapseret", "Kiplombe", "Kimumu", "Kuinet/Kapsuswa"],
+    "Turbo": ["Turbo", "Ngenyilel", "Kamagut", "Kiplombe", "Kimumu"],
+    "Moiben": ["Moiben", "Sergoit", "Karuna/Meibeki", "Tembelio", "Kimumu"],
+    "Ainabkoi": ["Kapsoya", "Ainabkoi/Olare", "Kaptagat"],
+    "Kapseret": ["Megun", "Langas", "Simat/Kapseret", "Kipkenyo", "Ngeria"],
+    "Kesses": ["Racecourse", "Tulwet/Chuiyat", "Tarakwa", "Cheptiret/Kipchamo"]
+  },
+  "Elgeyo-Marakwet": {
+    "Marakwet East": ["Endo", "Embobut/Embolot", "Sambirir", "Kapyego"],
+    "Marakwet West": ["Lelan", "Sengwer", "Cherangany/Chebororwa", "Moiben/Kuserwo"],
+    "Keiyo North": ["Emsoo", "Kamariny", "Kapchemutwa", "Tambach"],
+    "Keiyo South": ["Kaptarakwa", "Chepkorio", "Soy North", "Soy South"]
+  },
+  "Nandi": {
+    "Tinderet": ["Songhor/Soba", "Tindiret", "Chemelil/Chemase", "Kapsimotwa"],
+    "Aldai": ["Kaptumo/Kaboi", "Kemeloi/Maraba", "Koyo/Ndurio", "Kabwareng", "Terik"],
+    "Nandi Hills": ["Nandi Hills", "Chepkunyuk", "Kapchorwa", "O'lessos"],
+    "Chesumei": ["Kiptuya", "Kosirai", "Lelmokwo/Ngechek", "Chemundu/Kapng'etuny", "Kaptel/Kamoiywo"],
+    "Emgwen": ["Chepkumia", "Kapsabet", "Kilibwoni", "Kapkangani"],
+    "Mosop": ["Kabiyet", "Kurgung/Surungai", "Chepterwai", "Sangalo/Kebulonik", "Kabisaga"]
+  },
+  "Baringo": {
+    "Baringo Central": ["Kabarnet", "Sacho", "Tenges", "Kapropita", "Ewalel Chapchap"],
+    "Baringo North": ["Barwesa", "Saimo Kipsaraman", "Saimo Soi", "Kabartonjo", "Bartabwa"],
+    "Eldama Ravine": ["Lembus", "Lembus Kwen", "Ravine", "Maji Mazuri/Mumberes", "Lembus Perkerra", "Koibatek"],
+    "Mogotio": ["Mogotio", "Emining", "Kisanana"],
+    "Baringo South": ["Mukutani", "Marigat", "Ilchamus", "Mochongoi"],
+    "Tiaty": ["Tirioko", "Kolowa", "Ribkwo", "Silale", "Tangulbei/Korossi", "Loiyamorok", "Churo/Amaya"]
+  },
+  "Laikipia": {
+    "Laikipia East": ["Ngobit", "Tigithi", "Thingithu", "Nanyuki", "Umande"],
+    "Laikipia West": ["Ol-Moran", "Rumuruti Township", "Githiga", "Marmanet", "Sosian", "Kinamba"],
+    "Laikipia North": ["Segera", "Mugogodo West", "Mugogodo East"]
+  },
+  "Nakuru": {
+    "Molo": ["Mariashoni", "Elburgon", "Turi", "Molo"],
+    "Njoro": ["Mauche", "Kihingo", "Lare", "Nessuit", "Njoro"],
+    "Naivasha": ["Biashara", "Hells Gate", "Lake View", "Mai Mahiu", "Maiella", "Naivasha East", "Olkaria", "Viwandani"],
+    "Gilgil": ["Gilgil", "Elementaita", "Mbaruk/Eburu", "Murindati"],
+    "Kuresoi South": ["Amalo", "Keringet", "Kiptagich", "Tinet"],
+    "Kuresoi North": ["Kamara", "Kiptororo", "Nyota", "Sirikwa"],
+    "Subukia": ["Kabazi", "Subukia", "Waseges"],
+    "Rongai": ["Lemotit", "Menengai West", "Mosop", "Soin"],
+    "Bahati": ["Bahati", "Dundori", "Kabatini", "Lanet/Umoja", "Kiamaina"],
+    "Nakuru Town East": ["Biashara", "Flamingo", "Kivumbini", "Menengai", "Shabab"],
+    "Nakuru Town West": ["Barut", "Kaptembwa", "London", "Rhoda", "Shaabab"]
+  },
+  "Narok": {
+    "Kilgoris": ["Angata Barikoi", "Kilgoris Central", "Keyian", "Lolgorian", "Shankoe"],
+    "Emurua Dikirr": ["Ilkerin", "Ololmasani", "Mogondo", "Kapsasian"],
+    "Narok North": ["Olokurto", "Ololulung'a", "Nkareta", "Olorropil", "Narok Town"],
+    "Narok East": ["Mosiro", "Ildamat", "Keekonyokie", "Suswa"],
+    "Narok South": ["Majimoto/Naroosura", "Melelo", "Loita", "Sogoo", "Ololulunga"],
+    "Narok West": ["Ilmotiok", "Mara", "Siana", "Naikarra"]
+  },
+  "Kajiado": {
+    "Kajiado North": ["Ongata Rongai", "Nkaimurunya", "Olkeri", "Oloolua", "Ngong"],
+    "Kajiado Central": ["Purko", "Ildamat", "Dalalekutuk", "Matapato North", "Matapato South"],
+    "Kajiado East": ["Kaputiei North", "Kitengela", "Oloosirkon/Sholinke", "Kenyawa-Poka", "Imaroro"],
+    "Kajiado West": ["Keekonyokie", "Iloodokilani", "Magadi", "Ewuaso Oonkidong'i", "Mosiro"],
+    "Kajiado South": ["Entonet/Lenkisim", "Mbirikani/Eselenkei", "Kimana", "Rombo", "Kuku"]
+  },
+  "Kericho": {
+    "Ainamoi": ["Ainamoi", "Kipchebor", "Kipchimchim", "Kipkelion", "Kipkelion East", "Kipkelion West"],
+    "Belgut": ["Kabianga", "Waldai", "Chaik", "Kapsuser", "Cheptororiet/Seretut"],
+    "Bureti": ["Cheboin", "Chemosot", "Kapkatet", "Kipreres", "Litein"],
+    "Kipkelion East": ["Kedowa/Kimugul", "Londiani", "Chepseon", "Tendeno/Sorget"],
+    "Kipkelion West": ["Kunyak", "Kamasian", "Kipkelion", "Chilchila"],
+    "Sigowet/Soin": ["Sigowet", "Kaplelartet", "Soliat", "Soin"]
+  },
+  "Bomet": {
+    "Bomet Central": ["Silibwet Township", "Ndaraweta", "Singorwet", "Chesoen", "Mutarakwa"],
+    "Bomet East": ["Merigi", "Kembu", "Longisa", "Kipreres", "Chemaner"],
+    "Chepalungu": ["Sigor", "Chebunyo", "Siongiroi", "Nyangores", "Kipsonoi"],
+    "Konoin": ["Kimulot", "Mogogosiek", "Boito", "Chepchabas", "Embomos"],
+    "Sotik": ["Ndanai/Abosi", "Chemagel", "Kapletundo", "Manaret", "Rongena/Manaret"]
+  },
+  "Kakamega": {
+    "Lugari": ["Lugari", "Lumakanda", "Chekalini", "Chevaywa", "Lwandeti"],
+    "Likuyani": ["Likuyani", "Sango", "Kongoni", "Nzoia", "Sinoko"],
+    "Malava": ["Malava", "Shivagala", "Shivanga", "Kabras", "South Kabras"],
+    "Lurambi": ["Lurambi", "Shinyalu", "Idakho", "Mahiakalo", "Maraba"],
+    "Navakholo": ["Navakholo", "Kabras", "Shivanga", "Kabras South", "Kabras West"],
+    "Mumias West": ["Mumias", "Mumias Central", "Mumias East", "Mumias West", "Mumias South"],
+    "Mumias East": ["Mumias", "Mumias Central", "Mumias East", "Mumias West", "Mumias South"],
+    "Matungu": ["Matungu", "Shivanga", "Shivagala", "Kabras", "South Kabras"],
+    "Butere": ["Butere", "Shivanga", "Shivagala", "Kabras", "South Kabras"],
+    "Khwisero": ["Khwisero", "Shivanga", "Shivagala", "Kabras", "South Kabras"],
+    "Shinyalu": ["Shinyalu", "Idakho", "Mahiakalo", "Maraba", "Lurambi"],
+    "Ikolomani": ["Ikolomani", "Idakho", "Mahiakalo", "Maraba", "Lurambi"]
+  },
+ "Vihiga": {
+    "Sabatia": ["Lyaduywa/Izava", "Wodanga", "Chavakali", "North Maragoli", "Busali"],
+    "Hamisi": ["Shiru", "Gisambai", "Shamakhokho", "Banja", "Muhudu", "Tambua", "Jepkoyai"],
+    "Luanda": ["Luanda Township", "Wemilabi", "Mwibona", "Emabungo", "Ekwanda"],
+    "Emuhaya": ["North East Bunyore", "Central Bunyore", "West Bunyore"],
+    "Vihiga": ["Lugaga-Wamuluma", "South Maragoli", "Central Maragoli", "Mungoma", "Lyamoywa"]
+  },
+  "Bungoma": {
+    "Kanduyi": ["Bukembe West", "Bukembe East", "Township", "Khalaba", "Musikoma", "East Sang'alo", "Marakaru/Tuuti", "West Sang'alo"],
+    "Webuye East": ["Mihuu", "Ndivisi", "Maraka"],
+    "Webuye West": ["Misikhu", "Sitikho", "Matulo"],
+    "Kimilili": ["Maeni", "Kamukuywa", "Kimilili", "Milima"],
+    "Sirisia": ["Namwela", "Malakisi/South Kulisiru", "Lwandanyi"],
+    "Kabuchai": ["Mukuyuni", "West Nalondo", "Bwake/Luuya", "Chwele/Kabuchai"],
+    "Tongaren": ["Milima", "Ndalu/Tabani", "Tongaren", "Soysambu/Mitua", "Naitiri/Kabuyefwe"],
+    "Bumula": ["Bumula", "Khasoko", "Kabula", "Kimaeti", "South Bukusu", "West Bukusu", "Siboti"]
+  },
+  "Busia": {
+    "Teso North": ["Malaba Central", "Malaba North", "Angurai South", "Angurai North", "Angurai East"],
+    "Teso South": ["Ang'urai West", "Chakol South", "Chakol North", "Amukura East", "Amukura West", "Amukura Central"],
+    "Nambale": ["Bukhayo North/Waltsi", "Bukhayo East", "Bukhayo Central", "Bukhayo West"],
+    "Matayos": ["Busibwabo", "Mayenje", "Matayos South", "Matayos Central", "Burumba"],
+    "Butula": ["Marachi West", "Marachi Central", "Marachi East", "Kingandole", "Elugulu"],
+    "Funyula": ["Bwiri", "Namboboto/Nambuku", "Ageng'a/Nanguba", "Nangina"],
+    "Bunyala": ["Bunyala Central", "Bunyala North", "Bunyala West", "Bunyala South"]
+  },
+  "Siaya": {
+    "Ugenya": ["East Ugenya", "North Ugenya", "West Ugenya", "South Ugenya"],
+    "Ugunja": ["Ugunja", "Sigomere", "Sidindi"],
+    "Alego Usonga": ["Usonga", "West Alego", "Central Alego", "Siaya Township", "North Alego", "South East Alego"],
+    "Gem": ["North Gem", "South Gem", "East Gem", "Yala Township", "Central Gem"],
+    "Bondo": ["West Yimbo", "Central Sakwa", "South Sakwa", "Yimbo East", "North Sakwa", "West Sakwa"],
+    "Rarieda": ["East Asembo", "West Asembo", "North Uyoma", "South Uyoma", "West Uyoma"]
+  },
+  "Kisumu": {
+    "Kisumu East": ["Kajulu", "Kolwa East", "Manyatta B"],
+    "Kisumu West": ["North West Kisumu", "Kisumu North", "Kisumu Central", "South West Kisumu", "Central Kisumu"],
+    "Kisumu Central": ["Railways", "Shaurimoyo Kaloleni", "Market Milimani", "Nyalenda A", "Nyalenda B", "Migosi"],
+    "Nyando": ["East Kano/Wawidhi", "Awasi/Onjiko", "Ahero", "Kabonyo/Kanyagwal", "Kobura"],
+    "Muhoroni": ["Chemelil", "Muhoroni/Koru", "Owasa", "Fort Ternan"],
+    "Nyakach": ["South East Nyakach", "North Nyakach", "West Nyakach", "Central Nyakach"],
+    "Seme": ["West Seme", "East Seme", "Central Seme", "North Seme"]
+  },
+  "Homa Bay": {
+    "Homa Bay Town": ["Homa Bay Central", "Homa Bay Arujo", "Homa Bay East", "Homa Bay West"],
+    "Kabondo Kasipul": ["Kabondo East", "Kabondo West", "Kokwanyo/Kakelo", "Kojwach"],
+    "Karachuonyo": ["West Karachuonyo", "North Karachuonyo", "Kanyaluo", "Central Karachuonyo", "Kibiri", "Wang’chieng’", "Kendu Bay Town"],
+    "Kasipul": ["West Kasipul", "South Kasipul", "Central Kasipul", "East Kamagak", "West Kamagak"],
+    "Ndhiwa": ["Kanyadoto", "Kanyikela", "Kabuoch South/Pala", "Kabuoch North", "Kanyamwa Kologi", "Kanyamwa Kosewe", "Kochia"],
+    "Rangwe": ["Kagan", "Kochia", "Homa Bay East", "Homa Bay West"],
+    "Suba North": ["Mfangano Island", "Rusinga Island", "Kasgunga", "Gembe", "Lambwe"],
+    "Suba South": ["Gwassi South", "Gwassi North", "Kaksingri West", "Ruma-Kaksingri"]
+  },
+  "Migori": {
+    "Awendo": ["North Sakwa", "South Sakwa", "Central Sakwa", "West Sakwa"],
+    "Kuria East": ["Nyabasi East", "Nyabasi West", "Gokeharaka/Getambwega", "Ntimaru East", "Ntimaru West"],
+    "Kuria West": ["Bukira East", "Bukira Central/Ikerege", "Isibania", "Makerero", "Masaba", "Tagare", "Nyamosense/Komosoko"],
+    "Nyatike": ["Kachieng'", "Kanyasa", "North Kadem", "Macalder/Kanyarwanda", "Kaler", "Got Kachola", "Muhuru"],
+    "Rongo": ["North Kamagambo", "Central Kamagambo", "East Kamagambo", "South Kamagambo"],
+    "Suna East": ["God Jope", "Suna Central", "Kakrao", "Kwa"],
+    "Suna West": ["Wiga", "Wasweta II", "Ragana-Oruba", "Wasimbete"],
+    "Uriri": ["West Kanyamkago", "North Kanyamkago", "Central Kanyamkago", "South Kanyamkago", "East Kanyamkago"]
+  },
+  Kisii: {
+    "Bonchari": ["Bomariba", "Bogiakumu", "Riana", "Bomariba East"],
+    "South Mugirango": ["Tabaka", "Bogetenga", "Boikang’a", "Moticho"],
+    "Bobasi": ["Masige East", "Masige West", "Nyacheki", "Bobasi Central", "Bobasi East"],
+    "Bomachoge Borabu": ["Magenche", "Bokimonge", "Nyabasi West", "Nyabasi East"],
+    "Bomachoge Chache": ["Bosoti", "Majoge", "Boochi", "Boochi Borabu"],
+    "Nyaribari Masaba": ["Kiamokama", "Masimba", "Gesusu", "Rigoma"],
+    "Nyaribari Chache": ["Kisii Central", "Kiogoro", "Mosocho", "Bobaracho"],
+    "Kitutu Chache North": ["Marani", "Kegogi", "Sensi", "Nyatieko"],
+    "Kitutu Chache South": ["Bogusero", "Bogeka", "Nyakoe", "Nyankoba"]
+  },
+  Nyamira: {
+    "Kitutu Masaba": ["Magombo", "Gachuba", "Gesima", "Kemera", "Rigoma"],
+    "West Mugirango": ["Nyamaiya", "Bogichora", "Township", "Bosamaro"],
+    "North Mugirango": ["Ekerenyo", "Magwagwa", "Bomwagamo", "Itibo"],
+    "Borabu": ["Esise", "Mekenene", "Kiabonyoru", "Nyansiongo"]
+  },
   Nairobi: {
     "Westlands": ["Kitisuru", "Parklands/Highridge", "Karura", "Kangemi", "Mountain View"],
-    "Dagoretti North": ["Kilimani", "Kawangware", "Gatina", "Kabiro"],
-    "Dagoretti South": ["Mutuini", "Riruta", "Uthiru/Ruthimitu", "Waithaka"],
-    "Lang’ata": ["Karen", "Nairobi West", "Mugumu-ini", "South C", "Nyayo Highrise"],
+    "Dagoretti North": ["Kilimani", "Kawangware", "Gatina"],
+    "Dagoretti South": ["Mutuini", "Riruta", "Uthiru/Ruthimitu", "Waithaka", "Kilimani"],
+    "Langata": ["Karen", "Nairobi West", "Mugumo-Ini", "South C", "Nyayo Highrise"],
     "Kibra": ["Laini Saba", "Lindi", "Makina", "Woodley/Kenyatta Golf Course", "Sarang'ombe"],
-    "Roysambu": ["Kahawa West", "Githurai", "Zimmerman", "Roysambu", "Kahawa"],
-    "Kasarani": ["Clay City", "Mwiki", "Kasarani", "Njiru", "Ruai"],
+    "Roysambu": ["Kahawa", "Githurai", "Zimmerman", "Roy Sambu", "Kahawa West"],
+    "Kasarani": ["Roysambu", "Githurai", "Kahawa", "Mwiki", "Clay City"],
     "Ruaraka": ["Baba Dogo", "Utalii", "Mathare North", "Lucky Summer", "Korogocho"],
     "Embakasi North": ["Kariobangi North", "Dandora Area I", "Dandora Area II", "Dandora Area III", "Dandora Area IV"],
-    "Embakasi Central": ["Kayole North", "Kayole Central", "Kayole South", "Komarock", "Matopeni/Spring Valley"],
-    "Embakasi East": ["Upper Savannah", "Lower Savannah", "Embakasi", "Utawala", "Mihango"],
     "Embakasi South": ["Imara Daima", "Kwa Njenga", "Kwa Reuben", "Pipeline", "Kware"],
+    "Embakasi Central": ["Kayole North", "Kayole Central", "Kayole South", "Komarock", "Matopeni/Spring Valley"],
+    "Embakasi East": ["Upper Savanna", "Lower Savanna", "Embakasi", "Utawala", "Mihango"],
     "Embakasi West": ["Umoja I", "Umoja II", "Mowlem", "Kariobangi South"],
-    "Makadara": ["Viwandani", "Harambee", "Makongeni", "Pumwani", "Maringo/Hamza"],
+    "Makadara": ["Maringo/Hamza", "Viwandani", "Harambee", "Makongeni", "Pumwani"],
     "Kamukunji": ["Pumwani", "Eastleigh North", "Eastleigh South", "Airbase", "California"],
-    "Starehe": ["Nairobi Central", "Ngara", "Pangani", "Ziwani/Kariokor", "Landimawe"],
-    "Mathare": ["Hospital", "Mabatini", "Huruma", "Ngei", "Mlango Kubwa", "Kiamaiko"]
-  },
-
-  Mombasa: {
-    "Mvita": ["Tudor", "Ganjoni", "Tononoka", "Majengo", "Old Town"],
-    "Changamwe": ["Port Reitz", "Miritini", "Kipevu", "Airport", "Chaani"],
-    "Likoni": ["Timbwani", "Mtongwe", "Bofu", "Likoni", "Shika Adabu"],
-    "Jomvu": ["Mikindani", "Miritini", "Jomvu Kuu"],
-    "Kisauni": ["Junda", "Bamburi", "Mtopanga", "Mwakirunge", "Magogoni", "Shanzu"],
-    "Nyali": ["Frere Town", "Ziwa la Ng’ombe", "Mkomani", "Kongowea", "Kadzandani"]
+    "Starehe": ["Pangani", "Ziwani/Kariokor", "Ngara", "Nairobi Central", "Landimawe"],
+    "Mathare": ["Hospital", "Mabatini", "Huruma", "Ngei", "Mlango Kubwa"]
   }
 };
 
-
-function loadConstituencies() {
+function loadConstituency() {
   const county = document.getElementById("county").value;
-  const constituency = document.getElementById("constituency");
-  const ward = document.getElementById("ward");
+  const constituencySelect = document.getElementById("constituency");
+  const wardSelect = document.getElementById("ward");
 
-  constituency.innerHTML = '<option value="" hidden>-- Select Constituency --</option>';
-  ward.innerHTML = '<option value="" hidden>-- Select Ward --</option>';
+  // Clear previous options
+  constituencySelect.innerHTML = '<option value="" hidden>-- Select Constituency --</option>';
+  wardSelect.innerHTML = '<option value="" hidden>-- Select Ward --</option>';
 
-  if (locationData[county]) {
-    Object.keys(locationData[county]).forEach(c => {
+  if (county && data[county]) {
+    for (let constituency in data[county]) {
       let opt = document.createElement("option");
-      opt.value = c;
-      opt.innerText = c;
-      constituency.appendChild(opt);
-    });
+      opt.value = constituency;
+      opt.innerHTML = constituency;
+      constituencySelect.appendChild(opt);
+    }
   }
 }
 
-function loadWards() {
+function loadWard() {
   const county = document.getElementById("county").value;
   const constituency = document.getElementById("constituency").value;
-  const ward = document.getElementById("ward");
+  const wardSelect = document.getElementById("ward");
 
-  ward.innerHTML = '<option value="" hidden>-- Select Ward --</option>';
+  // Clear previous options
+  wardSelect.innerHTML = '<option value="" hidden>-- Select Ward --</option>';
 
-  if (locationData[county] && locationData[county][constituency]) {
-    locationData[county][constituency].forEach(w => {
+  if (county && constituency && data[county][constituency]) {
+    data[county][constituency].forEach(ward => {
       let opt = document.createElement("option");
-      opt.value = w;
-      opt.innerText = w;
-      ward.appendChild(opt);
+      opt.value = ward;
+      opt.innerHTML = ward;
+      wardSelect.appendChild(opt);
     });
   }
 }
-</script> -->
-
-
-<script>
-$(document).ready(function() {
-    $('#county').on('change', function() {
-        var countyId = $(this).val();
-        $('#constituency').html('<option>Loading...</option>');
-        $.ajax({
-            url: 'get_constituencies.php',
-            type: 'POST',
-            data: { county_id: countyId },
-            success: function(data) {
-                $('#constituency').html(data);
-                $('#ward').html('<option value="">-- Select Ward --</option>');
-            }
-        });
-    });
-
-    $('#constituency').on('change', function() {
-        var constituencyId = $(this).val();
-        $('#ward').html('<option>Loading...</option>');
-        $.ajax({
-            url: 'get_wards.php',
-            type: 'POST',
-            data: { constituency_id: constituencyId },
-            success: function(data) {
-                $('#ward').html(data);
-            }
-        });
-    });
-});
 </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
