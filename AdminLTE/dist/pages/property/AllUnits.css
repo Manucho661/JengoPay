@@ -5,14 +5,23 @@ body {
     font-size: 12px;
   }
 
+                                          /* HEADER + SUMMARY */
   .contact_section_header{
     font-weight: 600;
   letter-spacing: .5px;
   margin-right: 2px;
+  color: #767676;
+  }
+  .contact_section_header span{
+    color: #00192D;
   }
 .contact_section_header .icon{
   color: #FFC107;
+}
 
+.property-type
+{
+  color: #767676;
 }
   .panel {
     display: none; /* Initially hidden */
@@ -132,11 +141,7 @@ body {
       color: red;
       }
    */
-  .card-header.view_announcement {
-    position: relative;
-    display: flex;/* Add this for the absolute positioning of the close button */
-    font-weight: 600;
-  }
+
 
 
 
@@ -172,21 +177,6 @@ body {
   margin-bottom: 8px;
   display: block;
   }
-
-  /* input[type="text"], input[type="email"], input[type="number"], select, textarea {
-  width: 70%;
-  padding: 8px;
-  margin-bottom: 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  }  */
-
-  /* textarea {
-  resize: vertical;
-  } */
-
-
-  /* Main form container */
 
 
   /* Form Section Titles */
@@ -277,13 +267,7 @@ body {
       box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
 
   }
-  .contact_section_header{
-    border-bottom: 1px solid rgba(128, 128, 128, 0.5);
-    font-family: 'Poppins', sans-serif;
-    font-size: 22px;
-    font-weight: 600;
 
-  }
   a{
     color: #00192D;
   }

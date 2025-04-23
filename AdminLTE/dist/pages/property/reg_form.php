@@ -532,7 +532,7 @@ try {
                   --
                 </option>
 
-                
+
                 <!-- <option value="Nairobi">Kangemi</option>
                 <option value="Kisumu">Kiambu</option>
                 <option value="Vihiga">Pipeline</option> -->
@@ -1178,7 +1178,7 @@ try {
          </tr>
        </thead>
        <tbody>
-         <tr onclick="window.location.href='AllUnits.html'">
+         <tr onclick="window.location.href='units.html'">
            <td>Crown Z Towers</td>
            <td>Mai mahiu</td>
            <td>Patrick Musila</td>
@@ -1192,7 +1192,7 @@ try {
 
            </td>
          </tr>
-         <tr onclick="window.location.href='AllUnits.html'">
+         <tr onclick="window.location.href='units.html'">
            <td>Ebenezer Apartments</td>
            <td>Kikuyu</td>
            <td>Patrick Musila</td>
@@ -1204,7 +1204,7 @@ try {
 
            </td>
          </tr>
-         <tr onclick="window.location.href='AllUnits.html'">
+         <tr onclick="window.location.href='units.html'">
            <td>Manucho Apartments</td>
            <td>Komarock</td>
            <td>Patrick Musila</td>
@@ -1217,7 +1217,7 @@ try {
 
            </td>
          </tr>
-         <tr onclick="window.location.href='AllUnits.html'">
+         <tr onclick="window.location.href='units.html'">
            <td>Huduma Apartments</td>
            <td>Huduma</td>
            <td>Patrick Musila</td>
@@ -1229,7 +1229,7 @@ try {
 
            </td>
          </tr>
-         <tr onclick="window.location.href='AllUnits.html'">
+         <tr onclick="window.location.href='units.html'">
            <td>Kona Moja Apartments</td>
            <td>Westlands</td>
            <td>Patrick Musila</td>
@@ -1241,7 +1241,7 @@ try {
 
             </td>
          </tr>
-         <tr onclick="window.location.href='AllUnits.html'">
+         <tr onclick="window.location.href='units.html'">
            <td>Crown Mawingu Towers</td>
            <td>Limuru</td>
            <td>Patrick Mwangi</td>
