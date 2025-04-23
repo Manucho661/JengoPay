@@ -2,6 +2,46 @@
 <?php
  include '../db/connect.php';
 ?>
+
+<?php
+try {
+  $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+  // Fetch tenants with their user details
+  $sql = "SELECT 
+              users.name, 
+              users.email, 
+              tenants.phone_number,
+              tenants.residence,
+              tenants.id_no,
+              tenants.unit,
+              tenants.status
+          FROM tenants
+          INNER JOIN users ON tenants.user_id = users.id";
+
+  $stmt = $conn->query($sql);
+  $tenants = $stmt->fetchAll();
+
+
+ // Tenants Count
+            $count = count($tenants);
+            $activeTenantsCount  = 0;
+            $inactiveTenantsCount = 0;
+
+            foreach ($tenants as $tenant) {
+                if (strtolower($tenant['status']) === 'active') {
+                    $activeTenantsCount++;
+                } else {
+                    $inactiveTenantsCount++;
+                }
+            }
+
+
+  } catch (PDOException $e) {
+    echo "❌ Error: " . $e->getMessage();
+  }
+?>
 <!doctype html>
 <html lang="en">
   <!--begin::Head-->
@@ -77,18 +117,12 @@
     <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
 
     <style>
-      body{
-        background-color: #FFC107 !important;
-
-      }
-      .app-wrapper{
-        background-color: rgba(128,128,128, 0.1);
-      }
+     
     </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
-    <div class="app-wrapper">
+    <div class="app-wrapper"style="background-color:rgba(128,128,128, 0.1);" >
       <!--begin::Header-->
       <nav class="app-header navbar navbar-expand bg-body">
         <!--begin::Container-->
@@ -338,59 +372,58 @@
             </div>
             <!--end::Row-->
 
-            <!-- ROW, for summary -->
-             <div class="row">
+                                             <!-- SUMMARY -->
+            <!-- Start Row-->
+            <div class="row">
               <div class="col-md-12">
-                <h6 class="mb-0 contact_section_header summary mb-2"> </i> Summary</h6>
+
+                  <h6 class="mb-0 contact_section_header summary mb-2"> </i> Summary</h6>
 
                 <div class="row">
 
-                        <div class="col-md-3">
+                  <div class="col-md-3">
 
-                          <div class="summary-item">
-                            <div class="summary-item-container p-2">
-                              <div ><i class="fas fa-user-tie icon"></i> <span class="label" > Total,</span> </div>
-                              <div class="value"><b>2000</b></div>
-                            </div>
-                          </div>
+                    <div class="summary-card p-2">
+                        <div ><i class="fas fa-user-tie summary-card_icon"></i> <span class="summary-card_label" > Total,</span> </div>
+                        <div class="summary-card_value"><b> <?= $count ?> </b></div>
+                    </div>
 
-                        </div>
+                  </div>
 
-                        <div class="col-md-3">
-                          <div class="summary-item">
-                            <div class="summary-item-container p-2">
-                              <div ><i class="fas fa-user-tie icon"></i> <span class="label" > Active,</span> </div>
-                              <div class="value active"><b>2000</b></div>
-                            </div>
-                          </div>
-                        </div>
+                  <div class="col-md-3">
 
-                        <div class="col-md-3">
-                          <div class="summary-item">
-                            <div class="summary-item-container p-2">
-                              <div ><i class="fas fa-user-tie icon"></i> <span class="label" > Inctive,</span> </div>
-                              <div class="value inactive"><b>2000</b></div>
-                            </div>
-                          </div>
-                        </div>
+                    <div class="summary-card p-2">
+                        <div ><i class="fas fa-user-tie summary-card_icon"></i> <span class="summary-card_label" > Active,</span> </div>
+                        <div class="summary-card_value active"><b> <?= $activeTenantsCount ?> </b></div>
+                    </div>
 
-                        <div class="col-md-3">
-                          <div class="summary-item">
-                            <div class="summary-item-container p-2">
-                              <div ><i class="fas fa-user-tie icon"></i> <span class="label" > New Applicants,</span> </div>
-                              <div class="value"><b>2000</b></div>
-                            </div>
-                          </div>
-                        </div>
+                  </div>
+
+                  <div class="col-md-3">
+
+                    <div class="summary-card p-2">
+                        <div ><i class="fas fa-user-tie summary-card_icon"></i> <span class="summary-card_label" > Inactive,</span> </div>
+                        <div class="summary-card_value inactive"><b> <?= $inactiveTenantsCount ?> </b></div>
+                    </div>
+              
+                  </div>
+
+                  <div class="col-md-3">
+
+                    <div class="summary-card p-2">
+                        <div ><i class="fas fa-user-tie summary-card_icon"></i> <span class="summary-card_label" > Inactive,</span> </div>
+                        <div class="summary-card_value inactive"><b> 2000</b></div>
+                    </div>
+                    
+                  </div>
+                </div>
               </div>
-
-
+            </div>
+            <!-- End row -->
           </div>
-             </div>
-            <!-- END ROW -->
+          <!--end::Container-fluid-->
 
-          </div>
-          <!--end::Container-->
+          
         </div>
         <div class="app-content mt-4">
           <!--begin::Container-->
@@ -449,30 +482,46 @@
 
                             </tr>
                           </thead>
+                          
                           <tbody>
-                            <tr  onclick="goToDetails('user-1')">
-                              <td>Edwin</td>
-                              <td> 3801790</td>
-                              <td>
-                                <div> Ebenezer </div>
-                                <div style="color: green;">E236</div>
 
-                              </td>
-                              <!-- <td><button onclick="toggleOverlay()">Paid</button></td> -->
-                              <td>
-                                <div class="phone"> <i class="fas fa-phone icon"></i> 0757417721</div>
-                                <div class="email"><i class="fa fa-envelope icon"></i>  nucho23@gmail.com</div>
+                          <?php if (!empty($tenants)) : ?>
+                            <?php foreach ($tenants as $tenant) : ?>
 
-                               </td>
-                              <td> <button class="status completed"><i class="fa fa-check-circle"></i> Active </button>  </td>
+                              <tr  onclick="goToDetails('user-1')">
+                                <td> <?= htmlspecialchars($tenant['name']) ?> </td>
+                                <td> <?= htmlspecialchars($tenant['id_no']) ?></td>
+                                <td>
+                                  <div>  <?= htmlspecialchars($tenant['residence']) ?>  </div>
+                                  <div style="color: green;"><?= htmlspecialchars($tenant['unit']) ?></div>
 
-                              <td>
-                                <a href="vacate_tenant.php" class="btn btn-sm" style="background-color: #00192D; color:#fff;" data-toggle="tooltip" title="Vacant edwin from the House" onclick="event.stopPropagation();" > <i class="fa fa-arrow-right"></i></a>
-                                <button class="btn btn-sm" style="background-color: #AF2A28; color:#fff;"> <i class="fa fa-comment" data-toggle="tooltip" title="Send Paul Pashan an SMS"></i></button>
-                                <button style="background-color: #F74B00; color:#fff;" class="btn btn-sm" data-toggle="tooltip" title="Send Paul Pashan Email"><i class="fa fa-envelope"></i> </button>
-                              </td>
-                            </tr>
-                            <tr>
+                                </td>
+                                <!-- <td><button onclick="toggleOverlay()">Paid</button></td> -->
+                                <td>
+                                  <div class="phone"> <i class="fas fa-phone icon"></i> <?= htmlspecialchars($tenant['phone_number']) ?></div>
+                                  <div class="email"><i class="fa fa-envelope icon"></i> <?= htmlspecialchars($tenant['email']) ?></div>
+
+                                </td>
+                                <td> <button class="status completed"><i class="fa fa-check-circle"></i> Active </button>  </td>
+
+                                <td>
+
+                                  <button class="btn btn-sm" style="background-color: #00192D; color:white"> <i class="fa fa-arrow-right" data-toggle="tooltip" title="Vacant edwin from the House" onclick="event.stopPropagation();"></i></button>
+                                  <button class="btn btn-sm" style="background-color: #AF2A28; color:#fff;"> <i class="fa fa-comment" data-toggle="tooltip" title="Send Paul Pashan an SMS"></i></button>
+                                  <button style="background-color: #F74B00; color:#fff;" class="btn btn-sm" data-toggle="tooltip" title="Send Paul Pashan Email"><i class="fa fa-envelope"></i> </button>
+                                </td>
+                              </tr>
+
+                            <?php endforeach; ?>
+                          <?php else : ?>
+
+                              <tr>
+                                <td colspan="8">No tenants found.</td>
+                              </tr>
+                          <?php endif; ?>
+
+
+                            <!-- <tr>
                                 <td>Joseph</td>
 
 
@@ -482,7 +531,7 @@
                                   <div> Manucho </div>
                                   <div style="color: green;">M239</div>
                                 </td>
-                                <!-- <td><button onclick="toggleOverlay()">Paid</button></td> -->
+                                
                                 <td>
                                   <div class="phone"> <i class="fas fa-phone icon"></i> 0757417721</div>
                                   <div class="email"><i class="fa fa-envelope icon"></i>   joseph23@gmail.com</div>
@@ -496,7 +545,7 @@
                                     <button class="btn btn-sm" style="background-color: #AF2A28; color:#fff;"> <i class="fa fa-comment" data-toggle="tooltip" title="Send Paul Pashan an SMS"></i></button>
                                     <button style="background-color: #F74B00; color:#fff;" class="btn btn-sm" data-toggle="tooltip" title="Send Paul Pashan Email"><i class="fa fa-envelope"></i> </button>
                                 </td>
-                            </tr>
+                            </tr> -->
                             <!-- Add more rows as needed -->
                           </tbody>
                     </table>
@@ -532,114 +581,89 @@
     <!--end::App Wrapper-->
 
 
-
-
-<!-- POPUPS -->
+                                              <!-- OVERLAYS -->
 
 <!-- Add Tenant -->
-<div class="popup-overlay"  id="complaintPopup">
-  <div class="popup-content">
+  <div class="popup-overlay"  id="complaintPopup">
+    <div class="popup-content">
 
-    <button class="close-btn text-secondary" onclick="closePopup()">×</button>
+      <button class="close-btn text-secondary" onclick="closePopup()">×</button>
 
-    <form class="complaint-form" action="tena.php">
-      <h2 class="text-start addTenantHeader">Add Tenant</h2>
-        <label for="name">Tenant Name:</label>
-        <input type="text" id="name" name="name" required>
+      <form class="complaint-form" action="" method="post">
+        <h2 class="text-start addTenantHeader">Add Tenant</h2>
+          <label for="name">Tenant Name:</label>
+          <input type="text" id="name" name="name" required>
 
-        <label for="number">Kra pin:</label>
-        <input type="number" id="number" name="number" required>
+          <label for="number">Identifiacation No:</label>
+          <input type="number" id="number" name="id" required>
 
-        <label for="email">Email Address:</label>
-        <input type="email" id="email" name="email" required>
+          <label for="email">Email Address:</label>
+          <input type="email" id="email" name="email" required>
 
-        <label for="phone">Phone Number:</label>
-        <input type="tel" id="phone" name="phone" required>
+          <label for="phone">Phone Number:</label>
+          <input type="tel" id="phone" name="phone" required>
 
-        <label for="property">Property:</label>
-        <select id="property" name="property" required style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;">
-          <option value="" disabled selected>Select Property</option>
-          <option value="High">Manucho</option>
-          <option value="Moderate">Ben 10</option>
-          <option value="Low">Alpha</option>
-        </select>
-        <label for="unit">Rental Unit:</label>
-        <input type="text" id="unit" name="unit" required>
+          <label for="property">Property:</label>
+          <select id="property" name="residence" required style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;">
+            <option value="" disabled selected>Select Property</option>
+            <option value="Manucho">Manucho</option>
+            <option value="White House">White House</option>
+            <option value="Pink House">Pink House</option>
+            <option value="Silver">Silver</option>
+          </select>
+          <label for="unit">Rental Unit:</label>
+          <input type="text" id="unit" name="unit" required>
 
-      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
+        <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
 
-    </form>
+      </form>
+    </div>
   </div>
-</div>
 <!--End Add Tenant -->
 
  <!-- Shift Tenant -->
- <div class="shiftpopup-overlay" id="shiftPopup">
-  <div class="shiftpopup-content">
-    <button class="close-btn text-secondary" onclick="closeshiftPopup()">×</button>
-    <div class="shift">
-    <h2 style="color: #00192D;">Shift Tenant</h2>
-    <label for="tenant">Select Tenant:</label>
+  <div class="shiftpopup-overlay" id="shiftPopup">
+    <div class="shiftpopup-content">
+      <button class="close-btn text-secondary" onclick="closeshiftPopup()">×</button>
+      <div class="shift">
+      <h2 style="color: #00192D;">Shift Tenant</h2>
+      <label for="tenant">Select Tenant:</label>
 
-    <select id="tenant"  style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;">
-        <option value="John Doe">John Doe</option>
-        <option value="Jane Smith">Jane Smith</option>
-        <option value="Mike Johnson">Mike Johnson</option>
-    </select>
+      <select id="tenant"  style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;">
+          <option value="John Doe">John Doe</option>
+          <option value="Jane Smith">Jane Smith</option>
+          <option value="Mike Johnson">Mike Johnson</option>
+      </select>
 
-    <label for="property" >Select New Property:</label>
-    <select id="property" style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;">
-        <option value="Apartment 101">Apartment 101</option>
-        <option value="House B3">House B3</option>
-        <option value="Condo 23A">Condo 23A</option>
-    </select>
-    <label for="property">Select Unit:</label>
-    <select id="property" style="width: 100%;padding: 10px;margin-bottom: 15px;border-radius: 5px;border: 1px solid #ccc;">
-        <option value="Apartment 101">A55</option>
-        <option value="House B3">B3</option>
-        <option value="Condo 23A">CA</option>
-    </select>
-    <br>
+      <label for="property" >Select New Property:</label>
+      <select id="property" style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;">
+          <option value="Apartment 101">Apartment 101</option>
+          <option value="House B3">House B3</option>
+          <option value="Condo 23A">Condo 23A</option>
+      </select>
+      <label for="property">Select Unit:</label>
+      <select id="property" style="width: 100%;padding: 10px;margin-bottom: 15px;border-radius: 5px;border: 1px solid #ccc;">
+          <option value="Apartment 101">A55</option>
+          <option value="House B3">B3</option>
+          <option value="Condo 23A">CA</option>
+      </select>
+      <br>
 
-    <button  type="submit" class="submit-btn" onclick="shiftTenant()"  style="background-color: #00192D; color: #f1f1f1;">Confirm Shift</button>
+      <button  type="submit" class="submit-btn" onclick="shiftTenant()"  style="background-color: #00192D; color: #f1f1f1;">Confirm Shift</button>
 
+    </div>
+    </div>
   </div>
-  </div>
-</div>
+
+
+                                           <!-- PLUGINS -->
 
 <!-- LOADING AND OUT PROGRESS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
 <!-- EnD LOADING AND OUT PROGRESS -->
 
 
- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
- <script>
-  const   more_announcement = document.getElementById('more_announcement_btn');
-  const   view_announcement = document.getElementById('view_announcement');
-  const   close_overlay = document.getElementById("close-overlay-btn");
-
-  more_announcement.addEventListener('click', ()=>{
-
-     view_announcement.style.display= "flex";
-     document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
-     const now = new Date();
-            const formattedTime = now.toLocaleString(); // Format the date and time
-            timestamp.textContent = `Sent on: ${formattedTime}`;
-
-
-  });
-
-     close_overlay.addEventListener('click', ()=>{
-
-     view_announcement.style.display= "none";
-     document.querySelector('.app-wrapper').style.opacity = '1';
-
-
-     });
- </script>
-
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 
 
@@ -915,5 +939,57 @@
   </body>
   <!--end::Body-->
 </html>
+
+
+<?php
+try {
+  $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+  // Set error mode to exception
+  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+  // Start transaction
+  $conn->beginTransaction();
+
+  // Step 1: Insert into users
+  $sqlUser = "INSERT INTO users (name, email) VALUES (:name, :email)";
+  $stmtUser = $conn->prepare($sqlUser);
+  $stmtUser->execute([
+      ':name' => $_POST['name'],
+      ':email' => $_POST['email']
+      
+  ]);
+
+  // Step 2: Get last inserted user_id
+  $user_id = $conn->lastInsertId();
+
+  // Step 3: Insert into tenants
+  $sqlTenant = "INSERT INTO tenants (
+      user_id, phone_number, id_no, residence, 
+      unit, status
+  ) VALUES (
+      :user_id, :phone, :id_no, :residence,  :unit, :status
+  )";
+
+  $stmtTenant = $conn->prepare($sqlTenant);
+  $stmtTenant->execute([
+      ':user_id' => $user_id,
+      ':phone' => $_POST['phone'],
+      ':residence' => $_POST['residence'],
+      ':id_no' => $_POST['id'],
+      ':unit' => $_POST['unit'],
+      ':status' => 'active'
+  ]);
+
+  // Commit transaction
+  $conn->commit();
+
+  echo "✅ Tenant created successfully!";
+
+} catch (PDOException $e) {
+  $conn->rollBack();
+  echo "❌ Error: " . $e->getMessage();
+}
+
+?>
 
 
