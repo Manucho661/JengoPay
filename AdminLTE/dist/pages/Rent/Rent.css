@@ -5,15 +5,15 @@ a{
 body{
     font-family: 'Poppins', sans-serif;
     background-color: rgba(128, 128, 128, 0.1);
-    
+
 
 }
 main{
   transition: opacity 0.4s ease-in-out;
-  opacity: 1; 
+  opacity: 1;
 }
 main.fade-out {
-   opacity: 0;  
+   opacity: 0;
 }
 
 /* ROUGH WORK */
@@ -172,6 +172,9 @@ input:hover{
                                                     font-weight: 600;
                                                     font-size: 16px;
                                                   }
+                                                  .rentTable.section{
+                                                    overflow: auto;
+                                                  }
                                                   .amount.date .date{
                                                     font-weight: 400px;
                                                     font-size: 10px;
@@ -250,7 +253,7 @@ input:hover{
 /* SELECT ELEMENT CONTAINER */
 .select-option-container{
 
-  width: 170px; 
+  width: 170px;
  position: relative;
  }
  .caret{
@@ -268,19 +271,19 @@ input:hover{
      cursor: pointer;
      margin-right: 20px;
      width: 100%;
-     
-     
+
+
  }
  .custom-select:hover{
    border: 1px solid #FFC107;
- 
+
  }
  .custom-select:focus{
    border-color: #FFC107;
    outline: none;
    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
  }
- 
+
  .custom-select:after{
      border-bottom: 2px solid #999;
      border-right: 2px solid #999;
@@ -305,7 +308,7 @@ input:hover{
  .custom-select.open:after {
    transform: rotate(-135deg);
  }
- 
+
  .select-options{
        background-color: white;
        position: absolute;
@@ -320,10 +323,10 @@ input:hover{
        overflow-y: auto;
        border-radius: 5px;
        color: gray;
-       
-       display: none;   
+
+       display: none;
        /* border-radius: 0 0 8px 8px; */
- 
+
  }
  .select-options div {
        padding: 12px;
@@ -334,15 +337,51 @@ input:hover{
        background-color: #00192D;
        color: #FFC107;
    }
-       
+
  .select-options div:hover {
        background-color: #00192D !important;
        color: #FFC107 !important;
- 
+
  }
  .filter-boxes{
    gap:15px;
+   display: flex;
+   overflow: hidden;
  }
  .view-link{
   color: #00192D;
  }
+
+
+ /* Media Queries */
+ @media (max-width: 767.98px)  {
+  body{
+    overflow-x: hidden;
+  }
+  .filter-boxes{
+     display: block;
+  }
+  .select-option-container{
+    width: 100%;
+  }
+  .rent-info.filter{
+    display: block;
+  }
+  .pdf-excel{
+    margin-top: 5px;
+    display: flex;
+    justify-content: end;
+  }
+  .col-sm-12.col-md-3{
+    margin-bottom: 7px;
+
+  }
+  .col-sm-4.home{
+    display: flex;
+    justify-content: end;
+    overflow: hidden;
+  }
+  .summary-item{
+    overflow-x: hidden;
+  }
+  }

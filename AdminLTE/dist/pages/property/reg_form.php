@@ -1,3 +1,49 @@
+<?php
+// Database connection
+$host = "localhost";
+$dbname = "bt_jengopay";
+$username = "root";
+$password = "";
+
+try {
+  $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $building_name = $_POST['building_name'];
+    $county = $_POST['county'];
+    $constituency = $_POST['constituency'];
+    $ward = $_POST['ward'];
+    $floor_number = $_POST['floor_number'];
+    $units_number = $_POST['units_number'];
+    $building_type = $_POST['building_type'] ?? ''; // Default to empty string
+
+
+    $sql = "INSERT INTO building_identification
+    (building_name, county, constituency, ward, floor_number, units_number, building_type)
+            VALUES (:building_name, :county, :constituency, :ward, :floor_number, :units_number, :building_type)";
+
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+      ':building_name' => $building_name,
+      ':county' => $county,
+      ':constituency' => $constituency,
+      ':ward' => $ward,
+      ':floor_number' => $floor_number,
+      ':units_number' => $units_number,
+      ':building_type' => $building_type
+    ]);
+
+    // echo "<p style='color:green;'>Data submitted successfully!</p>";
+  }
+} catch (PDOException $e) {
+  echo "Connection failed: " . $e->getMessage();
+}
+?>
+
+
+
 <!doctype html>
 <html lang="en">
   <!--begin::Head-->
@@ -334,7 +380,8 @@
         style="background-color:#00192D; color:#FFC107; border-radius:35px; padding-left:15px; padding-right:15px; padding-bottom:7px; padding-top:7px; font-size:1.5rem;"
         id="stepOneIndicatorNo">1</b>
       <p class="mt-2" id="stepOneIndicatorText" style="font-size:13px;">
-        Overview</p>
+        Overview
+      </p>
     </div>
     <!-- Step Two Building Identification Details -->
     <div class="col-md-1 text-center">
@@ -442,29 +489,37 @@
           <div class="col-12 col-sm-4">
             <div class="form-group">
               <label>County</label>
-              <select class="form-control select2 select2-danger"
+              <select name="county"  id="county" onchange="loadConstituencies()"  class="form-control select2 select2-danger"
                 data-dropdown-css-class="select2-danger"
-                style="width: 100%; height:300px !important;">
-                <option value="" hidden selected>-- Select Option --</optio>
-                <option>Mombasa</option>
-                <option>Nairobi</option>
-                <option>Turkana</option>
-                <option>Bungoma</option>
-                <option>Nakuru</option>
-                <option>Kwale</option>
+                style="width: 100%; height:300px !important;" required>
+                <option value="" hidden selected>-- Select Option --</option>
+                <?php
+                  $pdo = new PDO("mysql:host=localhost;dbname=bt_jengopay", "root", "");
+                  $stmt = $pdo->query("SELECT * FROM counties");
+                  while ($row = $stmt->fetch()) {
+                      echo "<option value='{$row['id']}'>{$row['name']}</option>";
+        }
+        ?>
               </select>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <label>Constituency</label>
-              <select name="constituency" id="constituency" class="form-control" required>
+              <select name="constituency" id="constituency" onchange="loadWards()" class="form-control" required>
                 <option value="" selected hidden>-- Choose
                   Constituency
                   --</option>
-                <option value="Nairobi">Westlands</option>
+                  <?php
+                  $pdo = new PDO("mysql:host=localhost;dbname=bt_jengopay", "root", "");
+                  $stmt = $pdo->query("SELECT * FROM constituencies");
+                  while ($row = $stmt->fetch()) {
+                      echo "<option value='{$row['id']}'>{$row['name']}</option>";
+        }
+        ?>
+                <!-- <option value="Nairobi">Westlands</option>
                 <option value="Kisumu">Starehe</option>
-                <option value="Vihiga">Embakasi</option>
+                <option value="Vihiga">Embakasi</option> -->
               </select>
               <b class="errorMessages" id="constituencyError"></b>
             </div>
@@ -476,9 +531,11 @@
                 <option value="" selected hidden>-- Choose Ward
                   --
                 </option>
-                <option value="Nairobi">Kangemi</option>
+
+                
+                <!-- <option value="Nairobi">Kangemi</option>
                 <option value="Kisumu">Kiambu</option>
-                <option value="Vihiga">Pipeline</option>
+                <option value="Vihiga">Pipeline</option> -->
               </select>
               <b class="errorMessages" id="wardError"></b>
             </div>
@@ -488,19 +545,19 @@
           <div class="col-md-4">
             <div class="form-group">
               <label>Number of Floors</label>
-              <input type="text" class="form-control" id="floorNumber"
+              <input type="text" class="form-control" name="floor_number" id="floorNumber"
                 placeholder="Number of Floors">
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <label>Number of Units</label>
-              <input type="text" class="form-control" id="unitsumber" placeholder="Number of Units">
+              <input type="text" class="form-control" id="unitsnumber" name="units_number" placeholder="Number of Units">
             </div>
           </div>
           <div class="col-md-4">
             <label>Building Type</label>
-            <select name="" id="buildingType" class="form-control">
+            <select name="building_type" id="buildingType" class="form-control">
               <option value="" selected hidden>--Select Building
                 Type--</option>
               <option value="Residential">Residential</option>
@@ -663,7 +720,7 @@
                 <div class="col-md-6">
                   <label>Title Deed Copy</label>
                   <input type="file" onchange="handleFiles(event)" class="form-control" id="titleDeedCopy">
-                  
+
                   <!-- Section to display selected files' previews and sizes -->
                   <div id="filePreviews"></div>
 
@@ -1243,6 +1300,108 @@
     <!--end::App Wrapper-->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
+
+
+    <!-- <script>
+const locationData = {
+  Nairobi: {
+    "Westlands": ["Kitisuru", "Parklands/Highridge", "Karura", "Kangemi", "Mountain View"],
+    "Dagoretti North": ["Kilimani", "Kawangware", "Gatina", "Kabiro"],
+    "Dagoretti South": ["Mutuini", "Riruta", "Uthiru/Ruthimitu", "Waithaka"],
+    "Lang’ata": ["Karen", "Nairobi West", "Mugumu-ini", "South C", "Nyayo Highrise"],
+    "Kibra": ["Laini Saba", "Lindi", "Makina", "Woodley/Kenyatta Golf Course", "Sarang'ombe"],
+    "Roysambu": ["Kahawa West", "Githurai", "Zimmerman", "Roysambu", "Kahawa"],
+    "Kasarani": ["Clay City", "Mwiki", "Kasarani", "Njiru", "Ruai"],
+    "Ruaraka": ["Baba Dogo", "Utalii", "Mathare North", "Lucky Summer", "Korogocho"],
+    "Embakasi North": ["Kariobangi North", "Dandora Area I", "Dandora Area II", "Dandora Area III", "Dandora Area IV"],
+    "Embakasi Central": ["Kayole North", "Kayole Central", "Kayole South", "Komarock", "Matopeni/Spring Valley"],
+    "Embakasi East": ["Upper Savannah", "Lower Savannah", "Embakasi", "Utawala", "Mihango"],
+    "Embakasi South": ["Imara Daima", "Kwa Njenga", "Kwa Reuben", "Pipeline", "Kware"],
+    "Embakasi West": ["Umoja I", "Umoja II", "Mowlem", "Kariobangi South"],
+    "Makadara": ["Viwandani", "Harambee", "Makongeni", "Pumwani", "Maringo/Hamza"],
+    "Kamukunji": ["Pumwani", "Eastleigh North", "Eastleigh South", "Airbase", "California"],
+    "Starehe": ["Nairobi Central", "Ngara", "Pangani", "Ziwani/Kariokor", "Landimawe"],
+    "Mathare": ["Hospital", "Mabatini", "Huruma", "Ngei", "Mlango Kubwa", "Kiamaiko"]
+  },
+
+  Mombasa: {
+    "Mvita": ["Tudor", "Ganjoni", "Tononoka", "Majengo", "Old Town"],
+    "Changamwe": ["Port Reitz", "Miritini", "Kipevu", "Airport", "Chaani"],
+    "Likoni": ["Timbwani", "Mtongwe", "Bofu", "Likoni", "Shika Adabu"],
+    "Jomvu": ["Mikindani", "Miritini", "Jomvu Kuu"],
+    "Kisauni": ["Junda", "Bamburi", "Mtopanga", "Mwakirunge", "Magogoni", "Shanzu"],
+    "Nyali": ["Frere Town", "Ziwa la Ng’ombe", "Mkomani", "Kongowea", "Kadzandani"]
+  }
+};
+
+
+function loadConstituencies() {
+  const county = document.getElementById("county").value;
+  const constituency = document.getElementById("constituency");
+  const ward = document.getElementById("ward");
+
+  constituency.innerHTML = '<option value="" hidden>-- Select Constituency --</option>';
+  ward.innerHTML = '<option value="" hidden>-- Select Ward --</option>';
+
+  if (locationData[county]) {
+    Object.keys(locationData[county]).forEach(c => {
+      let opt = document.createElement("option");
+      opt.value = c;
+      opt.innerText = c;
+      constituency.appendChild(opt);
+    });
+  }
+}
+
+function loadWards() {
+  const county = document.getElementById("county").value;
+  const constituency = document.getElementById("constituency").value;
+  const ward = document.getElementById("ward");
+
+  ward.innerHTML = '<option value="" hidden>-- Select Ward --</option>';
+
+  if (locationData[county] && locationData[county][constituency]) {
+    locationData[county][constituency].forEach(w => {
+      let opt = document.createElement("option");
+      opt.value = w;
+      opt.innerText = w;
+      ward.appendChild(opt);
+    });
+  }
+}
+</script> -->
+
+
+<script>
+$(document).ready(function() {
+    $('#county').on('change', function() {
+        var countyId = $(this).val();
+        $('#constituency').html('<option>Loading...</option>');
+        $.ajax({
+            url: 'get_constituencies.php',
+            type: 'POST',
+            data: { county_id: countyId },
+            success: function(data) {
+                $('#constituency').html(data);
+                $('#ward').html('<option value="">-- Select Ward --</option>');
+            }
+        });
+    });
+
+    $('#constituency').on('change', function() {
+        var constituencyId = $(this).val();
+        $('#ward').html('<option>Loading...</option>');
+        $.ajax({
+            url: 'get_wards.php',
+            type: 'POST',
+            data: { constituency_id: constituencyId },
+            success: function(data) {
+                $('#ward').html(data);
+            }
+        });
+    });
+});
+</script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>

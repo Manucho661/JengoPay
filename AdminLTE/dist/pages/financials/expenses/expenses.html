@@ -408,52 +408,55 @@
 
                                   <!-- Expense Table -->
                                   <div class="row g-3 mt-2">
-                                      <h6 class="text-center" style="color:linear-gradient(to right, #00192D, #003D5B, #00788D) ;"> <b>Add the Spend items in the fields below</b> </h6>
-                                      <table class="table table-bordered table-hover table-striped">
-                                          <thead>
-                                              <tr>
-                                                  <th>Account</th>
-                                                  <th>Description</th>
-                                                  <th>Quantity</th>
-                                                  <th>Unit Price</th>
-                                                   <th>Supplier</th>
-                                                  <th>Sub-total</th>
-                                                  <th>Taxes</th>
-                                                  <th>Totals</th>
-                                                  <th>Remove</th>
-                                              </tr>
-                                          </thead>
-                                          <tbody>
-                                              <tr>
-                                                  <td>
+                                    <h6 class="text-center" style="color:linear-gradient(to right, #00192D, #003D5B, #00788D) ;"> <b>Add the Spend items in the fields below</b> </h6>
+                                    <div style="overflow-x: auto;">
+                                        <table class="table table-bordered table-hover table-striped" style="min-width: 800px;">
+                                            <thead>
+                                                <tr>
+                                                    <th>Account</th>
+                                                    <th>Description</th>
+                                                    <th>Quantity</th>
+                                                    <th>Unit Price</th>
+                                                    <th>Supplier</th>
+                                                    <th>Sub-total</th>
+                                                    <th>Taxes</th>
+                                                    <th>Totals</th>
+                                                    <th>Remove</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <select class="form-select">
+                                                            <option selected disabled>Repair and Mantainance</option>
+                                                            <option>Salaries</option>
+                                                            <option>Legal Work</option>
+                                                            <option>Internet</option>
+                                                        </select>
+                                                    </td>
+                                                    <td><textarea class="form-control" rows="1" placeholder="Enter details"></textarea></td>
+                                                    <td><input type="text" class="form-control" placeholder="123"></td>
+                                                    <td><input type="number" class="form-control" placeholder="1"></td>
+                                                    <td><input type="text" class="form-control" placeholder="Quickmart"></td>
+                                                    <td><input type="number" class="form-control" placeholder="123"></td>
+                                                    <td>
                                                       <select class="form-select">
-                                                          <option selected disabled>Repair and Mantainance</option>
-                                                          <option>Salaries</option>
-                                                          <option>Legal Work</option>
-                                                          <option>Internet</option>
+                                                        <option value="" disabled selected>Select Option</option>
+                                                        <option value="credit_card">VAT 16% Inclusive</option>
+                                                        <option value="paypal">VAT 16% Exclusive</option>
+                                                        <option value="bank_transfer">Zero Rated</option>
+                                                        <option value="bank_transfer">Exempted</option>
                                                       </select>
-                                                  </td>
-                                                  <td><textarea class="form-control" rows="1" placeholder="Enter details"></textarea></td>
-                                                  <td><input type="text" class="form-control" placeholder="123"></td>
-                                                  <td><input type="number" class="form-control" placeholder="1"></td>
-                                                  <td><input type="text" class="form-control" placeholder="Quickmart"></td>
-                                                  <td><input type="number" class="form-control" placeholder="123"></td>
-                                                  <td>
-                                                    <select class="form-select">
-                                                      <option value="" disabled selected>Select Option</option>
-                                                      <option value="credit_card">VAT 16% Inclusive</option>
-                                                      <option value="paypal">VAT 16% Exclusive</option>
-                                                      <option value="bank_transfer">Zero Rated</option>
-                                                      <option value="bank_transfer">Exempted</option>
-                                                    </select>
-                                                  </td>
-                                                  <td><input type="number" class="form-control" placeholder="1300"></td>
-                                                  <td><button type="button" class="btn btn-danger remove-row">Delete</button></td>
-                                              </tr>
-                                          </tbody>
-                                      </table>
-                                  </div>
+                                                    </td>
+                                                    <td><input type="number" class="form-control" placeholder="1300"></td>
+                                                    <td><button type="button" class="btn btn-danger remove-row">Delete</button></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
 
+                                
                                   <div class="row g-3 mt-2">
                                       <div class="col-6">
                                           <button type="button" class="btn btn-custom btn-sm" id="addRow">
@@ -497,15 +500,15 @@
             </div>
             <!--end::Row-->
            <!--begin::Row-->
-            <div class="row">
-              <!-- Start col -->
-              <div class="col-md-12 ">
+           <div class="row">
+            <!-- Start col -->
+            <div class="col-md-12">
                 <div class="card Content">
                     <div class="card-header">
-                      <b>All Operational Expenses</b>
+                        <b>All Operational Expenses</b>
                     </div>
-                    <div class="card-body">
-                        <table class="table-striped" id="repaireExpenses" style="width: 100%;">
+                    <div class="card-body" style="overflow-x: auto;">
+                        <table class="table-striped" id="repaireExpenses" style="width: 100%; min-width: 600px;">
                             <thead>
                                 <tr>
                                     <th>Date</th>
@@ -586,6 +589,7 @@
                     </div>
                 </div>
             </div>
+        </div>
               <!-- /.col -->
             </div>
             <!--end::Row-->
