@@ -1,3 +1,38 @@
+<?php
+include '../db/connect.php'; // Make sure this defines $conn for mysqli
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $stmt = $conn->prepare("INSERT INTO unit_information (
+        unit_number, size, floor_number, rooms, room_type, bathrooms, kitchen, balcony, rent_amount, description, created_at, updated_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
+
+    $stmt->bind_param(
+        "sissssssss",
+        $_POST['unit_number'],
+        $_POST['size'],
+        $_POST['floor_number'],
+        $_POST['rooms'],
+        $_POST['room_type'],
+        $_POST['bathrooms'],
+        $_POST['kitchen'],
+        $_POST['balcony'],
+        $_POST['rent_amount'],
+        $_POST['description']
+    );
+
+    if ($stmt->execute()) {
+        // echo "Unit added successfully!";
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+
+    $stmt->close();
+    $conn->close();
+} else {
+    // echo "Form not submitted.";
+}
+?>
+
 <!doctype html>
 <html lang="en">
   <!--begin::Head-->
@@ -43,8 +78,9 @@
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
-
-   <link rel="stylesheet" href="AllUnits.css">
+   <link rel="stylesheet" href="Building.css">
+   <link rel="stylesheet" href="meterreading.css">
+   <link rel="stylesheet" href="AddUnit.css">
 
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
@@ -65,13 +101,119 @@
 
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-
         <style>
-          body{
-            font-size: 16px;
+          .property-registration .progress-bar {
+              display: flex;
+              justify-content: center;
           }
-        </style>
-<!-- </style> -->
+
+          /* Progress Bar */
+          .progress-bar {
+              display: flex!important;
+              justify-content: space-between; /* Spreads steps evenly */
+              align-items: center;
+              width: 100%; /* Full width */
+              max-width: 400px; /* Adjust width as needed */
+              margin: 20px auto; /* Centers it */
+              /* padding: 10px; */
+              gap: 10px; /* Adds spacing between steps */
+          }
+
+          /* Individual Step */
+          .stepy {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              width: 40px;
+              height: 40px;
+              background: #00192D;
+              color:#FFC107;
+              border-radius: 50%;
+              font-weight: bold;
+              transition: 0.3s;
+          }
+
+          .property-registration {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              width: 100%;
+          }
+
+          /* Active Step */
+          .stepy.active {
+              background:#00192D;
+          }
+
+          /* Completed Step (Tick) */
+          .stepy.completed span {
+              display: none;
+          }
+
+          .stepy.completed::after {
+              content: "✔";
+              font-size: 18px;
+              font-weight: bold;
+          }
+
+          /* Form Steps */
+          .form-step {
+              display: none;
+              opacity: 0;
+              transform: translateX(50px);
+              transition: all 0.3s ease-in-out;
+          }
+
+          .form-step.active {
+              display: block;
+              opacity: 1;
+              transform: translateX(0);
+          }
+
+          input {
+              width: 90%;
+              padding: 8px;
+              margin: 10px 0;
+              border: 1px solid #ccc;
+              border-radius: 5px;
+          }
+
+          button {
+              padding: 10px 15px;
+              border: none;
+              border-radius: 10px;
+              cursor: pointer;
+              margin: 5px;
+          }
+
+          .next-btn {
+              background: #00192D;
+              color: white;
+          }
+
+          .prev-btn {
+              background: #00192D;
+              color: white;
+          }
+
+          .submit-btn {
+              background: green;
+              color: white;
+          }
+          select{
+              width: 90%;
+              padding: 8px;
+              margin: 10px 0;
+              border: 1px solid #ccc;
+              border-radius: 5px;
+          }
+          label{
+              text-align: left;
+          }
+
+      </style>
+
+</style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -324,209 +466,137 @@
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
-
-            <div class="col-sm-8">
-              <div class="">
-                <h3 class="mb-0 contact_section_header"> <i class="fas fa-home icon"></i> Crown Z Towers / <span>Units</span> </h3>
-                <h6 class="property-type">Residential</h6>
-              </div>
-            </div>
-
-
-            <!-- start row -->
-            <div class="row mt-3 personal-info">
-              <h6 class="mb-0 contact_section_header mb-2"> </i> Basic Info</h6>
-          <div class="col-md-12">
-              <div class="row">
-
-                      <div class="col-md-3">
-
-                        <div class="personal-item d-flex justify-content-between bg-white">
-                        <!-- <i class="fas fa-calculator"></i> -->
-                          <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
-                            <div class="category"><i class="fas fa-briefcase personal-info-icon"></i> <span class="personal-info item-name" > Location,</span> </div>
-                            <div class="number"><b>Kisumu</b></div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="col-md-3">
-
-                        <div class="personal-item d-flex justify-content-between bg-white">
-                          <!-- <i class="fas fa-calculator"></i> -->
-                            <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
-                              <div class="category"><i class="fas fa-globe icon personal-info-icon "></i> <span class="personal-info item-name" >Origin,</span>  </div>
-                              <div class="number"><b>Kenyan</b></div>
-                            </div>
-                        </div>
-                      </div>
-
-                      <div class="col-md-3">
-                        <div class="personal-item d-flex justify-content-between bg-white">
-                        <!-- <i class="fas fa-calculator"></i> -->
-                          <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
-                            <div class="category"> <i class="fas fa-key personal-info-icon"></i> <span class="personal-info item-name">Type,</span></div>
-                            <div class="number"><b>Residential</b></div>
-                            <button class="btn view id rounded "> view </button>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="col-md-3">
-                        <div class="personal-item-edit d-flex justify-content-between">
-                        <!-- <i class="fas fa-calculator"></i> -->
-                        <button class="btn edit-btn personal-info rounded"><i class="fas fa-edit icon"></i> Edit </button>
-
-                      </div>
-              </div>
-            </div>
-
-            <div class="col-md-12 mt-2">
-              <div class="row">
-
-                    <div class="col-md-3">
-
-                      <div class="personal-item d-flex justify-content-between bg-white">
-                      <!-- <i class="fas fa-calculator"></i> -->
-                        <div class="labal-value p-2" style="display: flex; gap: 5px;   align-items: center;">
-                          <div class="label"> <i class="fa fa-envelope personal-info-icon "></i>
-                            <span class="personal-info item-name email" > Ownership,</span> </div>
-                          <div class="value"><b>Individual</b></div>
-                        </div>
-                      </div>
-
-
-
-                    </div>
-
-                    <div class="col-md-3">
-
-                      <div class="personal-item d-flex justify-content-between bg-white">
-                        <!-- <i class="fas fa-calculator"></i> -->
-                          <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
-                            <div class="category"><i class="fas fa-city personal-info-icon"></i>  <span class="personal-info item-name" >Units,</span>  </div>
-                            <div class="phone"><b>5</b></div>
-                          </div>
-                      </div>
-                    </div>
-
-                  <div class="col-md-3">
-                    <div class="personal-item d-flex justify-content-between bg-white">
-                    <!-- <i class="fas fa-calculator"></i> -->
-                      <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
-                        <div class="category"> <i class="fas fa-id-card personal-info-icon "></i> <span class="personal-info item-name">Address,</span></div>
-                        <div class="number"><b>50202, Chwele</b></div>
-                      </div>
-                    </div>
-                  </div>
-
-
-              </div>
-          </div>
-        </div>
-      </div>
-
-
-
-<!-- <hr> -->
+            <div class="property-title">Crown Z Towers</div>
+            <p>Residential |
+              <button class="edit-btn"><i class="fas fa-edit"></i>EDIT</button>
+           </p>
+            <hr>
 <div style="display: flex;gap: 25px;">
+<!-- <a href=""><p>Summary</p></a> -->
 <!-- <a href="../property/AllUnits.html"><p>Units(5)</p></a> -->
-
 </div>
-<hr>
 </div>
 
 <div style="display: flex; gap: 25px;">
-    <a href="../property/Units.html" style="color: #FFC107;"><p>Unit list</p></a>
+   <a href="../property/AllUnits.html"  style="color: #FFC107;"> <p>Unit list</p></a>
     <a href="../property/meterreading.html"  style="color: #FFC107;"><p>Meter Reading</p></a>
 </div>
 
-<div class="justify-content-end d-flex" style="padding-bottom:2%">
-  <a href="../property/AddUnit.html">
-    <button class="edit-btn">
-    <i class="fas fa-plus"></i>
-    New Unit</button></a>
+<!-- <b><p>Add Unit to Crown Z Towers</p></b> -->
+
+<b><p>What is the Unit Information?</p></b>
+
+<form action="AddUnit.php" method="POST">
+<div class="row">
+  <div class="col-md-4">
+  <label for="location">Unit Number*</label>
+  <input type="text" id="unit_number" name="unit_number" placeholder="Enter Unit Number" required>
+</div>
+
+
+<div class="col-md-4">
+  <label for="size">Size(Optional)*</label>
+  <input type="text" id="size" name="size" placeholder="Enter Size" required>
   </div>
 
-<!--begin::Row-->
-<div class="row">
-    <div class="col-md-12">
-      <div class="card mb-4">
-        <div class="card-header">
-          <h5 class="card-title text-warning">Registered Units</h5>
-          <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-              <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-              <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-            </button>
-            <div class="btn-group">
-              <button
-                type="button"
-                class="btn btn-tool dropdown-toggle"
-                data-bs-toggle="dropdown"
-              >
-                <i class="bi bi-wrench"></i>
-              </button>
-              <div class="dropdown-menu dropdown-menu-end" role="menu">
-                <a href="#" class="dropdown-item">Action</a>
-                <a href="#" class="dropdown-item">Another action</a>
-                <a href="#" class="dropdown-item"> Something else here </a>
-                <a class="dropdown-divider"></a>
-                <a href="#" class="dropdown-item">Separated link</a>
-              </div>
-            </div>
-            <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-              <i class="bi bi-x-lg"></i>
-            </button>
-          </div>
+
+<div class="col-md-4">
+<label for="size">Floor Number*</label>
+<input type="number" id="floor_number" name="floor_number" placeholder="Enter Floor Size" required>
+</div>
+
+<b><p>What is the listing information?</p></b>
+<div class="col-md-4">
+    <label for="rooms">Rooms*</label>
+    <select id="rooms" name="rooms" required>
+    <option value="Bedsitter">Bedsitter</option>
+    <option value="One bedroom">One bedroom</option>
+    <option value="Two bedroom">Two Bedroom</option>
+    <option value="Two bedroom">Three Bedroom</option>
+    <option value="Two bedroom">Four Bedroom</option>
+    <option value="Two bedroom">Five Bedroom</option>
+
+
+    </select>
+
+</div>
+
+<div class="col-md-4">
+
+        <label for="rooms">Room Type*</label>
+        <select id="rooms" name="room_type" required>
+        <option value="Rental">Rental</option>
+        <option value="Air BnB">Air Bnb</option>
+        <option value="Banking Hall">Banking Hall</option>
+        <option value="Banking Hall">Office</option>
+
+        </select>
+
+    </div>
+
+    <div class="col-md-4">
+
+            <label for="rooms">Bathrooms*</label>
+            <select id="rooms" name="bathrooms" required>
+            <option value="One bedroom">One Bathroom</option>
+            <option value="Two bedroom">Two Bathroom</option>
+            <option value="Two bedroom">ThreeBathroom</option>
+            <option value="Two bedroom">Four Bathroom</option>
+            <option value="Two bedroom">Five Bathroom</option>
+            </select>
+
         </div>
-        <!-- /.card-header -->
-        <div class="card-body">
-          <!--begin::Row-->
-          <div class="row">
-            <table id="myTableOne" class="display" >
-              <thead>
-                <tr>
-                  <th>Units</th>
-                  <th>Tenants</th>
-                 <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
 
-                    <tr>
-                    <td>A1</td>
-                    <td>Jake Konza</td>
-                    <td>
-                      <a href="#"> <button onclick="openunitsPopup()"  class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button></a>
-                     <button  class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px;"></i>
-                    </td>
-                    </tr>
+        <div class="col-md-4">
 
-                    <tr>
-                    <td>B1</td>
-                    <td>Julia Konzanni</td>
-                    <td>
-                      <a href="#"> <button  onclick="openunitsPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button></a>
-                    <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px;"></i>
-                    </td>
-                    </tr>
+              <label for="kitchen">Kitchen*</label>
+              <select id="kitchen" name="kitchen" required>
+              <option value="open">Open</option>
+              <option value="closed">Closed</option>
+              </select>
 
-                    <tr>
-                    <td>C1</td>
-                    <td>Jibu Walter</td>
-                    <td>
-                      <a href="#"> <button onclick="openunitsPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button></a>
-                    <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px;"></i>
-                    </td>
-                    </tr>
+          </div>
 
+          <div class="col-md-4">
 
+                <label for="balcony">Balcony*</label>
+                <select id="balcony" name="balcony" required>
+                <option value="one">One </option>
+                <option value="two">Two </option>
+                <option value="three">Three</option>
+                <option value="four">Four</option>
+                <option value="five">Five</option>
+                </select>
 
+            </div>
 
-                <!-- Add more rows as needed -->
-              </tbody>
-            </table>
+            <div class="col-md-4">
+
+                  <label for="Rent Amount">Rent Amount*</label>
+                  <input type="number" id="rent_amount" name="rent_amount" placeholder="Enter Amount" required>
+
+              </div>
+
+            <div class="col-md-12">
+                <label for="description" class="filter-label">Description</label>
+                <input type="text" id="description" class="form-control" name="description" placeholder="Enter a brief description" required/>
+                  </select>
+              </div>
+
+        </div>
+</div>
+
+<div class="row justify-content-end ">
+    <div class="col-md-4">
+    <button type="submit">Create Unit</button>
+  </div>
+  <div class="col-md-4">
+   <a href="../property/AddUnit.php"><button>Add Another Unit</button></a>
+  </div>
+  <div class="col-md-4">
+    <a href="../property/Units.php"><button>Cancel</button></a>
+  </div>
+        </form>
             <!-- /.col -->
           </div>
           <!--end::Row-->
@@ -573,82 +643,16 @@
     </div>
     <!--end::App Wrapper-->
 
- <!-- units popup -->
- <div class="units-overlay" id="unitsPopup">
-  <div class="units-content wide-form">
-      <button class="close-btn" onclick="closeunitsPopup()">×</button>
-      <h2 class="assign-title">Detailed Units Information</h2>
-      <button class="edit-btn"><i class="fas fa-edit"></i>EDIT</button>
-      <form class="wide-form">
-        <div class="form-group">
-          <div class="row g-3">
-            <div class="col-md-6">
-            <label for="name">Unit Number:</label>
-            <input type="number" id="unit_number" name="unit_number" placeholder="D17" required disabled>
-          </div>
-          <div class="col-md-6">
-            <label for="text">Size:</label>
-            <input type="text" id="size" name="size" placeholder="3 by 3" required disabled>
-          </div>
-
-          <div class="col-md-6">
-            <label for="floor_number">Floor Number</label>
-            <input type="tel" id="floor_number" name="floor_number" placeholder="2" required disabled>
-        </div>
-
-        <div class="col-md-6">
-            <label for="rooms">Room</label>
-            <input type="text" id="rooms" name="rooms"  placeholder="Bed Sitter" disabled>
-    </div>
-
-    <div class="col-md-6">
-      <label for="room_type">Room Type</label>
-      <input type="text" id="room_type" name="room_type" placeholder="Office" disabled>
-</div>
-
-<div class="col-md-6">
-  <label for="kitchen">Kitchen</label>
-  <input type="text" id="kitchen" name="Kitchen" placeholder="Open" disabled>
-</div>
-
-<div class="col-md-6">
-  <label for="balcony">Balcony</label>
-  <input type="text" id="balcony" name="Balcony" placeholder="One" disabled>
-</div>
-
-    <div class="col-md-6">
-            <label for="bathrooms">Bathrooms</label>
-            <input type="text" id="bathrooms" name="bathrooms" placeholder="5" disabled>
-    </div>
-
-    <div class="col-md-12">
-      <label for="description">Description</label>
-      <input type="text" id="description" name="description" placeholder="lorem skdkjfjkkkdkjjkjkjsjjejjnnfn" disabled>
-  </div>
-  <button type="submit" class="submit-btn">Submit</button>
-
-      </form>
-  </div>
-</div>
-<!-- end -->
 
 
-      </div>
-      </div>
-    </div>
+
+        <!-- <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button> -->
 
 
 
 
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
-
-    <script>
-      function enableEdit() {
-          document.getElementById("description").disabled = false;
-      }
-  </script>
-
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const steps = document.querySelectorAll(".form-step");
@@ -723,13 +727,13 @@
 
 <script>
   // Function to open the complaint popup
-  function openunitsPopup() {
-    document.getElementById("unitsPopup").style.display = "flex";
+  function opendetailedPopup() {
+    document.getElementById("detailedPopup").style.display = "flex";
   }
 
   // Function to close the complaint popup
-  function closeunitsPopup() {
-    document.getElementById("unitsPopup").style.display = "none";
+  function closedetailedPopup() {
+    document.getElementById("detailedPopup").style.display = "none";
   }
 </script>
 

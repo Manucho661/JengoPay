@@ -1,3 +1,60 @@
+<?php
+include '../db/connect.php'; // Make sure this defines $conn for mysqli
+
+// Query the unit_information table
+$sql = "SELECT unit_number FROM unit_information";
+$result = $conn->query($sql);
+
+// Fetch all unit numbers
+$units = [];
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $units[] = $row;
+    }
+}
+
+// Fetch the data from the database using $conn
+$sql = "SELECT id, building_name, county, building_type, ownership_info, units_number FROM building_identification";
+$result = $conn->query($sql);
+
+// Check if a result is returned
+if ($result->num_rows > 0) {
+    $building = $result->fetch_assoc(); // Fetch the first row of data
+} else {
+    // Handle the case where no data is returned (optional)
+    echo "No records found.";
+}
+
+
+if (isset($_GET['id'])) {
+  $buildingId = intval($_GET['id']);
+
+  // Prepare the query
+  $stmt = $conn->prepare("SELECT * FROM building_identification WHERE id = ?");
+  $stmt->bind_param("i", $buildingId);
+  $stmt->execute();
+
+  // Get the result
+  $result = $stmt->get_result();
+  $building = $result->fetch_assoc();
+
+  if (!$building) {
+      echo "Building not found.";
+      exit;
+  }
+
+  $stmt->close();
+} else {
+  echo "No building selected.";
+  exit;
+}
+// Optional: display or debug output
+// print_r($units);
+?>
+
+
+
+
 <!doctype html>
 <html lang="en">
   <!--begin::Head-->
@@ -43,7 +100,9 @@
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
-   <link rel="stylesheet" href="meterreading.css">
+
+   <link rel="stylesheet" href="AllUnits.css">
+
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -69,6 +128,7 @@
             font-size: 16px;
           }
         </style>
+<!-- </style> -->
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -321,211 +381,180 @@
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
-<div class="col-sm-8">
-  <div class="d-flex">
-    <h3 class="mb-0 contact_section_header">  <i class="fas fa-home"></i>Crown Z Towers </h3>
-    <h6 class="month" style="color: green;">Active</h6>
-  </div>
-</div>
-<p style="color: #FFC107; padding-top:2%;">Residential|
-  <button class="edit-btn"><i class="fas fa-edit"></i>EDIT</button>
-</p>
-<a href="../property/billcharges.html"><button class="edit-btn">
-  <i class="fas fa-edit"></i>
-  Create Meter Charges</button></a>
 
-<!-- start row -->
-<div class="row mt-3 personal-info">
-  <h6 class="mb-0 contact_section_header mb-2"> </i> Building  Information</h6>
-<div class="col-md-12">
-  <div class="row">
-
-          <div class="col-md-3">
-
-            <div class="personal-item d-flex justify-content-between bg-white">
-            <!-- <i class="fas fa-calculator"></i> -->
-              <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
-                <div class="category"><i class="fas fa-briefcase personal-info-icon"></i> <span class="personal-info item-name" > Location,</span> </div>
-                <div class="number"><b>Kisumu</b></div>
+            <div class="col-sm-8">
+              <div class="">
+                <h3 class="mb-0 contact_section_header"> <i class="fas fa-home icon"></i> <?php echo htmlspecialchars($building['building_name']); ?>
+                <!-- <span>,Units</span> </h3> -->
+                <h6 class="property-type"><b><?php echo htmlspecialchars($building['building_type']); ?></b></h6>
               </div>
             </div>
-          </div>
 
-          <div class="col-md-3">
 
-            <div class="personal-item d-flex justify-content-between bg-white">
-              <!-- <i class="fas fa-calculator"></i> -->
-                <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
-                  <div class="category"><i class="fas fa-globe icon personal-info-icon "></i> <span class="personal-info item-name" >Origin,</span>  </div>
-                  <div class="number"><b>Kenyan</b></div>
-                </div>
-            </div>
-          </div>
+            <!-- start row -->
+            <div class="row mt-3 personal-info">
+              <h6 class="mb-0 contact_section_header mb-2"> </i> Basic Info</h6>
+          <div class="col-md-12">
+          <div class="row">
+  <div class="col-md-3">
+    <div class="personal-item d-flex justify-content-between bg-white">
+      <div class="category-number p-2" style="display: flex; gap: 5px; align-items: center;">
+        <div class="category"><i class="fas fa-briefcase personal-info-icon"></i> <span class="personal-info item-name"> Location,</span> </div>
+        <div class="number"><b><?php echo htmlspecialchars($building['county']); ?></b></div>
+      </div>
+    </div>
+  </div>
 
-          <div class="col-md-3">
-            <div class="personal-item d-flex justify-content-between bg-white">
-            <!-- <i class="fas fa-calculator"></i> -->
-              <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
-                <div class="category"> <i class="fas fa-key personal-info-icon"></i> <span class="personal-info item-name">Type,</span></div>
-                <div class="number"><b>Residential</b></div>
-                <button class="btn view id rounded "> view </button>
-              </div>
-            </div>
-          </div>
+  <!-- <div class="col-md-3">
+    <div class="personal-item d-flex justify-content-between bg-white">
+      <div class="category-number p-2" style="display: flex; gap: 5px; align-items: center;">
+        <div class="category"><i class="fas fa-globe icon personal-info-icon"></i> <span class="personal-info item-name">Origin,</span> </div>
+        <div class="number"><b>Kenyan</b></div>  Or use dynamic data if needed -->
+      <!-- </div>
+    </div>
+  </div> -->
 
-          <div class="col-md-3">
-            <div class="personal-item-edit d-flex justify-content-between">
-            <!-- <i class="fas fa-calculator"></i> -->
-            <button class="btn edit-btn personal-info rounded"><i class="fas fa-edit icon"></i> Edit </button>
 
-          </div>
+
+  <div class="col-md-3">
+  <div class="personal-item-edit d-flex btn personal-info justify-content-between">
+    <button class="btn edit-btn personal-info rounded" data-bs-toggle="modal" data-bs-target="#editModal">
+      <i class="fas fa-edit icon"></i> Edit
+    </button>
   </div>
 </div>
+
 
 <div class="col-md-12 mt-2">
   <div class="row">
-
-        <div class="col-md-3">
-
-          <div class="personal-item d-flex justify-content-between bg-white">
-          <!-- <i class="fas fa-calculator"></i> -->
-            <div class="labal-value p-2" style="display: flex; gap: 5px;   align-items: center;">
-              <div class="label"> <i class="fa fa-envelope personal-info-icon "></i>
-                <span class="personal-info item-name email" > Ownership,</span> </div>
-              <div class="value"><b>Individual</b></div>
-            </div>
-          </div>
-
-
-
-        </div>
-
-        <div class="col-md-3">
-
-          <div class="personal-item d-flex justify-content-between bg-white">
-            <!-- <i class="fas fa-calculator"></i> -->
-              <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
-                <div class="category"><i class="fas fa-city personal-info-icon"></i>  <span class="personal-info item-name" >Units,</span>  </div>
-                <div class="phone"><b>5</b></div>
-              </div>
-          </div>
-        </div>
-
-      <div class="col-md-3">
-        <div class="personal-item d-flex justify-content-between bg-white">
-        <!-- <i class="fas fa-calculator"></i> -->
-          <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
-            <div class="category"> <i class="fas fa-id-card personal-info-icon "></i> <span class="personal-info item-name">Address,</span></div>
-            <div class="number"><b>50202, Chwele</b></div>
-          </div>
+    <div class="col-md-3">
+      <div class="personal-item d-flex justify-content-between bg-white">
+        <div class="labal-value p-2" style="display: flex; gap: 5px; align-items: center;">
+          <div class="label"><i class="fa fa-envelope personal-info-icon"></i>
+            <span class="personal-info item-name email"> Ownership,</span> </div>
+          <div class="value"><b><?php echo htmlspecialchars($building['ownership_info']); ?></b></div>
         </div>
       </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="personal-item d-flex justify-content-between bg-white">
+        <div class="category-number p-2" style="display: flex; gap: 5px; align-items: center;">
+          <div class="category"><i class="fas fa-city personal-info-icon"></i> <span class="personal-info item-name">
+            Units,</span> </div>
+          <div class="phone"><b><?php echo htmlspecialchars($building['units_number']); ?></b></div> <!-- Assuming static data for units, you could replace it with dynamic data -->
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="col-md-3">
+      <div class="personal-item d-flex justify-content-between bg-white">
+        <div class="category-number p-2" style="display: flex; gap: 5px; align-items: center;">
+          <div class="category"><i class="fas fa-id-card personal-info-icon"></i> <span class="personal-info item-name">Address,</span></div>
+          <div class="number"><b>50202, </b></div>  Replace with dynamic data if available -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 
+
+<!-- <hr> -->
 <div style="display: flex;gap: 25px;">
-<!-- <a href=""><p>Summary</p></a> -->
 <!-- <a href="../property/AllUnits.html"><p>Units(5)</p></a> -->
 
 </div>
 <hr>
 </div>
 
-
 <div style="display: flex; gap: 25px;">
-   <a href="../property/AllUnits.html" style="color: #FFC107;"> <p>Unit list</p></a>
-    <a href="../property/meterreading.html" style="color: #FFC107;"><p>Meter Reading</p></a>
+    <a href="../property/Units.php" style="color: #FFC107;"><p>Unit list</p></a>
+    <a href="../property/meterreading.php"  style="color: #FFC107;"><p>Meter Reading</p></a>
 </div>
 
-
-<div class="justify-content-end d-flex">
-<button onclick="meterreadingopenPopup()" class="edit-btn">
+<div class="justify-content-end d-flex" style="padding-bottom:2%">
+  <a href="../property/AddUnit.php">
+    <button class="edit-btn">
     <i class="fas fa-plus"></i>
-    Add Meter Reading</button></a>
+    New Unit</button></a>
   </div>
 
+<!--begin::Row-->
 <div class="row">
-  <table id="myTableOne" class="display" >
-    <thead>
-      <tr>
-        <th>Reading Date</th>
-        <th>Unit</th>
-        <th>Meter Type</th>
-        <th>Previous Reading</th>
-        <th>Current Reading</th>
-        <th>Consumption Units</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>8/03/2025</td>
-        <td>C10</td>
-        <td>Water</td>
-        <td>10</td>
-        <td>11</td>
-        <td>1</td>
-        <td>
-         <button  onclick="openshiftPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file" ></i></button>
-          <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>
-          </td>
-      </tr>
-      <tr>
-        <td>7/03/2025</td>
-        <td>B11</td>
-        <td>
-         Water
-        </td>
-        <td>19</td>
-        <td>20</td>
-        <td>1</td>
-        <td>
-         <button onclick="openshiftPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
-          <button   class="btn btn-sm" style="background-color: #193042; color:#fff;">    <i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>
-          </td>
-      </tr>
+    <div class="col-md-12">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="card-title text-warning">Registered Units</h5>
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+              <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+              <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+            </button>
+            <div class="btn-group">
+              <button
+                type="button"
+                class="btn btn-tool dropdown-toggle"
+                data-bs-toggle="dropdown"
+              >
+                <i class="bi bi-wrench"></i>
+              </button>
+              <div class="dropdown-menu dropdown-menu-end" role="menu">
+                <a href="#" class="dropdown-item">Action</a>
+                <a href="#" class="dropdown-item">Another action</a>
+                <a href="#" class="dropdown-item"> Something else here </a>
+                <a class="dropdown-divider"></a>
+                <a href="#" class="dropdown-item">Separated link</a>
+              </div>
+            </div>
+            <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+          <!--begin::Row-->
+          <div class="row">
+            <table id="myTableOne" class="display" >
+              <thead>
+                <tr>
+                  <th>Units</th>
+                  <th>Tenants</th>
+                 <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+              <?php foreach ($units as $unit): ?>
+              <tr onclick="window.location.href='units.php'">
+                <td><?= htmlspecialchars($unit['unit_number'])?></td>
+                <td>Patrick Musila</td> <!-- Replace with dynamic tenant if needed -->
+                <td>
+                  <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Provider">
+                    <i class="fa fa-trash" style="font-size: 12px;"></i>
+                  </button>
+                </td>
+              </tr>
+            <?php endforeach; ?>
 
-      <tr onclick="window.location.href=''">
-        <td>6/03/2025</td>
-        <td>B18</td>
-        <td>
-        Water
-        </td>
-        <td>21</td>
-        <td>22</td>
-        <td>1</td>
-        <td>
-          <button onclick="openshiftPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
-          <button   class="btn btn-sm" style="background-color: #193042; color:#fff;">    <i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>
-          </td>
-      </tr>
 
-      <tr onclick="window.location.href=''" >
-        <td>01/03/2025</td>
-        <td>D17</td>
-        <td>
-         Water
-        </td>
-        <td>12</td>
-        <td>13</td>
-        <td>1</td>
-        <td>
-          <button onclick="openshiftPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
-          <button   class="btn btn-sm" style="background-color: #193042; color:#fff;"><i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>          </td>
-      </tr>
-      <!-- Add more rows as needed -->
-    </tbody>
-  </table>
+
+                <!-- Add more rows as needed -->
+              </tbody>
+            </table>
             <!-- /.col -->
           </div>
           <!--end::Row-->
-
 
 
                       <!-- /.col -->
                     </div>
                     <!--end::Row-->
                   <!-- ./card-body -->
-
+                  <div class="card-footer">
                     <!--begin::Row-->
 
                       <!-- /.col -->
@@ -562,101 +591,144 @@
     </div>
     <!--end::App Wrapper-->
 
+ <!-- units popup -->
+ <div class="units-overlay" id="unitsPopup">
+  <div class="units-content wide-form">
+      <button class="close-btn" onclick="closeunitsPopup()">×</button>
+      <h2 class="assign-title">Detailed Units Information</h2>
+      <button class="edit-btn"><i class="fas fa-edit"></i>EDIT</button>
+      <form class="wide-form">
+        <div class="form-group">
+          <div class="row g-3">
+            <div class="col-md-6">
+            <label for="name">Unit Number:</label>
+            <input type="number" id="unit_number" name="unit_number" placeholder="D17" required disabled>
+          </div>
+          <div class="col-md-6">
+            <label for="text">Size:</label>
+            <input type="text" id="size" name="size" placeholder="3 by 3" required disabled>
+          </div>
 
+          <div class="col-md-6">
+            <label for="floor_number">Floor Number</label>
+            <input type="tel" id="floor_number" name="floor_number" placeholder="2" required disabled>
+        </div>
 
-<!-- Shift Tenant -->
-<div class="shiftpopup" id="shiftPopup">
-  <div class="shiftpopup-content">
-    <button id="close-btns" class="text-secondary" onclick="closeshiftPopup()">×</button>
-    <h2 class="assign-title">Detailed Information Of Meter Reading</h2>
-    <button class="edit-btn"><i class="fas fa-edit"></i>EDIT</button>
-    <form class="wide-form">
-      <div class="form-group">
-        <b><label for="dateInput" class="filter-label">Reading Date</label></b>
-        <input type="" id="dateInput" class="form-control" placeholder="11-02-2023" required disabled/>
-        <label for="units">Unit:</label>
-        <select id="units" required disabled>
-            <option>D17</option>
-            <option>B18</option>
-            <option>B11</option>
-            <option>C10</option>
-        </select>
+        <div class="col-md-6">
+            <label for="rooms">Room</label>
+            <input type="text" id="rooms" name="rooms"  placeholder="Bed Sitter" disabled>
     </div>
-        <div class="form-group">
-            <label for="meter_type">Meter Type:</label>
-            <select id="meter_type" required disabled>
-              <option>Water</option>
-              <option>Electrical</option>
-          </select>
-        </div>
 
-        <div class="form-group">
-            <label for="previous_reading">Previous Reading:</label>
-            <input type="number" id="previous_reading" name="previous_reading" placeholder="11" required disabled>
-        </div>
+    <div class="col-md-6">
+      <label for="room_type">Room Type</label>
+      <input type="text" id="room_type" name="room_type" placeholder="Office" disabled>
+</div>
 
-        <div class="form-group">
-            <label for="current_reading">Current Reading:</label>
-            <input type="number" id="current_reading" name="current_reading" placeholder="15" required disabled>
-        </div>
+<div class="col-md-6">
+  <label for="kitchen">Kitchen</label>
+  <input type="text" id="kitchen" name="Kitchen" placeholder="Open" disabled>
+</div>
 
-       <button type="submit" class="submit-btn">Submit</button>
-    </form>
+<div class="col-md-6">
+  <label for="balcony">Balcony</label>
+  <input type="text" id="balcony" name="Balcony" placeholder="One" disabled>
+</div>
+
+    <div class="col-md-6">
+            <label for="bathrooms">Bathrooms</label>
+            <input type="text" id="bathrooms" name="bathrooms" placeholder="5" disabled>
+    </div>
+
+    <div class="col-md-12">
+      <label for="description">Description</label>
+      <input type="text" id="description" name="description" placeholder="lorem skdkjfjkkkdkjjkjkjsjjejjnnfn" disabled>
   </div>
+  <button type="submit" class="submit-btn">Submit</button>
+
+      </form>
   </div>
 </div>
-<!-- End shift popup -->
 
 
-  <!-- meterreading popup -->
-   <div class="meterpopup-overlay" id="meterPopup">
-    <div class="meterpopup-content wide-form">
-        <button id="close-btns" class="text-secondary" onclick="meterreadingclosePopup()">×</button>
-        <h2 class="assign-title">Add A Meter Reading</h2>
-        <form class="wide-form">
-          <div class="form-group">
-            <b><label for="dateInput" class="filter-label">Reading Date</label></b>
-            <input type="date" id="dateInput" class="form-control" required/>
-            <label for="units">Units:</label>
-            <select id="units" required>
-                <option>D17</option>
-                <option>B18</option>
-                <option>B11</option>
-                <option>C10</option>
-            </select>
+<!-- edit info -->
+
+<div class="units-overlay" id="unitsPopup">
+  <div class="units-content wide-form">
+      <button class="close-btn" onclick="closeunitsPopup()">×</button>
+      <div class="modal-body">
+          <input type="hidden" name="id" value="<?= $building['id'] ?>">
+
+          <div class="form-group row g-3">
+            <div class="col-md-6">
+              <label for="buildingName">Building Name</label>
+              <input type="text" class="form-control" name="building_name" value="<?= htmlspecialchars($building['building_name']) ?>" required>
+            </div>
+
+            <div class="col-md-6">
+              <label for="location">Location</label>
+              <input type="text" class="form-control" name="location" value="<?= htmlspecialchars($building['county']) ?>" required>
+            </div>
+
+            <div class="col-md-6">
+              <label for="buildingType">Building Type</label>
+              <input type="text" class="form-control" name="building_type" value="<?= htmlspecialchars($building['building_type']) ?>" required>
+            </div>
+
+            <div class="col-md-6">
+              <label for="ownership">Ownership</label>
+              <input type="text" class="form-control" name="ownership_info" value="<?= htmlspecialchars($building['ownership_info']) ?>" required>
+            </div>
+
+            <!-- Add more fields here as needed -->
+          </div>
         </div>
-            <div class="form-group">
-                <label for="meter_type">Meter Type:</label>
-                <select id="meter_type" required>
-                  <option>Water</option>
-                  <option>Electrical</option>
-              </select>
-            </div>
 
-            <div class="form-group">
-                <label for="previous_reading">Previous Reading:</label>
-                <input type="number" id="previous_reading" name="previous_reading" placeholder="Previous Reading" required>
-            </div>
 
-            <div class="form-group">
-                <label for="current_reading">Current Reading:</label>
-                <input type="number" id="current_reading" name="current_reading" placeholder="Current Reading" required>
-            </div>
-
-           <button type="submit" class="submit-btn">Create Meter Reading</button>
-        </form>
-    </div>
+  </div>
 </div>
+
+
+
+
+
+
+
 <!-- end -->
 
 
-
+      </div>
+      </div>
+    </div>
 
 
 
 
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
+
+    <script>
+    // Show the modal
+    function openModal() {
+        document.getElementById("modalOverlay").style.display = "flex";
+    }
+
+    // Close the modal
+    function closeModal() {
+        document.getElementById("modalOverlay").style.display = "none";
+    }
+
+    // Trigger the modal to show when the button is clicked
+    document.querySelector('.edit-btn').addEventListener('click', openModal);
+</script>
+
+
+
+    <script>
+      function enableEdit() {
+          document.getElementById("description").disabled = false;
+      }
+  </script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const steps = document.querySelectorAll(".form-step");
@@ -729,29 +801,18 @@
         });
             </script>
 
-
-            <script>
-              function openmeterPopup() {
-                  document.getElementById('meteringPopup').style.display = 'flex'; // Make the overlay visible
-              }
-
-              function closemeterPopup() {
-                  document.getElementById('meteringPopup').style.display = 'none'; // Hide the overlay
-              }
-          </script>
-
-
 <script>
-  // Function to meter the meter popup
-  function meterreadingopenPopup() {
-    document.getElementById("meterPopup").style.display = "flex";
+  // Function to open the complaint popup
+  function openunitsPopup() {
+    document.getElementById("unitsPopup").style.display = "flex";
   }
 
-  // Function to close the meter popup
-  function meterreadingclosePopup() {
-    document.getElementById("meterPopup").style.display = "none";
+  // Function to close the complaint popup
+  function closeunitsPopup() {
+    document.getElementById("unitsPopup").style.display = "none";
   }
 </script>
+
 
 <script>
         $(document).ready(function () {
@@ -943,19 +1004,6 @@ setInterval(() => {
     }
   });
 </script>
-
-<script>
-  // Function to open the complaint popup
-  function openshiftPopup() {
-    document.getElementById("shiftPopup").style.display = "flex";
-  }
-
-  // Function to close the complaint popup
-  function closeshiftPopup() {
-    document.getElementById("shiftPopup").style.display = "none";
-  }
-</script>
-
 
 <script>
   const ctx = document.getElementById('myPieChart').getContext('2d');

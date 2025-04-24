@@ -34,6 +34,7 @@ try {
 
 
       // Collect building data
+      $id = $_POST['id'];
       $building_name = $_POST['building_name'];
       $county = $_POST['county'];
       $constituency = $_POST['constituency'];
@@ -197,7 +198,7 @@ try {
   }
 
 // Query the building_identification table
-$sql = "SELECT building_name, county, building_type, ownership_info FROM building_identification";
+$sql = "SELECT id, building_name, county, building_type, ownership_info FROM building_identification";
 $stmt = $pdo->prepare($sql);
 $stmt->execute();
 
@@ -1392,7 +1393,7 @@ $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
        </thead>
        <tbody>
        <?php foreach ($buildings as $building): ?>
-  <tr onclick="window.location.href='units.html'">
+    <tr onclick="window.open('Units.php?id=<?= $building['id'] ?>', '_blank')">
     <td><?= htmlspecialchars($building['building_name'])?></td>
     <td><?= htmlspecialchars($building['county'])?></td>
     <td>Patrick Musila</td> <!-- Replace with dynamic tenant if needed -->

@@ -857,6 +857,92 @@ height: fit-content;
                                     text-decoration: underline;
                                     cursor: pointer;
                                   }
+/* Add this to your CSS file or inside a <style> tag */
+.modal-overlay {
+  display: none; /* Initially hidden */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+  z-index: 9999; /* Ensure it's on top */
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
 
+/* Modal content */
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 80%; /* Adjust as needed */
+  max-width: 600px;
+  position: relative;
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 30px;
+  color: #333;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-weight: bold;
+}
+
+/* Assign title */
+.assign-title {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+
+/* .wide-form {
+  padding: 20px;
+  border-radius: 10px;
+} */
+
+.assign-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* .edit-btn {
+  background-color: #f0ad4e;
+  color: white;
+  border: none;
+  padding: 6px 15px;
+  font-size: 16px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+} */
+
+.submit-btn {
+  background-color: #007bff;
+  color: white;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3;
+}
+
+.close-btn {
+  font-size: 20px;
+  color: #333;
+}
+
+.form-control {
+  border-radius: 6px;
+}
 
 
