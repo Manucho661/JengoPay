@@ -191,46 +191,37 @@ try {
             ':rear_view_photo' => $rear_view_photo,
             ':angle_view_photo' => $angle_view_photo,
             ':interior_view_photo' => $interior_view_photo
-
-
-
       ]);
 
       // echo "<p style='color:green;'>Data and files submitted successfully!</p>";
   }
+
+// Query the building_identification table
+$sql = "SELECT building_name, county, building_type, ownership_info FROM building_identification";
+$stmt = $pdo->prepare($sql);
+$stmt->execute();
+
+// Fetch all buildings
+$buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
  // Fetch property data
-// $stmt = $pdo->query("SELECT building_name, county, constituency, ward, building_type FROM building_identification ORDER BY id DESC");
+//   $stmt = $pdo->query("SELECT
+//     building_identification.building_name,
+//     building_identification.county,
+//     building_identification.building_type FROM building_identification ORDER BY id DESC");
 
-// while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-//     $location = $row['county'] . ', ' . $row['constituency'] . ', ' . $row['ward'];
-//     $buildingName = htmlspecialchars($row['building_name']);
-//     $buildingType = htmlspecialchars($row['building_type']);
+//  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+//    $county = htmlspecialchars($row['county']);
+//    $building_name = htmlspecialchars($row['building_name']);
+//    $building_type = htmlspecialchars($row['building_type']);
 
-//     echo '
-//     <tr onclick="window.location.href=\'units.html\'">
-//         <td>' . $building_name . '</td>
-//         <td>' . $county . '</td>
-//         <td>Patrick Musila</td> <!-- You can replace this with dynamic tenant info later -->
-//         <td></td> <!-- Manager name can go here -->
-//         <td>' . $building_type . '</td>
-//         <td>
-//             <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View">
-//                 <i class="fas fa-eye"></i>
-//             </button>
-
-//             <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Provider">
-//                 <i class="fa fa-trash" style="font-size: 12px;"></i>
-//             </button>
-//         </td>
-//     </tr>';
-// }
+//  }
 
 
 } catch (PDOException $e) {
   echo "Connection failed: " . $e->getMessage();
 }
 ?>
-
 
 
 <!doctype html>
@@ -850,6 +841,7 @@ try {
                   <div class="form-group">
                     <label>Phone Number</label>
                     <input type="text" name="phone_number" class="form-control" id="phoneNumber"
+                     pattern="07[0-9]{8}" maxlength="10"
                       placeholder="Phone Number">
                   </div>
                   <div class="form-group">
@@ -859,7 +851,7 @@ try {
                   </div>
                   <div class="form-group">
                     <label>Email</label>
-                    <input type="text"  name="email" class="form-control" id="ownerEmail" placeholder="Email">
+                    <input type="email"  name="email" class="form-control" id="ownerEmail" placeholder="Email">
                   </div>
                 </div>
                 <div class="card-footer text-right">
@@ -1393,50 +1385,30 @@ try {
            <th>Property</th>
            <th >Location</th>
            <th >Tenant</th>
-           <th >Manager</th>
-           <th >Type</th>
+           <th >Ownership Information</th>
+           <th >Building Type</th>
            <th >Action</th>
          </tr>
        </thead>
        <tbody>
-        <?php
-        include '../../../../db/connect.php'; // Adjust path if needed
+       <?php foreach ($buildings as $building): ?>
+  <tr onclick="window.location.href='units.html'">
+    <td><?= htmlspecialchars($building['building_name'])?></td>
+    <td><?= htmlspecialchars($building['county'])?></td>
+    <td>Patrick Musila</td> <!-- Replace with dynamic tenant if needed -->
+    <td><?=htmlspecialchars($building['ownership_info'])?></td> <!-- Manager goes here -->
+    <td><?= htmlspecialchars($building['building_type']) ?></td>
+    <td>
+      <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View">
+        <i class="fas fa-eye"></i>
+      </button>
+      <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Provider">
+        <i class="fa fa-trash" style="font-size: 12px;"></i>
+      </button>
+    </td>
+  </tr>
+<?php endforeach; ?>
 
-        $buildings = [];
-        $sql = "SELECT building_name, county, building_type  type FROM building_identification";
-        $result = mysqli_query($conn, $sql);
-
-        if ($result) {
-          while ($row = mysqli_fetch_assoc($result)) {
-            $buildings[] = [
-              'building_name' => $row['building_name'],
-              'county' => $row['county'],
-              'building_type' => $row['building_type']
-            ];
-          }
-        } else {
-          echo "Error: " . mysqli_error($conn);
-        }
-
-         foreach ($buildings as $building) {
-          echo '
-          <tr onclick="window.location.href=\'units.html\'">
-            <td>' . $building['building_name'] . '</td>
-            <td>' . $building['county'] . '</td>
-            <td>Patrick Musila</td> <!-- Replace with dynamic tenant if needed -->
-            <td></td> <!-- Manager goes here -->
-            <td>' . $building['building_type'] . '</td>
-            <td>
-              <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View">
-                <i class="fas fa-eye"></i>
-              </button>
-              <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Provider">
-                <i class="fa fa-trash" style="font-size: 12px;"></i>
-              </button>
-            </td>
-          </tr>';
-        }
-        ?>
        </tbody>
      </table>
 
@@ -1590,6 +1562,20 @@ const data = {
     "Mwingi Central": ["Central", "Kivou", "Nguni", "Nuu"],
     "Mwingi North": ["Kyuso", "Ngomeni", "Tharaka", "Mumoni"],
     "Mwingi West": ["Migwani", "Kiomo/Kyethani", "Nzeluni", "Waita"]
+  },
+  "Kiambu": {
+    "Gatundu North": ["Gituamba", "Githobokoni", "Chania", "Mang'u"],
+    "Gatundu South": ["Kiamwangi", "Kiganjo", "Ndarugo", "Ngenda"],
+    "Githunguri": ["Githunguri", "Githiga", "Ikinu", "Ngewa", "Komothai"],
+    "Juja": ["Murera", "Theta", "Juja", "Witeithie", "Kalimoni"],
+    "Kabete": ["Gitaru", "Muguga", "Nyathuna", "Kabete", "Uthiru"],
+    "Kiambaa": ["Cianda", "Karuri", "Ndenderu", "Muchatha", "Kihara"],
+    "Kiambu Town": ["Ting'ang'a", "Ndumberi", "Riabai", "Township"],
+    "Kikuyu": ["Karai", "Nachu", "Sigona", "Kikuyu", "Kinoo"],
+    "Limuru": ["Bibirioni", "Limuru Central", "Ndeiya", "Limuru East", "Ngecha/Tigoni"],
+    "Lari": ["Kinale", "Kijabe", "Nyanduma", "Kamburu", "Lari/Kirenga"],
+    "Ruiru": ["Gitothua", "Biashara", "Gatongora", "Kahawa/Sukari", "Kahawa Wendani", "Kiuu", "Mwiki", "Mwihoko"],
+    "Thika Town": ["Township", "Kamenu", "Hospital", "Gatuanyaga", "Ngoliba"]
   },
   "Machakos": {
     "Machakos Town": ["Kalama", "Mua", "Mutituni", "Mumbuni North"],
