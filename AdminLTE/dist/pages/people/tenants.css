@@ -216,7 +216,7 @@ main.fade-out {
     border-radius: 5px;
     /* box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2); */
   }
-  .tenants-header{
+  .details-container_header{
     color: #ffffff;
     font-weight: 700;
    background-color: #00192D;

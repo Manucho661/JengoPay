@@ -9,10 +9,12 @@ try {
   $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
   // Fetch tenants with their user details
-  $sql = "SELECT 
+  $sql = "SELECT
+              users.id,
               users.name, 
               users.email, 
               tenants.phone_number,
+              tenants.user_id,
               tenants.residence,
               tenants.id_no,
               tenants.unit,
@@ -347,6 +349,8 @@ try {
         <!--end::Sidebar Wrapper-->
       </aside>
       <!--end::Sidebar-->
+
+                                                            <!-- MAIN -->
       <!--begin::App Main-->
       <main class="app-main" id="mainElement">
         <!--begin::App Content Header-->
@@ -372,12 +376,12 @@ try {
             </div>
             <!--end::Row-->
 
-                                             <!-- SUMMARY -->
+                                              <!-- SUMMARY -->
             <!-- Start Row-->
             <div class="row">
               <div class="col-md-12">
 
-                  <h6 class="mb-0 contact_section_header summary mb-2"> </i> Summary</h6>
+                <h6 class="mb-0 contact_section_header summary mb-2"> </i> Summary</h6>
 
                 <div class="row">
 
@@ -422,9 +426,9 @@ try {
             <!-- End row -->
           </div>
           <!--end::Container-fluid-->
-
-          
         </div>
+
+                                                      <!-- CONTENT  -->
         <div class="app-content mt-4">
           <!--begin::Container-->
           <div class="container">
@@ -433,9 +437,9 @@ try {
             <!--begin::Row-->
             <div class="row">
               <!-- Start col -->
-              <div >
-                <div class="bg-white p-2 rounded details">
-                   <h3 class=" text-start  tenants-header">All Tenants</h3>
+              <div class="col-md-12">
+                <div class="details-container bg-white p-2 rounded">
+                   <h3 class="details-container_header text-start">All Tenants</h3>
                    <div class="table-responsive">
                     <div id="top-bar" class="filter-pdf-excel mb-2">
                       <div class="d-flex" style="gap: 10px;">
@@ -488,7 +492,7 @@ try {
                           <?php if (!empty($tenants)) : ?>
                             <?php foreach ($tenants as $tenant) : ?>
 
-                              <tr  onclick="goToDetails('user-1')">
+                              <tr  onclick="goToDetails(<?= $tenant['user_id'];?>)">
                                 <td> <?= htmlspecialchars($tenant['name']) ?> </td>
                                 <td> <?= htmlspecialchars($tenant['id_no']) ?></td>
                                 <td>
@@ -505,8 +509,12 @@ try {
                                 <td> <button class="status completed"><i class="fa fa-check-circle"></i> Active </button>  </td>
 
                                 <td>
+                                <button onclick="handleDelete(event, <?= $tenant['user_id'];?>, 'users');" 
+                                          class="btn btn-sm" 
+                                          style="background-color: #00192D; color:white">
+                                    <i class="fa fa-arrow-right" data-toggle="tooltip" title="Vacant Edwin from the House"></i>
+                                  </button>
 
-                                  <button class="btn btn-sm" style="background-color: #00192D; color:white"> <i class="fa fa-arrow-right" data-toggle="tooltip" title="Vacant edwin from the House" onclick="event.stopPropagation();"></i></button>
                                   <button class="btn btn-sm" style="background-color: #AF2A28; color:#fff;"> <i class="fa fa-comment" data-toggle="tooltip" title="Send Paul Pashan an SMS"></i></button>
                                   <button style="background-color: #F74B00; color:#fff;" class="btn btn-sm" data-toggle="tooltip" title="Send Paul Pashan Email"><i class="fa fa-envelope"></i> </button>
                                 </td>
@@ -520,37 +528,10 @@ try {
                               </tr>
                           <?php endif; ?>
 
-
-                            <!-- <tr>
-                                <td>Joseph</td>
-
-
-
-                                <td> 3801790</td>
-                                <td>
-                                  <div> Manucho </div>
-                                  <div style="color: green;">M239</div>
-                                </td>
-                                
-                                <td>
-                                  <div class="phone"> <i class="fas fa-phone icon"></i> 0757417721</div>
-                                  <div class="email"><i class="fa fa-envelope icon"></i>   joseph23@gmail.com</div>
-
-                                </td>
-                                <td> <button class="status completed"><i class="fa fa-check-circle"></i> Active </button>  </td>
-
-                                <td>
-
-                                    <a href="vacate_tenant.php" class="btn btn-sm" style="background-color: #00192D; color:#fff;" data-toggle="tooltip" title="Vacant Paul Pashan from the House"> <i class="fa fa-arrow-right"></i></a>
-                                    <button class="btn btn-sm" style="background-color: #AF2A28; color:#fff;"> <i class="fa fa-comment" data-toggle="tooltip" title="Send Paul Pashan an SMS"></i></button>
-                                    <button style="background-color: #F74B00; color:#fff;" class="btn btn-sm" data-toggle="tooltip" title="Send Paul Pashan Email"><i class="fa fa-envelope"></i> </button>
-                                </td>
-                            </tr> -->
-                            <!-- Add more rows as needed -->
                           </tbody>
                     </table>
                 </div>
-                </div>
+              </div>
               <!-- /.col -->
             </div>
             <!--end::Row-->
@@ -561,8 +542,6 @@ try {
       </main>
       <!--end::App Main-->
       <!--begin::Footer-->
-
-
 
       <footer class="app-footer">
         <!--begin::To the end-->
@@ -583,84 +562,86 @@ try {
 
                                               <!-- OVERLAYS -->
 
-<!-- Add Tenant -->
-  <div class="popup-overlay"  id="complaintPopup">
-    <div class="popup-content">
+   <!-- Add Tenant -->
+   <div class="popup-overlay" id="addTenantModal">
+  <div class="popup-content">
+    <button class="close-btn text-secondary" onclick="closePopup()">×</button>
 
-      <button class="close-btn text-secondary" onclick="closePopup()">×</button>
+    <!-- Form with onsubmit event handler to call the JavaScript function -->
+    <form id="tenantForm" class="complaint-form" onsubmit="submitTenantForm(event)">
+      <h2 class="text-start addTenantHeader">Add Tenant</h2>
+      <label for="name">Tenant Name:</label>
+      <input type="text" id="name" name="name" required>
 
-      <form class="complaint-form" action="" method="post">
-        <h2 class="text-start addTenantHeader">Add Tenant</h2>
-          <label for="name">Tenant Name:</label>
-          <input type="text" id="name" name="name" required>
+      <label for="number">Identification No:</label>
+      <input type="number" id="number" name="id" required>
 
-          <label for="number">Identifiacation No:</label>
-          <input type="number" id="number" name="id" required>
+      <label for="email">Email Address:</label>
+      <input type="email" id="email" name="email" required>
 
-          <label for="email">Email Address:</label>
-          <input type="email" id="email" name="email" required>
+      <label for="phone">Phone Number:</label>
+      <input type="tel" id="phone" name="phone" required>
 
-          <label for="phone">Phone Number:</label>
-          <input type="tel" id="phone" name="phone" required>
+      <label for="property">Property:</label>
+      <select id="property" name="residence" required>
+        <option value="" disabled selected>Select Property</option>
+        <option value="Manucho">Manucho</option>
+        <option value="White House">White House</option>
+        <option value="Pink House">Pink House</option>
+        <option value="Silver">Silver</option>
+      </select>
 
-          <label for="property">Property:</label>
-          <select id="property" name="residence" required style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;">
-            <option value="" disabled selected>Select Property</option>
-            <option value="Manucho">Manucho</option>
-            <option value="White House">White House</option>
-            <option value="Pink House">Pink House</option>
-            <option value="Silver">Silver</option>
-          </select>
-          <label for="unit">Rental Unit:</label>
-          <input type="text" id="unit" name="unit" required>
+      <label for="unit">Rental Unit:</label>
+      <input type="text" id="unit" name="unit" required>
 
-        <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
-
-      </form>
-    </div>
+      <!-- Submit Button -->
+      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
+    </form>
   </div>
-<!--End Add Tenant -->
+</div>
 
- <!-- Shift Tenant -->
-  <div class="shiftpopup-overlay" id="shiftPopup">
-    <div class="shiftpopup-content">
-      <button class="close-btn text-secondary" onclick="closeshiftPopup()">×</button>
-      <div class="shift">
-      <h2 style="color: #00192D;">Shift Tenant</h2>
-      <label for="tenant">Select Tenant:</label>
+        <!--End Add Tenant -->
 
-      <select id="tenant"  style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;">
-          <option value="John Doe">John Doe</option>
-          <option value="Jane Smith">Jane Smith</option>
-          <option value="Mike Johnson">Mike Johnson</option>
-      </select>
+        <!-- Shift Tenant -->
+          <div class="shiftpopup-overlay" id="shiftPopup">
+            <div class="shiftpopup-content">
+              <button class="close-btn text-secondary" onclick="closeshiftPopup()">×</button>
+              <div class="shift">
+              <h2 style="color: #00192D;">Shift Tenant</h2>
+              <label for="tenant">Select Tenant:</label>
 
-      <label for="property" >Select New Property:</label>
-      <select id="property" style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;">
-          <option value="Apartment 101">Apartment 101</option>
-          <option value="House B3">House B3</option>
-          <option value="Condo 23A">Condo 23A</option>
-      </select>
-      <label for="property">Select Unit:</label>
-      <select id="property" style="width: 100%;padding: 10px;margin-bottom: 15px;border-radius: 5px;border: 1px solid #ccc;">
-          <option value="Apartment 101">A55</option>
-          <option value="House B3">B3</option>
-          <option value="Condo 23A">CA</option>
-      </select>
-      <br>
+              <select id="tenant"  style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;">
+                  <option value="John Doe">John Doe</option>
+                  <option value="Jane Smith">Jane Smith</option>
+                  <option value="Mike Johnson">Mike Johnson</option>
+              </select>
 
-      <button  type="submit" class="submit-btn" onclick="shiftTenant()"  style="background-color: #00192D; color: #f1f1f1;">Confirm Shift</button>
+              <label for="property" >Select New Property:</label>
+              <select id="property" style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;">
+                  <option value="Apartment 101">Apartment 101</option>
+                  <option value="House B3">House B3</option>
+                  <option value="Condo 23A">Condo 23A</option>
+              </select>
+              <label for="property">Select Unit:</label>
+              <select id="property" style="width: 100%;padding: 10px;margin-bottom: 15px;border-radius: 5px;border: 1px solid #ccc;">
+                  <option value="Apartment 101">A55</option>
+                  <option value="House B3">B3</option>
+                  <option value="Condo 23A">CA</option>
+              </select>
+              <br>
 
-    </div>
-    </div>
-  </div>
+              <button  type="submit" class="submit-btn" onclick="shiftTenant()"  style="background-color: #00192D; color: #f1f1f1;">Confirm Shift</button>
+
+            </div>
+            </div>
+          </div>
 
 
                                            <!-- PLUGINS -->
 
-<!-- LOADING AND OUT PROGRESS -->
+            <!-- LOADING AND OUT PROGRESS -->
             <script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
-<!-- EnD LOADING AND OUT PROGRESS -->
+            <!-- EnD LOADING AND OUT PROGRESS -->
 
 
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -681,7 +662,7 @@ try {
     <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
 
 
-<!-- Scripts For PopUps -->
+      <!-- Scripts For PopUps -->
         <script>
           // Function to open the complaint popup
           function openshiftPopup() {
@@ -709,16 +690,16 @@ try {
         <script>
           // Function to open the complaint popup
           function openPopup() {
-            document.getElementById("complaintPopup").style.display = "flex";
+            document.getElementById("addTenantModal").style.display = "flex";
           }
 
           // Function to close the complaint popup
           function closePopup() {
-            document.getElementById("complaintPopup").style.display = "none";
+            document.getElementById("addTenantModal").style.display = "none";
           }
         </script>
 
-<!--End Scripts For PopUps -->
+    <!--End Scripts For PopUps -->
 
     <!-- Script for datatable -->
     <script>
@@ -755,37 +736,37 @@ try {
 
 
 
-<script>
-  $(document).ready(function () {
-    const table = $('#maintenance').DataTable({
-      dom: 'rtip', // No default buttons or search
-      buttons: ['excel', 'pdf']
-    });
+    <script>
+    $(document).ready(function () {
+      const table = $('#maintenance').DataTable({
+        dom: 'rtip', // No default buttons or search
+        buttons: ['excel', 'pdf']
+      });
 
-    // Append buttons to our div
-    table.buttons().container().appendTo('#custom-buttons');
+      // Append buttons to our div
+      table.buttons().container().appendTo('#custom-buttons');
 
-    // Custom search input control
-    $('#searchInput').on('keyup', function () {
-      table.search(this.value).draw();
+      // Custom search input control
+      $('#searchInput').on('keyup', function () {
+        table.search(this.value).draw();
+      });
     });
-  });
-</script>
+    </script>
 
 
     </script>
     <!-- End script for data_table -->
 
-<!--Begin sidebar script -->
-<script>
-  fetch('../bars/sidebar.html')  // Fetch the file
-      .then(response => response.text()) // Convert it to text
-      .then(data => {
-          document.getElementById('sidebar').innerHTML = data; // Insert it
-      })
-      .catch(error => console.error('Error loading the file:', error)); // Handle errors
-</script>
-<!-- end sidebar script -->
+    <!--Begin sidebar script -->
+    <script>
+    fetch('../bars/sidebar.html')  // Fetch the file
+        .then(response => response.text()) // Convert it to text
+        .then(data => {
+            document.getElementById('sidebar').innerHTML = data; // Insert it
+        })
+        .catch(error => console.error('Error loading the file:', error)); // Handle errors
+    </script>
+    <!-- end sidebar script -->
 
 
 
@@ -828,111 +809,158 @@ try {
 
 
 
-<!-- SELECT ELEMENT SCRIPT -->
+    <!-- SELECT ELEMENT SCRIPT -->
 
-<script>
-  document.querySelectorAll('.select-option-container').forEach(container => {
-      const select = container.querySelector('.custom-select');
-      const optionsContainer = container.querySelector('.select-options');
-      const options = optionsContainer.querySelectorAll('div');
-
-      // Toggle dropdown on select click
-      select.addEventListener('click', () => {
-        const isOpen = optionsContainer.style.display === 'block';
-
-        // Close all other dropdowns before opening a new one
-        document.querySelectorAll('.select-options').forEach(opt => opt.style.display = 'none');
-        document.querySelectorAll('.custom-select').forEach(sel => {
-          sel.classList.remove('open');
-
-        });
-
-        // Toggle current dropdown
-        optionsContainer.style.display = isOpen ? 'none' : 'block';
-        select.classList.toggle('open', !isOpen);
-      });
-
-      // Option click handler
-      options.forEach(option => {
-        option.addEventListener('click', () => {
-          select.textContent = option.textContent;
-          select.setAttribute('data-value', option.getAttribute('data-value'));
-
-          options.forEach(opt => opt.classList.remove('selected'));
-          option.classList.add('selected');
-
-          optionsContainer.style.display = 'none';
-          select.classList.remove('open');
-        });
-
-        option.addEventListener('mouseenter', () => {
-          options.forEach(opt => opt.classList.remove('selected'));
-          option.classList.add('selected');
-        });
-
-      });
-    });
-
-    // Close dropdowns on outside click
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('.select-option-container')) {
-        document.querySelectorAll('.select-options').forEach(opt => opt.style.display = 'none');
-        document.querySelectorAll('.custom-select').forEach(sel => {
-          sel.classList.remove('open');
-          sel.style.borderRadius = '5px';
-        });
-      }
-    });
-
-  </script>
-    <!--end::Script-->
-
-
-
-    <!-- Tenant Page -->
     <script>
-      function goToDetails(userId) {
-        window.location.href = `../people/tenant-profile.html?id=${userId}`;
+      document.querySelectorAll('.select-option-container').forEach(container => {
+          const select = container.querySelector('.custom-select');
+          const optionsContainer = container.querySelector('.select-options');
+          const options = optionsContainer.querySelectorAll('div');
+
+          // Toggle dropdown on select click
+          select.addEventListener('click', () => {
+            const isOpen = optionsContainer.style.display === 'block';
+
+            // Close all other dropdowns before opening a new one
+            document.querySelectorAll('.select-options').forEach(opt => opt.style.display = 'none');
+            document.querySelectorAll('.custom-select').forEach(sel => {
+              sel.classList.remove('open');
+
+            });
+
+            // Toggle current dropdown
+            optionsContainer.style.display = isOpen ? 'none' : 'block';
+            select.classList.toggle('open', !isOpen);
+          });
+
+          // Option click handler
+          options.forEach(option => {
+            option.addEventListener('click', () => {
+              select.textContent = option.textContent;
+              select.setAttribute('data-value', option.getAttribute('data-value'));
+
+              options.forEach(opt => opt.classList.remove('selected'));
+              option.classList.add('selected');
+
+              optionsContainer.style.display = 'none';
+              select.classList.remove('open');
+            });
+
+            option.addEventListener('mouseenter', () => {
+              options.forEach(opt => opt.classList.remove('selected'));
+              option.classList.add('selected');
+            });
+
+          });
+        });
+
+        // Close dropdowns on outside click
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('.select-option-container')) {
+            document.querySelectorAll('.select-options').forEach(opt => opt.style.display = 'none');
+            document.querySelectorAll('.custom-select').forEach(sel => {
+              sel.classList.remove('open');
+              sel.style.borderRadius = '5px';
+            });
+          }
+        });
+
+      </script>
+        <!--end::Script-->
+
+    <script>
+      function handleDelete(event, id, type) {
+        event.stopPropagation(); // Stop the row or parent element click
+        if (confirm("Are you sure?")) {
+        fetch('../actions/delete_record.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: 'id=' + encodeURIComponent(id) + '&type=' + encodeURIComponent(type)
+        })
+        .then(res => res.text())
+        .then(data => {
+          alert(data);
+          location.reload();
+        })
+        .catch(err => console.error(err));
       }
-   </script>
+
+      }
+
+    </script>
 
 
-
-<!-- Loading out and in script -->
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    // Fade in effect on page load
-    const mainElement = document.getElementById("mainElement");
 
-    if (mainElement) {
-      mainElement.classList.remove("fade-out");
-    }
+function submitTenantForm(event) {
+  event.preventDefault(); // Prevent the form from submitting normally
 
-    function navigateWithTransition(url) {
-    NProgress.start();                             // Start progress bar
-    mainElement.classList.add("fade-out");         // Fade out the main content
+  // Create FormData object from the form
+  const formData = new FormData(document.getElementById("tenantForm"));
+  formData.append("type", "tenant"); // Add the type for tenant
 
-    setTimeout(() => {
-      window.location.href = url;                  // Navigate after fade
-    }, 500); // Matches the CSS transition time
-  }
-
-
-    // Intercept link clicks
-    document.querySelectorAll("a").forEach(link => {
-      link.addEventListener("click", function (e) {
-        const target = this.getAttribute("target");
-        const href = this.getAttribute("href");
-
-        if (!target || target === "_self") {
-          e.preventDefault();
-          navigateWithTransition(href);              
-        }
-      });
-    });
-  });
+  // Send data via fetch
+  fetch("../actions/add_record.php", {
+    method: "POST",
+    body: new URLSearchParams(formData)
+  })
+  .then(res => res.text())
+  .then(data => {
+    alert(data); // Display success message or error from server
+    location.reload(); // Reload the page to reflect changes (optional)
+  })
+  .catch(err => console.error(err));
+}
 
 </script>
+
+
+        <!-- Tenant Page -->
+        <script>
+          function goToDetails(userId) {
+            window.location.href = `../people/tenant-profile.php?id=${userId}`;
+          }
+        </script>
+
+
+
+    <!-- Loading out and in script -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Fade in effect on page load
+        const mainElement = document.getElementById("mainElement");
+
+        if (mainElement) {
+          mainElement.classList.remove("fade-out");
+        }
+
+        function navigateWithTransition(url) {
+        NProgress.start();                             // Start progress bar
+        mainElement.classList.add("fade-out");         // Fade out the main content
+
+        setTimeout(() => {
+          window.location.href = url;                  // Navigate after fade
+        }, 500); // Matches the CSS transition time
+      }
+
+
+        // Intercept link clicks
+        document.querySelectorAll("a").forEach(link => {
+          link.addEventListener("click", function (e) {
+            const target = this.getAttribute("target");
+            const href = this.getAttribute("href");
+
+            if (!target || target === "_self") {
+              e.preventDefault();
+              navigateWithTransition(href);              
+            }
+          });
+        });
+      });
+
+    </script>
 
 
 
@@ -941,55 +969,5 @@ try {
 </html>
 
 
-<?php
-try {
-  $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-  // Set error mode to exception
-  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-  // Start transaction
-  $conn->beginTransaction();
-
-  // Step 1: Insert into users
-  $sqlUser = "INSERT INTO users (name, email) VALUES (:name, :email)";
-  $stmtUser = $conn->prepare($sqlUser);
-  $stmtUser->execute([
-      ':name' => $_POST['name'],
-      ':email' => $_POST['email']
-      
-  ]);
-
-  // Step 2: Get last inserted user_id
-  $user_id = $conn->lastInsertId();
-
-  // Step 3: Insert into tenants
-  $sqlTenant = "INSERT INTO tenants (
-      user_id, phone_number, id_no, residence, 
-      unit, status
-  ) VALUES (
-      :user_id, :phone, :id_no, :residence,  :unit, :status
-  )";
-
-  $stmtTenant = $conn->prepare($sqlTenant);
-  $stmtTenant->execute([
-      ':user_id' => $user_id,
-      ':phone' => $_POST['phone'],
-      ':residence' => $_POST['residence'],
-      ':id_no' => $_POST['id'],
-      ':unit' => $_POST['unit'],
-      ':status' => 'active'
-  ]);
-
-  // Commit transaction
-  $conn->commit();
-
-  echo "✅ Tenant created successfully!";
-
-} catch (PDOException $e) {
-  $conn->rollBack();
-  echo "❌ Error: " . $e->getMessage();
-}
-
-?>
 
 
