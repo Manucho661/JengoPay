@@ -1,4 +1,31 @@
+<?php
+ include '../db/connect.php';
 
+
+ if (isset($_GET['id'])) {
+  $user_id = $_GET['id'];
+
+
+  // Get tenant info joined with user info
+  $stmt = $conn->prepare("
+      SELECT tenants.*, users.name, users.email 
+      FROM tenants 
+      JOIN users ON tenants.user_id = users.id 
+      WHERE tenants.user_id = ?
+  ");
+  $stmt->execute([$user_id]);
+  $tenant = $stmt->fetch(PDO::FETCH_ASSOC);
+  if (!$tenant) {
+    echo "<p>No tenant found with ID: $user_id</p>";
+  }
+  
+ }
+ else {
+  $tenant = null; // or redirect to error page
+}
+
+
+?>
 <!doctype html>
 <html lang="en">
   <!--begin::Head-->
@@ -327,7 +354,7 @@
             <div class="row  " >
               <div class="col-sm-6">
                 <div class="d-flex">
-                  <h3 class="section_header tenantName"><i class="fas fa-user-tie icon" style="color:#FFC107"></i> Mary Joseph</h3>
+                  <h3 class="section_header tenantName"><i class="fas fa-user-tie icon" style="color:#FFC107"></i><?= htmlspecialchars($tenant['name']) ?>  </h3>
                   <h6 class="active">Active</h6>
                 </div>
 
