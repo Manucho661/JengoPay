@@ -2,7 +2,7 @@
 include '../db/connect.php'; // Make sure this defines $conn for mysqli
 
 // Query the unit_information table
-$sql = "SELECT unit_number FROM unit_information";
+$sql = "SELECT unit_number, floor_number,rooms  FROM unit_information";
 $result = $conn->query($sql);
 
 // Fetch all unit numbers
@@ -51,9 +51,6 @@ if (isset($_GET['id'])) {
 // Optional: display or debug output
 // print_r($units);
 ?>
-
-
-
 
 <!doctype html>
 <html lang="en">
@@ -470,7 +467,11 @@ if (isset($_GET['id'])) {
 
 <div style="display: flex; gap: 25px;">
     <a href="../property/Units.php" style="color: #FFC107;"><p>Unit list</p></a>
-    <a href="../property/meterreading.php"  style="color: #FFC107;"><p>Meter Reading</p></a>
+    <?php
+// This could be inside a loop where you list multiple buildings
+echo '<a style="color: #FFC107;" href="meterreading.php?id=' . $building['id'] . '  ">Meter Reading</a>';
+?>
+    <!-- <a href="../property/meterreading.php"  style="color: #FFC107;"><p>Meter Reading</p></a> -->
 </div>
 
 <div class="justify-content-end d-flex" style="padding-bottom:2%">
@@ -521,6 +522,8 @@ if (isset($_GET['id'])) {
                 <tr>
                   <th>Units</th>
                   <th>Tenants</th>
+                  <th>Unit Type</th>
+                  <th>Floor Number</th>
                  <th>Action</th>
                 </tr>
               </thead>
@@ -529,6 +532,8 @@ if (isset($_GET['id'])) {
               <tr onclick="window.location.href='units.php'">
                 <td><?= htmlspecialchars($unit['unit_number'])?></td>
                 <td>Patrick Musila</td> <!-- Replace with dynamic tenant if needed -->
+                <td><?= htmlspecialchars($unit['rooms'])?></td>
+                <td><?= htmlspecialchars($unit['floor_number'])?></td>
                 <td>
                   <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View">
                     <i class="fas fa-eye"></i>

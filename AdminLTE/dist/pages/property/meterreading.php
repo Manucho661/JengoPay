@@ -1,50 +1,82 @@
 <?php
+// Include database connection
 include '../db/connect.php'; // Ensure this defines $conn for mysqli
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Validate if 'reading_date' is provided
-    if (empty($_POST['reading_date'])) {
-        echo "Reading date is required.";
-        exit();
+// Check if 'id' is passed in the URL
+if (isset($_GET['id'])) {
+    $buildingId = intval($_GET['id']); // Get the building ID from the URL
+
+    // Prepare the query to fetch building data based on the 'id'
+    $stmt = $conn->prepare("SELECT * FROM building_identification WHERE id = ?");
+    $stmt->bind_param("i", $buildingId);
+    $stmt->execute();
+
+    // Get the result
+    $result = $stmt->get_result();
+    $building = $result->fetch_assoc();
+
+    // Check if building data is found
+    if (!$building) {
+        echo "Building not found.";
+        exit;
     }
 
-    // Prepare the SQL query
-    $stmt = $conn->prepare("INSERT INTO meter_readings (
-       reading_date, unit_number, meter_type, previous_reading, current_reading, consumption_units, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())");
-
-    // Check for a valid prepared statement
-    if ($stmt === false) {
-        echo "Error preparing the SQL statement: " . $conn->error;
-        exit();
-    }
-
-    // Bind parameters to the prepared statement
-    $stmt->bind_param(
-        "sssiii",
-        $_POST['reading_date'],
-        $_POST['unit_number'],
-        $_POST['meter_type'],
-        $_POST['previous_reading'],
-        $_POST['current_reading'],
-        $_POST['consumption_units']
-    );
-
-    // Execute the statement
-    if ($stmt->execute()) {
-        echo "Meter reading added successfully!";
-    } else {
-        echo "Error: " . $stmt->error;
-    }
-
-    // Close the statement and connection
     $stmt->close();
-    $conn->close();
 } else {
-    echo "Form not submitted.";
+    echo "No building selected.";
+    exit;
 }
-?>
 
+// Handle form submission
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['submit'])) {
+  $reading_date = $_POST['reading_date'] ?? null;
+  $unit_number = $_POST['unit_number'] ?? null;
+  $meter_type = $_POST['meter_type'] ?? null;
+  $previous_reading = floatval($_POST['previous_reading'] ?? 0);
+  $current_reading = floatval($_POST['current_reading'] ?? 0);
+  $consumption_units = $current_reading - $previous_reading;
+
+  if (empty($reading_date) || empty($unit_number)) {
+      echo "<p style='color:red;'>Reading date and unit number are required.</p>";
+  } else {
+      $stmt = $conn->prepare("INSERT INTO meter_readings (reading_date, unit_number, meter_type, previous_reading, current_reading, consumption_units)
+                              VALUES (?, ?, ?, ?, ?, ?)");
+      $stmt->bind_param("sssddd", $reading_date, $unit_number, $meter_type, $previous_reading, $current_reading, $consumption_units);
+
+      if ($stmt->execute()) {
+          // echo "<p style='color:green;'>Meter reading successfully added! Consumption: <b>$consumption_units</b></p>";
+      } else {
+          echo "<p style='color:red;'>Error: " . $stmt->error . "</p>";
+      }
+
+      $stmt->close();
+  }
+}
+
+
+// Fetch all units for the dropdown
+$units = [];
+$sql = "SELECT unit_number FROM unit_information";
+$result = $conn->query($sql);
+if ($result && $result->num_rows > 0) {
+  while ($row = $result->fetch_assoc()) {
+      $units[] = $row['unit_number'];
+  }
+}
+/// Fetch the meter readings from the database
+$sql = "SELECT * FROM meter_readings";
+$result = $conn->query($sql);
+
+// Check if any data is returned
+$readings = [];
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $readings[] = $row;
+    }
+}
+
+
+?>
 
 
 <!doctype html>
@@ -353,125 +385,82 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="app-content-header">
           <!--begin::Container-->
           <div class="container-fluid">
-            <!--begin::Row-->
-            <div class="row">
-              <div class="col-sm-6"><h3 class="mb-0"></h3></div>
-              <div class="col-sm-6">
-                <!-- <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#"></a></li>
-                  <li class="breadcrumb-item active" aria-current="page"></li>
-                </ol> -->
+
+            <div class="col-sm-8">
+              <div class="">
+                <h3 class="mb-0 contact_section_header"> <i class="fas fa-home icon"></i> <?php echo htmlspecialchars($building['building_name']); ?>
+                <!-- <span>,Units</span> </h3> -->
+                <h6 class="property-type"><b><?php echo htmlspecialchars($building['building_type']); ?></b></h6>
               </div>
             </div>
-            <!--end::Row-->
-          </div>
-          <!--end::Container-->
-        </div>
-        <div class="app-content">
-          <!--begin::Container-->
-          <div class="container-fluid">
-<div class="col-sm-8">
-  <div class="d-flex">
-    <h3 class="mb-0 contact_section_header">  <i class="fas fa-home"></i>
 
-    <?php echo htmlspecialchars($building['building_name']); ?> </h3>
-    <h6 class="month" style="color: green;">Active</h6>
-  </div>
-</div>
-<p style="color: #FFC107; padding-top:2%;"><?php echo htmlspecialchars($building['building_type']); ?>|
-  <button class="edit-btn"><i class="fas fa-edit"></i>EDIT</button>
-</p>
-<a href="../property/billcharges.html"><button class="edit-btn">
-  <i class="fas fa-edit"></i>
-  Create Meter Charges</button></a>
 
-<!-- start row -->
-<div class="row mt-3 personal-info">
-  <h6 class="mb-0 contact_section_header mb-2"> </i> Building  Information</h6>
-<div class="col-md-12">
-  <div class="row">
-
-          <div class="col-md-3">
-
-            <div class="personal-item d-flex justify-content-between bg-white">
-            <!-- <i class="fas fa-calculator"></i> -->
-              <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
-                <div class="category"><i class="fas fa-briefcase personal-info-icon"></i> <span class="personal-info item-name" > Location,</span> </div>
-                <div class="number"><b><?php echo htmlspecialchars($building['county']); ?></b></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-3">
-
-            <!-- <div class="personal-item d-flex justify-content-between bg-white"> -->
-              <!-- <i class="fas fa-calculator"></i> -->
-                <!-- <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;"> -->
-                  <!-- <div class="category"><i class="fas fa-globe icon personal-info-icon "></i> <span class="personal-info item-name" >Origin,</span>  </div> -->
-                  <!-- <div class="number"><b>Kenyan</b></div> -->
-                <!-- </div> -->
-            <!-- </div> -->
-          <!-- </div> -->
-
-          <div class="col-md-3">
+            <!-- start row -->
+            <div class="row mt-3 personal-info">
+              <h6 class="mb-0 contact_section_header mb-2"> </i> Basic Info</h6>
+          <div class="col-md-12">
+          <div class="row">
+  <div class="col-md-3">
     <div class="personal-item d-flex justify-content-between bg-white">
       <div class="category-number p-2" style="display: flex; gap: 5px; align-items: center;">
-        <div class="category"><i class="fas fa-key personal-info-icon"></i> <span class="personal-info item-name">Type,</span></div>
-        <div class="number"><b><?php echo htmlspecialchars($building['building_type']); ?></b></div>
-        <!-- <button class="btn view id rounded">view</button> -->
+        <div class="category"><i class="fas fa-briefcase personal-info-icon"></i> <span class="personal-info item-name"> Location,</span> </div>
+        <div class="number"><b><?php echo htmlspecialchars($building['county']); ?></b></div>
       </div>
     </div>
   </div>
 
   <!-- <div class="col-md-3">
+    <div class="personal-item d-flex justify-content-between bg-white">
+      <div class="category-number p-2" style="display: flex; gap: 5px; align-items: center;">
+        <div class="category"><i class="fas fa-globe icon personal-info-icon"></i> <span class="personal-info item-name">Origin,</span> </div>
+        <div class="number"><b>Kenyan</b></div>  Or use dynamic data if needed -->
+      <!-- </div>
+    </div>
+  </div> -->
+
+
+
+  <div class="col-md-3">
   <div class="personal-item-edit d-flex btn personal-info justify-content-between">
     <button class="btn edit-btn personal-info rounded" data-bs-toggle="modal" data-bs-target="#editModal">
       <i class="fas fa-edit icon"></i> Edit
     </button>
   </div>
-</div> -->
-
-  </div>
 </div>
+
 
 <div class="col-md-12 mt-2">
   <div class="row">
-
-        <div class="col-md-3">
-
-          <div class="personal-item d-flex justify-content-between bg-white">
-          <!-- <i class="fas fa-calculator"></i> -->
-            <div class="labal-value p-2" style="display: flex; gap: 5px;   align-items: center;">
-              <div class="label"> <i class="fa fa-envelope personal-info-icon "></i>
-                <span class="personal-info item-name email" > Ownership,</span> </div>
-              <div class="value"><b><?php echo htmlspecialchars($building['ownership_info']); ?></b></div>
-            </div>
-          </div>
-
-
-
+    <div class="col-md-3">
+      <div class="personal-item d-flex justify-content-between bg-white">
+        <div class="labal-value p-2" style="display: flex; gap: 5px; align-items: center;">
+          <div class="label"><i class="fa fa-envelope personal-info-icon"></i>
+            <span class="personal-info item-name email"> Ownership,</span> </div>
+          <div class="value"><b><?php echo htmlspecialchars($building['ownership_info']); ?></b></div>
         </div>
+      </div>
+    </div>
 
-        <div class="col-md-3">
-
-          <div class="personal-item d-flex justify-content-between bg-white">
-            <!-- <i class="fas fa-calculator"></i> -->
-              <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
-                <div class="category"><i class="fas fa-city personal-info-icon"></i>  <span class="personal-info item-name" >Units,</span>  </div>
-                <div class="phone"><b><?php echo htmlspecialchars($building['units_number']); ?></b></div>
-              </div>
-          </div>
+    <div class="col-md-3">
+      <div class="personal-item d-flex justify-content-between bg-white">
+        <div class="category-number p-2" style="display: flex; gap: 5px; align-items: center;">
+          <div class="category"><i class="fas fa-city personal-info-icon"></i> <span class="personal-info item-name">
+            Units,</span> </div>
+          <div class="phone"><b><?php echo htmlspecialchars($building['units_number']); ?></b></div> <!-- Assuming static data for units, you could replace it with dynamic data -->
         </div>
+      </div>
+    </div>
 
-      <!-- <div class="col-md-3">
-        <div class="personal-item d-flex justify-content-between bg-white"> -->
-        <!-- <i class="fas fa-calculator"></i> -->
-          <!-- <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
-            <div class="category"> <i class="fas fa-id-card personal-info-icon "></i> <span class="personal-info item-name">Address,</span></div>
-            <div class="number"><b>50202, Chwele</b></div>
-          </div>
+    <!-- <div class="col-md-3">
+      <div class="personal-item d-flex justify-content-between bg-white">
+        <div class="category-number p-2" style="display: flex; gap: 5px; align-items: center;">
+          <div class="category"><i class="fas fa-id-card personal-info-icon"></i> <span class="personal-info item-name">Address,</span></div>
+          <div class="number"><b>50202, </b></div>  Replace with dynamic data if available -->
         </div>
-      </div> -->
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <div style="display: flex;gap: 25px;">
@@ -509,63 +498,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>8/03/2025</td>
-        <td>C10</td>
-        <td>Water</td>
-        <td>10</td>
-        <td>11</td>
-        <td>1</td>
-        <td>
-         <button  onclick="openshiftPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file" ></i></button>
-          <button   class="btn btn-sm" style="background-color: #193042; color:#fff;" title="Assign this Task to a Plumbing Service Providersingle_units.php">    <i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>
-          </td>
-      </tr>
-      <tr>
-        <td>7/03/2025</td>
-        <td>B11</td>
-        <td>
-         Water
-        </td>
-        <td>19</td>
-        <td>20</td>
-        <td>1</td>
-        <td>
-         <button onclick="openshiftPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
-          <button   class="btn btn-sm" style="background-color: #193042; color:#fff;">    <i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>
-          </td>
-      </tr>
-
-      <tr onclick="window.location.href=''">
-        <td>6/03/2025</td>
-        <td>B18</td>
-        <td>
-        Water
-        </td>
-        <td>21</td>
-        <td>22</td>
-        <td>1</td>
-        <td>
-          <button onclick="openshiftPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
-          <button   class="btn btn-sm" style="background-color: #193042; color:#fff;">    <i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>
-          </td>
-      </tr>
-
-      <tr onclick="window.location.href=''" >
-        <td>01/03/2025</td>
-        <td>D17</td>
-        <td>
-         Water
-        </td>
-        <td>12</td>
-        <td>13</td>
-        <td>1</td>
-        <td>
-          <button onclick="openshiftPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
-          <button   class="btn btn-sm" style="background-color: #193042; color:#fff;"><i class="fa fa-trash" style="font-size: 12px; color: rgb(red, green, blue);"></i>          </td>
-      </tr>
-      <!-- Add more rows as needed -->
+        <?php foreach ($readings as $reading): ?>
+        <tr>
+            <td><?php echo htmlspecialchars($reading['reading_date']); ?></td>
+            <td><?php echo htmlspecialchars($reading['unit_number']); ?></td>
+            <td><?php echo htmlspecialchars($reading['meter_type']); ?></td>
+            <td><?php echo htmlspecialchars($reading['previous_reading']); ?></td>
+            <td><?php echo htmlspecialchars($reading['current_reading']); ?></td>
+            <td><?php echo htmlspecialchars($reading['consumption_units']); ?></td>
+            <td>
+                <button onclick="openshiftPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;">
+                    <i class="fa fa-file"></i>
+                </button>
+                <button class="btn btn-sm" style="background-color: #193042; color:#fff;" title="Delete">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+        <?php endforeach; ?>
     </tbody>
+
   </table>
             <!-- /.col -->
           </div>
@@ -627,7 +579,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <b><label for="dateInput" class="filter-label">Reading Date</label></b>
         <input type="" id="dateInput" name="reading_date" class="form-control" placeholder="11-02-2023" required disabled/>
         <label for="units">Unit:</label>
-        <select id="units" required disabled>
+        <select id="units"  disabled>
             <option>D17</option>
             <option>B18</option>
             <option>B11</option>
@@ -660,51 +612,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!-- End shift popup -->
 
 
-  <!-- meterreading popup -->
-   <div class="meterpopup-overlay" id="meterPopup">
-    <div class="meterpopup-content wide-form">
-        <button id="close-btns" class="text-secondary" onclick="meterreadingclosePopup()">×</button>
-        <h2 class="assign-title">Add A Meter Reading</h2>
-        <form class="wide-form" action="" method="POST">
-          <div class="form-group">
-            <b><label for="dateInput" class="filter-label">Reading Date</label></b>
-            <input type="date" id="dateInput" class="form-control" required/>
-            <label for="units">Units:</label>
+      <!-- meterreading popup -->
+      <div class="meterpopup-overlay" id="meterPopup">
+        <div class="meterpopup-content wide-form">
+            <button id="close-btns" class="text-secondary" onclick="meterreadingclosePopup()">×</button>
+            <h2 class="assign-title">Add A Meter Reading</h2>
+            <form class="wide-form"  method="POST" action="">
+              <div class="form-group">
+             <b><label for="dateInput" class="filter-label">Reading Date</label></b>
+              <input type="date" id="dateInput" name="reading_date" class="form-control" required />
+
+                <label for="units">Units:</label>
             <select id="units" name="unit_number" required>
-                <option>D17</option>
-                <option>B18</option>
-                <option>B11</option>
-                <option>C10</option>
+              <?php foreach ($units as $unit): ?>
+                  <option value="<?php echo htmlspecialchars($unit); ?>"><?php echo htmlspecialchars($unit); ?></option>
+              <?php endforeach; ?>
             </select>
-        </div>
-            <div class="form-group">
-                <label for="meter_type">Meter Type:</label>
-                <select id="meter_type" name="meter_type" required>
-                  <option>Water</option>
-                  <option>Electrical</option>
-              </select>
             </div>
-
             <div class="form-group">
-                <label for="previous_reading">Previous Reading:</label>
-                <input type="number" id="previous_reading" name="previous_reading" placeholder="Previous Reading" required>
-            </div>
-
-            <div class="form-group">
-                <label for="current_reading">Current Reading:</label>
-                <input type="number" id="current_reading" name="current_reading" placeholder="Current Reading" required>
-            </div>
-
-            <div class="form-group">
-                <label for="consumption_units">Consumption Units:</label>
-                <input type="number" id="consumption_units" name="consumption_units" placeholder="Consumption Units" required>
-            </div>
-
-           <button type="submit" class="submit-btn">Create Meter Reading</button>
-        </form>
+        <label for="meter_type">Meter Type:</label>
+        <select id="meter_type" name="meter_type" required>
+            <option>Water</option>
+            <option>Electrical</option>
+        </select>
     </div>
-</div>
-<!-- end -->
+
+    <div class="form-group">
+        <label for="previous_reading">Previous Reading:</label>
+        <input type="number" id="previous_reading" name="previous_reading" placeholder="Previous Reading" required>
+    </div>
+
+    <div class="form-group">
+        <label for="current_reading">Current Reading:</label>
+        <input type="number" id="current_reading" name="current_reading" placeholder="Current Reading" required>
+    </div>
+
+    <div class="form-group">
+    <label>Consumption Units:</label>
+    <p id="consumption_preview"><i>Calculated automatically</i></p>
+    </div>
+
+
+    <button type="submit" name="submit" class="submit-btn">Create Meter Reading</button>
+            </form>
+        </div>
+    </div>
+    <!-- end -->
 
 
 
