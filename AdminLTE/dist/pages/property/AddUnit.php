@@ -2,12 +2,17 @@
 include '../db/connect.php'; // Make sure this defines $conn for mysqli
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $stmt = $conn->prepare("INSERT INTO unit_information (
-        unit_number, size, floor_number, rooms, room_type, bathrooms, kitchen, balcony, rent_amount, description, created_at, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
+  
+  $building_id = isset($_GET['building_id']) ? $_GET['building_id'] : null;
 
+    // Prepare SQL statement to insert data into units table
+    $stmt = $conn->prepare("INSERT INTO units (
+        unit_number, size, floor_number, rooms, room_type, bathrooms, kitchen, balcony, rent_amount, description, building_id, created_at, updated_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
+
+    // Bind parameters (including building_id)
     $stmt->bind_param(
-        "sissssssss",
+        "sisssssssss", // Adjusted for the building_id (i for integer)
         $_POST['unit_number'],
         $_POST['size'],
         $_POST['floor_number'],
@@ -17,21 +22,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_POST['kitchen'],
         $_POST['balcony'],
         $_POST['rent_amount'],
-        $_POST['description']
+        $_POST['description'],
+        $_POST['building_id'] // This is the foreign key
     );
 
+    // Execute the query
     if ($stmt->execute()) {
         // echo "Unit added successfully!";
     } else {
         echo "Error: " . $stmt->error;
     }
 
+    // Close the prepared statement and connection
     $stmt->close();
     $conn->close();
 } else {
-    // echo "Form not submitted.";
+    //  echo "Form not submitted.";
 }
+
+
+// Fetch the data from the database using $conn
+$sql = "SELECT building_id, building_name, building_type FROM buildings";
+$result = $conn->query($sql);
+
+// Check if a result is returned
+if ($result->num_rows > 0) {
+    $building = $result->fetch_assoc(); // Fetch the first row of data
+} else {
+    // Handle the case where no data is returned (optional)
+    echo "No records found.";
+}
+
+
+
 ?>
+
 
 <!doctype html>
 <html lang="en">
@@ -466,8 +491,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
-            <div class="property-title">Crown Z Towers</div>
-            <p>Residential |
+            <div class="property-title"><?php echo htmlspecialchars($building['building_name']); ?></div>
+            <p><?php echo htmlspecialchars($building['building_type']); ?>|
               <button class="edit-btn"><i class="fas fa-edit"></i>EDIT</button>
            </p>
             <hr>
@@ -487,116 +512,122 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <b><p>What is the Unit Information?</p></b>
 
 <form action="AddUnit.php" method="POST">
-<div class="row">
-  <div class="col-md-4">
-  <label for="location">Unit Number*</label>
-  <input type="text" id="unit_number" name="unit_number" placeholder="Enter Unit Number" required>
-</div>
-
-
+    <div class="row">
+<!-- Add the new field for building_id -->
 <div class="col-md-4">
-  <label for="size">Size(Optional)*</label>
-  <input type="text" id="size" name="size" placeholder="Enter Size" required>
-  </div>
+            <label for="building_id">Building*</label>
+            <select id="building_id" name="building_id" required>
+                <?php
+                    // Assuming you want to fetch building options from the database
+                    include '../db/connect.php'; // Make sure this defines $conn for mysqli
+                    $result = $conn->query("SELECT building_id, building_name FROM buildings");
 
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<option value='" . $row['building_id'] . "'>" . $row['building_name'] . "</option>";
+                        }
+                    } else {
+                        echo "<option value=''>No Buildings Available</option>";
+                    }
 
-<div class="col-md-4">
-<label for="size">Floor Number*</label>
-<input type="number" id="floor_number" name="floor_number" placeholder="Enter Floor Size" required>
-</div>
-
-<b><p>What is the listing information?</p></b>
-<div class="col-md-4">
-    <label for="rooms">Rooms*</label>
-    <select id="rooms" name="rooms" required>
-    <option value="Bedsitter">Bedsitter</option>
-    <option value="One bedroom">One bedroom</option>
-    <option value="Two bedroom">Two Bedroom</option>
-    <option value="Two bedroom">Three Bedroom</option>
-    <option value="Two bedroom">Four Bedroom</option>
-    <option value="Two bedroom">Five Bedroom</option>
-
-
-    </select>
-
-</div>
-
-<div class="col-md-4">
-
-        <label for="rooms">Room Type*</label>
-        <select id="rooms" name="room_type" required>
-        <option value="Rental">Rental</option>
-        <option value="Air BnB">Air Bnb</option>
-        <option value="Banking Hall">Banking Hall</option>
-        <option value="Banking Hall">Office</option>
-
-        </select>
-
-    </div>
-
-    <div class="col-md-4">
-
-            <label for="rooms">Bathrooms*</label>
-            <select id="rooms" name="bathrooms" required>
-            <option value="One bedroom">One Bathroom</option>
-            <option value="Two bedroom">Two Bathroom</option>
-            <option value="Two bedroom">ThreeBathroom</option>
-            <option value="Two bedroom">Four Bathroom</option>
-            <option value="Two bedroom">Five Bathroom</option>
+                    $conn->close();
+                ?>
             </select>
-
         </div>
 
         <div class="col-md-4">
+            <label for="location">Unit Number*</label>
+            <input type="text" id="unit_number" name="unit_number" placeholder="Enter Unit Number" required>
+        </div>
 
-              <label for="kitchen">Kitchen*</label>
-              <select id="kitchen" name="kitchen" required>
-              <option value="open">Open</option>
-              <option value="closed">Closed</option>
-              </select>
+        <div class="col-md-4">
+            <label for="size">Size(Optional)*</label>
+            <input type="text" id="size" name="size" placeholder="Enter Size" required>
+        </div>
 
-          </div>
+        <div class="col-md-4">
+            <label for="size">Floor Number*</label>
+            <input type="number" id="floor_number" name="floor_number" placeholder="Enter Floor Size" required>
+        </div>
 
-          <div class="col-md-4">
+        <b><p>What is the listing information?</p></b>
+        <div class="col-md-4">
+            <label for="rooms">Rooms*</label>
+            <select id="rooms" name="rooms" required>
+                <option value="Bedsitter">Bedsitter</option>
+                <option value="One bedroom">One bedroom</option>
+                <option value="Two bedroom">Two Bedroom</option>
+                <option value="Three bedroom">Three Bedroom</option>
+                <option value="Four bedroom">Four Bedroom</option>
+                <option value="Five bedroom">Five Bedroom</option>
+            </select>
+        </div>
 
-                <label for="balcony">Balcony*</label>
-                <select id="balcony" name="balcony" required>
-                <option value="one">One </option>
-                <option value="two">Two </option>
+        <div class="col-md-4">
+            <label for="rooms">Room Type*</label>
+            <select id="rooms" name="room_type" required>
+                <option value="Rental">Rental</option>
+                <option value="Air BnB">Air BnB</option>
+                <option value="Banking Hall">Banking Hall</option>
+                <option value="Office">Office</option>
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <label for="rooms">Bathrooms*</label>
+            <select id="rooms" name="bathrooms" required>
+                <option value="One bathroom">One Bathroom</option>
+                <option value="Two bathroom">Two Bathroom</option>
+                <option value="Three bathroom">Three Bathroom</option>
+                <option value="Four bathroom">Four Bathroom</option>
+                <option value="Five bathroom">Five Bathroom</option>
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <label for="kitchen">Kitchen*</label>
+            <select id="kitchen" name="kitchen" required>
+                <option value="open">Open</option>
+                <option value="closed">Closed</option>
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <label for="balcony">Balcony*</label>
+            <select id="balcony" name="balcony" required>
+                <option value="one">One</option>
+                <option value="two">Two</option>
                 <option value="three">Three</option>
                 <option value="four">Four</option>
                 <option value="five">Five</option>
-                </select>
-
-            </div>
-
-            <div class="col-md-4">
-
-                  <label for="Rent Amount">Rent Amount*</label>
-                  <input type="number" id="rent_amount" name="rent_amount" placeholder="Enter Amount" required>
-
-              </div>
-
-            <div class="col-md-12">
-                <label for="description" class="filter-label">Description</label>
-                <input type="text" id="description" class="form-control" name="description" placeholder="Enter a brief description" required/>
-                  </select>
-              </div>
-
+            </select>
         </div>
-</div>
 
-<div class="row justify-content-end ">
-    <div class="col-md-4">
-    <button type="submit">Create Unit</button>
-  </div>
-  <div class="col-md-4">
-   <a href="../property/AddUnit.php"><button>Add Another Unit</button></a>
-  </div>
-  <div class="col-md-4">
-    <a href="../property/Units.php"><button>Cancel</button></a>
-  </div>
-        </form>
+        <div class="col-md-4">
+            <label for="Rent Amount">Rent Amount*</label>
+            <input type="number" id="rent_amount" name="rent_amount" placeholder="Enter Amount" required>
+        </div>
+
+        <div class="col-md-12">
+            <label for="description" class="filter-label">Description</label>
+            <input type="text" id="description" class="form-control" name="description" placeholder="Enter a brief description" required />
+        </div>
+
+    </div>
+
+    <div class="row justify-content-end">
+        <div class="col-md-4">
+            <button type="submit">Create Unit</button>
+        </div>
+        <div class="col-md-4">
+            <a href="../property/AddUnit.php"><button>Add Another Unit</button></a>
+        </div>
+        <div class="col-md-4">
+            <a href="../property/Units.php"><button>Cancel</button></a>
+        </div>
+    </div>
+</form>
+
             <!-- /.col -->
           </div>
           <!--end::Row-->

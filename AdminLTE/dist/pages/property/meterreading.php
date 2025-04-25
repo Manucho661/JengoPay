@@ -1,13 +1,15 @@
 <?php
 // Include database connection
+
+
 include '../db/connect.php'; // Ensure this defines $conn for mysqli
 
 // Check if 'id' is passed in the URL
-if (isset($_GET['id'])) {
-    $buildingId = intval($_GET['id']); // Get the building ID from the URL
+if (isset($_GET['building_id'])) {
+    $buildingId = intval($_GET['building_id']); // Get the building ID from the URL
 
     // Prepare the query to fetch building data based on the 'id'
-    $stmt = $conn->prepare("SELECT * FROM building_identification WHERE id = ?");
+    $stmt = $conn->prepare("SELECT * FROM buildings WHERE building_id = ?");
     $stmt->bind_param("i", $buildingId);
     $stmt->execute();
 
@@ -37,8 +39,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['submit'])) {
   $consumption_units = $current_reading - $previous_reading;
 
   if (empty($reading_date) || empty($unit_number)) {
-      echo "<p style='color:red;'>Reading date and unit number are required.</p>";
-  } else {
+    echo "<p style='color:red;'>Both reading date and unit number are required.</p>";
+}
+ else {
       $stmt = $conn->prepare("INSERT INTO meter_readings (reading_date, unit_number, meter_type, previous_reading, current_reading, consumption_units)
                               VALUES (?, ?, ?, ?, ?, ?)");
       $stmt->bind_param("sssddd", $reading_date, $unit_number, $meter_type, $previous_reading, $current_reading, $consumption_units);
@@ -53,16 +56,37 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['submit'])) {
   }
 }
 
+// Get building_id from query parameters
+$building_id = isset($_GET['building_id']) ? $_GET['building_id'] : null;
 
-// Fetch all units for the dropdown
-$units = [];
-$sql = "SELECT unit_number FROM unit_information";
-$result = $conn->query($sql);
-if ($result && $result->num_rows > 0) {
-  while ($row = $result->fetch_assoc()) {
-      $units[] = $row['unit_number'];
-  }
+if ($building_id) {
+    // Prepare the query to fetch units for a specific building
+    $stmt = $conn->prepare("SELECT u.unit_number FROM units u WHERE u.building_id = ?");
+    
+    // Check if preparation was successful
+    if ($stmt === false) {
+        die("Error preparing statement: " . $conn->error);
+    }
+
+    $stmt->bind_param("i", $building_id); // Bind the building_id
+} else {
+    // If no building_id is provided, fetch all units
+    $stmt = $conn->prepare("SELECT u.unit_number FROM units u");
+
+    // Check if preparation was successful
+    if ($stmt === false) {
+        die("Error preparing statement: " . $conn->error);
+    }
 }
+
+$stmt->execute();
+$result = $stmt->get_result();
+$units = $result->fetch_all(MYSQLI_ASSOC);
+
+// Close the statement and connection
+$stmt->close();
+
+
 /// Fetch the meter readings from the database
 $sql = "SELECT * FROM meter_readings";
 $result = $conn->query($sql);
@@ -621,13 +645,15 @@ if ($result && $result->num_rows > 0) {
               <div class="form-group">
              <b><label for="dateInput" class="filter-label">Reading Date</label></b>
               <input type="date" id="dateInput" name="reading_date" class="form-control" required />
-
-                <label for="units">Units:</label>
-            <select id="units" name="unit_number" required>
-              <?php foreach ($units as $unit): ?>
-                  <option value="<?php echo htmlspecialchars($unit); ?>"><?php echo htmlspecialchars($unit); ?></option>
-              <?php endforeach; ?>
-            </select>
+              </div>
+              <div class="form-group">
+              <select id="units" name="unit_number" required>
+            <?php foreach ($units as $unit): ?>
+                <option value="<?php echo htmlspecialchars($unit['unit_number']); ?>">
+                    <?php echo htmlspecialchars($unit['unit_number']); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
             </div>
             <div class="form-group">
         <label for="meter_type">Meter Type:</label>
@@ -658,12 +684,6 @@ if ($result && $result->num_rows > 0) {
         </div>
     </div>
     <!-- end -->
-
-
-
-
-
-
 
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->

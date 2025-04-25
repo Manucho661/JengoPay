@@ -34,7 +34,7 @@ try {
 
 
       // Collect building data
-      $id = $_POST['id'];
+      $id = $_POST['building_id'];
       $building_name = $_POST['building_name'];
       $county = $_POST['county'];
       $constituency = $_POST['constituency'];
@@ -116,7 +116,7 @@ try {
         $building_tax_pin = $_POST['building_tax_pin'] ?? '';
 
       // Insert all data
-      $sql = "INSERT INTO building_identification (
+      $sql = "INSERT INTO buildings (
                   building_name, county, constituency, ward, floor_number, units_number, building_type,
                   ownership_info,
                   first_name, last_name, phone_number, kra_pin, email,
@@ -125,7 +125,7 @@ try {
                   parking_lot, alarm_system, elevators, psds_accessibility, cctv,  nca_approval, nca_approval_no, nca_approval_date,
                     local_gov_approval, local_gov_approval_no, local_gov_approval_date,
                     nema_approval, nema_approval_no, nema_approval_date,
-                    building_tax_pin, insurance_cover, insurance_policy, insurance_provider, policy_from_date, policy_until_date,front_view_photo, rear_view_photo, angle_view_photo, interior_view_photo
+                    building_tax_pin, insurance_cover, insurance_policy, insurance_provider, policy_from_date, policy_until_date,front_view_photo, rear_view_photo, angle_view_photo, interior_view_photo, building_number
 
               ) VALUES (
                   :building_name, :county, :constituency, :ward, :floor_number, :units_number, :building_type,
@@ -136,7 +136,7 @@ try {
                   :parking_lot, :alarm_system, :elevators, :psds_accessibility, :cctv , :nca_approval, :nca_approval_no, :nca_approval_date,
                     :local_gov_approval, :local_gov_approval_no, :local_gov_approval_date,
                     :nema_approval, :nema_approval_no, :nema_approval_date,
-                    :building_tax_pin,  :insurance_cover, :insurance_policy, :insurance_provider, :policy_from_date, :policy_until_date, :front_view_photo, :rear_view_photo, :angle_view_photo, :interior_view_photo
+                    :building_tax_pin,  :insurance_cover, :insurance_policy, :insurance_provider, :policy_from_date, :policy_until_date, :front_view_photo, :rear_view_photo, :angle_view_photo, :interior_view_photo,  :building_number
               )";
 
       $stmt = $pdo->prepare($sql);
@@ -191,14 +191,16 @@ try {
             ':front_view_photo' => $front_view_photo,
             ':rear_view_photo' => $rear_view_photo,
             ':angle_view_photo' => $angle_view_photo,
-            ':interior_view_photo' => $interior_view_photo
+            ':interior_view_photo' => $interior_view_photo,
+            ':building_number' => $building_number,
+
       ]);
 
       // echo "<p style='color:green;'>Data and files submitted successfully!</p>";
   }
 
 // Query the building_identification table
-$sql = "SELECT id, building_name, county, building_type, ownership_info FROM building_identification";
+$sql = "SELECT building_id, building_name, county, building_type, ownership_info FROM buildings";
 $stmt = $pdo->prepare($sql);
 $stmt->execute();
 
@@ -1393,7 +1395,7 @@ $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
        </thead>
        <tbody>
        <?php foreach ($buildings as $building): ?>
-    <tr onclick="window.open('Units.php?id=<?= $building['id'] ?>', '_blank')">
+    <tr onclick="window.open('Units.php?building_id=<?= $building['building_id'] ?>', '_blank')">
     <td><?= htmlspecialchars($building['building_name'])?></td>
     <td><?= htmlspecialchars($building['county'])?></td>
     <td>Patrick Musila</td> <!-- Replace with dynamic tenant if needed -->

@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 25, 2025 at 09:06 AM
+-- Generation Time: Apr 25, 2025 at 04:43 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -40,6 +40,14 @@ CREATE TABLE `meter_readings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `meter_readings`
+--
+
+INSERT INTO `meter_readings` (`id`, `reading_date`, `unit_number`, `meter_type`, `previous_reading`, `current_reading`, `consumption_units`, `created_at`, `updated_at`) VALUES
+(17, '2025-04-24', 'C9', 'Water', 80, 100, 20, '2025-04-25 14:08:15', '2025-04-25 14:08:15'),
+(18, '2025-04-24', 'C9', 'Water', 80, 100, 20, '2025-04-25 14:09:21', '2025-04-25 14:09:21');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -57,7 +65,7 @@ ALTER TABLE `meter_readings`
 -- AUTO_INCREMENT for table `meter_readings`
 --
 ALTER TABLE `meter_readings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

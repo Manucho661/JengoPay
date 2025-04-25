@@ -1,20 +1,37 @@
 <?php
 include '../db/connect.php'; // Make sure this defines $conn for mysqli
 
-// Query the unit_information table
-$sql = "SELECT unit_number, floor_number,rooms  FROM unit_information";
-$result = $conn->query($sql);
+$building_id = isset($_GET['building_id']) ? $_GET['building_id'] : null;
 
-// Fetch all unit numbers
-$units = [];
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $units[] = $row;
+if ($building_id) {
+    // Prepare the query to fetch units for a specific building
+    $stmt = $conn->prepare("SELECT u.unit_number, u.rooms, u.floor_number FROM units u WHERE u.building_id = ?");
+    
+    // Check if preparation was successful
+    if ($stmt === false) {
+        die("Error preparing statement: " . $conn->error);
+    }
+
+    $stmt->bind_param("i", $building_id);
+} else {
+    // Prepare the query to fetch all units if no building_id is provided
+    $stmt = $conn->prepare("SELECT u.unit_number, u.rooms, u.floor_number FROM units u");
+
+    // Check if preparation was successful
+    if ($stmt === false) {
+        die("Error preparing statement: " . $conn->error);
     }
 }
 
+$stmt->execute();
+$result = $stmt->get_result();
+$units = $result->fetch_all(MYSQLI_ASSOC);
+
+
+$stmt->close();
+
 // Fetch the data from the database using $conn
-$sql = "SELECT id, building_name, county, building_type, ownership_info, units_number FROM building_identification";
+$sql = "SELECT building_id, building_name, county, building_type, ownership_info, units_number FROM buildings";
 $result = $conn->query($sql);
 
 // Check if a result is returned
@@ -26,11 +43,11 @@ if ($result->num_rows > 0) {
 }
 
 
-if (isset($_GET['id'])) {
-  $buildingId = intval($_GET['id']);
+if (isset($_GET['building_id'])) {
+  $buildingId = intval($_GET['building_id']);
 
   // Prepare the query
-  $stmt = $conn->prepare("SELECT * FROM building_identification WHERE id = ?");
+  $stmt = $conn->prepare("SELECT * FROM buildings WHERE building_id = ?");
   $stmt->bind_param("i", $buildingId);
   $stmt->execute();
 
@@ -469,7 +486,7 @@ if (isset($_GET['id'])) {
     <a href="../property/Units.php" style="color: #FFC107;"><p>Unit list</p></a>
     <?php
 // This could be inside a loop where you list multiple buildings
-echo '<a style="color: #FFC107;" href="meterreading.php?id=' . $building['id'] . '  ">Meter Reading</a>';
+echo '<a style="color: #FFC107;" href="meterreading.php?building_id=' . $building['building_id'] . '  ">Meter Reading</a>';
 ?>
     <!-- <a href="../property/meterreading.php"  style="color: #FFC107;"><p>Meter Reading</p></a> -->
 </div>
@@ -528,27 +545,24 @@ echo '<a style="color: #FFC107;" href="meterreading.php?id=' . $building['id'] .
                 </tr>
               </thead>
               <tbody>
-              <?php foreach ($units as $unit): ?>
-              <tr onclick="window.location.href='units.php'">
-                <td><?= htmlspecialchars($unit['unit_number'])?></td>
-                <td>Patrick Musila</td> <!-- Replace with dynamic tenant if needed -->
-                <td><?= htmlspecialchars($unit['rooms'])?></td>
-                <td><?= htmlspecialchars($unit['floor_number'])?></td>
-                <td>
-                  <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View">
+    <?php foreach ($units as $unit): ?>
+        <tr onclick="window.location.href='units.php'">
+            <td><?= htmlspecialchars($unit['unit_number']) ?></td>
+            <td><?= htmlspecialchars($unit['tenant_name'] ?? 'Not Assigned') ?></td> <!-- Replace with dynamic tenant if needed -->
+            <td><?= htmlspecialchars($unit['rooms']) ?></td>
+            <td><?= htmlspecialchars($unit['floor_number']) ?></td>
+            <td>
+                <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#viewUnitModal" title="View">
                     <i class="fas fa-eye"></i>
-                  </button>
-                  <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Provider">
+                </button>
+                <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Provider">
                     <i class="fa fa-trash" style="font-size: 12px;"></i>
-                  </button>
-                </td>
-              </tr>
-            <?php endforeach; ?>
+                </button>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</tbody>
 
-
-
-                <!-- Add more rows as needed -->
-              </tbody>
             </table>
             <!-- /.col -->
           </div>
@@ -602,58 +616,56 @@ echo '<a style="color: #FFC107;" href="meterreading.php?id=' . $building['id'] .
       <button class="close-btn" onclick="closeunitsPopup()">×</button>
       <h2 class="assign-title">Detailed Units Information</h2>
       <button class="edit-btn"><i class="fas fa-edit"></i>EDIT</button>
-      <form class="wide-form">
+      <form class="wide-form" method="POST" action="process_unit.php"> <!-- Add method and action -->
         <div class="form-group">
           <div class="row g-3">
             <div class="col-md-6">
-            <label for="name">Unit Number:</label>
-            <input type="number" id="unit_number" name="unit_number" placeholder="D17" required disabled>
-          </div>
-          <div class="col-md-6">
-            <label for="text">Size:</label>
-            <input type="text" id="size" name="size" placeholder="3 by 3" required disabled>
-          </div>
+              <label for="building_id">Building:</label>
+              <select id="building_id" name="building_id" required>
+                <option value="" disabled selected>Select Building</option>
+                <?php
+                // Fetch all buildings from the database
+                $sql = "SELECT building_id, building_name FROM building_identification";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute();
+                $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-          <div class="col-md-6">
-            <label for="floor_number">Floor Number</label>
-            <input type="tel" id="floor_number" name="floor_number" placeholder="2" required disabled>
+                // Populate the dropdown with building names
+                foreach ($buildings as $building) {
+                  echo "<option value=\"" . $building['building_id'] . "\">" . $building['building_name'] . "</option>";
+                }
+                ?>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label for="unit_number">Unit Number:</label>
+              <input type="number" id="unit_number" name="unit_number" placeholder="D17" required>
+            </div>
+
+            <div class="col-md-6">
+              <label for="size">Size:</label>
+              <input type="text" id="size" name="size" placeholder="3 by 3" required>
+            </div>
+
+            <div class="col-md-6">
+              <label for="floor_number">Floor Number</label>
+              <input type="number" id="floor_number" name="floor_number" placeholder="2" required>
+            </div>
+
+            <div class="col-md-6">
+              <label for="rooms">Room</label>
+              <input type="text" id="rooms" name="rooms" placeholder="Bed Sitter" required>
+            </div>
+
+            <!-- Add other unit details as needed -->
+
+            <button type="submit" class="submit-btn">Submit</button>
+          </div>
         </div>
-
-        <div class="col-md-6">
-            <label for="rooms">Room</label>
-            <input type="text" id="rooms" name="rooms"  placeholder="Bed Sitter" disabled>
-    </div>
-
-    <div class="col-md-6">
-      <label for="room_type">Room Type</label>
-      <input type="text" id="room_type" name="room_type" placeholder="Office" disabled>
-</div>
-
-<div class="col-md-6">
-  <label for="kitchen">Kitchen</label>
-  <input type="text" id="kitchen" name="Kitchen" placeholder="Open" disabled>
-</div>
-
-<div class="col-md-6">
-  <label for="balcony">Balcony</label>
-  <input type="text" id="balcony" name="Balcony" placeholder="One" disabled>
-</div>
-
-    <div class="col-md-6">
-            <label for="bathrooms">Bathrooms</label>
-            <input type="text" id="bathrooms" name="bathrooms" placeholder="5" disabled>
-    </div>
-
-    <div class="col-md-12">
-      <label for="description">Description</label>
-      <input type="text" id="description" name="description" placeholder="lorem skdkjfjkkkdkjjkjkjsjjejjnnfn" disabled>
-  </div>
-  <button type="submit" class="submit-btn">Submit</button>
-
       </form>
   </div>
 </div>
-
 
 <!-- edit info -->
 
