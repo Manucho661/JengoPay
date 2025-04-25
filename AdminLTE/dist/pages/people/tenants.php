@@ -11,8 +11,8 @@ try {
   // Fetch tenants with their user details
   $sql = "SELECT
               users.id,
-              users.name, 
-              users.email, 
+              users.name,
+              users.email,
               tenants.phone_number,
               tenants.user_id,
               tenants.residence,
@@ -54,7 +54,7 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="title" content="AdminLTE | Dashboard v2" />
     <meta name="author" content="ColorlibHQ"/>
-    
+
     <meta
       name="description"
       content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS."
@@ -119,7 +119,7 @@ try {
     <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
 
     <style>
-     
+
     </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -409,7 +409,7 @@ try {
                         <div ><i class="fas fa-user-tie summary-card_icon"></i> <span class="summary-card_label" > Inactive,</span> </div>
                         <div class="summary-card_value inactive"><b> <?= $inactiveTenantsCount ?> </b></div>
                     </div>
-              
+
                   </div>
 
                   <div class="col-md-3">
@@ -418,7 +418,7 @@ try {
                         <div ><i class="fas fa-user-tie summary-card_icon"></i> <span class="summary-card_label" > Inactive,</span> </div>
                         <div class="summary-card_value inactive"><b> 2000</b></div>
                     </div>
-                    
+
                   </div>
                 </div>
               </div>
@@ -429,9 +429,9 @@ try {
         </div>
 
                                                       <!-- CONTENT  -->
-        <div class="app-content mt-4">
+        <div class="app-content mt-4" style="height: 80%;">
           <!--begin::Container-->
-          <div class="container">
+          <div class="container-fluid"style="height: 100%;  >
 
             <h6 class="mb-0 contact_section_header summary mb-2"> </i> Details</h6>
             <!--begin::Row-->
@@ -486,7 +486,7 @@ try {
 
                             </tr>
                           </thead>
-                          
+
                           <tbody>
 
                           <?php if (!empty($tenants)) : ?>
@@ -509,8 +509,8 @@ try {
                                 <td> <button class="status completed"><i class="fa fa-check-circle"></i> Active </button>  </td>
 
                                 <td>
-                                <button onclick="handleDelete(event, <?= $tenant['user_id'];?>, 'users');" 
-                                          class="btn btn-sm" 
+                                <button onclick="handleDelete(event, <?= $tenant['user_id'];?>, 'users');"
+                                          class="btn btn-sm"
                                           style="background-color: #00192D; color:white">
                                     <i class="fa fa-arrow-right" data-toggle="tooltip" title="Vacant Edwin from the House"></i>
                                   </button>
@@ -954,7 +954,7 @@ function submitTenantForm(event) {
 
             if (!target || target === "_self") {
               e.preventDefault();
-              navigateWithTransition(href);              
+              navigateWithTransition(href);
             }
           });
         });

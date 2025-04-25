@@ -20,7 +20,7 @@
   color: #767676;
 }
 .summary-card_value.active{
-  background-color: #2e7d32; 
+  background-color: #2e7d32;
   color: white;
   border: none;
   padding:0 6px;
@@ -184,7 +184,7 @@ main.fade-out {
                                                     border-radius: 5px;
                                                     color: gray;
 
-                                                    display: none; 
+                                                    display: none;
                                                     /* border-radius: 0 0 8px 8px; */
 
                                               }
@@ -224,6 +224,7 @@ main.fade-out {
     border-radius: 5px 5px 0 0;
     text-align: center;
     font-size: 16px;
+    
   }
 
   .table {
@@ -269,13 +270,13 @@ main.fade-out {
     cursor: pointer;
   }
  td .phone{
-   
+
     font-size: 14px;
   }
  td .phone:hover{
     text-decoration: underline;
     cursor: pointer;
-  }    
+  }
 
   tr:hover {
     background-color: #f9f9f9 !important;
