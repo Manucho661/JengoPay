@@ -119,7 +119,36 @@ try {
     <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
 
     <style>
-
+.app-content{
+  flex: 1;
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+}
+.app-content .container-fluid{
+  flex: 1;
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+}
+.container-fluid .row.details{
+  flex: 1;
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+}
+.col-md-12.details{
+  flex: 1;
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+}
+.details-container{
+  flex: 1;
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+}
     </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -429,17 +458,17 @@ try {
         </div>
 
                                                       <!-- CONTENT  -->
-        <div class="app-content mt-4" style="height: 70%;" >
+        <div class="app-content mt-4">
           <!--begin::Container-->
-          <div class="container-fluid" style="height:100%" >
+          <div class="container-fluid">
 
             <h6 class="mb-0 contact_section_header summary mb-2"> </i> Details</h6>
             <!--begin::Row-->
-            <div class="row" style="height:100%" >
+            <div class="row details">
               <!-- Start col -->
-              <div class="col-md-12">
-                <div class="details-container bg-white p-2 rounded" style="height:100%">
-                   <h3 class="details-container_header text-start" >All Tenants</h3>
+              <div class="col-md-12 details">
+                <div class="details-container bg-white p-2 rounded">
+                   <h3 class="details-container_header text-start">All Tenants</h3>
                    <div class="table-responsive">
                     <div id="top-bar" class="filter-pdf-excel mb-2">
                       <div class="d-flex" style="gap: 10px;">
