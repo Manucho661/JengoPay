@@ -78,6 +78,26 @@
 select:hover {
   color: #000 !important; /* black or any color you want */
 }
+.app-main{
+  align-items: stretch !important;
+}
+.app-content {
+  flex: 1;
+ 
+   align-items: stretch;
+  display: flex;
+  flex-direction: column;
+}
+.container-fluid.app-content{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.container-fluid.app-content .row.details{
+  flex: 1;
+}
+
 </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -307,8 +327,10 @@ select:hover {
         <!--end::Sidebar Wrapper-->
       </aside>
       <!--end::Sidebar-->
+
       <!--begin::App Main-->
       <main id="mainElement" class="app-main fade-out">
+
         <!--begin::App Content Header-->
         <div class="app-content-header">
           <!--begin::Container-->
@@ -326,7 +348,7 @@ select:hover {
         </div>
         <div  class="app-content">
 
-          <div class="container-fluid">
+          <div class="container-fluid app-content">
             <!-- First Row -->
             <div class="row">
 
@@ -402,11 +424,12 @@ select:hover {
             <!-- END ROW -->
 
             <!-- START ROW -->
-             <div class="row mt-4">
+             <div class="row mt-4 details">
                 <!-- <div class="row"> -->
-                  <h6 class="mb-0 contact_section_header summary mb-2"> </i> Details</h6>
 
-                    <div class="col-md-12">
+
+                    <div class="col-md-12 details">
+                    <h6 class="mb-0 contact_section_header summary mb-2"> </i> Details</h6>
                       <div class="rent-info">
                           <div class="rent-info filter ">
                             <div class="filter-boxes">
@@ -472,7 +495,7 @@ select:hover {
                                       <td class="rent overpayment">$&nbsp; 500</td>
 
                                     <td>
-                                      <button class="btn view"> <a class="view-link" href="building-rent.html">View</a> </button>
+                                      <button class="btn view"> <a class="view-link" href="building-rent.php">View</a> </button>
                                     </td>
                                 </tr>
                                 <tr>
@@ -484,7 +507,7 @@ select:hover {
                                     <td class="rent collected">$&nbsp;2,000</td>
                                     <td class="rent overpayment">$&nbsp; 500</td>
                                   <td>
-                                    <button class="btn view"> <a class="view-link" href="building-rent.html">View</a> </button>
+                                    <button class="btn view"> <a class="view-link" href="building-rent.php">View</a> </button>
                                   </td>
                                 </tr>
                                 <tr>
@@ -548,7 +571,8 @@ select:hover {
 
 
 
-      </form>
+         </form>
+      </main>
   </div>
 </div>
 <!-- end -->

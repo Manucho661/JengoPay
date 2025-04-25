@@ -429,17 +429,17 @@ try {
         </div>
 
                                                       <!-- CONTENT  -->
-        <div class="app-content mt-4" style="height: 80%;">
+        <div class="app-content mt-4" style="height: 70%;" >
           <!--begin::Container-->
-          <div class="container-fluid"style="height: 100%;  >
+          <div class="container-fluid" style="height:100%" >
 
             <h6 class="mb-0 contact_section_header summary mb-2"> </i> Details</h6>
             <!--begin::Row-->
-            <div class="row">
+            <div class="row" style="height:100%" >
               <!-- Start col -->
               <div class="col-md-12">
-                <div class="details-container bg-white p-2 rounded">
-                   <h3 class="details-container_header text-start">All Tenants</h3>
+                <div class="details-container bg-white p-2 rounded" style="height:100%">
+                   <h3 class="details-container_header text-start" >All Tenants</h3>
                    <div class="table-responsive">
                     <div id="top-bar" class="filter-pdf-excel mb-2">
                       <div class="d-flex" style="gap: 10px;">
