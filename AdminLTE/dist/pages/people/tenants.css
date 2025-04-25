@@ -1,4 +1,6 @@
-                     /* SUMMARY */
+
+
+/* SUMMARY */
 .summary-card{
   background-color: white !important;
   padding-left: 2px;
@@ -224,7 +226,7 @@ main.fade-out {
     border-radius: 5px 5px 0 0;
     text-align: center;
     font-size: 16px;
-    
+
   }
 
   .table {
