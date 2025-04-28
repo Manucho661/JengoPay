@@ -1,42 +1,39 @@
 <?php
-include '../db/connect.php'; // Make sure this defines $conn for mysqli
+include '../db/connect.php'; // Make sure this defines $pdo for PDO
 
 $building_id = isset($_GET['building_id']) ? $_GET['building_id'] : null;
 
 if ($building_id) {
     // Prepare the query to fetch units for a specific building
-    $stmt = $conn->prepare("SELECT u.unit_number, u.rooms, u.floor_number FROM units u WHERE u.building_id = ?");
-    
+    $stmt = $pdo->prepare("SELECT u.unit_number, u.rooms, u.floor_number FROM units u WHERE u.building_id = ?");
+
     // Check if preparation was successful
     if ($stmt === false) {
-        die("Error preparing statement: " . $conn->error);
+        die("Error preparing statement: " . $pdo->errorInfo()[2]);
     }
 
-    $stmt->bind_param("i", $building_id);
+    $stmt->bindParam(1, $building_id, PDO::PARAM_INT);
 } else {
     // Prepare the query to fetch all units if no building_id is provided
-    $stmt = $conn->prepare("SELECT u.unit_number, u.rooms, u.floor_number FROM units u");
+    $stmt = $pdo->prepare("SELECT u.unit_number, u.rooms, u.floor_number FROM units u");
 
     // Check if preparation was successful
     if ($stmt === false) {
-        die("Error preparing statement: " . $conn->error);
+        die("Error preparing statement: " . $pdo->errorInfo()[2]);
     }
 }
 
 $stmt->execute();
-$result = $stmt->get_result();
-$units = $result->fetch_all(MYSQLI_ASSOC);
+$units = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
-$stmt->close();
-
-// Fetch the data from the database using $conn
+// Fetch the data from the database using $pdo
 $sql = "SELECT building_id, building_name, county, building_type, ownership_info, units_number FROM buildings";
-$result = $conn->query($sql);
+$stmt = $pdo->query($sql);
 
 // Check if a result is returned
-if ($result->num_rows > 0) {
-    $building = $result->fetch_assoc(); // Fetch the first row of data
+if ($stmt->rowCount() > 0) {
+    $building = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch the first row of data
 } else {
     // Handle the case where no data is returned (optional)
     echo "No records found.";
@@ -47,20 +44,19 @@ if (isset($_GET['building_id'])) {
   $buildingId = intval($_GET['building_id']);
 
   // Prepare the query
-  $stmt = $conn->prepare("SELECT * FROM buildings WHERE building_id = ?");
-  $stmt->bind_param("i", $buildingId);
+  $stmt = $pdo->prepare("SELECT * FROM buildings WHERE building_id = ?");
+  $stmt->bindParam(1, $buildingId, PDO::PARAM_INT);
   $stmt->execute();
 
   // Get the result
-  $result = $stmt->get_result();
-  $building = $result->fetch_assoc();
+  $building = $stmt->fetch(PDO::FETCH_ASSOC);
 
   if (!$building) {
       echo "Building not found.";
       exit;
   }
 
-  $stmt->close();
+  $stmt->closeCursor();
 } else {
   echo "No building selected.";
   exit;
@@ -68,6 +64,8 @@ if (isset($_GET['building_id'])) {
 // Optional: display or debug output
 // print_r($units);
 ?>
+
+
 
 <!doctype html>
 <html lang="en">

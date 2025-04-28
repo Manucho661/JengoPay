@@ -1,23 +1,18 @@
 <?php
 // Include database connection
-
-
-include '../db/connect.php'; // Ensure this defines $conn for mysqli
+include '../db/connect.php'; // Ensure this defines $pdo for PDO
 
 // Check if 'id' is passed in the URL
 if (isset($_GET['building_id'])) {
     $buildingId = intval($_GET['building_id']); // Get the building ID from the URL
 
     // Prepare the query to fetch building data based on the 'id'
-$stmt = $conn->prepare("SELECT * FROM meter_readings WHERE id = :unitId");
-$stmt->bindValue(':unitId', $unitId, PDO::PARAM_INT);
-$stmt->execute();
-$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+    $stmt = $pdo->prepare("SELECT * FROM buildings WHERE building_id = ?");
+    $stmt->bindParam(1, $buildingId, PDO::PARAM_INT);
+    $stmt->execute();
 
     // Get the result
-    $result = $stmt->get_result();
-    $building = $result->fetch_assoc();
+    $building = $stmt->fetch(PDO::FETCH_ASSOC);
 
     // Check if building data is found
     if (!$building) {
@@ -25,7 +20,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         exit;
     }
 
-    $stmt->close();
+    $stmt->closeCursor();
 } else {
     echo "No building selected.";
     exit;
@@ -42,19 +37,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['submit'])) {
 
   if (empty($reading_date) || empty($unit_number)) {
     echo "<p style='color:red;'>Both reading date and unit number are required.</p>";
-}
- else {
-      $stmt = $conn->prepare("INSERT INTO meter_readings (reading_date, unit_number, meter_type, previous_reading, current_reading, consumption_units)
+} else {
+      $stmt = $pdo->prepare("INSERT INTO meter_readings (reading_date, unit_number, meter_type, previous_reading, current_reading, consumption_units)
                               VALUES (?, ?, ?, ?, ?, ?)");
-      $stmt->bind_param("sssddd", $reading_date, $unit_number, $meter_type, $previous_reading, $current_reading, $consumption_units);
+      $stmt->bindParam(1, $reading_date, PDO::PARAM_STR);
+      $stmt->bindParam(2, $unit_number, PDO::PARAM_STR);
+      $stmt->bindParam(3, $meter_type, PDO::PARAM_STR);
+      $stmt->bindParam(4, $previous_reading, PDO::PARAM_STR);
+      $stmt->bindParam(5, $current_reading, PDO::PARAM_STR);
+      $stmt->bindParam(6, $consumption_units, PDO::PARAM_STR);
 
       if ($stmt->execute()) {
           // echo "<p style='color:green;'>Meter reading successfully added! Consumption: <b>$consumption_units</b></p>";
       } else {
-          echo "<p style='color:red;'>Error: " . $stmt->error . "</p>";
+          echo "<p style='color:red;'>Error: " . $stmt->errorInfo()[2] . "</p>";
       }
 
-      $stmt->close();
+      $stmt->closeCursor();
   }
 }
 
@@ -63,46 +62,43 @@ $building_id = isset($_GET['building_id']) ? $_GET['building_id'] : null;
 
 if ($building_id) {
     // Prepare the query to fetch units for a specific building
-    $stmt = $conn->prepare("SELECT u.unit_number FROM units u WHERE u.building_id = ?");
+    $stmt = $pdo->prepare("SELECT u.unit_number FROM units u WHERE u.building_id = ?");
 
     // Check if preparation was successful
     if ($stmt === false) {
-        die("Error preparing statement: " . $conn->error);
+        die("Error preparing statement: " . $pdo->errorInfo()[2]);
     }
 
-    $stmt->bind_param("i", $building_id); // Bind the building_id
+    $stmt->bindParam(1, $building_id, PDO::PARAM_INT); // Bind the building_id
 } else {
     // If no building_id is provided, fetch all units
-    $stmt = $conn->prepare("SELECT u.unit_number FROM units u");
+    $stmt = $pdo->prepare("SELECT u.unit_number FROM units u");
 
     // Check if preparation was successful
     if ($stmt === false) {
-        die("Error preparing statement: " . $conn->error);
+        die("Error preparing statement: " . $pdo->errorInfo()[2]);
     }
 }
 
 $stmt->execute();
-$result = $stmt->get_result();
-$units = $result->fetch_all(MYSQLI_ASSOC);
+$units = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Close the statement and connection
-$stmt->close();
-
+$stmt->closeCursor();
 
 /// Fetch the meter readings from the database
 $sql = "SELECT * FROM meter_readings";
-$result = $conn->query($sql);
+$stmt = $pdo->query($sql);
 
 // Check if any data is returned
 $readings = [];
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
+if ($stmt->rowCount() > 0) {
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $readings[] = $row;
     }
 }
-
-
 ?>
+
 
 
 <!doctype html>

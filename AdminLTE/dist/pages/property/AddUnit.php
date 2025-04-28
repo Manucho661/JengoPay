@@ -39,13 +39,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //  echo "Form not submitted.";
 }
 
-// Fetch the data from the database using $conn
+// Fetch the data from the database using $pdo
 $sql = "SELECT building_id, building_name, building_type FROM buildings";
-$result = $conn->query($sql);
+$stmt = $pdo->query($sql);
 
 // Check if a result is returned
-if ($result->num_rows > 0) {
-    $building = $result->fetch_assoc(); // Fetch the first row of data
+if ($stmt->rowCount() > 0) {
+    $building = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch the first row of data
 } else {
     // Handle the case where no data is returned (optional)
     echo "No records found.";

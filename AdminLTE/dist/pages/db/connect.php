@@ -1,25 +1,23 @@
 <?php
-$host = "";
-$dbname = "bt_jengopay";
-$username = "root";
-$password = "";
+$host = 'localhost';
+$db   = 'bt_jengopay';
+$user = 'root';
+$pass = '';
+$charset = 'utf8mb4';
 
-// Create connection
-// $conn = new mysqli($host, $username, $password,$dbname);
+
+$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+
+$options = [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, // VERY important
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES   => false,
+];
+
 try {
-  $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-  // Set error mode to exception
-  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-  die("Connection failed: " . $e->getMessage());
+    $pdo = new PDO($dsn, $user, $pass, $options);
+    //  echo "Connected successfully"; // Optional
+} catch (\PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
 }
-
-
-// Check connection
-//  if ($conn->connect_error) {
-    //  die("❌ Connection failed: " . $conn->connect_error);
-//  } else {
-    //  echo "✅ Connected successfully to the database.";
-//  }
-
 ?>
