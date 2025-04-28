@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $service = $_POST['service_type'] ?? '';
 
             if (!empty($name) && !empty($service)) {
-                $stmt = $conn->prepare("INSERT INTO providers (provider_name, service_type) VALUES (?, ?)");
+                $stmt = $pdo->prepare("INSERT INTO providers (provider_name, service_type) VALUES (?, ?)");
                 if ($stmt->execute([$name, $service])) {
                     echo "Provider added successfully!";
                 } else {
@@ -34,21 +34,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
                 if ($name && $email && $phone && $id_no && $residence && $unit) {
                     try {
-                        $conn->beginTransaction();
+                        $pdo->beginTransaction();
     
                         // Step 1: Insert into users
-                        $stmtUser = $conn->prepare("INSERT INTO users (name, email) VALUES (?, ?)");
+                        $stmtUser = $pdo->prepare("INSERT INTO users (name, email) VALUES (?, ?)");
                         $stmtUser->execute([$name, $email]);
-                        $user_id = $conn->lastInsertId();
+                        $user_id = $pdo->lastInsertId();
     
                         // Step 2: Insert into tenants
-                        $stmtTenant = $conn->prepare("INSERT INTO tenants (user_id, phone_number, id_no, residence, unit, status) VALUES (?, ?, ?, ?, ?, ?)");
+                        $stmtTenant = $pdo->prepare("INSERT INTO tenants (user_id, phone_number, id_no, residence, unit, status) VALUES (?, ?, ?, ?, ?, ?)");
                         $stmtTenant->execute([$user_id, $phone, $id_no, $residence, $unit, $status]);
     
-                        $conn->commit();
+                        $pdo->commit();
                         echo "Tenant and user added successfully!";
                     } catch (Exception $e) {
-                        $conn->rollBack();
+                        $pdo->rollBack();
                         echo "Error: " . $e->getMessage();
                     }
                 } else {
