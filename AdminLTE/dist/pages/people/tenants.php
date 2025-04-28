@@ -444,8 +444,8 @@ try {
                   <div class="col-md-3">
 
                     <div class="summary-card p-2">
-                        <div ><i class="fas fa-user-tie summary-card_icon"></i> <span class="summary-card_label" > Inactive,</span> </div>
-                        <div class="summary-card_value inactive"><b> 2000</b></div>
+                        <div ><i class="fas fa-user-tie summary-card_icon"></i> <span class="summary-card_label" > New Applicants,</span> </div>
+                        <div class="summary-card_value"><b> 2000</b></div>
                     </div>
 
                   </div>
@@ -468,7 +468,7 @@ try {
               <!-- Start col -->
               <div class="col-md-12 details">
                 <div class="details-container bg-white p-2 rounded">
-                   <h3 class="details-container_header text-start">All Tenants</h3>
+                   <h3 class="details-container_header text-start">All Tenants &nbsp;	|&nbsp;	 <span style="color:#FFC107">3 Enteries</span></h3>
                    <div class="table-responsive">
                     <div id="top-bar" class="filter-pdf-excel mb-2">
                       <div class="d-flex" style="gap: 10px;">

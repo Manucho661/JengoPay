@@ -23,8 +23,6 @@
  else {
   $tenant = null; // or redirect to error page
 }
-
-
 ?>
 <!doctype html>
 <html lang="en">

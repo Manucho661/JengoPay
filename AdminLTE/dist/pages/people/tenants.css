@@ -28,36 +28,14 @@
   padding:0 6px;
   border-radius: 5px;
 }
-
- .summary-item{
-  background-color: white;
-padding-left: 2px;
-/* border-left:5px solid #F28B88; */
- box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
- border-radius: 5px;
- display: flex;
- justify-content: space-between;
- background-color: white;
- }
-
-.summary-item-container .icon{
-  color: #FFC107;
-  font-weight: 600;
-  font-size: 16px;
-}
-.summary-item-container .label{
-  font-weight: 600;
-  font-size: 16px;
-  color: #767676;
-}
-
-.summary-item-container .inactive{
-  background-color: #F87171	;
+.summary-card_value.inactive{
+  background-color: #F87171;
   color: white;
   border: none;
   padding:0 6px;
   border-radius: 5px;
 }
+
 /* GENERAL STYLES */
 .contact_section_header.summary{
   border-bottom: 1px solid rgba(128, 128, 128, 0.5);
@@ -299,12 +277,11 @@ main.fade-out {
      border-radius: 4px;
     font-size: 14px;
   }
+
   .status.completed {
     background-color: #2e7d32; /* Light green */
-
     color: white;
     border: none;
-
   }
   /* General Styling for Summary Items */
 

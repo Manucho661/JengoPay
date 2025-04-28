@@ -30,8 +30,11 @@ main{
      margin-right: 2px;
 }
 .active{
-  color: green;
- background-color: rgba(128,128,128,0.2);
+ 
+ background-color: #2e7d32; /* Light green */
+
+ color: white;
+ border: none;
  height: fit-content;
  padding: 0 4px;
  border-radius: 5px;
