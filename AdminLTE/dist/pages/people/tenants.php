@@ -4,8 +4,6 @@
 ?>
 
 <?php
-
-
   // Fetch tenants with their user details
   $sql = "SELECT
               users.id,
@@ -38,7 +36,7 @@
             }
 
 
-  
+
 ?>
 <!doctype html>
 <html lang="en">
