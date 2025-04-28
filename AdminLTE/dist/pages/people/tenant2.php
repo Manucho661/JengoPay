@@ -21,15 +21,15 @@
           INNER JOIN users ON tenants.user_id = users.id";
 
   $stmt = $pdo->query($sql);
-  $tenantsy = $stmt->fetchAll();
+  $tenants = $stmt->fetchAll();
 
 
  // Tenants Count
-            $count = count($tenantsy);
+            $count = count($tenants);
             $activeTenantsCount  = 0;
             $inactiveTenantsCount = 0;
 
-            foreach ($tenantsy as $tenant) {
+            foreach ($tenants as $tenant) {
                 if (strtolower($tenant['status']) === 'active') {
                     $activeTenantsCount++;
                 } else {
@@ -498,7 +498,7 @@
 
                     </div>
 
-                    <table class="table table-hover" id="users-table">
+                    <table class="table table-hover" id="maintenance">
                         <thead class="thead bg-gradient" >
                             <tr>
 
@@ -514,6 +514,44 @@
 
                           <tbody>
 
+                          <?php if (!empty($tenants)) : ?>
+                            <?php foreach ($tenants as $tenant) : ?>
+
+                              <tr  onclick="goToDetails(<?= $tenant['user_id'];?>)">
+                                <td> <?= htmlspecialchars($tenant['name']) ?> </td>
+                                <td> <?= htmlspecialchars($tenant['id_no']) ?></td>
+                                <td>
+                                  <div>  <?= htmlspecialchars($tenant['residence']) ?>  </div>
+                                  <div style="color: green;"><?= htmlspecialchars($tenant['unit']) ?></div>
+
+                                </td>
+                                <!-- <td><button onclick="toggleOverlay()">Paid</button></td> -->
+                                <td>
+                                  <div class="phone"> <i class="fas fa-phone icon"></i> <?= htmlspecialchars($tenant['phone_number']) ?></div>
+                                  <div class="email"><i class="fa fa-envelope icon"></i> <?= htmlspecialchars($tenant['email']) ?></div>
+
+                                </td>
+                                <td> <button class="status completed"><i class="fa fa-check-circle"></i> Active </button>  </td>
+
+                                <td>
+                                <button onclick="handleDelete(event, <?= $tenant['user_id'];?>, 'users');"
+                                          class="btn btn-sm"
+                                          style="background-color: #00192D; color:white">
+                                    <i class="fa fa-arrow-right" data-toggle="tooltip" title="Vacant Edwin from the House"></i>
+                                  </button>
+
+                                  <button class="btn btn-sm" style="background-color: #AF2A28; color:#fff;"> <i class="fa fa-comment" data-toggle="tooltip" title="Send Paul Pashan an SMS"></i></button>
+                                  <button style="background-color: #F74B00; color:#fff;" class="btn btn-sm" data-toggle="tooltip" title="Send Paul Pashan Email"><i class="fa fa-envelope"></i> </button>
+                                </td>
+                              </tr>
+
+                            <?php endforeach; ?>
+                          <?php else : ?>
+
+                              <tr>
+                                <td colspan="8">No tenants found.</td>
+                              </tr>
+                          <?php endif; ?>
 
                           </tbody>
                     </table>
@@ -692,7 +730,15 @@
     <script>
 
             document.addEventListener("DOMContentLoaded", function() {
+            let table = $('#maintenanc').DataTable({
+                lengthChange: false, // Removes "Show [X] entries"
+                dom: 't<"bottom"p>', // Removes default search bar & keeps only table + pagination
+            });
 
+            // Link custom search box to DataTables search
+            $('#searchInput').on('keyup', function () {
+                table.search(this.value).draw();
+            });
 
         });
     </script>
@@ -712,76 +758,25 @@
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
 
 
-<script>
 
-document.addEventListener('DOMContentLoaded', function () {
-  fetch('../actions/fetch_records.php')
-        .then(response => response.json())
-        .then(data => {
-            const tableBody = document.querySelector('#users-table tbody');
-
-            data.forEach(user => {
-                const row = document.createElement('tr');
-
-                row.innerHTML = `
-                    <td>${user.name}</td>
-                    <td>${user.id_no}</td>
-                    <td> <div> ${user.residence}</div>
-                    <div style="color: green;" > ${user.unit}</div>
-
-                     </td>
-                    <td>
-                    <div class="phone" >  <i class="fas fa-phone icon"></i> ${user.phone_number} </div>
-                     <div class="email" > <i class="fa fa-envelope icon"></i> ${user.email} </div>
-                   </td>
-                    <td> <button class="status completed"><i class="fa fa-check-circle"></i> Active </button> </td>
-                    <td>
-                        <button onclick="handleDelete(event, ${user.user_id}, 'users');"
-                          class="btn btn-sm"
-                          style="background-color: #00192D; color:white">
-                          <i class="fa fa-arrow-right" data-toggle="tooltip" title="Vacate User"></i>
-                        </button>
-
-                        <button class="btn btn-sm" style="background-color: #AF2A28; color:#fff;">
-                          <i class="fa fa-comment" data-toggle="tooltip" title="Send SMS"></i>
-                        </button>
-
-                        <button style="background-color: #F74B00; color:#fff;" class="btn btn-sm" data-toggle="tooltip" title="Send Email">
-                          <i class="fa fa-envelope"></i>
-                        </button>
-                    </td>
-                `;
-
-                tableBody.appendChild(row);
-            });
-
-// Initialize dataTable
-            $(document).ready(function () {
-            const table = $('#users-table').DataTable({
-              dom: 'rtip', // No default buttons or search
-              buttons: ['excel', 'pdf']
-            });
-
-            // Append buttons to our div
-            table.buttons().container().appendTo('#custom-buttons');
-
-            // Custom search input control
-            $('#searchInput').on('keyup', function () {
-              table.search(this.value).draw();
-          });
-        });
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-        });
-});
-
-</script>
 
 
 
     <script>
+    $(document).ready(function () {
+      const table = $('#maintenance').DataTable({
+        dom: 'rtip', // No default buttons or search
+        buttons: ['excel', 'pdf']
+      });
 
+      // Append buttons to our div
+      table.buttons().container().appendTo('#custom-buttons');
+
+      // Custom search input control
+      $('#searchInput').on('keyup', function () {
+        table.search(this.value).draw();
+      });
+    });
     </script>
 
 
@@ -990,4 +985,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   </body>
 </html>
+
+
+
 
