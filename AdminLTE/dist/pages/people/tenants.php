@@ -5,7 +5,7 @@
 
 <?php
 try {
-  $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+  $conn = new PDO("mysql:host=$host;dbname=$db");
   $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
   // Fetch tenants with their user details
