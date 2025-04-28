@@ -2,7 +2,7 @@
 include '../db/connect.php'; // Make sure this defines $conn for mysqli
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  
+
   $building_id = isset($_GET['building_id']) ? $_GET['building_id'] : null;
 
     // Prepare SQL statement to insert data into units table
@@ -32,14 +32,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo "Error: " . $stmt->error;
     }
-
     // Close the prepared statement and connection
-    $stmt->close();
-    $conn->close();
+    // $stmt->close();
+    // $conn->close();
 } else {
     //  echo "Form not submitted.";
 }
-
 
 // Fetch the data from the database using $conn
 $sql = "SELECT building_id, building_name, building_type FROM buildings";
@@ -52,7 +50,6 @@ if ($result->num_rows > 0) {
     // Handle the case where no data is returned (optional)
     echo "No records found.";
 }
-
 
 
 ?>

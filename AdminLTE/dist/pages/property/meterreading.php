@@ -9,9 +9,11 @@ if (isset($_GET['building_id'])) {
     $buildingId = intval($_GET['building_id']); // Get the building ID from the URL
 
     // Prepare the query to fetch building data based on the 'id'
-    $stmt = $conn->prepare("SELECT * FROM buildings WHERE building_id = ?");
-    $stmt->bind_param("i", $buildingId);
-    $stmt->execute();
+$stmt = $conn->prepare("SELECT * FROM meter_readings WHERE id = :unitId");
+$stmt->bindValue(':unitId', $unitId, PDO::PARAM_INT);
+$stmt->execute();
+$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
     // Get the result
     $result = $stmt->get_result();
@@ -62,7 +64,7 @@ $building_id = isset($_GET['building_id']) ? $_GET['building_id'] : null;
 if ($building_id) {
     // Prepare the query to fetch units for a specific building
     $stmt = $conn->prepare("SELECT u.unit_number FROM units u WHERE u.building_id = ?");
-    
+
     // Check if preparation was successful
     if ($stmt === false) {
         die("Error preparing statement: " . $conn->error);
