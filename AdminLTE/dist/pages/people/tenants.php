@@ -4,9 +4,7 @@
 ?>
 
 <?php
-try {
-  $conn = new PDO("mysql:host=$host;dbname=$db");
-  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
 
   // Fetch tenants with their user details
   $sql = "SELECT
@@ -22,7 +20,7 @@ try {
           FROM tenants
           INNER JOIN users ON tenants.user_id = users.id";
 
-  $stmt = $conn->query($sql);
+  $stmt = $pdo->query($sql);
   $tenants = $stmt->fetchAll();
 
 
@@ -40,9 +38,7 @@ try {
             }
 
 
-  } catch (PDOException $e) {
-    echo "❌ Error: " . $e->getMessage();
-  }
+  
 ?>
 <!doctype html>
 <html lang="en">
