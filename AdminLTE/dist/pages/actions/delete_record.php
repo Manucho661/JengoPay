@@ -14,7 +14,7 @@
     try {
         switch ($type) {
             case 'users':
-                $stmt = $conn->prepare("DELETE FROM users WHERE id = :id");
+                $stmt = $pdo->prepare("DELETE FROM users WHERE id = :id");
                 break;
             case 'property':
                 $stmt = $pdo->prepare("DELETE FROM properties WHERE property_id = :id");
