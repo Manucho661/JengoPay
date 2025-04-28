@@ -739,6 +739,7 @@
             $('#searchInput').on('keyup', function () {
                 table.search(this.value).draw();
             });
+            
         });
     </script>
 
@@ -835,64 +836,64 @@
 
 
     <!-- SELECT ELEMENT SCRIPT -->
-
     <script>
-      document.querySelectorAll('.select-option-container').forEach(container => {
-          const select = container.querySelector('.custom-select');
-          const optionsContainer = container.querySelector('.select-options');
-          const options = optionsContainer.querySelectorAll('div');
+        document.querySelectorAll('.select-option-container').forEach(container => {
+            const select = container.querySelector('.custom-select');
+            const optionsContainer = container.querySelector('.select-options');
+            const options = optionsContainer.querySelectorAll('div');
 
-          // Toggle dropdown on select click
-          select.addEventListener('click', () => {
-            const isOpen = optionsContainer.style.display === 'block';
+            // Toggle dropdown on select click
+            select.addEventListener('click', () => {
+              const isOpen = optionsContainer.style.display === 'block';
 
-            // Close all other dropdowns before opening a new one
-            document.querySelectorAll('.select-options').forEach(opt => opt.style.display = 'none');
-            document.querySelectorAll('.custom-select').forEach(sel => {
-              sel.classList.remove('open');
+              // Close all other dropdowns before opening a new one
+              document.querySelectorAll('.select-options').forEach(opt => opt.style.display = 'none');
+              document.querySelectorAll('.custom-select').forEach(sel => {
+                sel.classList.remove('open');
 
+              });
+
+              // Toggle current dropdown
+              optionsContainer.style.display = isOpen ? 'none' : 'block';
+              select.classList.toggle('open', !isOpen);
             });
 
-            // Toggle current dropdown
-            optionsContainer.style.display = isOpen ? 'none' : 'block';
-            select.classList.toggle('open', !isOpen);
+            // Option click handler
+            options.forEach(option => {
+              option.addEventListener('click', () => {
+                select.textContent = option.textContent;
+                select.setAttribute('data-value', option.getAttribute('data-value'));
+
+                options.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+
+                optionsContainer.style.display = 'none';
+                select.classList.remove('open');
+              });
+
+              option.addEventListener('mouseenter', () => {
+                options.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+              });
+
+            });
           });
 
-          // Option click handler
-          options.forEach(option => {
-            option.addEventListener('click', () => {
-              select.textContent = option.textContent;
-              select.setAttribute('data-value', option.getAttribute('data-value'));
-
-              options.forEach(opt => opt.classList.remove('selected'));
-              option.classList.add('selected');
-
-              optionsContainer.style.display = 'none';
-              select.classList.remove('open');
-            });
-
-            option.addEventListener('mouseenter', () => {
-              options.forEach(opt => opt.classList.remove('selected'));
-              option.classList.add('selected');
-            });
-
+          // Close dropdowns on outside click
+          document.addEventListener('click', (e) => {
+            if (!e.target.closest('.select-option-container')) {
+              document.querySelectorAll('.select-options').forEach(opt => opt.style.display = 'none');
+              document.querySelectorAll('.custom-select').forEach(sel => {
+                sel.classList.remove('open');
+                sel.style.borderRadius = '5px';
+              });
+            }
           });
-        });
-
-        // Close dropdowns on outside click
-        document.addEventListener('click', (e) => {
-          if (!e.target.closest('.select-option-container')) {
-            document.querySelectorAll('.select-options').forEach(opt => opt.style.display = 'none');
-            document.querySelectorAll('.custom-select').forEach(sel => {
-              sel.classList.remove('open');
-              sel.style.borderRadius = '5px';
-            });
-          }
-        });
-
       </script>
         <!--end::Script-->
 
+
+    <!-- DELETE TENANT -->
     <script>
       function handleDelete(event, id, type) {
         event.stopPropagation(); // Stop the row or parent element click
@@ -913,45 +914,39 @@
       }
 
       }
-
     </script>
 
+    <!-- ADD TENANT TO DB -->
+    <script>
+      function submitTenantForm(event) {
+        event.preventDefault(); // Prevent the form from submitting normally
 
-<script>
+        // Create FormData object from the form
+        const formData = new FormData(document.getElementById("tenantForm"));
+        formData.append("type", "tenant"); // Add the type for tenant
 
-function submitTenantForm(event) {
-  event.preventDefault(); // Prevent the form from submitting normally
+        // Send data via fetch
+        fetch("../actions/add_record.php", {
+          method: "POST",
+          body: new URLSearchParams(formData)
+        })
+        .then(res => res.text())
+        .then(data => {
+          alert(data); // Display success message or error from server
+          location.reload(); // Reload the page to reflect changes (optional)
+        })
+        .catch(err => console.error(err));
+      }
+    </script>
 
-  // Create FormData object from the form
-  const formData = new FormData(document.getElementById("tenantForm"));
-  formData.append("type", "tenant"); // Add the type for tenant
+    <!-- OPEN TENANT PAGE -->
+    <script>
+      function goToDetails(userId) {
+        window.location.href = `../people/tenant-profile.php?id=${userId}`;
+      }
+    </script>
 
-  // Send data via fetch
-  fetch("../actions/add_record.php", {
-    method: "POST",
-    body: new URLSearchParams(formData)
-  })
-  .then(res => res.text())
-  .then(data => {
-    alert(data); // Display success message or error from server
-    location.reload(); // Reload the page to reflect changes (optional)
-  })
-  .catch(err => console.error(err));
-}
-
-</script>
-
-
-        <!-- Tenant Page -->
-        <script>
-          function goToDetails(userId) {
-            window.location.href = `../people/tenant-profile.php?id=${userId}`;
-          }
-        </script>
-
-
-
-    <!-- Loading out and in script -->
+    <!-- SMOOTH LOADING IN AND OUT -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         // Fade in effect on page load
@@ -984,13 +979,11 @@ function submitTenantForm(event) {
           });
         });
       });
+    </script>
 
     </script>
 
-
-
   </body>
-  <!--end::Body-->
 </html>
 
 
