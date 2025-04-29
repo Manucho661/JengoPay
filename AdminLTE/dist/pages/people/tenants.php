@@ -464,7 +464,7 @@
               <!-- Start col -->
               <div class="col-md-12 details">
                 <div class="details-container bg-white p-2 rounded">
-                   <h3 class="details-container_header text-start">All Tenants &nbsp;	|&nbsp;	 <span style="color:#FFC107">3 Enteries</span></h3>
+                   <h3 class="details-container_header text-start">All Tenants &nbsp;	|&nbsp;	 <span style="color:#FFC107">3 enteries</span></h3>
                    <div class="table-responsive">
                     <div id="top-bar" class="filter-pdf-excel mb-2">
                       <div class="d-flex" style="gap: 10px;">
@@ -472,7 +472,7 @@
                           <div class="custom-select">All Buildings</div>
                           <div class="select-options mt-1">
                             <div class="selected" data-value="item1">All Buildings</div>
-                            <div data-value="item1">Manucho</div>
+                            <div data-value="Manucho">Manucho</div>
                             <div data-value="item2">Ebenezer</div>
                             <div data-value="item3">Crown Z</div>
                           </div>
@@ -623,6 +623,8 @@
             </div>
           </div>
 
+          <script src="tenants.js"></script>
+
 
                                            <!-- PLUGINS -->
 
@@ -649,45 +651,8 @@
     <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
 
 
-      <!-- Scripts For PopUps -->
-        <script>
-          // Function to open the complaint popup
-          function openshiftPopup() {
-            document.getElementById("shiftPopup").style.display = "flex";
-          }
-
-          // Function to close the complaint popup
-          function closeshiftPopup() {
-            document.getElementById("shiftPopup").style.display = "none";
-          }
-        </script>
-
-        <script>
-          // Function to open the complaint popup
-          function opennotificationPopup() {
-            document.getElementById("notificationPopup").style.display = "flex";
-          }
-
-          // Function to close the complaint popup
-          function closenotificationPopup() {
-            document.getElementById("notificationPopup").style.display = "none";
-          }
-        </script>
-
-        <script>
-          // Function to open the complaint popup
-          function openPopup() {
-            document.getElementById("addTenantModal").style.display = "flex";
-          }
-
-          // Function to close the complaint popup
-          function closePopup() {
-            document.getElementById("addTenantModal").style.display = "none";
-          }
-        </script>
-
-    <!--End Scripts For PopUps -->
-
+      
+    
     <!-- Script for datatable -->
     <script>
 
@@ -710,80 +675,6 @@
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
-
-
-  <script>
-
-    document.addEventListener('DOMContentLoaded', function () {
-     fetch('../actions/fetch_records.php')
-        .then(response => response.json())
-        .then(data => {
-            const tableBody = document.querySelector('#users-table tbody');
-
-            data.forEach(user => {
-                const row = document.createElement('tr');
-
-                row.innerHTML = `
-                    <td>${user.name}</td>
-                    <td>${user.id_no}</td>
-                    <td> <div> ${user.residence}</div>
-                    <div style="color: green;" > ${user.unit}</div>
-
-                     </td>
-                    <td>
-                    <div class="phone" >  <i class="fas fa-phone icon"></i> ${user.phone_number} </div>
-                     <div class="email" > <i class="fa fa-envelope icon"></i> ${user.email} </div>
-                   </td>
-                    <td> <button class="status completed"><i class="fa fa-check-circle"></i> Active </button> </td>
-                    <td>
-                        <button onclick="handleDelete(event, ${user.user_id}, 'users');"
-                          class="btn btn-sm"
-                          style="background-color: #00192D; color:white">
-                          <i class="fa fa-arrow-right" data-toggle="tooltip" title="Vacate User"></i>
-                        </button>
-
-                        <button class="btn btn-sm" style="background-color: #AF2A28; color:#fff;">
-                          <i class="fa fa-comment" data-toggle="tooltip" title="Send SMS"></i>
-                        </button>
-
-                        <button style="background-color: #F74B00; color:#fff;" class="btn btn-sm" data-toggle="tooltip" title="Send Email">
-                          <i class="fa fa-envelope"></i>
-                        </button>
-                    </td>
-                `;
-
-                tableBody.appendChild(row);
-            });
-
-            // Initialize dataTable
-            $(document).ready(function () {
-            const table = $('#users-table').DataTable({
-              dom: 'rtip', // No default buttons or search
-              buttons: ['excel', 'pdf']
-            });
-
-            // Append buttons to our div
-            table.buttons().container().appendTo('#custom-buttons');
-
-            // Custom search input control
-            $('#searchInput').on('keyup', function () {
-              table.search(this.value).draw();
-          });
-        });
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-        });
-     });
-
-    </script>
-
-
-
-    <script>
-
-    </script>
-
 
     </script>
     <!-- End script for data_table -->
@@ -839,111 +730,6 @@
     ></script>
 
 
-
-    <!-- SELECT ELEMENT SCRIPT -->
-    <script>
-        document.querySelectorAll('.select-option-container').forEach(container => {
-            const select = container.querySelector('.custom-select');
-            const optionsContainer = container.querySelector('.select-options');
-            const options = optionsContainer.querySelectorAll('div');
-
-            // Toggle dropdown on select click
-            select.addEventListener('click', () => {
-              const isOpen = optionsContainer.style.display === 'block';
-
-              // Close all other dropdowns before opening a new one
-              document.querySelectorAll('.select-options').forEach(opt => opt.style.display = 'none');
-              document.querySelectorAll('.custom-select').forEach(sel => {
-                sel.classList.remove('open');
-
-              });
-
-              // Toggle current dropdown
-              optionsContainer.style.display = isOpen ? 'none' : 'block';
-              select.classList.toggle('open', !isOpen);
-            });
-
-            // Option click handler
-            options.forEach(option => {
-              option.addEventListener('click', () => {
-                select.textContent = option.textContent;
-                select.setAttribute('data-value', option.getAttribute('data-value'));
-
-                options.forEach(opt => opt.classList.remove('selected'));
-                option.classList.add('selected');
-
-                optionsContainer.style.display = 'none';
-                select.classList.remove('open');
-              });
-
-              option.addEventListener('mouseenter', () => {
-                options.forEach(opt => opt.classList.remove('selected'));
-                option.classList.add('selected');
-              });
-
-            });
-          });
-
-          // Close dropdowns on outside click
-          document.addEventListener('click', (e) => {
-            if (!e.target.closest('.select-option-container')) {
-              document.querySelectorAll('.select-options').forEach(opt => opt.style.display = 'none');
-              document.querySelectorAll('.custom-select').forEach(sel => {
-                sel.classList.remove('open');
-                sel.style.borderRadius = '5px';
-              });
-            }
-          });
-      </script>
-        <!--end::Script-->
-
-
-    <!-- DELETE TENANT -->
-    <script>
-      function handleDelete(event, id, type) {
-        event.stopPropagation(); // Stop the row or parent element click
-        if (confirm("Are you sure?")) {
-        fetch('../actions/delete_record.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: 'id=' + encodeURIComponent(id) + '&type=' + encodeURIComponent(type)
-        })
-        .then(res => res.text())
-        .then(data => {
-          alert(data);
-          location.reload();
-        })
-        .catch(err => console.error(err));
-      }
-
-      }
-    </script>
-
-    <!-- ADD TENANT TO DB -->
-    <script>
-      function submitTenantForm(event) {
-        event.preventDefault(); // Prevent the form from submitting normally
-
-        // Create FormData object from the form
-        const formData = new FormData(document.getElementById("tenantForm"));
-        formData.append("type", "tenant"); // Add the type for tenant
-
-        // Send data via fetch
-        fetch("../actions/add_record.php", {
-          method: "POST",
-          body: new URLSearchParams(formData)
-        })
-        .then(res => res.text())
-        .then(data => {
-          alert(data); // Display success message or error from server
-          location.reload(); // Reload the page to reflect changes (optional)
-        })
-        .catch(err => console.error(err));
-      }
-    </script>
-
     <!-- OPEN TENANT PAGE -->
     <script>
       function goToDetails(userId) {
@@ -951,42 +737,14 @@
       }
     </script>
 
-    <!-- SMOOTH LOADING IN AND OUT -->
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        // Fade in effect on page load
-        const mainElement = document.getElementById("mainElement");
-
-        if (mainElement) {
-          mainElement.classList.remove("fade-out");
-        }
-
-        function navigateWithTransition(url) {
-        NProgress.start();                             // Start progress bar
-        mainElement.classList.add("fade-out");         // Fade out the main content
-
-        setTimeout(() => {
-          window.location.href = url;                  // Navigate after fade
-        }, 500); // Matches the CSS transition time
-      }
-
-
-        // Intercept link clicks
-        document.querySelectorAll("a").forEach(link => {
-          link.addEventListener("click", function (e) {
-            const target = this.getAttribute("target");
-            const href = this.getAttribute("href");
-
-            if (!target || target === "_self") {
-              e.preventDefault();
-              navigateWithTransition(href);
-            }
-          });
-        });
-      });
-    </script>
+    
 
     </script>
+
+
+
+  </script>
+
 
   </body>
 </html>

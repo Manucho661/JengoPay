@@ -1,4 +1,5 @@
 
+// FETCH TENANTS
 document.addEventListener('DOMContentLoaded', function (){
   fetchTenants('all');
 
@@ -63,7 +64,11 @@ document.addEventListener('DOMContentLoaded', function (){
 // fetch tenants function
 
 function fetchTenants(building) {
+
+  const tableBody = document.querySelector('#users-table tbody');
+  tableBody.innerHTML = '<tr><td colspan="6"><div class="loader"></div></td></tr>'; // 🟡 Show loading
   fetch('../actions/fetch_records.php?building=' + encodeURIComponent(building))
+  
       .then(response => response.json())
       .then(data => {
           const tableBody = document.querySelector('#users-table tbody');
@@ -106,10 +111,134 @@ function fetchTenants(building) {
           });
 
           // After inserting rows, reinitialize DataTable
-          $('#users-table').DataTable();
+          $(document).ready(function () {
+            const table = $('#users-table').DataTable({
+              dom: 'rtip', // No default buttons or search
+              buttons: ['excel', 'pdf']
+            });
+
+            // Append buttons to our div
+            table.buttons().container().appendTo('#custom-buttons');
+
+            // Custom search input control
+            $('#searchInput').on('keyup', function () {
+              table.search(this.value).draw();
+          });
+        });
       })
       .catch(error => {
           console.error('Error fetching data:', error);
       });
 }
 });
+
+
+// DELETE TENANT 
+    
+      function handleDelete(event, id, type) {
+        event.stopPropagation(); // Stop the row or parent element click
+        if (confirm("Are you sure?")) {
+        fetch('../actions/delete_record.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: 'id=' + encodeURIComponent(id) + '&type=' + encodeURIComponent(type)
+        })
+        .then(res => res.text())
+        .then(data => {
+          alert(data);
+          location.reload();
+        })
+        .catch(err => console.error(err));
+      }
+
+      }
+
+
+      // ADD TENANT TO DB     
+        function submitTenantForm(event) {
+          event.preventDefault(); // Prevent the form from submitting normally
+  
+          // Create FormData object from the form
+          const formData = new FormData(document.getElementById("tenantForm"));
+          formData.append("type", "tenant"); // Add the type for tenant
+  
+          // Send data via fetch
+          fetch("../actions/add_record.php", {
+            method: "POST",
+            body: new URLSearchParams(formData)
+          })
+          .then(res => res.text())
+          .then(data => {
+            alert(data); // Display success message or error from server
+            location.reload(); // Reload the page to reflect changes (optional)
+          })
+          .catch(err => console.error(err));
+        }
+      
+
+    // POPUPS
+    // Function to open the complaint popup
+    function openshiftPopup() {
+      document.getElementById("shiftPopup").style.display = "flex";
+    }
+
+    // Function to close the complaint popup
+    function closeshiftPopup() {
+      document.getElementById("shiftPopup").style.display = "none";
+    }
+
+    // Function to open the complaint popup
+    function opennotificationPopup() {
+      document.getElementById("notificationPopup").style.display = "flex";
+    }
+
+    // Function to close the complaint popup
+    function closenotificationPopup() {
+      document.getElementById("notificationPopup").style.display = "none";
+    }
+
+    // Function to open the complaint popup
+    function openPopup() {
+      document.getElementById("addTenantModal").style.display = "flex";
+    }
+
+    // Function to close the complaint popup
+    function closePopup() {
+      document.getElementById("addTenantModal").style.display = "none";
+    }
+
+    //  SMOOTH LOADING IN AND OUT 
+      document.addEventListener("DOMContentLoaded", () => {
+        // Fade in effect on page load
+        const mainElement = document.getElementById("mainElement");
+
+        if (mainElement) {
+          mainElement.classList.remove("fade-out");
+        }
+
+        function navigateWithTransition(url) {
+        NProgress.start();                             // Start progress bar
+        mainElement.classList.add("fade-out");         // Fade out the main content
+
+        setTimeout(() => {
+          window.location.href = url;                  // Navigate after fade
+        }, 500); // Matches the CSS transition time
+      }
+
+
+        // Intercept link clicks
+        document.querySelectorAll("a").forEach(link => {
+          link.addEventListener("click", function (e) {
+            const target = this.getAttribute("target");
+            const href = this.getAttribute("href");
+
+            if (!target || target === "_self") {
+              e.preventDefault();
+              navigateWithTransition(href);
+            }
+          });
+        });
+      });
+    
