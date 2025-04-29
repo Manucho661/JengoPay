@@ -5,23 +5,25 @@
 header('Content-Type: application/json');
 
 
-$sql = "SELECT
-users.id,
-users.name,
-users.email,
-tenants.phone_number,
-tenants.user_id,
-tenants.residence,
-tenants.id_no,
-tenants.unit,
-tenants.status
-FROM tenants
-INNER JOIN users ON tenants.user_id = users.id";
+$building = isset($_GET['building']) ? $_GET['building'] : 'all';
 
-$stmt = $pdo->query($sql);
-$tenants = $stmt->fetchAll(PDO::FETCH_ASSOC); // IMPORTANT: Fetch as Associative Array
+if ($building === 'all') {
+    $sql = "SELECT users.id, users.name, users.email, tenants.phone_number, tenants.user_id, tenants.residence, tenants.id_no, tenants.unit, tenants.status
+            FROM tenants
+            INNER JOIN users ON tenants.user_id = users.id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+} else {
+    $sql = "SELECT users.id, users.name, users.email, tenants.phone_number, tenants.user_id, tenants.residence, tenants.id_no, tenants.unit, tenants.status
+            FROM tenants
+            INNER JOIN users ON tenants.user_id = users.id
+            WHERE tenants.residence = :building";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['building' => $building]);
+}
 
-    echo json_encode($tenants);
+$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+echo json_encode($results);
 
 ?>

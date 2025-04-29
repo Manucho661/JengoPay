@@ -472,7 +472,7 @@
                           <div class="custom-select">All Buildings</div>
                           <div class="select-options mt-1">
                             <div class="selected" data-value="item1">All Buildings</div>
-                            <div data-value="item1">Manucho</div>
+                            <div data-value="Manucho">Manucho</div>
                             <div data-value="item2">Ebenezer</div>
                             <div data-value="item3">Crown Z</div>
                           </div>
@@ -623,6 +623,8 @@
             </div>
           </div>
 
+          <script src="tenants.js"></script>
+
 
                                            <!-- PLUGINS -->
 
@@ -712,77 +714,13 @@
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
 
 
-  <script>
-
-    document.addEventListener('DOMContentLoaded', function () {
-     fetch('../actions/fetch_records.php')
-        .then(response => response.json())
-        .then(data => {
-            const tableBody = document.querySelector('#users-table tbody');
-
-            data.forEach(user => {
-                const row = document.createElement('tr');
-
-                row.innerHTML = `
-                    <td>${user.name}</td>
-                    <td>${user.id_no}</td>
-                    <td> <div> ${user.residence}</div>
-                    <div style="color: green;" > ${user.unit}</div>
-
-                     </td>
-                    <td>
-                    <div class="phone" >  <i class="fas fa-phone icon"></i> ${user.phone_number} </div>
-                     <div class="email" > <i class="fa fa-envelope icon"></i> ${user.email} </div>
-                   </td>
-                    <td> <button class="status completed"><i class="fa fa-check-circle"></i> Active </button> </td>
-                    <td>
-                        <button onclick="handleDelete(event, ${user.user_id}, 'users');"
-                          class="btn btn-sm"
-                          style="background-color: #00192D; color:white">
-                          <i class="fa fa-arrow-right" data-toggle="tooltip" title="Vacate User"></i>
-                        </button>
-
-                        <button class="btn btn-sm" style="background-color: #AF2A28; color:#fff;">
-                          <i class="fa fa-comment" data-toggle="tooltip" title="Send SMS"></i>
-                        </button>
-
-                        <button style="background-color: #F74B00; color:#fff;" class="btn btn-sm" data-toggle="tooltip" title="Send Email">
-                          <i class="fa fa-envelope"></i>
-                        </button>
-                    </td>
-                `;
-
-                tableBody.appendChild(row);
-            });
-
-            // Initialize dataTable
-            $(document).ready(function () {
-            const table = $('#users-table').DataTable({
-              dom: 'rtip', // No default buttons or search
-              buttons: ['excel', 'pdf']
-            });
-
-            // Append buttons to our div
-            table.buttons().container().appendTo('#custom-buttons');
-
-            // Custom search input control
-            $('#searchInput').on('keyup', function () {
-              table.search(this.value).draw();
-          });
-        });
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-        });
-     });
-
-    </script>
 
 
 
-    <script>
 
-    </script>
+
+
+
 
 
     </script>
@@ -840,62 +778,7 @@
 
 
 
-    <!-- SELECT ELEMENT SCRIPT -->
-    <script>
-        document.querySelectorAll('.select-option-container').forEach(container => {
-            const select = container.querySelector('.custom-select');
-            const optionsContainer = container.querySelector('.select-options');
-            const options = optionsContainer.querySelectorAll('div');
 
-            // Toggle dropdown on select click
-            select.addEventListener('click', () => {
-              const isOpen = optionsContainer.style.display === 'block';
-
-              // Close all other dropdowns before opening a new one
-              document.querySelectorAll('.select-options').forEach(opt => opt.style.display = 'none');
-              document.querySelectorAll('.custom-select').forEach(sel => {
-                sel.classList.remove('open');
-
-              });
-
-              // Toggle current dropdown
-              optionsContainer.style.display = isOpen ? 'none' : 'block';
-              select.classList.toggle('open', !isOpen);
-            });
-
-            // Option click handler
-            options.forEach(option => {
-              option.addEventListener('click', () => {
-                select.textContent = option.textContent;
-                select.setAttribute('data-value', option.getAttribute('data-value'));
-
-                options.forEach(opt => opt.classList.remove('selected'));
-                option.classList.add('selected');
-
-                optionsContainer.style.display = 'none';
-                select.classList.remove('open');
-              });
-
-              option.addEventListener('mouseenter', () => {
-                options.forEach(opt => opt.classList.remove('selected'));
-                option.classList.add('selected');
-              });
-
-            });
-          });
-
-          // Close dropdowns on outside click
-          document.addEventListener('click', (e) => {
-            if (!e.target.closest('.select-option-container')) {
-              document.querySelectorAll('.select-options').forEach(opt => opt.style.display = 'none');
-              document.querySelectorAll('.custom-select').forEach(sel => {
-                sel.classList.remove('open');
-                sel.style.borderRadius = '5px';
-              });
-            }
-          });
-      </script>
-        <!--end::Script-->
 
 
     <!-- DELETE TENANT -->
@@ -987,6 +870,11 @@
     </script>
 
     </script>
+
+
+
+  </script>
+
 
   </body>
 </html>
