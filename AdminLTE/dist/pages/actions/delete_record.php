@@ -1,11 +1,10 @@
 <?php
  include '../db/connect.php';
 
-
  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = isset($_POST['id']) ? (int)$_POST['id'] : null;
     $type = isset($_POST['type']) ? $_POST['type'] : null;
-    // $building_id = isset($_POST['building_id']) ? (int)$_POST['building_id'] : null;
+
 
 
     if (!$id || !$type) {
@@ -25,9 +24,12 @@
                 $stmt = $pdo->prepare("DELETE FROM maintenance_requests WHERE request_id = :id");
                 break;
 
-                case 'building':
-                  $stmt = $pdo->prepare("DELETE FROM buildings WHERE building_id = :id");
-                  break;
+           case 'building':
+                // First delete related units (and other child data, if any)
+                $pdo->prepare("DELETE FROM units WHERE building_id = :id")->execute(['id' => $id]);
+                // Then delete the building
+                $stmt = $pdo->prepare("DELETE FROM buildings WHERE building_id = :id");
+                break;
 
 
             default:

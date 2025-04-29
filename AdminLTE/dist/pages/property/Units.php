@@ -396,23 +396,24 @@ if (isset($_GET['building_id'])) {
 
             <div class="col-sm-8">
               <div class="">
-                <h3 class="mb-0 contact_section_header"> <i class="fas fa-home icon"></i> <?php echo htmlspecialchars($building['building_name']); ?>
-                <!-- <span>,Units</span> </h3> -->
-                <h6 class="property-type"><b><?php echo htmlspecialchars($building['building_type']); ?></b></h6>
+                <h3 style="color:#FFC107;" class="mb-0 contact_section_header">
+                   <b>  <i class="fas fa-home icon"></i><?php echo htmlspecialchars($building['building_name']); ?></b>
+                </h3>
+                <h6  style="color:#193042;" class="property-type"><b><?php echo htmlspecialchars($building['building_type']); ?></b></h6>
               </div>
             </div>
 
 
             <!-- start row -->
             <div class="row mt-3 personal-info">
-              <h6 class="mb-0 contact_section_header mb-2"> </i> Basic Info</h6>
+              <h6 style="color:black;" class="mb-0 contact_section_header mb-2"> </i> Basic Info</h6>
           <div class="col-md-12">
           <div class="row">
   <div class="col-md-3">
     <div class="personal-item d-flex justify-content-between bg-white">
       <div class="category-number p-2" style="display: flex; gap: 5px; align-items: center;">
-        <div class="category"><i class="fas fa-briefcase personal-info-icon"></i> <span class="personal-info item-name"> Location,</span> </div>
-        <div class="number"><b><?php echo htmlspecialchars($building['county']); ?></b></div>
+        <div class="category"><i class="fas fa-briefcase personal-info-icon"></i> <span style="color:#193042;" class="personal-info item-name"> Location,</span> </div>
+        <div  style="color:#FFC107;"  class="number"><b><?php echo htmlspecialchars($building['county']); ?></b></div>
       </div>
     </div>
   </div>
@@ -443,8 +444,8 @@ if (isset($_GET['building_id'])) {
       <div class="personal-item d-flex justify-content-between bg-white">
         <div class="labal-value p-2" style="display: flex; gap: 5px; align-items: center;">
           <div class="label"><i class="fa fa-envelope personal-info-icon"></i>
-            <span class="personal-info item-name email"> Ownership,</span> </div>
-          <div class="value"><b><?php echo htmlspecialchars($building['ownership_info']); ?></b></div>
+            <span style="color:#193042;" class="personal-info item-name email"> Ownership,</span> </div>
+          <div style="color:#FFC107;" class="value"><b><?php echo htmlspecialchars($building['ownership_info']); ?></b></div>
         </div>
       </div>
     </div>
@@ -452,9 +453,9 @@ if (isset($_GET['building_id'])) {
     <div class="col-md-3">
       <div class="personal-item d-flex justify-content-between bg-white">
         <div class="category-number p-2" style="display: flex; gap: 5px; align-items: center;">
-          <div class="category"><i class="fas fa-city personal-info-icon"></i> <span class="personal-info item-name">
+          <div class="category"><i class="fas fa-city personal-info-icon"></i> <span  style="color:#193042;" class="personal-info item-name">
             Units,</span> </div>
-          <div class="phone"><b><?php echo htmlspecialchars($building['units_number']); ?></b></div> <!-- Assuming static data for units, you could replace it with dynamic data -->
+          <div style="color:#FFC107;" class="phone"><b><?php echo htmlspecialchars($building['units_number']); ?></b></div> <!-- Assuming static data for units, you could replace it with dynamic data -->
         </div>
       </div>
     </div>
@@ -481,10 +482,10 @@ if (isset($_GET['building_id'])) {
 </div>
 
 <div style="display: flex; gap: 25px;">
-    <a href="../property/Units.php" style="color: #FFC107;"><p>Unit list</p></a>
+    <a href="../property/Units.php" style="color:#193042;"><p>Unit list</p></a>
     <?php
 // This could be inside a loop where you list multiple buildings
-echo '<a style="color: #FFC107;" href="meterreading.php?building_id=' . $building['building_id'] . '  ">Meter Reading</a>';
+echo '<a style="color:#193042;" href="../property/meterreading.php?building_id=' . $building['building_id'] . '  ">Meter Reading</a>';
 ?>
     <!-- <a href="../property/meterreading.php"  style="color: #FFC107;"><p>Meter Reading</p></a> -->
 </div>
@@ -501,7 +502,7 @@ echo '<a style="color: #FFC107;" href="meterreading.php?building_id=' . $buildin
     <div class="col-md-12">
       <div class="card mb-4">
         <div class="card-header">
-          <h5 class="card-title text-warning">Registered Units</h5>
+          <h5 style="color:#193042;" class="card-title"><b>Registered Units</b></h5>
           <div class="card-tools">
             <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
               <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
@@ -693,170 +694,37 @@ echo '<a style="color: #FFC107;" href="meterreading.php?building_id=' . $buildin
               <label for="ownership">Ownership</label>
               <input type="text" class="form-control" name="ownership_info" value="<?= htmlspecialchars($building['ownership_info']) ?>" required>
             </div>
-
             <!-- Add more fields here as needed -->
           </div>
         </div>
-
-
   </div>
 </div>
-
-
-
-
-
-
-
 <!-- end -->
-
-
       </div>
       </div>
     </div>
 
-
-
-
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
 
-    <script>
-    // Show the modal
-    function openModal() {
-        document.getElementById("modalOverlay").style.display = "flex";
-    }
-
-    // Close the modal
-    function closeModal() {
-        document.getElementById("modalOverlay").style.display = "none";
-    }
-
-    // Trigger the modal to show when the button is clicked
-    document.querySelector('.edit-btn').addEventListener('click', openModal);
-</script>
-
-
-
+    <script src="units.js"></script>
     <script>
       function enableEdit() {
           document.getElementById("description").disabled = false;
       }
   </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const steps = document.querySelectorAll(".form-step");
-            const progressSteps = document.querySelectorAll(".step");
-            const nextBtns = document.querySelectorAll(".next-btn");
-            const prevBtns = document.querySelectorAll(".prev-btn");
-            const form = document.getElementById("property-form");
-
-            let currentStep = 0;
-
-            function showStep(stepIndex) {
-                // Hide all steps and reset progress
-                steps.forEach((step, index) => {
-                    step.classList.remove("active");
-                    if (index === stepIndex) {
-                        step.classList.add("active");
-                    }
-                });
-
-                // Update progress bar (show tick for completed steps)
-                progressSteps.forEach((step, index) => {
-                    step.classList.remove("active", "completed");
-                    if (index < stepIndex) {
-                        step.classList.add("completed"); // Mark previous steps as completed (✔️)
-                    }
-                    if (index === stepIndex) {
-                        step.classList.add("active"); // Highlight current step
-                    }
-                });
-            }
-
-            function validateStep() {
-                const inputs = steps[currentStep].querySelectorAll("input");
-                for (let input of inputs) {
-                    if (input.value.trim() === "") {
-                        alert("Please fill in all fields before proceeding.");
-                        return false;
-                    }
-                }
-                return true;
-            }
-
-            nextBtns.forEach((button) => {
-                button.addEventListener("click", () => {
-                    if (validateStep()) {
-                        if (currentStep < steps.length - 1) {
-                            currentStep++;
-                            showStep(currentStep);
-                        }
-                    }
-                });
-            });
-
-            prevBtns.forEach((button) => {
-                button.addEventListener("click", () => {
-                    if (currentStep > 0) {
-                        currentStep--;
-                        showStep(currentStep);
-                    }
-                });
-            });
-
-            form.addEventListener("submit", function (event) {
-                event.preventDefault();
-                alert("Property Registered Successfully!");
-            });
-
-            // Show first step on load
-            showStep(currentStep);
-        });
-            </script>
-
 <script>
-  // Function to open the complaint popup
-  function openunitsPopup() {
-    document.getElementById("unitsPopup").style.display = "flex";
-  }
-
-  // Function to close the complaint popup
-  function closeunitsPopup() {
-    document.getElementById("unitsPopup").style.display = "none";
-  }
+  // sidebar
+fetch('../bars/sidebar.html')  // Fetch the file
+  .then(response => response.text()) // Convert it to text
+  .then(data => {
+      document.getElementById('sidebar').innerHTML = data; // Insert it
+  })
+  .catch(error => console.error('Error loading the file:', error)); // Handle errors
 </script>
 
 
-<script>
-        $(document).ready(function () {
-            $('#myTableOne').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableThree').DataTable();
-        });
-        $(document).ready(function () {
-            $('#myTableFour').DataTable();
-        });
-
-
-        $(document).ready(function() {
-   $('#myTable').DataTable({
-       "paging": true,
-       "searching": true,
-       "info": true,
-       "lengthMenu": [5, 10, 25, 50],
-       "language": {
-           "search": "Filter records:",
-           "lengthMenu": "Show _MENU_ entries"
-       }
-   });
-});
-
-</script>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
@@ -868,29 +736,6 @@ echo '<a style="color: #FFC107;" href="meterreading.php?building_id=' . $buildin
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
-
-
-<script>
-  $(document).ready(function() {
-      $('#rent').DataTable({
-          "lengthChange": false,
-          "dom": 'Bfrtip',
-          "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-      });
-  });
-</script>
-
-<!-- Sidebar script -->
-<script>
-  fetch('../bars/sidebar.html')  // Fetch the file
-      .then(response => response.text()) // Convert it to text
-      .then(data => {
-          document.getElementById('sidebar').innerHTML = data; // Insert it
-      })
-      .catch(error => console.error('Error loading the file:', error)); // Handle errors
-</script>
-
-<!-- End sidebar script -->
 
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
@@ -912,304 +757,14 @@ echo '<a style="color: #FFC107;" href="meterreading.php?building_id=' . $buildin
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
     <script src="../../../dist/js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
-    <script>
-      const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-      const Default = {
-        scrollbarTheme: 'os-theme-light',
-        scrollbarAutoHide: 'leave',
-        scrollbarClickScroll: true,
-      };
-      document.addEventListener('DOMContentLoaded', function () {
-        const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-        if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
-          OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-            scrollbars: {
-              theme: Default.scrollbarTheme,
-              autoHide: Default.scrollbarAutoHide,
-              clickScroll: Default.scrollbarClickScroll,
-            },
-          });
-        }
-      });
-    </script>
-
-<script>
-  const slides = document.querySelector('.slides');
-const prevBtn = document.getElementById('prev');
-const nextBtn = document.getElementById('next');
-
-let index = 0;
-const totalSlides = document.querySelectorAll('.slide').length;
-
-function updateSlide() {
-    slides.style.transform = `translateX(-${index * 100}%)`;
-}
-
-// Next button
-nextBtn.addEventListener('click', () => {
-    index = (index + 1) % totalSlides;
-    updateSlide();
-});
-
-// Previous button
-prevBtn.addEventListener('click', () => {
-    index = (index - 1 + totalSlides) % totalSlides;
-    updateSlide();
-});
-
-// Auto-slide every 3 seconds
-setInterval(() => {
-    index = (index + 1) % totalSlides;
-    updateSlide();
-}, 3000);
-
-</script>
-
-<script>
-  const cty = document.getElementById('rentalTrends').getContext('2d');
-
-  new Chart(cty, {
-    type: 'line',
-    data: {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-      datasets: [
-        {
-          label: 'CROWN Z TOWERS',
-          data: [35,'000', 30,'000', 32,'000', 30,'000', 33,'000', 35,'000', 34,'000', 33,'000', 34,'000', 35,'000', 34,'000', 35,'000'],
-          borderColor: 'cyan',
-          backgroundColor: 'transparent',
-          tension: 0.4
-        },
-        {
-          label: 'Manucho Apartments',
-          data: [32,'000', 33,'000', 38,'000', 34,'000', 33,'000', 34,'000', 38,'000', 36,'000', 37,'000', 32,'000', 31,'000', 34,'000'],
-          borderColor: 'green',
-          backgroundColor: 'transparent',
-          tension: 0.4
-        },
-        {
-          label: 'The Mansion Apartments',
-          data:[31,'000', 32,'000', 39,'000', 35,'000', 32,'000', 33,'000', 39,'000', 37,'000', 39,'000', 31,'000', 32,'000', 34,'000'],
-          borderColor: 'black',
-          backgroundColor: 'transparent',
-          tension: 0.4
-        },
-        {
-          label: 'Bsty Apartments',
-          data: [34,'000', 39,'000', 34,'000', 32,'000', 34,'000', 36,'000', 38,'000', 37,'000', 34,'000', 33,'000', 32,'000', 31,'000'],
-          borderColor: 'red',
-          backgroundColor: 'transparent',
-          tension: 0.4
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          position: 'top'
-        },
-
-      },
-      scales: {
-        y: {
-          beginAtZero: false
-        }
-      }
-    }
-  });
-</script>
-
-<script>
-  const ctx = document.getElementById('myPieChart').getContext('2d');
-
-  const myPieChart = new Chart(ctx, {
-      type: 'pie',
-      data: {
-          labels: ['Occupied','Vacant', 'Vacant Soon'],
-          datasets: [{
-              data: [30, 50, 20],
-              backgroundColor: ['#28a745', '#ffc107', '#dc3545']
-          }]
-      },
-      options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          onClick: function(event, elements) {
-              if (elements.length > 0) {
-                  let index = elements[0].index;
-                  let label = this.data.labels[index];
-                  // let links = { "Approved": "approved.html", "Pending": "pending.html", "Rejected": "rejected.html" };
-                  let links = { "Occupied": "occupied.html", "Vacant": "vacant.html", "Vacant Soon": "vacantsoon.html"};
-                  if (links[label]) window.location.href = links[label];
-              }
-          }
-      }
-  });
-</script>
-
-
-
-    <!--end::OverlayScrollbars Configure-->
-    <!-- OPTIONAL SCRIPTS -->
-    <!-- apexcharts -->
     <script
       src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
       integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
       crossorigin="anonymous"
     ></script>
-    <script>
-
-
-
-      // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
-      // IT'S ALL JUST JUNK FOR DEMO
-      // ++++++++++++++++++++++++++++++++++++++++++
-
-      /* apexcharts
-       * -------
-       * Here we will create a few charts using apexcharts
-       */
-
-      //-----------------------
-      // - MONTHLY SALES CHART -
-      //-----------------------
-
-      const sales_chart_options = {
-        series: [
-          {
-            name: 'Digital Goods',
-            data: [28, 48, 40, 19, 86, 27, 90],
-          },
-          {
-            name: 'Electronics',
-            data: [65, 59, 80, 81, 56, 55, 40],
-          },
-        ],
-        chart: {
-          height: 180,
-          type: 'area',
-          toolbar: {
-            show: false,
-          },
-        },
-        legend: {
-          show: false,
-        },
-        colors: ['#0d6efd', '#20c997'],
-        dataLabels: {
-          enabled: false,
-        },
-        stroke: {
-          curve: 'smooth',
-        },
-        xaxis: {
-          type: 'datetime',
-          categories: [
-            '2023-01-01',
-            '2023-02-01',
-            '2023-03-01',
-            '2023-04-01',
-            '2023-05-01',
-            '2023-06-01',
-            '2023-07-01',
-          ],
-        },
-        tooltip: {
-          x: {
-            format: 'MMMM yyyy',
-          },
-        },
-      };
-
-      const sales_chart = new ApexCharts(
-        document.querySelector('#sales-chart'),
-        sales_chart_options,
-      );
-      sales_chart.render();
-
-      //---------------------------
-      // - END MONTHLY SALES CHART -
-      //---------------------------
-
-      function createSparklineChart(selector, data) {
-        const options = {
-          series: [{ data }],
-          chart: {
-            type: 'line',
-            width: 150,
-            height: 30,
-            sparkline: {
-              enabled: true,
-            },
-          },
-          colors: ['var(--bs-primary)'],
-          stroke: {
-            width: 2,
-          },
-          tooltip: {
-            fixed: {
-              enabled: false,
-            },
-            x: {
-              show: false,
-            },
-            y: {
-              title: {
-                formatter: function (seriesName) {
-                  return '';
-                },
-              },
-            },
-            marker: {
-              show: false,
-            },
-          },
-        };
-
-        const chart = new ApexCharts(document.querySelector(selector), options);
-        chart.render();
-      }
-
-      const table_sparkline_1_data = [25, 66, 41, 89, 63, 25, 44, 12, 36, 9, 54];
-      const table_sparkline_2_data = [12, 56, 21, 39, 73, 45, 64, 52, 36, 59, 44];
-      const table_sparkline_3_data = [15, 46, 21, 59, 33, 15, 34, 42, 56, 19, 64];
-      const table_sparkline_4_data = [30, 56, 31, 69, 43, 35, 24, 32, 46, 29, 64];
-      const table_sparkline_5_data = [20, 76, 51, 79, 53, 35, 54, 22, 36, 49, 64];
-      const table_sparkline_6_data = [5, 36, 11, 69, 23, 15, 14, 42, 26, 19, 44];
-      const table_sparkline_7_data = [12, 56, 21, 39, 73, 45, 64, 52, 36, 59, 74];
-
-      createSparklineChart('#table-sparkline-1', table_sparkline_1_data);
-      createSparklineChart('#table-sparkline-2', table_sparkline_2_data);
-      createSparklineChart('#table-sparkline-3', table_sparkline_3_data);
-      createSparklineChart('#table-sparkline-4', table_sparkline_4_data);
-      createSparklineChart('#table-sparkline-5', table_sparkline_5_data);
-      createSparklineChart('#table-sparkline-6', table_sparkline_6_data);
-      createSparklineChart('#table-sparkline-7', table_sparkline_7_data);
-
-      //-------------
-      // - PIE CHART -
-      //-------------
-
-      const pie_chart_options = {
-        series: [700, 500, 400, 600, 300, 100],
-        chart: {
-          type: 'donut',
-        },
-        labels: ['Chrome', 'Edge', 'FireFox', 'Safari', 'Opera', 'IE'],
-        dataLabels: {
-          enabled: false,
-        },
-        colors: ['#0d6efd', '#20c997', '#ffc107', '#d63384', '#6f42c1', '#adb5bd'],
-      };
-
-      const pie_chart = new ApexCharts(document.querySelector('#pie-chart'), pie_chart_options);
-      pie_chart.render();
-
-      //-----------------
-      // - END PIE CHART -
-      //-----------------
-    </script>
+    <!--end::OverlayScrollbars Configure-->
+    <!-- OPTIONAL SCRIPTS -->
+    <!-- apexcharts -->
     <!--end::Script-->
   </body>
   <!--end::Body-->

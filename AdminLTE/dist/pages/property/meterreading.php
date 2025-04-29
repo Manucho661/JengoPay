@@ -410,8 +410,7 @@ if ($stmt->rowCount() > 0) {
 
             <div class="col-sm-8">
               <div class="">
-                <h3 class="mb-0 contact_section_header"> <i class="fas fa-home icon"></i> <?php echo htmlspecialchars($building['building_name']); ?>
-                <!-- <span>,Units</span> </h3> -->
+                <h3 style="color:#FFC107;" class="mb-0 contact_section_header"> <i class="fas fa-home icon"></i> <?php echo htmlspecialchars($building['building_name']); ?></h3>
                 <h6 class="property-type"><b><?php echo htmlspecialchars($building['building_type']); ?></b></h6>
               </div>
             </div>
@@ -425,8 +424,8 @@ if ($stmt->rowCount() > 0) {
   <div class="col-md-3">
     <div class="personal-item d-flex justify-content-between bg-white">
       <div class="category-number p-2" style="display: flex; gap: 5px; align-items: center;">
-        <div class="category"><i class="fas fa-briefcase personal-info-icon"></i> <span class="personal-info item-name"> Location,</span> </div>
-        <div class="number"><b><?php echo htmlspecialchars($building['county']); ?></b></div>
+        <div class="category"><i class="fas fa-briefcase personal-info-icon"></i> <span style="color:#193042;" class="personal-info item-name"> Location,</span> </div>
+        <div style="color:#FFC107;" class="number"><b><?php echo htmlspecialchars($building['county']); ?></b></div>
       </div>
     </div>
   </div>
@@ -457,8 +456,8 @@ if ($stmt->rowCount() > 0) {
       <div class="personal-item d-flex justify-content-between bg-white">
         <div class="labal-value p-2" style="display: flex; gap: 5px; align-items: center;">
           <div class="label"><i class="fa fa-envelope personal-info-icon"></i>
-            <span class="personal-info item-name email"> Ownership,</span> </div>
-          <div class="value"><b><?php echo htmlspecialchars($building['ownership_info']); ?></b></div>
+            <span style="color:#193042;"  class="personal-info item-name email"> Ownership,</span> </div>
+          <div style="color:#FFC107;" class="value"><b><?php echo htmlspecialchars($building['ownership_info']); ?></b></div>
         </div>
       </div>
     </div>
@@ -466,9 +465,9 @@ if ($stmt->rowCount() > 0) {
     <div class="col-md-3">
       <div class="personal-item d-flex justify-content-between bg-white">
         <div class="category-number p-2" style="display: flex; gap: 5px; align-items: center;">
-          <div class="category"><i class="fas fa-city personal-info-icon"></i> <span class="personal-info item-name">
+          <div class="category"><i class="fas fa-city personal-info-icon"></i> <span style="color:#193042;" class="personal-info item-name">
             Units,</span> </div>
-          <div class="phone"><b><?php echo htmlspecialchars($building['units_number']); ?></b></div> <!-- Assuming static data for units, you could replace it with dynamic data -->
+          <div style="color:#FFC107;" class="phone"><b><?php echo htmlspecialchars($building['units_number']); ?></b></div> <!-- Assuming static data for units, you could replace it with dynamic data -->
         </div>
       </div>
     </div>
@@ -495,8 +494,8 @@ if ($stmt->rowCount() > 0) {
 
 
 <div style="display: flex; gap: 25px;">
-   <a href="#" style="color: #FFC107;"> <p>Unit list</p></a>
-    <a href="../property/meterreading.php" style="color: #FFC107;"><p>Meter Reading</p></a>
+   <a href="../property/Units.php" style="color:#193042;"> <p>Unit list</p></a>
+    <a href="../property/meterreading.php" style="color:#193042;"><p>Meter Reading</p></a>
 </div>
 
 

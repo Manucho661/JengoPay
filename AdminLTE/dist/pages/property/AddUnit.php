@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Execute the query
     if ($stmt->execute()) {
-        // echo "Unit added successfully!";
+         echo "Unit added successfully!";
     } else {
         echo "Error: " . $stmt->error;
     }
@@ -50,8 +50,6 @@ if ($stmt->rowCount() > 0) {
     // Handle the case where no data is returned (optional)
     echo "No records found.";
 }
-
-
 ?>
 
 
@@ -488,25 +486,32 @@ if ($stmt->rowCount() > 0) {
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
-            <div class="property-title"><?php echo htmlspecialchars($building['building_name']); ?></div>
-            <p><?php echo htmlspecialchars($building['building_type']); ?>|
-              <button class="edit-btn"><i class="fas fa-edit"></i>EDIT</button>
-           </p>
-            <hr>
-<div style="display: flex;gap: 25px;">
-<!-- <a href=""><p>Summary</p></a> -->
-<!-- <a href="../property/AllUnits.html"><p>Units(5)</p></a> -->
-</div>
-</div>
+
+          <div class="col-sm-8">
+              <div class="">
+              <?php if ($building): ?>
+              <h3 class="mb-0 contact_section_header">
+                  <b><i class="fas fa-home icon"></i> <?= htmlspecialchars($building['building_name']) ?></b>
+              </h3>
+              <h6 class="property-type">
+                  <b><?= htmlspecialchars($building['building_type']) ?></b>
+              </h6>
+          <?php endif; ?>
+
+              </div>
+             </div>
+
+            <!-- <hr> -->
+
 
 <div style="display: flex; gap: 25px;">
-   <a href="../property/AllUnits.html"  style="color: #FFC107;"> <p>Unit list</p></a>
-    <a href="../property/meterreading.html"  style="color: #FFC107;"><p>Meter Reading</p></a>
+   <a href="../property/AllUnits.html"  style="color: #FFC107; font-size:large;"> <p>Unit list</p></a>
+    <a href="../property/meterreading.html"  style="color: #FFC107; font-size:large;"><p>Meter Reading</p></a>
 </div>
 
 <!-- <b><p>Add Unit to Crown Z Towers</p></b> -->
 
-<b><p>What is the Unit Information?</p></b>
+<b><p  style="color: #FFC107;">What is the Unit Information?</p></b>
 
 <form action="AddUnit.php" method="POST">
     <div class="row">
@@ -546,7 +551,7 @@ if ($stmt->rowCount() > 0) {
 
         <div class="col-md-4">
             <label for="size">Floor Number*</label>
-            <input type="number" id="floor_number" name="floor_number" placeholder="Enter Floor Size" required>
+            <input type="number" id="floor_number" name="floor_number" placeholder="Enter Floor Number" required>
         </div>
 
         <b><p>What is the listing information?</p></b>
@@ -616,13 +621,13 @@ if ($stmt->rowCount() > 0) {
 
     <div class="row justify-content-end">
         <div class="col-md-4">
-            <button type="submit">Create Unit</button>
+            <button type="submit" style="color:#00192D;background-color:white;font-size:larger;">Create Unit</button>
         </div>
         <div class="col-md-4">
-            <a href="../property/AddUnit.php"><button>Add Another Unit</button></a>
+            <a href="../property/AddUnit.php"><button style="color:#00192D;background-color:white;font-size:larger;">Add Another Unit</button></a>
         </div>
         <div class="col-md-4">
-            <a href="../property/Units.php"><button>Cancel</button></a>
+            <a href="../property/Units.php"><button style="color:#00192D;background-color:white;font-size:larger;">Cancel</button></a>
         </div>
     </div>
 </form>
