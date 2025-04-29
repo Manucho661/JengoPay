@@ -464,7 +464,7 @@
               <!-- Start col -->
               <div class="col-md-12 details">
                 <div class="details-container bg-white p-2 rounded">
-                   <h3 class="details-container_header text-start">All Tenants &nbsp;	|&nbsp;	 <span style="color:#FFC107">3 enteries</span></h3>
+                   <h3 class="details-container_header text-start"> <span id="displayed_building">All Tenants</span>  &nbsp;	|&nbsp;	 <span style="color:#FFC107">3 enteries</span></h3>
                    <div class="table-responsive">
                     <div id="top-bar" class="filter-pdf-excel mb-2">
                       <div class="d-flex" style="gap: 10px;">

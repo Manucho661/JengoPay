@@ -1,12 +1,14 @@
 
-// FETCH TENANTS
+// FETCH TENANTS SECTION
 document.addEventListener('DOMContentLoaded', function (){
   fetchTenants('all');
 
   document.querySelectorAll('.select-option-container').forEach(container => {
+    
     const select = container.querySelector('.custom-select');
     const optionsContainer = container.querySelector('.select-options');
     const options = optionsContainer.querySelectorAll('div');
+    const displayed_building = document.getElementById('displayed_building');
 
     // Toggle dropdown on select click
     select.addEventListener('click', () => {
@@ -28,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function (){
     options.forEach(option => {
       option.addEventListener('click', () => {
         select.textContent = option.textContent;
+        displayed_building.textContent= option.textContent;
         select.setAttribute('data-value', option.getAttribute('data-value'));
 
         options.forEach(opt => opt.classList.remove('selected'));
