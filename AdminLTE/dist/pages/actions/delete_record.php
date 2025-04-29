@@ -5,6 +5,8 @@
  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = isset($_POST['id']) ? (int)$_POST['id'] : null;
     $type = isset($_POST['type']) ? $_POST['type'] : null;
+    // $building_id = isset($_POST['building_id']) ? (int)$_POST['building_id'] : null;
+
 
     if (!$id || !$type) {
         echo "Missing parameters.";
@@ -22,6 +24,12 @@
             case 'maintenance':
                 $stmt = $pdo->prepare("DELETE FROM maintenance_requests WHERE request_id = :id");
                 break;
+
+                case 'building':
+                  $stmt = $pdo->prepare("DELETE FROM buildings WHERE building_id = :id");
+                  break;
+
+
             default:
                 echo "Invalid type.";
                 exit;

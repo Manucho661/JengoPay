@@ -514,21 +514,23 @@ if ($stmt->rowCount() > 0) {
 <div class="col-md-4">
             <label for="building_id">Building*</label>
             <select id="building_id" name="building_id" required>
-                <?php
-                    // Assuming you want to fetch building options from the database
-                    include '../db/connect.php'; // Make sure this defines $conn for mysqli
-                    $result = $conn->query("SELECT building_id, building_name FROM buildings");
+            <?php
+// Assuming you want to fetch building options from the database
+include '../db/connect.php'; // Make sure this defines $pdo for PDO
 
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<option value='" . $row['building_id'] . "'>" . $row['building_name'] . "</option>";
-                        }
-                    } else {
-                        echo "<option value=''>No Buildings Available</option>";
-                    }
+$stmt = $pdo->query("SELECT building_id, building_name FROM buildings");
 
-                    $conn->close();
-                ?>
+if ($stmt->rowCount() > 0) {
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        echo "<option value='" . $row['building_id'] . "'>" . $row['building_name'] . "</option>";
+    }
+} else {
+    echo "<option value=''>No Buildings Available</option>";
+}
+
+// No need to manually close the connection, PDO handles it automatically
+?>
+
             </select>
         </div>
 

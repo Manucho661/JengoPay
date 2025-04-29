@@ -31,8 +31,6 @@ try {
       return null;
   }
 
-
-
       // Collect building data
       $id = $_POST['building_id'];
       $building_name = $_POST['building_name'];
@@ -1405,20 +1403,21 @@ $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View">
         <i class="fas fa-eye"></i>
       </button>
-      <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Provider">
-        <i class="fa fa-trash" style="font-size: 12px;"></i>
-      </button>
+      <button onclick="deleteBuilding(<?= htmlspecialchars($building['building_id']) ?>)"
+        class="btn btn-sm"
+        style="background-color: red; color: white;">
+    <i class="fa fa-trash" data-toggle="tooltip" title="Delete Building" style="font-size: 12px;"></i>
+</button>
     </td>
   </tr>
 <?php endforeach; ?>
-
        </tbody>
      </table>
 
                     <!--end::Row-->
                   </div>
                   <!-- ./card-body -->
-                  <div class="card-footer">
+                  <!-- <div class="card-footer"> -->
                     <!--begin::Row-->
 
                       <!-- /.col -->
@@ -1432,6 +1431,9 @@ $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
               <!-- /.col -->
             </div>
             <!-- End mantainance row -->
+
+
+             <!-- units popup -->
 
 
 
@@ -1459,6 +1461,33 @@ $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <!--end::App Wrapper-->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
+
+    <script>
+  function deleteBuilding(buildingId) {
+    if (confirm("Are you sure you want to delete this building?")) {
+      fetch('../action/delete_record.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'id=' + encodeURIComponent(buildingId) + '&type=building'
+
+      })
+      .then(response => response.text()) // your PHP currently echoes plain text, not JSON
+      .then(message => {
+        alert(message); // shows success or failure message from PHP
+        location.reload(); // refresh the page to reflect deletion
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to delete the building.');
+      });
+    }
+  }
+</script>
+
+
+
 
 
     <script>
