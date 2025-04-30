@@ -354,14 +354,21 @@
           <!--begin::Brand Link-->
           <a href="./index.html" class="brand-link">
             <!--begin::Brand Image-->
-            <img
+            <!-- <img
               src="../../../dist/assets/img/AdminLTELogo.png"
               alt="AdminLTE Logo"
               class="brand-image opacity-75 shadow"
-            />
+            /> -->
             <!--end::Brand Image-->
             <!--begin::Brand Text-->
-            <span class="brand-text fw-light">AdminLTE 4</span>
+            <span class="brand-text fw-light">
+              <a href="index3.html" class="brand-link">
+        <!--<img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">-->
+        <span class="brand-text font-weight-light"><b class="p-2"
+                style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
+                class="p-2"
+                style=" border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107;">JENGOPAY</b></span>
+    </a></span>
             <!--end::Brand Text-->
           </a>
           <!--end::Brand Link-->
@@ -649,8 +656,8 @@
     <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
 
 
-      
-    
+
+
     <!-- Script for datatable -->
     <script>
 
@@ -735,7 +742,7 @@
       }
     </script>
 
-    
+
 
     </script>
 

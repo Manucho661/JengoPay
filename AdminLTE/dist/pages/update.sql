@@ -7,3 +7,4 @@ here are the columns - id	name	email	phone	password	avatar	role	status	email_ver
 Created the Building_Identification  Table .  by michelle
 Created  Unit_information  Table .  by michelle
 Created  Meter_Reading   Table .  by michelle
+Created communications Table . by michelle
