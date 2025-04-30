@@ -5,38 +5,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   $building_id = isset($_GET['building_id']) ? $_GET['building_id'] : null;
 
-    // Prepare SQL statement to insert data into units table
-    $stmt = $conn->prepare("INSERT INTO units (
-        unit_number, size, floor_number, rooms, room_type, bathrooms, kitchen, balcony, rent_amount, description, building_id, created_at, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
+   // Prepare SQL statement to insert data into units table using PDO
+$sql = "INSERT INTO units (
+  unit_number, size, floor_number, rooms, room_type, bathrooms, kitchen, balcony,
+  rent_amount, description, building_id, created_at, updated_at
+) VALUES (
+  :unit_number, :size, :floor_number, :rooms, :room_type, :bathrooms, :kitchen, :balcony,
+  :rent_amount, :description, :building_id, NOW(), NOW()
+)";
 
-    // Bind parameters (including building_id)
-    $stmt->bind_param(
-        "sisssssssss", // Adjusted for the building_id (i for integer)
-        $_POST['unit_number'],
-        $_POST['size'],
-        $_POST['floor_number'],
-        $_POST['rooms'],
-        $_POST['room_type'],
-        $_POST['bathrooms'],
-        $_POST['kitchen'],
-        $_POST['balcony'],
-        $_POST['rent_amount'],
-        $_POST['description'],
-        $_POST['building_id'] // This is the foreign key
-    );
+$stmt = $pdo->prepare($sql);
 
-    // Execute the query
-    if ($stmt->execute()) {
-         echo "Unit added successfully!";
-    } else {
-        echo "Error: " . $stmt->error;
-    }
+// Execute the statement with an associative array
+$success = $stmt->execute([
+  ':unit_number'   => $_POST['unit_number'],
+  ':size'          => $_POST['size'],
+  ':floor_number'  => $_POST['floor_number'],
+  ':rooms'         => $_POST['rooms'],
+  ':room_type'     => $_POST['room_type'],
+  ':bathrooms'     => $_POST['bathrooms'],
+  ':kitchen'       => $_POST['kitchen'],
+  ':balcony'       => $_POST['balcony'],
+  ':rent_amount'   => $_POST['rent_amount'],
+  ':description'   => $_POST['description'],
+  ':building_id'   => $_POST['building_id']
+]);
+
+// Check if execution was successful
+if ($success) {
+    echo "<script>alert('✅ Unit added successfully!');</script>";
+} else {
+    echo "<script>alert('❌ Error: Failed to insert unit.');</script>";
+}
+
+
     // Close the prepared statement and connection
     // $stmt->close();
     // $conn->close();
 } else {
-    //  echo "Form not submitted.";
+      // echo "Form not submitted.";
 }
 
 // Fetch the data from the database using $pdo
@@ -489,14 +496,7 @@ if ($stmt->rowCount() > 0) {
 
           <div class="col-sm-8">
               <div class="">
-              <?php if ($building): ?>
-              <h3 class="mb-0 contact_section_header">
-                  <b><i class="fas fa-home icon"></i> <?= htmlspecialchars($building['building_name']) ?></b>
-              </h3>
-              <h6 class="property-type">
-                  <b><?= htmlspecialchars($building['building_type']) ?></b>
-              </h6>
-          <?php endif; ?>
+
 
               </div>
              </div>
@@ -558,6 +558,7 @@ if ($stmt->rowCount() > 0) {
         <div class="col-md-4">
             <label for="rooms">Rooms*</label>
             <select id="rooms" name="rooms" required>
+                <option value="rooms">-Select-</option>
                 <option value="Bedsitter">Bedsitter</option>
                 <option value="One bedroom">One bedroom</option>
                 <option value="Two bedroom">Two Bedroom</option>
@@ -570,6 +571,7 @@ if ($stmt->rowCount() > 0) {
         <div class="col-md-4">
             <label for="rooms">Room Type*</label>
             <select id="rooms" name="room_type" required>
+            <option value="rooms">-Select-</option>
                 <option value="Rental">Rental</option>
                 <option value="Air BnB">Air BnB</option>
                 <option value="Banking Hall">Banking Hall</option>
@@ -580,6 +582,7 @@ if ($stmt->rowCount() > 0) {
         <div class="col-md-4">
             <label for="rooms">Bathrooms*</label>
             <select id="rooms" name="bathrooms" required>
+                 <option value="rooms">-Select-</option>
                 <option value="One bathroom">One Bathroom</option>
                 <option value="Two bathroom">Two Bathroom</option>
                 <option value="Three bathroom">Three Bathroom</option>
@@ -591,6 +594,7 @@ if ($stmt->rowCount() > 0) {
         <div class="col-md-4">
             <label for="kitchen">Kitchen*</label>
             <select id="kitchen" name="kitchen" required>
+                 <option value="rooms">-Select-</option>
                 <option value="open">Open</option>
                 <option value="closed">Closed</option>
             </select>
@@ -599,6 +603,7 @@ if ($stmt->rowCount() > 0) {
         <div class="col-md-4">
             <label for="balcony">Balcony*</label>
             <select id="balcony" name="balcony" required>
+                <option value="rooms">-Select-</option>
                 <option value="one">One</option>
                 <option value="two">Two</option>
                 <option value="three">Three</option>

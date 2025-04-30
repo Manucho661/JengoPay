@@ -1,5 +1,3 @@
-
-
 // data tables
       $(document).ready(function() {
         $('#rent').DataTable({

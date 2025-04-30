@@ -48,7 +48,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['submit'])) {
       $stmt->bindParam(6, $consumption_units, PDO::PARAM_STR);
 
       if ($stmt->execute()) {
-          // echo "<p style='color:green;'>Meter reading successfully added! Consumption: <b>$consumption_units</b></p>";
+        echo "<script>
+            alert('✅ Meter reading successfully added! Consumption: $consumption_units units');
+            document.getElementById('meterForm').reset();
+        </script>";
+
       } else {
           echo "<p style='color:red;'>Error: " . $stmt->errorInfo()[2] . "</p>";
       }
@@ -638,7 +642,7 @@ if ($stmt->rowCount() > 0) {
         <div class="meterpopup-content wide-form">
             <button id="close-btns" class="text-secondary" onclick="meterreadingclosePopup()">×</button>
             <h2 class="assign-title">Add A Meter Reading</h2>
-            <form class="wide-form"  method="POST" action="">
+            <form class="wide-form" id="meterForm" method="POST" action="">
               <div class="form-group">
              <b><label for="dateInput" class="filter-label">Reading Date</label></b>
               <input type="date" id="dateInput" name="reading_date" class="form-control" required />

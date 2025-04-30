@@ -6,97 +6,82 @@ $username = "root";
 $password = "";
 
 try {
-  $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+        function uploadPhoto($fileInput, $targetDir = "uploads/") {
+            if (!isset($_FILES[$fileInput]) || $_FILES[$fileInput]['error'] !== UPLOAD_ERR_OK) {
+                return null;
+            }
 
-    function uploadPhoto($fileInput, $targetDir = "uploads/") {
-      if (!isset($_FILES[$fileInput]) || $_FILES[$fileInput]['error'] !== UPLOAD_ERR_OK) {
-          return null;
-      }
+            $fileName = basename($_FILES[$fileInput]["name"]);
+            $targetFile = $targetDir . uniqid() . "_" . $fileName;
 
-      $fileName = basename($_FILES[$fileInput]["name"]);
-      $targetFile = $targetDir . uniqid() . "_" . $fileName;
+            if (!is_dir($targetDir)) {
+                mkdir($targetDir, 0755, true);
+            }
 
-      if (!is_dir($targetDir)) {
-          mkdir($targetDir, 0755, true);
-      }
+            if (move_uploaded_file($_FILES[$fileInput]["tmp_name"], $targetFile)) {
+                return $targetFile;
+            }
 
-      if (move_uploaded_file($_FILES[$fileInput]["tmp_name"], $targetFile)) {
-          return $targetFile;
-      }
+            return null;
+        }
 
-      return null;
-  }
+        // Collect building data
+        $building_name = $_POST['building_name'];
+        $county = $_POST['county'];
+        $constituency = $_POST['constituency'];
+        $ward = $_POST['ward'];
+        $floor_number = $_POST['floor_number'];
+        $units_number = $_POST['units_number'];
+        $building_type = $_POST['building_type'] ?? '';
+        $ownership_info = $_POST['ownership_info'];
 
-      // Collect building data
-      $id = $_POST['building_id'];
-      $building_name = $_POST['building_name'];
-      $county = $_POST['county'];
-      $constituency = $_POST['constituency'];
-      $ward = $_POST['ward'];
-      $floor_number = $_POST['floor_number'];
-      $units_number = $_POST['units_number'];
-      $building_type = $_POST['building_type'] ?? '';
-      $ownership_info = $_POST['ownership_info'];
-      $title_deed_copy=uploadPhoto('title_deed_copy');
-      $other_document_copy = uploadPhoto('title_deed_copy');
-      $borehole_availability = $_POST['borehole_availability'] ?? '';
-      $solar_availability = $_POST['solar_availability'] ?? '';
-      $solar_brand = $_POST['solar_brand'] ?? '';
-      $installation_company = $_POST['installation_company'] ?? '';
-      $no_of_panels = $_POST['no_of_panels'] ?? '';
-      $solar_primary_use = $_POST['solar_primary_use'] ?? '';
-      $parking_lot = $_POST['parking_lot'] ?? '';
-      $alarm_system = $_POST['alarm_system'] ?? '';
-      $elevators = $_POST['elevators'] ?? '';
-      $psds_accessibility = $_POST['psds_accessibility'] ?? '';
-      $cctv = $_POST['cctv'] ?? '';
-      $insurance_cover = $_POST['insurance_cover'] ?? '';
-      $insurance_policy = $_POST['insurance_policy'] ?? '';
-      $insurance_provider = $_POST['insurance_provider'] ?? '';
-      $policy_from_date = $_POST['policy_from_date'] ?? null;
-      $policy_until_date = $_POST['policy_until_date'] ?? null;
-      $front_view_photo = uploadPhoto('front_view_photo');
-      $rear_view_photo = uploadPhoto('rear_view_photo');
-      $angle_view_photo = uploadPhoto('angle_view_photo');
-      $interior_view_photo = uploadPhoto('interior_view_photo');
+        $titleDeedPath = uploadPhoto('title_deed_copy');
+        $otherDocPath = uploadPhoto('other_document_copy');
+        $borehole_availability = $_POST['borehole_availability'] ?? '';
+        $solar_availability = $_POST['solar_availability'] ?? '';
+        $solar_brand = $_POST['solar_brand'] ?? '';
+        $installation_company = $_POST['installation_company'] ?? '';
+        $no_of_panels = $_POST['no_of_panels'] ?? '';
+        $solar_primary_use = $_POST['solar_primary_use'] ?? '';
+        $parking_lot = $_POST['parking_lot'] ?? '';
+        $alarm_system = $_POST['alarm_system'] ?? '';
+        $elevators = $_POST['elevators'] ?? '';
+        $psds_accessibility = $_POST['psds_accessibility'] ?? '';
+        $cctv = $_POST['cctv'] ?? '';
+        $insurance_cover = $_POST['insurance_cover'] ?? '';
+        $insurance_policy = $_POST['insurance_policy'] ?? '';
+        $insurance_provider = $_POST['insurance_provider'] ?? '';
+        $policy_from_date = $_POST['policy_from_date'] ?? null;
+        $policy_until_date = $_POST['policy_until_date'] ?? null;
+        $front_view_photo = uploadPhoto('front_view_photo');
+        $rear_view_photo = uploadPhoto('rear_view_photo');
+        $angle_view_photo = uploadPhoto('angle_view_photo');
+        $interior_view_photo = uploadPhoto('interior_view_photo');
+        // $building_number = $_POST['building_number'];
 
+        // Ownership fields
+        $first_name = $last_name = $phone_number = $kra_pin = $email = '';
+        $entity_name = $entity_phone = $entity_email = $entity_kra_pin = $entity_representative = $entity_rep_role = '';
 
-
-      // Default values for ownership columns
-      $first_name = $last_name = $phone_number = $kra_pin = $email = '';
-      $entity_name = $entity_phone = $entity_email = $entity_kra_pin = $entity_representative = $entity_rep_role = '';
-
-      if ($ownership_info == 'Individual') {
-          $first_name = $_POST['first_name'];
-          $last_name = $_POST['last_name'];
-          $phone_number = $_POST['phone_number'];
-          $kra_pin = $_POST['kra_pin'];
-          $email = $_POST['email'];
-      } elseif ($ownership_info == 'Entity') {
-          $entity_name = $_POST['entity_name'];
-          $entity_phone = $_POST['entity_phone'];
-          $entity_email = $_POST['entity_email'];
-          $entity_kra_pin = $_POST['entity_kra_pin'];
-          $entity_representative = $_POST['entity_representative'];
-          $entity_rep_role = $_POST['entity_rep_role'];
-      }
-
-      // File Uploads
-      $titleDeedPath = $otherDocPath = '';
-
-      if (isset($_FILES['title_deed_copy']) && $_FILES['title_deed_copy']['error'] === UPLOAD_ERR_OK) {
-          $titleDeedPath = 'uploads/' . basename($_FILES['title_deed_copy']['name']);
-          move_uploaded_file($_FILES['title_deed_copy']['tmp_name'], $titleDeedPath);
-      }
-
-      if (isset($_FILES['other_document_copy']) && $_FILES['other_document_copy']['error'] === UPLOAD_ERR_OK) {
-          $otherDocPath = 'uploads/' . basename($_FILES['other_document_copy']['name']);
-          move_uploaded_file($_FILES['other_document_copy']['tmp_name'], $otherDocPath);
-      }
+        if ($ownership_info == 'Individual') {
+            $first_name = $_POST['first_name'];
+            $last_name = $_POST['last_name'];
+            $phone_number = $_POST['phone_number'];
+            $kra_pin = $_POST['kra_pin'];
+            $email = $_POST['email'];
+        } elseif ($ownership_info == 'Entity') {
+            $entity_name = $_POST['entity_name'];
+            $entity_phone = $_POST['entity_phone'];
+            $entity_email = $_POST['entity_email'];
+            $entity_kra_pin = $_POST['entity_kra_pin'];
+            $entity_representative = $_POST['entity_representative'];
+            $entity_rep_role = $_POST['entity_rep_role'];
+        }
 
         // Approvals
         $nca_approval = $_POST['nca_approval'] ?? 'No';
@@ -113,65 +98,68 @@ try {
 
         $building_tax_pin = $_POST['building_tax_pin'] ?? '';
 
-      // Insert all data
-      $sql = "INSERT INTO buildings (
-                  building_name, county, constituency, ward, floor_number, units_number, building_type,
-                  ownership_info,
-                  first_name, last_name, phone_number, kra_pin, email,
-                  entity_name, entity_phone, entity_email, entity_kra_pin, entity_representative, entity_rep_role,
-                  title_deed_copy, other_document_copy ,borehole_availability, solar_availability, solar_brand, installation_company, no_of_panels, solar_primary_use,
-                  parking_lot, alarm_system, elevators, psds_accessibility, cctv,  nca_approval, nca_approval_no, nca_approval_date,
-                    local_gov_approval, local_gov_approval_no, local_gov_approval_date,
-                    nema_approval, nema_approval_no, nema_approval_date,
-                    building_tax_pin, insurance_cover, insurance_policy, insurance_provider, policy_from_date, policy_until_date,front_view_photo, rear_view_photo, angle_view_photo, interior_view_photo, building_number
+        // SQL Insert
+        $sql = "INSERT INTO buildings (
+            building_name, county, constituency, ward, floor_number, units_number, building_type,
+            ownership_info,
+            first_name, last_name, phone_number, kra_pin, email,
+            entity_name, entity_phone, entity_email, entity_kra_pin, entity_representative, entity_rep_role,
+            title_deed_copy, other_document_copy, borehole_availability, solar_availability, solar_brand,
+            installation_company, no_of_panels, solar_primary_use, parking_lot, alarm_system, elevators,
+            psds_accessibility, cctv, nca_approval, nca_approval_no, nca_approval_date,
+            local_gov_approval, local_gov_approval_no, local_gov_approval_date,
+            nema_approval, nema_approval_no, nema_approval_date,
+            building_tax_pin, insurance_cover, insurance_policy, insurance_provider,
+            policy_from_date, policy_until_date, front_view_photo, rear_view_photo, angle_view_photo, interior_view_photo
+        ) VALUES (
+            :building_name, :county, :constituency, :ward, :floor_number, :units_number, :building_type,
+            :ownership_info,
+            :first_name, :last_name, :phone_number, :kra_pin, :email,
+            :entity_name, :entity_phone, :entity_email, :entity_kra_pin, :entity_representative, :entity_rep_role,
+            :title_deed_copy, :other_document_copy, :borehole_availability, :solar_availability, :solar_brand,
+            :installation_company, :no_of_panels, :solar_primary_use, :parking_lot, :alarm_system, :elevators,
+            :psds_accessibility, :cctv, :nca_approval, :nca_approval_no, :nca_approval_date,
+            :local_gov_approval, :local_gov_approval_no, :local_gov_approval_date,
+            :nema_approval, :nema_approval_no, :nema_approval_date,
+            :building_tax_pin, :insurance_cover, :insurance_policy, :insurance_provider,
+            :policy_from_date, :policy_until_date, :front_view_photo, :rear_view_photo, :angle_view_photo, :interior_view_photo
+        )";
 
-              ) VALUES (
-                  :building_name, :county, :constituency, :ward, :floor_number, :units_number, :building_type,
-                  :ownership_info,
-                  :first_name, :last_name, :phone_number, :kra_pin, :email,
-                  :entity_name, :entity_phone, :entity_email, :entity_kra_pin, :entity_representative, :entity_rep_role,
-                  :title_deed_copy, :other_document_copy , :borehole_availability, :solar_availability, :solar_brand, :installation_company, :no_of_panels, :solar_primary_use,
-                  :parking_lot, :alarm_system, :elevators, :psds_accessibility, :cctv , :nca_approval, :nca_approval_no, :nca_approval_date,
-                    :local_gov_approval, :local_gov_approval_no, :local_gov_approval_date,
-                    :nema_approval, :nema_approval_no, :nema_approval_date,
-                    :building_tax_pin,  :insurance_cover, :insurance_policy, :insurance_provider, :policy_from_date, :policy_until_date, :front_view_photo, :rear_view_photo, :angle_view_photo, :interior_view_photo,  :building_number
-              )";
-
-      $stmt = $pdo->prepare($sql);
-      $stmt->execute([
-          ':building_name' => $building_name,
-          ':county' => $county,
-          ':constituency' => $constituency,
-          ':ward' => $ward,
-          ':floor_number' => $floor_number,
-          ':units_number' => $units_number,
-          ':building_type' => $building_type,
-          ':ownership_info' => $ownership_info,
-          ':first_name' => $first_name,
-          ':last_name' => $last_name,
-          ':phone_number' => $phone_number,
-          ':kra_pin' => $kra_pin,
-          ':email' => $email,
-          ':entity_name' => $entity_name,
-          ':entity_phone' => $entity_phone,
-          ':entity_email' => $entity_email,
-          ':entity_kra_pin' => $entity_kra_pin,
-          ':entity_representative' => $entity_representative,
-          ':entity_rep_role' => $entity_rep_role,
-          ':title_deed_copy' => $titleDeedPath,
-          ':other_document_copy' => $otherDocPath,
-          ':borehole_availability' => $borehole_availability,
-          ':solar_availability' => $solar_availability,
-          ':solar_brand' => $solar_brand,
-          ':installation_company' => $installation_company,
-          ':no_of_panels' => $no_of_panels,
-          ':solar_primary_use' => $solar_primary_use,
-          ':parking_lot' => $parking_lot,
-          ':alarm_system' => $alarm_system,
-          ':elevators' => $elevators,
-          ':psds_accessibility' => $psds_accessibility,
-          ':cctv' => $cctv,
-          ':nca_approval' => $nca_approval,
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            ':building_name' => $building_name,
+            ':county' => $county,
+            ':constituency' => $constituency,
+            ':ward' => $ward,
+            ':floor_number' => $floor_number,
+            ':units_number' => $units_number,
+            ':building_type' => $building_type,
+            ':ownership_info' => $ownership_info,
+            ':first_name' => $first_name,
+            ':last_name' => $last_name,
+            ':phone_number' => $phone_number,
+            ':kra_pin' => $kra_pin,
+            ':email' => $email,
+            ':entity_name' => $entity_name,
+            ':entity_phone' => $entity_phone,
+            ':entity_email' => $entity_email,
+            ':entity_kra_pin' => $entity_kra_pin,
+            ':entity_representative' => $entity_representative,
+            ':entity_rep_role' => $entity_rep_role,
+            ':title_deed_copy' => $titleDeedPath,
+            ':other_document_copy' => $otherDocPath,
+            ':borehole_availability' => $borehole_availability,
+            ':solar_availability' => $solar_availability,
+            ':solar_brand' => $solar_brand,
+            ':installation_company' => $installation_company,
+            ':no_of_panels' => $no_of_panels,
+            ':solar_primary_use' => $solar_primary_use,
+            ':parking_lot' => $parking_lot,
+            ':alarm_system' => $alarm_system,
+            ':elevators' => $elevators,
+            ':psds_accessibility' => $psds_accessibility,
+            ':cctv' => $cctv,
+            ':nca_approval' => $nca_approval,
             ':nca_approval_no' => $nca_approval_no,
             ':nca_approval_date' => $nca_approval_date,
             ':local_gov_approval' => $local_gov_approval,
@@ -190,37 +178,22 @@ try {
             ':rear_view_photo' => $rear_view_photo,
             ':angle_view_photo' => $angle_view_photo,
             ':interior_view_photo' => $interior_view_photo,
-            ':building_number' => $building_number,
+            // ':building_number' => $building_number,
+        ]);
 
-      ]);
+        // ✅ Redirect to avoid resubmission
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    }
 
-       echo "<p style='color:green;'>Building Registered successfully!</p>";
-  }
-
-// Query the building_identification table
-$sql = "SELECT building_id, building_name, county, building_type, ownership_info FROM buildings";
-$stmt = $pdo->prepare($sql);
-$stmt->execute();
-
-// Fetch all buildings
-$buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
- // Fetch property data
-//   $stmt = $pdo->query("SELECT
-//     building_identification.building_name,
-//     building_identification.county,
-//     building_identification.building_type FROM building_identification ORDER BY id DESC");
-
-//  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-//    $county = htmlspecialchars($row['county']);
-//    $building_name = htmlspecialchars($row['building_name']);
-//    $building_type = htmlspecialchars($row['building_type']);
-
-//  }
-
+    // Fetch buildings for display
+    $sql = "SELECT building_id, building_name, county, building_type, ownership_info FROM buildings";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 } catch (PDOException $e) {
-  echo "Connection failed: " . $e->getMessage();
+    echo "Connection failed: " . $e->getMessage();
 }
 ?>
 
