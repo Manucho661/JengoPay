@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function (){
   fetchTenants('all');
 
   document.querySelectorAll('.select-option-container').forEach(container => {
-    
+
     const select = container.querySelector('.custom-select');
     const optionsContainer = container.querySelector('.select-options');
     const options = optionsContainer.querySelectorAll('div');
@@ -71,7 +71,7 @@ function fetchTenants(building) {
   const tableBody = document.querySelector('#users-table tbody');
   tableBody.innerHTML = '<tr><td colspan="6"><div class="loader"></div></td></tr>'; // 🟡 Show loading
   fetch('../actions/fetch_records.php?building=' + encodeURIComponent(building))
-  
+
       .then(response => response.json())
       .then(data => {
           const tableBody = document.querySelector('#users-table tbody');
@@ -81,7 +81,7 @@ function fetchTenants(building) {
           const tenantCount = data.length;
           enteries.textContent = tenantCount;
 
-          
+
           // If DataTable already exists, destroy it
           if ( $.fn.dataTable.isDataTable('#users-table') ) {
               $('#users-table').DataTable().destroy();
@@ -93,7 +93,7 @@ function fetchTenants(building) {
               row.setAttribute('onclick', `goToDetails(${user.user_id})`);
 
               row.innerHTML = `
-                    <td>${user.first_name}</td>
+                    <td>${user.first_name} &nbsp; ${user.middle_name}  </td>
                     <td>${user.id_no}</td>
                     <td> <div> ${user.residence}</div>
                     <div style="color: green;" > ${user.unit}</div>
@@ -141,7 +141,7 @@ function fetchTenants(building) {
                   customize: function (doc) {
                     // Center table
                     doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
-                
+
                     // Optional: center-align the entire table
                     doc.styles.tableHeader.alignment = 'center';
                     doc.styles.tableBodyEven.alignment = 'center';
@@ -155,19 +155,19 @@ function fetchTenants(building) {
                         }
 
                   }
-                
+
                 }
               ]
             });
-          
+
             // Append buttons to your div
             table.buttons().container().appendTo('#custom-buttons');
-          
+
             // Custom search
             $('#searchInput').on('keyup', function () {
               table.search(this.value).draw();
             });
-          
+
           });
       })
       .catch(error => {
@@ -177,8 +177,8 @@ function fetchTenants(building) {
 });
 
 
-// DELETE TENANT 
-    
+// DELETE TENANT
+
       function handleDelete(event, id, type) {
         event.stopPropagation(); // Stop the row or parent element click
         if (confirm("Are you sure?")) {
@@ -200,14 +200,14 @@ function fetchTenants(building) {
       }
 
 
-      // ADD TENANT TO DB     
+      // ADD TENANT TO DB
         function submitTenantForm(event) {
           event.preventDefault(); // Prevent the form from submitting normally
-  
+
           // Create FormData object from the form
           const formData = new FormData(document.getElementById("form_for_tenant"));
           formData.append("type", "tenant"); // Add the type for tenant
-  
+
           // Send data via fetch
           fetch("../actions/add_record.php", {
             method: "POST",
@@ -220,7 +220,7 @@ function fetchTenants(building) {
           })
           .catch(err => console.error(err));
         }
-      
+
 
     // POPUPS
     // Function to open the complaint popup
@@ -257,7 +257,7 @@ function fetchTenants(building) {
       document.getElementById("addTenantModal").style.display = "none";
     }
 
-    //  SMOOTH LOADING IN AND OUT 
+    //  SMOOTH LOADING IN AND OUT
       document.addEventListener("DOMContentLoaded", () => {
         // Fade in effect on page load
         const mainElement = document.getElementById("mainElement");
@@ -289,4 +289,3 @@ function fetchTenants(building) {
           });
         });
       });
-    
