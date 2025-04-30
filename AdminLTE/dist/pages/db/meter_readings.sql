@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 25, 2025 at 04:43 PM
+-- Generation Time: Apr 30, 2025 at 04:33 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -44,8 +44,11 @@ CREATE TABLE `meter_readings` (
 --
 
 INSERT INTO `meter_readings` (`id`, `reading_date`, `unit_number`, `meter_type`, `previous_reading`, `current_reading`, `consumption_units`, `created_at`, `updated_at`) VALUES
-(17, '2025-04-24', 'C9', 'Water', 80, 100, 20, '2025-04-25 14:08:15', '2025-04-25 14:08:15'),
-(18, '2025-04-24', 'C9', 'Water', 80, 100, 20, '2025-04-25 14:09:21', '2025-04-25 14:09:21');
+(18, '2025-04-24', 'C9', 'Water', 80, 100, 20, '2025-04-25 14:09:21', '2025-04-25 14:09:21'),
+(19, '2025-04-27', 'C40', 'Electrical', 12, 15, 3, '2025-04-28 08:00:25', '2025-04-28 08:00:25'),
+(21, '2025-04-29', 'D8', 'Electrical', 18, 25, 7, '2025-04-30 07:32:24', '2025-04-30 07:32:24'),
+(29, '2025-04-29', 'B30', 'Water', 15, 18, 3, '2025-04-30 07:39:36', '2025-04-30 07:39:36'),
+(37, '2025-04-28', 'C41', 'Water', 25, 27, 2, '2025-04-30 07:43:30', '2025-04-30 07:43:30');
 
 --
 -- Indexes for dumped tables
@@ -65,7 +68,7 @@ ALTER TABLE `meter_readings`
 -- AUTO_INCREMENT for table `meter_readings`
 --
 ALTER TABLE `meter_readings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
