@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 25, 2025 at 04:21 PM
+-- Generation Time: Apr 30, 2025 at 04:32 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -81,17 +81,18 @@ CREATE TABLE `buildings` (
   `angle_view_photo` varchar(255) DEFAULT NULL,
   `interior_view_photo` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `building_number` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `buildings`
 --
 
-INSERT INTO `buildings` (`building_id`, `building_name`, `county`, `constituency`, `ward`, `floor_number`, `units_number`, `building_type`, `ownership_info`, `first_name`, `last_name`, `phone_number`, `kra_pin`, `email`, `entity_name`, `entity_phone`, `entity_email`, `entity_kra_pin`, `entity_representative`, `entity_rep_role`, `title_deed_copy`, `other_document_copy`, `borehole_availability`, `solar_availability`, `solar_brand`, `installation_company`, `no_of_panels`, `solar_primary_use`, `parking_lot`, `alarm_system`, `elevators`, `psds_accessibility`, `cctv`, `nca_approval`, `nca_approval_no`, `nca_approval_date`, `local_gov_approval`, `local_gov_approval_no`, `local_gov_approval_date`, `nema_approval`, `nema_approval_no`, `nema_approval_date`, `building_tax_pin`, `insurance_cover`, `insurance_policy`, `insurance_provider`, `policy_from_date`, `policy_until_date`, `front_view_photo`, `rear_view_photo`, `angle_view_photo`, `interior_view_photo`, `created_at`, `updated_at`) VALUES
-(41, 'ttt', 'Embu', 'Runyenjes', 'Gaturi North', 5, 0, '', 'Individual', 'rttuuu', '', 745896325, 0, '', '', 0, '', 0, '', '', '', '', 'Yes', 'No', '', '', 0, '', 'Yes', 'Yes', 'Yes', 'No', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-04-24 08:40:09', '2025-04-24 08:40:09'),
-(58, 'bahati', 'Kwale', 'Msambweni', 'Gombato Bongwe', 5, 45, 'Residential', 'Individual', 'peter', 'mwangi', 748986858, 0, 'peter@gmail.com', '', 0, '', 0, '', '', '', '', 'Yes', 'Yes', 'devki', 'devki', 5, 'Water Heating', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', '20', '0000-00-00', 'Yes', '40740', '2025-04-26', 'Yes', '58', '2025-04-20', 'AQWERTY5689', 'Yes', 'CIC', '', '2025-04-30', NULL, 'uploads/6808f83319e55_14.PNG', 'uploads/6808f8331a12e_page 4.PNG', 'uploads/6808f8331a305_page2.PNG', 'uploads/6808f8331a398_Thy instructions..png', '2025-04-24 08:40:09', '2025-04-24 08:40:09'),
-(64, 'RIBA APARTMENT', 'Meru', 'North Imenti', 'Municipality', 5, 5, 'Residential', 'Individual', 'michy', 'city', 745895896, 0, 'mich@gmail.com', '', 0, '', 0, '', '', '', '', 'No', '', '', '', 0, '', 'No', 'No', 'No', 'No', 'No', 'No', '', '0000-00-00', 'Yes', '', '0000-00-00', 'No', '', '0000-00-00', 'A099799B345', 'No', 'MEDICAL', 'CIC', '2025-03-22', '2025-04-22', 'uploads/6809f48b378e3_14.PNG', 'uploads/6809f48b37af9_page 4.PNG', 'uploads/6809f48b37b82_Thy instructions..png', 'uploads/6809f48b37db5_page2.PNG', '2025-04-24 08:40:09', '2025-04-24 08:40:09');
+INSERT INTO `buildings` (`building_id`, `building_name`, `county`, `constituency`, `ward`, `floor_number`, `units_number`, `building_type`, `ownership_info`, `first_name`, `last_name`, `phone_number`, `kra_pin`, `email`, `entity_name`, `entity_phone`, `entity_email`, `entity_kra_pin`, `entity_representative`, `entity_rep_role`, `title_deed_copy`, `other_document_copy`, `borehole_availability`, `solar_availability`, `solar_brand`, `installation_company`, `no_of_panels`, `solar_primary_use`, `parking_lot`, `alarm_system`, `elevators`, `psds_accessibility`, `cctv`, `nca_approval`, `nca_approval_no`, `nca_approval_date`, `local_gov_approval`, `local_gov_approval_no`, `local_gov_approval_date`, `nema_approval`, `nema_approval_no`, `nema_approval_date`, `building_tax_pin`, `insurance_cover`, `insurance_policy`, `insurance_provider`, `policy_from_date`, `policy_until_date`, `front_view_photo`, `rear_view_photo`, `angle_view_photo`, `interior_view_photo`, `created_at`, `updated_at`, `building_number`) VALUES
+(64, 'RIBA APARTMENT', 'Meru', 'North Imenti', 'Municipality', 5, 5, 'Residential', 'Individual', 'michy', 'city', 745895896, 0, 'mich@gmail.com', '', 0, '', 0, '', '', '', '', 'No', '', '', '', 0, '', 'No', 'No', 'No', 'No', 'No', 'No', '', '0000-00-00', 'Yes', '', '0000-00-00', 'No', '', '0000-00-00', 'A099799B345', 'No', 'MEDICAL', 'CIC', '2025-03-22', '2025-04-22', 'uploads/6809f48b378e3_14.PNG', 'uploads/6809f48b37af9_page 4.PNG', 'uploads/6809f48b37b82_Thy instructions..png', 'uploads/6809f48b37db5_page2.PNG', '2025-04-24 08:40:09', '2025-04-24 08:40:09', 0),
+(76, 'Crown Z Towers', 'Kiambu', 'Ruiru', 'Gatongora', 10, 60, 'Commercial', 'Individual', 'Maina', 'Mwangi', 745897896, 0, 'maina@gmail.com', '', 0, '', 0, '', '', NULL, NULL, 'Yes', 'Yes', 'Devki', 'Devki Installers', 5, 'Water Heating', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', '30589', '0000-00-00', 'Yes', '4545', '2025-04-29', 'Yes', '8986', '2025-04-28', 'P00124H', 'Yes', 'Fire Insurance', 'CIC GENERAL', '2024-04-30', '2025-04-30', 'uploads/6811f9423598f_14.PNG', 'uploads/6811f94235b9c_page 4.PNG', 'uploads/6811f94235c51_page1.PNG', 'uploads/6811f94235cda_Thy instructions..png', '2025-04-30 10:19:46', '2025-04-30 10:19:46', 0),
+(77, 'CROWN M', 'Kiambu', 'Thika Town', 'Township', 6, 8, 'Residential', 'Entity', '', '', 0, 0, '', 'JENGA', 748968547, 'jenga@gmail.com', 0, '', 'Founder', NULL, NULL, 'Yes', 'No', '', '', 0, '', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'No', '', '0000-00-00', 'Yes', '', '0000-00-00', 'No', '', '0000-00-00', '', 'No', '', '', '0000-00-00', '0000-00-00', NULL, NULL, NULL, NULL, '2025-04-30 10:24:12', '2025-04-30 10:24:12', 0);
 
 --
 -- Indexes for dumped tables
@@ -111,7 +112,7 @@ ALTER TABLE `buildings`
 -- AUTO_INCREMENT for table `buildings`
 --
 ALTER TABLE `buildings`
-  MODIFY `building_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `building_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
