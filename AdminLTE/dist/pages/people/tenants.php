@@ -154,7 +154,7 @@ position: absolute;
     display: none; /* Initially hidden */
     justify-content: center;
     align-items: center;
-     width: 100%; 
+     width: 100%;
     padding: 20px;
     min-height: 100%;
     /* margin-left: 20%; */
@@ -402,7 +402,7 @@ position: absolute;
 
       <section id="tenant-form" class="tenant-form">
                 <div class="container">
-                
+
                     <form id="form_for_tenant" onsubmit="submitTenantForm(event)">
                         <!-- Main Tenant Information Entries -->
                         <div class="card shadow" id="mainTenantCard">
@@ -483,7 +483,7 @@ position: absolute;
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Email</label> <sup class="text-danger"><b>*</b></sup>
-                                                        <input type="email" class="form-control" name="tenant_email" id="tenant_email" placeholder="Email">
+                                                        <input type="email" class="form-control" name="tenant_email" id="tenant_email" placeholder="email"> 
                                                     </div>
                                                     <b class="text-danger" id="tenant_emailError"></b>
                                                 </div>
@@ -525,7 +525,7 @@ position: absolute;
                                     <!-- Section Two Occupants Information -->
                                     <div class="card" id="sectionTwoOccpantsInfo" style="display:none;">
                                         <div class="card-header" style="background-color:#00192D; color:#FFC107;"><b>Occupation Information</b></div>
-                                        <div class="card-body">    
+                                        <div class="card-body">
                                         <div class="row">
                                                 <div class="col-md-4">
                                                     <label>Building</label> <sup class="text-danger"><b>*</b></sup>
@@ -542,7 +542,7 @@ position: absolute;
                                                     <input type="text" class="form-control" name="unit_name" id="unit_name" placeholder="C210">
                                                     <b class="text-danger" id="unit_nameError"></b>
                                                 </div>
-                                            </div>  
+                                            </div>
                                         </div>
                                         <div class="card-footer text-right">
                                             <button type="button" class="btn btn-danger btn-sm back-btn" id="secondStepPreviousBtn">Back</button>
@@ -699,7 +699,7 @@ position: absolute;
               <div class="col-sm-4 d-flex justify-content-end">
                   <div class="vacate">
                      <!-- <button class="vacate-tenant rounded" style="height: fit-content;"  onclick="openPopup()" > ADD TENANT</button>  -->
-                     <button class="vacate-tenant rounded" style="height: fit-content;"  onclick="tenant_form()" > ADD TENANT</button> 
+                     <button class="vacate-tenant rounded" style="height: fit-content;"  onclick="tenant_form()" > ADD TENANT</button>
 
                   </div>
               </div>
@@ -930,7 +930,7 @@ position: absolute;
           </div>
 
           <!-- Real tenant -->
-          
+
 
 
 

@@ -8,9 +8,9 @@
 
   // Get tenant info joined with user info
   $stmt = $pdo->prepare("
-      SELECT tenants.*, users.name, users.email
-      FROM tenants 
-      JOIN users ON tenants.user_id = users.id 
+      SELECT tenants.*, users.first_name, users.middle_name, users.email
+      FROM tenants
+      JOIN users ON tenants.user_id = users.id
       WHERE tenants.user_id = ?
   ");
   $stmt->execute([$user_id]);
@@ -18,7 +18,7 @@
   if (!$tenant) {
     echo "<p>No tenant found with ID: $user_id</p>";
   }
-  
+
  }
  else {
   $tenant = null; // or redirect to error page
@@ -93,7 +93,7 @@
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
 <style>
-   
+
 </style>
 
   </head>
@@ -352,7 +352,7 @@
             <div class="row  " >
               <div class="col-sm-6">
                 <div class="d-flex">
-                  <h3 class="section_header tenantName"><i class="fas fa-user-tie icon" style="color:#FFC107"></i><?= htmlspecialchars($tenant['name']) ?>  </h3>
+                  <h3 class="section_header tenantName"><i class="fas fa-user-tie icon" style="color:#FFC107"></i><?= htmlspecialchars($tenant['first_name']) ?> &nbsp;<?= htmlspecialchars($tenant['middle_name']) ?>  </h3>
                   <h6 class="active">Active</h6>
                 </div>
 
