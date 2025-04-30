@@ -7,8 +7,8 @@
 
 
   // Get tenant info joined with user info
-  $stmt = $conn->prepare("
-      SELECT tenants.*, users.name, users.email 
+  $stmt = $pdo->prepare("
+      SELECT tenants.*, users.name, users.email
       FROM tenants 
       JOIN users ON tenants.user_id = users.id 
       WHERE tenants.user_id = ?
@@ -444,7 +444,7 @@
                                 <div class="labal-value p-2" style="display: flex; gap: 5px;   align-items: center;">
                                   <div class="label"> <i class="fa fa-envelope personal-info-icon "></i>
                                     <span class="personal-info item-name email" > Email,</span> </div>
-                                  <div class="value"><b>jos1@gmail.com</b></div>
+                                  <div class="value"><b></i><?= htmlspecialchars($tenant['email']) ?></b></div>
                                 </div>
                               </div>
 

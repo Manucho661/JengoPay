@@ -9,7 +9,7 @@
   // Fetch tenants with their user details
   $sql = "SELECT
               users.id,
-              users.name,
+              users.first_name,
               users.email,
               tenants.phone_number,
               tenants.user_id,
@@ -45,7 +45,7 @@
   <!--begin::Head-->
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>AdminLTE | Dashboard v2</title>
+    <title>Tenants</title>
     <!--begin::Primary Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="title" content="AdminLTE | Dashboard v2" />
@@ -60,7 +60,7 @@
       name="keywords"
       content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard"
     />
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- loading out and in progress -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css">
     <!--end::Primary Meta Tags-->
@@ -98,8 +98,6 @@
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
 
-
-
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
@@ -115,6 +113,9 @@
     <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
 
     <style>
+      body{
+        overflow: auto;
+      }
 .app-content{
   flex: 1;
   align-items: stretch;
@@ -144,6 +145,21 @@
   align-items: stretch;
   display: flex;
   flex-direction: column;
+}
+.tenant-form{
+  display: none;
+z-index: 10000;
+position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.7); /* Dark overlay */
+    display: none; /* Initially hidden */
+    justify-content: center;
+    align-items: center;
+     width: 100%; 
+    padding: 20px;
+    min-height: 100%;
+    /* margin-left: 20%; */
 }
     </style>
   </head>
@@ -378,6 +394,289 @@
                                                             <!-- MAIN -->
       <!--begin::App Main-->
       <main class="app-main" id="mainElement">
+
+      <section id="tenant-form" class="tenant-form">
+                <div class="container">
+                
+                    <form id="form_for_tenant" onsubmit="submitTenantForm(event)">
+                        <!-- Main Tenant Information Entries -->
+                        <div class="card shadow" id="mainTenantCard">
+                            <div class="card-header" style="background-color:#00192D; color:#FFC107;">
+                                <b>Main Tenant Registration Process</b>
+                            </div>
+                            <div class="card-body">
+                                <div class="media-body">
+                                    <!-- Indicators Section Start Here -->
+                                    <div class="row mt-2" style="justify-content:center; align-items:center;">
+                                        <!-- Step One Personal Information Section -->
+                                        <div class="col-md-2 text-center">
+                                            <b class="shadow" style="background-color:#00192D; color:#FFC107; border-radius:35px; padding-left:14px; padding-right:14px; padding-bottom:7px; padding-top:7px; font-size:1.5rem;" id="stepOneIndicatorNo">1</b>
+                                            <p class="mt-2" id="stepOneIndicatorText" style="font-size:14px; font-weight:bold;">Personal Information</p>
+                                        </div>
+                                        <!-- Step Two Occupants Information Details -->
+                                        <div class="col-md-2 text-center">
+                                            <b class="shadow" style="background-color:#00192D; color:#FFC107; border-radius:35px; padding-left:14px; padding-right:14px; padding-bottom:7px; padding-top:7px; font-size:1.5rem;" id="stepTwoIndicatorNo">2</b>
+                                            <p class="mt-2" id="stepTwoIndicatorText" style="font-size:14px; font-weight:bold;">Occupants &amp; Unit</p>
+                                        </div>
+                                        <!-- Step Three Pets Ownership Information -->
+                                        <div class="col-md-2 text-center">
+                                            <b class="shadow" style="background-color:#00192D; color:#FFC107; border-radius:35px; padding-left:14px; padding-right:14px; padding-bottom:7px; padding-top:7px; font-size:1.5rem;" id="stepThreeIndicatorNo">3</b>
+                                            <p class="mt-2" id="stepThreeIndicatorText" style="font-size:14px; font-weight:bold;">Pets Information</p>
+                                        </div>
+                                        <!-- Step 4 Source of Income Information -->
+                                        <div class="col-md-2 text-center">
+                                            <b class="shadow" style="background-color:#00192D; color:#FFC107; border-radius:35px; padding-left:14px; padding-right:14px; padding-bottom:7px; padding-top:7px; font-size:1.5rem;" id="stepFourIndicatorNo">4</b>
+                                            <p class="mt-2" id="stepFourIndicatorText" style="font-size:14px; font-weight:bold;">Source of Income</p>
+                                        </div>
+                                        <!-- Step Five Copy of Agreement Copy Upload  -->
+                                        <div class="col-md-2 text-center">
+                                            <b class="shadow" style="background-color:#00192D; color:#FFC107; border-radius:35px; padding-left:14px; padding-right:14px; padding-bottom:7px; padding-top:7px; font-size:1.5rem;" id="stepFiveIndicatorNo">5</b>
+                                            <p class="mt-2" id="stepFiveIndicatorText" style="font-size:14px; font-weight:bold;">Rental Agreement Copy</p>
+                                        </div>
+                                    </div>
+                                    <!-- Indicators Section End Here -->
+                                    <!-- Section One Personal Information -->
+                                    <div class="card" id="sectionOnePersonalInfo">
+                                        <div class="card-header" style="background-color:#00192D; color:#FFC107;"><b>Personal Information</b></div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <label>First Name</label> <sup class="text-danger"><b>*</b></sup>
+                                                    <input type="text" class="form-control" name="tenant_f_name" id="tenant_f_name" placeholder="First Name">
+                                                    <b class="text-danger" id="tenant_f_nameError"></b>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Middle Name</label> <sup class="text-danger"><b>*</b></sup>
+                                                    <input type="text" class="form-control" name="tenant_m_name" id="tenant_m_name" placeholder="Middle Name">
+                                                    <b class="text-danger" id="tenant_m_nameError"></b>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Last Name</label> <sup class="text-danger"><b>*</b></sup>
+                                                    <input type="text" class="form-control" name="tenant_l_name" id="tenant_l_name" placeholder="last name">
+                                                    <b class="text-danger" id="tenant_l_nameError"></b>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Main Contact Phone</label> <sup class="text-danger"><b>*</b></sup>
+                                                        <input type="tel" class="form-control" name="tenant_m_contact" id="tenant_m_contact" placeholder="Main Contact Phone">
+                                                    </div>
+                                                    <b class="text-danger" id="tenant_m_contactError"></b>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Alt Contact Phone</label> <sup class="text-danger"><b>*</b></sup>
+                                                        <input type="tel" class="form-control" name="tenant_a_contact" id="tenant_a_contact" placeholder="Alternative Contact Phone">
+                                                    </div>
+                                                    <b class="text-danger" id="tenant_a_contactError"></b>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Email</label> <sup class="text-danger"><b>*</b></sup>
+                                                        <input type="email" class="form-control" name="tenant_email" id="tenant_email" placeholder="Email">
+                                                    </div>
+                                                    <b class="text-danger" id="tenant_emailError"></b>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Identification No.</label> <sup class="text-danger"><b>*</b></sup>
+                                                        <input type="text" class="form-control" name="tenant_id_no" id="tenant_id_no" placeholder="Identification Number">
+                                                    </div>
+                                                    <b class="text-danger" id="tenant_id_noError"></b>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>Upload a Copy of Identification</label>
+                                                        <input type="file" class="form-control" id="tenant_id_copy" id="tenant_id_copy">
+                                                    </div>
+                                                    <b class="text-danger" id="tenant_id_copyError"></b>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label for="">KRA PIN</label>
+                                                        <input type="text" class="form-control" name="kra_pin" id="kra_pin">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label for="">KRA PIN Copy</label>
+                                                        <input type="file" class="form-control" name="kra_pin_copy" id="kra_pin_copy">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer text-right">
+                                            <button type="button" class="btn btn-sm next-btn" id="firstStepNextBtn">Next Step</button>
+                                        </div>
+                                    </div>
+                                    <!-- Section Two Occupants Information -->
+                                    <div class="card" id="sectionTwoOccpantsInfo" style="display:none;">
+                                        <div class="card-header" style="background-color:#00192D; color:#FFC107;"><b>Occupation Information</b></div>
+                                        <div class="card-body">    
+                                        <div class="row">
+                                                <div class="col-md-4">
+                                                    <label>Building</label> <sup class="text-danger"><b>*</b></sup>
+                                                    <input type="text" class="form-control" name="building_name" id="building_name" placeholder="Manucho">
+                                                    <b class="text-danger" id="building_nameError"></b>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Foor Number</label> <sup class="text-danger"><b>*</b></sup>
+                                                    <input type="number" class="form-control" name="floor_number" id="Floor Number" placeholder="5">
+                                                    <b class="text-danger" id="floor_number_nameError"></b>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Unit</label> <sup class="text-danger"><b>*</b></sup>
+                                                    <input type="text" class="form-control" name="unit_name" id="unit_name" placeholder="C210">
+                                                    <b class="text-danger" id="unit_nameError"></b>
+                                                </div>
+                                            </div>  
+                                        </div>
+                                        <div class="card-footer text-right">
+                                            <button type="button" class="btn btn-danger btn-sm back-btn" id="secondStepPreviousBtn">Back</button>
+                                            <button type="button" class="btn btn-sm next-btn" id="secondStepNextBtn">Next Step</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Section Three Pets Ownership Information -->
+                                    <div class="card" id="sectionThreePetsInfo" style="display:none;">
+                                        <div class="card-header" style="background-color:#00192D; color:#FFC206;"><b>Pets Ownership Information</b></div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-12 text-center">
+                                                    <div class="form-group"><label>Do you have Pets?</label></div>
+                                                </div>
+                                            </div>
+                                            <div class="row text-center">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <div class="custom-control custom-switch">
+                                                            <input type="radio" class="custom-control-input" value="Yes" name="pets" id="customSwitchPetYes">
+                                                            <label class="custom-control-label" for="customSwitchPetYes">Yes</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <div class="custom-control custom-switch">
+                                                            <input type="radio" class="custom-control-input" value="No" name="pets" id="customNoPets" onclick="hideToSpecifyPets();">
+                                                            <label class="custom-control-label" for="customNoPets">No</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card" id="specifyPetsCard" style="display:none;">
+                                                <div class="card-header" style="background-color:#00192D; color:#FFC206;"><b>Please Specify Pets you Own</b></div>
+                                                <div class="card-body">
+                                                    <div class="form-group">
+                                                        <label>Select Pet(s)</label> <sup>Multiple Allowed</sup>
+                                                        <select class="select2" multiple="multiple" data-placeholder="Specify Pet(s)" style="width: 100%;">
+                                                            <option>Dog</option>
+                                                            <option>Cat</option>
+                                                            <option>Parrot</option>
+                                                            <option>Snake</option>
+                                                            <option>Lion</option>
+                                                            <option>Tiger</option>
+                                                            <option>Goat</option>
+                                                            <option>Robot</option>
+                                                            <option>Bunny</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer text-right">
+                                            <button type="button" class="btn btn-danger btn-sm back-btn" id="thirdStepPreviousBtn">Back</button>
+                                            <button type="button" class="btn btn-sm next-btn" id="thirdStepNextBtn">Next Step</button>
+                                        </div>
+                                    </div>
+                                    <!-- Section Four Source of Income Information -->
+                                    <div class="card" id="sectionFourIncomeSourceInfo" style="display:none;">
+                                        <div class="card-header"><b>Source of Income Information</b></div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-12 text-center">
+                                                    <label>What is your Main Source of Income?</label>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <div class="custom-control custom-switch">
+                                                            <input type="radio" class="custom-control-input" id="employmentSelectionOption" value="Employment" name="income_source">
+                                                            <label class="custom-control-label" for="employmentSelectionOption">Employment</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <div class="custom-control custom-switch">
+                                                            <input type="radio" class="custom-control-input" id="business" value="Business" name="income_source">
+                                                            <label class="custom-control-label" for="business">Business</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <div class="custom-control custom-switch">
+                                                            <input type="radio" class="custom-control-input" id="empBus" value="Employment and Business" name="income_source">
+                                                            <label class="custom-control-label" for="empBus">Employment &amp; Business</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="card" id="employmentCard" style="display:none;">
+                                                        <div class="card-header" style="background-color:#00192D; color:#FFC206;"><b>Specify your Job</b></div>
+                                                        <div class="card-body">
+                                                            <div class="form-group">
+                                                                <label>Where do you Work?</label>
+                                                                <input type="text" class="form-control" name="tenant_workplace">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Specify your Job Title</label>
+                                                                <input type="text" class="form-control" name="tenant_jobtitle">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer text-right">
+                                            <button type="button" class="btn btn-danger btn-sm back-btn" id="fourthStepPreviousBtn">Back</button>
+                                            <button type="button" class="btn btn-sm next-btn" id="fourthStepNextBtn">Next Step</button>
+                                        </div>
+                                    </div>
+                                    <!-- Section Five Rental Agreement Copy Information -->
+                                    <div class="card" id="sectionFiveRentalAgreementInfo" style="display:none;">
+                                        <div class="card-header" style="background-color:#00192D; color:#FFC206;"><b>Rental Agreement Copy</b></div>
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label for="">Upload a Copy of Signed Agreement</label>
+                                                <input type="file" class="form-control" id="agreementAttachmentCopy" name="agreemeny_copy">
+                                            </div>
+                                        </div>
+                                        <div class="card-footer text-right">
+                                            <button type="button" class="btn btn-danger btn-sm back-btn" id="fifththStepPreviousBtn">Back</button>
+                                            <button type="submit" class="btn btn-sm next-btn" id="fifththStepNextBtn">Submit</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+
         <!--begin::App Content Header-->
         <div class="app-content-header">
           <!--begin::Container-->
@@ -394,7 +693,9 @@
 
               <div class="col-sm-4 d-flex justify-content-end">
                   <div class="vacate">
-                    <button class="vacate-tenant rounded" style="height: fit-content;" onclick="openPopup()" > ADD TENANT</button>
+                     <!-- <button class="vacate-tenant rounded" style="height: fit-content;"  onclick="openPopup()" > ADD TENANT</button>  -->
+                     <button class="vacate-tenant rounded" style="height: fit-content;"  onclick="tenant_form()" > ADD TENANT</button> 
+
                   </div>
               </div>
 
@@ -441,7 +742,7 @@
 
                     <div class="summary-card p-2">
                         <div ><i class="fas fa-user-tie summary-card_icon"></i> <span class="summary-card_label" > New Applicants,</span> </div>
-                        <div class="summary-card_value"><b> 2000</b></div>
+                        <div class="summary-card_value"><b> 20,000</b></div>
                     </div>
 
                   </div>
@@ -464,17 +765,17 @@
               <!-- Start col -->
               <div class="col-md-12 details">
                 <div class="details-container bg-white p-2 rounded">
-                   <h3 class="details-container_header text-start"> <span id="displayed_building">All Tenants</span>  &nbsp;	|&nbsp;	 <span style="color:#FFC107">3 enteries</span></h3>
+                   <h3 class="details-container_header text-start"> <span id="displayed_building">All Tenants</span>  &nbsp;	|&nbsp;	 <span style="color:#FFC107"> <span id="enteries">3</span>  enteries</span></h3>
                    <div class="table-responsive">
                     <div id="top-bar" class="filter-pdf-excel mb-2">
                       <div class="d-flex" style="gap: 10px;">
                         <div class="select-option-container">
                           <div class="custom-select">All Buildings</div>
                           <div class="select-options mt-1">
-                            <div class="selected" data-value="item1">All Buildings</div>
+                            <div class="selected" data-value="all">All Buildings</div>
                             <div data-value="Manucho">Manucho</div>
-                            <div data-value="item2">Ebenezer</div>
-                            <div data-value="item3">Crown Z</div>
+                            <div data-value="Pink House">Pink House</div>
+                            <div data-value="White House">White House</div>
                           </div>
                         </div>
 
@@ -623,6 +924,11 @@
             </div>
           </div>
 
+          <!-- Real tenant -->
+          
+
+
+
           <script src="tenants.js"></script>
 
 
@@ -745,6 +1051,173 @@
 
   </script>
 
+
+  <script>
+
+$(document).ready(function(){
+        var tenant_f_nameError = '';
+        var tenant_m_nameError = '';
+        var tenant_l_nameError = '';
+        var tenant_m_contactError = '';
+        var tenant_a_contactError = '';
+        var tenant_emailError = '';
+        var tenant_id_noError = '';
+        var tenant_id_copyError = '';
+
+        var tenant_f_name = '';
+        var tenant_m_name = '';
+        var tenant_l_name = '';
+        var tenant_m_contact = '';
+        var tenant_a_contact = '';
+        var tenant_email = '';
+        var tenant_id_no = '';
+        var tenant_id_copy = '';
+
+        $("#firstStepNextBtn").click(function(e) {
+            e.preventDefault();
+            alert('Hi');
+            if($("#tenant_f_name").val() == '') {
+                $("#tenant_f_nameError").html('First Name Required');
+                $("#tenant_f_name").css('background-color','#FFDBDB');
+                return false;
+
+            } else if ($("#tenant_m_name").val() == '') {
+                $("#tenant_m_nameError").html('Middle Name Required');
+                $("#tenant_m_name").css('background-color','#FFDBDB');
+                return false;
+            } else if ($("#tenant_l_name").val() == '') {
+                $("#tenant_l_nameError").html('Last Name Required');
+                $("#tenant_l_name").css('background-color','#FFDBDB');
+                return false;
+
+            } else if ($("#tenant_m_name").val() == $("#tenant_f_name").val()) {
+                $("#tenant_m_nameError").html('Middle & First Name can\'t the Same');
+                $("#tenant_m_name").css('background-color','#FFDBDB');
+                return false;
+
+            } else if ($("#tenant_m_contact").val() == '') {
+                $("#tenant_m_contactError").html('Contact Information Required');
+                $("#tenant_m_contact").css('background-color','#FFDBDB');
+                return false;
+
+            } else if ($("#tenant_a_contact") .val() == $("#tenant_m_contact").val()) {
+                $("#tenant_a_contactError").html('Contacts can\'t be the Same');
+                $("#tenant_a_contact").css('background-color','#FFDBDB');
+                return false;
+            } else if ($("#tenant_email").val() == '') {
+                $("#tenant_emailError").html('Email Required');
+                $("#tenant_email").css('background-color','#FFDBDB');
+                return false;
+
+            } else if ($("#tenant_id_no").val() == '') {
+                $("#tenant_id_noError").html('Identification No. Required');
+                $("#tenant_id_no").css('background-color','#FFDBDB');
+                return false;
+            } else if ($("#tenant_id_no").val() == $("#tenant_a_contact").val()) {
+                $("#tenant_id_noError").html('Identification & Contact No. can\'t be the Same');
+                $("#tenant_id_no").css('background-color','#FFDBDB');
+                return false;
+
+            } else if ($("#tenant_id_copy").val() == '') {
+                $("#tenant_id_copyError").html('Identification Copy Required');
+                $("#tenant_id_copy").css('background-color','#FFDBDB');
+                return false;
+
+            } else {
+                $("#sectionTwoOccpantsInfo").show();
+                $("#sectionOnePersonalInfo").hide();
+                $("#stepOneIndicatorNo").html('<i class="fa fa-check"></i>');
+                $("#stepOneIndicatorNo").css('background-color', '#FFC107');
+                $("#stepOneIndicatorNo").css('color', '#00192D');
+                $("#stepOneIndicatorText").html('Done');
+
+                //Change the Field's Properties
+                $("#tenant_f_nameError").html('');
+                $("#tenant_f_name").css('border','1px solid #379E1B');
+                $("#tenant_f_name").css('background-color','rgb(55, 158, 27, .3)');
+            }
+        });
+        $('#secondStepPreviousBtn').click(function(e){
+            e.preventDefault();
+            $("#sectionTwoOccpantsInfo").hide();
+            $("#sectionOnePersonalInfo").show();
+            $("#stepOneIndicatorNo").html('1');
+            $("#stepOneIndicatorNo").css('background-color', '#00192D');
+            $("#stepOneIndicatorNo").css('color', '#FFC107');
+            $("#stepOneIndicatorText").html('Personal Information');
+        });
+        $("#secondStepNextBtn").click(function(e){
+            e.preventDefault();
+            alert ('Validation Pending. I\'ll get back to this');
+
+            $("#sectionThreePetsInfo").show();
+            $("#sectionTwoOccpantsInfo").hide();
+
+            $("#stepTwoIndicatorNo").html('<i class="fa fa-check"></i>');
+            $("#stepTwoIndicatorNo").css('background-color', '#FFC107');
+            $("#stepTwoIndicatorNo").css('color', '#00192D');
+            $("#stepTwoIndicatorText").html('Done');
+
+        });
+        $("#thirdStepPreviousBtn").click(function(e){
+            e.preventDefault();
+
+            $("#sectionTwoOccpantsInfo").show();
+            $("#sectionThreePetsInfo").hide();
+
+            $("#stepTwoIndicatorNo").html('2');
+            $("#stepTwoIndicatorNo").css('background-color', '#00192D');
+            $("#stepTwoIndicatorNo").css('color', '#FFC107');
+            $("#stepTwoIndicatorText").html('Occupants Information');
+        });
+        $("#thirdStepNextBtn").click(function(e){
+            e.preventDefault();
+
+            $("#sectionFourIncomeSourceInfo").show();
+            $("#sectionThreePetsInfo").hide();
+
+            $("#stepThreeIndicatorNo").html('<i class="fa fa-check"></i>');
+            $("#stepThreeIndicatorNo").css('background-color', '#FFC107');
+            $("#stepThreeIndicatorNo").css('color', '#00192D');
+            $("#stepThreeIndicatorText").html('Done');
+        });
+        $("#fourthStepPreviousBtn").click(function(e){
+            e.preventDefault();
+
+            $("#sectionFourIncomeSourceInfo").hide();
+            $("#sectionThreePetsInfo").show();
+
+            $("#stepThreeIndicatorNo").html('3');
+            $("#stepThreeIndicatorNo").css('background-color', '#00192D');
+            $("#stepThreeIndicatorNo").css('color', '#FFC107');
+            $("#stepThreeIndicatorText").html('Pets Information');
+
+        });
+        $("#fourthStepNextBtn").click(function(e){
+            e.preventDefault();
+
+            $("#sectionFiveRentalAgreementInfo").show();
+            $("#sectionFourIncomeSourceInfo").hide();
+
+            $("#stepFourIndicatorNo").html('<i class="fa fa-check"></i>');
+            $("#stepFourIndicatorNo").css('background-color', '#FFC107');
+            $("#stepFourIndicatorNo").css('color', '#00192D');
+            $("#stepFourIndicatorText").html('Done');
+        });
+        $("#fifththStepPreviousBtn").click(function(e){
+            e.preventDefault();
+
+            $("#sectionFiveRentalAgreementInfo").hide();
+            $("#sectionFourIncomeSourceInfo").show();
+
+            $("#stepFourIndicatorNo").html('4');
+            $("#stepFourIndicatorNo").css('background-color', '#00192D');
+            $("#stepFourIndicatorNo").css('color', '#FFC107');
+            $("#stepFourIndicatorText").html('Source of Income');
+        });
+    });
+
+            </script>
 
   </body>
 </html>

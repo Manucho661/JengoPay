@@ -24,21 +24,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         case 'tenant':
             case 'tenant':
-                $name = $_POST['name'] ?? '';
-                $email = $_POST['email'] ?? '';
-                $phone = $_POST['phone'] ?? '';
-                $id_no = $_POST['id'] ?? '';
-                $residence = $_POST['residence'] ?? '';
-                $unit = $_POST['unit'] ?? '';
+                $first_name = $_POST['tenant_f_name'] ?? '';
+                $middle_name = $_POST['tenant_m_name'] ?? '';
+                $email = $_POST['tenant_email'] ?? '';
+                $phone = $_POST['tenant_m_contact'] ?? '';
+                $id_no = $_POST['tenant_id_no'] ?? '';
+                $residence = $_POST['building_name'] ?? '';
+                $unit = $_POST['unit_name'] ?? '';
                 $status = 'active';
     
-                if ($name && $email && $phone && $id_no && $residence && $unit) {
+                if ($first_name && $middle_name && $email && $phone && $id_no && $residence && $unit) {
                     try {
                         $pdo->beginTransaction();
     
                         // Step 1: Insert into users
-                        $stmtUser = $pdo->prepare("INSERT INTO users (name, email) VALUES (?, ?)");
-                        $stmtUser->execute([$name, $email]);
+                        $stmtUser = $pdo->prepare("INSERT INTO users (first_name, middle_name, email) VALUES (?, ?)");
+                        $stmtUser->execute([$first_name, $email]);
                         $user_id = $pdo->lastInsertId();
     
                         // Step 2: Insert into tenants

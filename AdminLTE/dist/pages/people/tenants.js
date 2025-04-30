@@ -76,17 +76,24 @@ function fetchTenants(building) {
       .then(data => {
           const tableBody = document.querySelector('#users-table tbody');
 
+          // ✅ Save the number of rows (tenants)
+          const enteries = document.getElementById('enteries');
+          const tenantCount = data.length;
+          enteries.textContent = tenantCount;
+
+          
           // If DataTable already exists, destroy it
           if ( $.fn.dataTable.isDataTable('#users-table') ) {
               $('#users-table').DataTable().destroy();
           }
-
           tableBody.innerHTML = '';
 
           data.forEach(user => {
               const row = document.createElement('tr');
+              row.setAttribute('onclick', `goToDetails(${user.user_id})`);
+
               row.innerHTML = `
-                    <td>${user.name}</td>
+                    <td>${user.first_name}</td>
                     <td>${user.id_no}</td>
                     <td> <div> ${user.residence}</div>
                     <div style="color: green;" > ${user.unit}</div>
@@ -116,18 +123,52 @@ function fetchTenants(building) {
           // After inserting rows, reinitialize DataTable
           $(document).ready(function () {
             const table = $('#users-table').DataTable({
-              dom: 'rtip', // No default buttons or search
-              buttons: ['excel', 'pdf']
+              dom: 'Brtip', // ⬅ Changed to include Buttons in DOM
+              buttons: [
+                {
+                  extend: 'excelHtml5',
+                  text: 'Excel',
+                  exportOptions: {
+                    columns: ':not(:last-child)' // ⬅ Exclude last column
+                  }
+                },
+                {
+                  extend: 'pdfHtml5',
+                  text: 'PDF',
+                  exportOptions: {
+                    columns: ':not(:last-child)' // ⬅ Exclude last column
+                  },
+                  customize: function (doc) {
+                    // Center table
+                    doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+                
+                    // Optional: center-align the entire table
+                    doc.styles.tableHeader.alignment = 'center';
+                    doc.styles.tableBodyEven.alignment = 'center';
+                    doc.styles.tableBodyOdd.alignment = 'center';
+
+                    const body = doc.content[1].table.body;
+                        for (let i = 1; i < body.length; i++) { // start from 1 to skip header
+                          if (body[i][4]) {
+                            body[i][4].color = 'blue'; // set email column to blue
+                          }
+                        }
+
+                  }
+                
+                }
+              ]
             });
-
-            // Append buttons to our div
+          
+            // Append buttons to your div
             table.buttons().container().appendTo('#custom-buttons');
-
-            // Custom search input control
+          
+            // Custom search
             $('#searchInput').on('keyup', function () {
               table.search(this.value).draw();
+            });
+          
           });
-        });
       })
       .catch(error => {
           console.error('Error fetching data:', error);
@@ -164,7 +205,7 @@ function fetchTenants(building) {
           event.preventDefault(); // Prevent the form from submitting normally
   
           // Create FormData object from the form
-          const formData = new FormData(document.getElementById("tenantForm"));
+          const formData = new FormData(document.getElementById("form_for_tenant"));
           formData.append("type", "tenant"); // Add the type for tenant
   
           // Send data via fetch
@@ -207,6 +248,10 @@ function fetchTenants(building) {
       document.getElementById("addTenantModal").style.display = "flex";
     }
 
+    // Function to open the tenant popup
+    function tenant_form() {
+      document.getElementById("tenant-form").style.display = "flex";
+    }
     // Function to close the complaint popup
     function closePopup() {
       document.getElementById("addTenantModal").style.display = "none";
