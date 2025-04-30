@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 24, 2025 at 10:56 AM
+-- Generation Time: Apr 30, 2025 at 04:47 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -29,7 +29,8 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `users` (
   `id` int(10) UNSIGNED NOT NULL,
-  `name` varchar(100) NOT NULL,
+  `first_name` varchar(100) NOT NULL,
+  `middle_name` varchar(100) NOT NULL,
   `email` varchar(150) NOT NULL,
   `password` varchar(11) NOT NULL,
   `phone` varchar(20) DEFAULT NULL,
@@ -41,14 +42,6 @@ CREATE TABLE `users` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`id`, `name`, `email`, `password`, `phone`, `avatar`, `role`, `status`, `email_verified_at`, `last_login`, `created_at`, `updated_at`) VALUES
-(126, 'Wanyonyi', 'wanyonyi44@gmail.com', '', NULL, NULL, 'user', 'active', NULL, NULL, '2025-04-23 13:53:27', '2025-04-23 13:53:27'),
-(130, 'Wanyonyi', 'emmah56@gmail.com', '', NULL, NULL, 'user', 'active', NULL, NULL, '2025-04-23 13:56:52', '2025-04-23 13:56:52');
 
 --
 -- Indexes for dumped tables
@@ -69,7 +62,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=153;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

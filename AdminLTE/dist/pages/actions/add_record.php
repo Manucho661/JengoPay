@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
                         // Step 1: Insert into users
                         $stmtUser = $pdo->prepare("INSERT INTO users (first_name, middle_name, email) VALUES (?, ?)");
-                        $stmtUser->execute([$first_name, $email]);
+                        $stmtUser->execute([$first_name, $middle_name,  $email]);
                         $user_id = $pdo->lastInsertId();
     
                         // Step 2: Insert into tenants
