@@ -1,3 +1,42 @@
+<?php
+include '../db/connect.php'; // Make sure $pdo is defined here (PDO instance)
+
+// Get input values
+// $building_id = $_POST['building_id'] ?? null;
+$subject = $_POST['subject'] ?? '';
+$message = $_POST['message'] ?? '';
+$files = $_POST['files'] ?? '';
+$unit_id = $_POST['unit_id'] ?? '';
+$tenant = $_POST['tenant'] ?? '';
+
+
+try {
+    // Insert message into messages table
+    $stmt = $pdo->prepare("INSERT INTO messages ( subject,  message, files, unit_id, tenant) VALUES ( ?, ?, ?, ?, ?)");
+    $stmt->execute([ $subject,  $message, $files,  $unit_id, $tenant]);
+
+    $message_id = $pdo->lastInsertId();
+
+    // Handle file uploads
+    $upload_dir = "uploads/";
+    if (!empty($_FILES['attachments']['name'][0])) {
+        foreach ($_FILES['attachments']['name'] as $key => $name) {
+            $tmp_name = $_FILES['attachments']['tmp_name'][$key];
+            $target_file = $upload_dir . basename($name);
+
+            if (move_uploaded_file($tmp_name, $target_file)) {
+                $stmt_file = $pdo->prepare("INSERT INTO message_files (message_id, file_path) VALUES (?, ?)");
+                $stmt_file->execute([$message_id, $target_file]);
+            }
+        }
+    }
+
+    // echo "Message sent successfully.";
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+}
+?>
+
 <!doctype html>
 <html lang="en">
   <!--begin::Head-->
@@ -331,7 +370,16 @@ display: flex;
             />
             <!--end::Brand Image-->
             <!--begin::Brand Text-->
-            <span class="brand-text fw-light">AdminLTE 4</span>
+            <span class="brand-text fw-light">
+            <a href="index3.html" class="brand-link">
+        <!--<img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">-->
+        <span class="brand-text font-weight-light"><b class="p-2"
+                style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
+                class="p-2"
+                style=" border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107;">JENGOPAY</b></span>
+    </a>
+
+            </span>
             <!--end::Brand Text-->
           </a>
           <!--end::Brand Link-->
@@ -724,7 +772,6 @@ display: flex;
 
 <!-- new text popup -->
                 <div class="newtextpopup-overlay" id="newtextPopup">
-
                     <div  class="card" style="margin-top: 20px;">
                       <div class="card-header new-message-header">
                         New Message
@@ -732,12 +779,12 @@ display: flex;
                       </div>
                       <div class="card-body new-message-body">
                         <div class="row">
-
+                        <form action="texts.php" method="POST" enctype="multipart/form-data">
                           <div class="col-md-12" style="display: flex;">
 
                             <div id="field-group-first" class="field-group first" >
                               <label for="recipient" style="color: black;">Recepient<i class="fas fa-mouse-pointer title-icon" style="transform: rotate(110deg);"></i>                                Building</label>
-                              <select id="recipient" onchange="toggleShrink()" class="recipient" >
+                              <select name="building_id"  id="recipient" onchange="toggleShrink()" class="recipient" >
                                 <option value=""> Select Building </option>
                                 <option value="all"  >All Tenants</option>
                                 <option value="john-doe">Manucho</option>
@@ -747,7 +794,7 @@ display: flex;
 
                             <div id="field-group-second" class="field-group second" style="display:none" >
                               <label for="recipient">Unit</label>
-                              <select id="recipient-units" onchange="toggleShrink1()" class="recipient" >
+                              <select name="unit_id" id="recipient-units" onchange="toggleShrink1()" class="recipient" >
                                 <option value="">-- Select Unit --</option>
                                 <option value="all">All Tenants</option>
                                 <option value="john-doe">C12</option>
@@ -757,7 +804,7 @@ display: flex;
 
                             <div id="field-group-third" class="field-group third" style="display:none" >
                               <label for="tenant">Tenant</label>
-                              <select id="Tenant" onchange="toggleShrink2()" class="tenant" >
+                              <select name="tenant" id="Tenant" onchange="toggleShrink2()" class="tenant" >
                                 <option value="">Joseph</option>
 
                               </select>
@@ -770,17 +817,17 @@ display: flex;
                         <div class="field-group">
 
                           <label for="subject new-message">Subject (optional)</label>
-                          <input type="text" id="subject" class="subject" placeholder="Enter subject..." />
+                          <input name="subject" type="text" id="subject" class="subject" placeholder="Enter subject..." />
                         </div>
 
                         <div class="field-group">
                           <label for="message">Message</label>
-                          <textarea id="message" placeholder="Type your message here..."></textarea>
+                          <textarea name="message" id="message" placeholder="Type your message here..."></textarea>
                         </div>
                         <!-- File input for multiple file types -->
 
                         <div style="padding-bottom: 2%;">
-                        <input type="file" id="fileInput" onchange="handleFiles(event)" class="form-control" multiple>
+                        <input  name="files"  type="file" id="fileInput" onchange="handleFiles(event)" class="form-control" multiple>
 
                         <!-- Section to display selected files' previews and sizes -->
                         <div id="filePreviews"></div>
@@ -789,9 +836,9 @@ display: flex;
                         <div class="actions d-flex justify-content-end">
                           <button class="draft-btn text-danger btn">Cancel</button>
                           <button class="draft-btn btn">Save Draft</button>
-                          <button class="send-btn btn">Send</button>
+                          <button type="submit"  class="send-btn btn">Send</button>
                         </div>
-
+</form>
                       </div>
 
                     </div>

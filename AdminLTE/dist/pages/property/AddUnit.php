@@ -1,58 +1,82 @@
 <?php
-include '../db/connect.php'; // Make sure this defines $conn for mysqli
+include '../db/connect.php'; // Make sure $pdo is defined here
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-  $building_id = isset($_GET['building_id']) ? $_GET['building_id'] : null;
+    // Check if building_id is in GET or POST
+    $building_id = $_POST['building_id'] ?? ($_GET['building_id'] ?? null);
 
-    // Prepare SQL statement to insert data into units table
-    $stmt = $conn->prepare("INSERT INTO units (
-        unit_number, size, floor_number, rooms, room_type, bathrooms, kitchen, balcony, rent_amount, description, building_id, created_at, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
+    // Check if this unit already exists
+    $checkSql = "SELECT COUNT(*) FROM units WHERE unit_number = :unit_number AND building_id = :building_id";
+    $checkStmt = $pdo->prepare($checkSql);
+    $checkStmt->execute([
+        ':unit_number' => $_POST['unit_number'],
+        ':building_id' => $building_id
+    ]);
 
-    // Bind parameters (including building_id)
-    $stmt->bind_param(
-        "sisssssssss", // Adjusted for the building_id (i for integer)
-        $_POST['unit_number'],
-        $_POST['size'],
-        $_POST['floor_number'],
-        $_POST['rooms'],
-        $_POST['room_type'],
-        $_POST['bathrooms'],
-        $_POST['kitchen'],
-        $_POST['balcony'],
-        $_POST['rent_amount'],
-        $_POST['description'],
-        $_POST['building_id'] // This is the foreign key
-    );
-
-    // Execute the query
-    if ($stmt->execute()) {
-        // echo "Unit added successfully!";
-    } else {
-        echo "Error: " . $stmt->error;
+    if ($checkStmt->fetchColumn() > 0) {
+        // Duplicate found
+        header("Location: ".$_SERVER['PHP_SELF']."?building_id=$building_id&duplicate=1");
+        exit();
     }
-    // Close the prepared statement and connection
-    // $stmt->close();
-    // $conn->close();
-} else {
-    //  echo "Form not submitted.";
+
+    // No duplicate, proceed with insert
+    $sql = "INSERT INTO units (
+      unit_number, size, floor_number, rooms, room_type, bathrooms, kitchen, balcony,
+      rent_amount, description, building_id, created_at, updated_at
+    ) VALUES (
+      :unit_number, :size, :floor_number, :rooms, :room_type, :bathrooms, :kitchen, :balcony,
+      :rent_amount, :description, :building_id, NOW(), NOW()
+    )";
+
+    $stmt = $pdo->prepare($sql);
+
+    try {
+        $stmt->execute([
+            ':unit_number'   => $_POST['unit_number'],
+            ':size'          => $_POST['size'],
+            ':floor_number'  => $_POST['floor_number'],
+            ':rooms'         => $_POST['rooms'],
+            ':room_type'     => $_POST['room_type'],
+            ':bathrooms'     => $_POST['bathrooms'],
+            ':kitchen'       => $_POST['kitchen'],
+            ':balcony'       => $_POST['balcony'],
+            ':rent_amount'   => $_POST['rent_amount'],
+            ':description'   => $_POST['description'],
+            ':building_id'   => $building_id
+        ]);
+
+        // Redirect to avoid resubmission
+        header("Location: ".$_SERVER['PHP_SELF']."?building_id=$building_id&success=1");
+        exit();
+
+    } catch (PDOException $e) {
+        // Handle DB error (e.g., duplicate constraint violation)
+        header("Location: ".$_SERVER['PHP_SELF']."?building_id=$building_id&error=1");
+        exit();
+    }
 }
 
-// Fetch the data from the database using $pdo
+// Show feedback messages if redirected
+if (isset($_GET['success'])) {
+    echo "<script>alert('✅ Unit added successfully!');</script>";
+} elseif (isset($_GET['duplicate'])) {
+    echo "<script>alert('⚠️ This unit already exists.');</script>";
+} elseif (isset($_GET['error'])) {
+    echo "<script>alert('❌ Error inserting unit.');</script>";
+}
+
+// Fetch buildings (optional part, unchanged)
 $sql = "SELECT building_id, building_name, building_type FROM buildings";
 $stmt = $pdo->query($sql);
 
-// Check if a result is returned
 if ($stmt->rowCount() > 0) {
-    $building = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch the first row of data
+    $building = $stmt->fetch(PDO::FETCH_ASSOC);
 } else {
-    // Handle the case where no data is returned (optional)
-    echo "No records found.";
+    echo "No building records found.";
 }
-
-
 ?>
+
 
 
 <!doctype html>
@@ -488,25 +512,25 @@ if ($stmt->rowCount() > 0) {
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
-            <div class="property-title"><?php echo htmlspecialchars($building['building_name']); ?></div>
-            <p><?php echo htmlspecialchars($building['building_type']); ?>|
-              <button class="edit-btn"><i class="fas fa-edit"></i>EDIT</button>
-           </p>
-            <hr>
-<div style="display: flex;gap: 25px;">
-<!-- <a href=""><p>Summary</p></a> -->
-<!-- <a href="../property/AllUnits.html"><p>Units(5)</p></a> -->
-</div>
-</div>
+
+          <div class="col-sm-8">
+              <div class="">
+
+
+              </div>
+             </div>
+
+            <!-- <hr> -->
+
 
 <div style="display: flex; gap: 25px;">
-   <a href="../property/AllUnits.html"  style="color: #FFC107;"> <p>Unit list</p></a>
-    <a href="../property/meterreading.html"  style="color: #FFC107;"><p>Meter Reading</p></a>
+   <a href="../property/AllUnits.html"  style="color: #FFC107; font-size:large;"> <p>Unit list</p></a>
+    <a href="../property/meterreading.html"  style="color: #FFC107; font-size:large;"><p>Meter Reading</p></a>
 </div>
 
 <!-- <b><p>Add Unit to Crown Z Towers</p></b> -->
 
-<b><p>What is the Unit Information?</p></b>
+<b><p  style="color: #FFC107;">What is the Unit Information?</p></b>
 
 <form action="AddUnit.php" method="POST">
     <div class="row">
@@ -514,21 +538,24 @@ if ($stmt->rowCount() > 0) {
 <div class="col-md-4">
             <label for="building_id">Building*</label>
             <select id="building_id" name="building_id" required>
-                <?php
-                    // Assuming you want to fetch building options from the database
-                    include '../db/connect.php'; // Make sure this defines $conn for mysqli
-                    $result = $conn->query("SELECT building_id, building_name FROM buildings");
+            <option>-Select Building-</option>
+            <?php
+// Assuming you want to fetch building options from the database
+include '../db/connect.php'; // Make sure this defines $pdo for PDO
 
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<option value='" . $row['building_id'] . "'>" . $row['building_name'] . "</option>";
-                        }
-                    } else {
-                        echo "<option value=''>No Buildings Available</option>";
-                    }
+$stmt = $pdo->query("SELECT building_id, building_name FROM buildings");
 
-                    $conn->close();
-                ?>
+if ($stmt->rowCount() > 0) {
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        echo "<option value='" . $row['building_id'] . "'>" . $row['building_name'] . "</option>";
+    }
+} else {
+    echo "<option value=''>No Buildings Available</option>";
+}
+
+// No need to manually close the connection, PDO handles it automatically
+?>
+
             </select>
         </div>
 
@@ -544,13 +571,14 @@ if ($stmt->rowCount() > 0) {
 
         <div class="col-md-4">
             <label for="size">Floor Number*</label>
-            <input type="number" id="floor_number" name="floor_number" placeholder="Enter Floor Size" required>
+            <input type="number" id="floor_number" name="floor_number" placeholder="Enter Floor Number" required>
         </div>
 
         <b><p>What is the listing information?</p></b>
         <div class="col-md-4">
             <label for="rooms">Rooms*</label>
             <select id="rooms" name="rooms" required>
+                <option value="rooms">-Select Rooms-</option>
                 <option value="Bedsitter">Bedsitter</option>
                 <option value="One bedroom">One bedroom</option>
                 <option value="Two bedroom">Two Bedroom</option>
@@ -563,6 +591,7 @@ if ($stmt->rowCount() > 0) {
         <div class="col-md-4">
             <label for="rooms">Room Type*</label>
             <select id="rooms" name="room_type" required>
+            <option value="rooms">-Select Room Type-</option>
                 <option value="Rental">Rental</option>
                 <option value="Air BnB">Air BnB</option>
                 <option value="Banking Hall">Banking Hall</option>
@@ -573,6 +602,7 @@ if ($stmt->rowCount() > 0) {
         <div class="col-md-4">
             <label for="rooms">Bathrooms*</label>
             <select id="rooms" name="bathrooms" required>
+                 <option value="rooms">-Select Bathroom-</option>
                 <option value="One bathroom">One Bathroom</option>
                 <option value="Two bathroom">Two Bathroom</option>
                 <option value="Three bathroom">Three Bathroom</option>
@@ -584,6 +614,7 @@ if ($stmt->rowCount() > 0) {
         <div class="col-md-4">
             <label for="kitchen">Kitchen*</label>
             <select id="kitchen" name="kitchen" required>
+                 <option value="rooms">-Select-</option>
                 <option value="open">Open</option>
                 <option value="closed">Closed</option>
             </select>
@@ -592,6 +623,7 @@ if ($stmt->rowCount() > 0) {
         <div class="col-md-4">
             <label for="balcony">Balcony*</label>
             <select id="balcony" name="balcony" required>
+                <option value="rooms">-Select-</option>
                 <option value="one">One</option>
                 <option value="two">Two</option>
                 <option value="three">Three</option>
@@ -614,13 +646,13 @@ if ($stmt->rowCount() > 0) {
 
     <div class="row justify-content-end">
         <div class="col-md-4">
-            <button type="submit">Create Unit</button>
+        <button type="submit" style="color:#00192D;background-color:white;font-size:larger;">Create Unit</button>
         </div>
         <div class="col-md-4">
-            <a href="../property/AddUnit.php"><button>Add Another Unit</button></a>
+            <a href="../property/AddUnit.php"><button style="color:#00192D;background-color:white;font-size:larger;">Add Another Unit</button></a>
         </div>
         <div class="col-md-4">
-            <a href="../property/Units.php"><button>Cancel</button></a>
+            <a href="../property/Units.php"><button style="color:#00192D;background-color:white;font-size:larger;">Cancel</button></a>
         </div>
     </div>
 </form>

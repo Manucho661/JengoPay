@@ -358,7 +358,7 @@ if (isset($_GET['building_id'])) {
             />
             <!--end::Brand Image-->
             <!--begin::Brand Text-->
-            <span class="brand-text fw-dark">BT JENGOPAY</span>
+            <a href="../Dashboard/index2.html"><span class="brand-text fw-dark">BT JENGOPAY</span></a>
             <!--end::Brand Text-->
           </a>
           <!--end::Brand Link-->
@@ -396,23 +396,24 @@ if (isset($_GET['building_id'])) {
 
             <div class="col-sm-8">
               <div class="">
-                <h3 class="mb-0 contact_section_header"> <i class="fas fa-home icon"></i> <?php echo htmlspecialchars($building['building_name']); ?>
-                <!-- <span>,Units</span> </h3> -->
-                <h6 class="property-type"><b><?php echo htmlspecialchars($building['building_type']); ?></b></h6>
+                <h3 style="color:#FFC107;" class="mb-0 contact_section_header">
+                   <b>  <i class="fas fa-home icon"></i><?php echo htmlspecialchars($building['building_name']); ?></b>
+                </h3>
+                <h6  style="color:#193042;" class="property-type"><b><?php echo htmlspecialchars($building['building_type']); ?></b></h6>
               </div>
             </div>
 
 
             <!-- start row -->
             <div class="row mt-3 personal-info">
-              <h6 class="mb-0 contact_section_header mb-2"> </i> Basic Info</h6>
+              <h6 style="color:black;" class="mb-0 contact_section_header mb-2"> </i> Basic Info</h6>
           <div class="col-md-12">
           <div class="row">
   <div class="col-md-3">
     <div class="personal-item d-flex justify-content-between bg-white">
       <div class="category-number p-2" style="display: flex; gap: 5px; align-items: center;">
-        <div class="category"><i class="fas fa-briefcase personal-info-icon"></i> <span class="personal-info item-name"> Location,</span> </div>
-        <div class="number"><b><?php echo htmlspecialchars($building['county']); ?></b></div>
+        <div class="category"><i class="fas fa-briefcase personal-info-icon"></i> <span style="color:#193042;" class="personal-info item-name"> Location,</span> </div>
+        <div  style="color:#FFC107;"  class="number"><b><?php echo htmlspecialchars($building['county']); ?></b></div>
       </div>
     </div>
   </div>
@@ -443,8 +444,8 @@ if (isset($_GET['building_id'])) {
       <div class="personal-item d-flex justify-content-between bg-white">
         <div class="labal-value p-2" style="display: flex; gap: 5px; align-items: center;">
           <div class="label"><i class="fa fa-envelope personal-info-icon"></i>
-            <span class="personal-info item-name email"> Ownership,</span> </div>
-          <div class="value"><b><?php echo htmlspecialchars($building['ownership_info']); ?></b></div>
+            <span style="color:#193042;" class="personal-info item-name email"> Ownership,</span> </div>
+          <div style="color:#FFC107;" class="value"><b><?php echo htmlspecialchars($building['ownership_info']); ?></b></div>
         </div>
       </div>
     </div>
@@ -452,9 +453,9 @@ if (isset($_GET['building_id'])) {
     <div class="col-md-3">
       <div class="personal-item d-flex justify-content-between bg-white">
         <div class="category-number p-2" style="display: flex; gap: 5px; align-items: center;">
-          <div class="category"><i class="fas fa-city personal-info-icon"></i> <span class="personal-info item-name">
+          <div class="category"><i class="fas fa-city personal-info-icon"></i> <span  style="color:#193042;" class="personal-info item-name">
             Units,</span> </div>
-          <div class="phone"><b><?php echo htmlspecialchars($building['units_number']); ?></b></div> <!-- Assuming static data for units, you could replace it with dynamic data -->
+          <div style="color:#FFC107;" class="phone"><b><?php echo htmlspecialchars($building['units_number']); ?></b></div> <!-- Assuming static data for units, you could replace it with dynamic data -->
         </div>
       </div>
     </div>
@@ -481,10 +482,10 @@ if (isset($_GET['building_id'])) {
 </div>
 
 <div style="display: flex; gap: 25px;">
-    <a href="../property/Units.php" style="color: #FFC107;"><p>Unit list</p></a>
+    <a href="../property/Units.php" style="color:#193042;"><p>Unit list</p></a>
     <?php
 // This could be inside a loop where you list multiple buildings
-echo '<a style="color: #FFC107;" href="meterreading.php?building_id=' . $building['building_id'] . '  ">Meter Reading</a>';
+echo '<a style="color:#193042;" href="../property/meterreading.php?building_id=' . $building['building_id'] . '  ">Meter Reading</a>';
 ?>
     <!-- <a href="../property/meterreading.php"  style="color: #FFC107;"><p>Meter Reading</p></a> -->
 </div>
@@ -501,7 +502,7 @@ echo '<a style="color: #FFC107;" href="meterreading.php?building_id=' . $buildin
     <div class="col-md-12">
       <div class="card mb-4">
         <div class="card-header">
-          <h5 class="card-title text-warning">Registered Units</h5>
+          <h5 style="color:#193042;" class="card-title"><b>Registered Units</b></h5>
           <div class="card-tools">
             <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
               <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
@@ -693,57 +694,18 @@ echo '<a style="color: #FFC107;" href="meterreading.php?building_id=' . $buildin
               <label for="ownership">Ownership</label>
               <input type="text" class="form-control" name="ownership_info" value="<?= htmlspecialchars($building['ownership_info']) ?>" required>
             </div>
-
             <!-- Add more fields here as needed -->
           </div>
         </div>
-
-
   </div>
 </div>
-
-
-
-
-
-
-
 <!-- end -->
-
-
       </div>
       </div>
     </div>
 
-
-
-
-    <!--begin::Script-->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
-
-    <script>
-    // Show the modal
-    function openModal() {
-        document.getElementById("modalOverlay").style.display = "flex";
-    }
-
-    // Close the modal
-    function closeModal() {
-        document.getElementById("modalOverlay").style.display = "none";
-    }
-
-    // Trigger the modal to show when the button is clicked
-    document.querySelector('.edit-btn').addEventListener('click', openModal);
-</script>
-
-
-
-    <script>
-      function enableEdit() {
-          document.getElementById("description").disabled = false;
-      }
-  </script>
-
+<!--begin::Script-->
+<!--begin::Third Party Plugin(OverlayScrollbars)-->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const steps = document.querySelectorAll(".form-step");
@@ -816,18 +778,29 @@ echo '<a style="color: #FFC107;" href="meterreading.php?building_id=' . $buildin
         });
             </script>
 
+
+            <script>
+              function openmeterPopup() {
+                  document.getElementById('meteringPopup').style.display = 'flex'; // Make the overlay visible
+              }
+
+              function closemeterPopup() {
+                  document.getElementById('meteringPopup').style.display = 'none'; // Hide the overlay
+              }
+          </script>
+
+
 <script>
-  // Function to open the complaint popup
-  function openunitsPopup() {
-    document.getElementById("unitsPopup").style.display = "flex";
+  // Function to meter the meter popup
+  function meterreadingopenPopup() {
+    document.getElementById("meterPopup").style.display = "flex";
   }
 
-  // Function to close the complaint popup
-  function closeunitsPopup() {
-    document.getElementById("unitsPopup").style.display = "none";
+  // Function to close the meter popup
+  function meterreadingclosePopup() {
+    document.getElementById("meterPopup").style.display = "none";
   }
 </script>
-
 
 <script>
         $(document).ready(function () {
@@ -1021,6 +994,19 @@ setInterval(() => {
 </script>
 
 <script>
+  // Function to open the complaint popup
+  function openshiftPopup() {
+    document.getElementById("shiftPopup").style.display = "flex";
+  }
+
+  // Function to close the complaint popup
+  function closeshiftPopup() {
+    document.getElementById("shiftPopup").style.display = "none";
+  }
+</script>
+
+
+<script>
   const ctx = document.getElementById('myPieChart').getContext('2d');
 
   const myPieChart = new Chart(ctx, {
@@ -1210,6 +1196,12 @@ setInterval(() => {
       // - END PIE CHART -
       //-----------------
     </script>
+    <!--end::Script-->
+
+
+    <!--end::OverlayScrollbars Configure-->
+    <!-- OPTIONAL SCRIPTS -->
+    <!-- apexcharts -->
     <!--end::Script-->
   </body>
   <!--end::Body-->
