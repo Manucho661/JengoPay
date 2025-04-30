@@ -32,20 +32,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $residence = $_POST['building_name'] ?? '';
                 $unit = $_POST['unit_name'] ?? '';
                 $status = 'active';
-    
+
                 if ($first_name && $middle_name && $email && $phone && $id_no && $residence && $unit) {
                     try {
                         $pdo->beginTransaction();
-    
+
                         // Step 1: Insert into users
-                        $stmtUser = $pdo->prepare("INSERT INTO users (first_name, middle_name, email) VALUES (?, ?)");
+                        $stmtUser = $pdo->prepare("INSERT INTO users (first_name, middle_name, email) VALUES (?,?, ?)");
                         $stmtUser->execute([$first_name, $middle_name,  $email]);
                         $user_id = $pdo->lastInsertId();
-    
+
                         // Step 2: Insert into tenants
                         $stmtTenant = $pdo->prepare("INSERT INTO tenants (user_id, phone_number, id_no, residence, unit, status) VALUES (?, ?, ?, ?, ?, ?)");
                         $stmtTenant->execute([$user_id, $phone, $id_no, $residence, $unit, $status]);
-    
+
                         $pdo->commit();
                         echo "Tenant and user added successfully!";
                     } catch (Exception $e) {
@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     echo "All tenant fields are required.";
                 }
-    
+
             break;
 
         // 🔜 You can add more like this:
