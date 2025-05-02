@@ -73,7 +73,21 @@
         font-size: 16px;
           background-color: rgba(128, 128, 128, 0.1);
       }
+      .summary-table {
+        float: right;
+        width: 20px;
+        margin-top: 20px;
+      }
 
+      .summary-table th {
+        width: 50%;
+        text-align: left;
+      }
+
+      .summary-table td input {
+        width: 70%;
+        font-size: 0.8rem; /* Adjusting the font size */
+      }
 
   </style>
   <script>
@@ -90,18 +104,20 @@
                                 </select>
                             </td>
                             <td><textarea name="Description" placeholder="Description" rows="1" required></textarea></td>
-                            <td><input type="number" name="item_price[]" placeholder="Unit Price" required oninput="updateTotal(this)"></td>
-                            <td><input type="number" name="item_quantity[]" placeholder="Quantity" required oninput="updateTotal(this)"></td>
-                            <td><input type="number" name="item_quantity[]" placeholder="Sub-Total" required oninput="updateTotal(this)"></td>
+                            <td><input type="number" class="form-control unit-price" placeholder="123"></td>
+                            <td><input type="number" class="form-control quantity" placeholder="1"></td>
+                            <td><input type="number" class="form-control subtotal" placeholder="0" readonly></td>
                             <td>
-                              <select name="payment_method" required>
+                              <select class="form-select vat-option">
                                 <option value="" disabled selected>Select Option</option>
-                                <option value="credit_card">VAT 16% Inclusive</option>
-                                <option value="paypal">VAT 16% Exclusive</option>
-                                <option value="bank_transfer">VAT 16% Zero Rated</option>
-                            </select>
-                          </td>
-                           <td><input type="number" name="item_total[]" placeholder="Total" readonly></td>
+                                <option value="inclusive">VAT 16% Inclusive</option>
+                                <option value="exclusive">VAT 16% Exclusive</option>
+                                <option value="zero">Zero Rated</option>
+                                <option value="exempt">Exempted</option>
+                              </select>
+                            </td>
+                            <td><input type="number" class="form-control vat-amount" placeholder="0" readonly></td>
+                            <td><input type="number" class="form-control total" placeholder="0" readonly></td>
                             <td><button type="button" class="delete-btn" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>
 
         `;
@@ -1027,10 +1043,9 @@
                             <tr>
                               <th>Item (Service)</th>
                               <th>Description</th>
-                              <th>Unit Price</th>
                               <th>Qty</th>
-                              <th>Subtotal</th>
-                            <th>Taxes</th>
+                              <th>Unit Price</th>
+                              <th>Taxes</th>
                               <th>Total</th>
                               <th>Delete</th>
                             </tr>
@@ -1039,39 +1054,67 @@
                             <tr>
                               <td>
                                 <select name="payment_method" required>
-                                    <option value="" disabled selected>Select Option</option>
-                                    <option value="credit_card">Rent</option>
-                                    <option value="paypal">Water Bill</option>
-                                    <option value="bank_transfer">Garbage</option>
+                                  <option value="" disabled selected>Select Option</option>
+                                  <option value="credit_card">Rent</option>
+                                  <option value="paypal">Water Bill</option>
+                                  <option value="bank_transfer">Garbage</option>
                                 </select>
-                            </td>
-                            <td><textarea name="Description" placeholder="Description" rows="1" required></textarea></td>
-                            <td><input type="number" name="item_price[]" placeholder="Unit Price" required oninput="updateTotal(this)"></td>
-                            <td><input type="number" name="item_quantity[]" placeholder="Quantity" required oninput="updateTotal(this)"></td>
-                            <td><input type="number" name="item_quantity[]" placeholder="Sub-Total" required oninput="updateTotal(this)"></td>
-                            <td>
-                              <select name="payment_method" required>
-                                <option value="" disabled selected>Select Option</option>
-                                <option value="credit_card">VAT 16% Inclusive</option>
-                                <option value="paypal">VAT 16% Exclusive</option>
-                                <option value="bank_transfer"> Zero Rated</option>
-                                <option value="bank_transfer">Exempted</option>
-                            </select>
-                            </td>
-                           <td><input type="number" name="item_total[]" placeholder="Total" readonly></td>
-                            <td><button type="button" class="delete-btn" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>
-                        </tr>
-                    </tbody>
-                </table>
+                              </td>
+                              <td><textarea name="Description" placeholder="Description" rows="1" required></textarea></td>
+                              <td><input type="number" class="form-control quantity" placeholder="1"></td>
+                              <td><input type="number" class="form-control unit-price" placeholder="123"></td>
+                              <td>
+                                <select class="form-select vat-option">
+                                  <option value="" disabled selected>Select Option</option>
+                                  <option value="inclusive">VAT 16% Inclusive</option>
+                                  <option value="exclusive">VAT 16% Exclusive</option>
+                                  <option value="exempt">Exempted</option>
+                                </select>
+                              </td>
+                              <td><input type="number" class="form-control total" placeholder="0" readonly></td>
+                              <td style="width: 10%; text-align: center; padding: 2px;">
+                                <button type="button" class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
+                                  <i class="fa fa-trash" style="font-size: 12px;"></i>
+                                </button>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                        <table class="summary-table table table-bordered" style="width: 20%; float: right; font-size: 0.8rem; margin-top: 10px;">
+                          <tbody>
+                            <tr>
+                              <th style="width: 50%; padding: 5px; text-align: left;">Sub-total</th>
+                              <td><input type="number" class="form-control subtotal-summary" placeholder="0" readonly style="padding: 5px;"></td>
+                            </tr>
+                            <tr>
+                              <th style="width: 50%; padding: 5px; text-align: left;">VAT 16%</th>
+                              <td><input type="number" class="form-control tax-summary" placeholder="0" readonly style="padding: 5px;"></td>
+                            </tr>
+
+                            <tr>
+                              <th style="width: 50%; padding: 5px; text-align: left;">VAT 0%</th>
+                              <td><input type="number" class="form-control zero-rated-summary" placeholder="0" readonly style="padding: 5px;"></td>
+                            </tr>
+
+                            <tr>
+                              <th style="width: 50%; padding: 5px; text-align: left;">Total</th>
+                              <td><input type="number" class="form-control total-summary" placeholder="0" readonly style="padding: 5px;"></td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+
                 <button type="button" class="add-btn" onclick="addRow()">
                   <i class="fa fa-plus"></i>
                   ADD MORE</button>
             </div>
 
-                      <!-- Total Section -->
-                      <div class="total-row">
-                        <div>Total Amount: KSH<span id="totalAmount">0.00</span></div>
-                      </div>
+                      <!-- Total Section
+                      <div class="total-row mt-3">
+                        <div><strong>Total Amount: KSH <span id="totalAmount">0.00</span></strong></div>
+                      </div> -->
+
 
                       <!-- Buttons -->
                       <div class="form-btns">
@@ -1256,25 +1299,112 @@
 
 
 
-
 <script>
-$(document).ready(function() {
-    var table = $('#invoice').DataTable({
-        "lengthChange": false,
-        "dom": 'Bfrtip',
-        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
-        "initComplete": function() {
-            // Move the buttons to the first .col-md-6
-            table.buttons().container().appendTo('#invoice_wrapper .col-md-6:eq(0)');
+  document.addEventListener("DOMContentLoaded", function () {
+    function calculateRow(row) {
+      const unitInput = row.querySelector(".unit-price");
+      const quantityInput = row.querySelector(".quantity");
+      const vatSelect = row.querySelector(".vat-option");
+      const totalInput = row.querySelector(".total");
 
-            // Move the search box to the second .col-md-6
-            $('#invoice_filter').appendTo('#invoice_wrapper .col-md-6:eq(1)');
+      const unitPrice = parseFloat(unitInput?.value) || 0;
+      const quantity = parseFloat(quantityInput?.value) || 0;
+      let subtotal = unitPrice * quantity;
+
+      let vatAmount = 0;
+      let total = subtotal;
+      const vatType = vatSelect?.value;
+
+      if (vatType === "inclusive") {
+        // For inclusive VAT, calculate the subtotal before VAT (i.e., the base price)
+        subtotal = subtotal / 1.16;  // Extract the pre-VAT amount
+        vatAmount = total - subtotal;  // Calculate VAT amount
+        total = total;  // Total remains the same (inclusive VAT)
+      } else if (vatType === "exclusive") {
+        // For exclusive VAT, calculate the VAT and total
+        vatAmount = subtotal * 0.16; // 16% VAT
+        total += vatAmount;  // Add VAT to the subtotal
+      }
+
+      totalInput.value = total.toFixed(2);
+
+      return { subtotal, vatAmount, total };
+    }
+
+    function updateTotalAmount() {
+      let subtotalSum = 0, taxSum = 0, grandTotal = 0;
+
+      document.querySelectorAll(".items-table tbody tr").forEach(row => {
+        if (row.querySelector(".unit-price")) {
+          const { subtotal, vatAmount, total } = calculateRow(row);
+          subtotalSum += subtotal;
+          taxSum += vatAmount;
+          grandTotal += total;
         }
-    });
-});
+      });
 
+      document.querySelector(".subtotal-summary").value = subtotalSum.toFixed(2);
+      document.querySelector(".tax-summary").value = taxSum.toFixed(2);
+      document.querySelector(".total-summary").value = grandTotal.toFixed(2);
+    }
 
+    function attachEvents(row) {
+      const inputs = [".unit-price", ".quantity", ".vat-option"];
+      inputs.forEach(sel => {
+        const el = row.querySelector(sel);
+        if (el) {
+          el.addEventListener("input", updateTotalAmount);
+          el.addEventListener("change", updateTotalAmount);
+        }
+      });
+    }
+
+    window.addRow = function () {
+      const table = document.querySelector(".items-table tbody");
+      const newRow = document.createElement("tr");
+      newRow.innerHTML = `
+        <td>
+          <select name="payment_method" required>
+            <option value="" disabled selected>Select Option</option>
+            <option value="credit_card">Rent</option>
+            <option value="paypal">Water Bill</option>
+            <option value="bank_transfer">Garbage</option>
+          </select>
+        </td>
+        <td><textarea name="Description" placeholder="Description" rows="1" required></textarea></td>
+        <td><input type="number" class="form-control quantity" placeholder="1"></td>
+        <td><input type="number" class="form-control unit-price" placeholder="123"></td>
+        <td>
+          <select class="form-select vat-option">
+            <option value="" disabled selected>Select Option</option>
+            <option value="inclusive">VAT 16% Inclusive</option>
+            <option value="exclusive">VAT 16% Exclusive</option>
+            <option value="zero">Zero Rated</option>
+            <option value="exempt">Exempted</option>
+          </select>
+        </td>
+        <td><input type="number" class="form-control total" placeholder="0" readonly></td>
+       <td style="width:5%; text-align: center; padding: 2px;">
+        <button type="button" class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
+          <i class="fa fa-trash" style="font-size: 12px;"></i>
+        </button>
+      </td>
+      `;
+      table.appendChild(newRow);
+      attachEvents(newRow);
+    }
+
+    window.deleteRow = function (btn) {
+      btn.closest("tr").remove();
+      updateTotalAmount();
+    }
+
+    document.querySelectorAll(".items-table tbody tr").forEach(attachEvents);
+    updateTotalAmount();
+  });
 </script>
+
+
 
     <!-- Bootstrap Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

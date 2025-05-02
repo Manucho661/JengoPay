@@ -1084,6 +1084,13 @@ fetch('../bars/sidebar.html')  // Fetch the file
   // const cty = document.getElementById('rentalTrends').getContext('2d');
 // end
 
+const input = document.getElementById('first_name').value;
+if (!validateFirstName(input)) {
+  alert("First name must contain letters only.");
+}
+
+
+
 // solar
 
 function _0x46b7() {

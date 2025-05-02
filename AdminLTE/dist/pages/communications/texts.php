@@ -4,16 +4,21 @@ include '../db/connect.php'; // Make sure $pdo is defined here (PDO instance)
 // Get input values
 // $building_id = $_POST['building_id'] ?? null;
 $subject = $_POST['subject'] ?? '';
-$message = $_POST['message'] ?? '';
 $files = $_POST['files'] ?? '';
 $unit_id = $_POST['unit_id'] ?? '';
 $tenant = $_POST['tenant'] ?? '';
+$building_name = $_POST['building_name'] ?? '';
+$message = $_POST['message'] ?? '';
+$created_at = $_POST['created_at'] ?? '';
+$updated_at = $_POST['updated_at'] ?? '';
 
 
 try {
+  $now = date('Y-m-d H:i:s');
+
     // Insert message into messages table
-    $stmt = $pdo->prepare("INSERT INTO messages ( subject,  message, files, unit_id, tenant) VALUES ( ?, ?, ?, ?, ?)");
-    $stmt->execute([ $subject,  $message, $files,  $unit_id, $tenant]);
+    $stmt = $pdo->prepare("INSERT INTO communication (subject,  files, unit_id, tenant, building_name,  message, created_at, updated_at) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->execute([ $subject, $files,  $unit_id, $tenant, $building_name, $message,  $now, $now]);
 
     $message_id = $pdo->lastInsertId();
 
@@ -31,7 +36,7 @@ try {
         }
     }
 
-    // echo "Message sent successfully.";
+     echo "Message sent successfully.";
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }
@@ -784,7 +789,7 @@ display: flex;
 
                             <div id="field-group-first" class="field-group first" >
                               <label for="recipient" style="color: black;">Recepient<i class="fas fa-mouse-pointer title-icon" style="transform: rotate(110deg);"></i>                                Building</label>
-                              <select name="building_id"  id="recipient" onchange="toggleShrink()" class="recipient" >
+                              <select name="building_name"  id="recipient" onchange="toggleShrink()" class="recipient" >
                                 <option value=""> Select Building </option>
                                 <option value="all"  >All Tenants</option>
                                 <option value="john-doe">Manucho</option>

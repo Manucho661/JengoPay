@@ -83,6 +83,7 @@ try {
             $entity_rep_role = $_POST['entity_rep_role'];
         }
 
+
         // Approvals
         $nca_approval = $_POST['nca_approval'] ?? 'No';
         $nca_approval_no = $_POST['nca_approval_no'] ?? '';
@@ -187,6 +188,7 @@ try {
     }
 
     // Fetch buildings for display
+    
     $sql = "SELECT building_id, building_name, county, building_type, ownership_info FROM buildings";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
@@ -807,7 +809,7 @@ try {
                       <div class="form-group">
                         <label>First Name</label>
                         <input type="text" name="first_name" class="form-control" id="firstName"
-                          placeholder="First Name">
+                          placeholder="First Name" pattern="^[A-Za-z]+$" title="Letters only" required>
                       </div>
                     </div>
                     <div class="col-md-6">
@@ -1449,6 +1451,12 @@ try {
 <script>
 $(document).ready((function(){$("#stepOneNextBtn").click((function(e){e.preventDefault(),$("#sectionTwo").show(),$("#sectionOne").hide(),$("#stepOneIndicatorNo").html('<i class="fa fa-check"><i>'),$("#stepOneIndicatorNo").css("background-color","#FFC107"),$("#stepOneIndicatorNo").css("color","#00192D"),$("#stepOneIndicatorText").html("Done")})),$("#stepTwoBackBtn").click((function(e){e.preventDefault(),$("#sectionTwo").hide(),$("#sectionOne").show(),$("#stepOneIndicatorNo").html("1"),$("#stepOneIndicatorNo").css("background-color","#00192D"),$("#stepOneIndicatorNo").css("color","#FFC107"),$("#stepOneIndicatorText").html("Overview")})),$("#stepTwoNextBtn").click((function(e){e.preventDefault(),$("#sectionTwo").hide(),$("#sectionThree").show(),$("#stepTwoIndicatorNo").html('<i class="fa fa-check"><i>'),$("#stepTwoIndicatorNo").css("background-color","#FFC107"),$("#stepTwoIndicatorNo").css("color","#00192D"),$("#stepTwoIndicatorText").html("Done")})),$("#stepThreeBackBtn").click((function(e){e.preventDefault(),$("#sectionTwo").show(),$("#sectionThree").hide(),$("#stepTwoIndicatorNo").html("2"),$("#stepTwoIndicatorNo").css("background-color","#00192D"),$("#stepTwoIndicatorNo").css("color","#FFC107"),$("#stepTwoIndicatorText").html("Identification")})),$("#stepThreeNextBtn").click((function(e){e.preventDefault(),$("#sectionThree").hide(),$("#sectionFour").show(),$("#stepThreeIndicatorNo").html('<i class="fa fa-check"><i>'),$("#stepThreeIndicatorNo").css("background-color","#FFC107"),$("#stepThreeIndicatorNo").css("color","#00192D"),$("#stepThreeIndicatorText").html("Done")})),$("#stepFourBackBtn").click((function(e){e.preventDefault(),$("#sectionThree").show(),$("#sectionFour").hide(),$("#stepThreeIndicatorNo").html("3"),$("#stepThreeIndicatorNo").css("background-color","#00192D"),$("#stepThreeIndicatorNo").css("color","#FFC107"),$("#stepThreeIndicatorText").html("Ownership")})),$("#stepFourNextBtn").click((function(e){e.preventDefault(),$("#sectionFour").hide(),$("#sectionFive").show(),$("#stepFourIndicatorNo").html('<i class="fa fa-check"><i>'),$("#stepFourIndicatorNo").css("background-color","#FFC107"),$("#stepFourIndicatorNo").css("color","#00192D"),$("#stepFourIndicatorText").html("Done")})),$("#stepFiveBackBtn").click((function(e){e.preventDefault(),$("#sectionFour").show(),$("#sectionFive").hide(),$("#stepFourIndicatorNo").html("4"),$("#stepFourIndicatorNo").css("background-color","#00192D"),$("#stepFourIndicatorNo").css("color","#FFC107"),$("#stepFourIndicatorText").html("Utilities")})),$("#stepFiveNextBtn").click((function(e){e.preventDefault(),$("#sectionFive").hide(),$("#sectionSix").show(),$("#stepFiveIndicatorNo").html('<i class="fa fa-check"><i>'),$("#stepFiveIndicatorNo").css("background-color","#FFC107"),$("#stepFiveIndicatorNo").css("color","#00192D"),$("#stepFiveIndicatorText").html("Done")})),$("#stepSixBackBtn").click((function(e){e.preventDefault(),$("#sectionFive").show(),$("#sectionSix").hide(),$("#stepFiveIndicatorNo").html("5"),$("#stepFiveIndicatorNo").css("background-color","#00192D"),$("#stepFiveIndicatorNo").css("color","#FFC107"),$("#stepFiveIndicatorText").html("Regulations")})),$("#stepSixNextBtn").click((function(e){e.preventDefault(),$("#sectionSix").hide(),$("#sectionSeven").show(),$("#stepSixIndicatorNo").html('<i class="fa fa-check"><i>'),$("#stepSixIndicatorNo").css("background-color","#FFC107"),$("#stepSixIndicatorNo").css("color","#00192D"),$("#stepSixIndicatorText").html("Done")})),$("#stepSevenBackBtn").click((function(e){e.preventDefault(),$("#sectionSix").show(),$("#sectionSeven").hide(),$("#stepSixIndicatorNo").html("6"),$("#stepSixIndicatorNo").css("background-color","#00192D"),$("#stepSixIndicatorNo").css("color","#FFC107"),$("#stepSixIndicatorText").html("Insurance")})),$("#stepSevenNextBtn").click((function(e){e.preventDefault(),$("#sectionSeven").hide(),$("#sectionEight").show(),$("#stepSevenIndicatorNo").html('<i class="fa fa-check"><i>'),$("#stepSevenIndicatorNo").css("background-color","#FFC107"),$("#stepSevenIndicatorNo").css("color","#00192D"),$("#stepSevenIndicatorText").html("Done")})),$("#stepEightBackBtn").click((function(e){e.preventDefault(),$("#sectionSeven").show(),$("#sectionEight").hide(),$("#stepSevenIndicatorNo").html("7"),$("#stepSevenIndicatorNo").css("background-color","#00192D"),$("#stepSevenIndicatorNo").css("color","#FFC107"),$("#stepSevenIndicatorText").html("Photos")}))}));
   // </script>
+  <script>
+    function validateFirstName(name) {
+  const regex = /^[A-Za-z]+$/;
+  return regex.test(name);
+}
+  </script>
 <script
   src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
   integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
