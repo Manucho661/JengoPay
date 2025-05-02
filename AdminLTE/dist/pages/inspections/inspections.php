@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
   <!--begin::Head-->
@@ -16,12 +17,16 @@
       name="keywords"
       content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard"
     />
-    <!--end::Primary Meta Tags-->
-    <!--begin::Fonts-->
                                                     <!-- LINKS -->
 
-    <!-- for bootstrap -->
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link
       rel="stylesheet"
@@ -50,17 +55,8 @@
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
-     <link rel="stylesheet" href="index1.css">
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
-      integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
-      crossorigin="anonymous"
-    />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+     <link rel="stylesheet" href="inspections.css">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -72,9 +68,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bs-stepper/dist/css/bs-stepper.min.css" rel="stylesheet">
 
     <style>
-      body{
-        /* background-color: #FFC107 !important; */
-      }
       .app-wrapper{
          background-color: rgba(128,128,128, 0.1);
       }
@@ -113,87 +106,6 @@
                 <i class="bi bi-chat-text"></i>
                 <span class="navbar-badge badge text-bg-danger">3</span>
               </a>
-              <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                <a href="#" class="dropdown-item">
-                  <!--begin::Message-->
-                  <div class="d-flex">
-                    <div class="flex-shrink-0">
-                      <img
-                        src="../../../dist/assets/img/user1-128x128.jpg"
-                        alt="User Avatar"
-                        class="img-size-50 rounded-circle me-3"
-                      />
-                    </div>
-                    <div class="flex-grow-1">
-                      <h3 class="dropdown-item-title">
-                        Brad Diesel
-                        <span class="float-end fs-7 text-danger"
-                          ><i class="bi bi-star-fill"></i
-                        ></span>
-                      </h3>
-                      <p class="fs-7">Call me whenever you can...</p>
-                      <p class="fs-7 text-secondary">
-                        <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                      </p>
-                    </div>
-                  </div>
-                  <!--end::Message-->
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                  <!--begin::Message-->
-                  <div class="d-flex">
-                    <div class="flex-shrink-0">
-                      <img
-                        src="../../../dist/assets/img/user8-128x128.jpg"
-                        alt="User Avatar"
-                        class="img-size-50 rounded-circle me-3"
-                      />
-                    </div>
-                    <div class="flex-grow-1">
-                      <h3 class="dropdown-item-title">
-                        John Pierce
-                        <span class="float-end fs-7 text-secondary">
-                          <i class="bi bi-star-fill"></i>
-                        </span>
-                      </h3>
-                      <p class="fs-7">I got your message bro</p>
-                      <p class="fs-7 text-secondary">
-                        <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                      </p>
-                    </div>
-                  </div>
-                  <!--end::Message-->
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                  <!--begin::Message-->
-                  <div class="d-flex">
-                    <div class="flex-shrink-0">
-                      <img
-                        src="../../../dist/assets/img/user3-128x128.jpg"
-                        alt="User Avatar"
-                        class="img-size-50 rounded-circle me-3"
-                      />
-                    </div>
-                    <div class="flex-grow-1">
-                      <h3 class="dropdown-item-title">
-                        Nora Silvester
-                        <span class="float-end fs-7 text-warning">
-                          <i class="bi bi-star-fill"></i>
-                        </span>
-                      </h3>
-                      <p class="fs-7">The subject goes here</p>
-                      <p class="fs-7 text-secondary">
-                        <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                      </p>
-                    </div>
-                  </div>
-                  <!--end::Message-->
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-              </div>
             </li>
             <!--end::Messages Dropdown Menu-->
             <!--begin::Notifications Dropdown Menu-->
@@ -303,8 +215,7 @@
         </div>
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
-        <div id="sidebar"></div> <!-- This is where the sidebar is inserted -->
-
+        <div > <?php include_once '../includes/sidebar.php'; ?>  </div> <!-- This is where the sidebar is inserted -->
         <!--end::Sidebar Wrapper-->
       </aside>
       <!--end::Sidebar-->
@@ -344,46 +255,47 @@
           <div class="container-fluid">
             <!-- BEGIN ROW -->
             <div class="row">
+
               <h6 class="mb-0 contact_section_header summary mb-2"></i> SUMMARY</h6>
 
               <div class="container-fluid">
                 <div class="row">
                   <div class="col-6 col-sm-3">
-                    <div class="summary-item collected" style="display: flex; background-color:white;">
-                      <div class="icon"> <i class="fas fa-clipboard-check"></i></div>
+                    <div class="summary-card" >
+                        <div class="icon"> <i class="fas fa-clipboard-check"></i></div>
                       <div>
-                        <div class="label" style="font-weight: bold; align-items:flex-start;">Scheduled</div>
-                        <div class="value" style="background-color:green; color:white;font-weight:900;">&nbsp;1,000</div>
+                        <div class="summary-card_label">Scheduled</div>
+                        <div class="summary-card_value" >&nbsp;1,000</div>
                       </div>
                     </div>
                   </div>
 
                   <div class="col-6 col-sm-3">
-                    <div class="summary-item collected" style="display: flex; gap: 10px; align-items: center; background-color:white;">
+                    <div class="summary-card" >
                       <div class="icon"><i class="fas fa-check-circle"></i></div>
-                      <div style="text-align: left;">
-                        <div class="label" style="font-weight: bold;">Completed</div>
-                        <div class="value penalities" style="background-color:green; color:white;font-weight:900;">&nbsp;300</div>
+                      <div>
+                        <div class="summary-card_label">Completed</div>
+                        <div class="summary-card_value penalities" >&nbsp;300</div>
                       </div>
                     </div>
                   </div>
 
                   <div class="col-6 col-sm-3">
-                    <div class="summary-item collected" style="display: flex; gap: 10px; align-items: center; background-color:white;">
+                    <div class="summary-card">
                       <div class="icon"> <i class="fas fa-spinner fa-spin"></i>  </div>
                       <div>
-                        <div class="label" style="font-weight: bold;">In Progress</div>
-                        <div class="value" style="background-color:#FFC107; color:white; font-weight:900;">&nbsp;200</div>
+                        <div class="summary-card_label" >In Progress</div>
+                        <div class="summary-card_value" >&nbsp;200</div>
                       </div>
                     </div>
                   </div>
 
                   <div class="col-6 col-sm-3">
-                    <div class="summary-item collected" style="display: flex; gap: 10px; align-items: center; background-color:white;">
+                    <div class="summary-card">
                       <div class="icon" style="font-weight: bold;"><i class="fas fa-question-circle"></i>    </div>
                       <div>
-                        <div class="label" style="font-weight: bold;">Incomplete</div>
-                        <div class="value" style="background-color:red; color:white;font-weight:900;">&nbsp;20</div>
+                        <div class="summary-card_label">Incomplete</div>
+                        <div class="summary-card_value">&nbsp;20</div>
                       </div>
                     </div>
                   </div>
@@ -451,56 +363,6 @@
                               <input type="date" class="form-control">
                           </div>
                       </div>
-
-
-
-                      <!-- Expense Table
-                      <div class="row g-3 mt-2">
-                          <h6 class="text-center" style="color:linear-gradient(to right, #00192D, #003D5B, #00788D) ;"> <b>Add the Spend items in the fields below</b> </h6>
-                          <table class="table table-bordered table-hover table-striped">
-                              <thead>
-                                  <tr>
-                                      <th>Account</th>
-                                      <th>Description</th>
-                                      <th>Quantity</th>
-                                      <th>Unit Price</th>
-                                       <th>Supplier</th>
-                                      <th>Sub-total</th>
-                                      <th>Taxes</th>
-                                      <th>Totals</th>
-                                      <th>Remove</th>
-                                  </tr>
-                              </thead>
-                              <tbody>
-                                  <tr>
-                                      <td>
-                                          <select class="form-select">
-                                              <option selected disabled>Repair and Mantainance</option>
-                                              <option>Salaries</option>
-                                              <option>Legal Work</option>
-                                              <option>Internet</option>
-                                          </select>
-                                      </td>
-                                      <td><textarea class="form-control" rows="1" placeholder="Enter details"></textarea></td>
-                                      <td><input type="text" class="form-control" placeholder="123"></td>
-                                      <td><input type="number" class="form-control" placeholder="1"></td>
-                                      <td><input type="text" class="form-control" placeholder="Quickmart"></td>
-                                      <td><input type="number" class="form-control" placeholder="123"></td>
-                                      <td>
-                                        <select class="form-select">
-                                          <option value="" disabled selected>Select Option</option>
-                                          <option value="credit_card">VAT 16% Inclusive</option>
-                                          <option value="paypal">VAT 16% Exclusive</option>
-                                          <option value="bank_transfer">Zero Rated</option>
-                                          <option value="bank_transfer">Exempted</option>
-                                        </select>
-                                      </td>
-                                      <td><input type="number" class="form-control" placeholder="1300"></td>
-                                      <td><button type="button" class="btn btn-danger remove-row">Delete</button></td>
-                                  </tr>
-                              </tbody>
-                          </table>
-                      </div> -->
 
                       <div class="row g-3 mt-2">
                           <!-- <div class="col-6">
@@ -1937,19 +1799,7 @@
 
 
 
-                                    <!-- SIDE BAR -->
-<script>
-                  fetch('../bars/sidebar.html')  // Fetch the file
-                      .then(response => response.text()) // Convert it to text
-                      .then(data => {
-                          document.getElementById('sidebar').innerHTML = data; // Insert it
-                      })
-                  .catch(error => console.error('Error loading the file:', error)); // Handle errors
-</script>
-<!-- end sidebar script -->
-
-
-
+                                  
 <script>
                       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
                       const Default = {

@@ -27,7 +27,7 @@ body {
 
                             /* BODY TITLE SECTION */
   .contact_section_header{
-     border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+   
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
     letter-spacing: .5px;
@@ -176,64 +176,77 @@ input, select {
   border: 1px solid #00192D !important;
   font-weight: 600 !important;
 }
+div.dt-buttons{
+  /* background-color: #00192D !important ; */
+}
+div.dt-buttons .btn{
+   background-color: #00192D !important ;
+  border-radius: 2px ;
+}
+h1 {
+
+}
+
+
+
+
+.dt-buttons {
+  display: flex;
+  justify-content: start; /* or center */
+  gap: 5px;
+}
+
+div.dt-button-collection {
+  background-color: #00192D !important;  /* Change to your preferred color */
+  border: 1px solid #ccc !important;
+  border-radius: 2px;
+}
+div.dt-button-collection .dt-button {
+  background-color: #00192D !important;
+  color: white !important; /* Ensure text is visible */
+  border: none !important;
+}
+
+/* Change hover effect */
+div.dt-button-collection .dt-button:hover {
+  background-color: #FFC107 !important;
+  color: white !important;
+  border-radius: 3px;
+}
                                                                     /* SUMMARY SECTION */
-   .summary-section {
-    display: flex;
-   justify-content: start; /* Aligns left */
-    font-size: 16px;
-    line-height: 1.2;
-    font-weight: bold;
-    }
+                                                              .summary-section {
+                                                                display: flex;
+                                                                justify-content: start; /* Aligns left */
+                                                                font-size: 16px;
+                                                                line-height: 1.2;
+                                                                font-weight: bold;
+                                                                }
 
 
-    /* General Styling for Summary Items */
-    .summary-item {
-    padding: 5px 10px;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    }
-
-
-    div.dt-buttons{
-        /* background-color: #00192D !important ; */
-      }
-      div.dt-buttons .btn{
-         background-color: #00192D !important ;
-        border-radius: 2px ;
-      }
-      h1 {
-
-      }
-
+                                                                /* General Styling for Summary Items */
+                                                                .summary-card{
+                                                                  padding: 5px 10px;
+                                                                border-radius: 5px;
+                                                                display: flex;
+                                                                align-items: center;
+                                                                display: flex;
+                                                                color: #767676;
+                                                                background-color: white;
+                                                                }
+                                                                .summary-card_label{
+                                                                  color: #767676;
+                                                                  font-weight: 600;
+                                                                  font-size: 16px;
+                                                                }
+                                                                .summary-card_value{
+                                                                  font-weight: 600;
+                                                                  font-size: 16px;
+                                                                  color: rgb(41, 41, 41);
+                                                                }
 
 
 
-      .dt-buttons {
-        display: flex;
-        justify-content: start; /* or center */
-        gap: 5px;
-      }
-
-      div.dt-button-collection {
-        background-color: #00192D !important;  /* Change to your preferred color */
-        border: 1px solid #ccc !important;
-        border-radius: 2px;
-      }
-      div.dt-button-collection .dt-button {
-        background-color: #00192D !important;
-        color: white !important; /* Ensure text is visible */
-        border: none !important;
-      }
-
-      /* Change hover effect */
-      div.dt-button-collection .dt-button:hover {
-        background-color: #FFC107 !important;
-        color: white !important;
-        border-radius: 3px;
-      }
+    
 
 
 
