@@ -261,7 +261,7 @@
               <div class="container-fluid">
                 <div class="row">
                   <div class="col-6 col-sm-3">
-                    <div class="summary-card collected" >
+                    <div class="summary-card" >
                         <div class="icon"> <i class="fas fa-clipboard-check"></i></div>
                       <div>
                         <div class="summary-card_label">Scheduled</div>
@@ -271,7 +271,7 @@
                   </div>
 
                   <div class="col-6 col-sm-3">
-                    <div class="summary-card collected" >
+                    <div class="summary-card" >
                       <div class="icon"><i class="fas fa-check-circle"></i></div>
                       <div>
                         <div class="summary-card_label">Completed</div>
@@ -281,7 +281,7 @@
                   </div>
 
                   <div class="col-6 col-sm-3">
-                    <div class="summary-card collected">
+                    <div class="summary-card">
                       <div class="icon"> <i class="fas fa-spinner fa-spin"></i>  </div>
                       <div>
                         <div class="summary-card_label" >In Progress</div>
@@ -291,7 +291,7 @@
                   </div>
 
                   <div class="col-6 col-sm-3">
-                    <div class="summary-card collected">
+                    <div class="summary-card">
                       <div class="icon" style="font-weight: bold;"><i class="fas fa-question-circle"></i>    </div>
                       <div>
                         <div class="summary-card_label">Incomplete</div>
