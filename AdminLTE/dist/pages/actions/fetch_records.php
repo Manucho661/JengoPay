@@ -4,7 +4,6 @@
 
 header('Content-Type: application/json');
 
-
 $building = isset($_GET['building']) ? $_GET['building'] : 'all';
 
 if ($building === 'all') {
