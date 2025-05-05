@@ -230,52 +230,69 @@
          <section class="add-inspection" id="add-inspection" >
 
          <div class="card content"  >
-          <div class="card-header" style="background:  #00192D; padding:10px !important" >
-              <h6 class="text-white">New Inspection Details</h6>
+          <div class="card-header d-flex justify-content-between" style="background:  #00192D; padding:10px !important" >
+            <div class="text-white">New Inspection Details</div>
+              <div><button class="close-btn text-white" onclick="closeInspectionMDL()">×</button></div>
+              
           </div>
           <div class="card-body">
               <div class="form-container">
                   <form>
                       <div class="row g-3">
+                        <!-- Year -->
+                          <div class="col-md-4 " >
+                              <label class="form-label"><b>Inspection Number</b></label>
+                              <input type="number" placeholder="124">
+                          </div>
                           <!-- No -->
-                          <div class="col-md-3">
-                              <label class="form-label"><b>Inspection No</b></label>
-                              <input type="number" class="form-control" placeholder="123">
+                          <div class="col-md-4">
+                          <label class="form-label"><b> Building</b></label>
+                          <div class="select-option-container">
+                              <div class="custom-select">All Buildings</div>
+                              <div class="select-options mt-1">
+                                <div class="selected" data-value="all">All Buildings</div>
+                                <div data-value="Manucho">Manucho</div>
+                                <div data-value="Pink House">Pink House</div>
+                                <div data-value="White House">White House</div>
+                              </div>
+                            </div>
                           </div>
 
                           <!-- Expense of the Month -->
-                          <div class="col-md-5 ">
-                              <label class="form-label"><b> Month</b></label>
-                              <select class="form-select">
-                                  <option selected disabled>Select Month</option>
-                                  <option>January</option>
-                                  <option>February</option>
-                                  <option>March</option>
-                                  <option>April</option>
-                                  <option>May</option>
-                                  <option>June</option>
-                                  <option>July</option>
-                                  <option>August</option>
-                                  <option>September</option>
-                                  <option>October</option>
-                                  <option>November</option>
-                                  <option>December</option>
-                              </select>
-                          </div>
-
-                          <!-- Year -->
-                          <div class="col-md-4 " >
-                              <label class="form-label"><b>Year</b></label>
-                              <input type="number" class="form-control" placeholder="2025">
+                          <div class="col-md-4 ">
+                              <label class="form-label"><b> Unit</b></label>
+                              <div class="select-option-container">
+                              <div class="custom-select">All Buildings</div>
+                              <div class="select-options mt-1">
+                                <div class="selected" data-value="all">All Buildings</div>
+                                <div data-value="Manucho">Manucho</div>
+                                <div data-value="Pink House">Pink House</div>
+                                <div data-value="White House">White House</div>
+                              </div>
+                             </div>
                           </div>
                       </div>
-
-                      <div class="row g-3">
+                      <hr>
+                      <div class="row g-3 mt-2">
                           <div class="col-md-6">
-                              <label class="form-label"><b>Entry Date</b></label>
-                              <input type="date" class="form-control">
+                          <label class="form-label"><b> Inspection Type</b></label>
+                          <div class="select-option-container">
+                              <div class="custom-select">Inspection Type</div>
+                              <div class="select-options mt-1">
+                                <div class="selected" data-value="all">Move In</div>
+                                <div data-value="Manucho">Move Out</div>
+                                
+                              </div>
+                            </div>
+                      
                           </div>
+
+                          <div class="col-md-6">
+                          <label class="form-label"><b> Inspection Date</b></label>
+                          <input type="date">
                       </div>
+
+                      <hr>
 
                       <div class="row g-3 mt-2">
                           <!-- <div class="col-6">
@@ -284,7 +301,7 @@
                               SUBMIT</button>
                           </div> -->
                           <div class="col-12 mt-2 d-flex justify-content-end">
-                              <button type="submit" class="btn btn-custom btn-sm" style="height: fit-content; color:#FFC107;">  SUBMIT</button>
+                              <button type="submit" class="btn btn-custom btn-sm" style="height: fit-content; color:#FFC107; background:#00192D;">  SUBMIT</button>
                           </div>
                       </div>
 
@@ -380,88 +397,7 @@
 
             <!-- /end row -->
 
-            <!-- Begin row -->
-<!-- begin row -->
-<div class="row mt-2">
-  <div class="col-md-12">
-    <div class="card">
-      <div class="card-header">
-          <a class="btn btn-link add-expense-btn" data-bs-toggle="collapse" href="#addExpense" aria-expanded="false" aria-controls="addExpenseAccordion" style="color: #00192D; font-weight:bold; text-decoration: none;">
-              <span id="toggleIcon">+</span> Click Here To Schedule An Inspection
-          </a>
-      </div>
-
-      <div class="card-body collapse" id="addExpense">
-        <div class="card">
-          <div class="card-header" style="background: linear-gradient(to right, #00192D, #003D5B, #00788D);">
-              <h6 class="text-white">Enter Inspection Details</h6>
-          </div>
-          <div class="card-body">
-              <div class="form-container">
-                  <form>
-                      <div class="row g-3">
-                          <!-- No -->
-                          <div class="col-md-3">
-                              <label class="form-label"><b>Inspection No</b></label>
-                              <input type="number" class="form-control" placeholder="123">
-                          </div>
-
-                          <!-- Expense of the Month -->
-                          <div class="col-md-5">
-                              <label class="form-label"><b> Month</b></label>
-                              <select class="form-select">
-                                  <option selected disabled>Select Month</option>
-                                  <option>January</option>
-                                  <option>February</option>
-                                  <option>March</option>
-                                  <option>April</option>
-                                  <option>May</option>
-                                  <option>June</option>
-                                  <option>July</option>
-                                  <option>August</option>
-                                  <option>September</option>
-                                  <option>October</option>
-                                  <option>November</option>
-                                  <option>December</option>
-                              </select>
-                          </div>
-
-                          <!-- Year -->
-                          <div class="col-md-4">
-                              <label class="form-label"><b>Year</b></label>
-                              <input type="number" class="form-control" placeholder="2025">
-                          </div>
-                      </div>
-
-                      <div class="row g-3 mt-2">
-                          <div class="col-md-6">
-                              <label class="form-label"><b>Entry Date</b></label>
-                              <input type="date" class="form-control">
-                          </div>
-                      </div>
-
-                      <div class="row g-3 mt-2">
-                          <!-- <div class="col-6">
-                              <button type="button" class="btn btn-custom btn-sm" id="addRow">
-                                <i class="fa fa-plus"></i>
-                              SUBMIT</button>
-                          </div> -->
-                          <div class="col-12 mt-2 d-flex justify-content-end">
-                              <button type="submit" class="btn btn-custom btn-sm" style="height: fit-content; color:#FFC107;">  SUBMIT</button>
-                          </div>
-                      </div>
-
-                  </form>
-              </div>
-          </div>
-      </div>
-      </div>
-    </div>
-  <!-- </div> -->
-  <!-- </div> -->
-
-
-<!-- /end row -->
+            
 
 
               <div class="row mt-2 mb-2 add-inspection-container">

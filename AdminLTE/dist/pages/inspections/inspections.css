@@ -38,11 +38,10 @@ body {
   }
 
                         /* SELECT, INPUT, TEXT_AREA */
-  input, textarea {
+ input, textarea {
     width: 100%;
     padding: 8px;
-
-    border: 1px solid #ccc;
+    border: 1px solid #00192D;
     border-radius: 4px;
 }
 
@@ -77,13 +76,6 @@ label {
 }
 
 
-input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
 select {
   appearance: none; /* Hides default arrow in some browsers */
   background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="%23FFC107" d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
@@ -101,16 +93,7 @@ input:focus, select:focus, textarea:focus {
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5) !important;
 }
 
-input, select {
-  width: 30%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-  background-color: #fff;
-  cursor: pointer;
-  margin-right: 20px;
-}
+
 .row input[type="text"], input[type="date"]{
   border: none;
       border-bottom: 1px solid #000;
@@ -437,13 +420,6 @@ input[type="radio"] {
   }
 
 
-
-  input {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-  }
   .add_provider_btn{
     width: 10%;
       padding: 10px;
@@ -507,14 +483,7 @@ input[type="radio"] {
   .link_item:hover{
     color: #FFC107;
   }
-    /* Form styling */
-    .complaint-form input, .complaint-form textarea {
-    width: 100%;
-    padding: 10px;
-
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    }
+   
 
     /* Submit button */
     .submit-btn {
@@ -553,13 +522,7 @@ input[type="radio"] {
   font-family: 'Poppins', sans-serif;
   font-size: small;
   }
-  input, textarea {
-    width: 100%;
-    padding: 8px;
-
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
+ 
 /* notification popup */
 /* Close button */
 .close-btn {
@@ -743,5 +706,96 @@ input[type="radio"] {
 }
 .add-inspection .card.content{
   height: fit-content;
-
 }
+
+                                      /* SELECTION OPTION CONTAINER */
+                                      .select-option-container{
+
+                                        width: 170px;
+                                       position: relative;
+                                       }
+
+                                      .custom-select{
+                                        position: relative;
+                                        padding: 8px;
+                                        /* padding:10px 20px; */
+                                        color: #999;
+                                        border: 1px solid #00192D;
+                                        border-radius: 5px;
+                                        font-size: 16px;
+                                        background-color: #fff;
+                                        cursor: pointer;
+                                        margin-right: 20px;
+                                        width: 100%;
+
+
+                                    }
+                                    .custom-select:hover{
+                                      border: 1px solid #FFC107;
+
+                                    }
+                                    .custom-select:focus{
+                                      border-color: #FFC107;
+                                      outline: none;
+                                      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+                                    }
+
+                                    .custom-select:after{
+                                        border-bottom: 2px solid #999;
+                                        border-right: 2px solid #999;
+                                        content: '';
+                                        display: block;
+                                        height: 5px;
+                                        margin-top: -4px;
+                                        pointer-events: none;
+                                        position: absolute;
+                                        right: 12px;
+                                        top: 50%;
+                                        -webkit-transform-origin: 66% 66%;
+                                        -ms-transform-origin: 66% 66%;
+                                        transform-origin: 66% 66%;
+                                        -webkit-transform: rotate(45deg);
+                                        -ms-transform: rotate(45deg);
+                                        transform: rotate(45deg);
+                                        -webkit-transition: all 0.15s ease-in-out;
+                                        transition: all 0.15s ease-in-out;
+                                        width: 5px;
+                                    }
+                                    .custom-select.open:after {
+                                      transform: rotate(-135deg);
+                                    }
+                                    .select-options{
+                                      background-color: white;
+                                       position: absolute;
+                                      top: 100%;
+                                      left: 0;
+                                      right: 0;
+                                      background: white;
+                                      border: 1px solid #ccc;
+                                      border-top: none;
+                                      z-index: 10;
+                                      max-height: 200px;
+                                      overflow-y: auto;
+                                      border-radius: 5px;
+                                      color: gray;
+
+                                      display: none;
+                                      /* border-radius: 0 0 8px 8px; */
+
+                                }
+                                .select-options div {
+                                      padding: 12px;
+                                      cursor: pointer;
+                                      transition: background 0.3s;
+                                    }
+                                .select-options div.selected {
+                                      background-color: #00192D;
+                                      color: #FFC107;
+                                  }
+
+                                .select-options div:hover {
+                                      background-color: #00192D !important;
+                                      color: #FFC107 !important;
+
+                                }
+                       
