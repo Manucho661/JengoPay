@@ -188,7 +188,7 @@ try {
     }
 
     // Fetch buildings for display
-    
+
     $sql = "SELECT building_id, building_name, county, building_type, ownership_info FROM buildings";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
@@ -197,6 +197,8 @@ try {
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
 }
+
+
 ?>
 
 
