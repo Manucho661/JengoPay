@@ -1,9 +1,13 @@
 
 // show add new schedule
-function addNewSchedule() {
-  const content = document.getElementById('add-inspection');
-  content.style.display = 'flex'; // or 'flex'/'inline' depending on your layout
-}
+window.closeInspectionMDL = function () {
+  document.getElementById("add-inspection").style.display = "none";
+};
+
+window.addNewSchedule = function () {
+  document.getElementById("add-inspection").style.display = "flex";
+};
+
 
 // custom select container
 document.querySelectorAll('.select-option-container').forEach(container => {

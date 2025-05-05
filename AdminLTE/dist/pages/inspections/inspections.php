@@ -230,8 +230,10 @@
          <section class="add-inspection" id="add-inspection" >
 
          <div class="card content"  >
-          <div class="card-header" style="background:  #00192D; padding:10px !important" >
-              <h6 class="text-white">New Inspection Details</h6>
+          <div class="card-header d-flex justify-content-between" style="background:  #00192D; padding:10px !important" >
+            <div class="text-white">New Inspection Details</div>
+              <div><button class="close-btn text-white" onclick="closeInspectionMDL()">×</button></div>
+              
           </div>
           <div class="card-body">
               <div class="form-container">
