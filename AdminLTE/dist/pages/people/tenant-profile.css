@@ -30,7 +30,7 @@ main{
      margin-right: 2px;
 }
 .active{
- 
+
  background-color: #2e7d32; /* Light green */
 
  color: white;
@@ -92,7 +92,7 @@ main{
                                                               font-size: 12px;
                                                               background-color: #00192D;
                                                               color: #FFC107;
-                                                            
+
                                                             height: fit-content;
                                                             }
                                                             .btn.view.id:hover{
@@ -145,7 +145,11 @@ padding-left: 2px;
 .icon-category-number .icon{
   color: #FFC107;
 }
-
+.yoyo{
+  font-weight: 600;
+  font-size: 16px;
+  color: #767676;
+}
 .icon-category-number .rent-type{
   font-weight: 600;
   font-size: 16px;

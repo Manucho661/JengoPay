@@ -19,15 +19,9 @@
     />
                                                     <!-- LINKS -->
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- DataTables -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+                                                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css">
+    <!--end::Primary Meta Tags-->
+    <!--begin::Fonts-->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
@@ -35,6 +29,7 @@
       crossorigin="anonymous"
     />
     <!--end::Fonts-->
+
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <link
       rel="stylesheet"
@@ -50,22 +45,30 @@
       integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
+    <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
-     <link rel="stylesheet" href="inspections.css">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
+      integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
+      crossorigin="anonymous"
+    />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+   <link rel="stylesheet" href="inspections.css">
+     <!-- scripts for data_table -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
 
-
-                                          <!-- For bs-stepper library -->
-    <link href="https://cdn.jsdelivr.net/npm/bs-stepper/dist/css/bs-stepper.min.css" rel="stylesheet">
 
     <style>
       .app-wrapper{
@@ -221,7 +224,81 @@
       <!--end::Sidebar-->
       <!--begin::App Main-->
       <main class="app-main" >
+
+                      <!--MAIN MODALS -->
+        <!-- add inspection -->
+         <section class="add-inspection" id="add-inspection" >
+
+         <div class="card content"  >
+          <div class="card-header" style="background:  #00192D; padding:10px !important" >
+              <h6 class="text-white">New Inspection Details</h6>
+          </div>
+          <div class="card-body">
+              <div class="form-container">
+                  <form>
+                      <div class="row g-3">
+                          <!-- No -->
+                          <div class="col-md-3">
+                              <label class="form-label"><b>Inspection No</b></label>
+                              <input type="number" class="form-control" placeholder="123">
+                          </div>
+
+                          <!-- Expense of the Month -->
+                          <div class="col-md-5 ">
+                              <label class="form-label"><b> Month</b></label>
+                              <select class="form-select">
+                                  <option selected disabled>Select Month</option>
+                                  <option>January</option>
+                                  <option>February</option>
+                                  <option>March</option>
+                                  <option>April</option>
+                                  <option>May</option>
+                                  <option>June</option>
+                                  <option>July</option>
+                                  <option>August</option>
+                                  <option>September</option>
+                                  <option>October</option>
+                                  <option>November</option>
+                                  <option>December</option>
+                              </select>
+                          </div>
+
+                          <!-- Year -->
+                          <div class="col-md-4 " >
+                              <label class="form-label"><b>Year</b></label>
+                              <input type="number" class="form-control" placeholder="2025">
+                          </div>
+                      </div>
+
+                      <div class="row g-3">
+                          <div class="col-md-6">
+                              <label class="form-label"><b>Entry Date</b></label>
+                              <input type="date" class="form-control">
+                          </div>
+                      </div>
+
+                      <div class="row g-3 mt-2">
+                          <!-- <div class="col-6">
+                              <button type="button" class="btn btn-custom btn-sm" id="addRow">
+                                <i class="fa fa-plus"></i>
+                              SUBMIT</button>
+                          </div> -->
+                          <div class="col-12 mt-2 d-flex justify-content-end">
+                              <button type="submit" class="btn btn-custom btn-sm" style="height: fit-content; color:#FFC107;">  SUBMIT</button>
+                          </div>
+                      </div>
+
+                  </form>
+              </div>
+          </div>
+         </div>
+
+         </section>
+
+
+
         <!--begin::App Content Header-->
+
         <div class="app-content-header">
           <!--begin::Container-->
           <div class="container-fluid">
@@ -237,12 +314,9 @@
                 </div>
               </div>
 
-              <div class="col-sm-4">
-                <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                </ol>
-              </div>
+              <div class="col-sm-4 d-flex justify-content-end">
+
+                    <button   class="btn schedule" onclick="addNewSchedule()" style="height: fit-content;"> <i class="fas fa-plus "></i> New Schedule</button>
 
             </div>
             <!--end::Row-->
@@ -256,13 +330,15 @@
             <!-- BEGIN ROW -->
             <div class="row">
 
+
+
               <h6 class="mb-0 contact_section_header summary mb-2"></i> SUMMARY</h6>
 
               <div class="container-fluid">
                 <div class="row">
                   <div class="col-6 col-sm-3">
                     <div class="summary-card" >
-                        <div class="icon"> <i class="fas fa-clipboard-check"></i></div>
+                        <div class="summary-card_icon"> <i class="fas fa-clipboard-check"></i></div>
                       <div>
                         <div class="summary-card_label">Scheduled</div>
                         <div class="summary-card_value" >&nbsp;1,000</div>
@@ -272,7 +348,7 @@
 
                   <div class="col-6 col-sm-3">
                     <div class="summary-card" >
-                      <div class="icon"><i class="fas fa-check-circle"></i></div>
+                      <div class="summary-card_icon"><i class="fas fa-check-circle"></i></div>
                       <div>
                         <div class="summary-card_label">Completed</div>
                         <div class="summary-card_value penalities" >&nbsp;300</div>
@@ -282,7 +358,7 @@
 
                   <div class="col-6 col-sm-3">
                     <div class="summary-card">
-                      <div class="icon"> <i class="fas fa-spinner fa-spin"></i>  </div>
+                      <div class="summary-card_icon"> <i class="fas fa-spinner fa-spin"></i>  </div>
                       <div>
                         <div class="summary-card_label" >In Progress</div>
                         <div class="summary-card_value" >&nbsp;200</div>
@@ -292,7 +368,7 @@
 
                   <div class="col-6 col-sm-3">
                     <div class="summary-card">
-                      <div class="icon" style="font-weight: bold;"><i class="fas fa-question-circle"></i>    </div>
+                      <div class="summary-card_icon" style="font-weight: bold;"><i class="fas fa-question-circle"></i>    </div>
                       <div>
                         <div class="summary-card_label">Incomplete</div>
                         <div class="summary-card_value">&nbsp;20</div>
@@ -1649,6 +1725,10 @@
     </div>
     <!--end::App Wrapper-->
 
+
+                                           <!-- OVERLAYS -->
+
+    <script src="inspections.js"></script>
     <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
@@ -1799,7 +1879,7 @@
 
 
 
-                                  
+
 <script>
                       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
                       const Default = {

@@ -388,6 +388,7 @@
 
               <!-- start row -->
                 <div class="row mt-3 personal-info">
+                  <div class="yoyo">yoyo</div>
                       <h6 class="mb-0 contact_section_header mb-2"> </i> Personal Info</h6>
                   <div class="col-md-12">
                       <div class="row">
