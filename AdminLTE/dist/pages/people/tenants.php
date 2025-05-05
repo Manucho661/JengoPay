@@ -58,7 +58,7 @@
       name="keywords"
       content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard"
     />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
     <!-- loading out and in progress -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css">
     <!--end::Primary Meta Tags-->
@@ -79,6 +79,19 @@
       crossorigin="anonymous"
     />
     <!--end::Third Party Plugin(OverlayScrollbars)-->
+
+        
+
+   
+    <!--begin::Third Party Plugin(Multple seclection)-->
+
+      <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!--end::Third Party Plugin(Mutiple selection)-->
+  
+
+
+
     <!--begin::Third Party Plugin(Bootstrap Icons)-->
     <link
       rel="stylesheet"
@@ -96,12 +109,7 @@
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
 
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
-      integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
-      crossorigin="anonymous"
-    />
+    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
    <link rel="stylesheet" href="tenants.css">
@@ -146,7 +154,7 @@
 }
 .tenant-form{
   display: none;
-z-index: 10000;
+z-index: 1000;
 position: absolute;
     top: 0;
     left: 0;
@@ -159,6 +167,9 @@ position: absolute;
     min-height: 100%;
     /* margin-left: 20%; */
 }
+
+
+
     </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -582,6 +593,7 @@ position: absolute;
                                                 <div class="card-body">
                                                     <div class="form-group">
                                                         <label>Select Pet(s)</label> <sup>Multiple Allowed</sup>
+                                                        
                                                         <select class="select2" multiple="multiple" data-placeholder="Specify Pet(s)" style="width: 100%;">
                                                             <option>Dog</option>
                                                             <option>Cat</option>
@@ -930,9 +942,19 @@ position: absolute;
           </div>
 
           <!-- Real tenant -->
+    <!--Begin Jquery plugin-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+    <!-- End Jquery plugin-->
+    
+    <!-- Begin select2 plugin-->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <!-- End select2 plugin-->
 
-
-
+    <script>
+      $(document).ready(function() {
+        $('.select2').select2();
+      });
+    </script>
 
           <script src="tenants.js"></script>
 
@@ -944,7 +966,6 @@ position: absolute;
             <!-- EnD LOADING AND OUT PROGRESS -->
 
 
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 
 
@@ -974,7 +995,6 @@ position: absolute;
     </script>
 
 
-     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
@@ -1032,15 +1052,11 @@ position: absolute;
       });
     </script>
     <!--end::OverlayScrollbars Configure-->
-    <!-- OPTIONAL SCRIPTS -->
-    <!-- apexcharts -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
-      integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
-      crossorigin="anonymous"
-    ></script>
+    
 
-
+    <!-- Select2 JS -->
+  
+   
     <!-- OPEN TENANT PAGE -->
     <script>
       function goToDetails(userId) {
@@ -1223,6 +1239,22 @@ $(document).ready(function(){
     });
 
             </script>
+<!-- //Event Listener to Specify if the Tenant Owns Pets -->
+
+<script>
+
+ $(document).ready(function() {
+        document.getElementById('customSwitchPetYes').addEventListener('change', function(){
+        document.getElementById('specifyPetsCard').style.display='block';
+    });
+        $('.select2').select2();
+      });
+    
+    document.getElementById('customNoPets').addEventListener('change', function(){
+        document.getElementById('specifyPetsCard').style.display='none';
+    });
+
+</script>
 
   </body>
 </html>

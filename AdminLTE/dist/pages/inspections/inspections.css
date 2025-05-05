@@ -1,8 +1,8 @@
 body {
     font-family: 'Poppins', sans-serif;
-      columns: gray;
-      background-color: black;
-      font-size: 10px;
+
+
+      /* font-size: 10px; */
   }
 
 /* Mobile-first approach */
@@ -27,7 +27,7 @@ body {
 
                             /* BODY TITLE SECTION */
   .contact_section_header{
-   
+
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
     letter-spacing: .5px;
@@ -38,11 +38,10 @@ body {
   }
 
                         /* SELECT, INPUT, TEXT_AREA */
-  input, textarea {
+ input, textarea {
     width: 100%;
     padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
+    border: 1px solid #00192D;
     border-radius: 4px;
 }
 
@@ -77,13 +76,6 @@ label {
 }
 
 
-input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
 select {
   appearance: none; /* Hides default arrow in some browsers */
   background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="%23FFC107" d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
@@ -101,16 +93,7 @@ input:focus, select:focus, textarea:focus {
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5) !important;
 }
 
-input, select {
-  width: 30%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-  background-color: #fff;
-  cursor: pointer;
-  margin-right: 20px;
-}
+
 .row input[type="text"], input[type="date"]{
   border: none;
       border-bottom: 1px solid #000;
@@ -124,18 +107,26 @@ input, select {
 .btn{
     font: bold !important;
     letter-spacing: 0.15em;
-    /* padding: 6px 14px; */
     height: fit-content;
     background-color: #00192D;
     color: white;
     cursor: pointer;
   }
+
   .btn:hover {
     background-color: #002a4d !important; /* Slightly lighter blue */
     transform: scale(1.05) !important; /* Slightly enlarge */
     color: #FFC107 !important;
   }
+.btn.schedule{
+  padding: 2px 8px;
+    letter-spacing: 0.15em;
+    height: fit-content;
+    background-color: #00192D;
+    color: white;
+    cursor: pointer;
 
+}
   .submit-btn {
     margin-right: 5px;
     }
@@ -214,6 +205,11 @@ div.dt-button-collection .dt-button:hover {
   border-radius: 3px;
 }
                                                                     /* SUMMARY SECTION */
+                                                              .contact_section_header.summary{
+                                                                border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+                                                                font-weight: 600;
+                                                                width: 100%;
+                                                              }
                                                               .summary-section {
                                                                 display: flex;
                                                                 justify-content: start; /* Aligns left */
@@ -232,21 +228,25 @@ div.dt-button-collection .dt-button:hover {
                                                                 display: flex;
                                                                 color: #767676;
                                                                 background-color: white;
+                                                                gap: 15px;
+                                                                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+
+
                                                                 }
                                                                 .summary-card_label{
+                                                                  font-weight: 700;
+                                                                  font-size: 17px;
                                                                   color: #767676;
-                                                                  font-weight: 600;
-                                                                  font-size: 16px;
+                                                                  border-radius: 5px;
                                                                 }
                                                                 .summary-card_value{
-                                                                  font-weight: 600;
-                                                                  font-size: 16px;
+                                                                  font-weight: 700;
+                                                                  font-size: 17px;
                                                                   color: rgb(41, 41, 41);
                                                                 }
-
-
-
-    
+                                                                .summary-card_icon{
+                                                                  color: #FFC107;
+                                                                }
 
 
 
@@ -399,12 +399,12 @@ input[type="radio"] {
 
       border-radius: 5px;
 
-      color: black;
+
       width: 100%;
       max-width: 50%;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      font-size: 90%;
-      color: gray;
+      
+     color: #00192D;
   }
 
 
@@ -420,13 +420,6 @@ input[type="radio"] {
   }
 
 
-
-  input {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-  }
   .add_provider_btn{
     width: 10%;
       padding: 10px;
@@ -490,14 +483,7 @@ input[type="radio"] {
   .link_item:hover{
     color: #FFC107;
   }
-    /* Form styling */
-    .complaint-form input, .complaint-form textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    }
+   
 
     /* Submit button */
     .submit-btn {
@@ -536,13 +522,7 @@ input[type="radio"] {
   font-family: 'Poppins', sans-serif;
   font-size: small;
   }
-  input, textarea {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
+ 
 /* notification popup */
 /* Close button */
 .close-btn {
@@ -698,6 +678,7 @@ input[type="radio"] {
 
   .form-label {
     font-size: 14px;
+    color: #00192D;
   }
 
   .inpection-section-headers {
@@ -705,3 +686,116 @@ input[type="radio"] {
   }
 }
 /* end */
+
+
+                                        /* POPUPS */
+.add-inspection{
+  /* display: none; */
+  z-index: 10000;
+  position: absolute;
+      top: 0;
+      left: 0;
+      background: rgba(0, 0, 0, 0.7); /* Dark overlay */
+       display: none;
+      justify-content: center;
+      /* align-items: center; */
+       width: 100%;
+      padding: 20px;
+      min-height: 100%;
+      /* margin-left: 20%; */
+}
+.add-inspection .card.content{
+  height: fit-content;
+}
+
+                                      /* SELECTION OPTION CONTAINER */
+                                      .select-option-container{
+
+                                        width: 170px;
+                                       position: relative;
+                                       }
+
+                                      .custom-select{
+                                        position: relative;
+                                        padding: 8px;
+                                        /* padding:10px 20px; */
+                                        color: #999;
+                                        border: 1px solid #00192D;
+                                        border-radius: 5px;
+                                        font-size: 16px;
+                                        background-color: #fff;
+                                        cursor: pointer;
+                                        margin-right: 20px;
+                                        width: 100%;
+
+
+                                    }
+                                    .custom-select:hover{
+                                      border: 1px solid #FFC107;
+
+                                    }
+                                    .custom-select:focus{
+                                      border-color: #FFC107;
+                                      outline: none;
+                                      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+                                    }
+
+                                    .custom-select:after{
+                                        border-bottom: 2px solid #999;
+                                        border-right: 2px solid #999;
+                                        content: '';
+                                        display: block;
+                                        height: 5px;
+                                        margin-top: -4px;
+                                        pointer-events: none;
+                                        position: absolute;
+                                        right: 12px;
+                                        top: 50%;
+                                        -webkit-transform-origin: 66% 66%;
+                                        -ms-transform-origin: 66% 66%;
+                                        transform-origin: 66% 66%;
+                                        -webkit-transform: rotate(45deg);
+                                        -ms-transform: rotate(45deg);
+                                        transform: rotate(45deg);
+                                        -webkit-transition: all 0.15s ease-in-out;
+                                        transition: all 0.15s ease-in-out;
+                                        width: 5px;
+                                    }
+                                    .custom-select.open:after {
+                                      transform: rotate(-135deg);
+                                    }
+                                    .select-options{
+                                      background-color: white;
+                                       position: absolute;
+                                      top: 100%;
+                                      left: 0;
+                                      right: 0;
+                                      background: white;
+                                      border: 1px solid #ccc;
+                                      border-top: none;
+                                      z-index: 10;
+                                      max-height: 200px;
+                                      overflow-y: auto;
+                                      border-radius: 5px;
+                                      color: gray;
+
+                                      display: none;
+                                      /* border-radius: 0 0 8px 8px; */
+
+                                }
+                                .select-options div {
+                                      padding: 12px;
+                                      cursor: pointer;
+                                      transition: background 0.3s;
+                                    }
+                                .select-options div.selected {
+                                      background-color: #00192D;
+                                      color: #FFC107;
+                                  }
+
+                                .select-options div:hover {
+                                      background-color: #00192D !important;
+                                      color: #FFC107 !important;
+
+                                }
+                       

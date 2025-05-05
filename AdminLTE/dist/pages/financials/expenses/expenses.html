@@ -527,9 +527,9 @@
 
                                   <div class="row g-3 mt-2">
                                       <div class="col-6">
-                                          <button type="button" class="btn btn-custom btn-sm" id="addRow">
-                                            <i class="fa fa-plus"></i>
-                                            Add More</button>
+                                        <button type="button" class="add-btn" onclick="addRow()">
+                                          <i class="fa fa-plus"></i>
+                                          ADD MORE</button>
                                       </div>
                                       <div class="col-6 mt-2 d-flex justify-content-end">
                                           <button type="submit" class="btn btn-custom btn-sm" style="height: fit-content;"> Submit</button>
@@ -777,6 +777,55 @@
  <!-- View announcements script -->
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+
+ <script>
+  function addRow() {
+      const table = document.querySelector(".items-table tbody");
+      const newRow = document.createElement("tr");
+      newRow.innerHTML = `
+        <td>
+                                            <select name="payment_method" required>
+                                              <option value="" disabled selected>Select Option</option>
+                                              <option value="credit_card">Rent</option>
+                                              <option value="paypal">Water Bill</option>
+                                              <option value="bank_transfer">Garbage</option>
+                                            </select>
+                                          </td>
+                                          <td><textarea name="Description" placeholder="Description" rows="1" required></textarea></td>
+                                          <td><input type="number" class="form-control quantity" placeholder="1"></td>
+                                          <td><input type="number" class="form-control unit-price" placeholder="123"></td>
+                                          <td>
+                                            <select class="form-select vat-option">
+                                              <option value="" disabled selected>Select Option</option>
+                                              <option value="inclusive">VAT 16% Inclusive</option>
+                                              <option value="exclusive">VAT 16% Exclusive</option>
+                                              <option value="zero">Zero Rated</option>
+                                              <option value="exempted">Exempted</option>
+                                            </select>
+                                          </td>
+                                          <td>
+                                            <input type="text" class="form-control total" placeholder="0" readonly>
+                                            <button type="button" class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
+                                              <i class="fa fa-trash" style="font-size: 12px;"></i>
+                                            </button>
+                                          </td>
+
+      `;
+      table.appendChild(newRow);
+  }
+  function deleteRow(btn) {
+      btn.closest("tr").remove();
+  }
+      function printInvoice() {
+          window.print();
+      }
+      function downloadPDF() {
+          const element = document.querySelector(".invoice-container");
+          html2pdf().from(element).save("invoice.pdf");
+      }
+</script>
+
+
  <script>
   function enableEditing() {
     const fields = document.querySelectorAll('#unit_number, #size, #floor_number, #description');
@@ -784,6 +833,8 @@
   }
 
  </script>
+
+
 
  <script>
   // Function to open the complaint popup
