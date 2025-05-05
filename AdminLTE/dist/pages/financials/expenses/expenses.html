@@ -83,6 +83,42 @@
         font-size: 0.8rem; /* Adjusting the font size */
       }
 
+        .items-table {
+          font-size: 0.9rem;
+          margin-top: 20px;
+        }
+
+        .items-table th, .items-table td {
+          vertical-align: middle !important;
+          text-align: center;
+        }
+
+        .items-table select,
+        .items-table textarea,
+        .items-table input {
+          width: 100%;
+          padding: 4px 6px;
+          font-size: 0.9rem;
+        }
+
+        .items-table textarea {
+          resize: vertical;
+        }
+
+        .items-table .delete-btn {
+          margin-top: 4px;
+        }
+
+        .btn-primary.mt-2 {
+          margin-top: 15px;
+        }
+
+        /* Optional: Style the table headers */
+        .items-table thead {
+          background-color: #f8f9fa;
+        }
+
+
 
     </style>
   </head>
@@ -433,82 +469,67 @@
                                     <div style="overflow-x: auto;">
 
                                     <!-- Expense Table -->
-                                    <table class="table table-bordered table-hover table-striped" style="min-width: 800px;">
+                                    <!-- Expense Table -->
+                                    <table class="items-table table table-bordered">
                                       <thead>
                                         <tr>
-                                          <th>Account</th>
+                                          <th>Item (Service)</th>
                                           <th>Description</th>
-                                          <th>Quantity</th>
+                                          <th>Qty</th>
                                           <th>Unit Price</th>
-                                          <th>VAT Option</th>
-                                          <th>Sub-total</th>
+                                          <th>Taxes</th>
                                           <th>Total</th>
-                                          <th>Remove</th>
                                         </tr>
                                       </thead>
-                                      <tbody id="expenseTableBody">
+                                      <tbody>
                                         <tr>
                                           <td>
-                                            <select class="form-select">
-                                              <option selected disabled>Repair and Maintenance</option>
-                                              <option>Salaries</option>
-                                              <option>Legal Work</option>
-                                              <option>Sugar</option>
-                                              <option>Milk</option>
-                                              <option>Diaper</option>
+                                            <select name="payment_method" required>
+                                              <option value="" disabled selected>Select Option</option>
+                                              <option value="credit_card">Rent</option>
+                                              <option value="paypal">Water Bill</option>
+                                              <option value="bank_transfer">Garbage</option>
                                             </select>
                                           </td>
-                                          <td><textarea class="form-control" rows="1" placeholder="Enter details"></textarea></td>
-                                          <td><input type="number" class="form-control quantity"    placeholder="1"></td>
-                                          <td><input type="number" class="form-control unit-price"  placeholder="123"></td>
+                                          <td><textarea name="Description" placeholder="Description" rows="1" required></textarea></td>
+                                          <td><input type="number" class="form-control quantity" placeholder="1"></td>
+                                          <td><input type="number" class="form-control unit-price" placeholder="123"></td>
                                           <td>
                                             <select class="form-select vat-option">
                                               <option value="" disabled selected>Select Option</option>
-                                              <option value="inclusive">VAT 16% Inclusive</option>
-                                              <option value="exclusive">VAT 16% Exclusive</option>
-                                              <option value="zero">Zero Rated</option>
-                                              <option value="exempt">Exempted</option>
+                                              <option value="inclusive">VAT 16% Inclusive</option>
+                                              <option value="exclusive">VAT 16% Exclusive</option>
+                                              <option value="zero">Zero Rated</option>
+                                              <option value="exempted">Exempted</option>
                                             </select>
                                           </td>
-                                          <td><input type="number" class="form-control subtotal" placeholder="0" readonly></td>
-                                          <td><input type="number" class="form-control total"    placeholder="0" readonly></td>
-                                          <td><button type="button" class="btn btn-danger remove-row">Delete</button></td>
+                                          <td>
+                                            <input type="text" class="form-control total" placeholder="0" readonly>
+                                            <button type="button" class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
+                                              <i class="fa fa-trash" style="font-size: 12px;"></i>
+                                            </button>
+                                          </td>
                                         </tr>
                                       </tbody>
                                     </table>
 
+                                    <!-- Button to Add Row -->
+                                    <!-- <button type="button" class="btn btn-primary mt-2" onclick="addRow()">Add Row</button> -->
+
+
                                       <!-- <button id="addRow" class="btn btn-primary">Add Row</button> -->
 
                                        <!-- Summary Table -->
-                                       <table class="summary-table table table-bordered" style="width: 20%; font-size: 0.8rem; margin-top: 10px;">
-                                        <tbody>
-                                          <tr>
-                                            <th style="padding:5px; text-align:left;">Sub-total</th>
-                                            <td><input type="number" class="form-control subtotal-summary"    readonly style="padding:5px;"></td>
-                                          </tr>
-                                          <tr>
-                                            <th style="padding:5px; text-align:left;">VAT 16%</th>
-                                            <td><input type="number" class="form-control tax-summary"         readonly style="padding:5px;"></td>
-                                          </tr>
-                                          <tr>
-                                            <th style="padding:5px; text-align:left;">VAT 0%</th>
-                                            <td><input type="number" class="form-control zero-rated-summary"  readonly style="padding:5px;"></td>
-                                          </tr>
-                                          <tr>
-                                            <th style="padding:5px; text-align:left;">Total</th>
-                                            <td><input type="number" class="form-control total-summary"       readonly style="padding:5px;"></td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
+
                                                                             </div>
                                 </div>
 
 
                                   <div class="row g-3 mt-2">
                                       <div class="col-6">
-                                          <button type="button" class="btn btn-custom btn-sm" id="addRow">
-                                            <i class="fa fa-plus"></i>
-                                            Add More</button>
+                                        <button type="button" class="add-btn" onclick="addRow()">
+                                          <i class="fa fa-plus"></i>
+                                          ADD MORE</button>
                                       </div>
                                       <div class="col-6 mt-2 d-flex justify-content-end">
                                           <button type="submit" class="btn btn-custom btn-sm" style="height: fit-content;"> Submit</button>
@@ -756,6 +777,55 @@
  <!-- View announcements script -->
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+
+ <script>
+  function addRow() {
+      const table = document.querySelector(".items-table tbody");
+      const newRow = document.createElement("tr");
+      newRow.innerHTML = `
+        <td>
+                                            <select name="payment_method" required>
+                                              <option value="" disabled selected>Select Option</option>
+                                              <option value="credit_card">Rent</option>
+                                              <option value="paypal">Water Bill</option>
+                                              <option value="bank_transfer">Garbage</option>
+                                            </select>
+                                          </td>
+                                          <td><textarea name="Description" placeholder="Description" rows="1" required></textarea></td>
+                                          <td><input type="number" class="form-control quantity" placeholder="1"></td>
+                                          <td><input type="number" class="form-control unit-price" placeholder="123"></td>
+                                          <td>
+                                            <select class="form-select vat-option">
+                                              <option value="" disabled selected>Select Option</option>
+                                              <option value="inclusive">VAT 16% Inclusive</option>
+                                              <option value="exclusive">VAT 16% Exclusive</option>
+                                              <option value="zero">Zero Rated</option>
+                                              <option value="exempted">Exempted</option>
+                                            </select>
+                                          </td>
+                                          <td>
+                                            <input type="text" class="form-control total" placeholder="0" readonly>
+                                            <button type="button" class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
+                                              <i class="fa fa-trash" style="font-size: 12px;"></i>
+                                            </button>
+                                          </td>
+
+      `;
+      table.appendChild(newRow);
+  }
+  function deleteRow(btn) {
+      btn.closest("tr").remove();
+  }
+      function printInvoice() {
+          window.print();
+      }
+      function downloadPDF() {
+          const element = document.querySelector(".invoice-container");
+          html2pdf().from(element).save("invoice.pdf");
+      }
+</script>
+
+
  <script>
   function enableEditing() {
     const fields = document.querySelectorAll('#unit_number, #size, #floor_number, #description');
@@ -763,6 +833,8 @@
   }
 
  </script>
+
+
 
  <script>
   // Function to open the complaint popup
@@ -779,110 +851,148 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    const addBtn   = document.getElementById("addRow");
-    const body     = document.getElementById("expenseTableBody");
-    const outSub   = document.querySelector(".subtotal-summary");
-    const outVAT16 = document.querySelector(".tax-summary");
-    const outVAT0  = document.querySelector(".zero-rated-summary");
-    const outTotal = document.querySelector(".total-summary");
+    function formatNumber(num) {
+      return num.toLocaleString('en-KE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
 
-    // Recalculate *all* summaries from current rows
-    function recalcAll() {
-      let sumNet = 0, sumVAT16 = 0, sumVAT0 = 0, sumGross = 0;
+    function calculateRow(row) {
+      const unitInput = row.querySelector(".unit-price");
+      const quantityInput = row.querySelector(".quantity");
+      const vatSelect = row.querySelector(".vat-option");
+      const totalInput = row.querySelector(".total");
 
-      body.querySelectorAll("tr").forEach(row => {
-        const qty   = parseFloat(row.querySelector(".quantity").value)   || 0;
-        const up    = parseFloat(row.querySelector(".unit-price").value) || 0;
-        const type  = row.querySelector(".vat-option").value;
-        const raw   = qty * up;
-        let net    = raw,
-            vatAmt = 0,
-            gross  = raw;
+      const unitPrice = parseFloat(unitInput?.value) || 0;
+      const quantity = parseFloat(quantityInput?.value) || 0;
+      let subtotal = unitPrice * quantity;
 
-        if (type === "inclusive") {
-          net    = raw / 1.16;
-          vatAmt = raw - net;
-          gross  = raw;
-          sumVAT16 += vatAmt;
+      let vatAmount = 0;
+      let total = subtotal;
+      const vatType = vatSelect?.value;
+
+      if (vatType === "inclusive") {
+        subtotal = subtotal / 1.16;
+        vatAmount = total - subtotal;
+      } else if (vatType === "exclusive") {
+        vatAmount = subtotal * 0.16;
+        total += vatAmount;
+      } else if (vatType === "zero" || vatType === "exempted") {
+        vatAmount = 0;
+        total = subtotal;
+      }
+
+      totalInput.value = formatNumber(total);
+      return { subtotal, vatAmount, total, vatType };
+    }
+
+    function updateTotalAmount() {
+      let subtotalSum = 0, taxSum = 0, grandTotal = 0;
+      let vat16Used = false, vat0Used = false, exemptedUsed = false;
+
+      document.querySelectorAll(".items-table tbody tr").forEach(row => {
+        if (row.querySelector(".unit-price")) {
+          const { subtotal, vatAmount, total, vatType } = calculateRow(row);
+          subtotalSum += subtotal;
+          taxSum += vatAmount;
+          grandTotal += total;
+
+          if (vatType === "inclusive" || vatType === "exclusive") vat16Used = true;
+          else if (vatType === "zero") vat0Used = true;
+          else if (vatType === "exempted") exemptedUsed = true;
         }
-        else if (type === "exclusive") {
-          net    = raw;
-          vatAmt = raw * 0.16;
-          gross  = raw + vatAmt;
-          sumVAT16 += vatAmt;
-        }
-        else if (type === "zero") {
-          net   = raw;
-          vatAmt = 0;
-          gross = raw;
-          sumVAT0 += raw;
-        }
-        // (exempt behaves like zero for VAT)
-
-        // write back each row
-        row.querySelector(".subtotal").value = net.toFixed(2);
-        row.querySelector(".total"   ).value = gross.toFixed(2);
-
-        sumNet   += net;
-        sumGross += gross;
       });
 
-      outSub.value   = sumNet.toFixed(2);
-      outVAT16.value = sumVAT16.toFixed(2);
-      outVAT0.value  = sumVAT0.toFixed(2);
-      outTotal.value = sumGross.toFixed(2);
+      createOrUpdateSummaryTable({ subtotalSum, taxSum, grandTotal, vat16Used, vat0Used, exemptedUsed });
     }
 
-    // attach listeners to a new or existing row
-    function attach(row) {
-      row.querySelectorAll(".quantity, .unit-price").forEach(i =>
-        i.addEventListener("input", recalcAll)
-      );
-      row.querySelector(".vat-option")
-         .addEventListener("change",  recalcAll);
-      row.querySelector(".remove-row")
-         .addEventListener("click",   () => { row.remove(); recalcAll(); });
+    function createOrUpdateSummaryTable({ subtotalSum, taxSum, grandTotal, vat16Used, vat0Used, exemptedUsed }) {
+      let summaryTable = document.querySelector(".summary-table");
+
+      if (!summaryTable) {
+        summaryTable = document.createElement("table");
+        summaryTable.className = "summary-table table table-bordered";
+        summaryTable.style = "width: 20%; float: right; font-size: 0.8rem; margin-top: 10px;";
+        summaryTable.innerHTML = `<tbody></tbody>`;
+        document.querySelector(".items-table").after(summaryTable);
+      }
+
+      const tbody = summaryTable.querySelector("tbody");
+      tbody.innerHTML = `
+        <tr>
+          <th style="width: 50%; padding: 5px;">Sub-total</th>
+          <td><input type="text" class="form-control" value="${formatNumber(subtotalSum)}" readonly></td>
+        </tr>
+        ${vat16Used ? `
+        <tr>
+          <th>VAT 16%</th>
+          <td><input type="text" class="form-control" value="${formatNumber(taxSum)}" readonly></td>
+        </tr>` : ''}
+        ${vat0Used ? `
+        <tr>
+          <th>VAT 0%</th>
+          <td><input type="text" class="form-control" value="0.00" readonly></td>
+        </tr>` : ''}
+        ${exemptedUsed ? `
+        <tr>
+          <th>Exempted</th>
+          <td><input type="text" class="form-control" value="0.00" readonly></td>
+        </tr>` : ''}
+        <tr>
+          <th>Total</th>
+          <td><input type="text" class="form-control" value="${formatNumber(grandTotal)}" readonly></td>
+        </tr>
+      `;
     }
 
-    // build a blank row
-    function makeRow() {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
+    function attachEvents(row) {
+      ["input", "change"].forEach(evt => {
+        row.querySelectorAll(".unit-price, .quantity, .vat-option").forEach(el =>
+          el.addEventListener(evt, updateTotalAmount)
+        );
+      });
+    }
+
+    window.addRow = function () {
+      const table = document.querySelector(".items-table tbody");
+      const newRow = document.createElement("tr");
+      newRow.innerHTML = `
         <td>
-          <select class="form-select">
-            <option selected disabled>Repair and Maintenance</option>
-            <option>Salaries</option>
-            <option>Legal Work</option>
-            <option>Sugar</option>
-            <option>Milk</option>
-            <option>Diaper</option>
+          <select name="payment_method" required>
+            <option value="" disabled selected>Select Option</option>
+            <option value="credit_card">Rent</option>
+            <option value="paypal">Water Bill</option>
+            <option value="bank_transfer">Garbage</option>
           </select>
         </td>
-        <td><textarea class="form-control" rows="1" placeholder="Enter details"></textarea></td>
-        <td><input type="number" class="form-control quantity"    placeholder="1"></td>
-        <td><input type="number" class="form-control unit-price"  placeholder="123"></td>
+        <td><textarea name="Description" placeholder="Description" rows="1" required></textarea></td>
+        <td><input type="number" class="form-control quantity" placeholder="1"></td>
+        <td><input type="number" class="form-control unit-price" placeholder="123"></td>
         <td>
           <select class="form-select vat-option">
             <option value="" disabled selected>Select Option</option>
-            <option value="inclusive">VAT 16% Inclusive</option>
-            <option value="exclusive">VAT 16% Exclusive</option>
-            <option value="zero">Zero Rated</option>
-            <option value="exempt">Exempted</option>
+            <option value="inclusive">VAT 16% Inclusive</option>
+            <option value="exclusive">VAT 16% Exclusive</option>
+            <option value="zero">Zero Rated</option>
+            <option value="exempted">Exempted</option>
           </select>
         </td>
-        <td><input type="number" class="form-control subtotal" placeholder="0" readonly></td>
-        <td><input type="number" class="form-control total"    placeholder="0" readonly></td>
-        <td><button type="button" class="btn btn-danger remove-row">Delete</button></td>
+        <td>
+          <input type="text" class="form-control total" placeholder="0" readonly>
+          <button type="button" class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
+            <i class="fa fa-trash" style="font-size: 12px;"></i>
+          </button>
+        </td>
       `;
-      attach(tr);
-      return tr;
-    }
+      table.appendChild(newRow);
+      attachEvents(newRow);
+    };
 
-    // wire-up
-    body.querySelectorAll("tr").forEach(attach);
-    addBtn.addEventListener("click", () => { body.appendChild(makeRow()); });
-    // initial compute
-    recalcAll();
+    window.deleteRow = function (btn) {
+      btn.closest("tr").remove();
+      updateTotalAmount();
+    };
+
+    document.querySelectorAll(".items-table tbody tr").forEach(attachEvents);
+    updateTotalAmount();
   });
   </script>
 

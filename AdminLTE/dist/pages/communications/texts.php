@@ -36,10 +36,32 @@ try {
         }
     }
 
-     echo "Message sent successfully.";
+    //  echo "Message sent successfully.";
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }
+$sql = "SELECT building_id, building_name FROM buildings";
+$stmt = $pdo->prepare($sql);
+$stmt->execute();
+$buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$stmt = $pdo->prepare("SELECT unit_id, unit_number FROM units WHERE building_id = ?");
+$selectedBuildingId = $_POST['selectedBuildingId'] ?? null;
+$units = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+   // Fetch start_date and end_date from communication (e.g., for a specific record)
+   $stmt = $pdo->prepare("SELECT start_date, end_date FROM communication WHERE id = ?");
+   $stmt->execute([1]); // Replace 1 with the communication record ID you want
+   $row = $stmt->fetch();
+
+   $startDate = $row['start_date'] ?? '';
+   $endDate   = $row['end_date'] ?? '';
+
+// } catch (PDOException $e) {
+//    echo "Database error: " . $e->getMessage();
+//    $startDate = $endDate = '';
+// }
 ?>
 
 <!doctype html>
@@ -434,12 +456,13 @@ display: flex;
                           <div class="col-12 message-container-header-section">
                               <div class="row">
                                   <div class="col-md-8 col-12">
-                                      <select id="categoryFilter" class="categoryFilter">
-                                          <option value="">-- Select Building--</option>
-                                          <option value="technology">All</option>
-                                          <option value="health">Manucho</option>
-                                          <option value="business">Ebenezer</option>
-                                          <option value="education">Crown Z</option>
+                                      <select id="categoryFilter"  name="building_id" class="categoryFilter form-select">
+                                      <option value="">-- Select Building --</option>
+                                      <?php foreach ($buildings as $b): ?>
+                                        <option value="<?= htmlspecialchars($b['building_id']) ?>">
+                                          <?= htmlspecialchars($b['building_name']) ?>
+                                        </option>
+                                      <?php endforeach; ?>
                                       </select>
                                       <input type="text" class="search-input" placeholder="Search Tenant...">
                                   </div>
@@ -790,22 +813,28 @@ display: flex;
                             <div id="field-group-first" class="field-group first" >
                               <label for="recipient" style="color: black;">Recepient<i class="fas fa-mouse-pointer title-icon" style="transform: rotate(110deg);"></i>                                Building</label>
                               <select name="building_name"  id="recipient" onchange="toggleShrink()" class="recipient" >
-                                <option value=""> Select Building </option>
-                                <option value="all"  >All Tenants</option>
-                                <option value="john-doe">Manucho</option>
-                                <option value="jane-smith">Ebenezer</option>
+                              <option value="">-- Select Building --</option>
+                              <?php foreach ($buildings as $b): ?>
+                                <option value="<?= htmlspecialchars($b['building_id']) ?>">
+                                  <?= htmlspecialchars($b['building_name']) ?>
+                                </option>
+                              <?php endforeach; ?>
                               </select>
                             </div>
 
-                            <div id="field-group-second" class="field-group second" style="display:none" >
-                              <label for="recipient">Unit</label>
-                              <select name="unit_id" id="recipient-units" onchange="toggleShrink1()" class="recipient" >
-                                <option value="">-- Select Unit --</option>
-                                <option value="all">All Tenants</option>
-                                <option value="john-doe">C12</option>
-                                <option value="jane-smith">E278</option>
-                              </select>
-                            </div>
+                            <div id="field-group-second" class="field-group second" style="display:none">
+                            <label for="recipient-units">Unit</label>
+                            <select name="unit_id" id="recipient-units" onchange="toggleShrink1()" class="recipient form-select">
+                              <option value="">-- Select Unit --</option>
+                              <option value="all">All Tenants</option>
+                              <?php foreach ($units as $unit): ?>
+                                <option value="<?= htmlspecialchars($unit['unit_id']) ?>">
+                                  <?= htmlspecialchars($unit['unit_number']) ?>
+                                </option>
+                              <?php endforeach; ?>
+                            </select>
+                          </div>
+
 
                             <div id="field-group-third" class="field-group third" style="display:none" >
                               <label for="tenant">Tenant</label>
