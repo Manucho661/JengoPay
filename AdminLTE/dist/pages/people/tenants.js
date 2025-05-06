@@ -103,9 +103,11 @@ function fetchTenants(building) {
                     <div class="phone" >  <i class="fas fa-phone icon"></i> ${user.phone_number} </div>
                      <div class="email" > <i class="fa fa-envelope icon"></i> ${user.email} </div>
                    </td>
-                    <td> <button class="status completed"><i class="fa fa-check-circle"></i> Active </button> </td>
+                    <td> <button class="status active"><i class="fa fa-check-circle"></i> ${user.status} </button> </td>
                   <td>
-                      <button onclick="handleDelete(event, ${user.user_id}, 'users');"
+                    
+
+                      <button onclick="handleDeactivate(event, ${user.user_id}, 'tenants');"
                         class="btn btn-sm" style="background-color: #00192D; color:white">
                         <i class="fa fa-arrow-right"></i>
                       </button>
@@ -179,10 +181,10 @@ function fetchTenants(building) {
 
 // DELETE TENANT
 
-      function handleDelete(event, id, type) {
+      function handleDeactivate(event, id, type) {
         event.stopPropagation(); // Stop the row or parent element click
         if (confirm("Are you sure?")) {
-        fetch('../actions/delete_record.php', {
+        fetch('../actions/update_record.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
