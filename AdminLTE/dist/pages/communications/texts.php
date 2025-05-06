@@ -1,68 +1,120 @@
 <?php
-include '../db/connect.php'; // Make sure $pdo is defined here (PDO instance)
+include '../db/connect.php'; // Make sure $pdo is available
 
-// Get input values
-// $building_id = $_POST['building_id'] ?? null;
-$subject = $_POST['subject'] ?? '';
-$files = $_POST['files'] ?? '';
-$unit_id = $_POST['unit_id'] ?? '';
-$tenant = $_POST['tenant'] ?? '';
-$building_name = $_POST['building_name'] ?? '';
-$message = $_POST['message'] ?? '';
-$created_at = $_POST['created_at'] ?? '';
-$updated_at = $_POST['updated_at'] ?? '';
+// === HANDLE NEW THREAD SUBMISSION (POST) ===
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['subject']) && !empty($_POST['message'])) {
+    try {
+        $subject = $_POST['subject'];
+        $title = $_POST['title'] ?? '';
+        $unit_id = $_POST['unit_id'] ?? '';
+        $tenant = $_POST['tenant'] ?? '';
+        $building_name = $_POST['building_name'] ?? '';
+        $message = $_POST['message'];
+        $now = date('Y-m-d H:i:s');
+        $upload_dir = "uploads/";
+        $uploaded_files = [];
 
-
-try {
-  $now = date('Y-m-d H:i:s');
-
-    // Insert message into messages table
-    $stmt = $pdo->prepare("INSERT INTO communication (subject,  files, unit_id, tenant, building_name,  message, created_at, updated_at) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->execute([ $subject, $files,  $unit_id, $tenant, $building_name, $message,  $now, $now]);
-
-    $message_id = $pdo->lastInsertId();
-
-    // Handle file uploads
-    $upload_dir = "uploads/";
-    if (!empty($_FILES['attachments']['name'][0])) {
-        foreach ($_FILES['attachments']['name'] as $key => $name) {
-            $tmp_name = $_FILES['attachments']['tmp_name'][$key];
-            $target_file = $upload_dir . basename($name);
-
-            if (move_uploaded_file($tmp_name, $target_file)) {
-                $stmt_file = $pdo->prepare("INSERT INTO message_files (message_id, file_path) VALUES (?, ?)");
-                $stmt_file->execute([$message_id, $target_file]);
+        // Handle file uploads
+        if (!empty($_FILES['attachments']['name'][0])) {
+            foreach ($_FILES['attachments']['name'] as $key => $name) {
+                $tmp_name = $_FILES['attachments']['tmp_name'][$key];
+                $target_file = $upload_dir . basename($name);
+                if (move_uploaded_file($tmp_name, $target_file)) {
+                    $uploaded_files[] = $target_file;
+                }
             }
         }
-    }
 
-    //  echo "Message sent successfully.";
-} catch (PDOException $e) {
-    echo "Error: " . $e->getMessage();
+        $files_json = json_encode($uploaded_files);
+
+        // Insert communication thread
+        $stmt = $pdo->prepare("INSERT INTO communication (subject, title, files, unit_id, tenant, building_name, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$subject, $title, $files_json, $unit_id, $tenant, $building_name, $now, $now]);
+
+        $thread_id = $pdo->lastInsertId();
+
+        // Insert initial message
+        $stmt = $pdo->prepare("INSERT INTO messages (thread_id, sender, content, timestamp) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$thread_id, 'landlord', $message, $now]);
+
+        // Store attachments separately if any
+        if (!empty($uploaded_files)) {
+            $stmt_file = $pdo->prepare("INSERT INTO message_files (thread_id, file_path) VALUES (?, ?)");
+            foreach ($uploaded_files as $file_path) {
+                $stmt_file->execute([$thread_id, $file_path]);
+            }
+        }
+
+        // Redirect to avoid resubmission
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit;
+
+    } catch (PDOException $e) {
+        echo "Database error: " . $e->getMessage();
+        exit;
+    }
 }
-$sql = "SELECT building_id, building_name FROM buildings";
-$stmt = $pdo->prepare($sql);
+
+// === FETCH BUILDINGS ===
+$stmt = $pdo->prepare("SELECT building_id, building_name FROM buildings");
 $stmt->execute();
 $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$stmt = $pdo->prepare("SELECT unit_id, unit_number FROM units WHERE building_id = ?");
-$selectedBuildingId = $_POST['selectedBuildingId'] ?? null;
-$units = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// === FETCH UNITS IF BUILDING SELECTED ===
+$building_id = $_POST['building_id'] ?? null;
+$units = [];
 
+if ($building_id) {
+    $stmt = $pdo->prepare("SELECT unit_id, unit_number FROM units WHERE building_id = ?");
+    $stmt->execute([$building_id]);
+    $units = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
-   // Fetch start_date and end_date from communication (e.g., for a specific record)
-   $stmt = $pdo->prepare("SELECT start_date, end_date FROM communication WHERE id = ?");
-   $stmt->execute([1]); // Replace 1 with the communication record ID you want
-   $row = $stmt->fetch();
+// === FETCH COMMUNICATION THREADS ===
+$stmt = $pdo->prepare("
+    SELECT
+        c.thread_id,
+        c.subject,
+        c.title,
+        c.tenant,
+        c.created_at,
+        (SELECT content FROM messages WHERE thread_id = c.thread_id ORDER BY timestamp DESC LIMIT 1) AS last_message,
+        (SELECT timestamp FROM messages WHERE thread_id = c.thread_id ORDER BY timestamp DESC LIMIT 1) AS last_time,
+        (SELECT COUNT(*) FROM messages WHERE thread_id = c.thread_id AND is_read = 0) AS unread_count
+    FROM communication c
+    ORDER BY last_time DESC
+");
+$stmt->execute();
+$communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-   $startDate = $row['start_date'] ?? '';
-   $endDate   = $row['end_date'] ?? '';
+// === IF VIEWING A THREAD'S MESSAGES (AJAX-LIKE BLOCK) ===
+if (isset($_GET['thread_id']) && $_GET['thread_id'] > 0) {
+    $threadId = (int)$_GET['thread_id'];
 
-// } catch (PDOException $e) {
-//    echo "Database error: " . $e->getMessage();
-//    $startDate = $endDate = '';
-// }
+    // Mark messages as read
+    $pdo->prepare("UPDATE messages SET is_read = 1 WHERE thread_id = :thread_id AND is_read = 0")
+        ->execute(['thread_id' => $threadId]);
+
+    // Fetch and display messages
+    $stmt = $pdo->prepare("SELECT sender, content, timestamp FROM messages WHERE thread_id = :thread_id ORDER BY timestamp ASC");
+    $stmt->execute(['thread_id' => $threadId]);
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $sender = htmlspecialchars($row['sender']);
+        $content = htmlspecialchars($row['content']);
+        $timestamp = date('H:i', strtotime($row['timestamp']));
+        $class = ($sender === 'landlord') ? 'outgoing' : 'incoming';
+
+        echo "<div class='message $class'>
+                <div class='bubble'>$content</div>
+                <div class='timestamp'>$timestamp</div>
+              </div>";
+    }
+    exit; // Stop further page output if this is used in a dynamic fetch context
+}
 ?>
+
+
 
 <!doctype html>
 <html lang="en">
@@ -511,133 +563,41 @@ display: flex;
                                       <thead class="">
                                           <tr>
                                               <th>SENT</th>
-                                              <th>Title</th>
+                                              <th>TITLE</th>
                                               <th>SENT BY</th>
                                               <th>ACTION</th>
                                           </tr>
                                       </thead>
                                       <tbody>
-                                          <tr class="table-row">
-                                              <td class="timestamp">
-                                                  <div class="date">13-03-2025</div>
-                                                  <div class="time">07:45PM</div>
-                                              </td>
-                                              <td class="title">Request to Vacate Room</td>
-                                              <td>
-                                                  <div class="sender">Me</div>
-                                                  <div class="sender-email"></div>
-                                              </td>
-                                              <td>
-                                                  <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                                                  <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                                              </td>
-                                          </tr>
-                                          <tr>
-                                              <td class="timestamp">
-                                                  <div class="date">13-03-2025</div>
-                                                  <div class="time">07:45PM</div>
-                                              </td>
-                                              <td class="title">Request to Fix Leaking shower</td>
-                                              <td>
-                                                  <div class="sender">Christiano Ronaldo</div>
-                                                  <div class="sender-email"><i class="fa fa-envelope"></i> Ronald12@gmail.com</div>
-                                              </td>
-                                              <td>
-                                                  <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                                                  <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                                              </td>
-                                          </tr>
-                                          <tr>
-                                              <td class="timestamp">
-                                                  <div class="date">13-03-2025</div>
-                                                  <div class="time">07:45PM</div>
-                                              </td>
-                                              <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
-                                              <td>
-                                                  <div class="sender">Sherly Nabwana</div>
-                                                  <div class="sender-email"><i class="fa fa-envelope"></i>Nabwana@gmail.com</div>
-                                              </td>
-                                              <td>
-                                                  <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                                                  <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                                              </td>
-                                          </tr>
-                                          <tr>
-                                              <td class="timestamp">
-                                                  <div class="date">13-03-2025</div>
-                                                  <div class="time">07:45PM</div>
-                                              </td>
-                                              <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
-                                              <td>
-                                                  <div class="sender">Hesbon Wanjiku</div>
-                                                  <div class="sender-email"><i class="fa fa-envelope"></i>wa123@gmail.com</div>
-                                              </td>
-                                              <td>
-                                                  <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                                                  <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                                              </td>
-                                          </tr>
-                                          <tr>
-                                              <td class="timestamp">
-                                                  <div class="date">13-03-2025</div>
-                                                  <div class="time">07:45PM</div>
-                                              </td>
-                                              <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
-                                              <td>
-                                                  <div class="sender">Me</div>
-                                                  <div class="sender-email"></div>
-                                              </td>
-                                              <td>
-                                                  <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                                                  <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                                              </td>
-                                          </tr>
-                                          <tr>
-                                              <td class="timestamp">
-                                                  <div class="date">13-03-2025</div>
-                                                  <div class="time">07:45PM</div>
-                                              </td>
-                                              <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
-                                              <td>
-                                                  <div class="sender">Sherly Nabwana</div>
-                                                  <div class="sender-email"><i class="fa fa-envelope"></i>Nabwana@gmail.com</div>
-                                              </td>
-                                              <td>
-                                                  <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                                                  <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                                              </td>
-                                          </tr>
-                                          <tr>
-                                              <td class="timestamp">
-                                                  <div class="date">13-03-2025</div>
-                                                  <div class="time">07:45PM</div>
-                                              </td>
-                                              <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
-                                              <td>
-                                                  <div class="sender">Hesbon Wanjiku</div>
-                                                  <div class="sender-email"><i class="fa fa-envelope"></i>wa123@gmail.com</div>
-                                              </td>
-                                              <td>
-                                                  <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                                                  <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                                              </td>
-                                          </tr>
-                                          <tr>
-                                              <td class="timestamp">
-                                                  <div class="date">13-03-2025</div>
-                                                  <div class="time">07:45PM</div>
-                                              </td>
-                                              <td class="title">Humble Request to Pay the Outsanding Rent Balance</td>
-                                              <td>
-                                                  <div class="sender">Me</div>
-                                                  <div class="sender-email"></div>
-                                              </td>
-                                              <td>
-                                                  <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                                                  <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                                              </td>
-                                          </tr>
-                                      </tbody>
+    <?php foreach ($communications as $comm):
+        $datetime = new DateTime($comm['last_time'] ?? $comm['created_at']);
+        $date = $datetime->format('d-m-Y');
+        $time = $datetime->format('h:iA');
+        $sender = htmlspecialchars($comm['tenant'] ?: 'Me');
+        $email = ''; // Add email logic if needed
+        $title = htmlspecialchars($comm['title']);
+        $threadId = $comm['thread_id'];
+    ?>
+        <tr class="table-row">
+            <td class="timestamp">
+                <div class="date"><?= $date ?></div>
+                <div class="time"><?= $time ?></div>
+            </td>
+            <td class="title"><?= $title ?></td>
+            <td>
+                <div class="sender"><?= $sender ?></div>
+                <div class="sender-email"><?= $email ?></div>
+            </td>
+            <td>
+                <!-- The View Button with dynamically passed thread_id -->
+                <button class="btn btn-primary view" data-thread-id="<?= $threadId ?>"><i class="bi bi-eye"></i> View</button>
+                <button class="btn btn-danger delete" data-thread-id="<?= $threadId ?>"><i class="bi bi-trash3"></i> Delete</button>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</tbody>
+
+
                                   </table>
                               </div>
                           </div>
@@ -657,7 +617,7 @@ display: flex;
                                       <div class="individual-residence d-flex">
                                         <div class="individual-name body">Emmanuel,</div>
                                         <div  class="initial-topic-separator">|</div>
-                                        <div class="residence mt-2">EBENEZER, C12</div>
+                                        <div class="residence mt-2"><?= htmlspecialchars($b['building_name'])?></div>
                                       </div>
 
 
@@ -671,61 +631,29 @@ display: flex;
 
                               <div class="h-80  other-topics-section">
 
-                                <div class="individual-topic-profiles active d-flex">
+                                <?php foreach ($communications as $comm): ?>
+                                  <div class="individual-topic-profiles active d-flex"
+                                    data-message-id="<?= $comm['thread_id'] ?>"
+                                    onclick="loadConversation(<?= $comm['thread_id'] ?>)">
 
                                   <div class="individual-topic-profile-container">
 
-                                    <div class="individual-topic">Rental Arrears</div>
-
-                                    <div class="individual-message mt-2">I will be paying rent from march...</div>
-
-                                  </div>
-                                  <div class="d-flex justify-content-end time-count">
-                                    <div class="time">3/3/25</div>
-                                    <div class="message-count mt-2">6</div>
-                                  </div>
-                                </div>
-
-                                <div class="individual-topic-profiles d-flex">
-
-                                  <div class="individual-topic-profile-container">
-                                    <div class="individual-topic">Request For Marriage</div>
-                                    <div class="individual-message mt-2 ">I will not be paying rent this month, i did not receive..</div>
+                                  <div class="individual-topic"><?= htmlspecialchars($comm['title']) ?></div>
+                                  <div class="individual-message mt-2"><?= htmlspecialchars(mb_strimwidth($comm['last_message'], 0, 60, '...'))?></div>
                                   </div>
 
                                   <div class="d-flex justify-content-end time-count">
-                                    <div class="time">3/3/25</div>
-                                    <div class="message-count mt-2">3</div>
+                                    <div class="time"><?php
+                                    $datetime = new DateTime($comm['created_at']);
+                                    echo $datetime->format('d/m/y');
+                                  ?></div>
+                                      <div class="message-count mt-2">
+                                        <?= $comm['unread_count'] > 0 ? $comm['unread_count'] : '' ?>
+                                      </div>
+ <!-- Optional: Replace 1 with actual reply count if available -->
                                   </div>
                                 </div>
-
-                                <div class="individual-topic-profiles d-flex">
-
-                                  <div class="individual-topic-profile-container">
-                                    <div class="individual-topic">Request to fix leaking shower</div>
-                                    <div class="individual-message mt-2 ">I will not be paying rent this month, i did not receive..</div>
-                                  </div>
-
-                                  <div class="d-flex justify-content-end time-count">
-                                    <div class="time">3/3/25</div>
-                                    <div class="message-count"></div>
-                                  </div>
-                                </div>
-
-                                <div class="individual-topic-profiles d-flex">
-
-                                  <div class="individual-topic-profile-container">
-                                    <div class="individual-topic">Request for deposit refund</div>
-                                    <div class="individual-message mt-2 ">I will be paying rent from march...</div>
-                                  </div>
-
-                                  <div class="d-flex justify-content-end time-count">
-                                    <div class="time">3/3/25</div>
-                                    <div class="message-count"></div>
-                                  </div>
-                                </div>
-
-
+                                <?php endforeach; ?>
                               </div>
 
                             </div>
@@ -749,7 +677,7 @@ display: flex;
                                 </div>
                                <div class="input-area">
                                   <div class="input-box" id="inputBox" contenteditable="true"></div>
-                                  <button class="btn message-send-button" onclick="sendMessage()"><i class="fa fa-paper-plane"></i> </button>
+                                  <button name="incoming_message" class="btn message-send-button" onclick="sendMessage()"><i class="fa fa-paper-plane"></i> </button>
                               </div>
 
                               </div>
@@ -810,30 +738,33 @@ display: flex;
                         <form action="texts.php" method="POST" enctype="multipart/form-data">
                           <div class="col-md-12" style="display: flex;">
 
-                            <div id="field-group-first" class="field-group first" >
+                            <div id="field-group-first" class="field-group first">
                               <label for="recipient" style="color: black;">Recepient<i class="fas fa-mouse-pointer title-icon" style="transform: rotate(110deg);"></i>                                Building</label>
                               <select name="building_name"  id="recipient" onchange="toggleShrink()" class="recipient" >
                               <option value="">-- Select Building --</option>
                               <?php foreach ($buildings as $b): ?>
-                                <option value="<?= htmlspecialchars($b['building_id']) ?>">
+                              <option value="<?= htmlspecialchars($b['building_id']) ?>">
                                   <?= htmlspecialchars($b['building_name']) ?>
-                                </option>
+                              </option>
                               <?php endforeach; ?>
                               </select>
-                            </div>
+                              </div>
 
-                            <div id="field-group-second" class="field-group second" style="display:none">
+                            <div id="field-group-second" class="field-group second" style="display:block">
                             <label for="recipient-units">Unit</label>
-                            <select name="unit_id" id="recipient-units" onchange="toggleShrink1()" class="recipient form-select">
-                              <option value="">-- Select Unit --</option>
-                              <option value="all">All Tenants</option>
+                           <select name="unit_id">
+                            <?php if (!empty($units) && is_array($units)): ?>
                               <?php foreach ($units as $unit): ?>
                                 <option value="<?= htmlspecialchars($unit['unit_id']) ?>">
                                   <?= htmlspecialchars($unit['unit_number']) ?>
                                 </option>
                               <?php endforeach; ?>
-                            </select>
+                            <?php else: ?>
+                              <option disabled>No units found</option>
+                            <?php endif; ?>
+                          </select>
                           </div>
+
 
 
                             <div id="field-group-third" class="field-group third" style="display:none" >
@@ -849,10 +780,15 @@ display: flex;
                         </div>
 
                         <div class="field-group">
-
                           <label for="subject new-message">Subject (optional)</label>
                           <input name="subject" type="text" id="subject" class="subject" placeholder="Enter subject..." />
                         </div>
+
+                        <div class="field-group">
+                          <label for="title">Title</label>
+                          <input name="title" type="text" id="title" class="title" placeholder="Enter title..." />
+                        </div>
+
 
                         <div class="field-group">
                           <label for="message">Message</label>
@@ -1065,151 +1001,138 @@ display: flex;
 
                       <!-- SCRIPT FOR MESSAGES -->
     <!-- Begin -->
-    <script>
-      function sendMessage() {
-          const inputBox = document.getElementById("inputBox");
-          const messages = document.getElementById("messages");
-          const text = inputBox.innerText.trim();
-          if (text !== "") {
-              const messageDiv = document.createElement("div");
-              messageDiv.classList.add("message", "outgoing");
-              messageDiv.textContent = text;
-              messages.appendChild(messageDiv);
-              inputBox.innerText = "";
-              messages.scrollTop = messages.scrollHeight;
-          }
-      }
 
-
-
-                              // SHOWING THE CHATBOT.
-
-                              const filter_section = document.getElementById('filter-section');
-                              const go_back = document.getElementById('go-back');
-
-                              document.querySelectorAll('.view').forEach(item => {
-                    item.addEventListener('click', function () {
-                      const all_messages_summary = document.getElementById('all-messages-summary');
-                      const individual_message_summary = document.getElementById('individual-message-summmary');
-
-                      const row = this.closest('tr'); // This refers to the clicked button
-                      const cells = row.querySelectorAll('td');
-
-                      const secondLast = cells[cells.length - 2];
-                      const senderDiv = secondLast.querySelector('.sender');
-                      const sender = senderDiv ? senderDiv.textContent.split(' ')[0]  : 'Unknown Sender'; // Safe fallback
-                      const thirdLast = cells[cells.length - 3].textContent;
-                      console.log("Third Last:", thirdLast);
-                      // console.log("Second Last:", secondLast);
-
-                      // Find the `.individual-name.body` and update it (name of the tenant)
-                        let targetName = document.querySelector('.individual-name.body');
-                        if (targetName) {
-                            targetName.textContent = sender;
-                        }
-
-                        // Profile Initials
-                        let targetName3 = document.getElementById('profile-initials');
-                            const words = senderDiv.textContent.trim().split(' ');
-                            const firstInitial = words[0] ? words[0][0] : '';
-                            const secondInitial = words[1] ? words[1][0] : '';
-                            const full_initials = firstInitial + secondInitial || 'Unknown Sender';
-                            if (targetName3) {
-                            targetName3.textContent = full_initials;
-                        }
-
-                        let targetName2 = document.querySelector('.individual-topic.body');
-                        if (targetName2 ) {
-                            targetName2.textContent = thirdLast;
-                        }
-
-                      all_messages_summary.style.display = "none";
-                      filter_section.style.display = "none";
-                      individual_message_summary.style.display = "flex";
-                      go_back.style.display = "flex";
-
-
-  });
-});
-
-          // Back to all messages summary.
-          function myBack() {
-
-            const individual_message_summary = document.getElementById('individual-message-summmary').style.display="none";
-            const all_messages_summary = document.getElementById('all-messages-summary').style.display="flex";
-            const fliter_section = document.getElementById('filter-section').style.display="flex";
-            const go_back = document.getElementById('go-back').style.display="none";
-                  }
-
-
-                                            // Hover and active effect
-
-      // Select all message elements
-            document.querySelectorAll('.individual-topic-profiles').forEach(item => {
-            item.addEventListener('click', () => {
-                // Remove 'active' class from all and add to clicked one
-                document.querySelectorAll('.individual-topic-profiles').forEach(el => el.classList.remove('active'));
-                item.classList.add('active');
-
-                // Get the clicked individual's name
-                let clickedName = item.querySelector('.individual-topic').textContent;
-
-                // Random residence names
-
-
-                // Find the `.individual-topic.body` and update it
-                let targetName = document.querySelector('.individual-topic.body');
-                if (targetName) {
-                    targetName.textContent = clickedName;
-                }
-
-                // Find the `.residence` element and update it with a random residence
-
-            });
-        });
-
-
-
-                            // EFFECT ON SMALLER SCREENS
-
-// const recentChats = document.getElementById("RecentChats");
-          const messageProfiles = document.getElementById("message-profiles");
-          const messageBody = document.getElementById("messageBody");
-          const individualProfiles = document.querySelectorAll(".individual-topic-profiles");
-          const profile_initials_initials_topic = document.getElementById("profile-initials-initials-topic");
-          const initial_topic_separator = document.getElementById("initial-topic-separator");
-
-
-// Function to handle resizing
-          function updateLayout() {
-              if (window.innerWidth > 768) {
-                  messageProfiles.style.display = "block";
-
-                  messageBody.style.display = "block";
-                  profile_initials_initials_topic.style.display = "none";
-                  initial_topic_separator.style.display = "none";
-              } else {
-                  messageProfiles.style.display = "none";
-
-                  messageBody.style.display = "block";
-                  profile_initials_initials_topic.style.display = "flex";
-                  initial_topic_separator.style.display = "flex";
-              }
-          }
-
-
-// Initial check when the page loads
-          updateLayout();
-
-// Listen for window resize events
-          window.addEventListener("resize", updateLayout);
-
-// Add click event to recentChats (only for small screens)
-          recentChats.addEventListener("click", showMessageProfiles);
-
-  </script>
   <!-- End  -->
 
+<!--
+<script>
+document.getElementById('sendMessage').addEventListener('click', function() {
+    let messageInput = document.getElementById('messageInput').value;
+    if (messageInput.trim() !== "") {
+        // Create a new message div
+        let newMessage = document.createElement('div');
+        newMessage.classList.add('message', 'outgoing');
+        newMessage.innerHTML = `<p>${messageInput}</p>`;
+
+        // Append the message to the chat container
+        document.getElementById('chatContainer').appendChild(newMessage);
+
+        // Clear input field
+        document.getElementById('messageInput').value = '';
+
+        // Optionally scroll to the bottom after sending a message
+        document.getElementById('chatContainer').scrollTop = document.getElementById('chatContainer').scrollHeight;
+    }
+});
+</script> -->
+
+
+
+
+
+
+<!-- loadConversation -->
+<script>
+let activeThreadId = null;
+
+function loadConversation(threadId) {
+    activeThreadId = threadId; // set current thread ID
+
+    fetch('load_conversation.php?thread_id=' + threadId)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('messages').innerHTML = data;
+
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        });
+}
+</script>
+
+
+<!-- send & get message -->
+<script>
+function sendMessage() {
+    var inputBox = document.getElementById('inputBox');
+    var message = inputBox.innerHTML.trim();
+
+    if (!message) {
+        alert("Please type a message.");
+        return;
+    }
+
+    if (!activeThreadId) {
+        alert("Please select a conversation thread first.");
+        return;
+    }
+
+    message = message.replace(/<[^>]*>/g, '');
+
+    fetch('send_message.php', {
+        method: 'POST',
+        body: new URLSearchParams({
+            'message': message,
+            'sender': 'landlord',  // or 'tenant' depending on logged-in user
+            'thread_id': activeThreadId
+        })
+    })
+    .then(response => response.text())
+    .then(data => {
+        inputBox.innerHTML = '';
+        loadConversation(activeThreadId); // refresh only current thread
+    });
+}
+
+
+// Function to load messages (AJAX request to fetch new messages)
+function loadMessages() {
+    fetch('get_message.php')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('messages').innerHTML = data;
+
+            // Optional: scroll to bottom after loading
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        });
+}
+
+// Load messages on page load
+document.addEventListener('DOMContentLoaded', loadMessages);
+</script>
+
+<script>
+    document.querySelectorAll('.view').forEach(button => {
+        button.addEventListener('click', function() {
+            const threadId = this.getAttribute('data-thread-id');
+            fetchMessages(threadId);
+        });
+    });
+
+    function fetchMessages(threadId) {
+        const messageThread = document.getElementById('message-thread');
+        const messagesContainer = document.getElementById('messages');
+
+        // Show loading text
+        messagesContainer.innerHTML = '<p>Loading...</p>';
+        messageThread.style.display = 'block';
+
+        // Fetch messages via AJAX
+        fetch(`get_message.php?thread_id=${threadId}`)
+            .then(response => response.text())
+            .then(data => {
+                messagesContainer.innerHTML = data;
+            })
+            .catch(error => {
+                messagesContainer.innerHTML = '<p>Error loading messages.</p>';
+            });
+    }
+</script>
+
+  <!-- End  -->
+
+
+</script>
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
       integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
