@@ -1,17 +1,12 @@
 <?php
-include '../db/connect.php';
+include '../db/connect.php'; // Ensure $pdo is defined
 
-if (isset($_GET['id'])) {
-    // Fetch the main message and replies (assuming you have replies stored separately)
-    $stmt = $pdo->prepare("
-        SELECT message, sender_type, created_at
-        FROM communication_replies
-        WHERE thread_id = ?
-        ORDER BY created_at ASC
-    ");
-    $stmt->execute([$_GET['id']]);
-    $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Fetch all messages ordered by time
+$stmt = $pdo->query("SELECT sender, content FROM messages ORDER BY timestamp ASC");
 
-    header('Content-Type: application/json');
-    echo json_encode($messages);
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $class = ($row['sender'] === 'landlord') ? 'outgoing' : 'incoming';
+    $message = htmlspecialchars($row['content']); // sanitize output
+
+    echo "<div class='message $class'>{$message}</div>";
 }

@@ -1,12 +1,11 @@
 <?php
-include '../db/connect.php'; // Ensure $pdo is defined
+include '../db/connect.php'; // Make sure $pdo is available
 
-// Handle form submission
+// === HANDLE NEW THREAD SUBMISSION (POST) ===
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['subject']) && !empty($_POST['message'])) {
     try {
         $subject = $_POST['subject'];
         $title = $_POST['title'] ?? '';
-        $incoming_message = $_POST['incoming_message'] ?? '';
         $unit_id = $_POST['unit_id'] ?? '';
         $tenant = $_POST['tenant'] ?? '';
         $building_name = $_POST['building_name'] ?? '';
@@ -20,7 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['subject']) && !empty
             foreach ($_FILES['attachments']['name'] as $key => $name) {
                 $tmp_name = $_FILES['attachments']['tmp_name'][$key];
                 $target_file = $upload_dir . basename($name);
-
                 if (move_uploaded_file($tmp_name, $target_file)) {
                     $uploaded_files[] = $target_file;
                 }
@@ -29,21 +27,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['subject']) && !empty
 
         $files_json = json_encode($uploaded_files);
 
-        // Insert main message
-        $stmt = $pdo->prepare("INSERT INTO communication (subject, title, incoming_message, files, unit_id, tenant, building_name, message, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$subject, $title, $incoming_message,  $files_json, $unit_id, $tenant, $building_name, $message, $now, $now]);
+        // Insert communication thread
+        $stmt = $pdo->prepare("INSERT INTO communication (subject, title, files, unit_id, tenant, building_name, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$subject, $title, $files_json, $unit_id, $tenant, $building_name, $now, $now]);
 
-        $message_id = $pdo->lastInsertId();
+        $thread_id = $pdo->lastInsertId();
 
-        // Insert file paths
+        // Insert initial message
+        $stmt = $pdo->prepare("INSERT INTO messages (thread_id, sender, content, timestamp) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$thread_id, 'landlord', $message, $now]);
+
+        // Store attachments separately if any
         if (!empty($uploaded_files)) {
-            $stmt_file = $pdo->prepare("INSERT INTO message_files (message_id, file_path) VALUES (?, ?)");
+            $stmt_file = $pdo->prepare("INSERT INTO message_files (thread_id, file_path) VALUES (?, ?)");
             foreach ($uploaded_files as $file_path) {
-                $stmt_file->execute([$message_id, $file_path]);
+                $stmt_file->execute([$thread_id, $file_path]);
             }
         }
 
-        // ✅ Redirect to prevent resubmission on reload
+        // Redirect to avoid resubmission
         header("Location: " . $_SERVER['PHP_SELF']);
         exit;
 
@@ -53,14 +55,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['subject']) && !empty
     }
 }
 
-// Continue normal page logic (GET request)
-
-// Fetch buildings
+// === FETCH BUILDINGS ===
 $stmt = $pdo->prepare("SELECT building_id, building_name FROM buildings");
 $stmt->execute();
 $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Fetch units if building selected
+// === FETCH UNITS IF BUILDING SELECTED ===
 $building_id = $_POST['building_id'] ?? null;
 $units = [];
 
@@ -70,12 +70,50 @@ if ($building_id) {
     $units = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Fetch communications
-$stmt = $pdo->prepare("SELECT * FROM communication ORDER BY created_at DESC");
+// === FETCH COMMUNICATION THREADS ===
+$stmt = $pdo->prepare("
+    SELECT
+        c.thread_id,
+        c.subject,
+        c.title,
+        c.tenant,
+        c.created_at,
+        (SELECT content FROM messages WHERE thread_id = c.thread_id ORDER BY timestamp DESC LIMIT 1) AS last_message,
+        (SELECT timestamp FROM messages WHERE thread_id = c.thread_id ORDER BY timestamp DESC LIMIT 1) AS last_time,
+        (SELECT COUNT(*) FROM messages WHERE thread_id = c.thread_id AND is_read = 0) AS unread_count
+    FROM communication c
+    ORDER BY last_time DESC
+");
 $stmt->execute();
 $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// === IF VIEWING A THREAD'S MESSAGES (AJAX-LIKE BLOCK) ===
+if (isset($_GET['thread_id']) && $_GET['thread_id'] > 0) {
+    $threadId = (int)$_GET['thread_id'];
+
+    // Mark messages as read
+    $pdo->prepare("UPDATE messages SET is_read = 1 WHERE thread_id = :thread_id AND is_read = 0")
+        ->execute(['thread_id' => $threadId]);
+
+    // Fetch and display messages
+    $stmt = $pdo->prepare("SELECT sender, content, timestamp FROM messages WHERE thread_id = :thread_id ORDER BY timestamp ASC");
+    $stmt->execute(['thread_id' => $threadId]);
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $sender = htmlspecialchars($row['sender']);
+        $content = htmlspecialchars($row['content']);
+        $timestamp = date('H:i', strtotime($row['timestamp']));
+        $class = ($sender === 'landlord') ? 'outgoing' : 'incoming';
+
+        echo "<div class='message $class'>
+                <div class='bubble'>$content</div>
+                <div class='timestamp'>$timestamp</div>
+              </div>";
+    }
+    exit; // Stop further page output if this is used in a dynamic fetch context
+}
 ?>
+
 
 
 <!doctype html>
@@ -531,30 +569,35 @@ display: flex;
                                           </tr>
                                       </thead>
                                       <tbody>
-                                      <?php foreach ($communications as $comm): ?>
-                                      <tr class="table-row">
-                                        <td class="timestamp">
-                                          <?php
-                                            $datetime = new DateTime($comm['created_at']);
-                                            $date = $datetime->format('d-m-Y');
-                                            $time = $datetime->format('h:iA');
-                                          ?>
-                                          <div class="date"><?= $date ?></div>
-                                          <div class="time"><?= $time ?></div>
-                                        </td>
-                                        <td class="title"><?= htmlspecialchars($comm['title']) ?></td>
-                                        <td>
-                                          <div class="sender"><?= htmlspecialchars($comm['tenant'] ?: 'Me') ?></div>
-                                          <div class="sender-email"></div> <!-- Optional: add email if available -->
-                                        </td>
-                                        <td>
-                                          <button class="btn btn-primary view"><i class="bi bi-eye"></i> View</button>
-                                          <button class="btn btn-danger delete"><i class="bi bi-trash3"></i> Delete</button>
-                                        </td>
-                                      </tr>
-                                    <?php endforeach; ?>
+    <?php foreach ($communications as $comm):
+        $datetime = new DateTime($comm['last_time'] ?? $comm['created_at']);
+        $date = $datetime->format('d-m-Y');
+        $time = $datetime->format('h:iA');
+        $sender = htmlspecialchars($comm['tenant'] ?: 'Me');
+        $email = ''; // Add email logic if needed
+        $title = htmlspecialchars($comm['title']);
+        $threadId = $comm['thread_id'];
+    ?>
+        <tr class="table-row">
+            <td class="timestamp">
+                <div class="date"><?= $date ?></div>
+                <div class="time"><?= $time ?></div>
+            </td>
+            <td class="title"><?= $title ?></td>
+            <td>
+                <div class="sender"><?= $sender ?></div>
+                <div class="sender-email"><?= $email ?></div>
+            </td>
+            <td>
+                <!-- The View Button with dynamically passed thread_id -->
+                <button class="btn btn-primary view" data-thread-id="<?= $threadId ?>"><i class="bi bi-eye"></i> View</button>
+                <button class="btn btn-danger delete" data-thread-id="<?= $threadId ?>"><i class="bi bi-trash3"></i> Delete</button>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</tbody>
 
-                                      </tbody>
+
                                   </table>
                               </div>
                           </div>
@@ -590,14 +633,13 @@ display: flex;
 
                                 <?php foreach ($communications as $comm): ?>
                                   <div class="individual-topic-profiles active d-flex"
-                                    data-message-id="<?= $comm['id'] ?>"
-                                    onclick="loadConversation(<?= $comm['id'] ?>)">
-
+                                    data-message-id="<?= $comm['thread_id'] ?>"
+                                    onclick="loadConversation(<?= $comm['thread_id'] ?>)">
 
                                   <div class="individual-topic-profile-container">
 
                                   <div class="individual-topic"><?= htmlspecialchars($comm['title']) ?></div>
-                                  <div class="individual-message mt-2"><?= htmlspecialchars(mb_strimwidth($comm['message'], 0, 60, '...')) ?></div>
+                                  <div class="individual-message mt-2"><?= htmlspecialchars(mb_strimwidth($comm['last_message'], 0, 60, '...'))?></div>
                                   </div>
 
                                   <div class="d-flex justify-content-end time-count">
@@ -605,7 +647,10 @@ display: flex;
                                     $datetime = new DateTime($comm['created_at']);
                                     echo $datetime->format('d/m/y');
                                   ?></div>
-                                    <div class="message-count mt-2">1</div> <!-- Optional: Replace 1 with actual reply count if available -->
+                                      <div class="message-count mt-2">
+                                        <?= $comm['unread_count'] > 0 ? $comm['unread_count'] : '' ?>
+                                      </div>
+ <!-- Optional: Replace 1 with actual reply count if available -->
                                   </div>
                                 </div>
                                 <?php endforeach; ?>
@@ -956,196 +1001,138 @@ display: flex;
 
                       <!-- SCRIPT FOR MESSAGES -->
     <!-- Begin -->
-    <script>
-      function sendMessage() {
-          const inputBox = document.getElementById("inputBox");
-          const messages = document.getElementById("messages");
-          const text = inputBox.innerText.trim();
-          if (text !== "") {
-              const messageDiv = document.createElement("div");
-              messageDiv.classList.add("message", "outgoing");
-              messageDiv.textContent = text;
-              messages.appendChild(messageDiv);
-              inputBox.innerText = "";
-              messages.scrollTop = messages.scrollHeight;
-          }
-      }
 
-
-
-                              // SHOWING THE CHATBOT.
-
-                              const filter_section = document.getElementById('filter-section');
-                              const go_back = document.getElementById('go-back');
-
-                              document.querySelectorAll('.view').forEach(item => {
-                    item.addEventListener('click', function () {
-                      const all_messages_summary = document.getElementById('all-messages-summary');
-                      const individual_message_summary = document.getElementById('individual-message-summmary');
-
-                      const row = this.closest('tr'); // This refers to the clicked button
-                      const cells = row.querySelectorAll('td');
-
-                      const secondLast = cells[cells.length - 2];
-                      const senderDiv = secondLast.querySelector('.sender');
-                      const sender = senderDiv ? senderDiv.textContent.split(' ')[0]  : 'Unknown Sender'; // Safe fallback
-                      const thirdLast = cells[cells.length - 3].textContent;
-                      console.log("Third Last:", thirdLast);
-                      // console.log("Second Last:", secondLast);
-
-                      // Find the `.individual-name.body` and update it (name of the tenant)
-                        let targetName = document.querySelector('.individual-name.body');
-                        if (targetName) {
-                            targetName.textContent = sender;
-                        }
-
-                        // Profile Initials
-                        let targetName3 = document.getElementById('profile-initials');
-                            const words = senderDiv.textContent.trim().split(' ');
-                            const firstInitial = words[0] ? words[0][0] : '';
-                            const secondInitial = words[1] ? words[1][0] : '';
-                            const full_initials = firstInitial + secondInitial || 'Unknown Sender';
-                            if (targetName3) {
-                            targetName3.textContent = full_initials;
-                        }
-
-                        let targetName2 = document.querySelector('.individual-topic.body');
-                        if (targetName2 ) {
-                            targetName2.textContent = thirdLast;
-                        }
-
-                      all_messages_summary.style.display = "none";
-                      filter_section.style.display = "none";
-                      individual_message_summary.style.display = "flex";
-                      go_back.style.display = "flex";
-
-
-  });
-});
-
-          // Back to all messages summary.
-          function myBack() {
-
-            const individual_message_summary = document.getElementById('individual-message-summmary').style.display="none";
-            const all_messages_summary = document.getElementById('all-messages-summary').style.display="flex";
-            const fliter_section = document.getElementById('filter-section').style.display="flex";
-            const go_back = document.getElementById('go-back').style.display="none";
-                  }
-
-
-                                            // Hover and active effect
-
-      // Select all message elements
-            document.querySelectorAll('.individual-topic-profiles').forEach(item => {
-            item.addEventListener('click', () => {
-                // Remove 'active' class from all and add to clicked one
-                document.querySelectorAll('.individual-topic-profiles').forEach(el => el.classList.remove('active'));
-                item.classList.add('active');
-
-                // Get the clicked individual's name
-                let clickedName = item.querySelector('.individual-topic').textContent;
-
-                // Random residence names
-
-
-                // Find the `.individual-topic.body` and update it
-                let targetName = document.querySelector('.individual-topic.body');
-                if (targetName) {
-                    targetName.textContent = clickedName;
-                }
-
-                // Find the `.residence` element and update it with a random residence
-
-            });
-        });
-
-
-
-                            // EFFECT ON SMALLER SCREENS
-
-// const recentChats = document.getElementById("RecentChats");
-          const messageProfiles = document.getElementById("message-profiles");
-          const messageBody = document.getElementById("messageBody");
-          const individualProfiles = document.querySelectorAll(".individual-topic-profiles");
-          const profile_initials_initials_topic = document.getElementById("profile-initials-initials-topic");
-          const initial_topic_separator = document.getElementById("initial-topic-separator");
-
-
-// Function to handle resizing
-          function updateLayout() {
-              if (window.innerWidth > 768) {
-                  messageProfiles.style.display = "block";
-
-                  messageBody.style.display = "block";
-                  profile_initials_initials_topic.style.display = "none";
-                  initial_topic_separator.style.display = "none";
-              } else {
-                  messageProfiles.style.display = "none";
-
-                  messageBody.style.display = "block";
-                  profile_initials_initials_topic.style.display = "flex";
-                  initial_topic_separator.style.display = "flex";
-              }
-          }
-
-
-// Initial check when the page loads
-          updateLayout();
-
-// Listen for window resize events
-          window.addEventListener("resize", updateLayout);
-
-// Add click event to recentChats (only for small screens)
-          recentChats.addEventListener("click", showMessageProfiles);
-
-  </script>
   <!-- End  -->
 
-  <script>
-document.addEventListener('DOMContentLoaded', function () {
-  const previews = document.querySelectorAll('.individual-topic-profiles');
-
-  previews.forEach(preview => {
-    preview.addEventListener('click', function () {
-      const messageId = this.getAttribute('data-id');
-
-      fetch(`get_message.php?id=${messageId}`)
-        .then(response => response.json())
-        .then(data => {
-          const messagesContainer = document.getElementById('messages');
-          messagesContainer.innerHTML = ''; // clear previous thread
-
-          data.thread.forEach(msg => {
-            const div = document.createElement('div');
-            div.classList.add('message');
-            div.classList.add(msg.direction === 'incoming' ? 'incoming' : 'outgoing');
-            div.textContent = msg.content;
-            messagesContainer.appendChild(div);
-          });
-
-          // update subject/title
-          document.querySelector('.individual-topic.body').textContent = data.subject || '';
-        })
-        .catch(err => console.error('Fetch error:', err));
-    });
-  });
-});
-</script>
-
+<!--
 <script>
-function loadConversation(id) {
-  fetch('get_message.php?id=' + id)
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById('messages').innerHTML = `<div class="message incoming">${data}</div>`;
-    })
-    .catch(error => console.error('Error loading message:', error));
+document.getElementById('sendMessage').addEventListener('click', function() {
+    let messageInput = document.getElementById('messageInput').value;
+    if (messageInput.trim() !== "") {
+        // Create a new message div
+        let newMessage = document.createElement('div');
+        newMessage.classList.add('message', 'outgoing');
+        newMessage.innerHTML = `<p>${messageInput}</p>`;
+
+        // Append the message to the chat container
+        document.getElementById('chatContainer').appendChild(newMessage);
+
+        // Clear input field
+        document.getElementById('messageInput').value = '';
+
+        // Optionally scroll to the bottom after sending a message
+        document.getElementById('chatContainer').scrollTop = document.getElementById('chatContainer').scrollHeight;
+    }
+});
+</script> -->
+
+
+
+
+
+
+<!-- loadConversation -->
+<script>
+let activeThreadId = null;
+
+function loadConversation(threadId) {
+    activeThreadId = threadId; // set current thread ID
+
+    fetch('load_conversation.php?thread_id=' + threadId)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('messages').innerHTML = data;
+
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        });
 }
 </script>
 
 
+<!-- send & get message -->
+<script>
+function sendMessage() {
+    var inputBox = document.getElementById('inputBox');
+    var message = inputBox.innerHTML.trim();
+
+    if (!message) {
+        alert("Please type a message.");
+        return;
+    }
+
+    if (!activeThreadId) {
+        alert("Please select a conversation thread first.");
+        return;
+    }
+
+    message = message.replace(/<[^>]*>/g, '');
+
+    fetch('send_message.php', {
+        method: 'POST',
+        body: new URLSearchParams({
+            'message': message,
+            'sender': 'landlord',  // or 'tenant' depending on logged-in user
+            'thread_id': activeThreadId
+        })
+    })
+    .then(response => response.text())
+    .then(data => {
+        inputBox.innerHTML = '';
+        loadConversation(activeThreadId); // refresh only current thread
+    });
+}
 
 
+// Function to load messages (AJAX request to fetch new messages)
+function loadMessages() {
+    fetch('get_message.php')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('messages').innerHTML = data;
+
+            // Optional: scroll to bottom after loading
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        });
+}
+
+// Load messages on page load
+document.addEventListener('DOMContentLoaded', loadMessages);
+</script>
+
+<script>
+    document.querySelectorAll('.view').forEach(button => {
+        button.addEventListener('click', function() {
+            const threadId = this.getAttribute('data-thread-id');
+            fetchMessages(threadId);
+        });
+    });
+
+    function fetchMessages(threadId) {
+        const messageThread = document.getElementById('message-thread');
+        const messagesContainer = document.getElementById('messages');
+
+        // Show loading text
+        messagesContainer.innerHTML = '<p>Loading...</p>';
+        messageThread.style.display = 'block';
+
+        // Fetch messages via AJAX
+        fetch(`get_message.php?thread_id=${threadId}`)
+            .then(response => response.text())
+            .then(data => {
+                messagesContainer.innerHTML = data;
+            })
+            .catch(error => {
+                messagesContainer.innerHTML = '<p>Error loading messages.</p>';
+            });
+    }
+</script>
+
+  <!-- End  -->
+
+
+</script>
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
       integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
