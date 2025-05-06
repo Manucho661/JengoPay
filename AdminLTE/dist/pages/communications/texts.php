@@ -590,7 +590,9 @@ display: flex;
             </td>
             <td>
                 <!-- The View Button with dynamically passed thread_id -->
-                <button class="btn btn-primary view" data-thread-id="<?= $threadId ?>"><i class="bi bi-eye"></i> View</button>
+                <!-- <button class="btn btn-primary view" data-thread-id="<?= $threadId ?>"><i class="bi bi-eye"></i> View</button> -->
+                <button class="btn btn-primary view" data-thread-id="<?= $threadId ?>">View</button>
+
                 <button class="btn btn-danger delete" data-thread-id="<?= $threadId ?>"><i class="bi bi-trash3"></i> Delete</button>
             </td>
         </tr>
@@ -1100,33 +1102,33 @@ function loadMessages() {
 // Load messages on page load
 document.addEventListener('DOMContentLoaded', loadMessages);
 </script>
-
 <script>
-    document.querySelectorAll('.view').forEach(button => {
-        button.addEventListener('click', function() {
-            const threadId = this.getAttribute('data-thread-id');
-            fetchMessages(threadId);
+document.addEventListener('DOMContentLoaded', function () {
+    const viewButtons = document.querySelectorAll('.btn.view');
+    const messagesContainer = document.getElementById('messages-container');
+    const messageThread = document.getElementById('message-thread');
+
+    viewButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const threadId = button.getAttribute('data-thread-id');
+
+            // Show loading text
+            messagesContainer.innerHTML = '<p>Loading...</p>';
+            messageThread.style.display = 'block';
+
+            // Fetch messages via GET
+            fetch(`get_message.php?thread_id=${threadId}`)
+                .then(response => response.text())
+                .then(data => {
+                    messagesContainer.innerHTML = data;
+                })
+                .catch(error => {
+                    messagesContainer.innerHTML = '<p>Error loading messages.</p>';
+                    console.error('Error:', error);
+                });
         });
     });
-
-    function fetchMessages(threadId) {
-        const messageThread = document.getElementById('message-thread');
-        const messagesContainer = document.getElementById('messages');
-
-        // Show loading text
-        messagesContainer.innerHTML = '<p>Loading...</p>';
-        messageThread.style.display = 'block';
-
-        // Fetch messages via AJAX
-        fetch(`get_message.php?thread_id=${threadId}`)
-            .then(response => response.text())
-            .then(data => {
-                messagesContainer.innerHTML = data;
-            })
-            .catch(error => {
-                messagesContainer.innerHTML = '<p>Error loading messages.</p>';
-            });
-    }
+});
 </script>
 
   <!-- End  -->
