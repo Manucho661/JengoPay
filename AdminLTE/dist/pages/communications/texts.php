@@ -550,6 +550,7 @@ display: flex;
 
                          <!-- start row -->
                          <div class="row align-items-stretch all-messages-summary" id="all-messages-summary">
+
                           <div id="message-summary" class="col-md-12  message-summary">
                               <div class="message-list p-2" style="display: flex; justify-content: space-between;">
                                   <div class="recent-messages-header">Recent Messages</div>
@@ -569,15 +570,15 @@ display: flex;
                                           </tr>
                                       </thead>
                                       <tbody>
-    <?php foreach ($communications as $comm):
-        $datetime = new DateTime($comm['last_time'] ?? $comm['created_at']);
-        $date = $datetime->format('d-m-Y');
-        $time = $datetime->format('h:iA');
-        $sender = htmlspecialchars($comm['tenant'] ?: 'Me');
-        $email = ''; // Add email logic if needed
-        $title = htmlspecialchars($comm['title']);
-        $threadId = $comm['thread_id'];
-    ?>
+                                      ` <?php foreach ($communications as $comm):
+                                            $datetime = new DateTime($comm['last_time'] ?? $comm['created_at']);
+                                            $date = $datetime->format('d-m-Y');
+                                            $time = $datetime->format('h:iA');
+                                            $sender = htmlspecialchars($comm['tenant'] ?: 'Me');
+                                            $email = ''; // Add email logic if needed
+                                            $title = htmlspecialchars($comm['title']);
+                                            $threadId = $comm['thread_id'];
+                                        ?>`
         <tr class="table-row">
             <td class="timestamp">
                 <div class="date"><?= $date ?></div>
@@ -590,8 +591,11 @@ display: flex;
             </td>
             <td>
                 <!-- The View Button with dynamically passed thread_id -->
-                <!-- <button class="btn btn-primary view" data-thread-id="<?= $threadId ?>"><i class="bi bi-eye"></i> View</button> -->
-                <button class="btn btn-primary view" data-thread-id="<?= $threadId ?>">View</button>
+
+                <button class="btn btn-primary view"
+                                  data-thread-id="<?= $threadId ?>"
+                                  data-thread-title="<?= htmlspecialchars($title) ?>">View</button>
+
 
                 <button class="btn btn-danger delete" data-thread-id="<?= $threadId ?>"><i class="bi bi-trash3"></i> Delete</button>
             </td>
@@ -608,11 +612,12 @@ display: flex;
 
                       <div class="row h-100 align-items-stretch" id="individual-message-summmary" style="border:1px solid #E2E2E2; padding: 0 !important; display: none; max-height: 95%;">
 
+
                             <div id="message-profiles" class="col-md-4  message-profiles" style="height: 100%;" >
 
                               <div class="topic-profiles-header-section d-flex">
                                 <div class="content d-flex">
-                                  <div class="individual-details-container">
+                                  <div id="message-thread" class="individual-details-container">
                                     <div class="content d-flex">
                                       <div class="profile-initials" id="profile-initials">JM</div>
 
@@ -1102,25 +1107,31 @@ function loadMessages() {
 // Load messages on page load
 document.addEventListener('DOMContentLoaded', loadMessages);
 </script>
+
+
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const viewButtons = document.querySelectorAll('.btn.view');
     const messagesContainer = document.getElementById('messages-container');
     const messageThread = document.getElementById('message-thread');
+    const threadTitle = document.getElementById('thread-title');
 
     viewButtons.forEach(button => {
         button.addEventListener('click', () => {
             const threadId = button.getAttribute('data-thread-id');
 
-            // Show loading text
+            // Show loading
             messagesContainer.innerHTML = '<p>Loading...</p>';
+            threadTitle.innerText = '';
             messageThread.style.display = 'block';
 
-            // Fetch messages via GET
+            // Fetch JSON
             fetch(`get_message.php?thread_id=${threadId}`)
-                .then(response => response.text())
+                .then(response => response.json())
                 .then(data => {
-                    messagesContainer.innerHTML = data;
+                    threadTitle.innerText = data.title;
+                    messagesContainer.innerHTML = data.messages;
                 })
                 .catch(error => {
                     messagesContainer.innerHTML = '<p>Error loading messages.</p>';
