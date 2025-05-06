@@ -592,11 +592,7 @@ display: flex;
             <td>
                 <!-- The View Button with dynamically passed thread_id -->
 
-                <button class="btn btn-primary view"
-                                  data-thread-id="<?= $threadId ?>"
-                                  data-thread-title="<?= htmlspecialchars($title) ?>">View</button>
-
-
+                <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
                 <button class="btn btn-danger delete" data-thread-id="<?= $threadId ?>"><i class="bi bi-trash3"></i> Delete</button>
             </td>
         </tr>
@@ -617,7 +613,7 @@ display: flex;
 
                               <div class="topic-profiles-header-section d-flex">
                                 <div class="content d-flex">
-                                  <div id="message-thread" class="individual-details-container">
+                                  <div  class="individual-details-container">
                                     <div class="content d-flex">
                                       <div class="profile-initials" id="profile-initials">JM</div>
 
@@ -657,6 +653,7 @@ display: flex;
                                       <div class="message-count mt-2">
                                         <?= $comm['unread_count'] > 0 ? $comm['unread_count'] : '' ?>
                                       </div>
+
  <!-- Optional: Replace 1 with actual reply count if available -->
                                   </div>
                                 </div>
@@ -677,6 +674,7 @@ display: flex;
                                   </div>
                                 </div>
                               </div>
+                              
                               <div class="individual-message-body">
                                 <div class="messages" id="messages">
                                   <div class="message incoming">Hello! How are you?</div>

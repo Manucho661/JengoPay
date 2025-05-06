@@ -650,7 +650,8 @@ try {
                             <h5 class="text-center" style="font-weight: bold;">Location
                               Information</h5>
                             <div class="row">
-                              <div class="col-12 col-sm-4">
+                              <!-- <div class="col-12  col-sm-4"> -->
+                              <div class="col-md-4">
                                 <div class="form-group">
                                   <label>County</label>
                                   <select name="county" id="county" onchange="loadConstituency()"  class="form-control select2 select2-danger"
