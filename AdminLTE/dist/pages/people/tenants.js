@@ -103,7 +103,7 @@ function fetchTenants(building) {
                     <div class="phone" >  <i class="fas fa-phone icon"></i> ${user.phone_number} </div>
                      <div class="email" > <i class="fa fa-envelope icon"></i> ${user.email} </div>
                    </td>
-                    <td> <button class="status active"><i class="fa fa-check-circle"></i> ${user.status} </button> </td>
+                    <td> <button class="status ${user.status}"><i class="fa fa-check-circle"></i>&nbsp; ${user.status} </button> </td>
                   <td>
                     
 
@@ -201,6 +201,8 @@ function fetchTenants(building) {
 
       }
 
+      
+      //End Tenant status
 
       // ADD TENANT TO DB
         function submitTenantForm(event) {

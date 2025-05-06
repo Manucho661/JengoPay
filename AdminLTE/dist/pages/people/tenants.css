@@ -282,6 +282,14 @@ main.fade-out {
     background-color: #2e7d32; /* Light green */
     color: white;
     border: none;
+    width: 100px;
+  }
+
+  .status.inactive {
+    background-color: #F87171; /* Light green */
+    color: white;
+    border: none;
+    width: 100px;
   }
   /* General Styling for Summary Items */
 

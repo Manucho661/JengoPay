@@ -1065,6 +1065,24 @@ document.getElementById('employmentSelectionOption').addEventListener('change', 
 
 </script>
 
+
+
+<script>
+
+  //TENANT STATUS
+      // Run this after fetch/AJAX renders the rows
+document.querySelectorAll('button.status').forEach(button => {
+  const status = button.getAttribute('data-status')?.toLowerCase();
+
+  button.classList.remove('active', 'inactive');
+
+  if (status === 'active') {
+    button.classList.add('active');
+  } else if (status === 'inactive') {
+    button.classList.add('inactive');
+  }
+});
+</script>
   </body>
 </html>
 
