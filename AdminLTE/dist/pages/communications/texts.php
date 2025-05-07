@@ -508,6 +508,7 @@ display: flex;
                           <div class="col-12 message-container-header-section">
                               <div class="row">
                                   <div class="col-md-8 col-12">
+                                  <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; margin-bottom: 1rem;">
                                       <select id="categoryFilter"  name="building_id" class="categoryFilter form-select">
                                       <option value="">-- Select Building --</option>
                                       <?php foreach ($buildings as $b): ?>
@@ -517,6 +518,7 @@ display: flex;
                                       <?php endforeach; ?>
                                       </select>
                                       <input type="text" class="search-input" placeholder="Search Tenant...">
+                                  </div>
                                   </div>
                                   <div class="col-md-4 col-12 RecentChatNewText-btns" style="align-items: center;">
                                       <div class="date d-flex date">
@@ -529,9 +531,9 @@ display: flex;
                                       </div>
                                   </div>
                               </div>
-                          </div>
-                      </div>
-                  </div>
+                          <!-- </div> -->
+                      <!-- </div> -->
+                  <!-- </div> -->
               <!-- </div> -->
                         <!-- Start Row messages-summmary -->
                          <div class="row" style="display: none;" id="go-back" >
@@ -550,7 +552,6 @@ display: flex;
 
                          <!-- start row -->
                          <div class="row align-items-stretch all-messages-summary" id="all-messages-summary">
-
                           <div id="message-summary" class="col-md-12  message-summary">
                               <div class="message-list p-2" style="display: flex; justify-content: space-between;">
                                   <div class="recent-messages-header">Recent Messages</div>
@@ -570,7 +571,7 @@ display: flex;
                                           </tr>
                                       </thead>
                                       <tbody>
-                                      ` <?php foreach ($communications as $comm):
+                                       <?php foreach ($communications as $comm):
                                             $datetime = new DateTime($comm['last_time'] ?? $comm['created_at']);
                                             $date = $datetime->format('d-m-Y');
                                             $time = $datetime->format('h:iA');
@@ -578,7 +579,7 @@ display: flex;
                                             $email = ''; // Add email logic if needed
                                             $title = htmlspecialchars($comm['title']);
                                             $threadId = $comm['thread_id'];
-                                        ?>`
+                                        ?>
         <tr class="table-row">
             <td class="timestamp">
                 <div class="date"><?= $date ?></div>
@@ -592,11 +593,7 @@ display: flex;
             <td>
                 <!-- The View Button with dynamically passed thread_id -->
 
-                <button class="btn btn-primary view"
-                                  data-thread-id="<?= $threadId ?>"
-                                  data-thread-title="<?= htmlspecialchars($title) ?>">View</button>
-
-
+                <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
                 <button class="btn btn-danger delete" data-thread-id="<?= $threadId ?>"><i class="bi bi-trash3"></i> Delete</button>
             </td>
         </tr>
@@ -617,7 +614,7 @@ display: flex;
 
                               <div class="topic-profiles-header-section d-flex">
                                 <div class="content d-flex">
-                                  <div id="message-thread" class="individual-details-container">
+                                  <div  class="individual-details-container">
                                     <div class="content d-flex">
                                       <div class="profile-initials" id="profile-initials">JM</div>
 
@@ -657,6 +654,7 @@ display: flex;
                                       <div class="message-count mt-2">
                                         <?= $comm['unread_count'] > 0 ? $comm['unread_count'] : '' ?>
                                       </div>
+
  <!-- Optional: Replace 1 with actual reply count if available -->
                                   </div>
                                 </div>
@@ -677,6 +675,7 @@ display: flex;
                                   </div>
                                 </div>
                               </div>
+
                               <div class="individual-message-body">
                                 <div class="messages" id="messages">
                                   <div class="message incoming">Hello! How are you?</div>

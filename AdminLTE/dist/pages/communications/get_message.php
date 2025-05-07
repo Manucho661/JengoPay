@@ -1,14 +1,25 @@
 <?php
 include '../db/connect.php';
 
+header('Content-Type: application/json');
+
 if (isset($_GET['thread_id']) && is_numeric($_GET['thread_id'])) {
     $threadId = (int)$_GET['thread_id'];
 
-    // Get the title
+    // Get thread title
     $stmtTitle = $pdo->prepare("SELECT title FROM messages_threads WHERE id = :thread_id");
     $stmtTitle->execute(['thread_id' => $threadId]);
     $titleRow = $stmtTitle->fetch(PDO::FETCH_ASSOC);
-    $title = htmlspecialchars($titleRow['title'] ?? 'Conversation');
+
+    if (!$titleRow) {
+        echo json_encode([
+            'title' => 'Not Found',
+            'messages' => "<div class='message error'>Thread not found.</div>"
+        ]);
+        exit;
+    }
+
+    $title = htmlspecialchars($titleRow['title']);
 
     // Mark messages as read
     $pdo->prepare("UPDATE messages SET is_read = 1 WHERE thread_id = :thread_id AND is_read = 0")
@@ -30,7 +41,6 @@ if (isset($_GET['thread_id']) && is_numeric($_GET['thread_id'])) {
                           </div>";
     }
 
-    // Send back title + messages as JSON
     echo json_encode([
         'title' => $title,
         'messages' => $messagesHtml

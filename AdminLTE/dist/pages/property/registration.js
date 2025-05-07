@@ -461,28 +461,37 @@ function loadConstituency() {
   }
 
   // Function to handle multiple files selection
-
   function handleFiles(event) {
     const files = event.target.files;  // Get all selected files
     const previewContainer = document.getElementById('filePreviews');
-    previewContainer.innerHTML = '';  // Clear previous previews
+    const fileSizeError = document.getElementById('fileSizeError');
 
+    previewContainer.innerHTML = '';  // Clear previous previews
+    fileSizeError.style.display = 'none';  // Hide error message if previously shown
+
+    const maxSize = 2 * 1024 * 1024; // 2MB
     let imageCount = 0; // Keep track of how many images we preview
 
     Array.from(files).forEach(file => {
+      if (file.size > maxSize) {
+        fileSizeError.style.display = 'block'; // Show size error
+        event.target.value = ''; // Reset file input
+        previewContainer.innerHTML = ''; // Clear previews
+        return;
+      }
+
       const fileSizeInMB = (file.size / (1024 * 1024)).toFixed(2);  // Convert to MB
       const fileType = file.type;
 
-      // Create a container for each file's preview and size
+      // Create container for file preview
       const fileContainer = document.createElement('div');
       fileContainer.style.marginBottom = '30px';
 
-      // Display the file size
+      // Show file size
       const fileSizeElement = document.createElement('p');
       fileSizeElement.textContent = `File size: ${fileSizeInMB} MB`;
       fileContainer.appendChild(fileSizeElement);
 
-      // Preview the file based on type
       if (fileType.startsWith('image/')) {
         if (imageCount >= 3) {
           const warning = document.createElement('p');
@@ -497,29 +506,25 @@ function loadConstituency() {
         img.style.display = 'flex';
         img.src = URL.createObjectURL(file);
         img.onload = function () {
-          URL.revokeObjectURL(img.src); // Free memory
+          URL.revokeObjectURL(img.src);
         };
-
         fileContainer.appendChild(img);
         imageCount++;
-
-
 
       } else if (fileType === 'application/pdf') {
         const pdfEmbed = document.createElement('embed');
         pdfEmbed.style.width = '100%';
-        pdfEmbed.style.height = '100%';
+        pdfEmbed.style.height = '500px';
         pdfEmbed.src = URL.createObjectURL(file);
         fileContainer.appendChild(pdfEmbed);
 
-      }
-
-      else {
+      } else {
         const fileName = document.createElement('p');
         fileName.textContent = `File: ${file.name}`;
         fileContainer.appendChild(fileName);
       }
-      // Append the file container to the previews section
+
+      // Add to preview area
       previewContainer.appendChild(fileContainer);
     });
   }
@@ -1084,10 +1089,10 @@ fetch('../bars/sidebar.html')  // Fetch the file
   // const cty = document.getElementById('rentalTrends').getContext('2d');
 // end
 
-const input = document.getElementById('first_name').value;
-if (!validateFirstName(input)) {
-  alert("First name must contain letters only.");
-}
+// const input = document.getElementById('first_name').value;
+// if (!validateFirstName(input)) {
+//   alert("First name must contain letters only.");
+// }
 
 
 
@@ -1200,4 +1205,3 @@ function hideSolarProvider() {
 //   }
 // }
 // });
-

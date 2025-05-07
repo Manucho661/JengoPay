@@ -182,24 +182,35 @@ try {
             // ':building_number' => $building_number,
         ]);
 
-        // ✅ Redirect to avoid resubmission
-        header("Location: " . $_SERVER['PHP_SELF']);
-        exit();
+         // Redirect with success flag
+         header("Location: " . $_SERVER['PHP_SELF'] . "?success=1");
+         exit();
     }
 
     // Fetch buildings for display
 
-    $sql = "SELECT building_id, building_name, county, building_type, ownership_info FROM buildings";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-    $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+   // Fetch buildings for display
+   $sql = "SELECT building_id, building_name, county, building_type, ownership_info FROM buildings";
+   $stmt = $pdo->prepare($sql);
+   $stmt->execute();
+   $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-} catch (PDOException $e) {
+
+  } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
 }
-
-
 ?>
+
+<?php if (isset($_GET['success']) && $_GET['success'] == 1): ?>
+<script>
+    alert("Building added successfully!");
+    if (window.history.replaceState) {
+        const cleanUrl = window.location.href.split('?')[0];
+        window.history.replaceState(null, null, cleanUrl);
+    }
+</script>
+<?php endif; ?>
+
 
 
 <!doctype html>
@@ -740,15 +751,36 @@ try {
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label>Number of Floors</label>
-              <input type="text" class="form-control" name="floor_number" id="floorNumber"
-                placeholder="Number of Floors">
+            <label >Number of Floors</label>
+            <input
+              type="text"
+              name="floor_number"
+              class="form-control"
+              id="floorNumber"
+              placeholder="Number of Floors"
+              required
+              pattern="^\d+$"
+              title="Please enter a valid number for the number of floors."
+              oninput="validateFloorNumber()"
+            />
+            <small id="floorNumberError" style="color:red; display:none;">Please enter a valid number for the number of floors.</small>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label>Number of Units</label>
-              <input type="text" class="form-control" id="unitsnumber" name="units_number" placeholder="Number of Units">
+            <label>Number of Units</label>
+            <input
+              type="text"
+              class="form-control"
+              id="unitsnumber"
+              name="units_number"
+              placeholder="Number of Units"
+              required
+              pattern="^\d+$"
+              title="Please enter a valid number for the number of units."
+              oninput="validateUnitsNumber()"
+            />
+            <small id="unitsNumberError" style="color:red; display:none;">Please enter a valid number for the number of units.</small>
             </div>
           </div>
           <div class="col-md-4">
@@ -809,33 +841,66 @@ try {
                   <div class="row">
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label>First Name</label>
+                      <label>First Name</label><b>*</b>
                         <input type="text" name="first_name" class="form-control" id="firstName"
-                          placeholder="First Name" pattern="^[A-Za-z]+$" title="Letters only" required>
+                          placeholder="First Name"  pattern="[A-Za-z]+"
+                        title="Only letters allowed"
+                        required
+                        oninput="validateFirstName()" required>
+                      <small id="firstNameError" style="color:red; display:none;">Only letters allowed</small>
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label>Last Name</label>
+                      <label>Last Name</label><b>*</b>
                         <input type="text" name="last_name" class="form-control" id="lastName"
-                          placeholder="Last Name">
+                          placeholder="Last Name"  pattern="[A-Za-z]+"
+                        title="Only letters allowed"
+                        required
+                        oninput="validateLastName()">
+                      <small id="lastNameError" style="color:red; display:none;">Only letters allowed</small>
                       </div>
                     </div>
                   </div>
                   <div class="form-group">
-                    <label>Phone Number</label>
+                  <label>Phone Number</label><b>*</b>
                     <input type="text" name="phone_number" class="form-control" id="phoneNumber"
                      pattern="07[0-9]{8}" maxlength="10"
-                      placeholder="Phone Number">
+                      placeholder="Phone Number"  title="Phone number must start with 07 and be 10 digits long"
+                    required
+                    oninput="validatePhoneNumber()" onblur="checkPhoneNumberExists()">
+                  <small id="phoneNumberError" style="color:red; display:none;">Phone must start with 07 and be 10 digits</small>
+                  <!-- <small id="phoneNumberExistsError" style="color:red; display:none;">This phone number already exists</small> -->
                   </div>
                   <div class="form-group">
-                    <label>Kra pin</label>
-                    <input type="text" name="kra_pin" class="form-control" id="kra_pin"
-                      placeholder="Kra pin">
+                  <label >KRA PIN</label><b>*</b>
+                <input
+                  type="text"
+                  name="kra_pin"
+                  class="form-control"
+                  id="kra_pin"
+                  placeholder="KRA PIN (e.g. A123456789K)"
+                  pattern="^[A-Z]{1}\d{9}[A-Z]{1}$"
+                  title="KRA PIN must be in the format A123456789K"
+                  required
+                  oninput="validateKraPin()"
+                />
+                <small id="kraPinError" style="color:red; display:none;">Format: A123456789K (1 letter, 9 digits, 1 letter)</small>
                   </div>
                   <div class="form-group">
-                    <label>Email</label>
-                    <input type="email"  name="email" class="form-control" id="ownerEmail" placeholder="Email">
+                  <label>Email</label><b>*</b>
+                  <input
+                    type="email"
+                    name="email"
+                    class="form-control"
+                    id="ownerEmail"
+                    placeholder="Enter a valid email (e.g. name@example.com)"
+                    required
+                    pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                    title="Enter a valid email address"
+                    oninput="validateEmail()"
+                  >
+                  <small id="emailError" style="color:red; display:none;">Please enter a valid email address.</small>
                   </div>
                 </div>
                 <div class="card-footer text-right">
@@ -978,22 +1043,59 @@ try {
                 <div class="card-header"><b>Please Specify</b></div>
                 <div class="card-body">
                   <div class="form-group">
-                    <label>Solar Panel Brand</label>
-                    <input type="text" name="solar_brand" class="form-control" id="solarBrand"
-                      placeholder="Solar Brand">
+                  <label>Solar Panel Brand</label><b>*</b>
+                  <input
+                    type="text"
+                    name="solar_brand"
+                    class="form-control"
+                    id="solarBrand"
+                    placeholder="Solar Brand (letters only)"
+                    pattern="^[A-Za-z\s]+$"
+                    title="Only letters and spaces are allowed"
+                    required
+                    oninput="validateSolarBrand()"
+                  />
+                  <small id="solarBrandError" style="color:red; display:none;">
+                    Only letters and spaces are allowed.
+                  </small>
                   </div>
                   <div class="form-group">
-                    <label>Installation Company</label>
-                    <input type="text" name="installation_company" class="form-control" id="installationCompany"
-                      placeholder="Installation Company">
+                  <label >Installation Company</label><b>*</b>
+                  <input
+                    type="text"
+                    name="installation_company"
+                    class="form-control"
+                    id="installationCompany"
+                    placeholder="Installation Company (letters only)"
+                    pattern="^[A-Za-z\s]+$"
+                    title="Only letters and spaces are allowed"
+                    required
+                    oninput="validateInstallationCompany()"
+                  />
+                  <small id="installationCompanyError" style="color:red; display:none;">
+                    Only letters and spaces are allowed.
+                  </small>
+
                   </div>
                   <div class="form-group">
-                    <label>Number of Panels</label>
-                    <input type="text" name="no_of_panels" class="form-control" id="noOfPanels"
-                      placeholder="Number of Panels">
+                   <label >Number of Panels</label><b>*</b>
+                  <input
+                    type="text"
+                    name="no_of_panels"
+                    class="form-control"
+                    id="noOfPanels"
+                    placeholder="Enter number of panels"
+                    pattern="^\d+$"
+                    title="Only numbers are allowed"
+                    required
+                    oninput="validateNoOfPanels()"
+                  />
+                  <small id="noOfPanelsError" style="color:red; display:none;">
+                    Only numeric values are allowed.
+                  </small>
                   </div>
                   <div class="form-group">
-                    <label>Primary Use</label>
+                    <label>Primary Use</label><b>*</b>
                     <select name="solar_primary_use" id="solarPrimaryUse" class="form-control">
                       <option value="" selected hidden>-- Select Option --</option>
                       <option value="Lighting">Lighting</option>
@@ -1093,16 +1195,38 @@ try {
               <div class="card-header"><b>Construction Approval</b></div>
               <div class="card-body">
                 <div class="form-group">
-                  <label>Approval Number</label>
-                  <input type="text" name="nca_approval_no"  class="form-control" id="approvalNo"
-                    placeholder="Approval Number">
+                <label>Approval Number</label><b>*</b>
+                <input
+                  type="text"
+                  name="nca_approval_no"
+                  class="form-control"
+                  id="approvalNo"
+                  placeholder="Approval Number (e.g. NCA-1234567-2025)"
+                  pattern="^NCA-\d{7}-\d{4}$"
+                  title="Format must be NCA-1234567-2025"
+                  required
+                  oninput="validateApprovalNo()"
+                />
+                <small id="approvalNoError" style="color:red; display:none;">
+                  Format must be NCA-1234567-2025
+                </small>
                 </div>
                 <div class="form-group">
-                  <label>Approval Date</label>
-                  <input type="date" name="date" class="form-control" id="approvalDate">
+                <label >Approval Date</label><b>*</b>
+                <input
+                  type="date"
+                  name="nca_approval_date"
+                  class="form-control"
+                  id="approvalDate"
+                  max="<?php echo date('Y-m-d'); ?>"
+                  required
+                />
+                <small id="approvalDateError" style="color:red; display:none;">
+                  Approval date cannot be in the future.
+                </small>
                 </div>
                 <div class="formm-control">
-                  <label>NCA Approval Copy</label>
+                  <label>NCA Approval Copy</label><b>*</b>
                   <input type="file"  class="form-control" id="ncaApprovalCopy">
                 </div>
               </div>
@@ -1135,15 +1259,15 @@ try {
                 <div class="card-header"><b>Local Government Approval Details</b></div>
                 <div class="card-body">
                   <div class="form-group">
-                    <label>Approval Number</label>
+                    <label>Approval Number</label><b>*</b>
                     <input type="text" name="local_gov_approval_no" class="form-control" id="localGovApprovalNo">
                   </div>
                   <div class="form-group">
-                    <label>Approval Date</label>
+                    <label>Approval Date</label><b>*</b>
                     <input type="date" name="local_gov_approval_date" class="form-control" id="localGovApprovalDate">
                   </div>
                   <div class="form-group">
-                    <label>Approval Copy</label>
+                    <label>Approval Copy</label><b>*</b>
                     <input type="file" class="form-control" id="localGovApprovalCopy">
                   </div>
                 </div>
@@ -1180,16 +1304,36 @@ try {
               <div class="card-header"><b>NEMA Approval Specifications</b></div>
               <div class="card-body">
                 <div class="form-group">
-                  <label>Approval Number</label>
-                  <input type="text"  name="nema_approval_no" class="form-control" id="nemaApprovalNumber"
-                    placeholder="Approval Number">
+                <label>Approval Number</label><b>*</b>
+                <input
+                  type="text"
+                  name="nema_approval_no"
+                  class="form-control"
+                  id="nemaApprovalNumber"
+                  placeholder="Approval Number (e.g. NEMA/EIA/PS/1234)"
+                  pattern="^NEMA\/EIA\/PS\/\d{4}$"
+                  title="Format: NEMA/EIA/PS/1234"
+                  required
+                  oninput="validateNemaApproval()"
+                />
+                <small id="nemaApprovalError" style="color:red; display:none;">
+                  Format must be NEMA/EIA/PS/1234
+                </small>
                 </div>
                 <div class="form-group">
-                  <label>Approval Date</label>
-                  <input type="date" name="nema_approval_date" class="form-control" id="nemaApprovalDate">
+                <label>Approval Date</label><b>*</b>
+                <input
+                  type="date"
+                  name="nema_approval_date"
+                  class="form-control"
+                  id="nemaApprovalDate"
+                  required
+                />
+                <small id="nemaDateError" style="color:red; display:none;">Date cannot be in the future.</small>
+
                 </div>
                 <div class="form-group">
-                  <label>Approval Copy</label>
+                  <label>Approval Copy</label><b>*</b>
                   <input type="file"  class="form-control" id="nemaApprovalCopy">
                 </div>
               </div>
@@ -1199,9 +1343,20 @@ try {
               </div>
             </div>
             <div class="form-group">
-              <label>TAX PIN for the Building</label>
-              <input type="text" name="building_tax_pin" class="form-control" id="buildingTaxPin"
-                placeholder="TAX PIN for the Building">
+            <label >TAX PIN for the Building</label><b>*</b>
+                <input
+                  type="text"
+                  name="building_tax_pin"
+                  class="form-control"
+                  id="buildingTaxPin"
+                  placeholder="TAX PIN for the Building (e.g. P123456789B)"
+                  required
+                  pattern="^P\d{9}B$"
+                  title="TAX PIN must be in the format P123456789B"
+                  oninput="validateTaxPin()"
+                />
+                <small id="taxPinError" style="color:red; display:none;">Format: P123456789B (1 letter, 9 digits, 1 letter)</small>
+
             </div>
           </div>
         </div>
@@ -1243,21 +1398,21 @@ try {
                 <div class="card-header"><b>Insurance Cover Details</b></div>
                 <div class="card-body">
                   <div class="form-group">
-                    <label>Specify Insurance Policy</label>
+                    <label>Specify Insurance Policy</label><b>*</b>
                     <input type="text" name="insurance_policy" class="form-control" id="insurance_policy"
                       placeholder="Insurance Policy">
                   </div>
                   <div class="form-group">
-                    <label>Insurance Policy Provider</label>
+                    <label>Insurance Policy Provider</label><b>*</b>
                     <input type="text" class="form-control" name="insurance_provider" id="insurance_provider"
                       placeholder="Insurance Policy Provider">
                   </div>
                   <div class="form-group">
-                    <label>Covered From</label>
+                    <label>Covered From</label><b>*</b>
                     <input type="date" class="form-control"  name="policy_from_date"  id="policy_from_date">
                   </div>
                   <div class="form-group">
-                    <label>Covered Until</label>
+                    <label>Covered Until</label><b>*</b>
                     <input type="date" name="policy_until_date" class="form-control" id="policy_until_date">
                   </div>
                 </div>
@@ -1328,8 +1483,10 @@ try {
     </div>
   </form>
 
+
       <!-- Specify Solar Avilability DOM -->
 
+<!-- registered buildings -->
 
       <hr>
       <!--begin::Row-->
@@ -1482,6 +1639,343 @@ $(document).ready((function(){$("#stepOneNextBtn").click((function(e){e.preventD
   integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
   crossorigin="anonymous"
 ></script>
+
+<script>
+function validateFirstName() {
+  const input = document.getElementById('firstName');
+  const errorMsg = document.getElementById('firstNameError');
+  const regex = /^[A-Za-z]+$/;
+
+  if (input.value === '' || regex.test(input.value)) {
+    errorMsg.style.display = 'none';
+    input.setCustomValidity('');
+  } else {
+    errorMsg.style.display = 'block';
+    input.setCustomValidity('Only letters allowed');
+  }
+}
+</script>
+
+<script>
+function validateLastName() {
+  const input = document.getElementById('lastName');
+  const errorMsg = document.getElementById('lastNameError');
+  const regex = /^[A-Za-z]+$/;
+
+  if (input.value === '' || regex.test(input.value)) {
+    errorMsg.style.display = 'none';
+    input.setCustomValidity('');
+  } else {
+    errorMsg.style.display = 'block';
+    input.setCustomValidity('Only letters allowed');
+  }
+}
+</script>
+
+<script>
+function validatePhoneNumber() {
+  const input = document.getElementById('phoneNumber');
+  const errorMsg = document.getElementById('phoneNumberError');
+  const regex = /^07\d{8}$/;
+
+  if (input.value === '' || regex.test(input.value)) {
+    errorMsg.style.display = 'none';
+    input.setCustomValidity('');
+  } else {
+    errorMsg.style.display = 'block';
+    input.setCustomValidity('Phone must start with 07 and be 10 digits');
+  }
+}
+</script>
+
+<script>
+function validateKraPin() {
+  const input = document.getElementById('kra_pin');
+  const errorMsg = document.getElementById('kraPinError');
+  const regex = /^[A-Z]{1}\d{9}[A-Z]{1}$/;
+
+  if (input.value === '' || regex.test(input.value)) {
+    errorMsg.style.display = 'none';
+    input.setCustomValidity('');
+  } else {
+    errorMsg.style.display = 'block';
+    input.setCustomValidity('Format: A123456789K');
+  }
+}
+</script>
+
+<script>
+function validateEmail() {
+  const input = document.getElementById('ownerEmail');
+  const errorMsg = document.getElementById('emailError');
+  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  if (input.value === '' || regex.test(input.value)) {
+    errorMsg.style.display = 'none';
+    input.setCustomValidity('');
+  } else {
+    errorMsg.style.display = 'block';
+    input.setCustomValidity('Please enter a valid email address.');
+  }
+}
+</script>
+
+<script>
+function validateEntityName() {
+  const input = document.getElementById('entityName');
+  const errorMsg = document.getElementById('entityNameError');
+  const regex = /^[A-Za-z\s]+$/;
+
+  if (input.value === '' || regex.test(input.value)) {
+    errorMsg.style.display = 'none';
+    input.setCustomValidity('');
+  } else {
+    errorMsg.style.display = 'block';
+    input.setCustomValidity('Only letters and spaces are allowed.');
+  }
+}
+</script>
+
+<script>
+function validateEntityPhone() {
+  const input = document.getElementById('entityPhone');
+  const errorMsg = document.getElementById('entityPhoneError');
+  const regex = /^07\d{8}$/;
+
+  if (input.value === '' || regex.test(input.value)) {
+    errorMsg.style.display = 'none';
+    input.setCustomValidity('');
+  } else {
+    errorMsg.style.display = 'block';
+    input.setCustomValidity('Phone must start with 07 and be 10 digits');
+  }
+}
+</script>
+
+<script>
+function validateEntityEmail() {
+  const input = document.getElementById('entityEmail');
+  const errorMsg = document.getElementById('entityEmailError');
+  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  if (input.value === '' || regex.test(input.value)) {
+    errorMsg.style.display = 'none';
+    input.setCustomValidity('');
+  } else {
+    errorMsg.style.display = 'block';
+    input.setCustomValidity('Please enter a valid email address.');
+  }
+}
+</script>
+
+
+<script>
+function validateEntityRepresentative() {
+  const input = document.getElementById('entityRepresentative');
+  const errorMsg = document.getElementById('entityRepresentativeError');
+  const regex = /^[A-Za-z\s]+$/;
+
+  if (input.value === '' || regex.test(input.value)) {
+    errorMsg.style.display = 'none';
+    input.setCustomValidity('');
+  } else {
+    errorMsg.style.display = 'block';
+    input.setCustomValidity('Only letters and spaces are allowed.');
+  }
+}
+</script>
+
+<script>
+function validateSolarBrand() {
+  const input = document.getElementById('solarBrand');
+  const errorMsg = document.getElementById('solarBrandError');
+  const regex = /^[A-Za-z\s]+$/;
+
+  if (input.value === '' || regex.test(input.value)) {
+    errorMsg.style.display = 'none';
+    input.setCustomValidity('');
+  } else {
+    errorMsg.style.display = 'block';
+    input.setCustomValidity('Only letters and spaces are allowed.');
+  }
+}
+</script>
+
+<script>
+function validateInstallationCompany() {
+  const input = document.getElementById('installationCompany');
+  const errorMsg = document.getElementById('installationCompanyError');
+  const regex = /^[A-Za-z\s]+$/;
+
+  if (input.value === '' || regex.test(input.value)) {
+    errorMsg.style.display = 'none';
+    input.setCustomValidity('');
+  } else {
+    errorMsg.style.display = 'block';
+    input.setCustomValidity('Only letters and spaces are allowed.');
+  }
+}
+</script>
+
+<script>
+function validateNoOfPanels() {
+  const input = document.getElementById('noOfPanels');
+  const errorMsg = document.getElementById('noOfPanelsError');
+  const regex = /^\d+$/;
+
+  if (input.value === '' || regex.test(input.value)) {
+    errorMsg.style.display = 'none';
+    input.setCustomValidity('');
+  } else {
+    errorMsg.style.display = 'block';
+    input.setCustomValidity('Only numeric values are allowed.');
+  }
+}
+</script>
+
+<script>
+function validateApprovalNo() {
+  const input = document.getElementById('approvalNo');
+  const errorMsg = document.getElementById('approvalNoError');
+  const regex = /^NCA-\d{7}-\d{4}$/;
+
+  if (input.value === '' || regex.test(input.value)) {
+    errorMsg.style.display = 'none';
+    input.setCustomValidity('');
+  } else {
+    errorMsg.style.display = 'block';
+    input.setCustomValidity('Format must be NCA-1234567-2025');
+  }
+}
+</script>
+
+<script>
+function validateApprovalDate() {
+  const input = document.getElementById('approvalDate');
+  const errorMsg = document.getElementById('approvalDateError');
+  const today = new Date().toISOString().split('T')[0];
+
+  if (input.value && input.value > today) {
+    errorMsg.style.display = 'block';
+    input.setCustomValidity('Approval date cannot be in the future.');
+  } else {
+    errorMsg.style.display = 'none';
+    input.setCustomValidity('');
+  }
+}
+
+document.getElementById('approvalDate').addEventListener('input', validateApprovalDate);
+</script>
+
+<script>
+function validateNemaApproval() {
+  const input = document.getElementById('nemaApprovalNumber');
+  const errorMsg = document.getElementById('nemaApprovalError');
+  const regex = /^NEMA\/EIA\/PS\/\d{4}$/;
+
+  if (input.value === '' || regex.test(input.value)) {
+    errorMsg.style.display = 'none';
+    input.setCustomValidity('');
+  } else {
+    errorMsg.style.display = 'block';
+    input.setCustomValidity('Format must be NEMA/EIA/PS/1234');
+  }
+}
+</script>
+
+<script>
+function restrictFutureDate() {
+  const dateInput = document.getElementById('nemaApprovalDate');
+  const errorMsg = document.getElementById('nemaDateError');
+  const today = new Date().toISOString().split('T')[0];
+
+  dateInput.setAttribute('max', today);
+
+  dateInput.addEventListener('change', () => {
+    if (dateInput.value > today) {
+      errorMsg.style.display = 'block';
+      dateInput.setCustomValidity("Date cannot be in the future.");
+    } else {
+      errorMsg.style.display = 'none';
+      dateInput.setCustomValidity('');
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', restrictFutureDate);
+</script>
+
+
+<script>
+function validateTaxPin() {
+  const input = document.getElementById('buildingTaxPin');
+  const errorMsg = document.getElementById('taxPinError');
+  const regex = /^P\d{9}B$/;
+
+  if (input.value === '' || regex.test(input.value)) {
+    errorMsg.style.display = 'none';
+    input.setCustomValidity('');
+  } else {
+    errorMsg.style.display = 'block';
+    input.setCustomValidity('TAX PIN must be in the format P123456789B (1 letter, 9 digits, 1 letter)');
+  }
+}
+</script>
+
+<script>
+function validateFloorNumber() {
+  const input = document.getElementById('floorNumber');
+  const errorMsg = document.getElementById('floorNumberError');
+  const regex = /^\d+$/;  // Ensures only numbers are allowed
+
+  if (input.value === '' || regex.test(input.value)) {
+    errorMsg.style.display = 'none';
+    input.setCustomValidity('');
+  } else {
+    errorMsg.style.display = 'block';
+    input.setCustomValidity('Please enter a valid number for the number of floors.');
+  }
+}
+</script>
+
+<script>
+function validateUnitsNumber() {
+  const input = document.getElementById('unitsnumber');
+  const errorMsg = document.getElementById('unitsNumberError');
+  const regex = /^\d+$/;  // Ensures only numbers are allowed
+
+  if (input.value === '' || regex.test(input.value)) {
+    errorMsg.style.display = 'none';
+    input.setCustomValidity('');
+  } else {
+    errorMsg.style.display = 'block';
+    input.setCustomValidity('Please enter a valid number for the number of units.');
+  }
+}
+</script>
+
+<!-- <script>
+  function checkPhoneNumberExists() {
+  const phone = document.getElementById("phoneNumber").value;
+  const existsError = document.getElementById("phoneNumberExistsError");
+
+  if (phone.length === 10) {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "check_phone_exists.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        if (xhr.responseText.trim() === "exists") {
+          existsError.style.display = "block";
+        } else {
+          existsError.style.display = "none";
+        }
+      }
+    };
+    xhr.send("phone=" + encodeURIComponent(phone));
+  }}
+</script> -->
+
 <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
  <script src="../../../dist/js/adminlte.js"></script>
 <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
