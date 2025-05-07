@@ -531,8 +531,8 @@ display: flex;
                                       </div>
                                   </div>
                               </div>
-                          <!-- </div> -->
-                      <!-- </div> -->
+                          </div>
+                      </div>
                   <!-- </div> -->
               <!-- </div> -->
                         <!-- Start Row messages-summmary -->
@@ -580,25 +580,29 @@ display: flex;
                                             $title = htmlspecialchars($comm['title']);
                                             $threadId = $comm['thread_id'];
                                         ?>
-        <tr class="table-row">
-            <td class="timestamp">
-                <div class="date"><?= $date ?></div>
-                <div class="time"><?= $time ?></div>
-            </td>
-            <td class="title"><?= $title ?></td>
-            <td>
-                <div class="sender"><?= $sender ?></div>
-                <div class="sender-email"><?= $email ?></div>
-            </td>
-            <td>
-                <!-- The View Button with dynamically passed thread_id -->
+                                      <tr class="table-row">
+                                          <td class="timestamp">
+                                              <div class="date"><?= $date ?></div>
+                                              <div class="time"><?= $time ?></div>
+                                          </td>
+                                          <td class="title"><?= $title ?></td>
+                                          <td>
+                                              <div class="sender"><?= $sender ?></div>
+                                              <div class="sender-email"><?= $email ?></div>
+                                          </td>
+                                          <td>
+                                        <!-- The View Button with dynamically passed thread_id -->
 
-                <button class="btn btn-primary view"><i class="bi bi-eye"></i> View </button>
-                <button class="btn btn-danger delete" data-thread-id="<?= $threadId ?>"><i class="bi bi-trash3"></i> Delete</button>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-</tbody>
+                                        <button class="btn btn-primary view" onclick="loadConversation(<?= $threadId ?>)">
+    <i class="bi bi-eye"></i> View
+</button>
+
+
+                                      <button class="btn btn-danger delete" data-thread-id="<?= $threadId ?>"><i class="bi bi-trash3"></i> Delete</button>
+                                  </td>
+                              </tr>
+                          <?php endforeach; ?>
+                      </tbody>
 
 
                                   </table>
@@ -1039,20 +1043,28 @@ document.getElementById('sendMessage').addEventListener('click', function() {
 
 <!-- loadConversation -->
 <script>
-let activeThreadId = null;
+  function loadConversation(threadId) {
+    activeThreadId = threadId;
 
-function loadConversation(threadId) {
-    activeThreadId = threadId; // set current thread ID
+    // Remove "active" class from all
+    document.querySelectorAll('.individual-topic-profiles').forEach(el => {
+        el.classList.remove('active');
+    });
 
+    // Add "active" to the clicked one
+    const selected = document.querySelector(`[data-message-id="${threadId}"]`);
+    if (selected) selected.classList.add('active');
+
+    // Fetch and update messages
     fetch('load_conversation.php?thread_id=' + threadId)
         .then(response => response.text())
         .then(data => {
             document.getElementById('messages').innerHTML = data;
-
             const messagesDiv = document.getElementById('messages');
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         });
 }
+
 </script>
 
 
