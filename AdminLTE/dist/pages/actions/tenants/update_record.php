@@ -1,5 +1,5 @@
 <?php
- include '../db/connect.php';
+ include '../../db/connect.php';
 
  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = isset($_POST['id']) ? (int)$_POST['id'] : null;
@@ -14,9 +14,12 @@
 
     try {
         switch ($type) {
-            case 'tenants':
+            case 'activate':
+                $stmt = $pdo->prepare("UPDATE tenants SET status = 'active' WHERE user_id = :id");
+                break;
+            case 'deactivate':
                 $stmt = $pdo->prepare("UPDATE tenants SET status = 'inactive' WHERE user_id = :id");
-                break;   
+                break;  
             default:
                 echo "Invalid type.";
                 exit;

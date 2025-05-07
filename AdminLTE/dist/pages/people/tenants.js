@@ -93,39 +93,50 @@ function fetchTenants(building) {
               row.setAttribute('onclick', `goToDetails(${user.user_id})`);
 
               row.innerHTML = `
-                    <td>${user.first_name} &nbsp; ${user.middle_name}  </td>
-                    <td>${user.id_no}</td>
-                    <td> <div> ${user.residence}</div>
-                    <div style="color: green;" > ${user.unit}</div>
-
-                     </td>
-                    <td>
-                    <div class="phone" >  <i class="fas fa-phone icon"></i> ${user.phone_number} </div>
-                     <div class="email" > <i class="fa fa-envelope icon"></i> ${user.email} </div>
-                   </td>
-                    <td> <button class="status ${user.status}"><i class="fa fa-check-circle"></i>&nbsp; ${user.status} </button> </td>
-                  <td>
-                    
-
-                      <button onclick="handleDeactivate(event, ${user.user_id}, 'tenants');"
-                        class="btn btn-sm" style="background-color: #00192D; color:white">
-                        <i class="fa fa-arrow-right"></i>
-                      </button>
-                      <button class="btn btn-sm" style="background-color: #AF2A28; color:white;">
-                        <i class="fa fa-comment"></i>
-                      </button>
-                      <button class="btn btn-sm" style="background-color: #F74B00; color:white;">
-                        <i class="fa fa-envelope"></i>
-                      </button>
-                  </td>
+                <td>${user.first_name} &nbsp; ${user.middle_name}</td>
+                <td>${user.id_no}</td>
+                <td>
+                  <div>${user.residence}</div>
+                  <div style="color: green;">${user.unit}</div>
+                </td>
+                <td>
+                  <div class="phone"><i class="fas fa-phone icon"></i> ${user.phone_number}</div>
+                  <div class="email"><i class="fa fa-envelope icon"></i> ${user.email}</div>
+                </td>
+                <td>
+                  <button class="status ${user.status}">
+                    <i class="fa fa-check-circle"></i>&nbsp; ${user.status}
+                  </button>
+                </td>
+                <td>
+                  ${
+                    user.status === 'active'
+                      ? `<button onclick="handleDeactivate(event, ${user.user_id}, 'deactivate');"
+                            class="btn btn-sm" style="background-color: #F87171; color:white;">
+                            <i class="fa fa-arrow-right"></i> Deactivate
+                          </button>`
+                      : `<button onclick="handleReactivate(event, ${user.user_id}, 'activate');"
+                            class="btn btn-sm" style="background-color: #2e7d32 ; color:white;">
+                            <i class="fa fa-arrow-left"></i> Reactivate
+                          </button>`
+                  }
+                  <button class="btn btn-sm" style="background-color: #AF2A28; color:white;">
+                    <i class="fa fa-comment"></i>
+                  </button>
+                  <button class="btn btn-sm" style="background-color: #F74B00; color:white;">
+                    <i class="fa fa-envelope"></i>
+                  </button>
+                </td>
               `;
               tableBody.appendChild(row);
+
           });
 
           // After inserting rows, reinitialize DataTable
           $(document).ready(function () {
             const table = $('#users-table').DataTable({
               dom: 'Brtip', // ⬅ Changed to include Buttons in DOM
+              order: [], // ⬅ disables automatic ordering by DataTables
               buttons: [
                 {
                   extend: 'excelHtml5',
@@ -177,14 +188,12 @@ function fetchTenants(building) {
       });
 }
 });
-
-
-// DELETE TENANT
+// Deactivate TENANT
 
       function handleDeactivate(event, id, type) {
         event.stopPropagation(); // Stop the row or parent element click
         if (confirm("Are you sure?")) {
-        fetch('../actions/update_record.php', {
+        fetch('../actions/tenants/update_record.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -200,6 +209,26 @@ function fetchTenants(building) {
       }
 
       }
+  // Activate Tenants
+          function handleReactivate(event, id, type) {
+            event.stopPropagation(); // Stop the row or parent element click
+            if (confirm("Are you sure?")) {
+            fetch('../actions/tenants/update_record.php', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+              },
+              body: 'id=' + encodeURIComponent(id) + '&type=' + encodeURIComponent(type)
+            })
+            .then(res => res.text())
+            .then(data => {
+              alert(data);
+              location.reload();
+            })
+            .catch(err => console.error(err));
+          }
+
+          }
 
       
       //End Tenant status

@@ -47,3 +47,25 @@ document.querySelectorAll('.select-option-container').forEach(container => {
 
     })
 });
+
+
+// New inspection
+function submitInspectionForm(event) {
+  event.preventDefault(); // Prevent the form from submitting normally
+
+  // Create FormData object from the form
+  const formData = new FormData(document.getElementById("form_new_inspection"));
+  formData.append("type", "inspections"); // Add the type for tenant
+
+  // Send data via fetch
+  fetch("../actions/inspections/add_record.php", {
+    method: "POST",
+    body: new URLSearchParams(formData)
+  })
+  .then(res => res.text())
+  .then(data => {
+    alert(data); // Display success message or error from server
+    location.reload(); // Reload the page to reflect changes (optional)
+  })
+  .catch(err => console.error(err));
+}

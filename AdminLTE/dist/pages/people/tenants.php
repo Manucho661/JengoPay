@@ -152,7 +152,9 @@
   display: flex;
   flex-direction: column;
 }
-
+#building_name{
+width: 100%;
+}
 
 
     </style>
@@ -186,7 +188,7 @@
                 style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
                 class="p-2"
                 style=" border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107;">JENGOPAY</b></span>
-    </a></span>
+       </a></span>
             <!--end::Brand Text-->
           </a>
           <!--end::Brand Link-->
@@ -331,17 +333,30 @@
                                         <div class="row">
                                                 <div class="col-md-4">
                                                     <label>Building</label> <sup class="text-danger"><b>*</b></sup>
-                                                    <input type="text" class="form-control" name="building_name" id="building_name" placeholder="Manucho">
+                                                    <br>
+                                                    
+                                                    <select class="form-control" name="building_name" id="building_name" >
+                                                      <option value="Crown Z">Crown Z</option>
+                                                      <option value="Manucho">Manucho</option>
+                                                      <option value="Pink House">Pink House</option>
+                                                      <option value="White House">White House</option>
+                                                    </select>
                                                     <b class="text-danger" id="building_nameError"></b>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <label>Foor Number</label> <sup class="text-danger"><b>*</b></sup>
+                                                    <label>Floor Number</label> <sup class="text-danger"><b>*</b></sup>
                                                     <input type="number" class="form-control" name="floor_number" id="Floor Number" placeholder="5">
                                                     <b class="text-danger" id="floor_number_nameError"></b>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label>Unit</label> <sup class="text-danger"><b>*</b></sup>
-                                                    <input type="text" class="form-control" name="unit_name" id="unit_name" placeholder="C210">
+                                                    <br>
+                                                    <select class="form-control" name="unit_name" id="unit_name" >
+                                                      <option value="C219">C219</option>
+                                                      <option value="B14">B14</option>
+                                                      <option value="M145">Pink House</option>
+                                                      <option value="M5">White House</option>
+                                                    </select>
                                                     <b class="text-danger" id="unit_nameError"></b>
                                                 </div>
                                             </div>
@@ -1082,6 +1097,19 @@ document.querySelectorAll('button.status').forEach(button => {
     button.classList.add('inactive');
   }
 });
+</script>
+
+
+
+<script>
+  document.querySelectorAll('.select-options div').forEach(option => {
+  option.addEventListener('click', () => {
+    const value = option.getAttribute('data-value');
+    document.getElementById('building_name_display').textContent = value;
+    document.getElementById('building_name').value = value;
+  });
+});
+
 </script>
   </body>
 </html>

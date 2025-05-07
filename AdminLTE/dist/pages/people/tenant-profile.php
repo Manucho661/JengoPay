@@ -8,10 +8,12 @@
 
   // Get tenant info joined with user info
   $stmt = $pdo->prepare("
-      SELECT tenants.*, users.first_name, users.middle_name, users.email
-      FROM tenants
-      JOIN users ON tenants.user_id = users.id
-      WHERE tenants.user_id = ?
+      SELECT tenants.income_source, tenants.work_place, tenants.job_title, tenants.residence, tenants.unit, tenants.status, tenants.id_no,
+           users.first_name, users.middle_name, users.email
+    FROM tenants
+    JOIN users ON tenants.user_id = users.id
+    WHERE tenants.user_id = ?
+
   ");
   $stmt->execute([$user_id]);
   $tenant = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -388,31 +390,31 @@
 
               <!-- start row -->
                 <div class="row mt-3 personal-info">
-                  <div class="yoyo">yoyo</div>
+                  
                       <h6 class="mb-0 contact_section_header mb-2"> </i> Personal Info</h6>
                   <div class="col-md-12">
                       <div class="row">
 
                               <div class="col-md-3">
-
                                 <div class="personal-item d-flex justify-content-between bg-white">
                                 <!-- <i class="fas fa-calculator"></i> -->
-                                  <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
-                                    <div class="category"><i class="fas fa-briefcase personal-info-icon"></i> <span class="personal-info item-name" > Occupation,</span> </div>
-                                    <div class="number"><b>Teacher</b></div>
+                                  <div class="labal-value p-2" style="display: flex; gap: 5px;   align-items: center;">
+                                    <div class="label"> <i class="fa fa-envelope personal-info-icon "></i>
+                                      <span class="personal-info item-name email" > Email,</span> </div>
+                                    <div class="value"><b></i><?= htmlspecialchars($tenant['email']) ?></b></div>
                                   </div>
                                 </div>
                               </div>
 
                               <div class="col-md-3">
-
                                 <div class="personal-item d-flex justify-content-between bg-white">
                                   <!-- <i class="fas fa-calculator"></i> -->
                                     <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
-                                      <div class="category"><i class="fas fa-globe icon personal-info-icon "></i> <span class="personal-info item-name" >Origin,</span>  </div>
-                                      <div class="number"><b>Kenyan</b></div>
+                                      <div class="category"><i class="fas fa-phone icon personal-info-icon "></i> <span class="personal-info item-name" >Phone</span>  </div>
+                                      <div class="phone"><b>0757414722</b></div>
                                     </div>
                                 </div>
+                                
                               </div>
 
                               <div class="col-md-3">
@@ -440,36 +442,33 @@
 
                             <div class="col-md-3">
 
-                              <div class="personal-item d-flex justify-content-between bg-white">
-                              <!-- <i class="fas fa-calculator"></i> -->
-                                <div class="labal-value p-2" style="display: flex; gap: 5px;   align-items: center;">
-                                  <div class="label"> <i class="fa fa-envelope personal-info-icon "></i>
-                                    <span class="personal-info item-name email" > Email,</span> </div>
-                                  <div class="value"><b></i><?= htmlspecialchars($tenant['email']) ?></b></div>
+                               <div class="personal-item d-flex justify-content-between bg-white">
+                                <!-- <i class="fas fa-calculator"></i> -->
+                                  <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
+                                    <div class="category"><i class="fas fa-briefcase personal-info-icon"></i> <span class="personal-info item-name" > Income Source,</span> </div>
+                                    <div class="number"><b><?= htmlspecialchars($tenant['income_source']) ?></b></div>
+                                  </div>
                                 </div>
-                              </div>
-
-
 
                             </div>
 
                             <div class="col-md-3">
 
                               <div class="personal-item d-flex justify-content-between bg-white">
-                                <!-- <i class="fas fa-calculator"></i> -->
-                                  <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
-                                    <div class="category"><i class="fas fa-phone icon personal-info-icon "></i> <span class="personal-info item-name" >Phone</span>  </div>
-                                    <div class="phone"><b>0757414722</b></div>
+                                    <!-- <i class="fas fa-calculator"></i> -->
+                                      <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
+                                        <div class="category"><i class="fas fa-globe icon personal-info-icon "></i> <span class="personal-info item-name" >Work Place,</span>  </div>
+                                        <div class="number"><b><?= htmlspecialchars($tenant['work_place']) ?></b></div>
+                                      </div>
                                   </div>
                               </div>
-                            </div>
 
                           <div class="col-md-3">
                             <div class="personal-item d-flex justify-content-between bg-white">
                             <!-- <i class="fas fa-calculator"></i> -->
                               <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
-                                <div class="category"> <i class="fas fa-id-card personal-info-icon "></i> <span class="personal-info item-name">Address,</span></div>
-                                <div class="number"><b>50202, Chwele</b></div>
+                                <div class="category"> <i class="fas fa-id-card personal-info-icon "></i> <span class="personal-info item-name">Job Title,</span></div>
+                                <div class="number"><b><?= htmlspecialchars($tenant['job_title']) ?></b></div>
                               </div>
                             </div>
                           </div>
@@ -571,7 +570,7 @@
                                     <th>Month</th>
                                     <th>Rent Due</th>
                                     <th>PAID</th>
-                                    <th>PENALT</th>
+                                    <th>PENALTY</th>
                                     <th>ARREAS</th>
                                     <th>OPTIONS</th>
                                   </tr>
@@ -656,7 +655,7 @@
 
                       <div class="col-md-3" >
                         <div class="penalty-rate p-2 " style="background-color:white; box-shadow:  0px 4px 10px rgba(0, 0, 0, 0.15); border-radius: 5px; ">
-                          <div class="label">Penalt Rate</div>
+                          <div class="label">Penalty Rate</div>
                         <div class="penalt_desc d-flex">
                           <div class="pen-rate">10%</div>
                           <div class="pen-desc">of the total rent</div>
