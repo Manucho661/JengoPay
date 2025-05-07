@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 06, 2025 at 03:27 PM
+-- Generation Time: May 07, 2025 at 03:21 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -90,7 +90,9 @@ CREATE TABLE `buildings` (
 --
 
 INSERT INTO `buildings` (`building_id`, `building_name`, `county`, `constituency`, `ward`, `floor_number`, `units_number`, `building_type`, `ownership_info`, `first_name`, `last_name`, `phone_number`, `kra_pin`, `email`, `entity_name`, `entity_phone`, `entity_email`, `entity_kra_pin`, `entity_representative`, `entity_rep_role`, `title_deed_copy`, `other_document_copy`, `borehole_availability`, `solar_availability`, `solar_brand`, `installation_company`, `no_of_panels`, `solar_primary_use`, `parking_lot`, `alarm_system`, `elevators`, `psds_accessibility`, `cctv`, `nca_approval`, `nca_approval_no`, `nca_approval_date`, `local_gov_approval`, `local_gov_approval_no`, `local_gov_approval_date`, `nema_approval`, `nema_approval_no`, `nema_approval_date`, `building_tax_pin`, `insurance_cover`, `insurance_policy`, `insurance_provider`, `policy_from_date`, `policy_until_date`, `front_view_photo`, `rear_view_photo`, `angle_view_photo`, `interior_view_photo`, `created_at`, `updated_at`, `building_number`) VALUES
-(78, 'crown', 'Marsabit', 'Moyale', 'Butiye', 5, 10, 'Commercial', 'Individual', 'best', 'htre', 745589685, 0, 'er@gmail.com', '', 0, '', 0, '', '', NULL, NULL, 'No', 'Yes', '', '', 0, '', 'Yes', 'Yes', 'No', 'Yes', 'Yes', 'No', '', '0000-00-00', 'Yes', '', '0000-00-00', 'No', '', '0000-00-00', 'ddsgvdbhfnjgjn', 'No', '', '', '0000-00-00', '0000-00-00', 'uploads/6814dc433e3aa_page3.PNG', 'uploads/6814dc433e840_14.PNG', 'uploads/6814dc433e9a4_exclusive.PNG', 'uploads/6814dc433ea9e_zero rated.PNG', '2025-05-02 14:52:51', '2025-05-02 14:52:51', 0);
+(86, 'DCF', 'Kitui', 'Kitui East', 'Mutito', 4, 33, 'Commercial', 'Individual', 'GVGB', 'DXDD', 752222222, 0, 'dff@gmail.com', '', 0, '', 0, '', '', NULL, NULL, 'Yes', 'No', '', '', 0, '', 'No', 'No', 'No', 'No', 'No', 'No', '', '0000-00-00', 'Yes', '', '0000-00-00', 'No', '', '0000-00-00', 'PGBDUVFNVBNHF4', 'No', '', '', '0000-00-00', '0000-00-00', 'uploads/681b4979e6a2c_Capture.PNG', 'uploads/681b4979e6c81_page3.PNG', 'uploads/681b4979e6d17_zero rated.PNG', 'uploads/681b4979e6dc7_12.PNG', '2025-05-07 11:52:25', '2025-05-07 11:52:25', 0),
+(87, 'HENJHE', 'Tana River', 'Bura', 'Chewele', 4, 44, 'Commercial', 'Individual', 'SGVFV', 'DVFB', 744444444, 0, 'fcgye@gmail.com', '', 0, '', 0, '', '', NULL, NULL, 'Yes', 'Yes', 'fvsdgbh', 'sxgdcg', 6, 'Water Heating', 'Yes', 'Yes', 'No', 'Yes', 'Yes', 'No', '', '0000-00-00', 'Yes', '', '0000-00-00', 'No', '', '0000-00-00', 'sfvgnhy', 'No', '', '', '0000-00-00', '0000-00-00', 'uploads/681b4acea9eb2_14.PNG', 'uploads/681b4aceaa078_page3.PNG', 'uploads/681b4aceaa109_exempted.PNG', 'uploads/681b4aceaa1c1_exclusive.PNG', '2025-05-07 11:58:06', '2025-05-07 11:58:06', 0),
+(89, 'EBENEZER', 'Wajir', 'Wajir North', 'Gurar', 4, 6, 'Commercial', 'Individual', 'HYTH', 'THT', 744444444, 0, 'df@gmail.com', '', 0, '', 0, '', '', NULL, NULL, 'Yes', 'Yes', 'dcfgbv', 'ghbnj', 4, 'Lighting', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'NCA-1234567-2025', '0000-00-00', 'Yes', '4356', '2025-05-15', 'Yes', 'NEMA/EIA/PS/1234', '2025-04-29', 'P123456789B', 'No', '', '', '0000-00-00', '0000-00-00', 'uploads/681b4f3280088_14.PNG', 'uploads/681b4f32803b2_zero rated.PNG', 'uploads/681b4f328047b_page 4.PNG', 'uploads/681b4f328051c_page2.PNG', '2025-05-07 12:16:50', '2025-05-07 12:16:50', 0);
 
 --
 -- Indexes for dumped tables
@@ -110,7 +112,7 @@ ALTER TABLE `buildings`
 -- AUTO_INCREMENT for table `buildings`
 --
 ALTER TABLE `buildings`
-  MODIFY `building_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
+  MODIFY `building_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
