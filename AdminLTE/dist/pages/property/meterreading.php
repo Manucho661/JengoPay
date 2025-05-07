@@ -90,17 +90,21 @@ $units = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // Close the statement and connection
 $stmt->closeCursor();
 
-/// Fetch the meter readings from the database
-$sql = "SELECT * FROM meter_readings";
-$stmt = $pdo->query($sql);
+// Fetch meter readings only for units belonging to the specified building
+$sql = "
+    SELECT mr.reading_date, mr.unit_number, mr.meter_type, mr.previous_reading, mr.current_reading, mr.consumption_units
+    FROM meter_readings mr
+    INNER JOIN units u ON mr.unit_number = u.unit_number
+    WHERE u.building_id = :building_id
+    ORDER BY mr.reading_date DESC
+";
 
-// Check if any data is returned
-$readings = [];
-if ($stmt->rowCount() > 0) {
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $readings[] = $row;
-    }
-}
+$stmt = $pdo->prepare($sql);
+$stmt->bindParam(':building_id', $buildingId, PDO::PARAM_INT);
+$stmt->execute();
+$readings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
 ?>
 
 
