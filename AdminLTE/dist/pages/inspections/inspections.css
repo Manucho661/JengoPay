@@ -592,7 +592,7 @@ input[type="radio"] {
 
 .completed {
   background-color: #4CAF50; /* Green */
-  color: black; /* Better contrast with dark text */
+  color: white;
 }
 
 .in-progress {
