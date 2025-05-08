@@ -1504,85 +1504,98 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
 
             <!-- End row -->
             <!-- Begin Row -->
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="inspection-details-container bg-white p-2">
+                        <div id="filter-pdf-excel-section" class="filter-pdf-excel-section mb-2">
+                          <div class="d-flex" style="gap: 10px;">
+                            <div class="select-option-container">
+                              <div class="custom-select">All Buildings</div>
+                              <div class="select-options mt-1">
+                                <div class="selected" data-value="all">All Buildings</div>
+                                <div data-value="Manucho">Manucho</div>
+                                <div data-value="Pink House">Pink House</div>
+                                <div data-value="White House">White House</div>
+                              </div>
+                            </div>
+
+                            <div id="custom-search">
+                              <input type="text" id="searchInput" placeholder="Search tenant...">
+                            </div>
+
+                          </div>
+
+                          <div>
+
+                          </div>
+
+                          <div class="d-flex">
+
+                            <button id="add_provider_btn"  class="btn shift-tenant rounded" style="height: fit-content;" onclick="openPopup()" > Shift Tenant</button>
 
 
-            <div class="row second rounded-2" >
-                <!-- Start col -->
-                <div class="col-md-12">
-                  <div class="row bg-white " style="border:1px solid #E2E2E2" >
-                    <div class="col-12 p-2">
-                      <div class="row">
-                        <div class="col-md-122">
-                          <select id="categoryFilter">
-                            <option value="">-- Select Property--</option>
-                            <option value="technology">All</option>
-                            <option value="health">Manucho</option>
-                            <option value="business">Ebenezer</option>
-                            <option value="education">Crown Z</option>
-                          </select>
+                                <div id="custom-buttons"></div>
+                          </div>
+
                         </div>
 
-                      </div>
-                    </div>
-                  </div>
-
-
-                  <div class="row p-2 bg-white">
-                                      
-                          <table id="maintenance" class="display summary-table">
-                              <thead class="mb-2">
-                              <tr>
-                                  <th>Date</th>
-                                  <th>PROPERTY</th>
-                                  <th>UNIT</th>
-                                  <th>TYPE</th>
-                                  <th>Inspection No</th>
-                                  <!-- <th>INSPECTOR</th> -->
-                                  <th>Attached Files</th>
-                                  <th>STATUS</th>
-                                  <th>ACTION</th>
-                              </tr>
-                              </thead>
-                              <tbody>
-                              <?php if ($inspectionsCount > 0): ?>
-                                  <?php foreach ($inspections as $inspection): ?>
-                                      <tr>
-                                          <td><?= htmlspecialchars($inspection['date']) ?></td>
-                                          <td><?= htmlspecialchars($inspection['building_name']) ?></td>
-                                          <td><?= htmlspecialchars($inspection['unit_name']) ?></td>
-                                          <td>Bed-sitter</td>
-                                          <td><?= htmlspecialchars($inspection['inspection_number']) ?></td>
-                                          <td></td>
-                                          <td>
-                                              <div class="status completed">
-                                                  <i class="fas fa-spinner fa-spin"></i>
-                                                  In progress
-                                              </div>
-                                          </td>
-                                          <td id="more">
-                                              <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View"><i class="fas fa-eye"></i></button>
-                                              <button class="btn btn-sm" style="background-color: #193042; color:#FFCCCC; margin-right: 2px;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-trash"></i></button>
-                                              <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-edit"></i></button>
-                                              
-                                              <!-- File Upload Section -->
-                                              <form action="/upload" method="POST" enctype="multipart/form-data">
-                                                  <label for="fileUpload" class="attachment-icon">📎</label>
-                                                  <input type="file" id="fileUpload" name="fileUpload" class="file-input" style="display:none;" onchange="submitForm()">
-                                              </form>
-                                          </td>
-                                      </tr>
-                                  <?php endforeach; ?>
-                              <?php else: ?>
-                                  <tr>
-                                      <td colspan="8" style="text-align:center;">No inspections found.</td>
-                                  </tr>
-                              <?php endif; ?>
-                              </tbody>
+                        <table id="maintenance" class="display summary-table">
+                                <thead class="mb-2">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>PROPERTY</th>
+                                    <th>UNIT</th>
+                                    <th>TYPE</th>
+                                    <th>Inspection No</th>
+                                    <!-- <th>INSPECTOR</th> -->
+                                    <th>Attached Files</th>
+                                    <th>STATUS</th>
+                                    <th>ACTION</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php if ($inspectionsCount > 0): ?>
+                                    <?php foreach ($inspections as $inspection): ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($inspection['date']) ?></td>
+                                            <td><?= htmlspecialchars($inspection['building_name']) ?></td>
+                                            <td><?= htmlspecialchars($inspection['unit_name']) ?></td>
+                                            <td>Bed-sitter</td>
+                                            <td><?= htmlspecialchars($inspection['inspection_number']) ?></td>
+                                            <td></td>
+                                            <td>
+                                                <div class="status completed">
+                                                    <i class="fas fa-spinner fa-spin"></i>
+                                                    In progress
+                                                </div>
+                                            </td>
+                                            <td id="more">
+                                                <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View"><i class="fas fa-eye"></i></button>
+                                                <button class="btn btn-sm" style="background-color: #193042; color:#FFCCCC; margin-right: 2px;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-trash"></i></button>
+                                                <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-edit"></i></button>
+                                                
+                                                <!-- File Upload Section -->
+                                                <form action="/upload" method="POST" enctype="multipart/form-data">
+                                                    <label for="fileUpload" class="attachment-icon">📎</label>
+                                                    <input type="file" id="fileUpload" name="fileUpload" class="file-input" style="display:none;" onchange="submitForm()">
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="8" style="text-align:center;">No inspections found.</td>
+                                    </tr>
+                                <?php endif; ?>
+                                </tbody>
 
                           </table>
-                 
+                      </div> 
+
                   </div>
+                              
                 </div>
+              
 
 
 
