@@ -595,10 +595,10 @@ display: flex;
 
                                         <button class="btn btn-primary view" onclick="loadConversation(<?= $threadId ?>)">
     <i class="bi bi-eye"></i> View
-   </button>
+</button>
 
 
-    <button class="btn btn-danger delete" data-thread-id="<?= $threadId ?>"><i class="bi bi-trash3"></i> Delete</button>
+                                      <button class="btn btn-danger delete" data-thread-id="<?= $threadId ?>"><i class="bi bi-trash3"></i> Delete</button>
                                   </td>
                               </tr>
                           <?php endforeach; ?>
@@ -1037,41 +1037,6 @@ document.getElementById('sendMessage').addEventListener('click', function() {
 </script> -->
 
 
-<!-- delete conversation  -->
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.btn.delete').forEach(button => {
-        button.addEventListener('click', function () {
-            const threadId = this.getAttribute('data-thread-id');
-
-            if (confirm("Are you sure you want to delete this conversation?")) {
-                fetch('delete_conversation.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'thread_id=' + encodeURIComponent(threadId)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Optionally remove the row from the UI
-                        this.closest('tr').remove();
-
-                        // Also remove from the conversation list if needed
-                        const convoItem = document.querySelector(`[data-message-id="${threadId}"]`);
-                        if (convoItem) convoItem.remove();
-
-                        alert("Conversation deleted successfully.");
-                    } else {
-                        alert("Failed to delete conversation.");
-                    }
-                });
-            }
-        });
-    });
-});
-</script>
 
 
 
