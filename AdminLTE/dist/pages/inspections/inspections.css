@@ -595,6 +595,7 @@ input[type="radio"] {
   color: white;
 }
 
+
 .in-progress {
   background-color: #FFC107; /* Yellow */
   color: black; /* Better contrast with dark text */
