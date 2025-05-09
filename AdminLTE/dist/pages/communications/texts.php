@@ -2,9 +2,9 @@
 include '../db/connect.php'; // Make sure $pdo is available
 
 // === HANDLE NEW THREAD SUBMISSION (POST) ===
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['subject']) && !empty($_POST['message'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['title']) && !empty($_POST['message'])) {
     try {
-        $subject = $_POST['subject'];
+        // $subject = $_POST['subject'];
         $title = $_POST['title'] ?? '';
         $unit_id = $_POST['unit_id'] ?? '';
         $tenant = $_POST['tenant'] ?? '';
@@ -28,8 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['subject']) && !empty
         $files_json = json_encode($uploaded_files);
 
         // Insert communication thread
-        $stmt = $pdo->prepare("INSERT INTO communication (subject, title, files, unit_id, tenant, building_name, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$subject, $title, $files_json, $unit_id, $tenant, $building_name, $now, $now]);
+        $stmt = $pdo->prepare("INSERT INTO communication (title, files, unit_id, tenant, building_name, created_at, updated_at) VALUES ( ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([ $title, $files_json, $unit_id, $tenant, $building_name, $now, $now]);
 
         $thread_id = $pdo->lastInsertId();
 
@@ -74,10 +74,10 @@ if ($building_id) {
 $stmt = $pdo->prepare("
     SELECT
         c.thread_id,
-        c.subject,
         c.title,
         c.tenant,
         c.created_at,
+        c.building_name,
         (SELECT content FROM messages WHERE thread_id = c.thread_id ORDER BY timestamp DESC LIMIT 1) AS last_message,
         (SELECT timestamp FROM messages WHERE thread_id = c.thread_id ORDER BY timestamp DESC LIMIT 1) AS last_time,
         (SELECT COUNT(*) FROM messages WHERE thread_id = c.thread_id AND is_read = 0) AS unread_count
@@ -562,47 +562,48 @@ display: flex;
 
                               <div class="table-responsive">
                                   <table class="table table-hover table-summary-messages" style="border-radius: 20px; flex-grow: 1;">
-                                      <thead class="">
-                                          <tr>
-                                              <th>SENT</th>
-                                              <th>TITLE</th>
-                                              <th>SENT BY</th>
-                                              <th>ACTION</th>
-                                          </tr>
-                                      </thead>
-                                      <tbody>
-                                       <?php foreach ($communications as $comm):
-                                            $datetime = new DateTime($comm['last_time'] ?? $comm['created_at']);
-                                            $date = $datetime->format('d-m-Y');
-                                            $time = $datetime->format('h:iA');
-                                            $sender = htmlspecialchars($comm['tenant'] ?: 'Me');
-                                            $email = ''; // Add email logic if needed
-                                            $title = htmlspecialchars($comm['title']);
-                                            $threadId = $comm['thread_id'];
-                                        ?>
-                                      <tr class="table-row">
-                                          <td class="timestamp">
-                                              <div class="date"><?= $date ?></div>
-                                              <div class="time"><?= $time ?></div>
-                                          </td>
-                                          <td class="title"><?= $title ?></td>
-                                          <td>
-                                              <div class="sender"><?= $sender ?></div>
-                                              <div class="sender-email"><?= $email ?></div>
-                                          </td>
-                                          <td>
-                                        <!-- The View Button with dynamically passed thread_id -->
+                                  <thead class="">
+                                  <tr>
+                                      <th>DATE</th>
+                                      <th>TITLE</th>
+                                      <th>SENT BY</th>
+                                      <th>SENT TO</th> <!-- Add this line -->
+                                      <th>ACTION</th>
+                                  </tr>
+                              </thead>
 
-                                        <button class="btn btn-primary view" onclick="loadConversation(<?= $threadId ?>)">
-    <i class="bi bi-eye"></i> View
-</button>
-
-
-                                      <button class="btn btn-danger delete" data-thread-id="<?= $threadId ?>"><i class="bi bi-trash3"></i> Delete</button>
+                              <tbody>
+                              <?php foreach ($communications as $comm):
+                                  $datetime = new DateTime($comm['created_at']);
+                                  $date = $datetime->format('d-m-Y'); // Only the date
+                                  $sender = 'Me'; // assuming the landlord is the one logged in
+                                  $recipient = htmlspecialchars($comm['tenant'] ?: 'N/A'); // this is the recipient
+                                  $title = htmlspecialchars($comm['title']);
+                                  $threadId = $comm['thread_id'];
+                              ?>
+                              <tr class="table-row">
+                                  <td class="timestamp">
+                                      <div class="date"><?= $date ?></div>
+                                  </td>
+                                  <td class="title"><?= $title ?></td>
+                                  <td>
+                                      <div class="sender"><?= $sender ?></div>
+                                  </td>
+                                  <td>
+                                      <div class="recipient"><?= $recipient ?></div>
+                                  </td>
+                                  <td>
+                                      <button class="btn btn-primary view" onclick="loadConversation(<?= $threadId ?>)">
+                                          <i class="bi bi-eye"></i> View
+                                      </button>
+                                      <button class="btn btn-danger delete" data-thread-id="<?= $threadId ?>">
+                                          <i class="bi bi-trash3"></i> Delete
+                                      </button>
                                   </td>
                               </tr>
-                          <?php endforeach; ?>
-                      </tbody>
+                              <?php endforeach; ?>
+                          </tbody>
+
 
 
                                   </table>
@@ -628,30 +629,27 @@ display: flex;
                                         <div class="residence mt-2"><?= htmlspecialchars($b['building_name'])?></div>
                                       </div>
 
-
                                     </div>
-
-
                                   </div>
 
                                 </div>
                               </div>
 
                               <div class="h-80  other-topics-section">
-
                                 <?php foreach ($communications as $comm): ?>
                                   <div class="individual-topic-profiles active d-flex"
                                     data-message-id="<?= $comm['thread_id'] ?>"
                                     onclick="loadConversation(<?= $comm['thread_id'] ?>)">
 
-                                  <div class="individual-topic-profile-container">
 
+                                  <div class="individual-topic-profile-container">
                                   <div class="individual-topic"><?= htmlspecialchars($comm['title']) ?></div>
                                   <div class="individual-message mt-2"><?= htmlspecialchars(mb_strimwidth($comm['last_message'], 0, 60, '...'))?></div>
                                   </div>
 
-                                  <div class="d-flex justify-content-end time-count">
-                                    <div class="time"><?php
+                                    <div class="d-flex justify-content-end time-count">
+                                    <div class="time">
+                                   <?php
                                     $datetime = new DateTime($comm['created_at']);
                                     echo $datetime->format('d/m/y');
                                   ?></div>
@@ -789,10 +787,10 @@ display: flex;
 
                         </div>
 
-                        <div class="field-group">
+                        <!-- <div class="field-group">
                           <label for="subject new-message">Subject (optional)</label>
                           <input name="subject" type="text" id="subject" class="subject" placeholder="Enter subject..." />
-                        </div>
+                        </div> -->
 
                         <div class="field-group">
                           <label for="title">Title</label>

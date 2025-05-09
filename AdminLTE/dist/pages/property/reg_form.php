@@ -43,8 +43,8 @@ try {
         $ownership_info = $_POST['ownership_info'];
 
 
-        $titleDeedPath = uploadPhoto('title_deed_copy');
-        $otherDocPath = uploadPhoto('other_document_copy');
+        $title_deed_copy = uploadPhoto('title_deed_copy');
+        $other_document_copy = uploadPhoto('other_document_copy');
         $borehole_availability = $_POST['borehole_availability'] ?? '';
         $solar_availability = $_POST['solar_availability'] ?? '';
         $solar_brand = $_POST['solar_brand'] ?? '';
@@ -82,17 +82,21 @@ try {
             $identification_number = $_POST['identification_number'];
             $id_attachment = uploadPhoto('id_attachment');
             $email = $_POST['email'];
+            // $title_deed_copy = uploadPhoto('title_deed_copy');
+            // $other_document_copy = uploadPhoto('other_document_copy');
         } elseif ($ownership_info == 'Entity') {
             $entity_name = $_POST['entity_name'];
             $entity_phone = $_POST['entity_phone'];
             $entity_country_code = $_POST['entity_country_code'];
             $entity_email = $_POST['entity_email'];
             $bs_reg_no = $_POST['bs_reg_no'];
-            $attach_bs_reg_no = $_POST['attach_bs_reg_no'];
+            $attach_bs_reg_no = uploadPhoto('attach_bs_reg_no');
             $entity_kra_pin = $_POST['entity_kra_pin'];
-            $entity_attach_kra_copy = $_POST['entity_attach_kra_copy'];
+            $entity_attach_kra_copy = uploadPhoto('entity_attach_kra_copy');
             $entity_representative = $_POST['entity_representative'];
             $entity_rep_role = $_POST['entity_rep_role'];
+            // $title_deed_copy = uploadPhoto('title_deed_copy');
+            // $other_document_copy = uploadPhoto('other_document_copy');
         }
 
 
@@ -169,8 +173,8 @@ try {
             ':entity_attach_kra_copy' => $entity_attach_kra_copy,
             ':entity_representative' => $entity_representative,
             ':entity_rep_role' => $entity_rep_role,
-            ':title_deed_copy' => $titleDeedPath,
-            ':other_document_copy' => $otherDocPath,
+            ':title_deed_copy' => $title_deed_copy,
+            ':other_document_copy' => $other_document_copy,
             ':borehole_availability' => $borehole_availability,
             ':solar_availability' => $solar_availability,
             ':solar_brand' => $solar_brand,
@@ -979,44 +983,44 @@ try {
                   <div class="row">
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label>Entity
+                      <label>Entity
                           Name</label>
                         <input type="text" name="entity_name" class="form-control" id="entityName"
                           placeholder="Entity Name">
                       </div>
                     </div>
-                    <div class="col-md-6">
                     <div class="form-group">
-                  <label>Phone Number</label>
-                  <div style="display: flex; gap: 5px;">
-                  <select name="entity_country_code" id="countryCode" class="form-control" style="max-width: 100px;" onchange="updatePhoneValidation()">
-                  <option value="+254"
-                          data-pattern="^(\+254|254|0)(7\d{8}|1\d{8})$"
-                          data-placeholder="0712345678 or 0111111158"
-                          data-maxlength="10">🇰🇪 +254 (Kenya)</option>
-                  <option value="+255"
-                          data-pattern="^(\+255|0)(6|7)\d{8}$"
-                          data-placeholder="0712345678"
-                          data-maxlength="10">🇹🇿 +255 (Tanzania)</option>
-                  <option value="+256"
-                          data-pattern="^(\+256|0)7\d{8}$"
-                          data-placeholder="0701234567"
-                          data-maxlength="10">🇺🇬 +256 (Uganda)</option>
-                </select>
+                    <label>Phone Number</label>
+                    <div style="display: flex; gap: 5px;">
+                      <select name="entity_country_code" id="countryCode" class="form-control" style="max-width: 100px;" onchange="updatePhoneValidation()">
+                        <option value="+254"
+                                data-pattern="^(\+254|254|0)(7\\d{8}|1\\d{8})$"
+                                data-placeholder="0712345678 or 0111111158"
+                                data-maxlength="10">🇰🇪 +254 (Kenya)</option>
+                        <option value="+255"
+                                data-pattern="^(\+255|0)(6|7)\\d{8}$"
+                                data-placeholder="0712345678"
+                                data-maxlength="10">🇹🇿 +255 (Tanzania)</option>
+                        <option value="+256"
+                                data-pattern="^(\+256|0)7\\d{8}$"
+                                data-placeholder="0701234567"
+                                data-maxlength="10">🇺🇬 +256 (Uganda)</option>
+                      </select>
+
                       <input type="text"
-                     name="entity_phone"
-                      class="form-control"
-                      id="phoneNumber"
-                      placeholder=""
-                      maxlength="10"
-                      title="Enter a valid phone number"
-                      oninput="validatePhoneNumber()"
-                      onblur="checkPhoneNumberExists()">
-                  </div>
-                  <small id="phoneNumberError" style="color:red; display:none;">Invalid phone number format</small>
-                  <small id="phoneNumberExists" style="color:red; display:none;">Phone number not found</small>
-                </div>
+                            name="entity_phone"
+                            class="form-control"
+                            id="entity_phoneNumber"
+                            placeholder=""
+                            maxlength="10"
+                            title="Enter a valid phone number"
+                            oninput="validateEntityPhoneNumber()"
+                            onblur="checkPhoneNumberExists()">
                     </div>
+
+                    <small id="phoneNumberError" style="color:red; display:none;">Invalid phone number format</small>
+                    <small id="phoneNumberExists" style="color:red; display:none;">Phone number not found</small>
+                  </div>
                   </div>
                   <div class="form-group">
                     <label>Official Email</label>
@@ -1028,6 +1032,7 @@ try {
                     <input type="text" name="bs_reg_no" class="form-control" id="bs_reg_no"
                       placeholder="Business Registration Number">
                   </div>
+
                   <div class="form-group">
                     <label>Attach Business Registration Number Copy</label>
                     <input type="file" name="attach_bs_reg_no" class="form-control" id="attach_bs_reg_no"
@@ -1035,7 +1040,7 @@ try {
                   </div>
                   <div class="form-group">
                     <label>Kra pin</label>
-                    <input type="text" name="entity_kra_pin" class="form-control" id="kra_pin"
+                    <input type="text" name="entity_kra_pin" class="form-control" id="entity_kra_pin"
                       placeholder="Kra pin">
                   </div>
                   <div class="form-group">
@@ -1421,14 +1426,14 @@ try {
                   name="nema_approval_no"
                   class="form-control"
                   id="nemaApprovalNumber"
-                  placeholder="Approval Number (e.g. NEMA/EIA/PS/1234)"
+                  placeholder="Approval Number (e.g. NEMA/WM/DA/1081)"
                   pattern="^NEMA\/EIA\/PS\/\d{4}$"
-                  title="Format: NEMA/EIA/PS/1234"
+                  title="Format: NEMA/WM/DA/1081"
 
                   oninput="validateNemaApproval()"
                 />
                 <small id="nemaApprovalError" style="color:red; display:none;">
-                  Format must be NEMA/EIA/PS/1234
+                  Format must be NEMA/WM/DA/1081
                 </small>
                 </div>
                 <div class="form-group">
@@ -1998,14 +2003,14 @@ document.getElementById('approvalDate').addEventListener('input', validateApprov
 function validateNemaApproval() {
   const input = document.getElementById('nemaApprovalNumber');
   const errorMsg = document.getElementById('nemaApprovalError');
-  const regex = /^NEMA\/EIA\/PS\/\d{4}$/;
+  const regex = /^NEMA\/WM\/DA\/\d{4}$/;
 
   if (input.value === '' || regex.test(input.value)) {
     errorMsg.style.display = 'none';
     input.setCustomValidity('');
   } else {
     errorMsg.style.display = 'block';
-    input.setCustomValidity('Format must be NEMA/EIA/PS/1234');
+    input.setCustomValidity('Format must be NEMA/WM/DA/1081');
   }
 }
 </script>
@@ -2264,6 +2269,85 @@ $("#stepEightBackBtn").click(function(e) {
 
 });
 </script>
+
+<script>
+  function updatePhoneValidation() {
+    const select = document.getElementById('entitycountryCode');
+    const input = document.getElementById('entityphoneNumber');
+    const selected = select.options[select.selectedIndex];
+
+    const pattern = selected.dataset.pattern;
+    const placeholder = selected.dataset.placeholder;
+    const maxLength = selected.dataset.maxlength;
+
+    input.setAttribute('pattern', pattern);
+    input.setAttribute('maxlength', maxLength);
+    input.setAttribute('placeholder', placeholder);
+  }
+
+  function validatePhoneNumber() {
+    const input = document.getElementById('entityphoneNumber');
+    const pattern = new RegExp(input.getAttribute('pattern'));
+    const errorMsg = document.getElementById('phoneNumberError');
+
+    if (input.value === '' || pattern.test(input.value)) {
+      errorMsg.style.display = 'none';
+      input.setCustomValidity('');
+    } else {
+      errorMsg.style.display = 'inline';
+      input.setCustomValidity('Invalid phone number format');
+    }
+  }
+
+  function checkPhoneNumberExists() {
+    // Placeholder function – implement your backend check here if needed
+    const exists = false; // simulate result
+    const existMsg = document.getElementById('phoneNumberExists');
+    existMsg.style.display = exists ? 'inline' : 'none';
+  }
+
+  // Initialize on load
+  document.addEventListener('DOMContentLoaded', updatePhoneValidation);
+</script>
+
+<script>
+function validateEmailFormat() {
+  const emailInput = document.getElementById('entityEmail');
+  const errorFormat = document.getElementById('emailFormatError');
+  const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  if (emailInput.value === '' || pattern.test(emailInput.value)) {
+    errorFormat.style.display = 'none';
+    emailInput.setCustomValidity('');
+  } else {
+    errorFormat.style.display = 'inline';
+    emailInput.setCustomValidity('Invalid email format');
+  }
+}
+
+function checkEmailExists() {
+  const email = document.getElementById('entityEmail').value;
+  const errorExists = document.getElementById('emailExistsError');
+
+  if (email === '') return;
+
+  fetch('check_email.php?email=' + encodeURIComponent(email))
+    .then(response => response.json())
+    .then(data => {
+      if (data.exists) {
+        errorExists.style.display = 'inline';
+        document.getElementById('entityEmail').setCustomValidity('Email already exists');
+      } else {
+        errorExists.style.display = 'none';
+        document.getElementById('entityEmail').setCustomValidity('');
+      }
+    })
+    .catch(err => {
+      console.error('Error checking email:', err);
+    });
+}
+</script>
+
 
 <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
  <script src="../../../dist/js/adminlte.js"></script>
