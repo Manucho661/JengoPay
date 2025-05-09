@@ -92,8 +92,6 @@ input:focus, select:focus, textarea:focus {
   outline: none;
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5) !important;
 }
-
-
 .row input[type="text"], input[type="date"]{
   border: none;
       border-bottom: 1px solid #000;
@@ -217,8 +215,6 @@ div.dt-button-collection .dt-button:hover {
                                                                 line-height: 1.2;
                                                                 font-weight: bold;
                                                                 }
-
-
                                                                 /* General Styling for Summary Items */
                                                                 .summary-card{
                                                                   padding: 5px 10px;
@@ -248,28 +244,6 @@ div.dt-button-collection .dt-button:hover {
                                                                   color: #FFC107;
                                                                 }
 
-
-
-      .paginate_button.page-item.active a{
-        background-color: #FFC107 !important;
-      }
-
-    /* Color Coding */
-    .total { background-color: #f8f9fa; color: #333; } /* Neutral */
-    .completed { background-color: #28a745; color: white; } /* Green */
-    .in-progress { background-color: #007bff; color: white; } /* Blue */
-    .incomplete { background-color: #dc3545; color: white; } /* Red */
-    .value{
-        /* font-size: 12px; */
-        /* display: flex; */
-        justify-content: center;
-        color: #FFC107;
-        /* background-color: #00192D; */
-        border-radius: 10px;
-    }
-.summary-item.icon{
-    margin-right: 12px;
-}
 
 
 
@@ -358,8 +332,6 @@ background-color: #f1f1f1;
 }
 .inspection-table thead{
   background-color: #FFECB3;
-
-
 }
 
 .inspection-table th{
@@ -606,8 +578,6 @@ input[type="radio"] {
   color: black; /* Better contrast with dark text */
 
 }
-
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .add-inspection-container {
@@ -799,4 +769,10 @@ input[type="radio"] {
                                       color: #FFC107 !important;
 
                                 }
+
+                                /* Scheduled Inspections */
+.filter-pdf-excel-section{
+  display: flex;
+  justify-content: space-between;
+}
                        

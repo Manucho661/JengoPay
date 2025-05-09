@@ -1507,7 +1507,9 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                 <div class="row">
                   <div class="col-md-12">
                     <div class="inspection-details-container bg-white p-2">
+
                         <div id="filter-pdf-excel-section" class="filter-pdf-excel-section mb-2">
+
                           <div class="d-flex" style="gap: 10px;">
                             <div class="select-option-container">
                               <div class="custom-select">All Buildings</div>
@@ -1518,11 +1520,9 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                                 <div data-value="White House">White House</div>
                               </div>
                             </div>
-
                             <div id="custom-search">
                               <input type="text" id="searchInput" placeholder="Search tenant...">
                             </div>
-
                           </div>
 
                           <div>
@@ -1530,10 +1530,6 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                           </div>
 
                           <div class="d-flex">
-
-                            <button id="add_provider_btn"  class="btn shift-tenant rounded" style="height: fit-content;" onclick="openPopup()" > Shift Tenant</button>
-
-
                                 <div id="custom-buttons"></div>
                           </div>
 
@@ -1543,11 +1539,9 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                                 <thead class="mb-2">
                                 <tr>
                                     <th>Date</th>
-                                    <th>PROPERTY</th>
-                                    <th>UNIT</th>
+                                    <th>PROPERTY + UNIT</th>
                                     <th>TYPE</th>
-                                    <th>Inspection No</th>
-                                    <!-- <th>INSPECTOR</th> -->
+                                    <th>Inspection No</th>                                    
                                     <th>Attached Files</th>
                                     <th>STATUS</th>
                                     <th>ACTION</th>
@@ -1559,7 +1553,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                                         <tr>
                                             <td><?= htmlspecialchars($inspection['date']) ?></td>
                                             <td><?= htmlspecialchars($inspection['building_name']) ?></td>
-                                            <td><?= htmlspecialchars($inspection['unit_name']) ?></td>
+                                            
                                             <td>Bed-sitter</td>
                                             <td><?= htmlspecialchars($inspection['inspection_number']) ?></td>
                                             <td></td>
@@ -1734,20 +1728,61 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                                   <!-- DATE TABLES -->
 <script>
 
-                        $(document).ready(function() {
-                            var table = $('#maintenance').DataTable({
-                                "lengthChange": false,
-                                "dom": 'Bfrtip',
-                                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
-                                "initComplete": function() {
-                                    // Move the buttons to the first .col-md-6
-                                    table.buttons().container().appendTo('#maintenance_wrapper .col-md-6:eq(0)');
-
-                                    // Move the search box to the second .col-md-6
-                                    $('#maintenance_filter').appendTo('#maintenance_wrapper .col-md-6:eq(1)');
+                        $(document).ready(function () {
+                          const table = $('#maintenance').DataTable({
+                            dom: 'Brtip', // ⬅ Changed to include Buttons in DOM
+                            order: [], // ⬅ disables automatic ordering by DataTables
+                            buttons: [
+                              {
+                                extend: 'excelHtml5',
+                                text: 'Excel',
+                                exportOptions: {
+                                  columns: ':not(:last-child)' // ⬅ Exclude last column
                                 }
-                            });
+                              },                              
+                              {
+                                extend: 'pdfHtml5',
+                                text: 'PDF',
+                                exportOptions: {
+                                  columns: ':not(:last-child)' // ⬅ Exclude last column
+                                },
+                                customize: function (doc) {
+                                  // Center table
+                                  doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+
+                                  // Optional: center-align the entire table
+                                  doc.styles.tableHeader.alignment = 'center';
+                                  doc.styles.tableBodyEven.alignment = 'center';
+                                  doc.styles.tableBodyOdd.alignment = 'center';
+
+                                  const body = doc.content[1].table.body;
+                                      for (let i = 1; i < body.length; i++) { // start from 1 to skip header
+                                        if (body[i][4]) {
+                                          body[i][4].color = 'blue'; // set email column to blue
+                                        }
+                                      }
+
+                                }
+                              },
+                                  {
+                                extend: 'print',
+                                text: 'Print',
+                                exportOptions: {
+                                  columns: ':not(:last-child)' // ⬅ Exclude last column from print
+                                }
+                              }
+                            ]
                           });
+
+            // Append buttons to your div
+            table.buttons().container().appendTo('#custom-buttons');
+
+            // Custom search
+            $('#searchInput').on('keyup', function () {
+              table.search(this.value).draw();
+            });
+
+          });
 </script>
 
 

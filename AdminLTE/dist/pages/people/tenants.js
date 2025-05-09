@@ -145,6 +145,7 @@ function fetchTenants(building) {
                     columns: ':not(:last-child)' // ⬅ Exclude last column
                   }
                 },
+                
                 {
                   extend: 'pdfHtml5',
                   text: 'PDF',

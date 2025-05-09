@@ -55,9 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         //step 3: Insert into pets
                         foreach ($pets as $pet) {
-                            
-                            
-                
+                        
                             $stmtPet = $pdo->prepare("INSERT INTO pets (tenant_id, pet_name) VALUES (?, ?)");
                             $stmtPet->execute([$tenant_id, $pet]);
                         }

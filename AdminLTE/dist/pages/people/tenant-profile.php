@@ -13,7 +13,6 @@
     FROM tenants
     JOIN users ON tenants.user_id = users.id
     WHERE tenants.user_id = ?
-
   ");
   $stmt->execute([$user_id]);
   $tenant = $stmt->fetch(PDO::FETCH_ASSOC);
