@@ -1,4 +1,26 @@
+<?php
+ include '../db/connect.php';
+?>
 
+<?php
+  // Fetch tenants with their user details
+  $sql = "SELECT
+  inspections.inspection_number,
+  inspections.building_name,
+  inspections.unit_name,
+  inspections.inspection_type,
+  inspections.date
+FROM inspections";
+
+$stmt = $pdo->query($sql);
+
+// Use fetchAll to get all rows as an array
+$inspections = $stmt ? $stmt->fetchAll(PDO::FETCH_ASSOC) : [];
+
+// Safely count the inspections
+$inspectionsCount = is_array($inspections) ? count($inspections) : 0;
+
+?>
 <!doctype html>
 <html lang="en">
   <!--begin::Head-->
@@ -203,15 +225,14 @@
         <div class="sidebar-brand">
           <!--begin::Brand Link-->
           <a href="./index.html" class="brand-link">
-            <!--begin::Brand Image-->
-            <img
-              src="../../../dist/assets/img/AdminLTELogo.png"
-              alt="AdminLTE Logo"
-              class="brand-image opacity-75 shadow"
-            />
-            <!--end::Brand Image-->
+            
             <!--begin::Brand Text-->
-            <span class="brand-text fw-light">AdminLTE 4</span>
+            <span class="brand-text font-weight-light"><b class="p-2"
+                style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
+                class="p-2"
+                style=" border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107;">JENGOPAY</b></span>
+            </a>
+            </span>
             <!--end::Brand Text-->
           </a>
           <!--end::Brand Link-->
@@ -237,69 +258,54 @@
           </div>
           <div class="card-body">
               <div class="form-container">
-                  <form>
+                  <form id="form_new_inspection" onsubmit="submitInspectionForm(event)" >
                       <div class="row g-3">
                         <!-- Year -->
                           <div class="col-md-4 " >
                               <label class="form-label"><b>Inspection Number</b></label>
-                              <input type="number" placeholder="124">
+                              <input class="form-control" type="number" name="inspection_number" placeholder="124">
                           </div>
                           <!-- No -->
                           <div class="col-md-4">
-                          <label class="form-label"><b> Building</b></label>
-                          <div class="select-option-container">
-                              <div class="custom-select">All Buildings</div>
-                              <div class="select-options mt-1">
-                                <div class="selected" data-value="all">All Buildings</div>
-                                <div data-value="Manucho">Manucho</div>
-                                <div data-value="Pink House">Pink House</div>
-                                <div data-value="White House">White House</div>
-                              </div>
-                            </div>
+                            <label class="form-label"><b> Building</b></label>
+                            <select class="form-control" name="building_name" id="building_name" >
+                              <option value="Crown Z">Crown Z</option>
+                              <option value="Manucho">Manucho</option>
+                              <option value="Pink House">Pink House</option>
+                              <option value="White House">White House</option>
+                            </select>
                           </div>
-
                           <!-- Expense of the Month -->
                           <div class="col-md-4 ">
                               <label class="form-label"><b> Unit</b></label>
-                              <div class="select-option-container">
-                              <div class="custom-select">All Buildings</div>
-                              <div class="select-options mt-1">
-                                <div class="selected" data-value="all">All Buildings</div>
-                                <div data-value="Manucho">Manucho</div>
-                                <div data-value="Pink House">Pink House</div>
-                                <div data-value="White House">White House</div>
-                              </div>
-                             </div>
+                              <select class="form-control" name="unit_name" id="unit_name" >
+                                <option value="C219">C219</option>
+                                <option value="B14">B14</option>
+                                <option value="M145">M56</option>
+                                <option value="M5">M290</option>
+                              </select>
                           </div>
                       </div>
                       <hr>
                       <div class="row g-3 mt-2">
                           <div class="col-md-6">
-                          <label class="form-label"><b> Inspection Type</b></label>
-                          <div class="select-option-container">
-                              <div class="custom-select">Inspection Type</div>
-                              <div class="select-options mt-1">
-                                <div class="selected" data-value="all">Move In</div>
-                                <div data-value="Manucho">Move Out</div>
+                              <label class="form-label"><b> Inspection Type</b></label>
+                              <select class="form-control" name="inspection_type" id="inspection_type" >
+                                <option value="Move In">Move In</option>
+                                <option value="Move Out">Move Out</option>
                                 
-                              </div>
-                            </div>
-                      
+                              </select>
                           </div>
 
                           <div class="col-md-6">
                           <label class="form-label"><b> Inspection Date</b></label>
-                          <input type="date">
+                          <input type="date" name="date">
                       </div>
 
                       <hr>
 
                       <div class="row g-3 mt-2">
-                          <!-- <div class="col-6">
-                              <button type="button" class="btn btn-custom btn-sm" id="addRow">
-                                <i class="fa fa-plus"></i>
-                              SUBMIT</button>
-                          </div> -->
+                          
                           <div class="col-12 mt-2 d-flex justify-content-end">
                               <button type="submit" class="btn btn-custom btn-sm" style="height: fit-content; color:#FFC107; background:#00192D;">  SUBMIT</button>
                           </div>
@@ -347,8 +353,6 @@
             <!-- BEGIN ROW -->
             <div class="row">
 
-
-
               <h6 class="mb-0 contact_section_header summary mb-2"></i> SUMMARY</h6>
 
               <div class="container-fluid">
@@ -358,7 +362,7 @@
                         <div class="summary-card_icon"> <i class="fas fa-clipboard-check"></i></div>
                       <div>
                         <div class="summary-card_label">Scheduled</div>
-                        <div class="summary-card_value" >&nbsp;1,000</div>
+                        <div class="summary-card_value" >&nbsp; <?= $inspectionsCount ?> </div>
                       </div>
                     </div>
                   </div>
@@ -394,15 +398,18 @@
                   </div>
                 </div>
               </div>
+            </div>
 
-            <!-- /end row -->
+            
 
+            
+              <!-- /end row -->
             
 
 
               <div class="row mt-2 mb-2 add-inspection-container">
-                <div class="col-md-12 add-inspection-btn bg-white p-2">
-
+                <div class="col-md-12 ">
+                 <div class="add-inspection-btn bg-white p-2">
                         <a class="btn-link add-inspection-btn "
                             data-bs-toggle="collapse"
                             href="#selectInspectionSection"
@@ -412,6 +419,8 @@
                             style="color: #00192D; font-weight:600; font-size: 16px; text-decoration: none;">
                           <span>+</span> Perform An Inspection
                         </a>
+                 </div>
+                        
                 </div>
 
               <div class="col-md-12 collapse bg-white selectInspectionSection" id="selectInspectionSection" >
@@ -1488,149 +1497,99 @@
                 </div>
               </div>
 
-          </div>
+             </div>
           <!-- /end row -->
+           
 
 
             <!-- End row -->
             <!-- Begin Row -->
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="inspection-details-container bg-white p-2">
 
+                        <div id="filter-pdf-excel-section" class="filter-pdf-excel-section mb-2">
 
-            <div class="row second rounded-2" >
-                <!-- Start col -->
-                <div class="col-md-12  ">
-                  <div class="row bg-white " style="border:1px solid #E2E2E2" >
-                    <div class="col-12 p-2">
-                      <div class="row">
-                        <div class="col-md-122">
-                          <select id="categoryFilter">
-                            <option value="">-- Select Property--</option>
-                            <option value="technology">All</option>
-                            <option value="health">Manucho</option>
-                            <option value="business">Ebenezer</option>
-                            <option value="education">Crown Z</option>
-                          </select>
+                          <div class="d-flex" style="gap: 10px;">
+                            <div class="select-option-container">
+                              <div class="custom-select">All Buildings</div>
+                              <div class="select-options mt-1">
+                                <div class="selected" data-value="all">All Buildings</div>
+                                <div data-value="Manucho">Manucho</div>
+                                <div data-value="Pink House">Pink House</div>
+                                <div data-value="White House">White House</div>
+                              </div>
+                            </div>
+                            <div id="custom-search">
+                              <input type="text" id="searchInput" placeholder="Search tenant...">
+                            </div>
+                          </div>
+
+                          <div>
+
+                          </div>
+
+                          <div class="d-flex">
+                                <div id="custom-buttons"></div>
+                          </div>
+
                         </div>
 
-                      </div>
-                    </div>
-                  </div>
-
-
-                  <div class="row p-2 bg-white">
-                      <div class="card second_col " style="border-radius: none !important;">
-
-
-                          <div class="card-body" style="overflow-x: scroll;">
-                          <table id="maintenance" class="display summary-table">
-                              <thead class="mb-2">
-                              <tr>
-                                  <th>Date</th>
-                                  <th>PROPERTY</th>
-                                  <th>UNIT</th>
-                                  <th>TYPE</th>
-                                  <th>Inspection No</th>
-                                  <!-- <th>INSPECTOR</th> -->
-                                  <th>Attached Files</th>
-                                  <th>STATUS</th>
-                                  <th>ACTION</th>
-                              </tr>
-                              </thead>
-                              <tbody>
-                              <tr >
-                                  <td>11/13/2024 </td>
-                                  <td>Manucho APARTMENTS </td>
-                                  <td>C39</td>
-                                  <td>Bed-sitter</td>
-                                  <td>123</td>
-                                  <!-- <td>Keroche Farms</td> -->
-                                  <td></td>
-                                 <td><div class="status completed">
-                                  <i class="fas fa-clipboard-check"></i>
-                                  Completed</div></td>
-                                  <td id="more">
-                                    <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View"><i class="fas fa-eye"></i>
-                                     </button>
-                                    <button class="btn btn-sm" style="background-color:  #193042; color:#FFCCCC; margin-right: 2px; " data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-trash"></i></button>
-                                    <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-edit"></i></button>
-                                                                  <!-- File Upload Section -->
-                                  <form action="/upload" method="POST" enctype="multipart/form-data">
-                                    <label for="fileUpload" class="attachment-icon">
-                                        📎 <!-- Attachment Icon -->
-                                    </label>
-                                    <input type="file" id="fileUpload" name="fileUpload" class="file-input" style="display:none;" onchange="submitForm()">
-                                </form>
-                                  </td>
-                              </tr>
-                              <tr >
-                                <td>11/13/2024 </td>
-                                <td>Manucho APARTMENTS </td>
-                                <td>C20</td>
-                                <td>Bed-sitter</td>
-                                <td>123</td>
-                                <!-- <td>Keroche Farms</td> -->
-                                <td></td>
-                                <td><div class="status in-progress">
-                                  <i class="fas fa-spinner fa-spin"></i>
-                                  InProgress</div></td>
-                                <td id="more">
-                                  <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fas fa-eye"></i>
-                                  </button>
-                                  <button class="btn btn-sm" style="background-color:  #193042; color:#FFCCCC; margin-right: 2px; " data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-trash"></i></button>
-                                  <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-edit"></i></button>
-                                                                <!-- File Upload Section -->
-                                <form action="/upload" method="POST" enctype="multipart/form-data">
-                                  <label for="fileUpload" class="attachment-icon">
-                                      📎 <!-- Attachment Icon -->
-                                  </label>
-                                  <input type="file" id="fileUpload" name="fileUpload" class="file-input" style="display:none;" onchange="submitForm()">
-                              </form>
-                                </td>
-                            </tr>
-
-                            <tr >
-                              <td>11/13/2024 </td>
-                              <td>Manucho APARTMENTS </td>
-                              <td>C25</td>
-                              <td>Bed-sitter</td>
-                              <td>123</td>
-                              <!-- <td>Keroche Farms</td> -->
-                              <td></td>
-                              <td> <div class="status incomplete">
-                                <i class="fas fa-question-circle">Incomplete</i>
-                               </div></td>
-                              <td id="more">
-                                <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fas fa-eye"></i>
-                                </button>
-                                <button class="btn btn-sm" style="background-color:  #193042; color:#FFCCCC; margin-right: 2px; " data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-trash"></i></button>
-                                <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-edit"></i></button>
-                                                              <!-- File Upload Section -->
-                              <form action="/upload" method="POST" enctype="multipart/form-data">
-                                <label for="fileUpload" class="attachment-icon">
-                                    📎 <!-- Attachment Icon -->
-                                </label>
-                                <input type="file" id="fileUpload" name="fileUpload" class="file-input" style="display:none;" onchange="submitForm()">
-                            </form>
-                              </td>
-                          </tr>
-                              <!-- Add more rows as needed -->
-                              </tbody>
+                        <table id="maintenance" class="display summary-table">
+                                <thead class="mb-2">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>PROPERTY + UNIT</th>
+                                    <th>TYPE</th>
+                                    <th>Inspection No</th>                                    
+                                    <th>Attached Files</th>
+                                    <th>STATUS</th>
+                                    <th>ACTION</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php if ($inspectionsCount > 0): ?>
+                                    <?php foreach ($inspections as $inspection): ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($inspection['date']) ?></td>
+                                            <td><?= htmlspecialchars($inspection['building_name']) ?></td>
+                                            
+                                            <td>Bed-sitter</td>
+                                            <td><?= htmlspecialchars($inspection['inspection_number']) ?></td>
+                                            <td></td>
+                                            <td>
+                                                <div class="status completed">
+                                                    <i class="fas fa-spinner fa-spin"></i>
+                                                    In progress
+                                                </div>
+                                            </td>
+                                            <td id="more">
+                                                <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View"><i class="fas fa-eye"></i></button>
+                                                <button class="btn btn-sm" style="background-color: #193042; color:#FFCCCC; margin-right: 2px;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-trash"></i></button>
+                                                <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-edit"></i></button>
+                                                
+                                                <!-- File Upload Section -->
+                                                <form action="/upload" method="POST" enctype="multipart/form-data">
+                                                    <label for="fileUpload" class="attachment-icon">📎</label>
+                                                    <input type="file" id="fileUpload" name="fileUpload" class="file-input" style="display:none;" onchange="submitForm()">
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="8" style="text-align:center;">No inspections found.</td>
+                                    </tr>
+                                <?php endif; ?>
+                                </tbody>
 
                           </table>
+                      </div> 
 
-
-
-                          </div>
-
-
-
-                          <div class="card-footer">
-
-                          </div>
-
-                      </div>
                   </div>
+                              
                 </div>
+              
 
 
 
@@ -1769,20 +1728,61 @@
                                   <!-- DATE TABLES -->
 <script>
 
-                        $(document).ready(function() {
-                            var table = $('#maintenance').DataTable({
-                                "lengthChange": false,
-                                "dom": 'Bfrtip',
-                                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
-                                "initComplete": function() {
-                                    // Move the buttons to the first .col-md-6
-                                    table.buttons().container().appendTo('#maintenance_wrapper .col-md-6:eq(0)');
-
-                                    // Move the search box to the second .col-md-6
-                                    $('#maintenance_filter').appendTo('#maintenance_wrapper .col-md-6:eq(1)');
+                        $(document).ready(function () {
+                          const table = $('#maintenance').DataTable({
+                            dom: 'Brtip', // ⬅ Changed to include Buttons in DOM
+                            order: [], // ⬅ disables automatic ordering by DataTables
+                            buttons: [
+                              {
+                                extend: 'excelHtml5',
+                                text: 'Excel',
+                                exportOptions: {
+                                  columns: ':not(:last-child)' // ⬅ Exclude last column
                                 }
-                            });
+                              },                              
+                              {
+                                extend: 'pdfHtml5',
+                                text: 'PDF',
+                                exportOptions: {
+                                  columns: ':not(:last-child)' // ⬅ Exclude last column
+                                },
+                                customize: function (doc) {
+                                  // Center table
+                                  doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+
+                                  // Optional: center-align the entire table
+                                  doc.styles.tableHeader.alignment = 'center';
+                                  doc.styles.tableBodyEven.alignment = 'center';
+                                  doc.styles.tableBodyOdd.alignment = 'center';
+
+                                  const body = doc.content[1].table.body;
+                                      for (let i = 1; i < body.length; i++) { // start from 1 to skip header
+                                        if (body[i][4]) {
+                                          body[i][4].color = 'blue'; // set email column to blue
+                                        }
+                                      }
+
+                                }
+                              },
+                                  {
+                                extend: 'print',
+                                text: 'Print',
+                                exportOptions: {
+                                  columns: ':not(:last-child)' // ⬅ Exclude last column from print
+                                }
+                              }
+                            ]
                           });
+
+            // Append buttons to your div
+            table.buttons().container().appendTo('#custom-buttons');
+
+            // Custom search
+            $('#searchInput').on('keyup', function () {
+              table.search(this.value).draw();
+            });
+
+          });
 </script>
 
 

@@ -30,10 +30,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $phone = $_POST['tenant_m_contact'] ?? '';
                 $id_no = $_POST['tenant_id_no'] ?? '';
                 $residence = $_POST['building_name'] ?? '';
+                $pets = $_POST['pets']?? '';
                 $unit = $_POST['unit_name'] ?? '';
+                $income_source = $_POST['income_source'] ?? '';
+                
+                $work_place = $_POST['tenant_workplace'] ?? '';
+                $job_title = $_POST['tenant_jobtitle'] ?? '';
                 $status = 'active';
 
-                if ($first_name && $middle_name && $email && $phone && $id_no && $residence && $unit) {
+                if ($first_name && $middle_name && $pets && $email && $phone && $id_no && $residence && $unit && $income_source && $work_place && $job_title) {
                     try {
                         $pdo->beginTransaction();
 
@@ -43,8 +48,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $user_id = $pdo->lastInsertId();
 
                         // Step 2: Insert into tenants
-                        $stmtTenant = $pdo->prepare("INSERT INTO tenants (user_id, phone_number, id_no, residence, unit, status) VALUES (?, ?, ?, ?, ?, ?)");
-                        $stmtTenant->execute([$user_id, $phone, $id_no, $residence, $unit, $status]);
+                        $stmtTenant = $pdo->prepare("INSERT INTO tenants (user_id, phone_number, id_no, residence, unit,income_source,work_place, job_title, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                        $stmtTenant->execute([$user_id, $phone, $id_no, $residence, $unit, $income_source,$work_place, $job_title, $status]);
+                        $tenant_id = $pdo->lastInsertId();
+
+
+                        //step 3: Insert into pets
+                        foreach ($pets as $pet) {
+                        
+                            $stmtPet = $pdo->prepare("INSERT INTO pets (tenant_id, pet_name) VALUES (?, ?)");
+                            $stmtPet->execute([$tenant_id, $pet]);
+                        }
+                
 
                         $pdo->commit();
                         echo "Tenant and user added successfully!";
