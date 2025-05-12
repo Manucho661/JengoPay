@@ -76,12 +76,7 @@ label {
 }
 
 
-select {
-  appearance: none; /* Hides default arrow in some browsers */
-  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="%23FFC107" d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
-  background-size: 16px;
-  padding-right: 30px;
-}
+
 input:focus, select:focus, textarea:focus {
   border-color: #FFC107 !important;
   outline: none;
@@ -92,15 +87,7 @@ input:focus, select:focus, textarea:focus {
   outline: none;
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5) !important;
 }
-.row input[type="text"], input[type="date"]{
-  border: none;
-      border-bottom: 1px solid #000;
-      padding: 4px;
-      min-width: 150px;
-      font-family: Georgia, serif;
-      font-size: 1em;
-}
-                                                                            /* BUTTONS */
+                                                                       /* BUTTONS */
 
 .btn{
     font: bold !important;
