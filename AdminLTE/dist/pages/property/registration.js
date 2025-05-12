@@ -1205,3 +1205,164 @@ function hideSolarProvider() {
 //   }
 // }
 // });
+
+
+
+//Step by Step Building Registration and Validations DOM -->
+    $(document).ready(function() {
+
+        $("#stepOneNextBtn").click(function(e) {
+            e.preventDefault();
+            $("#sectionTwo").show();
+            $("#sectionOne").hide();
+
+            $("#stepOneIndicatorNo").html('<i class="fa fa-check"><i>');
+            $("#stepOneIndicatorNo").css('background-color', '#FFC107');
+            $("#stepOneIndicatorNo").css('color', '#00192D');
+            $("#stepOneIndicatorText").html('Done');
+        });
+
+        $("#stepTwoBackBtn").click(function(e) {
+            e.preventDefault();
+            $("#sectionTwo").hide();
+            $("#sectionOne").show();
+
+            $("#stepOneIndicatorNo").html('1');
+            $("#stepOneIndicatorNo").css('background-color', '#00192D');
+            $("#stepOneIndicatorNo").css('color', '#FFC107');
+            $("#stepOneIndicatorText").html('Overview');
+        });
+
+        $("#stepTwoNextBtn").click(function(e) {
+            e.preventDefault();
+            $("#sectionTwo").hide();
+            $("#sectionThree").show();
+
+            $("#stepTwoIndicatorNo").html('<i class="fa fa-check"><i>');
+            $("#stepTwoIndicatorNo").css('background-color', '#FFC107');
+            $("#stepTwoIndicatorNo").css('color', '#00192D');
+            $("#stepTwoIndicatorText").html('Done');
+        });
+
+        $("#stepThreeBackBtn").click(function(e) {
+            e.preventDefault();
+            $("#sectionTwo").show();
+            $("#sectionThree").hide();
+
+            $("#stepTwoIndicatorNo").html('2');
+            $("#stepTwoIndicatorNo").css('background-color', '#00192D');
+            $("#stepTwoIndicatorNo").css('color', '#FFC107');
+            $("#stepTwoIndicatorText").html('Identification');
+        });
+
+        $("#stepThreeNextBtn").click(function(e) {
+            e.preventDefault();
+            $("#sectionThree").hide();
+            $("#sectionFour").show();
+
+            $("#stepThreeIndicatorNo").html('<i class="fa fa-check"><i>');
+            $("#stepThreeIndicatorNo").css('background-color', '#FFC107');
+            $("#stepThreeIndicatorNo").css('color', '#00192D');
+            $("#stepThreeIndicatorText").html('Done');
+        });
+
+        $("#stepFourBackBtn").click(function(e) {
+            e.preventDefault();
+            $("#sectionThree").show();
+            $("#sectionFour").hide();
+
+            $("#stepThreeIndicatorNo").html('3');
+            $("#stepThreeIndicatorNo").css('background-color', '#00192D');
+            $("#stepThreeIndicatorNo").css('color', '#FFC107');
+            $("#stepThreeIndicatorText").html('Ownership');
+        });
+
+        $("#stepFourNextBtn").click(function(e) {
+            e.preventDefault();
+            $("#sectionFour").hide();
+            $("#sectionFive").show();
+
+            $("#stepFourIndicatorNo").html('<i class="fa fa-check"><i>');
+            $("#stepFourIndicatorNo").css('background-color', '#FFC107');
+            $("#stepFourIndicatorNo").css('color', '#00192D');
+            $("#stepFourIndicatorText").html('Done');
+        });
+
+        $("#stepFiveBackBtn").click(function(e) {
+            e.preventDefault();
+            $("#sectionFour").show();
+            $("#sectionFive").hide();
+
+            $("#stepFourIndicatorNo").html('4');
+            $("#stepFourIndicatorNo").css('background-color', '#00192D');
+            $("#stepFourIndicatorNo").css('color', '#FFC107');
+            $("#stepFourIndicatorText").html('Utilities');
+        });
+
+        $("#stepFiveNextBtn").click(function(e) {
+            e.preventDefault();
+            $("#sectionFive").hide();
+            $("#sectionSix").show();
+
+            $("#stepFiveIndicatorNo").html('<i class="fa fa-check"><i>');
+            $("#stepFiveIndicatorNo").css('background-color', '#FFC107');
+            $("#stepFiveIndicatorNo").css('color', '#00192D');
+            $("#stepFiveIndicatorText").html('Done');
+        });
+
+        $("#stepSixBackBtn").click(function(e) {
+            e.preventDefault();
+            $("#sectionFive").show();
+            $("#sectionSix").hide();
+
+            $("#stepFiveIndicatorNo").html('5');
+            $("#stepFiveIndicatorNo").css('background-color', '#00192D');
+            $("#stepFiveIndicatorNo").css('color', '#FFC107');
+            $("#stepFiveIndicatorText").html('Regulations');
+        });
+
+        $("#stepSixNextBtn").click(function(e) {
+            e.preventDefault();
+            $("#sectionSix").hide();
+            $("#sectionSeven").show();
+
+            $("#stepSixIndicatorNo").html('<i class="fa fa-check"><i>');
+            $("#stepSixIndicatorNo").css('background-color', '#FFC107');
+            $("#stepSixIndicatorNo").css('color', '#00192D');
+            $("#stepSixIndicatorText").html('Done');
+        });
+
+        $("#stepSevenBackBtn").click(function(e) {
+            e.preventDefault();
+            $("#sectionSix").show();
+            $("#sectionSeven").hide();
+
+            $("#stepSixIndicatorNo").html('6');
+            $("#stepSixIndicatorNo").css('background-color', '#00192D');
+            $("#stepSixIndicatorNo").css('color', '#FFC107');
+            $("#stepSixIndicatorText").html('Insurance');
+        });
+
+        $("#stepSevenNextBtn").click(function(e) {
+            e.preventDefault();
+            $("#sectionSeven").hide();
+            $("#sectionEight").show();
+
+            $("#stepSevenIndicatorNo").html('<i class="fa fa-check"><i>');
+            $("#stepSevenIndicatorNo").css('background-color', '#FFC107');
+            $("#stepSevenIndicatorNo").css('color', '#00192D');
+            $("#stepSevenIndicatorText").html('Done');
+        });
+
+        $("#stepEightBackBtn").click(function(e) {
+            e.preventDefault();
+            $("#sectionSeven").show();
+            $("#sectionEight").hide();
+
+            $("#stepSevenIndicatorNo").html('7');
+            $("#stepSevenIndicatorNo").css('background-color', '#00192D');
+            $("#stepSevenIndicatorNo").css('color', '#FFC107');
+            $("#stepSevenIndicatorText").html('Photos');
+        });
+
+    });
