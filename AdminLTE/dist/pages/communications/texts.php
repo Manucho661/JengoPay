@@ -1,6 +1,7 @@
 <?php
 include '../db/connect.php'; // Make sure $pdo is available
 
+
 // === HANDLE NEW THREAD SUBMISSION (POST) ===
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['title']) && !empty($_POST['message'])) {
     try {
@@ -9,23 +10,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['title']) && !empty($
         $unit_id = $_POST['unit_id'] ?? '';
         $tenant = $_POST['tenant'] ?? '';
         $building_name = $_POST['building_name'] ?? '';
+        // $files = uploadPhoto('files');
         $message = $_POST['message'];
         $now = date('Y-m-d H:i:s');
-        $upload_dir = "uploads/";
         $uploaded_files = [];
+        $upload_dir = "uploads/";
 
         // Handle file uploads
-        if (!empty($_FILES['attachments']['name'][0])) {
-            foreach ($_FILES['attachments']['name'] as $key => $name) {
-                $tmp_name = $_FILES['attachments']['tmp_name'][$key];
-                $target_file = $upload_dir . basename($name);
-                if (move_uploaded_file($tmp_name, $target_file)) {
-                    $uploaded_files[] = $target_file;
-                }
-            }
-        }
+        if (!empty($_FILES['files']['name'][0])) {
+          foreach ($_FILES['files']['name'] as $key => $name) {
+              $tmp_name = $_FILES['files']['tmp_name'][$key];
+              $unique_name = uniqid() . '_' . basename($name);
+              $target_file = $upload_dir . $unique_name;
 
-        $files_json = json_encode($uploaded_files);
+              if (!is_dir($upload_dir)) {
+                  mkdir($upload_dir, 0755, true);
+              }
+
+              if (move_uploaded_file($tmp_name, $target_file)) {
+                  $uploaded_files[] = $target_file;
+              }
+          }
+      }
+
+      $files_json = json_encode($uploaded_files);
+
+
+        $now = (new DateTime('now', new DateTimeZone('Africa/Nairobi')))->format('Y-m-d H:i:s');
+        echo $now;
 
         // Insert communication thread
         $stmt = $pdo->prepare("INSERT INTO communication (title, files, unit_id, tenant, building_name, created_at, updated_at) VALUES ( ?, ?, ?, ?, ?, ?, ?)");
@@ -80,7 +92,8 @@ $stmt = $pdo->prepare("
         c.building_name,
         (SELECT content FROM messages WHERE thread_id = c.thread_id ORDER BY timestamp DESC LIMIT 1) AS last_message,
         (SELECT timestamp FROM messages WHERE thread_id = c.thread_id ORDER BY timestamp DESC LIMIT 1) AS last_time,
-        (SELECT COUNT(*) FROM messages WHERE thread_id = c.thread_id AND is_read = 0) AS unread_count
+        (SELECT COUNT(*) FROM messages WHERE thread_id = c.thread_id AND is_read = 0) AS unread_count,
+        (SELECT file_path FROM message_files WHERE thread_id = c.thread_id LIMIT 1) AS preview_file
     FROM communication c
     ORDER BY last_time DESC
 ");
@@ -96,21 +109,86 @@ if (isset($_GET['thread_id']) && $_GET['thread_id'] > 0) {
         ->execute(['thread_id' => $threadId]);
 
     // Fetch and display messages
-    $stmt = $pdo->prepare("SELECT sender, content, timestamp FROM messages WHERE thread_id = :thread_id ORDER BY timestamp ASC");
-    $stmt->execute(['thread_id' => $threadId]);
+    // Get all messages and their possible files
+$stmt = $pdo->prepare("
+SELECT m.message_id, m.sender, m.content, m.timestamp,
+       mf.file_path
+FROM messages m
+LEFT JOIN message_files mf ON mf.thread_id = m.thread_id
+WHERE m.thread_id = :thread_id
+ORDER BY m.timestamp ASC
+");
+$stmt->execute(['thread_id' => $threadId]);
 
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $sender = htmlspecialchars($row['sender']);
-        $content = htmlspecialchars($row['content']);
-        $timestamp = date('H:i', strtotime($row['timestamp']));
-        $class = ($sender === 'landlord') ? 'outgoing' : 'incoming';
+$messages = [];
 
-        echo "<div class='message $class'>
-                <div class='bubble'>$content</div>
-                <div class='timestamp'>$timestamp</div>
-              </div>";
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+$id = $row['message_id'];
+
+if (!isset($messages[$id])) {
+    $messages[$id] = [
+        'sender' => $row['sender'],
+        'content' => $row['content'],
+        'timestamp' => $row['timestamp'],
+        'files' => [],
+    ];
+}
+
+if (!empty($row['file_path'])) {
+    $messages[$id]['files'][] = $row['file_path'];
+}
+}
+
+// Display messages
+foreach ($messages as $msg) {
+$sender = htmlspecialchars($msg['sender']);
+$content = htmlspecialchars($msg['content']);
+$timestamp = date('H:i', strtotime($msg['timestamp']));
+$class = ($sender === 'landlord') ? 'outgoing' : 'incoming';
+
+echo "<div class='message $class'>
+        <div class='bubble'>$content</div>";
+
+// Attachments (if any)
+if (!empty($msg['files'])) {
+    echo "<div class='attachments mt-2'>";
+    foreach ($msg['files'] as $file) {
+        $basename = basename($file);
+        echo "<a href='$file' target='_blank' class='file-link'>$basename</a><br>";
     }
-    exit; // Stop further page output if this is used in a dynamic fetch context
+    echo "</div>";
+}
+
+echo "<div class='timestamp'>$timestamp</div>
+      </div>";
+}
+
+// Check if this thread has a message marked as not viewed before
+$welcomeShown = false;
+$checkFirstViewStmt = $pdo->prepare("
+    SELECT thread_id FROM messages
+    WHERE thread_id = :thread_id AND is_first_viewed = 0
+    ORDER BY timestamp ASC LIMIT 1
+");
+$checkFirstViewStmt->execute(['thread_id' => $threadId]);
+
+if ($checkFirstViewStmt->rowCount() > 0) {
+    $welcomeShown = true;
+
+    // Mark it as viewed so we don't show "Welcome" again
+    $updateFirstViewStmt = $pdo->prepare("
+        UPDATE messages
+        SET is_first_viewed = 1
+        WHERE thread_id = :thread_id AND is_first_viewed = 0
+    ");
+    $updateFirstViewStmt->execute(['thread_id' => $threadId]);
+}
+
+if ($welcomeShown) {
+    echo "<div class='system-message'>👋 Welcome! You have a new message.</div>";
+}
+
+
 }
 ?>
 
@@ -230,6 +308,19 @@ img {
 #filePreviews{
 display: flex;
 }
+.attachments ul {
+  list-style: none;
+  padding-left: 0;
+}
+.attachments li {
+  margin-bottom: 5px;
+}
+.attachments a {
+  color: #007BFF;
+  text-decoration: underline;
+}
+
+
 </style>
 
   </head>
@@ -559,58 +650,67 @@ display: flex;
                                       <button id="new_text" onclick="opennewtextPopup()" class="btn new-text"><i class="bi bi-plus"></i> New Chat</button>
                                   </div>
                               </div>
-
                               <div class="table-responsive">
-                                  <table class="table table-hover table-summary-messages" style="border-radius: 20px; flex-grow: 1;">
-                                  <thead class="">
-                                  <tr>
-                                      <th>DATE</th>
-                                      <th>TITLE</th>
-                                      <th>SENT BY</th>
-                                      <th>SENT TO</th> <!-- Add this line -->
-                                      <th>ACTION</th>
-                                  </tr>
-                              </thead>
+                              <table class="table table-hover table-summary-messages" style="border-radius: 20px; flex-grow: 1;">
+  <thead>
+    <tr>
+      <th>DATE</th>
+      <th>TITLE</th>
+      <th>SENT BY</th>
+      <th>SENT TO</th>
+      <th>ACTION</th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php if (!empty($communications)): ?>
+      <?php foreach ($communications as $comm):
+        $datetime = new DateTime($comm['created_at'] ?? date('Y-m-d H:i:s'));
+        $date = $datetime->format('d-m-Y');
+        $time = $datetime->format('h:iA');
+        $sender = htmlspecialchars($comm['tenant'] ?: 'Tenant');
+        $email = ''; // Add email logic if needed
+        $recipient = htmlspecialchars($comm['recipient'] ?? 'Sender Name'); // Adjust key as needed
+        $title = htmlspecialchars($comm['title']);
+        $threadId = $comm['thread_id'];
+      ?>
+        <tr class="table-row">
+          <td class="timestamp">
+            <div class="date"><?= $date ?></div>
+            <div class="time"><?= $time ?></div>
+          </td>
+          <td class="title"><?= $title ?></td>
+          <td><div class="recipient"><?= $recipient ?></div></td>
+          <td>
+            <div class="sender"><?= $sender ?></div>
+            <div class="sender-email"><?= $email ?></div>
+          </td>
+          <td>
+            <button class="btn btn-primary view" onclick="loadConversation(<?= $threadId ?>)">
+              <i class="bi bi-eye"></i> View
+            </button>
+            <button class="btn btn-danger delete" data-thread-id="<?= $threadId ?>">
+              <i class="bi bi-trash3"></i> Delete
+            </button>
+          </td>
+        </tr>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <tr>
+        <td colspan="5" class="text-center">No data available</td>
+      </tr>
+    <?php endif; ?>
+  </tbody>
+</table>
 
-                              <tbody>
-                              <?php foreach ($communications as $comm):
-                                  $datetime = new DateTime($comm['created_at']);
-                                  $date = $datetime->format('d-m-Y'); // Only the date
-                                  $sender = 'Me'; // assuming the landlord is the one logged in
-                                  $recipient = htmlspecialchars($comm['tenant'] ?: 'N/A'); // this is the recipient
-                                  $title = htmlspecialchars($comm['title']);
-                                  $threadId = $comm['thread_id'];
-                              ?>
-                              <tr class="table-row">
-                                  <td class="timestamp">
-                                      <div class="date"><?= $date ?></div>
-                                  </td>
-                                  <td class="title"><?= $title ?></td>
-                                  <td>
-                                      <div class="sender"><?= $sender ?></div>
-                                  </td>
-                                  <td>
-                                      <div class="recipient"><?= $recipient ?></div>
-                                  </td>
-                                  <td>
-                                      <button class="btn btn-primary view" onclick="loadConversation(<?= $threadId ?>)">
-                                          <i class="bi bi-eye"></i> View
-                                      </button>
-                                      <button class="btn btn-danger delete" data-thread-id="<?= $threadId ?>">
-                                          <i class="bi bi-trash3"></i> Delete
-                                      </button>
-                                  </td>
-                              </tr>
-                              <?php endforeach; ?>
-                          </tbody>
-
-
-
-                                  </table>
                               </div>
                           </div>
                       </div>
                         <!-- End Row messages-summmary -->
+
+
+                        <!-- start  -->
+
+                        <!-- end -->
 
                       <div class="row h-100 align-items-stretch" id="individual-message-summmary" style="border:1px solid #E2E2E2; padding: 0 !important; display: none; max-height: 95%;">
 
@@ -644,7 +744,16 @@ display: flex;
 
                                   <div class="individual-topic-profile-container">
                                   <div class="individual-topic"><?= htmlspecialchars($comm['title']) ?></div>
-                                  <div class="individual-message mt-2"><?= htmlspecialchars(mb_strimwidth($comm['last_message'], 0, 60, '...'))?></div>
+                                  <div class="individual-message mt-2">
+                                  <?= htmlspecialchars(mb_strimwidth($comm['last_message'], 0, 60, '...'))?>
+                                  <?php if (!empty($comm['preview_file'])): ?>
+                                  <div class="attached-file mt-1">
+                                    📎 <a href="<?= htmlspecialchars($comm['preview_file']) ?>" target="_blank">
+                                      <?= htmlspecialchars(basename($comm['preview_file'])) ?>
+                                    </a>
+                                  </div>
+                                <?php endif; ?>
+                                 </div>
                                   </div>
 
                                     <div class="d-flex justify-content-end time-count">
@@ -652,10 +761,11 @@ display: flex;
                                    <?php
                                     $datetime = new DateTime($comm['created_at']);
                                     echo $datetime->format('d/m/y');
-                                  ?></div>
-                                      <div class="message-count mt-2">
-                                        <?= $comm['unread_count'] > 0 ? $comm['unread_count'] : '' ?>
-                                      </div>
+                                  ?>
+                                  </div>
+                                <div class="message-count mt-2">
+                                  <?= $comm['unread_count'] > 0 ? $comm['unread_count'] : '' ?>
+                                </div>
 
  <!-- Optional: Replace 1 with actual reply count if available -->
                                   </div>
@@ -684,6 +794,13 @@ display: flex;
                                   <div class="message outgoing">I'm doing great, thanks!</div>
                                 </div>
                                <div class="input-area">
+
+                              <!-- Attachment input -->
+                              <input type="file" id="fileInput" multiple style="display: none;" onchange="handleFileChange(event)">
+                                <button class="btn attach-button" onclick="document.getElementById('fileInput').click();">
+                                  <i class="fa fa-paperclip"></i>
+                                </button>
+
                                   <div class="input-box" id="inputBox" contenteditable="true"></div>
                                   <button name="incoming_message" class="btn message-send-button" onclick="sendMessage()"><i class="fa fa-paper-plane"></i> </button>
                               </div>
@@ -805,7 +922,7 @@ display: flex;
                         <!-- File input for multiple file types -->
 
                         <div style="padding-bottom: 2%;">
-                        <input  name="files"  type="file" id="fileInput" onchange="handleFiles(event)" class="form-control" multiple>
+                        <input   name="files[]"  type="file" id="fileInput" onchange="handleFiles(event)" class="form-control" multiple>
 
                         <!-- Section to display selected files' previews and sizes -->
                         <div id="filePreviews"></div>
@@ -831,6 +948,24 @@ display: flex;
 
 
 <!-- !-- create new text -->
+
+<script>
+let selectedFiles = [];
+
+function handleFileChange(event) {
+  const files = event.target.files;
+  selectedFiles = Array.from(files);
+
+  const previewContainer = document.getElementById('filePreview');
+  previewContainer.innerHTML = '';
+
+  selectedFiles.forEach(file => {
+    const fileName = document.createElement('div');
+    fileName.textContent = `📎 ${file.name}`;
+    previewContainer.appendChild(fileName);
+  });
+}
+</script>
 
 <script>
   // Function to handle multiple files selection
