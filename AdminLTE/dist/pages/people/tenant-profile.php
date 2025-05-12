@@ -1,30 +1,43 @@
 <?php
- include '../db/connect.php';
+include '../db/connect.php';
 
+$tenant = null;
+$pets = [];
+$files = [];
 
- if (isset($_GET['id'])) {
-  $user_id = $_GET['id'];
+if (isset($_GET['id'])) {
+    $user_id = $_GET['id'];
 
+    // Step 1: Get tenant + user info
+    $stmt = $pdo->prepare("
+        SELECT tenants.id AS tenant_id, tenants.income_source, tenants.work_place, tenants.job_title, 
+               tenants.residence, tenants.unit, tenants.status, tenants.id_no,
+               users.first_name, users.middle_name, users.email
+        FROM tenants
+        JOIN users ON tenants.user_id = users.id
+        WHERE tenants.user_id = ?
+    ");
+    $stmt->execute([$user_id]);
+    $tenant = $stmt->fetch(PDO::FETCH_ASSOC);
 
-  // Get tenant info joined with user info
-  $stmt = $pdo->prepare("
-      SELECT tenants.income_source, tenants.work_place, tenants.job_title, tenants.residence, tenants.unit, tenants.status, tenants.id_no,
-           users.first_name, users.middle_name, users.email
-    FROM tenants
-    JOIN users ON tenants.user_id = users.id
-    WHERE tenants.user_id = ?
-  ");
-  $stmt->execute([$user_id]);
-  $tenant = $stmt->fetch(PDO::FETCH_ASSOC);
-  if (!$tenant) {
-    echo "<p>No tenant found with ID: $user_id</p>";
-  }
+    if ($tenant) {
+        $tenant_id = $tenant['tenant_id'];
 
- }
- else {
-  $tenant = null; // or redirect to error page
+        // Step 2: Get pets for the tenant
+        $petsStmt = $pdo->prepare("SELECT * FROM pets WHERE tenant_id = ?");
+        $petsStmt->execute([$tenant_id]);
+        $pets = $petsStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        
+    } else {
+        echo "<p>No tenant found with ID: $user_id</p>";
+    }
+} else {
+    echo "<p>No user ID provided in query string.</p>";
 }
+
 ?>
+
 <!doctype html>
 <html lang="en">
   <!--begin::Head-->
@@ -672,7 +685,7 @@
                   <div class="row mt-3">
                        <h6 class="mb-0 contact_section_header"> </i> Pets</h6>
                        <div class="col-md-9 pets">
-                        <table>
+                        <table id="pets-table">
                           <thead>
                             <th>Name</th>
                             <th>Type</th>
@@ -680,8 +693,7 @@
                             <th>License Number</th>
                           </thead>
                           <tbody>
-                            <tr> <td colspan="4">No pets info</td></tr>
-
+                            
                           </tbody>
                         </table>
 
@@ -887,13 +899,16 @@
   </div>
 </div>
 
+          <script src="tenant-profile.js"></script>
 
-
-
-
-
-
-
+ <?php if (isset($tenant_id)): ?>
+  <script>
+    const tenantId = <?= json_encode($tenant_id) ?>;
+    console.log("Tenant ID from PHP:", tenantId);
+    fetchPets(tenantId); // ✅ call the JS function directly
+  </script>
+<?php endif; ?>
+         
 <!--
         <div class="overlaying" id="overlaying">
           <div class="invoicy-container">

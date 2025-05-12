@@ -49,7 +49,6 @@ document.addEventListener('DOMContentLoaded', function (){
         options.forEach(opt => opt.classList.remove('selected'));
         option.classList.add('selected');
       });
-
     });
   });
 

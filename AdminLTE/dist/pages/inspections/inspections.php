@@ -1543,7 +1543,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                                     <th>TYPE</th>
                                     <th>Inspection No</th>                                    
                                     <th>Attached Files</th>
-                                    <th>STATUS</th>
+                                    <th>STATUS</th>             
                                     <th>ACTION</th>
                                 </tr>
                                 </thead>
