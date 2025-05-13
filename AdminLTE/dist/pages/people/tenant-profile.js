@@ -1,6 +1,6 @@
 function fetchPersonalInfo(){
 
-  fetch(`../actions/tenant_profile/fetch_records.php?user_id=${tenantId}`)
+  fetch(`actions/tenant_profile/fetch_records.php?user_id=${user_id}`)
 
     .then(response => response.json())
 
@@ -8,9 +8,15 @@ function fetchPersonalInfo(){
       console.log('Personal info:', data);
 
       // Example: populate fields
-      document.getElementById('fullName').textContent = `${data.first_name} ${data.middle_name}`;
+      document.getElementById('first_name').textContent = data.first_name;
+      document.getElementById('middle_name').textContent = data.middle_name;
+      document.getElementById('status').textContent = data.status;
       document.getElementById('email').textContent = data.email;
+      document.getElementById('phone').textContent = data.phone_number;
       document.getElementById('id_no').textContent = data.id_no;
+      document.getElementById('income_source').textContent = data.income_source;
+      document.getElementById('work_place').textContent = data.work_place;
+      document.getElementById('job_title').textContent = data.job_title;
       document.getElementById('unit').textContent = data.unit;
     })
     .catch(error => {
@@ -23,7 +29,7 @@ function fetchPets() {
 
   const tableBody = document.querySelector('#pets-table tbody');
   tableBody.innerHTML = '<tr><td colspan="4"><div class="loader"></div></td></tr>';
-  fetch(`../actions/tenant_profile/pets/fetch_records.php?tenant_id=${tenantId}`)
+  fetch(`actions/pets/fetch_records.php?tenant_id=${tenantId}`)
     .then(response => {
       console.log('HTTP status:', response.status);
       return response.text(); // ⬅ read as text first

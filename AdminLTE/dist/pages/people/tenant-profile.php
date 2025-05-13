@@ -1,42 +1,3 @@
-<?php
-include '../db/connect.php';
-
-$tenant = null;
-$pets = [];
-$files = [];
-
-if (isset($_GET['id'])) {
-    $user_id = $_GET['id'];
-
-    // Step 1: Get tenant + user info
-    $stmt = $pdo->prepare("
-        SELECT tenants.id AS tenant_id, tenants.income_source, tenants.work_place, tenants.job_title,
-               tenants.residence, tenants.unit, tenants.status, tenants.id_no,
-               users.first_name, users.middle_name, users.email
-        FROM tenants
-        JOIN users ON tenants.user_id = users.id
-        WHERE tenants.user_id = ?
-    ");
-    $stmt->execute([$user_id]);
-    $tenant = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($tenant) {
-        $tenant_id = $tenant['tenant_id'];
-
-        // Step 2: Get pets for the tenant
-        $petsStmt = $pdo->prepare("SELECT * FROM pets WHERE tenant_id = ?");
-        $petsStmt->execute([$tenant_id]);
-        $pets = $petsStmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-    } else {
-        echo "<p>No tenant found with ID: $user_id</p>";
-    }
-} else {
-    echo "<p>No user ID provided in query string.</p>";
-}
-
-?>
 
 <!doctype html>
 <html lang="en">
@@ -366,8 +327,8 @@ if (isset($_GET['id'])) {
             <div class="row  " >
               <div class="col-sm-6">
                 <div class="d-flex">
-                  <h3 class="section_header tenantName"><i class="fas fa-user-tie icon" style="color:#FFC107"></i><?= htmlspecialchars($tenant['first_name']) ?> &nbsp;<?= htmlspecialchars($tenant['middle_name']) ?>  </h3>
-                  <h6 class="active">Active</h6>
+                  <h3 class="section_header tenantName"><i class="fas fa-user-tie icon" style="color:#FFC107"></i> <span id="first_name"> </span> &nbsp; <span id="middle_name"> </span> </h3>
+                  <h6 class="active" id="status"></h6>
                 </div>
 
                 <!-- <h3 >   </h3> -->
@@ -413,7 +374,7 @@ if (isset($_GET['id'])) {
                                   <div class="labal-value p-2" style="display: flex; gap: 5px;   align-items: center;">
                                     <div class="label"> <i class="fa fa-envelope personal-info-icon "></i>
                                       <span class="personal-info item-name email" > Email,</span> </div>
-                                    <div class="value"><b></i><?= htmlspecialchars($tenant['email']) ?></b></div>
+                                    <div class="value" ><b id="email"></b></div>
                                   </div>
                                 </div>
                               </div>
@@ -423,7 +384,7 @@ if (isset($_GET['id'])) {
                                   <!-- <i class="fas fa-calculator"></i> -->
                                     <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
                                       <div class="category"><i class="fas fa-phone icon personal-info-icon "></i> <span class="personal-info item-name" >Phone</span>  </div>
-                                      <div class="phone"><b>0757414722</b></div>
+                                      <div class="phone"><b id="phone"></b></div>
                                     </div>
                                 </div>
 
@@ -434,8 +395,8 @@ if (isset($_GET['id'])) {
                                 <!-- <i class="fas fa-calculator"></i> -->
                                   <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
                                     <div class="category"> <i class="fas fa-id-card personal-info-icon "></i> <span class="personal-info item-name">ID NO,</span></div>
-                                    <div class="number"><b>45862394</b></div>
-                                    <button class="btn view id rounded "> view </button>
+                                    <div class="number" ><b id="id_no">45862394</b></div>
+                                    <button class="btn view id rounded"> view </button>
                                   </div>
                                 </div>
                               </div>
@@ -458,7 +419,7 @@ if (isset($_GET['id'])) {
                                 <!-- <i class="fas fa-calculator"></i> -->
                                   <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
                                     <div class="category"><i class="fas fa-briefcase personal-info-icon"></i> <span class="personal-info item-name" > Income Source,</span> </div>
-                                    <div class="number"><b><?= htmlspecialchars($tenant['income_source']) ?></b></div>
+                                    <div class="number" ><b id="income_source"><?= htmlspecialchars($tenant['income_source']) ?></b></div>
                                   </div>
                                 </div>
 
@@ -470,7 +431,7 @@ if (isset($_GET['id'])) {
                                     <!-- <i class="fas fa-calculator"></i> -->
                                       <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
                                         <div class="category"><i class="fas fa-globe icon personal-info-icon "></i> <span class="personal-info item-name" >Work Place,</span>  </div>
-                                        <div class="number"><b><?= htmlspecialchars($tenant['work_place']) ?></b></div>
+                                        <div class="number"><b id="work_place"></b></div>
                                       </div>
                                   </div>
                               </div>
@@ -480,7 +441,7 @@ if (isset($_GET['id'])) {
                             <!-- <i class="fas fa-calculator"></i> -->
                               <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
                                 <div class="category"> <i class="fas fa-id-card personal-info-icon "></i> <span class="personal-info item-name">Job Title,</span></div>
-                                <div class="number"><b><?= htmlspecialchars($tenant['job_title']) ?></b></div>
+                                <div class="number"><b id="job_title"></b></div>
                               </div>
                             </div>
                           </div>
@@ -909,6 +870,8 @@ if (isset($_GET['id'])) {
 
   </script>
 <?php endif; ?>
+
+
 
 <?php if (isset($_GET['id'])):
     $user_id = $_GET['id'];

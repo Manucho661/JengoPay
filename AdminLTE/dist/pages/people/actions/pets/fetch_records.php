@@ -17,7 +17,7 @@ $pets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // Fetch tenant details
 $stmt = $pdo->prepare("
   SELECT tenants.id AS tenant_id, tenants.income_source, tenants.work_place, tenants.job_title, 
-         tenants.residence, tenants.unit, tenants.status, tenants.id_no,
+         tenants.residence, tenants.unit, tenants.status, tenants.id_no, tenants.income_source, tenants.work_place, tenants.job_title,
          users.first_name, users.middle_name, users.email
   FROM tenants
   JOIN users ON tenants.user_id = users.id
