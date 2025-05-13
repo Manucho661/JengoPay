@@ -10,7 +10,7 @@ if (isset($_GET['id'])) {
 
     // Step 1: Get tenant + user info
     $stmt = $pdo->prepare("
-        SELECT tenants.id AS tenant_id, tenants.income_source, tenants.work_place, tenants.job_title, 
+        SELECT tenants.id AS tenant_id, tenants.income_source, tenants.work_place, tenants.job_title,
                tenants.residence, tenants.unit, tenants.status, tenants.id_no,
                users.first_name, users.middle_name, users.email
         FROM tenants
@@ -28,7 +28,7 @@ if (isset($_GET['id'])) {
         $petsStmt->execute([$tenant_id]);
         $pets = $petsStmt->fetchAll(PDO::FETCH_ASSOC);
 
-        
+
     } else {
         echo "<p>No tenant found with ID: $user_id</p>";
     }
@@ -402,7 +402,7 @@ if (isset($_GET['id'])) {
 
               <!-- start row -->
                 <div class="row mt-3 personal-info">
-                  
+
                       <h6 class="mb-0 contact_section_header mb-2"> </i> Personal Info</h6>
                   <div class="col-md-12">
                       <div class="row">
@@ -426,7 +426,7 @@ if (isset($_GET['id'])) {
                                       <div class="phone"><b>0757414722</b></div>
                                     </div>
                                 </div>
-                                
+
                               </div>
 
                               <div class="col-md-3">
@@ -693,7 +693,7 @@ if (isset($_GET['id'])) {
                             <th>License Number</th>
                           </thead>
                           <tbody>
-                            
+
                           </tbody>
                         </table>
 
@@ -901,80 +901,29 @@ if (isset($_GET['id'])) {
 
           <script src="tenant-profile.js"></script>
 
- <?php if (isset($tenant_id)): ?>
+<?php if (isset($tenant_id)): ?>
   <script>
     const tenantId = <?= json_encode($tenant_id) ?>;
     console.log("Tenant ID from PHP:", tenantId);
     fetchPets(tenantId); // ✅ call the JS function directly
+
   </script>
 <?php endif; ?>
-         
-<!--
-        <div class="overlaying" id="overlaying">
-          <div class="invoicy-container">
-          <div class="receipt-container" id="receipt">
-            <button class="close-btn" onclick="closeOverlay()">×</button>
-            <h2>Payment Receipt</h2>
-            <p> Nairobi,  KENYA</p>
-            <p><strong>Date:</strong> <span id="date"></span></p>
 
-            <table>
-              <td>Manucho Apartments</td>
-              <td>John</td>
-              <th>A11</th>
-              <td>KSH80,000</td>
-              <td>KSH80,000</td>
-              <td>MPESA</td>
-              <td>TBM34KGNJ8</td>
-              <td>10-12-2025</td>
-              <td>KSH0</td>
-            </table>
-        </div>
+<?php if (isset($_GET['id'])):
+    $user_id = $_GET['id'];
+  ?>
+  <script>
+    const user_id = <?= json_encode($user_id) ?>;
+    console.log("UsersID:", user_id);
+    fetchPersonalInfo( user_id); // ✅ call the JS function directly
 
-        <button class="print-btn" onclick="printReceipt()">Print Receipt</button>
-     -->
-
-
-    <!--end::App Wrapper-->
-    <!--begin::Script-->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
-
-    <!-- invoice -->
-    <script>
-      // Set current date for the invoice
-      document.getElementById('invoice-date').textContent = new Date().toLocaleDateString();
-
-      // // Calculate and update grand total
-      // function calculateTotal() {
-      //     let total = 0;
-      //     document.querySelectorAll(".total-price").forEach(cell => {
-      //         total += parseFloat(cell.textContent);
-      //     });
-      //     document.getElementById("grand-total").textContent = total.toFixed(2);
-      // }
-      // calculateTotal();
-
-      // Function to print invoice
-    function printInvoice() {
-        // Hide close button and print button before printing
-        document.querySelector(".close-btn").style.display = "none";
-        document.querySelector(".btns").style.display = "none";
-
-        // Print the invoice content
-        window.print();
-
-        // After print, restore the content visibility
-        window.onafterprint = function() {
-            document.querySelector(".close-btn").style.display = "block";
-            document.querySelector(".btns").style.display = "block";
-        };
-    }
   </script>
-<!-- invoice end -->
+<?php endif; ?>
 
 
 
-<!--Begin sidebar script -->
+
 <script>
   fetch('../bars/sidebar.html')  // Fetch the file
       .then(response => response.text()) // Convert it to text
@@ -982,90 +931,6 @@ if (isset($_GET['id'])) {
           document.getElementById('sidebar').innerHTML = data; // Insert it
       })
       .catch(error => console.error('Error loading the file:', error)); // Handle errors
-</script>
-<!-- end sidebar script -->
-
-    <!-- <script>
-      // Function to print the receipt
-      function printReceipt() {
-          window.print(); // Opens the print dialog
-      }
-
-      // Set current date on the receipt
-      document.getElementById("date").textContent = new Date().toLocaleDateString();
-  </script> -->
-
-<!--  Maintenance script -->
-<script>
-  // Function to open the complaint popup
-  function maintenancePopup() {
-    document.getElementById("maintenancePopup").style.display = "flex";
-  }
-
-  // Function to close the complaint popup
-  function closemaintenancePopup() {
-    document.getElementById("maintenancePopup").style.display = "none";
-  }
-</script>
-
-<!-- end Maintenance script -->
-
-<!-- reciept overlay -->
-<script>
-  // Function to open the receipt popup
-  function openPopup() {
-    document.getElementById("complaintPopup").style.display = "flex";
-  }
-
-  // Function to close the receipt popup
-  function closePopup() {
-    document.getElementById("complaintPopup").style.display = "none";
-  }
-</script>
-<!-- end receipt overlay -->
-<!-- invoice overlay -->
-<script>
-  function showOverlay() {
-    document.getElementById('invoiceOverlay').style.display = 'flex';
-  }
-
-  // function closeOverlay() {
-  //   document.getElementById('.overlay').style.display = 'none';
-  // }
-</script>
-
-
- <!-- close overlay -->
-<script>
-  function closeOverlay() {
-    document.querySelector('.overlay').style.display = 'none';
-  }
-</script>
-
-<script>
-  // Get the overlay and link elements
-const receiptOverlay = document.getElementById('receiptOverlay');
-const showReceiptLink = document.getElementById('showReceiptLink');
-const downloadReceiptBtn = document.getElementById('downloadReceiptBtn');
-const closeReceiptBtn = document.getElementById('closeReceiptBtn');
-
-// Show the receipt overlay when clicking the "Show Receipt" link
-showReceiptLink.addEventListener('click', function(event) {
-  event.preventDefault();  // Prevent the default link behavior (navigation)
-  receiptOverlay.style.display = 'flex';  // Show the overlay
-});
-
-// Hide the receipt overlay when clicking the "Download Receipt" button
-downloadReceiptBtn.addEventListener('click', function() {
-  alert('Downloading receipt...');  // Example action (you can add actual download functionality here)
-  receiptOverlay.style.display = 'none';  // Hide the overlay after download
-});
-
-// Close the receipt overlay when clicking the "Close" button
-closeReceiptBtn.addEventListener('click', function() {
-  receiptOverlay.style.display = 'none';  // Hide the overlay
-});
-
 </script>
 
 <!-- Begin script for datatable -->
@@ -1098,25 +963,7 @@ $(document).ready(function() {
 
 </script>
 
-<script>
 
-  // JavaScript to handle hover and hide functionality
-  const  more= document.getElementById("more");
-  const more_icon = document.getElementById("more_icon");
-  const more_options = document.getElementById("more_options");
-
-  // Show panel when hovering over the accordion
-  more_icon.addEventListener("mouseenter", () => {
-    more_options.style.display = "block";
-  });
-
-  // Hide panel when moving out of both accordion and panel
-   more.addEventListener("mouseleave", () => {
-    more_options.style.display = "none";
-});
-
-
-</script>
 
 <!-- End script for data_table -->
 
@@ -1171,176 +1018,9 @@ $(document).ready(function() {
       integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
       crossorigin="anonymous"
     ></script>
-    <script>
-      // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
-      // IT'S ALL JUST JUNK FOR DEMO
-      // ++++++++++++++++++++++++++++++++++++++++++
 
-      /* apexcharts
-       * -------
-       * Here we will create a few charts using apexcharts
-       */
 
-      //-----------------------
-      // - MONTHLY SALES CHART -
-      //-----------------------
 
-      const sales_chart_options = {
-        series: [
-          {
-            name: 'Digital Goods',
-            data: [28, 48, 40, 19, 86, 27, 90],
-          },
-          {
-            name: 'Electronics',
-            data: [65, 59, 80, 81, 56, 55, 40],
-          },
-        ],
-        chart: {
-          height: 180,
-          type: 'area',
-          toolbar: {
-            show: false,
-          },
-        },
-        legend: {
-          show: false,
-        },
-        colors: ['#0d6efd', '#20c997'],
-        dataLabels: {
-          enabled: false,
-        },
-        stroke: {
-          curve: 'smooth',
-        },
-        xaxis: {
-          type: 'datetime',
-          categories: [
-            '2023-01-01',
-            '2023-02-01',
-            '2023-03-01',
-            '2023-04-01',
-            '2023-05-01',
-            '2023-06-01',
-            '2023-07-01',
-          ],
-        },
-        tooltip: {
-          x: {
-            format: 'MMMM yyyy',
-          },
-        },
-      };
-
-      const sales_chart = new ApexCharts(
-        document.querySelector('#sales-chart'),
-        sales_chart_options,
-      );
-      sales_chart.render();
-
-      //---------------------------
-      // - END MONTHLY SALES CHART -
-      //---------------------------
-
-      function createSparklineChart(selector, data) {
-        const options = {
-          series: [{ data }],
-          chart: {
-            type: 'line',
-            width: 150,
-            height: 30,
-            sparkline: {
-              enabled: true,
-            },
-          },
-          colors: ['var(--bs-primary)'],
-          stroke: {
-            width: 2,
-          },
-          tooltip: {
-            fixed: {
-              enabled: false,
-            },
-            x: {
-              show: false,
-            },
-            y: {
-              title: {
-                formatter: function (seriesName) {
-                  return '';
-                },
-              },
-            },
-            marker: {
-              show: false,
-            },
-          },
-        };
-
-        const chart = new ApexCharts(document.querySelector(selector), options);
-        chart.render();
-      }
-
-      const table_sparkline_1_data = [25, 66, 41, 89, 63, 25, 44, 12, 36, 9, 54];
-      const table_sparkline_2_data = [12, 56, 21, 39, 73, 45, 64, 52, 36, 59, 44];
-      const table_sparkline_3_data = [15, 46, 21, 59, 33, 15, 34, 42, 56, 19, 64];
-      const table_sparkline_4_data = [30, 56, 31, 69, 43, 35, 24, 32, 46, 29, 64];
-      const table_sparkline_5_data = [20, 76, 51, 79, 53, 35, 54, 22, 36, 49, 64];
-      const table_sparkline_6_data = [5, 36, 11, 69, 23, 15, 14, 42, 26, 19, 44];
-      const table_sparkline_7_data = [12, 56, 21, 39, 73, 45, 64, 52, 36, 59, 74];
-
-      createSparklineChart('#table-sparkline-1', table_sparkline_1_data);
-      createSparklineChart('#table-sparkline-2', table_sparkline_2_data);
-      createSparklineChart('#table-sparkline-3', table_sparkline_3_data);
-      createSparklineChart('#table-sparkline-4', table_sparkline_4_data);
-      createSparklineChart('#table-sparkline-5', table_sparkline_5_data);
-      createSparklineChart('#table-sparkline-6', table_sparkline_6_data);
-      createSparklineChart('#table-sparkline-7', table_sparkline_7_data);
-
-      //-------------
-      // - PIE CHART -
-      //-------------
-
-      const pie_chart_options = {
-        series: [700, 500, 400, 600, 300, 100],
-        chart: {
-          type: 'donut',
-        },
-        labels: ['Chrome', 'Edge', 'FireFox', 'Safari', 'Opera', 'IE'],
-        dataLabels: {
-          enabled: false,
-        },
-        colors: ['#0d6efd', '#20c997', '#ffc107', '#d63384', '#6f42c1', '#adb5bd'],
-      };
-
-      const pie_chart = new ApexCharts(document.querySelector('#pie-chart'), pie_chart_options);
-      pie_chart.render();
-
-      //-----------------
-      // - END PIE CHART -
-      //-----------------
-    </script>
-    <script>
-      document.getElementById("exportButton").addEventListener("click", function() {
-        // Example data (can be your table data or an array of objects)
-        const data = [
-          { Name: "John", Age: 30, City: "New York" },
-          { Name: "Jane", Age: 25, City: "London" },
-          { Name: "Mark", Age: 35, City: "Paris" }
-        ];
-
-        // Convert data to a worksheet
-        const ws = XLSX.utils.json_to_sheet(data);
-
-        // Create a new workbook and append the worksheet
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-
-        // Export the workbook as an Excel file
-        XLSX.writeFile(wb, "ExportedData.xlsx");
-      });
-    </script>
-    <!--end::Script-->
   </body>
   <!--end::Body-->
 </html>

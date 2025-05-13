@@ -1,7 +1,9 @@
 function fetchPersonalInfo(){
-  fetch(`../actions/tenant_profile/pets/fetch_records.php?tenant_id=${tenantId}`)
 
-      .then(response => response.json())
+  fetch(`../actions/tenant_profile/fetch_records.php?user_id=${tenantId}`)
+
+    .then(response => response.json())
+
     .then(data => {
       console.log('Personal info:', data);
 
@@ -18,7 +20,7 @@ function fetchPersonalInfo(){
 }
 
 function fetchPets() {
-   
+
   const tableBody = document.querySelector('#pets-table tbody');
   tableBody.innerHTML = '<tr><td colspan="4"><div class="loader"></div></td></tr>';
   fetch(`../actions/tenant_profile/pets/fetch_records.php?tenant_id=${tenantId}`)
