@@ -62,7 +62,6 @@
 
     <!-- scripts for data_table -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="announcements.css">
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
@@ -327,9 +326,10 @@
             <div class="row  " >
               <div class="col-sm-6">
                 <div class="d-flex">
-                  <h3 class="section_header tenantName"><i class="fas fa-user-tie icon" style="color:#FFC107"></i> <span id="first_name"> </span> &nbsp; <span id="middle_name"> </span> </h3>
-                  <h6 class="active" id="status"></h6>
+                  <h3 class="section_header tenantName"><i class="fas fa-user-tie icon" style="color:#FFC107"></i> <span id="first_name"> </span> <span id="middle_name"> </span> </h3>
+                  <h6  class="active" id="status"></h6>
                 </div>
+                
 
                 <!-- <h3 >   </h3> -->
 
@@ -374,7 +374,7 @@
                                   <div class="labal-value p-2" style="display: flex; gap: 5px;   align-items: center;">
                                     <div class="label"> <i class="fa fa-envelope personal-info-icon "></i>
                                       <span class="personal-info item-name email" > Email,</span> </div>
-                                    <div class="value" ><b id="email"></b></div>
+                                    <div class="value" ><b id="email"> <span></span> </b></div>
                                   </div>
                                 </div>
                               </div>
@@ -419,7 +419,7 @@
                                 <!-- <i class="fas fa-calculator"></i> -->
                                   <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
                                     <div class="category"><i class="fas fa-briefcase personal-info-icon"></i> <span class="personal-info item-name" > Income Source,</span> </div>
-                                    <div class="number" ><b id="income_source"><?= htmlspecialchars($tenant['income_source']) ?></b></div>
+                                    <div class="number" ><b id="income_source"></b></div>
                                   </div>
                                 </div>
 
@@ -860,33 +860,23 @@
   </div>
 </div>
 
-          <script src="tenant-profile.js"></script>
+          
 
-<?php if (isset($tenant_id)): ?>
+
+
+
+
+<?php if (isset($_GET['id'])): ?>
   <script>
-    const tenantId = <?= json_encode($tenant_id) ?>;
-    console.log("Tenant ID from PHP:", tenantId);
-    fetchPets(tenantId); // ✅ call the JS function directly
-
-  </script>
-<?php endif; ?>
-
-
-
-<?php if (isset($_GET['id'])):
-    $user_id = $_GET['id'];
-  ?>
-  <script>
-    const user_id = <?= json_encode($user_id) ?>;
+    const user_id = <?= json_encode($_GET['id']) ?>;
     console.log("UsersID:", user_id);
-    fetchPersonalInfo( user_id); // ✅ call the JS function directly
-
   </script>
 <?php endif; ?>
 
 
 
 
+<script src="tenant-profile.js"></script>
 <script>
   fetch('../bars/sidebar.html')  // Fetch the file
       .then(response => response.text()) // Convert it to text
@@ -981,6 +971,9 @@ $(document).ready(function() {
       integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
       crossorigin="anonymous"
     ></script>
+
+
+<!--  -->
 
 
 

@@ -1,6 +1,6 @@
 
 <?php
- include '../db/connect.php';
+ include '../../../db/connect.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $type = $_POST['type'] ?? '';
@@ -33,12 +33,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $pets = $_POST['pets']?? '';
                 $unit = $_POST['unit_name'] ?? '';
                 $income_source = $_POST['income_source'] ?? '';
-                
+                $tenant_id_copy = $_FILES['tenant_id_copy']?? '';
                 $work_place = $_POST['tenant_workplace'] ?? '';
                 $job_title = $_POST['tenant_jobtitle'] ?? '';
                 $status = 'active';
 
-                if ($first_name && $middle_name && $pets && $email && $phone && $id_no && $residence && $unit && $income_source && $work_place && $job_title) {
+                if ($first_name && $middle_name && $pets && $email && $phone &&
+                    $id_no && $residence && $unit && $income_source && $work_place && $job_title &&
+                    isset($_FILES['tenant_id_copy']) &&
+                    $_FILES['tenant_id_copy']['error'] === UPLOAD_ERR_OK
+                    ) {
+                       // ✅ Step 1: Prepare file upload
+                       // Step 1: Set target folder (relative to current script)
+                            $uploadDir = __DIR__ . '/files/'; // Absolute path ensures it works correctly
+
+                            // Step 2: Create folder if it doesn't exist
+                            if (!file_exists($uploadDir)) {
+                                mkdir($uploadDir, 0777, true);
+                            }
+
+                            // Step 3: Get file details
+                            $originalName = $_FILES['tenant_id_copy']['name'];
+                            $tempPath = $_FILES['tenant_id_copy']['tmp_name'];
+                            $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+
+                            // Step 4: Validate file type
+                            $allowed = ['pdf', 'jpg', 'jpeg', 'png'];
+                            if (!in_array($extension, $allowed)) {
+                                echo "Invalid file type. Only PDF, JPG, JPEG, PNG allowed.";
+                                exit;
+                            }
+
+                            // Step 5: Set destination file path
+                            $filename = uniqid('id_copy_') . '.' . $extension;
+                            $destination = $uploadDir . $filename;
+
+                            // Step 6: Move uploaded file
+                            if (!move_uploaded_file($tempPath, $destination)) {
+                                echo "Failed to move uploaded file.";
+                                exit;
+                            }
+
+                            // ✅ Optional: Save filename to DB later
+                            echo "File uploaded successfully as $filename";
+
+
                     try {
                         $pdo->beginTransaction();
 
@@ -59,6 +98,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $stmtPet = $pdo->prepare("INSERT INTO pets (tenant_id, pet_name) VALUES (?, ?)");
                             $stmtPet->execute([$tenant_id, $pet]);
                         }
+                        
+                        // Step 4: Insert into files
+                        $stmtTenant = $pdo->prepare("INSERT INTO files (tenant_id, file_path) VALUES (?, ?)");
+                        $stmtTenant->execute([$tenant_id, $filename ]);
+                        
+
+
                 
 
                         $pdo->commit();

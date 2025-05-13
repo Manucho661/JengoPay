@@ -207,7 +207,7 @@ width: 100%;
       <section id="tenant-form" class="tenant-form">
                 <div class="container">
 
-                    <form id="form_for_tenant" onsubmit="submitTenantForm(event)">
+                    <form id="form_for_tenant" enctype="multipart/form-data" onsubmit="submitTenantForm(event)">
                         <!-- Main Tenant Information Entries -->
                         <div class="card shadow" id="mainTenantCard">
                             <div class="card-header" style="background-color:#00192D; color:#FFC107;">
@@ -304,7 +304,7 @@ width: 100%;
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label>Upload a Copy of Identification</label>
-                                                        <input type="file" class="form-control" id="tenant_id_copy" id="tenant_id_copy">
+                                                        <input type="file" class="form-control" name="tenant_id_copy" id="tenant_id_copy">
                                                     </div>
                                                     <b class="text-danger" id="tenant_id_copyError"></b>
                                                 </div>
