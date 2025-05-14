@@ -244,9 +244,12 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
       </aside>
       <!--end::Sidebar-->
       <!--begin::App Main-->
-      <main class="app-main" >
-
+      <main class="app-main">
                       <!--MAIN MODALS -->
+        <!-- Inspect -->
+         <section class="inspect" id="prfm_ipsn_plch">
+
+         </section>
         <!-- add inspection -->
          <section class="add-inspection" id="add-inspection" >
 
@@ -256,6 +259,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
               <div><button class="close-btn text-white" onclick="closeInspectionMDL()">×</button></div>
               
           </div>
+
           <div class="card-body">
               <div class="form-container">
                   <form id="form_new_inspection" onsubmit="submitInspectionForm(event)" >
@@ -328,12 +332,8 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
             <!--begin::Row-->
             <div class="row">
               <div class="col-sm-8">
-
                 <h3 class="mb-0 contact_section_header"> <i class="fas fa-search icon title-icon"></i>INSPECTIONS</h3>
-
-
                     <div class="row mt-2">
-
                 </div>
               </div>
 
@@ -408,1097 +408,12 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
 
 
               <div class="row mt-2 mb-2 add-inspection-container">
-                <div class="col-md-12 ">
-                 <div class="add-inspection-btn bg-white p-2">
-                        <a class="btn-link add-inspection-btn "
-                            data-bs-toggle="collapse"
-                            href="#selectInspectionSection"
-                            aria-expanded="false"
-                            aria-controls="moveInSection"
-                            onclick="hideOther('moveOutSection')"
-                            style="color: #00192D; font-weight:600; font-size: 16px; text-decoration: none;">
-                          <span>+</span> Perform An Inspection
-                        </a>
-                 </div>
-                        
-                </div>
+                
 
-              <div class="col-md-12 collapse bg-white selectInspectionSection" id="selectInspectionSection" >
-                      <div class="card-header">
-                        <div class="title select-section-title"> Select Inspection Type:</div>
-
-                        <a class="btn-link moveOut-btn select-btn"
-                        data-bs-toggle="collapse"
-                        href="#moveInSection"
-                        aria-expanded="false"
-                        aria-controls="moveInSection"
-                        onclick="hideOther('moveOutSection')"
-                        style="">
-                        <i class="fas fa-arrow-right" style="color: green;"></i> Move In </a>
-
-                    <!-- Move Out Button -->
-                       <a class="btn-link moveIn-btn select-btn"
-                        data-bs-toggle="collapse"
-                        href="#moveOutSection"
-                        aria-expanded="false"
-                        aria-controls="moveOutSection"
-                        onclick="hideOther('moveInSection')"
-                        style="">
-                         <i class="fas fa-door-open" style="color: red;"></i> Move Out
-                      </a>
-
-                </div>
-
-                                      <!-- MOVE IN INSPECTION COLUMN -->
-                <div class="col-md-12 collapse" id="moveInSection" >
-                  <div class="card">
-                    <div class="card-header" style="background: linear-gradient(to right, #00192D, #003D5B, #00788D); display: none;">
-                        <h6 class="text-white">Move out</h6>
-                    </div>
-                    <div class="card-body">
-                    <div id="stepper" class="bs-stepper">
-                      <div class="bs-stepper-header">
-                        <div class="step" data-target="#step1">
-                          <button class="step-trigger">
-                            <span class="bs-stepper-circle">1</span>
-                            <span class="bs-stepper-label">Move In</span>
-                          </button>
-                        </div>
-                        <div class="line"></div>
-                        <div class="step" data-target="#step2">
-                          <button class="step-trigger">
-                            <span class="bs-stepper-circle">2</span>
-                            <span class="bs-stepper-label">Move In</span>
-                          </button>
-                        </div>
-                        <div class="line"></div>
-                        <div class="step" data-target="#step3">
-                          <button class="step-trigger">
-                            <span class="bs-stepper-circle">3</span>
-                            <span class="bs-stepper-label">Move In</span>
-                          </button>
-                        </div>
-                        <div class="line"></div>
-                        <div class="step" data-target="#step4">
-                          <button class="step-trigger">
-                            <span class="bs-stepper-circle">4</span>
-                            <span class="bs-stepper-label">Move In</span>
-                          </button>
-                        </div>
-                        <div class="line"></div>
-                        <div class="step" data-target="#step5">
-                          <button class="step-trigger">
-                            <span class="bs-stepper-circle">5</span>
-                            <span class="bs-stepper-label">Move In</span>
-                          </button>
-                        </div>
-                        <div class="line"></div>
-                        <div class="step" data-target="#step6">
-                          <button class="step-trigger">
-                            <span class="bs-stepper-circle">6</span>
-                            <span class="bs-stepper-label">Move In</span>
-                          </button>
-                        </div>
-                      </div>
-                      <div id="step1" class="content">
-                        <div class="inpection-section-headers">Property & Tenant Information</div>
-
-                        <form>
-                          <div class="row">
-                            <div class="col-md-6">
-                              <label class="form-label">Property Name</label>
-                              <input type="text" class="form-control" placeholder="Ebenezer">
-                            </div>
-                            <div class="col-md-6">
-                              <label class="form-label">Unit Number</label>
-                              <input type="number" class="form-control" placeholder="Ebenezer">
-                            </div>
-                          </div>
-
-                          <div class="row">
-                            <div class="col-md-6">
-                              <label class="form-label">Landlord Name</label>
-                              <input type="text" class="form-control" placeholder="Ebenezer">
-                            </div>
-                            <div class="col-md-6">
-                              <label class="form-label">Tenant Name</label>
-                              <input type="text" class="form-control" placeholder="Ebenezer">
-                            </div>
-
-                          </div>
-
-                          <div class="row">
-
-                            <div class="col-md-6">
-                              <label class="form-label"> Inspection Date</label>
-                              <input type="date" class="form-control" placeholder="Ebenezer">
-                            </div>
-
-                            <div class="col-md-12 d-flex justify-content-end">
-                              <button type="button" class="btn btn-primary next-btn" onclick="stepper.next()">Next</button>
-
-                            </div>
-                          </div>
-
-                        </form>
-                      </div>
-                      <div id="step2" class="content">
-                        <div class="inpection-section-headers">Living Room & Common Areas</div>
-                        <form>
-                          <table class="inspection-table">
-                            <thead>
-                              <tr>
-                                <th>Item</th>
-                                <th>Condition at Move-In</th>
-                                <th>Comments</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td>Walls & Paint</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="walls" value="Good"> Good</label>
-                                  <label><input type="radio" name="walls" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="walls" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea placeholder="Add comments..."></textarea></td>
-                              </tr>
-                              <tr>
-                                <td>Ceiling</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="ceiling" value="Good"> Good</label>
-                                  <label><input type="radio" name="ceiling" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="ceiling" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-                              <tr>
-                                <td>Floor</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="flooring" value="Good"> Good</label>
-                                  <label><input type="radio" name="flooring" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="flooring" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-                              <tr>
-                                <td>Doors & Locks</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="doors" value="Good"> Good</label>
-                                  <label><input type="radio" name="doors" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="doors" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-                              <tr>
-                                <td>Windows & Glass</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="windows" value="Good"> Good</label>
-                                  <label><input type="radio" name="windows" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="windows" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-                              <tr>
-                                <td>Lighting Fixtures</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="lights" value="Good"> Good</label>
-                                  <label><input type="radio" name="lights" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="lights" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-                              <tr>
-                                <td>Electrical Outlets</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="outlets" value="Good"> Good</label>
-                                  <label><input type="radio" name="outlets" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="outlets" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-                              <tr>
-                                <td>Curtain Rods</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="curtains" value="Good"> Good</label>
-                                  <label><input type="radio" name="curtains" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="curtains" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-                            </tbody>
-                          </table>
-                          <div class="col-md-12 d-flex justify-content-between">
-                            <button type="button" class="btn btn-primary next-btn" onclick="stepper.previous()">Back</button>
-                            <button type="button" class="btn btn-primary next-btn" onclick="stepper.next()">Next</button>
-                          </div>
-
-                        </form>
-                      </div>
-                      <div id="step3" class="content">
-                        <div class="inpection-section-headers" >Kitchen </div>
-                        <form>
-                          <table class="inspection-table" >
-                            <thead>
-                              <tr>
-                                <th>Item</th>
-                                <th>Condition at Move-In</th>
-                                <th>Comments</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td>Cabinets and  Shelving</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="walls" value="Good"> Good</label>
-                                  <label><input type="radio" name="walls" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="walls" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea placeholder="Add comments..."></textarea></td>
-                              </tr>
-                              <tr>
-                                <td>CounterTops</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="ceiling" value="Good"> Good</label>
-                                  <label><input type="radio" name="ceiling" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="ceiling" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-                              <tr>
-                                <td>Sink and Taps</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="flooring" value="Good"> Good</label>
-                                  <label><input type="radio" name="flooring" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="flooring" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-                              <tr>
-                                <td>Plumbing(Leaks, Drainage)</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="doors" value="Good"> Good</label>
-                                  <label><input type="radio" name="doors" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="doors" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-                              <tr>
-                                <td>Cooker/Oven (If Applicable)</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="windows" value="Good"> Good</label>
-                                  <label><input type="radio" name="windows" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="windows" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-                              <tr>
-                                <td>Refrigerator</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="lights" value="Good"> Good</label>
-                                  <label><input type="radio" name="lights" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="lights" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-                              <tr>
-                                <td>Lighting Fixture</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="outlets" value="Good"> Good</label>
-                                  <label><input type="radio" name="outlets" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="outlets" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-
-                            </tbody>
-                          </table>
-                          <div class="col-md-12 d-flex justify-content-between">
-                            <button type="button" class="btn btn-primary next-btn" onclick="stepper.previous()">Back</button>
-                            <button type="button" class="btn btn-primary next-btn" onclick="stepper.next()">Next</button>
-                          </div>
-                        </form>
-                      </div>
-
-                      <div id="step4" class="content">
-                        <div class="inpection-section-headers" >Bedrooms </div>
-                        <form>
-                          <table class="inspection-table" >
-                            <thead>
-                              <tr>
-                                <th>Item</th>
-                                <th>Condition at Move-In</th>
-                                <th>Comments</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td>Wells and Paint</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="walls" value="Good"> Good</label>
-                                  <label><input type="radio" name="walls" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="walls" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea placeholder="Add comments..."></textarea></td>
-                              </tr>
-                              <tr>
-                                <td>Ceiling</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="ceiling" value="Good"> Good</label>
-                                  <label><input type="radio" name="ceiling" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="ceiling" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-                              <tr>
-                                <td>Floor</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="flooring" value="Good"> Good</label>
-                                  <label><input type="radio" name="flooring" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="flooring" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-                              <tr>
-                                <td>Window and Glass</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="doors" value="Good"> Good</label>
-                                  <label><input type="radio" name="doors" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="doors" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-                              <tr>
-                                <td>Wardrobes</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="windows" value="Good"> Good</label>
-                                  <label><input type="radio" name="windows" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="windows" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-                              <tr>
-                                <td>Curtain Rods</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="lights" value="Good"> Good</label>
-                                  <label><input type="radio" name="lights" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="lights" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-                              <tr>
-                                <td>Lighting Fixtures</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="outlets" value="Good"> Good</label>
-                                  <label><input type="radio" name="outlets" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="outlets" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-
-                            </tbody>
-                          </table>
-                          <div class="col-md-12 d-flex justify-content-between">
-                            <button type="button" class="btn btn-primary next-btn" onclick="stepper.previous()">Back</button>
-                            <button type="button" class="btn btn-primary next-btn" onclick="stepper.next()">Next</button>
-                          </div>
-
-                        </form>
-                      </div>
-
-                      <div id="step5" class="content">
-                        <div class="inpection-section-headers" >Washrooms</div>
-
-                        <form>
-                          <table class="inspection-table">
-                            <thead>
-                              <tr>
-                                <th>Item</th>
-                                <th>Condition at Move-In</th>
-                                <th>Comments</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td>Sinks and Taps</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="walls" value="Good"> Good</label>
-                                  <label><input type="radio" name="walls" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="walls" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea placeholder="Add comments..."></textarea></td>
-                              </tr>
-                              <tr>
-                                <td>WC/Toilet</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="ceiling" value="Good"> Good</label>
-                                  <label><input type="radio" name="ceiling" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="ceiling" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-                              <tr>
-                                <td>Showerhead</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="flooring" value="Good"> Good</label>
-                                  <label><input type="radio" name="flooring" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="flooring" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-                              <tr>
-                                <td>Plumbing(Leaks, Drainage)</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="doors" value="Good"> Good</label>
-                                  <label><input type="radio" name="doors" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="doors" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-                              <tr>
-                                <td>Bathroom Tiles and Grouting</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="windows" value="Good"> Good</label>
-                                  <label><input type="radio" name="windows" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="windows" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-
-                              <tr>
-                                <td>Lighting Fixtures</td>
-                                <td class="radio-group">
-                                  <label><input type="radio" name="outlets" value="Good"> Good</label>
-                                  <label><input type="radio" name="outlets" value="Fair"> Fair</label>
-                                  <label><input type="radio" name="outlets" value="Poor"> Poor</label>
-                                </td>
-                                <td><textarea></textarea></td>
-                              </tr>
-
-                            </tbody>
-                          </table>
-                          <div class="col-md-12 d-flex justify-content-between">
-                            <button type="button" class="btn btn-primary next-btn" onclick="stepper.previous()">Back</button>
-                            <button type="button" class="btn btn-primary next-btn" onclick="stepper.next()">Next</button>
-                          </div>
-                        </form>
-                      </div>
-
-                      <div id="step6" class="content">
-                        <form>
-                          <div class="section">
-                            <div class="inpection-section-headers" >Additional Notes & Observations</div>
-                            <textarea name="additional_notes" placeholder="Write any notes here..."></textarea>
-                          </div>
-
-                          <div class="section">
-                            <div class="inpection-section-headers" >Signatures</div>
-
-                            <div class="signatures">
-                              <div class="row">
-                                  <div class="col-md-4">
-                                    <label for="landlord_name">Landlord Name:</label>
-                                    <input type="text" id="landlord_name" name="landlord_name">
-                                  </div>
-                                  <div class="col-md-4">
-                                    <label for="landlord_signature">Signature:</label>
-                                    <input type="text" id="landlord_signature" name="landlord_signature">
-                                  </div>
-                                  <div class="col-md-4">
-                                    <label for="landlord_date">Date:</label>
-                                  <input type="date" id="landlord_date" name="landlord_date">
-                                </div>
-                              </div>
-
-                              <div class="row">
-                                <div class="col-md-4">
-                                  <label for="tenant_name">Tenant Name:</label>
-                                  <input type="text" id="tenant_name" name="tenant_name">
-                                </div>
-                                <div class="col-md-4">
-                                  <label for="tenant_signature">Signature:</label>
-                                  <input type="text" id="tenant_signature" name="tenant_signature">
-                                </div>
-                                <div class="col-md-4">
-                                  <label for="tenant_date">Date:</label>
-                                  <input type="date" id="tenant_date" name="tenant_date">
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-md-12 d-flex justify-content-between mt-2">
-                            <button type="button" class="btn btn-primary next-btn" onclick="stepper.previous()">Back</button>
-                            <button type="button" class="btn btn-primary next-btn" onclick="stepper.nex()">Cancel</button>
-                            <button type="submit" class="btn btn-success next-btn">Submit</button>
-                          </div>
-
-                        </form>
-                      </div>
-
-                    </div>
-                   </div>
-                  </div>
-                </div>
-                <!-- MOVE OUT INSPECTION COLUMN -->
-                <div class="col-md-12 collapse" id="moveOutSection">
-                  <div class="card">
-                    <div class="card-header" style="background: linear-gradient(to right, #00192D, #003D5B, #00788D); display: none;">
-                        <h6 class="text-white">Move out</h6>
-                    </div>
-                    <div class="card-body" style="overflow: auto;">
-                      <div id="MoveOut" class="bs-stepper">
-                        <div class="bs-stepper-header">
-                          <div class="step" data-target="#stepMoveOut1">
-                            <button class="step-trigger">
-                              <span class="bs-stepper-circle">1</span>
-                              <span class="bs-stepper-label">Move Out</span>
-                            </button>
-                          </div>
-                          <div class="line"></div>
-                          <div class="step" data-target="#stepMoveOut2">
-                            <button class="step-trigger">
-                              <span class="bs-stepper-circle">2</span>
-                              <span class="bs-stepper-label">Move Out</span>
-                            </button>
-                          </div>
-                          <div class="line"></div>
-                          <div class="step" data-target="#stepMoveOut3">
-                            <button class="step-trigger">
-                              <span class="bs-stepper-circle">3</span>
-                              <span class="bs-stepper-label">Move Out</span>
-                            </button>
-                          </div>
-                          <div class="line"></div>
-                          <div class="step" data-target="#stepMoveOut4">
-                            <button class="step-trigger">
-                              <span class="bs-stepper-circle">4</span>
-                              <span class="bs-stepper-label">Move Out</span>
-                            </button>
-                          </div>
-                          <div class="line"></div>
-                          <div class="step" data-target="#stepMoveOut5">
-                            <button class="step-trigger">
-                              <span class="bs-stepper-circle">5</span>
-                              <span class="bs-stepper-label">Move Out</span>
-                            </button>
-                          </div>
-                          <div class="line"></div>
-                          <div class="step" data-target="#stepMoveOut6">
-                            <button class="step-trigger">
-                              <span class="bs-stepper-circle">6</span>
-                              <span class="bs-stepper-label">Move Out</span>
-                            </button>
-                          </div>
-                          <div class="step" data-target="#stepMoveOut7">
-                            <button class="step-trigger">
-                              <span class="bs-stepper-circle">7</span>
-                              <span class="bs-stepper-label">Move Out</span>
-                            </button>
-                          </div>
-                        </div>
-
-                        <div id="stepMoveOut1" class="content">
-                          <div class="inpection-section-headers">Property & Tenant Information</div>
-
-                          <form>
-                            <div class="row">
-                              <div class="col-md-6">
-                                <label class="form-label">Property Name</label>
-                                <input type="text" class="form-control" placeholder="Ebenezer">
-                              </div>
-                              <div class="col-md-6">
-                                <label class="form-label">Unit Number</label>
-                                <input type="number" class="form-control" placeholder="Ebenezer">
-                              </div>
-                            </div>
-
-                            <div class="row">
-                              <div class="col-md-6">
-                                <label class="form-label">Landlord Name</label>
-                                <input type="text" class="form-control" placeholder="Ebenezer">
-                              </div>
-                              <div class="col-md-6">
-                                <label class="form-label">Tenant Name</label>
-                                <input type="text" class="form-control" placeholder="Ebenezer">
-                              </div>
-
-                            </div>
-
-                            <div class="row">
-
-                              <div class="col-md-6">
-                                <label class="form-label"> Inspection Date</label>
-                                <input type="date" class="form-control" placeholder="Ebenezer">
-                              </div>
-
-                              <div class="col-md-12 d-flex justify-content-end">
-                                <button type="button" class="btn btn-primary next-btn" onclick="stepper2.next()">Next</button>
-
-                              </div>
-                            </div>
-
-                          </form>
-                        </div>
-
-                        <div id="stepMoveOut2" class="content">
-                          <div class="inpection-section-headers">Living Room & Common Areas</div>
-                          <form>
-                            <table class="inspection-table">
-                              <thead>
-                                <tr>
-                                  <th>Item</th>
-                                  <th>Condition at Move-Out</th>
-                                  <th>Comments</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <td>Walls & Paint</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="walls" value="Good"> Good</label>
-                                    <label><input type="radio" name="walls" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="walls" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea placeholder="Add comments..."></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>Ceiling</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="ceiling" value="Good"> Good</label>
-                                    <label><input type="radio" name="ceiling" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="ceiling" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>Floor</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="flooring" value="Good"> Good</label>
-                                    <label><input type="radio" name="flooring" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="flooring" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>Doors & Locks</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="doors" value="Good"> Good</label>
-                                    <label><input type="radio" name="doors" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="doors" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>Windows & Glass</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="windows" value="Good"> Good</label>
-                                    <label><input type="radio" name="windows" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="windows" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>Lighting Fixtures</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="lights" value="Good"> Good</label>
-                                    <label><input type="radio" name="lights" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="lights" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>Electrical Outlets</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="outlets" value="Good"> Good</label>
-                                    <label><input type="radio" name="outlets" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="outlets" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>Curtain Rods</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="curtains" value="Good"> Good</label>
-                                    <label><input type="radio" name="curtains" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="curtains" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-                              </tbody>
-                            </table>
-                            <div class="col-md-12 d-flex justify-content-between">
-                              <button type="button" class="btn btn-primary next-btn" onclick="stepper2.previous()">Back</button>
-                              <button type="button" class="btn btn-primary next-btn" onclick="stepper2.next()">Next</button>
-                            </div>
-
-                          </form>
-                        </div>
-
-                        <div id="stepMoveOut3" class="content">
-                          <div class="inpection-section-headers" >Kitchen </div>
-                          <form>
-                            <table class="inspection-table" >
-                              <thead>
-                                <tr>
-                                  <th>Item</th>
-                                  <th>Condition at Move-Out</th>
-                                  <th>Comments</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <td>Cabinets and  Shelving</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="walls" value="Good"> Good</label>
-                                    <label><input type="radio" name="walls" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="walls" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea placeholder="Add comments..."></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>CounterTops</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="ceiling" value="Good"> Good</label>
-                                    <label><input type="radio" name="ceiling" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="ceiling" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>Sink and Taps</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="flooring" value="Good"> Good</label>
-                                    <label><input type="radio" name="flooring" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="flooring" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>Plumbing(Leaks, Drainage)</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="doors" value="Good"> Good</label>
-                                    <label><input type="radio" name="doors" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="doors" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>Cooker/Oven (If Applicable)</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="windows" value="Good"> Good</label>
-                                    <label><input type="radio" name="windows" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="windows" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>Refrigerator</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="lights" value="Good"> Good</label>
-                                    <label><input type="radio" name="lights" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="lights" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>Lighting Fixture</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="outlets" value="Good"> Good</label>
-                                    <label><input type="radio" name="outlets" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="outlets" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-
-                              </tbody>
-                            </table>
-                            <div class="col-md-12 d-flex justify-content-between">
-                              <button type="button" class="btn btn-primary next-btn" onclick="stepper2.previous()">Back</button>
-                              <button type="button" class="btn btn-primary next-btn" onclick="stepper2.next()">Next</button>
-                            </div>
-                          </form>
-                        </div>
-
-                        <div id="stepMoveOut4" class="content">
-                          <div class="inpection-section-headers" >Bedrooms </div>
-                          <form>
-                            <table class="inspection-table" >
-                              <thead>
-                                <tr>
-                                  <th>Item</th>
-                                  <th>Condition at Move-Out</th>
-                                  <th>Comments</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <td>Wells and Paint</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="walls" value="Good"> Good</label>
-                                    <label><input type="radio" name="walls" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="walls" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea placeholder="Add comments..."></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>Ceiling</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="ceiling" value="Good"> Good</label>
-                                    <label><input type="radio" name="ceiling" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="ceiling" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>Floor</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="flooring" value="Good"> Good</label>
-                                    <label><input type="radio" name="flooring" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="flooring" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>Window and Glass</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="doors" value="Good"> Good</label>
-                                    <label><input type="radio" name="doors" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="doors" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>Wardrobes</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="windows" value="Good"> Good</label>
-                                    <label><input type="radio" name="windows" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="windows" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>Curtain Rods</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="lights" value="Good"> Good</label>
-                                    <label><input type="radio" name="lights" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="lights" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>Lighting Fixtures</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="outlets" value="Good"> Good</label>
-                                    <label><input type="radio" name="outlets" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="outlets" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-
-                              </tbody>
-                            </table>
-                            <div class="col-md-12 d-flex justify-content-between">
-                              <button type="button" class="btn btn-primary next-btn" onclick="stepper2.previous()">Back</button>
-                              <button type="button" class="btn btn-primary next-btn" onclick="stepper2.next()">Next</button>
-                            </div>
-
-                          </form>
-                        </div>
-
-                        <div id="stepMoveOut5" class="content">
-                          <div class="inpection-section-headers" >Washrooms</div>
-
-                          <form>
-                            <table class="inspection-table">
-                              <thead>
-                                <tr>
-                                  <th>Item</th>
-                                  <th>Condition at Move-Out</th>
-                                  <th>Comments</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <td>Sinks and Taps</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="walls" value="Good"> Good</label>
-                                    <label><input type="radio" name="walls" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="walls" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea placeholder="Add comments..."></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>WC/Toilet</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="ceiling" value="Good"> Good</label>
-                                    <label><input type="radio" name="ceiling" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="ceiling" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>Showerhead</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="flooring" value="Good"> Good</label>
-                                    <label><input type="radio" name="flooring" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="flooring" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>Plumbing(Leaks, Drainage)</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="doors" value="Good"> Good</label>
-                                    <label><input type="radio" name="doors" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="doors" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>Bathroom Tiles and Grouting</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="windows" value="Good"> Good</label>
-                                    <label><input type="radio" name="windows" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="windows" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-
-                                <tr>
-                                  <td>Lighting Fixtures</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="outlets" value="Good"> Good</label>
-                                    <label><input type="radio" name="outlets" value="Fair"> Fair</label>
-                                    <label><input type="radio" name="outlets" value="Poor"> Poor</label>
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-
-                              </tbody>
-                            </table>
-                            <div class="col-md-12 d-flex justify-content-between">
-                              <button type="button" class="btn btn-primary next-btn" onclick="stepper2.previous()">Back</button>
-                              <button type="button" class="btn btn-primary next-btn" onclick="stepper2.next()">Next</button>
-                            </div>
-                          </form>
-                        </div>
-
-                        <div id="stepMoveOut6" class="content">
-                          <div class="inpection-section-headers" >Move Out Summary</div>
-
-                          <form>
-                            <table class="inspection-table">
-                              <thead>
-                                <tr>
-                                  <th>Item</th>
-                                  <th>Decision</th>
-                                  <th>Comments</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <td>Damaged beyond normal and repair</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="walls" value="Good"> Yes</label>
-                                    <label><input type="radio" name="walls" value="Fair"> No</label>
-
-                                  </td>
-                                  <td><textarea placeholder="Add comments..."></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>Cleaning Required</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="ceiling" value="Good"> Yes</label>
-                                    <label><input type="radio" name="ceiling" value="Fair"> No</label>
-
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td>Repairs Required</td>
-                                  <td class="radio-group">
-                                    <label><input type="radio" name="flooring" value="Good"> Yes</label>
-                                    <label><input type="radio" name="flooring" value="Fair"> No</label>
-
-                                  </td>
-                                  <td><textarea></textarea></td>
-                                </tr>
-                                <tr>
-                                  <td >Estimated Cost Of repairs</td>
-                                  <td colspan="2">
-                                    <label for=""></label>
-                                    <input type="number">
-
-
-                                  </td>
-
-                                </tr>
-                              </tbody>
-                            </table>
-                            <div class="col-md-12 d-flex justify-content-between">
-                              <button type="button" class="btn btn-primary next-btn" onclick="stepper2.previous()">Back</button>
-                              <button type="button" class="btn btn-primary next-btn" onclick="stepper2.next()">Next</button>
-                            </div>
-                          </form>
-                        </div>
-
-                        <div id="stepMoveOut7" class="content">
-                          <form>
-
-
-                            <div class="section">
-                              <div class="inpection-section-headers" >Signatures</div>
-
-                              <div class="signatures">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                      <label for="landlord_name">Landlord Name:</label>
-                                      <input type="text" id="landlord_name" name="landlord_name">
-                                    </div>
-                                    <div class="col-md-4">
-                                      <label for="landlord_signature">Signature:</label>
-                                      <input type="text" id="landlord_signature" name="landlord_signature">
-                                    </div>
-                                    <div class="col-md-4">
-                                      <label for="landlord_date">Date:</label>
-                                    <input type="date" id="landlord_date" name="landlord_date">
-                                  </div>
-                                </div>
-
-                                <div class="row">
-                                  <div class="col-md-4">
-                                    <label for="tenant_name">Tenant Name:</label>
-                                    <input type="text" id="tenant_name" name="tenant_name">
-                                  </div>
-                                  <div class="col-md-4">
-                                    <label for="tenant_signature">Signature:</label>
-                                    <input type="text" id="tenant_signature" name="tenant_signature">
-                                  </div>
-                                  <div class="col-md-4">
-                                    <label for="tenant_date">Date:</label>
-                                    <input type="date" id="tenant_date" name="tenant_date">
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col-md-12 d-flex justify-content-between mt-2">
-                              <button type="button" class="btn btn-primary next-btn" onclick="stepper.previous()">Back</button>
-                              <button type="button" class="btn btn-primary next-btn" onclick="stepper.nex()">Cancel</button>
-                              <button type="submit" class="btn btn-success next-btn">Submit</button>
-                            </div>
-
-                          </form>
-                        </div>
-
-                      </div>
-
-                    </div>
-                  </div>
-                </div>
-              </div>
+              
 
              </div>
-          <!-- /end row -->
+            <!-- /end row -->
            
 
 
@@ -1564,15 +479,12 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                                                 </div>
                                             </td>
                                             <td id="more">
+                                                <button class="btn btn-sm inspect" style="background-color: #00192D; color:#FFC107">Inspect</button>
                                                 <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View"><i class="fas fa-eye"></i></button>
                                                 <button class="btn btn-sm" style="background-color: #193042; color:#FFCCCC; margin-right: 2px;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-trash"></i></button>
                                                 <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-edit"></i></button>
                                                 
                                                 <!-- File Upload Section -->
-                                                <form action="/upload" method="POST" enctype="multipart/form-data">
-                                                    <label for="fileUpload" class="attachment-icon">📎</label>
-                                                    <input type="file" id="fileUpload" name="fileUpload" class="file-input" style="display:none;" onchange="submitForm()">
-                                                </form>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -1622,6 +534,294 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
 
 
                                            <!-- OVERLAYS -->
+  <!-- Perfom an inspection -->
+<section id="perform_inspection_modal" style="display: none;" >
+<div  class="container-fluid" >
+                        <div class="card">
+                            <div class="card-header" style="background-color:#00192D; color:#FFC107"><b>Perform Inspection</b></div>
+                            <div class="card-body">
+                                <div class="card shadow" style="border:1px solid rbg(0,25,45,.2)">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label><i class="fa fa-home"></i> Unit No: CH-01</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label><i class="fa fa-building"></i> Building: Angela's Apartment</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label><i class="fa fa-table"></i> Floor Location: Second Floor</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label><i class="fa fa-bed"></i> Rental Purpose: Residence</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> <hr>
+                                <div class="card shadow">
+                                    <div class="card-header" style="background-color:#00192D; color:#FFC107;"><i class="fa fa-cogs"></i> <b>Inspect this Unit</b></div>
+                                    <form action="" enctype="multipart/form-data">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="card shadow" style="border:1px solid rgb(0,25,45,.2);">
+                                                        <div class="card-header" style="background-color:#00192D; color:#FFC107;"><i class="fa fa-home"></i> <b>Floor Condition</b></div>
+                                                        <div class="card-body">
+                                                            <div class="row text-center">
+                                                                <div class="col-md-6">
+                                                                    <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
+                                                                        <i class="fa fa-wrench" style="font-size:30px;"></i>
+                                                                        <div class="icheck-dark d-inline">
+                                                                            <input type="radio" name="floor_condition" id="floorRepair" value="Needs Repair">
+                                                                            <label for="floorRepair"> Needs Repair</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
+                                                                        <i class="fa fa-thumbs-up" style="font-size:30px;"></i>
+                                                                        <div class="icheck-dark d-inline">
+                                                                            <input type="radio" name="floor_condition" id="floorGood" value="Good">
+                                                                            <label for="floorGood"> Good</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card shadow" id="floorBadDescription" style="display:none;">
+                                                                <div class="card-header" style="background-color:#00192D; color:#FFC107;"><b>Describe the Repair Required</b></div>
+                                                                <div class="card-body">
+                                                                    <div class="form-group">
+                                                                        <label>Describe the State</label>
+                                                                        <textarea name="floor_state" id="" class="form-control"></textarea>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label>Attach Photo</label>
+                                                                        <input type="file" class="form-control" name="floor_photo">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="card shadow" style="border:1px solid rgb(0,25,45,.2);">
+                                                        <div class="card-header" style="background-color:#00192D; color:#FFC107;"><i class="fa fa-table"></i> <b>Window(s) Condition</b></div>
+                                                        <div class="card-body">
+                                                            <div class="row text-center">
+                                                                <div class="col-md-6">
+                                                                    <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
+                                                                        <i class="fa fa-wrench" style="font-size:30px;"></i>
+                                                                        <div class="icheck-dark d-inline">
+                                                                            <input type="radio" name="window_condition" id="windowNeedsRepair" value="Needs Repair">
+                                                                            <label for="windowNeedsRepair"> Needs Repair</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
+                                                                        <i class="fa fa-thumbs-up" style="font-size:30px;"></i>
+                                                                        <div class="icheck-dark d-inline">
+                                                                            <input type="radio" name="window_condition" id="windowGood" value="Good">
+                                                                            <label for="windowGood"> Good</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card shadow" id="windowBadDescription" style="display:none;">
+                                                                <div class="card-header" style="background-color:#00192D; color:#FFC107;"><b>Describe the Repair Required</b></div>
+                                                                <div class="card-body">
+                                                                    <div class="form-group">
+                                                                        <label>Describe the State</label>
+                                                                        <textarea name="window_state" id="" class="form-control"></textarea>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label>Attach Photo</label>
+                                                                        <input type="file" class="form-control" name="floor_photo">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div><hr>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="card shadow" style="border:1px solid rgb(0,25,45,.2);">
+                                                        <div class="card-header" style="background-color:#00192D; color:#FFC107;"><i class="fa fa-building"></i> <b>Doors Condition</b></div>
+                                                        <div class="card-body">
+                                                            <div class="row text-center">
+                                                                <div class="col-md-6">
+                                                                    <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
+                                                                        <i class="fa fa-thumbs-up" style="font-size:30px;"></i>
+                                                                        <div class="icheck-dark d-inline">
+                                                                            <input type="radio" name="door_condition" id="doorGood" value="Good">
+                                                                            <label for="doorGood"> Good</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
+                                                                        <i class="fa fa-wrench" style="font-size:30px;"></i>
+                                                                        <div class="icheck-dark d-inline">
+                                                                            <input type="radio" name="door_condition" id="doorBad" value="Good">
+                                                                            <label for="doorBad"> Needs Repair</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card shadow mt-2" id="doorBadCard" style="display:none;">
+                                                                <div class="card-header" style="background-color:#00192D; color:#FFC107"><b>Provide More Informations</b></div>
+                                                                <div class="card-body">
+                                                                    <div class="form-group">
+                                                                        <label for="">Describe the Damage</label>
+                                                                        <textarea name="door_baddesc" class="form-control"></textarea>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="">Attach Photo</label>
+                                                                        <input type="file" class="form-control" name="door_badphoto">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="card shadow" style="border:1px solid rgb(0,25,45,.2);">
+                                                        <div class="card-header" style="background-color:#00192D; color:#FFC107;"><i class="fa fa-bank"></i><b> Wall Condition</b></div>
+                                                        <div class="card-body">
+                                                            <div class="row text-center">
+                                                                <div class="col-md-6">
+                                                                    <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
+                                                                        <i class="fa fa-wrench" style="font-size:30px;"></i>
+                                                                        <div class="icheck-dark d-inline">
+                                                                            <input type="radio" name="wall_condition" id="wallNeedRepair" value="Needs Repair">
+                                                                            <label for="wallNeedRepair"> Needs Repair</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
+                                                                        <i class="fa fa-thumbs-up" style="font-size:30px;"></i>
+                                                                        <div class="icheck-dark d-inline">
+                                                                            <input type="radio" name="wall_condition" id="wallGood" value="Good">
+                                                                            <label for="wallGood"> Good</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card shadow mt-2" id="wallNeedsRepairCard" style="display:none;">
+                                                                <div class="card-header" style="background-color:#00192D; color:#FFC107;"><b>More Information</b></div>
+                                                                <div class="card-body">
+                                                                    <div class="form-group">
+                                                                        <label for="">Describe the Repair Needed</label>
+                                                                        <textarea name="wall_faulty" id="" cols="30" class="form-control"></textarea>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="">Attach Photo</label>
+                                                                        <input type="file" class="form-control" name="faulty_wall_photo" id="faulty_wall_photo">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div><hr>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="card shadow" style="border:1px solid rgb(0,25,45,.2);">
+                                                        <div class="card-header" style="background-color:#00192D; color:#FFC107;"><i class="fa fa-bell"></i><b> Bulb Holder(s)</b></div>
+                                                        <div class="card-body">
+                                                            <div class="row text-center">
+                                                                <div class="col-md-6">
+                                                                    <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
+                                                                        <i class="fa fa-thumbs-up" style="font-size:30px;"></i>
+                                                                        <div class="icheck-dark d-inline">
+                                                                            <input type="radio" name="bulb_holder_condition" id="bulbHolderGood" value="Good">
+                                                                            <label for="bulbHolderGood"> Good</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="card shadow p-3" style="order: 1px solid rgb(0,25,45,.2);">
+                                                                        <i class="fa fa-wrench" style="font-size:30px;"></i>
+                                                                        <div class="icheck-dark d-inline">
+                                                                            <input type="radio" name="bulb_holder_condition" id="bulbHolderNeedsRepair" value="Needs Repair">
+                                                                            <label for="bulbHolderNeedsRepair"> Needs Repair</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card shadow" id="bulbHolderCard" style="display:none;">
+                                                                <div class="card-header" style="background-color:#00192D; color: #FFC107;"><b>Describe the Repair Needed</b></div>
+                                                                <div class="card-body">
+                                                                    <div class="form-group">
+                                                                        <label for="">Describe the Fault</label>
+                                                                        <textarea name="bulb_holder_desc" id="bulb_holder_desc" class="form-control"></textarea>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="">Attach Photo</label>
+                                                                        <input type="file" name="bulb_holder_photo" id="bulb_holder_photo" class="form-control">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="card shadow" style="border:1px solid rgb(0,25,45,.2);">
+                                                        <div class="card-header" style="background-color:#00192D; color:#FFC107;"><i class="fa fa-plug"></i> <b>Sockets</b></div>
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="col-md-6 text-center">
+                                                                    <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
+                                                                        <i class="fa fa-thumbs-up" style="font-size:30px;"></i>
+                                                                        <div class="icheck-dark d-inline">
+                                                                            <input type="radio" name="socket_condition" id="socketGood" value="Good">
+                                                                            <label for="socketGood"> Good</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6 text-center">
+                                                                    <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
+                                                                        <i class="fa fa-wrench" style="font-size:30px;"></i>
+                                                                        <div class="icheck-dark d-inline">
+                                                                            <input type="radio" name="socket_condition" id="socketNeedsRepair" value="Needs Repair">
+                                                                            <label for="socketNeedsRepair"> Needs Repair</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card shadow" id="socketFaultyCard" style="border:1px solid rgb(0,25,45,.2); display:none;">
+                                                                <div class="card-header" style="background-color:#00192D; color:#FFC107;"><b>Describe the Fault</b></div>
+                                                                <div class="card-body">
+                                                                    <div class="form-group">
+                                                                        <label>Describe the Fault</label>
+                                                                        <textarea name="fault_socket_description" id="fault_socket_description" class="form-control"></textarea>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label>Attach Photos</label>
+                                                                        <input type="file" name="fault_socket_photo" id="fault_socket_photo" class="form-control">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer text-right">
+                                            <button type="submit" class="btn btn-sm next-btn" id="fifththStepNextBtn">Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>                                          
+</section>
+
 
     <script src="inspections.js"></script>
     <!-- Scripts -->
@@ -1684,95 +884,54 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
 <!-- End links -->
 
 
-                                  <!-- FILE UPLOAD -->
-
-<script>
-  function uploadFile() {
-      const fileInput = document.getElementById('fileUpload');
-      if (fileInput.files.length > 0) {
-          // Handle file upload logic here (e.g., send it to the server)
-          alert("File Selected: " + fileInput.files[0].name);
-      }
-  }
-</script>
-
-
-                                  <!-- ADD INSPECTION CONTAINER SCRIPTS-->
-
-<!-- Script to collapse the other section when one is opened -->
-<script>
-                      function hideOther(idToHide) {
-                        const other = document.getElementById(idToHide);
-                        if (other && other.classList.contains('show')) {
-                          new bootstrap.Collapse(other, { toggle: true }).hide();
-                        }
-                      }
-</script>
-<!-- Active effect for the select add-inspection buttons -->
-<script>
-                      const buttons = document.querySelectorAll('.select-btn');
-
-                      buttons.forEach(btn => {
-                        btn.addEventListener('click', () => {
-                          // Remove 'active' from all buttons
-                          buttons.forEach(b => b.classList.remove('active'));
-
-                          // Add 'active' to clicked button
-                          btn.classList.add('active');
-                        });
-                      });
-</script>
-
-
-
                                   <!-- DATE TABLES -->
-<script>
+            <script>
 
-                        $(document).ready(function () {
-                          const table = $('#maintenance').DataTable({
-                            dom: 'Brtip', // ⬅ Changed to include Buttons in DOM
-                            order: [], // ⬅ disables automatic ordering by DataTables
-                            buttons: [
-                              {
-                                extend: 'excelHtml5',
-                                text: 'Excel',
-                                exportOptions: {
-                                  columns: ':not(:last-child)' // ⬅ Exclude last column
-                                }
-                              },                              
-                              {
-                                extend: 'pdfHtml5',
-                                text: 'PDF',
-                                exportOptions: {
-                                  columns: ':not(:last-child)' // ⬅ Exclude last column
-                                },
-                                customize: function (doc) {
-                                  // Center table
-                                  doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+              $(document).ready(function () {
+                const table = $('#maintenance').DataTable({
+                  dom: 'Brtip', // ⬅ Changed to include Buttons in DOM
+                  order: [], // ⬅ disables automatic ordering by DataTables
+                  buttons: [
+                    {
+                      extend: 'excelHtml5',
+                      text: 'Excel',
+                      exportOptions: {
+                        columns: ':not(:last-child)' // ⬅ Exclude last column
+                      }
+                    },                              
+                    {
+                      extend: 'pdfHtml5',
+                      text: 'PDF',
+                      exportOptions: {
+                        columns: ':not(:last-child)' // ⬅ Exclude last column
+                      },
+                      customize: function (doc) {
+                        // Center table
+                        doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
 
-                                  // Optional: center-align the entire table
-                                  doc.styles.tableHeader.alignment = 'center';
-                                  doc.styles.tableBodyEven.alignment = 'center';
-                                  doc.styles.tableBodyOdd.alignment = 'center';
+                        // Optional: center-align the entire table
+                        doc.styles.tableHeader.alignment = 'center';
+                        doc.styles.tableBodyEven.alignment = 'center';
+                        doc.styles.tableBodyOdd.alignment = 'center';
 
-                                  const body = doc.content[1].table.body;
-                                      for (let i = 1; i < body.length; i++) { // start from 1 to skip header
-                                        if (body[i][4]) {
-                                          body[i][4].color = 'blue'; // set email column to blue
-                                        }
-                                      }
-
-                                }
-                              },
-                                  {
-                                extend: 'print',
-                                text: 'Print',
-                                exportOptions: {
-                                  columns: ':not(:last-child)' // ⬅ Exclude last column from print
-                                }
+                        const body = doc.content[1].table.body;
+                            for (let i = 1; i < body.length; i++) { // start from 1 to skip header
+                              if (body[i][4]) {
+                                body[i][4].color = 'blue'; // set email column to blue
                               }
-                            ]
-                          });
+                            }
+
+                      }
+                    },
+                        {
+                      extend: 'print',
+                      text: 'Print',
+                      exportOptions: {
+                        columns: ':not(:last-child)' // ⬅ Exclude last column from print
+                      }
+                    }
+                  ]
+                });
 
             // Append buttons to your div
             table.buttons().container().appendTo('#custom-buttons');
@@ -1783,59 +942,92 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
             });
 
           });
-</script>
+        </script>
 
 
+  
+<!-- Perform an inspection script -->
+         <script>
+            // display the inspection modal.
+            const buttons = document.querySelectorAll('.inspect');
+            buttons.forEach(button => {
+              button.addEventListener('click', () => {
+              const prfm_Ins_mdl = document.getElementById('perform_inspection_modal');
+              const prfm_Ins_mdl_clonedContent = prfm_Ins_mdl.cloneNode(true); // Deep clone
+              prfm_Ins_mdl_clonedContent.id = ''; // Remove ID to avoid duplicates
+              document.getElementById('prfm_ipsn_plch').appendChild(prfm_Ins_mdl_clonedContent);
+            });
 
+            });
 
-<script>
+            
 
-                  // const   next_text = document.getElementById('respond_btn');
-                  const   respond_window = document.getElementById('respond');
-                  const   close_text_overlay = document.getElementById("closeTextWindow");
+            //Inspect Single Room and Display FLoor Condition if it is bad
+            document.getElementById('floorRepair').addEventListener('change', function(){
+                document.getElementById('floorBadDescription').style.display='block';
+            });
+            //if the floor condition is good no need for description
+            document.getElementById('floorGood').addEventListener('change',function(){
+                document.getElementById('floorBadDescription').style.display='none';
+            });
+            //Inspect Single Room if for the Faulty Window
+            document.getElementById('windowNeedsRepair').addEventListener('change', function(){
+                document.getElementById('windowBadDescription').style.display='block';
+            });
+            document.getElementById('windowGood').addEventListener('change', function(){
+                document.getElementById('windowBadDescription').style.display='none';
+            });
+            //Inspect Single Room for the Door Condition
+            document.getElementById('doorBad').addEventListener('click', function(){
+                document.getElementById('doorBadCard').style.display='block';
+                doorGood
+            });
+            //Inspect Single Room for the Door Condition
+            document.getElementById('doorGood').addEventListener('click', function(){
+                document.getElementById('doorBadCard').style.display='none';
+            });
+            //Inspect Single Unit for the Wall Condition
+            document.getElementById('wallNeedRepair').addEventListener('click', function(){
+                document.getElementById('wallNeedsRepairCard').style.display='block';
+            });
+            document.getElementById('wallGood').addEventListener('click', function(){
+                document.getElementById('wallNeedsRepairCard').style.display='none';
+            });
+            //BUlb Holder Event Listener
+            document.getElementById('bulbHolderNeedsRepair').addEventListener('click', function(){
+                document.getElementById('bulbHolderCard').style.display='block';
+            });
+            document.getElementById('bulbHolderGood').addEventListener('click', function(){
+                document.getElementById('bulbHolderCard').style.display='none';
+            });
+            document.getElementById('socketNeedsRepair').addEventListener('click',function(){
+                document.getElementById('socketFaultyCard').style.display='block';
+            });
+            document.getElementById('socketGood').addEventListener('click',function(){
+                document.getElementById('socketFaultyCard').style.display='none';
+            });
+        </script>
 
-                  next_text.addEventListener('click', ()=>{
-
-                    respond_window.style.display= "flex";
-                    document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
-                    const now = new Date();
-                            const formattedTime = now.toLocaleString(); // Format the date and time
-                            timestamp.textContent = `Sent on: ${formattedTime}`;
-
-
-                  });
-
-                  close_text_overlay.addEventListener('click', ()=>{
-
-                    respond_window.style.display= "none";
-                    document.querySelector('.app-wrapper').style.opacity = '1';
-                    });
-
-</script>
-
-
-
-
-<script>
-                      const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-                      const Default = {
-                        scrollbarTheme: 'os-theme-light',
-                        scrollbarAutoHide: 'leave',
-                        scrollbarClickScroll: true,
-                      };
-                      document.addEventListener('DOMContentLoaded', function () {
-                        const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-                        if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
-                          OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-                            scrollbars: {
-                              theme: Default.scrollbarTheme,
-                              autoHide: Default.scrollbarAutoHide,
-                              clickScroll: Default.scrollbarClickScroll,
-                            },
-                          });
-                        }
-                      });
-</script>
+        <script>
+          const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
+          const Default = {
+            scrollbarTheme: 'os-theme-light',
+            scrollbarAutoHide: 'leave',
+            scrollbarClickScroll: true,
+          };
+          document.addEventListener('DOMContentLoaded', function () {
+            const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
+            if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
+              OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+                scrollbars: {
+                  theme: Default.scrollbarTheme,
+                  autoHide: Default.scrollbarAutoHide,
+                  clickScroll: Default.scrollbarClickScroll,
+                },
+              });
+            }
+          });
+        </script>
 
 
     <!-- Bootstrap Bundle with Popper -->

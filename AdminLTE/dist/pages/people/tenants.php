@@ -362,8 +362,8 @@ width: 100%;
                                                     <select class="form-control" name="unit_name" id="unit_name" >
                                                       <option value="C219">C219</option>
                                                       <option value="B14">B14</option>
-                                                      <option value="M145">Pink House</option>
-                                                      <option value="M5">White House</option>
+                                                      <option value="M145">E214</option>
+                                                      <option value="M5">MC23</option>
                                                     </select>
                                                     <b class="text-danger" id="unit_nameError"></b>
                                                 </div>
@@ -469,16 +469,77 @@ width: 100%;
                                                         <div class="card-header" style="background-color:#00192D; color:#FFC206;"><b>Specify your Job</b></div>
                                                         <div class="card-body">
                                                             <div class="form-group">
-                                                                <label>Where do you Work?</label>
+                                                                <label>Employer?</label>
                                                                 <input type="text" class="form-control" name="tenant_workplace">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Specify your Job Title</label>
                                                                 <input type="text" class="form-control" name="tenant_jobtitle">
                                                             </div>
+                                                            <div class="form-group">
+                                                                <label>Employer Contact</label>
+                                                                <input type="text" class="form-control" name="employer_contact">
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                <div class="col-md-12">
+                                                    <div class="card" id="businessCard" style="display:none;">
+                                                        <div class="card-header" style="background-color:#00192D; color:#FFC206;"><b>Specify your Job</b></div>
+                                                        <div class="card-body">
+                                                            <div class="form-group">
+                                                                <label>What kind of business do you do?</label>
+                                                                <input type="text" class="form-control" name="business_kind">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>State the Location of Your Business</label>
+                                                                <input type="text" class="form-control" name="tenant_jobtitle">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Enter the Business KRA PIN</label>
+                                                                <input type="text" class="form-control" name="employer_contact">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-12">
+                                                    <div class="card" id="empBusCard" style="display:none;">
+                                                        <div class="card-header" style="background-color:#00192D; color:#FFC206;"><b>Specify your Job & Business</b></div>
+                                                        <div class="card-body">
+                                                            <div class="form-group">
+                                                                <label>What kind of business do you do?</label>
+                                                                <input type="text" class="form-control" name="business_kind">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>State the Location of Your Business</label>
+                                                                <input type="text" class="form-control" name="tenant_jobtitle">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Enter the Business KRA PIN</label>
+                                                                <input type="text" class="form-control" name="employer_contact">
+                                                            </div>
+                                                            <br>
+                                                            <br>
+                                                            <div class="form-group">
+                                                                <label>Employer?</label>
+                                                                <input type="text" class="form-control" name="tenant_workplace">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Specify your Job Title</label>
+                                                                <input type="text" class="form-control" name="tenant_jobtitle">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Employer Contact</label>
+                                                                <input type="text" class="form-control" name="employer_contact">
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+
                                             </div>
                                         </div>
                                         <div class="card-footer text-right">
@@ -1079,10 +1140,13 @@ document.getElementById('employmentSelectionOption').addEventListener('change', 
 
     document.getElementById('business').addEventListener('change', function() {
         document.getElementById('employmentCard').style.display='none';
+        document.getElementById('businessCard').style.display='block';
     });
 
     document.getElementById('empBus').addEventListener('change', function() {
         document.getElementById('employmentCard').style.display='none';
+        document.getElementById('businessCard').style.display='none';
+        document.getElementById('empBusCard').style.display='block';
     });
 
 

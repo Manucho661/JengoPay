@@ -327,9 +327,12 @@
               <div class="col-sm-6">
                 <div class="d-flex">
                   <h3 class="section_header tenantName"><i class="fas fa-user-tie icon" style="color:#FFC107"></i> <span id="first_name"> </span> <span id="middle_name"> </span> </h3>
+                  <h6 style="color:#00192D; ">  <span id="residence" style="color:#767676;">Ebenezer/</span> <span id="unit" style=" margin-right:2px;">Unit</span> </h6>
                   <h6  class="active" id="status"></h6>
                 </div>
-                
+                <div>
+                  
+                </div>
 
                 <!-- <h3 >   </h3> -->
 
@@ -341,7 +344,7 @@
               <div class="col-sm-6">
                 <div class="headerButtons">
                   <div class="shift">
-                    <button   class="btn shift-tenant rounded" style="height: fit-content;"> Transfer Joseph</button>
+                    <button   class="btn shift-tenant rounded" style="height: fit-content;"> Shift Joseph</button>
                   </div>
 
                   <div class="vacate">
@@ -362,7 +365,7 @@
                                                    <!--PERSONAL INFO  -->
 
               <!-- start row -->
-                <div class="row mt-3 personal-info">
+                <div class="row mt-2 personal-info">
 
                       <h6 class="mb-0 contact_section_header mb-2"> </i> Personal Info</h6>
                   <div class="col-md-12">
@@ -412,6 +415,7 @@
 
                     <div class="col-md-12 mt-2">
                       <div class="row">
+                        
 
                             <div class="col-md-3">
 
@@ -430,7 +434,7 @@
                               <div class="personal-item d-flex justify-content-between bg-white">
                                     <!-- <i class="fas fa-calculator"></i> -->
                                       <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
-                                        <div class="category"><i class="fas fa-globe icon personal-info-icon "></i> <span class="personal-info item-name" >Work Place,</span>  </div>
+                                        <div class="category"><i class="fas fa-globe icon personal-info-icon "></i> <span class="personal-info item-name" >Employer,</span>  </div>
                                         <div class="number"><b id="work_place"></b></div>
                                       </div>
                                   </div>
@@ -669,27 +673,17 @@
                   <div class="row">
                     <h6 class="mb-0 contact_section_header"> </i> Files</h6>
                     <div class="col-md-6">
-                      <table>
+                      <table id="files-table">
                         <thead>
-                          <th>File</th>
+                          <th>File Name</th>
 
                           <th>Actions</th>
 
                         </thead>
 
                         <tbody>
-                          <tr>
-                          <td> <i class="fa fa-file-pdf"></i> Rental Agreement</td>
-                          <td>
-
-                            <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-sm" style="background-color: #0C5662; color:#FFCCCC; margin-right: 2px;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-trash"></i></button>
-
-                                                      <!-- File Upload Section -->
-
-                          </td>
-                          </tr>
+                          
+                          
                         </tbody>
 
                       </table>

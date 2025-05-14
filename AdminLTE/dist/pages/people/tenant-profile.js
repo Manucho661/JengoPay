@@ -23,29 +23,59 @@ document.addEventListener("DOMContentLoaded", function () {
       .then(response => response.json())
       .then(data => {
         console.log('Personal info:', data);
+        console.log('Files:', data.files);
 
+
+            const tenant = data.tenant;
+            const files = data.files;
+            
         // Populate fields
-        document.getElementById('first_name').textContent = data.first_name;
-        document.getElementById('middle_name').textContent = data.middle_name;
-        document.getElementById('status').textContent = data.status;
-        document.getElementById('email').textContent = data.email;
-        document.getElementById('phone').textContent = data.phone_number;
-        document.getElementById('id_no').textContent = data.id_no;
-        document.getElementById('income_source').textContent = data.income_source;
-        document.getElementById('work_place').textContent = data.work_place;
-        document.getElementById('job_title').textContent = data.job_title;
-        document.getElementById('unit').textContent = data.unit;
+        safeSet("first_name", tenant.first_name);
+        safeSet("middle_name", tenant.middle_name);
+        safeSet("status", tenant.status);
+        safeSet("email", tenant.email);
+        safeSet("phone", tenant.phone_number);
+        safeSet("id_no", tenant.id_no);
+        safeSet("income_source", tenant.income_source);
+        safeSet("work_place", tenant.work_place);
+        safeSet("job_title", tenant.job_title);
+        safeSet("unit", tenant.unit);
+        
 
 
         const statusElement = document.getElementById('status');
-        statusElement.textContent = data.status;
+        statusElement.textContent = tenant.status;
 
-        if (data.status.toLowerCase() === 'inactive') {
+        if (tenant.status.toLowerCase() === 'inactive') {
           statusElement.className = 'inactive'; // sets class to "inactive"
         } else {
-          statusElement.className = ''; // clear or reset class if needed
+          statusElement.className = 'active'; // clear or reset class if needed
         }
 
+
+        // populate files table
+        const tableBody = document.querySelector('#files-table tbody');
+        tableBody.innerHTML = '';
+        if (!Array.isArray(files) || files.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="4">No files found.</td></tr>';
+        return;
+       }
+        files.forEach(files => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td> <b>${files.file_name} </b>  </td>
+          <td>
+          <a href="actions/tenants/files/${files.file_path}" target="_blank"
+            class="btn btn-sm"
+            style="background-color: #193042; color:#fff; margin-right: 2px;">
+            <i class="fas fa-eye"></i> 
+          </a>
+
+          <button class="btn btn-sm" style="background-color: #0C5662; color:#FFCCCC; margin-right: 2px;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-trash"></i></button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
 
       })
       .catch(error => {

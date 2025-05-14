@@ -3,7 +3,6 @@
 include '../../../db/connect.php';
 header('Content-Type: application/json');
 
-// Check the correct parameter
 if (!isset($_GET['user_id'])) {
     echo json_encode(['error' => 'user_id not provided']);
     exit;
@@ -11,9 +10,7 @@ if (!isset($_GET['user_id'])) {
 
 $user_id = $_GET['user_id'];
 
-// Debug: Output the ID
-// echo "User ID: $user_id";
-
+// Fetch tenant and user details
 $stmt = $pdo->prepare("
     SELECT tenants.id AS tenant_id, tenants.income_source, tenants.work_place, tenants.job_title,
            tenants.residence, tenants.unit, tenants.status, tenants.id_no, tenants.phone_number,
@@ -22,14 +19,24 @@ $stmt = $pdo->prepare("
     JOIN users ON tenants.user_id = users.id
     WHERE tenants.user_id = ?
 ");
-
 $stmt->execute([$user_id]);
-
 $tenant = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($tenant === false) {
-    echo json_encode(['message' => 'No tenant found for that user_id ' ]);
-} else {
-    echo json_encode($tenant);
+    echo json_encode(['message' => 'No tenant found for that user_id']);
+    exit;
 }
+
+// Fetch associated files
+$stmt2 = $pdo->prepare("SELECT file_name,file_path FROM files WHERE tenant_id = ?");
+$stmt2->execute([$tenant['tenant_id']]);
+$files = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+
+// Respond with combined data
+$response = [
+    'tenant' => $tenant,
+    'files' => $files
+];
+
+echo json_encode($response);
 ?>
