@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 06, 2025 at 02:26 PM
+-- Generation Time: May 14, 2025 at 03:35 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -41,12 +41,25 @@ CREATE TABLE `messages` (
 --
 
 INSERT INTO `messages` (`id`, `sender`, `content`, `thread_id`, `timestamp`, `is_read`) VALUES
-(1, 'landlord', 'yello', 0, '2025-05-06 07:48:06', 0),
-(2, 'landlord', 'YOH', 138, '2025-05-06 08:22:14', 1),
-(3, 'landlord', 'Good luck!', 113, '2025-05-06 08:32:01', 1),
-(4, 'landlord', 'Great news!', 113, '2025-05-06 08:33:55', 1),
-(5, 'landlord', 'Corridor wash', 142, '2025-05-06 09:11:02', 1),
-(6, 'landlord', 'wow', 142, '2025-05-06 10:13:57', 1);
+(99, 'landlord', 'working code', 192, '2025-05-13 12:47:20', 1),
+(100, 'landlord', 'done', 192, '2025-05-13 13:06:47', 1),
+(101, 'landlord', 'yees', 192, '2025-05-13 13:07:56', 1),
+(102, 'landlord', 'cfb', 192, '2025-05-13 13:19:38', 1),
+(103, 'landlord', 'gnhy', 192, '2025-05-13 13:19:43', 1),
+(104, 'landlord', 'remember', 192, '2025-05-13 13:20:54', 1),
+(105, 'landlord', 'noiw', 192, '2025-05-13 13:25:32', 1),
+(106, 'landlord', 'boom', 192, '2025-05-13 13:34:16', 1),
+(107, 'landlord', 'bravo', 192, '2025-05-13 13:44:22', 1),
+(108, 'landlord', 'gnhgfn', 193, '2025-05-13 13:52:59', 1),
+(109, 'landlord', 'dv', 192, '2025-05-13 13:54:39', 1),
+(110, 'landlord', 'dvc', 193, '2025-05-13 13:54:54', 1),
+(111, 'landlord', 'dvcv', 193, '2025-05-13 13:54:59', 1),
+(112, 'landlord', 'fbv', 194, '2025-05-13 13:55:47', 1),
+(113, 'landlord', 'frhtgb', 192, '2025-05-13 14:25:45', 1),
+(114, 'landlord', 'drgffg', 192, '2025-05-13 14:59:53', 1),
+(115, 'landlord', 'dgbfr', 194, '2025-05-13 15:00:10', 1),
+(116, 'landlord', 'frgbfgb', 193, '2025-05-13 15:00:16', 1),
+(117, 'landlord', 'done ', 195, '2025-05-14 12:42:39', 1);
 
 --
 -- Indexes for dumped tables
@@ -66,7 +79,7 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=118;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

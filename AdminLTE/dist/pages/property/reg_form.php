@@ -933,7 +933,9 @@ try {
                  <div class="form-group">
                     <label>Identification Number</label>
                     <input type="text" name="identification_number" class="form-control" id="identification_number" maxlength="8"
-                      placeholder="Identification Number">
+                      placeholder="Identification Number" inputmode="numeric"
+                                                        pattern="\d*"
+                                                        oninput="this.value = this.value.replace(/\D/g, '')">
                   </div>
                   <div class="form-group">
                     <label>Attach ID Copy</label>

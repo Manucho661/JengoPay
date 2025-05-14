@@ -715,104 +715,93 @@ display: flex;
                       <div class="row h-100 align-items-stretch" id="individual-message-summmary" style="border:1px solid #E2E2E2; padding: 0 !important; display: none; max-height: 95%;">
 
 
-                            <div id="message-profiles" class="col-md-4  message-profiles"  >
+                      <div id="message-profiles" class="col-md-4 message-profiles">
+  <div class="topic-profiles-header-section d-flex">
+    <div class="content d-flex">
+      <div class="individual-details-container">
+        <div class="content d-flex">
+          <div class="profile-initials" id="profile-initials">JM</div>
+          <div class="individual-residence d-flex">
+            <div class="individual-name body">Emmanuel,</div>
+            <div class="initial-topic-separator">|</div>
+            <div class="residence mt-2"><?= htmlspecialchars($b['building_name']) ?></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-                              <div class="topic-profiles-header-section d-flex">
-                                <div class="content d-flex">
-                                  <div  class="individual-details-container">
-                                    <div class="content d-flex">
-                                      <div class="profile-initials" id="profile-initials">JM</div>
+  <div class="h-80 other-topics-section">
+    <?php foreach ($communications as $comm): ?>
+      <div class="individual-topic-profiles active d-flex"
+        data-message-id="<?= $comm['thread_id'] ?>"
+        onclick="loadConversation(<?= $comm['thread_id'] ?>)">
+        <div class="individual-topic-profile-container">
+          <div class="individual-topic"><?= htmlspecialchars($comm['title']) ?></div>
+          <div class="individual-message mt-2">
+            <?= htmlspecialchars(mb_strimwidth($comm['last_message'], 0, 60, '...')) ?>
+            <?php if (!empty($comm['preview_file'])): ?>
+              <div class="attached-file mt-1">
+                📎 <a href="<?= htmlspecialchars($comm['preview_file']) ?>" target="_blank">
+                  <?= htmlspecialchars(basename($comm['preview_file'])) ?>
+                </a>
+              </div>
+            <?php endif; ?>
+          </div>
+        </div>
 
-                                      <div class="individual-residence d-flex">
-                                        <div class="individual-name body">Emmanuel,</div>
-                                        <div  class="initial-topic-separator">|</div>
-                                        <div class="residence mt-2"><?= htmlspecialchars($b['building_name'])?></div>
-                                      </div>
+        <div class="d-flex justify-content-end time-count">
+          <div class="time">
+            <?php
+            $datetime = new DateTime($comm['created_at']);
+            echo $datetime->format('d/m/y');
+            ?>
+          </div>
+          <div class="message-count mt-2">
+            <?= $comm['unread_count'] > 0 ? $comm['unread_count'] : '' ?>
+          </div>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  </div>
+</div>
 
-                                    </div>
-                                  </div>
+<div id="messageBody" class="col-md-8 message-body" style="padding: 0 !important; height: 100%;">
+  <div class="individual-message-body-header">
+    <div class="individual-details-container">
+      <div class="content">
+        <div class="individual-residence d-flex" style="align-items: center;">
+          <div class="profile-initials initials-topic" id="profile-initials-initials-topic"><b>JM</b></div>
+          <div id="initial-topic-separator" class="initial-topic-separator">|</div>
+          <div class="individual-topic body">Rental Arrears</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-                                </div>
-                              </div>
+  <div class="individual-message-body">
+    <div class="messages" id="messages">
+      <div class="message incoming">Hello! How are you?</div>
+      <div class="message outgoing">I'm doing great, thanks!</div>
+    </div>
 
-                              <div class="h-80  other-topics-section">
-                                <?php foreach ($communications as $comm): ?>
-                                  <div class="individual-topic-profiles active d-flex"
-                                    data-message-id="<?= $comm['thread_id'] ?>"
-                                    onclick="loadConversation(<?= $comm['thread_id'] ?>)">
+    <div class="input-area">
+      <!-- Attachment input -->
+      <input type="file" id="fileInput" multiple style="display: none;" onchange="handleFileChange(event)">
+      <button class="btn attach-button" onclick="document.getElementById('fileInput').click();">
+        <i class="fa fa-paperclip"></i>
+      </button>
 
+      <div class="input-box" id="inputBox" contenteditable="true"></div>
+      <div class="message-input-wrapper">
+        <button name="incoming_message" class="btn message-send-button" onclick="sendMessage()">
+          <i class="fa fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
-                                  <div class="individual-topic-profile-container">
-                                  <div class="individual-topic"><?= htmlspecialchars($comm['title']) ?></div>
-                                  <div class="individual-message mt-2">
-                                  <?= htmlspecialchars(mb_strimwidth($comm['last_message'], 0, 60, '...'))?>
-                                  <?php if (!empty($comm['preview_file'])): ?>
-                                  <div class="attached-file mt-1">
-                                    📎 <a href="<?= htmlspecialchars($comm['preview_file']) ?>" target="_blank">
-                                      <?= htmlspecialchars(basename($comm['preview_file'])) ?>
-                                    </a>
-                                  </div>
-                                <?php endif; ?>
-                                 </div>
-                                  </div>
-
-                                    <div class="d-flex justify-content-end time-count">
-                                    <div class="time">
-                                   <?php
-                                    $datetime = new DateTime($comm['created_at']);
-                                    echo $datetime->format('d/m/y');
-                                  ?>
-                                  </div>
-                                <div class="message-count mt-2">
-                                  <?= $comm['unread_count'] > 0 ? $comm['unread_count'] : '' ?>
-                                </div>
-
- <!-- Optional: Replace 1 with actual reply count if available -->
-                                  </div>
-                                </div>
-                                <?php endforeach; ?>
-                              </div>
-
-                            </div>
-
-                            <div id="messageBody" class="col-md-8 message-body" style="padding: 0 !important; height:100%;">
-                              <div class="individual-message-body-header">
-                                <div class="individual-details-container">
-                                  <div class="content">
-                                    <div class="individual-residence d-flex" style="align-items: center;" >
-                                      <div class="profile-initials initials-topic" id="profile-initials-initials-topic" ><b>JM</b></div>
-                                      <div id="initial-topic-separator" class="initial-topic-separator">|</div>
-                                      <div class="individual-topic body">Rental Arrears</div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div class="individual-message-body">
-                                <div class="messages" id="messages">
-                                  <div class="message incoming">Hello! How are you?</div>
-                                  <div class="message outgoing">I'm doing great, thanks!</div>
-                                </div>
-
-                               <div class="input-area">
-                              <!-- Attachment input -->
-                              <input type="file" id="fileInput" multiple style="display: none;" onchange="handleFileChange(event)">
-                                <button class="btn attach-button" onclick="document.getElementById('fileInput').click();">
-                                  <i class="fa fa-paperclip"></i>
-                                </button>
-
-                                  <div class="input-box" id="inputBox" contenteditable="true"></div>
-                                  <div class="message-input-wrapper">
-                                  <button name="incoming_message" class="btn message-send-button" onclick="sendMessage()">
-                                    <i class="fa fa-paper-plane"></i>
-                                  </button>
-                                </div>
-                              </div>
-
-                              </div>
-                            </div>
-                        </div>
-                      </div>
                   <!--end::Row-->
 
                   </div>

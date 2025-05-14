@@ -1,42 +1,38 @@
 <?php
-include '../db/connect.php'; // Ensure $pdo is defined
+include '../db/connect.php';
 
-$message = $_POST['message'] ?? '';
-$sender = $_POST['sender'] ?? '';
-$thread_id = $_POST['thread_id'] ?? 0;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['message_content'])) {
+        $messageContent = $_POST['message_content'];
+        $threadId = 1; // For now, use a static thread ID or pass it in the request
 
-if ($message && $sender && $thread_id) {
-    // Insert the message first
-    $stmt = $pdo->prepare("INSERT INTO messages (thread_id, sender, content) VALUES (:thread_id, :sender, :content)");
-    $stmt->execute([
-        'thread_id' => $thread_id,
-        'sender' => $sender,
-        'content' => $message
-    ]);
+        // Insert the message into the database
+        $stmt = $pdo->prepare("INSERT INTO messages (thread_id, sender, content, timestamp) VALUES (:thread_id, 'landlord', :content, NOW())");
+        $stmt->execute(['thread_id' => $threadId, 'content' => $messageContent]);
 
-    // ✅ Immediately get the ID of the inserted message
-    $message_id = $pdo->lastInsertId();
+        // Get the last inserted message ID
+        $messageId = $pdo->lastInsertId();
 
-    // ✅ Handle file uploads (only if new files are provided)
-    if (!empty($_FILES['attachment']['name'][0])) {
-        foreach ($_FILES['attachment']['tmp_name'] as $index => $tmpName) {
-            $originalName = basename($_FILES['attachment']['name'][$index]);
-            $uniqueName = uniqid() . '-' . preg_replace('/[^A-Za-z0-9.\-_]/', '_', $originalName);
-            $target = 'uploads/' . $uniqueName;
+        // Handle file uploads
+        if (isset($_FILES['files'])) {
+            $uploadsDir = 'uploads/'; // Specify your upload directory
+            foreach ($_FILES['files']['tmp_name'] as $key => $tmpName) {
+                $fileName = basename($_FILES['files']['name'][$key]);
+                $filePath = $uploadsDir . $fileName;
 
-            if (move_uploaded_file($tmpName, $target)) {
-                $stmt = $pdo->prepare("INSERT INTO message_files (thread_id, message_id, file_path) VALUES (:thread_id, :message_id, :file_path)");
-                $stmt->execute([
-                    'thread_id' => $thread_id,
-                    'message_id' => $message_id,
-                    'file_path' => $target
-                ]);
+                // Move file to upload directory
+                if (move_uploaded_file($tmpName, $filePath)) {
+                    // Save file path to the database
+                    $stmt = $pdo->prepare("INSERT INTO message_files (message_id, file_path) VALUES (:message_id, :file_path)");
+                    $stmt->execute(['message_id' => $messageId, 'file_path' => $filePath]);
+                }
             }
         }
-    }
 
-    echo "Message sent";
-} else {
-    echo "Invalid data";
+        // Send a success response
+        echo json_encode(['success' => true]);
+    } else {
+        echo json_encode(['success' => false]);
+    }
 }
 ?>
