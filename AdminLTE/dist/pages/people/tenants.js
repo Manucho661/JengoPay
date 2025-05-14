@@ -144,7 +144,7 @@ function fetchTenants(building) {
                     columns: ':not(:last-child)' // ⬅ Exclude last column
                   }
                 },
-                
+
                 {
                   extend: 'pdfHtml5',
                   text: 'PDF',
@@ -230,7 +230,7 @@ function fetchTenants(building) {
 
           }
 
-      
+
       //End Tenant status
 
       // ADD TENANT TO DB
@@ -275,6 +275,8 @@ function fetchTenants(building) {
     function closenotificationPopup() {
       document.getElementById("notificationPopup").style.display = "none";
     }
+
+
 
     // Function to open the complaint popup
     function openPopup() {
@@ -324,4 +326,3 @@ function fetchTenants(building) {
       });
 
 
-      

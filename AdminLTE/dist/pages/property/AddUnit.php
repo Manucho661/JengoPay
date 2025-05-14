@@ -624,6 +624,7 @@ if ($stmt->rowCount() > 0) {
             <label for="balcony">Balcony*</label>
             <select id="balcony" name="balcony" required>
                 <option value="rooms">-Select-</option>
+                <option value="one">None</option>
                 <option value="one">One</option>
                 <option value="two">Two</option>
                 <option value="three">Three</option>
