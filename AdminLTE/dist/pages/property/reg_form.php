@@ -30,8 +30,6 @@ try {
             return null;
         }
 
-
-
         // Collect building data
         $building_name = $_POST['building_name'];
         $county = $_POST['county'];
@@ -41,7 +39,6 @@ try {
         $units_number = $_POST['units_number'];
         $building_type = $_POST['building_type'] ?? '';
         $ownership_info = $_POST['ownership_info'];
-
 
         $title_deed_copy = uploadPhoto('title_deed_copy');
         $other_document_copy = uploadPhoto('other_document_copy');
@@ -65,28 +62,23 @@ try {
         $rear_view_photo = uploadPhoto('rear_view_photo');
         $angle_view_photo = uploadPhoto('angle_view_photo');
         $interior_view_photo = uploadPhoto('interior_view_photo');
-        // $building_number = $_POST['building_number'];
 
         // Ownership fields
-        $first_name = $last_name = $nationality = $country_code =  $phone_number = $kra_pin =  $kra_attachment =  $identification_number =  $id_attachment = $email = '';
-        $entity_name = $entity_phone = $entity_country_code =  $entity_email =  $bs_reg_no = $attach_bs_reg_no = $entity_kra_pin = $entity_attach_kra_copy = $entity_representative = $entity_rep_role = '';
+        $first_name = $last_name = $nationality = $country_code = $kra_pin = $kra_attachment = $identification_number = $id_attachment = $email = '';
+        $entity_name = $entity_country_code = $entity_email = $bs_reg_no = $attach_bs_reg_no = $entity_kra_pin = $entity_attach_kra_copy = $entity_representative = $entity_rep_role = '';
 
         if ($ownership_info == 'Individual') {
             $first_name = $_POST['first_name'];
             $last_name = $_POST['last_name'];
-            $nationality= $_POST['nationality'];
+            $nationality = $_POST['nationality'];
             $country_code = $_POST['country_code'];
-            $phone_number = $_POST['phone_number'];
             $kra_pin = $_POST['kra_pin'];
             $kra_attachment = uploadPhoto('kra_attachment');
             $identification_number = $_POST['identification_number'];
             $id_attachment = uploadPhoto('id_attachment');
             $email = $_POST['email'];
-            // $title_deed_copy = uploadPhoto('title_deed_copy');
-            // $other_document_copy = uploadPhoto('other_document_copy');
         } elseif ($ownership_info == 'Entity') {
             $entity_name = $_POST['entity_name'];
-            $entity_phone = $_POST['entity_phone'];
             $entity_country_code = $_POST['entity_country_code'];
             $entity_email = $_POST['entity_email'];
             $bs_reg_no = $_POST['bs_reg_no'];
@@ -95,10 +87,7 @@ try {
             $entity_attach_kra_copy = uploadPhoto('entity_attach_kra_copy');
             $entity_representative = $_POST['entity_representative'];
             $entity_rep_role = $_POST['entity_rep_role'];
-            // $title_deed_copy = uploadPhoto('title_deed_copy');
-            // $other_document_copy = uploadPhoto('other_document_copy');
         }
-
 
         // Approvals
         $nca_approval = $_POST['nca_approval'] ?? 'No';
@@ -120,8 +109,8 @@ try {
         $sql = "INSERT INTO buildings (
             building_name, county, constituency, ward, floor_number, units_number, building_type,
             ownership_info,
-            first_name, last_name, nationality, country_code, phone_number, kra_pin, kra_attachment, identification_number, id_attachment, email,
-            entity_name, entity_phone,entity_country_code,  entity_email, bs_reg_no, attach_bs_reg_no, entity_kra_pin, entity_attach_kra_copy, entity_representative, entity_rep_role,
+            first_name, last_name, nationality, country_code, kra_pin, kra_attachment, identification_number, id_attachment, email,
+            entity_name, entity_country_code, entity_email, bs_reg_no, attach_bs_reg_no, entity_kra_pin, entity_attach_kra_copy, entity_representative, entity_rep_role,
             title_deed_copy, other_document_copy, borehole_availability, solar_availability, solar_brand,
             installation_company, no_of_panels, solar_primary_use, parking_lot, alarm_system, elevators,
             psds_accessibility, cctv, nca_approval, nca_approval_no, nca_approval_start_date, nca_approval_end_date,
@@ -132,8 +121,8 @@ try {
         ) VALUES (
             :building_name, :county, :constituency, :ward, :floor_number, :units_number, :building_type,
             :ownership_info,
-            :first_name, :last_name, :nationality, :country_code, :phone_number, :kra_pin, :kra_attachment, :identification_number, :id_attachment, :email,
-            :entity_name, :entity_phone, :entity_country_code, :entity_email, :bs_reg_no, :attach_bs_reg_no, :entity_kra_pin, :entity_attach_kra_copy, :entity_representative, :entity_rep_role,
+            :first_name, :last_name, :nationality, :country_code, :kra_pin, :kra_attachment, :identification_number, :id_attachment, :email,
+            :entity_name, :entity_country_code, :entity_email, :bs_reg_no, :attach_bs_reg_no, :entity_kra_pin, :entity_attach_kra_copy, :entity_representative, :entity_rep_role,
             :title_deed_copy, :other_document_copy, :borehole_availability, :solar_availability, :solar_brand,
             :installation_company, :no_of_panels, :solar_primary_use, :parking_lot, :alarm_system, :elevators,
             :psds_accessibility, :cctv, :nca_approval, :nca_approval_no, :nca_approval_start_date, :nca_approval_end_date,
@@ -156,15 +145,13 @@ try {
             ':first_name' => $first_name,
             ':last_name' => $last_name,
             ':nationality' => $nationality,
-            ':country_code' =>$country_code,
-            ':phone_number' => $phone_number,
+            ':country_code' => $country_code,
             ':kra_pin' => $kra_pin,
             ':kra_attachment' => $kra_attachment,
             ':identification_number' => $identification_number,
             ':id_attachment' => $id_attachment,
             ':email' => $email,
             ':entity_name' => $entity_name,
-            ':entity_phone' => $entity_phone,
             ':entity_country_code' => $entity_country_code,
             ':entity_email' => $entity_email,
             ':bs_reg_no' => $bs_reg_no,
@@ -206,31 +193,31 @@ try {
             ':rear_view_photo' => $rear_view_photo,
             ':angle_view_photo' => $angle_view_photo,
             ':interior_view_photo' => $interior_view_photo,
-            // ':building_number' => $building_number,
         ]);
 
-         // Redirect with success flag
-         header("Location: " . $_SERVER['PHP_SELF'] . "?success=1");
-         exit();
+        header("Location: " . $_SERVER['PHP_SELF'] . "?success=1");
+        exit;
+        // echo "Building data successfully inserted!";
     }
-
-    // Fetch buildings for display
-
-   // Fetch buildings for display
-   $sql = "SELECT building_id, building_name, county, building_type, ownership_info FROM buildings";
-   $stmt = $pdo->prepare($sql);
-   $stmt->execute();
-   $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-  } catch (PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
 }
+
+try {
+
+  // Fetch buildings regardless of POST
+  $stmt = $pdo->query("SELECT * FROM buildings");
+  $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+  echo "Error fetching buildings: " . $e->getMessage();
+  $buildings = []; // prevent further errors
+}
+
 ?>
 
 <?php if (isset($_GET['success']) && $_GET['success'] == 1): ?>
 <script>
-    alert("Building added successfully!");
+    alert("✅ Building added successfully!");
     if (window.history.replaceState) {
         const cleanUrl = window.location.href.split('?')[0];
         window.history.replaceState(null, null, cleanUrl);
@@ -299,7 +286,7 @@ try {
     <!-- scripts for data_table -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="announcements.css">
+    <!-- <link rel="stylesheet" href="announcements.css"> -->
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
@@ -753,9 +740,9 @@ try {
                                     <option value="" selected hidden>-- Choose
                                       Constituency
                                       --</option>
-                                    <option value="Nairobi">Westlands</option>
+                                    <!-- <option value="Nairobi">Westlands</option>
                                     <option value="Kisumu">Starehe</option>
-                                    <option value="Vihiga">Embakasi</option>
+                                    <option value="Vihiga">Embakasi</option> -->
                                   </select>
                                   <b class="errorMessages" id="constituencyError"></b>
                                 </div>
@@ -767,9 +754,9 @@ try {
                                     <option value="" selected hidden>-- Choose Ward
                                       --
                                     </option>
-                                    <option value="Nairobi">Kangemi</option>
+                                    <!-- <option value="Nairobi">Kangemi</option>
                                     <option value="Kisumu">Kiambu</option>
-                                    <option value="Vihiga">Pipeline</option>
+                                    <option value="Vihiga">Pipeline</option> -->
                                   </select>
                                   <b class="errorMessages" id="wardError"></b>
                                 </div>
@@ -917,11 +904,11 @@ try {
                       placeholder=""
                       maxlength="10"
                       title="Enter a valid phone number"
-                      oninput="validatePhoneNumber()"
-                      onblur="checkPhoneNumberExists()">
+
+                     >
                   </div>
                   <small id="phoneNumberError" style="color:red; display:none;">Invalid phone number format</small>
-                  <small id="phoneNumberExists" style="color:red; display:none;">Phone number not found</small>
+                  <!-- <small id="phoneNumberExists" style="color:red; display:none;">Phone number not found</small> -->
                 </div>
 
                   <div class="form-group">
@@ -945,7 +932,7 @@ try {
                   </div>
                  <div class="form-group">
                     <label>Identification Number</label>
-                    <input type="text" name="identification_number" class="form-control" id="identification_number"
+                    <input type="text" name="identification_number" class="form-control" id="identification_number" maxlength="8"
                       placeholder="Identification Number">
                   </div>
                   <div class="form-group">
@@ -961,10 +948,9 @@ try {
                     class="form-control"
                     id="ownerEmail"
                     placeholder="Enter a valid email (e.g. name@example.com)"
-                    pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                     title="Enter a valid email address"
-                    oninput="validateEmail()"
-                  >
+                 oninput="validateEmail()"
+                    >
                   <small id="emailError" style="color:red; display:none;">Please enter a valid email address.</small>
                   </div>
                 </div>
@@ -992,19 +978,19 @@ try {
                     <div class="form-group">
                     <label>Phone Number</label>
                     <div style="display: flex; gap: 5px;">
-                      <select name="entity_country_code" id="countryCode" class="form-control" style="max-width: 100px;" onchange="updatePhoneValidation()">
-                        <option value="+254"
-                                data-pattern="^(\+254|254|0)(7\\d{8}|1\\d{8})$"
-                                data-placeholder="0712345678 or 0111111158"
-                                data-maxlength="10">🇰🇪 +254 (Kenya)</option>
-                        <option value="+255"
-                                data-pattern="^(\+255|0)(6|7)\\d{8}$"
-                                data-placeholder="0712345678"
-                                data-maxlength="10">🇹🇿 +255 (Tanzania)</option>
-                        <option value="+256"
-                                data-pattern="^(\+256|0)7\\d{8}$"
-                                data-placeholder="0701234567"
-                                data-maxlength="10">🇺🇬 +256 (Uganda)</option>
+                      <select name="entity_country_code" id="entityCountryCode" class="form-control" style="max-width: 100px;" onchange="updatePhoneValidation()">
+                      <option value="+254"
+                          data-pattern="^(\+254|254|0)(7\d{8}|1\d{8})$"
+                          data-placeholder="0712345678 or 0111111158"
+                          data-maxlength="10">🇰🇪 +254 (Kenya)</option>
+                  <option value="+255"
+                          data-pattern="^(\+255|0)(6|7)\d{8}$"
+                          data-placeholder="0712345678"
+                          data-maxlength="10">🇹🇿 +255 (Tanzania)</option>
+                  <option value="+256"
+                          data-pattern="^(\+256|0)7\d{8}$"
+                          data-placeholder="0701234567"
+                          data-maxlength="10">🇺🇬 +256 (Uganda)</option>
                       </select>
 
                       <input type="text"
@@ -1014,8 +1000,7 @@ try {
                             placeholder=""
                             maxlength="10"
                             title="Enter a valid phone number"
-                            oninput="validateEntityPhoneNumber()"
-                            onblur="checkPhoneNumberExists()">
+                            >
                     </div>
 
                     <small id="phoneNumberError" style="color:red; display:none;">Invalid phone number format</small>
@@ -1025,7 +1010,7 @@ try {
                   <div class="form-group">
                     <label>Official Email</label>
                     <input type="text"  name="entity_email" class="form-control" id="entityEmail"
-                      placeholder="Entity Email">
+                      placeholder="Entity Email"  oninput="validateEntityEmail()">
                   </div>
                   <div class="form-group">
                     <label>Business Registration Number</label>
@@ -1305,14 +1290,14 @@ try {
                   name="nca_approval_no"
                   class="form-control"
                   id="approvalNo"
-                  placeholder="Approval Number (e.g. NCA-1234567-2025)"
-                  pattern="^NCA-\d{7}-\d{4}$"
-                  title="Format must be NCA-1234567-2025"
+                  placeholder="Approval Number (e.g. 92177/B/0325)"
+                  pattern="^\d{5}\/[A-Z]\/\d{4}$/"
+                  title="Format must be  92177/B/0325"
 
                   oninput="validateApprovalNo()"
                 />
                 <small id="approvalNoError" style="color:red; display:none;">
-                  Format must be NCA-1234567-2025
+                  Format must be 92177/B/0325
                 </small>
                 </div>
                 <div class="form-group">
@@ -1719,18 +1704,16 @@ try {
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
 
-<script src="registration.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script src="prop.js"></script>
-<!-- <script>
+
+ <script>
 $(document).ready((function(){$("#stepOneNextBtn").click((function(e){e.preventDefault(),$("#sectionTwo").show(),$("#sectionOne").hide(),$("#stepOneIndicatorNo").html('<i class="fa fa-check"><i>'),$("#stepOneIndicatorNo").css("background-color","#FFC107"),$("#stepOneIndicatorNo").css("color","#00192D"),$("#stepOneIndicatorText").html("Done")})),$("#stepTwoBackBtn").click((function(e){e.preventDefault(),$("#sectionTwo").hide(),$("#sectionOne").show(),$("#stepOneIndicatorNo").html("1"),$("#stepOneIndicatorNo").css("background-color","#00192D"),$("#stepOneIndicatorNo").css("color","#FFC107"),$("#stepOneIndicatorText").html("Overview")})),$("#stepTwoNextBtn").click((function(e){e.preventDefault(),$("#sectionTwo").hide(),$("#sectionThree").show(),$("#stepTwoIndicatorNo").html('<i class="fa fa-check"><i>'),$("#stepTwoIndicatorNo").css("background-color","#FFC107"),$("#stepTwoIndicatorNo").css("color","#00192D"),$("#stepTwoIndicatorText").html("Done")})),$("#stepThreeBackBtn").click((function(e){e.preventDefault(),$("#sectionTwo").show(),$("#sectionThree").hide(),$("#stepTwoIndicatorNo").html("2"),$("#stepTwoIndicatorNo").css("background-color","#00192D"),$("#stepTwoIndicatorNo").css("color","#FFC107"),$("#stepTwoIndicatorText").html("Identification")})),$("#stepThreeNextBtn").click((function(e){e.preventDefault(),$("#sectionThree").hide(),$("#sectionFour").show(),$("#stepThreeIndicatorNo").html('<i class="fa fa-check"><i>'),$("#stepThreeIndicatorNo").css("background-color","#FFC107"),$("#stepThreeIndicatorNo").css("color","#00192D"),$("#stepThreeIndicatorText").html("Done")})),$("#stepFourBackBtn").click((function(e){e.preventDefault(),$("#sectionThree").show(),$("#sectionFour").hide(),$("#stepThreeIndicatorNo").html("3"),$("#stepThreeIndicatorNo").css("background-color","#00192D"),$("#stepThreeIndicatorNo").css("color","#FFC107"),$("#stepThreeIndicatorText").html("Ownership")})),$("#stepFourNextBtn").click((function(e){e.preventDefault(),$("#sectionFour").hide(),$("#sectionFive").show(),$("#stepFourIndicatorNo").html('<i class="fa fa-check"><i>'),$("#stepFourIndicatorNo").css("background-color","#FFC107"),$("#stepFourIndicatorNo").css("color","#00192D"),$("#stepFourIndicatorText").html("Done")})),$("#stepFiveBackBtn").click((function(e){e.preventDefault(),$("#sectionFour").show(),$("#sectionFive").hide(),$("#stepFourIndicatorNo").html("4"),$("#stepFourIndicatorNo").css("background-color","#00192D"),$("#stepFourIndicatorNo").css("color","#FFC107"),$("#stepFourIndicatorText").html("Utilities")})),$("#stepFiveNextBtn").click((function(e){e.preventDefault(),$("#sectionFive").hide(),$("#sectionSix").show(),$("#stepFiveIndicatorNo").html('<i class="fa fa-check"><i>'),$("#stepFiveIndicatorNo").css("background-color","#FFC107"),$("#stepFiveIndicatorNo").css("color","#00192D"),$("#stepFiveIndicatorText").html("Done")})),$("#stepSixBackBtn").click((function(e){e.preventDefault(),$("#sectionFive").show(),$("#sectionSix").hide(),$("#stepFiveIndicatorNo").html("5"),$("#stepFiveIndicatorNo").css("background-color","#00192D"),$("#stepFiveIndicatorNo").css("color","#FFC107"),$("#stepFiveIndicatorText").html("Regulations")})),$("#stepSixNextBtn").click((function(e){e.preventDefault(),$("#sectionSix").hide(),$("#sectionSeven").show(),$("#stepSixIndicatorNo").html('<i class="fa fa-check"><i>'),$("#stepSixIndicatorNo").css("background-color","#FFC107"),$("#stepSixIndicatorNo").css("color","#00192D"),$("#stepSixIndicatorText").html("Done")})),$("#stepSevenBackBtn").click((function(e){e.preventDefault(),$("#sectionSix").show(),$("#sectionSeven").hide(),$("#stepSixIndicatorNo").html("6"),$("#stepSixIndicatorNo").css("background-color","#00192D"),$("#stepSixIndicatorNo").css("color","#FFC107"),$("#stepSixIndicatorText").html("Insurance")})),$("#stepSevenNextBtn").click((function(e){e.preventDefault(),$("#sectionSeven").hide(),$("#sectionEight").show(),$("#stepSevenIndicatorNo").html('<i class="fa fa-check"><i>'),$("#stepSevenIndicatorNo").css("background-color","#FFC107"),$("#stepSevenIndicatorNo").css("color","#00192D"),$("#stepSevenIndicatorText").html("Done")})),$("#stepEightBackBtn").click((function(e){e.preventDefault(),$("#sectionSeven").show(),$("#sectionEight").hide(),$("#stepSevenIndicatorNo").html("7"),$("#stepSevenIndicatorNo").css("background-color","#00192D"),$("#stepSevenIndicatorNo").css("color","#FFC107"),$("#stepSevenIndicatorText").html("Photos")}))}));
-  // </script> -->
-  <script>
+  // </script>
+  <!-- <script>
     function validateFirstName(name) {
   const regex = /^[A-Za-z]+$/;
   return regex.test(name);
 }
-  </script>
+  </script> -->
 <script
   src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
   integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
@@ -1756,6 +1739,15 @@ $(document).ready((function(){$("#stepOneNextBtn").click((function(e){e.preventD
 ></script>
 
 <script>
+  document.addEventListener('DOMContentLoaded', function () {
+  const input = document.getElementById('firstName');
+  const errorMsg = document.getElementById('firstNameError');
+
+  if (input && errorMsg) {
+    input.addEventListener('input', validateFirstName);
+  }
+});
+
 function validateFirstName() {
   const input = document.getElementById('firstName');
   const errorMsg = document.getElementById('firstNameError');
@@ -1769,6 +1761,7 @@ function validateFirstName() {
     input.setCustomValidity('Only letters allowed');
   }
 }
+
 </script>
 
 <script>
@@ -1787,7 +1780,7 @@ function validateLastName() {
 }
 </script>
 
-<script>
+<!-- <script>
 function updatePhoneValidation() {
   const selectedOption = document.querySelector('#countryCode option:checked');
   const pattern = selectedOption.getAttribute('data-pattern');
@@ -1817,7 +1810,7 @@ function validatePhoneNumber() {
 
 // Initialize on page load
 window.onload = updatePhoneValidation;
-</script>
+</script> -->
 
 
 <script>
@@ -1969,7 +1962,8 @@ function validateNoOfPanels() {
 function validateApprovalNo() {
   const input = document.getElementById('approvalNo');
   const errorMsg = document.getElementById('approvalNoError');
-  const regex = /^NCA-\d{7}-\d{4}$/;
+  const regex = /^\d{5}\/[A-Z]\/\d{4}$/;
+
 
   if (input.value === '' || regex.test(input.value)) {
     errorMsg.style.display = 'none';
@@ -2270,7 +2264,7 @@ $("#stepEightBackBtn").click(function(e) {
 });
 </script>
 
-<script>
+<!-- <script>
   function updatePhoneValidation() {
     const select = document.getElementById('entitycountryCode');
     const input = document.getElementById('entityphoneNumber');
@@ -2308,7 +2302,7 @@ $("#stepEightBackBtn").click(function(e) {
 
   // Initialize on load
   document.addEventListener('DOMContentLoaded', updatePhoneValidation);
-</script>
+</script> -->
 
 <script>
 function validateEmailFormat() {
@@ -2347,7 +2341,41 @@ function checkEmailExists() {
     });
 }
 </script>
+<script>
+function validateEmail() {
+  const emailInput = document.getElementById("ownerEmail");
+  const emailError = document.getElementById("emailError");
+  const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
+  if (!emailPattern.test(emailInput.value)) {
+    emailError.style.display = "block";
+    emailInput.setCustomValidity("Invalid email address");
+  } else {
+    emailError.style.display = "none";
+    emailInput.setCustomValidity("");
+  }
+}
+</script>
+
+<script>
+function validateEntityEmail() {
+  const emailInput = document.getElementById("entityEmail");
+  const emailError = document.getElementById("entityEmailError");
+  const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+
+  if (!emailPattern.test(emailInput.value)) {
+    emailError.style.display = "block";
+    emailInput.setCustomValidity("Invalid email address");
+  } else {
+    emailError.style.display = "none";
+    emailInput.setCustomValidity("");
+  }
+}
+</script>
+
+<script src="registration.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="prop.js"></script>
 
 <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
  <script src="../../../dist/js/adminlte.js"></script>

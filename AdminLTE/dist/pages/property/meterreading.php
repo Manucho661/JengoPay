@@ -2,11 +2,11 @@
 // Include database connection
 include '../db/connect.php'; // Ensure this defines $pdo for PDO
 
-// Check if 'id' is passed in the URL
+// Check if 'building_id' is passed in the URL
 if (isset($_GET['building_id'])) {
     $buildingId = intval($_GET['building_id']); // Get the building ID from the URL
 
-    // Prepare the query to fetch building data based on the 'id'
+    // Prepare the query to fetch building data based on the 'building_id'
     $stmt = $pdo->prepare("SELECT * FROM buildings WHERE building_id = ?");
     $stmt->bindParam(1, $buildingId, PDO::PARAM_INT);
     $stmt->execute();
@@ -28,44 +28,46 @@ if (isset($_GET['building_id'])) {
 
 // Handle form submission
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['submit'])) {
-  $reading_date = $_POST['reading_date'] ?? null;
-  $unit_number = $_POST['unit_number'] ?? null;
-  $meter_type = $_POST['meter_type'] ?? null;
-  $previous_reading = floatval($_POST['previous_reading'] ?? 0);
-  $current_reading = floatval($_POST['current_reading'] ?? 0);
-  $consumption_units = $current_reading - $previous_reading;
+    $reading_date = $_POST['reading_date'] ?? null;
+    $unit_number = $_POST['unit_number'] ?? null;
+    $meter_type = $_POST['meter_type'] ?? null;
+    $previous_reading = floatval($_POST['previous_reading'] ?? 0);
+    $current_reading = floatval($_POST['current_reading'] ?? 0);
+    $consumption_units = $current_reading - $previous_reading;
 
-  if (empty($reading_date) || empty($unit_number)) {
-    echo "<p style='color:red;'>Both reading date and unit number are required.</p>";
-} else {
-      $stmt = $pdo->prepare("INSERT INTO meter_readings (reading_date, unit_number, meter_type, previous_reading, current_reading, consumption_units)
-                              VALUES (?, ?, ?, ?, ?, ?)");
-      $stmt->bindParam(1, $reading_date, PDO::PARAM_STR);
-      $stmt->bindParam(2, $unit_number, PDO::PARAM_STR);
-      $stmt->bindParam(3, $meter_type, PDO::PARAM_STR);
-      $stmt->bindParam(4, $previous_reading, PDO::PARAM_STR);
-      $stmt->bindParam(5, $current_reading, PDO::PARAM_STR);
-      $stmt->bindParam(6, $consumption_units, PDO::PARAM_STR);
+    if (empty($reading_date) || empty($unit_number)) {
+        echo "<p style='color:red;'>Both reading date and unit number are required.</p>";
+    } else {
+        // Insert meter reading into the database with building_id
+        $stmt = $pdo->prepare("INSERT INTO meter_readings (building_id, reading_date, unit_number, meter_type, previous_reading, current_reading, consumption_units)
+                               VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bindParam(1, $buildingId, PDO::PARAM_INT); // Ensure the building_id is linked
+        $stmt->bindParam(2, $reading_date, PDO::PARAM_STR);
+        $stmt->bindParam(3, $unit_number, PDO::PARAM_STR);
+        $stmt->bindParam(4, $meter_type, PDO::PARAM_STR);
+        $stmt->bindParam(5, $previous_reading, PDO::PARAM_STR);
+        $stmt->bindParam(6, $current_reading, PDO::PARAM_STR);
+        $stmt->bindParam(7, $consumption_units, PDO::PARAM_STR);
 
-      if ($stmt->execute()) {
-        echo "<script>
-            alert('✅ Meter reading successfully added! Consumption: $consumption_units units');
-            document.getElementById('meterForm').reset();
-        </script>";
+        if ($stmt->execute()) {
+            // Display success alert and reset the form
+            echo "<script>
+                    alert('✅ Meter reading successfully added! Consumption: $consumption_units units');
+                    document.getElementById('meterForm').reset();
+                  </script>";
+        } else {
+            echo "<p style='color:red;'>Error: " . $stmt->errorInfo()[2] . "</p>";
+        }
 
-      } else {
-          echo "<p style='color:red;'>Error: " . $stmt->errorInfo()[2] . "</p>";
-      }
-
-      $stmt->closeCursor();
-  }
+        $stmt->closeCursor();
+    }
 }
 
 // Get building_id from query parameters
 $building_id = isset($_GET['building_id']) ? $_GET['building_id'] : null;
 
 if ($building_id) {
-    // Prepare the query to fetch units for a specific building
+    // Prepare the query to fetch units for the specific building only
     $stmt = $pdo->prepare("SELECT u.unit_number FROM units u WHERE u.building_id = ?");
 
     // Check if preparation was successful
@@ -75,13 +77,9 @@ if ($building_id) {
 
     $stmt->bindParam(1, $building_id, PDO::PARAM_INT); // Bind the building_id
 } else {
-    // If no building_id is provided, fetch all units
-    $stmt = $pdo->prepare("SELECT u.unit_number FROM units u");
-
-    // Check if preparation was successful
-    if ($stmt === false) {
-        die("Error preparing statement: " . $pdo->errorInfo()[2]);
-    }
+    // If no building_id is provided, fetch all units for this building
+    echo "Building ID is missing!";
+    exit;
 }
 
 $stmt->execute();
@@ -103,10 +101,7 @@ $stmt = $pdo->prepare($sql);
 $stmt->bindParam(':building_id', $buildingId, PDO::PARAM_INT);
 $stmt->execute();
 $readings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
 ?>
-
 
 
 <!doctype html>
@@ -179,6 +174,10 @@ $readings = $stmt->fetchAll(PDO::FETCH_ASSOC);
           body{
             font-size: 16px;
           }
+          #chargeFormContainer {
+  padding-top: 60px;
+}
+
         </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -683,15 +682,98 @@ $readings = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <p id="consumption_preview"><i>Calculated automatically</i></p>
     </div>
 
-
-    <button type="submit" name="submit" class="submit-btn">Create Meter Reading</button>
+     <button type="submit" name="submit" class="submit-btn">Create Meter Reading</button>
             </form>
         </div>
     </div>
     <!-- end -->
 
+<!-- popup -->
+<!-- Create Meter Reading Button -->
+<!-- <button type="button" class="submit-btn" onclick="showChargeForm()">Create Meter Reading</button> -->
+
+<!-- Container where the Charge Form will appear -->
+<!-- <div id="chargeFormContainer" style="display: none; min-height: 70vh;" class="d-flex justify-content-center align-items-start mt-5">
+  <div class="col-md-10 col-lg-8 bg-white p-4 shadow rounded">
+
+    <div class="mb-4">
+      <label for="chargeName" class="form-label fw-bold">Charge Name</label>
+      <input type="text" id="chargeName" class="form-control shadow-sm" placeholder="Enter charge name">
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-md-4">
+          <label for="unitPrice" class="form-label fw-bold">Unit Price (Ksh)</label>
+          <input type="number" id="unitPrice" class="form-control shadow-sm" placeholder="Enter unit price">
+      </div>
+      <div class="col-md-4">
+          <label for="quantity" class="form-label fw-bold">Consumption Units</label>
+          <input type="number" id="quantity" class="form-control shadow-sm" placeholder="Enter Consumption Units">
+      </div>
+      <div class="col-md-4 d-flex align-items-end">
+          <button class="btn btn-primary w-100 shadow-sm" onclick="addCharge()">
+              <i class="fas fa-plus"></i> Add Charge
+          </button>
+      </div>
+    </div>
+
+     List of Charges -->
+    <!-- <div id="chargeList" class="mb-3"></div> -->
+
+    <!-- Charges Summary Table -->
+    <!-- <h4 class="mt-4 text-secondary">Charges Summary</h4>
+    <table class="table table-striped table-bordered mt-2 shadow-sm">
+        <thead class="bg-info text-white">
+            <tr>
+                <th>Charge Name</th>
+                <th>Unit Price (Ksh)</th>
+                <th>Consumption Units</th>
+                <th>Total (Ksh)</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="chargesTable"> -->
+            <!-- Dynamic Rows Will Be Added Here -->
+        <!-- </tbody>
+    </table> -->
+
+    <!-- Total Amount -->
+    <!-- <div class="row">
+      <div class="col-md-4 mt-3">
+        <label class="form-label fw-bold">Total Amount (Ksh)</label>
+        <input type="text" id="totalAmount" class="form-control shadow-sm" readonly>
+      </div>
+    </div>
+
+    <a href="../financials/invoices.html">
+        <button class="btn btn-success mt-3 w-100 shadow-sm">
+            <i class="fas fa-file-invoice"></i> Send To Invoice
+        </button>
+    </a>
+
+  </div>
+</div> -->
+
+
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
+
+    <!-- start -->
+    <!-- <script>
+  document.getElementById("meterForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent form from submitting
+    document.getElementById("chargeFormContainer").style.display = "none"; // Show the hidden container
+  });
+</script> -->
+
+<!-- </script> -->
+
+
+
+    <!-- end -->
+
+
+    <!-- begin -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const steps = document.querySelectorAll(".form-step");

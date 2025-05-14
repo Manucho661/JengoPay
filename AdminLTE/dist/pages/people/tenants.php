@@ -58,7 +58,7 @@
       name="keywords"
       content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard"
     />
-  
+
     <!-- loading out and in progress -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css">
     <!--end::Primary Meta Tags-->
@@ -80,15 +80,15 @@
     />
     <!--end::Third Party Plugin(OverlayScrollbars)-->
 
-        
 
-   
+
+
     <!--begin::Third Party Plugin(Multple seclection)-->
 
       <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
     <!--end::Third Party Plugin(Mutiple selection)-->
-  
+
 
 
 
@@ -109,7 +109,7 @@
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
 
-    
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
    <link rel="stylesheet" href="tenants.css">
@@ -162,7 +162,7 @@ width: 100%;
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
     <div class="app-wrapper"style="background-color:rgba(128,128,128, 0.1);" >
-      
+
       <!--begin::Header-->
       <?php include_once '../includes/header.php'?>
       <!--end::Header-->
@@ -287,14 +287,18 @@ width: 100%;
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Email</label> <sup class="text-danger"><b>*</b></sup>
-                                                        <input type="email" class="form-control" name="tenant_email" id="tenant_email" placeholder="email"> 
-                                                    </div>
+                                                        <input type="email" class="form-control" name="tenant_email" id="tenant_email" placeholder="email" >
+                                                        <small id="emailError" class="text-danger" style="display:none;">Please enter a valid email address.</small>
+
+                                                      </div>
                                                     <b class="text-danger" id="tenant_emailError"></b>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Identification No.</label> <sup class="text-danger"><b>*</b></sup>
-                                                        <input type="text" class="form-control" name="tenant_id_no" id="tenant_id_no" placeholder="Identification Number">
+                                                        <input type="text" class="form-control" name="tenant_id_no" id="tenant_id_no" placeholder="Identification Number" maxlength="8" inputmode="numeric"
+                                                        pattern="\d*"
+                                                        oninput="this.value = this.value.replace(/\D/g, '')">
                                                     </div>
                                                     <b class="text-danger" id="tenant_id_noError"></b>
                                                 </div>
@@ -311,13 +315,17 @@ width: 100%;
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="">KRA PIN</label>
-                                                        <input type="text" class="form-control" name="kra_pin" id="kra_pin">
+                                                        <input type="text" class="form-control" name="kra_pin" id="kra_pin"  placeholder="Enter KRA PIN (e.g. A123456789B)"
+                                                        title="Format: A123456789B"
+                                                        oninput="validateKraPin()" >
+                                                        <small id="kraPinError" style="color:red; display:none;">Please enter a valid KRA PIN (Format: A123456789B)</small>
+
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="">KRA PIN Copy</label>
-                                                        <input type="file" class="form-control" name="kra_pin_copy" id="kra_pin_copy">
+                                                        <input type="file" class="form-control" name="kra_pin_copy" id="kra_pin_copy" >
                                                     </div>
                                                 </div>
                                             </div>
@@ -334,7 +342,7 @@ width: 100%;
                                                 <div class="col-md-4">
                                                     <label>Building</label> <sup class="text-danger"><b>*</b></sup>
                                                     <br>
-                                                    
+
                                                     <select class="form-control" name="building_name" id="building_name" >
                                                       <option value="Crown Z">Crown Z</option>
                                                       <option value="Manucho">Manucho</option>
@@ -399,7 +407,7 @@ width: 100%;
                                                 <div class="card-body">
                                                     <div class="form-group">
                                                         <label>Select Pet(s)</label> <sup>Multiple Allowed</sup>
-                                                        
+
                                                         <select name="pets[]" class="select2" multiple="multiple" data-placeholder="Specify Pet(s)" style="width: 100%;">
                                                             <option>Dog</option>
                                                             <option>Cat</option>
@@ -810,9 +818,9 @@ width: 100%;
 
           <!-- Real tenant -->
     <!--Begin Jquery plugin-->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- End Jquery plugin-->
-    
+
     <!-- Begin select2 plugin-->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <!-- End select2 plugin-->
@@ -820,7 +828,7 @@ width: 100%;
     <script>
       $(document).ready(function() {
         $('.select2').select2();
-        
+
       });
     </script>
 
@@ -920,11 +928,11 @@ width: 100%;
       });
     </script>
     <!--end::OverlayScrollbars Configure-->
-    
+
 
     <!-- Select2 JS -->
-  
-   
+
+
     <!-- OPEN TENANT PAGE -->
     <script>
       function goToDetails(userId) {
@@ -1117,7 +1125,7 @@ $(document).ready(function(){
     });
         $('.select2').select2();
       });
-    
+
     document.getElementById('customNoPets').addEventListener('change', function(){
         document.getElementById('specifyPetsCard').style.display='none';
     });
@@ -1164,6 +1172,39 @@ document.querySelectorAll('button.status').forEach(button => {
 </script>
 
 
+<!-- validateKraPin -->
+<script>
+    function validateKraPin() {
+      const kraPinInput = document.getElementById("kra_pin");
+      const kraPinError = document.getElementById("kraPinError");
+      const kraPattern = /^A\d{9}[A-Z]$/i;
+
+      if (!kraPattern.test(kraPinInput.value.trim())) {
+        kraPinError.style.display = "block";
+        kraPinInput.setCustomValidity("Invalid KRA PIN format");
+      } else {
+        kraPinError.style.display = "none";
+        kraPinInput.setCustomValidity("");
+      }
+    }
+    </script>
+
+<script>
+  document.getElementById('tenant_email').addEventListener('input', function() {
+    var email = this.value;
+    var emailError = document.getElementById('emailError');
+
+    // Simple email pattern to check the format
+    var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
+    if (!emailPattern.test(email)) {
+        emailError.style.display = 'block';
+    } else {
+        emailError.style.display = 'none';
+    }
+});
+
+</script>
 
 <script>
   document.querySelectorAll('.select-options div').forEach(option => {

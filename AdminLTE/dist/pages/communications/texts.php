@@ -51,9 +51,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['title']) && !empty($
 
         // Store attachments separately if any
         if (!empty($uploaded_files)) {
-            $stmt_file = $pdo->prepare("INSERT INTO message_files (thread_id, file_path) VALUES (?, ?)");
+            $stmt_file = $pdo->prepare("INSERT INTO message_files (message_id,thread_id, file_path) VALUES (?, ?, ?)");
             foreach ($uploaded_files as $file_path) {
-                $stmt_file->execute([$thread_id, $file_path]);
+                $stmt_file->execute([$message_id,$thread_id, $file_path]);
             }
         }
 
@@ -715,7 +715,7 @@ display: flex;
                       <div class="row h-100 align-items-stretch" id="individual-message-summmary" style="border:1px solid #E2E2E2; padding: 0 !important; display: none; max-height: 95%;">
 
 
-                            <div id="message-profiles" class="col-md-4  message-profiles" style="height: 100%;" >
+                            <div id="message-profiles" class="col-md-4  message-profiles"  >
 
                               <div class="topic-profiles-header-section d-flex">
                                 <div class="content d-flex">
@@ -775,7 +775,7 @@ display: flex;
 
                             </div>
 
-                            <div id="messageBody" class="col-md-8 message-body" style="padding: 0 !important;">
+                            <div id="messageBody" class="col-md-8 message-body" style="padding: 0 !important; height:100%;">
                               <div class="individual-message-body-header">
                                 <div class="individual-details-container">
                                   <div class="content">
@@ -793,8 +793,8 @@ display: flex;
                                   <div class="message incoming">Hello! How are you?</div>
                                   <div class="message outgoing">I'm doing great, thanks!</div>
                                 </div>
-                               <div class="input-area">
 
+                               <div class="input-area">
                               <!-- Attachment input -->
                               <input type="file" id="fileInput" multiple style="display: none;" onchange="handleFileChange(event)">
                                 <button class="btn attach-button" onclick="document.getElementById('fileInput').click();">
@@ -802,7 +802,11 @@ display: flex;
                                 </button>
 
                                   <div class="input-box" id="inputBox" contenteditable="true"></div>
-                                  <button name="incoming_message" class="btn message-send-button" onclick="sendMessage()"><i class="fa fa-paper-plane"></i> </button>
+                                  <div class="message-input-wrapper">
+                                  <button name="incoming_message" class="btn message-send-button" onclick="sendMessage()">
+                                    <i class="fa fa-paper-plane"></i>
+                                  </button>
+                                </div>
                               </div>
 
                               </div>
@@ -1205,6 +1209,17 @@ document.getElementById('sendMessage').addEventListener('click', function() {
 function sendMessage() {
     var inputBox = document.getElementById('inputBox');
     var message = inputBox.innerHTML.trim();
+
+    const messageText = inputBox.innerText.trim();
+ if (messageText !== "") {
+  const messageContainer = document.getElementById('messages');
+  const newMessage = document.createElement('div');
+  newMessage.className = 'message outgoing';
+   newMessage.innerText = messageText;
+  messageContainer.appendChild(newMessage);
+   inputBox.innerText = ''; // Clear input
+   messageContainer.scrollTop = messageContainer.scrollHeight; // Scroll to bottom
+}
 
     if (!message) {
         alert("Please type a message.");
