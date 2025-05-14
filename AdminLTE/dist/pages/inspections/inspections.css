@@ -1,7 +1,5 @@
 body {
     font-family: 'Poppins', sans-serif;
-
-
       /* font-size: 10px; */
   }
 
@@ -23,7 +21,6 @@ body {
     width: 33.33%;
   }
 }
-
 
                             /* BODY TITLE SECTION */
   .contact_section_header{
@@ -110,11 +107,11 @@ input:focus, select:focus, textarea:focus {
     background-color: #00192D;
     color: white;
     cursor: pointer;
-
 }
   .submit-btn {
     margin-right: 5px;
     }
+
 
 
 .add-inspection-btn{
