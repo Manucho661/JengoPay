@@ -494,7 +494,7 @@ width: 100%;
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>State the Location of Your Business</label>
-                                                                <input type="text" class="form-control" name="tenant_jobtitle">
+                                                                <input type="text" class="form-control" name="tenant_jobtitlel">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Enter the Business KRA PIN</label>
@@ -514,7 +514,7 @@ width: 100%;
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>State the Location of Your Business</label>
-                                                                <input type="text" class="form-control" name="tenant_jobtitle">
+                                                                <input type="text" class="form-control" name="tenant_jobtitlel">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Enter the Business KRA PIN</label>
@@ -524,11 +524,11 @@ width: 100%;
                                                             <br>
                                                             <div class="form-group">
                                                                 <label>Employer?</label>
-                                                                <input type="text" class="form-control" name="tenant_workplace">
+                                                                <input type="text" class="form-control" name="tenantw_workplace">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Specify your Job Title</label>
-                                                                <input type="text" class="form-control" name="tenant_jobtitle">
+                                                                <input type="text" class="form-control" name="tenant_jobtitlel">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Employer Contact</label>
@@ -537,7 +537,7 @@ width: 100%;
 
                                                         </div>
                                                     </div>
-                                                    
+
                                                 </div>
 
                                             </div>
