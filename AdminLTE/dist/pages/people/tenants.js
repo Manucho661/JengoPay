@@ -242,9 +242,9 @@ function fetchTenants(building) {
           formData.append("type", "tenant"); // Add the type for tenant
 
           // Send data via fetch
-          fetch("../actions/add_record.php", {
+          fetch("actions/tenants/add_record.php", {
             method: "POST",
-            body: new URLSearchParams(formData)
+            body: formData 
           })
           .then(res => res.text())
           .then(data => {
