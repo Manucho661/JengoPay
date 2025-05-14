@@ -1,3 +1,4 @@
+
 <?php
 include '../db/connect.php'; // Make sure $pdo is available
 
@@ -715,21 +716,25 @@ display: flex;
                       <div class="row h-100 align-items-stretch" id="individual-message-summmary" style="border:1px solid #E2E2E2; padding: 0 !important; display: none; max-height: 95%;">
 
 
-                      <div id="message-profiles" class="col-md-4 message-profiles">
-  <div class="topic-profiles-header-section d-flex">
-    <div class="content d-flex">
-      <div class="individual-details-container">
-        <div class="content d-flex">
-          <div class="profile-initials" id="profile-initials">JM</div>
-          <div class="individual-residence d-flex">
-            <div class="individual-name body">Emmanuel,</div>
-            <div class="initial-topic-separator">|</div>
-            <div class="residence mt-2"><?= htmlspecialchars($b['building_name']) ?></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+                            <div id="message-profiles" class="col-md-4  message-profiles"  >
+
+                              <div class="topic-profiles-header-section d-flex">
+                                <div class="content d-flex">
+                                  <div  class="individual-details-container">
+                                    <div class="content d-flex">
+                                      <div class="profile-initials" id="profile-initials">JM</div>
+
+                                      <div class="individual-residence d-flex">
+                                        <div class="individual-name body">Emmanuel,</div>
+                                        <div  class="initial-topic-separator">|</div>
+                                        <div class="residence mt-2"><?= htmlspecialchars($b['building_name'])?></div>
+                                      </div>
+
+                                    </div>
+                                  </div>
+
+                                </div>
+                              </div>
 
                               <div class="h-80  other-topics-section">
                                 <?php foreach ($communications as $comm): ?>
@@ -798,7 +803,7 @@ display: flex;
                                 </button>
 
                                   <div class="input-box" id="inputBox" contenteditable="true"></div>
-                                  <div class="message-input-wrapper">
+                                  <div class="message-input-wrapper" >
                                   <button name="incoming_message" class="btn message-send-button" onclick="sendMessage()">
                                     <i class="fa fa-paper-plane"></i>
                                   </button>
