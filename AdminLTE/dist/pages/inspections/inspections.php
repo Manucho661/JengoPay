@@ -535,7 +535,8 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
 
                                            <!-- OVERLAYS -->
   <!-- Perfom an inspection -->
-<div id="perform_inspection_modal" class="container-fluid" style="display: none;">
+<section id="perform_inspection_modal" style="display: none;" >
+<div  class="container-fluid" >
                         <div class="card">
                             <div class="card-header" style="background-color:#00192D; color:#FFC107"><b>Perform Inspection</b></div>
                             <div class="card-body">
@@ -818,9 +819,8 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                             </div>
 
                         </div>
-                    </div>
-                                           
-
+                    </div>                                          
+</section>
 
 
     <script src="inspections.js"></script>

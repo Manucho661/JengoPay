@@ -788,8 +788,8 @@ display: flex;
                                 </div>
                               </div>
 
-                              <div class="individual-message-body">
-                                <div class="messages" id="messages">
+                              <div class="individual-message-body" style="height: 100%;">
+                                <div class="messages" id="messages" >
                                   <div class="message incoming">Hello! How are you?</div>
                                   <div class="message outgoing">I'm doing great, thanks!</div>
                                 </div>
