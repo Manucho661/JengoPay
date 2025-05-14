@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 07, 2025 at 04:03 PM
+-- Generation Time: May 14, 2025 at 03:36 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -40,22 +40,18 @@ CREATE TABLE `communication` (
   `building_name` varchar(155) NOT NULL,
   `building_id` int(255) NOT NULL,
   `title` varchar(255) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `email` varchar(255) NOT NULL,
+  `recipient` varchar(255) NOT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `communication`
 --
 
-INSERT INTO `communication` (`thread_id`, `sender_id`, `receiver_id`, `start_date`, `end_date`, `subject`, `files`, `unit_id`, `tenant`, `building_name`, `building_id`, `title`, `created_at`, `updated_at`) VALUES
-(113, NULL, NULL, NULL, NULL, 'efsgrd', '[]', '', '', '78', 0, 'request to vacate room ', '2025-05-05 10:38:12', '2025-05-05 10:38:12'),
-(138, NULL, NULL, NULL, NULL, 'efsgrd', '[]', '', '', '78', 0, 'woow', '2025-05-05 12:05:23', '2025-05-05 12:05:23'),
-(141, NULL, NULL, NULL, NULL, 'efsgrd', '[]', '', '', '78', 0, 'Come for your contract', '2025-05-06 08:07:24', '2025-05-06 08:07:24'),
-(142, NULL, NULL, NULL, NULL, 'wash your corridor', '[]', '', '', '78', 0, 'Corridor wash', '2025-05-06 09:11:02', '2025-05-06 09:11:02'),
-(143, NULL, NULL, NULL, NULL, 'wash your window', '[]', '', '', '78', 0, 'window cleaning', '2025-05-06 12:08:07', '2025-05-06 12:08:07'),
-(144, NULL, NULL, NULL, NULL, 'efsgrd', '[]', '', '', '86', 0, 'fvsgbh', '2025-05-07 12:39:24', '2025-05-07 12:39:24'),
-(145, NULL, NULL, NULL, NULL, 'wash your corridor', '[]', '', '', '87', 0, 'rfgbhdb', '2025-05-07 13:01:33', '2025-05-07 13:01:33');
+INSERT INTO `communication` (`thread_id`, `sender_id`, `receiver_id`, `start_date`, `end_date`, `subject`, `files`, `unit_id`, `tenant`, `building_name`, `building_id`, `title`, `email`, `recipient`, `created_at`, `updated_at`) VALUES
+(195, NULL, NULL, NULL, NULL, '', '[\"uploads\\/68248fbf18080_Terry\'s Title Deed.pdf\"]', '', '', '117', 0, 'yebo', '', '', '2025-05-14 15:42:39', '2025-05-14 15:42:39');
 
 --
 -- Indexes for dumped tables
@@ -75,7 +71,7 @@ ALTER TABLE `communication`
 -- AUTO_INCREMENT for table `communication`
 --
 ALTER TABLE `communication`
-  MODIFY `thread_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=146;
+  MODIFY `thread_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=196;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

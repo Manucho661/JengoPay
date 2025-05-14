@@ -1,3 +1,4 @@
+
 <?php
 include '../db/connect.php'; // Make sure $pdo is available
 
@@ -802,7 +803,7 @@ display: flex;
                                 </button>
 
                                   <div class="input-box" id="inputBox" contenteditable="true"></div>
-                                  <div class="message-input-wrapper">
+                                  <div class="message-input-wrapper" >
                                   <button name="incoming_message" class="btn message-send-button" onclick="sendMessage()">
                                     <i class="fa fa-paper-plane"></i>
                                   </button>
