@@ -38,12 +38,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $job_title = $_POST['tenant_jobtitle'] ?? '';
                 $status = 'active';
 
-                
-
                 if ($first_name && $middle_name && $pets && $email && $phone &&
                     $id_no && $residence && $unit && $income_source && $work_place && $job_title &&
-                    isset($_FILES['tenant_id_copy']) &&
-                    $_FILES['tenant_id_copy']['error'] === UPLOAD_ERR_OK
+                    isset($_FILES['tenant_id_copy'], $_FILES['kra_pin_copy'], $_FILES['agreemeny_copy'] ) &&
+                    $_FILES['tenant_id_copy']['error'] === UPLOAD_ERR_OK &&
+                    $_FILES['kra_pin_copy']['error'] === UPLOAD_ERR_OK &&
+                    $_FILES['agreemeny_copy']['error'] === UPLOAD_ERR_OK
                     ) {
                        // ✅ Step 1: Prepare file upload
                        // Step 1: Set target folder (relative to current script)
@@ -54,9 +54,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 mkdir($uploadDir, 0777, true);
                             }
 
-                            // Step 3: Get file details
-                            $originalName = $_FILES['tenant_id_copy']['name'];
-                            $tempPath = $_FILES['tenant_id_copy']['tmp_name'];
+                            $files = ['tenant_id_copy', 'kra_pin_copy', 'agreemeny_copy'];
+                            // Step 3: Get files details
+                            foreach ($files as $fileKey){
+                            $originalName = $_FILES[$fileKey]['name'];
+                            $tempPath = $_FILES[$fileKey]['tmp_name'];
                             $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
 
                             // Step 4: Validate file type
@@ -78,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                             // ✅ Optional: Save filename to DB later
                             echo "File uploaded successfully as $filename";
-
+                        }
 
                     try {
                         $pdo->beginTransaction();
@@ -104,9 +106,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         // Step 4: Insert into files
                         $stmtTenant = $pdo->prepare("INSERT INTO files (tenant_id, file_path) VALUES (?, ?)");
                         $stmtTenant->execute([$tenant_id, $filename ]);
-
-
-
 
 
                         $pdo->commit();
