@@ -54,9 +54,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 mkdir($uploadDir, 0777, true);
                             }
 
-                            $files = ['tenant_id_copy', 'kra_pin_copy', 'agreemeny_copy'];
+                            // Files array.
+                            $files = ['tenant_id_copy' =>'ID COPY', 'kra_pin_copy' =>'KRA PIN COPY', 'agreemeny_copy' =>'AGREEMENT COPY'];
+                            $uploadedFilePaths = []; // Array to store full paths
+
                             // Step 3: Get files details
-                            foreach ($files as $fileKey){
+                            foreach ($files as $fileKey=>$displayName){
                             $originalName = $_FILES[$fileKey]['name'];
                             $tempPath = $_FILES[$fileKey]['tmp_name'];
                             $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
@@ -69,8 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             }
 
                             // Step 5: Set destination file path
-                            $filename = uniqid('id_copy_') . '.' . $extension;
-                            $destination = $uploadDir . $filename;
+                            $uniqueName = uniqid(pathinfo($originalName, PATHINFO_FILENAME) . '_') . '.' . $extension;
+                            $destination = $uploadDir . $uniqueName;
 
                             // Step 6: Move uploaded file
                             if (!move_uploaded_file($tempPath, $destination)) {
@@ -78,8 +81,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 exit;
                             }
 
+                            $uploadedFiles[] = [
+                                'name' => $displayName,
+                                'path' => $destination
+                            ];
+
                             // ✅ Optional: Save filename to DB later
-                            echo "File uploaded successfully as $filename";
+                            echo "File uploaded successfully as $uniqueName";
                         }
 
                     try {
@@ -104,9 +112,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         }
 
                         // Step 4: Insert into files
-                        $stmtTenant = $pdo->prepare("INSERT INTO files (tenant_id, file_path) VALUES (?, ?)");
-                        $stmtTenant->execute([$tenant_id, $filename ]);
-
+                        foreach ($uploadedFiles as $file){
+                        $stmtTenant = $pdo->prepare("INSERT INTO files (tenant_id, file_name, file_path) VALUES (?, ?,?)");
+                        $stmtTenant->execute([$tenant_id, $file['name'], $file['path'] ]);
+                        }
 
                         $pdo->commit();
                         echo "Tenant and user added successfully!";
