@@ -1,3 +1,15 @@
+// landing in Units Page
+
+document.getElementById('unitForm').addEventListener('submit', function (e) {
+  e.preventDefault(); // Prevent default form submission
+
+  // Perform your validation or Ajax call here...
+
+  // After successful validation or server response
+  window.location.href = 'Units.php'; // Redirect to another page
+});
+
+
 // delete building
 
 function handleDelete(event, id, type) {

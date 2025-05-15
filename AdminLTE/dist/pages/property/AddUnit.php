@@ -47,13 +47,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':building_id'   => $building_id
         ]);
 
-        // Redirect to avoid resubmission
-        header("Location: ".$_SERVER['PHP_SELF']."?building_id=$building_id&success=1");
+        // Redirect on success
+        header("Location: Units.php?building_id=$building_id&success=1");
         exit();
 
     } catch (PDOException $e) {
-        // Handle DB error (e.g., duplicate constraint violation)
-        header("Location: ".$_SERVER['PHP_SELF']."?building_id=$building_id&error=1");
+        // Redirect on error
+        header("Location: Units.php?building_id=$building_id&error=1");
         exit();
     }
 }
@@ -533,7 +533,7 @@ if ($stmt->rowCount() > 0) {
 
 <b><p  style="color: #FFC107;">What is the Unit Information?</p></b>
 
-<form action="AddUnit.php" method="POST">
+<form action="" id="unitForm" method="POST">
     <div class="row">
 <!-- Add the new field for building_id -->
 <div class="col-md-4">

@@ -516,13 +516,14 @@ $readings = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <table id="myTableOne" class="display" >
     <thead>
       <tr>
-        <th>Reading Date</th>
-        <th>Unit</th>
-        <th>Meter Type</th>
-        <th>Previous Reading</th>
-        <th>Current Reading</th>
-        <th>Consumption Units</th>
-        <th>Action</th>
+        <th style="color: #FFC107;">Reading Date</th>
+        <th style="color: #FFC107;">Unit</th>
+        <th style="color: #FFC107;">Meter Type</th>
+        <th style="color: #FFC107;">Previous Reading</th>
+        <th style="color: #FFC107;">Current Reading</th>
+        <th style="color: #FFC107;">Consumption Units</th>
+        <th style="color: #FFC107;">Consumption Cost</th>
+        <th style="color: #FFC107;">Action</th>
       </tr>
     </thead>
     <tbody>
@@ -534,11 +535,12 @@ $readings = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <td><?php echo htmlspecialchars($reading['previous_reading']); ?></td>
             <td><?php echo htmlspecialchars($reading['current_reading']); ?></td>
             <td><?php echo htmlspecialchars($reading['consumption_units']); ?></td>
+            <td>Not Assigned</td>
             <td>
                 <button onclick="openshiftPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;">
                     <i class="fa fa-file"></i>
                 </button>
-                <button class="btn btn-sm" style="background-color: #193042; color:#fff;" title="Delete">
+                <button class="btn btn-sm" style="background-color: red; color:#fff;" title="Delete">
                     <i class="fa fa-trash"></i>
                 </button>
             </td>

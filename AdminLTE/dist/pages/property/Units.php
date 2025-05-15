@@ -1,11 +1,19 @@
 <?php
 include '../db/connect.php'; // Make sure this defines $pdo for PDO
 
+if (isset($_GET['success'])) {
+  echo "<script>alert('Unit added successfully.');</script>";
+} elseif (isset($_GET['duplicate'])) {
+  echo "<script>alert('This unit already exists in the building.');</script>";
+} elseif (isset($_GET['error'])) {
+  echo "<script>alert('An error occurred while inserting the unit.');</script>";
+}
+
 $building_id = isset($_GET['building_id']) ? $_GET['building_id'] : null;
 
 if ($building_id) {
     // Prepare the query to fetch units for a specific building
-    $stmt = $pdo->prepare("SELECT u.unit_number, u.rooms, u.floor_number FROM units u WHERE u.building_id = ?");
+    $stmt = $pdo->prepare("SELECT u.unit_number, u.rooms, u.room_type, u.unit_type, u.floor_number  FROM units u WHERE u.building_id = ?");
 
     // Check if preparation was successful
     if ($stmt === false) {
@@ -538,7 +546,9 @@ echo '<a style="color:#193042;" href="../property/meterreading.php?building_id='
                 <tr>
                   <th style="color: #FFC107;">Units</th>
                   <th style="color: #FFC107;">Tenants</th>
+                  <th style="color: #FFC107;">Room</th>
                   <th style="color: #FFC107;">Unit Type</th>
+                  <th style="color: #FFC107;">Room Type</th>
                   <th style="color: #FFC107;">Floor Number</th>
                  <th  style="color: #FFC107;">Action</th>
                 </tr>
@@ -549,6 +559,8 @@ echo '<a style="color:#193042;" href="../property/meterreading.php?building_id='
             <td><?= htmlspecialchars($unit['unit_number']) ?></td>
             <td><?= htmlspecialchars($unit['tenant_name'] ?? 'Not Assigned') ?></td> <!-- Replace with dynamic tenant if needed -->
             <td><?= htmlspecialchars($unit['rooms']) ?></td>
+            <td><?= htmlspecialchars($unit['unit_type']) ?></td>
+            <td><?= htmlspecialchars($unit['room_type']) ?></td>
             <td><?= htmlspecialchars($unit['floor_number']) ?></td>
             <td>
            <!-- Edit Button -->

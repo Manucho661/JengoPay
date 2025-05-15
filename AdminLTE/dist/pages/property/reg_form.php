@@ -932,7 +932,7 @@ try {
                   </div>
                  <div class="form-group">
                     <label>Identification Number</label>
-                    <input type="text" name="identification_number" class="form-control" id="identification_number" maxlength="8"
+                    <input type="text" name="identification_number" class="form-control" id="identification_number" maxlength="10"
                       placeholder="Identification Number" inputmode="numeric"
                                                         pattern="\d*"
                                                         oninput="this.value = this.value.replace(/\D/g, '')">
@@ -1073,19 +1073,18 @@ try {
               <div class="row">
                 <div class="col-md-6">
                   <label>Title Deed Copy</label>
-                  <input type="file" onchange="handleFiles(event)" class="form-control" id="titleDeedCopy">
+                  <input type="file" onchange="handleFiles(event)" name="title_deed_copy"  class="form-control" id="titleDeedCopy">
 
                   <!-- Section to display selected files' previews and sizes -->
                   <div id="filePreviews"></div>
 
                 </div>
                 <div class="col-md-6">
-                  <label>Other Legal Document</label>
-                  <input type="file" onchange="handleFiles(event)" class="form-control" id="otherDocumentCopy">
+                <label>Other Legal Document</label>
+                <input type="file" class="form-control" id="otherDocumentCopy" name="other_document_copy" accept=".pdf, image/*">
+                <div id="preview_other_document" style="margin-top: 10px;"></div>
+              </div>
 
-                  <!-- Section to display selected files' previews and sizes -->
-                  <div id="filePreviews"></div>
-                </div>
               </div>
             </div>
           </div>
@@ -1292,12 +1291,10 @@ try {
                   name="nca_approval_no"
                   class="form-control"
                   id="approvalNo"
-                  placeholder="Approval Number (e.g. 92177/B/0325)"
-                  pattern="^\d{5}\/[A-Z]\/\d{4}$/"
+                  placeholder="Approval Number"
                   title="Format must be  92177/B/0325"
-
-                  oninput="validateApprovalNo()"
                 />
+
                 <small id="approvalNoError" style="color:red; display:none;">
                   Format must be 92177/B/0325
                 </small>
@@ -1538,29 +1535,37 @@ try {
     <div class="card" id="sectionSeven">
       <div class="card-header"><b>Photographs and Documentations</b></div>
       <div class="card-body">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label>Front View</label>
-              <input type="file" class="form-control"  name="front_view_photo" id="front_view_photo">
-            </div>
-            <div class="form-group">
-              <label>Rear View</label>
-              <input type="file" class="form-control" name="rear_view_photo" id="front_view_photo">
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label>Angle View</label>
-              <input type="file" class="form-control" name="angle_view_photo" id="angle_view_photo">
-            </div>
-            <div class="form-group">
-              <label>Interior</label>
-              <input type="file" class="form-control" name="interior_view_photo" id="interior_view_photo">
-            </div>
-          </div>
+      <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Front View</label>
+          <input type="file" class="form-control" name="front_view_photo" id="front_view_photo" accept="image/*">
+          <img id="preview_front_view" src="#" alt="Front View Preview" style="max-width: 25%; max-height:25%; margin-top: 10px; display: none;">
+        </div>
+
+        <div class="form-group">
+          <label>Rear View</label>
+          <input type="file" class="form-control" name="rear_view_photo" id="rear_view_photo" accept="image/*">
+          <img id="preview_rear_view" src="#" alt="Rear View Preview" style="max-width: 25%; max-height:25%; margin-top: 10px; display: none;">
         </div>
       </div>
+
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Angle View</label>
+          <input type="file" class="form-control" name="angle_view_photo" id="angle_view_photo" accept="image/*">
+          <img id="preview_angle_view" src="#" alt="Angle View Preview" style="max-width: 25%; max-height:25%; margin-top: 10px; display: none;">
+        </div>
+
+        <div class="form-group">
+          <label>Interior</label>
+          <input type="file" class="form-control" name="interior_view_photo" id="interior_view_photo" accept="image/*">
+          <img id="preview_interior_view" src="#" alt="Interior View Preview" style="max-width: 25%; max-height:25%; margin-top: 10px; display: none;">
+        </div>
+      </div>
+    </div>
+    </div>
+
       <div class="card-footer text-right">
         <button type="button" class="btn btn-danger btn-sm back-btn"
           id="stepSevenBackBtn">Back</button>
@@ -1642,14 +1647,14 @@ try {
     <td><?=htmlspecialchars($building['ownership_info'])?></td> <!-- Manager goes here -->
     <td><?= htmlspecialchars($building['building_type']) ?></td>
     <td>
-      <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View">
-        <i class="fas fa-eye"></i>
+      <button class="btn btn-sm" style="background-color: #193042; color:#FFC107; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View">
+        <i class="fas fa-eye">VIEW</i>
       </button>
       <button onclick="handleDelete(event, <?= $building['building_id'] ?>, 'building')"
         class="btn btn-sm"
         style="background-color: red; color: white;">
     <i class="fa fa-trash" data-toggle="tooltip" title="Delete Building" style="font-size: 12px;"></i>
-</button>
+   </button>
 
 
     </td>
@@ -1960,22 +1965,6 @@ function validateNoOfPanels() {
 }
 </script>
 
-<script>
-function validateApprovalNo() {
-  const input = document.getElementById('approvalNo');
-  const errorMsg = document.getElementById('approvalNoError');
-  const regex = /^\d{5}\/[A-Z]\/\d{4}$/;
-
-
-  if (input.value === '' || regex.test(input.value)) {
-    errorMsg.style.display = 'none';
-    input.setCustomValidity('');
-  } else {
-    errorMsg.style.display = 'block';
-    input.setCustomValidity('Format must be NCA-1234567-2025');
-  }
-}
-</script>
 
 <script>
 function validateApprovalDate() {
@@ -2373,6 +2362,475 @@ function validateEntityEmail() {
     emailInput.setCustomValidity("");
   }
 }
+</script>
+
+<script>
+function previewImage(inputId, imgId) {
+  const input = document.getElementById(inputId);
+  const img = document.getElementById(imgId);
+
+  input.addEventListener('change', function () {
+    const file = input.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        img.src = e.target.result;
+        img.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    } else {
+      img.style.display = 'none';
+    }
+  });
+}
+
+// Initialize previews for each field
+previewImage('front_view_photo', 'preview_front_view');
+previewImage('rear_view_photo', 'preview_rear_view');
+previewImage('angle_view_photo', 'preview_angle_view');
+previewImage('interior_view_photo', 'preview_interior_view');
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get the form element
+    const form = document.querySelector('form');
+
+    // Add submit event listener
+    form.addEventListener('submit', function(e) {
+        if (!validateForm()) {
+            e.preventDefault(); // Prevent form submission if validation fails
+        }
+    });
+
+    // Function to validate the entire form
+    function validateForm() {
+        let isValid = true;
+        let errorMessage = "Please fill in the following required fields:\n";
+
+        // Section Two: Building Identification Information
+        if (!document.getElementById('buildingName').value) {
+            errorMessage += "- Building Name\n";
+            isValid = false;
+        }
+        if (!document.getElementById('county').value) {
+            errorMessage += "- County\n";
+            isValid = false;
+        }
+        if (!document.getElementById('constituency').value) {
+            errorMessage += "- Constituency\n";
+            isValid = false;
+        }
+        if (!document.getElementById('ward').value) {
+            errorMessage += "- Ward\n";
+            isValid = false;
+        }
+        if (!document.getElementById('floorNumber').value) {
+            errorMessage += "- Number of Floors\n";
+            isValid = false;
+        }
+        if (!document.getElementById('unitsnumber').value) {
+            errorMessage += "- Number of Units\n";
+            isValid = false;
+        }
+        if (!document.getElementById('buildingType').value) {
+            errorMessage += "- Building Type\n";
+            isValid = false;
+        }
+
+        // Section Three: Ownership Information
+        const ownershipRadio = document.querySelector('input[name="ownership_info"]:checked');
+        if (!ownershipRadio) {
+            errorMessage += "- Building Owned By (Individual/Entity)\n";
+            isValid = false;
+        } else {
+            if (ownershipRadio.value === "Individual") {
+                if (!document.getElementById('firstName').value) {
+                    errorMessage += "- First Name (Individual Owner)\n";
+                    isValid = false;
+                }
+                if (!document.getElementById('lastName').value) {
+                    errorMessage += "- Last Name (Individual Owner)\n";
+                    isValid = false;
+                }
+                if (!document.getElementById('phoneNumber').value) {
+                    errorMessage += "- Phone Number (Individual Owner)\n";
+                    isValid = false;
+                }
+            } else if (ownershipRadio.value === "Entity") {
+                if (!document.getElementById('entityName').value) {
+                    errorMessage += "- Entity Name\n";
+                    isValid = false;
+                }
+                if (!document.getElementById('entity_phoneNumber').value) {
+                    errorMessage += "- Entity Phone Number\n";
+                    isValid = false;
+                }
+            }
+        }
+
+        // Section Five: Legal and Regulatory Details
+        const ncaApproval = document.querySelector('input[name="nca_approval"]:checked');
+        if (ncaApproval && ncaApproval.value === "Yes") {
+            if (!document.getElementById('approvalNo').value) {
+                errorMessage += "- NCA Approval Number\n";
+                isValid = false;
+            }
+        }
+
+        const nemaApproval = document.querySelector('input[name="nema_approval"]:checked');
+        if (nemaApproval && nemaApproval.value === "Yes") {
+            if (!document.getElementById('nemaApprovalNumber').value) {
+                errorMessage += "- NEMA Approval Number\n";
+                isValid = false;
+            }
+        }
+
+        // Section Eight: Confirmation
+        if (!document.querySelector('#sectionEight input[type="checkbox"]:checked')) {
+            errorMessage += "- Confirmation Checkbox\n";
+            isValid = false;
+        }
+
+        // If form is not valid, show alert with missing fields
+        if (!isValid) {
+            alert(errorMessage);
+
+            // Scroll to the first invalid field
+            const firstInvalidField = document.querySelector(
+                '#buildingName:invalid, ' +
+                '#county:invalid, ' +
+                '#constituency:invalid, ' +
+                '#ward:invalid, ' +
+                '#floorNumber:invalid, ' +
+                '#unitsnumber:invalid, ' +
+                '#buildingType:invalid, ' +
+                '#firstName:invalid, ' +
+                '#lastName:invalid, ' +
+                '#phoneNumber:invalid, ' +
+                '#entityName:invalid, ' +
+                '#entity_phoneNumber:invalid, ' +
+                '#approvalNo:invalid, ' +
+                '#nemaApprovalNumber:invalid'
+            );
+
+            if (firstInvalidField) {
+                firstInvalidField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                firstInvalidField.focus();
+            }
+        }
+
+        return isValid;
+    }
+
+    // Add real-time validation for each section as users navigate
+    const nextButtons = document.querySelectorAll('.next-btn');
+    nextButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const currentSection = this.closest('.card');
+            const nextSection = currentSection.nextElementSibling;
+
+            if (validateCurrentSection(currentSection)) {
+                currentSection.style.display = 'none';
+                nextSection.style.display = 'block';
+                nextSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+
+    // Back buttons functionality
+    const backButtons = document.querySelectorAll('.back-btn');
+    backButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const currentSection = this.closest('.card');
+            const prevSection = currentSection.previousElementSibling;
+
+            currentSection.style.display = 'none';
+            prevSection.style.display = 'block';
+            prevSection.scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+
+    // Function to validate current section
+    function validateCurrentSection(section) {
+        let isValid = true;
+        let errorMessage = "Please fill in the following required fields:\n";
+
+        // Section Two validation
+        if (section.id === 'sectionTwo') {
+            if (!document.getElementById('buildingName').value) {
+                errorMessage += "- Building Name\n";
+                isValid = false;
+            }
+            if (!document.getElementById('county').value) {
+                errorMessage += "- County\n";
+                isValid = false;
+            }
+            if (!document.getElementById('constituency').value) {
+                errorMessage += "- Constituency\n";
+                isValid = false;
+            }
+            if (!document.getElementById('ward').value) {
+                errorMessage += "- Ward\n";
+                isValid = false;
+            }
+            if (!document.getElementById('floorNumber').value) {
+                errorMessage += "- Number of Floors\n";
+                isValid = false;
+            }
+            if (!document.getElementById('unitsnumber').value) {
+                errorMessage += "- Number of Units\n";
+                isValid = false;
+            }
+            if (!document.getElementById('buildingType').value) {
+                errorMessage += "- Building Type\n";
+                isValid = false;
+            }
+        }
+
+        // Section Three validation
+        if (section.id === 'sectionThree') {
+            const ownershipRadio = document.querySelector('input[name="ownership_info"]:checked');
+            if (!ownershipRadio) {
+                errorMessage += "- Building Owned By (Individual/Entity)\n";
+                isValid = false;
+            } else {
+                if (ownershipRadio.value === "Individual") {
+                    if (!document.getElementById('firstName').value) {
+                        errorMessage += "- First Name (Individual Owner)\n";
+                        isValid = false;
+                    }
+                    if (!document.getElementById('lastName').value) {
+                        errorMessage += "- Last Name (Individual Owner)\n";
+                        isValid = false;
+                    }
+                    if (!document.getElementById('phoneNumber').value) {
+                        errorMessage += "- Phone Number (Individual Owner)\n";
+                        isValid = false;
+                    }
+                } else if (ownershipRadio.value === "Entity") {
+                    if (!document.getElementById('entityName').value) {
+                        errorMessage += "- Entity Name\n";
+                        isValid = false;
+                    }
+                    if (!document.getElementById('entity_phoneNumber').value) {
+                        errorMessage += "- Entity Phone Number\n";
+                        isValid = false;
+                    }
+                }
+            }
+        }
+
+         // Section Four validation (Utilities and Infrastructure)
+    if (section.id === 'sectionFour') {
+        if (!document.getElementById('boreHoleVailability').value) {
+            errorMessage += "- Borehole Availability\n";
+            isValid = false;
+        }
+
+        const solarAvailability = document.querySelector('input[name="solar_availability"]:checked');
+        if (!solarAvailability) {
+            errorMessage += "- Solar System Availability\n";
+            isValid = false;
+        } else if (solarAvailability.value === "Yes") {
+            if (!document.getElementById('solarBrand').value) {
+                errorMessage += "- Solar Panel Brand\n";
+                isValid = false;
+            }
+            if (!document.getElementById('installationCompany').value) {
+                errorMessage += "- Installation Company\n";
+                isValid = false;
+            }
+            if (!document.getElementById('noOfPanels').value) {
+                errorMessage += "- Number of Panels\n";
+                isValid = false;
+            }
+            if (!document.getElementById('solarPrimaryUse').value) {
+                errorMessage += "- Solar Primary Use\n";
+                isValid = false;
+            }
+        }
+
+        if (!document.getElementById('parkingLot').value) {
+            errorMessage += "- Parking Lot Availability\n";
+            isValid = false;
+        }
+        if (!document.getElementById('alarmSystem').value) {
+            errorMessage += "- Alarm Security System\n";
+            isValid = false;
+        }
+        if (!document.getElementById('elevators').value) {
+            errorMessage += "- Elevator Availability\n";
+            isValid = false;
+        }
+        if (!document.getElementById('psds').value) {
+            errorMessage += "- PSD's Accessibility\n";
+            isValid = false;
+        }
+        if (!document.getElementById('cctv').value) {
+            errorMessage += "- CCTV Availability\n";
+            isValid = false;
+        }
+    }
+
+    // Section Five validation (Legal and Regulatory Details)
+    if (section.id === 'sectionFive') {
+        const ncaApproval = document.querySelector('input[name="nca_approval"]:checked');
+        if (!ncaApproval) {
+            errorMessage += "- NCA Approval\n";
+            isValid = false;
+        } else if (ncaApproval.value === "Yes") {
+            if (!document.getElementById('approvalNo').value) {
+                errorMessage += "- NCA Approval Number\n";
+                isValid = false;
+            }
+            if (!document.getElementById('approvalStartDate').value) {
+                errorMessage += "- NCA Approval Start Date\n";
+                isValid = false;
+            }
+            if (!document.getElementById('approvalEndDate').value) {
+                errorMessage += "- NCA Approval End Date\n";
+                isValid = false;
+            }
+        }
+
+        const localGovApproval = document.querySelector('input[name="local_gov_approval"]:checked');
+        if (!localGovApproval) {
+            errorMessage += "- Local Government Approval\n";
+            isValid = false;
+        } else if (localGovApproval.value === "Yes") {
+            if (!document.getElementById('localGovApprovalNo').value) {
+                errorMessage += "- Local Government Approval Number\n";
+                isValid = false;
+            }
+            if (!document.getElementById('localGovApprovalDate').value) {
+                errorMessage += "- Local Government Approval Date\n";
+                isValid = false;
+            }
+        }
+
+        const nemaApproval = document.querySelector('input[name="nema_approval"]:checked');
+        if (!nemaApproval) {
+            errorMessage += "- NEMA Approval\n";
+            isValid = false;
+        } else if (nemaApproval.value === "Yes") {
+            if (!document.getElementById('nemaApprovalNumber').value) {
+                errorMessage += "- NEMA Approval Number\n";
+                isValid = false;
+            }
+            if (!document.getElementById('nemaApprovalDate').value) {
+                errorMessage += "- NEMA Approval Date\n";
+                isValid = false;
+            }
+        }
+    }
+
+
+    // Section Six validation (Insurance Information)
+    if (section.id === 'sectionSix') {
+        const insuranceCover = document.querySelector('input[name="insurance_cover"]:checked');
+        if (!insuranceCover) {
+            errorMessage += "- Insurance Cover\n";
+            isValid = false;
+        } else if (insuranceCover.value === "Yes") {
+            if (!document.getElementById('insurance_policy').value) {
+                errorMessage += "- Insurance Policy\n";
+                isValid = false;
+            }
+            if (!document.getElementById('insurance_provider').value) {
+                errorMessage += "- Insurance Provider\n";
+                isValid = false;
+            }
+            if (!document.getElementById('policy_from_date').value) {
+                errorMessage += "- Policy Start Date\n";
+                isValid = false;
+            }
+            if (!document.getElementById('policy_until_date').value) {
+                errorMessage += "- Policy End Date\n";
+                isValid = false;
+            }
+        }
+    }
+
+// Section Seven validation (Photos)
+if (section.id === 'sectionSeven') {
+        if (!document.getElementById('front_view_photo').files.length) {
+            errorMessage += "- Front View Photo\n";
+            isValid = false;
+        }
+        if (!document.getElementById('rear_view_photo').files.length) {
+            errorMessage += "- Rear View Photo\n";
+            isValid = false;
+        }
+        if (!document.getElementById('angle_view_photo').files.length) {
+            errorMessage += "- Angle View Photo\n";
+            isValid = false;
+        }
+        if (!document.getElementById('interior_view_photo').files.length) {
+            errorMessage += "- Interior Photo\n";
+            isValid = false;
+        }
+    }
+
+
+       // Section Eight validation (Confirmation)
+       if (section.id === 'sectionEight') {
+        if (!document.querySelector('#sectionEight input[type="checkbox"]:checked')) {
+            errorMessage += "- Confirmation Checkbox\n";
+            isValid = false;
+        }
+    }
+
+        // Show error message if validation fails
+        if (!isValid) {
+            alert(errorMessage);
+
+            // Highlight the first invalid field
+            const invalidFields = section.querySelectorAll('input:invalid, select:invalid');
+            if (invalidFields.length > 0) {
+                invalidFields[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                invalidFields[0].focus();
+            }
+        }
+
+        return isValid;
+    }
+});
+</script>
+
+<script>
+document.getElementById('otherDocumentCopy').addEventListener('change', function () {
+  const file = this.files[0];
+  const preview = document.getElementById('preview_other_document');
+  preview.innerHTML = ''; // Clear previous preview
+
+  if (file) {
+    const fileType = file.type;
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      if (fileType.startsWith('image/')) {
+        // Image preview
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.style.maxWidth = '100%';
+        preview.appendChild(img);
+      } else if (fileType === 'application/pdf') {
+        // PDF preview
+        const embed = document.createElement('embed');
+        embed.src = e.target.result;
+        embed.type = 'application/pdf';
+        embed.width = '100%';
+        embed.height = '400px';
+        preview.appendChild(embed);
+      } else {
+        preview.textContent = 'File preview not supported.';
+      }
+    };
+
+    reader.readAsDataURL(file);
+  }
+});
 </script>
 
 <script src="registration.js"></script>
