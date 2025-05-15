@@ -479,7 +479,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                                                 </div>
                                             </td>
                                             <td id="more">
-                                                <button class="btn btn-sm inspect" style="background-color: #00192D; color:#FFC107">Inspect</button>
+                                                <button class="inspect_btn" style="background-color: #00192D; color:#FFC107">Inspect</button>
                                                 <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View"><i class="fas fa-eye"></i></button>
                                                 <button class="btn btn-sm" style="background-color: #193042; color:#FFCCCC; margin-right: 2px;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-trash"></i></button>
                                                 <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-edit"></i></button>
@@ -536,7 +536,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                                            <!-- OVERLAYS -->
   <!-- Perfom an inspection -->
 <section id="perform_inspection_modal" style="display: none;" >
-<div  class="container-fluid" >
+<div  class="container-fluid perform_inspection_modal"  >
                         <div class="card">
                             <div class="card-header" style="background-color:#00192D; color:#FFC107"><b>Perform Inspection</b></div>
                             <div class="card-body">
@@ -949,15 +949,22 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
 <!-- Perform an inspection script -->
          <script>
             // display the inspection modal.
-            const buttons = document.querySelectorAll('.inspect');
+            const buttons = document.querySelectorAll('.inspect_btn');
+
             buttons.forEach(button => {
               button.addEventListener('click', () => {
-              const prfm_Ins_mdl = document.getElementById('perform_inspection_modal');
-              const prfm_Ins_mdl_clonedContent = prfm_Ins_mdl.cloneNode(true); // Deep clone
-              prfm_Ins_mdl_clonedContent.id = ''; // Remove ID to avoid duplicates
-              document.getElementById('prfm_ipsn_plch').appendChild(prfm_Ins_mdl_clonedContent);
-            });
+                const prfm_Ins_mdl = document.getElementById('perform_inspection_modal');
 
+                // Clone only the inner content
+                const innerContent = prfm_Ins_mdl.innerHTML;
+
+                // Create a wrapper div for the content
+                const wrapper = document.createElement('div');
+                wrapper.innerHTML = innerContent;
+
+                // Append it to the placeholder
+                document.getElementById('prfm_ipsn_plch').appendChild(wrapper);
+              });
             });
 
             

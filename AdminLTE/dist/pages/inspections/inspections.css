@@ -7,7 +7,21 @@ body {
 .element {
   width: 100%;
 }
-
+.container-fluid.perform_inspection_modal{
+  
+  z-index: 1000;
+  position: absolute;
+      top: 0;
+      left: 0;
+      background: rgba(0, 0, 0, 0.7); /* Dark overlay */
+     
+      justify-content: center;
+      align-items: center;
+       width: 100%;
+      padding: 20px;
+      min-height: 100%;
+      /* margin-left: 20%; */
+}
 /* Tablet */
 @media (min-width: 768px) {
   .element {

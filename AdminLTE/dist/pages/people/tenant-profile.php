@@ -702,157 +702,14 @@
               </div>
 
 
-
-<!-- Farst Overlay (Receipt) -->
-<div class="popup-overlay" id="complaintPopup">
-  <div class="popup-content">
-    <button class="close-btn text-secondary" onclick="closePopup()">×</button>
-        <h2 style="color: #00192D; font-size: medium;">Payment Receipt</h2>
-        <div class="info" id="inform">
-            <p><strong>Receipt No:</strong>#123456</p>
-            <p><strong>Date:</strong> 2025-02-13</p>
-            <p><strong>Tenant:</strong> John Doe</p>
-        </div>
-        <div class="receipt">
-          <p><strong>Property:</strong>Manucho</p>
-          <p><strong>House Unit:</strong>A12</p>
-          <p><strong>Mpesa:</strong> KSH 10,0000</p>
-          <p><strong>Transaction:</strong> TBM34KGNJ8</p>
-          <p class="total"><strong>Total:</strong> KSH10,000.00</p>
-
-        </div>
-        <p style="text-align: center;" style="color:#00192D;">Thank you for your payment!</p>
-        <div style="display: flex; justify-content: flex-end;">
-          <button style="background-color: white; color:#FFC107; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">
-            DOWNLOAD
-          </button>
-      </div>
-  </div>
-</div>
-<!-- end -->
-
-<!-- The invoice Overlay -->
-<div id="invoiceOverlay" class="overlay">
-  <div class="overlay-content">
-      <button class="close-btn" onclick="closeOverlay()">×</button>
-      <div id="invoice" style="text-align: start;">
-          <b><h2 style="color:#00192D; font-size: medium;"><strong>Invoice Details</strong></h2></b>
-      </div>
-
-      <div class="invoice-header">
-          <div>
-            <strong>Bill To:</strong><br>
-            John Doe<br>
-            Manucho Apartments<br>
-            Email: johndoe@example.com
-          </div>
-          <div>
-              <strong>INVOICE</strong><br>
-            <b>  Invoice Date <span>18-02-2025</span><br></b>
-              <b>Due Date<span>25-03-2025</span><br></b>
-              <!-- Email<span>johndoe@example.com</span>  -->
-          </div>
-      </div>
-
-      <table>
-        <thead>
-            <tr>
-              <th>Qty</th>
-                <th>Description</th>
-                <th>Unit Price</th>
-               <th>Amount</th>
-               <!-- <th style="color:#FFC107 ;">Late fees</th> -->
-               <!-- <th>Maintenance</th> -->
-
-
-
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-               <td>1.00</td>
-               <td>Rent For February</td>
-               <td>KSH20,000</td>
-               <td>KSH20,000</td>
-               <!-- <td>ksh</td> -->
-               </tr>
-               <tr>
-                <td>10</td>
-                <td>Water Bill</td>
-                <td>KSH200.00</td>
-                <td>KSH200.00</td>
-                <!-- <td>ksh</td> -->
-                </tr>
-                <tr>
-                  <td>1.00</td>
-                  <td>Garbage Collection</td>
-                  <td>KSH250.00</td>
-                  <td>KSH250.00</td>
-                  <!-- <td>ksh</td> -->
-                  </tr>
-                  <tr>
-                    <td>1.00</td>
-                    <td>Late Payment Fees</td>
-                    <td>KSH250.00</td>
-                    <td>KSH250.00</td>
-                    <!-- <td>ksh</td> -->
-                    </tr>
-        </tbody>
-        <tfoot>
-            <tr class="total-row">
-                <td colspan="3" style="text-align: right;">Subtotal</td>
-                <td>KSH39,000</td>
-            </tr>
-            <tr class="total-row">
-              <td colspan="3" style="text-align: right;">*VAT(16%)</td>
-              <td>KSH40,000</td>
-          </tr>
-            <tr class="total-row">
-                <td colspan="3" style="text-align: right;">Total</td>
-                <td>KSH200</td>
-            </tr>
-        </tfoot>
-      </table>
-
-      <div class="">
-        POWERED BY
-        <button class="btns">
-          BTJENGOPAY
-        </button>
-      <div>
-
-
-      <!-- <p class="total">Grand Total: Ksh <span id="grand-total"></span></p> -->
-
-      <!-- <button class="btn-print" onclick="printReceipt()">Print Receipt</button> -->
-
-
-      <div class="invoice-header">
-          <button class="btns" onclick="printInvoice()">
-              <i class="fa fa-print"></i> Print Invoice
-          </button>
-          <button class="btns" onclick="downloadpdf()">
-            <i class="fa fa-file-pdf"></i> Generate PDF
-          </button>
-          <button class="btns" onclick="exportexcel()">
-            <i class="fa fa-file-export"></i> Export Excel
-          </button>
-
-      </div>
-
-
-
   </div>
 </div>
 
-      <!-- <div style="display: flex; justify-content: flex-end;">
-        <button style="background-color: white; color:#FFC107; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">
-          DOWNLOAD
-        </button>
-    </div>
-     -->
+      
   </div>
 </div>
+
+
 
           
 
@@ -867,6 +724,9 @@
   </script>
 <?php endif; ?>
 
+
+<!-- OVERLAY -->
+ 
 
 
 
