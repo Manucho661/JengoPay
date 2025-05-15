@@ -22,10 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // No duplicate, proceed with insert
     $sql = "INSERT INTO units (
-      unit_number, size, floor_number, rooms, room_type, bathrooms, kitchen, balcony,
+      unit_number, unit_type, size, floor_number, rooms, room_type, bathrooms, kitchen, balcony,
       rent_amount, description, building_id, created_at, updated_at
     ) VALUES (
-      :unit_number, :size, :floor_number, :rooms, :room_type, :bathrooms, :kitchen, :balcony,
+      :unit_number, :unit_type, :size, :floor_number, :rooms, :room_type, :bathrooms, :kitchen, :balcony,
       :rent_amount, :description, :building_id, NOW(), NOW()
     )";
 
@@ -34,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $stmt->execute([
             ':unit_number'   => $_POST['unit_number'],
+            ':unit_type'   => $_POST['unit_type'],
             ':size'          => $_POST['size'],
             ':floor_number'  => $_POST['floor_number'],
             ':rooms'         => $_POST['rooms'],
@@ -555,9 +556,8 @@ if ($stmt->rowCount() > 0) {
 
 // No need to manually close the connection, PDO handles it automatically
 ?>
-
-            </select>
-        </div>
+</select>
+</div>
 
         <div class="col-md-4">
             <label for="location">Unit Number*</label>
@@ -565,7 +565,20 @@ if ($stmt->rowCount() > 0) {
         </div>
 
         <div class="col-md-4">
-            <label for="size">Size(Optional)*</label>
+        <label>Unit Type*</label>
+            <select name="unit_type" id="UnitType" class="form-control" required>
+              <option value="" selected hidden>--Select Unit Type --</option>
+              <option value="Residential">Residential</option>
+              <option value="Commercial">Commercial</option>
+              <option value="Commercial">Commercial</option>
+              <option value="Industrial">Industrial</option>
+              <option value="Industrial">Industrial</option>
+              <option value="Mixed-Use">Mixed-Use</option>
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <label for="size">Size(Optional)</label>
             <input type="text" id="size" name="size" placeholder="Enter Size" required>
         </div>
 

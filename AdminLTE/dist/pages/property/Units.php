@@ -533,30 +533,40 @@ echo '<a style="color:#193042;" href="../property/meterreading.php?building_id='
         <div class="card-body">
           <!--begin::Row-->
           <div class="row">
-            <table id="myTableOne" class="display" >
-              <thead>
+            <table id="myTableOne"  class="display table table-striped table-hover" style="width: 100%; font-size: 16px;">
+              <thead class="">
                 <tr>
-                  <th>Units</th>
-                  <th>Tenants</th>
-                  <th>Unit Type</th>
-                  <th>Floor Number</th>
-                 <th>Action</th>
+                  <th style="color: #FFC107;">Units</th>
+                  <th style="color: #FFC107;">Tenants</th>
+                  <th style="color: #FFC107;">Unit Type</th>
+                  <th style="color: #FFC107;">Floor Number</th>
+                 <th  style="color: #FFC107;">Action</th>
                 </tr>
               </thead>
               <tbody>
     <?php foreach ($units as $unit): ?>
-        <tr onclick="window.location.href='units.php'">
+            <tr>
             <td><?= htmlspecialchars($unit['unit_number']) ?></td>
             <td><?= htmlspecialchars($unit['tenant_name'] ?? 'Not Assigned') ?></td> <!-- Replace with dynamic tenant if needed -->
             <td><?= htmlspecialchars($unit['rooms']) ?></td>
             <td><?= htmlspecialchars($unit['floor_number']) ?></td>
             <td>
-                <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#viewUnitModal" title="View">
-                    <i class="fas fa-eye"></i>
+           <!-- Edit Button -->
+           <button onclick="handleEdit('<?= htmlspecialchars($unit['unit_number']) ?>')" class="btn btn-sm" style="background-color:#193042; color:#ffc107;" title="Edit this unit">
+                <i class="fa fa-edit" style="font-size: 12px;">EDIT</i>
+            </button>
+
+                <button class="btn btn-sm" style="background-color: #193042; color:#FFC107; margin-right: 2px;" data-toggle="modal" data-target="#viewUnitModal" title="View">
+                    <i class="fas fa-eye"> View</i>
                 </button>
-                <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Provider">
-                    <i class="fa fa-trash" style="font-size: 12px;"></i>
-                </button>
+                <button
+                  onclick="handleDelete(<?= htmlspecialchars(json_encode($unit['unit_number'])) ?>, <?= (int)$building_id ?>, 'unit')"
+                  class="btn btn-sm"
+                  style="background-color: red; color:white;"
+                  title="Delete this unit">
+                  <i class="fa fa-trash" style="font-size: 12px;"></i>
+              </button>
+
             </td>
         </tr>
     <?php endforeach; ?>
@@ -1036,6 +1046,7 @@ setInterval(() => {
 
 
 
+
     <!--end::OverlayScrollbars Configure-->
     <!-- OPTIONAL SCRIPTS -->
     <!-- apexcharts -->
@@ -1196,6 +1207,10 @@ setInterval(() => {
       // - END PIE CHART -
       //-----------------
     </script>
+
+
+<script src="units.js"></script>
+
     <!--end::Script-->
 
 

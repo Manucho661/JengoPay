@@ -30,6 +30,17 @@
                 // Then delete the building
                 $stmt = $pdo->prepare("DELETE FROM buildings WHERE building_id = :id");
                 break;
+                
+            case 'unit':
+              if (!$buildingId) {
+                  echo "Missing building ID for unit deletion.";
+                  exit;
+              }
+              $stmt = $pdo->prepare("DELETE FROM units WHERE unit_number = :id AND building_id = :building_id");
+              $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+              $stmt->bindParam(':building_id', $buildingId, PDO::PARAM_INT);
+              break;
+
 
 
             default:

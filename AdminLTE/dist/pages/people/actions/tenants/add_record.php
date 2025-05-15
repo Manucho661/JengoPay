@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $job_title = $_POST['tenant_jobtitle'] ?? '';
                 $status = 'active';
 
-                
+
 
                 if ($first_name && $middle_name && $pets && $email && $phone &&
                     $id_no && $residence && $unit && $income_source && $work_place && $job_title &&
@@ -95,15 +95,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
                         //step 3: Insert into pets
-                        foreach ($pets as $pet) {
+                         foreach ($pets as $pet) {
 
-                            $stmtPet = $pdo->prepare("INSERT INTO pets (tenant_id, pet_name) VALUES (?, ?)");
-                            $stmtPet->execute([$tenant_id, $pet]);
-                        }
+                             $stmtPet = $pdo->prepare("INSERT INTO pets (tenant_id, pet_name) VALUES (?, ?)");
+                             $stmtPet->execute([$tenant_id, $pet]);
+                         }
 
-                        // Step 4: Insert into files
-                        $stmtTenant = $pdo->prepare("INSERT INTO files (tenant_id, file_path) VALUES (?, ?)");
-                        $stmtTenant->execute([$tenant_id, $filename ]);
+                        // // Step 4: Insert into files
+                         $stmtTenant = $pdo->prepare("INSERT INTO files (tenant_id, file_path) VALUES (?, ?)");
+                         $stmtTenant->execute([$tenant_id, $filename ]);
 
 
 

@@ -1,11 +1,48 @@
+// delete building
+function handleDelete(event, id, type) {
+  event.stopPropagation();
+
+  if (confirm("Are you sure?")) {
+    fetch('../actions/delete_record.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: 'id=' + encodeURIComponent(id) + '&type=' + encodeURIComponent(type)
+    })
+    .then(res => res.text())
+    .then(data => {
+      alert(data);
+      location.reload();
+    })
+    .catch(err => console.error('Delete error:', err));
+  }
+}
+
 // data tables
-      $(document).ready(function() {
-        $('#rent').DataTable({
-            "lengthChange": false,
-            "dom": 'Bfrtip',
-            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        });
-    });
+$(document).ready(function () {
+  $('#myTableOne').DataTable();
+});
+$(document).ready(function () {
+  $('#myTableThree').DataTable();
+});
+$(document).ready(function () {
+  $('#myTableFour').DataTable();
+});
+
+
+$(document).ready(function() {
+$('#myTable').DataTable({
+"paging": true,
+"searching": true,
+"info": true,
+"lengthMenu": [5, 10, 25, 50],
+"language": {
+ "search": "Filter records:",
+ "lengthMenu": "Show _MENU_ entries"
+}
+});
+});
 
     // data tables
 
