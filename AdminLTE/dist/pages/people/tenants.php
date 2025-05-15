@@ -743,42 +743,42 @@ width: 100%;
                                               <!-- OVERLAYS -->
 
    <!-- Add Tenant -->
-   <div class="popup-overlay" id="addTenantModal">
-  <div class="popup-content">
-    <button class="close-btn text-secondary" onclick="closePopup()">×</button>
+          <div class="popup-overlay" id="addTenantModal">
+            <div class="popup-content">
+              <button class="close-btn text-secondary" onclick="closePopup()">×</button>
 
-    <!-- Form with onsubmit event handler to call the JavaScript function -->
-    <form id="tenantForm" class="complaint-form" onsubmit="submitTenantForm(event)">
-      <h2 class="text-start addTenantHeader">Add Tenant</h2>
-      <label for="name">Tenant Name:</label>
-      <input type="text" id="name" name="name" required>
+              <!-- Form with onsubmit event handler to call the JavaScript function -->
+              <form id="tenantForm" class="complaint-form" onsubmit="submitTenantForm(event)">
+                <h2 class="text-start addTenantHeader">Add Tenant</h2>
+                <label for="name">Tenant Name:</label>
+                <input type="text" id="name" name="name" required>
 
-      <label for="number">Identification No:</label>
-      <input type="number" id="number" name="id" required>
+                <label for="number">Identification No:</label>
+                <input type="number" id="number" name="id" required>
 
-      <label for="email">Email Address:</label>
-      <input type="email" id="email" name="email" required>
+                <label for="email">Email Address:</label>
+                <input type="email" id="email" name="email" required>
 
-      <label for="phone">Phone Number:</label>
-      <input type="tel" id="phone" name="phone" required>
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" required>
 
-      <label for="property">Property:</label>
-      <select id="property" name="residence" required>
-        <option value="" disabled selected>Select Property</option>
-        <option value="Manucho">Manucho</option>
-        <option value="White House">White House</option>
-        <option value="Pink House">Pink House</option>
-        <option value="Silver">Silver</option>
-      </select>
+                <label for="property">Property:</label>
+                <select id="property" name="residence" required>
+                  <option value="" disabled selected>Select Property</option>
+                  <option value="Manucho">Manucho</option>
+                  <option value="White House">White House</option>
+                  <option value="Pink House">Pink House</option>
+                  <option value="Silver">Silver</option>
+                </select>
 
-      <label for="unit">Rental Unit:</label>
-      <input type="text" id="unit" name="unit" required>
+                <label for="unit">Rental Unit:</label>
+                <input type="text" id="unit" name="unit" required>
 
-      <!-- Submit Button -->
-      <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
-    </form>
-  </div>
-</div>
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
+              </form>
+            </div>
+          </div>
 
         <!--End Add Tenant -->
 
@@ -816,7 +816,7 @@ width: 100%;
             </div>
           </div>
 
-          <!-- Real tenant -->
+          
     <!--Begin Jquery plugin-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- End Jquery plugin-->
