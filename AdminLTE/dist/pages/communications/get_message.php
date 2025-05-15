@@ -1,49 +1,38 @@
 <?php
 include '../db/connect.php';
-
 header('Content-Type: application/json');
 
-if (isset($_GET['thread_id']) && is_numeric($_GET['thread_id'])) {
-    $threadId = (int)$_GET['thread_id'];
+if (isset($_GET['message_id']) && is_numeric($_GET['message_id'])) {
+    $messageId = (int)$_GET['message_id'];
 
-    // Get thread title
-    $stmtTitle = $pdo->prepare("SELECT title FROM messages_threads WHERE id = :thread_id");
-    $stmtTitle->execute(['thread_id' => $threadId]);
-    $titleRow = $stmtTitle->fetch(PDO::FETCH_ASSOC);
+    // Fetch the message from the database
+    $stmt = $pdo->prepare("SELECT sender, content, timestamp, file_path FROM messages WHERE id = :message_id");
+    $stmt->execute(['message_id' => $messageId]);
 
-    if (!$titleRow) {
-        echo json_encode([
-            'title' => 'Not Found',
-            'messages' => "<div class='message error'>Thread not found.</div>"
-        ]);
-        exit;
-    }
+    $message = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    $title = htmlspecialchars($titleRow['title']);
+    if ($message) {
+        // Format message content and include file link if available
+        $content = htmlspecialchars($message['content']);
+        $timestamp = date('H:i', strtotime($message['timestamp']));
+        $fileLink = $message['file_path'] ? "<div class='attachment'><a href='{$message['file_path']}' target='_blank'>Download Attachment</a></div>" : '';
 
-    // Mark messages as read
-    $pdo->prepare("UPDATE messages SET is_read = 1 WHERE thread_id = :thread_id AND is_read = 0")
-        ->execute(['thread_id' => $threadId]);
-
-    // Fetch messages
-    $stmt = $pdo->prepare("SELECT sender, content, timestamp FROM messages WHERE thread_id = :thread_id ORDER BY timestamp ASC");
-    $stmt->execute(['thread_id' => $threadId]);
-
-    $messagesHtml = '';
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $class = ($row['sender'] === 'landlord') ? 'outgoing' : 'incoming';
-        $message = htmlspecialchars($row['content']);
-        $timestamp = date('H:i', strtotime($row['timestamp']));
-
-        $messagesHtml .= "<div class='message $class'>
-                            <div class='bubble'>$message</div>
+        // Combine content and file link (if any)
+        $messageContent = "<div class='message'>
+                            <div class='bubble'>$content</div>
+                            $fileLink
                             <div class='timestamp'>$timestamp</div>
                           </div>";
+
+        // Return the response in JSON format
+        echo json_encode(['success' => true, 'message' => $messageContent]);
+    } else {
+        echo json_encode(['success' => false, 'error' => 'Message not found']);
     }
 
-    echo json_encode([
-        'title' => $title,
-        'messages' => $messagesHtml
-    ]);
     exit;
+} else {
+    echo json_encode(['success' => false, 'error' => 'Invalid message ID']);
 }
+?>
+

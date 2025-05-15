@@ -40,8 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['title']) && !empty($
         $message_id = $pdo->lastInsertId(); // Get the message ID for attachments
 
         // Insert initial message
-        $stmt = $pdo->prepare("INSERT INTO messages (thread_id, sender, content, timestamp) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$thread_id, 'landlord', $message, $now]);
+        $stmt = $pdo->prepare("INSERT INTO messages (thread_id, sender, content, timestamp,file_path) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$thread_id, 'landlord', $message, $now, $file_path]);
 
         // Store attachments
         if (!empty($uploaded_files)) {
@@ -124,10 +124,14 @@ if (isset($_GET['thread_id']) && $_GET['thread_id'] > 0) {
         $content = nl2br(htmlspecialchars($msg['content']));
         $timestamp = date('H:i', strtotime($msg['timestamp']));
         $class = ($sender === 'landlord') ? 'outgoing' : 'incoming';
-        $file_paths = !empty($msg['file_paths']) ? explode('|||', $msg['file_paths']) : [];
+        $file_path = !empty($msg['file_paths']) ? explode('|||', $msg['file_path']) : [];
 
         echo "<div class='message $class'>
-                <div class='bubble'>$content</div>";
+                <div class='bubble'>
+                $content
+                $file_paths
+                </div>";
+
 
         // Display attachments if any
         if (!empty($file_paths)) {
@@ -1143,7 +1147,7 @@ function handleFileChange(event) {
 
   <!-- End  -->
 
-<!--
+
 <script>
 document.getElementById('sendMessage').addEventListener('click', function() {
     let messageInput = document.getElementById('messageInput').value;
@@ -1163,7 +1167,7 @@ document.getElementById('sendMessage').addEventListener('click', function() {
         document.getElementById('chatContainer').scrollTop = document.getElementById('chatContainer').scrollHeight;
     }
 });
-</script> -->
+</script>
 
 
 
@@ -1171,7 +1175,7 @@ document.getElementById('sendMessage').addEventListener('click', function() {
 
 <!-- loadConversation -->
 <script>
-  function loadConversation(threadId) {
+ function loadConversation(threadId) {
     activeThreadId = threadId;
 
     // Remove "active" class from all
@@ -1185,13 +1189,24 @@ document.getElementById('sendMessage').addEventListener('click', function() {
 
     // Fetch and update messages
     fetch('load_conversation.php?thread_id=' + threadId)
-        .then(response => response.text())
+        .then(response => response.json())
         .then(data => {
-            document.getElementById('messages').innerHTML = data;
-            const messagesDiv = document.getElementById('messages');
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            // Check if the response includes messages
+            if (data.messages) {
+                document.getElementById('messages').innerHTML = data.messages;
+
+                // Optional: Scroll to the bottom after loading new messages
+                const messagesDiv = document.getElementById('messages');
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            } else {
+                console.error('No messages returned from server');
+            }
+        })
+        .catch(error => {
+            console.error('Error loading conversation:', error);
         });
 }
+
 
 </script>
 
@@ -1199,22 +1214,13 @@ document.getElementById('sendMessage').addEventListener('click', function() {
 <!-- send & get message -->
 <script>
 function sendMessage() {
-    var inputBox = document.getElementById('inputBox');
-    var message = inputBox.innerHTML.trim();
-
+    const inputBox = document.getElementById('inputBox');
     const messageText = inputBox.innerText.trim();
- if (messageText !== "") {
-  const messageContainer = document.getElementById('messages');
-  const newMessage = document.createElement('div');
-  newMessage.className = 'message outgoing';
-   newMessage.innerText = messageText;
-  messageContainer.appendChild(newMessage);
-   inputBox.innerText = ''; // Clear input
-   messageContainer.scrollTop = messageContainer.scrollHeight; // Scroll to bottom
-}
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
 
-    if (!message) {
-        alert("Please type a message.");
+    if (!messageText && !file) {
+        alert("Please type a message or attach a file.");
         return;
     }
 
@@ -1223,39 +1229,56 @@ function sendMessage() {
         return;
     }
 
-    message = message.replace(/<[^>]*>/g, '');
+    const formData = new FormData();
+    formData.append('message', messageText);
+    formData.append('thread_id', activeThreadId);
+    formData.append('sender', 'landlord');
+    if (file) {
+        formData.append('file', file);
+    }
 
     fetch('send_message.php', {
         method: 'POST',
-        body: new URLSearchParams({
-            'message': message,
-            'sender': 'landlord',  // or 'tenant' depending on logged-in user
-            'thread_id': activeThreadId
-        })
+        body: formData
     })
-    .then(response => response.text())
+    .then(response => response.json())
     .then(data => {
-        inputBox.innerHTML = '';
-        loadConversation(activeThreadId); // refresh only current thread
+        if (!data.success) {
+            throw new Error(data.error || 'Failed to send message');
+        }
+        loadConversation(activeThreadId); // Reload thread
+        inputBox.innerText = '';
+        fileInput.value = '';
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to send message.');
     });
 }
 
 
 // Function to load messages (AJAX request to fetch new messages)
-function loadMessages() {
-    fetch('get_message.php')
-        .then(response => response.text())
+function getMessage(messageId) {
+    fetch('get_message.php?message_id=' + messageId)
+        .then(response => response.json())
         .then(data => {
-            document.getElementById('messages').innerHTML = data;
+            if (data.success) {
+                // Display message content
+                const messageContainer = document.getElementById('messageDetails');
+                messageContainer.innerHTML = data.message;
 
-            // Optional: scroll to bottom after loading
-            const messagesDiv = document.getElementById('messages');
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                // Optional: Scroll to the message detail view
+                messageContainer.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                console.error('Failed to fetch message:', data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching message:', error);
         });
 }
 
-// Load messages on page load
-document.addEventListener('DOMContentLoaded', loadMessages);
+
 </script>
 
 
