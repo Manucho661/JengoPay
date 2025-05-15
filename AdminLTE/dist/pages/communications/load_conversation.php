@@ -1,87 +1,83 @@
 <?php
-include '../db/connect.php';
+include '../db/connect.php'; // DB connection
 
-if (isset($_GET['thread_id']) && $_GET['thread_id'] > 0) {
-    $threadId = (int)$_GET['thread_id'];
+if (!isset($_GET['thread_id']) || !(int)$_GET['thread_id']) {
+    echo "Invalid thread ID.";
+    exit;
+}
 
-    // Mark messages as read
-    $pdo->prepare("UPDATE messages SET is_read = 1 WHERE thread_id = :thread_id AND is_read = 0")
-        ->execute(['thread_id' => $threadId]);
+$threadId = (int)$_GET['thread_id'];
 
-    // Fetch messages and their individual attachments
-    $stmt = $pdo->prepare("
-        SELECT m.id AS message_id, m.sender, m.content, m.timestamp, f.file_path
-        FROM messages m
-        LEFT JOIN message_files f ON m.id = f.message_id
-        WHERE m.thread_id = :thread_id
-        ORDER BY m.timestamp ASC
-    ");
-    $stmt->execute(['thread_id' => $threadId]);
+// Mark messages as read
+$pdo->prepare("UPDATE messages SET is_read = 1 WHERE thread_id = :thread_id AND is_read = 0")
+    ->execute(['thread_id' => $threadId]);
 
-    // Group messages with their corresponding files
-    $messages = [];
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $id = $row['message_id'];
-        if (!isset($messages[$id])) {
-            $messages[$id] = [
-                'sender' => htmlspecialchars($row['sender']),
-                'content' => htmlspecialchars($row['content']),
-                'files' => [],
-                'timestamp' => date('M d, H:i', strtotime($row['timestamp']))
-            ];
-        }
+// Fetch messages with their attached files
+$stmt = $pdo->prepare("
+    SELECT
+        m.message_id,
+        m.sender,
+        m.content,
+        m.timestamp,
+        mf.file_path
+    FROM messages m
+    LEFT JOIN message_files mf ON mf.message_id = m.message_id
+    WHERE m.thread_id = :thread_id
+    ORDER BY m.timestamp ASC
+");
+$stmt->execute(['thread_id' => $threadId]);
 
-        if (!empty($row['file_path'])) {
-            $messages[$id]['files'][] = htmlspecialchars($row['file_path']);
-        }
+$messages = [];
+
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $id = $row['message_id'];
+
+    if (!isset($messages[$id])) {
+        $messages[$id] = [
+            'sender' => htmlspecialchars($row['sender']),
+            'content' => nl2br(htmlspecialchars($row['content'])),
+            'timestamp' => date('H:i', strtotime($row['timestamp'])),
+            'files' => [],
+        ];
     }
 
-    // Display messages with attachments inside the message bubble
-    if (empty($messages)) {
-        echo "<div class='text-muted'>No messages in this thread yet.</div>";
-    } else {
-        foreach ($messages as $msg) {
-            $class = ($msg['sender'] === 'landlord') ? 'outgoing' : 'incoming';
-
-            echo "<div class='message $class'>";
-
-            // Start message bubble
-            echo "<div class='bubble'>";
-            echo "<div class='text'>{$msg['content']}</div>";
-
-            // Display attachments inside the bubble
-            if (!empty($msg['files'])) {
-                echo "<div class='attachments' style='margin-top: 8px;'>";
-                foreach ($msg['files'] as $filePath) {
-                    $fileName = basename($filePath);
-                    $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
-
-                    switch ($ext) {
-                        case 'jpg':
-                        case 'jpeg':
-                        case 'png':
-                        case 'gif':
-                            echo "<div style='margin-top: 6px;'><strong>$fileName</strong><br>
-                                  <img src='$filePath' style='max-width:200px; max-height:200px;'></div>";
-                            break;
-                        case 'pdf':
-                            echo "<div style='margin-top: 6px;'><strong>$fileName</strong><br>
-                                  <embed src='$filePath' type='application/pdf' width='100%' height='400px'></div>";
-                            break;
-                        default:
-                            echo "<div><a href='$filePath' target='_blank'>📎 $fileName</a></div>";
-                    }
-                }
-                echo "</div>";
-            }
-
-            echo "</div>"; // end bubble
-
-            // Timestamp outside bubble
-            echo "<div class='timestamp'>{$msg['timestamp']}</div>";
-
-            echo "</div>"; // end message
-        }
+    if (!empty($row['file_path'])) {
+        $messages[$id]['files'][] = htmlspecialchars($row['file_path']);
     }
+}
+
+// Display the messages and their attachments
+foreach ($messages as $msg) {
+    $class = ($msg['sender'] === 'landlord') ? 'outgoing' : 'incoming';
+
+    echo "<div class='message $class'>";
+    echo "<div class='bubble'>{$msg['content']}</div>";
+
+    if (!empty($msg['files'])) {
+      echo "<div class='attachments mt-2'>";
+      foreach ($msg['files'] as $file) {
+          $fileName = basename($file);
+          $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+          $safePath = htmlspecialchars($file);
+
+          if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])) {
+              echo "<div class='attachment-image mb-2'>";
+              echo "<div class='image-container'>";
+              echo "<img src='$safePath' alt='$fileName'
+                    class='msg-image img-thumbnail'
+                    loading='lazy'
+                    data-fullsize='$safePath'
+                    style='max-width:200px; cursor:pointer'>";
+              echo "</div>";
+              echo "<small class='text-muted'>$fileName</small>";
+              echo "</div>";
+          }
+          // ... rest of your file type handling
+      }
+      echo "</div>";
+  }
+
+    echo "<div class='timestamp'>{$msg['timestamp']}</div>";
+    echo "</div>";
 }
 ?>
