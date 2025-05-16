@@ -6,24 +6,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $type = $_POST['type'] ?? '';
 
     switch ($type) {
-        case 'provider':
-            $name = $_POST['provider_name'] ?? '';
-            $service = $_POST['service_type'] ?? '';
-
-            if (!empty($name) && !empty($service)) {
-                $stmt = $pdo->prepare("INSERT INTO providers (provider_name, service_type) VALUES (?, ?)");
-                if ($stmt->execute([$name, $service])) {
-                    echo "Provider added successfully!";
-                } else {
-                    echo "Failed to add provider.";
-                }
-            } else {
-                echo "All provider fields are required.";
-            }
-            break;
-
         case 'tenant':
-            case 'tenant':
+            
                 $first_name = $_POST['tenant_f_name'] ?? '';
                 $middle_name = $_POST['tenant_m_name'] ?? '';
                 $email = $_POST['tenant_email'] ?? '';
