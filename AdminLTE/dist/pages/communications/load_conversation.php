@@ -36,6 +36,7 @@ if (isset($_GET['thread_id']) && $_GET['thread_id'] > 0) {
         }
     }
 
+
     // Display messages with attachments inside the message bubble
     if (empty($messages)) {
         echo "<div class='text-muted'>No messages in this thread yet.</div>";
@@ -48,6 +49,7 @@ if (isset($_GET['thread_id']) && $_GET['thread_id'] > 0) {
             // Start message bubble
             echo "<div class='bubble'>";
             echo "<div class='text'>{$msg['content']}</div>";
+            echo "<div class='text'>{$msg['filePath']}</div>";
 
             // Display attachments inside the bubble
             if (!empty($msg['files'])) {
@@ -61,8 +63,8 @@ if (isset($_GET['thread_id']) && $_GET['thread_id'] > 0) {
                         case 'jpeg':
                         case 'png':
                         case 'gif':
-                            echo "<div style='margin-top: 6px;'><strong>$fileName</strong><br>
-                                  <img src='$filePath' style='max-width:200px; max-height:200px;'></div>";
+                    echo "<div style='margin-top: 6px;'><strong>$fileName</strong><br>
+                    <img src='$filePath' style='max-width:200px; max-height:200px;'></div>";
                             break;
                         case 'pdf':
                             echo "<div style='margin-top: 6px;'><strong>$fileName</strong><br>
