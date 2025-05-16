@@ -357,60 +357,7 @@
   </div>
 </div>
 
-<!-- Shift Tenant Modal -->
-<div class="modal fade" id="shiftTenantModal" tabindex="-1" aria-labelledby="shiftTenantModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content shadow">
-      <form id="shiftTenantForm">
-        <!-- Custom Modal Header -->
-        <div class="modal-header "style="background-color:#00192D; color:#FFC107;">
-          <h5 class="modal-title" id="shiftTenantModalLabel">
-            <i class="fas fa-exchange-alt me-2"></i> Shift Tenant - Joseph
-          </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
 
-        <!-- Modal Body -->
-        <div class="modal-body px-4">
-          <!-- Tenant name -->
-          <div class="mb-3">
-            <label class="form-label">Tenant Name</label>
-            <input type="text" class="form-control" value="Joseph" readonly>
-          </div>
-
-          <!-- Building list -->
-          <div class="mb-3">
-            <label for="buildingSelect" class="form-label">Select Building</label>
-            <select id="buildingSelect" class="form-select" required>
-              <option value="">-- Select Building --</option>
-              <option value="Building A">Building A</option>
-              <option value="Building B">Building B</option>
-              <option value="Building C">Building C</option>
-            </select>
-          </div>
-
-          <!-- Unit list -->
-          <div class="mb-3">
-            <label for="unitSelect" class="form-label">Select Unit</label>
-            <select id="unitSelect" class="form-select" required>
-              <option value="">-- Select Unit --</option>
-              <option value="Unit 101">Unit 101</option>
-              <option value="Unit 102">Unit 102</option>
-              <option value="Unit 201">Unit 201</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Custom Modal Footer -->
-        <div class="modal-footer custom-footer">
-          <button type="submit" class="btn btn-custom-submit" style= "background-color:#00192D; color:#FFC107;">
-            <i class="fas fa-check-circle me-1"></i> Confirm Shift
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
 
 
             <!-- End first Row -->
@@ -512,68 +459,7 @@
                 </div>
               </div>
 
-            <!-- Edit Personal Info Modal -->
-              <div class="modal fade" id="editPersonalInfoModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                  <div class="modal-content shadow-lg border-0 rounded-3">
-                    <form id="editPersonalInfoForm" autocomplete="off">
-                      <div class="modal-header   rounded-top" style= "background-color: #00192D; color:#FFC107;">
-                        <h5 class="modal-title" id="editModalLabel">
-                          <i class="fas fa-user-edit me-2"></i> Edit Personal Information
-                        </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-
-                      <div class="modal-body px-4 py-3">
-                        <!-- Email -->
-                        <div class="form-floating mb-3">
-                          <input type="email" class="form-control" id="editEmail" placeholder="Email" required>
-                          <label for="editEmail"><i class="fas fa-envelope me-1"></i> Email Address</label>
-                        </div>
-
-                        <!-- Phone -->
-                        <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="editPhone" placeholder="Phone Number" required>
-                          <label for="editPhone"><i class="fas fa-phone me-1"></i> Phone Number</label>
-                        </div>
-
-                        <!-- ID Number -->
-                        <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="editIDNo" placeholder="ID Number" required>
-                          <label for="editIDNo"><i class="fas fa-id-card me-1"></i> National ID Number</label>
-                        </div>
-
-                        <!-- Income Source -->
-                        <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="editIncomeSource" placeholder="Income Source">
-                          <label for="editIncomeSource"><i class="fas fa-briefcase me-1"></i> Income Source</label>
-                        </div>
-
-                        <!-- Employer -->
-                        <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="editEmployer" placeholder="Employer">
-                          <label for="editEmployer"><i class="fas fa-building me-1"></i> Employer</label>
-                        </div>
-
-                        <!-- Job Title -->
-                        <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="editJobTitle" placeholder="Job Title">
-                          <label for="editJobTitle"><i class="fas fa-user-tie me-1"></i> Job Title</label>
-                        </div>
-                      </div>
-
-                      <div class="modal-footer bg-light d-flex justify-content-between">
-                        <small class="text-muted"><i class="fas fa-info-circle me-1"></i> Make sure details are accurate</small>
-                        <button type="submit" class="btn btn-success" style="background-color:#00192D; color:#FFC107;">
-                          <i class="fas fa-save me-1"></i> Save Changes
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-
-             <!-- end row -->
+               <!-- Edit Personal Info Modal -->
 
              <!-- start row -->
 
@@ -819,7 +705,122 @@
 </div>
 
           
+        <!-- OVERLAYS -->
+        <!-- Edit Personal Info Modal -->
+              <div class="modal fade" id="editPersonalInfoModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content shadow-lg border-0 rounded-3">
+                    <form id="editPersonalInfoForm" autocomplete="off">
+                      <div class="modal-header   rounded-top" style= "background-color: #00192D; color:#FFC107;">
+                        <h5 class="modal-title" id="editModalLabel">
+                          <i class="fas fa-user-edit me-2"></i> Edit Personal Information
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
 
+                      <div class="modal-body px-4 py-3">
+                        <!-- Email -->
+                        <div class="form-floating mb-3">
+                          <input type="email" class="form-control" id="editEmail" placeholder="Email" required>
+                          <label for="editEmail"><i class="fas fa-envelope me-1"></i> Email Address</label>
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="form-floating mb-3">
+                          <input type="text" class="form-control" id="editPhone" placeholder="Phone Number" required>
+                          <label for="editPhone"><i class="fas fa-phone me-1"></i> Phone Number</label>
+                        </div>
+
+                        <!-- ID Number -->
+                        <div class="form-floating mb-3">
+                          <input type="text" class="form-control" id="editIDNo" placeholder="ID Number" required>
+                          <label for="editIDNo"><i class="fas fa-id-card me-1"></i> National ID Number</label>
+                        </div>
+
+                        <!-- Income Source -->
+                        <div class="form-floating mb-3">
+                          <input type="text" class="form-control" id="editIncomeSource" placeholder="Income Source">
+                          <label for="editIncomeSource"><i class="fas fa-briefcase me-1"></i> Income Source</label>
+                        </div>
+
+                        <!-- Employer -->
+                        <div class="form-floating mb-3">
+                          <input type="text" class="form-control" id="editEmployer" placeholder="Employer">
+                          <label for="editEmployer"><i class="fas fa-building me-1"></i> Employer</label>
+                        </div>
+
+                        <!-- Job Title -->
+                        <div class="form-floating mb-3">
+                          <input type="text" class="form-control" id="editJobTitle" placeholder="Job Title">
+                          <label for="editJobTitle"><i class="fas fa-user-tie me-1"></i> Job Title</label>
+                        </div>
+                      </div>
+
+                      <div class="modal-footer bg-light d-flex justify-content-between">
+                        <small class="text-muted"><i class="fas fa-info-circle me-1"></i> Make sure details are accurate</small>
+                        <button type="submit" class="btn btn-changes" style="background-color:#00192D; color:#FFC107;">
+                          <i class="fas fa-save me-1"></i> Save Changes
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Shift Tenant Modal -->
+              <div class="modal fade" id="shiftTenantModal" tabindex="-1" aria-labelledby="shiftTenantModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content shadow">
+                    <form id="shiftTenantForm">
+                      <!-- Custom Modal Header -->
+                      <div class="modal-header "style="background-color:#00192D; color:#FFC107;">
+                        <h5 class="modal-title" id="shiftTenantModalLabel">
+                          <i class="fas fa-exchange-alt me-2"></i> Shift Tenant - Joseph
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+
+                      <!-- Modal Body -->
+                      <div class="modal-body px-4">
+                        <!-- Tenant name -->
+                        <div class="mb-3">
+                          <label class="form-label">Tenant Name</label>
+                          <input type="text" class="form-control" value="Joseph" readonly>
+                        </div>
+
+                        <!-- Building list -->
+                        <div class="mb-3">
+                          <label for="buildingSelect" class="form-label">Select Building</label>
+                          <select id="buildingSelect" class="form-select" required>
+                            <option value="">-- Select Building --</option>
+                            <option value="Building A">Building A</option>
+                            <option value="Building B">Building B</option>
+                            <option value="Building C">Building C</option>
+                          </select>
+                        </div>
+
+                        <!-- Unit list -->
+                        <div class="mb-3">
+                          <label for="unitSelect" class="form-label">Select Unit</label>
+                          <select id="unitSelect" class="form-select" required>
+                            <option value="">-- Select Unit --</option>
+                            <option value="Unit 101">Unit 101</option>
+                            <option value="Unit 102">Unit 102</option>
+                            <option value="Unit 201">Unit 201</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <!-- Custom Modal Footer -->
+                      <div class="modal-footer custom-footer">
+                        <button type="submit" class="btn btn-shift" style= "background-color:#00192D; color:#FFC107;">
+                          <i class="fas fa-check-circle me-1"></i> Confirm Shift
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
 
 
 
