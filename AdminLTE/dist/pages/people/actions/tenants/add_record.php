@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                             $uniqueName = uniqid(pathinfo($originalName, PATHINFO_FILENAME) . '_') . '.' . $extension;
                             $destination = $uploadDir . $uniqueName;
-                            $browserPath = $relativePath . $uniqueName;
+                            $browserPath = '/' .  $relativePath . $uniqueName;
 
                             if (!move_uploaded_file($tempPath, $destination)) {
                                 echo "Failed to move uploaded file.";
