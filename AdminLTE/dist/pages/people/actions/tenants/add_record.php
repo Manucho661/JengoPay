@@ -7,7 +7,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     switch ($type) {
         case 'tenant':
-            
                 $first_name = $_POST['tenant_f_name'] ?? '';
                 $middle_name = $_POST['tenant_m_name'] ?? '';
                 $email = $_POST['tenant_email'] ?? '';
