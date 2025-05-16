@@ -497,3 +497,36 @@ position: relative;
 
 
 /* ToolTip */
+
+/* Modal header - dark blue background, gold text */
+.custom-modal-header {
+  background-color: #00192D !important;
+  color: #FFC107 !important;
+}
+
+/* Modal footer - dark blue background, white text */
+.custom-modal-footer {
+  background-color: #00192D;
+  color: white;
+}
+
+/* Save button - gold background, dark blue text */
+.btn-save-changes {
+  background-color: #FFC107;
+  color: #00192D;
+  font-weight: 600;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+/* Save button hover - darker gold / orange effect */
+.btn-save-changes:hover,
+.btn-save-changes:focus {
+  background-color: #e6b807;
+  color: #00192D;
+}
+
+/* Optional: change close button color to white for better visibility */
+.btn-close-white {
+  filter: invert(1);
+}
