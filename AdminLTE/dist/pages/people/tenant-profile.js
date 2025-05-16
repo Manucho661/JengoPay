@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
         row.innerHTML = `
           <td> <b>${files.file_name} </b>  </td>
           <td>
-          <a href="actions/tenants/files/${files.file_path}" target="_blank"
+          <a href="${files.file_path}" target="_blank"
             class="btn btn-sm"
             style="background-color: #193042; color:#fff; margin-right: 2px;">
             <i class="fas fa-eye"></i> 
