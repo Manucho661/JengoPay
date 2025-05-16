@@ -38,8 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $job_title = $_POST['tenant_jobtitle'] ?? '';
                 $status = 'active';
 
-
-
                 if ($first_name && $middle_name && $pets && $email && $phone &&
                     $id_no && $residence && $unit && $income_source && $work_place && $job_title &&
                     isset($_FILES['tenant_id_copy'], $_FILES['kra_pin_copy'], $_FILES['agreemeny_copy'] ) &&
@@ -47,39 +45,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_FILES['kra_pin_copy']['error'] === UPLOAD_ERR_OK &&
                     $_FILES['agreemeny_copy']['error'] === UPLOAD_ERR_OK
                     ) {
-                       // ✅ Step 1: Prepare file upload
-                       // Step 1: Set target folder (relative to current script)
-                       $relativePath = 'originaltwo/AdminLTE/dist/pages/people/uploads/';
-                       $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/' . $relativePath;      // For saving files
+                       // Set paths
+                        $relativePath = 'originaltwo/AdminLTE/dist/pages/people/uploads/'; // For URLs
+                        $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/' . $relativePath;      // For saving files
 
-                            // Step 2: Create folder if it doesn't exist
-                            if (!file_exists($relativePath )) {
-                                mkdir($relativePath, 0777, true);
-                            }
+                        // Create folder if it doesn't exist
+                        if (!file_exists($uploadDir)) {
+                            mkdir($uploadDir, 0777, true);
+                        }
 
-                            // Files array.
-                            $files = ['tenant_id_copy' =>'ID COPY', 'kra_pin_copy' =>'KRA PIN COPY', 'agreemeny_copy' =>'AGREEMENT COPY'];
-                            $uploadedFilePaths = []; // Array to store full paths
+                        $files = [
+                            'tenant_id_copy' => 'ID COPY',
+                            'kra_pin_copy' => 'KRA PIN COPY',
+                            'agreemeny_copy' => 'AGREEMENT COPY'
+                        ];
 
-                            // Step 3: Get files details
-                            foreach ($files as $fileKey=>$displayName){
+                        $uploadedFiles = [];
+
+                        foreach ($files as $fileKey => $displayName) {
                             $originalName = $_FILES[$fileKey]['name'];
                             $tempPath = $_FILES[$fileKey]['tmp_name'];
                             $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
 
-                            // Step 4: Validate file type
                             $allowed = ['pdf', 'jpg', 'jpeg', 'png'];
                             if (!in_array($extension, $allowed)) {
                                 echo "Invalid file type. Only PDF, JPG, JPEG, PNG allowed.";
                                 exit;
                             }
 
-                            // Step 5: Set destination file path
-                            $uniqueName = uniqid($originalName) . '.' . $extension;
+                            $uniqueName = uniqid(pathinfo($originalName, PATHINFO_FILENAME) . '_') . '.' . $extension;
                             $destination = $uploadDir . $uniqueName;
-                            $browserPath = $relativePath . $uniqueName;
+                            $browserPath = '/' .  $relativePath . $uniqueName;
 
-                            // Step 6: Move uploaded file
                             if (!move_uploaded_file($tempPath, $destination)) {
                                 echo "Failed to move uploaded file.";
                                 exit;
@@ -90,8 +87,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 'path' => $browserPath
                             ];
 
-                            // ✅ Optional: Save filename to DB later
-                            echo "File uploaded successfully as $uniqueName";
+                            $uploadedFiles[] = [
+                                'name' => $displayName,
+                                'path' => $browserPath // ✅ Use this in DB and href
+                            ];
+
+                            echo "File uploaded successfully as $uniqueName<br>";
+
+
                         }
 
                     try {
@@ -115,13 +118,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                              $stmtPet->execute([$tenant_id, $pet]);
                          }
 
-                        // // Step 4: Insert into files
-                         $stmtTenant = $pdo->prepare("INSERT INTO files (tenant_id, file_path) VALUES (?, ?)");
-                         $stmtTenant->execute([$tenant_id, $filename ]);
-
-
-
-
+                        // Step 4: Insert into files
+                        foreach ($uploadedFiles as $file){
+                        $stmtTenant = $pdo->prepare("INSERT INTO files (tenant_id, file_name, file_path) VALUES (?, ?,?)");
+                        $stmtTenant->execute([$tenant_id, $file['name'], $file['path'] ]);
+                        }
 
                         $pdo->commit();
                         echo "Tenant and user added successfully!";

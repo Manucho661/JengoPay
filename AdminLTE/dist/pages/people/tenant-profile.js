@@ -85,7 +85,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 function fetchPets(user_id) {
-
   const tableBody = document.querySelector('#pets-table tbody');
   tableBody.innerHTML = '<tr><td colspan="4"><div class="loader"></div></td></tr>';
   fetch(`actions/pets/fetch_records.php?user_id=${user_id}`)
