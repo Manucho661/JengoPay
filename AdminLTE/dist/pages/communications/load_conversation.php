@@ -1,89 +1,84 @@
 <?php
 include '../db/connect.php';
 
-if (isset($_GET['thread_id']) && $_GET['thread_id'] > 0) {
+header('Content-Type: application/json');
+
+if (isset($_GET['thread_id']) && is_numeric($_GET['thread_id'])) {
     $threadId = (int)$_GET['thread_id'];
 
-    // Mark messages as read
-    $pdo->prepare("UPDATE messages SET is_read = 1 WHERE thread_id = :thread_id AND is_read = 0")
-        ->execute(['thread_id' => $threadId]);
+    // Fetch thread title (Optional)
+    $stmtTitle = $pdo->prepare("SELECT title FROM communication WHERE thread_id = :thread_id");
+    $stmtTitle->execute(['thread_id' => $threadId]);
+    $titleRow = $stmtTitle->fetch(PDO::FETCH_ASSOC);
+    $title = $titleRow ? $titleRow['title'] : 'Not Found';
 
-    // Fetch messages and their individual attachments
+    // Fetch messages and associated files
     $stmt = $pdo->prepare("
-        SELECT m.id AS message_id, m.sender, m.content, m.timestamp, f.file_path
+        SELECT
+            m.message_id,
+            m.sender,
+            m.content,
+            m.timestamp,
+            GROUP_CONCAT(mf.file_path SEPARATOR '|||') AS file_paths
         FROM messages m
-        LEFT JOIN message_files f ON m.id = f.message_id
+        LEFT JOIN message_files mf ON mf.message_id = m.message_id
         WHERE m.thread_id = :thread_id
+        GROUP BY m.message_id
         ORDER BY m.timestamp ASC
     ");
     $stmt->execute(['thread_id' => $threadId]);
+    $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Group messages with their corresponding files
-    $messages = [];
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $id = $row['message_id'];
-        if (!isset($messages[$id])) {
-            $messages[$id] = [
-                'sender' => htmlspecialchars($row['sender']),
-                'content' => htmlspecialchars($row['content']),
-                'files' => [],
-                'timestamp' => date('M d, H:i', strtotime($row['timestamp']))
-            ];
-        }
+    // Build response with messages and file paths
+    $messagesHtml = '';
+    foreach ($messages as $msg) {
+        $class = ($msg['sender'] === 'landlord') ? 'outgoing' : 'incoming';
+        $content = nl2br(htmlspecialchars($msg['content']));
+        $timestamp = date('H:i', strtotime($msg['timestamp']));
+        $file_paths = !empty($msg['file_paths']) ? explode('|||', $msg['file_paths']) : [];
 
-        if (!empty($row['file_path'])) {
-            $messages[$id]['files'][] = htmlspecialchars($row['file_path']);
-        }
-    }
+        $messagesHtml .= "<div class='message $class'>
+                            <div class='bubble'>$content</div>";
 
+        // Display attachments if any
+        if (!empty($file_paths)) {
+            $messagesHtml .= "<div class='attachments mt-2'>";
+            foreach ($file_paths as $file) {
+                if (empty($file)) continue;
 
-    // Display messages with attachments inside the message bubble
-    if (empty($messages)) {
-        echo "<div class='text-muted'>No messages in this thread yet.</div>";
-    } else {
-        foreach ($messages as $msg) {
-            $class = ($msg['sender'] === 'landlord') ? 'outgoing' : 'incoming';
+                $file = htmlspecialchars($file);
+                $basename = htmlspecialchars(basename($file));
+                $ext = strtolower(pathinfo($basename, PATHINFO_EXTENSION));
+                $image_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'];
 
-            echo "<div class='message $class'>";
-
-            // Start message bubble
-            echo "<div class='bubble'>";
-            echo "<div class='text'>{$msg['content']}</div>";
-            echo "<div class='text'>{$msg['filePath']}</div>";
-
-            // Display attachments inside the bubble
-            if (!empty($msg['files'])) {
-                echo "<div class='attachments' style='margin-top: 8px;'>";
-                foreach ($msg['files'] as $filePath) {
-                    $fileName = basename($filePath);
-                    $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
-
-                    switch ($ext) {
-                        case 'jpg':
-                        case 'jpeg':
-                        case 'png':
-                        case 'gif':
-                    echo "<div style='margin-top: 6px;'><strong>$fileName</strong><br>
-                    <img src='$filePath' style='max-width:200px; max-height:200px;'></div>";
-                            break;
-                        case 'pdf':
-                            echo "<div style='margin-top: 6px;'><strong>$fileName</strong><br>
-                                  <embed src='$filePath' type='application/pdf' width='100%' height='400px'></div>";
-                            break;
-                        default:
-                            echo "<div><a href='$filePath' target='_blank'>📎 $fileName</a></div>";
-                    }
+                if (in_array($ext, $image_extensions)) {
+                    // Display image with lightbox functionality
+                    $messagesHtml .= "<div class='attachment-image mb-2'>
+                                        <a href='$file' data-lightbox='message-$threadId' data-title='$basename'>
+                                            <img src='$file' alt='$basename' class='img-thumbnail' style='max-width:200px; max-height:150px;'>
+                                        </a>
+                                        <div class='file-name'>$basename</div>
+                                      </div>";
+                } else {
+                    // Display download link for non-image files
+                    $messagesHtml .= "<div class='attachment-file mb-2'>
+                                        <a href='$file' target='_blank' class='btn btn-sm btn-outline-secondary'>
+                                            <i class='fas fa-download'></i> $basename
+                                        </a>
+                                      </div>";
                 }
-                echo "</div>";
             }
-
-            echo "</div>"; // end bubble
-
-            // Timestamp outside bubble
-            echo "<div class='timestamp'>{$msg['timestamp']}</div>";
-
-            echo "</div>"; // end message
+            $messagesHtml .= "</div>";  // Close attachments div
         }
+
+        $messagesHtml .= "<div class='timestamp'>$timestamp</div></div>"; // Close message div
     }
+
+    // Send back the title and messages HTML as a JSON response
+    echo json_encode([
+        'title' => $title,
+        'messages' => $messagesHtml
+    ]);
+    exit;
 }
 ?>

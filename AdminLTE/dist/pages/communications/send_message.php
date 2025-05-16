@@ -1,38 +1,54 @@
 <?php
 include '../db/connect.php';
+header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['message_content'])) {
-        $messageContent = $_POST['message_content'];
-        $threadId = 1; // For now, use a static thread ID or pass it in the request
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo json_encode(['success' => false, 'error' => 'Invalid request']);
+    exit;
+}
 
-        // Insert the message into the database
-        $stmt = $pdo->prepare("INSERT INTO messages (thread_id, sender, content, timestamp) VALUES (:thread_id, 'landlord', :content, NOW())");
-        $stmt->execute(['thread_id' => $threadId, 'content' => $messageContent]);
+$message = $_POST['message'] ?? '';
+$threadId = (int)($_POST['thread_id'] ?? 0);
+$sender = $_POST['sender'] ?? 'unknown';
 
-        // Get the last inserted message ID
-        $messageId = $pdo->lastInsertId();
+if (!$threadId) {
+    echo json_encode(['success' => false, 'error' => 'Invalid thread ID']);
+    exit;
+}
 
-        // Handle file uploads
-        if (isset($_FILES['files'])) {
-            $uploadsDir = 'uploads/'; // Specify your upload directory
-            foreach ($_FILES['files']['tmp_name'] as $key => $tmpName) {
-                $fileName = basename($_FILES['files']['name'][$key]);
-                $filePath = $uploadsDir . $fileName;
+$filePath = null;
+if (!empty($_FILES['file']['name'])) {
+    $uploadDir = '../uploads/';
+    if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 
-                // Move file to upload directory
-                if (move_uploaded_file($tmpName, $filePath)) {
-                    // Save file path to the database
-                    $stmt = $pdo->prepare("INSERT INTO message_files (message_id, file_path) VALUES (:message_id, :file_path)");
-                    $stmt->execute(['message_id' => $messageId, 'file_path' => $filePath]);
-                }
-            }
-        }
+    $filename = time() . '_' . basename($_FILES['file']['name']);
+    $targetFile = $uploadDir . $filename;
 
-        // Send a success response
-        echo json_encode(['success' => true]);
+    if (move_uploaded_file($_FILES['file']['tmp_name'], $targetFile)) {
+        $filePath = 'uploads/' . $filename;
     } else {
-        echo json_encode(['success' => false]);
+        echo json_encode(['success' => false, 'error' => 'File upload failed']);
+        exit;
     }
+}
+
+$content = htmlspecialchars($message);
+if ($filePath) {
+    $fileLink = "<a href='$filePath' target='_blank'>Download Attachment</a>";
+    $content .= ($content ? '<br>' : '') . $fileLink;
+}
+
+try {
+    $stmt = $pdo->prepare("INSERT INTO messages (thread_id, sender, content, timestamp, file_path) VALUES (:thread_id, :sender, :content, NOW(), :file_path)");
+    $stmt->execute([
+        'thread_id' => $threadId,
+        'sender' => $sender,
+        'content' => $content,
+        'file_path' => $filePath
+    ]);
+
+    echo json_encode(['success' => true]);
+} catch (PDOException $e) {
+    echo json_encode(['success' => false, 'error' => 'DB error: ' . $e->getMessage()]);
 }
 ?>
