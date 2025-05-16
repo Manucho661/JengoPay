@@ -38,6 +38,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $job_title = $_POST['tenant_jobtitle'] ?? '';
                 $status = 'active';
 
+                function dd($data) {
+                    echo '<pre>';
+                    print_r($data);
+                    echo '</pre>';
+                    die;}
+
+
                 if ($first_name && $middle_name && $pets && $email && $phone &&
                     $id_no && $residence && $unit && $income_source && $work_place && $job_title &&
                     isset($_FILES['tenant_id_copy'], $_FILES['kra_pin_copy'], $_FILES['agreemeny_copy'] ) &&
@@ -136,11 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             break;
 
-        // 🔜 You can add more like this:
-        // case 'maintenance':
-        //     ...
-        //     break;
-
+       
         default:
             echo "Invalid record type.";
             break;
