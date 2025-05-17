@@ -124,6 +124,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Tenant Submit Form
   window.submitTenantForm = function (event) {
+     console.log('add fired');
+            alert('Function triggered!');
     event.preventDefault();
     const formData = new FormData(document.getElementById("form_for_tenant"));
     formData.append("type", "tenant");
