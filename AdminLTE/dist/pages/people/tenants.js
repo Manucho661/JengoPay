@@ -235,6 +235,7 @@ function fetchTenants(building) {
 
       // ADD TENANT TO DB
         function submitTenantForm(event) {
+         git add .$gig
           event.preventDefault(); // Prevent the form from submitting normally
 
           // Create FormData object from the form
@@ -244,7 +245,7 @@ function fetchTenants(building) {
           // Send data via fetch
           fetch("actions/tenants/add_record.php", {
             method: "POST",
-            body: formData 
+            body: formData
           })
           .then(res => res.text())
           .then(data => {
