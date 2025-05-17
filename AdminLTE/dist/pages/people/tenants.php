@@ -339,7 +339,7 @@ width: 100%;
                                         <div class="card-header" style="background-color:#00192D; color:#FFC107;"><b>Occupation Information</b></div>
                                         <div class="card-body">
                                         <div class="row">
-                                                <div class="col-md-4">
+                                                <div class="col-md-3">
                                                     <label>Building</label> <sup class="text-danger"><b>*</b></sup>
                                                     <br>
 
@@ -351,12 +351,23 @@ width: 100%;
                                                     </select>
                                                     <b class="text-danger" id="building_nameError"></b>
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-3">
+                                                    <label>Unit_type
+                                                    </label> <sup class="text-danger"><b>*</b></sup>
+                                                    <br>
+                                                    <select class="form-control" name="unit_type" id="unit_type" >
+                                                      <option value="C219">Residential</option>
+                                                      <option value="B14">Commercial</option>
+
+                                                    </select>
+                                                    <b class="text-danger" id="unit_nameError"></b>
+                                                </div>
+                                                <div class="col-md-3">
                                                     <label>Floor Number</label> <sup class="text-danger"><b>*</b></sup>
                                                     <input type="number" class="form-control" name="floor_number" id="Floor Number" placeholder="5">
                                                     <b class="text-danger" id="floor_number_nameError"></b>
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-3">
                                                     <label>Unit</label> <sup class="text-danger"><b>*</b></sup>
                                                     <br>
                                                     <select class="form-control" name="unit_name" id="unit_name" >
@@ -405,21 +416,8 @@ width: 100%;
                                             <div class="card" id="specifyPetsCard" style="display:none;">
                                                 <div class="card-header" style="background-color:#00192D; color:#FFC206;"><b>Please Specify Pets you Own</b></div>
                                                 <div class="card-body">
-                                                    <div class="form-group">
-                                                        <label>Select Pet(s)</label> <sup>Multiple Allowed</sup>
-
-                                                        <select name="pets[]" class="select2" multiple="multiple" data-placeholder="Specify Pet(s)" style="width: 100%;">
-                                                            <option>Dog</option>
-                                                            <option>Cat</option>
-                                                            <option>Parrot</option>
-                                                            <option>Snake</option>
-                                                            <option>Lion</option>
-                                                            <option>Tiger</option>
-                                                            <option>Goat</option>
-                                                            <option>Robot</option>
-                                                            <option>Bunny</option>
-                                                        </select>
-                                                    </div>
+                                                    <div id="petContainer"></div>
+                                                      <button type="button" class="btn btn-success mb-3" onclick="addPetBlock()">+ Add Pet</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -816,7 +814,7 @@ width: 100%;
             </div>
           </div>
 
-          
+
     <!--Begin Jquery plugin-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- End Jquery plugin-->
@@ -1214,6 +1212,66 @@ document.querySelectorAll('button.status').forEach(button => {
     document.getElementById('building_name').value = value;
   });
 });
+
+</script>
+
+<!-- pets control script -->
+<script>
+window.onload = () => addPetBlock();
+
+  function addPetBlock() {
+    const container = document.getElementById('petContainer');
+
+    const card = document.createElement('div');
+    card.className = 'card p-3';
+
+    card.innerHTML = `
+      <div class="row g-3 align-items-end">
+        <div class="col-md-4">
+          <label class="form-label">Pet Type</label>
+          <select class="form-select" name="petType[]" required>
+            <option value="">-- Select Pet --</option>
+            <option value="Dog">Dog</option>
+            <option value="Cat">Cat</option>
+            <option value="Rabbit">Rabbit</option>
+            <option value="Parrot">Parrot</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Weight (kg)</label>
+          <input type="number" class="form-control" name="petWeight[]" required min="0" step="0.1">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">License Number</label>
+          <input type="text" class="form-control" name="petLicense[]" required>
+        </div>
+        <div class="col-md-1 text-end">
+          <button type="button" class="btn btn-danger" onclick="this.closest('.card').remove()">×</button>
+        </div>
+      </div>
+    `;
+
+    container.appendChild(card);
+  }
+
+  // Handle submission
+  document.getElementById('petForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const types = Array.from(document.getElementsByName('petType[]')).map(el => el.value);
+    const weights = Array.from(document.getElementsByName('petWeight[]')).map(el => el.value);
+    const licenses = Array.from(document.getElementsByName('petLicense[]')).map(el => el.value);
+
+    const pets = types.map((type, index) => ({
+      type,
+      weight: weights[index],
+      license: licenses[index]
+    }));
+
+    console.log('Submitted Pets:', pets);
+   
+  });
+</script>
 
 </script>
   </body>
