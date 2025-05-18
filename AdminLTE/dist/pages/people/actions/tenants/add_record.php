@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $phone = $_POST['tenant_m_contact'] ?? '';
                 $id_no = $_POST['tenant_id_no'] ?? '';
                 $residence = $_POST['building_name'] ?? '';
-                $pets = $_POST['pets']?? '';
+                $petsJson = $_POST['petsData']?? '';
                 $unit = $_POST['unit_name'] ?? '';
                 $income_source = $_POST['income_source'] ?? '';
                 $tenant_id_copy = $_FILES['tenant_id_copy']?? '';
@@ -21,11 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $job_title = $_POST['tenant_jobtitle'] ?? '';
                 $status = 'active';
 
-                function dd($data) {
-                    echo '<pre>';
-                    print_r($data);
-                    echo '</pre>';
-                    die;}
+                $pets = json_decode($petsJson, true); // decode JSON string into PHP associative array
 
 
                 if ($first_name && $middle_name && $pets && $email && $phone &&
@@ -102,11 +98,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
                         //step 3: Insert into pets
-                         foreach ($pets as $pet) {
+                        foreach ($pets as $pet) {
+                            $stmtPet = $pdo->prepare("
+                                INSERT INTO pets (tenant_id, type, weight, license)
+                                VALUES (:tenant_id, :type, :weight, :license)
+                            ");
 
-                             $stmtPet = $pdo->prepare("INSERT INTO pets (tenant_id, pet_name) VALUES (?, ?)");
-                             $stmtPet->execute([$tenant_id, $pet]);
-                         }
+                            $stmtPet->execute([
+                                ':tenant_id' => $tenant_id, // assume you defined this earlier
+                                ':type' => $pet['type'] ?? '',
+                                ':weight' => $pet['weight'] ?? '',
+                                ':license' => $pet['license'] ?? ''
+                            ]);
+                        }
+
+
 
                         // Step 4: Insert into files
                         foreach ($uploadedFiles as $file){
@@ -126,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             break;
 
-       
+
         default:
             echo "Invalid record type.";
             break;

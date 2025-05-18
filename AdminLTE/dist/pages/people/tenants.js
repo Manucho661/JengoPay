@@ -280,7 +280,7 @@ function handleDeactivate(event, id, type) {
   }
 }
 
-      }
+         r6
   // Activate Tenants
           function handleReactivate(event, id, type) {
             event.stopPropagation(); // Stop the row or parent element click

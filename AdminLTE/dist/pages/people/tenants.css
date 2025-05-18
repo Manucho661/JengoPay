@@ -300,7 +300,7 @@ main.fade-out {
     letter-spacing: 0.15em;
     /* padding: 6px 14px; */
     height: fit-content;
-    background-color: #002a4d;
+    background-color: #002a4d ;
     cursor: pointer;
     color: #FFC107;
   }
@@ -350,11 +350,28 @@ main.fade-out {
   cursor: pointer;
   color: #FFC107;
 }
-
+.btn.add_pet{
+  font: bold !important;
+  letter-spacing: 0.15em;
+  /* padding: 6px 14px; */
+  height: fit-content;
+  background-color: #00192D !important;
+  cursor: pointer;
+  color: #FFC107;
+}
+.btn.save{
+  font: bold !important;
+  letter-spacing: 0.15em;
+  /* padding: 6px 14px; */
+  height: fit-content;
+  background-color: #00192D !important;
+  cursor: pointer;
+  color: #FFC107;
+}
 
                                                  /*Modals*/
-  
-  
+
+
   /* Submit button */
   .submit-btn {
     background-color: #00192D;
@@ -470,7 +487,7 @@ position: relative;
       min-height: 100%;
       /* margin-left: 20%; */
   }
-  
+
 
 /* Loading */
 
