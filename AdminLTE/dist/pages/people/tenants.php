@@ -398,8 +398,10 @@ width: 100%;
                                             <div class="row text-center">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <div class="custom-control custom-switch">
-                                                            <input type="radio" class="custom-control-input" value="Yes" name="pets" id="customSwitchPetYes">
+                                                        <div class="custom-control custom-switch" >
+
+                                                            <input type="radio" class="custom-control-input" value="Yes" name="haspets" id="customSwitchPetYes">
+                                                            <!-- <input type="hidden" name="petsData" id="petsDataInput"> -->
                                                             <label class="custom-control-label" for="customSwitchPetYes">Yes</label>
                                                         </div>
                                                     </div>
@@ -417,7 +419,12 @@ width: 100%;
                                                 <div class="card-header" style="background-color:#00192D; color:#FFC206;"><b>Please Specify Pets you Own</b></div>
                                                 <div class="card-body">
                                                     <div id="petContainer"></div>
-                                                      <button type="button" class="btn btn-success mb-3" onclick="addPetBlock()">+ Add Pet</button>
+                                                    <br>
+                                                    <div class="d-flex justify-content-between">
+                                                      <button type="button" class="btn add_pet mb-3" onclick="addPetBlock()">+ Add Pet</button>
+                                                      <button type="button" class="btn save mb-3" onclick="savePets()">Save </button>
+                                                    </div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -1223,10 +1230,10 @@ window.onload = () => addPetBlock();
     const container = document.getElementById('petContainer');
 
     const card = document.createElement('div');
-    card.className = 'card p-3';
+    card.className = 'card p-3 mb-2';
 
     card.innerHTML = `
-      <div class="row g-3 align-items-end">
+      <div class="row mb-2 g-3 align-items-end">
         <div class="col-md-4">
           <label class="form-label">Pet Type</label>
           <select class="form-select" name="petType[]" required>
@@ -1248,29 +1255,33 @@ window.onload = () => addPetBlock();
         <div class="col-md-1 text-end">
           <button type="button" class="btn btn-danger" onclick="this.closest('.card').remove()">×</button>
         </div>
+
       </div>
+
     `;
 
     container.appendChild(card);
   }
 
   // Handle submission
-  document.getElementById('petForm').addEventListener('submit', function (e) {
-    e.preventDefault();
 
-    const types = Array.from(document.getElementsByName('petType[]')).map(el => el.value);
-    const weights = Array.from(document.getElementsByName('petWeight[]')).map(el => el.value);
-    const licenses = Array.from(document.getElementsByName('petLicense[]')).map(el => el.value);
+  function savePets(){
+        const types = Array.from(document.getElementsByName('petType[]')).map(el => el.value);
+        const weights = Array.from(document.getElementsByName('petWeight[]')).map(el => el.value);
+        const licenses = Array.from(document.getElementsByName('petLicense[]')).map(el => el.value);
 
-    const pets = types.map((type, index) => ({
-      type,
-      weight: weights[index],
-      license: licenses[index]
-    }));
+        const pets = types.map((type, index) => ({
+          type,
+          weight: weights[index],
+          license: licenses[index]
+        }));
 
-    console.log('Submitted Pets:', pets);
-   
-  });
+        document.getElementById('petsDataInput').value = JSON.stringify(pets);
+
+
+        console.log('Submitted Pets:', pets);
+
+      }
 </script>
 
 </script>
