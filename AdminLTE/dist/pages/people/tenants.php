@@ -399,6 +399,7 @@ width: 100%;
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <div class="custom-control custom-switch" >
+                                                          
                                                             <input type="radio" class="custom-control-input" value="Yes" name="haspets" id="customSwitchPetYes">
                                                             <!-- <input type="hidden" name="petsData" id="petsDataInput"> -->
                                                             <label class="custom-control-label" for="customSwitchPetYes">Yes</label>
