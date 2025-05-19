@@ -12,19 +12,49 @@ if (isset($_GET['message_id']) && is_numeric($_GET['message_id'])) {
     $message = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($message) {
-        // Format message content and include file link if available
-        $content = htmlspecialchars($message['content']);
+        // Format content and timestamp
+        $content = nl2br(htmlspecialchars($message['content']));
         $timestamp = date('H:i', strtotime($message['timestamp']));
-        $fileLink = $message['file_path'] ? "<div class='attachment'><a href='{$message['file_path']}' target='_blank'>Download Attachment</a></div>" : '';
+        $attachmentHtml = '';
 
-        // Combine content and file link (if any)
+        // If file exists, embed it accordingly
+        if (!empty($message['file_path']) && file_exists($message['file_path'])) {
+            $path = $message['file_path'];
+            $basename = basename($path);
+            $ext = strtolower(pathinfo($basename, PATHINFO_EXTENSION));
+            $fileData = file_get_contents($path);
+            $base64 = base64_encode($fileData);
+            $mimeType = mime_content_type($path);
+
+            if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'])) {
+                $attachmentHtml = "<div class='attachment-image mt-2'>
+                                    <img src='data:$mimeType;base64,$base64' alt='$basename' class='img-thumbnail' style='max-width:200px; max-height:150px;'>
+                                    <div class='file-name small'>$basename</div>
+                                  </div>";
+            } elseif ($ext === 'pdf') {
+                $attachmentHtml = "<div class='attachment-file mt-2'>
+                                    <a href='data:$mimeType;base64,$base64' download='$basename' class='btn btn-sm btn-outline-secondary'>
+                                        <i class='fas fa-file-pdf'></i> $basename
+                                    </a>
+                                  </div>";
+            } else {
+                $attachmentHtml = "<div class='attachment-file mt-2'>
+                                    <a href='data:$mimeType;base64,$base64' download='$basename' class='btn btn-sm btn-outline-secondary'>
+                                        <i class='fas fa-download'></i> $basename
+                                    </a>
+                                  </div>";
+            }
+        }
+
+        // Render message with attachment inside bubble
         $messageContent = "<div class='message'>
-                            <div class='bubble'>$content</div>
-                            $fileLink
+                            <div class='bubble'>
+                                $content
+                                $attachmentHtml
+                            </div>
                             <div class='timestamp'>$timestamp</div>
                           </div>";
 
-        // Return the response in JSON format
         echo json_encode(['success' => true, 'message' => $messageContent]);
     } else {
         echo json_encode(['success' => false, 'error' => 'Message not found']);
@@ -35,4 +65,3 @@ if (isset($_GET['message_id']) && is_numeric($_GET['message_id'])) {
     echo json_encode(['success' => false, 'error' => 'Invalid message ID']);
 }
 ?>
-

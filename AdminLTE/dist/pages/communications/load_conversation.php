@@ -98,3 +98,4 @@ if (isset($_GET['thread_id']) && is_numeric($_GET['thread_id'])) {
     exit;
 }
 ?>
+ 
