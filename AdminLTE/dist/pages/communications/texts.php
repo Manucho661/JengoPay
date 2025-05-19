@@ -83,6 +83,7 @@ $stmt = $pdo->prepare("
         c.tenant,
         c.created_at,
         c.building_name,
+        c.message,
         (SELECT content FROM messages WHERE thread_id = c.thread_id ORDER BY timestamp DESC LIMIT 1) AS last_message,
         (SELECT timestamp FROM messages WHERE thread_id = c.thread_id ORDER BY timestamp DESC LIMIT 1) AS last_time,
         (SELECT COUNT(*) FROM messages WHERE thread_id = c.thread_id AND is_read = 0) AS unread_count,
