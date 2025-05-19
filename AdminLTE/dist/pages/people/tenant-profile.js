@@ -1,3 +1,4 @@
+// SafeSet Object
 function safeSet(id, value) {
   const el = document.getElementById(id);
   if (el) {
@@ -17,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 // 
 
-
+// fetch personal info
   function fetchPersonalInfo(user_id) {
     fetch(`actions/tenant_profile/fetch_records.php?user_id=${user_id}`)
       .then(response => response.json())
@@ -84,6 +85,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
 
+  // Fetch pets
+
 function fetchPets(user_id) {
   const tableBody = document.querySelector('#pets-table tbody');
   tableBody.innerHTML = '<tr><td colspan="4"><div class="loader"></div></td></tr>';
@@ -124,6 +127,9 @@ function fetchPets(user_id) {
 fetchPets(user_id)
 
 });
+
+
+
 
 
 

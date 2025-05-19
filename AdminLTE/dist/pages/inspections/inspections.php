@@ -172,11 +172,11 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
             <!--begin::User Menu Dropdown-->
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                <img
+                <!-- <img
                   src="17.jpg"
                   class="user-image rounded-circle shadow"
                   alt="User Image"
-                />
+                /> -->
                 <span class="d-none d-md-inline" style="color: #00192D;" > <b> JENGO PAY  </b>  </span>
               </a>
               <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
@@ -827,13 +827,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
     <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
-  <script>
-    // Initialize Stepper
-    const stepper = new Stepper(document.querySelector('#stepper'))
-    const stepper2 = new Stepper(document.querySelector('#MoveOut'));
-
-  </script>
-
+  
   <!-- J  A V A S C R I PT -->
 
                                                 <!-- LINKS -->
@@ -878,15 +872,14 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
 <!--End links for dataTaable buttons -->
 
 <!-- index.js -->
-<script src="index.js"></script>
+<!-- <script src="index.js"></script> -->
 <!-- End index.js -->
 
 <!-- End links -->
 
 
                                   <!-- DATE TABLES -->
-            <script>
-
+  <script>
               $(document).ready(function () {
                 const table = $('#maintenance').DataTable({
                   dom: 'Brtip', // ⬅ Changed to include Buttons in DOM
@@ -942,12 +935,12 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
             });
 
           });
-        </script>
+</script>
 
 
   
 <!-- Perform an inspection script -->
-         <script>
+<script>
             // display the inspection modal.
             const buttons = document.querySelectorAll('.inspect_btn');
 
@@ -971,6 +964,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
 
             //Inspect Single Room and Display FLoor Condition if it is bad
             document.getElementById('floorRepair').addEventListener('change', function(){
+                              console.log('yoyo');
                 document.getElementById('floorBadDescription').style.display='block';
             });
             //if the floor condition is good no need for description
@@ -1013,7 +1007,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
             document.getElementById('socketGood').addEventListener('click',function(){
                 document.getElementById('socketFaultyCard').style.display='none';
             });
-        </script>
+</script>
 
         <script>
           const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
