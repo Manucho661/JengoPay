@@ -38,25 +38,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $job_title = $_POST['tenant_jobtitle'] ?? '';
                 $status = 'active';
 
-                
-
                 if ($first_name && $middle_name && $pets && $email && $phone &&
                     $id_no && $residence && $unit && $income_source && $work_place && $job_title &&
-                    isset($_FILES['tenant_id_copy']) &&
-                    $_FILES['tenant_id_copy']['error'] === UPLOAD_ERR_OK
+                    isset($_FILES['tenant_id_copy'], $_FILES['kra_pin_copy'], $_FILES['agreemeny_copy'] ) &&
+                    $_FILES['tenant_id_copy']['error'] === UPLOAD_ERR_OK &&
+                    $_FILES['kra_pin_copy']['error'] === UPLOAD_ERR_OK &&
+                    $_FILES['agreemeny_copy']['error'] === UPLOAD_ERR_OK
                     ) {
                        // ✅ Step 1: Prepare file upload
                        // Step 1: Set target folder (relative to current script)
-                            $uploadDir = __DIR__ . '/files/'; // Absolute path ensures it works correctly
+                       $relativePath = 'originaltwo/AdminLTE/dist/pages/people/uploads/';
+                       $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/' . $relativePath;      // For saving files
 
                             // Step 2: Create folder if it doesn't exist
-                            if (!file_exists($uploadDir)) {
-                                mkdir($uploadDir, 0777, true);
+                            if (!file_exists($relativePath )) {
+                                mkdir($relativePath, 0777, true);
                             }
 
-                            // Step 3: Get file details
-                            $originalName = $_FILES['tenant_id_copy']['name'];
-                            $tempPath = $_FILES['tenant_id_copy']['tmp_name'];
+                            // Files array.
+                            $files = ['tenant_id_copy' =>'ID COPY', 'kra_pin_copy' =>'KRA PIN COPY', 'agreemeny_copy' =>'AGREEMENT COPY'];
+                            $uploadedFilePaths = []; // Array to store full paths
+
+                            // Step 3: Get files details
+                            foreach ($files as $fileKey=>$displayName){
+                            $originalName = $_FILES[$fileKey]['name'];
+                            $tempPath = $_FILES[$fileKey]['tmp_name'];
                             $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
 
                             // Step 4: Validate file type
@@ -67,8 +73,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             }
 
                             // Step 5: Set destination file path
-                            $filename = uniqid('id_copy_') . '.' . $extension;
-                            $destination = $uploadDir . $filename;
+                            $uniqueName = uniqid($originalName) . '.' . $extension;
+                            $destination = $uploadDir . $uniqueName;
+                            $browserPath = $relativePath . $uniqueName;
 
                             // Step 6: Move uploaded file
                             if (!move_uploaded_file($tempPath, $destination)) {
@@ -76,9 +83,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 exit;
                             }
 
-                            // ✅ Optional: Save filename to DB later
-                            echo "File uploaded successfully as $filename";
+                            $uploadedFiles[] = [
+                                'name' => $displayName,
+                                'path' => $browserPath
+                            ];
 
+                            // ✅ Optional: Save filename to DB later
+                            echo "File uploaded successfully as $uniqueName";
+                        }
 
                     try {
                         $pdo->beginTransaction();
@@ -102,12 +114,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         }
 
                         // Step 4: Insert into files
-                        $stmtTenant = $pdo->prepare("INSERT INTO files (tenant_id, file_path) VALUES (?, ?)");
-                        $stmtTenant->execute([$tenant_id, $filename ]);
-
-
-
-
+                        foreach ($uploadedFiles as $file){
+                        $stmtTenant = $pdo->prepare("INSERT INTO files (tenant_id, file_name, file_path) VALUES (?, ?,?)");
+                        $stmtTenant->execute([$tenant_id, $file['name'], $file['path'] ]);
+                        }
 
                         $pdo->commit();
                         echo "Tenant and user added successfully!";

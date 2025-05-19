@@ -357,60 +357,7 @@
   </div>
 </div>
 
-<!-- Shift Tenant Modal -->
-<div class="modal fade" id="shiftTenantModal" tabindex="-1" aria-labelledby="shiftTenantModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content shadow">
-      <form id="shiftTenantForm">
-        <!-- Custom Modal Header -->
-        <div class="modal-header "style="background-color:#00192D; color:#FFC107;">
-          <h5 class="modal-title" id="shiftTenantModalLabel">
-            <i class="fas fa-exchange-alt me-2"></i> Shift Tenant - Joseph
-          </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
 
-        <!-- Modal Body -->
-        <div class="modal-body px-4">
-          <!-- Tenant name -->
-          <div class="mb-3">
-            <label class="form-label">Tenant Name</label>
-            <input type="text" class="form-control" value="Joseph" readonly>
-          </div>
-
-          <!-- Building list -->
-          <div class="mb-3">
-            <label for="buildingSelect" class="form-label">Select Building</label>
-            <select id="buildingSelect" class="form-select" required>
-              <option value="">-- Select Building --</option>
-              <option value="Building A">Building A</option>
-              <option value="Building B">Building B</option>
-              <option value="Building C">Building C</option>
-            </select>
-          </div>
-
-          <!-- Unit list -->
-          <div class="mb-3">
-            <label for="unitSelect" class="form-label">Select Unit</label>
-            <select id="unitSelect" class="form-select" required>
-              <option value="">-- Select Unit --</option>
-              <option value="Unit 101">Unit 101</option>
-              <option value="Unit 102">Unit 102</option>
-              <option value="Unit 201">Unit 201</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Custom Modal Footer -->
-        <div class="modal-footer custom-footer">
-          <button type="submit" class="btn btn-custom-submit" style= "background-color:#00192D; color:#FFC107;">
-            <i class="fas fa-check-circle me-1"></i> Confirm Shift
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
 
 
             <!-- End first Row -->
@@ -511,73 +458,8 @@
                   </div>
                 </div>
               </div>
-            <!-- Edit Personal Info Modal -->
-<div class="modal fade" id="editPersonalInfoModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content shadow-lg border-0 rounded-3">
-      <form id="editPersonalInfoForm" autocomplete="off">
-        <div class="modal-header   rounded-top" style= "background-color: #00192D; color:#FFC107;">
-          <h5 class="modal-title" id="editModalLabel">
-            <i class="fas fa-user-edit me-2"></i> Edit Personal Information
-          </h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
 
-        <div class="modal-body px-4 py-3">
-          <!-- Email -->
-          <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="editEmail" placeholder="Email" required>
-            <label for="editEmail"><i class="fas fa-envelope me-1"></i> Email Address</label>
-          </div>
-
-          <!-- Phone -->
-          <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="editPhone" placeholder="Phone Number" required>
-            <label for="editPhone"><i class="fas fa-phone me-1"></i> Phone Number</label>
-          </div>
-
-          <!-- ID Number -->
-          <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="editIDNo" placeholder="ID Number" required>
-            <label for="editIDNo"><i class="fas fa-id-card me-1"></i> National ID Number</label>
-          </div>
-
-          <!-- Income Source -->
-          <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="editIncomeSource" placeholder="Income Source">
-            <label for="editIncomeSource"><i class="fas fa-briefcase me-1"></i> Income Source</label>
-          </div>
-
-          <!-- Employer -->
-          <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="editEmployer" placeholder="Employer">
-            <label for="editEmployer"><i class="fas fa-building me-1"></i> Employer</label>
-          </div>
-
-          <!-- Job Title -->
-          <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="editJobTitle" placeholder="Job Title">
-            <label for="editJobTitle"><i class="fas fa-user-tie me-1"></i> Job Title</label>
-          </div>
-        </div>
-
-        <div class="modal-footer bg-light d-flex justify-content-between">
-          <small class="text-muted"><i class="fas fa-info-circle me-1"></i> Make sure details are accurate</small>
-          <button type="submit" class="btn btn-success" style="background-color:#00192D; color:#FFC107;">
-            <i class="fas fa-save me-1"></i> Save Changes
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-
-             <!-- end row -->
-
-
-
-
+               <!-- Edit Personal Info Modal -->
 
              <!-- start row -->
 
@@ -818,271 +700,236 @@
 
 
               </div>
-
-
-
-<!-- Farst Overlay (Receipt) -->
-<div class="popup-overlay" id="complaintPopup">
-  <div class="popup-content">
-    <button class="close-btn text-secondary" onclick="closePopup()">×</button>
-        <h2 style="color: #00192D; font-size: medium;">Payment Receipt</h2>
-        <div class="info" id="inform">
-            <p><strong>Receipt No:</strong>#123456</p>
-            <p><strong>Date:</strong> 2025-02-13</p>
-            <p><strong>Tenant:</strong> John Doe</p>
-        </div>
-        <div class="receipt">
-          <p><strong>Property:</strong>Manucho</p>
-          <p><strong>House Unit:</strong>A12</p>
-          <p><strong>Mpesa:</strong> KSH 10,0000</p>
-          <p><strong>Transaction:</strong> TBM34KGNJ8</p>
-          <p class="total"><strong>Total:</strong> KSH10,000.00</p>
-
-        </div>
-        <p style="text-align: center;" style="color:#00192D;">Thank you for your payment!</p>
-        <div style="display: flex; justify-content: flex-end;">
-          <button style="background-color: white; color:#FFC107; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">
-            DOWNLOAD
-          </button>
-      </div>
-  </div>
-</div>
-<!-- end -->
-
-<!-- The invoice Overlay -->
-<div id="invoiceOverlay" class="overlay">
-  <div class="overlay-content">
-      <button class="close-btn" onclick="closeOverlay()">×</button>
-      <div id="invoice" style="text-align: start;">
-          <b><h2 style="color:#00192D; font-size: medium;"><strong>Invoice Details</strong></h2></b>
-      </div>
-
-      <div class="invoice-header">
-          <div>
-            <strong>Bill To:</strong><br>
-            John Doe<br>
-            Manucho Apartments<br>
-            Email: johndoe@example.com
-          </div>
-          <div>
-              <strong>INVOICE</strong><br>
-            <b>  Invoice Date <span>18-02-2025</span><br></b>
-              <b>Due Date<span>25-03-2025</span><br></b>
-              <!-- Email<span>johndoe@example.com</span>  -->
-          </div>
-      </div>
-
-      <table>
-        <thead>
-            <tr>
-              <th>Qty</th>
-                <th>Description</th>
-                <th>Unit Price</th>
-               <th>Amount</th>
-               <!-- <th style="color:#FFC107 ;">Late fees</th> -->
-               <!-- <th>Maintenance</th> -->
-
-
-
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-               <td>1.00</td>
-               <td>Rent For February</td>
-               <td>KSH20,000</td>
-               <td>KSH20,000</td>
-               <!-- <td>ksh</td> -->
-               </tr>
-               <tr>
-                <td>10</td>
-                <td>Water Bill</td>
-                <td>KSH200.00</td>
-                <td>KSH200.00</td>
-                <!-- <td>ksh</td> -->
-                </tr>
-                <tr>
-                  <td>1.00</td>
-                  <td>Garbage Collection</td>
-                  <td>KSH250.00</td>
-                  <td>KSH250.00</td>
-                  <!-- <td>ksh</td> -->
-                  </tr>
-                  <tr>
-                    <td>1.00</td>
-                    <td>Late Payment Fees</td>
-                    <td>KSH250.00</td>
-                    <td>KSH250.00</td>
-                    <!-- <td>ksh</td> -->
-                    </tr>
-        </tbody>
-        <tfoot>
-            <tr class="total-row">
-                <td colspan="3" style="text-align: right;">Subtotal</td>
-                <td>KSH39,000</td>
-            </tr>
-            <tr class="total-row">
-              <td colspan="3" style="text-align: right;">*VAT(16%)</td>
-              <td>KSH40,000</td>
-          </tr>
-            <tr class="total-row">
-                <td colspan="3" style="text-align: right;">Total</td>
-                <td>KSH200</td>
-            </tr>
-        </tfoot>
-      </table>
-
-      <div class="">
-        POWERED BY
-        <button class="btns">
-          BTJENGOPAY
-        </button>
-      <div>
-
-
-      <!-- <p class="total">Grand Total: Ksh <span id="grand-total"></span></p> -->
-
-      <!-- <button class="btn-print" onclick="printReceipt()">Print Receipt</button> -->
-
-
-      <div class="invoice-header">
-          <button class="btns" onclick="printInvoice()">
-              <i class="fa fa-print"></i> Print Invoice
-          </button>
-          <button class="btns" onclick="downloadpdf()">
-            <i class="fa fa-file-pdf"></i> Generate PDF
-          </button>
-          <button class="btns" onclick="exportexcel()">
-            <i class="fa fa-file-export"></i> Export Excel
-          </button>
-
-      </div>
-
-
-
-  </div>
-</div>
-
-      <!-- <div style="display: flex; justify-content: flex-end;">
-        <button style="background-color: white; color:#FFC107; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">
-          DOWNLOAD
-        </button>
-    </div>
-     -->
+   
   </div>
 </div>
 
           
+        <!-- OVERLAYS -->
+        <!-- Edit Personal Info Modal -->
+              <div class="modal fade" id="editPersonalInfoModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content shadow-lg border-0 rounded-3">
+                    <form id="editPersonalInfoForm" autocomplete="off">
+                      <div class="modal-header   rounded-top" style= "background-color: #00192D; color:#FFC107;">
+                        <h5 class="modal-title" id="editModalLabel">
+                          <i class="fas fa-user-edit me-2"></i> Edit Personal Information
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+
+                      <div class="modal-body px-4 py-3">
+                        <!-- Email -->
+                        <div class="form-floating mb-3">
+                          <input type="email" class="form-control" id="editEmail" placeholder="Email" required>
+                          <label for="editEmail"><i class="fas fa-envelope me-1"></i> Email Address</label>
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="form-floating mb-3">
+                          <input type="text" class="form-control" id="editPhone" placeholder="Phone Number" required>
+                          <label for="editPhone"><i class="fas fa-phone me-1"></i> Phone Number</label>
+                        </div>
+
+                        <!-- ID Number -->
+                        <div class="form-floating mb-3">
+                          <input type="text" class="form-control" id="editIDNo" placeholder="ID Number" required>
+                          <label for="editIDNo"><i class="fas fa-id-card me-1"></i> National ID Number</label>
+                        </div>
+
+                        <!-- Income Source -->
+                        <div class="form-floating mb-3">
+                          <input type="text" class="form-control" id="editIncomeSource" placeholder="Income Source">
+                          <label for="editIncomeSource"><i class="fas fa-briefcase me-1"></i> Income Source</label>
+                        </div>
+
+                        <!-- Employer -->
+                        <div class="form-floating mb-3">
+                          <input type="text" class="form-control" id="editEmployer" placeholder="Employer">
+                          <label for="editEmployer"><i class="fas fa-building me-1"></i> Employer</label>
+                        </div>
+
+                        <!-- Job Title -->
+                        <div class="form-floating mb-3">
+                          <input type="text" class="form-control" id="editJobTitle" placeholder="Job Title">
+                          <label for="editJobTitle"><i class="fas fa-user-tie me-1"></i> Job Title</label>
+                        </div>
+                      </div>
+
+                      <div class="modal-footer bg-light d-flex justify-content-between">
+                        <small class="text-muted"><i class="fas fa-info-circle me-1"></i> Make sure details are accurate</small>
+                        <button type="submit" class="btn btn-changes" style="background-color:#00192D; color:#FFC107;">
+                          <i class="fas fa-save me-1"></i> Save Changes
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Shift Tenant Modal -->
+              <div class="modal fade" id="shiftTenantModal" tabindex="-1" aria-labelledby="shiftTenantModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content shadow">
+                    <form id="shiftTenantForm">
+                      <!-- Custom Modal Header -->
+                      <div class="modal-header "style="background-color:#00192D; color:#FFC107;">
+                        <h5 class="modal-title" id="shiftTenantModalLabel">
+                          <i class="fas fa-exchange-alt me-2"></i> Shift Tenant - Joseph
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+
+                      <!-- Modal Body -->
+                      <div class="modal-body px-4">
+                        <!-- Tenant name -->
+                        <div class="mb-3">
+                          <label class="form-label">Tenant Name</label>
+                          <input type="text" class="form-control" value="Joseph" readonly>
+                        </div>
+
+                        <!-- Building list -->
+                        <div class="mb-3">
+                          <label for="buildingSelect" class="form-label">Select Building</label>
+                          <select id="buildingSelect" class="form-select" required>
+                            <option value="">-- Select Building --</option>
+                            <option value="Building A">Building A</option>
+                            <option value="Building B">Building B</option>
+                            <option value="Building C">Building C</option>
+                          </select>
+                        </div>
+
+                        <!-- Unit list -->
+                        <div class="mb-3">
+                          <label for="unitSelect" class="form-label">Select Unit</label>
+                          <select id="unitSelect" class="form-select" required>
+                            <option value="">-- Select Unit --</option>
+                            <option value="Unit 101">Unit 101</option>
+                            <option value="Unit 102">Unit 102</option>
+                            <option value="Unit 201">Unit 201</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <!-- Custom Modal Footer -->
+                      <div class="modal-footer custom-footer">
+                        <button type="submit" class="btn btn-shift" style= "background-color:#00192D; color:#FFC107;">
+                          <i class="fas fa-check-circle me-1"></i> Confirm Shift
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
 
 
 
 
-
-<?php if (isset($_GET['id'])): ?>
-  <script>
-    const user_id = <?= json_encode($_GET['id']) ?>;
-    console.log("UsersID:", user_id);
-  </script>
-<?php endif; ?>
-
+        <?php if (isset($_GET['id'])): ?>
+          <script>
+            const user_id = <?= json_encode($_GET['id']) ?>;
+            console.log("UsersID:", user_id);
+          </script>
+        <?php endif; ?>
 
 
 
-<script src="tenant-profile.js"></script>
-<script>
-  fetch('../bars/sidebar.html')  // Fetch the file
-      .then(response => response.text()) // Convert it to text
-      .then(data => {
-          document.getElementById('sidebar').innerHTML = data; // Insert it
-      })
-      .catch(error => console.error('Error loading the file:', error)); // Handle errors
-</script>
 
-<!-- Begin script for datatable -->
-<script>
-  $(document).ready(function() {
-   $('#rent').DataTable({
-       "paging": true,
-       "searching": true,
-       "info": true,
-       "lengthMenu": [5, 10, 25, 50],
-       "language": {
-           "search": "Filter records:",
-           "lengthMenu": "Show _MENU_ entries"
-       }
-   });
-});
+        <script src="tenant-profile.js"></script>
+        <script>
+          fetch('../bars/sidebar.html')  // Fetch the file
+              .then(response => response.text()) // Convert it to text
+              .then(data => {
+                  document.getElementById('sidebar').innerHTML = data; // Insert it
+              })
+              .catch(error => console.error('Error loading the file:', error)); // Handle errors
+        </script>
 
-$(document).ready(function() {
-   $('#agreements').DataTable({
-       "paging": true,
-       "searching": true,
-       "info": true,
-       "lengthMenu": [5, 10, 25, 50],
-       "language": {
-           "search": "Filter records:",
-           "lengthMenu": "Show _MENU_ entries"
-       }
-   });
-});
-
-</script>
-
-
-
-<!-- End script for data_table -->
-
-
-    <script
-      src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-      integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
-      crossorigin="anonymous"
-    ></script>
-    <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-    <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-      crossorigin="anonymous"
-    ></script>
-    <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-      integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-      crossorigin="anonymous"
-    ></script>
-    <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <script src="../../../dist/js/adminlte.js"></script>
-    <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
-    <script>
-      const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-      const Default = {
-        scrollbarTheme: 'os-theme-light',
-        scrollbarAutoHide: 'leave',
-        scrollbarClickScroll: true,
-      };
-      document.addEventListener('DOMContentLoaded', function () {
-        const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-        if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
-          OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-            scrollbars: {
-              theme: Default.scrollbarTheme,
-              autoHide: Default.scrollbarAutoHide,
-              clickScroll: Default.scrollbarClickScroll,
-            },
+        <!-- Begin script for datatable -->
+        <script>
+          $(document).ready(function() {
+          $('#rent').DataTable({
+              "paging": true,
+              "searching": true,
+              "info": true,
+              "lengthMenu": [5, 10, 25, 50],
+              "language": {
+                  "search": "Filter records:",
+                  "lengthMenu": "Show _MENU_ entries"
+              }
           });
-        }
-      });
-    </script>
-    <!-- Bootstrap Bundle with Popper -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <!--end::OverlayScrollbars Configure-->
-    <!-- OPTIONAL SCRIPTS -->
-    <!-- apexcharts -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
-      integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
-      crossorigin="anonymous"
-    ></script>
+        });
+
+        $(document).ready(function() {
+          $('#agreements').DataTable({
+              "paging": true,
+              "searching": true,
+              "info": true,
+              "lengthMenu": [5, 10, 25, 50],
+              "language": {
+                  "search": "Filter records:",
+                  "lengthMenu": "Show _MENU_ entries"
+              }
+          });
+        });
+
+        </script>
+
+
+
+        <!-- End script for data_table -->
+
+
+            <script
+              src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
+              integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
+              crossorigin="anonymous"
+            ></script>
+            <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
+            <script
+              src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+              integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+              crossorigin="anonymous"
+            ></script>
+            <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
+            <script
+              src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+              integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+              crossorigin="anonymous"
+            ></script>
+            <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
+            <script src="../../../dist/js/adminlte.js"></script>
+            <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
+            <script>
+              const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
+              const Default = {
+                scrollbarTheme: 'os-theme-light',
+                scrollbarAutoHide: 'leave',
+                scrollbarClickScroll: true,
+              };
+              document.addEventListener('DOMContentLoaded', function () {
+                const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
+                if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
+                  OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+                    scrollbars: {
+                      theme: Default.scrollbarTheme,
+                      autoHide: Default.scrollbarAutoHide,
+                      clickScroll: Default.scrollbarClickScroll,
+                    },
+                  });
+                }
+              });
+            </script>
+            <!-- Bootstrap Bundle with Popper -->
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+            <!--end::OverlayScrollbars Configure-->
+            <!-- OPTIONAL SCRIPTS -->
+            <!-- apexcharts -->
+            <script
+              src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
+              integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
+              crossorigin="anonymous"
+            ></script>
 
 
 <!--  -->
