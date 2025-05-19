@@ -93,100 +93,6 @@ $stmt = $pdo->prepare("
 $stmt->execute();
 $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// === IF VIEWING A THREAD'S MESSAGES ===
-if (isset($_GET['thread_id']) && $_GET['thread_id'] > 0) {
-    $threadId = (int)$_GET['thread_id'];
-
-    // Mark messages as read
-    $pdo->prepare("UPDATE messages SET is_read = 1 WHERE thread_id = :thread_id AND is_read = 0")
-        ->execute(['thread_id' => $threadId]);
-
-    // Fetch messages with their attachments
-    $stmt = $pdo->prepare("
-        SELECT
-            m.message_id,
-            m.sender,
-            m.content,
-            m.timestamp,
-            GROUP_CONCAT(mf.file_path SEPARATOR '|||') AS file_paths
-        FROM messages m
-        LEFT JOIN message_files mf ON mf.message_id = m.message_id
-        WHERE m.thread_id = :thread_id
-        GROUP BY m.message_id
-        ORDER BY m.timestamp ASC
-    ");
-    $stmt->execute(['thread_id' => $threadId]);
-    $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Display messages
-    foreach ($messages as $msg) {
-        $sender = htmlspecialchars($msg['sender']);
-        $content = nl2br(htmlspecialchars($msg['content']));
-        $timestamp = date('H:i', strtotime($msg['timestamp']));
-        $class = ($sender === 'landlord') ? 'outgoing' : 'incoming';
-        $file_path = !empty($msg['file_paths']) ? explode('|||', $msg['file_path']) : [];
-
-        echo "<div class='message $class'>
-                <div class='bubble'>
-                $content
-                $file_paths
-                </div>";
-
-
-        // Display attachments if any
-        if (!empty($file_paths)) {
-            echo "<div class='attachments mt-2'>";
-            foreach ($file_paths as $file) {
-                if (empty($file)) continue;
-
-                $file = htmlspecialchars($file);
-                $basename = htmlspecialchars(basename($file));
-                $ext = strtolower(pathinfo($basename, PATHINFO_EXTENSION));
-                $image_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'];
-
-                if (in_array($ext, $image_extensions)) {
-                    // Display image with lightbox functionality
-                    echo "<div class='attachment-image mb-2'>
-                            <a href='$file' data-lightbox='message-$threadId' data-title='$basename'>
-                                <img src='$file' alt='$basename' class='img-thumbnail' style='max-width:200px; max-height:150px;'>
-                            </a>
-                            <div class='file-name'>$basename</div>
-                          </div>";
-                } else {
-                    // Display download link for non-image files
-                    echo "<div class='attachment-file mb-2'>
-                            <a href='$file' target='_blank' class='btn btn-sm btn-outline-secondary'>
-                                <i class='fas fa-download'></i> $basename
-                            </a>
-                          </div>";
-                }
-            }
-            echo "</div>";
-        }
-
-        echo "<div class='timestamp'>$timestamp</div>
-              </div>";
-    }
-
-    // Check for first view
-    $checkFirstViewStmt = $pdo->prepare("
-        SELECT thread_id FROM messages
-        WHERE thread_id = :thread_id AND is_first_viewed = 0
-        ORDER BY timestamp ASC LIMIT 1
-    ");
-    $checkFirstViewStmt->execute(['thread_id' => $threadId]);
-
-    if ($checkFirstViewStmt->rowCount() > 0) {
-        // Mark as viewed
-        $pdo->prepare("
-            UPDATE messages
-            SET is_first_viewed = 1
-            WHERE thread_id = :thread_id AND is_first_viewed = 0
-        ")->execute(['thread_id' => $threadId]);
-
-        echo "<div class='system-message'>👋 Welcome! You have a new message.</div>";
-    }
-}
 ?>
 
 
@@ -742,13 +648,17 @@ display: flex;
                                   <div class="individual-topic"><?= htmlspecialchars($comm['title']) ?></div>
                                   <div class="individual-message mt-2">
                                   <?= htmlspecialchars(mb_strimwidth($comm['last_message'], 0, 60, '...'))?>
-                                  <?php if (!empty($comm['preview_file'])): ?>
-                                  <div class="attached-file mt-1">
-                                    📎 <a href="<?= htmlspecialchars($comm['preview_file']) ?>" target="_blank">
-                                      <?= htmlspecialchars(basename($comm['preview_file'])) ?>
-                                    </a>
-                                  </div>
-                                <?php endif; ?>
+                                  <?php
+                                  $specificMessageId = 42; // replace this with your actual target ID
+
+                                  if (!empty($comm['preview_file']) && $comm['message'] == $specificMessageId): ?>
+                                    <div class="attached-file mt-1">
+                                      📎 <a href="<?= htmlspecialchars($comm['preview_file']) ?>" target="_blank">
+                                        <?= htmlspecialchars(basename($comm['preview_file'])) ?>
+                                      </a>
+                                    </div>
+                                  <?php endif; ?>
+
                                  </div>
                                   </div>
 
@@ -785,10 +695,12 @@ display: flex;
                               </div>
 
                               <div class="individual-message-body" style="height: 100%;">
-                                <div class="messages" id="messages" >
-                                  <div class="message incoming">Hello! How are you?</div>
-                                  <div class="message outgoing">I'm doing great, thanks!</div>
+                                 <div class="messages" id="messages" >
+                                   <!-- <div class="message incoming">Hello! How are you?</div>
+                                  <div class="message outgoing">I'm doing great, thanks!</div> -->
                                 </div>
+
+
 
                                <div class="input-area">
                               <!-- Attachment input -->
