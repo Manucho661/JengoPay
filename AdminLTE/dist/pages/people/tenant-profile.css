@@ -142,6 +142,24 @@ main{
                                                             height: fit-content;
 
                                                             }
+                                                            .btn.btn-changes{
+                                                                 height: fit-content;
+                                                                  padding: 4px 12px;
+                                                                  font-size: 12px;
+                                                                  /* background-color: transparent; */
+                                                                  /* color: green; */
+                                                                  border: 1px solid #002a4d;
+                                                                  font-weight: 600px;
+                                                            }
+                                                            .btn.btn-shift{
+                                                                 height: fit-content;
+                                                                  padding: 4px 12px;
+                                                                  font-size: 12px;
+                                                                  /* background-color: transparent; */
+                                                                  /* color: green; */
+                                                                  border: 1px solid #002a4d;
+                                                                  font-weight: 600px;
+                                                            }
                                                             /* SUMMARY SECTION */
 
 .col-md-3 .icon-category-number {
@@ -287,6 +305,14 @@ margin-top: 2px;
 
                                                         input:hover{
                                                         border: 1px solid #FFC107;
+                                                        }
+                                                        .form-control:hover{
+                                                          border: 1px solid #FFC107 !important;
+                                                        }
+                                                        .form-control:focus{
+                                                          border-color: #FFC107;
+                                                          outline: none;
+                                                          box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
                                                         }
                                                         select:hover{
                                                         border: 1px solid #FFC107;

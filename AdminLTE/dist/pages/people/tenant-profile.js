@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
         row.innerHTML = `
           <td> <b>${files.file_name} </b>  </td>
           <td>
-          <a href="actions/tenants/files/${files.file_path}" target="_blank"
+          <a href="${files.file_path}" target="_blank"
             class="btn btn-sm"
             style="background-color: #193042; color:#fff; margin-right: 2px;">
             <i class="fas fa-eye"></i> 
@@ -85,7 +85,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 function fetchPets(user_id) {
-
   const tableBody = document.querySelector('#pets-table tbody');
   tableBody.innerHTML = '<tr><td colspan="4"><div class="loader"></div></td></tr>';
   fetch(`actions/pets/fetch_records.php?user_id=${user_id}`)

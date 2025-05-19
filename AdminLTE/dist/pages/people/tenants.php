@@ -339,7 +339,7 @@ width: 100%;
                                         <div class="card-header" style="background-color:#00192D; color:#FFC107;"><b>Occupation Information</b></div>
                                         <div class="card-body">
                                         <div class="row">
-                                                <div class="col-md-4">
+                                                <div class="col-md-3">
                                                     <label>Building</label> <sup class="text-danger"><b>*</b></sup>
                                                     <br>
 
@@ -351,12 +351,23 @@ width: 100%;
                                                     </select>
                                                     <b class="text-danger" id="building_nameError"></b>
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-3">
+                                                    <label>Unit_type
+                                                    </label> <sup class="text-danger"><b>*</b></sup>
+                                                    <br>
+                                                    <select class="form-control" name="unit_type" id="unit_type" >
+                                                      <option value="C219">Residential</option>
+                                                      <option value="B14">Commercial</option>
+
+                                                    </select>
+                                                    <b class="text-danger" id="unit_nameError"></b>
+                                                </div>
+                                                <div class="col-md-3">
                                                     <label>Floor Number</label> <sup class="text-danger"><b>*</b></sup>
                                                     <input type="number" class="form-control" name="floor_number" id="Floor Number" placeholder="5">
                                                     <b class="text-danger" id="floor_number_nameError"></b>
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-3">
                                                     <label>Unit</label> <sup class="text-danger"><b>*</b></sup>
                                                     <br>
                                                     <select class="form-control" name="unit_name" id="unit_name" >
@@ -387,8 +398,10 @@ width: 100%;
                                             <div class="row text-center">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <div class="custom-control custom-switch">
-                                                            <input type="radio" class="custom-control-input" value="Yes" name="pets" id="customSwitchPetYes">
+                                                        <div class="custom-control custom-switch" >
+
+                                                            <input type="radio" class="custom-control-input" value="Yes" name="haspets" id="customSwitchPetYes">
+                                                            <input type="hidden" name="petsData" id="petsDataInput">
                                                             <label class="custom-control-label" for="customSwitchPetYes">Yes</label>
                                                         </div>
                                                     </div>
@@ -396,7 +409,7 @@ width: 100%;
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <div class="custom-control custom-switch">
-                                                            <input type="radio" class="custom-control-input" value="No" name="pets" id="customNoPets" onclick="hideToSpecifyPets();">
+                                                            <input type="radio" class="custom-control-input" value="No" name="haspets" id="customNoPets" onclick="hideToSpecifyPets();">
                                                             <label class="custom-control-label" for="customNoPets">No</label>
                                                         </div>
                                                     </div>
@@ -405,21 +418,13 @@ width: 100%;
                                             <div class="card" id="specifyPetsCard" style="display:none;">
                                                 <div class="card-header" style="background-color:#00192D; color:#FFC206;"><b>Please Specify Pets you Own</b></div>
                                                 <div class="card-body">
-                                                    <div class="form-group">
-                                                        <label>Select Pet(s)</label> <sup>Multiple Allowed</sup>
-
-                                                        <select name="pets[]" class="select2" multiple="multiple" data-placeholder="Specify Pet(s)" style="width: 100%;">
-                                                            <option>Dog</option>
-                                                            <option>Cat</option>
-                                                            <option>Parrot</option>
-                                                            <option>Snake</option>
-                                                            <option>Lion</option>
-                                                            <option>Tiger</option>
-                                                            <option>Goat</option>
-                                                            <option>Robot</option>
-                                                            <option>Bunny</option>
-                                                        </select>
+                                                    <div id="petContainer"></div>
+                                                    <br>
+                                                    <div class="d-flex justify-content-between">
+                                                      <button type="button" class="btn add_pet mb-3" onclick="addPetBlock()">+ Add Pet</button>
+                                                      <button type="button" class="btn save mb-3" onclick="savePets()">Save </button>
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -816,7 +821,7 @@ width: 100%;
             </div>
           </div>
 
-          
+
     <!--Begin Jquery plugin-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- End Jquery plugin-->
@@ -1118,17 +1123,44 @@ $(document).ready(function(){
 <!-- //Event Listener to Specify if the Tenant Owns Pets -->
 
 <script>
-
- $(document).ready(function() {
-        document.getElementById('customSwitchPetYes').addEventListener('change', function(){
-        document.getElementById('specifyPetsCard').style.display='block';
+  $(document).ready(function() {
+    // Show pets card when "Yes" is selected
+    document.getElementById('customSwitchPetYes').addEventListener('change', function(){
+      document.getElementById('specifyPetsCard').style.display = 'block';
+      console.log('fired');
     });
-        $('.select2').select2();
+
+    // Initialize select2
+    $('.select2').select2();
+
+    // Call the noPets function to bind the event
+    noPets();
+  });
+
+  // Define the noPets function properly
+   function noPets() {
+    const noPet = document.getElementById('customNoPets');
+    if (noPet) {
+      noPet.addEventListener('change', function () {
+        console.log('No radio changed');
+        document.getElementById('specifyPetsCard').style.display = 'none';
+        const pets = document.getElementById('petsDataInput').value = 'no_pet';
+        const petInputs = specifyPetsCard.querySelectorAll('select, input');
+          petInputs.forEach(el => {
+          el.disabled = true;
+          el.required = false;
+          el.value = ''; // Optional: clear input values
+        });
+
+        console.log('Pets value set:', pets);
       });
+    } else {
+      console.warn('No radio not found');
+    }
+  }
+</script>
 
-    document.getElementById('customNoPets').addEventListener('change', function(){
-        document.getElementById('specifyPetsCard').style.display='none';
-    });
+
 
 </script>
 
@@ -1214,6 +1246,70 @@ document.querySelectorAll('button.status').forEach(button => {
     document.getElementById('building_name').value = value;
   });
 });
+
+</script>
+
+<!-- pets control script -->
+<script>
+window.onload = () => addPetBlock();
+
+  function addPetBlock() {
+    const container = document.getElementById('petContainer');
+
+    const card = document.createElement('div');
+    card.className = 'card p-3 mb-2';
+
+    card.innerHTML = `
+      <div class="row mb-2 g-3 align-items-end">
+        <div class="col-md-4">
+          <label class="form-label">Pet Type</label>
+          <select class="form-select" name="petType[]" required>
+            <option value="">-- Select Pet --</option>
+            <option value="Dog">Dog</option>
+            <option value="Cat">Cat</option>
+            <option value="Rabbit">Rabbit</option>
+            <option value="Parrot">Parrot</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Weight (kg)</label>
+          <input type="number" class="form-control" name="petWeight[]" required min="0" step="0.1">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">License Number</label>
+          <input type="text" class="form-control" name="petLicense[]" required>
+        </div>
+        <div class="col-md-1 text-end">
+          <button type="button" class="btn btn-danger" onclick="this.closest('.card').remove()">×</button>
+        </div>
+
+      </div>
+
+    `;
+
+    container.appendChild(card);
+  }
+
+  // Handle submission
+
+  function savePets(){
+        const types = Array.from(document.getElementsByName('petType[]')).map(el => el.value);
+        const weights = Array.from(document.getElementsByName('petWeight[]')).map(el => el.value);
+        const licenses = Array.from(document.getElementsByName('petLicense[]')).map(el => el.value);
+
+        const pets = types.map((type, index) => ({
+          type,
+          weight: weights[index],
+          license: licenses[index]
+        }));
+
+        document.getElementById('petsDataInput').value = JSON.stringify(pets);
+
+
+        console.log('Submitted Pets:', pets);
+
+      }
+</script>
 
 </script>
   </body>
