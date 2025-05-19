@@ -401,7 +401,7 @@ width: 100%;
                                                         <div class="custom-control custom-switch" >
 
                                                             <input type="radio" class="custom-control-input" value="Yes" name="haspets" id="customSwitchPetYes">
-                                                            <!-- <input type="hidden" name="petsData" id="petsDataInput"> -->
+                                                            <input type="hidden" name="petsData" id="petsDataInput">
                                                             <label class="custom-control-label" for="customSwitchPetYes">Yes</label>
                                                         </div>
                                                     </div>
@@ -1123,18 +1123,44 @@ $(document).ready(function(){
 <!-- //Event Listener to Specify if the Tenant Owns Pets -->
 
 <script>
-
- $(document).ready(function() {
-        document.getElementById('customSwitchPetYes').addEventListener('change', function(){
-        document.getElementById('specifyPetsCard').style.display='block';
+  $(document).ready(function() {
+    // Show pets card when "Yes" is selected
+    document.getElementById('customSwitchPetYes').addEventListener('change', function(){
+      document.getElementById('specifyPetsCard').style.display = 'block';
+      console.log('fired');
     });
-        $('.select2').select2();
+
+    // Initialize select2
+    $('.select2').select2();
+
+    // Call the noPets function to bind the event
+    noPets();
+  });
+
+  // Define the noPets function properly
+   function noPets() {
+    const noPet = document.getElementById('customNoPets');
+    if (noPet) {
+      noPet.addEventListener('change', function () {
+        console.log('No radio changed');
+        document.getElementById('specifyPetsCard').style.display = 'none';
+        const pets = document.getElementById('petsDataInput').value = 'no_pet';
+        const petInputs = specifyPetsCard.querySelectorAll('select, input');
+          petInputs.forEach(el => {
+          el.disabled = true;
+          el.required = false;
+          el.value = ''; // Optional: clear input values
+        });
+
+        console.log('Pets value set:', pets);
       });
+    } else {
+      console.warn('No radio not found');
+    }
+  }
+</script>
 
-    document.getElementById('customNoPets').addEventListener('change', function(){
-        document.getElementById('specifyPetsCard').style.display='none';
-        
-    });
+
 
 </script>
 

@@ -98,19 +98,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
                         //step 3: Insert into pets
-                        foreach ($pets as $pet) {
-                            $stmtPet = $pdo->prepare("
-                                INSERT INTO pets (tenant_id, type, weight, license)
-                                VALUES (:tenant_id, :type, :weight, :license)
-                            ");
+                      if (is_array($pets)) {
+                          foreach ($pets as $pet) {
+                              $stmtPet = $pdo->prepare("
+                                  INSERT INTO pets (tenant_id, type, weight, license)
+                                  VALUES (:tenant_id, :type, :weight, :license)
+                              ");
 
-                            $stmtPet->execute([
-                                ':tenant_id' => $tenant_id, // assume you defined this earlier
-                                ':type' => $pet['type'] ?? '',
-                                ':weight' => $pet['weight'] ?? '',
-                                ':license' => $pet['license'] ?? ''
-                            ]);
-                        }
+                              $stmtPet->execute([
+                                  ':tenant_id' => $tenant_id, // assume this is defined
+                                  ':type' => $pet['type'] ?? '',
+                                  ':weight' => $pet['weight'] ?? '',
+                                  ':license' => $pet['license'] ?? ''
+                              ]);
+                          }
+                      }
+
 
 
 
