@@ -399,7 +399,7 @@ width: 100%;
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <div class="custom-control custom-switch" >
-                                                          
+
                                                             <input type="radio" class="custom-control-input" value="Yes" name="haspets" id="customSwitchPetYes">
                                                             <!-- <input type="hidden" name="petsData" id="petsDataInput"> -->
                                                             <label class="custom-control-label" for="customSwitchPetYes">Yes</label>
@@ -409,7 +409,7 @@ width: 100%;
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <div class="custom-control custom-switch">
-                                                            <input type="radio" class="custom-control-input" value="No" name="pets" id="customNoPets" onclick="hideToSpecifyPets();">
+                                                            <input type="radio" class="custom-control-input" value="No" name="haspets" id="customNoPets" onclick="hideToSpecifyPets();">
                                                             <label class="custom-control-label" for="customNoPets">No</label>
                                                         </div>
                                                     </div>
@@ -1133,6 +1133,7 @@ $(document).ready(function(){
 
     document.getElementById('customNoPets').addEventListener('change', function(){
         document.getElementById('specifyPetsCard').style.display='none';
+        
     });
 
 </script>
