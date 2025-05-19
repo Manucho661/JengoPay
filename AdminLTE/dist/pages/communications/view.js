@@ -83,4 +83,45 @@ function handleFiles(event) {
     previewContainer.appendChild(fileContainer);
   });
 }
+document.addEventListener("DOMContentLoaded", function () {
+  // Attach delete functionality to all delete buttons
+  document.querySelectorAll(".delete").forEach(function (button) {
+    button.addEventListener("click", function () {
+      const threadId = this.getAttribute("data-thread-id");
+
+      if (!threadId) {
+        alert("Missing thread ID.");
+        return;
+      }
+
+      if (confirm("Are you sure you want to delete this message?")) {
+        fetch("../actions/delete_record.php", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: `id=${encodeURIComponent(threadId)}&type=communication`
+        })
+          .then((response) => response.text())
+          .then((responseText) => {
+            console.log("Server response:", responseText);
+
+            if (responseText.includes("successfully")) {
+              const row = button.closest("tr");
+              if (row) row.remove(); // Remove the row from the DOM
+              alert("Message deleted successfully.");
+            } else {
+              alert("Delete failed: " + responseText);
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("An error occurred while deleting the message.");
+          });
+      }
+    });
+  });
+});
+
+
 // </script>
