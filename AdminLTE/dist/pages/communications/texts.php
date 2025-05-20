@@ -1082,7 +1082,9 @@ document.getElementById('sendMessage').addEventListener('click', function() {
 
 <!-- loadConversation -->
 <script>
- function loadConversation(threadId) {
+let activeThreadId = null;
+
+function loadConversation(threadId) {
     if (!threadId) {
         console.error('Invalid or missing threadId');
         return;
@@ -1090,61 +1092,51 @@ document.getElementById('sendMessage').addEventListener('click', function() {
 
     activeThreadId = threadId;
 
-    // Remove "active" class from all message thread entries
+    // Remove "active" class from all thread entries
     document.querySelectorAll('.individual-topic-profiles').forEach(el => {
         el.classList.remove('active');
     });
 
     // Highlight the currently selected thread
     const selected = document.querySelector(`[data-thread-id="${threadId}"]`);
-
     if (selected) {
         selected.classList.add('active');
     }
 
     console.log('Loading thread:', threadId);
 
-
-    // Fetch messages for the selected thread
-    fetch('load_conversation.php?thread_id=' + encodeURIComponent(threadId))
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
+    // Fetch and update messages
+    fetch('load_conversation.php?thread_id=' + threadId)
+        .then(response => response.json())
         .then(data => {
-            if (data.error) {
-                console.error('Server returned error:', data.error);
-                document.getElementById('messages').innerHTML = `<div class="text-danger">${data.error}</div>`;
-                return;
-            }
-
             if (data.messages) {
-                document.getElementById('messages').innerHTML = data.messages;
-
-                // Scroll to bottom to show latest message
                 const messagesDiv = document.getElementById('messages');
-                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                messagesDiv.innerHTML = data.messages;
+                messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to bottom
             } else {
-                document.getElementById('messages').innerHTML = '<div class="text-muted">No messages found in this thread.</div>';
+                console.warn('No messages returned from server.');
             }
         })
         .catch(error => {
             console.error('Error loading conversation:', error);
-            document.getElementById('messages').innerHTML = `<div class="text-danger">Error loading messages. Please try again later.</div>`;
         });
 }
-
 </script>
-
 
 <!-- send & get message -->
 <script>
+let activeThreadId = null; // Ensure this is declared in the global scope if not already
+
 function sendMessage() {
     const inputBox = document.getElementById('inputBox');
-    const messageText = inputBox.innerText.trim();
     const fileInput = document.getElementById('fileInput');
+
+    if (!inputBox || !fileInput) {
+        console.error("Required input elements not found.");
+        return;
+    }
+
+    const messageText = inputBox.innerText.trim();
     const file = fileInput.files[0];
 
     if (!messageText && !file) {
@@ -1161,6 +1153,7 @@ function sendMessage() {
     formData.append('message', messageText);
     formData.append('thread_id', activeThreadId);
     formData.append('sender', 'landlord');
+
     if (file) {
         formData.append('file', file);
     }
@@ -1172,41 +1165,47 @@ function sendMessage() {
     .then(response => response.json())
     .then(data => {
         if (!data.success) {
-            throw new Error(data.error || 'Failed to send message');
+            throw new Error(data.error || 'Failed to send message.');
         }
-        loadConversation(activeThreadId); // Reload thread
+
+        loadConversation(activeThreadId); // Reload conversation after sending
         inputBox.innerText = '';
         fileInput.value = '';
     })
     .catch(error => {
-        console.error('Error:', error);
-        alert('Failed to send message.');
+        console.error('Error sending message:', error);
+        alert('Failed to send message. Please try again.');
     });
 }
 
-
-// Function to load messages (AJAX request to fetch new messages)
 function getMessage(messageId) {
+    if (!messageId) {
+        console.warn('No message ID provided.');
+        return;
+    }
+
     fetch('get_message.php?message_id=' + messageId)
         .then(response => response.json())
         .then(data => {
             const messageContainer = document.getElementById('messageDetails');
+            if (!messageContainer) {
+                console.error("Message container element not found.");
+                return;
+            }
 
             if (data.success) {
                 messageContainer.innerHTML = data.message;
                 messageContainer.scrollIntoView({ behavior: 'smooth' });
             } else {
                 messageContainer.innerHTML = `<div class="alert alert-warning">${data.error}</div>`;
-                console.error('Failed to fetch message:', data.error);
+                console.warn('Failed to fetch message:', data.error);
             }
         })
         .catch(error => {
             console.error('Error fetching message:', error);
         });
 }
-
 </script>
-
 
 
 <script>
