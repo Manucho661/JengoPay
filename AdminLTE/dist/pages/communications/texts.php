@@ -649,16 +649,7 @@ display: flex;
                                   <div class="individual-topic"><?= htmlspecialchars($comm['title']) ?></div>
                                   <div class="individual-message mt-2">
                                   <?= htmlspecialchars(mb_strimwidth($comm['last_message'], 0, 60, '...'))?>
-                                  <?php
-                                  $specificMessageId = 42; // replace this with your actual target ID
 
-                                  if (!empty($comm['preview_file']) && $comm['message'] == $specificMessageId): ?>
-                                    <div class="attached-file mt-1">
-                                      📎 <a href="<?= htmlspecialchars($comm['preview_file']) ?>" target="_blank">
-                                        <?= htmlspecialchars(basename($comm['preview_file'])) ?>
-                                      </a>
-                                    </div>
-                                  <?php endif; ?>
 
                                  </div>
                                   </div>
@@ -697,8 +688,10 @@ display: flex;
 
                               <div class="individual-message-body" style="height: 100%;">
                                  <div class="messages" id="messages" >
-                                   <!-- <div class="message incoming">Hello! How are you?</div>
-                                  <div class="message outgoing">I'm doing great, thanks!</div> -->
+                                   <div class="message incoming"></div>
+                                  <div class="message outgoing">
+                                    
+                                  </div>
                                 </div>
 
 
@@ -1311,6 +1304,12 @@ document.addEventListener('DOMContentLoaded', function () {
       integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
       crossorigin="anonymous"
     ></script>
+    <script>
+window.addEventListener("error", function(e) {
+    console.error("JavaScript error:", e.message, "at", e.filename + ":" + e.lineno + ":" + e.colno);
+});
+</script>
+
 
     <!--end::Script-->
   </body>

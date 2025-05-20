@@ -172,11 +172,11 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
             <!--begin::User Menu Dropdown-->
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                <img
+                <!-- <img
                   src="17.jpg"
                   class="user-image rounded-circle shadow"
                   alt="User Image"
-                />
+                /> -->
                 <span class="d-none d-md-inline" style="color: #00192D;" > <b> JENGO PAY  </b>  </span>
               </a>
               <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
@@ -247,9 +247,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
       <main class="app-main">
                       <!--MAIN MODALS -->
         <!-- Inspect -->
-         <section class="inspect" id="prfm_ipsn_plch">
-
-         </section>
+         
         <!-- add inspection -->
          <section class="add-inspection" id="add-inspection" >
 
@@ -357,8 +355,8 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
 
               <div class="container-fluid">
                 <div class="row">
-                  <div class="col-6 col-sm-3">
-                    <div class="summary-card" >
+                  <div class="col-12 col-sm-6 col-md-3">
+                    <div class="summary-card mb-2" >
                         <div class="summary-card_icon"> <i class="fas fa-clipboard-check"></i></div>
                       <div>
                         <div class="summary-card_label">Scheduled</div>
@@ -367,7 +365,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                     </div>
                   </div>
 
-                  <div class="col-6 col-sm-3">
+                  <div class="col-12 col-sm-6 col-md-3">
                     <div class="summary-card" >
                       <div class="summary-card_icon"><i class="fas fa-check-circle"></i></div>
                       <div>
@@ -377,7 +375,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                     </div>
                   </div>
 
-                  <div class="col-6 col-sm-3">
+                  <div class="col-12 col-sm-6 col-md-3">
                     <div class="summary-card">
                       <div class="summary-card_icon"> <i class="fas fa-spinner fa-spin"></i>  </div>
                       <div>
@@ -387,7 +385,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                     </div>
                   </div>
 
-                  <div class="col-6 col-sm-3">
+                  <div class="col-12 col-sm-6 col-md-3">
                     <div class="summary-card">
                       <div class="summary-card_icon" style="font-weight: bold;"><i class="fas fa-question-circle"></i>    </div>
                       <div>
@@ -512,6 +510,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
           </div>
           <!--end::Container-->
         </div>
+        
         <!--end::App Content-->
       </main>
       <!--end::App Main-->
@@ -529,14 +528,13 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
         <!--end::Copyright-->
       </footer>
       <!--end::Footer-->
-    </div>
     <!--end::App Wrapper-->
 
 
                                            <!-- OVERLAYS -->
   <!-- Perfom an inspection -->
-<section id="perform_inspection_modal" style="display: none;" >
-<div  class="container-fluid perform_inspection_modal"  >
+<section id="perform_inspection_modal" class="perform_inspection_modal" style="display: none;" >
+<div  class="container-fluid"  >
                         <div class="card">
                             <div class="card-header" style="background-color:#00192D; color:#FFC107"><b>Perform Inspection</b></div>
                             <div class="card-body">
@@ -562,7 +560,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                                 </div> <hr>
                                 <div class="card shadow">
                                     <div class="card-header" style="background-color:#00192D; color:#FFC107;"><i class="fa fa-cogs"></i> <b>Inspect this Unit</b></div>
-                                    <form action="" enctype="multipart/form-data">
+                                    <form id="perform_inspection" onsubmit="performInspectionForm(event)" enctype="multipart/form-data">
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-md-6">
@@ -589,6 +587,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            
                                                             <div class="card shadow" id="floorBadDescription" style="display:none;">
                                                                 <div class="card-header" style="background-color:#00192D; color:#FFC107;"><b>Describe the Repair Required</b></div>
                                                                 <div class="card-body">
@@ -827,13 +826,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
     <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
-  <script>
-    // Initialize Stepper
-    const stepper = new Stepper(document.querySelector('#stepper'))
-    const stepper2 = new Stepper(document.querySelector('#MoveOut'));
-
-  </script>
-
+  
   <!-- J  A V A S C R I PT -->
 
                                                 <!-- LINKS -->
@@ -878,15 +871,14 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
 <!--End links for dataTaable buttons -->
 
 <!-- index.js -->
-<script src="index.js"></script>
+<!-- <script src="index.js"></script> -->
 <!-- End index.js -->
 
 <!-- End links -->
 
 
                                   <!-- DATE TABLES -->
-            <script>
-
+  <script>
               $(document).ready(function () {
                 const table = $('#maintenance').DataTable({
                   dom: 'Brtip', // ⬅ Changed to include Buttons in DOM
@@ -942,28 +934,19 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
             });
 
           });
-        </script>
+</script>
 
 
   
 <!-- Perform an inspection script -->
-         <script>
+<script>
             // display the inspection modal.
             const buttons = document.querySelectorAll('.inspect_btn');
 
             buttons.forEach(button => {
               button.addEventListener('click', () => {
                 const prfm_Ins_mdl = document.getElementById('perform_inspection_modal');
-
-                // Clone only the inner content
-                const innerContent = prfm_Ins_mdl.innerHTML;
-
-                // Create a wrapper div for the content
-                const wrapper = document.createElement('div');
-                wrapper.innerHTML = innerContent;
-
-                // Append it to the placeholder
-                document.getElementById('prfm_ipsn_plch').appendChild(wrapper);
+                prfm_Ins_mdl.style.display="block";
               });
             });
 
@@ -971,6 +954,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
 
             //Inspect Single Room and Display FLoor Condition if it is bad
             document.getElementById('floorRepair').addEventListener('change', function(){
+                              console.log('yoyo');
                 document.getElementById('floorBadDescription').style.display='block';
             });
             //if the floor condition is good no need for description
@@ -1013,7 +997,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
             document.getElementById('socketGood').addEventListener('click',function(){
                 document.getElementById('socketFaultyCard').style.display='none';
             });
-        </script>
+</script>
 
         <script>
           const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
