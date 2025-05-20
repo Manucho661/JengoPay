@@ -1,66 +1,66 @@
 document.addEventListener('DOMContentLoaded', function () {
   // Initial fetch
-  fetchTenants('all');
+          fetchTenants('all');
 
-  // Custom Dropdown Handler
-  document.querySelectorAll('.select-option-container').forEach(container => {
-    const select = container.querySelector('.custom-select');
-    const optionsContainer = container.querySelector('.select-options');
-    const options = optionsContainer.querySelectorAll('div');
-    const displayed_building = document.getElementById('displayed_building');
+          // Custom Dropdown Handler
+          document.querySelectorAll('.select-option-container').forEach(container => {
+            const select = container.querySelector('.custom-select');
+            const optionsContainer = container.querySelector('.select-options');
+            const options = optionsContainer.querySelectorAll('div');
+            const displayed_building = document.getElementById('displayed_building');
 
-    select.addEventListener('click', () => {
-      const isOpen = optionsContainer.style.display === 'block';
-      document.querySelectorAll('.select-options').forEach(opt => opt.style.display = 'none');
-      document.querySelectorAll('.custom-select').forEach(sel => sel.classList.remove('open'));
+            select.addEventListener('click', () => {
+              const isOpen = optionsContainer.style.display === 'block';
+              document.querySelectorAll('.select-options').forEach(opt => opt.style.display = 'none');
+              document.querySelectorAll('.custom-select').forEach(sel => sel.classList.remove('open'));
 
-      optionsContainer.style.display = isOpen ? 'none' : 'block';
-      select.classList.toggle('open', !isOpen);
-    });
+              optionsContainer.style.display = isOpen ? 'none' : 'block';
+              select.classList.toggle('open', !isOpen);
+            });
 
-    options.forEach(option => {
-      option.addEventListener('click', () => {
-        const selectedValue = option.getAttribute('data-value');
-        select.textContent = option.textContent;
-        displayed_building.textContent = option.textContent;
-        select.setAttribute('data-value', selectedValue);
+            options.forEach(option => {
+              option.addEventListener('click', () => {
+                const selectedValue = option.getAttribute('data-value');
+                select.textContent = option.textContent;
+                displayed_building.textContent = option.textContent;
+                select.setAttribute('data-value', selectedValue);
 
-        options.forEach(opt => opt.classList.remove('selected'));
-        option.classList.add('selected');
+                options.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
 
-        optionsContainer.style.display = 'none';
-        select.classList.remove('open');
+                optionsContainer.style.display = 'none';
+                select.classList.remove('open');
 
-        fetchTenants(selectedValue); // Fetch filtered tenants
-      });
+                fetchTenants(selectedValue); // Fetch filtered tenants
+              });
 
-      option.addEventListener('mouseenter', () => {
-        options.forEach(opt => opt.classList.remove('selected'));
-        option.classList.add('selected');
-      });
-    });
-  });
+              option.addEventListener('mouseenter', () => {
+                options.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+              });
+            });
+          });
 
-  // Close dropdowns on outside click
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.select-option-container')) {
-      document.querySelectorAll('.select-options').forEach(opt => opt.style.display = 'none');
-      document.querySelectorAll('.custom-select').forEach(sel => {
-        sel.classList.remove('open');
-        sel.style.borderRadius = '5px';
-      });
-    }
-  });
+          // Close dropdowns on outside click
+          document.addEventListener('click', (e) => {
+            if (!e.target.closest('.select-option-container')) {
+              document.querySelectorAll('.select-options').forEach(opt => opt.style.display = 'none');
+              document.querySelectorAll('.custom-select').forEach(sel => {
+                sel.classList.remove('open');
+                sel.style.borderRadius = '5px';
+              });
+            }
+          });
 
-  // Modal Prefill on Edit
-  const editBtn = document.querySelector('.edit-btn');
-  if (editBtn) {
-    editBtn.addEventListener('click', () => {
-      document.getElementById('editEmail').value = document.getElementById('email').textContent.trim();
-      document.getElementById('editPhone').value = document.getElementById('phone').textContent.trim();
-      document.getElementById('editIDNo').value = document.getElementById('id_no').textContent.trim();
-    });
-  }
+        // Modal Prefill on Edit
+        const editBtn = document.querySelector('.edit-btn');
+        if (editBtn) {
+          editBtn.addEventListener('click', () => {
+            document.getElementById('editEmail').value = document.getElementById('email').textContent.trim();
+            document.getElementById('editPhone').value = document.getElementById('phone').textContent.trim();
+            document.getElementById('editIDNo').value = document.getElementById('id_no').textContent.trim();
+          });
+        }
 
  document.getElementById('editPersonalInfoForm').addEventListener('submit', function (e) {
   e.preventDefault();
@@ -307,6 +307,7 @@ function handleDeactivate(event, id, type) {
 
       // ADD TENANT TO DB
         function submitTenantForm(event) {
+          console.log('YOYO');
           event.preventDefault(); // Prevent the form from submitting normally
 
           // Create FormData object from the form
