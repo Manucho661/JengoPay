@@ -1,3 +1,55 @@
+<?php
+// header('Content-Type: application/json');
+include '../db/connect.php';
+
+if (!isset($_GET['id'])) {
+  echo json_encode(['success' => false, 'message' => 'Tenant ID not provided']);
+  exit;
+}
+else{
+  
+}
+
+$user_id = intval($_GET['id']);
+
+try {
+  // ✅ Must be a string
+  $sql = "SELECT 
+          tenants.id AS tenant_id,
+          tenants.status,
+          tenants.phone_number,
+          tenants.id_no,
+          tenants.income_source,
+          tenants.work_place,
+          tenants.job_title,
+          users.id AS user_id,
+          users.email
+        FROM tenants 
+        INNER JOIN users ON tenants.user_id = users.id
+        WHERE users.id = ?";
+
+
+  // ✅ Prepare query
+  $stmt = $pdo->prepare($sql);
+
+  // ✅ Execute with an array of values
+  $stmt->execute([$user_id]);
+
+  $data = $stmt->fetch(PDO::FETCH_ASSOC);
+  
+  if (!$data) {
+    echo json_encode(['success' => false, 'message' => 'No matching tenant found']);
+  } else {
+   // echo json_encode(['success' => true, 'data' => $data]);
+  }
+
+} catch (PDOException $e) {
+  echo json_encode(['success' => false, 'message' => 'Query failed', 'error' => $e->getMessage()]);
+}
+?>
+
+
+
 
 <!doctype html>
 <html lang="en">
@@ -390,8 +442,9 @@
                                 <div class="personal-item d-flex justify-content-between bg-white">
                                   <!-- <i class="fas fa-calculator"></i> -->
                                     <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
-                                      <div class="category"><i class="fas fa-phone icon personal-info-icon "></i> <span class="personal-info item-name" >Phone</span>  </div>
-                                      <div class="phone"><b id="phone"></b></div>
+                                      <div class="category"><i class="fas fa-phone icon personal-info-icon "></i> 
+                                      <span class="personal-info item-name" >Phone</span>  </div>
+                                      <div class="value"><b id="phone"></b></div>
                                     </div>
                                 </div>
 
@@ -719,43 +772,48 @@
                       </div>
 
                       <div class="modal-body px-4 py-3">
-                        <!-- Email -->
+
+                      <!-- Email -->
                         <div class="form-floating mb-3">
-                          <input type="email" class="form-control" id="editEmail" placeholder="Email" required>
+                          <input type="email" class="form-control" id="editEmail" placeholder="Email" 
+                                value="<?= htmlspecialchars($data['email'] ?? '') ?>" required>
                           <label for="editEmail"><i class="fas fa-envelope me-1"></i> Email Address</label>
                         </div>
 
                         <!-- Phone -->
                         <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="editPhone" placeholder="Phone Number" required>
+                          <input type="text" class="form-control" id="editPhone" placeholder="Phone Number" 
+                                value="<?= htmlspecialchars($data['phone_number'] ?? '') ?>" required>
                           <label for="editPhone"><i class="fas fa-phone me-1"></i> Phone Number</label>
                         </div>
 
                         <!-- ID Number -->
                         <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="editIDNo" placeholder="ID Number" required>
+                          <input type="text" class="form-control" id="editIDNo" placeholder="ID Number" 
+                                value="<?= htmlspecialchars($data['id_no'] ?? '') ?>" required>
                           <label for="editIDNo"><i class="fas fa-id-card me-1"></i> National ID Number</label>
                         </div>
 
                         <!-- Income Source -->
                         <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="editIncomeSource" placeholder="Income Source">
+                          <input type="text" class="form-control" id="editIncomeSource" placeholder="Income Source" 
+                                value="<?= htmlspecialchars($data['income_source'] ?? '') ?>">
                           <label for="editIncomeSource"><i class="fas fa-briefcase me-1"></i> Income Source</label>
                         </div>
 
                         <!-- Employer -->
                         <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="editEmployer" placeholder="Employer">
+                          <input type="text" class="form-control" id="editEmployer" placeholder="Employer" 
+                                value="<?= htmlspecialchars($data['work_place'] ?? '') ?>">
                           <label for="editEmployer"><i class="fas fa-building me-1"></i> Employer</label>
                         </div>
 
                         <!-- Job Title -->
                         <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="editJobTitle" placeholder="Job Title">
+                          <input type="text" class="form-control" id="editJobTitle" placeholder="Job Title" 
+                                value="<?= htmlspecialchars($data['job_title'] ?? '') ?>">
                           <label for="editJobTitle"><i class="fas fa-user-tie me-1"></i> Job Title</label>
                         </div>
-                      </div>
-
                       <div class="modal-footer bg-light d-flex justify-content-between">
                         <small class="text-muted"><i class="fas fa-info-circle me-1"></i> Make sure details are accurate</small>
                         <button type="submit" class="btn btn-changes" style="background-color:#00192D; color:#FFC107;">
