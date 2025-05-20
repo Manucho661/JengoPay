@@ -397,4 +397,31 @@ function handleDeactivate(event, id, type) {
         });
       });
 
+      document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.editTenantBtn').forEach(button => {
+    button.addEventListener('click', function () {
+      const tenantId = this.getAttribute('data-id');
+
+      fetch('fetch-tenant.php?id=' + tenantId)
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // Populate form
+            document.getElementById('editTenantId').value = data.tenant.id;
+            document.getElementById('editFullName').value = data.tenant.full_name;
+            document.getElementById('editPhone').value = data.tenant.phone;
+            // ...more fields...
+
+            // Show modal
+            const editModal = new bootstrap.Modal(document.getElementById('editTenantModal'));
+            editModal.show();
+          } else {
+            alert('Tenant not found.');
+          }
+        })
+        .catch(err => console.error('Error:', err));
+    });
+  });
+});
+
 
