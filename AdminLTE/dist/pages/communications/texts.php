@@ -1,32 +1,6 @@
 <?php
 include '../db/connect.php'; // Make sure $pdo is available
 
-
-// Fetch attachments for this message
-$stmt = $pdo->prepare("SELECT file_name, file_type FROM attachments WHERE message_id = ?");
-$stmt->execute([$message['id']]);
-$attachments = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-echo "<div class='message'>";
-echo "<p>" . htmlspecialchars($message['content']) . "</p>";
-
-if ($attachments) {
-    echo "<div class='attachments'>";
-    foreach ($attachments as $file) {
-        $filePath = 'uploads/' . htmlspecialchars($file['file_name']);
-        $fileType = $file['file_type'];
-
-        if (str_starts_with($fileType, 'image/')) {
-            echo "<img src='$filePath' alt='Image' style='max-width:150px; margin:5px;'>";
-        } else {
-            echo "<a href='$filePath' download>Download " . htmlspecialchars($file['file_name']) . "</a>";
-        }
-    }
-    echo "</div>";
-}
-
-echo "</div>";
-
 // === HANDLE NEW THREAD SUBMISSION (POST) ===
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['title']) && !empty($_POST['message'])) {
     try {
@@ -65,9 +39,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['title']) && !empty($
         $thread_id = $pdo->lastInsertId();
         $message_id = $pdo->lastInsertId(); // Get the message ID for attachments
 
-        // Insert initial message
-        $stmt = $pdo->prepare("INSERT INTO messages (thread_id, sender, content, timestamp,file_path) VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute([$thread_id, 'landlord', $message, $now, $file_path]);
+      // Insert initial message (no file_path here)
+        $stmt = $pdo->prepare("INSERT INTO messages (thread_id, sender, content, timestamp) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$thread_id, 'landlord', $message, $now]);
+
 
         // Store attachments
         if (!empty($uploaded_files)) {
@@ -777,7 +752,11 @@ display: flex;
 <!-- Script source File -->
 <script src="text.js"></script>
 
+
 <!-- PopUp Scripts -->
+
+
+
 
 <!-- new text popup -->
                 <div class="newtextpopup-overlay" id="newtextPopup">
@@ -1104,37 +1083,58 @@ document.getElementById('sendMessage').addEventListener('click', function() {
 <!-- loadConversation -->
 <script>
  function loadConversation(threadId) {
+    if (!threadId) {
+        console.error('Invalid or missing threadId');
+        return;
+    }
+
     activeThreadId = threadId;
 
-    // Remove "active" class from all
+    // Remove "active" class from all message thread entries
     document.querySelectorAll('.individual-topic-profiles').forEach(el => {
         el.classList.remove('active');
     });
 
-    // Add "active" to the clicked one
-    const selected = document.querySelector(`[data-message-id="${threadId}"]`);
-    if (selected) selected.classList.add('active');
+    // Highlight the currently selected thread
+    const selected = document.querySelector(`[data-thread-id="${threadId}"]`);
 
-    // Fetch and update messages
-    fetch('load_conversation.php?thread_id=' + threadId)
-        .then(response => response.json())
+    if (selected) {
+        selected.classList.add('active');
+    }
+
+    console.log('Loading thread:', threadId);
+
+
+    // Fetch messages for the selected thread
+    fetch('load_conversation.php?thread_id=' + encodeURIComponent(threadId))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
-            // Check if the response includes messages
+            if (data.error) {
+                console.error('Server returned error:', data.error);
+                document.getElementById('messages').innerHTML = `<div class="text-danger">${data.error}</div>`;
+                return;
+            }
+
             if (data.messages) {
                 document.getElementById('messages').innerHTML = data.messages;
 
-                // Optional: Scroll to the bottom after loading new messages
+                // Scroll to bottom to show latest message
                 const messagesDiv = document.getElementById('messages');
                 messagesDiv.scrollTop = messagesDiv.scrollHeight;
             } else {
-                console.error('No messages returned from server');
+                document.getElementById('messages').innerHTML = '<div class="text-muted">No messages found in this thread.</div>';
             }
         })
         .catch(error => {
             console.error('Error loading conversation:', error);
+            document.getElementById('messages').innerHTML = `<div class="text-danger">Error loading messages. Please try again later.</div>`;
         });
 }
-
 
 </script>
 
@@ -1190,14 +1190,13 @@ function getMessage(messageId) {
     fetch('get_message.php?message_id=' + messageId)
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
-                // Display message content
-                const messageContainer = document.getElementById('messageDetails');
-                messageContainer.innerHTML = data.message;
+            const messageContainer = document.getElementById('messageDetails');
 
-                // Optional: Scroll to the message detail view
+            if (data.success) {
+                messageContainer.innerHTML = data.message;
                 messageContainer.scrollIntoView({ behavior: 'smooth' });
             } else {
+                messageContainer.innerHTML = `<div class="alert alert-warning">${data.error}</div>`;
                 console.error('Failed to fetch message:', data.error);
             }
         })
@@ -1205,6 +1204,7 @@ function getMessage(messageId) {
             console.error('Error fetching message:', error);
         });
 }
+
 </script>
 
 

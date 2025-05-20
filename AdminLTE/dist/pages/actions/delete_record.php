@@ -30,16 +30,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Then delete the building
                 $stmt = $pdo->prepare("DELETE FROM buildings WHERE building_id = :id");
                 break;
-                
-            case 'unit':
-              if (!$buildingId) {
-                  echo "Missing building ID for unit deletion.";
-                  exit;
-              }
-              $stmt = $pdo->prepare("DELETE FROM units WHERE unit_number = :id AND building_id = :building_id");
-              $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-              $stmt->bindParam(':building_id', $buildingId, PDO::PARAM_INT);
-              break;
+
+                case 'unit':
+                  // Get raw POST body and decode JSON
+                  $input = json_decode(file_get_contents('php://input'), true);
+
+                  $id = isset($input['id']) ? (int)$input['id'] : 0;
+                  $buildingId = isset($input['building_id']) ? (int)$input['building_id'] : 0;
+
+                  if (!$id || !$buildingId) {
+                      echo json_encode([
+                          'success' => false,
+                          'message' => 'Missing unit ID or building ID for deletion.'
+                      ]);
+                      exit;
+                  }
+
+                  // Prepare and execute the deletion
+                  $stmt = $pdo->prepare("DELETE FROM units WHERE unit_id = :id AND building_id = :building_id");
+                  $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+                  $stmt->bindParam(':building_id', $buildingId, PDO::PARAM_INT);
+
+                  if ($stmt->execute()) {
+                      echo json_encode([
+                          'success' => true,
+                          'message' => "Unit #$id deleted successfully."
+                      ]);
+                  } else {
+                      echo json_encode([
+                          'success' => false,
+                          'message' => 'Failed to delete unit.'
+                      ]);
+                  }
+                  break;
+
 
 
             case 'communication':

@@ -612,7 +612,7 @@ echo '<a style="color:#193042;" href="../property/meterreading.php?building_id='
             <td><?= htmlspecialchars($unit['floor_number']) ?></td>
             <td>
           <!-- Edit Button -->
-<button 
+<button
   class="btn btn-sm"
   style="background-color:#193042; color:#ffc107;"
   title="Edit this unit"
@@ -691,12 +691,13 @@ echo '<a style="color:#193042;" href="../property/meterreading.php?building_id='
                     <i class="fas fa-eye"> View</i>
                 </button>
                 <button
-  class="btn btn-sm"
+  class="btn btn-sm btn-delete-unit"
   style="background-color: red; color: white;"
   title="Delete this unit"
   data-bs-toggle="modal"
   data-bs-target="#deleteConfirmModal"
-  onclick="prepareDelete('<?= htmlspecialchars($unit['unit_number']) ?>', '<?= (int)$building_id ?>')"
+  data-unit-number="<?= htmlspecialchars($unit['unit_number']) ?>"
+  data-building-id="<?= (int)$building_id ?>"
 >
   <i class="fa fa-trash" style="font-size: 12px;"></i>
 </button>
@@ -709,25 +710,27 @@ echo '<a style="color:#193042;" href="../property/meterreading.php?building_id='
 </tbody>
 
 <!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteModalLabel" >
   <div class="modal-dialog">
     <div class="modal-content">
-    
+
       <div class="modal-header">
         <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      
+
       <div class="modal-body">
         Are you sure you want to delete unit <strong id="unitToDelete"></strong>?
-        <input type="hidden" id="deleteUnitNumber">
-        <input type="hidden" id="deleteBuildingId">
+        <!-- Hidden inputs to hold data -->
+        <input type="hidden" id="deleteUnitNumber" name="deleteUnitNumber" />
+        <input type="hidden" id="deleteBuildingId" name="deleteBuildingId" />
       </div>
-      
+
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button onclick="prepareDelete()"  type="button" class="btn btn-danger" id="confirmDeleteBtn">Yes, Delete</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Yes, Delete</button>
       </div>
+
     </div>
   </div>
 </div>
@@ -877,52 +880,7 @@ echo '<a style="color:#193042;" href="../property/meterreading.php?building_id='
 
 <!--begin::Script-->
 <!--begin::Third Party Plugin(OverlayScrollbars)-->
-<script>
-   let deletePayload = {};  // store unit and building info
 
-  function prepareDelete(unitNumber, buildingId) {
-    document.getElementById('unitToDelete').textContent = `#${unitNumber}`;
-    document.getElementById('deleteUnitNumber').value = unitNumber;
-    document.getElementById('deleteBuildingId').value = buildingId;
-
-    deletePayload = {
-      id: unitNumber,
-      type: 'unit',
-      building_id: buildingId
-    };
-  }
-
-  document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
-      fetch('../actions/delete_record.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(deletePayload)
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          const modalEl = document.getElementById('deleteConfirmModal');
-          const modalInstance = bootstrap.Modal.getInstance(modalEl);
-          if (modalInstance) modalInstance.hide();
-
-          const row = document.querySelector(`[data-unit="${deletePayload.id}"]`);
-          if (row) row.remove();
-
-          alert(data.message);
-        } else {
-          alert('Error: ' + data.message);
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        alert('Request failed.');
-      });
-    });
-  });
-</script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -1416,12 +1374,68 @@ setInterval(() => {
       //-----------------
     </script>
 
+<script>
+  let deletePayload = {};
+
+  function prepareDelete(unitNumber, buildingId) {
+    document.getElementById('unitToDelete').textContent = `#${unitNumber}`;
+    document.getElementById('deleteUnitNumber').value = unitNumber;
+    document.getElementById('deleteBuildingId').value = buildingId;
+
+    deletePayload = {
+      id: unitNumber,
+      type: 'unit',
+      building_id: buildingId
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    // Attach click handlers to all delete buttons
+    document.querySelectorAll('.btn-delete-unit').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const unitNumber = btn.getAttribute('data-unit-number');
+        const buildingId = btn.getAttribute('data-building-id');
+        prepareDelete(unitNumber, buildingId);
+      });
+    });
+
+    const confirmBtn = document.getElementById('confirmDeleteBtn');
+    if (confirmBtn) {
+      confirmBtn.addEventListener('click', function () {
+        fetch('../actions/delete_record.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(deletePayload)
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            const modalEl = document.getElementById('deleteConfirmModal');
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            if (modalInstance) modalInstance.hide();
+
+            const row = document.querySelector(`[data-unit="${deletePayload.id}"]`);
+            if (row) row.remove();
+
+            alert(data.message);
+          } else {
+            alert('Error: ' + data.message);
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          alert('Request failed.');
+        });
+      });
+    }
+  });
+</script>
+
 
 <script src="units.js"></script>
-
     <!--end::Script-->
-
-
     <!--end::OverlayScrollbars Configure-->
     <!-- OPTIONAL SCRIPTS -->
     <!-- apexcharts -->
