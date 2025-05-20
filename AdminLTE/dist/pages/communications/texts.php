@@ -1,6 +1,32 @@
 <?php
 include '../db/connect.php'; // Make sure $pdo is available
 
+
+// Fetch attachments for this message
+$stmt = $pdo->prepare("SELECT file_name, file_type FROM attachments WHERE message_id = ?");
+$stmt->execute([$message['id']]);
+$attachments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+echo "<div class='message'>";
+echo "<p>" . htmlspecialchars($message['content']) . "</p>";
+
+if ($attachments) {
+    echo "<div class='attachments'>";
+    foreach ($attachments as $file) {
+        $filePath = 'uploads/' . htmlspecialchars($file['file_name']);
+        $fileType = $file['file_type'];
+
+        if (str_starts_with($fileType, 'image/')) {
+            echo "<img src='$filePath' alt='Image' style='max-width:150px; margin:5px;'>";
+        } else {
+            echo "<a href='$filePath' download>Download " . htmlspecialchars($file['file_name']) . "</a>";
+        }
+    }
+    echo "</div>";
+}
+
+echo "</div>";
+
 // === HANDLE NEW THREAD SUBMISSION (POST) ===
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['title']) && !empty($_POST['message'])) {
     try {
@@ -638,38 +664,34 @@ display: flex;
                                 </div>
                               </div>
 
-                              <div class="h-80  other-topics-section">
-                                <?php foreach ($communications as $comm): ?>
-                                  <div class="individual-topic-profiles active d-flex"
-                                    data-message-id="<?= $comm['thread_id'] ?>"
-                                    onclick="loadConversation(<?= $comm['thread_id'] ?>)">
+                              <div class="h-80 other-topics-section">
+  <?php foreach ($communications as $comm): ?>
+    <div class="individual-topic-profiles d-flex"
+         data-message-id="<?= $comm['thread_id'] ?>"
+         onclick="loadConversation(this.dataset.messageId)">
 
+      <div class="individual-topic-profile-container">
+        <div class="individual-topic"><?= htmlspecialchars($comm['title']) ?></div>
+        <div class="individual-message mt-2">
+          <?= htmlspecialchars(mb_strimwidth($comm['last_message'], 0, 60, '...'))?>
+        </div>
+      </div>
 
-                                  <div class="individual-topic-profile-container">
-                                  <div class="individual-topic"><?= htmlspecialchars($comm['title']) ?></div>
-                                  <div class="individual-message mt-2">
-                                  <?= htmlspecialchars(mb_strimwidth($comm['last_message'], 0, 60, '...'))?>
+      <div class="d-flex justify-content-end time-count">
+        <div class="time">
+          <?php
+            $datetime = new DateTime($comm['created_at']);
+            echo $datetime->format('d/m/y');
+          ?>
+        </div>
+        <div class="message-count mt-2">
+          <?= $comm['unread_count'] > 0 ? $comm['unread_count'] : '' ?>
+        </div>
+      </div>
+    </div>
+  <?php endforeach; ?>
+</div>
 
-
-                                 </div>
-                                  </div>
-
-                                    <div class="d-flex justify-content-end time-count">
-                                    <div class="time">
-                                   <?php
-                                    $datetime = new DateTime($comm['created_at']);
-                                    echo $datetime->format('d/m/y');
-                                  ?>
-                                  </div>
-                                <div class="message-count mt-2">
-                                  <?= $comm['unread_count'] > 0 ? $comm['unread_count'] : '' ?>
-                                </div>
-
- <!-- Optional: Replace 1 with actual reply count if available -->
-                                  </div>
-                                </div>
-                                <?php endforeach; ?>
-                              </div>
 
                             </div>
 
@@ -690,7 +712,7 @@ display: flex;
                                  <div class="messages" id="messages" >
                                    <div class="message incoming"></div>
                                   <div class="message outgoing">
-                                    
+
                                   </div>
                                 </div>
 
@@ -828,7 +850,7 @@ display: flex;
                         <!-- File input for multiple file types -->
 
                         <div style="padding-bottom: 2%;">
-                        <input   name="files[]"  type="file" id="fileInput" onchange="handleFiles(event)" class="form-control" multiple>
+                        <input  name="files[]"  type="file" id="fileInput" onchange="handleFiles(event)" class="form-control" multiple>
 
                         <!-- Section to display selected files' previews and sizes -->
                         <div id="filePreviews"></div>
@@ -1183,8 +1205,6 @@ function getMessage(messageId) {
             console.error('Error fetching message:', error);
         });
 }
-
-
 </script>
 
 
