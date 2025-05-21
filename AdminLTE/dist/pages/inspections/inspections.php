@@ -249,137 +249,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
       <main class="app-main">
                       <!--MAIN MODALS -->
         <!-- add new inspection modal-->
-        <section class="add-inspection" id="add-inspection" >
-          <div class="card content"  >
-            <div class="card-header d-flex justify-content-between" style="background:  #00192D; padding:10px !important" >
-              <div class="text-white">New Inspection Details</div>
-                <div><button class="close-btn text-white" onclick="closeAddInspection()">×</button></div> 
-            </div>
-            <div class="card-body">
-                <div class="form-container">
-                    <form  >
-                        <div class="row g-3">
-                          <!-- Year -->
-                            <div class="col-md-4 " >
-                                <label class="form-label"><b>Inspection Number</b></label>
-                                <input class="form-control" type="number" name="inspection_number" placeholder="124">
-                            </div>
-                            <!-- No -->
-                            <div class="col-md-4">
-                              <label class="form-label"><b> Building</b></label>
-                              <select class="form-control" name="building_name" id="building_name" >
-                                <option value="Crown Z">Crown Z</option>
-                                <option value="Manucho">Manucho</option>
-                                <option value="Pink House">Pink House</option>
-                                <option value="White House">White House</option>
-                              </select>
-                            </div>
-                            <!-- Expense of the Month -->
-                            <div class="col-md-4 ">
-                                <label class="form-label"><b> Unit</b></label>
-                                <select class="form-control" name="unit_name" id="unit_name" >
-                                  <option value="C219">C219</option>
-                                  <option value="B14">B14</option>
-                                  <option value="M145">M56</option>
-                                  <option value="M5">M290</option>
-                                </select>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row g-3 mt-2">
-                            <div class="col-md-6">
-                                <label class="form-label"><b> Inspection Type</b></label>
-                                <select class="form-control" name="inspection_type" id="inspection_type" >
-                                  <option value="Move In">Move In</option>
-                                  <option value="Move Out">Move Out</option>
-                                  
-                                </select>
-                            </div>
-
-                            <div class="col-md-6">
-                            <label class="form-label"><b> Inspection Date</b></label>
-                            <input type="date" name="date">
-                        </div>
-
-                        <hr>
-
-                        <div class="row g-3 mt-2">
-                            
-                            <div class="col-12 mt-2 d-flex justify-content-end">
-                                <button type="submit" class="btn btn-custom btn-sm" style="height: fit-content; color:#FFC107; background:#00192D;">  SUBMIT</button>
-                            </div>
-                        </div>
-
-                    </form>
-                </div>
-            </div>
-          </div>
-          
-          <div class="modal fade" id="editPersonalInfoModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                  <div class="modal-content shadow-lg border-0 rounded-3">
-                    <form id="editPersonalInfoForm" autocomplete="off">
-                      <div class="modal-header   rounded-top" style= "background-color: #00192D; color:#FFC107;">
-                        <h5 class="modal-title" id="editModalLabel">
-                          <i class="fas fa-user-edit me-2"></i> Edit Personal Information
-                        </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-
-                      <div class="modal-body px-4 py-3">
-
-                      <!-- Email -->
-                        <div class="form-floating mb-3">
-                          <input type="email" class="form-control" id="editEmail" placeholder="Email" 
-                                value="" required>
-                          <label for="editEmail"><i class="fas fa-envelope me-1"></i> Email Address</label>
-                        </div>
-
-                        <!-- Phone -->
-                        <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="editPhone" placeholder="Phone Number" 
-                                value=" " required>
-                          <label for="editPhone"><i class="fas fa-phone me-1"></i> Phone Number</label>
-                        </div>
-
-                        <!-- ID Number -->
-                        <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="editIDNo" placeholder="ID Number" 
-                                value="" required>
-                          <label for="editIDNo"><i class="fas fa-id-card me-1"></i> National ID Number</label>
-                        </div>
-
-                        <!-- Income Source -->
-                        <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="editIncomeSource" placeholder="Income Source" 
-                                value="">
-                          <label for="editIncomeSource"><i class="fas fa-briefcase me-1"></i> Income Source</label>
-                        </div>
-
-                        <!-- Employer -->
-                        <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="editEmployer" placeholder="Employer" 
-                                value="">
-                          <label for="editEmployer"><i class="fas fa-building me-1"></i> Employer</label>
-                        </div>
-
-                        <!-- Job Title -->
-                        <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="editJobTitle" placeholder="Job Title" 
-                                value="">
-                          <label for="editJobTitle"><i class="fas fa-user-tie me-1"></i> Job Title</label>
-                        </div>
-                      <div class="modal-footer bg-light d-flex justify-content-between">
-                        <small class="text-muted"><i class="fas fa-info-circle me-1"></i> Make sure details are accurate</small>
-                        <button type="submit" class="btn btn-changes" style="background-color:#00192D; color:#FFC107;">
-                          <i class="fas fa-save me-1"></i> Save Changes
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-        </section>
+        
         <div class="modal fade" id="shiftTenantModal" tabindex="-1" aria-labelledby="shiftTenantModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content shadow">
@@ -444,10 +314,8 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
               </div>
 
               <div class="col-sm-4 d-flex justify-content-end">
-                <button class="btn edit-btn personal-info rounded" data-bs-toggle="modal" data-bs-target="#editPersonalInfoModal"><i class="fas fa-edit icon"></i> Edit</button>
-                <button   class="btn schedule" onclick="openAddInspection()" style="height: fit-content;"> <i class="fas fa-plus "></i> New Schedule</button>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#shiftTenantModal">
-                  Open Modal
+                <button type="button" class="btn newSchedule" data-bs-toggle="modal" data-bs-target="#shiftTenantModal">
+                  New Schedule
                 </button>
             </div>
             <!--end::Row-->
@@ -461,7 +329,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
             <!-- BEGIN ROW -->
             <div class="row">
 
-              <h6 class="mb-0 contact_section_header summary mb-2"></i> SUMMARY</h6>
+              <h6 class="mb-0 contact_section_header summary mb-2"></i> Summary</h6>
 
               <div class="container-fluid">
                 <div class="row">
@@ -528,7 +396,10 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
             <!-- End row -->
             <!-- Begin Row -->
                 <div class="row">
+                  <h6 class="mb-0 contact_section_header summary mb-2"></i> Scheduled Inspections</h6>
+
                   <div class="col-md-12">
+                    
                     <div class="inspection-details-container bg-white p-2">
 
                         <div id="filter-pdf-excel-section" class="filter-pdf-excel-section mb-2">
@@ -558,49 +429,19 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
 
                         </div>
 
-                        <table id="maintenance" class="display summary-table">
+                        <table id="maintanance" class="display summary-table">
                                 <thead class="mb-2">
                                 <tr>
                                     <th>Date</th>
+                                    <th>Inspection Number</th>
                                     <th>PROPERTY + UNIT</th>
                                     <th>TYPE</th>
-                                    <th>Inspection No</th>                                    
-                                    <th>Attached Files</th>
                                     <th>STATUS</th>             
                                     <th>ACTION</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                <?php if ($inspectionsCount > 0): ?>
-                                    <?php foreach ($inspections as $inspection): ?>
-                                        <tr>
-                                            <td><?= htmlspecialchars($inspection['date']) ?></td>
-                                            <td><?= htmlspecialchars($inspection['building_name']) ?></td>
-                                            
-                                            <td>Bed-sitter</td>
-                                            <td><?= htmlspecialchars($inspection['inspection_number']) ?></td>
-                                            <td></td>
-                                            <td>
-                                                <div class="status completed">
-                                                    <i class="fas fa-spinner fa-spin"></i>
-                                                    In progress
-                                                </div>
-                                            </td>
-                                            <td id="more">
-                                                <button class="inspect_btn" style="background-color: #00192D; color:#FFC107">Inspect</button>
-                                                <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View"><i class="fas fa-eye"></i></button>
-                                                <button class="btn btn-sm" style="background-color: #193042; color:#FFCCCC; margin-right: 2px;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-trash"></i></button>
-                                                <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-edit"></i></button>
-                                                
-                                                <!-- File Upload Section -->
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <tr>
-                                        <td colspan="8" style="text-align:center;">No inspections found.</td>
-                                    </tr>
-                                <?php endif; ?>
+                                <tbody id="scheduledInspectionsTableBody">
+                               
                                 </tbody>
 
                           </table>
@@ -653,10 +494,10 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                       <div class="card-body">
                           <div class="row">
                               <div class="col-md-6">
-                                  <label><i class="fa fa-home"></i> Unit No: CH-01</label>
+                                  <label><i class="fa fa-home"></i> Unit No: <span id="modal_unit"></span> </label>
                               </div>
                               <div class="col-md-6">
-                                  <label><i class="fa fa-building"></i> Building: Angela's Apartment</label>
+                                  <label><i class="fa fa-building"></i> Building: <span id="modal_building_name">Angela's Apartment</span> </label>
                               </div>
                           </div>
                           <div class="row">
@@ -748,7 +589,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                                                       </div>
                                                       <div class="form-group">
                                                           <label>Attach Photo</label>
-                                                          <input type="file" class="form-control" name="floor_photo">
+                                                          <input type="file" class="form-control" name="window_photo">
                                                       </div>
                                                   </div>
                                               </div>
@@ -922,7 +763,8 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                               </div>
                           </div>
                           <div class="card-footer text-right">
-                              <button type="submit" class="btn btn-sm next-btn" id="fifththStepNextBtn">Submit</button>
+                            <input type="hidden" name="inspection_id" id="modal_inspection_id">
+                            <button type="submit" class="btn btn-sm next-btn" id="fifththStepNextBtn">Submit</button>
                           </div>
                       </form>
                   </div>
@@ -985,7 +827,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                                         <!-- DATE TABLES -->
         <script>
                     $(document).ready(function () {
-                      const table = $('#maintenance').DataTable({
+                      const table = $('#maintanance').DataTable({
                         dom: 'Brtip', // ⬅ Changed to include Buttons in DOM
                         order: [], // ⬅ disables automatic ordering by DataTables
                         buttons: [
@@ -1045,17 +887,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
       
     <!-- Perform an inspection script -->
     <script>
-                // display the inspection modal.
-                const buttons = document.querySelectorAll('.inspect_btn');
-
-                buttons.forEach(button => {
-                  button.addEventListener('click', () => {
-                    const prfm_Ins_mdl = document.getElementById('perform_inspection_modal');
-                    prfm_Ins_mdl.style.display="block";
-                  });
-                });
-
-                
+                // display the inspection modal
 
                 //Inspect Single Room and Display FLoor Condition if it is bad
                 document.getElementById('floorRepair').addEventListener('change', function(){

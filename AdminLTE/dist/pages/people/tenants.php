@@ -422,7 +422,7 @@ width: 100%;
                                                     <br>
                                                     <div class="d-flex justify-content-between">
                                                       <button type="button" class="btn add_pet mb-3" onclick="addPetBlock()">+ Add Pet</button>
-                                                      <button type="button" class="btn save mb-3" onclick="savePets()">Save </button>
+                                                      <!-- <button type="button" class="btn save mb-3" onclick="savePets()">Save </button> -->
                                                     </div>
 
                                                 </div>
@@ -1287,34 +1287,52 @@ window.onload = () => addPetBlock();
         <div class="col-md-1 text-end">
           <button type="button" class="btn btn-danger" onclick="this.closest('.card').remove()">×</button>
         </div>
-
       </div>
-
     `;
 
     container.appendChild(card);
+
+    // Reattach event listeners to new inputs after appending the card
+    attachInputListeners();
   }
 
   // Handle submission
+  function savePets() {
+    const types = Array.from(document.getElementsByName('petType[]')).map(el => el.value);
+    const weights = Array.from(document.getElementsByName('petWeight[]')).map(el => el.value);
+    const licenses = Array.from(document.getElementsByName('petLicense[]')).map(el => el.value);
 
-  function savePets(){
-        const types = Array.from(document.getElementsByName('petType[]')).map(el => el.value);
-        const weights = Array.from(document.getElementsByName('petWeight[]')).map(el => el.value);
-        const licenses = Array.from(document.getElementsByName('petLicense[]')).map(el => el.value);
+    const pets = types.map((type, index) => ({
+      type,
+      weight: weights[index],
+      license: licenses[index]
+    }));
 
-        const pets = types.map((type, index) => ({
-          type,
-          weight: weights[index],
-          license: licenses[index]
-        }));
+    document.getElementById('petsDataInput').value = JSON.stringify(pets);
+    console.log('Live Pets Data:', pets);
+  }
 
-        document.getElementById('petsDataInput').value = JSON.stringify(pets);
+  // Attach input event listeners
+  function attachInputListeners() {
+    const allInputs = [
+      ...document.getElementsByName('petType[]'),
+      ...document.getElementsByName('petWeight[]'),
+      ...document.getElementsByName('petLicense[]')
+    ];
 
+    allInputs.forEach(input => {
+      input.removeEventListener('input', savePets); // Remove old listeners
+      input.addEventListener('input', savePets); // Attach the new listener
+    });
+  }
 
-        console.log('Submitted Pets:', pets);
+  // Attach input event listeners on page load and whenever a new pet block is added
+  document.addEventListener('DOMContentLoaded', () => {
+    attachInputListeners(); // Attach event listeners on page load
+  });
 
-      }
 </script>
+
 
 </script>
   </body>
