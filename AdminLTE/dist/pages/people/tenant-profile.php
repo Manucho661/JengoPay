@@ -521,7 +521,11 @@ try {
                       </div>
                     </div>
 
+                    
+
                     <div class="col-md-12 mt-2">
+                        <h6 class=" contact_section_header details mb-2 mt-2"> </i> Income Info</h6>
+
                       <div class="row">
                         
 
@@ -529,6 +533,7 @@ try {
 
                                <div class="personal-item d-flex justify-content-between bg-white">
                                 <!-- <i class="fas fa-calculator"></i> -->
+                          
                                   <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
                                     <div class="category"><i class="fas fa-briefcase personal-info-icon"></i> <span class="personal-info item-name" > Income Source,</span> </div>
                                     <div class="number" ><b id="income_source"></b></div>
@@ -558,13 +563,74 @@ try {
                             </div>
                           </div>
 
+                          <div class="col-md-3">
+                                <div class="personal-item-edit d-flex justify-content-between">
+                                <!-- <i class="fas fa-calculator"></i> -->
+                               <button class="btn  btn-sm edit-btn income-info rounded" data-bs-toggle="modal" data-bs-target="#editIncomeInfoModal"><i class="fas fa-edit icon"></i> Edit</button>
+                              </div>
+
 
                       </div>
                   </div>
                 </div>
               </div>
 
-               <!-- Edit Personal Info Modal -->
+<!-- Edit Income Info Modal -->
+<div class="modal fade" id="editIncomeInfoModal" tabindex="-1" aria-labelledby="editIncomeInfoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content shadow-lg rounded-4 border-0">
+      <form id="editIncomeInfoForm">
+      
+        <!-- Modal Header -->
+        <div class="modal-header py-3 px-4" style="background-color: #00192D; color: #FFC107;">
+          <h5 class="modal-title" id="editIncomeInfoLabel">
+            <i class="fas fa-edit me-2"></i> Edit Income Information
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="modal-body px-4 py-4 bg-light">
+
+          <!-- Income Source -->
+          <div class="form-floating mb-4">
+            <input type="text" class="form-control shadow-sm" id="editIncomeSource" placeholder="Income Source" 
+                   value="<?= htmlspecialchars($data['income_source'] ?? '') ?>" name="income_source" required>
+            <label for="editIncomeSource"><i class="fas fa-briefcase me-1 text-muted"></i> Income Source</label>
+          </div>
+
+          <!-- Employer -->
+          <div class="form-floating mb-4">
+            <input type="text" class="form-control shadow-sm" id="editEmployer" placeholder="Employer" 
+                   value="<?= htmlspecialchars($data['work_place'] ?? '') ?>" name="employer" required>
+            <label for="editEmployer"><i class="fas fa-building me-1 text-muted"></i> Employer</label>
+          </div>
+
+          <!-- Job Title -->
+          <div class="form-floating mb-4">
+            <input type="text" class="form-control shadow-sm" id="editJobTitle" placeholder="Job Title" 
+                   value="<?= htmlspecialchars($data['job_title'] ?? '') ?>" name="job_title" required>
+            <label for="editJobTitle"><i class="fas fa-user-tie me-1 text-muted"></i> Job Title</label>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer px-4 pb-4 pt-3">
+          <button type="submit" class="btn btn-sm " style="background-color: #00192D; color: #FFC107;">
+            <i class="fas fa-save me-1"></i> Save Changes
+          </button>
+          <button type="button" class="btn btn-sm" data-bs-dismiss="modal" style="background-color: #00192D; color: #FFC107;">
+            <i class="fas fa-times me-1"></i> Cancel
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
 
              <!-- start row -->
 
@@ -807,7 +873,7 @@ try {
                        </div>
 
                        <div class="col-md-3">
-                        <button class="btn edit-btn personal-info" data-bs-toggle="modal" data-bs-target="#addPetModal"><i class="fas fa-plus icon"></i> ADD </button>
+                        <button class="btn edit-btn personal-info" data-bs-toggle="modal" data-bs-target="#addPetModal" style="background-color: #00192D; color: #FFC107;"><i class="fas fa-plus icon"></i> ADD </button>
                        </div>
 
                   </div>
@@ -886,7 +952,7 @@ try {
                       </table>
                     </div>
                     <div class="col-md-3">
-                      <button class="btn edit-btn personal-info" data-bs-toggle ="modal" data-bs-target ="#addFileModal"><i class="fas fa-plus icon"></i> Add </button>
+                      <button class="btn edit-btn personal-info" data-bs-toggle ="modal" data-bs-target ="#addFileModal"style="background-color: #00192D; color: #FFC107;"><i class="fas fa-plus icon"></i> Add </button>
                     </div>
 
 
@@ -976,29 +1042,6 @@ try {
          value="<?= htmlspecialchars($data['id_no'] ?? '') ?>" required>
   <label for="editIDNo"><i class="fas fa-id-card me-1"></i> National ID Number</label>
 </div>
-
-<!-- Income Source -->
-<div class="form-floating mb-3">
-  <input type="text" class="form-control" id="editIncomeSource" placeholder="Income Source" 
-         value="<?= htmlspecialchars($data['income_source'] ?? '') ?>">
-  <label for="editIncomeSource"><i class="fas fa-briefcase me-1"></i> Income Source</label>
-</div>
-
-<!-- Employer -->
-<div class="form-floating mb-3">
-  <input type="text" class="form-control" id="editEmployer" placeholder="Employer" 
-         value="<?= htmlspecialchars($data['work_place'] ?? '') ?>">
-  <label for="editEmployer"><i class="fas fa-building me-1"></i> Employer</label>
-</div>
-
-<!-- Job Title -->
-<div class="form-floating mb-3">
-  <input type="text" class="form-control" id="editJobTitle" placeholder="Job Title" 
-         value="<?= htmlspecialchars($data['job_title'] ?? '') ?>">
-  <label for="editJobTitle"><i class="fas fa-user-tie me-1"></i> Job Title</label>
-</div>
-
-
 
                       <div class="modal-footer bg-light d-flex justify-content-between">
                         <small class="text-muted"><i class="fas fa-info-circle me-1"></i> Make sure details are accurate</small>

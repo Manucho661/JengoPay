@@ -272,6 +272,41 @@ document.getElementById('editPenaltyForm').addEventListener('submit', function(e
 });
 
 
+document.getElementById('editIncomeInfoForm').addEventListener('submit', function (e) {
+  e.preventDefault(); // Prevent normal form submission
+
+  const form = e.target;
+  const formData = new FormData(form);
+
+  fetch('update_income_info.php', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Optional: Update elements on the frontend
+      document.getElementById('incomeSourceDisplay').textContent = formData.get('income_source');
+      document.getElementById('employerDisplay').textContent = formData.get('employer');
+      document.getElementById('jobTitleDisplay').textContent = formData.get('job_title');
+
+      // Close modal
+      const modal = bootstrap.Modal.getInstance(document.getElementById('editIncomeInfoModal'));
+      modal.hide();
+    } else {
+      alert('Failed to update: ' + (data.message || 'Unknown error'));
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Something went wrong while updating.');
+  });
+});
+
+
+
+
+
 
 
 
