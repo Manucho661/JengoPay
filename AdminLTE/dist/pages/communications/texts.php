@@ -1050,23 +1050,15 @@ document.getElementById('sendMessage').addEventListener('click', function() {
 
 <!-- loadConversation -->
 <script>
-<<<<<<< HEAD
-let activeThreadId = null;
-
-=======
->>>>>>> 707bd5f0351ea3167aa9c3c4df5f3871edad06b7
 function loadConversation(threadId) {
     if (!threadId) {
         console.error('Invalid or missing threadId');
         return;
     }
 
-<<<<<<< HEAD
-=======
     // ✅ Update the browser URL without reloading
     history.replaceState(null, '', '?thread_id=' + encodeURIComponent(threadId));
 
->>>>>>> 707bd5f0351ea3167aa9c3c4df5f3871edad06b7
     activeThreadId = threadId;
 
     // Remove "active" class from all thread entries
@@ -1079,11 +1071,6 @@ function loadConversation(threadId) {
     if (selected) {
         selected.classList.add('active');
     }
-<<<<<<< HEAD
-
-    console.log('Loading thread:', threadId);
-=======
->>>>>>> 707bd5f0351ea3167aa9c3c4df5f3871edad06b7
 
     console.log('Loading thread:', threadId);
 
@@ -1117,18 +1104,7 @@ let activeThreadId = null; // Ensure this is declared in the global scope if not
 function sendMessage() {
     const inputBox = document.getElementById('inputBox');
     const fileInput = document.getElementById('fileInput');
-<<<<<<< HEAD
-
-    if (!inputBox || !fileInput) {
-        console.error("Required input elements not found.");
-        return;
-    }
-
-    const messageText = inputBox.innerText.trim();
-    const file = fileInput.files[0];
-=======
     const file = fileInput.files.length > 0 ? fileInput.files[0] : null;
->>>>>>> 707bd5f0351ea3167aa9c3c4df5f3871edad06b7
 
     if (!messageText && !file) {
         alert("Please type a message or attach a file.");
@@ -1145,10 +1121,6 @@ function sendMessage() {
     formData.append('thread_id', activeThreadId);
     formData.append('sender', 'landlord');
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 707bd5f0351ea3167aa9c3c4df5f3871edad06b7
     if (file) {
         formData.append('file', file);
     }
@@ -1163,11 +1135,7 @@ function sendMessage() {
             throw new Error(data.error || 'Failed to send message.');
         }
 
-<<<<<<< HEAD
-        loadConversation(activeThreadId); // Reload conversation after sending
-=======
         // Clear input fields only after a successful send
->>>>>>> 707bd5f0351ea3167aa9c3c4df5f3871edad06b7
         inputBox.innerText = '';
         fileInput.value = '';
 
@@ -1180,44 +1148,21 @@ function sendMessage() {
     });
 }
 
-<<<<<<< HEAD
-function getMessage(messageId) {
-    if (!messageId) {
-        console.warn('No message ID provided.');
-        return;
-    }
-=======
 
 
 // Function to load messages (AJAX request to fetch new messages)
 function getMessage(messageId) {
     const messageContainer = document.getElementById('messageDetails');
->>>>>>> 707bd5f0351ea3167aa9c3c4df5f3871edad06b7
 
     fetch('get_message.php?message_id=' + messageId)
         .then(response => response.json())
         .then(data => {
-<<<<<<< HEAD
-            const messageContainer = document.getElementById('messageDetails');
-            if (!messageContainer) {
-                console.error("Message container element not found.");
-                return;
-            }
-
-            if (data.success) {
-                messageContainer.innerHTML = data.message;
-                messageContainer.scrollIntoView({ behavior: 'smooth' });
-            } else {
-                messageContainer.innerHTML = `<div class="alert alert-warning">${data.error}</div>`;
-                console.warn('Failed to fetch message:', data.error);
-=======
             if (data.success) {
                 messageContainer.innerHTML = data.message;
                 messageContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
             } else {
                 messageContainer.innerHTML = `<div class="alert alert-warning">${data.error}</div>`;
                 console.warn('Fetch warning:', data.error);
->>>>>>> 707bd5f0351ea3167aa9c3c4df5f3871edad06b7
             }
         })
         .catch(error => {
