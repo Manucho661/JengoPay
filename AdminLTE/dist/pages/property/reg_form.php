@@ -679,7 +679,7 @@ try {
   <div class="col-md-4">
     <div class="form-group">
       <label>County</label>
-      <select name="county" id="county" onchange="loadConstituency()" 
+      <select name="county" id="county" onchange="loadConstituency()"
               class="form-control select2 select2-danger"
               data-dropdown-css-class="select2-danger"
               style="width: 100%;">
@@ -2675,57 +2675,60 @@ previewImage('interior_view_photo', 'preview_interior_view');
         }
     }
 
-    // Section Five validation (Legal and Regulatory Details)
-    if (section.id === 'sectionFive') {
-        const ncaApproval = document.querySelector('input[name="nca_approval"]:checked');
-        if (!ncaApproval) {
-            errorMessage += "- NCA Approval\n";
+   // Section Five validation (Legal and Regulatory Details)
+if (section.id === 'sectionFive') {
+    // NCA Approval
+    const ncaApproval = document.querySelector('input[name="nca_approval"]:checked');
+    if (!ncaApproval) {
+        errorMessage += "- NCA Approval\n";
+        isValid = false;
+    } else if (ncaApproval.value === "Yes") {
+        if (!document.getElementById('approvalNo').value) {
+            errorMessage += "- NCA Approval Number\n";
             isValid = false;
-        } else if (ncaApproval.value === "Yes") {
-            if (!document.getElementById('approvalNo').value) {
-                errorMessage += "- NCA Approval Number\n";
-                isValid = false;
-            }
-            if (!document.getElementById('approvalStartDate').value) {
-                errorMessage += "- NCA Approval Start Date\n";
-                isValid = false;
-            }
-            if (!document.getElementById('approvalEndDate').value) {
-                errorMessage += "- NCA Approval End Date\n";
-                isValid = false;
-            }
         }
-
-        const localGovApproval = document.querySelector('input[name="local_gov_approval"]:checked');
-        if (!localGovApproval) {
-            errorMessage += "- Local Government Approval\n";
+        if (!document.getElementById('approvalStartDate').value) {
+            errorMessage += "- NCA Approval Start Date\n";
             isValid = false;
-        } else if (localGovApproval.value === "Yes") {
-            if (!document.getElementById('localGovApprovalNo').value) {
-                errorMessage += "- Local Government Approval Number\n";
-                isValid = false;
-            }
-            if (!document.getElementById('localGovApprovalDate').value) {
-                errorMessage += "- Local Government Approval Date\n";
-                isValid = false;
-            }
         }
-
-        const nemaApproval = document.querySelector('input[name="nema_approval"]:checked');
-        if (!nemaApproval) {
-            errorMessage += "- NEMA Approval\n";
+        if (!document.getElementById('approvalEndDate').value) {
+            errorMessage += "- NCA Approval End Date\n";
             isValid = false;
-        } else if (nemaApproval.value === "Yes") {
-            if (!document.getElementById('nemaApprovalNumber').value) {
-                errorMessage += "- NEMA Approval Number\n";
-                isValid = false;
-            }
-            if (!document.getElementById('nemaApprovalDate').value) {
-                errorMessage += "- NEMA Approval Date\n";
-                isValid = false;
-            }
         }
     }
+
+    // Local Government Approval — only validate if "Yes" is selected
+
+    const localGovApproval = document.querySelector('input[name="local_gov_approval"]:checked');
+if (localGovApproval && localGovApproval.value === "Yes") {
+    if (!document.getElementById('localGovApprovalNo').value) {
+        errorMessage += "- Local Government Approval Number\n";
+        isValid = false;
+    }
+    if (!document.getElementById('localGovApprovalDate').value) {
+        errorMessage += "- Local Government Approval Date\n";
+        isValid = false;
+    }
+}
+
+
+    // NEMA Approval
+    const nemaApproval = document.querySelector('input[name="nema_approval"]:checked');
+    if (!nemaApproval) {
+        errorMessage += "- NEMA Approval\n";
+        isValid = false;
+    } else if (nemaApproval.value === "Yes") {
+        if (!document.getElementById('nemaApprovalNumber').value) {
+            errorMessage += "- NEMA Approval Number\n";
+            isValid = false;
+        }
+        if (!document.getElementById('nemaApprovalDate').value) {
+            errorMessage += "- NEMA Approval Date\n";
+            isValid = false;
+        }
+    }
+}
+
 
 
     // Section Six validation (Insurance Information)
