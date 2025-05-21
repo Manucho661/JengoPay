@@ -409,6 +409,58 @@ try {
   </div>
 </div>
 
+<!-- Shift Tenant Modal -->
+<div class="modal fade" id="shiftTenantModal" tabindex="-1" aria-labelledby="shiftTenantModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content shadow">
+      <form id="shiftTenantForm">
+        <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
+          <h5 class="modal-title" id="shiftTenantModalLabel">
+            <i class="fas fa-exchange-alt me-2"></i> Shift Tenant - Joseph
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" ></button>
+        </div>
+
+        <div class="modal-body px-4">
+          <!-- Tenant Name (Pre-filled) -->
+          <div class="mb-3">
+            <label class="form-label">Tenant Name</label>
+            <input type="text" class="form-control" name="tenantName" value="Joseph" readonly>
+          </div>
+
+          <!-- Select Building -->
+          <div class="mb-3">
+            <label for="buildingSelect" class="form-label">Select Building</label>
+            <select id="buildingSelect" class="form-select" required>
+              <option value="">-- Select Building --</option>
+              <option value="Manucho">Manucho</option>
+              <option value="White House">White House</option>
+              <option value="Pink House">Pink House</option>
+              <option value="Silver">Silver</option>
+            </select>
+          </div>
+
+          <!-- Select Unit -->
+          <div class="mb-3">
+            <label for="unitSelect" class="form-label">Select Unit</label>
+            <select id="unitSelect" class="form-select" required>
+              <option value="">-- Select Unit --</option>
+              <option value="Unit 101">Unit 101</option>
+              <option value="Unit 102">Unit 102</option>
+              <option value="Unit 201">Unit 201</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer px-4">
+          <button type="submit" class="btn btn-primary" style="background-color: #00192D; color: #FFC107;">Shift</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
 
 
 
@@ -702,86 +754,37 @@ try {
               </div>
 
 
-              <!-- Edit Penalty Modal -->
+    <!-- Edit Penalty Modal -->
 <div class="modal fade" id="editPenaltyModal" tabindex="-1" aria-labelledby="editPenaltyModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog">
     <div class="modal-content shadow">
       <form id="editPenaltyForm">
+        <!-- Header -->
         <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
           <h5 class="modal-title" id="editPenaltyModalLabel">
-            <i class="fas fa-pen-alt me-2"></i> Edit Penalty Details
+            <i class="fas fa-pen-alt me-2"></i> Edit Penalty Rates
           </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style=" background-color:white;"></button>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
+        <!-- Body -->
         <div class="modal-body px-4">
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label for="editYear" class="form-label">Select Year</label>
-              <select id="editYear" class="form-select" required>
-                <option value="">-- Select Year --</option>
-                <option value="2025">2025</option>
-                <option value="2024">2024</option>
-                <option value="2023">2023</option>
-                <option value="2022">2022</option>
-                <option value="2021">2021</option>
-                <option value="2020">2020</option>
-              </select>
-            </div>
-            <div class="col-md-6">
-              <label for="editMonth" class="form-label">Select Month</label>
-              <select id="editMonth" class="form-select" required>
-                <option value="">-- Select Month --</option>
-                <option>January</option>
-                <option>February</option>
-                <option>March</option>
-                <option>April</option>
-                <option>May</option>
-                <option>June</option>
-                <option>July</option>
-                <option>August</option>
-                <option>September</option>
-                <option>October</option>
-                <option>November</option>
-                <option>December</option>
-  
-              <!-- Add all months -->
-              </select>
-            </div>
-          </div>
-
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label for="rentDue" class="form-label">Rent Due</label>
-              <input type="number" class="form-control" id="rentDue" placeholder="Enter rent due" required>
-            </div>
-            <div class="col-md-6">
-              <label for="rentPaid" class="form-label">Amount Paid</label>
-              <input type="number" class="form-control" id="rentPaid" placeholder="Enter amount paid" required>
-            </div>
-            <div class="col-md-6">
-              <label for="penalty" class="form-label">Penalty</label>
-              <input type="number" class="form-control" id="penalty" placeholder="Enter penalty amount" required>
-            </div>
-            <div class="col-md-6">
-              <label for="arrears" class="form-label">Arrears</label>
-              <input type="number" class="form-control" id="arrears" placeholder="Enter arrears" required>
-            </div>
-            <div class="col-md-12">
-              <label for="receipt" class="form-label">Receipt Info</label>
-              <textarea class="form-control" id="receipt" placeholder="Enter receipt info..." rows="2" required></textarea>
-            </div>
+          <div class="mb-3">
+            <label for="penaltyRate" class="form-label">Penalty Rate (%)</label>
+            <input type="number" class="form-control" id="penaltyRate" name="penaltyRate" min="0" max="100" step="1" placeholder="Enter penalty rate" required>
           </div>
         </div>
 
+        <!-- Footer -->
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary" style="background-color: #00192D;">Save Changes</button>
-          <button type="button" class="btn btn-secondary" style ="background-color: #00192D;"data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="background-color: #00192D;">Save</button>
+          <button type="button" class="btn btn-secondary" style="background-color: #00192D;" data-bs-dismiss="modal">Cancel</button>
         </div>
       </form>
     </div>
   </div>
 </div>
+
 
 
                  <!-- end row -->
@@ -817,7 +820,7 @@ try {
         <!-- Modal Header -->
         <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
           <h5 class="modal-title" id="addPetModalLabel"><i class="fas fa-paw me-2"></i> Add Pet</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="background-color: white;"></button>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
         <!-- Modal Body -->
@@ -906,7 +909,7 @@ try {
       <!-- Modal Header -->
       <div class="modal-header" style="background-color:#00192D; color:#FFC107;">
         <h5 class="modal-title" id="addFileModalLabel"><i class="fas fa-file-upload me-2"></i> Add File</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
       <!-- Modal Body -->

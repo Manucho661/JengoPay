@@ -125,26 +125,6 @@ fetchPets(user_id)
 
 });
 
-document.getElementById("editPenaltyForm").addEventListener("submit", function(e) {
-  e.preventDefault();
-  // Collect values
-  const year = document.getElementById("editYear").value;
-  const month = document.getElementById("editMonth").value;
-  const rentDue = document.getElementById("rentDue").value;
-  const paid = document.getElementById("rentPaid").value;
-  const penalty = document.getElementById("penalty").value;
-  const arrears = document.getElementById("arrears").value;
-  const receipt = document.getElementById("receipt").value;
-
-  console.log({ year, month, rentDue, paid, penalty, arrears, receipt });
-
-  // You can make an AJAX call here to update backend
-  alert("Penalty details updated!");
-
-  // Hide modal
-  const modal = bootstrap.Modal.getInstance(document.getElementById('editPenaltyModal'));
-  modal.hide();
-});
 
 
 
@@ -212,6 +192,86 @@ document.getElementById("addFileForm").addEventListener("submit", function (e) {
       alert("An error occurred while uploading the file.");
     });
 });
+
+
+document.getElementById("shiftTenantForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const tenant = "Joseph"; // fixed here
+  const building = document.getElementById("buildingSelect").value;
+  const unit = document.getElementById("unitSelect").value;
+
+  if (!building || !unit) {
+    alert("Please select both building and unit.");
+    return;
+  }
+
+  // Example AJAX submission
+  fetch("shift_tenant.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tenant, building, unit })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert("Tenant shifted successfully!");
+      document.getElementById("shiftTenantForm").reset();
+      var modal = bootstrap.Modal.getInstance(document.getElementById("shiftTenantModal"));
+      modal.hide();
+    } else {
+      alert("Shift failed: " + data.message);
+    }
+  });
+});
+
+
+
+document.getElementById('editPenaltyForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const penaltyRate = document.getElementById('penaltyRate').value;
+
+  // Validate input
+  if (penaltyRate === "" || isNaN(penaltyRate) || penaltyRate < 0 || penaltyRate > 100) {
+    alert("Please enter a valid penalty rate between 0 and 100.");
+    return;
+  }
+
+  // Submit using fetch
+  fetch('save_penalty_rate.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ penaltyRate: penaltyRate })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert('Penalty rate updated successfully.');
+
+      // ✅ Update UI (replace `.penalty-rate-display` with your actual display element)
+      const displayEl = document.querySelector('.penalty-rate-display');
+      if (displayEl) {
+        displayEl.textContent = `${penaltyRate}%`;
+      }
+
+      // ✅ Close modal using Bootstrap 5 API
+      const modalEl = document.getElementById('editPenaltyModal');
+      const modal = bootstrap.Modal.getInstance(modalEl);
+      modal.hide();
+    } else {
+      alert('Failed to update penalty rate: ' + data.message);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('An unexpected error occurred.');
+  });
+});
+
+
 
 
 
