@@ -681,14 +681,17 @@ display: flex;
                                   </div>
                                 </div>
 
-                               <div class="input-area">
+
+                                <div class="input-area">
                               <!-- Attachment input -->
                               <!-- <input type="file" id="fileInput" multiple style="display: none;" onchange="handleFiles(event)">
                                 <button class="btn attach-button" onclick="document.getElementById('fileInput').click();">
                                   <i class="fa fa-paperclip"></i>
                                 </button> -->
 
+                                <div class="input-box" id="inputBox" contenteditable="true"></div>
 
+                                <!-- <div id="filePreviews" class="preview-container"></div> -->
                                 <!-- <div id="filePreviews" class="preview-container"></div> -->
 
                                   <div class="message-input-wrapper" >
@@ -699,6 +702,17 @@ display: flex;
                                     </div>
                                   </div>
                               </div>
+
+
+
+
+                               <!-- <div class="input-area">
+                                <div class="message-input-wrapper" >
+                                  <button name="incoming_message" class="btn message-send-button" onclick="sendMessage()">
+                                    <i class="fa fa-paper-plane"></i>
+                                  </button>
+                                </div>
+                              </div> -->
 
                               </div>
                             </div>
