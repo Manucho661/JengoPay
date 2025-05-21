@@ -174,49 +174,6 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <style>
-.preview-container {
-  /* display: flex; */
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 15px;
-}
-
-.preview-item {
-  position: relative;
-  width: 100px;
-  height: 100px;
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: #f0f0f0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.preview-item img,
-.preview-item embed {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.remove-button {
-  position: absolute;
-  top: 2px;
-  right: 4px;
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 18px;
-  height: 18px;
-  font-size: 14px;
-  cursor: pointer;
-  line-height: 18px;
-  text-align: center;
-}
-
-
   body{
     font-size: 16px;
 
@@ -241,9 +198,7 @@ img {
   max-height: 100%;
   display: none;
 }
-.app-main .app-content{
 
-}
 #filePreviews{
 display: flex;
 }
@@ -728,19 +683,21 @@ display: flex;
 
                                <div class="input-area">
                               <!-- Attachment input -->
-                              <input type="file" id="fileInput" multiple style="display: none;" onchange="handleFiles(event)">
+                              <!-- <input type="file" id="fileInput" multiple style="display: none;" onchange="handleFiles(event)">
                                 <button class="btn attach-button" onclick="document.getElementById('fileInput').click();">
                                   <i class="fa fa-paperclip"></i>
-                                </button>
+                                </button> -->
 
 
-                                <div id="filePreviews" class="preview-container"></div>
+                                <!-- <div id="filePreviews" class="preview-container"></div> -->
 
                                   <div class="message-input-wrapper" >
                                   <button name="incoming_message" class="btn message-send-button" onclick="sendMessage()">
                                     <i class="fa fa-paper-plane"></i>
                                   </button>
                                 </div>
+                                    </div>
+                                  </div>
                               </div>
 
                               </div>
@@ -891,7 +848,7 @@ display: flex;
 
 <!-- !-- create new text -->
 
-<script>
+<!-- <script>
 let selectedFiles = [];
 
 function handleFiles(event) {
@@ -943,7 +900,7 @@ function handleFiles(event) {
     previewContainer.appendChild(previewItem);
   });
 }
-</script>
+</script> -->
 
 
 

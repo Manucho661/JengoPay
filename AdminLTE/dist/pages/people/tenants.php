@@ -352,7 +352,7 @@ width: 100%;
                                                     <b class="text-danger" id="building_nameError"></b>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <label>Unit_type
+                                                    <label>Unit Type
                                                     </label> <sup class="text-danger"><b>*</b></sup>
                                                     <br>
                                                     <select class="form-control" name="unit_type" id="unit_type" >
