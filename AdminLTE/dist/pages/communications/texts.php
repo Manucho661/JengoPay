@@ -1063,14 +1063,13 @@ document.getElementById('sendMessage').addEventListener('click', function() {
 
 <!-- loadConversation -->
 <script>
+let activeThreadId = null;
+
 function loadConversation(threadId) {
     if (!threadId) {
         console.error('Invalid or missing threadId');
         return;
     }
-
-    // ✅ Update the browser URL without reloading
-    history.replaceState(null, '', '?thread_id=' + encodeURIComponent(threadId));
 
     activeThreadId = threadId;
 
@@ -1084,6 +1083,8 @@ function loadConversation(threadId) {
     if (selected) {
         selected.classList.add('active');
     }
+
+    console.log('Loading thread:', threadId);
 
     console.log('Loading thread:', threadId);
 
@@ -1117,7 +1118,14 @@ let activeThreadId = null; // Ensure this is declared in the global scope if not
 function sendMessage() {
     const inputBox = document.getElementById('inputBox');
     const fileInput = document.getElementById('fileInput');
-    const file = fileInput.files.length > 0 ? fileInput.files[0] : null;
+
+    if (!inputBox || !fileInput) {
+        console.error("Required input elements not found.");
+        return;
+    }
+
+    const messageText = inputBox.innerText.trim();
+    const file = fileInput.files[0];
 
     if (!messageText && !file) {
         alert("Please type a message or attach a file.");
@@ -1134,7 +1142,6 @@ function sendMessage() {
     formData.append('thread_id', activeThreadId);
     formData.append('sender', 'landlord');
 
-
     if (file) {
         formData.append('file', file);
     }
@@ -1149,7 +1156,7 @@ function sendMessage() {
             throw new Error(data.error || 'Failed to send message.');
         }
 
-        // Clear input fields only after a successful send
+        loadConversation(activeThreadId); // Reload conversation after sending
         inputBox.innerText = '';
         fileInput.value = '';
 
@@ -1162,21 +1169,27 @@ function sendMessage() {
     });
 }
 
-
-
-// Function to load messages (AJAX request to fetch new messages)
 function getMessage(messageId) {
-    const messageContainer = document.getElementById('messageDetails');
+    if (!messageId) {
+        console.warn('No message ID provided.');
+        return;
+    }
 
     fetch('get_message.php?message_id=' + messageId)
         .then(response => response.json())
         .then(data => {
+            const messageContainer = document.getElementById('messageDetails');
+            if (!messageContainer) {
+                console.error("Message container element not found.");
+                return;
+            }
+
             if (data.success) {
                 messageContainer.innerHTML = data.message;
-                messageContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                messageContainer.scrollIntoView({ behavior: 'smooth' });
             } else {
                 messageContainer.innerHTML = `<div class="alert alert-warning">${data.error}</div>`;
-                console.warn('Fetch warning:', data.error);
+                console.warn('Failed to fetch message:', data.error);
             }
         })
         .catch(error => {
@@ -1184,8 +1197,6 @@ function getMessage(messageId) {
             console.error('Fetch error:', error);
         });
 }
-
-
 </script>
 
 
