@@ -2,24 +2,28 @@
 include '../db/connect.php';
 header('Content-Type: application/json');
 
+// Only allow POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'error' => 'Invalid request']);
     exit;
 }
 
-$message = $_POST['message'] ?? '';
+$message = trim($_POST['message'] ?? '');
 $threadId = (int)($_POST['thread_id'] ?? 0);
 $sender = $_POST['sender'] ?? 'unknown';
 
-if (!$threadId) {
-    echo json_encode(['success' => false, 'error' => 'Invalid thread ID']);
+if (!$threadId || (!$message && empty($_FILES['file']['name']))) {
+    echo json_encode(['success' => false, 'error' => 'Message or file is required']);
     exit;
 }
 
+// Handle file upload
 $filePath = null;
 if (!empty($_FILES['file']['name'])) {
     $uploadDir = '../uploads/';
-    if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
+    }
 
     $filename = time() . '_' . basename($_FILES['file']['name']);
     $targetFile = $uploadDir . $filename;
@@ -32,14 +36,22 @@ if (!empty($_FILES['file']['name'])) {
     }
 }
 
-$content = htmlspecialchars($message);
+// Build content
+$content = '';
+if ($message) {
+    $content .= htmlspecialchars($message);
+}
 if ($filePath) {
     $fileLink = "<a href='$filePath' target='_blank'>Download Attachment</a>";
     $content .= ($content ? '<br>' : '') . $fileLink;
 }
 
+// Save to database
 try {
-    $stmt = $pdo->prepare("INSERT INTO messages (thread_id, sender, content, timestamp, file_path) VALUES (:thread_id, :sender, :content, NOW(), :file_path)");
+    $stmt = $pdo->prepare("
+        INSERT INTO messages (thread_id, sender, content, timestamp, file_path)
+        VALUES (:thread_id, :sender, :content, NOW(), :file_path)
+    ");
     $stmt->execute([
         'thread_id' => $threadId,
         'sender' => $sender,
@@ -51,4 +63,3 @@ try {
 } catch (PDOException $e) {
     echo json_encode(['success' => false, 'error' => 'DB error: ' . $e->getMessage()]);
 }
-?>

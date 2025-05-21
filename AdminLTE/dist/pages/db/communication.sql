@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 14, 2025 at 03:36 PM
+-- Generation Time: May 21, 2025 at 03:48 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,17 +29,18 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `communication` (
   `thread_id` int(11) NOT NULL,
-  `sender_id` int(11) DEFAULT NULL,
-  `receiver_id` int(11) DEFAULT NULL,
-  `start_date` date DEFAULT NULL,
-  `end_date` date DEFAULT NULL,
-  `subject` varchar(100) NOT NULL,
   `files` varchar(100) NOT NULL,
+  `file_name` varchar(255) NOT NULL,
+  `mime_type` varchar(100) NOT NULL,
+  `file_data` longblob NOT NULL,
+  `size` int(11) NOT NULL,
   `unit_id` varchar(100) NOT NULL,
   `tenant` varchar(100) NOT NULL,
   `building_name` varchar(155) NOT NULL,
   `building_id` int(255) NOT NULL,
   `title` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `message_id` int(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `recipient` varchar(255) NOT NULL,
   `created_at` datetime DEFAULT current_timestamp(),
@@ -50,8 +51,11 @@ CREATE TABLE `communication` (
 -- Dumping data for table `communication`
 --
 
-INSERT INTO `communication` (`thread_id`, `sender_id`, `receiver_id`, `start_date`, `end_date`, `subject`, `files`, `unit_id`, `tenant`, `building_name`, `building_id`, `title`, `email`, `recipient`, `created_at`, `updated_at`) VALUES
-(195, NULL, NULL, NULL, NULL, '', '[\"uploads\\/68248fbf18080_Terry\'s Title Deed.pdf\"]', '', '', '117', 0, 'yebo', '', '', '2025-05-14 15:42:39', '2025-05-14 15:42:39');
+INSERT INTO `communication` (`thread_id`, `files`, `file_name`, `mime_type`, `file_data`, `size`, `unit_id`, `tenant`, `building_name`, `building_id`, `title`, `message`, `message_id`, `email`, `recipient`, `created_at`, `updated_at`) VALUES
+(247, '[\"uploads\\/682db9e580fe4_Terry\'s KRA Pin.pdf\"]', '', '', '', 0, '', '', '127', 0, 'xsfvbg', 'fgnbg', 0, '', '', '2025-05-21 14:32:53', '2025-05-21 14:32:53'),
+(248, '[\"uploads\\/682dba0894631_WhatsApp Image 2025-05-12 at 13.33.26.jpeg\"]', '', '', '', 0, '', '', '127', 0, 'cgcbg', 'fvcbfvb ', 0, '', '', '2025-05-21 14:33:28', '2025-05-21 14:33:28'),
+(249, '[\"uploads\\/682dca7e94128_Dreamqeja NCA Certificate.pdf\"]', '', '', '', 0, '', '', '128', 0, 'hjiiuji', 'bhiklo', 0, '', '', '2025-05-21 15:43:42', '2025-05-21 15:43:42'),
+(250, '[\"uploads\\/682dcc2702309_Terry\'s Title Deed.pdf\"]', '', '', '', 0, '', '', '128', 0, 'nhf', 'fvnn', 0, '', '', '2025-05-21 15:50:47', '2025-05-21 15:50:47');
 
 --
 -- Indexes for dumped tables
@@ -71,7 +75,7 @@ ALTER TABLE `communication`
 -- AUTO_INCREMENT for table `communication`
 --
 ALTER TABLE `communication`
-  MODIFY `thread_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=196;
+  MODIFY `thread_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=251;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

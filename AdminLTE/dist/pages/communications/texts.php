@@ -1,3 +1,4 @@
+
 <?php
 include '../db/connect.php'; // Make sure $pdo is available
 
@@ -98,6 +99,7 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 
+
 <!doctype html>
 <html lang="en">
   <!--begin::Head-->
@@ -172,6 +174,49 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <style>
+.preview-container {
+  /* display: flex; */
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.preview-item {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.preview-item img,
+.preview-item embed {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-button {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 14px;
+  cursor: pointer;
+  line-height: 18px;
+  text-align: center;
+}
+
+
   body{
     font-size: 16px;
 
@@ -190,17 +235,7 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
 .app-main .app-content-header {
   padding: 1rem 0.5rem;
 }
-.preview-container {
-  /* margin-top: 20px; */
-  width: 30px;
-  height: 20px;
-  border: 2px dashed #ccc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  background-color: #fff;
-}
+
 img {
   max-width: 100%;
   max-height: 100%;
@@ -691,16 +726,16 @@ display: flex;
                                   </div>
                                 </div>
 
-
-
                                <div class="input-area">
                               <!-- Attachment input -->
-                              <input type="file" id="fileInput" multiple style="display: none;" onchange="handleFileChange(event)">
+                              <input type="file" id="fileInput" multiple style="display: none;" onchange="handleFiles(event)">
                                 <button class="btn attach-button" onclick="document.getElementById('fileInput').click();">
                                   <i class="fa fa-paperclip"></i>
                                 </button>
 
-                                  <div class="input-box" id="inputBox" contenteditable="true"></div>
+
+                                <div id="filePreviews" class="preview-container"></div>
+
                                   <div class="message-input-wrapper" >
                                   <button name="incoming_message" class="btn message-send-button" onclick="sendMessage()">
                                     <i class="fa fa-paper-plane"></i>
@@ -859,82 +894,58 @@ display: flex;
 <script>
 let selectedFiles = [];
 
-function handleFileChange(event) {
-  const files = event.target.files;
-  selectedFiles = Array.from(files);
+function handleFiles(event) {
+  const newFiles = Array.from(event.target.files);
+  const previewContainer = document.getElementById('filePreviews');
 
-  const previewContainer = document.getElementById('filePreview');
-  previewContainer.innerHTML = '';
+  // Merge and limit total to 10 files
+  selectedFiles = [...selectedFiles, ...newFiles].slice(0, 10);
 
-  selectedFiles.forEach(file => {
-    const fileName = document.createElement('div');
-    fileName.textContent = `📎 ${file.name}`;
-    previewContainer.appendChild(fileName);
+  previewContainer.innerHTML = ''; // Clear current previews
+
+  selectedFiles.forEach((file, index) => {
+    const fileType = file.type;
+
+    const previewItem = document.createElement('div');
+    previewItem.className = 'preview-item';
+
+    // Close (remove) button
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'remove-button';
+    removeBtn.innerHTML = '&times;';
+    removeBtn.onclick = () => {
+      selectedFiles.splice(index, 1);
+      handleFiles({ target: { files: selectedFiles } }); // Re-render
+    };
+
+    previewItem.appendChild(removeBtn);
+
+    // Preview logic
+    if (fileType.startsWith('image/')) {
+      const img = document.createElement('img');
+      img.src = URL.createObjectURL(file);
+      img.onload = () => URL.revokeObjectURL(img.src);
+      previewItem.appendChild(img);
+    } else if (fileType === 'application/pdf') {
+      const pdfIcon = document.createElement('div');
+      pdfIcon.textContent = '📄 PDF';
+      pdfIcon.style.fontSize = '16px';
+      previewItem.appendChild(pdfIcon);
+    } else {
+      const fileIcon = document.createElement('div');
+      fileIcon.textContent = file.name;
+      fileIcon.style.fontSize = '12px';
+      fileIcon.style.padding = '4px';
+      fileIcon.style.textAlign = 'center';
+      previewItem.appendChild(fileIcon);
+    }
+
+    previewContainer.appendChild(previewItem);
   });
 }
 </script>
 
-<script>
-  // Function to handle multiple files selection
-  function handleFiles(event) {
-    const files = event.target.files;  // Get all selected files
-    const previewContainer = document.getElementById('filePreviews');
-    previewContainer.innerHTML = '';  // Clear previous previews
 
-    let imageCount = 0; // Keep track of how many images we preview
-
-    Array.from(files).forEach(file => {
-      const fileSizeInMB = (file.size / (1024 * 1024)).toFixed(2);  // Convert to MB
-      const fileType = file.type;
-
-      // Create a container for each file's preview and size
-      const fileContainer = document.createElement('div');
-      fileContainer.style.marginBottom = '30px';
-
-      // Display the file size
-      const fileSizeElement = document.createElement('p');
-      fileSizeElement.textContent = `File size: ${fileSizeInMB} MB`;
-      fileContainer.appendChild(fileSizeElement);
-
-      // Preview the file based on type
-      if (fileType.startsWith('image/')) {
-        if (imageCount >= 3) {
-          const warning = document.createElement('p');
-          warning.style.color = 'red';
-          warning.textContent = 'You can only upload 3 images at a time.';
-          previewContainer.appendChild(warning);
-          return;
-        }
-
-        const img = document.createElement('img');
-        img.style.width = '70%';
-        img.style.display = 'flex';
-        img.src = URL.createObjectURL(file);
-        img.onload = function () {
-          URL.revokeObjectURL(img.src); // Free memory
-        };
-
-        fileContainer.appendChild(img);
-        imageCount++;
-
-      } else if (fileType === 'application/pdf') {
-        const pdfEmbed = document.createElement('embed');
-        pdfEmbed.style.width = '100%';
-        pdfEmbed.style.height = '100%';
-        pdfEmbed.src = URL.createObjectURL(file);
-        fileContainer.appendChild(pdfEmbed);
-
-      } else {
-        const fileName = document.createElement('p');
-        fileName.textContent = `File: ${file.name}`;
-        fileContainer.appendChild(fileName);
-      }
-
-      // Append the file container to the previews section
-      previewContainer.appendChild(fileContainer);
-    });
-  }
-</script>
 
 <script src="view.js"></script>
 
@@ -1082,14 +1093,23 @@ document.getElementById('sendMessage').addEventListener('click', function() {
 
 <!-- loadConversation -->
 <script>
+<<<<<<< HEAD
 let activeThreadId = null;
 
+=======
+>>>>>>> 707bd5f0351ea3167aa9c3c4df5f3871edad06b7
 function loadConversation(threadId) {
     if (!threadId) {
         console.error('Invalid or missing threadId');
         return;
     }
 
+<<<<<<< HEAD
+=======
+    // ✅ Update the browser URL without reloading
+    history.replaceState(null, '', '?thread_id=' + encodeURIComponent(threadId));
+
+>>>>>>> 707bd5f0351ea3167aa9c3c4df5f3871edad06b7
     activeThreadId = threadId;
 
     // Remove "active" class from all thread entries
@@ -1102,12 +1122,22 @@ function loadConversation(threadId) {
     if (selected) {
         selected.classList.add('active');
     }
+<<<<<<< HEAD
+
+    console.log('Loading thread:', threadId);
+=======
+>>>>>>> 707bd5f0351ea3167aa9c3c4df5f3871edad06b7
 
     console.log('Loading thread:', threadId);
 
-    // Fetch and update messages
-    fetch('load_conversation.php?thread_id=' + threadId)
-        .then(response => response.json())
+    // Fetch messages for the selected thread
+    fetch('load_conversation.php?thread_id=' + encodeURIComponent(threadId))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.messages) {
                 const messagesDiv = document.getElementById('messages');
@@ -1130,6 +1160,7 @@ let activeThreadId = null; // Ensure this is declared in the global scope if not
 function sendMessage() {
     const inputBox = document.getElementById('inputBox');
     const fileInput = document.getElementById('fileInput');
+<<<<<<< HEAD
 
     if (!inputBox || !fileInput) {
         console.error("Required input elements not found.");
@@ -1138,6 +1169,9 @@ function sendMessage() {
 
     const messageText = inputBox.innerText.trim();
     const file = fileInput.files[0];
+=======
+    const file = fileInput.files.length > 0 ? fileInput.files[0] : null;
+>>>>>>> 707bd5f0351ea3167aa9c3c4df5f3871edad06b7
 
     if (!messageText && !file) {
         alert("Please type a message or attach a file.");
@@ -1154,6 +1188,10 @@ function sendMessage() {
     formData.append('thread_id', activeThreadId);
     formData.append('sender', 'landlord');
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 707bd5f0351ea3167aa9c3c4df5f3871edad06b7
     if (file) {
         formData.append('file', file);
     }
@@ -1168,9 +1206,16 @@ function sendMessage() {
             throw new Error(data.error || 'Failed to send message.');
         }
 
+<<<<<<< HEAD
         loadConversation(activeThreadId); // Reload conversation after sending
+=======
+        // Clear input fields only after a successful send
+>>>>>>> 707bd5f0351ea3167aa9c3c4df5f3871edad06b7
         inputBox.innerText = '';
         fileInput.value = '';
+
+        // Reload thread messages
+        loadConversation(activeThreadId);
     })
     .catch(error => {
         console.error('Error sending message:', error);
@@ -1178,15 +1223,24 @@ function sendMessage() {
     });
 }
 
+<<<<<<< HEAD
 function getMessage(messageId) {
     if (!messageId) {
         console.warn('No message ID provided.');
         return;
     }
+=======
+
+
+// Function to load messages (AJAX request to fetch new messages)
+function getMessage(messageId) {
+    const messageContainer = document.getElementById('messageDetails');
+>>>>>>> 707bd5f0351ea3167aa9c3c4df5f3871edad06b7
 
     fetch('get_message.php?message_id=' + messageId)
         .then(response => response.json())
         .then(data => {
+<<<<<<< HEAD
             const messageContainer = document.getElementById('messageDetails');
             if (!messageContainer) {
                 console.error("Message container element not found.");
@@ -1199,10 +1253,19 @@ function getMessage(messageId) {
             } else {
                 messageContainer.innerHTML = `<div class="alert alert-warning">${data.error}</div>`;
                 console.warn('Failed to fetch message:', data.error);
+=======
+            if (data.success) {
+                messageContainer.innerHTML = data.message;
+                messageContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                messageContainer.innerHTML = `<div class="alert alert-warning">${data.error}</div>`;
+                console.warn('Fetch warning:', data.error);
+>>>>>>> 707bd5f0351ea3167aa9c3c4df5f3871edad06b7
             }
         })
         .catch(error => {
-            console.error('Error fetching message:', error);
+            messageContainer.innerHTML = `<div class="alert alert-danger">An error occurred while fetching the message.</div>`;
+            console.error('Fetch error:', error);
         });
 }
 </script>
