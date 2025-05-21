@@ -1104,7 +1104,7 @@ function loadConversation(threadId) {
 
     activeThreadId = threadId;
 
-    // Remove "active" class from all message thread entries
+    // Remove "active" class from all thread entries
     document.querySelectorAll('.individual-topic-profiles').forEach(el => {
         el.classList.remove('active');
     });
@@ -1126,34 +1126,26 @@ function loadConversation(threadId) {
             return response.json();
         })
         .then(data => {
-            if (data.error) {
-                console.error('Server returned error:', data.error);
-                document.getElementById('messages').innerHTML = `<div class="text-danger">${data.error}</div>`;
-                return;
-            }
-
             if (data.messages) {
-                document.getElementById('messages').innerHTML = data.messages;
-
-                // Scroll to bottom to show latest message
                 const messagesDiv = document.getElementById('messages');
-                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                messagesDiv.innerHTML = data.messages;
+                messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to bottom
             } else {
-                document.getElementById('messages').innerHTML = '<div class="text-muted">No messages found in this thread.</div>';
+                console.warn('No messages returned from server.');
             }
         })
         .catch(error => {
             console.error('Error loading conversation:', error);
-            document.getElementById('messages').innerHTML = `<div class="text-danger">Error loading messages. Please try again later.</div>`;
         });
 }
 </script>
 
 <!-- send & get message -->
 <script>
+let activeThreadId = null; // Ensure this is declared in the global scope if not already
+
 function sendMessage() {
     const inputBox = document.getElementById('inputBox');
-    const messageText = inputBox.innerText.trim();
     const fileInput = document.getElementById('fileInput');
     const file = fileInput.files.length > 0 ? fileInput.files[0] : null;
 
@@ -1172,6 +1164,7 @@ function sendMessage() {
     formData.append('thread_id', activeThreadId);
     formData.append('sender', 'landlord');
 
+
     if (file) {
         formData.append('file', file);
     }
@@ -1183,7 +1176,7 @@ function sendMessage() {
     .then(response => response.json())
     .then(data => {
         if (!data.success) {
-            throw new Error(data.error || 'Failed to send message');
+            throw new Error(data.error || 'Failed to send message.');
         }
 
         // Clear input fields only after a successful send
@@ -1194,8 +1187,8 @@ function sendMessage() {
         loadConversation(activeThreadId);
     })
     .catch(error => {
-        console.error('Error:', error);
-        alert('Failed to send message.');
+        console.error('Error sending message:', error);
+        alert('Failed to send message. Please try again.');
     });
 }
 
@@ -1224,7 +1217,6 @@ function getMessage(messageId) {
 
 
 </script>
-
 
 
 <script>

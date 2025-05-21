@@ -71,11 +71,29 @@
     });
   }
 
+  // fetch scheduled schedules.
+  function fetchScheduledInspections(){
+     fetch('actions/fetch_records.php')
+      .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log("Inspections:", data.data);
+                // you can now use data.data to display in your UI
+            } else {
+                console.error("Backend error:", data.error);
+            }
+        })
+        .catch(error => {
+            console.error("Network or parsing error:", error);
+        });
+  }
+
   // Initialize everything after DOM loads
   document.addEventListener("DOMContentLoaded", () => {
     setupCustomSelects();
     handleFormSubmit("form_new_inspection", "../actions/inspections/add_record.php", { type: "inspections" });
     handleFormSubmit("perform_inspection", "actions/add_record.php");
+    fetchScheduledInspections();
   });
 
 })();
