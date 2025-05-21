@@ -693,7 +693,7 @@ echo '<a style="color:#193042;" href="../property/meterreading.php?building_id='
                 <button
   class="btn btn-sm btn-delete-unit"
   style="background-color: red; color: white;"
-  title="Delete this unit"
+  title="Delete this unit" 
   data-bs-toggle="modal"
   data-bs-target="#deleteConfirmModal"
   data-unit-number="<?= htmlspecialchars($unit['unit_number']) ?>"
