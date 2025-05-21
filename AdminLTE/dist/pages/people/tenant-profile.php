@@ -690,13 +690,99 @@ try {
                           <div class="pen-rate">10%</div>
                           <div class="pen-desc">of the total rent</div>
                         </div>
-                        <div class="change-btn d-flex justify-content-end"><button class="btn edit rounded">Edit</button></div>
+                        <div class="change-btn d-flex justify-content-end">
+                         <button class="btn edit rounded" data-bs-toggle="modal" data-bs-target="#editPenaltyModal">Edit</button>
+
+                        </div>
                         </div>
 
                       </div>
                   </div>
                 </div>
               </div>
+
+
+              <!-- Edit Penalty Modal -->
+<div class="modal fade" id="editPenaltyModal" tabindex="-1" aria-labelledby="editPenaltyModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content shadow">
+      <form id="editPenaltyForm">
+        <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
+          <h5 class="modal-title" id="editPenaltyModalLabel">
+            <i class="fas fa-pen-alt me-2"></i> Edit Penalty Details
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style=" background-color:white;"></button>
+        </div>
+
+        <div class="modal-body px-4">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="editYear" class="form-label">Select Year</label>
+              <select id="editYear" class="form-select" required>
+                <option value="">-- Select Year --</option>
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+                <option value="2021">2021</option>
+                <option value="2020">2020</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="editMonth" class="form-label">Select Month</label>
+              <select id="editMonth" class="form-select" required>
+                <option value="">-- Select Month --</option>
+                <option>January</option>
+                <option>February</option>
+                <option>March</option>
+                <option>April</option>
+                <option>May</option>
+                <option>June</option>
+                <option>July</option>
+                <option>August</option>
+                <option>September</option>
+                <option>October</option>
+                <option>November</option>
+                <option>December</option>
+  
+              <!-- Add all months -->
+              </select>
+            </div>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="rentDue" class="form-label">Rent Due</label>
+              <input type="number" class="form-control" id="rentDue" placeholder="Enter rent due" required>
+            </div>
+            <div class="col-md-6">
+              <label for="rentPaid" class="form-label">Amount Paid</label>
+              <input type="number" class="form-control" id="rentPaid" placeholder="Enter amount paid" required>
+            </div>
+            <div class="col-md-6">
+              <label for="penalty" class="form-label">Penalty</label>
+              <input type="number" class="form-control" id="penalty" placeholder="Enter penalty amount" required>
+            </div>
+            <div class="col-md-6">
+              <label for="arrears" class="form-label">Arrears</label>
+              <input type="number" class="form-control" id="arrears" placeholder="Enter arrears" required>
+            </div>
+            <div class="col-md-12">
+              <label for="receipt" class="form-label">Receipt Info</label>
+              <textarea class="form-control" id="receipt" placeholder="Enter receipt info..." rows="2" required></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" style="background-color: #00192D;">Save Changes</button>
+          <button type="button" class="btn btn-secondary" style ="background-color: #00192D;"data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 
                  <!-- end row -->
                  <!-- start row -->
@@ -718,10 +804,65 @@ try {
                        </div>
 
                        <div class="col-md-3">
-                        <button class="btn edit-btn personal-info"><i class="fas fa-plus icon"></i> ADD </button>
+                        <button class="btn edit-btn personal-info" data-bs-toggle="modal" data-bs-target="#addPetModal"><i class="fas fa-plus icon"></i> ADD </button>
                        </div>
 
                   </div>
+
+                  <!-- Add Pet Modal -->
+<div class="modal fade" id="addPetModal" tabindex="-1" aria-labelledby="addPetModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content shadow rounded">
+      <form id="addPetForm">
+        <!-- Modal Header -->
+        <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
+          <h5 class="modal-title" id="addPetModalLabel"><i class="fas fa-paw me-2"></i> Add Pet</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="background-color: white;"></button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="modal-body px-4 py-3">
+          <!-- Pet Name -->
+          <div class="mb-3">
+            <label for="petName" class="form-label">Pet Name</label>
+            <input type="text" class="form-control" id="petName" name="pet_name" required placeholder="Enter pet name">
+          </div>
+
+          <!-- Pet Type -->
+          <div class="mb-3">
+            <label for="petType" class="form-label">Pet Type</label>
+            <select class="form-select" id="petType" name="pet_type" required>
+              <option value="" selected disabled>Select type</option>
+              <option value="Dog">Dog</option>
+              <option value="Cat">Cat</option>
+              <option value="Bird">Bird</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <!-- Pet Weight -->
+          <div class="mb-3">
+            <label for="petWeight" class="form-label">Weight (kg)</label>
+            <input type="number" class="form-control" id="petWeight" name="pet_weight" step="0.1" min="0" required placeholder="Enter pet weight">
+          </div>
+
+          <!-- License Number -->
+          <div class="mb-3">
+            <label for="licenseNumber" class="form-label">License Number</label>
+            <input type="text" class="form-control" id="licenseNumber" name="license_number" required placeholder="Enter license number">
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+          <button type="submit" class="btn" style="background-color: #00192D; color: #FFC107;">Add Pet</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #00192D; color: #FFC107;">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 
                   <div class="row">
                     <h6 class="mb-0 contact_section_header"> </i> Files</h6>
@@ -742,7 +883,7 @@ try {
                       </table>
                     </div>
                     <div class="col-md-3">
-                      <button class="btn edit-btn personal-info"><i class="fas fa-plus icon"></i> Add </button>
+                      <button class="btn edit-btn personal-info" data-bs-toggle ="modal" data-bs-target ="#addFileModal"><i class="fas fa-plus icon"></i> Add </button>
                     </div>
 
 
@@ -756,6 +897,45 @@ try {
    
   </div>
 </div>
+
+<!-- Add File Modal -->
+<div class="modal fade" id="addFileModal" tabindex="-1" aria-labelledby="addFileModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content shadow">
+
+      <!-- Modal Header -->
+      <div class="modal-header" style="background-color:#00192D; color:#FFC107;">
+        <h5 class="modal-title" id="addFileModalLabel"><i class="fas fa-file-upload me-2"></i> Add File</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <!-- Modal Body -->
+      <form id="addFileForm" enctype="multipart/form-data">
+        <div class="modal-body px-4">
+          <!-- File Name -->
+          <div class="mb-3">
+            <label for="fileName" class="form-label">File Name</label>
+            <input type="text" class="form-control" id="fileName" name="file_name" placeholder="Enter file name" required>
+          </div>
+
+          <!-- File Upload -->
+          <div class="mb-3">
+            <label for="fileUpload" class="form-label">Choose File</label>
+            <input type="file" class="form-control" id="fileUpload" name="file_upload" required>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer px-4">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #00192D; color: #FFC107;">Cancel</button>
+          <button type="submit" class="btn" style="background-color: #00192D; color: #FFC107;">Upload</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
 
           
         <!-- OVERLAYS -->

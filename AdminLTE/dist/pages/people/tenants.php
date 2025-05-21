@@ -746,44 +746,56 @@ width: 100%;
 
 
                                               <!-- OVERLAYS -->
+<!-- Add Tenant Popup -->
+<div class="popup-overlay" id="addTenantModal">
+  <div class="popup-content shift-tenant-popup">
+    <button class="close-btn text-secondary" onclick="closePopup()">×</button>
 
-   <!-- Add Tenant -->
-          <div class="popup-overlay" id="addTenantModal">
-            <div class="popup-content">
-              <button class="close-btn text-secondary" onclick="closePopup()">×</button>
+    <form id="shiftTenantForm" class="shift-tenant-form" onsubmit="submitShiftTenantForm(event)">
+      <h2 class="form-title mb-4"><<>> Shift Tenant</h2>
 
-              <!-- Form with onsubmit event handler to call the JavaScript function -->
-              <form id="tenantForm" class="complaint-form" onsubmit="submitTenantForm(event)">
-                <h2 class="text-start addTenantHeader">Add Tenant</h2>
-                <label for="name">Tenant Name:</label>
-                <input type="text" id="name" name="name" required>
+      <!-- Tenant Selection -->
+      <div class="form-group mb-3">
+        <label for="tenantSelect" class="form-label">👤 Select Tenant:</label>
+        <select id="tenantSelect" name="tenant" class="form-select" required>
+          <option value="" disabled selected>Select Tenant</option>
+          <option value="tenant1">John Doe</option>
+          <option value="tenant2">Jane Smith</option>
+        </select>
+      </div>
 
-                <label for="number">Identification No:</label>
-                <input type="number" id="number" name="id" required>
+      <!-- Building Selection -->
+      <div class="form-group mb-3">
+        <label for="buildingSelect" class="form-label">🏢 Select Building:</label>
+        <select id="buildingSelect" name="building" class="form-select" required>
+          <option value="" disabled selected>Select Building</option>
+          <option value="Manucho">Manucho</option>
+          <option value="White House">White House</option>
+          <option value="Pink House">Pink House</option>
+          <option value="Silver">Silver</option>
+        </select>
+      </div>
 
-                <label for="email">Email Address:</label>
-                <input type="email" id="email" name="email" required>
+      <!-- Unit Selection -->
+      <div class="form-group mb-4">
+        <label for="unitSelect" class="form-label">🔑 Select Unit:</label>
+        <select id="unitSelect" name="unit" class="form-select" required>
+          <option value="" disabled selected>Select Unit</option>
+          <option value="Unit 101">Unit 101</option>
+          <option value="Unit 102">Unit 102</option>
+          <option value="Unit 201">Unit 201</option>
+          <option value="Unit 301">Unit 301</option>
+        </select>
+      </div>
 
-                <label for="phone">Phone Number:</label>
-                <input type="tel" id="phone" name="phone" required>
+      <!-- Submit Button -->
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary" style="background-color: #00192D; color: #FFC107;">SHIFT</button>
+      </div>
+    </form>
+  </div>
+</div>
 
-                <label for="property">Property:</label>
-                <select id="property" name="residence" required>
-                  <option value="" disabled selected>Select Property</option>
-                  <option value="Manucho">Manucho</option>
-                  <option value="White House">White House</option>
-                  <option value="Pink House">Pink House</option>
-                  <option value="Silver">Silver</option>
-                </select>
-
-                <label for="unit">Rental Unit:</label>
-                <input type="text" id="unit" name="unit" required>
-
-                <!-- Submit Button -->
-                <button type="submit" class="submit-btn" style="background-color: #00192D; color: #f1f1f1;">SUBMIT</button>
-              </form>
-            </div>
-          </div>
 
         <!--End Add Tenant -->
 

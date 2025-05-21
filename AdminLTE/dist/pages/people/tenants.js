@@ -425,3 +425,38 @@ function handleDeactivate(event, id, type) {
 });
 
 
+document.addEventListener('DOMContentLoaded', () => {
+  fetch('fetch_options.php')
+    .then(res => res.json())
+    .then(data => {
+      const tenantSelect = document.getElementById('tenantSelect');
+      const buildingSelect = document.getElementById('buildingSelect');
+      const unitSelect = document.getElementById('unitSelect');
+
+      // Populate Tenants
+      data.tenants.forEach(tenant => {
+        tenantSelect.innerHTML += `<option value="${tenant.id}">${tenant.full_name}</option>`;
+      });
+
+      // Populate Buildings
+      data.buildings.forEach(building => {
+        buildingSelect.innerHTML += `<option value="${building.id}">${building.name}</option>`;
+      });
+
+      // Event: Filter Units by Building
+      buildingSelect.addEventListener('change', () => {
+        const selectedBuildingId = buildingSelect.value;
+        unitSelect.innerHTML = '<option disabled selected>Select Unit</option>';
+
+        data.units
+          .filter(unit => unit.building_id === selectedBuildingId)
+          .forEach(unit => {
+            unitSelect.innerHTML += `<option value="${unit.id}">${unit.unit_name}</option>`;
+          });
+      });
+    })
+    .catch(err => console.error('Error loading data:', err));
+});
+
+
+

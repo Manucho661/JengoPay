@@ -125,6 +125,93 @@ fetchPets(user_id)
 
 });
 
+document.getElementById("editPenaltyForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  // Collect values
+  const year = document.getElementById("editYear").value;
+  const month = document.getElementById("editMonth").value;
+  const rentDue = document.getElementById("rentDue").value;
+  const paid = document.getElementById("rentPaid").value;
+  const penalty = document.getElementById("penalty").value;
+  const arrears = document.getElementById("arrears").value;
+  const receipt = document.getElementById("receipt").value;
+
+  console.log({ year, month, rentDue, paid, penalty, arrears, receipt });
+
+  // You can make an AJAX call here to update backend
+  alert("Penalty details updated!");
+
+  // Hide modal
+  const modal = bootstrap.Modal.getInstance(document.getElementById('editPenaltyModal'));
+  modal.hide();
+});
+
+
+
+document.getElementById("addPetForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+  
+  const formData = new FormData(this);
+  
+  fetch("add_pet.php", {
+    method: "POST",
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert("Pet added successfully!");
+      const modal = bootstrap.Modal.getInstance(document.getElementById("addPetModal"));
+      modal.hide();
+      // Optionally refresh pet list
+    } else {
+      alert("Failed to add pet: " + data.message);
+    }
+  })
+  .catch(error => {
+    console.error("Error:", error);
+    alert("Error occurred while adding pet.");
+  });
+});
+
+
+document.getElementById("addFileForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const formData = new FormData(this);
+
+  fetch("add_file.php", {
+    method: "POST",
+    body: formData
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert("File uploaded successfully!");
+
+        // Close modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById("addFileModal"));
+        modal.hide();
+
+        // Add new row to files table
+        const table = document.querySelector("#files-table tbody");
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+          <td>${formData.get("file_name")}</td>
+          <td><a href="${data.file_url}" target="_blank" class="btn btn-sm btn-outline-primary">View</a></td>
+        `;
+        table.appendChild(newRow);
+
+        this.reset();
+      } else {
+        alert("Error: " + data.message);
+      }
+    })
+    .catch(error => {
+      console.error("Error uploading file:", error);
+      alert("An error occurred while uploading the file.");
+    });
+});
 
 
 
