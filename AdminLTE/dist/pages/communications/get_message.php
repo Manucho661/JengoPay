@@ -6,23 +6,22 @@ if (isset($_GET['message_id']) && is_numeric($_GET['message_id'])) {
     $messageId = (int)$_GET['message_id'];
 
     // Fetch the message
-    $stmt = $pdo->prepare("SELECT sender, content, timestamp FROM messages WHERE id = :message_id");
+    $stmt = $pdo->prepare("SELECT sender, content, timestamp FROM messages WHERE message_id = :message_id");
     $stmt->execute(['message_id' => $messageId]);
     $message = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($message) {
-        // Sanitize content and timestamp
         $content = nl2br(htmlspecialchars($message['content']));
         $timestamp = date('H:i', strtotime($message['timestamp']));
         $attachmentHtml = '';
 
-        // Fetch all attachments for this message
+        // Fetch attachments from message_files table
         $stmt_files = $pdo->prepare("SELECT file_path FROM message_files WHERE message_id = :message_id");
         $stmt_files->execute(['message_id' => $messageId]);
         $files = $stmt_files->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($files as $file) {
-            $path = $file['file_path'];
+            $path = '../' . ltrim($file['file_path'], '/'); // Ensure relative path for security
             if (!empty($path) && file_exists($path)) {
                 $basename = basename($path);
                 $ext = strtolower(pathinfo($basename, PATHINFO_EXTENSION));
