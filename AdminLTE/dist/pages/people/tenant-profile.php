@@ -774,49 +774,46 @@ try {
                       <div class="modal-body px-4 py-3">
 
                       <!-- Email -->
-<div class="form-floating mb-3">
-  <input type="email" class="form-control" id="editEmail" placeholder="Email" 
-         value="<?= htmlspecialchars($data['email'] ?? '') ?>" required>
-  <label for="editEmail"><i class="fas fa-envelope me-1"></i> Email Address</label>
-</div>
+                        <div class="form-floating mb-3">
+                          <input type="email" class="form-control" id="editEmail" placeholder="Email" 
+                                value="<?= htmlspecialchars($data['email'] ?? '') ?>" required>
+                          <label for="editEmail"><i class="fas fa-envelope me-1"></i> Email Address</label>
+                        </div>
 
-<!-- Phone -->
-<div class="form-floating mb-3">
-  <input type="text" class="form-control" id="editPhone" placeholder="Phone Number" 
-         value="<?= htmlspecialchars($data['phone_number'] ?? '') ?>" required>
-  <label for="editPhone"><i class="fas fa-phone me-1"></i> Phone Number</label>
-</div>
+                        <!-- Phone -->
+                        <div class="form-floating mb-3">
+                          <input type="text" class="form-control" id="editPhone" placeholder="Phone Number" 
+                                value="<?= htmlspecialchars($data['phone_number'] ?? '') ?>" required>
+                          <label for="editPhone"><i class="fas fa-phone me-1"></i> Phone Number</label>
+                        </div>
 
-<!-- ID Number -->
-<div class="form-floating mb-3">
-  <input type="text" class="form-control" id="editIDNo" placeholder="ID Number" 
-         value="<?= htmlspecialchars($data['id_no'] ?? '') ?>" required>
-  <label for="editIDNo"><i class="fas fa-id-card me-1"></i> National ID Number</label>
-</div>
+                        <!-- ID Number -->
+                        <div class="form-floating mb-3">
+                          <input type="text" class="form-control" id="editIDNo" placeholder="ID Number" 
+                                value="<?= htmlspecialchars($data['id_no'] ?? '') ?>" required>
+                          <label for="editIDNo"><i class="fas fa-id-card me-1"></i> National ID Number</label>
+                        </div>
 
-<!-- Income Source -->
-<div class="form-floating mb-3">
-  <input type="text" class="form-control" id="editIncomeSource" placeholder="Income Source" 
-         value="<?= htmlspecialchars($data['income_source'] ?? '') ?>">
-  <label for="editIncomeSource"><i class="fas fa-briefcase me-1"></i> Income Source</label>
-</div>
+                        <!-- Income Source -->
+                        <div class="form-floating mb-3">
+                          <input type="text" class="form-control" id="editIncomeSource" placeholder="Income Source" 
+                                value="<?= htmlspecialchars($data['income_source'] ?? '') ?>">
+                          <label for="editIncomeSource"><i class="fas fa-briefcase me-1"></i> Income Source</label>
+                        </div>
 
-<!-- Employer -->
-<div class="form-floating mb-3">
-  <input type="text" class="form-control" id="editEmployer" placeholder="Employer" 
-         value="<?= htmlspecialchars($data['work_place'] ?? '') ?>">
-  <label for="editEmployer"><i class="fas fa-building me-1"></i> Employer</label>
-</div>
+                        <!-- Employer -->
+                        <div class="form-floating mb-3">
+                          <input type="text" class="form-control" id="editEmployer" placeholder="Employer" 
+                                value="<?= htmlspecialchars($data['work_place'] ?? '') ?>">
+                          <label for="editEmployer"><i class="fas fa-building me-1"></i> Employer</label>
+                        </div>
 
-<!-- Job Title -->
-<div class="form-floating mb-3">
-  <input type="text" class="form-control" id="editJobTitle" placeholder="Job Title" 
-         value="<?= htmlspecialchars($data['job_title'] ?? '') ?>">
-  <label for="editJobTitle"><i class="fas fa-user-tie me-1"></i> Job Title</label>
-</div>
-
-
-
+                        <!-- Job Title -->
+                        <div class="form-floating mb-3">
+                          <input type="text" class="form-control" id="editJobTitle" placeholder="Job Title" 
+                                value="<?= htmlspecialchars($data['job_title'] ?? '') ?>">
+                          <label for="editJobTitle"><i class="fas fa-user-tie me-1"></i> Job Title</label>
+                        </div>
                       <div class="modal-footer bg-light d-flex justify-content-between">
                         <small class="text-muted"><i class="fas fa-info-circle me-1"></i> Make sure details are accurate</small>
                         <button type="submit" class="btn btn-changes" style="background-color:#00192D; color:#FFC107;">

@@ -39,9 +39,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['title']) && !empty($
         $thread_id = $pdo->lastInsertId();
         $message_id = $pdo->lastInsertId(); // Get the message ID for attachments
 
-        // Insert initial message
-        $stmt = $pdo->prepare("INSERT INTO messages (thread_id, sender, content, timestamp,file_path) VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute([$thread_id, 'landlord', $message, $now, $file_path]);
+      // Insert initial message (no file_path here)
+        $stmt = $pdo->prepare("INSERT INTO messages (thread_id, sender, content, timestamp) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$thread_id, 'landlord', $message, $now]);
+
 
         // Store attachments
         if (!empty($uploaded_files)) {
@@ -638,38 +639,34 @@ display: flex;
                                 </div>
                               </div>
 
-                              <div class="h-80  other-topics-section">
-                                <?php foreach ($communications as $comm): ?>
-                                  <div class="individual-topic-profiles active d-flex"
-                                    data-message-id="<?= $comm['thread_id'] ?>"
-                                    onclick="loadConversation(<?= $comm['thread_id'] ?>)">
+                              <div class="h-80 other-topics-section">
+  <?php foreach ($communications as $comm): ?>
+    <div class="individual-topic-profiles d-flex"
+         data-message-id="<?= $comm['thread_id'] ?>"
+         onclick="loadConversation(this.dataset.messageId)">
 
+      <div class="individual-topic-profile-container">
+        <div class="individual-topic"><?= htmlspecialchars($comm['title']) ?></div>
+        <div class="individual-message mt-2">
+          <?= htmlspecialchars(mb_strimwidth($comm['last_message'], 0, 60, '...'))?>
+        </div>
+      </div>
 
-                                  <div class="individual-topic-profile-container">
-                                  <div class="individual-topic"><?= htmlspecialchars($comm['title']) ?></div>
-                                  <div class="individual-message mt-2">
-                                  <?= htmlspecialchars(mb_strimwidth($comm['last_message'], 0, 60, '...'))?>
+      <div class="d-flex justify-content-end time-count">
+        <div class="time">
+          <?php
+            $datetime = new DateTime($comm['created_at']);
+            echo $datetime->format('d/m/y');
+          ?>
+        </div>
+        <div class="message-count mt-2">
+          <?= $comm['unread_count'] > 0 ? $comm['unread_count'] : '' ?>
+        </div>
+      </div>
+    </div>
+  <?php endforeach; ?>
+</div>
 
-
-                                 </div>
-                                  </div>
-
-                                    <div class="d-flex justify-content-end time-count">
-                                    <div class="time">
-                                   <?php
-                                    $datetime = new DateTime($comm['created_at']);
-                                    echo $datetime->format('d/m/y');
-                                  ?>
-                                  </div>
-                                <div class="message-count mt-2">
-                                  <?= $comm['unread_count'] > 0 ? $comm['unread_count'] : '' ?>
-                                </div>
-
- <!-- Optional: Replace 1 with actual reply count if available -->
-                                  </div>
-                                </div>
-                                <?php endforeach; ?>
-                              </div>
 
                             </div>
 
@@ -690,7 +687,7 @@ display: flex;
                                  <div class="messages" id="messages" >
                                    <div class="message incoming"></div>
                                   <div class="message outgoing">
-                                    
+
                                   </div>
                                 </div>
 
@@ -755,7 +752,11 @@ display: flex;
 <!-- Script source File -->
 <script src="text.js"></script>
 
+
 <!-- PopUp Scripts -->
+
+
+
 
 <!-- new text popup -->
                 <div class="newtextpopup-overlay" id="newtextPopup">
@@ -828,7 +829,7 @@ display: flex;
                         <!-- File input for multiple file types -->
 
                         <div style="padding-bottom: 2%;">
-                        <input   name="files[]"  type="file" id="fileInput" onchange="handleFiles(event)" class="form-control" multiple>
+                        <input  name="files[]"  type="file" id="fileInput" onchange="handleFiles(event)" class="form-control" multiple>
 
                         <!-- Section to display selected files' previews and sizes -->
                         <div id="filePreviews"></div>
@@ -1081,48 +1082,61 @@ document.getElementById('sendMessage').addEventListener('click', function() {
 
 <!-- loadConversation -->
 <script>
- function loadConversation(threadId) {
+let activeThreadId = null;
+
+function loadConversation(threadId) {
+    if (!threadId) {
+        console.error('Invalid or missing threadId');
+        return;
+    }
+
     activeThreadId = threadId;
 
-    // Remove "active" class from all
+    // Remove "active" class from all thread entries
     document.querySelectorAll('.individual-topic-profiles').forEach(el => {
         el.classList.remove('active');
     });
 
-    // Add "active" to the clicked one
-    const selected = document.querySelector(`[data-message-id="${threadId}"]`);
-    if (selected) selected.classList.add('active');
+    // Highlight the currently selected thread
+    const selected = document.querySelector(`[data-thread-id="${threadId}"]`);
+    if (selected) {
+        selected.classList.add('active');
+    }
+
+    console.log('Loading thread:', threadId);
 
     // Fetch and update messages
     fetch('load_conversation.php?thread_id=' + threadId)
         .then(response => response.json())
         .then(data => {
-            // Check if the response includes messages
             if (data.messages) {
-                document.getElementById('messages').innerHTML = data.messages;
-
-                // Optional: Scroll to the bottom after loading new messages
                 const messagesDiv = document.getElementById('messages');
-                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                messagesDiv.innerHTML = data.messages;
+                messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to bottom
             } else {
-                console.error('No messages returned from server');
+                console.warn('No messages returned from server.');
             }
         })
         .catch(error => {
             console.error('Error loading conversation:', error);
         });
 }
-
-
 </script>
-
 
 <!-- send & get message -->
 <script>
+let activeThreadId = null; // Ensure this is declared in the global scope if not already
+
 function sendMessage() {
     const inputBox = document.getElementById('inputBox');
-    const messageText = inputBox.innerText.trim();
     const fileInput = document.getElementById('fileInput');
+
+    if (!inputBox || !fileInput) {
+        console.error("Required input elements not found.");
+        return;
+    }
+
+    const messageText = inputBox.innerText.trim();
     const file = fileInput.files[0];
 
     if (!messageText && !file) {
@@ -1139,6 +1153,7 @@ function sendMessage() {
     formData.append('message', messageText);
     formData.append('thread_id', activeThreadId);
     formData.append('sender', 'landlord');
+
     if (file) {
         formData.append('file', file);
     }
@@ -1150,43 +1165,47 @@ function sendMessage() {
     .then(response => response.json())
     .then(data => {
         if (!data.success) {
-            throw new Error(data.error || 'Failed to send message');
+            throw new Error(data.error || 'Failed to send message.');
         }
-        loadConversation(activeThreadId); // Reload thread
+
+        loadConversation(activeThreadId); // Reload conversation after sending
         inputBox.innerText = '';
         fileInput.value = '';
     })
     .catch(error => {
-        console.error('Error:', error);
-        alert('Failed to send message.');
+        console.error('Error sending message:', error);
+        alert('Failed to send message. Please try again.');
     });
 }
 
-
-// Function to load messages (AJAX request to fetch new messages)
 function getMessage(messageId) {
+    if (!messageId) {
+        console.warn('No message ID provided.');
+        return;
+    }
+
     fetch('get_message.php?message_id=' + messageId)
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
-                // Display message content
-                const messageContainer = document.getElementById('messageDetails');
-                messageContainer.innerHTML = data.message;
+            const messageContainer = document.getElementById('messageDetails');
+            if (!messageContainer) {
+                console.error("Message container element not found.");
+                return;
+            }
 
-                // Optional: Scroll to the message detail view
+            if (data.success) {
+                messageContainer.innerHTML = data.message;
                 messageContainer.scrollIntoView({ behavior: 'smooth' });
             } else {
-                console.error('Failed to fetch message:', data.error);
+                messageContainer.innerHTML = `<div class="alert alert-warning">${data.error}</div>`;
+                console.warn('Failed to fetch message:', data.error);
             }
         })
         .catch(error => {
             console.error('Error fetching message:', error);
         });
 }
-
-
 </script>
-
 
 
 <script>

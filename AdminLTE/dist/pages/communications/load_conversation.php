@@ -1,6 +1,8 @@
 <?php
 include '../db/connect.php';
 header('Content-Type: application/json');
+file_put_contents('debug_log.txt', print_r($_GET, true));
+
 
 // Input
 $threadId = isset($_GET['thread_id']) ? (int)$_GET['thread_id'] : null;
@@ -17,30 +19,24 @@ $stmtTitle->execute(['thread_id' => $threadId]);
 $titleRow = $stmtTitle->fetch(PDO::FETCH_ASSOC);
 $title = $titleRow ? $titleRow['title'] : 'Not Found';
 
+// Messages fetch query
 if ($attachmentId) {
-    // ✅ Fetch specific message that has this attachment
-    $sql = "
+    // Fetch single message with specific attachment
+    $stmt = $pdo->prepare("
         SELECT
-            m.message_id,
-            m.thread_id,
-            m.sender,
-            m.content,
-            m.timestamp,
-            mf.file_id,
-            mf.file_path
+            m.message_id, m.sender, m.content, m.timestamp,
+            mf.file_path, mf.file_id
         FROM messages m
         JOIN message_files mf ON m.message_id = mf.message_id
-        WHERE m.thread_id = :thread_id
-        AND mf.file_id = :attachment_id
-    ";
-    $stmt = $pdo->prepare($sql);
+        WHERE m.thread_id = :thread_id AND mf.file_id = :attachment_id
+    ");
     $stmt->execute([
         'thread_id' => $threadId,
         'attachment_id' => $attachmentId
     ]);
     $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } else {
-    // ✅ Fetch all messages in thread as usual
+    // Fetch all messages in the thread
     $stmt = $pdo->prepare("
         SELECT
             m.message_id,
@@ -70,12 +66,15 @@ foreach ($messages as $msg) {
     $file_ids = [];
 
     if (!empty($msg['file_paths'])) {
-        $file_paths = array_filter(explode('|||', $msg['file_paths'] ?? $msg['file_path']));
-        $file_ids = !empty($msg['file_ids']) ? array_filter(explode('|||', $msg['file_ids'])) : [$msg['file_id'] ?? null];
+        $file_paths = explode('|||', $msg['file_paths']);
+        $file_ids = explode('|||', $msg['file_ids']);
+    } elseif (!empty($msg['file_path'])) {
+        $file_paths[] = $msg['file_path'];
+        $file_ids[] = $msg['file_id'];
     }
 
     $messagesHtml .= "<div class='message $class'>
-                        <div class='bubble'>$content</div>";
+        <div class='bubble'>$content</div>";
 
     if (!empty($file_paths)) {
         $messagesHtml .= "<div class='attachments mt-2'>";
@@ -90,10 +89,10 @@ foreach ($messages as $msg) {
                 $base64 = base64_encode($fileData);
                 $mimeType = mime_content_type($full_path);
 
-                if (strpos($mimeType, 'image/') === 0) {
+                if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'])) {
                     $messagesHtml .= "<div class='attachment-image mb-2'>
                         <img src='data:$mimeType;base64,$base64' alt='$basename' class='img-thumbnail' style='max-width:200px; max-height:150px;'>
-                        <div class='file-name'>$basename</div>
+                        <div class='file-name small'>$basename</div>
                     </div>";
                 } elseif ($ext === 'pdf') {
                     $messagesHtml .= "<div class='attachment-file mb-2'>
@@ -117,7 +116,7 @@ foreach ($messages as $msg) {
         $messagesHtml .= "</div>";
     }
 
-    $messagesHtml .= "<div class='timestamp'>$timestamp</div></div>";
+    $messagesHtml .= "<div class='timestamp small text-muted'>$timestamp</div></div>";
 }
 
 echo json_encode([

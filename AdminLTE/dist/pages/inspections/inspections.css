@@ -56,23 +56,7 @@ body {
   }
 
                         /* SELECT, INPUT, TEXT_AREA */
- input, textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #00192D;
-    border-radius: 4px;
-}
-
-input:hover{
-  border: 1px solid #00192D
-}
-select:hover{
-  border: 1px solid #00192D
-}
-textarea:hover{
-  border: 1px solid #00192D
-
-}
+ 
 /* notification popup */
 
 /* Form styles */
@@ -86,25 +70,12 @@ textarea:hover{
   width: 48%;
 }
 
-label {
-  display: inline-flex !important;
-  margin-bottom: 5px;
-  font-weight: bold;
-  gap: 10px ;
-}
 
 
 
-input:focus, select:focus, textarea:focus {
-  border-color: #FFC107 !important;
-  outline: none;
-   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-.form-control:focus{
-  border-color: #FFC107 !important;
-  outline: none;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5) !important;
-}
+
+
+
                                                                        /* BUTTONS */
 
 .btn{
@@ -148,20 +119,7 @@ input:focus, select:focus, textarea:focus {
   border-radius: 2px;
 
 }
-.select-btn{
-  color: #00192D;
-  font-weight:600;
-  font-size: 16px;
-  padding: 2px;
 
-  text-decoration: none !important;
-}
-.select-btn.active {
-  background-color: #f2f2f2;
-  color: #00788D;
-  font-weight: 600;
-  border-color: #00788D;
-}
 .next-btn{
   padding: 4px 10px !important;
   font-size: 12px !important;
@@ -262,15 +220,7 @@ div.dt-button-collection .dt-button:hover {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
-.select-section-title{
-  font-family: 'Poppins', sans-serif;
-  font-weight: 600;
-  letter-spacing: .5px;
-}
-.selectInspectionSection{
-  border-top: 1px solid #ccc;
-  gap: 15px;
-}
+
 .moveOut-btn{
   margin-left: 20%;
   margin-right: 20px;
@@ -639,9 +589,7 @@ input[type="radio"] {
     padding: 10px;
   }
 
-  .form-control, .inspection-table textarea {
-    font-size: 14px;
-  }
+  
 
   .next-btn {
     padding: 5px 10px;

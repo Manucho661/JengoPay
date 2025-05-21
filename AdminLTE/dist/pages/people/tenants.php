@@ -1168,11 +1168,16 @@ $(document).ready(function(){
 //Event Listener to Specify Employment Information
 document.getElementById('employmentSelectionOption').addEventListener('change', function() {
         document.getElementById('employmentCard').style.display='block';
+        document.getElementById('businessCard').style.display='none';
+        document.getElementById('empBusCard').style.display='none';
+        document.getElementById('empBusCard').style.display='none';
+
     });
 
     document.getElementById('business').addEventListener('change', function() {
         document.getElementById('employmentCard').style.display='none';
         document.getElementById('businessCard').style.display='block';
+        document.getElementById('empBusCard').style.display='none';
     });
 
     document.getElementById('empBus').addEventListener('change', function() {
