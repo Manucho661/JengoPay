@@ -1,8 +1,4 @@
 Array
 (
-<<<<<<< HEAD
-    [thread_id] => 250
-=======
-    [thread_id] => 160
->>>>>>> 06bd0e7fc30d3d3f4ae08133cb7cbf028cc6ec53
+    [thread_id] => 251
 )
