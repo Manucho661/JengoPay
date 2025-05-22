@@ -507,13 +507,17 @@ tr td:first-child {
 }
 .entries{
 border: 1px solid #e0e0e0 !important;
-padding: 3px;
+background-color: #00192D;
+padding: 7px;
 padding-left: 4px;
 line-height: 22px;
   font-size: 18px;
   font-weight: 700;
   font-family: ProximaNova, arial, sans-serif;
-  color: #4f4f52;
+  color: white;
+}
+.entries_label{
+  color: #FFC107;
 }
 .scheduledInspectionsTbl{
  border: 1px solid #e0e0e0 !important;

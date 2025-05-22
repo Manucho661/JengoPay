@@ -402,8 +402,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                       <div id="custom-buttons"></div>
                     </div>
                   </div>
-                  <div class="entries">
-                  5  entries
+                  <div class="entries">Manucho Apartments/ <span class="entries_label">/5  entries</span>
                   </div>
                   <div class="scheduledInspectionsTbl">
                     <table id="maintanance" class=" display summary-table">
