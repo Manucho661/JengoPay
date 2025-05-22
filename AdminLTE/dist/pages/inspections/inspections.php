@@ -249,7 +249,6 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
       <main class="app-main">
                       <!--MAIN MODALS -->
         <!-- add new inspection modal-->
-        
         <div class="modal fade" id="shiftTenantModal" tabindex="-1" aria-labelledby="shiftTenantModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content shadow">
@@ -375,93 +374,61 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                 </div>
               </div>
             </div>
-
-            
-
-            
-              <!-- /end row -->
-            
-
-
-              <div class="row mt-2 mb-2 add-inspection-container">
-                
-
-              
-
-             </div>
             <!-- /end row -->
-           
-
-
-            <!-- End row -->
             <!-- Begin Row -->
-                <div class="row">
-                  <h6 class="mb-0 contact_section_header summary mb-2"></i> Scheduled Inspections</h6>
-
-                  <div class="col-md-12">
-                    
-                    <div class="inspection-details-container bg-white p-2">
-
-                        <div id="filter-pdf-excel-section" class="filter-pdf-excel-section mb-2">
-
-                          <div class="d-flex" style="gap: 10px;">
-                            <div class="select-option-container">
-                              <div class="custom-select">All Buildings</div>
-                              <div class="select-options mt-1">
-                                <div class="selected" data-value="all">All Buildings</div>
-                                <div data-value="Manucho">Manucho</div>
-                                <div data-value="Pink House">Pink House</div>
-                                <div data-value="White House">White House</div>
-                              </div>
-                            </div>
-                            <div id="custom-search">
-                              <input type="text" id="searchInput" placeholder="Search tenant...">
-                            </div>
-                          </div>
-
-                          <div>
-
-                          </div>
-
-                          <div class="d-flex">
-                                <div id="custom-buttons"></div>
-                          </div>
-
-                        </div>
-
-                        <table id="maintanance" class="display summary-table">
-                                <thead class="mb-2">
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Inspection Number</th>
-                                    <th>PROPERTY + UNIT</th>
-                                    <th>TYPE</th>
-                                    <th>STATUS</th>             
-                                    <th>ACTION</th>
-                                </tr>
-                                </thead>
-                                <tbody id="scheduledInspectionsTableBody">
-                               
-                                </tbody>
-
-                          </table>
-                      </div> 
-
-                  </div>
-                              
-                </div>
+            <div class="row">
+              <h6 class="mb-0 contact_section_header summary mb-2"></i> Scheduled Inspections</h6>
               
-
-
-
-              </div>
-                <!-- /.col -->
-              </div>
-              <!--end::Row-->
+              <div class="col-md-12">
+                <div class="inspection-details-container bg-white p-2">
+                  <div id="filter-pdf-excel-section" class="filter-pdf-excel-section mb-2">
+                    <div class="d-flex" style="gap: 10px;">
+                      <div class="select-option-container">
+                        <div class="custom-select">All Buildings</div>
+                        <div class="select-options mt-1">
+                          <div class="selected" data-value="all">All Buildings</div>
+                          <div data-value="Manucho">Manucho</div>
+                          <div data-value="Pink House">Pink House</div>
+                          <div data-value="White House">White House</div>
+                        </div>
+                      </div>
+                      <div id="custom-search">
+                        <input type="text" id="searchInput" placeholder="Search tenant...">
+                      </div>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="d-flex">
+                      <div id="custom-buttons"></div>
+                    </div>
+                  </div>
+                  <div class="entries">
+                  5  entries
+                  </div>
+                  <div class="scheduledInspectionsTbl">
+                    <table id="maintanance" class=" display summary-table">
+                      <thead class="mb-2">
+                      <tr>
+                          <th>Date</th>
+                          <th>Inspection Number</th>
+                          <th>PROPERTY + UNIT</th>
+                          <th>TYPE</th>
+                          <th>STATUS</th>             
+                          <th>ACTION</th>
+                      </tr>
+                      </thead>
+                      <tbody id="scheduledInspectionsTableBody">
+                      </tbody>
+                    </table>
+                  </div>
+                  
+                </div> 
+              </div>          
+            </div>
+            <!--end::Row-->
           </div>
           <!--end::Container-->
         </div>
-        
         <!--end::App Content-->
       </main>
       <!--end::App Main-->
@@ -774,8 +741,8 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
         </div>                                          
       </section>
 
-
-      <script src="inspections.js"></script>
+  <!-- Main Js File -->
+  <script src="inspections.js"></script>
       <!-- Scripts -->
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
@@ -783,191 +750,171 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
       <!-- J  A V A S C R I PT -->
 
                                                   <!-- LINKS -->
-      <!-- steeper plugin -->
-      <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
+  <!-- steeper plugin -->
+  <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
+  <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
+  <script
+    src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
+    integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
+    crossorigin="anonymous">
+  </script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+    crossorigin="anonymous">
+  </script>
+  <script src="../../../dist/js/adminlte.js"></script>
+  <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
+  <!-- links for dataTaable buttons -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
+  <!--End links for dataTaable buttons -->
+  <!-- End links -->
+  <!-- DATE TABLES -->
+  <script>
+    $(document).ready(function () {
+      const table = $('#maintanance').DataTable({
+        dom: 'Brtip', // ⬅ Changed to include Buttons in DOM
+        order: [], // ⬅ disables automatic ordering by DataTables
+        buttons: [
+          {
+            extend: 'excelHtml5',
+            text: 'Excel',
+            exportOptions: {
+              columns: ':not(:last-child)' // ⬅ Exclude last column
+            }
+          },                              
+          {
+            extend: 'pdfHtml5',
+            text: 'PDF',
+            exportOptions: {
+              columns: ':not(:last-child)' // ⬅ Exclude last column
+            },
+            customize: function (doc) {
+              // Center table
+              doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
 
+              // Optional: center-align the entire table
+              doc.styles.tableHeader.alignment = 'center';
+              doc.styles.tableBodyEven.alignment = 'center';
+              doc.styles.tableBodyOdd.alignment = 'center';
 
-      <script
-            src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-            integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
-            crossorigin="anonymous">
-      </script>
-      <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-      <script
-            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-            crossorigin="anonymous">
-      </script>
-
-      
-      <script src="../../../dist/js/adminlte.js"></script>
-          <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
-      <!-- links for dataTaable buttons -->
-      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-      <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-      <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-      <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
-      <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-      <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
-      <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
-      <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
-      <!--End links for dataTaable buttons -->
-
-      <!-- index.js -->
-      <!-- <script src="index.js"></script> -->
-      <!-- End index.js -->
-
-      <!-- End links -->
-
-
-                                        <!-- DATE TABLES -->
-        <script>
-                    $(document).ready(function () {
-                      const table = $('#maintanance').DataTable({
-                        dom: 'Brtip', // ⬅ Changed to include Buttons in DOM
-                        order: [], // ⬅ disables automatic ordering by DataTables
-                        buttons: [
-                          {
-                            extend: 'excelHtml5',
-                            text: 'Excel',
-                            exportOptions: {
-                              columns: ':not(:last-child)' // ⬅ Exclude last column
-                            }
-                          },                              
-                          {
-                            extend: 'pdfHtml5',
-                            text: 'PDF',
-                            exportOptions: {
-                              columns: ':not(:last-child)' // ⬅ Exclude last column
-                            },
-                            customize: function (doc) {
-                              // Center table
-                              doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
-
-                              // Optional: center-align the entire table
-                              doc.styles.tableHeader.alignment = 'center';
-                              doc.styles.tableBodyEven.alignment = 'center';
-                              doc.styles.tableBodyOdd.alignment = 'center';
-
-                              const body = doc.content[1].table.body;
-                                  for (let i = 1; i < body.length; i++) { // start from 1 to skip header
-                                    if (body[i][4]) {
-                                      body[i][4].color = 'blue'; // set email column to blue
-                                    }
-                                  }
-
-                            }
-                          },
-                              {
-                            extend: 'print',
-                            text: 'Print',
-                            exportOptions: {
-                              columns: ':not(:last-child)' // ⬅ Exclude last column from print
-                            }
-                          }
-                        ]
-                      });
-
-                  // Append buttons to your div
-                  table.buttons().container().appendTo('#custom-buttons');
-
-                  // Custom search
-                  $('#searchInput').on('keyup', function () {
-                    table.search(this.value).draw();
-                  });
-
-                });
-      </script>
-
-
-      
+              const body = doc.content[1].table.body;
+                  for (let i = 1; i < body.length; i++) { // start from 1 to skip header
+                    if (body[i][4]) {
+                      body[i][4].color = 'blue'; // set email column to blue
+                    }
+                  }
+            }
+          },
+              {
+            extend: 'print',
+            text: 'Print',
+            exportOptions: {
+              columns: ':not(:last-child)' // ⬅ Exclude last column from print
+            }
+          }
+        ]
+      });
+      // Append buttons to your div
+      table.buttons().container().appendTo('#custom-buttons');
+      // Custom search
+      $('#searchInput').on('keyup', function () {
+        table.search(this.value).draw();
+      });
+    });
+  </script>
     <!-- Perform an inspection script -->
-    <script>
-                // display the inspection modal
+  <script>
+    // display the inspection modal
 
-                //Inspect Single Room and Display FLoor Condition if it is bad
-                document.getElementById('floorRepair').addEventListener('change', function(){
-                                  console.log('yoyo');
-                    document.getElementById('floorBadDescription').style.display='block';
-                });
-                //if the floor condition is good no need for description
-                document.getElementById('floorGood').addEventListener('change',function(){
-                    document.getElementById('floorBadDescription').style.display='none';
-                });
-                //Inspect Single Room if for the Faulty Window
-                document.getElementById('windowNeedsRepair').addEventListener('change', function(){
-                    document.getElementById('windowBadDescription').style.display='block';
-                });
-                document.getElementById('windowGood').addEventListener('change', function(){
-                    document.getElementById('windowBadDescription').style.display='none';
-                });
-                //Inspect Single Room for the Door Condition
-                document.getElementById('doorBad').addEventListener('click', function(){
-                    document.getElementById('doorBadCard').style.display='block';
-                    doorGood
-                });
-                //Inspect Single Room for the Door Condition
-                document.getElementById('doorGood').addEventListener('click', function(){
-                    document.getElementById('doorBadCard').style.display='none';
-                });
-                //Inspect Single Unit for the Wall Condition
-                document.getElementById('wallNeedRepair').addEventListener('click', function(){
-                    document.getElementById('wallNeedsRepairCard').style.display='block';
-                });
-                document.getElementById('wallGood').addEventListener('click', function(){
-                    document.getElementById('wallNeedsRepairCard').style.display='none';
-                });
-                //BUlb Holder Event Listener
-                document.getElementById('bulbHolderNeedsRepair').addEventListener('click', function(){
-                    document.getElementById('bulbHolderCard').style.display='block';
-                });
-                document.getElementById('bulbHolderGood').addEventListener('click', function(){
-                    document.getElementById('bulbHolderCard').style.display='none';
-                });
-                document.getElementById('socketNeedsRepair').addEventListener('click',function(){
-                    document.getElementById('socketFaultyCard').style.display='block';
-                });
-                document.getElementById('socketGood').addEventListener('click',function(){
-                    document.getElementById('socketFaultyCard').style.display='none';
-                });
-    </script>
+    //Inspect Single Room and Display FLoor Condition if it is bad
+    document.getElementById('floorRepair').addEventListener('change', function(){
+                      console.log('yoyo');
+        document.getElementById('floorBadDescription').style.display='block';
+    });
+    //if the floor condition is good no need for description
+    document.getElementById('floorGood').addEventListener('change',function(){
+        document.getElementById('floorBadDescription').style.display='none';
+    });
+    //Inspect Single Room if for the Faulty Window
+    document.getElementById('windowNeedsRepair').addEventListener('change', function(){
+        document.getElementById('windowBadDescription').style.display='block';
+    });
+    document.getElementById('windowGood').addEventListener('change', function(){
+        document.getElementById('windowBadDescription').style.display='none';
+    });
+    //Inspect Single Room for the Door Condition
+    document.getElementById('doorBad').addEventListener('click', function(){
+        document.getElementById('doorBadCard').style.display='block';
+        doorGood
+    });
+    //Inspect Single Room for the Door Condition
+    document.getElementById('doorGood').addEventListener('click', function(){
+        document.getElementById('doorBadCard').style.display='none';
+    });
+    //Inspect Single Unit for the Wall Condition
+    document.getElementById('wallNeedRepair').addEventListener('click', function(){
+        document.getElementById('wallNeedsRepairCard').style.display='block';
+    });
+    document.getElementById('wallGood').addEventListener('click', function(){
+        document.getElementById('wallNeedsRepairCard').style.display='none';
+    });
+    //BUlb Holder Event Listener
+    document.getElementById('bulbHolderNeedsRepair').addEventListener('click', function(){
+        document.getElementById('bulbHolderCard').style.display='block';
+    });
+    document.getElementById('bulbHolderGood').addEventListener('click', function(){
+        document.getElementById('bulbHolderCard').style.display='none';
+    });
+    document.getElementById('socketNeedsRepair').addEventListener('click',function(){
+        document.getElementById('socketFaultyCard').style.display='block';
+    });
+    document.getElementById('socketGood').addEventListener('click',function(){
+        document.getElementById('socketFaultyCard').style.display='none';
+    });
+  </script>
 
-            <script>
-              const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-              const Default = {
-                scrollbarTheme: 'os-theme-light',
-                scrollbarAutoHide: 'leave',
-                scrollbarClickScroll: true,
-              };
-              document.addEventListener('DOMContentLoaded', function () {
-                const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-                if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
-                  OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-                    scrollbars: {
-                      theme: Default.scrollbarTheme,
-                      autoHide: Default.scrollbarAutoHide,
-                      clickScroll: Default.scrollbarClickScroll,
-                    },
-                  });
-                }
-              });
-            </script>
-
-
-        <!-- Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-        <!--end::OverlayScrollbars Configure-->
-        <!-- OPTIONAL SCRIPTS -->
-        <!-- apexcharts -->
-    <script
-          src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
-          integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
-          crossorigin="anonymous"
-    ></script>
+  <script>
+    const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
+    const Default = {
+      scrollbarTheme: 'os-theme-light',
+      scrollbarAutoHide: 'leave',
+      scrollbarClickScroll: true,
+    };
+    document.addEventListener('DOMContentLoaded', function () {
+      const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
+      if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
+        OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+          scrollbars: {
+            theme: Default.scrollbarTheme,
+            autoHide: Default.scrollbarAutoHide,
+            clickScroll: Default.scrollbarClickScroll,
+          },
+        });
+      }
+    });
+  </script>
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <!--end::OverlayScrollbars Configure-->
+  <!-- OPTIONAL SCRIPTS -->
+  <!-- apexcharts -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
+    integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
+    crossorigin="anonymous"
+  ></script>
 
         <!--end::Script-->
   </body>

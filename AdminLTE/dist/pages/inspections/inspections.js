@@ -137,9 +137,9 @@ function handleFormSubmit_inspect(formId, url, extraFields = {}) {
         <div style="color: green;">${inspection.unit_name }</div>
       </td>
       <td>${inspection.inspection_type|| ''}</td>
-      <td>${inspection.status|| ''}</td>
+      <td > <span class="${inspection.status|| ''}"><i class="fas fa-spinner fa-spin"></i>  ${inspection.status|| ''}</span> </td>
       <td>   
-        <button class="inspect_btn"
+        <button class="btn inspect_btn"
           data-building-name="${inspection.building_name}"
           data-unit="${inspection.unit || ''}"
           data-inspection-id="${inspection.id}"
@@ -147,8 +147,6 @@ function handleFormSubmit_inspect(formId, url, extraFields = {}) {
          style="background-color: #00192D; color:#FFC107">
          Inspect</button>
         <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View"><i class="fas fa-eye"></i></button>
-        <button class="btn btn-sm" style="background-color: #193042; color:#FFCCCC; margin-right: 2px;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-trash"></i></button>
-        <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-edit"></i></button>
       </td>
     `;
 

@@ -148,6 +148,9 @@ div.dt-buttons .btn{
 h1 {
 
 }
+.inspect_btn{
+    padding: 2px 8px !important;
+}
 
 
 
@@ -259,7 +262,7 @@ div.dt-button-collection .dt-button:hover {
                                           /* TABLE  */
   /* table */
   .summary-table {
-border-collapse: collapse;
+/* border-collapse: collapse; */
  width: 100%;
 }
 .summary-table th {
@@ -276,7 +279,9 @@ font-size: 0.9rem;
 
 }
 .summary-table tr:nth-child(even) {
-background-color: #f9f9f9;
+  background-color: #f1f1f1 !important;
+   border: 1px solid #e0e0e0 !important;
+
 }
 .summary-table tr:hover {
 background-color: #f1f1f1;
@@ -344,120 +349,15 @@ tr td:first-child {
 .inspection-table tr:nth-child(even) {
   background-color: #f9f8fd;
 }
-.inspection-table
 
-.radio-group label {
-  margin-right: 15px;
-  cursor: pointer;
-
-}
-
-textarea {
-  width: 100%;
-  resize: vertical;
-  border-radius: 8px;
-  padding: 8px;
-  border: 1px solid #ddd;
-  min-height: 60px;
-  font-family: inherit;
-}
-
-input[type="radio"] {
-  accent-color: #5D3FD3;
+.In.Progress{
+  background-color: #4CAF50 !important;
+  color: white;
+  padding:2px 5px;
+  border-radius: 2px;
 }
 
 
-  .card.content{
-
-    position: relative;
-      background: white;
-
-      border-radius: 5px;
-
-
-      width: 100%;
-      max-width: 50%;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      
-     color: #00192D;
-  }
-
-
-/* Form styles */
-.form-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 15px;
-  }
-
-  .form-group {
-      width: 48%;
-  }
-
-
-  .add_provider_btn{
-    width: 10%;
-      padding: 10px;
-      background-color: #00192D;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-  }
-  .add_provider_btn-container{
-      display: flex;
-      justify-content: flex-end; /* Moves the button to the right */
-      margin-top: 15px;
-  }
-  #close_provider_btn_container{
-    display: flex;
-      justify-content: flex-end;
-  }
-  #close_provider_btn_container #close_btn{
-    cursor: pointer;
-  }
-  #close_provider_btn_container #close_btn:hover{
-    color: red;
-  }
-
-
-
-
-
-
-#close_provider_btn{
-  display: flex;
-  justify-content: end;
-}
-.contact{
-  display: flex;
-}
-  .contact_item{
-    color: gray;
-    font-size: smaller;
-  }
-
-
-  .btn:hover{
-    color: #FFC107;
-  }
-  #add_provider_btn:hover{
-    color: #FFC107;
-
-  }
-  .button_item:hover{
-    color: #FFC107;
-  }
-  a{
-    text-decoration: none;
-  }
-  .link_item{
-    color: white;
-  }
-  .link_item:hover{
-    color: #FFC107;
-  }
    
 
     /* Submit button */
@@ -482,93 +382,6 @@ input[type="radio"] {
   width: 100%;
   border-radius: 5px;
   }
-
-.notificationpopup-overlay{
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 10000;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7); /* Dark overlay */
-  display: none; /* Initially hidden */
-  justify-content: center;
-  align-items: center;
-  font-family: 'Poppins', sans-serif;
-  font-size: small;
-  }
- 
-/* notification popup */
-/* Close button */
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 20px;
-  cursor: pointer;
-  border: none;
-  background: none;
-  }
-  /* inspection css */
-  .inspection-card {
-    border: 2px solid #00192D;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 15px;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
-}
-.inspection-card h3 {
-  color: #00192D;
-  margin-bottom: 5px;
-}
-.needs-repair {
-  color: orange;
-}
-.broken {
-  color: red;
-}
-.icon {
-  margin-right: 8px;
-}
-.status {
-  font-weight: bold;
-  color: green; /* Change color based on condition */
-}
-.file-input {
-  display: none;
-}
-
-.attachment-icon {
-  font-size: 15px;
-  color: #4CAF50;
-  cursor: pointer;
-  transition: color 0.3s;
-}
-
-.attachment-icon:hover {
-  color: #45a049;
-}
-.attachment-container {
-  background-color: #fff;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  width: 300px;
-}
-
-.status {
-  padding: 5px 10px;
-  border-radius: 4px;
-  color: white;
-  font-weight: bold;
-  display: inline-block;
-}
-
-.completed {
-  background-color: #4CAF50; /* Green */
-  color: white;
-}
 
 
 .in-progress {
@@ -689,5 +502,22 @@ input[type="radio"] {
 /* Scheduled section */
 .inspection-details-container{
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+  border-radius: 5px;
 
+}
+.entries{
+border: 1px solid #e0e0e0 !important;
+padding: 3px;
+padding-left: 4px;
+line-height: 22px;
+  font-size: 18px;
+  font-weight: 700;
+  font-family: ProximaNova, arial, sans-serif;
+  color: #4f4f52;
+}
+.scheduledInspectionsTbl{
+ border: 1px solid #e0e0e0 !important;
+   box-shadow: 0 4px 12px rgba(93, 63, 211, 0.1);
+border-bottom-right-radius: 5px;
+border-bottom-left-radius: 5px;
 }
