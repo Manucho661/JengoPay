@@ -138,7 +138,7 @@ function handleFormSubmit_inspect(formId, url, extraFields = {}) {
       </td>
       <td>${inspection.inspection_type|| ''}</td>
       <td > <span class="${inspection.status|| ''}"><i class="fas fa-spinner fa-spin"></i>  ${inspection.status|| ''}</span> </td>
-      <td>   
+      <td class="d-flex gap-15px">   
         <button class="btn inspect_btn"
           data-building-name="${inspection.building_name}"
           data-unit="${inspection.unit || ''}"
@@ -146,7 +146,17 @@ function handleFormSubmit_inspect(formId, url, extraFields = {}) {
 
          style="background-color: #00192D; color:#FFC107">
          Inspect</button>
-        <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View"><i class="fas fa-eye"></i></button>
+        <button class="btn btn-sm" style="background-color: #193042; margin-left:10px; margin-right:10px; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View"><i class="fas fa-eye"></i></button>
+        <!-- Edit Button -->
+      <button class="btn btn-sm" style="background-color: #1e6f5c; margin-left: 2px; margin-right: 2px; color: #fff;" title="Edit">
+        <i class="fas fa-edit"></i>
+      </button>
+
+      <!-- Delete Button -->
+      <button class="btn btn-sm" style="background-color: #b02a37; margin-left: 2px; margin-right: 2px; color: #fff;" title="Delete">
+        <i class="fas fa-trash"></i>
+      </button>
+
       </td>
     `;
 

@@ -26,9 +26,7 @@ body {
       padding-bottom: 5%;
       padding-top: 5%;
 }
-.perform_inspection_modal .container-fluid{
 
-}
 /* Tablet */
 @media (min-width: 768px) {
   .element {
@@ -110,12 +108,9 @@ body {
     color: white;
     cursor: pointer;
 }
-  .submit-btn {
-    margin-right: 5px;
-    }
-
-
-
+.submit-btn {
+  margin-right: 5px;
+  }
 .add-inspection-btn{
   font-family: 'Poppins', sans-serif;
     font-weight: 600;
@@ -145,16 +140,10 @@ div.dt-buttons .btn{
    background-color: #00192D !important ;
   border-radius: 2px ;
 }
-h1 {
 
-}
 .inspect_btn{
     padding: 2px 8px !important;
 }
-
-
-
-
 .dt-buttons {
   display: flex;
   justify-content: start; /* or center */
@@ -221,42 +210,6 @@ div.dt-button-collection .dt-button:hover {
                                                                   color: #FFC107;
                                                                   margin-right: 20px;
                                                                 }
-
-
-
-
-/* INSPECTION CONTAINER */
-.inspection-container-header-section{
-    padding: 10px;
-}
-.add-inspection-btn{
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-}
-
-.moveOut-btn{
-  margin-left: 20%;
-  margin-right: 20px;
-}
-
-.active .bs-stepper-circle{
-    background-color: #00192D  !important;
-}
-
-.inpection-section-headers {
-  font-size: 1.5rem;
-  margin-bottom: 15px;
-  background-color: #FFF8E1;
-  color: #FFC107;
-  padding: 8px 13px;
-  border-left:8px solid #FFA000;;
-  border-radius: 8px;
-
-}
-
-.bs-stepper-label{
-  color: #00192D !important;
-}
 
 
                                           /* TABLE  */
@@ -402,8 +355,19 @@ tr td:first-child {
 
 
                                       /* SELECTION OPTION CONTAINER */
-                                      .select-option-container{
+                                      input, textarea {
+                                                    width: 100%;
+                                                    padding: 8px;
+                                                    margin-top: 5px;
+                                                    border: 1px solid #00192D;
+                                                    border-radius: 4px;
+                                                    color: #4f4f52;
+                                                    }
 
+                                                    input:hover{
+                                                    border: 1px solid #FFC107;
+                                                    }
+                                      .select-option-container{
                                         width: 170px;
                                        position: relative;
                                        }
@@ -420,12 +384,9 @@ tr td:first-child {
                                         cursor: pointer;
                                         margin-right: 20px;
                                         width: 100%;
-
-
                                     }
                                     .custom-select:hover{
                                       border: 1px solid #FFC107;
-
                                     }
                                     .custom-select:focus{
                                       border-color: #FFC107;
@@ -471,10 +432,7 @@ tr td:first-child {
                                       overflow-y: auto;
                                       border-radius: 5px;
                                       color: gray;
-
                                       display: none;
-                                      /* border-radius: 0 0 8px 8px; */
-
                                 }
                                 .select-options div {
                                       padding: 12px;
@@ -489,8 +447,24 @@ tr td:first-child {
                                 .select-options div:hover {
                                       background-color: #00192D !important;
                                       color: #FFC107 !important;
+                               }
+                               /* Defeult success */
+                               select:hover{
+                                                    border: 1px solid #FFC107;
+                                                    }
 
-                                }
+                                                    input:focus, select:focus, textarea:focus {
+                                                      border-color: #FFC107;
+                                                      outline: none;
+                                                      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+                                                    }
+                                                    select {
+                                                      background-size: 16px;
+                                                      /* padding-right: 30px; */
+                                                    border-radius: 4px;
+                                                    width: fit-content;
+                                                    padding:  10px;
+                                                    }
 
                                 /* Scheduled Inspections */
 .filter-pdf-excel-section{
@@ -525,3 +499,4 @@ line-height: 22px;
 border-bottom-right-radius: 5px;
 border-bottom-left-radius: 5px;
 }
+

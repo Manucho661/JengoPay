@@ -327,10 +327,8 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
           <div class="container-fluid">
             <!-- BEGIN ROW -->
             <div class="row">
-
-              <h6 class="mb-0 contact_section_header summary mb-2"></i> Summary</h6>
-
               <div class="container-fluid">
+                <h6 class="mb-0 contact_section_header summary mb-2"></i> Summary</h6>
                 <div class="row">
                   <div class="col-12 col-sm-6 col-md-3">
                     <div class="summary-card mb-2" >
@@ -377,9 +375,8 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
             <!-- /end row -->
             <!-- Begin Row -->
             <div class="row">
-              <h6 class="mb-0 contact_section_header summary mb-2"></i> Scheduled Inspections</h6>
-              
               <div class="col-md-12">
+                <h6 class="mb-0 contact_section_header summary mb-2"></i> Scheduled Inspections</h6>
                 <div class="inspection-details-container bg-white p-2">
                   <div id="filter-pdf-excel-section" class="filter-pdf-excel-section mb-2">
                     <div class="d-flex" style="gap: 10px;">
@@ -402,7 +399,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                       <div id="custom-buttons"></div>
                     </div>
                   </div>
-                  <div class="entries">Manucho Apartments/ <span class="entries_label">/5  entries</span>
+                  <div class="entries">Manucho Apartments <span class="entries_label">/5  entries</span>
                   </div>
                   <div class="scheduledInspectionsTbl">
                     <table id="maintanance" class=" display summary-table">

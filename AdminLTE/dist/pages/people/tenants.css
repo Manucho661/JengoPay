@@ -370,8 +370,6 @@ main.fade-out {
 }
 
                                                  /*Modals*/
-
-
   /* Submit button */
   .submit-btn {
     background-color: #00192D;
@@ -487,8 +485,6 @@ position: relative;
       min-height: 100%;
       /* margin-left: 20%; */
   }
-
-
 /* Loading */
 
                                       .loader {
