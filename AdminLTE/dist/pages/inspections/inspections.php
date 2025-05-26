@@ -92,7 +92,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
 
-
+    <!--Tailwind CSS  -->
     <style>
       .app-wrapper{
          background-color: rgba(128,128,128, 0.1);
@@ -307,9 +307,8 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
             <!--begin::Row-->
             <div class="row">
               <div class="col-sm-8">
-                <h3 class="mb-0 contact_section_header"> <i class="fas fa-search icon title-icon"></i>INSPECTIONS</h3>
-                    <div class="row mt-2">
-                </div>
+                <h3 class="mb-0 contact_section_header"> <i class="fas fa-search icon title-icon"></i>&nbsp; INSPECTIONS MANAGEMENT</h3>
+                       
               </div>
 
               <div class="col-sm-4 d-flex justify-content-end">
@@ -328,8 +327,33 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
             <!-- BEGIN ROW -->
             <div class="row">
               <div class="container-fluid">
+                <div class="row g-3 mb-4">
+                  <p class="text-muted">Manage inspections for buildings and tenants</p>
+                  <div class="col-md-3">
+                    <select class="form-select filter-shadow">
+                      <option selected>Filter by Building</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <select class="form-select filter-shadow ">
+                      <option selected>Filter by Tenant</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <select class="form-select filter-shadow">
+                      <option selected>Filter Status</option>
+                      <option>Pending</option>
+                      <option>Completed</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <input type="date" class="form-control filter-shadow ">
+                  </div>
+                </div>
+                                
+                
                 <h6 class="mb-0 contact_section_header summary mb-2"></i> Summary</h6>
-                <div class="row">
+                <div class="row mb-2">
                   <div class="col-12 col-sm-6 col-md-3">
                     <div class="summary-card mb-2" >
                         <div class="summary-card_icon"> <i class="fas fa-clipboard-check"></i></div>
@@ -376,7 +400,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
             <!-- Begin Row -->
             <div class="row">
               <div class="col-md-12">
-                <h6 class="mb-0 contact_section_header summary mb-2"></i> Scheduled Inspections</h6>
+                <h6 class="mb-0 contact_section_header summary mb-2"></i>  Scheduled Inspections</h6>
                 <div class="inspection-details-container bg-white p-2">
                   <div id="filter-pdf-excel-section" class="filter-pdf-excel-section mb-2">
                     <div class="d-flex" style="gap: 10px;">

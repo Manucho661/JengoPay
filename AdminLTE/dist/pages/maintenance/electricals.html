@@ -302,54 +302,20 @@
       <!--begin::App Main-->
       <main class="app-main" style=" height:100%;" >
         <!--begin::App Content Header-->
-        <div class="app-content-header" style=" height: 20%;">
+        <div class="app-content-header">
           <!--begin::Container-->
           <div class="container-fluid" >
             <!--begin::Row-->
             <div class="row">
               <div class="col-sm-8">
-
-                <h3 class="mb-0 contact_section_header">  <i class="fas fa-user icon"></i> Maintenance Requests/Electricals</h3>
-                    <div class="row mt-2  ">
-                      <div class="col-md-12  ">
-                        <div class="row Summary mt-6" >
-                          <!-- Summary -->
-
-                          <div class="col-md-12 ">
-                            <div class="summary-section text-center p-2 row">
-                              <div class="col-6 col-md-3 summary-item total">
-                                  <i class="fas fa-calculator"></i>
-                                  <div class="label">Total <b class="value" >100</b>  </div>
-
-                              </div>
-                              <div class="col-6 col-md-3 summary-item completed">
-                                  <i class="fa-solid fa-circle-check"></i>
-                                  <div class="label">Completed <b class="value">30</b></div>
-
-                              </div>
-                              <div class="col-6 col-md-3 summary-item in-progress">
-                                  <i class="fas fa-spinner fa-spin"></i>
-                                  <div class="label">In Progress <b class="value">20</b></div>
-                              </div>
-                            </div>
-
-                                <!-- <span class="value text-center"> <b>100 </b> </span> -->
-                          </div>
-
-
-                        </div>
-
-                      </div>
-
-                </div>
+                <h3 class="mb-0 "> 🛠 <span class="contact_section_header">Maintenance Requests/Electricals</span> </h3>     
               </div>
-
-              <!-- <div class="col-sm-4">
+              <div class="col-sm-4">
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
                   <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
                 </ol>
-              </div> -->
+              </div> 
             </div>
             <!--end::Row-->
           </div>
@@ -358,259 +324,117 @@
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
-            <!-- Info boxes -->
-
-            <!-- /.row -->
-
-
-            <!-- begin row -->
-            <div class="row mb-2">
-              <div>
-                <div class="card">
-                  <div class="card-header">
-                    <a class="btn btn-link add-expense-btn" data-bs-toggle="collapse" href="#addExpense" aria-expanded="false" aria-controls="addExpenseAccordion" style="color: #00192D; font-weight:bold; text-decoration: none;">
-                      <span id="toggleIcon">+</span> Add Payment
-                    </a>
+            <div class="row g-3 mb-4">
+                  <p class="text-muted">Manage maintenance requests for tenants</p>
+                  <div class="col-md-3">
+                    <select class="form-select filter-shadow">
+                      <option selected>Filter by Building</option>
+                    </select>
                   </div>
-                  <div class="card-body collapse" id="addExpense">
-                    <div class="card">
-                      <div class="card-header" style="background: linear-gradient(to right, #00192D, #003D5B, #00788D);"  >
-                        <h6 class="text-white">Add Payment Details</h6>
-                      </div>
-                      <div class="card-body">
-                        <div class="form-container">
-                          <form action="">
-                            <div class="row g-3">
-                              <!-- No -->
-                              <div class="col-md-4">
-                                  <label class="form-label"><b>Request ID</b></label>
-                                  <input type="number" class="form-control" placeholder="123" >
-                              </div>
-                              <!-- Expense of the Month -->
-                              <div class="col-md-4">
-                                <label class="form-label"><b>Invoice NO</b></label>
-                                <input type="number" class="form-control" placeholder="123">
-                              </div>
-
-                              <!-- Cheque No -->
-                              <div class="col-md-4">
-                                <label class="form-label"><b>Cheque No</b></label>
-                                <input type="number" class="form-control" placeholder="000001" >
-                            </div>
-
-
-                            <div class="row g-3 mt-2">
-                            <div class="col-md-6">
-                              <label class="form-label"><b>Description</b></label>
-                              <input type="text" class="form-control" placeholder="Enter">
-                          </div>
-
-                              <!-- Year -->
-                              <div class="col-md-6">
-                                  <label class="form-label"><b>Amount</b></label>
-                                  <input type="number" class="form-control" placeholder="2000">
-                              </div>
-                          </div>
-
-                          <div class="row g-3 mt-2">
-
-                              <div class="col-md-6">
-                                <label class="form-label"> <b>Payment Method</b> </label>
-                                <select class="form-select">
-
-                                <option selected disabled>Payment</option>
-                                <option>Cash</option>
-                                <option>Bank</option>
-                                <option>M-pesa</option>
-
-                            </select>
-                              </div>
-
-                              <div class="col-md-6">
-                                <label class="form-label"><b>Entry Date</b></label>
-                                <input type="date" class="form-control">
-                              </div>
-                          </div>
-                          </div>
-                          </form>
-                          </div>
-                          </div>
-                          </form>
-
-
-                          <!-- Expense Table -->
-
-
-                          <div class="row g-3 mt-2">
-                              <div class="col-6">
-
-                              </div>
-                              <div class="col-6 mt-2 d-flex justify-content-end">
-                                  <button type="submit" class="btn btn-custom btn-sm" style="height: fit-content;"> Submit</button>
-                              </div>
-                          </div>
-                          </form>
-                        </div>
-                      </div>
-
-                    </div>
+                  <div class="col-md-3">
+                    <select class="form-select filter-shadow ">
+                      <option selected>Filter by Tenant</option>
+                    </select>
                   </div>
-
+                  <div class="col-md-3">
+                    <select class="form-select filter-shadow">
+                      <option selected>Filter Status</option>
+                      <option>Pending</option>
+                      <option>Completed</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <input type="date" class="form-control filter-shadow ">
+                  </div>
                 </div>
+            <!-- begin row -->
+
+            <div class="row">
+              <div class="col-12 col-sm-6 col-md-3">
+                <div class="summary-card mb-2" >
+                    <div class="summary-card_icon"> <i class="fas fa-clipboard-check"></i></div>
+                  <div>
+                    <div class="summary-card_label">Scheduled</div>
+                    <div class="summary-card_value" >&nbsp; <?= $inspectionsCount ?> </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12 col-sm-6 col-md-3">
+                <div class="summary-card" >
+                  <div class="summary-card_icon"><i class="fas fa-check-circle"></i></div>
+                  <div>
+                    <div class="summary-card_label">Completed</div>
+                    <div class="summary-card_value penalities" >&nbsp;300</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12 col-sm-6 col-md-3">
+                <div class="summary-card">
+                  <div class="summary-card_icon"> <i class="fas fa-spinner fa-spin"></i>  </div>
+                  <div>
+                    <div class="summary-card_label" >In Progress</div>
+                    <div class="summary-card_value" >&nbsp;200</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12 col-sm-6 col-md-3">
+                <div class="summary-card">
+                  <div class="summary-card_icon" style="font-weight: bold;"><i class="fas fa-question-circle"></i>    </div>
+                  <div>
+                    <div class="summary-card_label">Incomplete</div>
+                    <div class="summary-card_value">&nbsp;20</div>
+                  </div>
+                </div>
+              </div>
             </div>
-             </div>
-
-
-            <!-- End row -->
-
-            <br>
-            <!-- <hr> -->
-
             <!--begin::Row-->
-              <!-- Start col -->
-              <div class="row">
+            <div class="row">
+
               <div class="col-md-12">
-                <div class="card Content">
-                    <div class="card-header">
-                      <b>All Appliance Requests</b>
-                    </div>
-                    <div class="card-body" style="overflow: auto;">
-                      <div class="container">
-                        <table id="maintenance" class="table table-striped" >
-                          <thead>
-                            <tr>
-                              <th>REQUESTDATE</th>
-                              <th>ID</th>
-                              <th>CATEGORY</th>
-                              <th>PAYMENT</th>
-                              <th>PROVIDER</th>
-                              <th>Priority</th>
-                              <th>STATUS</th>
-                              <th>ACTIONS</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
+                <h6 class="mb-0 contact_section_header summary mb-2"></i> Requests</h6>
+                <table id="maintanance" class=" display summary-table">
+                  <thead class="mb-2">
+                    <tr>
+                        <th>REQUEST Date</th>
+                        
+                        <th>PROPERTY + UNIT</th>
+                        <th>CATEGORY</th>
+                        <th>PROVIDER</th>
+                        <th>PRIORITY</th>             
+                        <th>STATUS</th>
+                        <th>PAYMENT</th>
+                        <th>ACTIONS</th>
+                    </tr>
+                  </thead>
+                  <tbody id="scheduledInspectionsTableBody">
+                    <tr>
                               <td>11-10-2025</td>
-                              <td>23423</td>
-                              <td>Broken handle</td>
-                              <td><button class="payment pending" id="example" data-bs-toggle="modal" data-bs-target="#leaseModal"> <i class="fa fa-exclamation-circle"></i>
-                              PENDING</button></td>
+                              
+                              <td>
+                                <div>${request.building_name }</div>
+                                <div style="color: green;">${request.unit_name }</div>
+                              </td>
+                              <td>
+                                Broken Handle
+                              </td>
                               <!-- <td><button onclick="toggleOverlay()">Paid</button></td> -->
                               <td>Kitu Moto</td>
                               <td>low</td>
-                              <td > <button class="status completed"><i class="fa fa-check-circle"></i> COMPLETED </button>  </td>
-
+                              <td><button class="status completed"><i class="fa fa-check-circle"></i> COMPLETED </button>  </td>
+                              <td>Pending</td>
                               <td>
-                                <button  onclick=" openassignPopup()"  class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
+                                <button  onclick="openassignPopup()"  class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
                                 </button>
-                                <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
+                                <button onclick="openplummbingdetailsPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
 
                               </td>
                             </tr>
-                            <tr>
-                              <td>11-10-2025</td>
-                            <td>12432</td>
-
-
-
-                              <td>Leaking roof</td>
-                              <td><button  class=" payment paid" id="example"> <i class="fa fa-check-circle"></i>  PAID</button></td>
-                              <td>Not Assigned </td>
-                              <td>High</td>
-
-                              <td > <button class="status incomplete" ><i class="fa fa-times-circle"></i> INCOMPLETE </button> </td>
-
-                              <td><button onclick=" openassignPopup()" class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                              </button>
-                              <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
-
-                                </td>
-                            </tr>
-                            <tr>
-                              <td>11-10-2025</td>
-                            <td>12432</td>
-
-
-
-                              <td>Leaking roof</td>
-                              <td><button  class=" payment paid" id="example"> <i class="fa fa-check-circle"></i>  PAID</button></td>
-                              <td>Not Assigned </td>
-                              <td>High</td>
-
-                              <td > <button class="status incomplete" ><i class="fa fa-times-circle"></i> INCOMPLETE </button> </td>
-
-                              <td><button onclick=" openassignPopup()" class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                              </button>
-                              <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
-
-                                </td>
-                            </tr>
-                            <tr>
-                              <td>11-10-2025</td>
-                            <td>12432</td>
-
-
-
-                              <td>Leaking roof</td>
-                              <td><button  class=" payment paid" id="example"> <i class="fa fa-check-circle"></i>  PAID</button></td>
-                              <td>Not Assigned </td>
-                              <td>High</td>
-
-                              <td > <button class="status incomplete" ><i class="fa fa-times-circle"></i> INCOMPLETE </button> </td>
-
-                              <td><button onclick=" openassignPopup()" class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                              </button>
-                              <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
-
-                                </td>
-                            </tr>
-                            <tr>
-                              <td>11-10-2025</td>
-                            <td>12432</td>
-
-
-
-                              <td>Leaking roof</td>
-                              <td><button  class=" payment paid" id="example"> <i class="fa fa-check-circle"></i>  PAID</button></td>
-                              <td>Not Assigned </td>
-                              <td>High</td>
-
-                              <td > <button class="status incomplete" ><i class="fa fa-times-circle"></i> INCOMPLETE </button> </td>
-
-                              <td><button onclick=" openassignPopup()" class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                              </button>
-                              <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
-
-                                </td>
-                            </tr>
-                            <tr>
-                              <td>11-10-2025</td>
-                            <td>12432</td>
-
-
-
-                              <td>Leaking roof</td>
-                              <td><button  class=" payment paid" id="example"> <i class="fa fa-check-circle"></i>  PAID</button></td>
-                              <td>Not Assigned </td>
-                              <td>High</td>
-
-                              <td > <button class="status incomplete" ><i class="fa fa-times-circle"></i> INCOMPLETE </button> </td>
-
-                              <td><button onclick=" openassignPopup()" class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Assign this Task to a Plumbing Service Providersingle_units.php"><i class="fa fa-wrench"></i>
-                              </button>
-                              <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-file"></i></button>
-
-                                </td>
-                            </tr>
-                            <!-- Add more rows as needed -->
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                </div>
-            </div>
-              <!-- /.col -->
+                  </tbody>
+                </table> 
+              </div>
             </div>
             <!--end::Row-->
           </div>
