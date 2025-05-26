@@ -1329,7 +1329,7 @@ try {
                 </div>
                 <div class="formm-control">
                   <label>NCA Approval Copy</label>
-                  <input type="file"  class="form-control" id="ncaApprovalCopy">
+                  <input type="file" name="nca_approval_copy" class="form-control" id="ncaApprovalCopy">
                 </div>
               </div>
               <div class="card-footer text-right">
