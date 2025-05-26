@@ -249,137 +249,6 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
       <main class="app-main">
                       <!--MAIN MODALS -->
         <!-- add new inspection modal-->
-        <section class="add-inspection" id="add-inspection" >
-          <div class="card content"  >
-            <div class="card-header d-flex justify-content-between" style="background:  #00192D; padding:10px !important" >
-              <div class="text-white">New Inspection Details</div>
-                <div><button class="close-btn text-white" onclick="closeAddInspection()">×</button></div> 
-            </div>
-            <div class="card-body">
-                <div class="form-container">
-                    <form  >
-                        <div class="row g-3">
-                          <!-- Year -->
-                            <div class="col-md-4 " >
-                                <label class="form-label"><b>Inspection Number</b></label>
-                                <input class="form-control" type="number" name="inspection_number" placeholder="124">
-                            </div>
-                            <!-- No -->
-                            <div class="col-md-4">
-                              <label class="form-label"><b> Building</b></label>
-                              <select class="form-control" name="building_name" id="building_name" >
-                                <option value="Crown Z">Crown Z</option>
-                                <option value="Manucho">Manucho</option>
-                                <option value="Pink House">Pink House</option>
-                                <option value="White House">White House</option>
-                              </select>
-                            </div>
-                            <!-- Expense of the Month -->
-                            <div class="col-md-4 ">
-                                <label class="form-label"><b> Unit</b></label>
-                                <select class="form-control" name="unit_name" id="unit_name" >
-                                  <option value="C219">C219</option>
-                                  <option value="B14">B14</option>
-                                  <option value="M145">M56</option>
-                                  <option value="M5">M290</option>
-                                </select>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row g-3 mt-2">
-                            <div class="col-md-6">
-                                <label class="form-label"><b> Inspection Type</b></label>
-                                <select class="form-control" name="inspection_type" id="inspection_type" >
-                                  <option value="Move In">Move In</option>
-                                  <option value="Move Out">Move Out</option>
-                                  
-                                </select>
-                            </div>
-
-                            <div class="col-md-6">
-                            <label class="form-label"><b> Inspection Date</b></label>
-                            <input type="date" name="date">
-                        </div>
-
-                        <hr>
-
-                        <div class="row g-3 mt-2">
-                            
-                            <div class="col-12 mt-2 d-flex justify-content-end">
-                                <button type="submit" class="btn btn-custom btn-sm" style="height: fit-content; color:#FFC107; background:#00192D;">  SUBMIT</button>
-                            </div>
-                        </div>
-
-                    </form>
-                </div>
-            </div>
-          </div>
-          
-          <div class="modal fade" id="editPersonalInfoModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                  <div class="modal-content shadow-lg border-0 rounded-3">
-                    <form id="editPersonalInfoForm" autocomplete="off">
-                      <div class="modal-header   rounded-top" style= "background-color: #00192D; color:#FFC107;">
-                        <h5 class="modal-title" id="editModalLabel">
-                          <i class="fas fa-user-edit me-2"></i> Edit Personal Information
-                        </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-
-                      <div class="modal-body px-4 py-3">
-
-                      <!-- Email -->
-                        <div class="form-floating mb-3">
-                          <input type="email" class="form-control" id="editEmail" placeholder="Email" 
-                                value="" required>
-                          <label for="editEmail"><i class="fas fa-envelope me-1"></i> Email Address</label>
-                        </div>
-
-                        <!-- Phone -->
-                        <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="editPhone" placeholder="Phone Number" 
-                                value=" " required>
-                          <label for="editPhone"><i class="fas fa-phone me-1"></i> Phone Number</label>
-                        </div>
-
-                        <!-- ID Number -->
-                        <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="editIDNo" placeholder="ID Number" 
-                                value="" required>
-                          <label for="editIDNo"><i class="fas fa-id-card me-1"></i> National ID Number</label>
-                        </div>
-
-                        <!-- Income Source -->
-                        <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="editIncomeSource" placeholder="Income Source" 
-                                value="">
-                          <label for="editIncomeSource"><i class="fas fa-briefcase me-1"></i> Income Source</label>
-                        </div>
-
-                        <!-- Employer -->
-                        <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="editEmployer" placeholder="Employer" 
-                                value="">
-                          <label for="editEmployer"><i class="fas fa-building me-1"></i> Employer</label>
-                        </div>
-
-                        <!-- Job Title -->
-                        <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="editJobTitle" placeholder="Job Title" 
-                                value="">
-                          <label for="editJobTitle"><i class="fas fa-user-tie me-1"></i> Job Title</label>
-                        </div>
-                      <div class="modal-footer bg-light d-flex justify-content-between">
-                        <small class="text-muted"><i class="fas fa-info-circle me-1"></i> Make sure details are accurate</small>
-                        <button type="submit" class="btn btn-changes" style="background-color:#00192D; color:#FFC107;">
-                          <i class="fas fa-save me-1"></i> Save Changes
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-        </section>
         <div class="modal fade" id="shiftTenantModal" tabindex="-1" aria-labelledby="shiftTenantModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content shadow">
@@ -444,10 +313,8 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
               </div>
 
               <div class="col-sm-4 d-flex justify-content-end">
-                <button class="btn edit-btn personal-info rounded" data-bs-toggle="modal" data-bs-target="#editPersonalInfoModal"><i class="fas fa-edit icon"></i> Edit</button>
-                <button   class="btn schedule" onclick="openAddInspection()" style="height: fit-content;"> <i class="fas fa-plus "></i> New Schedule</button>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#shiftTenantModal">
-                  Open Modal
+                <button type="button" class="btn newSchedule" data-bs-toggle="modal" data-bs-target="#shiftTenantModal">
+                  New Schedule
                 </button>
             </div>
             <!--end::Row-->
@@ -460,10 +327,8 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
           <div class="container-fluid">
             <!-- BEGIN ROW -->
             <div class="row">
-
-              <h6 class="mb-0 contact_section_header summary mb-2"></i> SUMMARY</h6>
-
               <div class="container-fluid">
+                <h6 class="mb-0 contact_section_header summary mb-2"></i> Summary</h6>
                 <div class="row">
                   <div class="col-12 col-sm-6 col-md-3">
                     <div class="summary-card mb-2" >
@@ -507,120 +372,59 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                 </div>
               </div>
             </div>
-
-            
-
-            
-              <!-- /end row -->
-            
-
-
-              <div class="row mt-2 mb-2 add-inspection-container">
-                
-
-              
-
-             </div>
             <!-- /end row -->
-           
-
-
-            <!-- End row -->
             <!-- Begin Row -->
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="inspection-details-container bg-white p-2">
-
-                        <div id="filter-pdf-excel-section" class="filter-pdf-excel-section mb-2">
-
-                          <div class="d-flex" style="gap: 10px;">
-                            <div class="select-option-container">
-                              <div class="custom-select">All Buildings</div>
-                              <div class="select-options mt-1">
-                                <div class="selected" data-value="all">All Buildings</div>
-                                <div data-value="Manucho">Manucho</div>
-                                <div data-value="Pink House">Pink House</div>
-                                <div data-value="White House">White House</div>
-                              </div>
-                            </div>
-                            <div id="custom-search">
-                              <input type="text" id="searchInput" placeholder="Search tenant...">
-                            </div>
-                          </div>
-
-                          <div>
-
-                          </div>
-
-                          <div class="d-flex">
-                                <div id="custom-buttons"></div>
-                          </div>
-
+            <div class="row">
+              <div class="col-md-12">
+                <h6 class="mb-0 contact_section_header summary mb-2"></i> Scheduled Inspections</h6>
+                <div class="inspection-details-container bg-white p-2">
+                  <div id="filter-pdf-excel-section" class="filter-pdf-excel-section mb-2">
+                    <div class="d-flex" style="gap: 10px;">
+                      <div class="select-option-container">
+                        <div class="custom-select">All Buildings</div>
+                        <div class="select-options mt-1">
+                          <div class="selected" data-value="all">All Buildings</div>
+                          <div data-value="Manucho">Manucho</div>
+                          <div data-value="Pink House">Pink House</div>
+                          <div data-value="White House">White House</div>
                         </div>
-
-                        <table id="maintenance" class="display summary-table">
-                                <thead class="mb-2">
-                                <tr>
-                                    <th>Date</th>
-                                    <th>PROPERTY + UNIT</th>
-                                    <th>TYPE</th>
-                                    <th>Inspection No</th>                                    
-                                    <th>Attached Files</th>
-                                    <th>STATUS</th>             
-                                    <th>ACTION</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <?php if ($inspectionsCount > 0): ?>
-                                    <?php foreach ($inspections as $inspection): ?>
-                                        <tr>
-                                            <td><?= htmlspecialchars($inspection['date']) ?></td>
-                                            <td><?= htmlspecialchars($inspection['building_name']) ?></td>
-                                            
-                                            <td>Bed-sitter</td>
-                                            <td><?= htmlspecialchars($inspection['inspection_number']) ?></td>
-                                            <td></td>
-                                            <td>
-                                                <div class="status completed">
-                                                    <i class="fas fa-spinner fa-spin"></i>
-                                                    In progress
-                                                </div>
-                                            </td>
-                                            <td id="more">
-                                                <button class="inspect_btn" style="background-color: #00192D; color:#FFC107">Inspect</button>
-                                                <button class="btn btn-sm" style="background-color: #193042; color:#fff; margin-right: 2px;" data-toggle="modal" data-target="#assignPlumberModal" title="View"><i class="fas fa-eye"></i></button>
-                                                <button class="btn btn-sm" style="background-color: #193042; color:#FFCCCC; margin-right: 2px;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-trash"></i></button>
-                                                <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="Get Full Report about this Repair Work"><i class="fa fa-edit"></i></button>
-                                                
-                                                <!-- File Upload Section -->
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <tr>
-                                        <td colspan="8" style="text-align:center;">No inspections found.</td>
-                                    </tr>
-                                <?php endif; ?>
-                                </tbody>
-
-                          </table>
-                      </div> 
-
+                      </div>
+                      <div id="custom-search">
+                        <input type="text" id="searchInput" placeholder="Search tenant...">
+                      </div>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="d-flex">
+                      <div id="custom-buttons"></div>
+                    </div>
                   </div>
-                              
-                </div>
-              
-
-
-
-              </div>
-                <!-- /.col -->
-              </div>
-              <!--end::Row-->
+                  <div class="entries">Manucho Apartments <span class="entries_label">/5  entries</span>
+                  </div>
+                  <div class="scheduledInspectionsTbl">
+                    <table id="maintanance" class=" display summary-table">
+                      <thead class="mb-2">
+                      <tr>
+                          <th>Date</th>
+                          <th>Inspection Number</th>
+                          <th>PROPERTY + UNIT</th>
+                          <th>TYPE</th>
+                          <th>STATUS</th>             
+                          <th>ACTION</th>
+                      </tr>
+                      </thead>
+                      <tbody id="scheduledInspectionsTableBody">
+                      </tbody>
+                    </table>
+                  </div>
+                  
+                </div> 
+              </div>          
+            </div>
+            <!--end::Row-->
           </div>
           <!--end::Container-->
         </div>
-        
         <!--end::App Content-->
       </main>
       <!--end::App Main-->
@@ -653,10 +457,10 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                       <div class="card-body">
                           <div class="row">
                               <div class="col-md-6">
-                                  <label><i class="fa fa-home"></i> Unit No: CH-01</label>
+                                  <label><i class="fa fa-home"></i> Unit No: <span id="modal_unit"></span> </label>
                               </div>
                               <div class="col-md-6">
-                                  <label><i class="fa fa-building"></i> Building: Angela's Apartment</label>
+                                  <label><i class="fa fa-building"></i> Building: <span id="modal_building_name">Angela's Apartment</span> </label>
                               </div>
                           </div>
                           <div class="row">
@@ -748,7 +552,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                                                       </div>
                                                       <div class="form-group">
                                                           <label>Attach Photo</label>
-                                                          <input type="file" class="form-control" name="floor_photo">
+                                                          <input type="file" class="form-control" name="window_photo">
                                                       </div>
                                                   </div>
                                               </div>
@@ -922,7 +726,8 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                               </div>
                           </div>
                           <div class="card-footer text-right">
-                              <button type="submit" class="btn btn-sm next-btn" id="fifththStepNextBtn">Submit</button>
+                            <input type="hidden" name="inspection_id" id="modal_inspection_id">
+                            <button type="submit" class="btn btn-sm next-btn" id="fifththStepNextBtn">Submit</button>
                           </div>
                       </form>
                   </div>
@@ -932,8 +737,8 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
         </div>                                          
       </section>
 
-
-      <script src="inspections.js"></script>
+  <!-- Main Js File -->
+  <script src="inspections.js"></script>
       <!-- Scripts -->
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
@@ -941,201 +746,171 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
       <!-- J  A V A S C R I PT -->
 
                                                   <!-- LINKS -->
-      <!-- steeper plugin -->
-      <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
+  <!-- steeper plugin -->
+  <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
+  <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
+  <script
+    src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
+    integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
+    crossorigin="anonymous">
+  </script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+    crossorigin="anonymous">
+  </script>
+  <script src="../../../dist/js/adminlte.js"></script>
+  <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
+  <!-- links for dataTaable buttons -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
+  <!--End links for dataTaable buttons -->
+  <!-- End links -->
+  <!-- DATE TABLES -->
+  <script>
+    $(document).ready(function () {
+      const table = $('#maintanance').DataTable({
+        dom: 'Brtip', // ⬅ Changed to include Buttons in DOM
+        order: [], // ⬅ disables automatic ordering by DataTables
+        buttons: [
+          {
+            extend: 'excelHtml5',
+            text: 'Excel',
+            exportOptions: {
+              columns: ':not(:last-child)' // ⬅ Exclude last column
+            }
+          },                              
+          {
+            extend: 'pdfHtml5',
+            text: 'PDF',
+            exportOptions: {
+              columns: ':not(:last-child)' // ⬅ Exclude last column
+            },
+            customize: function (doc) {
+              // Center table
+              doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
 
+              // Optional: center-align the entire table
+              doc.styles.tableHeader.alignment = 'center';
+              doc.styles.tableBodyEven.alignment = 'center';
+              doc.styles.tableBodyOdd.alignment = 'center';
 
-      <script
-            src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-            integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
-            crossorigin="anonymous">
-      </script>
-      <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-      <script
-            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-            crossorigin="anonymous">
-      </script>
-
-      
-      <script src="../../../dist/js/adminlte.js"></script>
-          <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
-      <!-- links for dataTaable buttons -->
-      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-      <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-      <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-      <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
-      <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-      <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
-      <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
-      <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
-      <!--End links for dataTaable buttons -->
-
-      <!-- index.js -->
-      <!-- <script src="index.js"></script> -->
-      <!-- End index.js -->
-
-      <!-- End links -->
-
-
-                                        <!-- DATE TABLES -->
-        <script>
-                    $(document).ready(function () {
-                      const table = $('#maintenance').DataTable({
-                        dom: 'Brtip', // ⬅ Changed to include Buttons in DOM
-                        order: [], // ⬅ disables automatic ordering by DataTables
-                        buttons: [
-                          {
-                            extend: 'excelHtml5',
-                            text: 'Excel',
-                            exportOptions: {
-                              columns: ':not(:last-child)' // ⬅ Exclude last column
-                            }
-                          },                              
-                          {
-                            extend: 'pdfHtml5',
-                            text: 'PDF',
-                            exportOptions: {
-                              columns: ':not(:last-child)' // ⬅ Exclude last column
-                            },
-                            customize: function (doc) {
-                              // Center table
-                              doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
-
-                              // Optional: center-align the entire table
-                              doc.styles.tableHeader.alignment = 'center';
-                              doc.styles.tableBodyEven.alignment = 'center';
-                              doc.styles.tableBodyOdd.alignment = 'center';
-
-                              const body = doc.content[1].table.body;
-                                  for (let i = 1; i < body.length; i++) { // start from 1 to skip header
-                                    if (body[i][4]) {
-                                      body[i][4].color = 'blue'; // set email column to blue
-                                    }
-                                  }
-
-                            }
-                          },
-                              {
-                            extend: 'print',
-                            text: 'Print',
-                            exportOptions: {
-                              columns: ':not(:last-child)' // ⬅ Exclude last column from print
-                            }
-                          }
-                        ]
-                      });
-
-                  // Append buttons to your div
-                  table.buttons().container().appendTo('#custom-buttons');
-
-                  // Custom search
-                  $('#searchInput').on('keyup', function () {
-                    table.search(this.value).draw();
-                  });
-
-                });
-      </script>
-
-
-      
+              const body = doc.content[1].table.body;
+                  for (let i = 1; i < body.length; i++) { // start from 1 to skip header
+                    if (body[i][4]) {
+                      body[i][4].color = 'blue'; // set email column to blue
+                    }
+                  }
+            }
+          },
+              {
+            extend: 'print',
+            text: 'Print',
+            exportOptions: {
+              columns: ':not(:last-child)' // ⬅ Exclude last column from print
+            }
+          }
+        ]
+      });
+      // Append buttons to your div
+      table.buttons().container().appendTo('#custom-buttons');
+      // Custom search
+      $('#searchInput').on('keyup', function () {
+        table.search(this.value).draw();
+      });
+    });
+  </script>
     <!-- Perform an inspection script -->
-    <script>
-                // display the inspection modal.
-                const buttons = document.querySelectorAll('.inspect_btn');
+  <script>
+    // display the inspection modal
 
-                buttons.forEach(button => {
-                  button.addEventListener('click', () => {
-                    const prfm_Ins_mdl = document.getElementById('perform_inspection_modal');
-                    prfm_Ins_mdl.style.display="block";
-                  });
-                });
+    //Inspect Single Room and Display FLoor Condition if it is bad
+    document.getElementById('floorRepair').addEventListener('change', function(){
+                      console.log('yoyo');
+        document.getElementById('floorBadDescription').style.display='block';
+    });
+    //if the floor condition is good no need for description
+    document.getElementById('floorGood').addEventListener('change',function(){
+        document.getElementById('floorBadDescription').style.display='none';
+    });
+    //Inspect Single Room if for the Faulty Window
+    document.getElementById('windowNeedsRepair').addEventListener('change', function(){
+        document.getElementById('windowBadDescription').style.display='block';
+    });
+    document.getElementById('windowGood').addEventListener('change', function(){
+        document.getElementById('windowBadDescription').style.display='none';
+    });
+    //Inspect Single Room for the Door Condition
+    document.getElementById('doorBad').addEventListener('click', function(){
+        document.getElementById('doorBadCard').style.display='block';
+        doorGood
+    });
+    //Inspect Single Room for the Door Condition
+    document.getElementById('doorGood').addEventListener('click', function(){
+        document.getElementById('doorBadCard').style.display='none';
+    });
+    //Inspect Single Unit for the Wall Condition
+    document.getElementById('wallNeedRepair').addEventListener('click', function(){
+        document.getElementById('wallNeedsRepairCard').style.display='block';
+    });
+    document.getElementById('wallGood').addEventListener('click', function(){
+        document.getElementById('wallNeedsRepairCard').style.display='none';
+    });
+    //BUlb Holder Event Listener
+    document.getElementById('bulbHolderNeedsRepair').addEventListener('click', function(){
+        document.getElementById('bulbHolderCard').style.display='block';
+    });
+    document.getElementById('bulbHolderGood').addEventListener('click', function(){
+        document.getElementById('bulbHolderCard').style.display='none';
+    });
+    document.getElementById('socketNeedsRepair').addEventListener('click',function(){
+        document.getElementById('socketFaultyCard').style.display='block';
+    });
+    document.getElementById('socketGood').addEventListener('click',function(){
+        document.getElementById('socketFaultyCard').style.display='none';
+    });
+  </script>
 
-                
-
-                //Inspect Single Room and Display FLoor Condition if it is bad
-                document.getElementById('floorRepair').addEventListener('change', function(){
-                                  console.log('yoyo');
-                    document.getElementById('floorBadDescription').style.display='block';
-                });
-                //if the floor condition is good no need for description
-                document.getElementById('floorGood').addEventListener('change',function(){
-                    document.getElementById('floorBadDescription').style.display='none';
-                });
-                //Inspect Single Room if for the Faulty Window
-                document.getElementById('windowNeedsRepair').addEventListener('change', function(){
-                    document.getElementById('windowBadDescription').style.display='block';
-                });
-                document.getElementById('windowGood').addEventListener('change', function(){
-                    document.getElementById('windowBadDescription').style.display='none';
-                });
-                //Inspect Single Room for the Door Condition
-                document.getElementById('doorBad').addEventListener('click', function(){
-                    document.getElementById('doorBadCard').style.display='block';
-                    doorGood
-                });
-                //Inspect Single Room for the Door Condition
-                document.getElementById('doorGood').addEventListener('click', function(){
-                    document.getElementById('doorBadCard').style.display='none';
-                });
-                //Inspect Single Unit for the Wall Condition
-                document.getElementById('wallNeedRepair').addEventListener('click', function(){
-                    document.getElementById('wallNeedsRepairCard').style.display='block';
-                });
-                document.getElementById('wallGood').addEventListener('click', function(){
-                    document.getElementById('wallNeedsRepairCard').style.display='none';
-                });
-                //BUlb Holder Event Listener
-                document.getElementById('bulbHolderNeedsRepair').addEventListener('click', function(){
-                    document.getElementById('bulbHolderCard').style.display='block';
-                });
-                document.getElementById('bulbHolderGood').addEventListener('click', function(){
-                    document.getElementById('bulbHolderCard').style.display='none';
-                });
-                document.getElementById('socketNeedsRepair').addEventListener('click',function(){
-                    document.getElementById('socketFaultyCard').style.display='block';
-                });
-                document.getElementById('socketGood').addEventListener('click',function(){
-                    document.getElementById('socketFaultyCard').style.display='none';
-                });
-    </script>
-
-            <script>
-              const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-              const Default = {
-                scrollbarTheme: 'os-theme-light',
-                scrollbarAutoHide: 'leave',
-                scrollbarClickScroll: true,
-              };
-              document.addEventListener('DOMContentLoaded', function () {
-                const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-                if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
-                  OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-                    scrollbars: {
-                      theme: Default.scrollbarTheme,
-                      autoHide: Default.scrollbarAutoHide,
-                      clickScroll: Default.scrollbarClickScroll,
-                    },
-                  });
-                }
-              });
-            </script>
-
-
-        <!-- Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-        <!--end::OverlayScrollbars Configure-->
-        <!-- OPTIONAL SCRIPTS -->
-        <!-- apexcharts -->
-    <script
-          src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
-          integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
-          crossorigin="anonymous"
-    ></script>
+  <script>
+    const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
+    const Default = {
+      scrollbarTheme: 'os-theme-light',
+      scrollbarAutoHide: 'leave',
+      scrollbarClickScroll: true,
+    };
+    document.addEventListener('DOMContentLoaded', function () {
+      const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
+      if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
+        OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+          scrollbars: {
+            theme: Default.scrollbarTheme,
+            autoHide: Default.scrollbarAutoHide,
+            clickScroll: Default.scrollbarClickScroll,
+          },
+        });
+      }
+    });
+  </script>
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <!--end::OverlayScrollbars Configure-->
+  <!-- OPTIONAL SCRIPTS -->
+  <!-- apexcharts -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
+    integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
+    crossorigin="anonymous"
+  ></script>
 
         <!--end::Script-->
   </body>

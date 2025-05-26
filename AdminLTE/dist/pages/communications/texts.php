@@ -238,9 +238,7 @@ img {
   max-height: 100%;
   display: none;
 }
-.app-main .app-content{
 
-}
 #filePreviews{
 display: flex;
 }
@@ -1249,7 +1247,7 @@ function handleFiles(event) {
     previewContainer.appendChild(previewItem);
   });
 }
-</script>
+</script> -->
 
 
 
@@ -1406,6 +1404,9 @@ function loadConversation(threadId) {
         console.error('Invalid or missing threadId');
         return;
     }
+
+    // ✅ Update the browser URL without reloading
+    history.replaceState(null, '', '?thread_id=' + encodeURIComponent(threadId));
 
     activeThreadId = threadId;
 
@@ -1566,26 +1567,17 @@ function sendMessage() {
 
 
 function getMessage(messageId) {
-    if (!messageId) {
-        console.warn('No message ID provided.');
-        return;
-    }
+    const messageContainer = document.getElementById('messageDetails');
 
     fetch('get_message.php?message_id=' + messageId)
         .then(response => response.json())
         .then(data => {
-            const messageContainer = document.getElementById('messageDetails');
-            if (!messageContainer) {
-                console.error("Message container element not found.");
-                return;
-            }
-
             if (data.success) {
                 messageContainer.innerHTML = data.message;
-                messageContainer.scrollIntoView({ behavior: 'smooth' });
+                messageContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
             } else {
                 messageContainer.innerHTML = `<div class="alert alert-warning">${data.error}</div>`;
-                console.warn('Failed to fetch message:', data.error);
+                console.warn('Fetch warning:', data.error);
             }
         })
         .catch(error => {

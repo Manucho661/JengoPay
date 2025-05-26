@@ -4,7 +4,6 @@
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-
                 $building_name = $_POST['building_name'] ?? '';
                 $unit_name = $_POST['unit_name'] ?? '';
                 $inspection_type = $_POST['inspection_type'] ?? '';
@@ -16,8 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $pdo->beginTransaction();
 
                         // Step 1: Insert into users
-                        $stmtUser = $pdo->prepare("INSERT INTO inspections ( building_name , inspection_type, date) VALUES (?,?, ?)");
-                        $stmtUser->execute([ $building_name,  $unit_name, $date]);
+                        $stmtUser = $pdo->prepare("INSERT INTO inspections ( building_name ,unit_name, inspection_type, date) VALUES (?,?,?, ?)");
+                        $stmtUser->execute([ $building_name,  $unit_name, $inspection_type, $date]);
                         $user_id = $pdo->lastInsertId();
                         $pdo->commit();
                         echo "New Schedule added successfully!";
