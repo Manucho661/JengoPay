@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 21, 2025 at 03:49 PM
+-- Generation Time: May 26, 2025 at 12:49 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -28,35 +28,79 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `message_files` (
+  `file_id` int(11) NOT NULL,
   `thread_id` int(11) NOT NULL,
-  `file_id` int(255) NOT NULL,
   `message_id` int(11) DEFAULT NULL,
-  `attachment_id` int(255) NOT NULL,
+  `attachment_id` int(11) DEFAULT NULL,
   `file_path` varchar(255) NOT NULL,
   `file_type` varchar(255) NOT NULL,
   `file_name` varchar(255) NOT NULL,
-  `files` varchar(100) NOT NULL
+  `files` varchar(100) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `message_files`
 --
 
-INSERT INTO `message_files` (`thread_id`, `file_id`, `message_id`, `attachment_id`, `file_path`, `file_type`, `file_name`, `files`) VALUES
-(192, 0, NULL, 0, 'uploads/68233f5886944_6821c8f3caad7_Tenants.pdf', '', '0', ''),
-(193, 0, NULL, 0, 'uploads/68234ebb34bb5_AdminLTE  Dashboard v2 (23).pdf', '', '0', ''),
-(194, 0, NULL, 0, 'uploads/68234f631ac80_6821e769bf9b6_AdminLTE  Dashboard v2 (13).pdf', '', '0', ''),
-(195, 0, NULL, 0, 'uploads/68248fbf18080_Terry\'s Title Deed.pdf', '', '0', ''),
-(196, 0, NULL, 0, 'uploads/6824a82eb4346_Terry\'s Title Deed.pdf', '', '0', ''),
-(197, 0, NULL, 0, 'uploads/6825d33d053b9_Terry\'s National id.pdf', '', '0', ''),
-(198, 0, NULL, 0, 'uploads/6825d46dcd72f_Terry\'s Title Deed.pdf', '', '0', ''),
-(199, 0, NULL, 0, 'uploads/6825d655b699b_Terry\'s Title Deed.pdf', '', '0', ''),
-(200, 0, 200, 0, 'uploads/6825db5a5cdd0_Terry\'s National id.pdf', '', '0', ''),
-(201, 0, 201, 0, 'uploads/6825dc92ad988_Terry\'s National id.pdf', '', '0', ''),
-(247, 0, 247, 0, 'uploads/682db9e580fe4_Terry\'s KRA Pin.pdf', '', '', ''),
-(248, 0, 248, 0, 'uploads/682dba0894631_WhatsApp Image 2025-05-12 at 13.33.26.jpeg', '', '', ''),
-(249, 0, 249, 0, 'uploads/682dca7e94128_Dreamqeja NCA Certificate.pdf', '', '', ''),
-(250, 0, 250, 0, 'uploads/682dcc2702309_Terry\'s Title Deed.pdf', '', '', '');
+INSERT INTO `message_files` (`file_id`, `thread_id`, `message_id`, `attachment_id`, `file_path`, `file_type`, `file_name`, `files`, `timestamp`) VALUES
+(9, 0, 11, NULL, 'uploads/1747921141_zero rated.PNG', '', '', '', '2025-05-23 08:14:50'),
+(10, 0, 12, NULL, 'uploads/1747921199_12.PNG', '', '', '', '2025-05-23 08:14:50'),
+(11, 0, 13, NULL, 'uploads/1747921647_Terry\'s National id.pdf', '', '', '', '2025-05-23 08:14:50'),
+(12, 0, 15, NULL, 'uploads/1747983279_page1.PNG', '', '', '', '2025-05-23 08:14:50'),
+(13, 0, 17, NULL, 'uploads/1747983870_zero rated.PNG', '', '', '', '2025-05-23 08:14:50'),
+(14, 0, 18, NULL, 'uploads/1747984262_12.PNG', '', '', '', '2025-05-23 08:14:50'),
+(15, 0, 19, NULL, 'uploads/1747984423_exclusive.PNG', '', '', '', '2025-05-23 08:14:50'),
+(16, 0, 21, NULL, 'uploads/1747984925_page 4.PNG', '', '', '', '2025-05-23 08:14:50'),
+(17, 0, 22, NULL, 'uploads/1747985573_exclusive.PNG', '', '', '', '2025-05-23 08:14:50'),
+(18, 0, 25, NULL, 'uploads/1747986717_zero rated.PNG', '', '', '', '2025-05-23 08:14:50'),
+(19, 0, 26, NULL, 'uploads/1747986778_WhatsApp Image 2025-05-12 at 13.33.25.jpeg', '', '', '', '2025-05-23 08:14:50'),
+(20, 0, 27, NULL, 'uploads/1747987529_6821c8f3caad7_Tenants.pdf', '', '', '', '2025-05-23 08:14:50'),
+(21, 0, 30, NULL, 'uploads/1747988148_Terry\'s National id.pdf', '', '', '', '2025-05-23 08:15:48'),
+(22, 0, 32, NULL, 'uploads/1747988273_14.PNG', '', '', '', '2025-05-23 08:17:53'),
+(23, 0, 33, NULL, 'uploads/1747988384_zero rated.PNG', '', '', '', '2025-05-23 08:19:44'),
+(24, 0, 34, NULL, 'uploads/1747988494_zero rated.PNG', '', '', '', '2025-05-23 08:21:34'),
+(26, 0, 38, NULL, 'uploads/1747990161_WhatsApp Image 2025-05-12 at 13.33.25.jpeg', '', '', '', '2025-05-23 08:49:21'),
+(27, 0, 268, NULL, 'uploads/1747991101_682daa3522da0_6821c8f3caad7_Tenants.pdf', '', '', '', '2025-05-23 09:05:01'),
+(28, 0, 272, NULL, 'uploads/1747993120_exempted.PNG', '', '', '', '2025-05-23 09:38:40'),
+(29, 0, 273, NULL, 'uploads/1747993217_14.PNG', '', '', '', '2025-05-23 09:40:17'),
+(30, 0, 274, NULL, 'uploads/1747993228_12.PNG', '', '', '', '2025-05-23 09:40:28'),
+(32, 0, 276, NULL, 'uploads/1747994889_exclusive.PNG', '', '', '', '2025-05-23 10:08:09'),
+(33, 0, 277, NULL, 'uploads/1747995196_exempted.PNG', '', '', '', '2025-05-23 10:13:16'),
+(34, 0, 278, NULL, 'uploads/1747995391_12.PNG', '', '', '', '2025-05-23 10:16:31'),
+(35, 0, 280, NULL, 'uploads/1747997173_exclusive.PNG', '', '', '', '2025-05-23 10:46:13'),
+(36, 0, 282, NULL, 'uploads/68305d9fdc364_Screenshot2.png', '', '', '', '2025-05-23 11:35:59'),
+(39, 0, 285, NULL, 'uploads/1748001069_Capture.PNG', '', '', '', '2025-05-23 11:51:09'),
+(40, 0, 286, NULL, 'uploads/1748001374_exclusive.PNG', '', '', '', '2025-05-23 11:56:14'),
+(41, 0, 287, NULL, 'uploads/1748001477_exclusive.PNG', '', '', '', '2025-05-23 11:57:57'),
+(42, 0, 288, NULL, 'uploads/1748001481_exclusive.PNG', '', '', '', '2025-05-23 11:58:01'),
+(43, 0, 289, NULL, 'uploads/1748001507_12.PNG', '', '', '', '2025-05-23 11:58:27'),
+(44, 0, 290, NULL, 'uploads/1748001523_12.PNG', '', '', '', '2025-05-23 11:58:43'),
+(53, 0, 303, NULL, 'uploads/1748003909_6830650d0c5f8_13.PNG', '', '', '', '2025-05-23 12:38:29'),
+(54, 0, 304, NULL, 'uploads/1748003912_6830650d0c5f8_13.PNG', '', '', '', '2025-05-23 12:38:32'),
+(57, 0, 307, NULL, 'uploads/1748004204_683060e7d7f94_Screenshot1.png', '', '', '', '2025-05-23 12:43:24'),
+(59, 0, 310, NULL, 'uploads/1748004790_8d0ba0375e.png', '', '', '', '2025-05-23 12:53:10'),
+(61, 0, 312, NULL, 'uploads/1748005083_ffa91ea375.png', '', '', '', '2025-05-23 12:58:03'),
+(62, 0, 313, NULL, 'uploads/1748005098_5b0e448a94.png', '', '', '', '2025-05-23 12:58:18'),
+(63, 0, 316, NULL, 'uploads/1748005154_37ae2592f9.png', '', '', '', '2025-05-23 12:59:14'),
+(64, 0, 317, NULL, 'uploads/1748005220_51efaef293.png', '', '', '', '2025-05-23 13:00:20'),
+(65, 0, 318, NULL, 'uploads/1748005282_68cb0a95aa.pdf', '', '', '', '2025-05-23 13:01:22'),
+(67, 0, 320, NULL, 'uploads/1748005618_b3bf5d07a4.pdf', '', '', '', '2025-05-23 13:06:58'),
+(68, 0, 321, NULL, 'uploads/1748005646_ad0becd1ac.png', '', '', '', '2025-05-23 13:07:26'),
+(69, 0, 322, NULL, 'uploads/1748005725_aa26eb5dac.png', '', '', '', '2025-05-23 13:08:45'),
+(71, 0, 325, NULL, 'uploads/1748006173_09b51c87a5.pdf', '', '', '', '2025-05-23 13:16:13'),
+(72, 0, 326, NULL, 'uploads/1748006937_3e76e8694c.pdf', '', '', '', '2025-05-23 13:28:57'),
+(73, 0, 329, NULL, 'uploads/1748007798_e93ee36b88.jpg', '', '', '', '2025-05-23 13:43:18'),
+(74, 0, 330, NULL, 'uploads/1748073049_68781937eb.jpg', '', '', '', '2025-05-24 07:50:49'),
+(75, 0, 331, NULL, 'uploads/1748073490_a5a0f153a8.jpg', '', '', '', '2025-05-24 07:58:10'),
+(76, 0, 332, NULL, 'uploads/1748073654_31c74334dd.jpg', '', '', '', '2025-05-24 08:00:54'),
+(77, 0, 334, NULL, 'uploads/1748074802_a46bd126f2.pdf', '', '', '', '2025-05-24 08:20:02'),
+(80, 281, 281, NULL, 'uploads/6832240b9da20_Capture.PNG', '', '', '', '2025-05-24 19:54:51'),
+(81, 0, 349, NULL, 'uploads/1748231249_5e4515b095.png', '', '', '', '2025-05-26 03:47:29'),
+(82, 0, 350, NULL, 'uploads/1748231355_135553cadd.pdf', '', '', '', '2025-05-26 03:49:15'),
+(83, 0, 352, NULL, 'uploads/1748233425_882bb4fe2c.jpg', '', '', '', '2025-05-26 04:23:45'),
+(84, 0, 353, NULL, 'uploads/1748233601_ff7e208ce4.png', '', '', '', '2025-05-26 04:26:41'),
+(85, 0, 354, NULL, 'uploads/1748245312_e80a335703.jpg', '', '', '', '2025-05-26 07:41:52');
 
 --
 -- Indexes for dumped tables
@@ -66,7 +110,7 @@ INSERT INTO `message_files` (`thread_id`, `file_id`, `message_id`, `attachment_i
 -- Indexes for table `message_files`
 --
 ALTER TABLE `message_files`
-  ADD PRIMARY KEY (`thread_id`);
+  ADD PRIMARY KEY (`file_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -76,7 +120,7 @@ ALTER TABLE `message_files`
 -- AUTO_INCREMENT for table `message_files`
 --
 ALTER TABLE `message_files`
-  MODIFY `thread_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=251;
+  MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

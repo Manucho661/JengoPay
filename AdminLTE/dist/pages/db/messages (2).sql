@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 21, 2025 at 03:49 PM
+-- Generation Time: May 26, 2025 at 12:46 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -28,27 +28,50 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `messages` (
-  `id` int(11) NOT NULL,
-  `sender` varchar(255) DEFAULT NULL,
-  `sender_id` int(255) NOT NULL,
-  `content` text DEFAULT NULL,
-  `message_id` int(255) NOT NULL,
+  `message_id` int(11) NOT NULL,
   `thread_id` int(11) NOT NULL,
+  `sender` varchar(255) DEFAULT NULL,
+  `sender_id` int(11) NOT NULL,
+  `content` text DEFAULT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
   `is_read` tinyint(1) DEFAULT 0,
-  `file_path` varchar(255) DEFAULT NULL
+  `file_path` varchar(255) NOT NULL,
+  `read_status` varchar(255) NOT NULL,
+  `viewed` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `messages`
 --
 
-INSERT INTO `messages` (`id`, `sender`, `sender_id`, `content`, `message_id`, `thread_id`, `timestamp`, `is_read`, `file_path`) VALUES
-(0, 'landlord', 0, 'fgnbg', 0, 247, '2025-05-21 11:32:53', 0, NULL),
-(0, 'landlord', 0, 'fvcbfvb ', 0, 248, '2025-05-21 11:33:28', 0, NULL),
-(0, 'landlord', 0, 'bhiklo', 0, 249, '2025-05-21 12:43:42', 0, NULL),
-(0, 'landlord', 0, 'jioi', 0, 249, '2025-05-21 12:45:15', 0, NULL),
-(0, 'landlord', 0, 'fvnn', 0, 250, '2025-05-21 12:50:47', 0, NULL);
+INSERT INTO `messages` (`message_id`, `thread_id`, `sender`, `sender_id`, `content`, `timestamp`, `is_read`, `file_path`, `read_status`, `viewed`) VALUES
+(341, 281, 'landlord', 0, 'kjkj', '2025-05-24 19:54:51', 0, 'uploads/6832240b9da20_Capture.PNG', '', 0),
+(350, 281, 'landlord', 0, 'KKLL', '2025-05-26 03:49:15', 0, '', '', 0),
+(351, 281, 'landlord', 0, 'hk', '2025-05-26 04:11:02', 0, '', '', 0),
+(352, 281, 'landlord', 0, 'better', '2025-05-26 04:23:45', 0, '', '', 0),
+(353, 281, 'landlord', 0, 'becoming', '2025-05-26 04:26:41', 0, '', '', 0),
+(354, 281, 'landlord', 0, '', '2025-05-26 07:41:52', 0, '', '', 0),
+(356, 290, 'landlord', 0, 'njhiio', '2025-05-26 09:58:36', 0, '', '', 0);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `messages`
+--
+ALTER TABLE `messages`
+  ADD PRIMARY KEY (`message_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `messages`
+--
+ALTER TABLE `messages`
+  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=357;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

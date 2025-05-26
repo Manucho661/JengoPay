@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 21, 2025 at 03:48 PM
+-- Generation Time: May 26, 2025 at 12:48 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -52,10 +52,8 @@ CREATE TABLE `communication` (
 --
 
 INSERT INTO `communication` (`thread_id`, `files`, `file_name`, `mime_type`, `file_data`, `size`, `unit_id`, `tenant`, `building_name`, `building_id`, `title`, `message`, `message_id`, `email`, `recipient`, `created_at`, `updated_at`) VALUES
-(247, '[\"uploads\\/682db9e580fe4_Terry\'s KRA Pin.pdf\"]', '', '', '', 0, '', '', '127', 0, 'xsfvbg', 'fgnbg', 0, '', '', '2025-05-21 14:32:53', '2025-05-21 14:32:53'),
-(248, '[\"uploads\\/682dba0894631_WhatsApp Image 2025-05-12 at 13.33.26.jpeg\"]', '', '', '', 0, '', '', '127', 0, 'cgcbg', 'fvcbfvb ', 0, '', '', '2025-05-21 14:33:28', '2025-05-21 14:33:28'),
-(249, '[\"uploads\\/682dca7e94128_Dreamqeja NCA Certificate.pdf\"]', '', '', '', 0, '', '', '128', 0, 'hjiiuji', 'bhiklo', 0, '', '', '2025-05-21 15:43:42', '2025-05-21 15:43:42'),
-(250, '[\"uploads\\/682dcc2702309_Terry\'s Title Deed.pdf\"]', '', '', '', 0, '', '', '128', 0, 'nhf', 'fvnn', 0, '', '', '2025-05-21 15:50:47', '2025-05-21 15:50:47');
+(281, '[\"uploads\\/6832240b9da20_Capture.PNG\"]', '', '', '', 0, '', '', '105', 0, 'hkjk', 'kjkj', 0, '', '', '2025-05-24 22:54:51', '2025-05-24 22:54:51'),
+(290, '[]', '', '', '', 0, '', '', '105', 0, 'hju', 'njhiio', 0, '', '', '2025-05-26 12:58:36', '2025-05-26 12:58:36');
 
 --
 -- Indexes for dumped tables
@@ -75,7 +73,7 @@ ALTER TABLE `communication`
 -- AUTO_INCREMENT for table `communication`
 --
 ALTER TABLE `communication`
-  MODIFY `thread_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=251;
+  MODIFY `thread_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=291;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
