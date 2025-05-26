@@ -38,6 +38,8 @@ try {
         $floor_number = $_POST['floor_number'];
         $units_number = $_POST['units_number'];
         $building_type = $_POST['building_type'] ?? '';
+        $water_price = $_POST['water_price'] ?? '';
+        $electricity_price = $_POST['electricity_price'] ?? '';
         $ownership_info = $_POST['ownership_info'];
 
         $title_deed_copy = uploadPhoto('title_deed_copy');
@@ -107,7 +109,7 @@ try {
 
         // SQL Insert
         $sql = "INSERT INTO buildings (
-            building_name, county, constituency, ward, floor_number, units_number, building_type,
+            building_name, county, constituency, ward, floor_number, units_number, building_type, water_price, electricity_price,
             ownership_info,
             first_name, last_name, nationality, country_code, kra_pin, kra_attachment, identification_number, id_attachment, email,
             entity_name, entity_country_code, entity_email, bs_reg_no, attach_bs_reg_no, entity_kra_pin, entity_attach_kra_copy, entity_representative, entity_rep_role,
@@ -119,7 +121,7 @@ try {
             building_tax_pin, insurance_cover, insurance_policy, insurance_provider,
             policy_from_date, policy_until_date, front_view_photo, rear_view_photo, angle_view_photo, interior_view_photo
         ) VALUES (
-            :building_name, :county, :constituency, :ward, :floor_number, :units_number, :building_type,
+            :building_name, :county, :constituency, :ward, :floor_number, :units_number, :building_type, :water_price, :electricity_price,
             :ownership_info,
             :first_name, :last_name, :nationality, :country_code, :kra_pin, :kra_attachment, :identification_number, :id_attachment, :email,
             :entity_name, :entity_country_code, :entity_email, :bs_reg_no, :attach_bs_reg_no, :entity_kra_pin, :entity_attach_kra_copy, :entity_representative, :entity_rep_role,
@@ -141,6 +143,8 @@ try {
             ':floor_number' => $floor_number,
             ':units_number' => $units_number,
             ':building_type' => $building_type,
+            ':water_price' => $water_price,
+            ':electricity_price' => $electricity_price,
             ':ownership_info' => $ownership_info,
             ':first_name' => $first_name,
             ':last_name' => $last_name,
@@ -782,6 +786,7 @@ try {
             <small id="floorNumberError" style="color:red; display:none;">Please enter a valid number for the number of floors.</small>
             </div>
           </div>
+
           <div class="col-md-4">
             <div class="form-group">
             <label>Number of Units</label>
@@ -799,6 +804,8 @@ try {
             <small id="unitsNumberError" style="color:red; display:none;">Please enter a valid number for the number of units.</small>
             </div>
           </div>
+
+
           <div class="col-md-4">
             <label>Building Type</label>
             <select name="building_type" id="buildingType" class="form-control">
@@ -812,6 +819,32 @@ try {
               <option value="Mixed-Use">Mixed-Use</option>
             </select>
           </div>
+
+          <div class="row">
+          <div class="col-md-4">
+          <label>Select Water Unit Price</label>
+            <select name="water_price" id="water_price" class="form-control">
+              <option value="" selected hidden>--Select Water Unit Price--</option>
+              <option value="Residential">Ksh 200</option>
+              <option value="Commercial">Ksh 150</option>
+              <option value="Commercial">Ksh 100</option>
+              <option value="Industrial">Ksh 50</option>
+            </select>
+          </div>
+          <div class="col-md-8">
+          <label>Select Electricity Unit Price</label>
+            <select name="electricity_price" id="electricity_price" class="form-control">
+              <option value="" selected hidden>--Select Water Unit Price--</option>
+              <option value="Residential">Ksh 1000</option>
+              <option value="Commercial">Ksh 500</option>
+              <option value="Commercial">Ksh 200</option>
+              <option value="Industrial">Ksh 100</option>
+              <option value="Industrial">Ksh 50</option>
+            </select>
+          </div>
+          </div>
+
+
         </div>
       </div>
       <div class="card-footer text-right">

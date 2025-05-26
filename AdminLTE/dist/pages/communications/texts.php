@@ -388,84 +388,103 @@ display: flex;
   font-size:12px;
 }
 .file-previews-container {
-  display: flex;
+  display: none; /* Hidden by default */
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 12px;
   justify-content: center;
-  align-items: center;
-  margin: 0 auto;
-  max-width: 100%;
+  padding: 10px;
+  background: #f5f5f5;
+  border-radius: 10px;
+  margin: 10px 0;
 }
 
 .file-preview {
-  position: relative;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  padding: 8px;
-  background: #f9f9f9;
   width: 120px;
-  height: 120px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.preview-image-container {
+  height: 100px;
+  position: relative;
 }
 
 .preview-image {
-  max-width: 100%;
-  max-height: 80px;
-  display: block;
-  margin-bottom: 5px;
-}
-
-/* .pdf-preview {
-  text-align: center;
-} */
-
-.pdf-preview, .file-preview > div {
-  text-align: center;
   width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.pdf-icon, .file-icon {
-  font-size: 40px;
-  display: block;
-  margin: 0 auto;
-}
-
-.pdf-icon { color: #e74c3c; }
-.file-icon { color: #7f8c8d; }
-
-.file-preview span {
-  display: block;
-  width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 12px;
-  text-align: center;
-}
-
-.remove-preview {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #e74c3c;
-  color: white;
-  border: none;
-  font-size: 10px;
+.preview-document, .preview-generic {
+  height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  padding: 0;
+  position: relative;
+  background: #f0f2f5;
 }
 
-.remove-preview:hover {
-  background: #c0392b;
+.pdf-icon {
+  font-size: 40px;
+  color: #e74c3c;
+}
+
+.file-icon {
+  font-size: 40px;
+  color: #7f8c8d;
+}
+
+.preview-overlay {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.file-preview:hover .preview-overlay {
+  opacity: 1;
+}
+
+.remove-preview {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-footer {
+  padding: 8px;
+  font-size: 12px;
+}
+
+.file-name {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-size {
+  color: #666;
+  font-size: 11px;
+}
+.input-box[contenteditable="true"]:empty:before {
+    content: attr(placeholder);
+    color: #999;
+    pointer-events: none;
+    display: block;
+}
+
+#filesPreviewList div:hover {
+    background: #e9e9e9;
+    cursor: pointer;
 }
 </style>
 </head>
@@ -927,40 +946,45 @@ display: flex;
                               <div class="individual-message-body" style="height: 100%;">
                                  <div class="messages" id="messages" >
                                    <div class="message incoming">
-                                  <div class="message outgoing" style="height:20%; width:20%;">
+                                  <div class="message outgoing">
 
                                   </div>
                                 </div>
                                 </div>
 
+
                                 <div class="input-area">
-                        <!-- Add this HTML where you want the previews to appear -->
-                        <div id="filePreviews" class="file-previews-container mb-3"></div>
+    <!-- Attachment input -->
+    <input type="file" name="file[]" id="fileInput" class="form-control" style="display: none;" onchange="showFilePreview()">
+    <button class="btn attach-button" onclick="document.getElementById('fileInput').click();">
+        <i class="fa fa-paperclip"></i>
+    </button>
+
+    <!-- File preview container -->
+    <div id="filePreviewContainer" style="display: none; margin-right: 10px; max-width: 200px;">
+        <div style="display: flex; align-items: center; background: #f5f5f5; padding: 5px; border-radius: 4px;">
+            <!-- Image thumbnail (shown only for image files) -->
+            <img id="fileThumbnail" src="" style="max-height: 40px; max-width: 40px; margin-right: 8px; display: none;">
+            <!-- File info -->
+            <div style="flex-grow: 1;">
+                <div id="fileName" style="font-size: 12px; color: #333;"></div>
+                <div style="font-size: 10px; color: #666;">Click to remove</div>
+            </div>
+            <button onclick="clearFileSelection()" style="background: none; border: none; color: #999; cursor: pointer; margin-left: 5px;">×</button>
+        </div>
+    </div>
+
+    <div class="input-box" id="inputBox" contenteditable="true" placeholder="Type your message..."></div>
+
+    <!-- MESSAGE SEND BUTTON -->
+    <div class="message-input-wrapper">
+        <button name="incoming_message" class="btn message-send-button" onclick="sendMessage()">
+            <i class="fa fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
 
 
-                              <!-- Attachment input -->
-                              <input type="file" name="file[]"  id="fileInput"  class="form-control" style="display: none; ">
-                                <button class="btn attach-button" onclick="document.getElementById('fileInput').click();">
-                                  <i class="fa fa-paperclip"></i>
-                                </button>
-
-                                <div class="input-box" id="inputBox" contenteditable="true"></div>
-
-
-                                <!-- File preview container (for selected files) -->
-                                <div id="filePreviewContainer" class="preview-container"></div>
-
-
-                                <!-- <div id="filePreviews" class="preview-container"></div> -->
-
-
-                                      <!-- MESSAGE SEND BUTTON -->
-                                  <div class="message-input-wrapper" >
-                                  <button name="incoming_message" class="btn message-send-button" onclick="sendMessage()">
-                                    <i class="fa fa-paper-plane"></i>
-                                  </button>
-                                </div>
-                              </div>
                               </div>
                             </div>
                         </div>
@@ -1110,56 +1134,75 @@ display: flex;
 <!-- !-- create new text -->
 <!-- Add this JavaScript -->
 <script>
-document.getElementById('fileInput').addEventListener('change', function(e) {
-  const previewContainer = document.getElementById('filePreviews');
-  previewContainer.innerHTML = ''; // Clear previous previews
-  
-  Array.from(e.target.files).forEach(file => {
-    const previewElement = createPreviewElement(file);
-    previewContainer.appendChild(previewElement);
-  });
-});
+function showFilePreview() {
+    const fileInput = document.getElementById('fileInput');
+    const previewContainer = document.getElementById('filePreviewContainer');
+    const fileThumbnail = document.getElementById('fileThumbnail');
+    const fileName = document.getElementById('fileName');
 
-function createPreviewElement(file) {
-  const previewDiv = document.createElement('div');
-  previewDiv.className = 'file-preview';
-  previewDiv.dataset.filename = file.name;
-  
-  // Preview for images
-  if (file.type.startsWith('image/')) {
-    const img = document.createElement('img');
-    img.src = URL.createObjectURL(file);
-    img.className = 'preview-image';
-    previewDiv.appendChild(img);
-  }
-  // Preview for PDFs
-  else if (file.type === 'application/pdf') {
-    const pdfIcon = document.createElement('div');
-    pdfIcon.className = 'pdf-preview';
-    pdfIcon.innerHTML = `
-      <i class="fas fa-file-pdf pdf-icon"></i>
-      <span>${file.name}</span>
-    `;
-    previewDiv.appendChild(pdfIcon);
-  }
-  // Generic file preview
-  else {
-    previewDiv.innerHTML = `
-      <i class="fas fa-file-alt file-icon"></i>
-      <span>${file.name}</span>
-    `;
-  }
-  
-  // Add remove button
-  const removeBtn = document.createElement('button');
-  removeBtn.className = 'remove-preview';
-  removeBtn.innerHTML = '<i class="fas fa-times"></i>';
-  removeBtn.onclick = () => previewDiv.remove();
-  previewDiv.appendChild(removeBtn);
-  
-  return previewDiv;
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        fileName.textContent = file.name;
+
+        // Check if file is an image
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                fileThumbnail.src = e.target.result;
+                fileThumbnail.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        } else {
+            fileThumbnail.style.display = 'none';
+        }
+
+        previewContainer.style.display = 'flex';
+    } else {
+        previewContainer.style.display = 'none';
+    }
 }
+
+function clearFileSelection() {
+    const fileInput = document.getElementById('fileInput');
+    const previewContainer = document.getElementById('filePreviewContainer');
+    const fileThumbnail = document.getElementById('fileThumbnail');
+
+    fileInput.value = '';
+    fileThumbnail.src = '';
+    previewContainer.style.display = 'none';
+}
+
+function sendMessage() {
+    const inputBox = document.getElementById('inputBox');
+    const message = inputBox.innerText.trim();
+    const fileInput = document.getElementById('fileInput');
+
+    if (message || fileInput.files.length > 0) {
+        // Here you would normally send the data to your server
+        console.log("Message:", message);
+
+        if (fileInput.files.length > 0) {
+            console.log("File attached:", fileInput.files[0].name);
+            // For actual implementation, you would need to:
+            // 1. Create FormData object
+            // 2. Append the file and message
+            // 3. Send via AJAX/Fetch
+        }
+
+        // Clear inputs after sending
+        inputBox.innerText = '';
+        clearFileSelection();
+    }
+}
+
+// Make the file preview container clickable to remove the file
+document.getElementById('filePreviewContainer').addEventListener('click', function(e) {
+    if (e.target.tagName !== 'BUTTON') {
+        clearFileSelection();
+    }
+});
 </script>
+
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
