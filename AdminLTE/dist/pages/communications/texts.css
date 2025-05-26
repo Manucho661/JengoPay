@@ -559,10 +559,10 @@ flex-grow: 1;
 overflow: auto;
 }
 .message {
-padding: 6px 8px;
+ padding: 4px 6px;
 margin: 5px 0;
 border-radius: 10px;
-max-width: 80%;
+max-width: 50%;
 
 }
 .incoming {
@@ -721,3 +721,34 @@ font-weight: bold;
 }
 
 
+/* File preview container */
+#filePreviewContainer {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* File preview item */
+.file-preview {
+  margin: 5px;
+  text-align: center;
+}
+
+/* Image preview */
+.file-preview img {
+  max-width: 150px;
+  max-height: 150px;
+}
+
+/* General file preview (for non-image files) */
+.file-preview div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}

@@ -1,59 +1,38 @@
 <?php
 include '../db/connect.php';
 header('Content-Type: application/json');
-file_put_contents('debug_log.txt', print_r($_GET, true));
 
-
-// Input
 $threadId = isset($_GET['thread_id']) ? (int)$_GET['thread_id'] : null;
-$attachmentId = isset($_GET['attachment_id']) ? (int)$_GET['attachment_id'] : null;
-
 if (!$threadId) {
     echo json_encode(['error' => 'Missing thread_id']);
     exit;
 }
 
-// Fetch thread title
+// Get thread title
 $stmtTitle = $pdo->prepare("SELECT title FROM communication WHERE thread_id = :thread_id");
 $stmtTitle->execute(['thread_id' => $threadId]);
 $titleRow = $stmtTitle->fetch(PDO::FETCH_ASSOC);
 $title = $titleRow ? $titleRow['title'] : 'Not Found';
 
-// Messages fetch query
-if ($attachmentId) {
-    // Fetch single message with specific attachment
-    $stmt = $pdo->prepare("
-        SELECT
-            m.message_id, m.sender, m.content, m.timestamp,
-            mf.file_path, mf.file_id
-        FROM messages m
-        JOIN message_files mf ON m.message_id = mf.message_id
-        WHERE m.thread_id = :thread_id AND mf.file_id = :attachment_id
-    ");
-    $stmt->execute([
-        'thread_id' => $threadId,
-        'attachment_id' => $attachmentId
-    ]);
-    $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} else {
-    // Fetch all messages in the thread
-    $stmt = $pdo->prepare("
-        SELECT
-            m.message_id,
-            m.sender,
-            m.content,
-            m.timestamp,
-            GROUP_CONCAT(DISTINCT mf.file_path SEPARATOR '|||') AS file_paths,
-            GROUP_CONCAT(DISTINCT mf.file_id SEPARATOR '|||') AS file_ids
-        FROM messages m
-        LEFT JOIN message_files mf ON mf.message_id = m.message_id
-        WHERE m.thread_id = :thread_id
-        GROUP BY m.message_id, m.sender, m.content, m.timestamp
-        ORDER BY m.timestamp ASC
-    ");
-    $stmt->execute(['thread_id' => $threadId]);
-    $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+// Get messages
+$stmt = $pdo->prepare("
+    SELECT
+        m.message_id,
+        m.sender,
+        m.content,
+        m.timestamp,
+        m.viewed,
+        m.file_path AS single_file_path,
+        GROUP_CONCAT(mf.file_path SEPARATOR '|||') AS file_paths,
+        GROUP_CONCAT(mf.file_id SEPARATOR '|||') AS file_ids
+    FROM messages m
+    LEFT JOIN message_files mf ON m.message_id = mf.message_id
+    WHERE m.thread_id = :thread_id
+    GROUP BY m.message_id
+    ORDER BY m.timestamp ASC
+");
+$stmt->execute(['thread_id' => $threadId]);
+$messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $messagesHtml = '';
 
@@ -68,19 +47,24 @@ foreach ($messages as $msg) {
     if (!empty($msg['file_paths'])) {
         $file_paths = explode('|||', $msg['file_paths']);
         $file_ids = explode('|||', $msg['file_ids']);
-    } elseif (!empty($msg['file_path'])) {
-        $file_paths[] = $msg['file_path'];
-        $file_ids[] = $msg['file_id'];
     }
 
-    $messagesHtml .= "<div class='message $class'>
-        <div class='bubble'>$content</div>";
+    if (!empty($msg['single_file_path'])) {
+        $file_paths[] = $msg['single_file_path'];
+        $file_ids[] = null;
+    }
+
+    $messagesHtml .= "<div class='message $class'>";
+    $messagesHtml .= "<div class='bubble'>$content</div>";
 
     if (!empty($file_paths)) {
         $messagesHtml .= "<div class='attachments mt-2'>";
         foreach ($file_paths as $index => $file_path) {
-            $full_path = htmlspecialchars($file_path);
-            $basename = basename($full_path);
+            if (empty($file_path)) continue;
+
+            $base_upload_dir = '/originalTwo/AdminLTE/dist/pages/communications/uploads/';
+            $full_path = $_SERVER['DOCUMENT_ROOT'] . $base_upload_dir . basename($file_path);
+            $basename = basename($file_path);
             $ext = strtolower(pathinfo($basename, PATHINFO_EXTENSION));
             $file_id = $file_ids[$index] ?? '';
 
@@ -90,14 +74,30 @@ foreach ($messages as $msg) {
                 $mimeType = mime_content_type($full_path);
 
                 if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'])) {
-                    $messagesHtml .= "<div class='attachment-image mb-2'>
-                        <img src='data:$mimeType;base64,$base64' alt='$basename' class='img-thumbnail' style='max-width:200px; max-height:150px;'>
-                        <div class='file-name small'>$basename</div>
+                    $messagesHtml .= "
+                    <div class='attachment-image whatsapp-style'>
+                        <div class='image-container'>
+                            <a href='data:$mimeType;base64,$base64' download='$basename' class='download-icon' title='Download'>
+                                <i class='fas fa-download'></i>
+                            </a>
+                            <img src='data:$mimeType;base64,$base64' alt='$basename' class='media-image'>
+                        </div>
+                        <div class='file-name'>$basename</div>
                     </div>";
                 } elseif ($ext === 'pdf') {
-                    $messagesHtml .= "<div class='attachment-file mb-2'>
-                        <a href='data:$mimeType;base64,$base64' download='$basename' class='btn btn-sm btn-outline-secondary'>
-                            <i class='fas fa-file-pdf'></i> $basename
+                    $messagesHtml .= "<div class='attachment-file whatsapp-style-file' data-filename='$basename'>
+                        <div class='file-container'>
+                            <embed src='data:$mimeType;base64,$base64' type='$mimeType' class='file-preview' />
+                            <a href='data:$mimeType;base64,$base64' download='$basename' class='download-icon' title='Download'>
+                                <i class='fas fa-download'></i>
+                            </a>
+                            <button class='delete-icon' title='Delete' onclick='deleteAttachment(this, \"$basename\")'>
+                                <i class='fas fa-trash-alt'></i>
+                            </button>
+                        </div>
+                        <a href='data:$mimeType;base64,$base64' download='$basename' class='file-download-link'>
+                            <i class='fas fa-file-pdf file-icon'></i>
+                            <span class='file-name'>$basename</span>
                         </a>
                     </div>";
                 } else {
@@ -108,15 +108,29 @@ foreach ($messages as $msg) {
                     </div>";
                 }
             } else {
-                $messagesHtml .= "<div class='attachment-error mb-2 text-danger'>
+                $messagesHtml .= "<div class='attachment-error text-danger mb-2'>
                     <i class='fas fa-exclamation-triangle'></i> File not found: $basename
                 </div>";
             }
         }
-        $messagesHtml .= "</div>";
+        $messagesHtml .= "</div>"; // attachments
     }
 
-    $messagesHtml .= "<div class='timestamp small text-muted'>$timestamp</div></div>";
+    // Timestamp + tick logic
+    $messagesHtml .= "<div class='timestamp small text-muted d-flex align-items-center'>$timestamp";
+
+    if ($msg['sender'] === 'landlord') {
+        if ($msg['viewed']) {
+            // Seen → double blue ticks
+            $messagesHtml .= "<i class='fas fa-check-double text-primary ms-2' title='Seen'></i>";
+        } else {
+            // Sent but not seen → single grey tick
+            $messagesHtml .= "<i class='fas fa-check text-muted ms-2' title='Sent, not seen'></i>";
+        }
+    }
+
+    $messagesHtml .= "</div>"; // timestamp
+    $messagesHtml .= "</div>"; // message
 }
 
 echo json_encode([
@@ -124,4 +138,3 @@ echo json_encode([
     'messages' => $messagesHtml
 ]);
 exit;
-?>

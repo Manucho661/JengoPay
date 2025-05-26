@@ -6,38 +6,22 @@ if (isset($_GET['message_id']) && is_numeric($_GET['message_id'])) {
     $messageId = (int)$_GET['message_id'];
 
     // Fetch the message
-<<<<<<< HEAD
-    $stmt = $pdo->prepare("SELECT sender, content, timestamp FROM messages WHERE id = :message_id");
-=======
     $stmt = $pdo->prepare("SELECT sender, content, timestamp FROM messages WHERE message_id = :message_id");
->>>>>>> 707bd5f0351ea3167aa9c3c4df5f3871edad06b7
     $stmt->execute(['message_id' => $messageId]);
     $message = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($message) {
-<<<<<<< HEAD
-        // Sanitize content and timestamp
-=======
->>>>>>> 707bd5f0351ea3167aa9c3c4df5f3871edad06b7
         $content = nl2br(htmlspecialchars($message['content']));
         $timestamp = date('H:i', strtotime($message['timestamp']));
         $attachmentHtml = '';
 
-<<<<<<< HEAD
-        // Fetch all attachments for this message
-=======
         // Fetch attachments from message_files table
->>>>>>> 707bd5f0351ea3167aa9c3c4df5f3871edad06b7
         $stmt_files = $pdo->prepare("SELECT file_path FROM message_files WHERE message_id = :message_id");
         $stmt_files->execute(['message_id' => $messageId]);
         $files = $stmt_files->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($files as $file) {
-<<<<<<< HEAD
-            $path = $file['file_path'];
-=======
             $path = '../' . ltrim($file['file_path'], '/'); // Ensure relative path for security
->>>>>>> 707bd5f0351ea3167aa9c3c4df5f3871edad06b7
             if (!empty($path) && file_exists($path)) {
                 $basename = basename($path);
                 $ext = strtolower(pathinfo($basename, PATHINFO_EXTENSION));

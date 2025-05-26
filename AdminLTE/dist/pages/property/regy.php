@@ -77,8 +77,6 @@
                                     <option value="" selected hidden>-- Choose
                                       Constituency
                                       --</option>
-
-
                                   </select>
                                   <b class="errorMessages" id="constituencyError"></b>
                                 </div>
@@ -88,7 +86,7 @@
                               <div class="col-12 col-md-4">
                                 <div class="form-group">
                                   <label>Ward</label>
-                                  <select name="ward" id="ward"    class="form-control">
+                                  <select name="ward" id="ward" class="form-control">
                                     <option value="" selected hidden>-- Choose Ward
                                       --
                                     </option>
@@ -135,6 +133,7 @@
             </div>
           </div>
 
+
           <div class="col-12 col-md-4">
             <label>Building Type</label>
             <select name="building_type" id="buildingType" class="form-control">
@@ -150,6 +149,8 @@
           </div>
         </div>
       </div>
+
+
       <div class="card-footer text-right">
         <button type="button" class="btn btn-danger btn-sm back-btn"
           id="stepTwoBackBtn">Back</button>

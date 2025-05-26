@@ -1,4 +1,3 @@
-
 <?php
 include '../db/connect.php'; // Make sure $pdo is available
 
@@ -12,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['title']) && !empty($
         $message = $_POST['message'];
         $uploaded_files = [];
         $upload_dir = "uploads/";
+        // $uploadDir = "C:/xampp/htdocs/originalTwo/AdminLTE/dist/pages/communications/uploads/";
 
         // Handle file uploads
         if (!empty($_FILES['files']['name'][0])) {
@@ -40,18 +40,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['title']) && !empty($
         $thread_id = $pdo->lastInsertId();
         $message_id = $pdo->lastInsertId(); // Get the message ID for attachments
 
+        if (!empty($uploaded_files)) {
+          foreach ($uploaded_files as $file_path) {
+              $stmt = $pdo->prepare("INSERT INTO messages (thread_id, sender, content, timestamp, file_path) VALUES (?, ?, ?, ?, ?)");
+              $stmt->execute([$thread_id, 'landlord', $message, $now, $file_path]);
+          }
+
+      } else {
+          $stmt = $pdo->prepare("INSERT INTO messages (thread_id, sender, content, timestamp) VALUES (?, ?, ?, ?)");
+          $stmt->execute([$thread_id, 'landlord', $message, $now]);
+      }
+
+
+      // Store attachments
+      if (!empty($uploaded_files)) {
+          $stmt_file = $pdo->prepare("INSERT INTO message_files (message_id, thread_id, file_path) VALUES (?, ?, ?)");
+          foreach ($uploaded_files as $file_path) {
+              $stmt_file->execute([$message_id, $thread_id, $file_path]);
+          }
+     }
+
+
+    //   if (!empty($uploaded_files)) {
+    //     foreach ($uploaded_files as $file_path) {
+    //         $stmt = $pdo->prepare("INSERT INTO messages  (message_id, thread_id, file_path) VALUES (?, ?, ?)");
+    //         $stmt->execute([$message_id, $thread_id, $file_path]);
+    //     }
+
+    // } else {
+    //     $stmt = $pdo->prepare("INSERT INTO message_files  (message_id, thread_id) VALUES (?, ?)");
+    //     $stmt->execute([$message_id, $thread_id]);
+    // }
+
+
       // Insert initial message (no file_path here)
-        $stmt = $pdo->prepare("INSERT INTO messages (thread_id, sender, content, timestamp) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$thread_id, 'landlord', $message, $now]);
+    //   if (!empty($uploaded_files)) {
+    //     $stmt_file = $pdo->prepare("INSERT INTO messages (thread_id, sender, content, timestamp, file_path) VALUES (?, ?, ?, ?, ?)");
+    //     foreach ($uploaded_files as $file_path) {
+    //         $stmt_file->execute([$thread_id, 'landlord', $message, $now,$file_path]);
+    //     }
+    // }
+
+        // $stmt = $pdo->prepare("INSERT INTO messages (thread_id, sender, content, timestamp) VALUES (?, ?, ?, ?)");
+        // $stmt->execute([$thread_id, 'landlord', $message, $now]);
 
 
         // Store attachments
-        if (!empty($uploaded_files)) {
-            $stmt_file = $pdo->prepare("INSERT INTO message_files (message_id, thread_id, file_path) VALUES (?, ?, ?)");
-            foreach ($uploaded_files as $file_path) {
-                $stmt_file->execute([$message_id, $thread_id, $file_path]);
-            }
-        }
+        // if (!empty($uploaded_files)) {
+        //     $stmt_file = $pdo->prepare("INSERT INTO message_files (message_id, thread_id, file_path) VALUES (?, ?, ?)");
+        //     foreach ($uploaded_files as $file_path) {
+        //         $stmt_file->execute([$message_id, $thread_id, $file_path]);
+        //     }
+        // }
 
         header("Location: " . $_SERVER['PHP_SELF']);
         exit;
@@ -213,11 +253,241 @@ display: flex;
   color: #007BFF;
   text-decoration: underline;
 }
+.attachment-image.whatsapp-style {
+    background-color: #f0f0f0;
+    border-radius: 12px;
+    padding: 8px;
+    display: inline-block;
+    max-width: 220px;
+    margin-bottom: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    font-family: sans-serif;
+    position: relative;
+}
 
+.image-container {
+    position: relative;
+    display: inline-block;
+}
 
+.media-image {
+    max-width: 200px;
+    max-height: 150px;
+    border-radius: 10px;
+    display: block;
+}
+
+.download-icon {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    /* background: rgba(0,0,0,0.5); */
+    background-color: #00192D;
+    color: white;
+    padding: 4px;
+    border-radius: 50%;
+    text-decoration: none;
+    font-size: 12px;
+    transition: background 0.2s;
+}
+
+.download-icon:hover {
+    background: rgba(0,0,0,0.7);
+}
+
+.file-name {
+    font-size: 12px;
+    color: #555;
+    text-align: center;
+    margin-top: 6px;
+    word-break: break-all;
+}
+
+.attachment-file.whatsapp-style-file {
+    background-color: #f0f0f0;
+    border-radius: 12px;
+    padding: 8px;
+    display: inline-block;
+    max-width: 250px;
+    font-family: sans-serif;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+.file-container {
+    position: relative;
+    width: 100%;
+    height: 140px;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.file-preview {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+    background-color: #fff;
+}
+
+.download-icon {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    padding: 4px;
+    border-radius: 50%;
+    text-decoration: none;
+    font-size: 12px;
+    transition: background 0.2s;
+}
+
+.download-icon:hover {
+    background: rgba(0,0,0,0.7);
+}
+
+.file-download-link {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #333;
+}
+
+.file-icon {
+    font-size: 18px;
+    color:#00192D;
+}
+
+.file-name {
+    font-size: 14px;
+    word-break: break-word;
+}
+.viewed-tick {
+    color: #34B7F1; /* WhatsApp blue */
+    font-size: 14px;
+    margin-left: 15rem;
+}
+
+.unviewed-tick {
+    color: #ccc; /* grey */
+    font-size: 14px;
+    margin-left: 25rem;
+}
+.tick-status {
+    text-align: right;
+    font-size: 0.9em;
+    margin-top: 4px;
+    color: grey;
+}
+.timestamp{
+  margin-left: 25rem;
+  font-size:12px;
+}
+.file-previews-container {
+  display: none; /* Hidden by default */
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  padding: 10px;
+  background: #f5f5f5;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
+.file-preview {
+  width: 120px;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.preview-image-container {
+  height: 100px;
+  position: relative;
+}
+
+.preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.preview-document, .preview-generic {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: #f0f2f5;
+}
+
+.pdf-icon {
+  font-size: 40px;
+  color: #e74c3c;
+}
+
+.file-icon {
+  font-size: 40px;
+  color: #7f8c8d;
+}
+
+.preview-overlay {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.file-preview:hover .preview-overlay {
+  opacity: 1;
+}
+
+.remove-preview {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-footer {
+  padding: 8px;
+  font-size: 12px;
+}
+
+.file-name {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-size {
+  color: #666;
+  font-size: 11px;
+}
+.input-box[contenteditable="true"]:empty:before {
+    content: attr(placeholder);
+    color: #999;
+    pointer-events: none;
+    display: block;
+}
+
+#filesPreviewList div:hover {
+    background: #e9e9e9;
+    cursor: pointer;
+}
 </style>
-
-  </head>
+</head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
@@ -590,7 +860,7 @@ display: flex;
       <?php endforeach; ?>
     <?php else: ?>
       <tr>
-        <td colspan="5" class="text-center">No data available</td>
+        <td colspan="5" class="text-center">No message available</td>
       </tr>
     <?php endif; ?>
   </tbody>
@@ -675,44 +945,45 @@ display: flex;
 
                               <div class="individual-message-body" style="height: 100%;">
                                  <div class="messages" id="messages" >
-                                   <div class="message incoming"></div>
+                                   <div class="message incoming">
                                   <div class="message outgoing">
 
                                   </div>
                                 </div>
+                                </div>
 
 
                                 <div class="input-area">
-                              <!-- Attachment input -->
-                              <!-- <input type="file" id="fileInput" multiple style="display: none;" onchange="handleFiles(event)">
-                                <button class="btn attach-button" onclick="document.getElementById('fileInput').click();">
-                                  <i class="fa fa-paperclip"></i>
-                                </button> -->
+    <!-- Attachment input -->
+    <input type="file" name="file[]" id="fileInput" class="form-control" style="display: none;" onchange="showFilePreview()">
+    <button class="btn attach-button" onclick="document.getElementById('fileInput').click();">
+        <i class="fa fa-paperclip"></i>
+    </button>
 
-                                <div class="input-box" id="inputBox" contenteditable="true"></div>
+    <!-- File preview container -->
+    <div id="filePreviewContainer" style="display: none; margin-right: 10px; max-width: 200px;">
+        <div style="display: flex; align-items: center; background: #f5f5f5; padding: 5px; border-radius: 4px;">
+            <!-- Image thumbnail (shown only for image files) -->
+            <img id="fileThumbnail" src="" style="max-height: 40px; max-width: 40px; margin-right: 8px; display: none;">
+            <!-- File info -->
+            <div style="flex-grow: 1;">
+                <div id="fileName" style="font-size: 12px; color: #333;"></div>
+                <div style="font-size: 10px; color: #666;">Click to remove</div>
+            </div>
+            <button onclick="clearFileSelection()" style="background: none; border: none; color: #999; cursor: pointer; margin-left: 5px;">×</button>
+        </div>
+    </div>
 
-                                <!-- <div id="filePreviews" class="preview-container"></div> -->
-                                <!-- <div id="filePreviews" class="preview-container"></div> -->
+    <div class="input-box" id="inputBox" contenteditable="true" placeholder="Type your message..."></div>
 
-                                  <div class="message-input-wrapper" >
-                                  <button name="incoming_message" class="btn message-send-button" onclick="sendMessage()">
-                                    <i class="fa fa-paper-plane"></i>
-                                  </button>
-                                </div>
-                                    </div>
-                                  </div>
-                              </div>
+    <!-- MESSAGE SEND BUTTON -->
+    <div class="message-input-wrapper">
+        <button name="incoming_message" class="btn message-send-button" onclick="sendMessage()">
+            <i class="fa fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
 
-
-
-
-                               <!-- <div class="input-area">
-                                <div class="message-input-wrapper" >
-                                  <button name="incoming_message" class="btn message-send-button" onclick="sendMessage()">
-                                    <i class="fa fa-paper-plane"></i>
-                                  </button>
-                                </div>
-                              </div> -->
 
                               </div>
                             </div>
@@ -773,7 +1044,7 @@ display: flex;
                       </div>
                       <div class="card-body new-message-body">
                         <div class="row">
-                        <form action="texts.php" method="POST" enctype="multipart/form-data">
+                        <form action="texts.php" method="POST" id="messageForm" enctype="multipart/form-data">
                           <div class="col-md-12" style="display: flex;">
 
                             <div id="field-group-first" class="field-group first">
@@ -861,8 +1132,113 @@ display: flex;
 
 
 <!-- !-- create new text -->
+<!-- Add this JavaScript -->
+<script>
+function showFilePreview() {
+    const fileInput = document.getElementById('fileInput');
+    const previewContainer = document.getElementById('filePreviewContainer');
+    const fileThumbnail = document.getElementById('fileThumbnail');
+    const fileName = document.getElementById('fileName');
 
-<!-- <script>
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        fileName.textContent = file.name;
+
+        // Check if file is an image
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                fileThumbnail.src = e.target.result;
+                fileThumbnail.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        } else {
+            fileThumbnail.style.display = 'none';
+        }
+
+        previewContainer.style.display = 'flex';
+    } else {
+        previewContainer.style.display = 'none';
+    }
+}
+
+function clearFileSelection() {
+    const fileInput = document.getElementById('fileInput');
+    const previewContainer = document.getElementById('filePreviewContainer');
+    const fileThumbnail = document.getElementById('fileThumbnail');
+
+    fileInput.value = '';
+    fileThumbnail.src = '';
+    previewContainer.style.display = 'none';
+}
+
+function sendMessage() {
+    const inputBox = document.getElementById('inputBox');
+    const message = inputBox.innerText.trim();
+    const fileInput = document.getElementById('fileInput');
+
+    if (message || fileInput.files.length > 0) {
+        // Here you would normally send the data to your server
+        console.log("Message:", message);
+
+        if (fileInput.files.length > 0) {
+            console.log("File attached:", fileInput.files[0].name);
+            // For actual implementation, you would need to:
+            // 1. Create FormData object
+            // 2. Append the file and message
+            // 3. Send via AJAX/Fetch
+        }
+
+        // Clear inputs after sending
+        inputBox.innerText = '';
+        clearFileSelection();
+    }
+}
+
+// Make the file preview container clickable to remove the file
+document.getElementById('filePreviewContainer').addEventListener('click', function(e) {
+    if (e.target.tagName !== 'BUTTON') {
+        clearFileSelection();
+    }
+});
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.querySelector('#newtextPopup form');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault(); // Stop default form submission
+
+    const formData = new FormData(form);
+
+    fetch('texts.php', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => {
+      if (response.ok) {
+        alert("Message Sent Successfully!");
+        // Optionally reset form or close popup
+        form.reset();
+        closenewtextPopup(); // if this function hides the popup
+      } else {
+        alert("Failed to send message.");
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("An error occurred while sending the message.");
+    });
+  });
+});
+</script>
+
+
+
+
+<script>
 let selectedFiles = [];
 
 function handleFiles(event) {
@@ -1064,6 +1440,8 @@ document.getElementById('sendMessage').addEventListener('click', function() {
 
 <!-- loadConversation -->
 <script>
+//let activeThreadId = null;
+
 function loadConversation(threadId) {
     if (!threadId) {
         console.error('Invalid or missing threadId');
@@ -1088,6 +1466,8 @@ function loadConversation(threadId) {
 
     console.log('Loading thread:', threadId);
 
+    // console.log('Loading thread:', threadId);
+
     // Fetch messages for the selected thread
     fetch('load_conversation.php?thread_id=' + encodeURIComponent(threadId))
         .then(response => {
@@ -1098,6 +1478,7 @@ function loadConversation(threadId) {
         })
         .then(data => {
             if (data.messages) {
+                 alert(data.messages);
                 const messagesDiv = document.getElementById('messages');
                 messagesDiv.innerHTML = data.messages;
                 messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to bottom
@@ -1113,14 +1494,27 @@ function loadConversation(threadId) {
 
 <!-- send & get message -->
 <script>
-let activeThreadId = null; // Ensure this is declared in the global scope if not already
+let activeThreadId = null; // Declare globally
 
+function selectThread(threadId) {
+    activeThreadId = threadId;
+    loadConversation(threadId);
+}
+// Function to send the message and files
 function sendMessage() {
     const inputBox = document.getElementById('inputBox');
     const fileInput = document.getElementById('fileInput');
-    const file = fileInput.files.length > 0 ? fileInput.files[0] : null;
+    const filePreviewContainer = document.getElementById('filePreviewContainer');
 
-    if (!messageText && !file) {
+    if (!inputBox || !fileInput) {
+        console.error("Required input elements not found.");
+        return;
+    }
+
+    const messageText = inputBox.innerText.trim();
+    const files = fileInput.files;
+
+    if (!messageText && (!files || files.length === 0)) {
         alert("Please type a message or attach a file.");
         return;
     }
@@ -1135,10 +1529,12 @@ function sendMessage() {
     formData.append('thread_id', activeThreadId);
     formData.append('sender', 'landlord');
 
-    if (file) {
-        formData.append('file', file);
+    // Append all selected files
+    for (let i = 0; i < files.length; i++) {
+        formData.append('file[]', files[i]);
     }
 
+    // Send the message and files
     fetch('send_message.php', {
         method: 'POST',
         body: formData
@@ -1148,23 +1544,71 @@ function sendMessage() {
         if (!data.success) {
             throw new Error(data.error || 'Failed to send message.');
         }
-
-        // Clear input fields only after a successful send
+        else{
+          alert('Message Sent Successfully');
+        }
+        // Clear the input box and file previews after sending
         inputBox.innerText = '';
         fileInput.value = '';
-
-        // Reload thread messages
-        loadConversation(activeThreadId);
+        filePreviewContainer.innerHTML = ''; // Clear file preview after sending
+        loadConversation(activeThreadId); // Reload conversation after message is sent
     })
     .catch(error => {
         console.error('Error sending message:', error);
         alert('Failed to send message. Please try again.');
     });
-}
+  }
 
 
+  function previewFile() {
+    const fileInput = document.getElementById('fileInput');
+    const filePreviewContainer = document.getElementById('filePreviewContainer');
+    filePreviewContainer.innerHTML = ''; // Clear previous previews
 
-// Function to load messages (AJAX request to fetch new messages)
+    const files = fileInput.files;
+    if (files.length === 0) {
+        return;
+    }
+
+    // Loop through selected files and create previews
+    Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const fileType = file.type.split('/')[0]; // Get file type (image, pdf, etc.)
+            const filePreview = document.createElement('div');
+            filePreview.classList.add('file-preview');
+
+            // Image files preview
+            if (fileType === 'image') {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.classList.add('img-thumbnail');
+                img.style.maxWidth = '150px';
+                img.style.maxHeight = '150px';
+                filePreview.appendChild(img);
+            }
+            // PDF files preview
+            else if (file.type === 'application/pdf') {
+                const pdfPreview = document.createElement('div');
+                pdfPreview.innerHTML = `<i class="fa fa-file-pdf"></i> ${file.name}`;
+                filePreview.appendChild(pdfPreview);
+            }
+            // Other file types
+            else {
+                const fileNamePreview = document.createElement('div');
+                fileNamePreview.innerHTML = `<i class="fa fa-file"></i> ${file.name}`;
+                filePreview.appendChild(fileNamePreview);
+            }
+
+            // Append file preview to container
+            filePreviewContainer.appendChild(filePreview);
+        };
+        reader.readAsDataURL(file); // Read file as Data URL for preview
+    });
+
+  }
+
+
 function getMessage(messageId) {
     const messageContainer = document.getElementById('messageDetails');
 
