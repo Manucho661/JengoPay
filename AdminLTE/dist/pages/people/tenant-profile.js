@@ -303,11 +303,45 @@ document.getElementById('editIncomeInfoForm').addEventListener('submit', functio
   });
 });
 
+window.submitEditPersonalInfoModal = function (event) {
+  console.log('DoNe');
+  alert('done')
+  event.preventDefault();
 
 
+  const email = document.getElementById('editEmail').value.trim();
+  const phone = document.getElementById('editPhone').value.trim();
+  const idNo = document.getElementById('editIDNo').value.trim();
+  const userId = document.getElementById('user_id').value;
 
+  if (!email || !phone || !idNo) {
+    alert("Please fill in all required fields.");
+    return;
+  }
 
+  const formData = new FormData();
+  formData.append("email", email);
+  formData.append("phone", phone);
+  formData.append("id_no", idNo);
+  formData.append("user_id", userId);
 
-
-
-
+  fetch("../people/actions/tenant_profile/update_personal_info.php", {
+    method: "POST",
+    body: formData
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert("Personal information updated successfully.");
+        const editModal = bootstrap.Modal.getInstance(document.getElementById('editPersonalInfoModal'));
+        editModal.hide();
+        location.reload();
+      } else {
+        alert("Error updating info: " + (data.message || "Unknown error"));
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("An error occurred while updating information.");
+    });
+}

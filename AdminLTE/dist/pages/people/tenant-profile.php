@@ -1012,7 +1012,12 @@ try {
               <div class="modal fade" id="editPersonalInfoModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content shadow-lg border-0 rounded-3">
-                    <form id="editPersonalInfoForm" autocomplete="off">
+
+                  <form id="editPersonalInfoForm" class="edit-personal-info-modal" autocomplete="off" onsubmit="submitEditPersonalInfoModal(event)">
+                     <!-- your form inputs... -->
+                    <input type="hidden" id="user_id" name="user_id" value="<?= htmlspecialchars($_GET['id'] ?? '') ?>">
+
+                    
                       <div class="modal-header   rounded-top" style= "background-color: #00192D; color:#FFC107;">
                         <h5 class="modal-title" id="editModalLabel">
                           <i class="fas fa-user-edit me-2"></i> Edit Personal Information
