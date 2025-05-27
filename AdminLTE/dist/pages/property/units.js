@@ -3,7 +3,7 @@ function handleDelete(event, id, type) {
   event.stopPropagation();
 
   if (confirm("Are you sure?")) {
-    fetch('../actions/delete_record.php', {
+    fetch('pages /actions/delete_record.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
