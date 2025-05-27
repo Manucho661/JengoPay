@@ -131,6 +131,188 @@ fetchPets(user_id)
 
 
 
+document.getElementById("addPetForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+  
+  const formData = new FormData(this);
+  
+  fetch("add_pet.php", {
+    method: "POST",
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert("Pet added successfully!");
+      const modal = bootstrap.Modal.getInstance(document.getElementById("addPetModal"));
+      modal.hide();
+      // Optionally refresh pet list
+    } else {
+      alert("Failed to add pet: " + data.message);
+    }
+  })
+  .catch(error => {
+    console.error("Error:", error);
+    alert("Error occurred while adding pet.");
+  });
+});
+
+
+document.getElementById("addFileForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const formData = new FormData(this);
+
+  fetch("add_file.php", {
+    method: "POST",
+    body: formData
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert("File uploaded successfully!");
+
+        // Close modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById("addFileModal"));
+        modal.hide();
+
+        // Add new row to files table
+        const table = document.querySelector("#files-table tbody");
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+          <td>${formData.get("file_name")}</td>
+          <td><a href="${data.file_url}" target="_blank" class="btn btn-sm btn-outline-primary">View</a></td>
+        `;
+        table.appendChild(newRow);
+
+        this.reset();
+      } else {
+        alert("Error: " + data.message);
+      }
+    })
+    .catch(error => {
+      console.error("Error uploading file:", error);
+      alert("An error occurred while uploading the file.");
+    });
+});
+
+
+document.getElementById("shiftTenantForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const tenant = "Joseph"; // fixed here
+  const building = document.getElementById("buildingSelect").value;
+  const unit = document.getElementById("unitSelect").value;
+
+  if (!building || !unit) {
+    alert("Please select both building and unit.");
+    return;
+  }
+
+  // Example AJAX submission
+  fetch("shift_tenant.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tenant, building, unit })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert("Tenant shifted successfully!");
+      document.getElementById("shiftTenantForm").reset();
+      var modal = bootstrap.Modal.getInstance(document.getElementById("shiftTenantModal"));
+      modal.hide();
+    } else {
+      alert("Shift failed: " + data.message);
+    }
+  });
+});
+
+
+
+document.getElementById('editPenaltyForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const penaltyRate = document.getElementById('penaltyRate').value;
+
+  // Validate input
+  if (penaltyRate === "" || isNaN(penaltyRate) || penaltyRate < 0 || penaltyRate > 100) {
+    alert("Please enter a valid penalty rate between 0 and 100.");
+    return;
+  }
+
+  // Submit using fetch
+  fetch('save_penalty_rate.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ penaltyRate: penaltyRate })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert('Penalty rate updated successfully.');
+
+      // ✅ Update UI (replace `.penalty-rate-display` with your actual display element)
+      const displayEl = document.querySelector('.penalty-rate-display');
+      if (displayEl) {
+        displayEl.textContent = `${penaltyRate}%`;
+      }
+
+      // ✅ Close modal using Bootstrap 5 API
+      const modalEl = document.getElementById('editPenaltyModal');
+      const modal = bootstrap.Modal.getInstance(modalEl);
+      modal.hide();
+    } else {
+      alert('Failed to update penalty rate: ' + data.message);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('An unexpected error occurred.');
+  });
+});
+
+
+document.getElementById('editIncomeInfoForm').addEventListener('submit', function (e) {
+  e.preventDefault(); // Prevent normal form submission
+
+  const form = e.target;
+  const formData = new FormData(form);
+
+  fetch('update_income_info.php', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Optional: Update elements on the frontend
+      document.getElementById('incomeSourceDisplay').textContent = formData.get('income_source');
+      document.getElementById('employerDisplay').textContent = formData.get('employer');
+      document.getElementById('jobTitleDisplay').textContent = formData.get('job_title');
+
+      // Close modal
+      const modal = bootstrap.Modal.getInstance(document.getElementById('editIncomeInfoModal'));
+      modal.hide();
+    } else {
+      alert('Failed to update: ' + (data.message || 'Unknown error'));
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Something went wrong while updating.');
+  });
+});
+
+
+
+
+
+
+
+
 
 
 

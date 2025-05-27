@@ -409,6 +409,58 @@ try {
   </div>
 </div>
 
+<!-- Shift Tenant Modal -->
+<div class="modal fade" id="shiftTenantModal" tabindex="-1" aria-labelledby="shiftTenantModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content shadow">
+      <form id="shiftTenantForm">
+        <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
+          <h5 class="modal-title" id="shiftTenantModalLabel">
+            <i class="fas fa-exchange-alt me-2"></i> Shift Tenant - Joseph
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" ></button>
+        </div>
+
+        <div class="modal-body px-4">
+          <!-- Tenant Name (Pre-filled) -->
+          <div class="mb-3">
+            <label class="form-label">Tenant Name</label>
+            <input type="text" class="form-control" name="tenantName" value="Joseph" readonly>
+          </div>
+
+          <!-- Select Building -->
+          <div class="mb-3">
+            <label for="buildingSelect" class="form-label">Select Building</label>
+            <select id="buildingSelect" class="form-select" required>
+              <option value="">-- Select Building --</option>
+              <option value="Manucho">Manucho</option>
+              <option value="White House">White House</option>
+              <option value="Pink House">Pink House</option>
+              <option value="Silver">Silver</option>
+            </select>
+          </div>
+
+          <!-- Select Unit -->
+          <div class="mb-3">
+            <label for="unitSelect" class="form-label">Select Unit</label>
+            <select id="unitSelect" class="form-select" required>
+              <option value="">-- Select Unit --</option>
+              <option value="Unit 101">Unit 101</option>
+              <option value="Unit 102">Unit 102</option>
+              <option value="Unit 201">Unit 201</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer px-4">
+          <button type="submit" class="btn btn-primary" style="background-color: #00192D; color: #FFC107;">Shift</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
 
 
 
@@ -469,7 +521,11 @@ try {
                       </div>
                     </div>
 
+                    
+
                     <div class="col-md-12 mt-2">
+                        <h6 class=" contact_section_header details mb-2 mt-2"> </i> Income Info</h6>
+
                       <div class="row">
                         
 
@@ -477,6 +533,7 @@ try {
 
                                <div class="personal-item d-flex justify-content-between bg-white">
                                 <!-- <i class="fas fa-calculator"></i> -->
+                          
                                   <div class="category-number p-2" style="display: flex; gap: 5px;   align-items: center;">
                                     <div class="category"><i class="fas fa-briefcase personal-info-icon"></i> <span class="personal-info item-name" > Income Source,</span> </div>
                                     <div class="number" ><b id="income_source"></b></div>
@@ -506,13 +563,74 @@ try {
                             </div>
                           </div>
 
+                          <div class="col-md-3">
+                                <div class="personal-item-edit d-flex justify-content-between">
+                                <!-- <i class="fas fa-calculator"></i> -->
+                               <button class="btn  btn-sm edit-btn income-info rounded" data-bs-toggle="modal" data-bs-target="#editIncomeInfoModal"><i class="fas fa-edit icon"></i> Edit</button>
+                              </div>
+
 
                       </div>
                   </div>
                 </div>
               </div>
 
-               <!-- Edit Personal Info Modal -->
+<!-- Edit Income Info Modal -->
+<div class="modal fade" id="editIncomeInfoModal" tabindex="-1" aria-labelledby="editIncomeInfoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content shadow-lg rounded-4 border-0">
+      <form id="editIncomeInfoForm">
+      
+        <!-- Modal Header -->
+        <div class="modal-header py-3 px-4" style="background-color: #00192D; color: #FFC107;">
+          <h5 class="modal-title" id="editIncomeInfoLabel">
+            <i class="fas fa-edit me-2"></i> Edit Income Information
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="modal-body px-4 py-4 bg-light">
+
+          <!-- Income Source -->
+          <div class="form-floating mb-4">
+            <input type="text" class="form-control shadow-sm" id="editIncomeSource" placeholder="Income Source" 
+                   value="<?= htmlspecialchars($data['income_source'] ?? '') ?>" name="income_source" required>
+            <label for="editIncomeSource"><i class="fas fa-briefcase me-1 text-muted"></i> Income Source</label>
+          </div>
+
+          <!-- Employer -->
+          <div class="form-floating mb-4">
+            <input type="text" class="form-control shadow-sm" id="editEmployer" placeholder="Employer" 
+                   value="<?= htmlspecialchars($data['work_place'] ?? '') ?>" name="employer" required>
+            <label for="editEmployer"><i class="fas fa-building me-1 text-muted"></i> Employer</label>
+          </div>
+
+          <!-- Job Title -->
+          <div class="form-floating mb-4">
+            <input type="text" class="form-control shadow-sm" id="editJobTitle" placeholder="Job Title" 
+                   value="<?= htmlspecialchars($data['job_title'] ?? '') ?>" name="job_title" required>
+            <label for="editJobTitle"><i class="fas fa-user-tie me-1 text-muted"></i> Job Title</label>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer px-4 pb-4 pt-3">
+          <button type="submit" class="btn btn-sm " style="background-color: #00192D; color: #FFC107;">
+            <i class="fas fa-save me-1"></i> Save Changes
+          </button>
+          <button type="button" class="btn btn-sm" data-bs-dismiss="modal" style="background-color: #00192D; color: #FFC107;">
+            <i class="fas fa-times me-1"></i> Cancel
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
 
              <!-- start row -->
 
@@ -690,13 +808,50 @@ try {
                           <div class="pen-rate">10%</div>
                           <div class="pen-desc">of the total rent</div>
                         </div>
-                        <div class="change-btn d-flex justify-content-end"><button class="btn edit rounded">Edit</button></div>
+                        <div class="change-btn d-flex justify-content-end">
+                         <button class="btn edit rounded" data-bs-toggle="modal" data-bs-target="#editPenaltyModal">Edit</button>
+
+                        </div>
                         </div>
 
                       </div>
                   </div>
                 </div>
               </div>
+
+
+    <!-- Edit Penalty Modal -->
+<div class="modal fade" id="editPenaltyModal" tabindex="-1" aria-labelledby="editPenaltyModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content shadow">
+      <form id="editPenaltyForm">
+        <!-- Header -->
+        <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
+          <h5 class="modal-title" id="editPenaltyModalLabel">
+            <i class="fas fa-pen-alt me-2"></i> Edit Penalty Rates
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body px-4">
+          <div class="mb-3">
+            <label for="penaltyRate" class="form-label">Penalty Rate (%)</label>
+            <input type="number" class="form-control" id="penaltyRate" name="penaltyRate" min="0" max="100" step="1" placeholder="Enter penalty rate" required>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" style="background-color: #00192D;">Save</button>
+          <button type="button" class="btn btn-secondary" style="background-color: #00192D;" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
 
                  <!-- end row -->
                  <!-- start row -->
@@ -718,10 +873,65 @@ try {
                        </div>
 
                        <div class="col-md-3">
-                        <button class="btn edit-btn personal-info"><i class="fas fa-plus icon"></i> ADD </button>
+                        <button class="btn edit-btn personal-info" data-bs-toggle="modal" data-bs-target="#addPetModal" style="background-color: #00192D; color: #FFC107;"><i class="fas fa-plus icon"></i> ADD </button>
                        </div>
 
                   </div>
+
+                  <!-- Add Pet Modal -->
+<div class="modal fade" id="addPetModal" tabindex="-1" aria-labelledby="addPetModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content shadow rounded">
+      <form id="addPetForm">
+        <!-- Modal Header -->
+        <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
+          <h5 class="modal-title" id="addPetModalLabel"><i class="fas fa-paw me-2"></i> Add Pet</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="modal-body px-4 py-3">
+          <!-- Pet Name -->
+          <div class="mb-3">
+            <label for="petName" class="form-label">Pet Name</label>
+            <input type="text" class="form-control" id="petName" name="pet_name" required placeholder="Enter pet name">
+          </div>
+
+          <!-- Pet Type -->
+          <div class="mb-3">
+            <label for="petType" class="form-label">Pet Type</label>
+            <select class="form-select" id="petType" name="pet_type" required>
+              <option value="" selected disabled>Select type</option>
+              <option value="Dog">Dog</option>
+              <option value="Cat">Cat</option>
+              <option value="Bird">Bird</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <!-- Pet Weight -->
+          <div class="mb-3">
+            <label for="petWeight" class="form-label">Weight (kg)</label>
+            <input type="number" class="form-control" id="petWeight" name="pet_weight" step="0.1" min="0" required placeholder="Enter pet weight">
+          </div>
+
+          <!-- License Number -->
+          <div class="mb-3">
+            <label for="licenseNumber" class="form-label">License Number</label>
+            <input type="text" class="form-control" id="licenseNumber" name="license_number" required placeholder="Enter license number">
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+          <button type="submit" class="btn" style="background-color: #00192D; color: #FFC107;">Add Pet</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #00192D; color: #FFC107;">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 
                   <div class="row">
                     <h6 class="mb-0 contact_section_header"> </i> Files</h6>
@@ -742,7 +952,7 @@ try {
                       </table>
                     </div>
                     <div class="col-md-3">
-                      <button class="btn edit-btn personal-info"><i class="fas fa-plus icon"></i> Add </button>
+                      <button class="btn edit-btn personal-info" data-bs-toggle ="modal" data-bs-target ="#addFileModal"style="background-color: #00192D; color: #FFC107;"><i class="fas fa-plus icon"></i> Add </button>
                     </div>
 
 
@@ -756,6 +966,45 @@ try {
    
   </div>
 </div>
+
+<!-- Add File Modal -->
+<div class="modal fade" id="addFileModal" tabindex="-1" aria-labelledby="addFileModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content shadow">
+
+      <!-- Modal Header -->
+      <div class="modal-header" style="background-color:#00192D; color:#FFC107;">
+        <h5 class="modal-title" id="addFileModalLabel"><i class="fas fa-file-upload me-2"></i> Add File</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <!-- Modal Body -->
+      <form id="addFileForm" enctype="multipart/form-data">
+        <div class="modal-body px-4">
+          <!-- File Name -->
+          <div class="mb-3">
+            <label for="fileName" class="form-label">File Name</label>
+            <input type="text" class="form-control" id="fileName" name="file_name" placeholder="Enter file name" required>
+          </div>
+
+          <!-- File Upload -->
+          <div class="mb-3">
+            <label for="fileUpload" class="form-label">Choose File</label>
+            <input type="file" class="form-control" id="fileUpload" name="file_upload" required>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer px-4">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #00192D; color: #FFC107;">Cancel</button>
+          <button type="submit" class="btn" style="background-color: #00192D; color: #FFC107;">Upload</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
 
           
         <!-- OVERLAYS -->
@@ -787,33 +1036,13 @@ try {
                           <label for="editPhone"><i class="fas fa-phone me-1"></i> Phone Number</label>
                         </div>
 
-                        <!-- ID Number -->
-                        <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="editIDNo" placeholder="ID Number" 
-                                value="<?= htmlspecialchars($data['id_no'] ?? '') ?>" required>
-                          <label for="editIDNo"><i class="fas fa-id-card me-1"></i> National ID Number</label>
-                        </div>
+<!-- ID Number -->
+<div class="form-floating mb-3">
+  <input type="text" class="form-control" id="editIDNo" placeholder="ID Number" 
+         value="<?= htmlspecialchars($data['id_no'] ?? '') ?>" required>
+  <label for="editIDNo"><i class="fas fa-id-card me-1"></i> National ID Number</label>
+</div>
 
-                        <!-- Income Source -->
-                        <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="editIncomeSource" placeholder="Income Source" 
-                                value="<?= htmlspecialchars($data['income_source'] ?? '') ?>">
-                          <label for="editIncomeSource"><i class="fas fa-briefcase me-1"></i> Income Source</label>
-                        </div>
-
-                        <!-- Employer -->
-                        <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="editEmployer" placeholder="Employer" 
-                                value="<?= htmlspecialchars($data['work_place'] ?? '') ?>">
-                          <label for="editEmployer"><i class="fas fa-building me-1"></i> Employer</label>
-                        </div>
-
-                        <!-- Job Title -->
-                        <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="editJobTitle" placeholder="Job Title" 
-                                value="<?= htmlspecialchars($data['job_title'] ?? '') ?>">
-                          <label for="editJobTitle"><i class="fas fa-user-tie me-1"></i> Job Title</label>
-                        </div>
                       <div class="modal-footer bg-light d-flex justify-content-between">
                         <small class="text-muted"><i class="fas fa-info-circle me-1"></i> Make sure details are accurate</small>
                         <button type="submit" class="btn btn-changes" style="background-color:#00192D; color:#FFC107;">
