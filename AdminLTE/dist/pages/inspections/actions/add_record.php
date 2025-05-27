@@ -56,6 +56,17 @@ function processInspectionItems(PDO $pdo, int $inspectionId, array $items): void
                 'photo_path'         => $photoData['path']
             ]);
         }
+
+        // Update Inspection Status to Completed.
+        $sql = "UPDATE inspections SET status = :status WHERE id = :id";
+        $stmt = $pdo->prepare($sql);
+        $status = "Completed";
+        $id = $inspectionId;
+        $stmt->execute([
+            'status' =>$status,
+            'id' => $id
+        ]);
+
     }
 }
 

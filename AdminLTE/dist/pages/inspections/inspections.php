@@ -761,6 +761,82 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
         </div>                                          
       </section>
 
+      <!-- Inspection(inspected) Modal -->
+      <div class="modal fade" id="inspectionModal" tabindex="-1" aria-labelledby="inspectionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+          <div class="modal-content rounded-4 shadow-lg">
+            <div class="modal-header">
+              <h5 class="modal-title" id="inspectionModalLabel">🏠 Inspection Details - <strong>Unit A12</strong></h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body p-4">
+              <table class="table inspection-table table-bordered table-hover">
+                <thead class="table-light">
+                  <tr>
+                    <th>Item</th>
+                    <th>Status</th>
+                    <th>Description</th>
+                    <th>Photos</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Floor</td>
+                    <td><span class="status-bad">Needs Repair</span></td>
+                    <td>Scratches and water damage near the corner.</td>
+                    <td>
+                      <img src="https://www.districtfloordepot.com/wp-content/uploads/2022/02/types-of-floor-damage.jpg" class="repair-photo" alt="Floor damage">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Window</td>
+                    <td><span class="status-bad">Needs Repair</span></td>
+                    <td>Broken lock on the left window pane.</td>
+                    <td>
+                      <img src="https://apexwindowwerks.com/wp-content/uploads/2023/03/wood-window-repair-guide.jpg" class="repair-photo" alt="Window issue">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Door</td>
+                    <td><span class="status-good">Good</span></td>
+                    <td>-</td>
+                    <td>-</td>
+                  </tr>
+                  <tr>
+                    <td>Wall</td>
+                    <td><span class="status-bad">Needs Repair</span></td>
+                    <td>Peeling paint and minor cracks.</td>
+                    <td>
+                      <img src="https://images.pexels.com/photos/276267/pexels-photo-276267.jpeg" class="repair-photo" alt="Wall damage">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Bulb</td>
+                    <td><span class="status-good">Good</span></td>
+                    <td>-</td>
+                    <td>-</td>
+                  </tr>
+                  <tr>
+                    <td>Sockets</td>
+                    <td><span class="status-bad">Needs Repair</span></td>
+                    <td>One socket in the kitchen is not working.</td>
+                    <td>
+                      <img src="https://create.vista.com/wp-content/uploads/2021/09/damaged-socket.jpg" class="repair-photo" alt="Socket issue">
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="modal-footer d-flex justify-content-between">
+              <small class="text-muted">📅 Inspection Date: <strong>2025-05-26</strong></small>
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
   <!-- Main Js File -->
   <script src="inspections.js"></script>
       <!-- Scripts -->
