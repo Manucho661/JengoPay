@@ -579,7 +579,12 @@ try {
 <div class="modal fade" id="editIncomeInfoModal" tabindex="-1" aria-labelledby="editIncomeInfoLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content shadow-lg rounded-4 border-0">
-      <form id="editIncomeInfoForm">
+      <form id="editIncomeInfoForm" class="edit-income-info-modal" autocomplete="off" onsubmit="submitEditIncomeInfo (event)">
+        <!--your form inputs...-->
+        <input type="hidden" id="tenant_id" name="tenant_id" value="<?=htmlspecialchars($_GET['tenant_id'] ?? '') ?>"/>
+        
+
+        <input type="hidden" id="user_id" name="user_id" value="<?=htmlspecialchars($_GET['id'] ?? '') ?>">
       
         <!-- Modal Header -->
         <div class="modal-header py-3 px-4" style="background-color: #00192D; color: #FFC107;">

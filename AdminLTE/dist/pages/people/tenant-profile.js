@@ -42,6 +42,16 @@ document.addEventListener("DOMContentLoaded", function () {
         safeSet("job_title", tenant.job_title);
         safeSet("unit", tenant.unit);
         
+        const tenantIdInput = document.getElementById("tenant_id");
+if (tenantIdInput) {
+  tenantIdInput.value = tenant.tenant_id;
+  console.log(`✅ tenant_id set to ${tenant.tenant_id}`);
+} else {
+  console.warn("❌ tenant_id input field not found.");
+}
+
+
+        
 
 
         const statusElement = document.getElementById('status');
@@ -274,38 +284,6 @@ document.getElementById('editPenaltyForm').addEventListener('submit', function(e
   });
 });
 
-
-document.getElementById('editIncomeInfoForm').addEventListener('submit', function (e) {
-  e.preventDefault(); // Prevent normal form submission
-
-  const form = e.target;
-  const formData = new FormData(form);
-
-  fetch('update_income_info.php', {
-    method: 'POST',
-    body: formData
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      // Optional: Update elements on the frontend
-      document.getElementById('incomeSourceDisplay').textContent = formData.get('income_source');
-      document.getElementById('employerDisplay').textContent = formData.get('employer');
-      document.getElementById('jobTitleDisplay').textContent = formData.get('job_title');
-
-      // Close modal
-      const modal = bootstrap.Modal.getInstance(document.getElementById('editIncomeInfoModal'));
-      modal.hide();
-    } else {
-      alert('Failed to update: ' + (data.message || 'Unknown error'));
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    alert('Something went wrong while updating.');
-  });
-});
-
 window.submitEditPersonalInfoModal = function (event) {
   console.log('DoNe');
   alert('done')
@@ -346,5 +324,69 @@ window.submitEditPersonalInfoModal = function (event) {
     .catch(error => {
       console.error("Error:", error);
       alert("An error occurred while updating information.");
+    });
+}
+
+
+
+
+ window.submitEditIncomeInfo = function (event) {
+  console.log('Saving income info...');
+  alert('hi!')
+  event.preventDefault();
+
+  const incomeSource = document.getElementById('editIncomeSource').value.trim();
+  const employer = document.getElementById('editEmployer').value.trim();
+  const jobTitle = document.getElementById('editJobTitle').value.trim();
+  const userId = document.getElementById('user_id')?.value;
+  const tenantId = document.getElementById('tenant_id')?.value;
+
+  console.log('tenant id', tenantId)
+
+  if (!incomeSource || !employer || !jobTitle || !userId || !tenantId) {
+    alert("⚠️ Please fill in all required fields.");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('income_source', incomeSource);
+  formData.append('employer', employer);
+  formData.append('job_title', jobTitle);
+  formData.append('user_id', userId);
+  formData.append('tenant_id', tenantId);
+
+  fetch("../people/actions/tenant_profile/update_income_info.php", {
+    method: "POST",
+    body: formData
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Server response:', data);
+
+      if (data.success) {
+        alert("✅ Income information updated successfully.");
+
+        // Update the UI
+        const incomeDisplay = document.getElementById('income_source_display');
+        const workplaceDisplay = document.getElementById('work_place_display');
+        const jobTitleDisplay = document.getElementById('job_title_display');
+
+        if (incomeDisplay) incomeDisplay.textContent = incomeSource;
+        if (workplaceDisplay) workplaceDisplay.textContent = employer;
+        if (jobTitleDisplay) jobTitleDisplay.textContent = jobTitle;
+
+        // Hide the modal
+        const editModal = bootstrap.Modal.getInstance(document.getElementById('editIncomeModal'));
+        if (editModal) editModal.hide();
+
+        // Optionally reload if UI update is not enough
+        // location.reload();
+      } else {
+        alert("❌ Failed to update income info: " + (data.message || "Unknown error."));
+      }
+    })
+    .catch(error => {
+      console.error("Fetch error:", error);
+      alert("❌ An error occurred while updating income information.");
     });
 }
