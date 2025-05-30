@@ -42,6 +42,14 @@ document.addEventListener("DOMContentLoaded", function () {
         safeSet("job_title", tenant.job_title);
         safeSet("unit", tenant.unit);
         
+
+//populate editing tenant field
+        document.getElementById("editIncomeSource").value = tenant.income_source;
+        document.getElementById("editEmployer").value = tenant.employer_name;
+        document.getElementById("editJobTitle").value = tenant.job_title;
+        
+
+        
         const tenantIdInput = document.getElementById("tenant_id");
 if (tenantIdInput) {
   tenantIdInput.value = tenant.tenant_id;
@@ -331,8 +339,8 @@ window.submitEditPersonalInfoModal = function (event) {
 
 
  window.submitEditIncomeInfo = function (event) {
-  console.log('Saving income info...');
-  alert('hi!')
+  console.log('DoNe');
+  alert('hi!');
   event.preventDefault();
 
   const incomeSource = document.getElementById('editIncomeSource').value.trim();
@@ -340,8 +348,6 @@ window.submitEditPersonalInfoModal = function (event) {
   const jobTitle = document.getElementById('editJobTitle').value.trim();
   const userId = document.getElementById('user_id')?.value;
   const tenantId = document.getElementById('tenant_id')?.value;
-
-  console.log('tenant id', tenantId)
 
   if (!incomeSource || !employer || !jobTitle || !userId || !tenantId) {
     alert("⚠️ Please fill in all required fields.");
@@ -364,23 +370,16 @@ window.submitEditPersonalInfoModal = function (event) {
       console.log('Server response:', data);
 
       if (data.success) {
-        alert("✅ Income information updated successfully.");
+         alert("✅ Income information updated successfully.");
+        // ✅ Hide the modal
+        const modalElement = document.getElementById('editIncomeInfoModal');
+        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+        if (modalInstance) modalInstance.hide();
 
-        // Update the UI
-        const incomeDisplay = document.getElementById('income_source_display');
-        const workplaceDisplay = document.getElementById('work_place_display');
-        const jobTitleDisplay = document.getElementById('job_title_display');
-
-        if (incomeDisplay) incomeDisplay.textContent = incomeSource;
-        if (workplaceDisplay) workplaceDisplay.textContent = employer;
-        if (jobTitleDisplay) jobTitleDisplay.textContent = jobTitle;
-
-        // Hide the modal
-        const editModal = bootstrap.Modal.getInstance(document.getElementById('editIncomeModal'));
-        if (editModal) editModal.hide();
-
-        // Optionally reload if UI update is not enough
-        // location.reload();
+        // ✅ Refresh the page to reflect changes
+        setTimeout(() => {
+          location.reload();
+        }, 300); // optional small delay to allow modal to close smoothly
       } else {
         alert("❌ Failed to update income info: " + (data.message || "Unknown error."));
       }
@@ -390,3 +389,4 @@ window.submitEditPersonalInfoModal = function (event) {
       alert("❌ An error occurred while updating income information.");
     });
 }
+
