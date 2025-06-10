@@ -246,7 +246,18 @@ function addRequestPayment(event){
 };
 
 // Mark Complete
-function markComplete(){
-   fetch(`actions/update_records.php?type=mark_payment&maintanance_request_id=${requests.id}`)
-
+function markComplete(itemId, status = 'completed'){
+   fetch(`actions/update_records.php?type=mark_item&item_id=${itemId}&status=${status}`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        console.log("Item updated successfully.");
+        // Optionally refresh part of the UI
+      } else {
+        console.error("Backend error:", data.error);
+      }
+    })
+    .catch(error => {
+      console.error("Network error:", error);
+    });
 }
