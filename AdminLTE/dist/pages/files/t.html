@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Viewer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+    <style>
+        .pdf-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between; /* Pushes the button to the bottom */
+            height: 90vh; /* Adjust height as needed */
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        canvas {
+            max-width: 100%;
+            flex-grow: 1; /* Allows canvas to take available space */
+        }
+        .view-button {
+            background-color: #00192D;
+            color: #f1f1f1;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            width: 100%; /* Full width */
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<!-- PDF viewer container -->
+<div class="pdf-container">
+    <canvas id="pdfViewer"></canvas>
+    <button class="view-button">VIEW</button>
+</div>
+
+<script>
+    const url = 'balancesheet (1).pdf'; // Ensure this file is accessible in the same directory or use a correct path
+
+    // Load the PDF file
+    pdfjsLib.getDocument(url).promise.then(pdf => {
+        pdf.getPage(1).then(page => {  // Render first page
+            const scale = 1.5;  // Adjust scale as needed
+            const viewport = page.getViewport({ scale });
+
+            const canvas = document.getElementById('pdfViewer');
+            const context = canvas.getContext('2d');
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+
+            const renderContext = {
+                canvasContext: context,
+                viewport: viewport
+            };
+            page.render(renderContext);
+        });
+    }).catch(error => {
+        console.error("Error loading PDF: ", error);
+    });
+</script>
+
+</body>
+</html>

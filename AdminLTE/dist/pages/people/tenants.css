@@ -1,0 +1,633 @@
+
+
+/* SUMMARY */
+.summary-card{
+  background-color: white !important;
+  padding-left: 2px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+  border-radius: 5px;
+  display: flex;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.summary-card_icon{
+  color: #FFC107;
+  font-weight: 600;
+  font-size: 16px;
+}
+.summary-card_label{
+  font-weight: 600;
+  font-size: 16px;
+  color: #767676;
+}
+.summary-card_value.active{
+  background-color: #2e7d32;
+  color: white;
+  border: none;
+  padding:0 6px;
+  border-radius: 5px;
+}
+.summary-card_value.inactive{
+  background-color: #F87171;
+  color: white;
+  border: none;
+  padding:0 6px;
+  border-radius: 5px;
+}
+
+/* GENERAL STYLES */
+.contact_section_header.summary{
+  border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+  font-weight: 600;
+  width: 100%;
+   color: #00192D;
+}
+
+main{
+  transition: opacity 0.4s ease-in-out;
+  opacity: 1;
+}
+main.fade-out {
+   opacity: 0;
+}
+
+                                                /* HEADER SECTION */
+
+.contact_section_header{
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  letter-spacing: .5px;
+  }
+  .contact_section_header .icon{
+    color: #FFC107;
+  }
+
+
+
+                                                   /* INPUT */
+                                                   input, textarea {
+                                                    width: 100%;
+                                                    padding: 8px;
+                                                    margin-top: 5px;
+                                                    border: 1px solid #00192D;
+                                                    border-radius: 4px;
+                                                    color: #4f4f52;
+                                                    }
+
+                                                    input:hover{
+                                                    border: 1px solid #FFC107;
+                                                    }
+                                                    select:hover{
+                                                    border: 1px solid #FFC107;
+                                                    }
+
+                                                    input:focus, select:focus, textarea:focus {
+                                                      border-color: #FFC107;
+                                                      outline: none;
+                                                      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+                                                    }
+                                                    select {
+                                                      background-size: 16px;
+                                                      /* padding-right: 30px; */
+                                                    border-radius: 4px;
+                                                    width: fit-content;
+                                                    padding:  10px;
+                                                    }
+                                                    .select-option-container{
+
+                                                      width: 170px;
+                                                     position: relative;
+                                                     }
+
+                                                    .custom-select{
+                                                      position: relative;
+                                                      padding: 8px;
+                                                      /* padding:10px 20px; */
+                                                      color: #999;
+                                                      border: 1px solid #00192D;
+                                                      border-radius: 5px;
+                                                      font-size: 16px;
+                                                      background-color: #fff;
+                                                      cursor: pointer;
+                                                      margin-right: 20px;
+                                                      width: 100%;
+                                                    }
+                                                    .custom-select:hover{
+                                                      border: 1px solid #FFC107;
+
+                                                    }
+                                                  .custom-select:focus{
+                                                    border-color: #FFC107;
+                                                    outline: none;
+                                                    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+                                                  }
+
+                                                  .custom-select:after{
+                                                      border-bottom: 2px solid #999;
+                                                      border-right: 2px solid #999;
+                                                      content: '';
+                                                      display: block;
+                                                      height: 5px;
+                                                      margin-top: -4px;
+                                                      pointer-events: none;
+                                                      position: absolute;
+                                                      right: 12px;
+                                                      top: 50%;
+                                                      -webkit-transform-origin: 66% 66%;
+                                                      -ms-transform-origin: 66% 66%;
+                                                      transform-origin: 66% 66%;
+                                                      -webkit-transform: rotate(45deg);
+                                                      -ms-transform: rotate(45deg);
+                                                      transform: rotate(45deg);
+                                                      -webkit-transition: all 0.15s ease-in-out;
+                                                      transition: all 0.15s ease-in-out;
+                                                      width: 5px;
+                                                  }
+                                                  .custom-select.open:after {
+                                                    transform: rotate(-135deg);
+                                                  }
+                                                  .select-options{
+                                                    background-color: white;
+                                                     position: absolute;
+                                                    top: 100%;
+                                                    left: 0;
+                                                    right: 0;
+                                                    background: white;
+                                                    border: 1px solid #ccc;
+                                                    border-top: none;
+                                                    z-index: 10;
+                                                    max-height: 200px;
+                                                    overflow-y: auto;
+                                                    border-radius: 5px;
+                                                    color: gray;
+
+                                                    display: none;
+                                                    /* border-radius: 0 0 8px 8px; */
+
+                                              }
+                                              .select-options div {
+                                                    padding: 12px;
+                                                    cursor: pointer;
+                                                    transition: background 0.3s;
+                                                  }
+                                              .select-options div.selected {
+                                                    background-color: #00192D;
+                                                    color: #FFC107;
+                                                }
+
+                                              .select-options div:hover {
+                                                    background-color: #00192D !important;
+                                                    color: #FFC107 !important;
+
+                                              }
+
+                                      /* Tenants Section */
+.filter-pdf-excel{
+  display: flex;
+  justify-content: space-between;
+}
+.container.tenants{
+    /* max-width: 850px; */
+    padding: 10px;
+    border-radius: 5px;
+    /* box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2); */
+  }
+  .details-container_header{
+    color: #ffffff;
+    font-weight: 700;
+   background-color: #00192D;
+    padding: 15px;
+    border-radius: 5px 5px 0 0;
+    text-align: center;
+    font-size: 16px;
+
+  }
+
+  .table {
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 12px;
+  }
+  thead {
+    background-color: #34495e;
+    color: white;
+    font-size: 16px !important;
+    border-top:2px solid #4f4f52 !important;
+  }
+  tbody tr:nth-child(even) {
+    background-color: #ecf0f1;
+  }
+  .fw-bold {
+    background-color: #d5dbdb;
+  }
+  th {
+    padding: 12px;
+  }
+  td{
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  tr td:first-child {
+    font-weight: 600;
+    font-size: 16px;
+
+  }
+  .fw-bold.text-end {
+    background-color: #2c3e50;
+    color: white;
+  }
+  td .email{
+    color: #0072C6;
+    
+  }
+  td .email:hover{
+    text-decoration: underline;
+    cursor: pointer;
+  }
+ td .phone{
+
+    font-size: 14px;
+  }
+ td .phone:hover{
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  tr:hover {
+    background-color: #f9f9f9 !important;
+    cursor: pointer;
+  }
+
+  .phone .icon{
+    color: #FFC107;
+  }
+  .email .icon{
+    color: #FFC107;
+  }
+  .status {
+    display: inline-flex;
+    align-items: center;
+    font-weight: bold;
+    padding: 6px 12px;
+     border-radius: 4px;
+    font-size: 14px;
+  }
+
+  .status.active {
+    background-color: #2e7d32; /* Light green */
+    color: white;
+    border: none;
+    width: 100px;
+  }
+
+  .status.inactive {
+    background-color: #F87171; /* Light green */
+    color: white;
+    border: none;
+    width: 100px;
+  }
+  /* General Styling for Summary Items */
+
+
+
+                                                     /* BUTTONS */
+
+
+   .btn{
+    font: bold !important;
+    letter-spacing: 0.15em;
+    /* padding: 6px 14px; */
+    height: fit-content;
+    background-color: #002a4d ;
+    cursor: pointer;
+    color: #FFC107;
+  }
+
+
+  .dt-buttons {
+    display: flex;
+    justify-content: start; /* or center */
+    gap: 5px;
+
+  }
+  div.dt-buttons .btn{
+    background-color: #00192D !important ;
+   border-radius: 5px ;
+ }
+
+
+  div.dt-button-collection {
+    background-color: #00192D !important;  /* Change to your preferred color */
+    border: 1px solid #ccc !important;
+    border-radius: 2px;
+  }
+  div.dt-button-collection .dt-button {
+    background-color: #00192D !important;
+    color: white !important; /* Ensure text is visible */
+    border: none !important;
+  }
+
+  /* Change hover effect */
+  div.dt-button-collection .dt-button:hover {
+    background-color: #FFC107 !important;
+    color: white !important;
+    border-radius: 3px;
+  }
+
+.btn.shift-tenant{
+  border: 1px solid #002a4d;
+  margin-right: 15px;
+}
+
+.btn.vacate-tenant{
+  font: bold !important;
+  letter-spacing: 0.15em;
+  /* padding: 6px 14px; */
+  height: fit-content;
+  background-color: #002a4d;
+  cursor: pointer;
+  color: #FFC107;
+}
+.btn.add_pet{
+  font: bold !important;
+  letter-spacing: 0.15em;
+  /* padding: 6px 14px; */
+  height: fit-content;
+  background-color: #00192D !important;
+  cursor: pointer;
+  color: #FFC107;
+}
+.btn.save{
+  font: bold !important;
+  letter-spacing: 0.15em;
+  /* padding: 6px 14px; */
+  height: fit-content;
+  background-color: #00192D !important;
+  cursor: pointer;
+  color: #FFC107;
+}
+
+                                                 /*Modals*/
+  /* Submit button */
+  .submit-btn {
+    background-color: #00192D;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 5px;
+    }
+  input, textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .complaint-form input, .complaint-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    }
+/* Shift Tenant */
+.shiftpopup-overlay{
+  position: fixed;
+top: 0;
+left: 0;
+z-index: 10000;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.7); /* Dark overlay */
+display: none; /* Initially hidden */
+justify-content: center;
+align-items: center;
+font-family: 'Poppins', sans-serif;
+font-size: small;
+}
+.shiftpopup-content{
+background: white;
+padding: 20px;
+border-radius: 8px;
+width: 50%;
+text-align: left;
+position: relative;
+}
+.shift{
+  width: 95%;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* dd Tenant */
+.popup-overlay {
+  position: fixed;
+  /* margin-top: 60px; */
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Dark overlay */
+  display: none; /* Initially hidden */
+  justify-content: center;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  font-size: small;
+  overflow: scroll;
+  }
+  .addTenantHeader{
+    font-weight: 600;
+  }
+  /* Popup content */
+  .popup-content {
+  /* background: white; */
+  margin-top: 15vh !important;
+  border-radius: 8px;
+  width: 50%;
+  text-align: left;
+  position: relative;
+  margin-bottom: 3px;
+  background-color: white;
+  padding: 20px;
+
+  }
+
+  /* Close button */
+  .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  }
+  .tenant-form{
+    display: none;
+  z-index: 1000;
+  position: absolute;
+      top: 0;
+      left: 0;
+      background: rgba(0, 0, 0, 0.7); /* Dark overlay */
+      display: none; /* Initially hidden */
+      justify-content: center;
+      align-items: center;
+       width: 100%;
+      padding: 20px;
+      min-height: 100%;
+      /* margin-left: 20%; */
+  }
+/* Loading */
+
+                                      .loader {
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: center;
+                                        height: 60px;
+                                      }
+
+                                      .loader::after {
+                                        content: "";
+                                        width: 30px;
+                                        height: 30px;
+                                        border: 4px solid #ccc;
+                                        border-top-color:#FFC107;
+                                        border-radius: 50%;
+                                        animation: spin 0.8s linear infinite;
+                                      }
+
+                                      @keyframes spin {
+                                        to { transform: rotate(360deg); }
+                                      }
+
+
+/* ToolTip */
+
+/* Modal header - dark blue background, gold text */
+.custom-modal-header {
+  background-color: #00192D !important;
+  color: #FFC107 !important;
+}
+
+/* Modal footer - dark blue background, white text */
+.custom-modal-footer {
+  background-color: #00192D;
+  color: white;
+}
+
+/* Save button - gold background, dark blue text */
+.btn-save-changes {
+  background-color: #FFC107;
+  color: #00192D;
+  font-weight: 600;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+/* Save button hover - darker gold / orange effect */
+.btn-save-changes:hover,
+.btn-save-changes:focus {
+  background-color: #e6b807;
+  color: #00192D;
+}
+
+/* Optional: change close button color to white for better visibility */
+.btn-close-white {
+  filter: invert(1);
+}
+/* Overlay background */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 25, 45, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Popup content styling */
+.shift-tenant-popup {
+  background: #ffffff;
+  border-radius: 12px;
+  width: 400px;
+  padding: 30px 25px;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #888;
+}
+
+/* Form styling */
+.shift-tenant-form .form-title {
+  margin-bottom: 20px;
+  color: #00192D;
+  font-size: 24px;
+  text-align: center;
+}
+
+.shift-tenant-form .form-group {
+  margin-bottom: 15px;
+}
+
+.shift-tenant-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #333;
+}
+
+.shift-tenant-form select,
+.shift-tenant-form input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.shift-tenant-form .submit-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #00192D;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.shift-tenant-form .submit-btn:hover {
+  background-color: #00345a;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

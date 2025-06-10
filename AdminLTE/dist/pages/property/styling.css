@@ -1,0 +1,304 @@
+.fab-container {
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    z-index: 999;
+    cursor: pointer;
+}
+
+.fab-icon-holder {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    background: #016fb9;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.fab-icon-holder:hover {
+    opacity: 0.8;
+}
+
+.fab-icon-holder i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-size: 25px;
+    color: #ffffff;
+}
+
+.fab {
+    width: 60px;
+    height: 60px;
+    background: #d23f31;
+}
+
+.fab-options {
+    list-style-type: none;
+    margin: 0;
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    opacity: 0;
+    transition: all 0.3s ease;
+    transform: scale(0);
+    transform-origin: 85% bottom;
+}
+
+.fab:hover+.fab-options,
+.fab-options:hover {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.fab-options li {
+    display: flex;
+    justify-content: flex-end;
+    padding: 5px;
+}
+
+.fab-label {
+    padding: 2px 5px;
+    align-self: center;
+    user-select: none;
+    white-space: nowrap;
+    border-radius: 3px;
+    font-size: 25px;
+    background: #666666;
+    color: #ffffff;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    margin-right: 10px;
+}
+
+
+/* Floating Social Media Buttons */
+
+
+/* CustomeButton Styling */
+
+#customBtn {
+    background-color: #00192D;
+    color: #ffffff;
+}
+
+
+/* Add Property Tab Stylings */
+
+#addPropertyTab1,
+#addPropertyTab2,
+#addPropertyTab3,
+#addPropertyTab4,
+#addPropertyTabs5,
+#addPropertyTabs6 {
+    border: 2px solid #00192D;
+    border-radius: 3px;
+    color: #00192D;
+}
+
+
+/*Form Container Stylings for the Add Property Step One Section */
+
+.form-container1 {
+    border: 4px solid #00192D;
+    border-radius: 10px;
+    width: 150px;
+    height: 150px;
+    float: right;
+}
+
+.form-container2 {
+    border: 4px solid #00192D;
+    border-radius: 10px;
+    width: 150px;
+    height: 150px;
+    float: left;
+}
+
+.unit-type {
+    border: 4px solid #00192D;
+    border-radius: 10px;
+    width: 150px;
+    height: 150px;
+}
+
+#propertyIcon {
+    margin-top: 3px;
+    font-size: 25px;
+}
+
+
+/*Modal Buttons Stylings */
+
+.back-btn,
+.next-btn {
+    width: 100px !important;
+    height: 35px !important;
+    font-size: 14px !important;
+    border: 0;
+    font-weight: bold;
+}
+
+.back-btn
+{
+    background-color: #cc0001;
+    color: #ffffff;
+}
+
+.back-btn:hover {
+    background-color: #cc0001;
+    color: #fff;
+}
+
+.next-btn {
+    background-color: #00192D;
+    color: #ffffff;
+}
+
+.next-btn:hover {
+    background-color: #FFC107;
+    color: #00192D;
+}
+
+
+/*Details Button Styling Found in the Tables */
+
+.details-btn {
+    background-color: #00192D;
+    color: #ffffff;
+    border: 2px solid #00192D;
+    width: 100px;
+    font-weight: bold;
+}
+
+.details-btn:hover {
+
+    border: 2px solid #00192D !important;
+    font-weight: bold;
+    background: none;
+    color: #00192D;
+}
+
+.edit-btn {
+    background-color: #FFC107;
+    color: #00192D;
+    width: 100px;
+    border: 2px solid #FFC107;
+    font-weight: bold;
+}
+
+.edit-btn:hover {
+    background: none !important;
+    border: 2px solid #FFC107;
+    color: #FFC107;
+}
+
+/*bookit-btn*/
+.bookit-btn{background-color: #AF2A28 !important; color: #fff; border: 2px solid #AF2A28; width: 100px; font-weight: bold;}
+
+.bookit-btn:hover{background: none !important; color: #AF2A28; border: 2px solid #AF2A28 !important;}
+
+/* Vacant Button */
+.vacant-btn{background-color:#cc0001; color:#fff; width: 130px !important; font-weight: bold;}
+
+/*Occupied Button */
+.occupied-btn{
+    background-color:#2C9E4B; color:#fff; border:2px solid #2C9E4B !important; width: 130px !important; font-weight: bold;
+}
+
+/*Vacant Soon Btn*/
+.vacantsoon-btn{background-color:#F74B00; color:#fff; border:2px solid #F74B00 !important; width: 130px !important; font-weight: bold;}
+/*Property Category Description */
+
+/*Rent it Button */
+.rent-btn{background-color: #0C5662; color: #fff; border: 2px solid #0C5662; width: 100px; font-weight: bold;}
+
+/*Rent it Button*/
+.rent-btn:hover{border: 2px solid #0C5662 !important; color: #0C5662; background: none;}
+
+.propertyCat {
+    border: 4px solid #00192D;
+    border-radius: 10px;
+    height: 180px;
+}
+
+.propertyCat i {
+    font-size: 80px;
+    color: #00192D;
+}
+
+.propertyCat p {
+    font-size: 18px;
+    color: #00192D;
+}
+
+
+
+#sectionTwo, #sectionThree, #sectionFour, #sectionFive, #sectionSix, #sectionSeven, #sectionEight {
+    display: none;
+}
+
+
+/*Appearing DIV Animation*/
+
+@keyframes slideInLeft {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+#sectionOne, #sectionTwo, #sectionThree, #sectionFour, #sectionFive, #sectionSix, #sectionSeven, #sectionEight {
+    animation: 1s ease-out 0s 1 slideInLeft;
+}
+
+.errorMessages {
+    color: #cc0001;
+    font-weight: bold;
+}
+.units-overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  width: 100%;
+ height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Dark overlay */
+  display: none; /* Initially hidden */
+  justify-content: center;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  font-size: small;
+  overflow: scroll;
+}
+.units-content{
+  /* background: white; */
+  padding: 20px;
+  border-radius: 8px;
+  /* height: 100%; */
+  width: 60%;
+  text-align: left;
+  position: relative;
+}
+.wide-form {
+  width: 100%;
+  max-width: 700px;
+  margin: auto;
+  padding: 10px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 30px;
+  color: #333;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-weight: bold;
+}

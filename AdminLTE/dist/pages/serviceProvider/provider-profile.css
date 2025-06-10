@@ -1,0 +1,639 @@
+a{
+  text-decoration: none;
+}
+
+body{
+  font-family: 'Poppins', sans-serif;
+  background-color: rgba(128, 128, 128, 0.1);
+}
+
+
+
+
+                   /* GENERAL STYLES */
+.contact_section_header{
+border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+font-weight: 600;
+width: 80%;
+}
+                                      /* HEADER SECTION */
+.section_header.tenantName{
+
+/* border-bottom: 1px solid rgba(128, 128, 128, 0.5); */
+
+font-weight: 600;
+   letter-spacing: .5px;
+   margin-right: 2px;
+}
+.active{
+color: green;
+background-color: rgba(128,128,128,0.2);
+height: fit-content;
+padding: 0 4px;
+border-radius: 5px;
+font-weight: 500;
+}
+                                        /* BUTTONS */
+                                                          .btn{
+                                                            font: bold !important;
+                                                            letter-spacing: 0.15em;
+                                                            /* padding: 6px 14px; */
+                                                            height: fit-content;
+                                                            background-color: #002a4d;
+
+                                                            cursor: pointer;
+                                                            color: #FFC107;
+                                                          }
+                                                          .headerButtons{
+                                                            display: flex;
+                                                            justify-content: end;
+                                                            gap: 15px;
+                                                          }
+                                                          .shift-tenant{
+                                                                height: fit-content;
+                                                                padding: 2px 8px;
+                                                                font-size: 12px;
+                                                                /* background-color: transparent; */
+                                                                /* color: green; */
+                                                                border: 1px solid #002a4d;
+                                                          }
+                                                          .vacate-tenant{
+                                                                height: fit-content;
+                                                                padding: 2px 8px;
+                                                                font-size: 12px;
+                                                                background-color: #e74c3c;
+                                                                color: white;
+                                                          }
+                                                          .btn:hover {
+                                                            background-color: #002a4d; /* Slightly lighter blue */
+                                                            transform: scale(1.05); /* Slightly enlarge */
+                                                            color: #FFC107;
+                                                          }
+                                                          .edit-btn.personal-info{
+                                                            height: fit-content;
+                                                                padding: 2px 6px;
+                                                                font-size: 12px;
+
+                                                                /* background-color: transparent; */
+                                                                /* color: green; */
+                                                                border: 1px solid #002a4d;
+                                                          }
+                                                          .edit-btn:hover{
+                                                            background-color: #002a4d; /* Slightly lighter blue */
+                                                            transform: scale(1.05); /* Slightly enlarge */
+                                                            color: #FFC107;
+                                                          }
+                                                          .btn.view.id{
+                                                            padding: 0px 3px;
+                                                            font-size: 12px;
+                                                            background-color: #00192D;
+                                                            color: #FFC107;
+                                                          /* border: 1px solid #FFC107; */
+                                                          height: fit-content;
+                                                          }
+                                                          .btn.view.id:hover{
+                                                            background-color: #002a4d; /* Slightly lighter blue */
+                                                            transform: scale(1.05); /* Slightly enlarge */
+                                                            color: #FFC107;
+                                                          }
+                                                          .pdf {
+                                                            border: 1px solid #FFC107;
+                                                            margin-right: 3px;
+                                                          }
+                                                          .excel{
+                                                            border: 1px solid #FFC107;
+                                                          }
+                                                          .pdf:hover{
+                                                            border: 1px solid #002a4d;
+                                                            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+                                                          }
+                                                          .excel:hover{
+                                                            border: 1px solid #002a4d;
+                                                            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+                                                          }
+                                                          .reciept{
+                                                            padding: 2px 8px;
+                                                            font-size: 12px;
+                                                            background-color: #00192D;
+                                                            color: #FFC107;
+                                                          /* border: 1px solid #FFC107; */
+                                                          height: fit-content;
+                                                          }
+                                                          .btn.change{
+                                                            padding: 0px 3px;
+                                                            font-size: 12px;
+                                                            background-color: #00192D;
+                                                            color: #FFC107;
+                                                            /* color: white; */
+                                                          /* border: 1px solid #FFC107; */
+                                                          height: fit-content;
+
+                                                          }
+                                                          /* SUMMARY SECTION */
+
+.col-md-3 .icon-category-number {
+background-color: white;
+padding-left: 2px;
+/* border-left:5px solid #F28B88; */
+box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+border-radius: 5px;
+}
+.icon-category-number .icon{
+color: #FFC107;
+}
+
+.icon-category-number .rent-type{
+font-weight: 600;
+font-size: 16px;
+color: #767676;
+border-radius: 5px;
+}
+.icon-category-number .number{
+font-weight: 600;
+font-size: 16px;
+color: rgb(41, 41, 41);
+/* color: #FFB000; */
+}
+.rent-type-duration-stayed{
+
+display: flex;
+gap: 3px;
+}
+.duration-stayed{
+font-weight: 400px;
+font-size: 14px;
+color: green;
+background-color: rgba(128,128,128,0.2);
+padding:0px 4px;
+border-radius: 10px;
+margin-top: 2px;
+height: fit-content;
+}
+.rent-type-date-paid {
+display: flex;
+gap: 4px;
+}
+.date-paid
+{
+font-weight: 500px;
+font-size: 14px;
+color: green;
+background-color: rgba(128,128,128,0.2);
+padding-bottom: 0px;
+border-radius: 10px;
+vertical-align: middle;
+padding: 0px 4px;
+height: fit-content;
+margin-top: 2px;
+}
+
+.completed {
+  background-color: #4CAF50; /* Green */
+  color: black; /* Better contrast with dark text */
+}
+
+
+/*PERSONAL INFO  */
+
+                                            .personal-info-icon{
+                                              color: #FFC107;
+                                            }
+                                            .personal-item{
+                                              box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+                                              overflow: hidden;
+                                              border-radius: 5px;
+                                            }
+                                            .personal-info.item-name{
+                                              /* color: rgb(41, 41, 41); */
+                                              color: #767676;
+                                              font-weight: 600;
+                                              font-size: 14px;
+                                            }
+
+                                          .personal-info-icon.email{
+                                            color: #0072C6;
+                                            overflow: hidden;
+                                          }
+
+                                          .email:hover{
+                                            text-decoration: underline;
+                                            cursor: pointer;
+                                          }
+                                          .phone{
+                                            color: #0072C6;
+                                            font-size: 14px;
+                                          }
+                                          .phone:hover{
+                                            text-decoration: underline;
+                                            cursor: pointer;
+                                          }
+                                          .labal-value .value{
+                                            color: #0072C6;
+                                            font-size: 14px;
+                                          }
+                                          .labal-value .value:hover{
+                                            text-decoration: underline;
+                                            cursor: pointer;
+                                          }
+
+
+
+                                          /* RENT DETAILS */
+.contact_section_header.details{
+  border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+  font-weight: 600;
+  width: 100%;
+  /* color: #00192D; */
+
+}
+.summary.title{
+color: #767676;
+  font-weight: 600;
+  font-size: 14px;
+
+}
+.details.title{
+color: #767676;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+                                        /* SELECT, INPUT, TEXT_AREA */
+input, textarea {
+width: 100%;
+padding: 8px;
+margin-top: 5px;
+border: 1px solid #00192D;
+border-radius: 4px;
+color: #4f4f52;
+}
+
+input:hover{
+border: 1px solid #FFC107;
+}
+select:hover{
+border: 1px solid #FFC107;
+}
+
+input:focus, select:focus, textarea:focus {
+border-color: #FFC107;
+outline: none;
+box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+select {
+background-size: 16px;
+padding-right: 30px;
+border-radius: 4px;
+width: fit-content;
+padding:  10px;
+}
+
+                                                       /* TABLE */
+                                                       table{
+                                                        border-radius: 200px !important;
+                                                      }
+                                                      th, td {
+                                                        text-align: left !important; /* Align text for readability */
+                                                        vertical-align: middle; /* Centers text vertically */
+                                                      }
+                                                      td{
+                                                        font-size: 14px !important;
+
+                                                        align-items: center;
+                                                      }
+
+                                                      th{
+                                                        font-size: 12px !important;
+                                                        letter-spacing: .5px;
+                                                        font-weight: 600;
+                                                        text-transform: uppercase;
+                                                      }
+                                                      th:nth-child(1), td:nth-child(1) {
+                                                        text-align: center !important; /* Center align numbers like serial numbers */
+                                                      }
+
+
+                                                      th:nth-child(4), td:nth-child(4) {
+                                                        text-align: left !important; /* Align provider names to the left */
+                                                      }
+                                                      th, td {
+                                                        padding: 12px 15px !important; /* Top-bottom: 12px, Left-right: 15px */
+
+                                                      }
+
+                                                      th, td {
+                                                        white-space: nowrap !important;
+                                                        overflow: hidden !important;
+                                                        text-overflow: ellipsis !important; /* Add '...' if text overflows */
+                                                      }
+                                                      th {
+                                                        font-weight: 600 !important;
+                                                        /* text-transform: uppercase !important; */
+                                                        /* background-color: #f4f4f4 !important; Light background for contrast */
+                                                        border-bottom: 2px solid #ddd !important;
+                                                        background: #00192D    !important ;
+                                                        color: white !important;
+                                                      }
+                                                      /* contents */
+                                                      td{
+                                                        background: #EFF2F5;
+                                                      }
+                                                      .month{
+                                                        color: rgb(41, 41, 41);
+                                                      }
+                                                      .rent{
+                                                        color: black;
+                                                        font-weight: 600;
+                                                        font-size: 16px;
+                                                      }
+                                                      .rent.paid{
+
+                                                        font-weight: 600;
+                                                        font-size: 16px;
+                                                      }
+                                                      .amount.date .date{
+                                                        font-weight: 400px;
+                                                        font-size: 10px;
+                                                        color: green;
+                                                        background-color: rgba(128,128,128,0.2);
+                                                        padding-bottom: 0px;
+                                                        border-radius: 10px;
+                                                      vertical-align: middle;
+                                                      padding: 0px 4px;
+                                                      height: fit-content;
+                                                      margin-top: 2px;
+                                                      margin-left: 2px;
+
+                                                      }
+                                                      .pen.amount{
+                                                        background-color: #e74c3c;
+                                                        width: fit-content;
+                                                        padding:0 10px;
+                                                        border-radius: 2px;
+                                                        color: white;
+                                                      }
+                                                      .rent.arrears{
+                                                        color: black;
+                                                        font-weight: 600;
+                                                        font-size: 16px;
+                                                      }
+
+                                                      /* Penalit */
+                                                      .penalt_desc{
+                                                        display: flex;
+                                                        gap: 5px;
+                                                      }
+                                                      .pen-rate{
+                                                        background-color: #e74c3c;
+                                                        width: fit-content;
+                                                        padding:0 10px;
+                                                        border-radius: 2px;
+                                                        color: white;
+
+                                                      }
+                                                      .penik-rate{
+                                                        background-color: green;
+                                                        width: fit-content;
+                                                        padding:0 10px;
+                                                        border-radius: 2px;
+                                                        color: white;
+
+                                                      }
+                                                      .penalt.rate.lable{
+                                                        color: #767676;
+                                                        font-weight: 600;
+                                                        font-size: 14px;
+                                                      }
+                                                      .pen-desc{
+                                                        color: #767676;
+                                                        font-size: 14px;
+                                                        font-weight: 500;
+                                                      }
+
+
+                                                      .status completed{
+
+                                                      }
+
+
+#agreements_btn{
+  background-color: #00192D; color: white; font-size: small;
+}
+#rent_details_btn{
+  background-color: #00192D;
+  color: #FFC107;
+  font-size: small;
+}
+#rent_details_btn a{
+  color: #FFC107;
+}
+
+#agreements_btn a{
+  color: white;
+}
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+ display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+/* Overlay content */
+.overlay-content {
+background-color: #fff;
+  padding: 30px;
+  /* border-radius: 8px; */
+  width: 400px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  /* text-align: center; */
+/* background-color: white; */
+/* padding: 30px; */
+border-radius: 10px;
+}
+
+/* Close button */
+.close-btn {
+position: absolute;
+top: 10px;
+right: 10px;
+background: none;
+border: none;
+font-size: 20px;
+cursor: pointer;
+background-color: red;
+border-radius: 20px;
+}
+
+
+/* Close button for the overlay */
+.close-overlay-btn {
+position: absolute;
+/* top: 10px; */
+right:0.5px;
+background: none;
+border: none;
+font-size: 20px;
+cursor: pointer;
+background-color: red;
+border-radius: 20px;
+}
+
+.receipt p {
+margin: 10px 0;
+}
+.receipt {
+border-top: 2px dashed #000;
+padding-top: 10px;
+}
+.info {
+margin-bottom: 10px;
+border-top: 2px dashed #000;
+font-family: Arial, sans-serif;
+/* margin: 20px;
+padding: 20px; */
+border: 5px solid #ddd;
+max-width: 600px;
+
+}
+.info p{
+margin :10px 0;
+}
+.total {
+border-top: 2px dashed #000;
+/* font-weight: bold; */
+text-align: center;
+}
+
+.popup-overlay {
+position: fixed;
+top: 0;
+left: 0;
+z-index: 10000;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.7); /* Dark overlay */
+display: none; /* Initially hidden */
+justify-content: center;
+align-items: center;
+font-family: 'Poppins', sans-serif;
+font-size: small;
+}
+
+/* Popup content */
+.popup-content {
+background: white;
+padding: 20px;
+border-radius: 8px;
+width: 50%;
+text-align: center;
+position: relative;
+}
+
+/* Close button */
+.close-btn {
+position: absolute;
+top: 10px;
+right: 15px;
+font-size: 20px;
+cursor: pointer;
+border: none;
+background: none;
+}
+
+.cost-details {
+  border-top: 2px dashed #000;
+  padding-top: 10px;
+}
+
+
+
+.overlay {
+/* position: absolute; */
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+display: none;
+justify-content: center;
+align-items: center;
+/* z-index: 1000; */
+}
+
+/* Overlay content */
+.overlay-content {
+background-color: #fff;
+padding: 30px;
+/* border-radius: 8px; */
+width: 400px;
+box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+position: relative;
+text-align: center;
+/* background-color: white; */
+/* padding: 30px; */
+border-radius: 10px;
+}
+
+
+table {
+
+border-collapse: collapse;
+margin: 20px 0;
+}
+table, th, td {
+border: 1px solid #ddd;
+}
+th, td {
+padding: 10px;
+text-align: left;
+}
+th {
+background-color: #f2f2f2;
+}
+.total-row {
+font-weight: bold;
+}
+
+.overlay {
+/* position: absolute; */
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+display: none;
+justify-content: center;
+align-items: center;
+/* z-index: 1000; */
+}
+
+/* Overlay content */
+.overlay-content {
+background-color: #fff;
+padding: 30px;
+/* border-radius: 8px; */
+width: 50%;
+box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+position: relative;
+text-align: center;
+/* background-color: white; */
+/* padding: 30px; */
+border-radius: 10px;
+}
+
+
+table {
+width: 100%;
+border-collapse: collapse;
+margin: 20px 0;
+}
+.mount{
+  background-color: green;
+}
