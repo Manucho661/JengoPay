@@ -120,7 +120,23 @@ foreach ($messages as $msg) {
                             <span class='file-name'>$basename</span>
                         </a>
                     </div>";
-                } else {
+                }
+                elseif (in_array($ext, ['xls', 'xlsx'])) {
+                  $messagesHtml .= "<div class='attachment-file whatsapp-style-file' data-filename='$basename'>
+                      <div class='file-container'>
+                          <a href='data:$mimeType;base64,$base64' download='$basename' class='download-icon' title='Download'>
+                              <i class='fas fa-download'></i>
+                          </a>
+
+                      </div>
+                      <a href='data:$mimeType;base64,$base64' download='$basename' class='file-download-link'>
+                          <i class='fas fa-file-excel file-icon text-success'></i>
+                          <span class='file-name'>$basename</span>
+                      </a>
+                  </div>";
+              }
+              
+                else {
                     $messagesHtml .= "<div class='attachment-file mb-2'>
                         <a href='data:$mimeType;base64,$base64' download='$basename' class='btn btn-sm btn-outline-secondary'>
                             <i class='fas fa-download'></i> $basename

@@ -46,7 +46,7 @@ try {
         foreach ($_FILES['file']['name'] as $index => $originalName) {
             if ($_FILES['file']['error'][$index] === UPLOAD_ERR_OK) {
                 $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
-                $validExtensions = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'docx', 'txt'];
+                $validExtensions = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'docx', 'txt' ,'xls', 'xlsx'];
                 if (!in_array($extension, $validExtensions)) {
                     throw new Exception("Invalid file type: $extension");
                 }

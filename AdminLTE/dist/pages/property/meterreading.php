@@ -594,9 +594,23 @@ $stmt->closeCursor();
             <td><?php echo htmlspecialchars($reading['consumption_units']); ?></td>
             <td><?php echo number_format($reading['consumption_cost'], 2); ?></td>
             <td>
-                <button onclick="openshiftPopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;">
-                    <i class="fa fa-file"></i>
-                </button>
+                
+
+ <!-- View Button -->
+<button 
+    class="btn btn-sm view-btn" 
+    style="background-color: #00192D; color: #FFC107;"
+    data-reading-date="<?= htmlspecialchars($reading['reading_date']) ?>"
+    data-unit="<?= htmlspecialchars($reading['unit_number']) ?>"
+    data-meter-type="<?= htmlspecialchars($reading['meter_type']) ?>"
+    data-prev-reading="<?= htmlspecialchars($reading['previous_reading']) ?>"
+    data-current-reading="<?= htmlspecialchars($reading['current_reading']) ?>"
+    data-consumption-units="<?= htmlspecialchars($reading['consumption_units']) ?>"
+    data-consumption-cost="<?= number_format($reading['consumption_cost'], 2) ?>"
+>
+    <i class="fa fa-file"></i>
+</button>
+
                 <button class="btn btn-sm" style="background-color: red; color:#fff;" title="Delete">
                     <i class="fa fa-trash"></i>
                 </button>
@@ -652,6 +666,57 @@ $stmt->closeCursor();
       <!--end::Footer-->
     </div>
     <!--end::App Wrapper-->
+
+
+    <!-- View Modal Structure -->
+<div class="modal fade" id="shiftModal" tabindex="-1" aria-labelledby="shiftModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-m">
+    <div class="modal-content border-0 rounded-3 shadow">
+      <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
+        <h5 class="modal-title" id="shiftModalLabel">Reading Details</h5>
+        <!--<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button> -->
+      </div>
+      <div class="modal-body px-4">
+        <table class="table table-bordered table-striped align-middle">
+          <tbody>
+            <tr>
+              <th style="background-color: #FFC107; width: 40%;">Reading Date</th>
+              <td id="readingDate"></td>
+            </tr>
+            <tr>
+              <th style="background-color: #FFC107;">Unit</th>
+              <td id="unit"></td>
+            </tr>
+            <tr>
+              <th style="background-color: #FFC107;">Meter Type</th>
+              <td id="meterType"></td>
+            </tr>
+            <tr>
+              <th style="background-color: #FFC107;">Previous Reading</th>
+              <td id="prevReading"></td>
+            </tr>
+            <tr>
+              <th style="background-color: #FFC107;">Current Reading</th>
+              <td id="currentReading"></td>
+            </tr>
+            <tr>
+              <th style="background-color: #FFC107;">Consumption Units</th>
+              <td id="consumptionUnits"></td>
+            </tr>
+            <tr>
+              <th style="background-color: #FFC107;">Consumption Cost</th>
+              <td id="consumptionCost"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer" style="background-color: #F8F9FA;">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #00192D; color: #FFC107;">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <!-- meterreading popup -->
 <div class="meterpopup-overlay" id="meterPopup">
@@ -1449,6 +1514,30 @@ setInterval(() => {
       }
   });
 </script>
+
+
+<!-- JavaScript to Open View Modal -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.view-btn').forEach(button => {
+      button.addEventListener('click', function () {
+        // Populate modal fields
+        document.getElementById('readingDate').textContent = this.dataset.readingDate;
+        document.getElementById('unit').textContent = this.dataset.unit;
+        document.getElementById('meterType').textContent = this.dataset.meterType;
+        document.getElementById('prevReading').textContent = this.dataset.prevReading;
+        document.getElementById('currentReading').textContent = this.dataset.currentReading;
+        document.getElementById('consumptionUnits').textContent = this.dataset.consumptionUnits;
+        document.getElementById('consumptionCost').textContent = this.dataset.consumptionCost;
+
+        // Show the modal
+        const modal = new bootstrap.Modal(document.getElementById('shiftModal'));
+        modal.show();
+      });
+    });
+  });
+</script>
+
 
     <!--end::OverlayScrollbars Configure-->
     <!-- OPTIONAL SCRIPTS -->
