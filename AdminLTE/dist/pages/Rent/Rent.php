@@ -518,11 +518,11 @@ select:hover {
 
 
                             <div class="pdf-excel">
-                            <form method="post" action="export-pdf.php" target="_blank">
-    <button type="submit" class="pdf">
-      <i class="fas fa-file-pdf" style="color: red;"></i>
-    </button>
-  </form>
+                            <form method="post" action="generate-pdf.php" target="_blank">
+                            <button  id="download-pdf" type="submit" class="pdf">
+                              <i class="fas fa-file-pdf" style="color: red;"></i>
+                            </button>
+                          </form>
 
                          <!-- <button  class="pdf" ><i class="fas fa-file-pdf" style="color: red;"></i></button> -->
                           <!-- <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button> -->
@@ -705,13 +705,19 @@ document.querySelectorAll('.select-option-container').forEach(container => {
       });
     }
   });
-
 </script>
 
+ <script>
+document.getElementById('download-pdf').addEventListener('click', function () {
+  const selected = document.querySelector('.custom-select').textContent.trim();
+  const building = encodeURIComponent(selected);
 
+  // Redirect to PDF generator (opens in new tab)
+  window.open(`generate-pdf.php?building=${building}`, '_blank');
+});
 
-
-
+ </script>
+<!--
  <script>
   document.getElementById("generateReport").addEventListener("click", function () {
       const { jsPDF } = window.jspdf;
@@ -751,7 +757,7 @@ document.querySelectorAll('.select-option-container').forEach(container => {
       // Save PDF
       doc.save("Rent_Deposit_Report.pdf");
   });
-</script>
+</script> -->
 <!-- end download as pdf -->
 
 <script>
@@ -859,7 +865,18 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
-
+<!--
+<script>
+        function downloadPDF() {
+            // Create a temporary anchor tag
+            const link = document.createElement('a');
+            link.href = 'download.php'; // This points to your PHP download script
+            link.download = ''; // Not required, but helps in some browsers
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script> -->
 
 <!-- create notification -->
 <script>

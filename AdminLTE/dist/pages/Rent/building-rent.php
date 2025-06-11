@@ -637,8 +637,8 @@ foreach ($tenants as $tenant) {
                           </div>
 
                           <div class="">
-                          <form method="post" action="export-pdf.php" style="display: inline;">
-                          <button type="submit" class="pdf">
+                          <form method="post" action="generating-pdf.php" style="display: inline;">
+                          <button  id="download-pdf"  type="submit" class="pdf">
                             <i class="fas fa-file-pdf" style="color: red;"></i>
                           </button>
                         </form>
@@ -877,6 +877,17 @@ foreach ($tenants as $tenant) {
       });
     });
   </script> -->
+
+  <script>
+document.getElementById('download-pdf').addEventListener('click', function () {
+  const selected = document.querySelector('.custom-select').textContent.trim();
+  const building = encodeURIComponent(selected);
+
+  // Redirect to PDF generator (opens in new tab)
+  window.open(`generating-pdf.php?building=${building}`, '_blank');
+});
+
+ </script>
 
   <script>
 function exportTableToCSV(filename) {
