@@ -1296,7 +1296,7 @@ setInterval(() => {
 </script>
 
 
-<script>
+<!-- <script>
 document.addEventListener("DOMContentLoaded", function () {
   // Attach click event to all edit buttons
   document.querySelectorAll('.edit-btn').forEach(button => {
@@ -1335,7 +1335,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 });
-</script>
+</script> -->
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {

@@ -2,12 +2,12 @@
 header('Content-Type: application/json');
 include '../db/connect.php'; // or adjust path
 
-if (!isset($_GET['id'])) {
+if (!isset($_GET['building_id'])) {
     echo json_encode(['success' => false, 'message' => 'No property ID provided']);
     exit;
 }
 
-$propertyId = intval($_GET['id']);
+$propertyId = intval($_GET['building_id']);
 
 try {
     $stmt = $pdo->prepare("SELECT county, ownership_info, units_number FROM buildings WHERE building_id = ?");

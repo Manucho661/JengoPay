@@ -119,7 +119,7 @@ if ($building_id) {
 
 // === FETCH COMMUNICATION THREADS ===
 $stmt = $pdo->prepare("
-     SELECT
+       SELECT
         c.thread_id,
         c.title,
         c.tenant,

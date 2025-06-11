@@ -37,13 +37,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['submit'])) {
     $current_reading = floatval($_POST['current_reading'] ?? 0);
     $consumption_units = $current_reading - $previous_reading;
 
-    // Calculate consumption cost based on meter type
-    $consumption_cost = 0;
-    if ($meter_type === 'Water') {
-        $consumption_cost = $consumption_units * $water_price;
-    } elseif ($meter_type === 'Electrical') {
-        $consumption_cost = $consumption_units * $electricity_price;
-    }
+   // Get the unit price based on meter type (from DB or session)
+   if ($meter_type === "Water") {
+    $unit_price = $_SESSION['water_price'] ?? 0; // Or fetch from DB
+} else {
+    $unit_price = $_SESSION['electricity_price'] ?? 0; // Or fetch from DB
+}
+
+$consumption_cost = $consumption_units * $unit_price;
 
 
     if (empty($reading_date) || empty($unit_number)) {
@@ -106,6 +107,21 @@ $stmt->bindParam(':building_id', $buildingId, PDO::PARAM_INT);
 $stmt->execute();
 $readings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $stmt->closeCursor();
+?>
+
+<?php
+include '../db/connect.php'; // Assuming this sets up $pdo
+
+$building_id = 137;
+$stmt = $pdo->prepare("SELECT water_price, electricity_price FROM buildings WHERE building_id = ?");
+$stmt->execute([$building_id]);
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$water_rate = $row['water_price'];
+$electricity_rate = $row['electricity_price'];
+
+echo "Water Rate: $water_rate<br>";
+echo "Electricity Rate: $electricity_rate";
 ?>
 
 
@@ -586,6 +602,7 @@ $stmt->closeCursor();
     <tbody>
       <?php foreach ($readings as $reading): ?>
         <tr>
+<<<<<<< HEAD
           <td><?= htmlspecialchars($reading['reading_date']) ?></td>
           <td><?= htmlspecialchars($reading['unit_number']) ?></td>
           <td><?= htmlspecialchars($reading['meter_type']) ?></td>
@@ -619,6 +636,37 @@ $stmt->closeCursor();
               <i class="fa fa-trash"></i>
             </button>
           </td>
+=======
+            <td><?php echo htmlspecialchars($reading['reading_date']); ?></td>
+            <td><?php echo htmlspecialchars($reading['unit_number']); ?></td>
+            <td><?php echo htmlspecialchars($reading['meter_type']); ?></td>
+            <td><?php echo htmlspecialchars($reading['previous_reading']); ?></td>
+            <td><?php echo htmlspecialchars($reading['current_reading']); ?></td>
+            <td><?php echo htmlspecialchars($reading['consumption_units']); ?></td>
+            <td>Ksh <?= number_format($reading['consumption_cost'], 2) ?></td>
+            <td>
+
+
+ <!-- View Button -->
+<button
+    class="btn btn-sm view-btn"
+    style="background-color: #00192D; color: #FFC107;"
+    data-reading-date="<?= htmlspecialchars($reading['reading_date']) ?>"
+    data-unit="<?= htmlspecialchars($reading['unit_number']) ?>"
+    data-meter-type="<?= htmlspecialchars($reading['meter_type']) ?>"
+    data-prev-reading="<?= htmlspecialchars($reading['previous_reading']) ?>"
+    data-current-reading="<?= htmlspecialchars($reading['current_reading']) ?>"
+    data-consumption-units="<?= htmlspecialchars($reading['consumption_units']) ?>"
+    data-consumption-cost="<?= number_format($reading['consumption_cost'], 2) ?>"
+>
+    <i class="fa fa-file"></i>
+</button>
+
+                <button class="btn btn-sm" style="background-color: red; color:#fff;" title="Delete">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </td>
+>>>>>>> 23ca3ca4585310566c909f6ab6c78859a0518c00
         </tr>
       <?php endforeach; ?>
     </tbody>
@@ -1067,7 +1115,7 @@ document.getElementById("current_reading").addEventListener("input", () => {
 
 </script>
 
-
+<!--
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   // Attach click event to all edit buttons
@@ -1107,7 +1155,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 });
-</script>
+</script> -->
 
 
 
@@ -1151,8 +1199,166 @@ document.addEventListener("DOMContentLoaded", function () {
 
 </script>
 
+<!-- <script>
+  function calculateConsumption() {
+    const meterType = document.getElementById("meter_type").value;
+    const prevReading = parseFloat(document.getElementById("previous_reading").value) || 0;
+    const currReading = parseFloat(document.getElementById("current_reading").value) || 0;
+
+    if (currReading <= prevReading) {
+        alert("Current reading must be higher than previous reading!");
+        return;
+    }
+
+    const consumption = currReading - prevReading;
+    document.getElementById("consumption_preview").textContent = `${consumption} units`;
+
+    // Get prices (with fallback)
+    const waterPrice = parseFloat(localStorage.getItem("waterPrice")) || 0;
+    const electricityPrice = parseFloat(localStorage.getItem("electricityPrice")) || 0;
+
+    const unitPrice = meterType === "Water" ? waterPrice : electricityPrice;
+    const cost = consumption * unitPrice;
+
+    document.getElementById("consumption_cost").textContent = `Ksh ${cost.toFixed(2)}`;
+    document.getElementById("consumption_cost_value").value = cost.toFixed(2);
+}
+</script> -->
 
 <script>
+// Function to calculate Consumption Units & Cost
+function calculateConsumptionAndCost() {
+    // Get input values
+    const meterType = document.getElementById("meter_type").value;
+    const prevReading = parseFloat(document.getElementById("previous_reading").value) || 0;
+    const currReading = parseFloat(document.getElementById("current_reading").value) || 0;
+
+    // Validate readings
+    if (currReading <= prevReading) {
+        // alert("Current reading must be higher than previous reading!");
+        return;
+    }
+
+    // Calculate Consumption Units
+    const consumptionUnits = currReading - prevReading;
+    document.getElementById("consumption_preview").textContent = consumptionUnits + " units";
+
+    // Get Unit Price (from localStorage or hardcoded)
+    let unitPrice = 0;
+    if (meterType === "Water") {
+        unitPrice = localStorage.getItem("waterPrice") || 200; // Default: Ksh 200
+    } else if (meterType === "Electrical") {
+        unitPrice = localStorage.getItem("electricityPrice") || 50; // Default: Ksh 50
+    }
+
+    // Calculate Cost
+    const consumptionCost = consumptionUnits * unitPrice;
+    document.getElementById("consumption_cost").textContent = "Ksh " + consumptionCost.toFixed(2);
+    document.getElementById("consumption_cost_value").value = consumptionCost.toFixed(2); // Hidden input for form submission
+}
+
+// Trigger calculation when inputs change
+document.getElementById("meter_type").addEventListener("change", calculateConsumptionAndCost);
+document.getElementById("previous_reading").addEventListener("input", calculateConsumptionAndCost);
+document.getElementById("current_reading").addEventListener("input", calculateConsumptionAndCost);
+
+// Initialize calculation on page load (optional)
+document.addEventListener("DOMContentLoaded", calculateConsumptionAndCost);
+</script>
+<!--
+<script>
+  // Fetch prices from backend and store in localStorage
+function fetchPricesFromBackend() {
+    fetch("get_prices.php")
+        .then(response => {
+            if (!response.ok) throw new Error("Network error");
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                localStorage.setItem("waterPrice", data.water_price);
+                localStorage.setItem("electricityPrice", data.electricity_price); // Note: Fix typo if your PHP uses 'electricity_price'
+                console.log("Prices fetched:", data);
+            } else {
+                console.error("Failed to fetch prices:", data.error);
+                // Fallback to default prices
+                localStorage.setItem("waterPrice", 0);
+                localStorage.setItem("electricityPrice", 0);
+            }
+        })
+        .catch(error => {
+            console.error("Fetch error:", error);
+            // Use cached prices or defaults
+            const cachedWaterPrice = localStorage.getItem("waterPrice") || 0;
+            const cachedElectricityPrice = localStorage.getItem("electricityPrice") || 0;
+            localStorage.setItem("waterPrice", cachedWaterPrice);
+            localStorage.setItem("electricityPrice", cachedElectricityPrice);
+        });
+}
+
+// Call this when the form loads
+document.addEventListener("DOMContentLoaded", function() {
+    fetchPricesFromBackend(); // Fetch latest prices
+    // Add other event listeners...
+});
+</script> -->
+
+<!-- <script>
+// Function to calculate consumption & cost
+function calculateConsumption() {
+    const meterType = document.getElementById("meter_type").value;
+    const prevReading = parseFloat(document.getElementById("previous_reading").value) || 0;
+    const currReading = parseFloat(document.getElementById("current_reading").value) || 0;
+
+    if (prevReading >= currReading) {
+        alert("Current reading must be higher than previous reading!");
+        return;
+    }
+
+    const consumption = currReading - prevReading;
+    document.getElementById("consumption_preview").textContent = consumption + " units";
+
+    // Fetch unit price (from localStorage or backend)
+    let unitPrice = 0;
+    if (meterType === "Water") {
+        unitPrice = localStorage.getItem("waterPrice") || 0;
+    } else if (meterType === "Electrical") {
+        unitPrice = localStorage.getItem("electricityPrice") || 0;
+    }
+
+    const cost = consumption * unitPrice;
+    document.getElementById("consumption_cost").textContent = "Ksh " + cost.toFixed(2);
+    document.getElementById("consumption_cost_value").value = cost.toFixed(2);
+}
+
+// Fetch prices when the page loads (or from localStorage)
+document.addEventListener("DOMContentLoaded", function() {
+    // Example: Fetch prices via AJAX (if stored in DB)
+    // fetchPricesFromBackend();
+
+    // Or use localStorage if prices are set in reg_form.php
+    const waterPrice = localStorage.getItem("waterPrice");
+    const electricityPrice = localStorage.getItem("electricityPrice");
+    console.log("Water Price:", waterPrice, "| Electricity Price:", electricityPrice);
+
+    // Update UI when inputs change
+    document.getElementById("meter_type").addEventListener("change", calculateConsumption);
+    document.getElementById("previous_reading").addEventListener("input", calculateConsumption);
+    document.getElementById("current_reading").addEventListener("input", calculateConsumption);
+});
+
+// Optional: Fetch prices from backend (if stored in DB)
+function fetchPricesFromBackend() {
+    fetch("get_prices.php") // Replace with your API endpoint
+        .then(response => response.json())
+        .then(data => {
+            localStorage.setItem("waterPrice", data.water_price);
+            localStorage.setItem("electricityPrice", data.electricity_price);
+        });
+}
+</script> -->
+
+<!-- <script>
 // Function to fetch building prices when unit is selected
 function fetchBuildingPrices() {
     const unitSelect = document.getElementById('units');
@@ -1228,7 +1434,7 @@ function calculateConsumption() {
         document.getElementById('consumption_cost').innerHTML = '<i>Select meter type</i>';
     }
 }
-</script>
+</script> -->
 
 <!-- <script>
 // This should be populated with the prices from your database
@@ -1278,7 +1484,7 @@ document.getElementById('units').addEventListener('change', function() {
 });
 </script> -->
 
-<script>
+<!-- <script>
   document.getElementById("current_reading").addEventListener("input", calculateConsumption);
   document.getElementById("previous_reading").addEventListener("input", calculateConsumption);
   document.getElementById("meter_type").addEventListener("change", calculateConsumption);
@@ -1311,7 +1517,7 @@ document.getElementById('units').addEventListener('change', function() {
       document.getElementById("consumption_cost_value").value = "";
     }
   }
-</script>
+</script> -->
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
