@@ -261,8 +261,8 @@ fetch(`actions/fetch_records.php?table=inspection_items&inspection_id=${inspecti
         .catch(error => {
             console.error("Network or parsing error:", error);
         });
-  const modal = new bootstrap.Modal(document.getElementById('inspectionModal'));
-  modal.show();
+        const modal = new bootstrap.Modal(document.getElementById('inspectionModal'));
+        modal.show();
 }
 
 // populateItemsTable

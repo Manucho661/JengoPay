@@ -137,8 +137,8 @@ function populateRequestsTable(requests) {
       <div class="dropdown">
             <button class="btn btn-sm more-btn d-flex" data-bs-toggle="dropdown" aria-expanded="false">⋮</button>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#" style="color: #FFA000 !important;"> <i class="fas fa-tasks"></i> Assign Provider</a></li>
-              <li><a class="dropdown-item" href="#" style="color: #FFA000 !important;"> <i class="fas fa-tasks"></i> Mark Complete</a></li>
+              <li><a class="dropdown-item assign-provider" href="#" style="color: #FFA000 !important;"> <i class="fas fa-tasks"></i> Assign Provider</a></li>
+              <li><a class="dropdown-item mark-complete" href="#" style="color: #FFA000 !important;"> <i class="fas fa-tasks"></i> Mark Complete</a></li>
               <li><a class="dropdown-item" href="#" style="color: #FFA000 !important;" ><i class="fas fa-eye"></i> View Payment</a></li>
               <li><a class="dropdown-item" href="#" style="color: #F87171 !important;"  ><i class="fas fa-trash"></i>     Delete Request</a></li>
             </ul>
@@ -163,6 +163,27 @@ function populateRequestsTable(requests) {
       const modal = new bootstrap.Modal(document.getElementById('recordPaymentModal'));
       modal.show();
       });
+
+      // View Request
+      const viewBtn = tempDiv.querySelector('.view-btn');
+      viewBtn.addEventListener('click', (e) =>{
+        const modal = new bootstrap.Modal(document.getElementById('maintenanceRequestModal'));
+        modal.show();
+      });
+
+      // Assign provider
+       const assignProviderBtn = tempDiv.querySelector('.assign-provider');
+        assignProviderBtn.addEventListener('click', (e) =>{
+        const modal = new bootstrap.Modal(document.getElementById('assignProviderModal'));
+        modal.show();
+      });
+
+      // Mark complete
+      const markCompleteBtn = tempDiv.querySelector('.mark-complete');
+        markCompleteBtn.addEventListener('click', (e) =>{
+        markComplete(requests.id);
+      });
+
     tableBody.appendChild(tempDiv.firstChild); // append the full row
   });
   
@@ -223,3 +244,20 @@ function addRequestPayment(event){
           })
           .catch(err => console.error(err));
 };
+
+// Mark Complete
+function markComplete(itemId, status = 'completed'){
+   fetch(`actions/update_records.php?type=mark_item&item_id=${itemId}&status=${status}`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        console.log("Item updated successfully.");
+        // Optionally refresh part of the UI
+      } else {
+        console.error("Backend error:", data.error);
+      }
+    })
+    .catch(error => {
+      console.error("Network error:", error);
+    });
+}

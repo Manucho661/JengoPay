@@ -591,7 +591,73 @@
                   </div>
                 </div>
               </div>
-              <!-- end viw request -->
+              <!-- /end viw request -->
+              <!-- ASSign Modal -->
+              <div class="modal fade" id="assignProviderModal" tabindex="-1" aria-labelledby="assignProviderModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content shadow-lg border-0 rounded-3">
+                    
+                    <!-- Modal Header -->
+                    <div class="modal-header bg-primary text-white">
+                      <h5 class="modal-title" id="assignProviderModalLabel">
+                        <i class="bi bi-person-check-fill me-2"></i>Assign Service Provider
+                      </h5>
+                      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    
+                    <!-- Modal Form -->
+                    <form id="assignProviderForm">
+                      <div class="modal-body">
+                        
+                        <!-- Hidden Fields -->
+                        <input type="hidden" name="maintenance_request_id" id="maintenance_request_id">
+                        <input type="hidden" name="unit_id" id="unit_id">
+
+                        <!-- Service Provider Dropdown -->
+                        <div class="mb-3">
+                          <label for="service_provider_id" class="form-label">
+                            <i class="bi bi-tools me-1"></i>Service Provider
+                          </label>
+                          <select class="form-select" name="service_provider_id" id="service_provider_id" required>
+                            <option selected disabled value="">Select a provider</option>
+                            <!-- Populate dynamically -->
+                            <option value="1">John Doe - Plumbing</option>
+                            <option value="2">Jane Smith - Electrical</option>
+                          </select>
+                        </div>
+
+                        <!-- Scheduled Date -->
+                        <div class="mb-3">
+                          <label for="scheduled_date" class="form-label">
+                            <i class="bi bi-calendar-event me-1"></i>Scheduled Date
+                          </label>
+                          <input type="date" class="form-control" name="scheduled_date" id="scheduled_date">
+                        </div>
+
+                        <!-- Notes / Instructions -->
+                        <div class="mb-3">
+                          <label for="instructions" class="form-label">
+                            <i class="bi bi-pencil-square me-1"></i>Instructions
+                          </label>
+                          <textarea class="form-control" name="instructions" id="instructions" rows="3" placeholder="Any special notes..."></textarea>
+                        </div>
+
+                      </div>
+
+                      <!-- Modal Footer -->
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                          <i class="bi bi-x-circle me-1"></i>Cancel
+                        </button>
+                        <button type="submit" class="btn btn-success">
+                          <i class="bi bi-check2-circle me-1"></i>Assign
+                        </button>
+                      </div>
+                    </form>
+
+                  </div>
+                </div>
+              </div>
             </div>
             <!--end::Row-->
           </div>
