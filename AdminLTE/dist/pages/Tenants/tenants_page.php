@@ -18,6 +18,11 @@
     body {
       background-color: #f4f6f8;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-image: url('building2.jpg');
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      height: 100vh;
     }
     .header-bar {
       background-color: #00192D;
@@ -49,25 +54,29 @@
 </div>
 
 <div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center">
+  <div class="d-flex flex-wrap justify-content-between align-items-center">
     <!-- Maintenance Request Button (Left) -->
-    <button class="btn me-3 mb-2 px-4 py-2" style="background-color: #00192D; color: #FFC107;" data-toggle="modal" data-target="#maintenanceModal">
+    <button class="btn mb-2 px-4 py-2 mx-auto" style="background-color: #00192D; color: #FFC107;" data-toggle="modal" data-target="#maintenanceModal">
       <i class="fas fa-tools"></i> Maintenance Requests
     </button>
 
     <!-- Rent Button (Center) -->
-    <div class="mx-auto">
-      <button class="btn mb-2 px-4 py-2" style="background-color: #00192D; color: #FFC107;" data-toggle="modal" data-target="#rentModal">
-        <i class="fas fa-hand-holding-usd"></i> Rent
-      </button>
-    </div>
+    <button class="btn mb-2 px-4 py-2 mx-auto" style="background-color: #00192D; color: #FFC107;" data-toggle="modal" data-target="#rentModal">
+      <i class="fas fa-hand-holding-usd"></i> Rent
+    </button>
 
     <!-- Vacate Button (Right) -->
-    <button class="btn mb-2 px-4 py-2" style="background-color: #00192D; color: #FFC107;" data-toggle="modal" data-target="#vacateModal">
+    <button class="btn mb-2 px-4 py-2 mx-auto" style="background-color: #00192D; color: #FFC107;" data-toggle="modal" data-target="#vacateModal">
       <i class="fas fa-door-open"></i> Vacate
+    </button>
+
+    <!-- Shift Button (Right) -->
+    <button class="btn mb-2 px-4 mx-auto" style="background-color: #00192D; color: #FFC107;" data-toggle="modal" data-target="#shiftModal">
+      <i class="fas fa-sync-alt"></i> Shift
     </button>
   </div>
 </div>
+
 
 
   <!-- Maintenance Request Modal -->
