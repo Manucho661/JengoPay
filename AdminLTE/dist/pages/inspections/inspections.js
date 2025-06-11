@@ -279,7 +279,11 @@ fetch(`actions/fetch_records.php?table=inspection_items&inspection_id=${inspecti
       <td>${item.category || '—'}</td>
       <td> <div class="${item.status || '—'}"> ${item.status || '—'}</div>  </td>
       <td>${item.description || '—'}</td>
-      <td>${item.photos || '—'}</td>
+      <td>
+          ${item.photo_path 
+        ? `<img src="${item.photo_path}" alt="Photo" style="width: 100px; height: auto;">`
+        : '—'}
+      </td>
     `;
     tableBody.appendChild(row);
   });

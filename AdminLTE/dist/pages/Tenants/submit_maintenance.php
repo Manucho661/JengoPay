@@ -7,21 +7,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $category = $_POST['category'] ?? null;
     $description = $_POST['description'] ?? null;
     $provider_id = $_POST['provider_id'] ?? null;
-    $status = $_POST['status'] ?? null;
-    $payment_status = $_POST['payment_status'] ?? null;
     $payment_date = $_POST['payment_date'] ?? null;
 
     try {
         $stmt = $pdo->prepare("INSERT INTO maintenance_requests 
-            (request_date, category, description, status, payment_status, created_at) 
-            VALUES (?, ?, ?, ?, ?, ?)");
+            (request_date, category, description, created_at) 
+            VALUES (?, ?, ?, ?)");
 
         $stmt->execute([
             $request_date,
             $category,
             $description,
-            $status,
-            $payment_status,
             $payment_date
         ]);
 

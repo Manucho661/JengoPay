@@ -101,8 +101,11 @@ function populateRequestsTable(requests) {
 
       </td>
       <td>
-      <div>${requests.provider_name|| ''} </div>
-      <div class="email" style="width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ">📧 </i> ${requests.provider_email|| ''} </div>
+      ${requests.provider_name
+          ? `<div>${requests.provider_name}</div>
+            <div class="email" style="width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">📧 ${requests.provider_email || ''}</div>`
+          : `<div>Not assigned</div>`
+        }
       </td>
       <td>${requests.priority|| ''} </td>
       ${statusHTML}
@@ -140,7 +143,7 @@ function populateRequestsTable(requests) {
               <li><a class="dropdown-item assign-provider" href="#" style="color: #FFA000 !important;"> <i class="fas fa-tasks"></i> Assign Provider</a></li>
               <li><a class="dropdown-item mark-complete" href="#" style="color: #FFA000 !important;"> <i class="fas fa-tasks"></i> Mark Complete</a></li>
               <li><a class="dropdown-item" href="#" style="color: #FFA000 !important;" ><i class="fas fa-eye"></i> View Payment</a></li>
-              <li><a class="dropdown-item" href="#" style="color: #F87171 !important;"  ><i class="fas fa-trash"></i>     Delete Request</a></li>
+              <li><a class="dropdown-item delete-record" href="#" style="color: #F87171 !important;"  ><i class="fas fa-trash"></i>     Delete Request</a></li>
             </ul>
           </div>
     </div>
@@ -163,27 +166,35 @@ function populateRequestsTable(requests) {
       const modal = new bootstrap.Modal(document.getElementById('recordPaymentModal'));
       modal.show();
       });
-
       // View Request
       const viewBtn = tempDiv.querySelector('.view-btn');
       viewBtn.addEventListener('click', (e) =>{
+        document.getElementById('request-id').innerText= requests.id;
+        document.getElementById('request-date').innerText= requests.request_date;
+        document.getElementById('property-name').innerText= requests.residence;
+        document.getElementById('unit-number').innerText= requests.unit;
+        document.getElementById('request-category').innerText= requests.category;
+        document.getElementById('request-status').innerText= requests.status;
+        document.getElementById('payment-status').innerText= requests.payment_status;
+        document.getElementById('request-description').innerText= requests.description;
         const modal = new bootstrap.Modal(document.getElementById('maintenanceRequestModal'));
         modal.show();
       });
-
       // Assign provider
        const assignProviderBtn = tempDiv.querySelector('.assign-provider');
         assignProviderBtn.addEventListener('click', (e) =>{
-        const modal = new bootstrap.Modal(document.getElementById('assignProviderModal'));
-        modal.show();
+        selectProviders(requests.id);
       });
-
       // Mark complete
       const markCompleteBtn = tempDiv.querySelector('.mark-complete');
         markCompleteBtn.addEventListener('click', (e) =>{
         markComplete(requests.id);
       });
-
+      //Delete Record
+      const deleteRecordBtn = tempDiv.querySelector('.delete-record');
+        deleteRecordBtn.addEventListener('click', (e) =>{
+        deleteRequest(requests.id);
+      });
     tableBody.appendChild(tempDiv.firstChild); // append the full row
   });
   
@@ -246,12 +257,13 @@ function addRequestPayment(event){
 };
 
 // Mark Complete
-function markComplete(itemId, status = 'completed'){
-   fetch(`actions/update_records.php?type=mark_item&item_id=${itemId}&status=${status}`)
+function markComplete(requestsID){
+   fetch(`actions/update_records.php?type=mark_item&request_id=${requestsID}`)
     .then(response => response.json())
     .then(data => {
       if (data.success) {
         console.log("Item updated successfully.");
+        location.reload(); // Reload the page to reflect changes
         // Optionally refresh part of the UI
       } else {
         console.error("Backend error:", data.error);
@@ -261,3 +273,59 @@ function markComplete(itemId, status = 'completed'){
       console.error("Network error:", error);
     });
 }
+
+//Delete Request
+function deleteRequest(requestsID){
+   fetch(`actions/delete_records.php?type=mark_item&request_id=${requestsID}`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        console.log("Item updated successfully.");
+        location.reload(); // Reload the page to reflect changes
+        // Optionally refresh part of the UI
+      } else {
+        console.error("Backend error:", data.error);
+      }
+    })
+    .catch(error => {
+      console.error("Network error:", error);
+    });
+}
+
+// Select Providers
+function selectProviders(requestsID){
+  fetch('actions/fetch_service_providers.php') // Adjust your endpoint
+  .then(res => res.json())
+  .then(data => {
+    const select = document.getElementById('service_provider_id');
+    data.forEach(provider => {
+      const option = document.createElement('option');
+      option.value = provider.id;
+      option.textContent = `${provider.name} - ${provider.category}`;
+      select.appendChild(option);
+      
+    });
+    document.getElementById('maintenance_request_id').value= requestsID;
+    const modal = new bootstrap.Modal(document.getElementById('assignProviderModal'));
+      modal.show();
+  })
+  .catch(error => console.error('Error fetching providers:', error));
+}
+
+// Assign the Provider
+function assignProvider(event){
+  event.preventDefault(); // Prevent the form from submitting immediately
+  const form = document.getElementById("assignProviderForm");
+  const formData = new FormData(form);
+
+  fetch("actions/assign_service_provider.php", {
+            method: "POST",
+            body: formData
+          })
+          .then(res => res.text())
+          .then(data => {
+            alert(data); // Display success message or error from server
+            location.reload(); // Reload the page to reflect changes (optional)
+          })
+          .catch(err => console.error(err));
+};
