@@ -570,7 +570,7 @@ $stmt->closeCursor();
   </div>
 
 <div class="row">
-  <table id="myTableOne" class="display" >
+  <table id="myTableOne" class="display">
     <thead>
       <tr>
         <th style="color: #FFC107;">Reading Date</th>
@@ -584,42 +584,46 @@ $stmt->closeCursor();
       </tr>
     </thead>
     <tbody>
-        <?php foreach ($readings as $reading): ?>
+      <?php foreach ($readings as $reading): ?>
         <tr>
-            <td><?php echo htmlspecialchars($reading['reading_date']); ?></td>
-            <td><?php echo htmlspecialchars($reading['unit_number']); ?></td>
-            <td><?php echo htmlspecialchars($reading['meter_type']); ?></td>
-            <td><?php echo htmlspecialchars($reading['previous_reading']); ?></td>
-            <td><?php echo htmlspecialchars($reading['current_reading']); ?></td>
-            <td><?php echo htmlspecialchars($reading['consumption_units']); ?></td>
-            <td><?php echo number_format($reading['consumption_cost'], 2); ?></td>
-            <td>
-                
+          <td><?= htmlspecialchars($reading['reading_date']) ?></td>
+          <td><?= htmlspecialchars($reading['unit_number']) ?></td>
+          <td><?= htmlspecialchars($reading['meter_type']) ?></td>
+          <td><?= htmlspecialchars($reading['previous_reading']) ?></td>
+          <td><?= htmlspecialchars($reading['current_reading']) ?></td>
+          <td><?= htmlspecialchars($reading['consumption_units']) ?></td>
+          <td><?= number_format($reading['consumption_cost'], 2) ?></td>
+          <td>
+            <!-- View Button -->
+            <button 
+              class="btn btn-sm view-btn" 
+              style="background-color: #00192D; color: #FFC107;"
+              data-reading-date="<?= htmlspecialchars($reading['reading_date']) ?>"
+              data-unit="<?= htmlspecialchars($reading['unit_number']) ?>"
+              data-meter-type="<?= htmlspecialchars($reading['meter_type']) ?>"
+              data-prev-reading="<?= htmlspecialchars($reading['previous_reading']) ?>"
+              data-current-reading="<?= htmlspecialchars($reading['current_reading']) ?>"
+              data-consumption-units="<?= htmlspecialchars($reading['consumption_units']) ?>"
+              data-consumption-cost="<?= number_format($reading['consumption_cost'], 2) ?>"
+            >
+              <i class="fa fa-file"></i>
+            </button>
 
- <!-- View Button -->
-<button 
-    class="btn btn-sm view-btn" 
-    style="background-color: #00192D; color: #FFC107;"
-    data-reading-date="<?= htmlspecialchars($reading['reading_date']) ?>"
-    data-unit="<?= htmlspecialchars($reading['unit_number']) ?>"
-    data-meter-type="<?= htmlspecialchars($reading['meter_type']) ?>"
-    data-prev-reading="<?= htmlspecialchars($reading['previous_reading']) ?>"
-    data-current-reading="<?= htmlspecialchars($reading['current_reading']) ?>"
-    data-consumption-units="<?= htmlspecialchars($reading['consumption_units']) ?>"
-    data-consumption-cost="<?= number_format($reading['consumption_cost'], 2) ?>"
->
-    <i class="fa fa-file"></i>
-</button>
-
-                <button class="btn btn-sm" style="background-color: red; color:#fff;" title="Delete">
-                    <i class="fa fa-trash"></i>
-                </button>
-            </td>
+            <!-- Delete Button -->
+            <button 
+              class="btn btn-sm delete-meter-btn" 
+              data-id="<?= htmlspecialchars($reading['id']) ?>" 
+              style="background-color: red; color: #fff;" 
+              title="Delete"
+            >
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
         </tr>
-        <?php endforeach; ?>
+      <?php endforeach; ?>
     </tbody>
-
   </table>
+</div>
             <!-- /.col -->
           </div>
           <!--end::Row-->
@@ -1536,6 +1540,40 @@ setInterval(() => {
       });
     });
   });
+</script>
+
+
+<!-- Java script to handle delete meter readings -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.delete-meter-btn').forEach(button => {
+        button.addEventListener('click', async () => {
+            const id = button.getAttribute('data-id');
+            if (confirm('Are you sure you want to delete this meter reading?')) {
+                try {
+                    const response = await fetch('../property/delete_meter_reading.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ id })
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                       alert('Meter reading deleted successfully.');
+                        // Remove the row or element from the DOM
+                        button.closest('tr')?.remove(); // Adjust if it's not in a <tr>
+                    } else {
+                        alert('Failed to delete meter reading.');
+                    }
+                } catch (error) {
+                    console.error('Error deleting meter reading:', error);
+                    alert('An error occurred.');
+                }
+            }
+        });
+    });
+});
 </script>
 
 
