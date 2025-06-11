@@ -95,7 +95,7 @@ $stmt->closeCursor();
 
 // Fetch meter readings for the building
 $sql = "
-    SELECT mr.reading_date, mr.unit_number, mr.meter_type, mr.previous_reading, mr.current_reading, mr.consumption_units, mr.consumption_cost
+    SELECT mr.building_id, mr.reading_date, mr.unit_number, mr.meter_type, mr.previous_reading, mr.current_reading, mr.consumption_units, mr.consumption_cost
     FROM meter_readings mr
     INNER JOIN units u ON mr.unit_number = u.unit_number
     WHERE u.building_id = :building_id
@@ -602,7 +602,6 @@ echo "Electricity Rate: $electricity_rate";
     <tbody>
       <?php foreach ($readings as $reading): ?>
         <tr>
-<<<<<<< HEAD
           <td><?= htmlspecialchars($reading['reading_date']) ?></td>
           <td><?= htmlspecialchars($reading['unit_number']) ?></td>
           <td><?= htmlspecialchars($reading['meter_type']) ?></td>
@@ -611,9 +610,9 @@ echo "Electricity Rate: $electricity_rate";
           <td><?= htmlspecialchars($reading['consumption_units']) ?></td>
           <td><?= number_format($reading['consumption_cost'], 2) ?></td>
           <td>
-            <!-- View Button -->
-            <button 
-              class="btn btn-sm view-btn" 
+
+            <button
+              class="btn btn-sm view-btn"
               style="background-color: #00192D; color: #FFC107;"
               data-reading-date="<?= htmlspecialchars($reading['reading_date']) ?>"
               data-unit="<?= htmlspecialchars($reading['unit_number']) ?>"
@@ -623,50 +622,20 @@ echo "Electricity Rate: $electricity_rate";
               data-consumption-units="<?= htmlspecialchars($reading['consumption_units']) ?>"
               data-consumption-cost="<?= number_format($reading['consumption_cost'], 2) ?>"
             >
-              <i class="fa fa-file"></i>
+              <i class="fa fa-file">VIEW</i>
             </button>
 
             <!-- Delete Button -->
-            <button 
-              class="btn btn-sm delete-meter-btn" 
-              data-id="<?= htmlspecialchars($reading['id']) ?>" 
-              style="background-color: red; color: #fff;" 
+            <button
+              class="btn btn-sm delete-meter-btn"
+              data-id="<?= htmlspecialchars($reading['building_id']) ?>"
+              style="background-color: red; color: #fff;"
               title="Delete"
             >
               <i class="fa fa-trash"></i>
             </button>
           </td>
-=======
-            <td><?php echo htmlspecialchars($reading['reading_date']); ?></td>
-            <td><?php echo htmlspecialchars($reading['unit_number']); ?></td>
-            <td><?php echo htmlspecialchars($reading['meter_type']); ?></td>
-            <td><?php echo htmlspecialchars($reading['previous_reading']); ?></td>
-            <td><?php echo htmlspecialchars($reading['current_reading']); ?></td>
-            <td><?php echo htmlspecialchars($reading['consumption_units']); ?></td>
-            <td>Ksh <?= number_format($reading['consumption_cost'], 2) ?></td>
-            <td>
 
-
- <!-- View Button -->
-<button
-    class="btn btn-sm view-btn"
-    style="background-color: #00192D; color: #FFC107;"
-    data-reading-date="<?= htmlspecialchars($reading['reading_date']) ?>"
-    data-unit="<?= htmlspecialchars($reading['unit_number']) ?>"
-    data-meter-type="<?= htmlspecialchars($reading['meter_type']) ?>"
-    data-prev-reading="<?= htmlspecialchars($reading['previous_reading']) ?>"
-    data-current-reading="<?= htmlspecialchars($reading['current_reading']) ?>"
-    data-consumption-units="<?= htmlspecialchars($reading['consumption_units']) ?>"
-    data-consumption-cost="<?= number_format($reading['consumption_cost'], 2) ?>"
->
-    <i class="fa fa-file"></i>
-</button>
-
-                <button class="btn btn-sm" style="background-color: red; color:#fff;" title="Delete">
-                    <i class="fa fa-trash"></i>
-                </button>
-            </td>
->>>>>>> 23ca3ca4585310566c909f6ab6c78859a0518c00
         </tr>
       <?php endforeach; ?>
     </tbody>
