@@ -8,7 +8,7 @@ $data = json_decode(file_get_contents('php://input'), true);
 if (isset($data['id'])) {
     $id = $data['id'];
 
-    $stmt = $pdo->prepare("DELETE FROM meter_readings WHERE id = ?");
+    $stmt = $pdo->prepare("DELETE FROM meter_readings WHERE building_id = ?");
     if ($stmt->execute([$id])) {
         echo json_encode(['success' => true]);
     } else {

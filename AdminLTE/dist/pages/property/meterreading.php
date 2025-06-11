@@ -109,21 +109,6 @@ $readings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $stmt->closeCursor();
 ?>
 
-<?php
-include '../db/connect.php'; // Assuming this sets up $pdo
-
-$building_id = 137;
-$stmt = $pdo->prepare("SELECT water_price, electricity_price FROM buildings WHERE building_id = ?");
-$stmt->execute([$building_id]);
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-$water_rate = $row['water_price'];
-$electricity_rate = $row['electricity_price'];
-
-echo "Water Rate: $water_rate<br>";
-echo "Electricity Rate: $electricity_rate";
-?>
-
 
 <!doctype html>
 <html lang="en">
