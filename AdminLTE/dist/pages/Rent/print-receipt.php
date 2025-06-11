@@ -80,7 +80,7 @@ $date = !empty($tenant['payment_date']) ? date("d F Y", strtotime($tenant['payme
     </table>
 
     <div class="print-button">
-        <button onclick="window.print()">Print</button>
+        <button onclick="window.print()" style="color:#FFC107; background-color:#00192D;">Print</button>
     </div>
 </div>
 </body>
