@@ -119,7 +119,7 @@ if ($building_id) {
 
 // === FETCH COMMUNICATION THREADS ===
 $stmt = $pdo->prepare("
-      SELECT
+       SELECT
         c.thread_id,
         c.title,
         c.tenant,
@@ -127,14 +127,8 @@ $stmt = $pdo->prepare("
         c.building_name,
         c.message,
         (SELECT content FROM messages WHERE thread_id = c.thread_id ORDER BY timestamp DESC LIMIT 1) AS last_message,
-        COALESCE(
-            (SELECT file_path FROM messages WHERE thread_id = c.thread_id AND file_path IS NOT NULL ORDER BY timestamp DESC LIMIT 1),
-            (SELECT file_path FROM message_files WHERE thread_id = c.thread_id ORDER BY timestamp DESC LIMIT 1)
-        ) AS last_file,
-        GREATEST(
-            (SELECT COALESCE(MAX(timestamp), '1970-01-01') FROM messages WHERE thread_id = c.thread_id),
-            (SELECT COALESCE(MAX(timestamp), '1970-01-01') FROM message_files WHERE thread_id = c.thread_id)
-        ) AS last_time,
+        (SELECT file_path FROM messages WHERE thread_id = c.thread_id ORDER BY timestamp DESC LIMIT 1) AS last_file,
+        (SELECT timestamp FROM messages WHERE thread_id = c.thread_id ORDER BY timestamp DESC LIMIT 1) AS last_time,
         (SELECT COUNT(*) FROM messages WHERE thread_id = c.thread_id AND is_read = 0) AS unread_count
     FROM communication c
     ORDER BY last_time DESC
