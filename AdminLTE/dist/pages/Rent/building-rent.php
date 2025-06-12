@@ -756,11 +756,38 @@ foreach ($tenants as $tenant) {
                           <div class="pen-rate">10%</div>
                           <div class="pen-desc " style="white-space: nowrap; overflow: hidden;">of the total rent</div>
                       </div>
-                     <div class="change-btn d-flex justify-content-end"><button class="btn edit rounded">Edit</button></div>
-                    </div>
+                       <div class="change-btn d-flex justify-content-end">
+    <button class="btn edit rounded" data-bs-toggle="modal" data-bs-target="#editPenaltyModal">Edit</button>
+  </div>
 
                   </div>
            </div>
+
+
+           <!-- Modal for Editing Penalty Rate -->
+<div class="modal fade" id="editPenaltyModal" tabindex="-1" aria-labelledby="editPenaltyModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content rounded-3">
+      <div class="modal-header" style="background-color: #00192D;">
+        <h5 class="modal-title" id="editPenaltyModalLabel" style="background-color: #00192D; color: #FFC107;">Edit Penalty Rate</h5>
+        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+      </div>
+      <div class="modal-body">
+        <form id="penaltyRateForm">
+          <div class="mb-3">
+            <label for="penaltyRateInput" class="form-label">Penalty Rate (%)</label>
+            <input type="number" class="form-control" id="penaltyRateInput" value="10" min="0" step="0.1" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: white; color: #00192D">Cancel</button>
+        <button type="button" class="btn btn-primary" id="savePenaltyRateBtn" style="background-color: #00192D; color: #FFC107;">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
           <!-- END ROW -->
 
           </div>
@@ -805,6 +832,24 @@ foreach ($tenants as $tenant) {
 </script>
 
 <!-- End script for data_table -->
+<!-- Js for edit penalty rates -->
+<script>
+document.getElementById('savePenaltyRateBtn').addEventListener('click', function () {
+  const input = document.getElementById('penaltyRateInput');
+  const newRate = input.value;
+
+  if (newRate !== '' && !isNaN(newRate)) {
+    document.getElementById('currentPenaltyRate').textContent = `${newRate}%`;
+
+    // Optionally, make an AJAX call here to save the new rate to the server
+
+    // Close modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('editPenaltyModal'));
+    modal.hide();
+  }
+});
+</script>
+
 
 
 <!--Begin sidebar script -->
