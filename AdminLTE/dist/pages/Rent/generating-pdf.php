@@ -1,15 +1,15 @@
 <?php
-
-require_once 'C:\xampp\htdocs\originalTwo\lib\dompdf-3.1.0\dompdf\autoload.inc.php'; // adjust path if needed
-
+require_once 'C:\xampp\htdocs\originalTwo\lib\dompdf-3.1.0\dompdf\autoload.inc.php'; // Adjust path if needed
 include '../db/connect.php';
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
+// Get building filter from URL
 $building = $_GET['building'] ?? 'All Buildings';
 
-$sql = "SELECT tenant_name, unit_code, amount_paid, payment_date, penalty, penalty_days, arrears, overpayment
+// Build SQL with optional building filter
+$sql = "SELECT building_name, tenant_name, unit_code, amount_paid, payment_date, penalty, penalty_days, arrears, overpayment
         FROM tenant_rent_summary";
 $params = [];
 
@@ -25,10 +25,11 @@ $stmt->execute($params);
 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Build HTML
-$html = '<h2>Tenant Rent Summary - ' . htmlspecialchars($building) . '</h2>
+$html = '<h2 style="text-align:center;">Tenant Rent Summary - ' . htmlspecialchars($building) . '</h2>
 <table border="1" cellpadding="5" cellspacing="0" width="100%">
-<thead>
+<thead style="background-color:#f2f2f2;">
 <tr>
+    <th>Building</th>
     <th>Tenant</th>
     <th>Unit Code</th>
     <th>Amount Paid</th>
@@ -43,6 +44,7 @@ $html = '<h2>Tenant Rent Summary - ' . htmlspecialchars($building) . '</h2>
 
 foreach ($data as $row) {
     $html .= '<tr>
+        <td>' . htmlspecialchars($row['building_name']) . '</td>
         <td>' . htmlspecialchars($row['tenant_name']) . '</td>
         <td>' . htmlspecialchars($row['unit_code']) . '</td>
         <td>KSH ' . number_format($row['amount_paid'], 2) . '</td>
@@ -59,6 +61,8 @@ $html .= '</tbody></table>';
 // Generate PDF
 $options = new Options();
 $options->set('isHtml5ParserEnabled', true);
+$options->set('defaultFont', 'Helvetica');
+
 $dompdf = new Dompdf($options);
 $dompdf->loadHtml($html);
 $dompdf->setPaper('A4', 'landscape');
@@ -66,4 +70,3 @@ $dompdf->render();
 
 $filename = "tenant_rent_summary_" . str_replace(' ', '_', $building) . ".pdf";
 $dompdf->stream($filename, ["Attachment" => true]);
-
