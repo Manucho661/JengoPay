@@ -781,6 +781,61 @@ foreach ($tenants as $tenant) {
           </footer>
           <!--end::Footer-->
 
+
+
+          <!-- Edit Rent Deadline Modal -->
+<div class="modal fade" id="editRentDeadlineModal" tabindex="-1" aria-labelledby="editRentDeadlineModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="rent-deadline-form">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editRentDeadlineModalLabel">Edit Rent Payment Deadline</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label for="rent-deadline-date">Select New Deadline:</label>
+          <input type="date" id="rent-deadline-date" name="rent_deadline" class="form-control" required>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+<script>
+  document.getElementById('rent-deadline-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const newDate = document.getElementById('rent-deadline-date').value;
+
+  // Send to PHP backend via fetch or AJAX
+  fetch('update_rent_deadline.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: `rent_deadline=${encodeURIComponent(newDate)}`
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById('current-deadline').innerHTML = `<i class="fas fa-calendar-alt"></i> ${newDate}`;
+      var modal = bootstrap.Modal.getInstance(document.getElementById('editRentDeadlineModal'));
+      modal.hide();
+    } else {
+      alert('Failed to update deadline.');
+    }
+  });
+});
+
+</script>
+
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
@@ -793,9 +848,6 @@ foreach ($tenants as $tenant) {
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
-
-
-
 
 </script>
 
