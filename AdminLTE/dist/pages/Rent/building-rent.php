@@ -672,11 +672,16 @@ foreach ($tenants as $tenant) {
                           </div> -->
                           </div>
                           <div class="">
-                          <form method="post" action="generating-pdf.php" style="display: inline;">
-                          <button  id="download-pdf"  type="submit" class="pdf">
-                            <i class="fas fa-file-pdf" style="color: red;"></i>
-                          </button>
-                        </form>
+       <form method="get" action="generating-pdf.php" target="_blank" id="pdf-form">
+  <input type="hidden" name="building" id="pdf-building">
+  <input type="hidden" name="year" id="pdf-year">
+  <input type="hidden" name="month" id="pdf-month">
+  <button type="submit" class="pdf" id="download-pdf" title="Download PDF">
+    <i class="fas fa-file-pdf" style="color: red;"></i>
+  </button>
+</form>
+
+
 
                          <!-- <button  class="pdf" ><i class="fas fa-file-pdf" style="color: red;"></i></button> -->
                           <!-- <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button> -->
@@ -1098,15 +1103,28 @@ document.getElementById('savePenaltyRateBtn').addEventListener('click', function
   </script> -->
 
   <script>
-document.getElementById('download-pdf').addEventListener('click', function () {
-  const selected = document.querySelector('.custom-select').textContent.trim();
-  const building = encodeURIComponent(selected);
+  document.getElementById('download-pdf').addEventListener('click', function (e) {
+    e.preventDefault();
 
-  // Redirect to PDF generator (opens in new tab)
-  window.open(`generating-pdf.php?building=${building}`, '_blank');
-});
+    const buildingName = document.querySelector('.table-group-header td')?.textContent.trim() || '';
+    if (!buildingName) {
+      alert('No building detected. Please select or view a building first.');
+      return;
+    }
 
- </script>
+    const year = document.querySelector('select[name="year"]')?.value || new Date().getFullYear();
+    const month = document.querySelector('select[name="month"]')?.value || (new Date().getMonth() + 1);
+
+    document.getElementById('pdf-building').value = buildingName;
+    document.getElementById('pdf-year').value = year;
+    document.getElementById('pdf-month').value = month;
+
+    document.getElementById('pdf-form').submit();
+  });
+</script>
+
+
+
 
   <script>
 function exportTableToCSV(filename) {
