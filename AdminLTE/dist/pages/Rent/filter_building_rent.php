@@ -2,7 +2,7 @@
 include '../db/connect.php';
 
 // Get filter values from the request
-$building = $_POST['building'] ?? '';
+$building = $_POST['building_name'] ?? '';
 $unitType = $_POST['unit_type'] ?? '';
 $year = $_POST['year'] ?? '';
 $month = $_POST['month'] ?? '';
