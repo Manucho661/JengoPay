@@ -198,7 +198,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="../financials/expenses/expenses.html" class="nav-link">
+                <a href="../financials/expenses/expenses.php" class="nav-link">
                   <i class="nav-icon bi bi-circle"></i>
                   <p>Expenses</p>
                   <i class="nav-arrow bi bi-chevron-right"></i>

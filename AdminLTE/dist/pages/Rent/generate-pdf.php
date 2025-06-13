@@ -6,6 +6,7 @@ include '../db/connect.php';
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
+
 $building = $_GET['building'] ?? 'All Buildings';
 $year     = $_GET['year'] ?? '';
 $month    = $_GET['month'] ?? '';

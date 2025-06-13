@@ -93,7 +93,7 @@ $stmt = $pdo->query("
 $tenants = $stmt->fetchAll();
 
 try {
-  $stmt = $pdo->query("SELECT tenant_name, unit_code, amount_paid, balances, payment_date, penalty, penalty_days, arrears, overpayment FROM tenant_rent_summary");
+  $stmt = $pdo->query("SELECT tenant_name, unit_code, amount_paid, unit_type, balances, payment_date, penalty, penalty_days, arrears, overpayment FROM tenant_rent_summary");
   $tenants = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
   die("Error fetching tenants: " . $e->getMessage());
@@ -524,6 +524,7 @@ foreach ($tenants as $tenant) {
         $firstName = $nameParts[0] ?? '';
         $middleName = $nameParts[1] ?? '';
         $unit = $tenant['unit_code'];
+        $unit_type =$tenant['unit_type'];
         $amount = number_format($amountPaid, 2);
         $balances= number_format($balances, 2);
         $penaltyFormatted = number_format($penalty, 2);
@@ -612,26 +613,53 @@ foreach ($tenants as $tenant) {
                         <div class="rent-info filter ">
                           <div class="filter-boxes">
 
-                            <div class="select-option-container ">
+                            <!-- <div class="select-option-container "> -->
 
-                              <div class="custom-select" style="overflow: hidden;">All Buildings</div>
-                              <div class="select-options mt-1">
-                                <div class="selected" data-value="item1">All Units</div>
-                                <div data-value="item1">Single Rooms</div>
-                                <div data-value="item2">Bedsitters</div>
+                            <!-- <label for="unit-type-select">Unit Type</label> -->
+                           <!-- Unit Type Dropdown -->
 
-                              </div>
-                            </div>
 
-                            <div class="select-option-container ">
-                              <div class="custom-select">2025</div>
-                              <div class="select-options mt-1">
-                                <div class="selected"  data-value="item1">2025</div>
-                                <div data-value="item2">2024</div>
-                                <div data-value="item3">2023</div>
-                              </div>
-                            </div>
 
+                            <select id="unit-type-select" class="form-control mt-3">
+                              <option value="">All Units</option>
+                              <?php
+                                $unitTypes = $pdo->query("SELECT DISTINCT unit_type FROM tenant_rent_summary WHERE unit_type != ''");
+                                while ($u = $unitTypes->fetch()):
+                              ?>
+                                <option value="<?= htmlspecialchars($u['unit_type']) ?>">
+                                  <?= htmlspecialchars($u['unit_type']) ?>
+                                </option>
+                              <?php endwhile; ?>
+                            </select>
+
+                            <!-- Year Dropdown -->
+                            <select id="year-select" class="form-control mt-3">
+                              <option value="">All Years</option>
+                              <?php
+                                $years = $pdo->query("SELECT DISTINCT year FROM tenant_rent_summary ORDER BY year DESC");
+                                while ($y = $years->fetch()):
+                              ?>
+                                <option value="<?= $y['year'] ?>" <?= $y['year'] === '2025' ? 'selected' : '' ?>>
+                                  <?= $y['year'] ?>
+                                </option>
+                              <?php endwhile; ?>
+                            </select>
+
+                            <!-- Month Dropdown -->
+                            <select id="month-select" class="form-control mt-3">
+                              <option value="">All Months</option>
+                              <?php
+                                $months = [
+                                  "January", "February", "March", "April", "May", "June",
+                                  "July", "August", "September", "October", "November", "December"
+                                ];
+                                foreach ($months as $m):
+                              ?>
+                                <option value="<?= $m ?>" <?= $m === 'April' ? 'selected' : '' ?>><?= $m ?></option>
+                              <?php endforeach; ?>
+                            </select>
+
+<!--
                             <div class="select-option-container ">
                               <div class="custom-select">April</div>
                               <div class="select-options mt-1">
@@ -641,8 +669,8 @@ foreach ($tenants as $tenant) {
                                 <div data-value="item3">March</div>
                               </div>
                             </div>
+                          </div> -->
                           </div>
-
                           <div class="">
                           <form method="post" action="generating-pdf.php" style="display: inline;">
                           <button  id="download-pdf"  type="submit" class="pdf">
@@ -669,6 +697,7 @@ foreach ($tenants as $tenant) {
                                         <th scope="col">
                                           <div>Collected</div>
                                         </th>
+                                        <th>Unit Type</th>
                                         <th scope="col">Balances</th>
                                         <th scope="col">Penalty&nbsp;(l.days)</th>
                                         <th scope="col">Arreas</th>
@@ -699,6 +728,7 @@ foreach ($tenants as $tenant) {
         $middleName = $nameParts[1] ?? '';
         $unit = htmlspecialchars($tenant['unit_code'] ?? '');
         $amount = number_format((float)($tenant['amount_paid'] ?? 0), 2);
+        $unit_type = htmlspecialchars($tenant['unit_type'] ?? '');
         $balances = number_format((float)($tenant['balances'] ?? 0), 2);
         $penalty = number_format((float)($tenant['penalty'] ?? 0), 2);
         $arrears = number_format((float)($tenant['arrears'] ?? 0), 2);
@@ -719,7 +749,8 @@ foreach ($tenants as $tenant) {
                     <div class="date late"><?= $paymentDate ?></div>
                 </div>
             </td>
-            <td class="rent collected">KSH&nbsp;<?= $balances?></td>
+            <td class="unit_type">&nbsp;<?= $unit_type?></td>
+            <td class="rent balances">KSH&nbsp;<?= $balances?></td>
             <td>
                 <div class="rent penalit">
                     KSH&nbsp;<?= $penalty ?>
@@ -965,6 +996,32 @@ document.getElementById('savePenaltyRateBtn').addEventListener('click', function
 });
 </script>
 
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const unitSelect = document.getElementById("unit-type-select");
+    const yearSelect = document.getElementById("year-select");
+    const monthSelect = document.getElementById("month-select");
+
+    [unitSelect, yearSelect, monthSelect].forEach(select => {
+      select.addEventListener("change", fetchFilteredData);
+    });
+
+    function fetchFilteredData() {
+      const unit = unitSelect.value;
+      const year = yearSelect.value;
+      const month = monthSelect.value;
+
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", `fetch-rent-data.php?unit=${unit}&year=${year}&month=${month}`, true);
+      xhr.onload = function () {
+        if (this.status === 200) {
+          document.querySelector("#rent tbody").innerHTML = this.responseText;
+        }
+      };
+      xhr.send();
+    }
+  });
+</script>
 
 
 

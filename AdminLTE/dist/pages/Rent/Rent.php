@@ -499,22 +499,7 @@ select:hover {
                                   </option>
                                 <?php endwhile; ?>
                               </select>
-                                <!-- <div class="custom-select">All Buildings</div>
-                                <div class="select-options mt-1">
-                                  <div class="selected" data-value="item1">All Buildings</div>
-                                 </div> -->
-                              <!-- </div> -->
-
-                              <!-- <div class="select-option-container mt-3">
-                                <div class="custom-select">2025</div>
-                                <div class="select-options mt-1">
-                                <select name="selected_year" class="form-control mt-3" required>
-                                <option value="2025" selected>2025</option>
-                                <option value="2024">2024</option>
-                                <option value="2023">2023</option>
-                              </select>
-                                </div>
-                              </div> -->
+                               
                               <select id="year-select" class="form-control mt-3">
                               <option value="2025" selected>2025</option>
                               <option value="2024">2024</option>
@@ -563,11 +548,15 @@ select:hover {
 
 
                             <div class="pdf-excel">
-                            <form method="post" action="generate-pdf.php" target="_blank">
-                            <button  id="download-pdf" type="submit" class="pdf">
-                              <i class="fas fa-file-pdf" style="color: red;"></i>
-                            </button>
-                          </form>
+                            <form method="get" action="generate-pdf.php" target="_blank" id="pdf-form">
+  <input type="hidden" name="building" id="pdf-building" value="">
+  <input type="hidden" name="year" id="pdf-year" value="">
+  <input type="hidden" name="month" id="pdf-month" value="">
+  <button id="download-pdf" type="submit" class="pdf">
+    <i class="fas fa-file-pdf" style="color: red;"></i>
+  </button>
+</form>
+
 
                          <!-- <button  class="pdf" ><i class="fas fa-file-pdf" style="color: red;"></i></button> -->
                           <!-- <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button> -->
@@ -786,6 +775,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
         xhr.send(`building=${encodeURIComponent(building)}&year=${year}&month=${month}`);
     }
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const buildingSelect = document.getElementById("building-select");
+    const yearSelect = document.getElementById("year-select");
+    const monthSelect = document.getElementById("month-select");
+
+    const pdfForm = document.getElementById("pdf-form");
+    const pdfBuilding = document.getElementById("pdf-building");
+    const pdfYear = document.getElementById("pdf-year");
+    const pdfMonth = document.getElementById("pdf-month");
+
+    pdfForm.addEventListener("submit", function () {
+        pdfBuilding.value = buildingSelect.value || 'All Buildings';
+        pdfYear.value = yearSelect.value;
+        pdfMonth.value = monthSelect.value;
+    });
 });
 </script>
 
