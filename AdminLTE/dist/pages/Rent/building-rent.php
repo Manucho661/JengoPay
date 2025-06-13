@@ -617,7 +617,18 @@ foreach ($tenants as $tenant) {
 
                             <!-- <label for="unit-type-select">Unit Type</label> -->
                            <!-- Unit Type Dropdown -->
-
+<!-- Building Dropdown -->
+<select id="building-select" class="form-control mt-3">
+    <option value="">All Buildings</option>
+    <?php
+    $buildings = $pdo->query("SELECT DISTINCT building_name FROM tenant_rent_summary WHERE building_name != '' ORDER BY building_name");
+    while ($b = $buildings->fetch()):
+    ?>
+        <option value="<?= htmlspecialchars($b['building_name']) ?>">
+            <?= htmlspecialchars($b['building_name']) ?>
+        </option>
+    <?php endwhile; ?>
+</select>
 
 
                             <select id="unit-type-select" class="form-control mt-3">
@@ -1002,32 +1013,90 @@ document.getElementById('savePenaltyRateBtn').addEventListener('click', function
 </script>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const unitSelect = document.getElementById("unit-type-select");
-    const yearSelect = document.getElementById("year-select");
-    const monthSelect = document.getElementById("month-select");
+  document.addEventListener('DOMContentLoaded', function() {
+    const buildingSelect = document.getElementById('building-select');
+    const unitTypeSelect = document.getElementById('unit-type-select');
+    const yearSelect = document.getElementById('year-select');
+    const monthSelect = document.getElementById('month-select');
+    const rentTable = document.getElementById('rent');
 
-    [unitSelect, yearSelect, monthSelect].forEach(select => {
-      select.addEventListener("change", fetchFilteredData);
-    });
+    function filterTable() {
+        const selectedBuilding = buildingSelect.value.toLowerCase();
+        const selectedUnitType = unitTypeSelect.value.toLowerCase();
+        const selectedYear = yearSelect.value;
+        const selectedMonth = monthSelect.value.toLowerCase();
 
-    function fetchFilteredData() {
-      const unit = unitSelect.value;
-      const year = yearSelect.value;
-      const month = monthSelect.value;
+        let showBuildingHeader = selectedBuilding === '';
+        let currentBuilding = '';
 
-      const xhr = new XMLHttpRequest();
-      xhr.open("GET", `fetch-rent-data.php?unit=${unit}&year=${year}&month=${month}`, true);
-      xhr.onload = function () {
-        if (this.status === 200) {
-          document.querySelector("#rent tbody").innerHTML = this.responseText;
-        }
-      };
-      xhr.send();
+        // Loop through all rows in the table body
+        rentTable.querySelectorAll('tbody tr').forEach(row => {
+            if (row.classList.contains('table-group-header')) {
+                // This is a building header row
+                currentBuilding = row.cells[0].textContent.trim().toLowerCase();
+                const shouldShow = selectedBuilding === '' || currentBuilding === selectedBuilding;
+                row.style.display = shouldShow ? '' : 'none';
+                return;
+            }
+
+            // For data rows
+            const unitType = row.querySelector('.unit_type').textContent.trim().toLowerCase();
+            // You'll need to add year and month data attributes to your rows in PHP
+            const year = row.getAttribute('data-year') || '';
+            const month = row.getAttribute('data-month') || '';
+
+            const matchesBuilding = selectedBuilding === '' || currentBuilding === selectedBuilding;
+            const matchesUnitType = selectedUnitType === '' || unitType === selectedUnitType;
+            const matchesYear = selectedYear === '' || year === selectedYear;
+            const matchesMonth = selectedMonth === '' || month === selectedMonth;
+
+            row.style.display = (matchesBuilding && matchesUnitType && matchesYear && matchesMonth) ? '' : 'none';
+        });
     }
-  });
+
+    // Add event listeners to all filter dropdowns
+    buildingSelect.addEventListener('change', filterTable);
+    unitTypeSelect.addEventListener('change', filterTable);
+    yearSelect.addEventListener('change', filterTable);
+    monthSelect.addEventListener('change', filterTable);
+});
 </script>
 
+<script>
+  // JavaScript to handle filter changes and fetch data via AJAX
+document.addEventListener('DOMContentLoaded', function() {
+    const buildingSelect = document.getElementById('building-select');
+    const unitTypeSelect = document.getElementById('unit-type-select');
+    const yearSelect = document.getElementById('year-select');
+    const monthSelect = document.getElementById('month-select');
+
+    function fetchFilteredData() {
+        const filters = {
+            building: buildingSelect.value,
+            unitType: unitTypeSelect.value,
+            year: yearSelect.value,
+            month: monthSelect.value
+        };
+
+        fetch('filter_building_rent.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(filters)
+        })
+        .then(response => response.text())
+        .then(html => {
+            document.querySelector('#rent tbody').innerHTML = html;
+        });
+    }
+
+    buildingSelect.addEventListener('change', fetchFilteredData);
+    unitTypeSelect.addEventListener('change', fetchFilteredData);
+    yearSelect.addEventListener('change', fetchFilteredData);
+    monthSelect.addEventListener('change', fetchFilteredData);
+});
+</script>
 
 
 
