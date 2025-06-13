@@ -71,7 +71,7 @@
         background-color: rgba(128,128,128, 0.1);
       }
 
-      
+
     .dropdown-menu {
       min-width: 120px;
       background-color: #132E45	;
@@ -312,7 +312,9 @@
         </div>
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
-        <div id="sidebar"></div>
+        <!-- <div id="sidebar"></div> -->
+        <div > <?php include_once '../includes/sidebar.php'; ?>  </div> <!-- This is where the sidebar is inserted -->
+
         <!--end::Sidebar Wrapper-->
       </aside>
       <!--end::Sidebar-->
@@ -325,14 +327,14 @@
             <!--begin::Row-->
             <div class="row">
               <div class="col-sm-8">
-                <h3 class="mb-0 "> 🛠 <span class="contact_section_header">Maintenance Requests/Electricals</span> </h3>     
+                <h3 class="mb-0 "> 🛠 <span class="contact_section_header">Maintenance Requests/Electricals</span> </h3>
               </div>
               <div class="col-sm-4">
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
                   <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
                 </ol>
-              </div> 
+              </div>
             </div>
             <!--end::Row-->
           </div>
@@ -409,9 +411,9 @@
             </div>
             <!--begin::Row-->
             <div class="row">
-              
+
               <h6 class="mb-0 contact_section_header summary mb-2"></i> Requests</h6>
-              
+
               <div class="col-md-12">
                 <div class="Table-section bg-white p-2 rounded-2">
                   <div class="table-section-header">
@@ -425,7 +427,7 @@
                       <div id="custom-buttons"></div>
                     </div>
                   </div>
-                  
+
                   <table id="requests-table" class=" display summary-table" >
                     <thead class="mb-2">
                       <tr>
@@ -434,17 +436,17 @@
                           <th>PROPERTY + UNIT</th>
                           <th>CATEGORY + DESCRIPTION </th>
                           <th>PROVIDER</th>
-                          <th>PRIORITY</th>             
+                          <th>PRIORITY</th>
                           <th>STATUS</th>
                           <th>PAYMENT</th>
                           <th>ACTIONS</th>
                       </tr>
                     </thead>
                     <tbody id="maintenanceRequestsTableBody">
-                      
+
                     </tbody>
                   </table>
-                </div> 
+                </div>
               </div>
                <!-- Record Payment Modal -->
               <div class="modal fade" id="recordPaymentModal" tabindex="-1" aria-labelledby="recordPaymentModalLabel" aria-hidden="true">
@@ -456,7 +458,7 @@
                       </h5>
                       <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    
+
                     <form id="recordPaymentForm" onsubmit="addRequestPayment(event)" enctype="multipart/form-data" >
                       <div class="modal-body">
                         <div class="row g-3">
@@ -517,7 +519,7 @@
 
                         </div>
                       </div>
-                      
+
                       <div class="modal-footer">
                         <input type="hidden" name="request_id" id="modal_request_id">
                         <input type="hidden" name="form_type" value="addPaymentForm">
@@ -596,7 +598,7 @@
               <div class="modal fade" id="assignProviderModal" tabindex="-1" aria-labelledby="assignProviderModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content shadow-lg border-0 rounded-3">
-                    
+
                     <!-- Modal Header -->
                     <div class="modal-header bg-primary text-white">
                       <h5 class="modal-title" id="assignProviderModalLabel">
@@ -604,11 +606,11 @@
                       </h5>
                       <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    
+
                     <!-- Modal Form -->
                     <form id="assignProviderForm">
                       <div class="modal-body">
-                        
+
                         <!-- Hidden Fields -->
                         <input type="hidden" name="maintenance_request_id" id="maintenance_request_id">
                         <input type="hidden" name="unit_id" id="unit_id">
@@ -806,14 +808,14 @@ $(document).ready(function() {
     <!-- End script for data_table -->
 
 <!--Begin sidebar script -->
-<script>
+<!-- <script>
   fetch('../bars/sidebar.html')  // Fetch the file
       .then(response => response.text()) // Convert it to text
       .then(data => {
           document.getElementById('sidebar').innerHTML = data; // Insert it
       })
       .catch(error => console.error('Error loading the file:', error)); // Handle errors
-</script>
+</script> -->
 <!-- end sidebar script -->
 
 
@@ -847,9 +849,9 @@ $(document).ready(function() {
       });
     </script>
     <!--end::OverlayScrollbars Configure-->
-    
+
     <!-- DataTable Script -->
-     
+
 
     <!--end::Script-->
   </body>

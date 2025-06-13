@@ -87,7 +87,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
 
    <link rel="stylesheet" href="inspections.css">
      <!-- scripts for data_table -->
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> 
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
@@ -96,7 +96,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
     <style>
       .app-wrapper{
          background-color: rgba(128,128,128, 0.1);
-        
+
       }
       .modal-backdrop.show {
         opacity: 0.4 !important; /* Adjust the value as needed */
@@ -231,7 +231,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
         <div class="sidebar-brand">
           <!--begin::Brand Link-->
           <a href="./index.html" class="brand-link">
-            
+
             <!--begin::Brand Text-->
             <span class="brand-text font-weight-light"><b class="p-2"
                 style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
@@ -312,7 +312,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
             <div class="row">
               <div class="col-sm-8">
                 <h3 class="mb-0 contact_section_header"> <i class="fas fa-search icon title-icon"></i>&nbsp; INSPECTIONS MANAGEMENT</h3>
-                       
+
               </div>
 
               <div class="col-sm-4 d-flex justify-content-end">
@@ -354,8 +354,8 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                     <input type="date" class="form-control filter-shadow ">
                   </div>
                 </div>
-                                
-                
+
+
                 <h6 class="mb-0 contact_section_header summary mb-2"></i> Summary</h6>
                 <div class="row mb-2">
                   <div class="col-12 col-sm-6 col-md-3">
@@ -437,7 +437,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                           <th>Inspection Number</th>
                           <th>PROPERTY + UNIT</th>
                           <th>TYPE</th>
-                          <th>STATUS</th>             
+                          <th>STATUS</th>
                           <th>ACTION</th>
                       </tr>
                       </thead>
@@ -445,9 +445,9 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                       </tbody>
                     </table>
                   </div>
-                  
-                </div> 
-              </div>          
+
+                </div>
+              </div>
             </div>
             <!--end::Row-->
           </div>
@@ -477,7 +477,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                                            <!-- OVERLAYS(that Covers whole viewport) -->
       <!-- Perfom an inspection -->
       <section id="perform_inspection_modal" class="perform_inspection_modal" style="display: none;" >
-        
+
         <div  class="container-fluid"  >
           <div class="card">
               <div class="card-header" style="background-color:#00192D; color:#FFC107"><b>Perform Inspection</b></div>
@@ -531,7 +531,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                                                       </div>
                                                   </div>
                                               </div>
-                                              
+
                                               <div class="card shadow" id="floorBadDescription" style="display:none;">
                                                   <div class="card-header" style="background-color:#00192D; color:#FFC107;"><b>Describe the Repair Required</b></div>
                                                   <div class="card-body">
@@ -763,7 +763,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
               </div>
 
           </div>
-        </div>                                          
+        </div>
       </section>
       <!-- Inspection(inspected) Modal -->
       <div class="modal fade" id="inspectionModal" tabindex="-1" aria-labelledby="inspectionModalLabel" aria-hidden="true">
@@ -846,7 +846,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
       <!-- Scripts -->
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
-    
+
       <!-- J  A V A S C R I PT -->
 
                                                   <!-- LINKS -->
@@ -893,7 +893,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
             exportOptions: {
               columns: ':not(:last-child)' // ⬅ Exclude last column
             }
-          },                              
+          },
           {
             extend: 'pdfHtml5',
             text: 'PDF',

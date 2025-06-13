@@ -532,7 +532,9 @@
         </div>
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
-        <div id="sidebar"></div> <!-- This is where the header will be inserted -->
+        <!-- <div id="sidebar"></div> This is where the header will be inserted -->
+        <div > <?php include_once '../includes/sidebar.php'; ?>  </div> <!-- This is where the sidebar is inserted -->
+
 
         <!--end::Sidebar Wrapper-->
       </aside>
@@ -1080,14 +1082,14 @@
 
 
 <!-- Sidebar script -->
-<script>
+<!-- <script>
   fetch('../bars/sidebar.html')  // Fetch the file
       .then(response => response.text()) // Convert it to text
       .then(data => {
           document.getElementById('sidebar').innerHTML = data; // Insert it
       })
       .catch(error => console.error('Error loading the file:', error)); // Handle errors
-</script>
+</script> -->
 
 <!-- End sidebar script -->
 
