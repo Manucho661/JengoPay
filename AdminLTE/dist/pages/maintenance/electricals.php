@@ -37,14 +37,8 @@
     integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
     crossorigin="anonymous" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
-
-  <!--end::Third Party Plugin(Bootstrap Icons)-->
-  <!--begin::Required Plugin(AdminLTE)-->
   <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
-  <!-- <link rel="stylesheet" href="text.css" /> -->
-  <!--end::Required Plugin(AdminLTE)-->
-  <!-- apexcharts -->
+  
   <link
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
@@ -90,7 +84,65 @@
       background-color: #00192D;
       color: white;
     }
-  </style>
+
+    .sidebar {
+            background-color: #00192D;
+            color: white;
+            flex-shrink: 0;
+            padding-top: 1rem;
+            grid-area: sidebar;
+            min-height: 100vh;
+            min-height: 100vh;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: block;
+            transition: background-color 0.2s;
+        }
+        .sidebar a:hover, .sidebar .active {
+            background-color: #495057;
+        }
+        .sidebar .submenu a {
+            padding-left: 40px;
+            font-size: 0.95rem;
+        }
+
+    .menu-header {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+
+  .arrow {
+    transition: transform 0.3s ease;
+  }
+
+  .submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    padding-left: 1.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .submenu a {
+    padding: 4px 0;
+    text-decoration: none;
+  }
+
+  .menu-group.open .submenu {
+    max-height: 500px;
+  }
+
+  .menu-group.open .arrow {
+    transform: rotate(90deg);
+  }
   </style>
 </head>
 
@@ -305,7 +357,9 @@
       </div>
       <!--end::Sidebar Brand-->
       <!--begin::Sidebar Wrapper-->
-      <div id="sidebar"></div>
+      <?php
+      include "../includes/sidebar1.php";
+      ?>
       <!--end::Sidebar Wrapper-->
     </aside>
     <!--end::Sidebar-->
@@ -572,7 +626,7 @@
                         <div><strong>Payment Status:</strong></div>
                         <div class="badge payment-status px-3 py-1 rounded-pill d-flex" style="width:fit-content;">
                           <div>✅</div>
-                          <div id="payment-status">--</div>
+                          <button id="payment-status" onclick="makePayment()"></button> 
                         </div>
                       </div>
                       <div class="col-12">
@@ -655,6 +709,50 @@
                 </div>
               </div>
             </div>
+            <!-- make payment modal-->
+            <!-- Payment Modal -->
+            <div class="modal fade" id="payProviderModal" tabindex="-1" aria-labelledby="payProviderModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <!-- Modal Header -->
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="payProviderModalLabel">Pay Provider</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <!-- Modal Body with Step Content -->
+                  <div class="modal-body">
+                    <!-- Step 1: Show Provider Details -->
+                    <div id="step-1">
+                      <p><strong>Provider Name:</strong> <span id="providerName">John Doe Ltd</span></p>
+                      <p><strong>Work Done:</strong> <span id="workDescription">Fixed leaking roof in Block A</span></p>
+                      <p><strong>Amount:</strong> <span id="paymentAmount">KES 8,500</span></p>
+                      <button class="btn btn-primary" id="nextStepBtn">Proceed to Payment</button>
+                      <button class="btn btn-primary" id="nextStepBtn">Record Instead</button>
+
+                    </div>
+                    <!-- Step 2: Choose Payment Method -->
+                    <div id="step-2" class="d-none">
+                      <form id="paymentForm">
+                        <div class="mb-3">
+                          <label for="paymentMethod" class="form-label">Select Payment Method</label>
+                          <select class="form-select" id="paymentMethod" name="payment_method" required>
+                            <option value="">-- Choose --</option>
+                            <option value="mpesa">M-Pesa</option>
+                            <option value="bank">Bank Transfer</option>
+                          </select>
+                        </div>
+                        <div id="mpesaPhoneSection" class="d-none">
+                          <label for="phoneNumber" class="form-label">M-Pesa Phone Number</label>
+                          <input type="tel" class="form-control" name="phone" id="phoneNumber" placeholder="07XXXXXXXX" required>
+                        </div>
+                        <button type="submit" class="btn btn-success mt-3">Pay Now</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- end payment modal -->
           </div>
           <!--end::Row-->
         </div>
@@ -795,19 +893,6 @@
   </script>
   <!-- End script for data_table -->
 
-  <!--Begin sidebar script -->
-  <script>
-    fetch('../bars/sidebar.html') // Fetch the file
-      .then(response => response.text()) // Convert it to text
-      .then(data => {
-        document.getElementById('sidebar').innerHTML = data; // Insert it
-      })
-      .catch(error => console.error('Error loading the file:', error)); // Handle errors
-  </script>
-  <!-- end sidebar script -->
-
-
-
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
     integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
@@ -815,33 +900,15 @@
   <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
   <script src="../../../dist/js/adminlte.js"></script>
   <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
-  <script>
-    const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-    const Default = {
-      scrollbarTheme: 'os-theme-light',
-      scrollbarAutoHide: 'leave',
-      scrollbarClickScroll: true,
-    };
-    document.addEventListener('DOMContentLoaded', function() {
-      const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-      if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
-        OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-          scrollbars: {
-            theme: Default.scrollbarTheme,
-            autoHide: Default.scrollbarAutoHide,
-            clickScroll: Default.scrollbarClickScroll,
-          },
-        });
-      }
-    });
-  </script>
-  <!--end::OverlayScrollbars Configure-->
+  
 
-  <!-- DataTable Script -->
-
-
-  <!--end::Script-->
+<!-- for sidebar -->
+<script>
+   function toggleMenu(element) {
+    const group = element.parentElement;
+    group.classList.toggle('open');
+  }
+</script>
 </body>
 <!--end::Body-->
-
 </html>
