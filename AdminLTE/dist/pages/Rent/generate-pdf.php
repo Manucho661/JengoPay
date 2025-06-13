@@ -71,6 +71,28 @@ foreach ($data as $row) {
 }
 $html .= '</table>';
 
+// Add branding footer
+$html .= '<div style="margin-top: 50px; text-align: center;">
+    <span style="font-family: Arial, sans-serif;">
+        <b style="
+            padding: 4px 10px;
+            background-color: #FFC107;
+            border: 2px solid #FFC107;
+            border-top-left-radius: 5px;
+            font-weight: bold;
+            color: #00192D;
+            display: inline-block;
+        ">BT</b><b style="
+            padding: 4px 10px;
+            border: 2px solid #FFC107;
+            border-bottom-right-radius: 5px;
+            font-weight: bold;
+            color: #FFC107;
+            display: inline-block;
+        ">JENGOPAY</b>
+    </span>
+</div>';
+
 // Generate PDF
 $options = new Options();
 $options->set('isHtml5ParserEnabled', true);
