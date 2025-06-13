@@ -448,6 +448,7 @@
                   </table>
                 </div>
               </div>
+
                <!-- Record Payment Modal -->
               <div class="modal fade" id="recordPaymentModal" tabindex="-1" aria-labelledby="recordPaymentModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -593,7 +594,72 @@
                   </div>
                 </div>
               </div>
-              <!-- /end viw request -->
+              <!-- /end view request -->
+
+              <!-- View Payment Modal -->
+        <div class="modal fade" id="viewPaymentModal" tabindex="-1" aria-labelledby="viewPaymentModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-sm">
+              <div class="modal-header bg-dark text-white rounded-top">
+                <h5 class="modal-title" id="viewPaymentModalLabel" style="color:#FFA000 !important;">
+                  <i class="fas fa-eye me-2"></i> View Payment Details
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <div class="modal-body">
+                <div class="row g-3">
+
+                  <div class="col-md-6">
+                    <label><strong>Amount Paid:</strong></label>
+                    <p id="view_amountPaid"></p>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label><strong>Payment Method:</strong></label>
+                    <p id="view_paymentMethod"></p>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label><strong>Date Paid:</strong></label>
+                    <p id="view_datePaid"></p>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label><strong>Service Provider:</strong></label>
+                    <p id="view_serviceProvider"></p>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label><strong>Cheque Number:</strong></label>
+                    <p id="view_chequeNumber"></p>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label><strong>Invoice Number:</strong></label>
+                    <p id="view_invoiceNumber"></p>
+                  </div>
+
+                  <div class="col-12">
+                    <label><strong>Notes:</strong></label>
+                    <p id="view_paymentNotes"></p>
+                  </div>
+
+                  <div class="col-12">
+                    <label><strong>Receipt:</strong></label>
+                    <div id="view_receiptLink"></div>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="background-color: #00192D; color:#FFC107;">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+           <!-- end view payment -->
               <!-- ASSign Modal -->
               <div class="modal fade" id="assignProviderModal" tabindex="-1" aria-labelledby="assignProviderModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
@@ -779,7 +845,10 @@
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
 
 
+<script>
 
+
+</script>
 
 <script>
 $(document).ready(function() {
