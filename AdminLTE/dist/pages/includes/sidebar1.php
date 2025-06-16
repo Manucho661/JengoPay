@@ -1,11 +1,11 @@
-<nav class="sidebar" style="">
+<nav class="sidebar" style="position:relative;">
   <h5 class="text-center text-uppercase">Dashboard</h5>
   <a href="../Dashboard/index2.php">📊 Dashboard</a>
 
   <!-- Property -->
   <div class="menu-group">
     <div class="menu-header" onclick="toggleMenu(this)">
-      <span class="arrow">▶</span> 🏠 Property
+      <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> 🏠 Property
     </div>
     <div class="submenu">
       <a href="../property/reg_form.php">🏢 Buildings</a>
@@ -18,7 +18,7 @@
   <!-- Communications -->
   <div class="menu-group">
     <div class="menu-header" onclick="toggleMenu(this)">
-      <span class="arrow">▶</span> 💬 Communications
+      <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> 💬 Communications
     </div>
     <div class="submenu">
       <a href="#">📢 Announcements</a>
@@ -33,7 +33,7 @@
   <!-- Financials -->
   <div class="menu-group">
     <div class="menu-header" onclick="toggleMenu(this)">
-      <span class="arrow">▶</span> 💼 Financials
+      <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> 💼 Financials
     </div>
     <div class="submenu">
       <a href="#">💵 Expenses</a>
@@ -41,4 +41,6 @@
       <a href="#">📊 Balance Sheet</a>
     </div>
   </div>
+    <a href="#">⚙️ Settings</a>
+    <a href="#" class="logout"> 🔓  Log Out</a>
 </nav>

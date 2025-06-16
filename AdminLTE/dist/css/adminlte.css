@@ -210,11 +210,16 @@ body {
 .sidebar {
             background-color: #00192D;
             color: white;
+            position: relative;
             flex-shrink: 0;
             padding-top: 1rem;
             grid-area: sidebar;
             min-height: 100vh;
             min-height: 100vh;
+            padding-bottom: 50px; /* Prevent content overlap with logout */
+            display: flex;
+            flex-direction: column;
+
         }
         .sidebar a {
             color: white;
@@ -242,6 +247,8 @@ body {
 
   .arrow {
     transition: transform 0.3s ease;
+      
+
   }
 
   .submenu {
@@ -265,7 +272,11 @@ body {
   .menu-group.open .arrow {
     transform: rotate(90deg);
   }
-
+.sidebar a.logout {
+   bottom: 25vh;
+   position: absolute;
+    
+  }
 
 
 hr {

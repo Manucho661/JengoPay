@@ -163,7 +163,9 @@ try {
 width: 100%;
 }
 
-
+.menu-group .menu-header .arrow {
+  color: #FFC107 !important;
+}
     </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
