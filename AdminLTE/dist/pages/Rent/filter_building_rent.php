@@ -1,70 +1,49 @@
 <?php
-include '../db/connect.php';
+require_once '../db/connect.php'; // Your database connection file
 
-// Get filter values from the request
-$building = $_POST['building'] ?? '';
-$unitType = $_POST['unit_type'] ?? '';
-$year = $_POST['year'] ?? '';
-$month = $_POST['month'] ?? '';
+$filters = json_decode(file_get_contents('php://input'), true);
 
-// Build dynamic query
 $query = "SELECT * FROM tenant_rent_summary WHERE 1=1";
 $params = [];
 
-// Filter by building name
-if (!empty($building)) {
+if (!empty($filters['building'])) {
     $query .= " AND building_name = ?";
-    $params[] = $building;
+    $params[] = $filters['building'];
 }
 
-// Filter by unit type
-if (!empty($unitType)) {
+if (!empty($filters['unitType'])) {
     $query .= " AND unit_type = ?";
-    $params[] = $unitType;
+    $params[] = $filters['unitType'];
 }
 
-// Filter by year
-if (!empty($year)) {
-    $query .= " AND YEAR(payment_date) = ?";
-    $params[] = $year;
+if (!empty($filters['year'])) {
+    $query .= " AND year = ?";
+    $params[] = $filters['year'];
 }
 
-// Filter by month (name or number)
-if (!empty($month)) {
-    // Convert month name to number if needed
-    if (!is_numeric($month)) {
-        $monthNumber = date('m', strtotime("1 $month"));
-    } else {
-        $monthNumber = str_pad($month, 2, '0', STR_PAD_LEFT);
-    }
-
-    $query .= " AND MONTH(payment_date) = ?";
-    $params[] = $monthNumber;
+if (!empty($filters['month'])) {
+    $query .= " AND month = ?";
+    $params[] = $filters['month'];
 }
 
-// Prepare and execute
 $stmt = $pdo->prepare($query);
 $stmt->execute($params);
-$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$tenants = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Render results
-if ($results) {
-    foreach ($results as $row) {
-        echo "<tr>
-            <td>{$row['building_name']}</td>
-            <td>{$row['tenant_name']}</td>
-            <td>{$row['unit_code']}</td>
-            <td>{$row['unit_type']}</td>
-            <td>{$row['amount_paid']}</td>
-            <td>{$row['balances']}</td>
-            <td>{$row['penalty']}</td>
-            <td>{$row['penalty_days']}</td>
-            <td>{$row['arrears']}</td>
-            <td>{$row['overpayment']}</td>
-            <td>{$row['payment_date']}</td>
-        </tr>";
+// Generate the table HTML (similar to your existing code but without the building headers)
+$currentBuilding = '';
+foreach ($tenants as $tenant) {
+    $building = $tenant['building_name'] ?? '';
+
+    if ($building !== $currentBuilding) {
+        $currentBuilding = $building;
+        echo '<tr class="table-group-header bg-light">';
+        echo '<td colspan="6" style="font-weight: bold; color: #007bff;">';
+        echo htmlspecialchars($currentBuilding);
+        echo '</td></tr>';
     }
-} else {
-    echo "<tr><td colspan='11'>No records found.</td></tr>";
+
+    // Output the tenant row as before
+    // ...
 }
 ?>

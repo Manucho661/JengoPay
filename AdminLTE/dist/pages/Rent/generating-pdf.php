@@ -9,7 +9,7 @@ use Dompdf\Options;
 $building = $_GET['building'] ?? 'All Buildings';
 
 // Build SQL with optional building filter
-$sql = "SELECT building_name, tenant_name, unit_code, amount_paid, payment_date, penalty, penalty_days, arrears, overpayment
+$sql = "SELECT building_name, tenant_name, unit_code, unit_type, amount_paid, payment_date, penalty, penalty_days, arrears, overpayment
         FROM tenant_rent_summary";
 $params = [];
 
@@ -32,6 +32,7 @@ $html = '<h2 style="text-align:center;">Tenant Rent Summary - ' . htmlspecialcha
     <th>Building</th>
     <th>Tenant</th>
     <th>Unit Code</th>
+    <th>Unit Type</th>
     <th>Amount Paid</th>
     <th>Payment Date</th>
     <th>Penalty</th>
@@ -47,6 +48,7 @@ foreach ($data as $row) {
         <td>' . htmlspecialchars($row['building_name']) . '</td>
         <td>' . htmlspecialchars($row['tenant_name']) . '</td>
         <td>' . htmlspecialchars($row['unit_code']) . '</td>
+        <td>' . htmlspecialchars($row['unit_type']) . '</td>
         <td>KSH ' . number_format($row['amount_paid'], 2) . '</td>
         <td>' . htmlspecialchars($row['payment_date']) . '</td>
         <td>KSH ' . number_format($row['penalty'], 2) . '</td>
