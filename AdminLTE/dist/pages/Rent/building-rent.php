@@ -219,7 +219,37 @@ foreach ($tenants as $tenant) {
 .btn.print:hover {
     background-color: #00192D;
 }
-
+.tableRent {
+        border-collapse: collapse;
+    }
+    .tableRent th, .tableRent td {
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+    .tableRent th {
+        background-color: #f2f2f2;
+        position: sticky;
+        top: 0;
+    }
+    .table-group-header td {
+        padding: 10px;
+        background-color: #e9ecef;
+    }
+    .btn {
+        border: 1px solid #ddd;
+        background-color: white;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .btn:hover {
+        background-color: #f8f9fa;
+    }
+    .date.late {
+        color: #dc3545;
+    }
+    .rent.lateDays {
+        color: #dc3545;
+    }
 
 </style>
 
@@ -447,7 +477,10 @@ foreach ($tenants as $tenant) {
         </div>
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
-        <div id="sidebar"></div>
+        <!-- <div id="sidebar"></div> -->
+        <div > <?php include_once '../includes/sidebar.php'; ?>  </div> <!-- This is where the sidebar is inserted -->
+
+
         <!--end::Sidebar Wrapper-->
       </aside>
       <!--end::Sidebar-->
@@ -617,58 +650,56 @@ foreach ($tenants as $tenant) {
 
                             <!-- <label for="unit-type-select">Unit Type</label> -->
                            <!-- Unit Type Dropdown -->
-<!-- Building Dropdown -->
-<select id="building-select" class="form-control mt-3">
-    <option value="">All Buildings</option>
-    <?php
-    $buildings = $pdo->query("SELECT DISTINCT building_name FROM tenant_rent_summary WHERE building_name != '' ORDER BY building_name");
-    while ($b = $buildings->fetch()):
-    ?>
-        <option value="<?= htmlspecialchars($b['building_name']) ?>">
-            <?= htmlspecialchars($b['building_name']) ?>
-        </option>
-    <?php endwhile; ?>
-</select>
+                            <!-- Building Dropdown -->
+                            <select id="building-select" class="form-control">
+            <option value="">All Buildings</option>
+            <?php
+            $buildings = $pdo->query("SELECT DISTINCT building_name FROM tenant_rent_summary WHERE building_name != '' ORDER BY building_name");
+            while ($b = $buildings->fetch()):
+            ?>
+                <option value="<?= htmlspecialchars($b['building_name']) ?>">
+                    <?= htmlspecialchars($b['building_name']) ?>
+                </option>
+            <?php endwhile; ?>
+        </select>
 
-
-                            <select id="unit-type-select" class="form-control mt-3">
-                              <option value="">All Units</option>
-                              <?php
-                                $unitTypes = $pdo->query("SELECT DISTINCT unit_type FROM tenant_rent_summary WHERE unit_type != ''");
-                                while ($u = $unitTypes->fetch()):
-                              ?>
-                                <option value="<?= htmlspecialchars($u['unit_type']) ?>">
-                                  <?= htmlspecialchars($u['unit_type']) ?>
-                                </option>
-                              <?php endwhile; ?>
-                            </select>
-
+        <select id="unit-type-select" class="form-control">
+            <option value="">All Units</option>
+            <?php
+            $unitTypes = $pdo->query("SELECT DISTINCT unit_type FROM tenant_rent_summary WHERE unit_type != ''");
+            while ($u = $unitTypes->fetch()):
+            ?>
+                <option value="<?= htmlspecialchars($u['unit_type']) ?>">
+                    <?= htmlspecialchars($u['unit_type']) ?>
+                </option>
+            <?php endwhile; ?>
+        </select>
                             <!-- Year Dropdown -->
-                            <select id="year-select" class="form-control mt-3">
-                              <option value="">All Years</option>
-                              <?php
-                                $years = $pdo->query("SELECT DISTINCT year FROM tenant_rent_summary ORDER BY year DESC");
-                                while ($y = $years->fetch()):
-                              ?>
+                            <select id="year-select" class="form-control">
+                            <option value="">All Years</option>
+                            <?php
+                            $years = $pdo->query("SELECT DISTINCT year FROM tenant_rent_summary ORDER BY year DESC");
+                            while ($y = $years->fetch()):
+                            ?>
                                 <option value="<?= $y['year'] ?>" <?= $y['year'] === '2025' ? 'selected' : '' ?>>
-                                  <?= $y['year'] ?>
+                                    <?= $y['year'] ?>
                                 </option>
-                              <?php endwhile; ?>
-                            </select>
+                            <?php endwhile; ?>
+                        </select>
 
                             <!-- Month Dropdown -->
-                            <select id="month-select" class="form-control mt-3">
-                              <option value="">All Months</option>
-                              <?php
-                                $months = [
-                                  "January", "February", "March", "April", "May", "June",
-                                  "July", "August", "September", "October", "November", "December"
-                                ];
-                                foreach ($months as $m):
-                              ?>
-                                <option value="<?= $m ?>" <?= $m === 'April' ? 'selected' : '' ?>><?= $m ?></option>
-                              <?php endforeach; ?>
-                            </select>
+                            <select id="month-select" class="form-control">
+                  <option value="">All Months</option>
+                  <?php
+                  $months = [
+                      "January", "February", "March", "April", "May", "June",
+                      "July", "August", "September", "October", "November", "December"
+                  ];
+                  foreach ($months as $m):
+                  ?>
+                      <option value="<?= $m ?>" <?= $m === 'April' ? 'selected' : '' ?>><?= $m ?></option>
+                  <?php endforeach; ?>
+              </select>
 
                             <!--
                             <div class="select-option-container ">
@@ -706,88 +737,97 @@ foreach ($tenants as $tenant) {
                           </div>
                           </div>
                         <div class="rentTable section" >
-                          <table id="rent" class="tableRent" style="font-size: small;" >
-                            <thead>
-                                <tr>
-                                        <th scope="col">Tenant + unit</th>
-                                        <th scope="col">
-                                          <div>Collected</div>
-                                        </th>
-                                        <th>Unit Type</th>
-                                        <th scope="col">Balances</th>
-                                        <th scope="col">Penalty&nbsp;(l.days)</th>
-                                        <th scope="col">Arreas</th>
-                                        <th scope="col">Overpayment</th>
-                                        <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-    <?php
-    $currentBuilding = '';
-    foreach ($tenants as $tenant):
-        $building = $tenant['building_name'] ?? '';
-
-        // Show building name as a header row if it has changed
-        if ($building !== $currentBuilding):
-            $currentBuilding = $building;
-    ?>
-        <tr class="table-group-header bg-light">
-            <td colspan="6" style="font-weight: bold; color: #007bff;">
-                <?= htmlspecialchars($currentBuilding) ?>
-            </td>
-        </tr>
-    <?php
-        endif;
-
-        $nameParts = explode(" ", $tenant['tenant_name'] ?? '');
-        $firstName = $nameParts[0] ?? '';
-        $middleName = $nameParts[1] ?? '';
-        $unit = htmlspecialchars($tenant['unit_code'] ?? '');
-        $amount = number_format((float)($tenant['amount_paid'] ?? 0), 2);
-        $unit_type = htmlspecialchars($tenant['unit_type'] ?? '');
-        $balances = number_format((float)($tenant['balances'] ?? 0), 2);
-        $penalty = number_format((float)($tenant['penalty'] ?? 0), 2);
-        $arrears = number_format((float)($tenant['arrears'] ?? 0), 2);
-        $overpayment = number_format((float)($tenant['overpayment'] ?? 0), 2);
-        $penaltyDays = (int)($tenant['penalty_days'] ?? 0);
-        $paymentDate = !empty($tenant['payment_date']) ? date("d-F", strtotime($tenant['payment_date'])) : '';
-    ?>
+                        <table id="rent" class="tableRent" style="font-size: small; width: 100%; table-layout: fixed;">
+                        <colgroup>
+                            <col style="width: 20%">  <!-- Tenant + unit -->
+                            <col style="width: 12%">  <!-- Collected -->
+                            <col style="width: 10%">  <!-- Unit Type -->
+                            <col style="width: 10%">  <!-- Balances -->
+                            <col style="width: 12%">  <!-- Penalty -->
+                            <col style="width: 10%">  <!-- Arrears -->
+                            <col style="width: 10%">  <!-- Overpayment -->
+                            <col style="width: 16%">  <!-- Action -->
+                        </colgroup>
+                        <thead>
         <tr>
-            <th>
-                <div class="d-flex justify-content-between">
-                    <div><?= htmlspecialchars("$firstName $middleName") ?></div>
-                    <div class="value" style="color:#FFC107">&nbsp;<?= $unit ?></div>
-                </div>
-            </th>
-            <td>
-                <div class="rent paid">
-                    <div>KSH&nbsp;<?= $amount?></div>
-                    <div class="date late"><?= $paymentDate ?></div>
-                </div>
-            </td>
-            <td class="unit_type">&nbsp;<?= $unit_type?></td>
-            <td class="rent balances">KSH&nbsp;<?= $balances?></td>
-            <td>
-                <div class="rent penalit">
-                    KSH&nbsp;<?= $penalty ?>
-                    (<span class="rent lateDays">-<?= $penaltyDays ?></span>)
-                </div>
-            </td>
-            <td class="rent collected">KSH&nbsp;<?= $arrears ?></td>
-            <td class="rent overpayment">KSH&nbsp;<?= $overpayment ?></td>
-            <td>
-                <button class="btn view" data-bs-toggle="modal" data-bs-target="#tenantProfileModal">
-                 View
-                </button>
-                <button class="btn print" onclick="window.open('print-receipt.php?tenant_id=<?= $tenant['id'] ?>', '_blank')">
-                <i class="fas fa-file-invoice"></i>Receipt
-</button>
-            </td>
+            <th scope="col">Tenant + unit</th>
+            <th scope="col">Collected</th>
+            <th scope="col">Unit Type</th>
+            <th scope="col">Balances</th>
+            <th scope="col">Penalty (l.days)</th>
+            <th scope="col">Arrears</th>
+            <th scope="col">Overpayment</th>
+            <th scope="col">Action</th>
         </tr>
-    <?php endforeach; ?>
-</tbody>
+    </thead>
+    <tbody>
+        <?php
+        $currentBuilding = '';
+        foreach ($tenants as $tenant):
+            $building = $tenant['building_name'] ?? '';
 
-                    </table>
+            // Show building name as a header row if it has changed
+            if ($building !== $currentBuilding):
+                $currentBuilding = $building;
+        ?>
+                <tr class="table-group-header bg-light">
+                    <td colspan="8" style="font-weight: bold; color: #007bff; padding: 8px;">
+                        <?= htmlspecialchars($currentBuilding) ?>
+                    </td>
+                </tr>
+        <?php
+            endif;
+            $nameParts = explode(" ", $tenant['tenant_name'] ?? '');
+            $firstName = $nameParts[0] ?? '';
+            $middleName = $nameParts[1] ?? '';
+            $unit = htmlspecialchars($tenant['unit_code'] ?? '');
+            $amount = number_format((float)($tenant['amount_paid'] ?? 0), 2);
+            $unit_type = htmlspecialchars($tenant['unit_type'] ?? '');
+            $balances = number_format((float)($tenant['balances'] ?? 0), 2);
+            $penalty = number_format((float)($tenant['penalty'] ?? 0), 2);
+            $arrears = number_format((float)($tenant['arrears'] ?? 0), 2);
+            $overpayment = number_format((float)($tenant['overpayment'] ?? 0), 2);
+            $penaltyDays = (int)($tenant['penalty_days'] ?? 0);
+            $paymentDate = !empty($tenant['payment_date']) ? date("d-F", strtotime($tenant['payment_date'])) : '';
+        ?>
+            <tr>
+                <td style="padding: 8px; vertical-align: middle;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span><?= htmlspecialchars("$firstName $middleName") ?></span>
+                        <span style="color: #FFC107;"><?= $unit ?></span>
+                    </div>
+                </td>
+                <td style="padding: 8px; vertical-align: middle;">
+                    <div style="display: flex; flex-direction: column;">
+                        <span>KSH <?= $amount ?></span>
+                        <span class="date late" style="font-size: 0.8em;"><?= $paymentDate ?></span>
+                    </div>
+                </td>
+                <td style="padding: 8px; vertical-align: middle;"><?= $unit_type ?></td>
+                <td style="padding: 8px; vertical-align: middle;">KSH <?= $balances ?></td>
+                <td style="padding: 8px; vertical-align: middle;">
+                    <div style="display: flex; flex-direction: column;">
+                        <span>KSH <?= $penalty ?></span>
+                        <span class="rent lateDays" style="font-size: 0.8em;">(<?= $penaltyDays ?> days)</span>
+                    </div>
+                </td>
+                <td style="padding: 8px; vertical-align: middle;">KSH <?= $arrears ?></td>
+                <td style="padding: 8px; vertical-align: middle;">KSH <?= $overpayment ?></td>
+                <td style="padding: 8px; vertical-align: middle;">
+                    <div style="display: flex; gap: 4px;">
+                        <button class="btn view" data-bs-toggle="modal" data-bs-target="#tenantProfileModal" style="padding: 4px 8px;">
+                            View
+                        </button>
+                        <button class="btn print" onclick="window.open('print-receipt.php?tenant_id=<?= $tenant['id'] ?>', '_blank')" style="padding: 4px 8px;">
+                            <i class="fas fa-file-invoice"></i> Receipt
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
 
                         </div>
                     </div>
@@ -1101,14 +1141,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 <!--Begin sidebar script -->
-<script>
+<!-- <script>
   fetch('../bars/sidebar.html')  // Fetch the file
       .then(response => response.text()) // Convert it to text
       .then(data => {
           document.getElementById('sidebar').innerHTML = data; // Insert it
       })
       .catch(error => console.error('Error loading the file:', error)); // Handle errors
-</script>
+</script> -->
 <!-- end sidebar script -->
 
 
