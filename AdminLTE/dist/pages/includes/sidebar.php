@@ -8,7 +8,7 @@
         data-accordion="false"
       >
         <li class="nav-item">
-          <a href="../Dashboard/index2.html" class="nav-link">
+          <a href="../Dashboard/index2.php" class="nav-link">
             <i class="fas fa-tachometer-alt"></i>
             <p>Dashboard</p>
           </a>
@@ -83,7 +83,7 @@
         </li>
 
         <li class="nav-item">
-          <a href="../inspections/index.html" class="nav-link">
+          <a href="../inspections/inspections.php" class="nav-link">
             <i class="fas fa-clipboard-check icon"></i>
             <p>Inspections</p>
           </a>
@@ -105,67 +105,67 @@
             </p>
           </a>
           <ul class="nav nav-treeview collapse" id="commDropdown">
-            <li class="nav-item">
-              <a href="../maintenance/plumbing.html" class="nav-link">
+            <!-- <li class="nav-item">
+              <a href="../maintenance/plumbing.php" class="nav-link">
                 <i class="nav-icon bi bi-circle"></i>
                 <p>Plumbing Works</p>
               </a>
-            </li>
+            </li> -->
             <li class="nav-item">
-              <a href="../maintenance/electricals.html" class="nav-link">
+              <a href="../maintenance/maintenance.php" class="nav-link">
                 <i class="nav-icon bi bi-circle"></i>
-                <p>Electrical Works</p>
+                <p>Maintenance Requests</p>
               </a>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <a href="../maintenance/General.html" class="nav-link">
                 <i class="nav-icon bi bi-circle"></i>
                 <p>Safety& Security</p>
               </a>
-            </li>
-            <li class="nav-item">
+            </li> -->
+            <!-- <li class="nav-item">
               <a href="../maintenance/Outdoor.html" class="nav-link">
                 <i class="nav-icon bi bi-circle"></i>
                 <p>Outdoor Repairs</p>
               </a>
-            </li>
-            <li class="nav-item">
+            </li> -->
+            <!-- <li class="nav-item">
               <a href="../maintenance/plumbing.html" class="nav-link">
                 <i class="nav-icon bi bi-circle"></i>
                 <p>General Repairs</p>
               </a>
-            </li>
-            <li class="nav-item">
+            </li> -->
+            <!-- <li class="nav-item">
               <a href="../maintenance/plumbing.html" class="nav-link">
                 <i class="nav-icon bi bi-circle"></i>
                 <p>Appliance Repairs</p>
               </a>
-            </li>
-            <li class="nav-item">
+            </li> -->
+            <!-- <li class="nav-item">
               <a href="../maintenance/Outdoor.html" class="nav-link">
                 <i class="nav-icon bi bi-circle"></i>
                 <p>Painting And Finishing</p>
               </a>
-            </li>
-            <li class="nav-item">
+            </li> -->
+            <!-- <li class="nav-item">
               <a href="../maintenance/Outdoor.html" class="nav-link">
                 <i class="nav-icon bi bi-circle"></i>
                 <p>HVAC Maintenance</p>
               </a>
-            </li>
-            <li class="nav-item">
+            </li> -->
+            <!-- <li class="nav-item">
               <a href="../maintenance/General.html" class="nav-link">
                 <i class="nav-icon bi bi-circle"></i>
                 <p>Pest Control</p>
               </a>
-            </li>
+            </li> -->
           </ul>
         </li>
 
 
 
         <li class="nav-item">
-          <a href="../serviceProvider/providerProfiles.html" class="nav-link">
+          <a href="../serviceProvider/providers.php" class="nav-link">
             <i class="fas fa-user-tie icon"></i>
             <p>ServiceProviders</p>
           </a>
@@ -173,7 +173,7 @@
 
 
         <li class="nav-item">
-          <a href="../files/files.html" class="nav-link">
+          <a href="../files/files.php" class="nav-link">
             <i class="bi bi-file-earmark"></i>
             <p>Files</p>
           </a>
@@ -198,7 +198,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="../financials/expenses/expenses.html" class="nav-link">
+                <a href="../financials/expenses/expenses.php" class="nav-link">
                   <i class="nav-icon bi bi-circle"></i>
                   <p>Expenses</p>
                   <i class="nav-arrow bi bi-chevron-right"></i>

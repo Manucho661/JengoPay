@@ -853,7 +853,8 @@ display: flex;
         </div>
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
-        <div id="sidebar"></div> <!-- This is where the sidebar is inserted -->
+        <!-- <div id="sidebar"></div> This is where the sidebar is inserted -->
+        <div > <?php include_once '../includes/sidebar.php'; ?>  </div> <!-- This is where the sidebar is inserted -->
 
         <!--end::Sidebar Wrapper-->
       </aside>
@@ -1610,14 +1611,14 @@ function handleFiles(event) {
 
 
 <!--Begin sidebar script -->
-<script>
+<!-- <script>
   fetch('../bars/sidebar.html')  // Fetch the file
       .then(response => response.text()) // Convert it to text
       .then(data => {
           document.getElementById('sidebar').innerHTML = data; // Insert it
       })
       .catch(error => console.error('Error loading the file:', error)); // Handle errors
-</script>
+</script> -->
 <!-- end sidebar script -->
 
 

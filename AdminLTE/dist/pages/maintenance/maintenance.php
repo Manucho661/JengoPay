@@ -68,6 +68,7 @@
     }
 
 
+
     .dropdown-menu {
       min-width: 120px;
       background-color: #132E45;
@@ -330,6 +331,7 @@
           <!--end::Row-->
         </div>
         <!--end::Container-->
+<<<<<<< HEAD:AdminLTE/dist/pages/maintenance/electricals.php
       </div>
       <div class="app-content">
         <!--begin::Container-->
@@ -355,6 +357,54 @@
             </div>
             <div class="col-md-3">
               <input type="date" class="form-control filter-shadow ">
+=======
+      </nav>
+      <!--end::Header-->
+      <!--begin::Sidebar-->
+      <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+        <!--begin::Sidebar Brand-->
+        <div class="sidebar-brand">
+          <!--begin::Brand Link-->
+          <a href="./index.html" class="brand-link">
+            <!--begin::Brand Image-->
+            <img
+              src="../../../dist/assets/img/AdminLTELogo.png"
+              alt="AdminLTE Logo"
+              class="brand-image opacity-75 shadow"
+            />
+            <!--end::Brand Image-->
+            <!--begin::Brand Text-->
+            <span class="brand-text fw-light">AdminLTE 4</span>
+            <!--end::Brand Text-->
+          </a>
+          <!--end::Brand Link-->
+        </div>
+        <!--end::Sidebar Brand-->
+        <!--begin::Sidebar Wrapper-->
+        <!-- <div id="sidebar"></div> -->
+        <div > <?php include_once '../includes/sidebar.php'; ?>  </div> <!-- This is where the sidebar is inserted -->
+
+        <!--end::Sidebar Wrapper-->
+      </aside>
+      <!--end::Sidebar-->
+      <!--begin::App Main-->
+      <main class="app-main" style=" height:100%;" >
+        <!--begin::App Content Header-->
+        <div class="app-content-header">
+          <!--begin::Container-->
+          <div class="container-fluid" >
+            <!--begin::Row-->
+            <div class="row">
+              <div class="col-sm-8">
+                <h3 class="mb-0 "> 🛠 <span class="contact_section_header">Maintenance Requests/Electricals</span> </h3>
+              </div>
+              <div class="col-sm-4">
+                <ol class="breadcrumb float-sm-end">
+                  <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                </ol>
+              </div>
+>>>>>>> 9ad25da32dd09fe2167f1e77105485f75e5d055d:AdminLTE/dist/pages/maintenance/maintenance.php
             </div>
           </div>
           <!-- begin row -->
@@ -369,6 +419,7 @@
                 </div>
               </div>
             </div>
+<<<<<<< HEAD:AdminLTE/dist/pages/maintenance/electricals.php
 
             <div class="col-12 col-sm-6 col-md-3">
               <div class="summary-card">
@@ -376,6 +427,128 @@
                 <div>
                   <div class="summary-card_label">Completed</div>
                   <div class="summary-card_value penalities">&nbsp;300</div>
+=======
+            <!--begin::Row-->
+            <div class="row">
+
+              <h6 class="mb-0 contact_section_header summary mb-2"></i> Requests</h6>
+
+              <div class="col-md-12">
+                <div class="Table-section bg-white p-2 rounded-2">
+                  <div class="table-section-header">
+                    <div class="entries">
+                      <h6 class="mb-0 contact_section_header summary mb-2 p-2 rounded-top" style="background-color: #00192D; color:#FFA000;"> <span class="text-white">Manucho |</span>  5 entries</h6>
+                    </div>
+                    <div class="search-pdf-excel d-flex justify-content-between">
+                      <div id="custom-search">
+                          <input type="text" id="searchInput" placeholder="Search request...">
+                      </div>
+                      <div id="custom-buttons"></div>
+                    </div>
+                  </div>
+
+                  <table id="requests-table" class=" display summary-table" >
+                    <thead class="mb-2">
+                      <tr>
+                          <th>REQUEST Date</th>
+                          <th>Request ID</th>
+                          <th>PROPERTY + UNIT</th>
+                          <th>CATEGORY + DESCRIPTION </th>
+                          <th>PROVIDER</th>
+                          <th>PRIORITY</th>
+                          <th>STATUS</th>
+                          <th>PAYMENT</th>
+                          <th>ACTIONS</th>
+                      </tr>
+                    </thead>
+                    <tbody id="maintenanceRequestsTableBody">
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+               <!-- Record Payment Modal -->
+              <div class="modal fade" id="recordPaymentModal" tabindex="-1" aria-labelledby="recordPaymentModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                  <div class="modal-content rounded-4 shadow-sm">
+                    <div class="modal-header bg-primary text-white rounded-top" style="background-color: #00192D !important;" >
+                      <h5 class="modal-title" id="recordPaymentModalLabel" style="color:#FFA000 !important; margin-left:5px;" id="inspectionModalLabel" >
+                        <i class="fas fa-money-check-alt me-2"></i> Record Payment
+                      </h5>
+                      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <form id="recordPaymentForm" onsubmit="addRequestPayment(event)" enctype="multipart/form-data" >
+                      <div class="modal-body">
+                        <div class="row g-3">
+
+                          <!-- Amount Paid -->
+                          <div class="col-md-6 form-floating">
+                            <input type="number" class="form-control" id="amountPaid" name="amountPaid" placeholder="Amount Paid" required>
+                            <label for="amountPaid"><i class="fas fa-coins me-2" style="color:#FFA000 ! important" ></i>Amount Paid</label>
+                          </div>
+
+                          <!-- Payment Method -->
+                          <div class="col-md-6 form-floating">
+                            <select class="form-select" name="paymentMethod" id="paymentMethod" required>
+                              <option value="" selected disabled>Select Method</option>
+                              <option>Cash</option>
+                              <option>M-Pesa</option>
+                              <option>Bank Transfer</option>
+                              <option>Cheque</option>
+                            </select>
+                            <label for="paymentMethod"><i class="fas fa-wallet me-2" style="color:#FFA000 ! important"></i>Payment Method</label>
+                          </div>
+
+                          <!-- Date Paid -->
+                          <div class="col-md-6 form-floating">
+                            <input type="date" class="form-control" id="datePaid" name="datePaid" placeholder="Date Paid" required>
+                            <label for="datePaid"><i class="fas fa-calendar-day me-2" style="color:#FFA000 ! important"></i>Date Paid</label>
+                          </div>
+
+                          <!-- Service Provider -->
+                          <div class="col-md-6 form-floating">
+                            <input type="text" class="form-control" id="serviceProvider" name="serviceProvider" placeholder="Service Provider" required>
+                            <label for="serviceProvider"><i class="fas fa-user-tie me-2" style="color:#FFA000 ! important"></i>Service Provider</label>
+                          </div>
+
+                          <!-- Cheque Number -->
+                          <div class="col-md-6 form-floating">
+                            <input type="text" class="form-control" name="chequeNumber" id="chequeNumber" placeholder="Cheque Number">
+                            <label for="chequeNumber"><i class="fas fa-receipt me-2" style="color:#FFA000 ! important" ></i>Cheque Number</label>
+                          </div>
+
+                          <!-- Invoice Number -->
+                          <div class="col-md-6 form-floating">
+                            <input type="text" class="form-control" name="invoiceNumber" id="invoiceNumber" placeholder="Invoice Number">
+                            <label for="invoiceNumber"><i class="fas fa-file-invoice me-2"style="color:#FFA000 ! important" ></i>Invoice Number</label>
+                          </div>
+
+                          <!-- Notes -->
+                          <div class="col-12 form-floating">
+                            <textarea class="form-control" id="paymentNotes" name="paymentNotes" placeholder="Notes" style="height: 100px;"></textarea>
+                            <label for="paymentNotes"><i class="fas fa-comment-dots me-2" style="color:#FFA000 ! important"></i>Payment Notes</label>
+                          </div>
+
+                          <!-- Upload Receipt (Optional) -->
+                          <div class="col-12">
+                            <label for="uploadReceipt" class="form-label fw-bold" style="color:#FFA000 ! important"><i class="fas fa-upload me-2"></i>Upload Receipt (optional)</label>
+                            <input class="form-control" type="file" name="uploadReceipt" id="uploadReceipt" accept="image/*,application/pdf">
+                          </div>
+
+                        </div>
+                      </div>
+
+                      <div class="modal-footer">
+                        <input type="hidden" name="request_id" id="modal_request_id">
+                        <input type="hidden" name="form_type" value="addPaymentForm">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn" style="background-color:#00192D; color:#FFA000;"><i class="fas fa-save me-1"></i> Save Payment</button>
+                      </div>
+                    </form>
+                  </div>
+>>>>>>> 9ad25da32dd09fe2167f1e77105485f75e5d055d:AdminLTE/dist/pages/maintenance/maintenance.php
                 </div>
               </div>
             </div>
@@ -460,6 +633,7 @@
                           <label for="amountPaid"><i class="fas fa-coins me-2" style="color:#FFA000 ! important"></i>Amount Paid</label>
                         </div>
 
+<<<<<<< HEAD:AdminLTE/dist/pages/maintenance/electricals.php
                         <!-- Payment Method -->
                         <div class="col-md-6 form-floating">
                           <select class="form-select" name="paymentMethod" id="paymentMethod" required>
@@ -468,6 +642,112 @@
                             <option>M-Pesa</option>
                             <option>Bank Transfer</option>
                             <option>Cheque</option>
+=======
+                    <div class="modal-footer bg-light rounded-bottom-4">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              <!-- /end view request -->
+
+              <!-- View Payment Modal -->
+        <div class="modal fade" id="viewPaymentModal" tabindex="-1" aria-labelledby="viewPaymentModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-sm">
+              <div class="modal-header bg-dark text-white rounded-top">
+                <h5 class="modal-title" id="viewPaymentModalLabel" style="color:#FFA000 !important;">
+                  <i class="fas fa-eye me-2"></i> View Payment Details
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <div class="modal-body">
+                <div class="row g-3">
+
+                  <div class="col-md-6">
+                    <label><strong>Amount Paid:</strong></label>
+                    <p id="view_amountPaid"></p>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label><strong>Payment Method:</strong></label>
+                    <p id="view_paymentMethod"></p>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label><strong>Date Paid:</strong></label>
+                    <p id="view_datePaid"></p>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label><strong>Service Provider:</strong></label>
+                    <p id="view_serviceProvider"></p>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label><strong>Cheque Number:</strong></label>
+                    <p id="view_chequeNumber"></p>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label><strong>Invoice Number:</strong></label>
+                    <p id="view_invoiceNumber"></p>
+                  </div>
+
+                  <div class="col-12">
+                    <label><strong>Notes:</strong></label>
+                    <p id="view_paymentNotes"></p>
+                  </div>
+
+                  <div class="col-12">
+                    <label><strong>Receipt:</strong></label>
+                    <div id="view_receiptLink"></div>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="background-color: #00192D; color:#FFC107;">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+           <!-- end view payment -->
+              <!-- ASSign Modal -->
+              <div class="modal fade" id="assignProviderModal" tabindex="-1" aria-labelledby="assignProviderModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content shadow-lg border-0 rounded-3">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header bg-primary text-white">
+                      <h5 class="modal-title" id="assignProviderModalLabel">
+                        <i class="bi bi-person-check-fill me-2"></i>Assign Service Provider
+                      </h5>
+                      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <!-- Modal Form -->
+                    <form id="assignProviderForm">
+                      <div class="modal-body">
+
+                        <!-- Hidden Fields -->
+                        <input type="hidden" name="maintenance_request_id" id="maintenance_request_id">
+                        <input type="hidden" name="unit_id" id="unit_id">
+
+                        <!-- Service Provider Dropdown -->
+                        <div class="mb-3">
+                          <label for="service_provider_id" class="form-label">
+                            <i class="bi bi-tools me-1"></i>Service Provider
+                          </label>
+                          <select class="form-select" name="service_provider_id" id="service_provider_id" required>
+                            <option selected disabled value="">Select a provider</option>
+                            <!-- Populate dynamically -->
+                            <option value="1">John Doe - Plumbing</option>
+                            <option value="2">Jane Smith - Electrical</option>
+>>>>>>> 9ad25da32dd09fe2167f1e77105485f75e5d055d:AdminLTE/dist/pages/maintenance/maintenance.php
                           </select>
                           <label for="paymentMethod"><i class="fas fa-wallet me-2" style="color:#FFA000 ! important"></i>Payment Method</label>
                         </div>
@@ -769,11 +1049,20 @@
   <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
 
 
+<script>
 
 
+<<<<<<< HEAD:AdminLTE/dist/pages/maintenance/electricals.php
   <script>
     $(document).ready(function() {
       var table = $('#maintenance').DataTable({
+=======
+</script>
+
+<script>
+$(document).ready(function() {
+    var table = $('#maintenance').DataTable({
+>>>>>>> 9ad25da32dd09fe2167f1e77105485f75e5d055d:AdminLTE/dist/pages/maintenance/maintenance.php
         "lengthChange": false,
         "dom": 'Bfrtip',
         "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
@@ -795,14 +1084,21 @@
   </script>
   <!-- End script for data_table -->
 
+<<<<<<< HEAD:AdminLTE/dist/pages/maintenance/electricals.php
   <!--Begin sidebar script -->
   <script>
     fetch('../bars/sidebar.html') // Fetch the file
+=======
+<!--Begin sidebar script -->
+<!-- <script>
+  fetch('../bars/sidebar.html')  // Fetch the file
+>>>>>>> 9ad25da32dd09fe2167f1e77105485f75e5d055d:AdminLTE/dist/pages/maintenance/maintenance.php
       .then(response => response.text()) // Convert it to text
       .then(data => {
         document.getElementById('sidebar').innerHTML = data; // Insert it
       })
       .catch(error => console.error('Error loading the file:', error)); // Handle errors
+<<<<<<< HEAD:AdminLTE/dist/pages/maintenance/electricals.php
   </script>
   <!-- end sidebar script -->
 
@@ -836,6 +1132,45 @@
     });
   </script>
   <!--end::OverlayScrollbars Configure-->
+=======
+</script> -->
+<!-- end sidebar script -->
+
+
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+      integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+      crossorigin="anonymous"
+    ></script>
+    <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
+    <script src="../../../dist/js/adminlte.js"></script>
+    <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
+    <script>
+      const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
+      const Default = {
+        scrollbarTheme: 'os-theme-light',
+        scrollbarAutoHide: 'leave',
+        scrollbarClickScroll: true,
+      };
+      document.addEventListener('DOMContentLoaded', function () {
+        const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
+        if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
+          OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+            scrollbars: {
+              theme: Default.scrollbarTheme,
+              autoHide: Default.scrollbarAutoHide,
+              clickScroll: Default.scrollbarClickScroll,
+            },
+          });
+        }
+      });
+    </script>
+    <!--end::OverlayScrollbars Configure-->
+
+    <!-- DataTable Script -->
+
+>>>>>>> 9ad25da32dd09fe2167f1e77105485f75e5d055d:AdminLTE/dist/pages/maintenance/maintenance.php
 
   <!-- DataTable Script -->
 

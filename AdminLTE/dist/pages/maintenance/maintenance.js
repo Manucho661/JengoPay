@@ -6,7 +6,7 @@ fetch('actions/fetch_records.php', { cache: 'no-store' })
   try {
     const data = JSON.parse(rawText);
     console.log("✅ Parsed JSON:", data);
-    
+
     if (data.success) {
       populateRequestsTable(data.data);
     } else {
@@ -45,9 +45,9 @@ function populateRequestsTable(requests) {
             <i class="fas fa-check-circle"></i> Completed
           </span>
         </td>`;
-        
+
     }
-    
+
     else if (status === 'pending') {
       statusHTML = `
         <td>
@@ -94,7 +94,7 @@ function populateRequestsTable(requests) {
       <div>${requests.residence}</div>
       <div style="color: green;">${requests.unit}</div>
       </td>
-      
+
       <td>
       <div>${requests.category }</div>
         <div style="color:green; border:none; width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ">${requests.description }</div>
@@ -142,8 +142,10 @@ function populateRequestsTable(requests) {
             <ul class="dropdown-menu">
               <li><a class="dropdown-item assign-provider" href="#" style="color: #FFA000 !important;"> <i class="fas fa-tasks"></i> Assign Provider</a></li>
               <li><a class="dropdown-item mark-complete" href="#" style="color: #FFA000 !important;"> <i class="fas fa-tasks"></i> Mark Complete</a></li>
-              <li><a class="dropdown-item" href="#" style="color: #FFA000 !important;" ><i class="fas fa-eye"></i> View Payment</a></li>
-              <li><a class="dropdown-item delete-record" href="#" style="color: #F87171 !important;"  ><i class="fas fa-trash"></i>     Delete Request</a></li>
+              <li><a class="dropdown-item view-payment" href="#" style="color: #FFA000 !important;"  data-request-id="${requests.id}" ><i class="fas fa-eye"></i> View Payment</a></li>
+              <li>
+              <a class="dropdown-item delete-request" href="#" style="color: #F87171 !important;" data-request-id="${requests.id}"><i class="fas fa-trash"></i> Delete Request</a>
+            </li>
             </ul>
           </div>
     </div>
@@ -197,7 +199,52 @@ function populateRequestsTable(requests) {
       });
     tableBody.appendChild(tempDiv.firstChild); // append the full row
   });
-  
+
+  // view payment
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('.view-payment')) {
+      e.preventDefault();
+      const btn = e.target.closest('.view-payment');
+      const requestId = btn.getAttribute('data-request-id');
+
+      fetch(`../maintenance/actions/get_payment_details.php?maintenance_request_id=${requestId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            const p = data.payment;
+
+            document.getElementById('view_amountPaid').innerText = p.amount_paid || '-';
+            document.getElementById('view_paymentMethod').innerText = p.payment_method || '-';
+            document.getElementById('view_datePaid').innerText = p.date_paid || '-';
+            document.getElementById('view_serviceProvider').innerText = p.service_provider || '-';
+            document.getElementById('view_chequeNumber').innerText = p.cheque_number || '-';
+            document.getElementById('view_invoiceNumber').innerText = p.invoice_number || '-';
+            document.getElementById('view_paymentNotes').innerText = p.notes || '-';
+
+            if (p.receipt_url) {
+              document.getElementById('view_receiptLink').innerHTML = `
+                <a href="${p.receipt_url}" target="_blank" class="btn btn-sm btn-outline-primary">
+                  View Receipt
+                </a>`;
+            } else {
+              document.getElementById('view_receiptLink').innerHTML = `<span class="text-muted">No receipt uploaded</span>`;
+            }
+
+            // Show modal
+            const viewModal = new bootstrap.Modal(document.getElementById('viewPaymentModal'));
+            viewModal.show();
+          } else {
+            alert('Error: ' + data.error);
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          alert('Failed to load payment details.');
+        });
+    }
+  });
+
+
 // add dataTable
   const table = $('#requests-table').DataTable({
         dom: 'Brtip',

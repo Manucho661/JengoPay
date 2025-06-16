@@ -1,11 +1,11 @@
 <?php
 include '../db/connect.php';
 
-
 // Fetch summary totals for all buildings
 $summaryQuery = $pdo->query("
     SELECT
         SUM(amount_collected) AS total_collected,
+        SUM(balances) AS total_balances,
         SUM(penalties) AS total_penalties,
         SUM(arrears) AS total_arrears,
         SUM(overpayment) AS total_overpayment
@@ -16,6 +16,7 @@ $summary = $summaryQuery->fetch(PDO::FETCH_ASSOC);
 
 // Format values for display
 $totalCollected = number_format($summary['total_collected'], 2);
+$totalBalances = number_format($summary['total_balances'], 2);
 $totalPenalties = number_format($summary['total_penalties'], 2);
 $totalArrears = number_format($summary['total_arrears'], 2);
 $totalOverpayment = number_format($summary['total_overpayment'], 2);
@@ -373,7 +374,9 @@ select:hover {
         </div>
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
-        <div id="sidebar"></div>
+        <!-- <div id="sidebar"></div> -->
+        <div > <?php include_once '../includes/sidebar.php'; ?>  </div> <!-- This is where the sidebar is inserted -->
+
         <!--end::Sidebar Wrapper-->
       </aside>
       <!--end::Sidebar-->
@@ -484,57 +487,88 @@ select:hover {
                           <div class="rent-info filter ">
                             <div class="filter-boxes">
 
-                               <div class="select-option-container mt-3">
-                                <div class="custom-select">All Buildings</div>
-                                <div class="select-options mt-1">
-                                  <div class="selected" data-value="item1">All Buildings</div>
+                               <!-- <div class="select-option-container mt-3"> -->
+                               <select id="building-select" class="form-control mt-3">
+                                <option value="">All Buildings</option>
+                                <?php
+                                  $buildings = $pdo->query("SELECT DISTINCT building_name FROM building_rent_summary");
+                                  while ($b = $buildings->fetch()):
+                                ?>
+                                  <option value="<?= htmlspecialchars($b['building_name']) ?>">
+                                    <?= htmlspecialchars($b['building_name']) ?>
+                                  </option>
+                                <?php endwhile; ?>
+                              </select>
+                               
+                              <select id="year-select" class="form-control mt-3">
+                              <option value="2025" selected>2025</option>
+                              <option value="2024">2024</option>
+                              <option value="2023">2023</option>
+                            </select>
 
-                                 </div>
-                              </div>
+                            <select id="month-select" class="form-control mt-3">
+                            <option value="">All Months</option>
+                            <?php
+                              $months = [
+                                "January", "February", "March", "April", "May", "June",
+                                "July", "August", "September", "October", "November", "December"
+                              ];
+                              foreach ($months as $m):
+                            ?>
+                              <option value="<?= $m ?>" <?= $m === 'April' ? 'selected' : '' ?>><?= $m ?></option>
+                            <?php endforeach; ?>
+                          </select>
 
 
 
-
-
-                              <div class="select-option-container mt-3">
-                                <div class="custom-select">2025</div>
-                                <div class="select-options mt-1">
-                                  <div class="selected"  data-value="item1">2025</div>
-                                  <div data-value="item2">2024</div>
-                                  <div data-value="item3">2023</div>
-                                </div>
-                              </div>
-
-                              <div class="select-option-container mt-3">
+                              <!-- <div class="select-option-container mt-3">
                                 <div class="custom-select">April</div>
                                 <div class="select-options mt-1">
-                                  <div class="selected" data-value="item1">April</div>
-                                  <div data-value="item1">January</div>
-                                  <div data-value="item2">February</div>
-                                  <div data-value="item3">March</div>
-                                </div>
+                                  <div class="selected" data-value="item1">April</div> -->
+                                  <!-- <select name="selected_month" class="form-control mt-3" required>
+                                <option value="January">January</option>
+                                <option value="February">February</option>
+                                <option value="March">March</option>
+                                <option value="April" selected>April</option>
+                                <option value="May">May</option>
+                                <option value="June">June</option>
+                                <option value="July">July</option>
+                                <option value="August">August</option>
+                                <option value="September">September</option>
+                                <option value="October">October</option>
+                                <option value="November">November</option>
+                                <option value="December">December</option>
+                              </select> -->
+
+                                <!-- </div>
                               </div>
+                            </div> -->
+
                             </div>
 
 
                             <div class="pdf-excel">
-                            <form method="post" action="generate-pdf.php" target="_blank">
-                            <button  id="download-pdf" type="submit" class="pdf">
-                              <i class="fas fa-file-pdf" style="color: red;"></i>
-                            </button>
-                          </form>
+                            <form method="get" action="generate-pdf.php" target="_blank" id="pdf-form">
+  <input type="hidden" name="building" id="pdf-building" value="">
+  <input type="hidden" name="year" id="pdf-year" value="">
+  <input type="hidden" name="month" id="pdf-month" value="">
+  <button id="download-pdf" type="submit" class="pdf">
+    <i class="fas fa-file-pdf" style="color: red;"></i>
+  </button>
+</form>
+
 
                          <!-- <button  class="pdf" ><i class="fas fa-file-pdf" style="color: red;"></i></button> -->
                           <!-- <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button> -->
                           <div class="">
                           <div class="pdf-excel">
-  <form method="post" action="export-excel.php">
-    <button type="submit" class="excel">
-      <i class="fas fa-file-excel" style="color: green;"></i>
-    </button>
-  </form>
-</div>
-                          </div>
+                          <form method="post" action="export-excel.php">
+                            <button type="submit" class="excel">
+                              <i class="fas fa-file-excel" style="color: green;"></i>
+                            </button>
+                          </form>
+                        </div>
+                                                  </div>
                           </div>
 
 
@@ -556,6 +590,7 @@ select:hover {
         <tr>
             <th scope="col">Building</th>
             <th scope="col">Collected</th>
+            <th scope="col">Balances</th>
             <th scope="col">Penalities</th>
             <th scope="col">Arreas</th>
             <th scope="col">Overpayment</th>
@@ -567,12 +602,15 @@ select:hover {
     $stmt = $pdo->query("SELECT * FROM building_rent_summary");
 
     $totalCollected = 0;
+    $totalBalances = 0;
     $totalPenalties = 0;
     $totalArrears = 0;
     $totalOverpayment = 0;
 
     while ($row = $stmt->fetch()):
         $building = htmlspecialchars($row['building_name']);
+        // $balances = htmlspecialchars($row['building_name']);
+        $balances = (float)$row['balances'];
         $collected = (float)$row['amount_collected'];
         $penalties = (float)$row['penalties'];
         $arrears = (float)$row['arrears'];
@@ -580,6 +618,7 @@ select:hover {
 
         // Accumulate totals
         $totalCollected += $collected;
+        $totalBalances +=  $balances;
         $totalPenalties += $penalties;
         $totalArrears += $arrears;
         $totalOverpayment += $overpayment;
@@ -587,6 +626,7 @@ select:hover {
         <tr>
             <th><?= $building ?></th>
             <td class="rent paid">KSH&nbsp;<?= number_format($collected, 2) ?></td>
+            <td class="rent balances">KSH&nbsp;<?= number_format($balances, 2) ?></td>
             <td><div class="rent penalit">KSH&nbsp;<?= number_format($penalties, 2) ?></div></td>
             <td class="rent collected">KSH&nbsp;<?= number_format($arrears, 2) ?></td>
             <td class="rent overpayment">KSH&nbsp;<?= number_format($overpayment, 2) ?></td>
@@ -601,7 +641,8 @@ select:hover {
     <!-- Totals Row -->
     <tr style="font-weight: bold; background-color: #f0f0f0;">
         <td>Total</td>
-        <td class="rent paid">KSH&nbsp;<?= number_format($totalCollected, 2) ?></td>
+        <td class="rent paid">KSH&nbsp;<?= number_format($totalCollected, 2)?></td>
+        <td class="rent paid">KSH&nbsp;<?= number_format($totalBalances, 2) ?></td>
         <td><div class="rent penalit">KSH&nbsp;<?= number_format($totalPenalties, 2) ?></div></td>
         <td class="rent collected">KSH&nbsp;<?= number_format($totalArrears, 2) ?></td>
         <td class="rent overpayment">KSH&nbsp;<?= number_format($totalOverpayment, 2) ?></td>
@@ -706,6 +747,56 @@ document.querySelectorAll('.select-option-container').forEach(container => {
     }
   });
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const buildingSelect = document.getElementById("building-select");
+    const yearSelect = document.getElementById("year-select");
+    const monthSelect = document.getElementById("month-select");
+
+    [buildingSelect, yearSelect, monthSelect].forEach(select => {
+        select.addEventListener("change", fetchFilteredData);
+    });
+
+    function fetchFilteredData() {
+        const building = buildingSelect.value;
+        const year = yearSelect.value;
+        const month = monthSelect.value;
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "filter-rent.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        xhr.onload = function () {
+            if (this.status === 200) {
+                document.getElementById("rent-body").innerHTML = this.responseText;
+            }
+        };
+
+        xhr.send(`building=${encodeURIComponent(building)}&year=${year}&month=${month}`);
+    }
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const buildingSelect = document.getElementById("building-select");
+    const yearSelect = document.getElementById("year-select");
+    const monthSelect = document.getElementById("month-select");
+
+    const pdfForm = document.getElementById("pdf-form");
+    const pdfBuilding = document.getElementById("pdf-building");
+    const pdfYear = document.getElementById("pdf-year");
+    const pdfMonth = document.getElementById("pdf-month");
+
+    pdfForm.addEventListener("submit", function () {
+        pdfBuilding.value = buildingSelect.value || 'All Buildings';
+        pdfYear.value = yearSelect.value;
+        pdfMonth.value = monthSelect.value;
+    });
+});
+</script>
+
 
  <script>
 document.getElementById('download-pdf').addEventListener('click', function () {
@@ -865,6 +956,27 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
+
+<!-- <script>
+document.querySelectorAll('.select-options div').forEach(option => {
+  option.addEventListener('click', function () {
+    const selectedMonth = this.getAttribute('data-value');
+    document.querySelector('.custom-select').innerText = selectedMonth;
+
+    // Highlight selected
+    document.querySelectorAll('.select-options div').forEach(opt => opt.classList.remove('selected'));
+    this.classList.add('selected');
+
+    // Fetch filtered rent data
+    fetch('fetch-rent.php?month=' + encodeURIComponent(selectedMonth))
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('rent-body').innerHTML = data;
+      });
+  });
+});
+</script> -->
+
 <!--
 <script>
         function downloadPDF() {
@@ -997,14 +1109,14 @@ document.getElementById('searchInput').addEventListener('input', (e) => {
 
 
 <!--Begin sidebar script -->
-<script>
+<!-- <script>
   fetch('../bars/sidebar.html')  // Fetch the file
       .then(response => response.text()) // Convert it to text
       .then(data => {
           document.getElementById('sidebar').innerHTML = data; // Insert it
       })
       .catch(error => console.error('Error loading the file:', error)); // Handle errors
-</script>
+</script> -->
 <!-- end sidebar script -->
 
 

@@ -38,7 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   break;
 
 
-
             case 'communication':
                 // First delete related message_files and messages
                 $pdo->prepare("DELETE FROM message_files WHERE thread_id = :id")->execute(['id' => $id]);

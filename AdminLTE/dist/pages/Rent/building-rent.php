@@ -44,6 +44,7 @@ try {
         SELECT
           building_name AS Building,
           CONCAT('KSH ', FORMAT(SUM(amount_paid), 2)) AS Collected,
+          CONCAT('KSH ', FORMAT(SUM(balances), 2)) AS Balances,
           CONCAT('KSH ', FORMAT(SUM(penalty), 2)) AS Penalties,
           CONCAT('KSH ', FORMAT(SUM(arrears), 2)) AS Arrears,
           CONCAT('KSH ', FORMAT(SUM(overpayment), 2)) AS Overpayment
@@ -92,7 +93,7 @@ $stmt = $pdo->query("
 $tenants = $stmt->fetchAll();
 
 try {
-  $stmt = $pdo->query("SELECT tenant_name, unit_code, amount_paid, payment_date, penalty, penalty_days, arrears, overpayment FROM tenant_rent_summary");
+  $stmt = $pdo->query("SELECT tenant_name, unit_code, amount_paid, unit_type, balances, payment_date, penalty, penalty_days, arrears, overpayment FROM tenant_rent_summary");
   $tenants = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
   die("Error fetching tenants: " . $e->getMessage());
@@ -111,12 +112,14 @@ $tenants = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Calculate totals
 $totalCollected = 0;
+$totalBalances = 0;
 $totalPenalties = 0;
 $totalArrears = 0;
 $totalOverpayment = 0;
 
 foreach ($tenants as $tenant) {
     $totalCollected += floatval($tenant['amount_paid']);
+    $totalBalances += floatval($tenant['balances']);
     $totalPenalties += floatval($tenant['penalty']);
     $totalArrears += floatval($tenant['arrears']);
     $totalOverpayment += floatval($tenant['overpayment']);
@@ -495,6 +498,7 @@ foreach ($tenants as $tenant) {
 
             <?php
             $totalCollected = 0;
+            $totalBalances = 0;
             $totalPenalties = 0;
             $totalArrears = 0;
             $totalOverpayment = 0;
@@ -503,12 +507,14 @@ foreach ($tenants as $tenant) {
 <?php foreach ($tenants as $tenant): ?>
     <?php
         $amountPaid = floatval($tenant['amount_paid']);
+        $balances = floatval($tenant['balances']);
         $penalty = floatval($tenant['penalty']);
         $arrears = floatval($tenant['arrears']);
         $overpayment = floatval($tenant['overpayment']);
 
         // Add to totals
         $totalCollected += $amountPaid;
+        $totalBalances += $balances;
         $totalPenalties += $penalty;
         $totalArrears += $arrears;
         $totalOverpayment += $overpayment;
@@ -518,7 +524,9 @@ foreach ($tenants as $tenant) {
         $firstName = $nameParts[0] ?? '';
         $middleName = $nameParts[1] ?? '';
         $unit = $tenant['unit_code'];
+        $unit_type =$tenant['unit_type'];
         $amount = number_format($amountPaid, 2);
+        $balances= number_format($balances, 2);
         $penaltyFormatted = number_format($penalty, 2);
         $arrearsFormatted = number_format($arrears, 2);
         $overpaymentFormatted = number_format($overpayment, 2);
@@ -605,26 +613,64 @@ foreach ($tenants as $tenant) {
                         <div class="rent-info filter ">
                           <div class="filter-boxes">
 
-                            <div class="select-option-container ">
+                            <!-- <div class="select-option-container "> -->
 
-                              <div class="custom-select" style="overflow: hidden;">All Buildings</div>
-                              <div class="select-options mt-1">
-                                <div class="selected" data-value="item1">All Units</div>
-                                <div data-value="item1">Single Rooms</div>
-                                <div data-value="item2">Bedsitters</div>
+                            <!-- <label for="unit-type-select">Unit Type</label> -->
+                           <!-- Unit Type Dropdown -->
+<!-- Building Dropdown -->
+<select id="building-select" class="form-control mt-3">
+    <option value="">All Buildings</option>
+    <?php
+    $buildings = $pdo->query("SELECT DISTINCT building_name FROM tenant_rent_summary WHERE building_name != '' ORDER BY building_name");
+    while ($b = $buildings->fetch()):
+    ?>
+        <option value="<?= htmlspecialchars($b['building_name']) ?>">
+            <?= htmlspecialchars($b['building_name']) ?>
+        </option>
+    <?php endwhile; ?>
+</select>
 
-                              </div>
-                            </div>
 
-                            <div class="select-option-container ">
-                              <div class="custom-select">2025</div>
-                              <div class="select-options mt-1">
-                                <div class="selected"  data-value="item1">2025</div>
-                                <div data-value="item2">2024</div>
-                                <div data-value="item3">2023</div>
-                              </div>
-                            </div>
+                            <select id="unit-type-select" class="form-control mt-3">
+                              <option value="">All Units</option>
+                              <?php
+                                $unitTypes = $pdo->query("SELECT DISTINCT unit_type FROM tenant_rent_summary WHERE unit_type != ''");
+                                while ($u = $unitTypes->fetch()):
+                              ?>
+                                <option value="<?= htmlspecialchars($u['unit_type']) ?>">
+                                  <?= htmlspecialchars($u['unit_type']) ?>
+                                </option>
+                              <?php endwhile; ?>
+                            </select>
 
+                            <!-- Year Dropdown -->
+                            <select id="year-select" class="form-control mt-3">
+                              <option value="">All Years</option>
+                              <?php
+                                $years = $pdo->query("SELECT DISTINCT year FROM tenant_rent_summary ORDER BY year DESC");
+                                while ($y = $years->fetch()):
+                              ?>
+                                <option value="<?= $y['year'] ?>" <?= $y['year'] === '2025' ? 'selected' : '' ?>>
+                                  <?= $y['year'] ?>
+                                </option>
+                              <?php endwhile; ?>
+                            </select>
+
+                            <!-- Month Dropdown -->
+                            <select id="month-select" class="form-control mt-3">
+                              <option value="">All Months</option>
+                              <?php
+                                $months = [
+                                  "January", "February", "March", "April", "May", "June",
+                                  "July", "August", "September", "October", "November", "December"
+                                ];
+                                foreach ($months as $m):
+                              ?>
+                                <option value="<?= $m ?>" <?= $m === 'April' ? 'selected' : '' ?>><?= $m ?></option>
+                              <?php endforeach; ?>
+                            </select>
+
+                            <!--
                             <div class="select-option-container ">
                               <div class="custom-select">April</div>
                               <div class="select-options mt-1">
@@ -634,14 +680,19 @@ foreach ($tenants as $tenant) {
                                 <div data-value="item3">March</div>
                               </div>
                             </div>
+                          </div> -->
                           </div>
-
                           <div class="">
-                          <form method="post" action="generating-pdf.php" style="display: inline;">
-                          <button  id="download-pdf"  type="submit" class="pdf">
-                            <i class="fas fa-file-pdf" style="color: red;"></i>
-                          </button>
-                        </form>
+       <form method="get" action="generating-pdf.php" target="_blank" id="pdf-form">
+  <input type="hidden" name="building" id="pdf-building">
+  <input type="hidden" name="year" id="pdf-year">
+  <input type="hidden" name="month" id="pdf-month">
+  <button type="submit" class="pdf" id="download-pdf" title="Download PDF">
+    <i class="fas fa-file-pdf" style="color: red;"></i>
+  </button>
+</form>
+
+
 
                          <!-- <button  class="pdf" ><i class="fas fa-file-pdf" style="color: red;"></i></button> -->
                           <!-- <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button> -->
@@ -660,8 +711,10 @@ foreach ($tenants as $tenant) {
                                 <tr>
                                         <th scope="col">Tenant + unit</th>
                                         <th scope="col">
-                                          <div>Paid</div>
+                                          <div>Collected</div>
                                         </th>
+                                        <th>Unit Type</th>
+                                        <th scope="col">Balances</th>
                                         <th scope="col">Penalty&nbsp;(l.days)</th>
                                         <th scope="col">Arreas</th>
                                         <th scope="col">Overpayment</th>
@@ -691,6 +744,8 @@ foreach ($tenants as $tenant) {
         $middleName = $nameParts[1] ?? '';
         $unit = htmlspecialchars($tenant['unit_code'] ?? '');
         $amount = number_format((float)($tenant['amount_paid'] ?? 0), 2);
+        $unit_type = htmlspecialchars($tenant['unit_type'] ?? '');
+        $balances = number_format((float)($tenant['balances'] ?? 0), 2);
         $penalty = number_format((float)($tenant['penalty'] ?? 0), 2);
         $arrears = number_format((float)($tenant['arrears'] ?? 0), 2);
         $overpayment = number_format((float)($tenant['overpayment'] ?? 0), 2);
@@ -706,10 +761,12 @@ foreach ($tenants as $tenant) {
             </th>
             <td>
                 <div class="rent paid">
-                    <div>KSH&nbsp;<?= $amount ?></div>
+                    <div>KSH&nbsp;<?= $amount?></div>
                     <div class="date late"><?= $paymentDate ?></div>
                 </div>
             </td>
+            <td class="unit_type">&nbsp;<?= $unit_type?></td>
+            <td class="rent balances">KSH&nbsp;<?= $balances?></td>
             <td>
                 <div class="rent penalit">
                     KSH&nbsp;<?= $penalty ?>
@@ -719,8 +776,8 @@ foreach ($tenants as $tenant) {
             <td class="rent collected">KSH&nbsp;<?= $arrears ?></td>
             <td class="rent overpayment">KSH&nbsp;<?= $overpayment ?></td>
             <td>
-                <button class="btn view">
-                    <a class="view-link" href="../people/tenant-profile.php">View</a>
+                <button class="btn view" data-bs-toggle="modal" data-bs-target="#tenantProfileModal">
+                 View
                 </button>
                 <button class="btn print" onclick="window.open('print-receipt.php?tenant_id=<?= $tenant['id'] ?>', '_blank')">
                 <i class="fas fa-file-invoice"></i>Receipt
@@ -745,7 +802,8 @@ foreach ($tenants as $tenant) {
                       <div class="label ">
                         RENT PAYMENT DEADLINE </div>
                       <div class="deadline date"><i class="fas fa-calendar-alt"></i> 30-4-2023</div>
-                      <div class="change-btn d-flex justify-content-end"><button class="btn edit rounded">Edit</button></div>
+                      <div class="change-btn d-flex justify-content-end">
+                        <button class="btn edit rounded" data-bs-toggle="modal" data-bs-target="#editRentDeadlineModal">Edit</button></div>
                     </div>
 
 
@@ -756,11 +814,82 @@ foreach ($tenants as $tenant) {
                           <div class="pen-rate">10%</div>
                           <div class="pen-desc " style="white-space: nowrap; overflow: hidden;">of the total rent</div>
                       </div>
-                     <div class="change-btn d-flex justify-content-end"><button class="btn edit rounded">Edit</button></div>
-                    </div>
+                       <div class="change-btn d-flex justify-content-end">
+    <button class="btn edit rounded" data-bs-toggle="modal" data-bs-target="#editPenaltyModal">Edit</button>
+  </div>
 
                   </div>
            </div>
+
+
+           <!-- Modal for Editing Penalty Rate -->
+<div class="modal fade" id="editPenaltyModal" tabindex="-1" aria-labelledby="editPenaltyModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content rounded-3">
+      <div class="modal-header" style="background-color: #00192D;">
+        <h5 class="modal-title" id="editPenaltyModalLabel" style="background-color: #00192D; color: #FFC107;">Edit Penalty Rate</h5>
+        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+      </div>
+      <div class="modal-body">
+        <form id="penaltyRateForm">
+          <div class="mb-3">
+            <label for="penaltyRateInput" class="form-label">Penalty Rate (%)</label>
+            <input type="number" class="form-control" id="penaltyRateInput" value="10" min="0" step="0.1" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: white; color: #00192D">Cancel</button>
+        <button type="button" class="btn btn-primary" id="savePenaltyRateBtn" style="background-color: #00192D; color: #FFC107;">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+ <!-- Edit Rent Deadline Modal -->
+ <div class="modal fade" id="editRentDeadlineModal" tabindex="-1" aria-labelledby="editRentDeadlineModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content rounded-3">
+      <div class="modal-header" style="background-color: #00192D;">
+        <h5 class="modal-title" id="editRentDeadlineModalLabel" style="background-color: #00192D; color: #FFC107;">Edit Rent Payment Deadline</h5>
+        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+      </div>
+      <div class="modal-body">
+        <form id="rent-deadline-form">
+          <div class="mb-3">
+            <label for="rent-deadline-date" class="form-label">Select New Deadline:</label>
+            <input type="date" id="rent-deadline-date" name="rent_deadline" class="form-control" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: white; color: #00192D;">Cancel</button>
+        <button type="submit" class="btn btn-primary" form="rent-deadline-form" style="background-color: #00192D; color: #FFC107;">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="tenantProfileModal" tabindex="-1" aria-labelledby="tenantProfileModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content rounded-3">
+      <div class="modal-header" style="background-color: #00192D;">
+        <h5 class="modal-title" id="tenantProfileModalLabel" style="color: #FFC107;">Tenant Profile</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="background-color: white;"></button>
+      </div>
+      <div class="modal-body" id="tenantProfileContent">
+        <!-- Profile content will be loaded here -->
+        <div class="text-center">
+          <div class="spinner-border text-warning" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
           <!-- END ROW -->
 
           </div>
@@ -781,6 +910,69 @@ foreach ($tenants as $tenant) {
           </footer>
           <!--end::Footer-->
 
+          <script>
+          document.getElementById('tenantProfileModal').addEventListener('show.bs.modal', function () {
+            const contentArea = document.getElementById('tenantProfileContent');
+
+            // Optional: Show loading spinner
+            contentArea.innerHTML = `
+              <div class="text-center">
+                <div class="spinner-border text-warning" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            `;
+
+            // Load tenant profile from server
+            fetch('../people/tenant-profile.php')
+              .then(response => response.text())
+              .then(html => {
+                contentArea.innerHTML = html;
+              })
+              .catch(error => {
+                contentArea.innerHTML = '<p class="text-danger">Failed to load tenant profile.</p>';
+              });
+          });
+</script>
+
+          <script>
+document.getElementById('rent-deadline-form').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const input = document.getElementById('rent-deadline-date');
+  const newDate = input.value;
+
+  if (newDate !== '') {
+    // Format date for display (optional — adjust format as needed)
+    const displayDate = new Date(newDate).toLocaleDateString('en-GB'); // e.g., "30/04/2023"
+
+    // Update display
+    document.getElementById('current-deadline').innerHTML = `<i class="fas fa-calendar-alt"></i> ${displayDate}`;
+
+    // Optionally, make an AJAX call here to save the new deadline to the server
+    fetch('update_rent_deadline.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: `rent_deadline=${encodeURIComponent(newDate)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Hide modal on success
+        const modal = bootstrap.Modal.getInstance(document.getElementById('editRentDeadlineModal'));
+        modal.hide();
+      } else {
+        alert('Failed to update rent deadline.');
+      }
+    })
+    .catch(() => alert('Error connecting to server.'));
+  }
+});
+</script>
+
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
@@ -794,9 +986,6 @@ foreach ($tenants as $tenant) {
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
 
-
-
-
 </script>
 
 
@@ -805,6 +994,110 @@ foreach ($tenants as $tenant) {
 </script>
 
 <!-- End script for data_table -->
+<!-- Js for edit penalty rates -->
+<script>
+document.getElementById('savePenaltyRateBtn').addEventListener('click', function () {
+  const input = document.getElementById('penaltyRateInput');
+  const newRate = input.value;
+
+  if (newRate !== '' && !isNaN(newRate)) {
+    document.getElementById('currentPenaltyRate').textContent = `${newRate}%`;
+
+    // Optionally, make an AJAX call here to save the new rate to the server
+
+    // Close modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('editPenaltyModal'));
+    modal.hide();
+  }
+});
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const buildingSelect = document.getElementById('building-select');
+    const unitTypeSelect = document.getElementById('unit-type-select');
+    const yearSelect = document.getElementById('year-select');
+    const monthSelect = document.getElementById('month-select');
+    const rentTable = document.getElementById('rent');
+
+    function filterTable() {
+        const selectedBuilding = buildingSelect.value.toLowerCase();
+        const selectedUnitType = unitTypeSelect.value.toLowerCase();
+        const selectedYear = yearSelect.value;
+        const selectedMonth = monthSelect.value.toLowerCase();
+
+        let showBuildingHeader = selectedBuilding === '';
+        let currentBuilding = '';
+
+        // Loop through all rows in the table body
+        rentTable.querySelectorAll('tbody tr').forEach(row => {
+            if (row.classList.contains('table-group-header')) {
+                // This is a building header row
+                currentBuilding = row.cells[0].textContent.trim().toLowerCase();
+                const shouldShow = selectedBuilding === '' || currentBuilding === selectedBuilding;
+                row.style.display = shouldShow ? '' : 'none';
+                return;
+            }
+
+            // For data rows
+            const unitType = row.querySelector('.unit_type').textContent.trim().toLowerCase();
+            // You'll need to add year and month data attributes to your rows in PHP
+            const year = row.getAttribute('data-year') || '';
+            const month = row.getAttribute('data-month') || '';
+
+            const matchesBuilding = selectedBuilding === '' || currentBuilding === selectedBuilding;
+            const matchesUnitType = selectedUnitType === '' || unitType === selectedUnitType;
+            const matchesYear = selectedYear === '' || year === selectedYear;
+            const matchesMonth = selectedMonth === '' || month === selectedMonth;
+
+            row.style.display = (matchesBuilding && matchesUnitType && matchesYear && matchesMonth) ? '' : 'none';
+        });
+    }
+
+    // Add event listeners to all filter dropdowns
+    buildingSelect.addEventListener('change', filterTable);
+    unitTypeSelect.addEventListener('change', filterTable);
+    yearSelect.addEventListener('change', filterTable);
+    monthSelect.addEventListener('change', filterTable);
+});
+</script>
+
+<script>
+  // JavaScript to handle filter changes and fetch data via AJAX
+document.addEventListener('DOMContentLoaded', function() {
+    const buildingSelect = document.getElementById('building-select');
+    const unitTypeSelect = document.getElementById('unit-type-select');
+    const yearSelect = document.getElementById('year-select');
+    const monthSelect = document.getElementById('month-select');
+
+    function fetchFilteredData() {
+        const filters = {
+            building: buildingSelect.value,
+            unitType: unitTypeSelect.value,
+            year: yearSelect.value,
+            month: monthSelect.value
+        };
+
+        fetch('filter_building_rent.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(filters)
+        })
+        .then(response => response.text())
+        .then(html => {
+            document.querySelector('#rent tbody').innerHTML = html;
+        });
+    }
+
+    buildingSelect.addEventListener('change', fetchFilteredData);
+    unitTypeSelect.addEventListener('change', fetchFilteredData);
+    yearSelect.addEventListener('change', fetchFilteredData);
+    monthSelect.addEventListener('change', fetchFilteredData);
+});
+</script>
+
 
 
 <!--Begin sidebar script -->
@@ -879,15 +1172,28 @@ foreach ($tenants as $tenant) {
   </script> -->
 
   <script>
-document.getElementById('download-pdf').addEventListener('click', function () {
-  const selected = document.querySelector('.custom-select').textContent.trim();
-  const building = encodeURIComponent(selected);
+  document.getElementById('download-pdf').addEventListener('click', function (e) {
+    e.preventDefault();
 
-  // Redirect to PDF generator (opens in new tab)
-  window.open(`generating-pdf.php?building=${building}`, '_blank');
-});
+    const buildingName = document.querySelector('.table-group-header td')?.textContent.trim() || '';
+    if (!buildingName) {
+      alert('No building detected. Please select or view a building first.');
+      return;
+    }
 
- </script>
+    const year = document.querySelector('select[name="year"]')?.value || new Date().getFullYear();
+    const month = document.querySelector('select[name="month"]')?.value || (new Date().getMonth() + 1);
+
+    document.getElementById('pdf-building').value = buildingName;
+    document.getElementById('pdf-year').value = year;
+    document.getElementById('pdf-month').value = month;
+
+    document.getElementById('pdf-form').submit();
+  });
+</script>
+
+
+
 
   <script>
 function exportTableToCSV(filename) {
