@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-include '../db/connect.php'; // Update this path if needed
+include '../../db/connect.php'; // Update this path if needed
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['thread_id'])) {
     $threadId = $_POST['thread_id'];

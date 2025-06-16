@@ -1,5 +1,5 @@
 <?php
-include '../db/connect.php';
+include '../../db/connect.php';
 
 $building_id = $_GET['building_id'] ?? null;
 

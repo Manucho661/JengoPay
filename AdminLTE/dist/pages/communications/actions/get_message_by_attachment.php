@@ -1,5 +1,5 @@
 <?php
-include '../db/connect.php';
+include '../../db/connect.php';
 header('Content-Type: application/json');
 
 $threadId = isset($_GET['thread_id']) ? (int)$_GET['thread_id'] : null;

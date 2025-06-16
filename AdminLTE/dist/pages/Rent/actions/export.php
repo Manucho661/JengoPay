@@ -1,5 +1,5 @@
 <?php
-include '../db/connect.php'; // Make sure $pdo is available
+include '../../db/connect.php'; // Make sure $pdo is available
 
 $type = $_GET['type'] ?? 'pdf';
 $buildingFilter = $_GET['building'] ?? '';

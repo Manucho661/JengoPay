@@ -1,5 +1,5 @@
 <?php
-include '../db/connect.php';
+include '../../db/connect.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['building_id'])) {
     $building_id = $_POST['building_id'];

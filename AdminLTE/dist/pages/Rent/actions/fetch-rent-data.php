@@ -1,5 +1,5 @@
 <?php
-require '../db/connect.php'; // Update path to your DB connection file
+require '../../db/connect.php'; // Update path to your DB connection file
 
 $unit = $_GET['unit'] ?? '';
 $year = $_GET['year'] ?? '';

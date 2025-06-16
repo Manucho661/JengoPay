@@ -1,5 +1,5 @@
 <?php
-require 'db_connection.php'; // Your PDO connection
+require '../../db/connect.php'; // Your PDO connection
 $buildingId = $_GET['building_id'] ?? '';
 
 if (!$buildingId) {

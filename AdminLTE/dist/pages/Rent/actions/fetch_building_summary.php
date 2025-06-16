@@ -1,5 +1,5 @@
 <?php
-include '../db/connect.php';
+include '../../db/connect.php';
 
 $building = isset($_GET['building']) ? $_GET['building'] : '';
 

@@ -1,6 +1,6 @@
 <?php
 require_once 'C:\xampp\htdocs\originalTwo\lib\dompdf-3.1.0\dompdf\autoload.inc.php'; // Adjust path if needed
-include '../db/connect.php';
+include '../../db/connect.php';
 
 use Dompdf\Dompdf;
 use Dompdf\Options;

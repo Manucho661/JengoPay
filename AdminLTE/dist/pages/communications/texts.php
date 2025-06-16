@@ -1439,8 +1439,7 @@ document.getElementById('buildingSelector').addEventListener('change', function 
 
     // ✅ Debug: log what’s being sent
     console.log("Sending buildingId:", buildingId);
-
-    fetch('get_conversations.php?building_id=' + buildingId)
+    fetch('../communications/actions/get_conversations.php?building_id=' + buildingId)
         .then(response => response.text()) // expect HTML fragment
         .then(html => {
             document.getElementById('conversationTableBody').innerHTML = html;
@@ -1608,8 +1607,6 @@ function handleFiles(event) {
 
 </script>
 
-
-
 <!--Begin sidebar script -->
 <!-- <script>
   fetch('../bars/sidebar.html')  // Fetch the file
@@ -1686,7 +1683,7 @@ function loadConversation(threadId) {
     // console.log('Loading thread:', threadId);
 
     // Fetch messages for the selected thread
-    fetch('load_conversation.php?thread_id=' + encodeURIComponent(threadId))
+    fetch('../communications/actions/load_conversation.php?thread_id=' + encodeURIComponent(threadId))
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -1756,7 +1753,8 @@ function sendMessage() {
     }
 
     // Send the message and files
-    fetch('send_message.php', {
+
+    fetch('../communications/actions/send_message.php', {
         method: 'POST',
         body: formData
     })
@@ -1832,8 +1830,7 @@ function sendMessage() {
 
 function getMessage(messageId) {
     const messageContainer = document.getElementById('messageDetails');
-
-    fetch('get_message.php?message_id=' + messageId)
+    fetch('../communications/actions/get_message.php?message_id=' + messageId)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -1861,7 +1858,7 @@ document.getElementById('recipient').addEventListener('change', function () {
     unitSelect.innerHTML = '<option value="">-- Loading Units... --</option>';
 
     if (buildingId) {
-        fetch('fetch_units.php', {
+        fetch('../communications/actions/fetch_units.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -1907,7 +1904,8 @@ function toggleOptionsMenu(btn) {
 function deleteMessage(messageId) {
     if (!confirm("Delete this message?")) return;
 
-    fetch('delete_message.php', {
+
+    fetch('../communications/actions/delete_message.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: `message_id=${messageId}`
@@ -1958,7 +1956,7 @@ function editMessage(btn, messageId) {
         const newText = textarea.value.trim();
         if (newText === '') return alert("Message cannot be empty.");
 
-        fetch('update_message.php', {
+        fetch('../communications/actions/update_message.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: `message_id=${messageId}&content=${encodeURIComponent(newText)}`
@@ -2038,7 +2036,7 @@ document.addEventListener('DOMContentLoaded', function () {
             messageThread.style.display = 'block';
 
             // Fetch JSON
-            fetch(`get_message.php?thread_id=${threadId}`)
+            fetch(`../communications/actions/get_message.php?thread_id=${threadId}`)
                 .then(response => response.json())
                 .then(data => {
                     threadTitle.innerText = data.title;

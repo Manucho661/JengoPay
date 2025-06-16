@@ -1,5 +1,5 @@
 <?php
-include '../db/connect.php'; // returns $pdo
+include '../../db/connect.php'; // returns $pdo
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     die('Invalid file ID');

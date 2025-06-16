@@ -1,5 +1,5 @@
 <?php
-include '../db/connect.php';
+include '../../db/connect.php';
 
 // Set headers to force download as CSV
 header('Content-Type: text/csv; charset=utf-8');

@@ -1,5 +1,5 @@
 <?php
-include '../db/connect.php'; // This should create a $pdo variable (PDO connection)
+include '../../db/connect.php'; // This should create a $pdo variable (PDO connection)
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['rent_deadline'])) {
     $deadline = $_POST['rent_deadline'];

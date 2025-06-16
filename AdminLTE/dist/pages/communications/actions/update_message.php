@@ -1,5 +1,5 @@
 <?php
-include '../db/connect.php';
+include '../../db/connect.php';
 header('Content-Type: application/json');
 
 $messageId = $_POST['message_id'] ?? null;

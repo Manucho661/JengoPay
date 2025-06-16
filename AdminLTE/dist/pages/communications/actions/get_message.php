@@ -1,5 +1,5 @@
 <?php
-include '../db/connect.php';
+include '../../db/connect.php';
 header('Content-Type: application/json');
 
 if (isset($_GET['message_id']) && is_numeric($_GET['message_id'])) {

@@ -1,5 +1,5 @@
 <?php
-require_once '../db/connect.php'; // Your database connection file
+require_once '../../db/connect.php'; // Your database connection file
 
 $filters = json_decode(file_get_contents('php://input'), true);
 

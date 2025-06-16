@@ -1,5 +1,5 @@
 <?php
-include '../db/connect.php';
+include '../../db/connect.php';
 header('Content-Type: application/json');
 
 // Input
@@ -135,7 +135,7 @@ foreach ($messages as $msg) {
                       </a>
                   </div>";
               }
-              
+
                 else {
                     $messagesHtml .= "<div class='attachment-file mb-2'>
                         <a href='data:$mimeType;base64,$base64' download='$basename' class='btn btn-sm btn-outline-secondary'>

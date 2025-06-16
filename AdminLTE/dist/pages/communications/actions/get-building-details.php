@@ -7,7 +7,7 @@ error_reporting(E_ALL);
 // Set response type to JSON
 header('Content-Type: application/json');
 
-include '../db/connect.php'; // adjust path if needed
+include '../../db/connect.php'; // adjust path if needed
 
 
 if (isset($_GET['building_id'])) {

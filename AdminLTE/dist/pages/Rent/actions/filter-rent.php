@@ -1,5 +1,5 @@
 <?php
-include '../db/connect.php';
+include '../../db/connect.php';
 
 $building = $_POST['building'] ?? '';
 $year = $_POST['year'] ?? date('Y');
