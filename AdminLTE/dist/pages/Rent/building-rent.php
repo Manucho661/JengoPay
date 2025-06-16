@@ -447,7 +447,7 @@ foreach ($tenants as $tenant) {
         </div>
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
-        <div id="sidebar"></div>
+        <div><?php include_once '../includes/sidebar1.php'; ?></div>
         <!--end::Sidebar Wrapper-->
       </aside>
       <!--end::Sidebar-->
@@ -476,9 +476,9 @@ foreach ($tenants as $tenant) {
               <div class="col-sm-8">
                 <div class="d-flex">
                 <h3 class="contact_section_header">
-  <i class="fas fa-coins icon"></i>
-  Rental Roll &nbsp;/&nbsp;<span class="building"><?php echo $buildingName;?></span>
-</h3>
+                    <i class="fas fa-coins icon"></i>
+                    Rental Roll &nbsp;/&nbsp;<span class="building"><?php echo $buildingName;?></span>
+                  </h3>
 
                     <h6 class="month"><i class="fas fa-calendar-alt"></i>
                       April-2025</h6>
