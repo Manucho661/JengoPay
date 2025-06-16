@@ -1516,17 +1516,17 @@ try {
               <div class="row">
                 <div class="col-md-6">
                   <div class="icheck-dark d-inline">
-                    <input type="radio" name="insurance_cover" id="yesInsurance"
-                      onclick="insuranceCoverYes();" value="Yes">
-                    <label for="yesInsurance"> Yes
+                   <input type="radio" name="insurance_cover" id="yesInsurance"
+  onclick="handleInsuranceSelection('Yes');" value="Yes">
+<label for="yesInsurance"> Yes</label>
                   </div>
 
                 </div>
                 <div class="col-md-6">
                 <div class="icheck-dark d-inline">
                     <input type="radio" name="insurance_cover" id="noInsurance"
-                      onclick="insuranceCoverYes();" value="No">
-                    <label for="noInsurance"> No
+  onclick="handleInsuranceSelection('No');" value="No">
+<label for="noInsurance"> No</label>
                   </div>
 
 
@@ -2874,6 +2874,27 @@ document.getElementById('otherDocumentCopy').addEventListener('change', function
   }
 });
 </script>
+
+
+<script>
+  function handleInsuranceSelection(value) {
+    const insuranceCard = document.getElementById("specifyInsuranceCoverInfoCard");
+
+    if (value === "Yes") {
+      insuranceCard.style.display = "block";
+    } else {
+      insuranceCard.style.display = "none";
+
+      // Optional: clear fields when "No" is selected
+      document.getElementById("insurance_policy").value = "";
+      document.getElementById("insurance_provider").value = "";
+      document.getElementById("policy_from_date").value = "";
+      document.getElementById("policy_until_date").value = "";
+    }
+  }
+</script>
+
+
 
 <script src="registration.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
