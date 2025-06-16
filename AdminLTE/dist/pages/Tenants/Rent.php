@@ -292,7 +292,7 @@
 
                         <!-- Pay Rent Button -->
                         <div class="text-center mt-4">
-                            <button class="btn btn-rent px-4 py-2" data-bs-toggle="modal" data-bs-target="#rentModal">
+                            <button  class="btn btn-rent px-4 py-2" data-bs-toggle="modal" data-bs-target="#rentModal">
                                 <i class="fas fa-hand-holding-usd me-2"></i>Pay Rent Now
                             </button>
                         </div>
@@ -321,7 +321,7 @@
                                     <i class="fas fa-mobile-alt"></i>
                                     <div>
                                         <h6 class="mb-1">M-Pesa</h6>
-                                        <p class="small text-muted mb-0">Pay via M-Pesa mobile money</p>
+                                        <p id="payBtn" class="small text-muted mb-0">Pay via M-Pesa mobile money</p>
                                     </div>
                                 </div>
                             </div>
@@ -600,71 +600,135 @@
         }
     </script>
     <script>
-// Activate payment method selection
-document.querySelectorAll('.payment-method').forEach(method => {
-    method.addEventListener('click', function() {
-        // Remove active class from all methods
-        document.querySelectorAll('.payment-method').forEach(m => {
-            m.classList.remove('active');
-        });
-
-        // Add active class to selected method
-        this.classList.add('active');
-
-        // Hide all forms
-        document.querySelectorAll('#mpesaForm, #bankForm, #cardForm').forEach(form => {
-            form.style.display = 'none';
-        });
-
-        // Show the selected form
-        const methodType = this.getAttribute('data-method');
-        document.getElementById(methodType + 'Form').style.display = 'block';
-    });
-});
-
-// Initialize with M-Pesa selected by default
-document.querySelector('.payment-method[data-method="mpesa"]').click();
-
-// Handle M-Pesa payment submission
-document.getElementById('rentPaymentForm').addEventListener('submit', function(e) {
+// Update the form submission handler
+document.getElementById('rentPaymentForm').addEventListener('submit', async function(e) {
     e.preventDefault();
 
-    const formData = new FormData(this);
-    const phone = formData.get('phone');
-    const amount = formData.get('amount');
+    const form = e.target;
+    const formData = new FormData(form);
+    const submitBtn = document.getElementById('submitPaymentBtn');
+    const paymentStatus = document.getElementById('paymentStatus');
+    const statusMessage = document.getElementById('statusMessage');
 
     // Validate phone number
+    const phone = formData.get('phone');
     if (!phone.match(/^254[0-9]{9}$/)) {
-        alert('Please enter a valid M-Pesa phone number in format 2547XXXXXXXX');
+        paymentStatus.style.display = 'block';
+        paymentStatus.className = 'alert alert-danger';
+        statusMessage.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i> Please enter a valid M-Pesa phone number (format: 2547XXXXXXXX)';
         return;
     }
 
     // Validate amount
+    const amount = parseFloat(formData.get('amount'));
     if (amount < 100 || amount > 150000) {
-        alert('Amount must be between KSH 100 and KSH 150,000');
+        paymentStatus.style.display = 'block';
+        paymentStatus.className = 'alert alert-danger';
+        statusMessage.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i> Amount must be between KSH 100 and KSH 150,000';
         return;
     }
 
-    // Show processing message
-    document.getElementById('statusMessage').textContent = 'Initiating M-Pesa payment...';
-    document.getElementById('paymentStatus').style.display = 'block';
+    // Disable submit button and show processing status
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="processing-spinner me-2"></span> Processing...';
 
-    // Here you would typically make an AJAX call to your server
-    // which would then interact with the Safaricom Daraja API
-    // For demonstration, we'll simulate a successful payment
+    paymentStatus.style.display = 'block';
+    paymentStatus.className = 'alert alert-info';
+    statusMessage.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Initiating M-Pesa payment request...';
 
-    // Simulate API call delay
-    setTimeout(() => {
-        // This is where you would handle the actual API response
-        document.getElementById('statusMessage').textContent = 'Payment initiated! Please check your phone to complete the transaction.';
+    try {
+        // Convert form data to JSON
+        const jsonData = {};
+        formData.forEach((value, key) => jsonData[key] = value);
 
-        // In a real implementation, you would poll for payment confirmation
-        setTimeout(() => {
-            document.getElementById('statusMessage').textContent = 'Payment confirmed! Thank you.';
-            // Close modal or redirect after successful payment
-            // $('#rentModal').modal('hide');
-        }, 3000);
-    }, 2000);
+        // Send payment request to server
+        const response = await fetch('process_mpesa_payment.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jsonData)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            // Payment initiated successfully
+            paymentStatus.className = 'alert alert-success';
+            statusMessage.innerHTML = '<i class="fas fa-check-circle me-2"></i> Payment request sent! Check your phone to complete the transaction.';
+
+            // Poll for payment confirmation
+            await checkPaymentStatus(result.checkoutRequestID);
+        } else {
+            throw new Error(result.message || 'Payment failed to initiate');
+        }
+    } catch (error) {
+        paymentStatus.className = 'alert alert-danger';
+        statusMessage.innerHTML = `<i class="fas fa-times-circle me-2"></i> Error: ${error.message}`;
+        console.error('Payment error:', error);
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-lock me-2"></i>Confirm Payment';
+    }
+});
+
+// Function to check payment status
+async function checkPaymentStatus(checkoutRequestID) {
+    const submitBtn = document.getElementById('submitPaymentBtn');
+    const paymentStatus = document.getElementById('paymentStatus');
+    const statusMessage = document.getElementById('statusMessage');
+
+    try {
+        // Check status every 3 seconds (max 10 times)
+        for (let i = 0; i < 10; i++) {
+            const response = await fetch('check_payment_status.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ checkoutRequestID })
+            });
+
+            const result = await response.json();
+
+            if (result.success && result.status === 'completed') {
+                // Payment completed successfully
+                paymentStatus.className = 'alert alert-success';
+                statusMessage.innerHTML = '<i class="fas fa-check-circle me-2"></i> Payment completed successfully!';
+
+                // Close modal and refresh page after delay
+                setTimeout(() => {
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('rentModal'));
+                    modal.hide();
+                    window.location.reload();
+                }, 2000);
+                return;
+            } else if (result.success && result.status === 'pending') {
+                // Still waiting
+                statusMessage.innerHTML = `<i class="fas fa-spinner fa-spin me-2"></i> Waiting for payment confirmation... (Attempt ${i+1}/10)`;
+                await new Promise(resolve => setTimeout(resolve, 3000));
+            } else {
+                throw new Error(result.message || 'Payment verification failed');
+            }
+        }
+
+        throw new Error('Payment confirmation timed out. Please check your M-Pesa transactions.');
+    } catch (error) {
+        paymentStatus.className = 'alert alert-warning';
+        statusMessage.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i> Notice: ${error.message}`;
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-lock me-2"></i>Confirm Payment';
+        console.error('Status check error:', error);
+    }
+}
+</script>
+
+<script>
+document.getElementById("payBtn").addEventListener("click", function () {
+    fetch("stk_push.php", { method: "POST" })
+        .then(response => response.json())
+        .then(data => {
+            alert("Payment request sent. Check your phone.");
+        });
 });
 </script>
 

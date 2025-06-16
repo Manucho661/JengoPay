@@ -1,41 +1,35 @@
 <?php
-include '../db/connect.php';
+// check_payment_status.php
 
-header('Content-Type: application/json');
+require_once '../db/connect.php';
+
+$data = json_decode(file_get_contents('php://input'), true);
+
+if (empty($data['checkoutRequestID'])) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'Missing checkoutRequestID']);
+    exit;
+}
 
 try {
-    $data = json_decode(file_get_contents('php://input'), true);
-
-    if (empty($data['checkoutRequestID'])) {
-        throw new Exception("Missing checkout request ID");
-    }
-
-    // Check database for transaction status
-    $stmt = $pdo->prepare("SELECT status, result_code FROM mpesa_transactions WHERE checkout_request_id = ?");
+    // Check database for payment status
+    $stmt = $pdo->prepare("SELECT status FROM mpesa_transactions
+                          WHERE checkout_request_id = ?");
     $stmt->execute([$data['checkoutRequestID']]);
     $transaction = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$transaction) {
-        throw new Exception("Transaction not found");
+        echo json_encode(['success' => false, 'message' => 'Transaction not found']);
+        exit;
     }
 
-    if ($transaction['status'] === 'completed') {
-        echo json_encode([
-            'success' => true,
-            'status' => 'completed',
-            'message' => 'Payment completed successfully'
-        ]);
-    } else {
-        echo json_encode([
-            'success' => true,
-            'status' => 'pending',
-            'message' => 'Payment still pending'
-        ]);
-    }
-
-} catch (Exception $e) {
     echo json_encode([
-        'success' => false,
-        'message' => $e->getMessage()
+        'success' => true,
+        'status' => $transaction['status'],
+        'message' => 'Status retrieved'
     ]);
+} catch (PDOException $e) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
 }
+?>
