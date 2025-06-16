@@ -192,11 +192,7 @@ function populateRequestsTable(requests) {
         markCompleteBtn.addEventListener('click', (e) =>{
         markComplete(requests.id);
       });
-      //Delete Record
-      const deleteRecordBtn = tempDiv.querySelector('.delete-record');
-        deleteRecordBtn.addEventListener('click', (e) =>{
-        deleteRequest(requests.id);
-      });
+
     tableBody.appendChild(tempDiv.firstChild); // append the full row
   });
 
