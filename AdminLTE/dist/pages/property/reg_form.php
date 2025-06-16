@@ -2735,16 +2735,23 @@ if (section.id === 'sectionFive') {
     }
 
     // Local Government Approval — only validate if "Yes" is selected
-
     const localGovApproval = document.querySelector('input[name="local_gov_approval"]:checked');
-if (localGovApproval && localGovApproval.value === "Yes") {
-    if (!document.getElementById('localGovApprovalNo').value) {
-        errorMessage += "- Local Government Approval Number\n";
+
+    if (!localGovApproval) {
+        errorMessage += "- Local Government Approval (Yes/No)\n";
         isValid = false;
-    }
-    if (!document.getElementById('localGovApprovalDate').value) {
-        errorMessage += "- Local Government Approval Date\n";
-        isValid = false;
+    } else if (localGovApproval.value === "Yes") {
+        const approvalNo = document.getElementById('localGovApprovalNo').value.trim();
+        const approvalDate = document.getElementById('localGovApprovalDate').value.trim();
+
+        if (!approvalNo) {
+            errorMessage += "- Local Government Approval Number\n";
+            isValid = false;
+        }
+        if (!approvalDate) {
+            errorMessage += "- Local Government Approval Date\n";
+            isValid = false;
+        }
     }
 }
 
@@ -2837,7 +2844,7 @@ if (section.id === 'sectionSeven') {
 
         return isValid;
     }
-});
+);
 </script>
 
 <script>
@@ -2874,6 +2881,26 @@ document.getElementById('otherDocumentCopy').addEventListener('change', function
   }
 });
 </script>
+
+<script>
+function showLocalGovernmentApproval() {
+    document.getElementById("localGovSpecifications").style.display = "block";
+    document.getElementById("localGovApprovalNo").setAttribute("required", "required");
+    document.getElementById("localGovApprovalDate").setAttribute("required", "required");
+}
+
+function hideLocalGovernmentApproval() {
+    document.getElementById("localGovSpecifications").style.display = "none";
+    document.getElementById("localGovApprovalNo").removeAttribute("required");
+    document.getElementById("localGovApprovalDate").removeAttribute("required");
+
+    // Optionally clear values
+    document.getElementById("localGovApprovalNo").value = "";
+    document.getElementById("localGovApprovalDate").value = "";
+}
+</script>
+
+
 
 
 <script>
