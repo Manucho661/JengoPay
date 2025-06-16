@@ -575,9 +575,10 @@
                           <div><strong>Status:</strong></div>
                           <div id="request-status" class="badge bg-info text-dark px-3 py-1 rounded-pill">--</div>
                         </div>
-                        <div class="col-md-6">
-                          <div><strong>Payment Status:</strong></div>
-                          <div id="payment-status" class="badge bg-warning text-dark px-3 py-1 rounded-pill">--</div>
+                        <div><strong>Payment Status:</strong></div>
+                        <div class="badge payment-status px-3 py-1 rounded-pill d-flex" style="width:fit-content;">
+                          <div>✅</div>
+                          <button id="payment-status" onclick="makePayment()"></button> 
                         </div>
                         <div class="col-12">
                           <div><strong>Description:</strong></div>
@@ -597,69 +598,69 @@
               <!-- /end view request -->
 
               <!-- View Payment Modal -->
-        <div class="modal fade" id="viewPaymentModal" tabindex="-1" aria-labelledby="viewPaymentModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content rounded-4 shadow-sm">
-              <div class="modal-header bg-dark text-white rounded-top">
-                <h5 class="modal-title" id="viewPaymentModalLabel" style="color:#FFA000 !important;">
-                  <i class="fas fa-eye me-2"></i> View Payment Details
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
+              <div class="modal fade" id="viewPaymentModal" tabindex="-1" aria-labelledby="viewPaymentModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                  <div class="modal-content rounded-4 shadow-sm">
+                    <div class="modal-header bg-dark text-white rounded-top">
+                      <h5 class="modal-title" id="viewPaymentModalLabel" style="color:#FFA000 !important;">
+                        <i class="fas fa-eye me-2"></i> View Payment Details
+                      </h5>
+                      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
 
-              <div class="modal-body">
-                <div class="row g-3">
+                    <div class="modal-body">
+                      <div class="row g-3">
 
-                  <div class="col-md-6">
-                    <label><strong>Amount Paid:</strong></label>
-                    <p id="view_amountPaid"></p>
+                        <div class="col-md-6">
+                          <label><strong>Amount Paid:</strong></label>
+                          <p id="view_amountPaid"></p>
+                        </div>
+
+                        <div class="col-md-6">
+                          <label><strong>Payment Method:</strong></label>
+                          <p id="view_paymentMethod"></p>
+                        </div>
+
+                        <div class="col-md-6">
+                          <label><strong>Date Paid:</strong></label>
+                          <p id="view_datePaid"></p>
+                        </div>
+
+                        <div class="col-md-6">
+                          <label><strong>Service Provider:</strong></label>
+                          <p id="view_serviceProvider"></p>
+                        </div>
+
+                        <div class="col-md-6">
+                          <label><strong>Cheque Number:</strong></label>
+                          <p id="view_chequeNumber"></p>
+                        </div>
+
+                        <div class="col-md-6">
+                          <label><strong>Invoice Number:</strong></label>
+                          <p id="view_invoiceNumber"></p>
+                        </div>
+
+                        <div class="col-12">
+                          <label><strong>Notes:</strong></label>
+                          <p id="view_paymentNotes"></p>
+                        </div>
+
+                        <div class="col-12">
+                          <label><strong>Receipt:</strong></label>
+                          <div id="view_receiptLink"></div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="background-color: #00192D; color:#FFC107;">Close</button>
+                    </div>
                   </div>
-
-                  <div class="col-md-6">
-                    <label><strong>Payment Method:</strong></label>
-                    <p id="view_paymentMethod"></p>
-                  </div>
-
-                  <div class="col-md-6">
-                    <label><strong>Date Paid:</strong></label>
-                    <p id="view_datePaid"></p>
-                  </div>
-
-                  <div class="col-md-6">
-                    <label><strong>Service Provider:</strong></label>
-                    <p id="view_serviceProvider"></p>
-                  </div>
-
-                  <div class="col-md-6">
-                    <label><strong>Cheque Number:</strong></label>
-                    <p id="view_chequeNumber"></p>
-                  </div>
-
-                  <div class="col-md-6">
-                    <label><strong>Invoice Number:</strong></label>
-                    <p id="view_invoiceNumber"></p>
-                  </div>
-
-                  <div class="col-12">
-                    <label><strong>Notes:</strong></label>
-                    <p id="view_paymentNotes"></p>
-                  </div>
-
-                  <div class="col-12">
-                    <label><strong>Receipt:</strong></label>
-                    <div id="view_receiptLink"></div>
-                  </div>
-
                 </div>
               </div>
-
-              <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="background-color: #00192D; color:#FFC107;">Close</button>
-              </div>
-            </div>
-          </div>
-        </div>
-           <!-- end view payment -->
+              <!-- end view payment -->
               <!-- ASSign Modal -->
               <div class="modal fade" id="assignProviderModal" tabindex="-1" aria-labelledby="assignProviderModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
@@ -726,6 +727,49 @@
                   </div>
                 </div>
               </div>
+              <!-- Payment Modal -->
+              <div class="modal fade" id="payProviderModal" tabindex="-1" aria-labelledby="payProviderModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="payProviderModalLabel">Pay Provider</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <!-- Modal Body with Step Content -->
+                    <div class="modal-body">
+                      <!-- Step 1: Show Provider Details -->
+                      <div id="step-1">
+                        <p><strong>Provider Name:</strong> <span id="providerName">John Doe Ltd</span></p>
+                        <p><strong>Work Done:</strong> <span id="workDescription">Fixed leaking roof in Block A</span></p>
+                        <p><strong>Amount:</strong> <span id="paymentAmount">KES 8,500</span></p>
+                        <button class="btn btn-primary" id="nextStepBtn">Proceed to Payment</button>
+                        <button class="btn btn-primary" id="nextStepBtn">Record Instead</button>
+
+                      </div>
+                      <!-- Step 2: Choose Payment Method -->
+                      <div id="step-2" class="d-none">
+                        <form id="paymentForm">
+                          <div class="mb-3">
+                            <label for="paymentMethod" class="form-label">Select Payment Method</label>
+                            <select class="form-select" id="paymentMethod" name="payment_method" required>
+                              <option value="">-- Choose --</option>
+                              <option value="mpesa">M-Pesa</option>
+                              <option value="bank">Bank Transfer</option>
+                            </select>
+                          </div>
+                          <div id="mpesaPhoneSection" class="d-none">
+                            <label for="phoneNumber" class="form-label">M-Pesa Phone Number</label>
+                            <input type="tel" class="form-control" name="phone" id="phoneNumber" placeholder="07XXXXXXXX" required>
+                          </div>
+                          <button type="submit" class="btn btn-success mt-3">Pay Now</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+             <!-- end payment modal -->
             </div>
             <!--end::Row-->
           </div>
