@@ -572,8 +572,10 @@
                           <div id="request-category" class="text-muted">--</div>
                         </div>
                         <div class="col-md-6">
-                          <div><strong>Status:</strong></div>
-                          <div id="request-status" class="badge bg-info text-dark px-3 py-1 rounded-pill">--</div>
+                         <div class="bg-info d-flex text-dark px-1 rounded-pill" style="width: fit-content;">
+                          <div>✅</div>
+                          <div id="request-status" class="badge  ">--</div>
+                        </div>
                         </div>
                         <div><strong>Payment Status:</strong></div>
                         <div class="badge payment-status px-3 py-1 rounded-pill d-flex" style="width:fit-content;">
@@ -745,7 +747,6 @@
                         <p><strong>Amount:</strong> <span id="paymentAmount">KES 8,500</span></p>
                         <button class="btn btn-primary" id="nextStepBtn">Proceed to Payment</button>
                         <button class="btn btn-primary" id="nextStepBtn">Record Instead</button>
-
                       </div>
                       <!-- Step 2: Choose Payment Method -->
                       <div id="step-2" class="d-none">
