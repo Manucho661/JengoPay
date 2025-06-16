@@ -372,3 +372,15 @@ function assignProvider(event){
           })
           .catch(err => console.error(err));
 };
+
+// make payment
+function makePayment(){
+ const modalEl = document.getElementById('maintenanceRequestModal');
+  const modal = bootstrap.Modal.getInstance(modalEl); // ✅ Get the existing instance
+  if (modal) {
+    modal.hide(); // ✅ Now this will work
+  }
+
+  const payProvider = new bootstrap.Modal(document.getElementById('payProviderModal'));
+  payProvider.show();
+}
