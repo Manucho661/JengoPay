@@ -374,13 +374,46 @@ function assignProvider(event){
 };
 
 // make payment
-function makePayment(){
- const modalEl = document.getElementById('maintenanceRequestModal');
-  const modal = bootstrap.Modal.getInstance(modalEl); // ✅ Get the existing instance
-  if (modal) {
-    modal.hide(); // ✅ Now this will work
+function makePayment() {
+  const maintenanceRequestModalEl = document.getElementById('maintenanceRequestModal');
+  const maintenanceRequestModalInstance = bootstrap.Modal.getInstance(maintenanceRequestModalEl);
+  if (maintenanceRequestModalInstance) {
+    maintenanceRequestModalInstance.hide();
   }
 
-  const payProvider = new bootstrap.Modal(document.getElementById('payProviderModal'));
-  payProvider.show();
+  // Open the "Pay Provider"
+  const payProviderModalEl = document.getElementById('payProviderModal');
+  let payProviderModalInstance = bootstrap.Modal.getInstance(payProviderModalEl);
+
+  if (!payProviderModalInstance) {
+    payProviderModalInstance = new bootstrap.Modal(payProviderModalEl);
+  }
+  payProviderModalInstance.show();
+
+ function handleOpenRecordPaymentModal() {
+    const payProviderInstance = bootstrap.Modal.getInstance(payProviderModalEl);
+    payProviderInstance.hide();
+
+    const recordPaymentModalEl = document.getElementById('recordPaymentModal');
+    let recordPaymentModalInstance = bootstrap.Modal.getInstance(recordPaymentModalEl);
+    recordPaymentModalInstance = new bootstrap.Modal(recordPaymentModalEl);
+    recordPaymentModalInstance.show();
+    nextStepBtn
+}
+ 
+function inSystemPayment(){
+  const step1Div = document.getElementById('step-1');
+  step1Div.style.display = 'none';
+
+  const step2Div = document.getElementById('step-2');
+  step2Div.style.display = 'block';
+}
+
+  const nextStepBtn = document.getElementById('nextStepBtn');
+  nextStepBtn.addEventListener('click', inSystemPayment);
+
+  const openRecordPaymentModalBtn = document.getElementById('openRecordPaymentModalBtn');
+  openRecordPaymentModalBtn.removeEventListener('click', handleOpenRecordPaymentModal);
+  openRecordPaymentModalBtn.addEventListener('click', handleOpenRecordPaymentModal);
+ 
 }

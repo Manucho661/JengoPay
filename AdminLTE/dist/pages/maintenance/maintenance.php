@@ -730,26 +730,30 @@
                 </div>
               </div>
               <!-- Payment Modal -->
-              <div class="modal fade" id="payProviderModal" tabindex="-1" aria-labelledby="payProviderModalLabel" aria-hidden="true">
+              <div class="modal fade" id="payProviderModal" tabindex="-1" aria-labelledby="payProviderModalLabel" aria-hidden="true" style="background-color: rgba(128,128,128, 0.1) !important;" >
                 <div class="modal-dialog modal-lg">
                   <div class="modal-content">
                     <!-- Modal Header -->
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="payProviderModalLabel">Pay Provider</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="modal-header" style="background-color: #00192D !important;">
+                      <h5 class="modal-title" id="payProviderModalLabel" style="color:#FFA000 !important">Pay Provider</h5>
+                      <span id="currentDate" class="me-3 text-muted small"> <b class="text" style="color:#FFA000;">10/34/2014</b> </span>
+                      <div class="d-flex align-items-center text-white" style="color:white;">
+                        <button type="button" style="color:white !important;" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close" >&times;</button>
+                      </div>
                     </div>
                     <!-- Modal Body with Step Content -->
-                    <div class="modal-body">
+                    <div class="modal-body shadow" >
                       <!-- Step 1: Show Provider Details -->
-                      <div id="step-1">
+                      <div id="step-1" class="shadow p-2 rounded-bottom-2">
                         <p><strong>Provider Name:</strong> <span id="providerName">John Doe Ltd</span></p>
                         <p><strong>Work Done:</strong> <span id="workDescription">Fixed leaking roof in Block A</span></p>
-                        <p><strong>Amount:</strong> <span id="paymentAmount">KES 8,500</span></p>
+                        <p><strong>Amount:</strong> <span id="paymentAmount" style="color:forestgreen">KES 8,500</span></p>
+                        <button type="button" class="btn btn-secondary me-2" id="goBackBtn">← Go Back</button>
                         <button class="btn btn-primary" id="nextStepBtn">Proceed to Payment</button>
-                        <button class="btn btn-primary" id="nextStepBtn">Record Instead</button>
+                        <button class="btn btn-primary" id="openRecordPaymentModalBtn">Record Instead</button>
                       </div>
                       <!-- Step 2: Choose Payment Method -->
-                      <div id="step-2" class="d-none">
+                      <div id="step-2" style="display: none;">
                         <form id="paymentForm">
                           <div class="mb-3">
                             <label for="paymentMethod" class="form-label">Select Payment Method</label>
@@ -763,6 +767,7 @@
                             <label for="phoneNumber" class="form-label">M-Pesa Phone Number</label>
                             <input type="tel" class="form-control" name="phone" id="phoneNumber" placeholder="07XXXXXXXX" required>
                           </div>
+                          <button type="button" class="btn btn-secondary me-2" id="goBackBtn">← Go Back</button>
                           <button type="submit" class="btn btn-success mt-3">Pay Now</button>
                         </form>
                       </div>

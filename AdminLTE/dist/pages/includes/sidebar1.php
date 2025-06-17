@@ -13,7 +13,7 @@
     </div>
   </div>
 
-  <a href="#">👥 People</a>
+  <a href="../people/tenants.php">👥 People</a>
 
   <!-- Communications -->
   <div class="menu-group">
