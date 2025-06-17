@@ -576,79 +576,79 @@ try {
       <b class="shadow"
         style="background-color:#00192D; color:#FFC107; border-radius:35px; padding-left:15px; padding-right:15px; padding-bottom:7px; padding-top:7px; font-size:1.5rem;"
         id="stepOneIndicatorNo">1</b>
-      <p class="mt-2" id="stepOneIndicatorText" style="font-size:13px;">
+      <b><p class="mt-2" id="stepOneIndicatorText" style="font-size:13px;">
         Overview
-      </p>
+      </p></b>
     </div>
     <!-- Step Two Building Identification Details -->
     <div class="col-md-1 text-center">
       <b class="shadow"
         style="background-color:#00192D; color:#FFC107; border-radius:35px; padding-left:15px; padding-right:15px; padding-bottom:7px; padding-top:7px; font-size:1.5rem;"
         id="stepTwoIndicatorNo">2</b>
-      <p class="mt-2" id="stepTwoIndicatorText" style="font-size:13px;">
-        Identification</p>
+     <b> <p class="mt-2" id="stepTwoIndicatorText" style="font-size:13px;">
+        Identification</p></b>
     </div>
     <!-- Step Three Ownership Information -->
     <div class="col-md-1 text-center">
       <b class="shadow"
         style="background-color:#00192D; color:#FFC107; border-radius:35px; padding-left:15px; padding-right:15px; padding-bottom:7px; padding-top:7px; font-size:1.5rem;"
         id="stepThreeIndicatorNo">3</b>
-      <p class="mt-2" id="stepThreeIndicatorText" style="font-size:13px;">
+      <b><p class="mt-2" id="stepThreeIndicatorText" style="font-size:13px;">
         Ownership
-      </p>
+      </p></b>
     </div>
     <!-- Step 4 Utilities and Infrastructure -->
     <div class="col-md-1 text-center">
       <b class="shadow"
         style="background-color:#00192D; color:#FFC107; border-radius:35px; padding-left:15px; padding-right:15px; padding-bottom:7px; padding-top:7px; font-size:1.5rem;"
         id="stepFourIndicatorNo">4</b>
-      <p class="mt-2" id="stepFourIndicatorText" style="font-size:13px;">
+      <b><p class="mt-2" id="stepFourIndicatorText" style="font-size:13px;">
         Utilities
-      </p>
+      </p></b>
     </div>
     <!-- Step Five Legal and Regulatory Details -->
     <div class="col-md-1 text-center">
       <b class="shadow"
         style="background-color:#00192D; color:#FFC107; border-radius:35px; padding-left:15px; padding-right:15px; padding-bottom:7px; padding-top:7px; font-size:1.5rem;"
         id="stepFiveIndicatorNo">5</b>
-      <p class="mt-2" id="stepFiveIndicatorText" style="font-size:13px;">
+      <b><p class="mt-2" id="stepFiveIndicatorText" style="font-size:13px;">
         Regulations
-      </p>
+      </p></b>
     </div>
     <!-- Step Six Insurance and Financial Information -->
     <div class="col-md-1 text-center">
       <b class="shadow"
         style="background-color:#00192D; color:#FFC107; border-radius:35px; padding-left:15px; padding-right:15px; padding-bottom:7px; padding-top:7px; font-size:1.5rem;"
         id="stepSixIndicatorNo">6</b>
-      <p class="mt-2" id="stepSixIndicatorText" style="font-size:13px;">
+      <b><p class="mt-2" id="stepSixIndicatorText" style="font-size:13px;">
         Insurance
-      </p>
+      </p></b>
     </div>
     <!-- Step Seven Photographs -->
     <div class="col-md-1 text-center">
       <b class="shadow"
         style="background-color:#00192D; color:#FFC107; border-radius:35px; padding-left:15px; padding-right:15px; padding-bottom:7px; padding-top:7px; font-size:1.5rem;"
         id="stepSevenIndicatorNo">7</b>
-      <p class="mt-2" id="stepSevenIndicatorText" style="font-size:13px;">
-        Photos</p>
+      <b><p class="mt-2" id="stepSevenIndicatorText" style="font-size:13px;">
+        Photos</p></b>
     </div>
     <!-- Step Eight Confirmation and Submission -->
     <div class="col-md-1 text-center">
       <b class="shadow"
         style="background-color:#00192D; color:#FFC107; border-radius:35px; padding-left:15px; padding-right:15px; padding-bottom:7px; padding-top:7px; font-size:1.5rem;"
         id="stepEightIndicatorNo">8</b>
-      <p class="mt-2" id="stepEightIndicatorText" style="font-size:13px;">
+      <b><p class="mt-2" id="stepEightIndicatorText" style="font-size:13px;">
         Confirmation
-      </p>
+      </p></b>
     </div>
   </div>
   <!-- Section One Overview Starts Here -->
   <div class="card" id="sectionOne">
-    <div class="card-header">
-      <b>Brief Overview</b>
+    <div class="card-header" style="background-color: #00192D;"  >
+      <b style="color: #FFC107;">Brief Overview</b>
     </div>
     <div class="card-body text-center p-3">
-      <p>Welcome to Biccount Property Registration Section. We'll collect
+      <b><p>Welcome to Biccount Property Registration Section. We'll collect
         some
         information regarding your property. This is essential for the
         correct
@@ -658,7 +658,7 @@ try {
         Service
         Provides to mention but a few. Click Next to start the
         Registration
-        process.</p>
+        process.</p></b>
     </div>
     <div class="card-footer text-right">
       <button type="button" class="btn btn-sm next-btn" id="stepOneNextBtn">Next</button>
@@ -666,9 +666,9 @@ try {
   </div>
   <form action="" method="post" enctype="multipart/form-data" autocomplete="off">
     <!-- Section Two Building Identification Information -->
-    <div class="card" id="sectionTwo">
-      <div class="card-header">
-        <b>Building Identification</b>
+    <div class="card"   id="sectionTwo">
+      <div class="card-header" style="background-color: #00192D;" >
+        <b style="color: #FFC107;">Building Identification</b>
       </div>
       <div class="card-body">
                             <div class="row">
@@ -859,8 +859,8 @@ try {
     </div>
     <!-- Section Three Ownership Information -->
     <div class="card" id="sectionThree">
-      <div class="card-header">
-        <b>Ownership Information</b>
+      <div class="card-header" style="background-color: #00192D;" >
+        <b style="color:#FFC107" >Ownership Information</b>
       </div>
       <div class="card-body">
         <div class="row">
@@ -1137,7 +1137,7 @@ try {
     </div>
     <!-- Section Four Utilities and Infrastructure -->
     <div class="card" id="sectionFour">
-      <div class="card-header"><b>Utilities and Infrastructure</b></div>
+      <div class="card-header" style="background-color: #00192D;" ><b style="color:#FFC107;" >Utilities and Infrastructure</b></div>
       <div class="card-body">
         <div class="row">
           <div class="col-md-6">
@@ -1294,7 +1294,7 @@ try {
     </div>
     <!-- Section Five Legal and Regulatory Details -->
     <div class="card" id="sectionFive">
-      <div class="card-header"><b>Legal and Regulatory Details</b></div>
+      <div class="card-header" style="background-color: #00192D;" ><b style="color:#FFC107;" > Legal and Regulatory Details</b></div>
       <div class="card-body">
         <div class="row">
           <div class="col-md-6">
@@ -1507,7 +1507,7 @@ try {
     </div>
     <!-- Section Six Insurance Information -->
     <div class="card" id="sectionSix">
-      <div class="card-header"><b>Insurance and Financial Information</b></div>
+      <div class="card-header" style="background-color: #00192D;" ><b style="color:#FFC107;" >Insurance and Financial Information</b></div>
       <div class="card-body">
         <div class="row">
           <div class="col-md-6">
@@ -1572,7 +1572,7 @@ try {
     </div>
     <!-- Section Seven Photos -->
     <div class="card" id="sectionSeven">
-      <div class="card-header"><b>Photographs and Documentations</b></div>
+      <div class="card-header" style="background-color: #00192D;" ><b style="color:#FFC107;" >Photographs and Documentations</b></div>
       <div class="card-body">
       <div class="row">
       <div class="col-md-6">
@@ -1613,7 +1613,7 @@ try {
     </div>
     <!-- Section Eight Confirmation -->
     <div class="card" id="sectionEight">
-      <div class="card-header"><b>Confirmation</b></div>
+      <div class="card-header" style="background-color: #00192D;" ><b style="color:#FFC107;" >Confirmation</b></div>
       <div class="card-body text-center">
         <input type="checkbox" required> I here by confirm that all the
         information filled in this form is accurare. I therefore issue my
@@ -1639,7 +1639,7 @@ try {
 <div class="row">
 <div class="col-md-12">
 <div class="card mb-4">
- <div class="card-header">
+ <div class="card-header" style="background-color: #00192D;" >
    <h5 class="card-title text-warning" style="font-size: 20px; font-weight: bold;">Registered Buildings</h5>
    <div class="card-tools">
      <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
@@ -1667,7 +1667,7 @@ try {
  <div class="card-body">
    <div class="row">
      <table id="myTableOne" class="display table table-striped table-hover" style="width: 100%; font-size: 16px;">
-       <thead class="table-dark">
+       <thead class="table">
          <tr>
            <th>Property</th>
            <th >Location</th>

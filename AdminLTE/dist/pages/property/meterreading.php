@@ -559,10 +559,12 @@ $stmt->closeCursor();
 
 
 <div style="display: flex; gap: 25px;">
-   <a href="../property/Units.php" style="color:#193042;"> <p>Unit list</p></a>
-    <a href="../property/meterreading.php" style="color:#193042;"><p>Meter Reading</p></a>
+   <b><a href="../property/Units.php" style="color:#193042;"> <p>Unit list</p></a></b>
+    <b><a href="../property/meterreading.php" style="color:#193042;"><p>Meter Reading</p></a></b>
 </div>
 
+<b>Recorded Meter Readings </b>
+<hr>
 
 <div class="justify-content-end d-flex">
 <button onclick="meterreadingopenPopup()" class="edit-btn">
@@ -570,18 +572,20 @@ $stmt->closeCursor();
     Add Meter Reading</button></a>
   </div>
 
+
+
 <div class="row">
   <table id="myTableOne" class="display">
     <thead>
       <tr>
-        <th style="color: #FFC107;">Reading Date</th>
-        <th style="color: #FFC107;">Unit</th>
-        <th style="color: #FFC107;">Meter Type</th>
-        <th style="color: #FFC107;">Previous Reading</th>
-        <th style="color: #FFC107;">Current Reading</th>
-        <th style="color: #FFC107;">Consumption Units</th>
-        <th style="color: #FFC107;">Consumption Cost</th>
-        <th style="color: #FFC107;">Action</th>
+        <th >Reading Date</th>
+        <th >Unit</th>
+        <th >Meter Type</th>
+        <th >Previous Reading</th>
+        <th >Current Reading</th>
+        <th >Consumption Units</th>
+        <th>Consumption Cost</th>
+        <th >Action</th>
       </tr>
     </thead>
     <tbody>

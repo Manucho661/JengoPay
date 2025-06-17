@@ -15,11 +15,11 @@ if (empty($data['phone']) || empty($data['amount']) || empty($data['tenant_id'])
 }
 
 // M-Pesa API credentials (should be stored securely, not hardcoded)
-$consumerKey = 'your_consumer_key';
-$consumerSecret = 'your_consumer_secret';
-$businessShortCode = 'your_business_shortcode';
-$lipaNaMpesaPasskey = 'your_passkey';
-$callbackUrl = 'https://yourdomain.com/mpesa_callback.php';
+$consumerKey = 'SjTrAk1B7iHo8yH1DZKsyzG9HKDLRlvwKGR3tBJniWEtkkNc';
+$consumerSecret = 'aibliGXFpGjaZblaZTT7J5608uHSGFGZz4vAiDMxwv3rTyFKAynI5f9lMxAJtyq9';
+$businessShortCode = '174379';
+$lipaNaMpesaPasskey = 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919';
+$callbackUrl = 'https://yourdomain.com/callback.php';
 
 // 1. Get access token
 $accessToken = getAccessToken($consumerKey, $consumerSecret);

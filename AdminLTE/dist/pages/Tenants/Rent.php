@@ -218,7 +218,7 @@
             </div>
 
             <!-- Rent Payment Section -->
-            <div class="col-lg-8">
+            <div class="col-lg-6">
                 <div class="card tenant-card">
                     <div class="card-header">
                         <h5 class="mb-0"><i class="fas fa-file-invoice-dollar me-2"></i>Rent Payment</h5>
@@ -249,6 +249,12 @@
                         </div>
 
                         <!-- Payment History -->
+                        <!-- // include '../db/connect.php';
+
+                        // $stmt = $pdo->query("SELECT * FROM payment_history ORDER BY created_at DESC");
+                        // $paymentHistory = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                         -->
+
                         <h5 class="mt-4 mb-3"><i class="fas fa-history me-2"></i>Payment History</h5>
                         <div class="table-responsive">
                             <table class="table table-hover">
@@ -366,7 +372,7 @@
                                         <label class="form-label">Amount (KSH)</label>
                                         <input type="number" class="form-control" name="amount"
                                                value="<?= max(0, $tenant['balances']) ?>"
-                                               min="100"
+                                               min="5"
                                                max="150000"
                                                required>
                                     </div>
@@ -599,7 +605,7 @@
             }
         }
     </script>
-    <script>
+    <!-- <script>
 // Update the form submission handler
 document.getElementById('rentPaymentForm').addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -730,7 +736,51 @@ document.getElementById("payBtn").addEventListener("click", function () {
             alert("Payment request sent. Check your phone.");
         });
 });
+</script> -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const payBtn = document.getElementById("payBtn");
+
+    payBtn.addEventListener("click", function () {
+        const phoneNumber = prompt("Enter your phone number (e.g., 254708374149):");
+        const amount = prompt("Enter amount to pay:");
+
+        if (!phoneNumber || !/^2547\d{8}$/.test(phoneNumber)) {
+            alert("Please enter a valid Safaricom number (e.g., 2547XXXXXXXX).");
+            return;
+        }
+
+        if (!amount || isNaN(amount) || Number(amount) <= 0) {
+            alert("Please enter a valid amount.");
+            return;
+        }
+
+        fetch("stk_push.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                phone: phoneNumber,
+                amount: amount
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("STK Push sent! Check your phone to complete the payment.");
+            } else {
+                alert("Error: " + (data.message || "Something went wrong"));
+            }
+        })
+        .catch(error => {
+            console.error("STK Error:", error);
+            alert("Failed to send STK push.");
+        });
+    });
+});
 </script>
+
 
 </body>
 </html>

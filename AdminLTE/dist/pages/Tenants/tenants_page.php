@@ -61,9 +61,9 @@
     </button>
 
     <!-- Rent Button (Center) -->
-    <button class="btn mb-2 px-4 py-2 mx-auto" style="background-color: #00192D; color: #FFC107;" data-toggle="modal" data-target="#rentModal">
+    <a href="../Tenants/Rent.php"><button class="btn mb-2 px-4 py-2 mx-auto" style="background-color: #00192D; color: #FFC107;" data-toggle="modal" data-target="#rentModal">
       <i class="fas fa-hand-holding-usd"></i> Rent
-    </button>
+    </button></a>
 
     <!-- Vacate Button (Right) -->
     <button class="btn mb-2 px-4 py-2 mx-auto" style="background-color: #00192D; color: #FFC107;" data-toggle="modal" data-target="#vacateModal">

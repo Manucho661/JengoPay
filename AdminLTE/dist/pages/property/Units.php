@@ -522,10 +522,10 @@ function handleDelete(event, id, type) {
 </div>
 
 <div style="display: flex; gap: 25px;">
-    <a href="../property/Units.php" style="color:#193042;"><p>Unit list</p></a>
+    <b><a href="../property/Units.php" style="color:#193042;"><p>Unit list</p></a></b>
     <?php
 // This could be inside a loop where you list multiple buildings
-echo '<a style="color:#193042;" href="../property/meterreading.php?building_id=' . $building['building_id'] . '  ">Meter Reading</a>';
+echo '<b><a style="color:#193042;" href="../property/meterreading.php?building_id=' . $building['building_id'] . '  ">Meter Reading</a></b>';
 ?>
     <!-- <a href="../property/meterreading.php"  style="color: #FFC107;"><p>Meter Reading</p></a> -->
 </div>
@@ -541,8 +541,8 @@ echo '<a style="color:#193042;" href="../property/meterreading.php?building_id='
 <div class="row">
     <div class="col-md-12">
       <div class="card mb-4">
-        <div class="card-header">
-          <h5 style="color:#193042;" class="card-title"><b>Registered Units</b></h5>
+        <div class="card-header" style="background-color:#00192D;">
+          <h5 style="color:#FFC107;" class="card-title"><b>Registered Units</b></h5>
           <div class="card-tools">
             <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
               <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
@@ -576,13 +576,13 @@ echo '<a style="color:#193042;" href="../property/meterreading.php?building_id='
             <table id="myTableOne"  class="display table table-striped table-hover" style="width: 100%; font-size: 16px;">
               <thead class="">
                 <tr>
-                  <th style="color: #FFC107;">Units</th>
-                  <th style="color: #FFC107;">Tenants</th>
-                  <th style="color: #FFC107;">Room</th>
-                  <th style="color: #FFC107;">Unit Type</th>
-                  <th style="color: #FFC107;">Room Type</th>
-                  <th style="color: #FFC107;">Floor Number</th>
-                 <th  style="color: #FFC107;">Action</th>
+                  <th >Units</th>
+                  <th >Tenants</th>
+                  <th >Room</th>
+                  <th >Unit Type</th>
+                  <th >Room Type</th>
+                  <th >Floor Number</th>
+                 <th >Action</th>
                 </tr>
               </thead>
               <tbody>
