@@ -24,11 +24,26 @@ try {
         $stmt = $pdo->prepare("SELECT * FROM inspections ORDER BY date DESC");
     } elseif ($table === 'inspection_items') {
         // Fetch inspection items
-         if (isset($_GET['inspection_id'])) {
+        if (isset($_GET['inspection_id'])) {
         $inspectionId = $_GET['inspection_id'];
-        $stmt = $pdo->prepare("SELECT * FROM inspection_items WHERE inspection_id = :id ORDER BY id DESC");
+        $stmt = $pdo->prepare("
+            SELECT 
+                i.*, 
+                p.id AS photo_id, 
+                p.photo_path 
+            FROM 
+                inspection_items i
+            LEFT JOIN 
+                inspection_photos p ON i.id = p.inspection_item_id
+            WHERE 
+                i.inspection_id = :id 
+            ORDER BY 
+                i.id DESC
+        ");
         $stmt->execute(['id' => $inspectionId]);
-    } else {
+        // $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+        else {
         $stmt = $pdo->prepare("SELECT * FROM inspection_items ORDER BY id DESC");
         $stmt->execute();
     }

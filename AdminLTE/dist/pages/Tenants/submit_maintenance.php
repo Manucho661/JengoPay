@@ -6,18 +6,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $request_date = $_POST['request_date'] ?? null;
     $category = $_POST['category'] ?? null;
     $description = $_POST['description'] ?? null;
+<<<<<<< HEAD
+    $provider_id = $_POST['provider_id'] ?? null;
+    $payment_date = $_POST['payment_date'] ?? null;
+=======
     
+>>>>>>> fc4a0e19c51f381c1fd36364587b0aac438a3209
 
     try {
         // 1. Insert maintenance request
         $stmt = $pdo->prepare("INSERT INTO maintenance_requests 
             (request_date, category, description, created_at) 
+<<<<<<< HEAD
+            VALUES (?, ?, ?, ?)");
+=======
             VALUES (?, ?, ?, NOW())");
+>>>>>>> fc4a0e19c51f381c1fd36364587b0aac438a3209
 
         $stmt->execute([
             $request_date,
             $category,
+<<<<<<< HEAD
+            $description,
+            $payment_date
+=======
             $description
+>>>>>>> fc4a0e19c51f381c1fd36364587b0aac438a3209
         ]);
 
         $maintenance_request_id = $pdo->lastInsertId();

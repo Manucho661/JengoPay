@@ -106,7 +106,6 @@
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     /* padding: 20px; */
-
     margin: 30px auto;
   }
   .profile-picture {
@@ -118,7 +117,6 @@
   }
   .profile-details h2 {
     /* margin-bottom: 10px; */
-
   }
   .profile-details p {
     /* /margin: 5px 0; */
@@ -136,7 +134,6 @@
       font-size: 14px;
       display: block;
       text-align: justify;
-
   }
   .other_profile_details{
       display: block;
@@ -299,6 +296,9 @@
         .dropdown:hover .dropdown-content {
             display:grid;
         }
+        .app-wrapper{
+        background-color: rgba(128,128,128, 0.1);
+      }
 </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -533,7 +533,7 @@
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
         <!-- <div id="sidebar"></div> This is where the header will be inserted -->
-        <div > <?php include_once '../includes/sidebar.php'; ?>  </div> <!-- This is where the sidebar is inserted -->
+        <div > <?php include_once '../includes/sidebar1.php'; ?>  </div> <!-- This is where the sidebar is inserted -->
 
 
         <!--end::Sidebar Wrapper-->

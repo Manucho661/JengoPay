@@ -290,7 +290,6 @@ td .email{
      padding:2px 5px; 
     text-align: center;
   border-radius: 5px; 
-
   }
   
 
@@ -345,4 +344,9 @@ td .email{
     background-color: #FFC107 !important;
     color: white !important;
     border-radius: 3px;
+  }
+
+  /* payment status modal */
+  .payment-status{
+    background-color: #4CAF50 !important;
   }

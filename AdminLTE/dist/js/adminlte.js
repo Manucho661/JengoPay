@@ -713,3 +713,7 @@
 
 }));
 //# sourceMappingURL=adminlte.js.map
+function toggleMenu(element) {
+    const group = element.parentElement;
+    group.classList.toggle('open');
+  }

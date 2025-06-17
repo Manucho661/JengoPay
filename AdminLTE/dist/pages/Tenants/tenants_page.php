@@ -45,7 +45,7 @@
 
 <body>
 <div class="header-bar">
-  <h1><i class="fas fa-users" style="color: #FFC107;"></i> Welcome Tenants</h1>
+  <h1><i class="fas fa-users" style="color: #FFC107;"></i> Welcome Jackson</h1>
   <div class="nav-links">
     <a href="dashboard.php"><i class="fas fa-home"></i> Dashboard</a>
     <a href="units_page.php"><i class="fas fa-building"></i> Units</a>

@@ -101,8 +101,11 @@ function populateRequestsTable(requests) {
 
       </td>
       <td>
-      <div>${requests.provider_name|| ''} </div>
-      <div class="email" style="width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ">📧 </i> ${requests.provider_email|| ''} </div>
+      ${requests.provider_name
+          ? `<div>${requests.provider_name}</div>
+            <div class="email" style="width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">📧 ${requests.provider_email || ''}</div>`
+          : `<div>Not assigned</div>`
+        }
       </td>
       <td>${requests.priority|| ''} </td>
       ${statusHTML}
@@ -165,61 +168,30 @@ function populateRequestsTable(requests) {
       const modal = new bootstrap.Modal(document.getElementById('recordPaymentModal'));
       modal.show();
       });
-
       // View Request
       const viewBtn = tempDiv.querySelector('.view-btn');
       viewBtn.addEventListener('click', (e) =>{
+        document.getElementById('request-id').innerText= requests.id;
+        document.getElementById('request-date').innerText= requests.request_date;
+        document.getElementById('property-name').innerText= requests.residence;
+        document.getElementById('unit-number').innerText= requests.unit;
+        document.getElementById('request-category').innerText= requests.category;
+        document.getElementById('request-status').innerText= requests.status;
+        document.getElementById('payment-status').innerText= requests.payment_status;
+        document.getElementById('request-description').innerText= requests.description;
         const modal = new bootstrap.Modal(document.getElementById('maintenanceRequestModal'));
         modal.show();
       });
-
       // Assign provider
        const assignProviderBtn = tempDiv.querySelector('.assign-provider');
         assignProviderBtn.addEventListener('click', (e) =>{
-        const modal = new bootstrap.Modal(document.getElementById('assignProviderModal'));
-        modal.show();
+        selectProviders(requests.id);
       });
-
       // Mark complete
       const markCompleteBtn = tempDiv.querySelector('.mark-complete');
         markCompleteBtn.addEventListener('click', (e) =>{
         markComplete(requests.id);
       });
-
-      // Delete Request
-      const deleteBtn = tempDiv.querySelector('.delete-request');
-      deleteBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const confirmed = confirm("Are you sure you want to delete this request?");
-        if (!confirmed) return;
-
-        const requestId = e.currentTarget.getAttribute('data-request-id');
-
-        fetch(`../maintenance/actions/delete_request.php`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: new URLSearchParams({
-            request_id: requestId
-          })
-        })
-
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            alert("Maintenance Request deleted successfully.");
-            location.reload(); // or re-fetch data
-          } else {
-            alert("Error deleting request: " + data.error);
-          }
-        })
-        .catch(err => {
-          console.error("Network error:", err);
-          alert("Failed to delete the request.");
-        });
-      });
-
 
     tableBody.appendChild(tempDiv.firstChild); // append the full row
   });
@@ -328,12 +300,13 @@ function addRequestPayment(event){
 };
 
 // Mark Complete
-function markComplete(itemId, status = 'completed'){
-   fetch(`actions/update_records.php?type=mark_item&item_id=${itemId}&status=${status}`)
+function markComplete(requestsID){
+   fetch(`actions/update_records.php?type=mark_item&request_id=${requestsID}`)
     .then(response => response.json())
     .then(data => {
       if (data.success) {
         console.log("Item updated successfully.");
+        location.reload(); // Reload the page to reflect changes
         // Optionally refresh part of the UI
       } else {
         console.error("Backend error:", data.error);
@@ -342,4 +315,105 @@ function markComplete(itemId, status = 'completed'){
     .catch(error => {
       console.error("Network error:", error);
     });
+}
+
+//Delete Request
+function deleteRequest(requestsID){
+   fetch(`actions/delete_records.php?type=mark_item&request_id=${requestsID}`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        console.log("Item updated successfully.");
+        location.reload(); // Reload the page to reflect changes
+        // Optionally refresh part of the UI
+      } else {
+        console.error("Backend error:", data.error);
+      }
+    })
+    .catch(error => {
+      console.error("Network error:", error);
+    });
+}
+
+// Select Providers
+function selectProviders(requestsID){
+  fetch('actions/fetch_service_providers.php') // Adjust your endpoint
+  .then(res => res.json())
+  .then(data => {
+    const select = document.getElementById('service_provider_id');
+    data.forEach(provider => {
+      const option = document.createElement('option');
+      option.value = provider.id;
+      option.textContent = `${provider.name} - ${provider.category}`;
+      select.appendChild(option);
+      
+    });
+    document.getElementById('maintenance_request_id').value= requestsID;
+    const modal = new bootstrap.Modal(document.getElementById('assignProviderModal'));
+      modal.show();
+  })
+  .catch(error => console.error('Error fetching providers:', error));
+}
+
+// Assign the Provider
+function assignProvider(event){
+  event.preventDefault(); // Prevent the form from submitting immediately
+  const form = document.getElementById("assignProviderForm");
+  const formData = new FormData(form);
+
+  fetch("actions/assign_service_provider.php", {
+            method: "POST",
+            body: formData
+          })
+          .then(res => res.text())
+          .then(data => {
+            alert(data); // Display success message or error from server
+            location.reload(); // Reload the page to reflect changes (optional)
+          })
+          .catch(err => console.error(err));
+};
+
+// make payment
+function makePayment() {
+  const maintenanceRequestModalEl = document.getElementById('maintenanceRequestModal');
+  const maintenanceRequestModalInstance = bootstrap.Modal.getInstance(maintenanceRequestModalEl);
+  if (maintenanceRequestModalInstance) {
+    maintenanceRequestModalInstance.hide();
+  }
+
+  // Open the "Pay Provider"
+  const payProviderModalEl = document.getElementById('payProviderModal');
+  let payProviderModalInstance = bootstrap.Modal.getInstance(payProviderModalEl);
+
+  if (!payProviderModalInstance) {
+    payProviderModalInstance = new bootstrap.Modal(payProviderModalEl);
+  }
+  payProviderModalInstance.show();
+
+ function handleOpenRecordPaymentModal() {
+    const payProviderInstance = bootstrap.Modal.getInstance(payProviderModalEl);
+    payProviderInstance.hide();
+
+    const recordPaymentModalEl = document.getElementById('recordPaymentModal');
+    let recordPaymentModalInstance = bootstrap.Modal.getInstance(recordPaymentModalEl);
+    recordPaymentModalInstance = new bootstrap.Modal(recordPaymentModalEl);
+    recordPaymentModalInstance.show();
+    nextStepBtn
+}
+ 
+function inSystemPayment(){
+  const step1Div = document.getElementById('step-1');
+  step1Div.style.display = 'none';
+
+  const step2Div = document.getElementById('step-2');
+  step2Div.style.display = 'block';
+}
+
+  const nextStepBtn = document.getElementById('nextStepBtn');
+  nextStepBtn.addEventListener('click', inSystemPayment);
+
+  const openRecordPaymentModalBtn = document.getElementById('openRecordPaymentModalBtn');
+  openRecordPaymentModalBtn.removeEventListener('click', handleOpenRecordPaymentModal);
+  openRecordPaymentModalBtn.addEventListener('click', handleOpenRecordPaymentModal);
+ 
 }
