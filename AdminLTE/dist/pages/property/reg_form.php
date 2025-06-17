@@ -1388,7 +1388,7 @@ try {
                 <div class="col-md-6">
                   <div class="icheck-dark d-inline">
                     <input type="radio" name="local_gov_approval"
-                      onclick="hideLocalGovernmentApproval();" value="Yes" id="noLocalGov">
+                      onclick="hideLocalGovernmentApproval();" value="No" id="noLocalGov">
                     <label for="noLocalGov"> No
                     </label>
                   </div>
@@ -1516,17 +1516,17 @@ try {
               <div class="row">
                 <div class="col-md-6">
                   <div class="icheck-dark d-inline">
-                    <input type="radio" name="insurance_cover" id="yesInsurance"
-                      onclick="insuranceCoverYes();" value="Yes">
-                    <label for="yesInsurance"> Yes
+                   <input type="radio" name="insurance_cover" id="yesInsurance"
+  onclick="handleInsuranceSelection('Yes');" value="Yes">
+<label for="yesInsurance"> Yes</label>
                   </div>
 
                 </div>
                 <div class="col-md-6">
                 <div class="icheck-dark d-inline">
                     <input type="radio" name="insurance_cover" id="noInsurance"
-                      onclick="insuranceCoverYes();" value="No">
-                    <label for="noInsurance"> No
+  onclick="handleInsuranceSelection('No');" value="No">
+<label for="noInsurance"> No</label>
                   </div>
 
 
@@ -1749,9 +1749,7 @@ try {
     <!--end::App Wrapper-->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
-
-
- <script>
+    <script>
 $(document).ready((function(){$("#stepOneNextBtn").click((function(e){e.preventDefault(),$("#sectionTwo").show(),$("#sectionOne").hide(),$("#stepOneIndicatorNo").html('<i class="fa fa-check"><i>'),$("#stepOneIndicatorNo").css("background-color","#FFC107"),$("#stepOneIndicatorNo").css("color","#00192D"),$("#stepOneIndicatorText").html("Done")})),$("#stepTwoBackBtn").click((function(e){e.preventDefault(),$("#sectionTwo").hide(),$("#sectionOne").show(),$("#stepOneIndicatorNo").html("1"),$("#stepOneIndicatorNo").css("background-color","#00192D"),$("#stepOneIndicatorNo").css("color","#FFC107"),$("#stepOneIndicatorText").html("Overview")})),$("#stepTwoNextBtn").click((function(e){e.preventDefault(),$("#sectionTwo").hide(),$("#sectionThree").show(),$("#stepTwoIndicatorNo").html('<i class="fa fa-check"><i>'),$("#stepTwoIndicatorNo").css("background-color","#FFC107"),$("#stepTwoIndicatorNo").css("color","#00192D"),$("#stepTwoIndicatorText").html("Done")})),$("#stepThreeBackBtn").click((function(e){e.preventDefault(),$("#sectionTwo").show(),$("#sectionThree").hide(),$("#stepTwoIndicatorNo").html("2"),$("#stepTwoIndicatorNo").css("background-color","#00192D"),$("#stepTwoIndicatorNo").css("color","#FFC107"),$("#stepTwoIndicatorText").html("Identification")})),$("#stepThreeNextBtn").click((function(e){e.preventDefault(),$("#sectionThree").hide(),$("#sectionFour").show(),$("#stepThreeIndicatorNo").html('<i class="fa fa-check"><i>'),$("#stepThreeIndicatorNo").css("background-color","#FFC107"),$("#stepThreeIndicatorNo").css("color","#00192D"),$("#stepThreeIndicatorText").html("Done")})),$("#stepFourBackBtn").click((function(e){e.preventDefault(),$("#sectionThree").show(),$("#sectionFour").hide(),$("#stepThreeIndicatorNo").html("3"),$("#stepThreeIndicatorNo").css("background-color","#00192D"),$("#stepThreeIndicatorNo").css("color","#FFC107"),$("#stepThreeIndicatorText").html("Ownership")})),$("#stepFourNextBtn").click((function(e){e.preventDefault(),$("#sectionFour").hide(),$("#sectionFive").show(),$("#stepFourIndicatorNo").html('<i class="fa fa-check"><i>'),$("#stepFourIndicatorNo").css("background-color","#FFC107"),$("#stepFourIndicatorNo").css("color","#00192D"),$("#stepFourIndicatorText").html("Done")})),$("#stepFiveBackBtn").click((function(e){e.preventDefault(),$("#sectionFour").show(),$("#sectionFive").hide(),$("#stepFourIndicatorNo").html("4"),$("#stepFourIndicatorNo").css("background-color","#00192D"),$("#stepFourIndicatorNo").css("color","#FFC107"),$("#stepFourIndicatorText").html("Utilities")})),$("#stepFiveNextBtn").click((function(e){e.preventDefault(),$("#sectionFive").hide(),$("#sectionSix").show(),$("#stepFiveIndicatorNo").html('<i class="fa fa-check"><i>'),$("#stepFiveIndicatorNo").css("background-color","#FFC107"),$("#stepFiveIndicatorNo").css("color","#00192D"),$("#stepFiveIndicatorText").html("Done")})),$("#stepSixBackBtn").click((function(e){e.preventDefault(),$("#sectionFive").show(),$("#sectionSix").hide(),$("#stepFiveIndicatorNo").html("5"),$("#stepFiveIndicatorNo").css("background-color","#00192D"),$("#stepFiveIndicatorNo").css("color","#FFC107"),$("#stepFiveIndicatorText").html("Regulations")})),$("#stepSixNextBtn").click((function(e){e.preventDefault(),$("#sectionSix").hide(),$("#sectionSeven").show(),$("#stepSixIndicatorNo").html('<i class="fa fa-check"><i>'),$("#stepSixIndicatorNo").css("background-color","#FFC107"),$("#stepSixIndicatorNo").css("color","#00192D"),$("#stepSixIndicatorText").html("Done")})),$("#stepSevenBackBtn").click((function(e){e.preventDefault(),$("#sectionSix").show(),$("#sectionSeven").hide(),$("#stepSixIndicatorNo").html("6"),$("#stepSixIndicatorNo").css("background-color","#00192D"),$("#stepSixIndicatorNo").css("color","#FFC107"),$("#stepSixIndicatorText").html("Insurance")})),$("#stepSevenNextBtn").click((function(e){e.preventDefault(),$("#sectionSeven").hide(),$("#sectionEight").show(),$("#stepSevenIndicatorNo").html('<i class="fa fa-check"><i>'),$("#stepSevenIndicatorNo").css("background-color","#FFC107"),$("#stepSevenIndicatorNo").css("color","#00192D"),$("#stepSevenIndicatorText").html("Done")})),$("#stepEightBackBtn").click((function(e){e.preventDefault(),$("#sectionSeven").show(),$("#sectionEight").hide(),$("#stepSevenIndicatorNo").html("7"),$("#stepSevenIndicatorNo").css("background-color","#00192D"),$("#stepSevenIndicatorNo").css("color","#FFC107"),$("#stepSevenIndicatorText").html("Photos")}))}));
   // </script>
   <!-- <script>
@@ -2717,7 +2715,7 @@ if (section.id === 'sectionFive') {
     // NCA Approval
     const ncaApproval = document.querySelector('input[name="nca_approval"]:checked');
     if (!ncaApproval) {
-        errorMessage += "- NCA Approval\n";
+        errorMessage += "- NCA Approval (Yes/No)\n";
         isValid = false;
     } else if (ncaApproval.value === "Yes") {
         if (!document.getElementById('approvalNo').value) {
@@ -2734,25 +2732,26 @@ if (section.id === 'sectionFive') {
         }
     }
 
-    // Local Government Approval — only validate if "Yes" is selected
-
+    // Local Government Approval
     const localGovApproval = document.querySelector('input[name="local_gov_approval"]:checked');
-if (localGovApproval && localGovApproval.value === "Yes") {
-    if (!document.getElementById('localGovApprovalNo').value) {
-        errorMessage += "- Local Government Approval Number\n";
+    if (!localGovApproval) {
+        errorMessage += "- Local Government Approval (Yes/No)\n";
         isValid = false;
+    } else if (localGovApproval.value === "Yes") {
+        if (!document.getElementById('localGovApprovalNo').value) {
+            errorMessage += "- Local Government Approval Number\n";
+            isValid = false;
+        }
+        if (!document.getElementById('localGovApprovalDate').value) {
+            errorMessage += "- Local Government Approval Date\n";
+            isValid = false;
+        }
     }
-    if (!document.getElementById('localGovApprovalDate').value) {
-        errorMessage += "- Local Government Approval Date\n";
-        isValid = false;
-    }
-}
-
 
     // NEMA Approval
     const nemaApproval = document.querySelector('input[name="nema_approval"]:checked');
     if (!nemaApproval) {
-        errorMessage += "- NEMA Approval\n";
+        errorMessage += "- NEMA Approval (Yes/No)\n";
         isValid = false;
     } else if (nemaApproval.value === "Yes") {
         if (!document.getElementById('nemaApprovalNumber').value) {
@@ -2765,6 +2764,7 @@ if (localGovApproval && localGovApproval.value === "Yes") {
         }
     }
 }
+
 
 
 
@@ -2874,6 +2874,27 @@ document.getElementById('otherDocumentCopy').addEventListener('change', function
   }
 });
 </script>
+
+
+<script>
+  function handleInsuranceSelection(value) {
+    const insuranceCard = document.getElementById("specifyInsuranceCoverInfoCard");
+
+    if (value === "Yes") {
+      insuranceCard.style.display = "block";
+    } else {
+      insuranceCard.style.display = "none";
+
+      // Optional: clear fields when "No" is selected
+      document.getElementById("insurance_policy").value = "";
+      document.getElementById("insurance_provider").value = "";
+      document.getElementById("policy_from_date").value = "";
+      document.getElementById("policy_until_date").value = "";
+    }
+  }
+</script>
+
+
 
 <script src="registration.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

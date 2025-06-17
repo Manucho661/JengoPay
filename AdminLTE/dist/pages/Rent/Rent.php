@@ -499,7 +499,7 @@ select:hover {
                                   </option>
                                 <?php endwhile; ?>
                               </select>
-                               
+
                               <select id="year-select" class="form-control mt-3">
                               <option value="2025" selected>2025</option>
                               <option value="2024">2024</option>
@@ -548,7 +548,8 @@ select:hover {
 
 
                             <div class="pdf-excel">
-                            <form method="get" action="generate-pdf.php" target="_blank" id="pdf-form">
+
+                            <form method="get" action="actions/generate-pdf.php" target="_blank" id="pdf-form">
   <input type="hidden" name="building" id="pdf-building" value="">
   <input type="hidden" name="year" id="pdf-year" value="">
   <input type="hidden" name="month" id="pdf-month" value="">
@@ -764,7 +765,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const month = monthSelect.value;
 
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", "filter-rent.php", true);
+        '../communications/actions/delete_message.php'
+        xhr.open("POST", "../Rent/actions/filter-rent.php", true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
         xhr.onload = function () {
@@ -804,7 +806,7 @@ document.getElementById('download-pdf').addEventListener('click', function () {
   const building = encodeURIComponent(selected);
 
   // Redirect to PDF generator (opens in new tab)
-  window.open(`generate-pdf.php?building=${building}`, '_blank');
+  window.open(`../Rent/actions/generate-pdf.php?building=${building}`, '_blank');
 });
 
  </script>
@@ -859,7 +861,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const summarySection = document.getElementById('summary-section');
 
   // Load buildings into dropdown
-  fetch('get_buildings.php')
+  fetch('../Rent/actions/get_buildings.php')
     .then(res => res.json())
     .then(data => {
       optionsBox.innerHTML = `<div class="selected" data-value="All Buildings">All Buildings</div>`;
@@ -881,7 +883,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   function loadBuildingData(buildingName) {
-    const url = `fetch_building_summary.php?building=${encodeURIComponent(buildingName)}`;
+    const url = `../Rent/actions/fetch_building_summary.php?building=${encodeURIComponent(buildingName)}`;
     fetch(url)
       .then(res => res.json())
       .then(data => {

@@ -77,83 +77,81 @@
   </div>
 </div>
 
+<!-- Maintenance Request Modal -->
+<div class="modal fade" id="maintenanceModal" tabindex="-1" role="dialog" aria-labelledby="maintenanceModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content shadow-lg rounded">
 
+      <!-- Modal Header -->
+      <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
+        <h5 class="modal-title">
+          <i class="fas fa-tools mr-2"></i> Maintenance Request
+        </h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+          <span>&times;</span>
+        </button>
+      </div>
 
-  <!-- Maintenance Request Modal -->
-  <div class="modal fade" id="maintenanceModal" tabindex="-1" role="dialog" aria-labelledby="maintenanceModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
+      <!-- Modal Body -->
+      <form id="maintenanceRequestForm" enctype="multipart/form-data">
+        <div class="modal-body" style="font-family: 'Segoe UI', sans-serif;">
 
-        <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
-          <h5 class="modal-title"><i class="fas fa-tools"></i> Maintenance Request</h5>
-          <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-            <span>&times;</span>
-          </button>
+          <div class="alert mb-4" style="background-color: #FFF3CD; color: #856404; border: 1px solid #FFE8A1;">
+            <i class="fas fa-exclamation-circle mr-2"></i> Please fill out all fields carefully to avoid delays.
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label><strong><i class="fas fa-id-card mr-1 text-warning"></i> Request ID</strong></label>
+              <input type="text" class="form-control bg-light" value="Auto-generated" disabled>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="request_date"><strong><i class="fas fa-calendar-alt mr-1 text-warning"></i> Request Date</strong></label>
+              <input type="date" class="form-control" name="request_date" required style="color: black;">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="category"><strong><i class="fas fa-tag mr-1 text-warning"></i> Category</strong></label>
+            <input type="text" class="form-control" name="category" placeholder="e.g. Electrical, Plumbing" required style="color: black;">
+          </div>
+
+          <div class="form-group">
+            <label for="description"><strong><i class="fas fa-align-left mr-1 text-warning"></i> Description</strong></label>
+            <textarea class="form-control" name="description" rows="3" placeholder="Describe the issue clearly..." required style="color: black;"></textarea>
+          </div>
+
+          <!-- Image Upload Section -->
+          <div class="form-group">
+            <label for="photo_upload"><strong><i class="fas fa-camera mr-1 text-warning"></i> Upload Photos</strong></label>
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" id="photo_upload" name="photos[]" multiple accept="image/*">
+              <label class="custom-file-label" for="photo_upload">Choose image(s)...</label>
+            </div>
+            <small class="form-text text-muted">Accepted formats: JPG, PNG, GIF</small>
+          </div>
+
+          <!-- Image Preview Section -->
+          <div id="imagePreview" class="d-flex flex-wrap mt-3" style="gap: 10px;"></div>
+
         </div>
 
-        <form id="maintenanceRequestForm">
-          <div class="modal-body">
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label>Request ID</label>
-                <input type="text" class="form-control" value="Auto-generated" disabled>
-              </div>
-              <div class="form-group col-md-6">
-                <label for="request_date">Request Date</label>
-                <input type="date" class="form-control" name="request_date" required style="color: black;">
-              </div>
-            </div>
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn" data-dismiss="modal" style="background-color: #00192D; color: #FFC107;">
+            <i class="fas fa-times-circle mr-1"></i> Cancel
+          </button>
+          <button type="submit" class="btn font-weight-bold" style="background-color: #00192D; color: #FFC107;">
+            <i class="fas fa-paper-plane mr-1"></i> Submit Request
+          </button>
+        </div>
+      </form>
 
-            <div class="form-group">
-              <label for="category">Category</label>
-              <input type="text" class="form-control" name="category" required style="color: black;">
-            </div>
-
-            <div class="form-group">
-              <label for="description">Description</label>
-              <textarea class="form-control" name="description" rows="3" required style="color: black;"></textarea>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label for="provider_id">Provider ID</label>
-                <input type="text" class="form-control" name="provider_id" required style="color: black;">
-              </div>
-              <div class="form-group col-md-6">
-                <label for="status">Status</label>
-                <select class="form-control" name="status" required style="color: black;">
-                  <option value="Pending"style="color: black;">Pending</option>
-                  <option value="In Progress"style="color: black;">In Progress</option>
-                  <option value="Completed" style="color: black;">Completed</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label for="payment_status">Payment Status</label>
-                <select class="form-control" name="payment_status" required style="color: black;">
-                  <option value="Unpaid" style="color: black;">Unpaid</option>
-                  <option value="Paid" style="color: black;">Paid</option>
-                </select>
-              </div>
-              <div class="form-group col-md-6">
-                <label for="payment_date">Payment Date</label>
-                <input type="date" class="form-control" name="payment_date" style="color: black;">
-              </div>
-            </div>
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color: #00192D; color: #FFC107;">Cancel</button>
-            <button type="submit" class="btn" style="background-color: #00192D; color: #FFC107;">Submit Request</button>
-          </div>
-        </form>
-
-      </div>
     </div>
   </div>
 </div>
+
+
 
 <!-- JS Includes -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -161,36 +159,69 @@
 
 <!-- JS to Handle Maintenance Form -->
 <script>
-document.getElementById('maintenanceRequestForm').addEventListener('submit', async function (e) {
-  e.preventDefault();
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('maintenanceRequestForm');
+  const fileInput = document.getElementById('photo_upload');
+  const preview = document.getElementById('imagePreview');
 
-  const form = e.target;
-  const formData = new FormData(form);
+  // Handle form submission
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
 
-  try {
-    const response = await fetch('submit_maintenance.php', {
-      method: 'POST',
-      body: formData
-    });
+    const formData = new FormData(form);
 
-    const text = await response.text(); // First, read as plain text
-    console.log('Raw response:', text);
+    try {
+      const response = await fetch('submit_maintenance.php', {
+        method: 'POST',
+        body: formData
+      });
 
-    const result = JSON.parse(text); // Then try to parse as JSON
+      const text = await response.text(); // Get raw response
+      console.log('Raw response:', text);
 
-    if (result.success) {
-      alert('Maintenance request submitted successfully!');
-      form.reset();
-      $('#maintenanceModal').modal('hide');
-    } else {
-      alert('Error: ' + result.error);
+      let result;
+      try {
+        result = JSON.parse(text); // Try to parse JSON
+      } catch (jsonError) {
+        throw new Error('Invalid JSON: ' + jsonError.message);
+      }
+
+      if (result.success) {
+        alert('✅Maintenance request submitted successfully!');
+        form.reset();
+        preview.innerHTML = ''; // Clear image previews
+        $('#maintenanceModal').modal('hide');
+      } else {
+        alert('Error: ' + result.error);
+      }
+
+    } catch (err) {
+      alert('Unexpected error. Please try again.');
+      console.error('Fetch Error:', err);
     }
-  } catch (err) {
-    alert('Unexpected error. Please try again.');
-    console.error('Fetch Error:', err);
-  }
+  });
+
+  // Handle image preview
+  fileInput.addEventListener('change', function (event) {
+    preview.innerHTML = ''; // Clear previous previews
+
+    Array.from(event.target.files).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.style.maxWidth = '100px';
+        img.style.margin = '5px';
+        img.style.borderRadius = '8px';
+        preview.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    });
+  });
 });
 </script>
+
+
 
 
 </body>
