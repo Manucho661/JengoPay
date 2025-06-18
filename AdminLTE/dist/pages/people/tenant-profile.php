@@ -581,13 +581,14 @@ try {
                             </div>
 
                             <!-- Modal Footer -->
-                            <div class="modal-footer px-4 pb-4 pt-3">
+
+                             <div class="modal-footer bg-light d-flex justify-content-between">
+                        <small class="text-muted"><i class="fas fa-info-circle me-1"></i> Make sure details are accurate</small>
+
                               <button type="submit" class="btn btn-sm " style="background-color: #00192D; color: #FFC107;">
                                 <i class="fas fa-save me-1"></i> Save Changes
                               </button>
-                              <button type="button" class="btn btn-sm" data-bs-dismiss="modal" style="background-color: #00192D; color: #FFC107;">
-                                <i class="fas fa-times me-1"></i> Cancel
-                              </button>
+                              
                             </div>
 
                           </form>
@@ -819,8 +820,9 @@ try {
 
         <!-- Footer -->
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary" style="background-color: #00192D;">Save</button>
-          <button type="button" class="btn btn-secondary" style="background-color: #00192D;" data-bs-dismiss="modal">Cancel</button>
+          
+          <button type="button" class="btn btn-sm " style="background-color: white; color: #00192D;" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-sm " style="background-color: #00192D; color: #FFC107;">Save</button>
         </div>
       </form>
     </div>
@@ -830,27 +832,37 @@ try {
 
 
                  <!-- end row -->
+                
                  <!-- start row -->
-                  <div class="row mt-3">
-                       <h6 class="mb-0 contact_section_header"> </i> Pets</h6>
-                       <div class="col-md-9 pets">
-                        <table id="pets-table">
-                          <thead>
-                            <th>Type</th>
-                            <th>Weight</th>
-                            <th>License Number</th>
-                          </thead>
-                          <tbody>
-                          </tbody>
-                        </table>
+<div class="row mt-3 align-items-center">
+  <div class="col-md-9 flex align-items-center">
+    <h6 class="mb-0 contact_section_header me-3">Pets</h6>
+    <table id="pets-table" class="mb-0">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Weight</th>
+          <th>License Number</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Pet rows will go here -->
+      </tbody>
+    </table>
+  </div>
 
-                       </div>
+  <div class="col-md-3">
+    <div class="add-pet-card shadow-sm bg-white px-2 py-2 rounded d-flex align-items-center justify-content-center">
+      <button class="btn btn-sm rounded pet-modal"
+              data-bs-toggle="modal"
+              data-bs-target="#addPetModal"
+              style="background-color: #00192D; color: #FFC107; padding: 4px 12px;">
+        <i class="fas fa-plus me-1"></i> Add
+      </button>
+    </div>
+  </div>
+</div>
 
-                       <div class="col-md-3">
-                        <button class="btn edit-btn personal-info" data-bs-toggle="modal" data-bs-target="#addPetModal" style="background-color: #00192D; color: #FFC107;"><i class="fas fa-plus icon"></i> ADD </button>
-                       </div>
-
-                  </div>
 
                   <!-- Add Pet Modal -->
 <div class="modal fade" id="addPetModal" tabindex="-1" aria-labelledby="addPetModalLabel" aria-hidden="true">
@@ -896,8 +908,9 @@ try {
 
         <!-- Modal Footer -->
         <div class="modal-footer">
+          
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: white; color: #00192D;">Cancel</button>
           <button type="submit" class="btn" style="background-color: #00192D; color: #FFC107;">Add Pet</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #00192D; color: #FFC107;">Cancel</button>
         </div>
       </form>
 
@@ -907,39 +920,42 @@ try {
 </div>
 
 
-                  <div class="row">
-                    <h6 class="mb-0 contact_section_header"> </i> Files</h6>
-                    <div class="col-md-6">
-                      <table id="files-table">
-                        <thead>
-                          <th>File Name</th>
+<div class="row mt-3 align-items-start">
+  <!-- Left Side: Heading + Table -->
+  <div class="col-md-6">
+    <h6 class="mb-2 contact_section_header">Files</h6>
+    <table id="files-table" class="table mb-0">
+      <thead>
+        <tr>
+          <th>File Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- File rows will go here -->
+      </tbody>
+    </table>
+  </div>
 
-                          <th>Actions</th>
-
-                        </thead>
-
-                        <tbody>
-
-
-                        </tbody>
-
-                      </table>
-                    </div>
-                    <div class="col-md-3">
-                      <button class="btn edit-btn personal-info" data-bs-toggle ="modal" data-bs-target ="#addFileModal"style="background-color: #00192D; color: #FFC107;"><i class="fas fa-plus icon"></i> Add </button>
-                    </div>
-
-
-                  </div>
-
-
-                </div>
-
-
-              </div>
-
+  <!-- Right Side: Add Button aligned with header row -->
+  <div class="col-md-3 d-flex align-items-end" style="padding-top: 38px;">
+    <div class="add-file-card shadow-sm bg-white px-2 py-2 rounded d-flex align-items-center justify-content-center" style="width: 300px;">
+      <button class="btn btn-sm rounded File-modal" 
+              data-bs-toggle="modal" 
+              data-bs-target="#addFileModal" 
+              style="background-color: #00192D; color: #FFC107; padding: 4px 12px;">
+        <i class="fas fa-plus me-1"></i> Add
+      </button>
+    </div>
   </div>
 </div>
+
+
+
+
+
+
+                  
 
 <!-- Add File Modal -->
 <div class="modal fade" id="addFileModal" tabindex="-1" aria-labelledby="addFileModalLabel" aria-hidden="true">
@@ -973,8 +989,8 @@ try {
 
         <!-- Modal Footer -->
         <div class="modal-footer px-4">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #00192D; color: #FFC107;">Cancel</button>
-          <button class="btn btn-primary add-file-btn" data-tenant-id="39011877" data-bs-toggle="modal" data-bs-target="#addFileModal">Upload</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: white; color: #00192D;">Cancel</button>
+          <button class="btn  add-file-btn" data-tenant-id="39011877" data-bs-toggle="modal" data-bs-target="#addFileModal" style="background-color: #00192D; color: #FFC107;">Upload</button>
         </div>
       </form>
 
