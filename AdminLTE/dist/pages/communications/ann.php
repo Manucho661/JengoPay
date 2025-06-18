@@ -1108,7 +1108,7 @@ body {
                   </div>
                   <div class="stat-content">
                     <label class="stat-label">
-                      <a href="index.html" class="" style="color: #FFC107; background-color:#00192D;">Announcements Received</a>
+                      <a href="index.html" class="" style="color: #FFC107; background-color:#00192D;">Announcements Sent</a>
                     </label>
                     <span class="stat-value">60</span>
                   </div>
@@ -1123,9 +1123,9 @@ body {
                   </div>
                   <div class="stat-content">
                     <label class="stat-label">
-                      <a href="#" class="" style="color: #FFC107; background-color:#00192D;">Duration</a>
+                      <a href="#" class="" style="color: #FFC107; background-color:#00192D;">Drafts</a>
                     </label>
-                    <span class="stat-value">1st Jan - 1st Feb</span>
+                    <span class="stat-value">2</span>
                   </div>
                 </div>
               </div>
@@ -1219,7 +1219,7 @@ body {
                             <button class="filter-btn active">
                                 <i class="fas fa-inbox"></i> All
                             </button>
-                            <button class="filter-btn">
+                            <!-- <button class="filter-btn">
                                 <i class="fas fa-info-circle"></i> Info
                             </button>
                             <button class="filter-btn">
@@ -1227,132 +1227,21 @@ body {
                             </button>
                             <button class="filter-btn">
                                 <i class="fas fa-exclamation-triangle"></i> Warning
+                            </button> -->
+                            <button class="filter-btn">
+                            <i class="fas fa-check-circle"></i> Sent
                             </button>
                             <button class="filter-btn">
-                                <i class="fas fa-exclamation-circle"></i> Alert
+                                <i class="fas fa-exclamation-circle"></i> Drafts
                             </button>
                             <button class="filter-btn">
                                 <i class="fas fa-archive"></i> Archived
                             </button>
                         </div>
 
-                        <div  class="notification-list" id="announcementList">
-                            <div class="notification-item unread">
-                                <div class="notification-icon success">
-                                    <i class="fas fa-check-circle"></i>
-                                </div>
-                                <div class="notification-content">
-                                    <div class="notification-title">
-                                        <span>Rent payment received</span>
-                                        <span class="notification-time">2 min ago</span>
-                                    </div>
-                                    <p class="notification-message">
-                                    Tenant John D. has paid $1,200 for unit #302 (November rent). Payment cleared successfully.
-                                    </p>
-                                    <div class="notification-actions">
-                                        <button class="action-btn">
-                                            <i class="fas fa-check"></i> Draft
-                                        </button>
-                                        <button class="action-btn">
-                                            <i class="fas fa-archive"></i> Archive
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="notification-item unread">
-                                <div class="notification-icon warning">
-                                <i class="fas fa-info-circle"></i>
-                                </div>
-                                <div class="notification-content">
-                                    <div class="notification-title">
-                                        <span>Maintenance request not found</span>
-                                        <span class="notification-time">15 min ago</span>
-                                    </div>
-                                    <p class="notification-message">
-                                    Urgent: Water leak reported in unit #105. Tenant requests immediate plumbing service.
-
-                                    </p>
-                                    <div class="notification-actions">
-                                        <button class="action-btn">
-                                            <i class="fas fa-check"></i> Draft
-                                        </button>
-                                        <button class="action-btn">
-                                            <i class="fas fa-archive"></i> Archive
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="notification-item">
-                                <div class="notification-icon success">
-                                <i class="fas fa-check-circle"></i>
-                                </div>
-                                <div class="notification-content">
-                                    <div class="notification-title">
-                                        <span>Inspection scheduled</span>
-                                        <span class="notification-time">1 hour ago</span>
-                                    </div>
-                                    <p class="notification-message">
-                                    Annual property inspection for 123 Main St. scheduled for November 20 at 10:00 AM with ABC Inspections.
-                                    </p>
-                                    <div class="notification-actions">
-                                        <button class="action-btn">
-                                            <i class="fas fa-check"></i> Draft
-                                        </button>
-                                        <button class="action-btn">
-                                            <i class="fas fa-archive"></i> Archive
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="notification-item">
-                                <div class="notification-icon danger">
-                                    <i class="fas fa-exclamation-circle"></i>
-                                </div>
-                                <div class="notification-content">
-                                    <div class="notification-title">
-                                        <span>Insurance renewal</span>
-                                        <span class="notification-time">3 hours ago</span>
-                                    </div>
-                                    <p class="notification-message">
-                                    Property insurance for 456 Oak Ave expires in 14 days. Premium due: $1,850.
-                                    </p>
-                                    <div class="notification-actions">
-                                        <button class="action-btn">
-                                            <i class="fas fa-check"></i> Draft
-                                        </button>
-                                        <button class="action-btn">
-                                            <i class="fas fa-archive"></i> Archive
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="notification-item">
-                                <div class="notification-icon info">
-                                    <i class="fas fa-user-plus"></i>
-                                </div>
-                                <div class="notification-content">
-                                    <div class="notification-title">
-                                        <span>New Tenant Registered</span>
-                                        <span class="notification-time">Yesterday</span>
-                                    </div>
-                                    <p class="notification-message">
-                                        Sarah Johnson has joined your Sunset Apartment!
-                                    </p>
-                                    <div class="notification-actions">
-                                        <button class="action-btn">
-                                            <i class="fas fa-check"></i>Draft
-                                        </button>
-                                        <button class="action-btn">
-                                            <i class="fas fa-archive"></i> Archive
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="notification-list" id="announcementList">
+    <!-- Announcements will be loaded here -->
+</div>
                       </div>
                     </div>
                 </div>
@@ -1361,7 +1250,7 @@ body {
             <div class="col-md-4">
                 <!-- Notification Stats Card -->
                 <!-- Quick Actions Card -->
-                <div class="card mb-4">
+                 <div class="card mb-4">
                     <div class="card-header" style="color: #FFC107; background-color:#00192D;">
                         <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
                     </div>
@@ -1372,18 +1261,18 @@ body {
         <!-- <button class="quick-action-btn">
             <i class="fas fa-file-invoice-dollar"></i> Send Rent Reminder
         </button> -->
-                        <button class="quick-action-btn">
+                         <button class="quick-action-btn">
                             <i class="fas fa-bell-slash"></i> Snooze Notifications
                         </button>
                         <!-- <button class="quick-action-btn">
             <i class="fas fa-tools"></i> Report Maintenance
         </button> -->
 
-                    </div>
+                     </div>
                 </div>
 
                 <!-- Notification Trends Card -->
-                <div class="card">
+                 <div class="card">
                     <div class="card-header" style="color: #FFC107; background-color:#00192D;">
                         <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Notification Trends</h5>
                     </div>
@@ -1721,7 +1610,7 @@ function loadAnnouncements() {
                 <p class="notification-message">${item.message}</p>
                 <div class="notification-actions">
                   <button class="action-btn">
-                    <i class="fas fa-check"></i> Mark as read
+                    <i class="fas fa-check"></i>Draft
                   </button>
                   <button class="action-btn">
                     <i class="fas fa-archive"></i> Archive
@@ -2159,6 +2048,86 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 </script> -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    fetch('fetch_announcements.php')
+        .then(response => response.json())
+        .then(data => {
+            const list = document.getElementById('announcementList');
+            list.innerHTML = '';
+
+            if (data.status === 'success') {
+                data.data.forEach((item, index) => {
+                    const iconType = getIconType(item.priority);
+                    const icon = getIcon(item.priority);
+
+                    const html = `
+                        <div class="notification-item unread" data-index="${index}">
+                            <div class="notification-icon ${iconType}">
+                                <i class="fas ${icon}"></i>
+                            </div>
+                            <div class="notification-content">
+                                <div class="notification-title">
+                                    <span>${item.priority} message to ${item.recipient}</span>
+                                    <span class="notification-time">${formatTime(item.created_at)}</span>
+                                </div>
+                                <p class="notification-message">${item.message}</p>
+                                <div class="notification-actions">
+                                    <button class="action-btn mark-sent">
+                                        <i class="fas fa-check"></i> Draft
+                                    </button>
+                                    <button class="action-btn">
+                                        <i class="fas fa-archive"></i> Archive
+                                    </button>
+                                </div>
+                            </div>
+                        </div>`;
+
+                    list.insertAdjacentHTML('beforeend', html);
+                });
+
+                // Attach event listeners to all "Draft" buttons to change to "Sent"
+                document.querySelectorAll('.mark-sent').forEach(button => {
+                    button.addEventListener('click', function () {
+                        this.innerHTML = '<i class="fas fa-paper-plane"></i> Sent';
+                        this.disabled = true; // Optionally disable the button after marking
+                    });
+                });
+
+            } else {
+                list.innerHTML = '<p class="text-danger">Failed to load announcements.</p>';
+            }
+        })
+        .catch(err => {
+            document.getElementById('announcementList').innerHTML = '<p class="text-danger">Error loading announcements.</p>';
+            console.error(err);
+        });
+});
+
+function getIconType(priority) {
+    switch (priority.toLowerCase()) {
+        case 'urgent': return 'danger';
+        case 'normal': return 'success';
+        case 'reminder': return 'info';
+        default: return 'info';
+    }
+}
+
+function getIcon(priority) {
+    switch (priority.toLowerCase()) {
+        case 'urgent': return 'fa-exclamation-circle';
+        case 'normal': return 'fa-check-circle';
+        case 'reminder': return 'fa-info-circle';
+        default: return 'fa-bell';
+    }
+}
+
+function formatTime(timestamp) {
+    const date = new Date(timestamp);
+    return date.toLocaleString(); // Customize formatting if needed
+}
+</script>
 
 <script>
   // Submit form via AJAX (using Fetch API)
