@@ -21,14 +21,15 @@
       <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> 💬 Communications
     </div>
     <div class="submenu">
-      <a href="#">📢 Announcements</a>
-      <a href="../communications/texts.php">💬 In-app Messages</a>
+    <a href="../communications/texts.php">💬 In-app Messages</a>
+      <a href="../communications/ann.php">📢 Announcements</a>
+
     </div>
   </div>
 
   <a href="../inspections/inspections.php">🕵️ Inspections</a>
   <a href="../Rent/Rent.php">💸 Rent</a>
-  <a href="../maintenance/electricals.php">🛠 Repairs & Maintenance</a>
+  <a href="../maintenance/maintenance.php">🛠 Repairs & Maintenance</a>
 
   <!-- Financials -->
   <div class="menu-group">

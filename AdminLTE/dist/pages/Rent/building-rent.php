@@ -711,7 +711,7 @@ foreach ($tenants as $tenant) {
                           </div> -->
                           </div>
                           <div class="">
-       <form method="get" action="generating-pdf.php" target="_blank" id="pdf-form">
+       <form method="get" action="../Rent/actions/generating-pdf.php" target="_blank" id="pdf-form">
   <input type="hidden" name="building" id="pdf-building">
   <input type="hidden" name="year" id="pdf-year">
   <input type="hidden" name="month" id="pdf-month">
@@ -725,7 +725,7 @@ foreach ($tenants as $tenant) {
                          <!-- <button  class="pdf" ><i class="fas fa-file-pdf" style="color: red;"></i></button> -->
                           <!-- <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button> -->
                           <div class="">
-                          <form method="post" action="exporting-excel.php">
+                          <form method="post" action="../Rent/actions/exporting-excel.php">
                             <button type="submit" class="excel">
                               <i class="fas fa-file-excel" style="color: green;"></i>
                             </button>
@@ -812,9 +812,15 @@ foreach ($tenants as $tenant) {
                 <td style="padding: 8px; vertical-align: middle;">KSH <?= $overpayment ?></td>
                 <td style="padding: 8px; vertical-align: middle;">
                     <div style="display: flex; gap: 4px;">
-                        <button class="btn view" data-bs-toggle="modal" data-bs-target="#tenantProfileModal" style="padding: 4px 8px;">
-                            View
-                        </button>
+                    <button
+  class="btn view"
+  data-bs-toggle="modal"
+  data-bs-target="#tenantProfileModal"
+  data-tenant='<?= json_encode($tenant) ?>'
+  style="padding: 4px 8px;">
+  View
+</button>
+
                         <button class="btn print" onclick="window.open('print-receipt.php?tenant_id=<?= $tenant['id'] ?>', '_blank')" style="padding: 4px 8px;">
                             <i class="fas fa-file-invoice"></i> Receipt
                         </button>
@@ -947,7 +953,7 @@ foreach ($tenants as $tenant) {
           </footer>
           <!--end::Footer-->
 
-          <script>
+          <!-- <script>
           document.getElementById('tenantProfileModal').addEventListener('show.bs.modal', function () {
             const contentArea = document.getElementById('tenantProfileContent');
 
@@ -970,7 +976,67 @@ foreach ($tenants as $tenant) {
                 contentArea.innerHTML = '<p class="text-danger">Failed to load tenant profile.</p>';
               });
           });
+</script> -->
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const tenantProfileModal = document.getElementById('tenantProfileModal');
+
+    tenantProfileModal.addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget;
+      const tenantData = JSON.parse(button.getAttribute('data-tenant'));
+      const content = document.getElementById('tenantProfileContent');
+
+      // Helper to format amounts
+      const formatCurrency = (val) => `KSH ${parseFloat(val || 0).toLocaleString('en-KE', { minimumFractionDigits: 2 })}`;
+
+      content.innerHTML = `
+        <div style="text-align: center; margin-bottom: 25px;">
+          <h4 style="color: #00192D; font-weight: bold;">${tenantData.tenant_name}</h4>
+          <span class="badge bg-warning text-dark" style="font-size: 1rem;">Unit: ${tenantData.unit_code}</span>
+        </div>
+
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <table class="table table-striped table-hover table-borderless mb-0">
+              <tbody>
+                <tr>
+                  <th scope="row" style="color: #00192D;">Amount Paid</th>
+                  <td>${formatCurrency(tenantData.amount_paid)}</td>
+                </tr>
+                <tr>
+                  <th scope="row" style="color: #00192D;">Unit Type</th>
+                  <td>${tenantData.unit_type}</td>
+                </tr>
+                <tr>
+                  <th scope="row" style="color: #00192D;">Balances</th>
+                  <td>${formatCurrency(tenantData.balances)}</td>
+                </tr>
+                <tr>
+                  <th scope="row" style="color: #00192D;">Penalty</th>
+                  <td>
+                    ${formatCurrency(tenantData.penalty)}
+                    <small class="text-muted">(${tenantData.penalty_days} late days)</small>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" style="color: #00192D;">Arrears</th>
+                  <td>${formatCurrency(tenantData.arrears)}</td>
+                </tr>
+                <tr>
+                  <th scope="row" style="color: #00192D;">Overpayment</th>
+                  <td>${formatCurrency(tenantData.overpayment)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    });
+  });
 </script>
+
+
 
           <script>
 document.getElementById('rent-deadline-form').addEventListener('submit', function (e) {
