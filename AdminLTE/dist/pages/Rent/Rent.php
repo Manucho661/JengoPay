@@ -148,7 +148,6 @@ select:hover {
 .container-fluid.app-content .row.details{
   flex: 1;
 }
-
 </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -546,17 +545,15 @@ select:hover {
 
                             </div>
 
-
                             <div class="pdf-excel">
-
                             <form method="get" action="actions/generate-pdf.php" target="_blank" id="pdf-form">
-  <input type="hidden" name="building" id="pdf-building" value="">
-  <input type="hidden" name="year" id="pdf-year" value="">
-  <input type="hidden" name="month" id="pdf-month" value="">
-  <button id="download-pdf" type="submit" class="pdf">
-    <i class="fas fa-file-pdf" style="color: red;"></i>
-  </button>
-</form>
+                            <input type="hidden" name="building" id="pdf-building" value="">
+                            <input type="hidden" name="year" id="pdf-year" value="">
+                            <input type="hidden" name="month" id="pdf-month" value="">
+                            <button id="download-pdf" type="submit" class="pdf">
+                              <i class="fas fa-file-pdf" style="color: red;"></i>
+                            </button>
+                          </form>
 
 
                          <!-- <button  class="pdf" ><i class="fas fa-file-pdf" style="color: red;"></i></button> -->
@@ -599,6 +596,7 @@ select:hover {
         </tr>
     </thead>
     <tbody id="rent-body">
+      
     <?php
     $stmt = $pdo->query("SELECT * FROM building_rent_summary");
 

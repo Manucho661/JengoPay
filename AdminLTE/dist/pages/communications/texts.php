@@ -941,7 +941,7 @@ display: flex;
 
                          <!-- start row -->
                          <div class="row align-items-stretch all-messages-summary" id="all-messages-summary">
-                          <div id="message-summary" class="col-md-12  message-summary">
+                          <div id="message-summary" class="col-md-12 message-summary">
                               <div class="message-list p-2" style="display: flex; justify-content: space-between;">
                                   <div class="recent-messages-header">Recent Messages</div>
                                   <div>

@@ -21,8 +21,9 @@
       <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> 💬 Communications
     </div>
     <div class="submenu">
-      <a href="#">📢 Announcements</a>
-      <a href="../communications/texts.php">💬 In-app Messages</a>
+    <a href="../communications/texts.php">💬 In-app Messages</a>
+      <a href="../communications/ann.php">📢 Announcements</a>
+
     </div>
   </div>
 
