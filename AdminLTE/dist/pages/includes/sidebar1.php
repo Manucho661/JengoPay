@@ -28,7 +28,7 @@
 
   <a href="../inspections/inspections.php">🕵️ Inspections</a>
   <a href="../Rent/Rent.php">💸 Rent</a>
-  <a href="../maintenance/electricals.php">🛠 Repairs & Maintenance</a>
+  <a href="../maintenance/maintenance.php">🛠 Repairs & Maintenance</a>
 
   <!-- Financials -->
   <div class="menu-group">

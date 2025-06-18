@@ -120,15 +120,6 @@ function populateRequestsTable(requests) {
       <div style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
       <div class="d-flex gap-15px" style="align-items: center;">
       <div>
-        <button class="btn btn-sm pay-btn d-flex"
-          data-building-name="${requests.building_name}"
-          data-unit="${requests.unit || ''}"
-          data-request-id="${requests.id}"
-          style="background-color: #00192D; color:#FFC107"> <i class="fas fa-coins" style="margin-right:3px;"></i>
-          Pay
-        </button>
-      </div>
-      <div>
         <button class="btn btn-sm view-btn"
           style="background-color: #193042; margin-left:10px; color:#fff;"
           title="View"
@@ -155,19 +146,6 @@ function populateRequestsTable(requests) {
    // Add the event listener here AFTER the row is in memory
      const tempDiv = document.createElement('div');
      tempDiv.appendChild(row);
-      const payBtn = tempDiv.querySelector('.pay-btn');
-      payBtn.addEventListener('click', (e) => {
-      const btn = e.currentTarget;
-      // const buildingName = btn.getAttribute('data-building-name');
-      //  const unit = btn.getAttribute('data-unit');
-      const requestId = btn.getAttribute('data-request-id');
-
-      // document.getElementById('modal_building_name').textContent = buildingName;
-      // document.getElementById('modal_unit').textContent = unit;
-      document.getElementById('modal_request_id').value = requestId;
-      const modal = new bootstrap.Modal(document.getElementById('recordPaymentModal'));
-      modal.show();
-      });
       // View Request
       const viewBtn = tempDiv.querySelector('.view-btn');
       viewBtn.addEventListener('click', (e) =>{
@@ -179,6 +157,7 @@ function populateRequestsTable(requests) {
         document.getElementById('request-status').innerText= requests.status;
         document.getElementById('payment-status').innerText= requests.payment_status;
         document.getElementById('request-description').innerText= requests.description;
+        document.getElementById('request-imag').src = '/originaltwo/AdminLTE/dist/pages/' + requests.photo_url;
         const modal = new bootstrap.Modal(document.getElementById('maintenanceRequestModal'));
         modal.show();
       });
@@ -277,6 +256,7 @@ function populateRequestsTable(requests) {
       });
 }
 
+
 // Add a payment
 function addRequestPayment(event){
   event.preventDefault(); // Prevent the form from submitting immediately
@@ -299,6 +279,7 @@ function addRequestPayment(event){
           .catch(err => console.error(err));
 };
 
+
 // Mark Complete
 function markComplete(requestsID){
    fetch(`actions/update_records.php?type=mark_item&request_id=${requestsID}`)
@@ -317,6 +298,7 @@ function markComplete(requestsID){
     });
 }
 
+
 //Delete Request
 function deleteRequest(requestsID){
    fetch(`actions/delete_records.php?type=mark_item&request_id=${requestsID}`)
@@ -334,6 +316,7 @@ function deleteRequest(requestsID){
       console.error("Network error:", error);
     });
 }
+
 
 // Select Providers
 function selectProviders(requestsID){
@@ -355,6 +338,7 @@ function selectProviders(requestsID){
   .catch(error => console.error('Error fetching providers:', error));
 }
 
+
 // Assign the Provider
 function assignProvider(event){
   event.preventDefault(); // Prevent the form from submitting immediately
@@ -372,6 +356,7 @@ function assignProvider(event){
           })
           .catch(err => console.error(err));
 };
+
 
 // make payment
 function makePayment() {
@@ -400,7 +385,8 @@ function makePayment() {
     recordPaymentModalInstance.show();
     nextStepBtn
 }
- 
+
+// in system payment
 function inSystemPayment(){
   const step1Div = document.getElementById('step-1');
   step1Div.style.display = 'none';
@@ -408,12 +394,22 @@ function inSystemPayment(){
   const step2Div = document.getElementById('step-2');
   step2Div.style.display = 'block';
 }
-
   const nextStepBtn = document.getElementById('nextStepBtn');
   nextStepBtn.addEventListener('click', inSystemPayment);
-
   const openRecordPaymentModalBtn = document.getElementById('openRecordPaymentModalBtn');
   openRecordPaymentModalBtn.removeEventListener('click', handleOpenRecordPaymentModal);
   openRecordPaymentModalBtn.addEventListener('click', handleOpenRecordPaymentModal);
+
+ // Mpesa payment
+  const paymentMethod = document.getElementById('paymentMethod'); // ✅ The <select>
+  const mpesaPhoneSection = document.getElementById('mpesaPhoneSection');
+  paymentMethod.addEventListener('change', function () {
+    if (this.value === 'mpesa') {
+      mpesaPhoneSection.style.display = 'block';
+    } else {
+      mpesaPhoneSection.style.display = 'none';
+    }
+  });
  
+
 }

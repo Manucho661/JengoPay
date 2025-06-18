@@ -298,4 +298,8 @@ fetch(`actions/fetch_records.php?table=inspection_items&inspection_id=${inspecti
     fetchScheduledInspections();
   });
 
+// print pdf
+
+
+
 })();
