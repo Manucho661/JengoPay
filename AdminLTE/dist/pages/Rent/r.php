@@ -48,6 +48,7 @@ try {
 }
 ?>
 
+
 <!doctype html>
 <html lang="en">
   <!--begin::Head-->
@@ -486,42 +487,36 @@ select:hover {
                             <div class="filter-boxes">
 
                                <!-- <div class="select-option-container mt-3"> -->
-                               <div class="row mt-3">
-  <!-- Building Select -->
-  <div class="col-md-3">
-    <b><label for="building-select" class="form-label">Select Building</label></b>
-    <select id="building-select" class="form-control">
-      <option value="">All Buildings</option>
-      <?php
-        $buildings = $pdo->query("SELECT DISTINCT building_name FROM building_rent_summary");
-        while ($b = $buildings->fetch()):
-      ?>
-        <option value="<?= htmlspecialchars($b['building_name']) ?>">
-          <?= htmlspecialchars($b['building_name']) ?>
-        </option>
-      <?php endwhile; ?>
-    </select>
-  </div>
+                               <select id="building-select" class="form-control mt-3">
+                                <option value="">All Buildings</option>
+                                <?php
+                                  $buildings = $pdo->query("SELECT DISTINCT building_name FROM building_rent_summary");
+                                  while ($b = $buildings->fetch()):
+                                ?>
+                                  <option value="<?= htmlspecialchars($b['building_name']) ?>">
+                                    <?= htmlspecialchars($b['building_name']) ?>
+                                  </option>
+                                <?php endwhile; ?>
+                              </select>
 
-  <!-- From Date -->
-  <div class="col-md-3">
-  <b><label for="start-date" class="form-label">From</label></b>
-    <input type="date" id="start-date" class="form-control">
-  </div>
+                              <select id="year-select" class="form-control mt-3">
+                              <option value="2025" selected>2025</option>
+                              <option value="2024">2024</option>
+                              <option value="2023">2023</option>
+                            </select>
 
-  <!-- To Date -->
-  <div class="col-md-3">
-    <b><label for="end-date" class="form-label">To</label></b>
-    <input type="date" id="end-date" class="form-control">
-  </div>
-</div>
-
-<!-- Search Button
-<div class="col-md-3 align-self-end">
-    <button type="submit" class="btn  w-100">Search</button>
-  </div> -->
-
-
+                            <select id="month-select" class="form-control mt-3">
+                            <option value="">All Months</option>
+                            <?php
+                              $months = [
+                                "January", "February", "March", "April", "May", "June",
+                                "July", "August", "September", "October", "November", "December"
+                              ];
+                              foreach ($months as $m):
+                            ?>
+                              <option value="<?= $m ?>" <?= $m === 'April' ? 'selected' : '' ?>><?= $m ?></option>
+                            <?php endforeach; ?>
+                          </select>
 
 
 
@@ -573,7 +568,13 @@ select:hover {
                         </div>
                                                   </div>
                           </div>
+
+
                             <!-- <div class="pdf-excel"> -->
+
+
+
+
 
                             <!-- <div class="pdf-excel">
                               <button class="pdf" ><i class="fas fa-file-pdf" style="color: red;"></i></button>
@@ -583,21 +584,72 @@ select:hover {
                           <?php include '../db/connect.php'; ?>
                           <div class="rentTable section">
                           <table id="rent" class="tableRent" style="font-size: small;">
-                          <thead>
-                            <tr>
-                              <th scope="col">Building</th>
-                              <th scope="col">Collected</th>
-                              <th scope="col">Balances</th>
-                              <th scope="col">Penalties</th>
-                              <th scope="col">Arrears</th>
-                              <th scope="col">Overpayment</th>
-                              <th scope="col">Action</th>
-                            </tr>
-                          </thead>
-                          <tbody id="rent-body">
-                            <!-- Data will be loaded here via JavaScript -->
-                          </tbody>
-                        </table>
+    <thead>
+        <tr>
+            <th scope="col">Building</th>
+            <th scope="col">Collected</th>
+            <th scope="col">Balances</th>
+            <th scope="col">Penalities</th>
+            <th scope="col">Arreas</th>
+            <th scope="col">Overpayment</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody id="rent-body">
+
+    <?php
+    $stmt = $pdo->query("SELECT * FROM building_rent_summary");
+
+    $totalCollected = 0;
+    $totalBalances = 0;
+    $totalPenalties = 0;
+    $totalArrears = 0;
+    $totalOverpayment = 0;
+
+    while ($row = $stmt->fetch()):
+        $building = htmlspecialchars($row['building_name']);
+        // $balances = htmlspecialchars($row['building_name']);
+        $balances = (float)$row['balances'];
+        $collected = (float)$row['amount_collected'];
+        $penalties = (float)$row['penalties'];
+        $arrears = (float)$row['arrears'];
+        $overpayment = (float)$row['overpayment'];
+
+        // Accumulate totals
+        $totalCollected += $collected;
+        $totalBalances +=  $balances;
+        $totalPenalties += $penalties;
+        $totalArrears += $arrears;
+        $totalOverpayment += $overpayment;
+    ?>
+        <tr>
+            <th><?= $building ?></th>
+            <td class="rent paid">KSH&nbsp;<?= number_format($collected, 2) ?></td>
+            <td class="rent balances">KSH&nbsp;<?= number_format($balances, 2) ?></td>
+            <td><div class="rent penalit">KSH&nbsp;<?= number_format($penalties, 2) ?></div></td>
+            <td class="rent collected">KSH&nbsp;<?= number_format($arrears, 2) ?></td>
+            <td class="rent overpayment">KSH&nbsp;<?= number_format($overpayment, 2) ?></td>
+            <td>
+                <button class="btn view">
+                    <a class="view-link" href="building-rent.php?building=<?= urlencode($building); ?>">View</a>
+                </button>
+            </td>
+        </tr>
+    <?php endwhile; ?>
+
+    <!-- Totals Row -->
+    <tr style="font-weight: bold; background-color: #f0f0f0;">
+        <td>Total</td>
+        <td class="rent paid">KSH&nbsp;<?= number_format($totalCollected, 2)?></td>
+        <td class="rent paid">KSH&nbsp;<?= number_format($totalBalances, 2) ?></td>
+        <td><div class="rent penalit">KSH&nbsp;<?= number_format($totalPenalties, 2) ?></div></td>
+        <td class="rent collected">KSH&nbsp;<?= number_format($totalArrears, 2) ?></td>
+        <td class="rent overpayment">KSH&nbsp;<?= number_format($totalOverpayment, 2) ?></td>
+        <td></td>
+    </tr>
+</tbody>
+
+</table>
                           </div>
                       </div>
                     </div>
@@ -694,82 +746,6 @@ document.querySelectorAll('.select-option-container').forEach(container => {
     }
   });
 </script>
-
-<script>
-function filterRentData() {
-  // Get filter values
-  const building = document.getElementById('building-select').value;
-  const startDate = document.getElementById('start-date').value;
-  const endDate = document.getElementById('end-date').value;
-
-  // Create an object with the filter parameters
-  const filters = {
-    building: building,
-    start_date: startDate,
-    end_date: endDate
-  };
-
-  // Send AJAX request to server
-  fetch('get_rent_data.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(filters)
-  })
-  .then(response => response.json())
-  .then(data => {
-    // Clear existing table data
-    const tbody = document.getElementById('rent-body');
-    tbody.innerHTML = '';
-
-    // Get current filter values for the View button URL
-    const currentStartDate = document.getElementById('start-date').value;
-    const currentEndDate = document.getElementById('end-date').value;
-
-    // Populate table with new data
-    data.forEach(row => {
-      const tr = document.createElement('tr');
-
-      // Build URL parameters for View button
-      let params = new URLSearchParams();
-      params.append('building', row.building_name);
-      if (currentStartDate) params.append('start_date', currentStartDate);
-      if (currentEndDate) params.append('end_date', currentEndDate);
-
-      tr.innerHTML = `
-        <td>${row.building_name}</td>
-        <td>ksh${formatCurrency(row.amount_collected)}</td>
-        <td>${formatCurrency(row.balances)}</td>
-        <td>${formatCurrency(row.penalties)}</td>
-        <td>${formatCurrency(row.arrears)}</td>
-        <td>${formatCurrency(row.overpayment)}</td>
-        <td>
-          <a href="building-rent.php?${params.toString()}" class="btn btn-sm btn-info">View</a>
-        </td>
-      `;
-
-      tbody.appendChild(tr);
-    });
-  })
-  .catch(error => console.error('Error:', error));
-}
-
-// Helper function to format currency
-function formatCurrency(amount) {
-  return parseFloat(amount).toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2
-  });
-}
-
-// Load data when page loads
-document.addEventListener('DOMContentLoaded', function() {
-  filterRentData();
-});
-</script>
-
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -1144,94 +1120,7 @@ document.getElementById('searchInput').addEventListener('input', (e) => {
 <!-- end sidebar script -->
 
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const buildingSelect = document.getElementById('building-select');
-    const startDate = document.getElementById('start-date');
-    const endDate = document.getElementById('end-date');
-    const rentBody = document.getElementById('rent-body');
 
-    // Function to fetch and display filtered data
-    function fetchFilteredData() {
-        const building = buildingSelect.value;
-        const fromDate = startDate.value;
-        const toDate = endDate.value;
-
-        // Create URL with query parameters
-        let url = 'fetch_rent_data.php?';
-        if (building) url += `building=${encodeURIComponent(building)}&`;
-        if (fromDate) url += `start_date=${encodeURIComponent(fromDate)}&`;
-        if (toDate) url += `end_date=${encodeURIComponent(toDate)}`;
-
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                updateTable(data);
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
-    // Update the table with filtered data
-    function updateTable(data) {
-        let html = '';
-        let totals = {
-            collected: 0,
-            balances: 0,
-            penalties: 0,
-            arrears: 0,
-            overpayment: 0
-        };
-
-        // Build rows for each building
-        data.forEach(row => {
-            totals.collected += parseFloat(row.amount_collected) || 0;
-            totals.balances += parseFloat(row.balances) || 0;
-            totals.penalties += parseFloat(row.penalties) || 0;
-            totals.arrears += parseFloat(row.arrears) || 0;
-            totals.overpayment += parseFloat(row.overpayment) || 0;
-
-            html += `
-                <tr>
-                    <th>${row.building_name}</th>
-                    <td class="rent paid">KSH&nbsp;${parseFloat(row.amount_collected).toFixed(2)}</td>
-                    <td class="rent balances">KSH&nbsp;${parseFloat(row.balances).toFixed(2)}</td>
-                    <td><div class="rent penalit">KSH&nbsp;${parseFloat(row.penalties).toFixed(2)}</div></td>
-                    <td class="rent collected">KSH&nbsp;${parseFloat(row.arrears).toFixed(2)}</td>
-                    <td class="rent overpayment">KSH&nbsp;${parseFloat(row.overpayment).toFixed(2)}</td>
-                    <td>
-                        <button class="btn view">
-                            <a class="view-link" href="building-rent.php?building=${encodeURIComponent(row.building_name)}">View</a>
-                        </button>
-                    </td>
-                </tr>
-            `;
-        });
-
-        // Add totals row
-        html += `
-            <tr style="font-weight: bold; background-color: #f0f0f0;">
-                <td>Total</td>
-                <td class="rent paid">KSH&nbsp;${totals.collected.toFixed(2)}</td>
-                <td class="rent paid">KSH&nbsp;${totals.balances.toFixed(2)}</td>
-                <td><div class="rent penalit">KSH&nbsp;${totals.penalties.toFixed(2)}</div></td>
-                <td class="rent collected">KSH&nbsp;${totals.arrears.toFixed(2)}</td>
-                <td class="rent overpayment">KSH&nbsp;${totals.overpayment.toFixed(2)}</td>
-                <td></td>
-            </tr>
-        `;
-
-        rentBody.innerHTML = html;
-    }
-
-    // Add event listeners
-    buildingSelect.addEventListener('change', fetchFilteredData);
-    startDate.addEventListener('change', fetchFilteredData);
-    endDate.addEventListener('change', fetchFilteredData);
-
-    // Initial load
-    fetchFilteredData();
-});
-</script>
 
 
     <script

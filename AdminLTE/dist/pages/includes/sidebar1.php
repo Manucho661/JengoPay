@@ -22,7 +22,7 @@
     </div>
     <div class="submenu">
     <a href="../communications/texts.php">💬 In-app Messages</a>
-      <a href="../communications/ann.php">📢 Announcements</a>
+      <a href="../communications/announcements.php">📢 Announcements</a>
 
     </div>
   </div>
