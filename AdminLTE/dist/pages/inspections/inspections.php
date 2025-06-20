@@ -433,7 +433,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                   </div>
                   <div class="entries">Manucho Apartments <span class="entries_label">/5  entries</span>
                   </div>
-                  <div class="scheduledInspectionsTbl">
+                  <div class="scheduledInspectionsTbl" style="overflow: auto;">
                     <table id="maintanance" class=" display summary-table">
                       <thead class="mb-2">
                       <tr>
@@ -773,14 +773,13 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
       <div class="modal fade" id="inspectionModal" tabindex="-1" aria-labelledby="inspectionModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
           <div class="modal-content rounded-2 shadow-lg">
-            <div class="modal-header d-flex justify-content-between align-items-center" style="background-color: #00192D !important; padding: 5px !important;">
+            <div class="modal-header d-flex justify-content-between align-items-center" id="inspectionModalHeader" style="background-color: #00192D !important;">
               <h5 class="modal-title" style="color: #FFA000 !important; margin-left: 5px;" id="inspectionModalLabel">
-                Inspection Details - Unit A12
+                Inspection Details - Ebenezer/Unit A12
               </h5>
-
               <!-- Centered Icon Button -->
               <button type="button" class="btn btn-sm btn-warning mx-auto" id="downloadInspectionBtn" title="Submit Inspection">
-                <i class="bi bi-clipboard2-check-fill"></i>
+                <i class="bi bi-download"></i>
               </button>
 
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -846,7 +845,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
 
             <div class="modal-footer d-flex justify-content-between p-2">
               <small class="text-muted">📅 Inspection Date: <strong>2025-05-26</strong></small>
-              <button type="button" style="background-color:#FFC107 !important; color:#00192D;" class="btn btn-outline" data-bs-dismiss="modal">Close</button>
+              <button type="button" style="background-color:#FFC107 !important; color:#00192D;" class="btn btn-outline" data-bs-dismiss="modal" id="closeInspectionModal">Close</button>
             </div>
           </div>
         </div>
@@ -1043,7 +1042,18 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
     <script>
       document.getElementById('downloadInspectionBtn').addEventListener('click', () => {
           const modalContent = document.querySelector('#inspectionModal .modal-content').cloneNode(true);
-          
+          // remove download button and change styling
+          const clonedDownloadBtn = modalContent.querySelector('#downloadInspectionBtn');
+          const inspectionModalHeader = modalContent.querySelector('#inspectionModalHeader');
+          const closeInspectionModal = modalContent.querySelector('#closeInspectionModal');
+          if (clonedDownloadBtn) {
+            clonedDownloadBtn.remove(); // completely removes it from the PDF
+            inspectionModalHeader.style.backgroundColor="white";
+            closeInspectionModal.remove();
+          }
+
+
+
           const printArea = document.getElementById('printArea');
           printArea.innerHTML = ''; // clear previous
           printArea.appendChild(modalContent);
@@ -1051,7 +1061,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
 
           html2pdf().from(printArea).set({
             margin: 0.5,
-            filename: 'maintenance-request.pdf',
+            filename: 'inspection.pdf',
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2 },
             jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }

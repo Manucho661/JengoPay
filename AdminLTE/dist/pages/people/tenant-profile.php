@@ -595,11 +595,7 @@ try {
                         </div>
                       </div>
                     </div>
-
-
-
-
-             <!-- start row -->
+              <!-- start row -->
               <div class="row mt-4 mb-3">
                 <h6 class=" contact_section_header details mb-2 mt-2"> </i> Rent Details</h6>
                 <div class="col-md-12 ">
@@ -667,11 +663,9 @@ try {
                   </div>
                 </div>
 
-                   <span class="details title mt-3">Details</span>
+                  <span class="details title mt-3">Details</span>
                   <div class="row">
-
-                      <div class="col-md-9 " >
-
+                      <div class="col-md-9 ">
                         <div class="bg-white " style="box-shadow:0 4px 10px rgba(0, 0, 0, 0.1) ; border-radius: 5px;">
                           <div class="row p-2">
                             <div class="col-md-8" >
@@ -701,14 +695,9 @@ try {
                                   </tr>
                                 </thead>
                                 <tbody>
-
-
-
                                     <tr >
-
                                       <td class="month">JANUARY
                                       <!-- Rating Section (stars) -->
-
                                       </td>
                                       <td class="rent">$ 50,000</td>
                                       <td class="rent paid">
@@ -795,64 +784,64 @@ try {
                   </div>
                 </div>
               </div>
+              <!-- Edit Penalty Modal -->
+              <div class="modal fade" id="editPenaltyModal" tabindex="-1" aria-labelledby="editPenaltyModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content shadow">
+                    <form id="editPenaltyForm">
+                      <!-- Header -->
+                      <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
+                        <h5 class="modal-title" id="editPenaltyModalLabel">
+                          <i class="fas fa-pen-alt me-2"></i> Edit Penalty Rates
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
 
+                      <!-- Body -->
+                      <div class="modal-body px-4">
+                        <div class="mb-3">
+                          <label for="penaltyRate" class="form-label">Penalty Rate (%)</label>
+                          <input type="number" class="form-control" id="penaltyRate" name="penaltyRate" min="0" max="100" step="1" placeholder="Enter penalty rate" required>
+                        </div>
+                      </div>
 
-    <!-- Edit Penalty Modal -->
-<div class="modal fade" id="editPenaltyModal" tabindex="-1" aria-labelledby="editPenaltyModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content shadow">
-      <form id="editPenaltyForm">
-        <!-- Header -->
-        <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
-          <h5 class="modal-title" id="editPenaltyModalLabel">
-            <i class="fas fa-pen-alt me-2"></i> Edit Penalty Rates
-          </h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-
-        <!-- Body -->
-        <div class="modal-body px-4">
-          <div class="mb-3">
-            <label for="penaltyRate" class="form-label">Penalty Rate (%)</label>
-            <input type="number" class="form-control" id="penaltyRate" name="penaltyRate" min="0" max="100" step="1" placeholder="Enter penalty rate" required>
-          </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="modal-footer">
-          
-          <button type="button" class="btn btn-sm " style="background-color: white; color: #00192D;" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-sm " style="background-color: #00192D; color: #FFC107;">Save</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+                      <!-- Footer -->
+                      <div class="modal-footer">
+                        
+                        <button type="button" class="btn btn-sm " style="background-color: white; color: #00192D;" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-sm " style="background-color: #00192D; color: #FFC107;">Save</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
 
 
 
                  <!-- end row -->
                 
                  <!-- start row -->
-<div class="row mt-3 align-items-center">
+<div class="row mt-3">
+      <h6 class="mb-0 contact_section_header" style="width:100%;">Pets</h6>
   <div class="col-md-9 flex align-items-center">
-    <h6 class="mb-0 contact_section_header me-3">Pets</h6>
-    <table id="pets-table" class="mb-0">
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Weight</th>
-          <th>License Number</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Pet rows will go here -->
-      </tbody>
-    </table>
+    <div class="bg-white p-2 rounded-2 mt-1" >
+        <table id="pets-table">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Weight</th>
+            <th>License Number</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Pet rows will go here -->
+        </tbody>
+      </table>
+    </div>
   </div>
 
-  <div class="col-md-3">
-    <div class="add-pet-card shadow-sm bg-white px-2 py-2 rounded d-flex align-items-center justify-content-center">
+  <div class="col-md-3 ">
+    <div class="add-pet-card mt-1 shadow-sm bg-white px-2 py-2 rounded d-flex align-items-cen justify-content-center">
       <button class="btn btn-sm rounded pet-modal"
               data-bs-toggle="modal"
               data-bs-target="#addPetModal"

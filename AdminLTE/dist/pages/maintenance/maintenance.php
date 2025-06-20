@@ -415,7 +415,7 @@
               <h6 class="mb-0 contact_section_header summary mb-2"></i> Requests</h6>
 
               <div class="col-md-12">
-                <div class="Table-section bg-white p-2 rounded-2">
+                <div class="Table-section bg-white p-2 rounded-2" >
                   <div class="table-section-header">
                     <div class="entries">
                       <h6 class="mb-0 contact_section_header summary mb-2 p-2 rounded-top" style="background-color: #00192D; color:#FFA000;"> <span class="text-white">Manucho |</span>  5 entries</h6>
@@ -427,7 +427,7 @@
                       <div id="custom-buttons"></div>
                     </div>
                   </div>
-
+                  <div style="overflow: auto;">
                   <table id="requests-table" class=" display summary-table" >
                     <thead class="mb-2">
                       <tr>
@@ -446,6 +446,7 @@
 
                     </tbody>
                   </table>
+                  </div>
                 </div>
               </div>
 

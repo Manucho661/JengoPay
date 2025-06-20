@@ -13,7 +13,15 @@
     </div>
   </div>
 
-  <a href="../people/tenants.php">👥 People</a>
+  <div class="menu-group">
+    <div class="menu-header" onclick="toggleMenu(this)">
+      <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> 👥 People
+    </div>
+    <div class="submenu">
+      <a href="../people/tenants.php">👥 Tenants</a>
+      <a href="../serviceProvider/providers.php">👥 Providers</a>
+    </div>
+  </div>
 
   <!-- Communications -->
   <div class="menu-group">
@@ -37,7 +45,7 @@
       <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> 💼 Financials
     </div>
     <div class="submenu">
-      <a href="#">💵 Expenses</a>
+      <a href="../financials/expenses/expenses.php">💵 Expenses</a>
       <a href="#">📄 Invoices</a>
       <a href="#">📊 Balance Sheet</a>
     </div>
