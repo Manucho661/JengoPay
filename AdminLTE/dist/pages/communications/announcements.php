@@ -839,6 +839,225 @@ body {
 .btn-submit:hover {
   background: #003366;
 }
+.notification-card {
+  width: 100%;
+  max-width: 500px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 25, 45, 0.3);
+  overflow: hidden;
+  border: none;
+  transform: translateY(-20px);
+  transition: transform 0.3s ease;
+  background-color: white;
+}
+
+.notificationpopup-overlay.active .notification-card {
+  transform: translateY(0);
+}
+
+.new-message-header {
+  background-color: #00192D;
+  color: #FFC107;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: none;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.notification-title {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #FFC107;
+  font-size: 24px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  margin: 0;
+  transition: transform 0.2s;
+}
+
+.close-btn:hover {
+  transform: scale(1.2);
+  color: white;
+}
+
+.new-message-body {
+  padding: 25px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #00192D;
+  font-size: 14px;
+}
+
+.form-select, .form-textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.3s;
+  background-color: #f9f9f9;
+}
+
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300192D' stroke='%2300192D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+}
+
+.form-select:focus, .form-textarea:focus {
+  border-color: #FFC107;
+  box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.2);
+  outline: none;
+  background-color: white;
+}
+
+.form-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.draft-btn, .send-btn {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  font-size: 14px;
+}
+
+.draft-btn {
+  background-color: #f5f5f5;
+  color: #d32f2f;
+  border: 1px solid #e0e0e0;
+}
+
+.draft-btn:hover {
+  background-color: #ffebee;
+}
+
+.send-btn {
+  background-color: #FFC107;
+  color: #00192D;
+  font-weight: 600;
+}
+
+.send-btn:hover {
+  background-color: #ffd54f;
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Priority color indicators */
+#priority option[value="Normal"] {
+  color: #388e3c;
+}
+#priority option[value="Urgent"] {
+  color: #d32f2f;
+  font-weight: bold;
+}
+#priority option[value="Reminder"] {
+  color: #ffa000;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .notificationpopup-overlay {
+    padding: 20px;
+    align-items: center;
+  }
+
+  .notification-card {
+    max-width: 100%;
+  }
+
+  .actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .draft-btn, .send-btn {
+    width: 100%;
+  }
+}
+
+.draft-status {
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 4px;
+  background-color: #fff8e1;
+  color: #ff8f00;
+  font-size: 14px;
+  display: none;
+}
+
+.draft-status.show {
+  display: block;
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.scrollable-container {
+  scroll-behavior: smooth;
+  position: relative;
+}
+
+.scroll-btn {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  z-index: 10;
+  display: none;
+}
+
+.scroll-up {
+  top: 10px;
+}
+
+.scroll-down {
+  bottom: 10px;
+}
+
+#announcementList {
+  position: relative;
+  transition: all 0.3s ease;
+}
 </style>
 
 
@@ -1088,7 +1307,7 @@ body {
           <!--begin::Container-->
           <div class="container-fluid">
             <!--begin::Row-->
-            <div class="row">
+  <div class="row">
   <div class="col-sm-12">
     <div class="card announcement-card">
       <div class="card-header" style="color: #FFC107; background-color:#00192D;">
@@ -1216,7 +1435,7 @@ body {
                         </div>
 
                         <div class="notification-filters">
-                            <button class="filter-btn active">
+                            <button class="filter-btn active" onclick="loadAnnouncements()">
                                 <i class="fas fa-inbox"></i> All
                             </button>
                             <!-- <button class="filter-btn">
@@ -1228,13 +1447,15 @@ body {
                             <button class="filter-btn">
                                 <i class="fas fa-exclamation-triangle"></i> Warning
                             </button> -->
-                            <button class="filter-btn">
-                            <i class="fas fa-check-circle"></i> Sent
-                            </button>
-                            <button class="filter-btn">
-                                <i class="fas fa-exclamation-circle"></i> Drafts
-                            </button>
-                            <button class="filter-btn">
+                            <button class="filter-btn" onclick="showSentMessages()">
+  <i class="fas fa-check-circle"></i> Sent
+</button>
+
+                            <button class="filter-btn" onclick="showDrafts()">
+  <i class="fas fa-exclamation-circle"></i> Drafts
+</button>
+
+                            <button class="filter-btn" onclick="showArchivedMessages()">
                                 <i class="fas fa-archive"></i> Archived
                             </button>
                         </div>
@@ -1413,52 +1634,7 @@ body {
 
 <!-- End view announcement -->
 
-<!-- Start of new announcement card-->
-<div class="container-fluid New_Announcement mt-5" id="New_Announcement">
-  <div class="card New_Announcement">
-      <div class="card-header text-white" style="background-color: #00192D; display: flex;">
-          <h5 class="mb-0">New Announcement</h5>
-         <div id="close-new_announcement-btn" class="close-btnOne" > <b> &times;</b> </div>
-      </div>
-      <div class="card-body">
-          <!-- Title -->
-          <div class="mb-3">
-              <label for="announcementTitle" class="form-label">Title</label>
-              <input type="text" class="form-control" id="announcementTitle" placeholder="Enter title">
-          </div>
 
-
-
-          <!-- Message -->
-          <div class="mb-3">
-              <label for="announcementMessage" class="form-label">Message</label>
-              <textarea class="form-control" id="announcementMessage" rows="5" placeholder="Write your message here"></textarea>
-          </div>
-
-          <!-- Recipients -->
-
-            <div class="mb-3 recipients-container" id="recipients-container">
-              <label for="recipientsSelect" class="form-label">Recipients</label>  <i class="fas fa-chevron-down"></i>
-              <div class="panel " >
-
-              <select class="form-select bg-dark text-white" id="recipientsSelect" multiple>
-                  <option value="all">All Employees</option>
-                  <option value="managers">Managers</option>
-                  <option value="tenants">Tenants</option>
-                  <option value="staff">Staff</option>
-              </select>
-
-            </div>
-          </div>
-
-
-      </div>
-      <div class="card-footer d-flex justify-content-end">
-          <button type="button" class="btn btn-secondary me-2" id="saveDraftBtn">Add to Draft</button>
-          <button type="button"  class="btn" style="background-color: #FFC107; color: white;" id="sendAnnouncementBtn">Send</button>
-      </div>
-  </div>
-</div>
 <!-- end of new announcement card-->
 
 
@@ -1496,6 +1672,10 @@ body {
           <textarea id="notes" name="message" class="form-textarea" placeholder="Type your announcement here..." required></textarea>
         </div>
 
+        <div class="draft-status" id="draftStatus">
+          <!-- Draft saved message will appear here -->
+        </div>
+
         <!-- Optional: add file upload support -->
         <!--
         <div class="form-group">
@@ -1505,6 +1685,7 @@ body {
         -->
 
         <div class="actions d-flex justify-content-end">
+        <button type="button" class="draft-btn" id="saveDraftBtn">Save Draft</button>
           <button type="button" class="draft-btn text-danger btn" onclick="closenotificationPopup()">Cancel</button>
           <button type="submit" class="send-btn btn">Send Announcement</button>
         </div>
@@ -1512,6 +1693,365 @@ body {
     </div>
   </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <script>
+function saveAsDraft() {
+  const recipient = document.getElementById('property').value;
+  const priority = document.getElementById('priority').value;
+  const message = document.getElementById('notes').value;
+
+  if (!recipient && !priority && !message) {
+    return; // Don't save empty drafts
+  }
+
+  fetch('save_draft.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      recipient: recipient,
+      priority: priority,
+      message: message
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('draftStatus').innerText = 'Draft saved!';
+  })
+  .catch(error => {
+    console.error('Error saving draft:', error);
+  });
+}
+</script> -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  document.getElementById('saveDraftBtn').addEventListener('click', function () {
+    const recipient = document.getElementById('property').value;
+    const priority = document.getElementById('priority').value;
+    const message = document.getElementById('notes').value;
+
+    // Don't save empty form
+    if (!recipient && !priority && !message) {
+      alert('Cannot save empty draft.');
+      return;
+    }
+
+    fetch('save_draft.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        recipient: recipient,
+        priority: priority,
+        message: message
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('Draft saved successfully!');
+      } else {
+        alert('Failed to save draft.');
+      }
+    })
+    .catch(error => {
+      console.error('Error saving draft:', error);
+      alert('An error occurred while saving the draft.');
+    });
+  });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  document.body.addEventListener('click', function (e) {
+    if (e.target.closest('.archive-btn')) {
+      const btn = e.target.closest('.archive-btn');
+      const id = btn.getAttribute('data-id');
+
+      if (confirm('Are you sure you want to archive this announcement?')) {
+        archiveAnnouncement(id);
+      }
+    }
+  });
+});
+
+function archiveAnnouncement(id) {
+  fetch('archive_announcement.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: id })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert('Announcement archived.');
+      // Optionally reload list (you can detect which view is active)
+      loadAnnouncements(); // or showDrafts(), showSentMessages(), etc.
+    } else {
+      alert('Failed to archive.');
+    }
+  })
+  .catch(err => {
+    console.error('Error archiving:', err);
+    alert('An error occurred.');
+  });
+}
+</script>
+
+<script>
+ function showArchivedMessages() {
+  fetch('get_archived_messages.php')
+    .then(response => response.json())
+    .then(data => {
+      const container = document.getElementById('announcementList');
+      container.innerHTML = '';
+
+      if (!data || data.length === 0) {
+        container.innerHTML = '<p>No archived announcements found.</p>';
+        return;
+      }
+
+      data.forEach(item => {
+        const iconClass = getIconByPriority(item.priority);
+        const html = `
+          <div class="notification-item unread" id="announcement-${item.id}">
+            <div class="notification-icon ${iconClass}">
+              <i class="fas ${getIconSymbol(item.priority)}"></i>
+            </div>
+            <div class="notification-content">
+              <div class="notification-title">
+                <span>${item.priority} Archived to ${item.recipient}</span>
+                <span class="notification-time">${formatTime(item.created_at)}</span>
+              </div>
+              <p class="notification-message">${item.message}</p>
+              <div class="notification-actions">
+                <span class="badge bg-secondary text-light" style="padding: 5px 10px; border-radius: 5px;">
+                  <i class="fas fa-archive"></i> Archived
+                </span>
+              </div>
+            </div>
+          </div>
+        `;
+        container.insertAdjacentHTML('beforeend', html);
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching archived messages:', error);
+    });
+}
+</script>
+
+<script>
+  function getIconByPriority(priority) {
+  switch (priority.toLowerCase()) {
+    case 'urgent': return 'danger';
+    case 'reminder': return 'info';
+    case 'normal': return 'success';
+    default: return 'info';
+  }
+}
+
+function getIconSymbol(priority) {
+  switch (priority.toLowerCase()) {
+    case 'urgent': return 'fa-exclamation-circle';
+    case 'reminder': return 'fa-info-circle';
+    case 'normal': return 'fa-check-circle';
+    default: return 'fa-info-circle';
+  }
+}
+
+function formatTime(datetime) {
+  const d = new Date(datetime);
+  return d.toLocaleString();
+}
+
+</script>
+
+
+<script>
+// Shared utility functions
+function getIconByPriority(priority) {
+    switch (priority.toLowerCase()) {
+        case 'urgent': return 'danger';
+        case 'reminder': return 'info';
+        case 'normal': return 'success';
+        default: return 'info';
+    }
+}
+
+function getIconSymbol(priority) {
+    switch (priority.toLowerCase()) {
+        case 'urgent': return 'fa-exclamation-circle';
+        case 'reminder': return 'fa-info-circle';
+        case 'normal': return 'fa-check-circle';
+        default: return 'fa-info-circle';
+    }
+}
+
+function formatTime(datetime) {
+    const d = new Date(datetime);
+    return d.toLocaleString();
+}
+
+function enableScrolling() {
+    const container = document.getElementById('announcementList');
+    const maxHeight = 500;
+
+    if (container.scrollHeight > maxHeight) {
+        container.style.maxHeight = `${maxHeight}px`;
+        container.style.overflowY = 'auto';
+        container.classList.add('scrollable-container');
+        addScrollButtons(container);
+    }
+}
+
+function addScrollButtons(container) {
+    const scrollUp = document.createElement('button');
+    scrollUp.className = 'scroll-btn scroll-up';
+    scrollUp.innerHTML = '<i class="fas fa-chevron-up"></i>';
+    scrollUp.onclick = () => container.scrollBy({ top: -100, behavior: 'smooth' });
+
+    const scrollDown = document.createElement('button');
+    scrollDown.className = 'scroll-btn scroll-down';
+    scrollDown.innerHTML = '<i class="fas fa-chevron-down"></i>';
+    scrollDown.onclick = () => container.scrollBy({ top: 100, behavior: 'smooth' });
+
+    container.parentNode.insertBefore(scrollUp, container);
+    container.parentNode.appendChild(scrollDown);
+
+    container.addEventListener('scroll', () => {
+        scrollUp.style.display = container.scrollTop > 0 ? 'block' : 'none';
+        scrollDown.style.display = container.scrollTop < container.scrollHeight - container.clientHeight ? 'block' : 'none';
+    });
+}
+
+// Drafts function
+function showDrafts() {
+    fetch('get_drafts.php')
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('announcementList');
+            container.innerHTML = '';
+
+            if (data.length === 0) {
+                container.innerHTML = '<p>No draft announcements found.</p>';
+                return;
+            }
+
+            data.forEach(item => {
+                const iconClass = getIconByPriority(item.priority);
+                const html = `
+                    <div class="notification-item unread" id="draft-${item.id}">
+                        <div class="notification-icon ${iconClass}">
+                            <i class="fas ${getIconSymbol(item.priority)}"></i>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">
+                                <span>${item.priority} Draft to ${item.recipient}</span>
+                                <span class="notification-time">${formatTime(item.created_at)}</span>
+                            </div>
+                            <p class="notification-message">${item.message}</p>
+                            <div class="notification-actions">
+                                <button class="action-btn edit-btn" data-id="${item.id}">
+                                    <i class="fas fa-pencil-alt"></i> Edit
+                                </button>
+                                <button class="action-btn archive-btn" data-id="${item.id}">
+                                    <i class="fas fa-archive"></i> Archive
+                                </button>
+                                <button class="action-btn delete-btn" data-id="${item.id}">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', html);
+            });
+
+            enableScrolling();
+        })
+        .catch(error => console.error('Error loading drafts:', error));
+}
+
+// Event listeners
+document.addEventListener('click', function(e) {
+    const archiveBtn = e.target.closest('.archive-btn');
+    const deleteBtn = e.target.closest('.delete-btn');
+    const editBtn = e.target.closest('.edit-btn');
+
+    if (archiveBtn) {
+        const id = archiveBtn.dataset.id;
+        if (confirm('Archive this announcement?')) archiveAnnouncement(id);
+    }
+
+    if (deleteBtn) {
+        const id = deleteBtn.dataset.id;
+        if (confirm('Delete this announcement?')) deleteAnnouncement(id);
+    }
+
+    if (editBtn) {
+        const id = editBtn.dataset.id;
+        editDraft(id);
+    }
+});
+
+function archiveAnnouncement(id) {
+    console.log('Archiving announcement:', id);
+    // Implement actual archive functionality
+}
+
+function deleteAnnouncement(id) {
+    console.log('Deleting announcement:', id);
+    // Implement actual delete functionality
+}
+
+function editDraft(id) {
+    console.log('Editing draft:', id);
+    // Implement actual edit functionality
+}
+
+// Initialize with drafts view by default
+document.addEventListener('DOMContentLoaded', showDrafts);
+</script>
+
+
+
+<script>
+function loadDraft(draftId) {
+  fetch(`get_draft_by_id.php?id=${draftId}`)
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('property').value = data.recipient;
+      document.getElementById('priority').value = data.priority;
+      document.getElementById('notes').value = data.message;
+
+      // Show the popup if it's hidden
+      document.getElementById("notificationPopup").style.display = "block";
+    })
+    .catch(error => {
+      console.error('Error loading draft:', error);
+    });
+}
+</script>
+
+
 
 <script src="announcements.js"></script>
 
@@ -1545,9 +2085,173 @@ body {
 
   // Function to close the complaint popup
   function closenotificationPopup() {
+    saveAsDraft(); // Save before closing
     document.getElementById("notificationPopup").style.display = "none";
   }
 </script>
+
+<script>
+  const form = document.getElementById('notificationForm');
+  const draftKey = 'notification_draft';
+
+  // Load draft if exists
+  document.addEventListener('DOMContentLoaded', () => {
+    const draft = JSON.parse(localStorage.getItem(draftKey));
+    if (draft) {
+      if (draft.recipient) form.recipient.value = draft.recipient;
+      if (draft.priority) form.priority.value = draft.priority;
+      if (draft.message) form.message.value = draft.message;
+      document.getElementById('draftStatus').textContent = 'Draft loaded';
+    }
+  });
+
+  // Auto-save to localStorage on input change
+  form.addEventListener('input', () => {
+    const data = {
+      recipient: form.recipient.value,
+      priority: form.priority.value,
+      message: form.message.value,
+    };
+    localStorage.setItem(draftKey, JSON.stringify(data));
+    document.getElementById('draftStatus').textContent = 'Draft saved';
+  });
+
+  // Save draft manually (on "Save Draft" button)
+  function saveAsDraft() {
+    const data = {
+      recipient: form.recipient.value,
+      priority: form.priority.value,
+      message: form.message.value,
+    };
+    localStorage.setItem(draftKey, JSON.stringify(data));
+    document.getElementById('draftStatus').textContent = 'Draft manually saved';
+  }
+
+  // Optional: clear draft after successful submission
+  form.addEventListener('submit', () => {
+    localStorage.removeItem(draftKey);
+  });
+
+  // Optional: save on popup close
+  function closenotificationPopup() {
+    saveAsDraft(); // Automatically saves before closing
+    document.getElementById('notificationPopup').style.display = 'none';
+  }
+
+  // Make closenotificationPopup global
+  window.closenotificationPopup = closenotificationPopup;
+  window.saveAsDraft = saveAsDraft;
+</script>
+
+<script>
+function showSentMessages() {
+  fetch('get_sent_messages.php')
+    .then(response => response.json())
+    .then(data => {
+      const container = document.getElementById('announcementList');
+      container.innerHTML = '';
+
+      if (data.length === 0) {
+        container.innerHTML = '<p>No sent announcements found.</p>';
+        return;
+      }
+
+      data.forEach(item => {
+        const iconClass = getIconByPriority(item.priority);
+        const html = `
+          <div class="notification-item unread" id="announcement-${item.id}">
+            <div class="notification-icon ${iconClass}">
+              <i class="fas ${getIconSymbol(item.priority)}"></i>
+            </div>
+            <div class="notification-content">
+              <div class="notification-title">
+                <span>${item.priority} Announcement to ${item.recipient}</span>
+                <span class="notification-time">${formatTime(item.created_at)}</span>
+              </div>
+              <p class="notification-message">${item.message}</p>
+              <div class="notification-actions">
+                <button class="action-btn archive-btn" data-id="${item.id}">
+                  <i class="fas fa-archive"></i> Archive
+                </button>
+                <button class="action-btn delete-btn" data-id="${item.id}">
+                  <i class="fas fa-trash-alt"></i> Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+        container.insertAdjacentHTML('beforeend', html);
+      });
+    })
+    .catch(error => console.error('Error loading sent messages:', error));
+}
+
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+  document.body.addEventListener('click', function (e) {
+    const deleteBtn = e.target.closest('.delete-btn');
+    if (deleteBtn) {
+      const id = deleteBtn.getAttribute('data-id');
+      if (confirm('Are you sure you want to delete this announcement?')) {
+        deleteAnnouncement(id);
+      }
+    }
+  });
+});
+
+function deleteAnnouncement(id) {
+  fetch('delete_announcement.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ id })
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        document.getElementById(`announcement-${id}`).remove();
+        alert('Announcement deleted.');
+      } else {
+        alert('Failed to delete announcement.');
+      }
+    })
+    .catch(error => {
+      console.error('Delete error:', error);
+      alert('An error occurred while deleting.');
+    });
+}
+
+</script>
+
+<script>
+function getIconByPriority(priority) {
+  switch (priority.toLowerCase()) {
+    case 'urgent': return 'danger';
+    case 'reminder': return 'info';
+    case 'normal': return 'success';
+    default: return 'info';
+  }
+}
+
+function getIconSymbol(priority) {
+  switch (priority.toLowerCase()) {
+    case 'urgent': return 'fa-exclamation-circle';
+    case 'reminder': return 'fa-info-circle';
+    case 'normal': return 'fa-check-circle';
+    default: return 'fa-info-circle';
+  }
+}
+
+function formatTime(datetime) {
+  const d = new Date(datetime);
+  return d.toLocaleString();
+}
+</script>
+
+
 
 <script>
   function sendMessage() {
@@ -1573,6 +2277,7 @@ body {
     .then(data => {
       alert(data.message);
       if (data.status === 'success') {
+        alert(Announcement);
         document.getElementById('notes').value = '';
         document.getElementById('property').value = '';
         document.getElementById('priority').value = 'Normal';
@@ -1585,6 +2290,7 @@ body {
     });
   }
 </script>
+
 <script>
 function loadAnnouncements() {
   fetch('fetch_announcements.php')
@@ -1595,32 +2301,62 @@ function loadAnnouncements() {
         container.innerHTML = '';
 
         data.data.forEach(item => {
-          const iconClass = getIconByPriority(item.priority); // Determine icon style
+          const iconClass = getIconByPriority(item.priority);
+          let actions = '';
+
+          if (item.status === 'Sent') {
+            actions = `
+              <button class="action-btn sent-label" disabled>
+                <i class="fas fa-paper-plane"></i> Sent
+              </button>
+              <button class="action-btn archive-btn" data-id="${item.id}">
+                <i class="fas fa-archive"></i> Archive
+              </button>
+            `;
+          } else if (item.status === 'Draft') {
+            actions = `
+
+              <span class="badge bg-warning text-dark" style="padding: 5px 10px; border-radius: 5px;">
+                <i class="fas fa-pencil-alt"></i> Draft
+              </span>
+            `;
+          } else if (item.status === 'Archived') {
+            actions = `
+              <span class="badge bg-secondary" style="padding: 5px 10px; border-radius: 5px;">
+                <i class="fas fa-archive"></i> Archived
+              </span>
+              <button class="action-btn restore-btn" data-id="${item.id}">
+                <i class="fas fa-undo"></i> Restore
+              </button>
+            `;
+          }
 
           const html = `
-            <div class="notification-item unread">
+            <div class="notification-item unread" id="announcement-${item.id}">
               <div class="notification-icon ${iconClass}">
                 <i class="fas ${getIconSymbol(item.priority)}"></i>
               </div>
               <div class="notification-content">
                 <div class="notification-title">
-                  <span>${item.priority} Announcement to ${item.recipient}</span>
+                  <span>${item.priority} ${item.status} to ${item.recipient}</span>
                   <span class="notification-time">${formatTime(item.created_at)}</span>
                 </div>
                 <p class="notification-message">${item.message}</p>
                 <div class="notification-actions">
-                  <button class="action-btn">
-                    <i class="fas fa-check"></i>Draft
-                  </button>
-                  <button class="action-btn">
-                    <i class="fas fa-archive"></i> Archive
+                  ${actions}
+                  <button class="action-btn delete-btn" data-id="${item.id}">
+                    <i class="fas fa-trash-alt"></i> Delete
                   </button>
                 </div>
               </div>
             </div>
           `;
+
           container.insertAdjacentHTML('beforeend', html);
         });
+
+        // Enable scrolling if content exceeds container height
+        enableScrolling();
       }
     })
     .catch(error => console.error('Error loading announcements:', error));
@@ -1646,11 +2382,110 @@ function getIconSymbol(priority) {
 
 function formatTime(datetime) {
   const d = new Date(datetime);
-  return d.toLocaleString(); // or customize as needed
+  return d.toLocaleString(); // Customize formatting if needed
 }
 
-// Call it on page load
+function enableScrolling() {
+  const container = document.getElementById('announcementList');
+  const maxHeight = 500; // Set your desired max height
+
+  if (container.scrollHeight > maxHeight) {
+    container.style.maxHeight = `${maxHeight}px`;
+    container.style.overflowY = 'auto';
+    container.classList.add('scrollable-container');
+    addScrollButtons(container);
+  }
+}
+
+function addScrollButtons(container) {
+  // Create scroll up button
+  const scrollUp = document.createElement('button');
+  scrollUp.className = 'scroll-btn scroll-up';
+  scrollUp.innerHTML = '<i class="fas fa-chevron-up"></i>';
+  scrollUp.onclick = () => container.scrollBy({ top: -100, behavior: 'smooth' });
+
+  // Create scroll down button
+  const scrollDown = document.createElement('button');
+  scrollDown.className = 'scroll-btn scroll-down';
+  scrollDown.innerHTML = '<i class="fas fa-chevron-down"></i>';
+  scrollDown.onclick = () => container.scrollBy({ top: 100, behavior: 'smooth' });
+
+  // Add buttons to container
+  container.parentNode.insertBefore(scrollUp, container);
+  container.parentNode.appendChild(scrollDown);
+
+  // Show/hide buttons based on scroll position
+  container.addEventListener('scroll', () => {
+    scrollUp.style.display = container.scrollTop > 0 ? 'block' : 'none';
+    scrollDown.style.display = container.scrollTop < container.scrollHeight - container.clientHeight ? 'block' : 'none';
+  });
+}
+
 document.addEventListener('DOMContentLoaded', loadAnnouncements);
+
+document.addEventListener('click', function (e) {
+  const archiveBtn = e.target.closest('.archive-btn');
+  const deleteBtn = e.target.closest('.delete-btn');
+  const restoreBtn = e.target.closest('.restore-btn');
+  const editBtn = e.target.closest('.edit-btn');
+
+  if (archiveBtn) {
+    const id = archiveBtn.dataset.id;
+    if (confirm('Archive this announcement?')) archiveAnnouncement(id);
+  }
+
+  if (deleteBtn) {
+    const id = deleteBtn.dataset.id;
+    if (confirm('Delete this announcement?')) deleteAnnouncement(id);
+  }
+
+  if (restoreBtn) {
+    const id = restoreBtn.dataset.id;
+    if (confirm('Restore this announcement?')) restoreAnnouncement(id);
+  }
+
+  if (editBtn) {
+    const id = editBtn.dataset.id;
+    editDraft(id);
+  }
+});
+
+function archiveAnnouncement(id) {
+  // Implement archive functionality
+  console.log('Archiving announcement:', id);
+}
+
+function deleteAnnouncement(id) {
+  // Implement delete functionality
+  console.log('Deleting announcement:', id);
+}
+
+function restoreAnnouncement(id) {
+  // Implement restore functionality
+  console.log('Restoring announcement:', id);
+}
+
+function editDraft(id) {
+  // Implement edit draft functionality
+  console.log('Editing draft:', id);
+}
+</script>
+<script>
+  document.addEventListener('click', function (e) {
+  const archiveBtn = e.target.closest('.archive-btn');
+  const deleteBtn = e.target.closest('.delete-btn');
+
+  if (archiveBtn) {
+    const id = archiveBtn.dataset.id;
+    if (confirm('Archive this announcement?')) archiveAnnouncement(id);
+  }
+
+  if (deleteBtn) {
+    const id = deleteBtn.dataset.id;
+    if (confirm('Delete this announcement?')) deleteAnnouncement(id);
+  }
+});
+
 </script>
 
     <script
@@ -2049,7 +2884,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script> -->
 
-<script>
+<!-- <script>
 document.addEventListener('DOMContentLoaded', function () {
     fetch('fetch_announcements.php')
         .then(response => response.json())
@@ -2078,7 +2913,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                         <i class="fas fa-check"></i> Draft
                                     </button>
                                     <button class="action-btn">
-                                        <i class="fas fa-archive"></i> Archive
+                                        <i class="fas fa-archive" data-id="${item.id}"></i> Archive
                                     </button>
                                 </div>
                             </div>
@@ -2165,7 +3000,7 @@ function submitAnnouncement(event) {
     submitBtn.textContent = 'Send Announcement';
   });
 }
-</script>
+</script> -->
 
     <!--end::Script-->
   </body>

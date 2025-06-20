@@ -1,42 +1,22 @@
 <?php
 header('Content-Type: application/json');
-include '../db/connect.php'; // This defines $pdo (NOT $conn)
+require_once '../db/connect.php'; // $pdo from your earlier config
+
+$recipient = $_POST['recipient'] ?? '';
+$priority = $_POST['priority'] ?? '';
+$message = $_POST['message'] ?? '';
+$status = 'Sent'; // default
+
+if (empty($recipient) || empty($priority) || empty($message)) {
+    echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
+    exit;
+}
 
 try {
-    // Sanitize inputs
-    $recipient = isset($_POST['recipient']) ? trim($_POST['recipient']) : '';
-    $priority  = isset($_POST['priority']) ? trim($_POST['priority']) : '';
-    $message   = isset($_POST['message']) ? trim($_POST['message']) : '';
+    $stmt = $pdo->prepare("INSERT INTO announcements (recipient, priority, message, status) VALUES (?, ?, ?, ?)");
+    $stmt->execute([$recipient, $priority, $message, $status]);
 
-    // Validate inputs
-    if ($recipient === '' || $priority === '' || $message === '') {
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Missing required fields.'
-        ]);
-        exit;
-    }
-
-    // Prepare and execute insert using $pdo
-    $stmt = $pdo->prepare("
-        INSERT INTO announcements (recipient, priority, message, created_at)
-        VALUES (:recipient, :priority, :message, NOW())
-    ");
-
-    $stmt->execute([
-        ':recipient' => $recipient,
-        ':priority'  => $priority,
-        ':message'   => $message
-    ]);
-
-    echo json_encode([
-        'status' => 'success',
-        'message' => 'Announcement sent successfully.'
-    ]);
-
+    echo json_encode(['status' => 'success', 'message' => 'Announcement sent']);
 } catch (PDOException $e) {
-    echo json_encode([
-        'status' => 'error',
-        'message' => 'Database error: ' . $e->getMessage()
-    ]);
+    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
 }
