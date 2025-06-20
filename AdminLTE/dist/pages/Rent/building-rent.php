@@ -861,8 +861,20 @@ foreach ($tenants as $tenant) {
     <button class="btn edit rounded" data-bs-toggle="modal" data-bs-target="#editPenaltyModal">Edit</button>
   </div>
 
+ 
+
+
+
                   </div>
+                           <!-- Rent Chart Section -->
+<div class="p-2 mt-2 rent-chart-wrapper" style="background-color: white;">
+  <div class="label mb-1">RENT VS MONTHS</div>
+  <div class="rent-chart-scroll">
+    <canvas id="rentChart" height="120px"></canvas>
+  </div>
+</div>
            </div>
+
 
 
            <!-- Modal for Editing Penalty Rate -->
@@ -1459,6 +1471,61 @@ document.querySelector('.excel').addEventListener('click', function () {
     XLSX.writeFile(wb, "rent_summary.xlsx");
 });
 </script>
+
+<script>
+  const unit = ''; // Optional: set a specific unit type
+  const year = new Date().getFullYear();
+
+  fetch(`../Rent/actions/get_tenant_rent_chart.php?unit=${encodeURIComponent(unit)}&year=${year}`)
+    .then(response => response.json())
+    .then(monthlyData => {
+      const ctx = document.getElementById('rentChart').getContext('2d');
+      console.log('nice');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          datasets: [{
+            label: 'Rent (Ksh)',
+            data: monthlyData,
+            backgroundColor: '#FFC107',
+            borderColor: '#00192D',
+            borderWidth: 1,
+            barThickness: 12
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { color: '#00192D', font: { size: 10 } },
+              grid: { color: '#eee' }
+            },
+            x: {
+              ticks: { color: '#00192D', font: { size: 10 } },
+              grid: { display: false }
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#00192D',
+              titleColor: '#FFC107',
+              bodyColor: '#fff',
+              titleFont: { size: 10 },
+              bodyFont: { size: 10 }
+            }
+          }
+        }
+      });
+    })
+    .catch(error => console.error('Error fetching tenant rent chart data:', error));
+</script>
+
+
+
 
 <!-- <script>
   document.querySelector(".pdf").addEventListener("click", function () {
