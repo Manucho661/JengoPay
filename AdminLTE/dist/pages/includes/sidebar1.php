@@ -1,6 +1,6 @@
 <nav class="sidebar" style="position:relative;">
   <h5 class="text-center text-uppercase">Dashboard</h5>
-  <a href="../Dashboard/index2.php">📊 Dashboard</a>
+  <a href="../Dashboard/index2.php">📋Dashboard</a>
 
   <!-- Property -->
   <div class="menu-group">

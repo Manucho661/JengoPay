@@ -5,6 +5,9 @@
  *   Website: AdminLTE.io <https://adminlte.io>
  *   License: Open source - MIT <https://opensource.org/licenses/MIT>
  */
+
+
+ 
 :root,
 [data-bs-theme=light] {
   --bs-blue: #0d6efd;
@@ -206,6 +209,13 @@ body {
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
+
+/* header-title */
+.contact_section_header{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    letter-spacing: .5px;
+  }
 /* sidebar */
 .sidebar {
             background-color: #00192D;
@@ -513,18 +523,6 @@ th {
   border-width: 0;
 }
 
-label {
-  display: inline-block;
-}
-
-button {
-  border-radius: 0;
-}
-
-button:focus:not(:focus-visible) {
-  outline: 0;
-}
-
 input,
 button,
 select,
@@ -554,19 +552,6 @@ select:disabled {
 
 [list]:not([type=date]):not([type=datetime-local]):not([type=month]):not([type=week]):not([type=time])::-webkit-calendar-picker-indicator {
   display: none !important;
-}
-
-button,
-[type=button],
-[type=reset],
-[type=submit] {
-  -webkit-appearance: button;
-}
-button:not(:disabled),
-[type=button]:not(:disabled),
-[type=reset]:not(:disabled),
-[type=submit]:not(:disabled) {
-  cursor: pointer;
 }
 
 ::-moz-focus-inner {
@@ -13151,36 +13136,6 @@ textarea.form-control-lg {
   display: flex;
   justify-content: flex-start;
 }
-.sidebar-wrapper .nav-link p {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.sidebar-wrapper .nav-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 1.5rem;
-  max-width: 1.5rem;
-}
-.sidebar-wrapper .sidebar-menu > .nav-item.menu-open .nav-link.active:not(:hover) {
-  --lte-sidebar-menu-active-bg: transparent;
-}
-.sidebar-wrapper .sidebar-menu > .nav-item > .nav-link:active, .sidebar-wrapper .sidebar-menu > .nav-item > .nav-link:focus {
-  color: var(--lte-sidebar-color);
-}
-.sidebar-wrapper .sidebar-menu > .nav-item > .nav-link.active:not(:hover) {
-  color: var(--lte-sidebar-menu-active-color);
-  background-color: var(--lte-sidebar-menu-active-bg);
-}
-.sidebar-wrapper .sidebar-menu > .nav-item.menu-open > .nav-link, .sidebar-wrapper .sidebar-menu > .nav-item:hover > .nav-link,
-.sidebar-wrapper .sidebar-menu > .nav-item > .nav-link:focus {
-  color: var(--lte-sidebar-hover-color);
-  background-color: var(--lte-sidebar-hover-bg);
-}
-.sidebar-wrapper .sidebar-menu > .nav-item > .nav-treeview {
-  background-color: var(--lte-sidebar-submenu-bg);
-}
 .sidebar-wrapper .nav-header {
   color: var(--lte-sidebar-header-color);
   background-color: inherit;
@@ -13191,27 +13146,7 @@ textarea.form-control-lg {
 .sidebar-wrapper .nav-treeview > .nav-item > .nav-link {
   color: var(--lte-sidebar-submenu-color);
 }
-.sidebar-wrapper .nav-treeview > .nav-item > .nav-link:hover, .sidebar-wrapper .nav-treeview > .nav-item > .nav-link:focus {
-  color: var(--lte-sidebar-submenu-hover-color);
-}
-.sidebar-wrapper .nav-treeview > .nav-item > .nav-link.active, .sidebar-wrapper .nav-treeview > .nav-item > .nav-link.active:hover, .sidebar-wrapper .nav-treeview > .nav-item > .nav-link.active:focus {
-  color: var(--lte-sidebar-submenu-active-color);
-  background-color: var(--lte-sidebar-submenu-active-bg);
-}
-.sidebar-wrapper .nav-treeview > .nav-item > .nav-link:hover {
-  background-color: var(--lte-sidebar-submenu-hover-bg);
-}
 
-.sidebar-menu .nav-item > .nav-link {
-  margin-bottom: 0.2rem;
-}
-.sidebar-menu .nav-item > .nav-link .nav-arrow {
-  transition: transform ease-in-out 0.3s;
-  transform: translateY(-50%) /*rtl:append:rotate(180deg)*/;
-  animation-name: fadeIn;
-  animation-duration: 0.3s;
-  animation-fill-mode: both;
-}
 @media (prefers-reduced-motion: reduce) {
   .sidebar-menu .nav-item > .nav-link .nav-arrow {
     transition: none;
@@ -13222,51 +13157,11 @@ textarea.form-control-lg {
   position: absolute;
   right: 1rem;
 }
-.sidebar-menu .nav-link > .nav-arrow,
-.sidebar-menu .nav-link > p > .nav-arrow {
-  position: absolute;
-  top: 50%;
-  right: 1rem;
-}
-.sidebar-menu .nav-link {
-  position: relative;
-  transition: width ease-in-out 0.3s;
-  border-radius: 0.375rem;
-}
+
 @media (prefers-reduced-motion: reduce) {
   .sidebar-menu .nav-link {
     transition: none;
   }
-}
-.sidebar-menu .nav-link p {
-  display: inline;
-  padding-left: 0.5rem;
-  margin: 0;
-}
-.sidebar-menu .nav-header {
-  padding: 0.5rem 0.75rem;
-  font-size: 0.9rem;
-}
-.sidebar-menu .nav-treeview {
-  display: none;
-  padding: 0;
-  list-style: none;
-}
-.nav-indent .sidebar-menu .nav-treeview {
-  padding-left: 0.5rem;
-}
-.sidebar-menu .menu-open > .nav-treeview {
-  display: block;
-}
-.sidebar-menu .menu-open > .nav-link .nav-arrow {
-  transform: translateY(-50%) rotate(90deg) /*rtl:ignore*/;
-}
-
-.nav-compact.nav-indent .nav-treeview {
-  padding-left: 0;
-}
-.nav-compact.nav-indent .nav-treeview .nav-item {
-  padding-left: 0.5rem;
 }
 
 .sidebar-mini.sidebar-collapse.nav-indent .app-sidebar:hover .nav-treeview {
@@ -13415,14 +13310,7 @@ textarea.form-control-lg {
   margin-left: calc(var(--lte-sidebar-width) * -1);
 }
 
-.sidebar-expand {
-  /* stylelint-disable-next-line scss/selector-no-union-class-name */
-  /* stylelint-disable-next-line scss/selector-no-union-class-name */
-  /* stylelint-disable-next-line scss/selector-no-union-class-name */
-  /* stylelint-disable-next-line scss/selector-no-union-class-name */
-  /* stylelint-disable-next-line scss/selector-no-union-class-name */
-  /* stylelint-disable-next-line scss/selector-no-union-class-name */
-}
+
 @media (min-width: 576px) {
   .sidebar-expand-sm.layout-fixed .app-main-wrapper {
     display: flex;
@@ -13834,20 +13722,6 @@ textarea.form-control-lg {
   animation-fill-mode: both;
 }
 
-.sidebar-menu .nav-link p,
-.app-sidebar .brand-text,
-.app-sidebar .logo-xs,
-.app-sidebar .logo-xl {
-  transition: margin-left 0.3s linear, opacity 0.3s ease, visibility 0.3s ease;
-}
-@media (prefers-reduced-motion: reduce) {
-  .sidebar-menu .nav-link p,
-  .app-sidebar .brand-text,
-  .app-sidebar .logo-xs,
-  .app-sidebar .logo-xl {
-    transition: none;
-  }
-}
 
 .app-loaded.sidebar-mini.sidebar-collapse .sidebar-menu .nav-link p,
 .app-loaded.sidebar-mini.sidebar-collapse .brand-text {

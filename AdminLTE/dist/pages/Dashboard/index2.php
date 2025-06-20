@@ -115,9 +115,6 @@
     object-fit: cover;
     border: 4px solid #007bff;
   }
-  .profile-details h2 {
-    /* margin-bottom: 10px; */
-  }
   .profile-details p {
     /* /margin: 5px 0; */
     color: #6c757d;
@@ -299,6 +296,59 @@
         .app-wrapper{
         background-color: rgba(128,128,128, 0.1);
       }
+
+
+      .summary-card {
+    background: white;
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+  }
+
+  .summary-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+  }
+
+  .summary-icon {
+    font-size: 2rem;
+    border-radius: 50%;
+    padding: 10px;
+    margin-bottom: 10px;
+    display: inline-block;
+  }
+
+  .icon-properties {
+    background: #0d6efd1a;
+    color: #FFC107;
+  }
+
+  .icon-tenants {
+    background: #1987541a;
+    color: #FFC107;
+  }
+
+  .icon-rent {
+    background: #6610f21a;
+    color: #FFC107;
+  }
+
+  .icon-pending {
+    background: #dc35451a;
+    color: #FFC107;
+  }
+
+  .summary-value {
+    font-weight: 700;
+    font-size: 1.6rem;
+  }
+
+  .summary-label {
+    font-size: 1rem;
+    color: rgb(0 28 63 / 60%); 
+    font-weight:600;
+  }
 </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -563,68 +613,37 @@
           <!--begin::Container-->
           <div class="container-fluid">
             <!-- Info boxes -->
-            <div class="row">
-              <div class="col-12 col-sm-6 col-md-3">
-                <div class="info-box">
-                  <span class="info-box-icon text-bg-primary shadow-sm">
-                    <i class="fas fa-home"></i>
-                  </span>
-                  <div class="info-box-content">
-                    <span class="info-box-text">PROPERTIES</span>
-                    <span class="info-box-number">
-                      15
-                      <small></small>
-                    </span>
-                  </div>
-                  <!-- /.info-box-content -->
+            <h3 class="mb-0 contact_section_header">📋Dashboard</h3>
+            <p class="text-muted">Manage your Properties</p>
+            <div class="row mb-2 g-3">
+              <div class="col-md-3">
+                <div class="card summary-card text-center p-3 rounded-2">
+                  <div class="summary-icon icon-properties"><i class="bi bi-house-door-fill"></i></div>
+                  <div class="summary-value">12</div>
+                  <div class="summary-label">Total Properties</div>
                 </div>
-                <!-- /.info-box -->
               </div>
-              <!-- /.col -->
-              <div class="col-12 col-sm-6 col-md-3">
-                <div class="info-box">
-                  <span class="info-box-icon text-bg-danger shadow-sm">
-                    <i class="fas fa-wrench icon"></i>
-                  </span>
-                  <div class="info-box-content">
-                    <span class="info-box-text">Repairs</span>
-                    <span class="info-box-number">70</span>
-                  </div>
-                  <!-- /.info-box-content -->
+              <div class="col-md-3">
+                <div class="card summary-card text-center p-3 rounded-2">
+                  <div class="summary-icon icon-tenants"><i class="bi bi-people-fill"></i></div>
+                  <div class="summary-value">87</div>
+                  <div class="summary-label">Active Tenants</div>
                 </div>
-                <!-- /.info-box -->
               </div>
-              <!-- /.col -->
-              <!-- fix for small devices only -->
-              <!-- <div class="clearfix hidden-md-up"></div> -->
-              <div class="col-12 col-sm-6 col-md-3">
-                <div class="info-box">
-                  <span class="info-box-icon text-bg-success shadow-sm">
-                    <i class="fas fa-user"></i>
-                  </span>
-                  <div class="info-box-content">
-                    <span class="info-box-text">Tenants</span>
-                    <span class="info-box-number">760</span>
-                  </div>
-                  <!-- /.info-box-content -->
+              <div class="col-md-3">
+                <div class="card summary-card text-center p-3 rounded-2">
+                  <div class="summary-icon icon-rent"><i class="bi bi-cash-stack"></i></div>
+                  <div class="summary-value">Ksh 320,000</div>
+                  <div class="summary-label">Total Rent Collected</div>
                 </div>
-                <!-- /.info-box -->
               </div>
-              <!-- /.col -->
-              <div class="col-12 col-sm-6 col-md-3">
-                <div class="info-box">
-                  <span class="info-box-icon text-bg-warning shadow-sm">
-                    <i class="bi bi-people-fill"></i>
-                  </span>
-                  <div class="info-box-content">
-                    <span class="info-box-text">ACTIVE TENANTS</span>
-                    <span class="info-box-number">2,000</span>
-                  </div>
-                  <!-- /.info-box-content -->
+              <div class="col-md-3">
+                <div class="card summary-card text-center p-3 rounded-2">
+                  <div class="summary-icon icon-pending"><i class="bi bi-exclamation-triangle-fill"></i></div>
+                  <div class="summary-value">Ksh 45,000</div>
+                  <div class="summary-label">Pending Rent</div>
                 </div>
-                <!-- /.info-box -->
               </div>
-              <!-- /.col -->
             </div>
             <!-- /.row -->
             <!--begin::Row-->

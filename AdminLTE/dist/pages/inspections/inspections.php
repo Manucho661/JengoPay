@@ -316,7 +316,6 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
             <div class="row">
               <div class="col-sm-8">
                 <h3 class="mb-0 contact_section_header"> <i class="fas fa-search icon title-icon"></i>&nbsp; INSPECTIONS MANAGEMENT</h3>
-
               </div>
 
               <div class="col-sm-4 d-flex justify-content-end">
