@@ -1,32 +1,25 @@
 <?php
 header('Content-Type: application/json');
-
-require_once '../db/connect.php'; // This must define $pdo
+require_once '../db/connect.php';
 
 $id = $_POST['id'] ?? null;
 
-if (!$id || !is_numeric($id)) {
-    echo json_encode(['status' => 'error', 'message' => 'Invalid or missing ID']);
+if (!$id) {
+    echo json_encode(['success' => false, 'error' => 'No draft ID provided']);
     exit;
 }
 
 try {
-    // Optional: Ensure you're deleting only if status is 'Draft'
-    $stmt = $pdo->prepare("DELETE FROM announcements WHERE id = :id AND status = 'Draft'");
-    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-    $stmt->execute();
+    // Only delete if status is 'Draft'
+    $stmt = $pdo->prepare("DELETE FROM announcements WHERE id = ? AND status = 'Draft'");
+    $stmt->execute([$id]);
 
     if ($stmt->rowCount() > 0) {
-        echo json_encode(['status' => 'success']);
+        echo json_encode(['success' => true]);
     } else {
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Draft not found or already deleted'
-        ]);
+        echo json_encode(['success' => false, 'error' => 'No draft found with that ID']);
     }
 } catch (PDOException $e) {
-    echo json_encode([
-        'status' => 'error',
-        'message' => 'Database error: ' . $e->getMessage()
-    ]);
+    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 }
+?>

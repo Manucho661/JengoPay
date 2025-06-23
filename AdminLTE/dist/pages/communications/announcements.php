@@ -1913,137 +1913,83 @@ function formatTime(datetime) {
 
 
 <script>
-  // Drafts function
-  function showDrafts() {
-    fetch('get_drafts.php')
-      .then(response => response.json())
-      .then(data => {
-        const container = document.getElementById('announcementList');
-        container.innerHTML = '';
+function showDrafts() {
+  fetch('get_drafts.php')
+    .then(response => response.json())
+    .then(data => {
+      const container = document.getElementById('announcementList');
+      container.innerHTML = '';
 
-        if (data.length === 0) {
-          container.innerHTML = '<p>No draft found.</p>';
-          return;
-        }
+      if (data.length === 0) {
+        container.innerHTML = '<p>No drafts found.</p>';
+        return;
+      }
 
-        data.forEach(item => {
-          const iconClass = getIconByPriority(item.priority);
-          const html = `
-            <div class="notification-item unread" id="announcement-${item.id}">
-              <div class="notification-icon ${iconClass}">
-                <i class="fas ${getIconSymbol(item.priority)}"></i>
+      data.forEach(item => {
+        const iconClass = getIconByPriority(item.priority);
+        const html = `
+          <div class="notification-item unread" id="announcement-${item.id}">
+            <div class="notification-icon ${iconClass}">
+              <i class="fas ${getIconSymbol(item.priority)}"></i>
+            </div>
+            <div class="notification-content">
+              <div class="notification-title">
+                <span>${item.priority} Draft to ${item.recipient}</span>
+                <span class="notification-time">${formatTime(item.created_at)}</span>
               </div>
-              <div class="notification-content">
-                <div class="notification-title">
-                  <span>${item.priority} Draft to ${item.recipient}</span>
-                  <span class="notification-time">${formatTime(item.created_at)}</span>
-                </div>
-                <p class="notification-message">${item.message}</p>
-                <div class="notification-actions">
-                  <button class="action-btn edit-btn" data-id="${item.id}">
-                    <i class="fas fa-pencil-alt"></i> Edit
-                  </button>
-                  <button class="action-btn archive-btn" data-id="${item.id}">
-                    <i class="fas fa-archive"></i> Archive
-                  </button>
-                  <button class="action-btn delete-btn" data-id="${item.id}">
-                    <i class="fas fa-trash-alt"></i> Delete
-                  </button>
-                </div>
+              <p class="notification-message">${item.message}</p>
+              <div class="notification-actions">
+                <button class="action-btn edit-btn" data-id="${item.id}">
+                  <i class="fas fa-pencil-alt"></i> Edit
+                </button>
+                <button class="action-btn delete-btn" data-id="${item.id}">
+                  <i class="fas fa-trash-alt"></i> Delete
+                </button>
               </div>
             </div>
-          `;
-          container.insertAdjacentHTML('beforeend', html);
+          </div>
+        `;
+        container.insertAdjacentHTML('beforeend', html);
+      });
+
+      // Add event listeners for drafts
+      document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          deleteDraft(this.getAttribute('data-id'));
         });
-
-        // Enable scrolling if content exceeds container height
-        enableScrolling();
-      })
-      .catch(error => console.error('Error loading drafts:', error));
-  }
-
-  // Global click listener for edit, archive, delete
-  document.addEventListener('click', function (e) {
-    const deleteBtn = e.target.closest('.delete-btn');
-    const archiveBtn = e.target.closest('.archive-btn');
-    const editBtn = e.target.closest('.edit-btn');
-
-    if (deleteBtn) {
-      const id = deleteBtn.dataset.id;
-      if (confirm('Are you sure you want to delete this draft?')) {
-        deleteDraft(id);
-      }
-    }
-
-    if (archiveBtn) {
-      const id = archiveBtn.dataset.id;
-      if (confirm('Archive this draft?')) {
-        archiveDraft(id);
-      }
-    }
-
-    if (editBtn) {
-      const id = editBtn.dataset.id;
-      editDraft(id);
-    }
-  });
-
-  // Delete function
-  function deleteDraft(id) {
-    fetch('delete_draft.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: `id=${encodeURIComponent(id)}`
+      });
     })
-    .then(response => response.json())
-    .then(data => {
-      if (data.status === 'success') {
-        const item = document.getElementById(`announcement-${id}`);
-        if (item) item.remove();
-        showNotification('Draft successfully deleted.', 'success');
-      } else {
-        showNotification(data.message || 'Failed to delete draft.', 'error');
-      }
-    })
-    .catch(error => {
-      console.error('Error deleting draft:', error);
-      showNotification('An error occurred while deleting.', 'error');
-    });
-  }
-
-  // Archive function (stub - replace with actual API call)
-  function archiveDraft(id) {
-    fetch('archive_draft.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: `id=${encodeURIComponent(id)}`
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.status === 'success') {
-        showNotification('Draft archived successfully.', 'success');
-        showDrafts(); // refresh list
-      } else {
-        showNotification('Failed to archive draft.', 'error');
-      }
-    })
-    .catch(error => {
-      console.error('Error archiving draft:', error);
-      showNotification('An error occurred while archiving.', 'error');
-    });
-  }
-
-  // Edit function (redirect or open modal)
-  function editDraft(id) {
-  console.log("Editing draft ID:", id); // <-- check console
-  window.location.href = `edit_draft.php?id=${id}`;
+    .catch(error => console.error('Error loading drafts:', error));
 }
 
+function deleteDraft(draftId) {
+  if (!confirm('Are you sure you want to permanently delete this draft? This action cannot be undone.')) {
+    return;
+  }
+
+  fetch('delete_draft.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: `id=${draftId}`
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById(`announcement-${draftId}`)?.remove();
+      showAlert('Draft deleted successfully', 'success');
+    } else {
+      showAlert('Failed to delete draft: ' + (data.error || data.message), 'error');
+    }
+  })
+  .catch(error => {
+    console.error('Error deleting draft:', error);
+    showAlert('An error occurred while deleting the draft', 'error');
+  });
+}
 </script>
+
 
 <script>
   document.addEventListener('click', function (e) {
@@ -2398,12 +2344,44 @@ function showSentMessages() {
         `;
         container.insertAdjacentHTML('beforeend', html);
       });
+
+      // Add event listeners for sent messages
+      document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          deleteSentMessage(this.getAttribute('data-id'));
+        });
+      });
     })
     .catch(error => console.error('Error loading sent messages:', error));
 }
 
-</script>
+function deleteSentMessage(messageId) {
+  if (!confirm('Are you sure you want to permanently delete this sent announcement? This action cannot be undone.')) {
+    return;
+  }
 
+  fetch('delete_message.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: `id=${messageId}`
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById(`announcement-${messageId}`)?.remove();
+      showAlert('Sent announcement deleted successfully', 'success');
+    } else {
+      showAlert('Failed to delete announcement: ' + (data.error || data.message), 'error');
+    }
+  })
+  .catch(error => {
+    console.error('Error deleting sent message:', error);
+    showAlert('An error occurred while deleting the announcement', 'error');
+  });
+}
+</script>
 <!-- <script>
   document.addEventListener('DOMContentLoaded', function () {
   document.body.addEventListener('click', function (e) {
