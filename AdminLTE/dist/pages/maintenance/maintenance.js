@@ -116,32 +116,29 @@ function populateRequestsTable(requests) {
         </div>
       </td>
 
-      <td style="vertical-align: middle;">
-      <div style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
-      <div class="d-flex gap-15px" style="align-items: center;">
-      <div>
-        <button class="btn btn-sm view-btn"
-          style="background-color: #193042; margin-left:10px; color:#fff;"
-          title="View"
-          data-id="${requests.id}"
-          data-status="${status}">
-          <i class="fas fa-eye"></i>
-        </button>
-      </div>
-      <div class="dropdown">
-            <button class="btn btn-sm more-btn d-flex" data-bs-toggle="dropdown" aria-expanded="false">⋮</button>
+      <td class="align-middle">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <!-- View button -->
+          <button class="btn btn-sm view-btn"
+            style="background-color: #193042; color:#fff;"
+            title="View"
+            data-id="${requests.id}"
+            data-status="${status}">
+            <i class="fas fa-eye"></i>
+          </button>
+
+          <!-- Dropdown -->
+          <div class="dropdown">
+            <button class="btn btn-sm more-btn d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">⋮</button>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item assign-provider" href="#" style="color: #FFA000 !important;"> <i class="fas fa-tasks"></i> Assign Provider</a></li>
-              <li><a class="dropdown-item mark-complete" href="#" style="color: #FFA000 !important;"> <i class="fas fa-tasks"></i> Mark Complete</a></li>
-              <li><a class="dropdown-item view-payment" href="#" style="color: #FFA000 !important;"  data-request-id="${requests.id}" ><i class="fas fa-eye"></i> View Payment</a></li>
-              <li>
-              <a class="dropdown-item delete-request" href="#" style="color: #F87171 !important;" data-request-id="${requests.id}"><i class="fas fa-trash"></i> Delete Request</a>
-            </li>
+              <li><a class="dropdown-item assign-provider" href="#" style="color: #FFA000;"><i class="fas fa-tasks"></i> Assign Provider</a></li>
+              <li><a class="dropdown-item mark-complete" href="#" style="color: #FFA000;"><i class="fas fa-tasks"></i> Mark Complete</a></li>
+              <li><a class="dropdown-item view-payment" href="#" style="color: #FFA000;" data-request-id="${requests.id}"><i class="fas fa-eye"></i> View Payment</a></li>
+              <li><a class="dropdown-item delete-request" href="#" style="color: #F87171;" data-request-id="${requests.id}"><i class="fas fa-trash"></i> Delete Request</a></li>
             </ul>
           </div>
-    </div>
-      </div>
-    </td>
+        </div>
+      </td>
     `;
    // Add the event listener here AFTER the row is in memory
      const tempDiv = document.createElement('div');
@@ -442,3 +439,38 @@ document.getElementById("paymentForm").addEventListener("submit", function (e) {
       alert("Something went wrong");
     });
   });
+
+  //Requests Applications
+  function showProposal() {
+  const maintenanceRequestModalEl = document.getElementById('maintenanceRequestModal');
+  const maintenanceRequestModalInstance = bootstrap.Modal.getInstance(maintenanceRequestModalEl);
+
+  if (maintenanceRequestModalInstance) {
+    maintenanceRequestModalInstance.hide(); // 👈 call it properly
+  }
+
+  const modal = document.getElementById("proposalContainer");
+  const backdrop = document.getElementById("customBackdrop");
+
+  backdrop.classList.remove("d-none");
+  modal.classList.remove("d-none");
+
+  setTimeout(() => {
+    backdrop.classList.add("show");
+    modal.classList.add("show", "d-block");
+  }, 10);
+}
+
+  function hideProposal() {
+    const modal = document.getElementById("proposalContainer");
+    const backdrop = document.getElementById("customBackdrop");
+
+    modal.classList.remove("show");
+    backdrop.classList.remove("show");
+
+    setTimeout(() => {
+      modal.classList.remove("d-block");
+      modal.classList.add("d-none");
+      backdrop.classList.add("d-none");
+    }, 300);
+  }
