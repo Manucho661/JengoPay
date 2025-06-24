@@ -17,14 +17,21 @@ if (!$tenant) {
     exit;
 }
 
+// Format data
 $name = htmlspecialchars($tenant['tenant_name']);
 $unit = htmlspecialchars($tenant['unit_code']);
+$property = htmlspecialchars($tenant['property_name'] ?? 'XXX');
 $amount = number_format((float)($tenant['amount_paid']), 2);
 $penalty = number_format((float)($tenant['penalty']), 2);
 $penaltyDays = (int)$tenant['penalty_days'];
 $arrears = number_format((float)($tenant['arrears']), 2);
 $overpayment = number_format((float)($tenant['overpayment']), 2);
-$date = !empty($tenant['payment_date']) ? date("d F Y", strtotime($tenant['payment_date'])) : date("d F Y");
+$balance = number_format((float)($tenant['balances']), 2);
+$paymentMode = htmlspecialchars($tenant['payment_mode'] ?? 'Mpesa');
+$reference = htmlspecialchars($tenant['reference_number'] ?? 'TCO2X12E80');
+$date = !empty($tenant['payment_date']) ? date("d/m/Y", strtotime($tenant['payment_date'])) : date("d/m/Y");
+$printDate = date("d/m/Y H:i");
+$receiptNo = "RC".str_pad($tenantId, 5, '0', STR_PAD_LEFT);
 ?>
 
 <!DOCTYPE html>
@@ -32,150 +39,182 @@ $date = !empty($tenant['payment_date']) ? date("d F Y", strtotime($tenant['payme
 <head>
     <title>Tenant Receipt</title>
     <style>
-     body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f5f5f5;
-    text-align: center;
-}
-
-.receipt-box-centered {
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 30px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0,0,0,0.05);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.receipt-header {
-    width: 100%;
-    background-color: #00192D;
-    color: #FFC107;
-    padding: 15px 0;
-    border-radius: 8px;
-}
-
-.receipt-header h2 {
-    margin: 0;
-    font-size: 22px;
-}
-
-.receipt-details {
-    margin: 20px 0;
-}
-
-.receipt-details p {
-    margin: 5px 0;
-    font-size: 15px;
-}
-
-.divider {
-    width: 80%;
-    height: 1px;
-    background-color: #ccc;
-    border: none;
-    margin: 20px 0;
-}
-
-.receipt-table-centered {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-.receipt-table-centered th,
-.receipt-table-centered td {
-    padding: 10px;
-    border: 1px solid #ccc;
-}
-
-.receipt-table-centered th {
-    background-color: #00192D;
-    color: #FFC107;
-}
-
-.receipt-table-centered td:first-child {
-    text-align: left;
-}
-
-.receipt-table-centered td:last-child {
-    text-align: right;
-}
-
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: white;
+        }
+        .receipt-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0;
+        }
+        .company-header {
+            text-align: center;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+        .company-header h1 {
+            font-size: 18px;
+            margin: 5px 0;
+            color: black;
+        }
+        .company-header p {
+            font-size: 12px;
+            margin: 2px 0;
+            color: black;
+        }
+        .receipt-title {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 1px solid black;
+        }
+        .receipt-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        .receipt-table td {
+            padding: 5px;
+            border: none;
+            vertical-align: top;
+        }
+        .receipt-table td:first-child {
+            font-weight: bold;
+            width: 30%;
+        }
+        .amount-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        .amount-table td {
+            padding: 5px;
+            border: none;
+        }
+        .amount-table td:last-child {
+            text-align: right;
+        }
+        .divider {
+            border-top: 1px dashed black;
+            margin: 10px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+        }
+        .signature-line {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+        @media print {
+            .print-button {
+                display: none;
+            }
+            body {
+                padding: 0;
+            }
+        }
     </style>
 </head>
 <body>
-<div class="receipt-box-centered">
-    <div class="receipt-header">
-        <h2>Payment Receipt</h2>
+<div class="receipt-container">
+    <div class="company-header">
+        <h1>SUNLAND REAL ESTATES LTD</h1>
+        <p>P.O BOX 37987 - 00100 - 8TH FLOOR</p>
+        <p>INTERNATIONAL LIFE HSE, MAMA NGINA ST.</p>
+        <p>TEL: 0733717726, 0202136440, 0202225507/8,</p>
+        <p>EMAIL: PROPERTYMANAGEMENT@SUNLAND.CO.KE</p>
     </div>
 
-    <div class="receipt-details">
-        <p><strong>Date:</strong> <?= $date ?></p>
-        <p><strong>Tenant Name:</strong> <?= $name ?></p>
-        <p><strong>Unit Code:</strong> <?= $unit ?></p>
-    </div>
+    <div class="divider"></div>
 
-    <hr class="divider">
+    <div class="receipt-title">RECEIPT</div>
 
-    <table class="receipt-table-centered">
-        <thead>
-            <tr>
-                <th>Description</th>
-                <th>Amount (KSH)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Rent</td>
-                <td><?= $amount ?></td>
-            </tr>
-            <tr>
-                <td>Penalty (<?= $penaltyDays ?> late days)</td>
-                <td><?= $penalty ?></td>
-            </tr>
-            <tr>
-                <td>Arrears</td>
-                <td><?= $arrears ?></td>
-            </tr>
-            <tr>
-                <td>Overpayment</td>
-                <td><?= $overpayment ?></td>
-            </tr>
-        </tbody>
+    <table class="receipt-table">
+        <tr>
+            <td>Received From:</td>
+            <td><?= $name ?></td>
+            <td>Receipt No.:</td>
+            <td><?= $receiptNo ?></td>
+        </tr>
+        <tr>
+            <td>A/c NO:</td>
+            <td>TID<?= $tenantId ?></td>
+            <td>Date:</td>
+            <td><?= $date ?></td>
+        </tr>
+        <tr>
+            <td>Unit No:</td>
+            <td><?= $unit ?></td>
+            <td>Payment Mode:</td>
+            <td><?= $paymentMode ?></td>
+        </tr>
+        <tr>
+            <td>Property:</td>
+            <td><?= $property ?></td>
+            <td>Reference No.:</td>
+            <td><?= $reference ?></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Amount (KES):</td>
+            <td><?= $amount ?></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Balance:</td>
+            <td><?= $balance ?></td>
+        </tr>
     </table>
-<!-- </div> -->
-<!-- </div> -->
 
-<p>Thankyou for The Payment!</p>
+    <div class="divider"></div>
 
-    <!-- Branding Footer -->
-<div style="margin-top: 50px; text-align: center;">
-    <span style="font-family: Arial, sans-serif;">
-        <b style="
-            padding: 4px 10px;
-            background-color: #FFC107;
-            border: 2px solid #FFC107;
-            border-top-left-radius: 5px;
-            font-weight: bold;
-            color: #00192D;
-            display: inline-block;
-        ">BT</b><b style="
-            padding: 4px 10px;
-            border: 2px solid #FFC107;
-            border-bottom-right-radius: 5px;
-            font-weight: bold;
-            color: #FFC107;
-            display: inline-block;
-        ">JENGOPAY</b>
-    </span>
+    <div class="receipt-title">DESCRIPTION</div>
+
+    <table class="amount-table">
+        <tr>
+            <td>Water</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Rent prepayment</td>
+            <td><?= $amount ?></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><?= $balance ?></td>
+        </tr>
+    </table>
+
+    <div class="divider"></div>
+
+    <table class="receipt-table">
+        <tr>
+            <td>Received By:</td>
+            <td>N/A</td>
+            <td>Signature:</td>
+            <td></td>
+        </tr>
+    </table>
+
+    <div class="footer">
+        <p>Thank You For Your Business</p>
+        <div class="divider"></div>
+        <p>PRINTED: <?= $printDate ?></p>
+    </div>
 </div>
-</div>
-
 
 <div class="print-button">
     <button onclick="window.print()" style="
@@ -187,12 +226,9 @@ $date = !empty($tenant['payment_date']) ? date("d F Y", strtotime($tenant['payme
         font-size: 16px;
         font-weight: bold;
         cursor: pointer;
-        transition: background-color 0.3s ease, color 0.3s ease;
-    "
-    onmouseover="this.style.backgroundColor='#FFC107'; this.style.color='#00192D';"
-    onmouseout="this.style.backgroundColor='#00192D'; this.style.color='#FFC107';"
-    >Print Receipt</button>
+        margin: 20px auto;
+        display: block;
+    ">Print Receipt</button>
 </div>
-
 </body>
 </html>
