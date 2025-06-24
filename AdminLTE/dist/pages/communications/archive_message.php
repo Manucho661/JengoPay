@@ -4,20 +4,19 @@ require_once '../db/connect.php';
 
 $id = $_POST['id'] ?? null;
 
-if (!$id) {
-    echo json_encode(['success' => false, 'error' => 'No draft ID provided']);
+if (!$id || !is_numeric($id)) {
+    echo json_encode(['success' => false, 'error' => 'Invalid message ID']);
     exit;
 }
 
 try {
-    // Only delete if status is 'Draft'
-    $stmt = $pdo->prepare("DELETE FROM announcements WHERE id = ? AND status = 'Draft'");
+    $stmt = $pdo->prepare("UPDATE announcements SET status = 'Archived' WHERE id = ? AND status = 'Sent'");
     $stmt->execute([$id]);
 
     if ($stmt->rowCount() > 0) {
         echo json_encode(['success' => true]);
     } else {
-        echo json_encode(['success' => false, 'error' => 'No draft found with that ID']);
+        echo json_encode(['success' => false, 'error' => 'Message not found or already archived']);
     }
 } catch (PDOException $e) {
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);

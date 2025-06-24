@@ -1,6 +1,7 @@
 <?php
 include '../db/connect.php';
 
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $recipient = $_POST['recipient'] ?? '';
     $priority = $_POST['priority'] ?? 'Normal';
@@ -50,7 +51,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die("Database error: " . $e->getMessage());
     }
 }
+
 ?>
+
+<?php
+include '../db/connect.php';
+
+try {
+    // Get today's date in Y-m-d format
+    $today = date('Y-m-d');
+
+    // Fetch only today's sent announcements
+    $query = "SELECT * FROM announcements
+              WHERE status = 'Sent'
+              AND DATE(created_at) = :today
+              ORDER BY created_at DESC";
+
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':today', $today);
+    $stmt->execute();
+    $announcements = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+} catch(PDOException $e) {
+    die("Database error: " . $e->getMessage());
+}
+?>
+
+
 
 <!doctype html>
 <html lang="en">
@@ -132,7 +159,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     --info: #3b82f6;
     /* color:#FFC107; */
 }
-
+.pulse {
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.6; }
+        100% { opacity: 1; }
+    }
+    .announcement-item:hover {
+        background-color: rgba(0,25,45,0.08) !important;
+        transition: background-color 0.2s ease;
+    }
 * {
     margin: 0;
     padding: 0;
@@ -1085,6 +1123,47 @@ body {
   margin-left: 15px;
 }
 
+.timeline {
+        position: relative;
+        padding-left: 1rem;
+    }
+    .timeline-date {
+        padding: 0.5rem 1rem;
+        font-weight: bold;
+        border-radius: 4px;
+        margin: 1rem 0;
+        display: inline-block;
+    }
+    .timeline-item {
+        display: flex;
+        padding-bottom: 1rem;
+        position: relative;
+    }
+    .timeline-marker {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        position: absolute;
+        left: 0;
+        top: 4px;
+    }
+    .timeline-content {
+        margin-left: 1.5rem;
+        padding: 0.5rem 1rem;
+        background-color: rgba(0,25,45,0.03);
+        border-radius: 4px;
+        flex-grow: 1;
+    }
+    .timeline-item:not(:last-child):before {
+        content: '';
+        position: absolute;
+        left: 5px;
+        top: 16px;
+        height: 100%;
+        width: 2px;
+        background: rgba(0,0,0,0.1);
+    }
+
 </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -1497,20 +1576,53 @@ body {
             <div class="col-md-4">
                 <!-- Notification Stats Card -->
                 <!-- Quick Actions Card -->
-                 <div class="card mb-4">
-                    <div class="card-header" style="color: #FFC107; background-color:#00192D;">
-                        <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
+                <div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center"
+         style="color: #FFC107; background-color:#00192D;">
+        <h5 class="mb-0"><i class="fas fa-calendar-day me-2"></i>Today's Announcements</h5>
+        <span class="badge bg-warning"><?= count($announcements) ?> Today</span>
+    </div>
+
+    <div class="card-body p-0">
+        <?php if (!empty($announcements)): ?>
+            <div class="list-group list-group-flush">
+                <?php foreach ($announcements as $item): ?>
+                <div class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="mb-1 fw-bold">
+                                <?= $item['priority'] == 'Urgent' ? '🚨 ' :
+                                   ($item['priority'] == 'Reminder' ? '⏰ ' : '📢 ') ?>
+                                <?= htmlspecialchars($item['recipient'] ?: 'All Users') ?>
+                            </h6>
+                            <p class="mb-1"><?= htmlspecialchars($item['message']) ?></p>
+                        </div>
+                        <small class="text-muted">
+                            <?= date('h:i A', strtotime($item['created_at'])) ?>
+                        </small>
                     </div>
-                    <div class="card-body">
-                    <!-- <button class="quick-action-btn">
-            <i class="fas fa-money-bill-wave"></i> Record Rent Payment
-        </button> -->
-        <!-- <button class="quick-action-btn">
-            <i class="fas fa-file-invoice-dollar"></i> Send Rent Reminder
-        </button> -->
-                         <button class="quick-action-btn">
-                            <i class="fas fa-bell-slash"></i> Snooze Notifications
-                        </button>
+                    <div class="mt-2">
+                        <span class="badge
+                              <?= $item['priority'] == 'Urgent' ? 'bg-warning text-dark' :
+                                 ($item['priority'] == 'Reminder' ? 'bg-success' : 'bg-info') ?>">
+                            <?= htmlspecialchars($item['priority']) ?>
+                        </span>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        <?php else: ?>
+            <div class="text-center p-4">
+                <i class="far fa-bell-slash fa-2x mb-2" style="color: #6c757d;"></i>
+                <p class="text-muted">No announcements for today</p>
+            </div>
+        <?php endif; ?>
+    </div>
+<!-- </div> -->
+    <!-- </div> -->
+<!-- </div> -->
+
+<!-- </div> -->
                         <!-- <button class="quick-action-btn">
             <i class="fas fa-tools"></i> Report Maintenance
         </button> -->
@@ -1519,7 +1631,7 @@ body {
                 </div>
 
                 <!-- Notification Trends Card -->
-                 <div class="card">
+                 <!-- <div class="card">
                     <div class="card-header" style="color: #FFC107; background-color:#00192D;">
                         <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Notification Trends</h5>
                     </div>
@@ -1577,7 +1689,31 @@ body {
                 </div>
             </div>
         </div>
+    </div> -->
+
+    <div class="card mb-4">
+    <div class="card-header" style="color: #FFC107; background-color:#00192D;">
+        <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
     </div>
+    <div class="card-body">
+        <div class="row g-3">
+        <!-- Pin/Unpin -->
+<a href="#" class="btn btn-outline-warning w-100 py-2 mb-2">
+  <i class="fas fa-thumbtack me-2"></i> Pin Announcement
+</a>
+
+<!-- Schedule -->
+<a href="#" class="btn btn-outline-warning w-100 py-2 mb-2">
+  <i class="far fa-clock me-2"></i> Schedule Post
+</a>
+
+<!-- Edit Drafts -->
+<a href="#" class="btn btn-outline-warning w-100 py-2 mb-2">
+  <i class="fas fa-edit me-2"></i> Edit Drafts
+</a>
+    </div>
+</div>
+
                         <!-- Empty state example (hidden by default) -->
                         <!-- <div class="empty-state">
                             <i class="fas fa-bell-slash"></i>
@@ -1843,7 +1979,7 @@ function archiveAnnouncement(id) {
 </script> -->
 
 <script>
- function showArchivedMessages() {
+function showArchivedMessages() {
   fetch('get_archived_messages.php')
     .then(response => response.json())
     .then(data => {
@@ -1872,6 +2008,12 @@ function archiveAnnouncement(id) {
                 <span class="badge bg-secondary text-light" style="padding: 5px 10px; border-radius: 5px;">
                   <i class="fas fa-archive"></i> Archived
                 </span>
+                <button class="action-btn restore-btn" data-id="${item.id}">
+                  <i class="fas fa-undo"></i> Restore
+                </button>
+                <button class="action-btn delete-btn" data-id="${item.id}">
+                  <i class="fas fa-trash-alt"></i> Delete
+                </button>
               </div>
             </div>
           </div>
@@ -1883,7 +2025,101 @@ function archiveAnnouncement(id) {
       console.error('Error fetching archived messages:', error);
     });
 }
+
+// Add event listeners to Restore and Delete buttons (for archived view)
+document.addEventListener('click', function (e) {
+  const restoreBtn = e.target.closest('.restore-btn');
+  const deleteBtn = e.target.closest('.delete-btn');
+
+  if (restoreBtn) {
+    const id = restoreBtn.dataset.id;
+    if (confirm('Restore this archived announcement?')) {
+      restoreAnnouncement(id);
+    }
+  }
+
+  if (deleteBtn) {
+    const id = deleteBtn.dataset.id;
+    if (confirm('Permanently delete this archived announcement?')) {
+      deleteAnnouncement(id);
+    }
+  }
+});
+
+function restoreAnnouncement(id) {
+  fetch('restore_message.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: 'id=' + encodeURIComponent(id)
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      showAlert('Announcement restored successfully', 'success');
+      showArchivedMessages(); // Reload the archived list
+    } else {
+      showAlert('Failed to restore: ' + (data.error || 'Unknown error'), 'error');
+    }
+  })
+  .catch(error => {
+    console.error('Restore error:', error);
+    showAlert('Error restoring announcement', 'error');
+  });
+}
+
+function deleteAnnouncement(id) {
+  fetch('delete_message.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: 'id=' + encodeURIComponent(id)
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      showAlert('Announcement deleted successfully', 'success');
+      showArchivedMessages(); // Refresh archived list
+    } else {
+      showAlert('Failed to delete: ' + (data.error || 'Unknown error'), 'error');
+    }
+  })
+  .catch(error => {
+    console.error('Delete error:', error);
+    showAlert('Error deleting announcement', 'error');
+  });
+}
+
+function showAlert(message, type = 'info') {
+  alert(message); // Replace with toast/snackbar if needed
+}
+
+function getIconByPriority(priority) {
+  switch (priority.toLowerCase()) {
+    case 'urgent': return 'danger';
+    case 'reminder': return 'info';
+    case 'normal': return 'success';
+    default: return 'info';
+  }
+}
+
+function getIconSymbol(priority) {
+  switch (priority.toLowerCase()) {
+    case 'urgent': return 'fa-exclamation-circle';
+    case 'reminder': return 'fa-info-circle';
+    case 'normal': return 'fa-check-circle';
+    default: return 'fa-info-circle';
+  }
+}
+
+function formatTime(datetime) {
+  const d = new Date(datetime);
+  return d.toLocaleString();
+}
 </script>
+
 
 <script>
   function getIconByPriority(priority) {
@@ -1953,6 +2189,19 @@ function showDrafts() {
       });
 
       // Add event listeners for drafts
+      document.querySelectorAll('.edit-btn').forEach(button => {
+      button.addEventListener('click', function () {
+        const messageId = this.getAttribute('data-id');
+        editSentMessage(messageId);
+      });
+    });
+
+    document.querySelectorAll('.archive-btn').forEach(button => {
+    button.addEventListener('click', function () {
+      archiveSentMessage(this.getAttribute('data-id'));
+        });
+        });
+
       document.querySelectorAll('.delete-btn').forEach(button => {
         button.addEventListener('click', function() {
           deleteDraft(this.getAttribute('data-id'));
@@ -2345,43 +2594,106 @@ function showSentMessages() {
         container.insertAdjacentHTML('beforeend', html);
       });
 
-      // Add event listeners for sent messages
+      // Add event listeners for delete buttons
       document.querySelectorAll('.delete-btn').forEach(button => {
         button.addEventListener('click', function() {
-          deleteSentMessage(this.getAttribute('data-id'));
+          const id = this.getAttribute('data-id');
+          if (confirm('Are you sure you want to delete this message?')) {
+            deleteSentMessage(id);
+          }
+        });
+      });
+
+      // Add event listeners for archive buttons
+      document.querySelectorAll('.archive-btn').forEach(button => {
+        button.addEventListener('click', function () {
+          const id = this.getAttribute('data-id');
+          if (confirm('Are you sure you want to archive this announcement?')) {
+            archiveSentMessage(id);
+          }
         });
       });
     })
     .catch(error => console.error('Error loading sent messages:', error));
 }
 
-function deleteSentMessage(messageId) {
-  if (!confirm('Are you sure you want to permanently delete this sent announcement? This action cannot be undone.')) {
-    return;
-  }
-
+function deleteSentMessage(id) {
   fetch('delete_message.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: `id=${messageId}`
+    body: 'id=' + encodeURIComponent(id)
   })
   .then(response => response.json())
   .then(data => {
     if (data.success) {
-      document.getElementById(`announcement-${messageId}`)?.remove();
-      showAlert('Sent announcement deleted successfully', 'success');
+      document.getElementById(`announcement-${id}`)?.remove();
+      showAlert('Message deleted successfully', 'success');
     } else {
-      showAlert('Failed to delete announcement: ' + (data.error || data.message), 'error');
+      showAlert('Failed to delete: ' + (data.error || 'Unknown error'), 'error');
     }
   })
   .catch(error => {
-    console.error('Error deleting sent message:', error);
-    showAlert('An error occurred while deleting the announcement', 'error');
+    console.error('Delete request failed:', error);
+    showAlert('Request failed while deleting', 'error');
   });
 }
+
+function archiveSentMessage(id) {
+  fetch('archive_message.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: 'id=' + encodeURIComponent(id)
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById(`announcement-${id}`)?.remove();
+      showAlert('Announcement archived successfully', 'success');
+    } else {
+      showAlert('Failed to archive: ' + (data.error || 'Unknown error'), 'error');
+    }
+  })
+  .catch(error => {
+    console.error('Archive request failed:', error);
+    showAlert('Request failed while archiving', 'error');
+  });
+}
+
+function getIconByPriority(priority) {
+  switch (priority.toLowerCase()) {
+    case 'urgent': return 'danger';
+    case 'reminder': return 'info';
+    case 'normal': return 'success';
+    default: return 'info';
+  }
+}
+
+function getIconSymbol(priority) {
+  switch (priority.toLowerCase()) {
+    case 'urgent': return 'fa-exclamation-circle';
+    case 'reminder': return 'fa-info-circle';
+    case 'normal': return 'fa-check-circle';
+    default: return 'fa-info-circle';
+  }
+}
+
+function formatTime(datetime) {
+  const d = new Date(datetime);
+  return d.toLocaleString();
+}
+
+function showAlert(message, type = 'info') {
+  alert(message); // Replace this with a toast/snackbar if needed
+}
+
+document.addEventListener('DOMContentLoaded', showSentMessages);
 </script>
+
+
 <!-- <script>
   document.addEventListener('DOMContentLoaded', function () {
   document.body.addEventListener('click', function (e) {
@@ -2509,10 +2821,12 @@ function loadAnnouncements() {
             `;
           } else if (item.status === 'Draft') {
             actions = `
-
               <span class="badge bg-warning text-dark" style="padding: 5px 10px; border-radius: 5px;">
                 <i class="fas fa-pencil-alt"></i> Draft
               </span>
+              <button class="action-btn edit-btn" data-id="${item.id}">
+                <i class="fas fa-edit"></i> Edit
+              </button>
             `;
           } else if (item.status === 'Archived') {
             actions = `
@@ -2549,7 +2863,6 @@ function loadAnnouncements() {
           container.insertAdjacentHTML('beforeend', html);
         });
 
-        // Enable scrolling if content exceeds container height
         enableScrolling();
       }
     })
@@ -2576,9 +2889,12 @@ function getIconSymbol(priority) {
 
 function formatTime(datetime) {
   const d = new Date(datetime);
-  return d.toLocaleString(); // Customize formatting if needed
+  return d.toLocaleString();
 }
 
+function showAlert(message, type = 'info') {
+  alert(message); // You can customize with toast/snackbar if needed
+}
 
 document.addEventListener('DOMContentLoaded', loadAnnouncements);
 
@@ -2588,15 +2904,15 @@ document.addEventListener('click', function (e) {
   const restoreBtn = e.target.closest('.restore-btn');
   const editBtn = e.target.closest('.edit-btn');
 
-  // if (archiveBtn) {
-  //   const id = archiveBtn.dataset.id;
-  //   if (confirm('Archive this announcement?')) archiveAnnouncement(id);
-  // }
+  if (archiveBtn) {
+    const id = archiveBtn.dataset.id;
+    if (confirm('Archive this announcement?')) archiveAnnouncement(id);
+  }
 
-  // if (deleteBtn) {
-  //   const id = deleteBtn.dataset.id;
-  //   if (confirm('Delete this announcement?')) deleteAnnouncement(id);
-  // }
+  if (deleteBtn) {
+    const id = deleteBtn.dataset.id;
+    if (confirm('Delete this announcement?')) deleteAnnouncement(id);
+  }
 
   if (restoreBtn) {
     const id = restoreBtn.dataset.id;
@@ -2610,25 +2926,80 @@ document.addEventListener('click', function (e) {
 });
 
 function archiveAnnouncement(id) {
-  // Implement archive functionality
-  console.log('Archiving announcement:', id);
+  fetch('archive_message.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: 'id=' + encodeURIComponent(id)
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      showAlert('Announcement archived successfully', 'success');
+      loadAnnouncements();
+    } else {
+      showAlert('Failed to archive: ' + (data.error || 'Unknown error'), 'error');
+    }
+  })
+  .catch(error => {
+    console.error('Archive error:', error);
+    showAlert('Error archiving announcement', 'error');
+  });
 }
 
 function deleteAnnouncement(id) {
-  // Implement delete functionality
-  console.log('Deleting announcement:', id);
+  fetch('delete_message.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: 'id=' + encodeURIComponent(id)
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      showAlert('Announcement deleted successfully', 'success');
+      loadAnnouncements();
+    } else {
+      showAlert('Failed to delete: ' + (data.error || 'Unknown error'), 'error');
+    }
+  })
+  .catch(error => {
+    console.error('Delete error:', error);
+    showAlert('Error deleting announcement', 'error');
+  });
 }
 
 function restoreAnnouncement(id) {
-  // Implement restore functionality
-  console.log('Restoring announcement:', id);
+  fetch('restore_message.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: 'id=' + encodeURIComponent(id)
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      showAlert('Announcement restored successfully', 'success');
+      loadAnnouncements();
+    } else {
+      showAlert('Failed to restore: ' + (data.error || 'Unknown error'), 'error');
+    }
+  })
+  .catch(error => {
+    console.error('Restore error:', error);
+    showAlert('Error restoring announcement', 'error');
+  });
 }
 
 function editDraft(id) {
-  // Implement edit draft functionality
-  console.log('Editing draft:', id);
+  // Redirect to edit draft page
+  window.location.href = `edit_draft.php?id=${id}`;
 }
 </script>
+
 <script>
   document.addEventListener('click', function (e) {
   const archiveBtn = e.target.closest('.archive-btn');

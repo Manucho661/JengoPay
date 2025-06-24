@@ -487,34 +487,34 @@ select:hover {
 
                                <!-- <div class="select-option-container mt-3"> -->
                                <div class="row mt-3">
-  <!-- Building Select -->
-  <div class="col-md-3">
-    <b><label for="building-select" class="form-label">Select Building</label></b>
-    <select id="building-select" class="form-control">
-      <option value="">All Buildings</option>
-      <?php
-        $buildings = $pdo->query("SELECT DISTINCT building_name FROM building_rent_summary");
-        while ($b = $buildings->fetch()):
-      ?>
-        <option value="<?= htmlspecialchars($b['building_name']) ?>">
-          <?= htmlspecialchars($b['building_name']) ?>
-        </option>
-      <?php endwhile; ?>
-    </select>
-  </div>
+                                <!-- Building Select -->
+                                <div class="col-md-3">
+                                  <b><label for="building-select" class="form-label">Select Building</label></b>
+                                  <select id="building-select" class="form-control">
+                                    <option value="">All Buildings</option>
+                                    <?php
+                                      $buildings = $pdo->query("SELECT DISTINCT building_name FROM building_rent_summary");
+                                      while ($b = $buildings->fetch()):
+                                    ?>
+                                      <option value="<?= htmlspecialchars($b['building_name']) ?>">
+                                        <?= htmlspecialchars($b['building_name']) ?>
+                                      </option>
+                                    <?php endwhile; ?>
+                                  </select>
+                                </div>
 
-  <!-- From Date -->
-  <div class="col-md-3">
-  <b><label for="start-date" class="form-label">From</label></b>
-    <input type="date" id="start-date" class="form-control">
-  </div>
+                                <!-- From Date -->
+                                <div class="col-md-3">
+                                <b><label for="start-date" class="form-label">From</label></b>
+                                  <input type="date" id="start-date" class="form-control">
+                                </div>
 
-  <!-- To Date -->
-  <div class="col-md-3">
-    <b><label for="end-date" class="form-label">To</label></b>
-    <input type="date" id="end-date" class="form-control">
-  </div>
-</div>
+                                <!-- To Date -->
+                                <div class="col-md-3">
+                                  <b><label for="end-date" class="form-label">To</label></b>
+                                  <input type="date" id="end-date" class="form-control">
+                                </div>
+                              </div>
 
 <!-- Search Button
 <div class="col-md-3 align-self-end">
@@ -695,81 +695,81 @@ document.querySelectorAll('.select-option-container').forEach(container => {
   });
 </script>
 
-<script>
-function filterRentData() {
-  // Get filter values
-  const building = document.getElementById('building-select').value;
-  const startDate = document.getElementById('start-date').value;
-  const endDate = document.getElementById('end-date').value;
 
-  // Create an object with the filter parameters
-  const filters = {
-    building: building,
-    start_date: startDate,
-    end_date: endDate
-  };
-
-  // Send AJAX request to server
-  fetch('get_rent_data.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(filters)
-  })
-  .then(response => response.json())
-  .then(data => {
-    // Clear existing table data
-    const tbody = document.getElementById('rent-body');
-    tbody.innerHTML = '';
-
-    // Get current filter values for the View button URL
-    const currentStartDate = document.getElementById('start-date').value;
-    const currentEndDate = document.getElementById('end-date').value;
-
-    // Populate table with new data
-    data.forEach(row => {
-      const tr = document.createElement('tr');
-
-      // Build URL parameters for View button
-      let params = new URLSearchParams();
-      params.append('building', row.building_name);
-      if (currentStartDate) params.append('start_date', currentStartDate);
-      if (currentEndDate) params.append('end_date', currentEndDate);
-
-      tr.innerHTML = `
-        <td>${row.building_name}</td>
-        <td>ksh${formatCurrency(row.amount_collected)}</td>
-        <td>${formatCurrency(row.balances)}</td>
-        <td>${formatCurrency(row.penalties)}</td>
-        <td>${formatCurrency(row.arrears)}</td>
-        <td>${formatCurrency(row.overpayment)}</td>
-        <td>
-          <a href="building-rent.php?${params.toString()}" class="btn btn-sm btn-info">View</a>
-        </td>
-      `;
-
-      tbody.appendChild(tr);
-    });
-  })
-  .catch(error => console.error('Error:', error));
-}
-
-// Helper function to format currency
-function formatCurrency(amount) {
-  return parseFloat(amount).toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2
-  });
-}
-
-// Load data when page loads
+<!-- <script>
 document.addEventListener('DOMContentLoaded', function() {
-  filterRentData();
-});
-</script>
+    // Set default dates (current month)
+    const today = new Date().toISOString().split('T')[0];
+    const firstDay = new Date();
+    firstDay.setDate(1);
+    const firstDayStr = firstDay.toISOString().split('T')[0];
 
+    document.getElementById('fromDate').value = firstDayStr;
+    document.getElementById('toDate').value = today;
+
+    // Get all filter elements
+    const filters = {
+        building: document.getElementById('building-select'),
+        fromDate: document.getElementById('fromDate'),
+        toDate: document.getElementById('toDate')
+    };
+
+    // Add event listeners
+    Object.values(filters).forEach(filter => {
+        filter.addEventListener('change', loadRentData);
+    });
+
+    // Initial load
+    loadRentData();
+
+    async function loadRentData() {
+        const params = new URLSearchParams();
+        params.append('building', filters.building.value);
+        params.append('from_date', filters.fromDate.value);
+        params.append('to_date', filters.toDate.value);
+
+        try {
+            const response = await fetch('get_rent_data.php?' + params.toString());
+            const data = await response.json();
+
+            const tbody = document.getElementById('rent-body');
+            tbody.innerHTML = '';
+
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.building_name}</td>
+                    <td>${formatCurrency(row.amount_collected)}</td>
+                    <td>${formatCurrency(row.balances)}</td>
+                    <td>${formatCurrency(row.penalties)}</td>
+                    <td>${formatCurrency(row.arrears)}</td>
+                    <td>${formatCurrency(row.overpayment)}</td>
+                    <td>
+                        <a href="building-rent.php?building=${encodeURIComponent(row.building_name)}&from_date=${filters.fromDate.value}&to_date=${filters.toDate.value}"
+                           class="btn btn-sm btn-info">
+                            View
+                        </a>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('rent-body').innerHTML = `
+                <tr>
+                    <td colspan="7" class="text-center text-danger">
+                        Error loading data. Please try again.
+                    </td>
+                </tr>
+            `;
+        }
+    }
+
+    function formatCurrency(amount) {
+        return 'Ksh ' + parseFloat(amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    }
+});
+</script> -->
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -1151,6 +1151,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const endDate = document.getElementById('end-date');
     const rentBody = document.getElementById('rent-body');
 
+    // Set default dates (current month)
+    const today = new Date().toISOString().split('T')[0];
+    const firstDay = new Date();
+    firstDay.setDate(1);
+    const firstDayStr = firstDay.toISOString().split('T')[0];
+
+    startDate.value = firstDayStr;
+    endDate.value = today;
+
     // Function to fetch and display filtered data
     function fetchFilteredData() {
         const building = buildingSelect.value;
@@ -1164,11 +1173,25 @@ document.addEventListener('DOMContentLoaded', function() {
         if (toDate) url += `end_date=${encodeURIComponent(toDate)}`;
 
         fetch(url)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
                 updateTable(data);
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                rentBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center text-danger">
+                            Error loading data: ${error.message}
+                        </td>
+                    </tr>
+                `;
+            });
     }
 
     // Update the table with filtered data
@@ -1184,23 +1207,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Build rows for each building
         data.forEach(row => {
-            totals.collected += parseFloat(row.amount_collected) || 0;
-            totals.balances += parseFloat(row.balances) || 0;
-            totals.penalties += parseFloat(row.penalties) || 0;
-            totals.arrears += parseFloat(row.arrears) || 0;
-            totals.overpayment += parseFloat(row.overpayment) || 0;
+            const collected = parseFloat(row.amount_collected) || 0;
+            const balances = parseFloat(row.balances) || 0;
+            const penalties = parseFloat(row.penalties) || 0;
+            const arrears = parseFloat(row.arrears) || 0;
+            const overpayment = parseFloat(row.overpayment) || 0;
+
+            totals.collected += collected;
+            totals.balances += balances;
+            totals.penalties += penalties;
+            totals.arrears += arrears;
+            totals.overpayment += overpayment;
 
             html += `
                 <tr>
                     <th>${row.building_name}</th>
-                    <td class="rent paid">KSH&nbsp;${parseFloat(row.amount_collected).toFixed(2)}</td>
-                    <td class="rent balances">KSH&nbsp;${parseFloat(row.balances).toFixed(2)}</td>
-                    <td><div class="rent penalit">KSH&nbsp;${parseFloat(row.penalties).toFixed(2)}</div></td>
-                    <td class="rent collected">KSH&nbsp;${parseFloat(row.arrears).toFixed(2)}</td>
-                    <td class="rent overpayment">KSH&nbsp;${parseFloat(row.overpayment).toFixed(2)}</td>
+                    <td class="rent paid">KSH&nbsp;${collected.toFixed(2)}</td>
+                    <td class="rent balances">KSH&nbsp;${balances.toFixed(2)}</td>
+                    <td><div class="rent penalit">KSH&nbsp;${penalties.toFixed(2)}</div></td>
+                    <td class="rent collected">KSH&nbsp;${arrears.toFixed(2)}</td>
+                    <td class="rent overpayment">KSH&nbsp;${overpayment.toFixed(2)}</td>
                     <td>
-                        <button class="btn view">
-                            <a class="view-link" href="building-rent.php?building=${encodeURIComponent(row.building_name)}">View</a>
+                        <button class="btn btn-sm btn-info">
+                            <a class="text-white" href="building-rent.php?building=${encodeURIComponent(row.building_name)}&start_date=${startDate.value}&end_date=${endDate.value}">View</a>
                         </button>
                     </td>
                 </tr>
@@ -1208,17 +1237,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Add totals row
-        html += `
-            <tr style="font-weight: bold; background-color: #f0f0f0;">
-                <td>Total</td>
-                <td class="rent paid">KSH&nbsp;${totals.collected.toFixed(2)}</td>
-                <td class="rent paid">KSH&nbsp;${totals.balances.toFixed(2)}</td>
-                <td><div class="rent penalit">KSH&nbsp;${totals.penalties.toFixed(2)}</div></td>
-                <td class="rent collected">KSH&nbsp;${totals.arrears.toFixed(2)}</td>
-                <td class="rent overpayment">KSH&nbsp;${totals.overpayment.toFixed(2)}</td>
-                <td></td>
-            </tr>
-        `;
+        if (data.length > 0) {
+            html += `
+                <tr style="font-weight: bold; background-color: #f0f0f0;">
+                    <td>Total</td>
+                    <td class="rent paid">KSH&nbsp;${totals.collected.toFixed(2)}</td>
+                    <td class="rent paid">KSH&nbsp;${totals.balances.toFixed(2)}</td>
+                    <td><div class="rent penalit">KSH&nbsp;${totals.penalties.toFixed(2)}</div></td>
+                    <td class="rent collected">KSH&nbsp;${totals.arrears.toFixed(2)}</td>
+                    <td class="rent overpayment">KSH&nbsp;${totals.overpayment.toFixed(2)}</td>
+                    <td></td>
+                </tr>
+            `;
+        } else {
+            html = `
+                <tr>
+                    <td colspan="7" class="text-center">No data found for selected filters</td>
+                </tr>
+            `;
+        }
 
         rentBody.innerHTML = html;
     }
@@ -1232,7 +1269,6 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchFilteredData();
 });
 </script>
-
 
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
