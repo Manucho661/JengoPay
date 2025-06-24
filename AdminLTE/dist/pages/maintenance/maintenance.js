@@ -410,6 +410,35 @@ function inSystemPayment(){
       mpesaPhoneSection.style.display = 'none';
     }
   });
- 
-
 }
+
+
+// stk push
+document.getElementById("paymentForm").addEventListener("submit", function (e) {
+    e.preventDefault(); // Prevent normal form submission
+
+    // Get values from form inputs
+    const phone = document.getElementById("phoneNumber").value;
+    const amount = document.getElementById("mpesaAmount").value;
+
+    // Send data to PHP via fetch
+    fetch("actions/stk.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        phone: phone,
+        amount: amount,
+      }),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      alert(data.message);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("Something went wrong");
+    });
+  });

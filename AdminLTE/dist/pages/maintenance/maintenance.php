@@ -586,7 +586,8 @@
                         </div>
                         <div class="col-6">
                           <div><strong>BIDS:</strong></div>
-                          <div id="request-description" style="color:rgb(0 28 63 / 60%); font-weight:500;">--</div>
+                          <button class="btn btn-primary p-1">30 Applications</button>
+                          <!-- <div id="request-description" style="color:rgb(0 28 63 / 60%); font-weight:500;">--</div> -->
                         </div>
                         
                       </div>
@@ -775,17 +776,26 @@
                             </select>
                           </div>
                           <div id="mpesaPhoneSection" style="display: none;">
-                            <label for="phoneNumber" class="form-label">M-Pesa Phone Number</label>
-                            <input type="tel" class="form-control" name="phone" id="phoneNumber" placeholder="0753432756" required>
+                            <select class="form-select" id="paymentMethod" name="payment_method" required>
+                              <option value="">Send Money</option>
+                              <option value="sendMoney">Send Money</option>
+                              <option value="lipaNaMpesa">Lipa na M-pesa</option>
+                            </select>
+                            <div id="sendMoneySection">
+                              <label for="phoneNumber" class="form-label"><b>Your Phone Number</b></label>
+                              <input type="tel" class="form-control" name="senderPhone" id="phoneNumber" placeholder="0753432756" required>
 
-                            <div class="mt-2">
-                              <label class="form-label">Amount</label>
-                              <p class="form-control-plaintext" id="mpesaAmount" style="color:rgb(0 28 63 / 60%); font-weight:500;" >KES 1,200</p>
+                              <label for="phoneNumber" class="form-label"><b>Provider Phone Number</b></label>
+                              <input type="tel" class="form-control" name="phone" id="phoneNumber" placeholder="0757414721" required>
+                              <div class="mt-2">
+                                <label class="form-label">Amount</label>
+                                <input type="number" id="mpesaAmount" name="mpesaAmount" placeholder="Amount" required />
+                              </div>
+                              <button type="submit" class="btn btn-success mt-3">Pay Now</button>
                             </div>
                           </div>
                           <div class="d-flex">
                             <button type="button" class="btn btn-secondary me-2 mt-3" id="goBackBtn">← Go Back</button>
-                            <button type="submit" class="btn btn-success mt-3">Pay Now</button>
                           </div>
                         </form>
                       </div>
@@ -793,7 +803,9 @@
                   </div>
                 </div>
               </div>
-             <!-- end payment modal -->
+              <!-- end payment modal -->
+              <!-- Applications Modal -->
+               
             </div>
             <!--end::Row-->
           </div>
@@ -803,9 +815,6 @@
       </main>
       <!--end::App Main-->
       <!--begin::Footer-->
-
-
-
       <footer class="app-footer">
         <!--begin::To the end-->
         <div class="float-end d-none d-sm-inline">Anything you want</div>
@@ -821,10 +830,6 @@
       <!--end::Footer-->
     </div>
     <!--end::App Wrapper-->
-
-
-
-
 <!-- Overlay Cards -->
 <!-- Overlay scripts -->
 <!-- main js file -->
