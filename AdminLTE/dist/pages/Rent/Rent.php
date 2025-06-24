@@ -619,6 +619,20 @@ select:hover {
 </div>
 <!-- end -->
 
+                           
+<!-- Rent Chart Section -->
+<div class="d-flex justify-content-center mt-4">
+  <div class="p-3 rounded shadow-sm" style="background-color: white; width: 90%; max-width: 600px;">
+    <h6 class="mb-2" style="color: #00192D; font-size: 16px;">📊 Rent vs Months</h6>
+    <div style="height: 180px;">
+      <canvas id="rentChart"></canvas>
+    </div>
+  </div>
+</div>
+
+
+
+
 <footer class="app-footer">
   <!--begin::To the end-->
   <div class="float-end d-none d-sm-inline">Anything you want</div>
@@ -639,6 +653,79 @@ select:hover {
 <!-- EnD LOADING AND OUT PROGRESS -->
 
 <!-- SELECT ELEMENT SCRIPT -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('rentChart').getContext('2d');
+  
+  const rentChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: [
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      ],
+      datasets: [{
+        label: 'Rent (KES)',
+        data: [12000, 13000, 12500, 14000, 13500, 15000, 14500, 15500, 16000, 15800, 16500, 17000],
+        backgroundColor: '#FFC107',
+        borderColor: '#00192D',
+        borderWidth: 1,
+        borderRadius: 5
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      layout: {
+        padding: 5
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            color: '#00192D',
+            font: {
+              size: 10
+            }
+          },
+          title: {
+            display: false
+          }
+        },
+        x: {
+          ticks: {
+            color: '#00192D',
+            font: {
+              size: 10
+            }
+          },
+          title: {
+            display: false
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: '#00192D',
+          titleColor: '#FFC107',
+          bodyColor: '#FFFFFF',
+          titleFont: {
+            size: 10
+          },
+          bodyFont: {
+            size: 10
+          }
+        }
+      }
+    }
+  });
+</script>
+
+
 
 <script>
 document.querySelectorAll('.select-option-container').forEach(container => {
