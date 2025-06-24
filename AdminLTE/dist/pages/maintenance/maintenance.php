@@ -586,7 +586,7 @@
                         </div>
                         <div class="col-6">
                           <div><strong>BIDS:</strong></div>
-                          <button class="btn btn-primary p-1">30 Applications</button>
+                          <button class="btn btn-primary p-1" onclick="showProposal()" >30 Applications</button>
                           <!-- <div id="request-description" style="color:rgb(0 28 63 / 60%); font-weight:500;">--</div> -->
                         </div>
                         
@@ -805,7 +805,95 @@
               </div>
               <!-- end payment modal -->
               <!-- Applications Modal -->
-               
+              <div id="customBackdrop" class="modal-backdrop fade d-none"></div>
+              <div id="proposalContainer" class="container proposalContainer py-2 fade d-none custom-modal bg-light" style="overflow: auto;">
+                <div class="d-flex justify-content-between mb-2">
+                  <div class=" text-left"style="color:rgb(0 28 63 / 60%); font-weight:500;"><b> Provider Applications</b></div>
+                  
+                  <div class="text-center">
+                    <button class="bg-secondary text-white px-4 py-0 rounded hover:bg-blue-600">← Go Back</button>
+                  </div>
+
+                  <div class="text-right">
+                    <button class="text-gray-500 text-xl rounded hover:text-white hover:bg-red-500 transition">&times;</button>
+                  </div>
+                </div>
+                <div class="proposal-card">
+                  <div class="proposal-header d-flex align-items-start">
+                    <img src="https://i.pravatar.cc/70" alt="Profile Picture" class="profile-pic me-3">
+                    <div>
+                      <h5>Jane Doe <span class="badge bg-success">Top Rated</span></h5>
+                      <p>Full Stack Developer | React & Node.js</p>
+                    </div>
+                    <div class="ms-auto proposal-meta text-end">
+                      <h6>$25/hr</h6>
+                      <small>5 days delivery</small><br>
+                      <small class="text-success">✅ 42 jobs completed</small>
+                    </div>
+                  </div>
+
+                  <hr>
+
+                  <p><strong>Cover Letter:</strong> I'm excited to help build your job board! I have 3 years of experience with React and recently completed a similar project...</p>
+                  <p><strong>Location:</strong> Nairobi, Kenya (GMT+3)</p>
+
+                  <div class="d-flex justify-content-end mt-3">
+                    <button class="btn btn-outline-secondary btn-sm btn-action">Message</button>
+                    <button class="btn btn-outline-primary btn-sm btn-action">Shortlist</button>
+                    <button class="btn btn-outline-danger btn-sm">Decline</button>
+                  </div>
+                </div>
+                <div class="proposal-card mt-2">
+                  <div class="proposal-header d-flex align-items-start">
+                    <img src="https://i.pravatar.cc/70" alt="Profile Picture" class="profile-pic me-3">
+                    <div>
+                      <h5>Jane Doe <span class="badge bg-success">Top Rated</span></h5>
+                      <p>Full Stack Developer | React & Node.js</p>
+                    </div>
+                    <div class="ms-auto proposal-meta text-end">
+                      <h6>$25/hr</h6>
+                      <small>5 days delivery</small><br>
+                      <small class="text-success">✅ 42 jobs completed</small>
+                    </div>
+                  </div>
+
+                  <hr>
+
+                  <p><strong>Cover Letter:</strong> I'm excited to help build your job board! I have 3 years of experience with React and recently completed a similar project...</p>
+                  <p><strong>Location:</strong> Nairobi, Kenya (GMT+3)</p>
+
+                  <div class="d-flex justify-content-end mt-3">
+                    <button class="btn btn-outline-secondary btn-sm btn-action">Message</button>
+                    <button class="btn btn-outline-primary btn-sm btn-action">Shortlist</button>
+                    <button class="btn btn-outline-danger btn-sm">Decline</button>
+                  </div>
+                </div>
+                <div class="proposal-card mt-2">
+                  <div class="proposal-header d-flex align-items-start">
+                    <img src="https://i.pravatar.cc/70" alt="Profile Picture" class="profile-pic me-3">
+                    <div>
+                      <h5>Jane Doe <span class="badge bg-success">Top Rated</span></h5>
+                      <p>Full Stack Developer | React & Node.js</p>
+                    </div>
+                    <div class="ms-auto proposal-meta text-end">
+                      <h6>$25/hr</h6>
+                      <small>5 days delivery</small><br>
+                      <small class="text-success">✅ 42 jobs completed</small>
+                    </div>
+                  </div>
+
+                  <hr>
+
+                  <p><strong>Cover Letter:</strong> I'm excited to help build your job board! I have 3 years of experience with React and recently completed a similar project...</p>
+                  <p><strong>Location:</strong> Nairobi, Kenya (GMT+3)</p>
+
+                  <div class="d-flex justify-content-end mt-3">
+                    <button class="btn btn-outline-secondary btn-sm btn-action">Message</button>
+                    <button class="btn btn-outline-primary btn-sm btn-action">Shortlist</button>
+                    <button class="btn btn-outline-danger btn-sm">Decline</button>
+                  </div>
+                </div>
+              </div>
             </div>
             <!--end::Row-->
           </div>

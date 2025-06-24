@@ -173,33 +173,38 @@ function handleFormSubmit_inspect(formId, url, extraFields = {}) {
       </td>
       <td>${inspection.inspection_type|| ''}</td>
       ${statusHTML}
-      <td class="d-flex gap-15px">   
-        <button class="btn inspect_btn"
-          data-building-name="${inspection.building_name}"
-          data-unit="${inspection.unit || ''}"
-          data-inspection-id="${inspection.id}"
-         style="background-color: #00192D; color:#FFC107">
-         Inspect</button>
+      <td class="align-middle">
+        <div class="d-flex align-items-center gap-2">
+          <!-- Inspect Button -->
+          <button class="btn inspect_btn"
+            data-building-name="${inspection.building_name}"
+            data-unit="${inspection.unit || ''}"
+            data-inspection-id="${inspection.id}"
+            style="background-color: #00192D; color:#FFC107;">
+            Inspect
+          </button>
 
-        <button class="btn btn-sm view-btn"
-          style="background-color: #193042; margin-left:10px; color:#fff;"
-          title="View"
-          data-id="${inspection.id}"
-          data-status="${status}">
-          <i class="fas fa-eye"></i>
-        </button>
+          <!-- View Button -->
+          <button class="btn btn-sm view-btn"
+            style="background-color: #193042; color:#fff;"
+            title="View"
+            data-id="${inspection.id}"
+            data-status="${status}">
+            <i class="fas fa-eye"></i>
+          </button>
 
-        <!-- Edit Button -->
-        <button class="btn btn-sm" style="background-color: #1e6f5c; margin-left: 2px; margin-right: 2px; color: #fff;" title="Edit">
-          <i class="fas fa-edit"></i>
-        </button>
+          <!-- Edit Button -->
+          <button class="btn btn-sm" style="background-color: #1e6f5c; color: #fff;" title="Edit">
+            <i class="fas fa-edit"></i>
+          </button>
 
-        <!-- Delete Button -->
-        <button class="btn btn-sm" style="background-color: #b02a37; margin-left: 2px; margin-right: 2px; color: #fff;" title="Delete">
-          <i class="fas fa-trash"></i>
-        </button>
-
+          <!-- Delete Button -->
+          <button class="btn btn-sm" style="background-color: #b02a37; color: #fff;" title="Delete">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
       </td>
+
     `;
 
    
