@@ -32,6 +32,10 @@ $reference = htmlspecialchars($tenant['reference_number'] ?? 'TCO2X12E80');
 $date = !empty($tenant['payment_date']) ? date("d/m/Y", strtotime($tenant['payment_date'])) : date("d/m/Y");
 $printDate = date("d/m/Y H:i");
 $receiptNo = "RC".str_pad($tenantId, 5, '0', STR_PAD_LEFT);
+
+// Calculate subtotal and total
+$subtotal = (float)$tenant['amount_paid'] + (float)$tenant['penalty'];
+$total = $subtotal + (float)$tenant['arrears'] + (float)$tenant['overpayment'];
 ?>
 
 <!DOCTYPE html>
@@ -116,6 +120,10 @@ $receiptNo = "RC".str_pad($tenantId, 5, '0', STR_PAD_LEFT);
             display: flex;
             justify-content: space-between;
         }
+        .total-section {
+            margin-top: 10px;
+            font-weight: bold;
+        }
         @media print {
             .print-button {
                 display: none;
@@ -185,16 +193,34 @@ $receiptNo = "RC".str_pad($tenantId, 5, '0', STR_PAD_LEFT);
 
     <table class="amount-table">
         <tr>
-            <td>Water</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Rent prepayment</td>
+            <td>Rent Payment</td>
             <td><?= $amount ?></td>
         </tr>
         <tr>
-            <td></td>
-            <td><?= $balance ?></td>
+            <td>Penalty (<?= $penaltyDays ?> days)</td>
+            <td><?= $penalty ?></td>
+        </tr>
+        <tr>
+            <td>Arrears</td>
+            <td><?= $arrears ?></td>
+        </tr>
+        <tr>
+            <td>Overpayment</td>
+            <td><?= $overpayment ?></td>
+        </tr>
+    </table>
+
+    <div class="divider"></div>
+
+    <!-- Subtotal and Total Sections -->
+    <table class="amount-table">
+        <tr>
+            <td>SUBTOTAL (KES)</td>
+            <td><?= number_format($subtotal, 2) ?></td>
+        </tr>
+        <tr>
+            <td>TOTAL (KES)</td>
+            <td><?= number_format($total, 2) ?></td>
         </tr>
     </table>
 
