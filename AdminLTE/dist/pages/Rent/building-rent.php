@@ -869,10 +869,11 @@ foreach ($tenants as $tenant) {
                            <!-- Rent Chart Section -->
 <div class="p-2 mt-2 rent-chart-wrapper" style="background-color: white;">
   <div class="label mb-1">RENT VS MONTHS</div>
-  <div class="rent-chart-scroll">
-    <canvas id="rentChart" height="120px"></canvas>
+  <div class="rent-chart-scroll" style="height: 200px;">
+    <canvas id="rentChart"></canvas>
   </div>
 </div>
+
            </div>
 
 
@@ -1476,9 +1477,9 @@ document.querySelector('.excel').addEventListener('click', function () {
   const unit = ''; // Optional: set a specific unit type
   const year = new Date().getFullYear();
 
-  fetch(`../Rent/actions/get_tenant_rent_chart.php?unit=${encodeURIComponent(unit)}&year=${year}`)
-    .then(response => response.json())
-    .then(monthlyData => {
+  // fetch(`../Rent/actions/get_tenant_rent_chart.php?unit=${encodeURIComponent(unit)}&year=${year}`)
+    // .then(response => response.json())
+    // .then(monthlyData => {
       const ctx = document.getElementById('rentChart').getContext('2d');
       console.log('nice');
       new Chart(ctx, {
@@ -1520,8 +1521,8 @@ document.querySelector('.excel').addEventListener('click', function () {
           }
         }
       });
-    })
-    .catch(error => console.error('Error fetching tenant rent chart data:', error));
+    // })
+    // .catch(error => console.error('Error fetching tenant rent chart data:', error));
 </script>
 
 

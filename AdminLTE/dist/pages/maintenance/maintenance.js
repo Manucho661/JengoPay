@@ -116,58 +116,33 @@ function populateRequestsTable(requests) {
         </div>
       </td>
 
-      <td style="vertical-align: middle;">
-      <div style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
-      <div class="d-flex gap-15px" style="align-items: center;">
-      <div>
-        <button class="btn btn-sm pay-btn d-flex"
-          data-building-name="${requests.building_name}"
-          data-unit="${requests.unit || ''}"
-          data-request-id="${requests.id}"
-          style="background-color: #00192D; color:#FFC107"> <i class="fas fa-coins" style="margin-right:3px;"></i>
-          Pay
-        </button>
-      </div>
-      <div>
-        <button class="btn btn-sm view-btn"
-          style="background-color: #193042; margin-left:10px; color:#fff;"
-          title="View"
-          data-id="${requests.id}"
-          data-status="${status}">
-          <i class="fas fa-eye"></i>
-        </button>
-      </div>
-      <div class="dropdown">
-            <button class="btn btn-sm more-btn d-flex" data-bs-toggle="dropdown" aria-expanded="false">⋮</button>
+      <td class="align-middle">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <!-- View button -->
+          <button class="btn btn-sm view-btn"
+            style="background-color: #193042; color:#fff;"
+            title="View"
+            data-id="${requests.id}"
+            data-status="${status}">
+            <i class="fas fa-eye"></i>
+          </button>
+
+          <!-- Dropdown -->
+          <div class="dropdown">
+            <button class="btn btn-sm more-btn d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">⋮</button>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item assign-provider" href="#" style="color: #FFA000 !important;"> <i class="fas fa-tasks"></i> Assign Provider</a></li>
-              <li><a class="dropdown-item mark-complete" href="#" style="color: #FFA000 !important;"> <i class="fas fa-tasks"></i> Mark Complete</a></li>
-              <li><a class="dropdown-item view-payment" href="#" style="color: #FFA000 !important;"  data-request-id="${requests.id}" ><i class="fas fa-eye"></i> View Payment</a></li>
-              <li>
-              <a class="dropdown-item delete-request" href="#" style="color: #F87171 !important;" data-request-id="${requests.id}"><i class="fas fa-trash"></i> Delete Request</a>
-            </li>
+              <li><a class="dropdown-item assign-provider" href="#" style="color: #FFA000;"><i class="fas fa-tasks"></i> Assign Provider</a></li>
+              <li><a class="dropdown-item mark-complete" href="#" style="color: #FFA000;"><i class="fas fa-tasks"></i> Mark Complete</a></li>
+              <li><a class="dropdown-item view-payment" href="#" style="color: #FFA000;" data-request-id="${requests.id}"><i class="fas fa-eye"></i> View Payment</a></li>
+              <li><a class="dropdown-item delete-request" href="#" style="color: #F87171;" data-request-id="${requests.id}"><i class="fas fa-trash"></i> Delete Request</a></li>
             </ul>
           </div>
-    </div>
-      </div>
-    </td>
+        </div>
+      </td>
     `;
    // Add the event listener here AFTER the row is in memory
      const tempDiv = document.createElement('div');
      tempDiv.appendChild(row);
-      const payBtn = tempDiv.querySelector('.pay-btn');
-      payBtn.addEventListener('click', (e) => {
-      const btn = e.currentTarget;
-      // const buildingName = btn.getAttribute('data-building-name');
-      //  const unit = btn.getAttribute('data-unit');
-      const requestId = btn.getAttribute('data-request-id');
-
-      // document.getElementById('modal_building_name').textContent = buildingName;
-      // document.getElementById('modal_unit').textContent = unit;
-      document.getElementById('modal_request_id').value = requestId;
-      const modal = new bootstrap.Modal(document.getElementById('recordPaymentModal'));
-      modal.show();
-      });
       // View Request
       const viewBtn = tempDiv.querySelector('.view-btn');
       viewBtn.addEventListener('click', (e) =>{
@@ -179,6 +154,7 @@ function populateRequestsTable(requests) {
         document.getElementById('request-status').innerText= requests.status;
         document.getElementById('payment-status').innerText= requests.payment_status;
         document.getElementById('request-description').innerText= requests.description;
+        document.getElementById('request-imag').src = '/originaltwo/AdminLTE/dist/pages/' + requests.photo_url;
         const modal = new bootstrap.Modal(document.getElementById('maintenanceRequestModal'));
         modal.show();
       });
@@ -277,6 +253,7 @@ function populateRequestsTable(requests) {
       });
 }
 
+
 // Add a payment
 function addRequestPayment(event){
   event.preventDefault(); // Prevent the form from submitting immediately
@@ -299,6 +276,7 @@ function addRequestPayment(event){
           .catch(err => console.error(err));
 };
 
+
 // Mark Complete
 function markComplete(requestsID){
    fetch(`actions/update_records.php?type=mark_item&request_id=${requestsID}`)
@@ -317,6 +295,7 @@ function markComplete(requestsID){
     });
 }
 
+
 //Delete Request
 function deleteRequest(requestsID){
    fetch(`actions/delete_records.php?type=mark_item&request_id=${requestsID}`)
@@ -334,6 +313,7 @@ function deleteRequest(requestsID){
       console.error("Network error:", error);
     });
 }
+
 
 // Select Providers
 function selectProviders(requestsID){
@@ -355,6 +335,7 @@ function selectProviders(requestsID){
   .catch(error => console.error('Error fetching providers:', error));
 }
 
+
 // Assign the Provider
 function assignProvider(event){
   event.preventDefault(); // Prevent the form from submitting immediately
@@ -372,6 +353,7 @@ function assignProvider(event){
           })
           .catch(err => console.error(err));
 };
+
 
 // make payment
 function makePayment() {
@@ -400,7 +382,8 @@ function makePayment() {
     recordPaymentModalInstance.show();
     nextStepBtn
 }
- 
+
+// in system payment
 function inSystemPayment(){
   const step1Div = document.getElementById('step-1');
   step1Div.style.display = 'none';
@@ -408,12 +391,86 @@ function inSystemPayment(){
   const step2Div = document.getElementById('step-2');
   step2Div.style.display = 'block';
 }
-
   const nextStepBtn = document.getElementById('nextStepBtn');
   nextStepBtn.addEventListener('click', inSystemPayment);
-
   const openRecordPaymentModalBtn = document.getElementById('openRecordPaymentModalBtn');
   openRecordPaymentModalBtn.removeEventListener('click', handleOpenRecordPaymentModal);
   openRecordPaymentModalBtn.addEventListener('click', handleOpenRecordPaymentModal);
- 
+
+ // Mpesa payment
+  const paymentMethod = document.getElementById('paymentMethod'); // ✅ The <select>
+  const mpesaPhoneSection = document.getElementById('mpesaPhoneSection');
+  paymentMethod.addEventListener('change', function () {
+    if (this.value === 'mpesa') {
+      mpesaPhoneSection.style.display = 'block';
+    } else {
+      mpesaPhoneSection.style.display = 'none';
+    }
+  });
 }
+
+
+// stk push
+document.getElementById("paymentForm").addEventListener("submit", function (e) {
+    e.preventDefault(); // Prevent normal form submission
+
+    // Get values from form inputs
+    const phone = document.getElementById("phoneNumber").value;
+    const amount = document.getElementById("mpesaAmount").value;
+
+    // Send data to PHP via fetch
+    fetch("actions/stk.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        phone: phone,
+        amount: amount,
+      }),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      alert(data.message);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("Something went wrong");
+    });
+  });
+
+  //Requests Applications
+  function showProposal() {
+  const maintenanceRequestModalEl = document.getElementById('maintenanceRequestModal');
+  const maintenanceRequestModalInstance = bootstrap.Modal.getInstance(maintenanceRequestModalEl);
+
+  if (maintenanceRequestModalInstance) {
+    maintenanceRequestModalInstance.hide(); // 👈 call it properly
+  }
+
+  const modal = document.getElementById("proposalContainer");
+  const backdrop = document.getElementById("customBackdrop");
+
+  backdrop.classList.remove("d-none");
+  modal.classList.remove("d-none");
+
+  setTimeout(() => {
+    backdrop.classList.add("show");
+    modal.classList.add("show", "d-block");
+  }, 10);
+}
+
+  function hideProposal() {
+    const modal = document.getElementById("proposalContainer");
+    const backdrop = document.getElementById("customBackdrop");
+
+    modal.classList.remove("show");
+    backdrop.classList.remove("show");
+
+    setTimeout(() => {
+      modal.classList.remove("d-block");
+      modal.classList.add("d-none");
+      backdrop.classList.add("d-none");
+    }, 300);
+  }

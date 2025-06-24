@@ -92,6 +92,10 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
 
+    <!-- Pdf pluggin -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+
     <!--Tailwind CSS  -->
     <style>
       .app-wrapper{
@@ -429,7 +433,7 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                   </div>
                   <div class="entries">Manucho Apartments <span class="entries_label">/5  entries</span>
                   </div>
-                  <div class="scheduledInspectionsTbl">
+                  <div class="scheduledInspectionsTbl" style="overflow: auto;">
                     <table id="maintanance" class=" display summary-table">
                       <thead class="mb-2">
                       <tr>
@@ -769,11 +773,17 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
       <div class="modal fade" id="inspectionModal" tabindex="-1" aria-labelledby="inspectionModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
           <div class="modal-content rounded-2 shadow-lg">
-            <div class="modal-header" style="background-color: #00192D !important; padding:5px !important;">
-              <h5 class="modal-title" style="color:#FFA000 !important; margin-left:5px;" id="inspectionModalLabel"> Inspection Details - Unit A12</h5>
+            <div class="modal-header d-flex justify-content-between align-items-center" id="inspectionModalHeader" style="background-color: #00192D !important;">
+              <h5 class="modal-title" style="color: #FFA000 !important; margin-left: 5px;" id="inspectionModalLabel">
+                Inspection Details - Ebenezer/Unit A12
+              </h5>
+              <!-- Centered Icon Button -->
+              <button type="button" class="btn btn-sm btn-warning mx-auto" id="downloadInspectionBtn" title="Submit Inspection">
+                <i class="bi bi-download"></i>
+              </button>
+
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
             <div class="modal-body p-2">
               <table class="table inspection-table table-striped rounded-2">
                 <thead class="table-light">
@@ -835,11 +845,15 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
 
             <div class="modal-footer d-flex justify-content-between p-2">
               <small class="text-muted">📅 Inspection Date: <strong>2025-05-26</strong></small>
-              <button type="button" style="background-color:#FFC107 !important; color:#00192D;" class="btn btn-outline" data-bs-dismiss="modal">Close</button>
+              <button type="button" style="background-color:#FFC107 !important; color:#00192D;" class="btn btn-outline" data-bs-dismiss="modal" id="closeInspectionModal">Close</button>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- cloned pdf modal-->
+      <div id="printArea" style="display: none;"></div>
+
 
   <!-- Main Js File -->
   <script src="inspections.js"></script>
@@ -1022,6 +1036,41 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
       const today = new Date().toISOString().split('T')[0];
       document.getElementById("inspectionDate").setAttribute("min", today);
    </script>
+
+   <!-- pdf download plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+      document.getElementById('downloadInspectionBtn').addEventListener('click', () => {
+          const modalContent = document.querySelector('#inspectionModal .modal-content').cloneNode(true);
+          // remove download button and change styling
+          const clonedDownloadBtn = modalContent.querySelector('#downloadInspectionBtn');
+          const inspectionModalHeader = modalContent.querySelector('#inspectionModalHeader');
+          const closeInspectionModal = modalContent.querySelector('#closeInspectionModal');
+          if (clonedDownloadBtn) {
+            clonedDownloadBtn.remove(); // completely removes it from the PDF
+            inspectionModalHeader.style.backgroundColor="white";
+            closeInspectionModal.remove();
+          }
+
+
+
+          const printArea = document.getElementById('printArea');
+          printArea.innerHTML = ''; // clear previous
+          printArea.appendChild(modalContent);
+          printArea.style.display = 'block'; // make visible
+
+          html2pdf().from(printArea).set({
+            margin: 0.5,
+            filename: 'inspection.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+          }).save().then(() => {
+            printArea.style.display = 'none'; // hide again
+          });
+        });
+    </script>
+
   </body>
   <!--end::Body-->
 </html>

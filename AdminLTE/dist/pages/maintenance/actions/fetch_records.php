@@ -7,14 +7,18 @@ try {
     // Fetch maintenance requests along with provider details
     $stmt = $pdo->prepare("
         SELECT 
-            mr.*, 
-            p.name AS provider_name, 
-            p.email AS provider_email,
-            p.phone AS provider_phone
-        FROM 
-            maintenance_requests mr
-        LEFT JOIN 
-            providers p ON mr.provider_id = p.id
+        mr.*, 
+        p.name AS provider_name, 
+        p.email AS provider_email,
+        p.phone AS provider_phone,
+        mp.photo_url
+    FROM 
+        maintenance_requests mr
+    LEFT JOIN 
+        providers p ON mr.provider_id = p.id
+    LEFT JOIN 
+        maintenance_photos mp ON mp.maintenance_request_id = mr.id
+
     ");
     $stmt->execute();
     $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);

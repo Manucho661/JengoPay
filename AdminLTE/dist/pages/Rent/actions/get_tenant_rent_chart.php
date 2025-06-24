@@ -3,15 +3,17 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-header('Content-Type: application/json'); // ✅ Ensure JSON header
+
+
+header('Content-Type: application/json');
 
 include '../../db/connect.php';
 
 $unit_code = $_GET['unit_code'] ?? '';
-$year = $_GET['year'] ?? date('Y');
+$year = 2025;
 
-// Start with 12 months initialized to 0
-$monthlyRent = array_fill(1, 12, 0);
+// Create an array with 12 months (index 0 = January, 11 = December)
+$monthlyRent = array_fill(0, 12, 0);
 
 // Build WHERE clause
 $where = ['`year` = ?'];
@@ -33,13 +35,13 @@ try {
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $month = (int)$row['month'];
-        $monthlyRent[$month] = (float)$row['total'];
+        if ($month >= 1 && $month <= 12) {
+            $monthlyRent[$month - 1] = (float)$row['total']; // FIXED: adjust for 0-based index
+        }
     }
 
-    // Return JSON array starting with January at index 0
-    echo json_encode(array_values($monthlyRent));
+    echo json_encode($monthlyRent); // returns [0, 0, ..., total] correctly for chart
 
 } catch (PDOException $e) {
     echo json_encode(['error' => $e->getMessage()]);
 }
- 

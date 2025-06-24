@@ -691,7 +691,7 @@ try {
               class="form-control select2 select2-danger"
               data-dropdown-css-class="select2-danger"
               style="width: 100%;">
-        <option value="" hidden selected>-- Select Option --</option>
+             <option value="" hidden selected>-- Select Option --</option>
                                     <option>Mombasa</option>
                                     <option>Kwale</option>
                                     <option>Kilifi</option>

@@ -415,7 +415,7 @@
               <h6 class="mb-0 contact_section_header summary mb-2"></i> Requests</h6>
 
               <div class="col-md-12">
-                <div class="Table-section bg-white p-2 rounded-2">
+                <div class="Table-section bg-white p-2 rounded-2" >
                   <div class="table-section-header">
                     <div class="entries">
                       <h6 class="mb-0 contact_section_header summary mb-2 p-2 rounded-top" style="background-color: #00192D; color:#FFA000;"> <span class="text-white">Manucho |</span>  5 entries</h6>
@@ -427,7 +427,7 @@
                       <div id="custom-buttons"></div>
                     </div>
                   </div>
-
+                  <div style="overflow: auto;">
                   <table id="requests-table" class=" display summary-table" >
                     <thead class="mb-2">
                       <tr>
@@ -446,20 +446,23 @@
 
                     </tbody>
                   </table>
+                  </div>
                 </div>
               </div>
 
                <!-- Record Payment Modal -->
               <div class="modal fade" id="recordPaymentModal" tabindex="-1" aria-labelledby="recordPaymentModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg modal-dialog-centered">
-                  <div class="modal-content rounded-4 shadow-sm">
+                  <div class="modal-content rounded-2 shadow-sm">
                     <div class="modal-header bg-primary text-white rounded-top" style="background-color: #00192D !important;" >
                       <h5 class="modal-title" id="recordPaymentModalLabel" style="color:#FFA000 !important; margin-left:5px;" id="inspectionModalLabel" >
                         <i class="fas fa-money-check-alt me-2"></i> Record Payment
                       </h5>
                       <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-
+                    <div class="alert mb-4" style="background-color: #FFF3CD; color: #856404; border: 1px solid #FFE8A1;">
+                      <i class="fas fa-exclamation-circle mr-2"></i> Please fill out all fields carefully to avoid delays.
+                    </div>
                     <form id="recordPaymentForm" onsubmit="addRequestPayment(event)" enctype="multipart/form-data" >
                       <div class="modal-body">
                         <div class="row g-3">
@@ -472,7 +475,7 @@
 
                           <!-- Payment Method -->
                           <div class="col-md-6 form-floating">
-                            <select class="form-select" name="paymentMethod" id="paymentMethod" required>
+                            <select class="form-select" name="paymentMethod" id="recordPaymentMethod" required>
                               <option value="" selected disabled>Select Method</option>
                               <option>Cash</option>
                               <option>M-Pesa</option>
@@ -488,22 +491,10 @@
                             <label for="datePaid"><i class="fas fa-calendar-day me-2" style="color:#FFA000 ! important"></i>Date Paid</label>
                           </div>
 
-                          <!-- Service Provider -->
+                          <!-- Reference Number -->
                           <div class="col-md-6 form-floating">
-                            <input type="text" class="form-control" id="serviceProvider" name="serviceProvider" placeholder="Service Provider" required>
-                            <label for="serviceProvider"><i class="fas fa-user-tie me-2" style="color:#FFA000 ! important"></i>Service Provider</label>
-                          </div>
-
-                          <!-- Cheque Number -->
-                          <div class="col-md-6 form-floating">
-                            <input type="text" class="form-control" name="chequeNumber" id="chequeNumber" placeholder="Cheque Number">
-                            <label for="chequeNumber"><i class="fas fa-receipt me-2" style="color:#FFA000 ! important" ></i>Cheque Number</label>
-                          </div>
-
-                          <!-- Invoice Number -->
-                          <div class="col-md-6 form-floating">
-                            <input type="text" class="form-control" name="invoiceNumber" id="invoiceNumber" placeholder="Invoice Number">
-                            <label for="invoiceNumber"><i class="fas fa-file-invoice me-2"style="color:#FFA000 ! important" ></i>Invoice Number</label>
+                            <input type="text" class="form-control" id="referenceNumber" name="referenceNumber" placeholder="Reference Number" required>
+                            <label for="referenceNumber"><i class="fas fa-hashtag me-2" style="color:#FFA000 ! important"></i>Reference Number</label>
                           </div>
 
                           <!-- Notes -->
@@ -532,68 +523,89 @@
                 </div>
               </div>
 
+
               <!-- View request Modal -->
               <div class="modal fade" id="maintenanceRequestModal" tabindex="-1" aria-labelledby="maintenanceRequestModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg modal-dialog-centered">
-                  <div class="modal-content rounded-4 shadow">
+                  <div class="modal-content rounded-2 shadow">
 
-                    <div class="modal-header bg-dark text-white rounded-top-4">
-                      <h5 class="modal-title" id="maintenanceRequestModalLabel">🛠 Maintenance Request Details</h5>
+                    <div class="modal-header bg-dark text-white rounded-top-2">
+                      <h5 class="modal-title" id="maintenanceRequestModalLabel" style="color: #FFA000;">🛠 Maintenance Request Details</h5>
                       <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
                     <div class="modal-body p-4">
-
-                      <!-- 🖼 Image Preview -->
-                      <div class="mb-4 text-center">
-                        <img id="request-imag" src="clouds-cloudy-conifers-247478.jpg" alt="Maintenance Picture" class="img-fluid rounded-3 shadow-sm" style="max-height: 250px; object-fit: cover;">
-                      </div>
-
                       <!-- 📋 Info Table -->
                       <div class="row g-3">
                         <div class="col-md-6">
                           <div><strong>Request ID:</strong></div>
-                          <div id="request-id" class="text-muted">--</div>
+                          <div id="request-id" style="color:rgb(0 28 63 / 60%); font-weight:500;">--</div>
                         </div>
                         <div class="col-md-6">
                           <div><strong>Request Date:</strong></div>
-                          <div id="request-date" class="text-muted">--</div>
+                          <div id="request-date" style="color:rgb(0 28 63 / 60%); font-weight:500;">--</div>
                         </div>
                         <div class="col-md-6">
                           <div><strong>Property:</strong></div>
-                          <div id="property-name" class="text-muted">--</div>
+                          <div id="property-name" style="color:rgb(0 28 63 / 60%); font-weight:500;">--</div>
                         </div>
                         <div class="col-md-6">
                           <div><strong>Unit:</strong></div>
-                          <div id="unit-number" class="text-muted">--</div>
+                          <div id="unit-number" style="color:rgb(0 28 63 / 60%); font-weight:500;">--</div>
                         </div>
                         <div class="col-md-6">
                           <div><strong>Category:</strong></div>
-                          <div id="request-category" class="text-muted">--</div>
+                          <div id="request-category" style="color:rgb(0 28 63 / 60%); font-weight:500;">--</div>
                         </div>
+                        
                         <div class="col-md-6">
-                         <div class="bg-info d-flex text-dark px-1 rounded-pill" style="width: fit-content;">
+                        <div><strong>Status:</strong></div>
+                         <div class="bg-info d-flex text-dark px-1 rounded-2" style="width: fit-content;">
                           <div>✅</div>
                           <div id="request-status" class="badge  ">--</div>
+                         </div>
                         </div>
+
+                        <div class="col-md-6">
+                          <div><strong>Payment Status:</strong></div>
+                          <div class="badge payment-status px-3 py-1 rounded-1 d-flex" style="width:fit-content; vertical-align:middle;">
+                            <div style="vertical-align:middle;">✅</div>
+                            <button id="payment-status" style="border:none;" onclick="makePayment()"></button> 
+                          </div>
                         </div>
-                        <div><strong>Payment Status:</strong></div>
-                        <div class="badge payment-status px-3 py-1 rounded-pill d-flex" style="width:fit-content;">
-                          <div>✅</div>
-                          <button id="payment-status" onclick="makePayment()"></button> 
-                        </div>
-                        <div class="col-12">
+                        <div class="col-6">
                           <div><strong>Description:</strong></div>
-                          <div id="request-description" class="text-muted">--</div>
+                          <div id="request-description" style="color:rgb(0 28 63 / 60%); font-weight:500;">--</div>
                         </div>
+
+                        <div class="col-md-6">
+                          <div><strong>Photo:</strong></div>
+                          <div class="mb-4">
+                            <img id="request-imag" src="uploads/1750247840_Tenants.png" alt="Maintenance Picture" class="img-fluid rounded-3 shadow-sm" style="max-height: 250px; object-fit: cover;">
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div><strong>BIDS:</strong></div>
+                          <button class="btn btn-primary p-1" onclick="showProposal()" >30 Applications</button>
+                          <!-- <div id="request-description" style="color:rgb(0 28 63 / 60%); font-weight:500;">--</div> -->
+                        </div>
+                        
                       </div>
 
                     </div>
 
-                    <div class="modal-footer bg-light rounded-bottom-4">
+                    <div class="modal-footer bg-light rounded-bottom-4 d-flex justify-content-between align-items-center">
+                      <!-- Date on the far left -->
+                      <div class="text-muted" id="footer-date">18 June 2025</div>
+
+                      <!-- Availability button in the center -->
+                      <button type="button" id="availabilityBtn" class="btn btn-outline-success">
+                        Available
+                      </button>
+
+                      <!-- Close button on the right -->
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
-
                   </div>
                 </div>
               </div>
@@ -763,19 +775,125 @@
                               <option value="bank">Bank Transfer</option>
                             </select>
                           </div>
-                          <div id="mpesaPhoneSection" class="d-none">
-                            <label for="phoneNumber" class="form-label">M-Pesa Phone Number</label>
-                            <input type="tel" class="form-control" name="phone" id="phoneNumber" placeholder="07XXXXXXXX" required>
+                          <div id="mpesaPhoneSection" style="display: none;">
+                            <select class="form-select" id="paymentMethod" name="payment_method" required>
+                              <option value="">Send Money</option>
+                              <option value="sendMoney">Send Money</option>
+                              <option value="lipaNaMpesa">Lipa na M-pesa</option>
+                            </select>
+                            <div id="sendMoneySection">
+                              <label for="phoneNumber" class="form-label"><b>Your Phone Number</b></label>
+                              <input type="tel" class="form-control" name="senderPhone" id="phoneNumber" placeholder="0753432756" required>
+
+                              <label for="phoneNumber" class="form-label"><b>Provider Phone Number</b></label>
+                              <input type="tel" class="form-control" name="phone" id="phoneNumber" placeholder="0757414721" required>
+                              <div class="mt-2">
+                                <label class="form-label">Amount</label>
+                                <input type="number" id="mpesaAmount" name="mpesaAmount" placeholder="Amount" required />
+                              </div>
+                              <button type="submit" class="btn btn-success mt-3">Pay Now</button>
+                            </div>
                           </div>
-                          <button type="button" class="btn btn-secondary me-2" id="goBackBtn">← Go Back</button>
-                          <button type="submit" class="btn btn-success mt-3">Pay Now</button>
+                          <div class="d-flex">
+                            <button type="button" class="btn btn-secondary me-2 mt-3" id="goBackBtn">← Go Back</button>
+                          </div>
                         </form>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-             <!-- end payment modal -->
+              <!-- end payment modal -->
+              <!-- Applications Modal -->
+              <div id="customBackdrop" class="modal-backdrop fade d-none"></div>
+              <div id="proposalContainer" class="container proposalContainer py-2 fade d-none custom-modal bg-light" style="overflow: auto;">
+                <div class="d-flex justify-content-between mb-2">
+                  <div class=" text-left"style="color:rgb(0 28 63 / 60%); font-weight:500;"><b> Provider Applications</b></div>
+                  
+                  <div class="text-center">
+                    <button class="bg-secondary text-white px-4 py-0 rounded hover:bg-blue-600">← Go Back</button>
+                  </div>
+
+                  <div class="text-right">
+                    <button class="text-gray-500 text-xl rounded hover:text-white hover:bg-red-500 transition">&times;</button>
+                  </div>
+                </div>
+                <div class="proposal-card">
+                  <div class="proposal-header d-flex align-items-start">
+                    <img src="https://i.pravatar.cc/70" alt="Profile Picture" class="profile-pic me-3">
+                    <div>
+                      <h5>Jane Doe <span class="badge bg-success">Top Rated</span></h5>
+                      <p>Full Stack Developer | React & Node.js</p>
+                    </div>
+                    <div class="ms-auto proposal-meta text-end">
+                      <h6>$25/hr</h6>
+                      <small>5 days delivery</small><br>
+                      <small class="text-success">✅ 42 jobs completed</small>
+                    </div>
+                  </div>
+
+                  <hr>
+
+                  <p><strong>Cover Letter:</strong> I'm excited to help build your job board! I have 3 years of experience with React and recently completed a similar project...</p>
+                  <p><strong>Location:</strong> Nairobi, Kenya (GMT+3)</p>
+
+                  <div class="d-flex justify-content-end mt-3">
+                    <button class="btn btn-outline-secondary btn-sm btn-action">Message</button>
+                    <button class="btn btn-outline-primary btn-sm btn-action">Shortlist</button>
+                    <button class="btn btn-outline-danger btn-sm">Decline</button>
+                  </div>
+                </div>
+                <div class="proposal-card mt-2">
+                  <div class="proposal-header d-flex align-items-start">
+                    <img src="https://i.pravatar.cc/70" alt="Profile Picture" class="profile-pic me-3">
+                    <div>
+                      <h5>Jane Doe <span class="badge bg-success">Top Rated</span></h5>
+                      <p>Full Stack Developer | React & Node.js</p>
+                    </div>
+                    <div class="ms-auto proposal-meta text-end">
+                      <h6>$25/hr</h6>
+                      <small>5 days delivery</small><br>
+                      <small class="text-success">✅ 42 jobs completed</small>
+                    </div>
+                  </div>
+
+                  <hr>
+
+                  <p><strong>Cover Letter:</strong> I'm excited to help build your job board! I have 3 years of experience with React and recently completed a similar project...</p>
+                  <p><strong>Location:</strong> Nairobi, Kenya (GMT+3)</p>
+
+                  <div class="d-flex justify-content-end mt-3">
+                    <button class="btn btn-outline-secondary btn-sm btn-action">Message</button>
+                    <button class="btn btn-outline-primary btn-sm btn-action">Shortlist</button>
+                    <button class="btn btn-outline-danger btn-sm">Decline</button>
+                  </div>
+                </div>
+                <div class="proposal-card mt-2">
+                  <div class="proposal-header d-flex align-items-start">
+                    <img src="https://i.pravatar.cc/70" alt="Profile Picture" class="profile-pic me-3">
+                    <div>
+                      <h5>Jane Doe <span class="badge bg-success">Top Rated</span></h5>
+                      <p>Full Stack Developer | React & Node.js</p>
+                    </div>
+                    <div class="ms-auto proposal-meta text-end">
+                      <h6>$25/hr</h6>
+                      <small>5 days delivery</small><br>
+                      <small class="text-success">✅ 42 jobs completed</small>
+                    </div>
+                  </div>
+
+                  <hr>
+
+                  <p><strong>Cover Letter:</strong> I'm excited to help build your job board! I have 3 years of experience with React and recently completed a similar project...</p>
+                  <p><strong>Location:</strong> Nairobi, Kenya (GMT+3)</p>
+
+                  <div class="d-flex justify-content-end mt-3">
+                    <button class="btn btn-outline-secondary btn-sm btn-action">Message</button>
+                    <button class="btn btn-outline-primary btn-sm btn-action">Shortlist</button>
+                    <button class="btn btn-outline-danger btn-sm">Decline</button>
+                  </div>
+                </div>
+              </div>
             </div>
             <!--end::Row-->
           </div>
@@ -785,9 +903,6 @@
       </main>
       <!--end::App Main-->
       <!--begin::Footer-->
-
-
-
       <footer class="app-footer">
         <!--begin::To the end-->
         <div class="float-end d-none d-sm-inline">Anything you want</div>
@@ -803,10 +918,6 @@
       <!--end::Footer-->
     </div>
     <!--end::App Wrapper-->
-
-
-
-
 <!-- Overlay Cards -->
 <!-- Overlay scripts -->
 <!-- main js file -->
@@ -973,6 +1084,8 @@ $(document).ready(function() {
 
 
     <!--end::Script-->
+    <!-- plugin for pdf -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   </body>
   <!--end::Body-->
 </html>
