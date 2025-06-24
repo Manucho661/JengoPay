@@ -1058,10 +1058,34 @@ body {
   position: relative;
   transition: all 0.3s ease;
 }
+
+.alert-box {
+  padding: 15px 20px;
+  background-color: #FFC107; /* amber background */
+  color: #00192D;            /* deep navy text */
+  border: 1px solid #00192D; /* matching border */
+  border-radius: 8px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: 10px auto;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  line-height: 20px;
+  cursor: pointer;
+  color: inherit;
+  margin-left: 15px;
+}
+
 </style>
-
-
-
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!-- Top Notification Bell -->
@@ -1375,7 +1399,10 @@ body {
 
               <!-- <div class="row"> -->
 
-
+              <div id="notificationBox" class="alert-box" style="display: none;">
+  <span id="notificationMessage">🔔 This is a notification.</span>
+  <button onclick="dismissNotification()" class="close-btn">&times;</button>
+</div>
 
               <div class="col-sm-4">
                 <!-- <ol class="breadcrumb float-sm-end">
@@ -1394,11 +1421,7 @@ body {
           <div class="container-fluid">
             <!-- Info boxes -->
             <div class="row first mb-2 mt-2 ">
-
               <div class="col-md-12 d-flex justify-content-end">
-
-
-
                   <button id="add_provider_btn" class="btn" style="background-color: #00192D; color: white; font-size: small;">   <i class="fa fa-bullhorn"></i>
                   <b class="button_item" class="open-btn" onclick="opennotificationPopup()"> New_Announcement</b></button>
 
@@ -1419,6 +1442,7 @@ body {
                     <div class="card-header">
                       <div class="notification-center">
                         <div class="header">
+
                             <h1>Announcements</h1>
                             <div class="notification-actions">
                             <span class="notification-count" style="color: #FFC107;">
@@ -1463,6 +1487,8 @@ body {
                         <div class="notification-list" id="announcementList">
     <!-- Announcements will be loaded here -->
 </div>
+
+
                       </div>
                     </div>
                 </div>
@@ -1648,9 +1674,9 @@ body {
     <div class="card-body new-message-body">
       <form action="" method="POST" id="notificationForm">
         <div class="form-group">
-          <label for="property">Recipients*</label>
+          <label for="property">Select Recipient*</label>
           <select id="property" name="recipient" class="form-select" required>
-            <option value="" disabled selected>Select Recipient</option>
+            <option value="" disabled selected>Select Recipient*</option>
             <option value="Manucho">Manucho</option>
             <option value="Ben 10">Ben 10</option>
             <option value="Alpha">Alpha</option>
@@ -1661,6 +1687,7 @@ body {
         <div class="form-group">
           <label for="priority">Priority*</label>
           <select id="priority" name="priority" class="form-select" required>
+          <option value="" disabled selected>Select Priority*</option>
             <option value="Normal">Normal</option>
             <option value="Urgent">Urgent</option>
             <option value="Reminder">Reminder</option>
@@ -1778,7 +1805,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
-<script>
+<!-- <script>
 document.addEventListener('DOMContentLoaded', function () {
   document.body.addEventListener('click', function (e) {
     if (e.target.closest('.archive-btn')) {
@@ -1813,7 +1840,7 @@ function archiveAnnouncement(id) {
     alert('An error occurred.');
   });
 }
-</script>
+</script> -->
 
 <script>
  function showArchivedMessages() {
@@ -1886,6 +1913,188 @@ function formatTime(datetime) {
 
 
 <script>
+function showDrafts() {
+  fetch('get_drafts.php')
+    .then(response => response.json())
+    .then(data => {
+      const container = document.getElementById('announcementList');
+      container.innerHTML = '';
+
+      if (data.length === 0) {
+        container.innerHTML = '<p>No drafts found.</p>';
+        return;
+      }
+
+      data.forEach(item => {
+        const iconClass = getIconByPriority(item.priority);
+        const html = `
+          <div class="notification-item unread" id="announcement-${item.id}">
+            <div class="notification-icon ${iconClass}">
+              <i class="fas ${getIconSymbol(item.priority)}"></i>
+            </div>
+            <div class="notification-content">
+              <div class="notification-title">
+                <span>${item.priority} Draft to ${item.recipient}</span>
+                <span class="notification-time">${formatTime(item.created_at)}</span>
+              </div>
+              <p class="notification-message">${item.message}</p>
+              <div class="notification-actions">
+                <button class="action-btn edit-btn" data-id="${item.id}">
+                  <i class="fas fa-pencil-alt"></i> Edit
+                </button>
+                <button class="action-btn delete-btn" data-id="${item.id}">
+                  <i class="fas fa-trash-alt"></i> Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+        container.insertAdjacentHTML('beforeend', html);
+      });
+
+      // Add event listeners for drafts
+      document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          deleteDraft(this.getAttribute('data-id'));
+        });
+      });
+    })
+    .catch(error => console.error('Error loading drafts:', error));
+}
+
+function deleteDraft(draftId) {
+  if (!confirm('Are you sure you want to permanently delete this draft? This action cannot be undone.')) {
+    return;
+  }
+
+  fetch('delete_draft.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: `id=${draftId}`
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById(`announcement-${draftId}`)?.remove();
+      showAlert('Draft deleted successfully', 'success');
+    } else {
+      showAlert('Failed to delete draft: ' + (data.error || data.message), 'error');
+    }
+  })
+  .catch(error => {
+    console.error('Error deleting draft:', error);
+    showAlert('An error occurred while deleting the draft', 'error');
+  });
+}
+</script>
+
+
+<script>
+  document.addEventListener('click', function (e) {
+  const editBtn = e.target.closest('.edit-btn');
+  if (editBtn) {
+    const id = editBtn.dataset.id;
+    editDraft(id);
+  }
+});
+
+</script>
+
+<script>
+  function editDraft(id) {
+  console.log('Editing draft with ID:', id); // for testing
+  window.location.href = `edit_draft.php?id=${id}`;
+}
+
+</script>
+
+<script>
+  function showNotification(message, type = 'success') {
+  const box = document.getElementById('notificationBox');
+  const messageSpan = document.getElementById('notificationMessage');
+
+  messageSpan.textContent = message;
+
+  // Set styles based on type
+  if (type === 'success') {
+    box.style.backgroundColor = '#d4edda';
+    box.style.color = '#155724';
+    box.style.borderColor = '#c3e6cb';
+  } else {
+    box.style.backgroundColor = '#f8d7da';
+    box.style.color = '#721c24';
+    box.style.borderColor = '#f5c6cb';
+  }
+
+  box.style.display = 'flex';
+
+  // Auto-dismiss after 3 seconds
+  setTimeout(() => {
+    if (box.style.display !== 'none') {
+      dismissNotification();
+    }
+  }, 3000);
+}
+
+function dismissNotification() {
+  const box = document.getElementById('notificationBox');
+  box.style.display = 'none';
+}
+
+</script>
+
+<script>
+// Drafts function
+// function showDrafts() {
+//   fetch('get_drafts.php')
+//     .then(response => response.json())
+//     .then(data => {
+//       const container = document.getElementById('announcementList');
+//       container.innerHTML = '';
+
+//       if (data.length === 0) {
+//         container.innerHTML = '<p>No draft announcements found.</p>';
+//         return;
+//       }
+
+//       data.forEach(item => {
+//         const iconClass = getIconByPriority(item.priority);
+//         const html = `
+//           <div class="notification-item unread" id="announcement-${item.id}">
+//             <div class="notification-icon ${iconClass}">
+//               <i class="fas ${getIconSymbol(item.priority)}"></i>
+//             </div>
+//             <div class="notification-content">
+//               <div class="notification-title">
+//                 <span>${item.priority} Draft to ${item.recipient}</span>
+//                 <span class="notification-time">${formatTime(item.created_at)}</span>
+//               </div>
+//               <p class="notification-message">${item.message}</p>
+//               <div class="notification-actions">
+//                 <button class="action-btn edit-btn" data-id="${item.id}">
+//                   <i class="fas fa-pencil-alt"></i> Edit
+//                 </button>
+//                 <button class="action-btn archive-btn" data-id="${item.id}">
+//                   <i class="fas fa-archive"></i> Archive
+//                 </button>
+//                 <button class="action-btn delete-btn" data-id="${item.id}">
+//                   <i class="fas fa-trash-alt"></i> Delete
+//                 </button>
+//               </div>
+//             </div>
+//           </div>
+//         `;
+//         container.insertAdjacentHTML('beforeend', html);
+//       });
+
+//       // Enable scrolling if content exceeds container height
+//       enableScrolling();
+//     })
+//     .catch(error => console.error('Error loading drafts:', error));
+// }
+
 // Shared utility functions
 function getIconByPriority(priority) {
     switch (priority.toLowerCase()) {
@@ -1910,126 +2119,79 @@ function formatTime(datetime) {
     return d.toLocaleString();
 }
 
-function enableScrolling() {
-    const container = document.getElementById('announcementList');
-    const maxHeight = 500;
+// function enableScrolling() {
+//     const container = document.getElementById('announcementList');
+//     const maxHeight = 500;
 
-    if (container.scrollHeight > maxHeight) {
-        container.style.maxHeight = `${maxHeight}px`;
-        container.style.overflowY = 'auto';
-        container.classList.add('scrollable-container');
-        addScrollButtons(container);
-    }
-}
+//     if (container.scrollHeight > maxHeight) {
+//         container.style.maxHeight = `${maxHeight}px`;
+//         container.style.overflowY = 'auto';
+//         container.classList.add('scrollable-container');
+//         addScrollButtons(container);
+//     }
+// }
 
-function addScrollButtons(container) {
-    const scrollUp = document.createElement('button');
-    scrollUp.className = 'scroll-btn scroll-up';
-    scrollUp.innerHTML = '<i class="fas fa-chevron-up"></i>';
-    scrollUp.onclick = () => container.scrollBy({ top: -100, behavior: 'smooth' });
+// function addScrollButtons(container) {
+//     const scrollUp = document.createElement('button');
+//     scrollUp.className = 'scroll-btn scroll-up';
+//     scrollUp.innerHTML = '<i class="fas fa-chevron-up"></i>';
+//     scrollUp.onclick = () => container.scrollBy({ top: -100, behavior: 'smooth' });
 
-    const scrollDown = document.createElement('button');
-    scrollDown.className = 'scroll-btn scroll-down';
-    scrollDown.innerHTML = '<i class="fas fa-chevron-down"></i>';
-    scrollDown.onclick = () => container.scrollBy({ top: 100, behavior: 'smooth' });
+//     const scrollDown = document.createElement('button');
+//     scrollDown.className = 'scroll-btn scroll-down';
+//     scrollDown.innerHTML = '<i class="fas fa-chevron-down"></i>';
+//     scrollDown.onclick = () => container.scrollBy({ top: 100, behavior: 'smooth' });
 
-    container.parentNode.insertBefore(scrollUp, container);
-    container.parentNode.appendChild(scrollDown);
+//     container.parentNode.insertBefore(scrollUp, container);
+//     container.parentNode.appendChild(scrollDown);
 
-    container.addEventListener('scroll', () => {
-        scrollUp.style.display = container.scrollTop > 0 ? 'block' : 'none';
-        scrollDown.style.display = container.scrollTop < container.scrollHeight - container.clientHeight ? 'block' : 'none';
-    });
-}
+//     container.addEventListener('scroll', () => {
+//         scrollUp.style.display = container.scrollTop > 0 ? 'block' : 'none';
+//         scrollDown.style.display = container.scrollTop < container.scrollHeight - container.clientHeight ? 'block' : 'none';
+//     });
+// }
 
-// Drafts function
-function showDrafts() {
-    fetch('get_drafts.php')
-        .then(response => response.json())
-        .then(data => {
-            const container = document.getElementById('announcementList');
-            container.innerHTML = '';
-
-            if (data.length === 0) {
-                container.innerHTML = '<p>No draft announcements found.</p>';
-                return;
-            }
-
-            data.forEach(item => {
-                const iconClass = getIconByPriority(item.priority);
-                const html = `
-                    <div class="notification-item unread" id="draft-${item.id}">
-                        <div class="notification-icon ${iconClass}">
-                            <i class="fas ${getIconSymbol(item.priority)}"></i>
-                        </div>
-                        <div class="notification-content">
-                            <div class="notification-title">
-                                <span>${item.priority} Draft to ${item.recipient}</span>
-                                <span class="notification-time">${formatTime(item.created_at)}</span>
-                            </div>
-                            <p class="notification-message">${item.message}</p>
-                            <div class="notification-actions">
-                                <button class="action-btn edit-btn" data-id="${item.id}">
-                                    <i class="fas fa-pencil-alt"></i> Edit
-                                </button>
-                                <button class="action-btn archive-btn" data-id="${item.id}">
-                                    <i class="fas fa-archive"></i> Archive
-                                </button>
-                                <button class="action-btn delete-btn" data-id="${item.id}">
-                                    <i class="fas fa-trash-alt"></i> Delete
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                container.insertAdjacentHTML('beforeend', html);
-            });
-
-            enableScrolling();
-        })
-        .catch(error => console.error('Error loading drafts:', error));
-}
 
 // Event listeners
-document.addEventListener('click', function(e) {
-    const archiveBtn = e.target.closest('.archive-btn');
-    const deleteBtn = e.target.closest('.delete-btn');
-    const editBtn = e.target.closest('.edit-btn');
+// document.addEventListener('click', function(e) {
+//     const archiveBtn = e.target.closest('.archive-btn');
+//     const deleteBtn = e.target.closest('.delete-btn');
+//     const editBtn = e.target.closest('.edit-btn');
 
-    if (archiveBtn) {
-        const id = archiveBtn.dataset.id;
-        if (confirm('Archive this announcement?')) archiveAnnouncement(id);
-    }
+//     if (archiveBtn) {
+//         const id = archiveBtn.dataset.id;
+//         if (confirm('Archive this announcement?')) archiveAnnouncement(id);
+//     }
 
-    if (deleteBtn) {
-        const id = deleteBtn.dataset.id;
-        if (confirm('Delete this announcement?')) deleteAnnouncement(id);
-    }
+//     // if (deleteBtn) {
+//     //     const id = deleteBtn.dataset.id;
+//     //     if (confirm('Delete this announcement?')) deleteAnnouncement(id);
+//     // }
 
-    if (editBtn) {
-        const id = editBtn.dataset.id;
-        editDraft(id);
-    }
-});
+//     if (editBtn) {
+//         const id = editBtn.dataset.id;
+//         editDraft(id);
+//     }
+// });
 
-function archiveAnnouncement(id) {
-    console.log('Archiving announcement:', id);
-    // Implement actual archive functionality
-}
+// function archiveAnnouncement(id) {
+//     console.log('Archiving announcement:', id);
+//     // Implement actual archive functionality
+// }
 
-function deleteAnnouncement(id) {
-    console.log('Deleting announcement:', id);
-    // Implement actual delete functionality
-}
+// function deleteAnnouncement(id) {
+//     console.log('Deleting announcement:', id);
+//     // Implement actual delete functionality
+// }
 
-function editDraft(id) {
-    console.log('Editing draft:', id);
-    // Implement actual edit functionality
-}
+// function editDraft(id) {
+//     console.log('Editing draft:', id);
+//     // Implement actual edit functionality
+// }
 
-// Initialize with drafts view by default
-document.addEventListener('DOMContentLoaded', showDrafts);
-</script>
+// // Initialize with drafts view by default
+// document.addEventListener('DOMContentLoaded', showDrafts);
+// </script>
 
 
 
@@ -2182,13 +2344,45 @@ function showSentMessages() {
         `;
         container.insertAdjacentHTML('beforeend', html);
       });
+
+      // Add event listeners for sent messages
+      document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          deleteSentMessage(this.getAttribute('data-id'));
+        });
+      });
     })
     .catch(error => console.error('Error loading sent messages:', error));
 }
 
-</script>
+function deleteSentMessage(messageId) {
+  if (!confirm('Are you sure you want to permanently delete this sent announcement? This action cannot be undone.')) {
+    return;
+  }
 
-<script>
+  fetch('delete_message.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: `id=${messageId}`
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById(`announcement-${messageId}`)?.remove();
+      showAlert('Sent announcement deleted successfully', 'success');
+    } else {
+      showAlert('Failed to delete announcement: ' + (data.error || data.message), 'error');
+    }
+  })
+  .catch(error => {
+    console.error('Error deleting sent message:', error);
+    showAlert('An error occurred while deleting the announcement', 'error');
+  });
+}
+</script>
+<!-- <script>
   document.addEventListener('DOMContentLoaded', function () {
   document.body.addEventListener('click', function (e) {
     const deleteBtn = e.target.closest('.delete-btn');
@@ -2224,7 +2418,7 @@ function deleteAnnouncement(id) {
     });
 }
 
-</script>
+</script> -->
 
 <script>
 function getIconByPriority(priority) {
@@ -2385,41 +2579,6 @@ function formatTime(datetime) {
   return d.toLocaleString(); // Customize formatting if needed
 }
 
-function enableScrolling() {
-  const container = document.getElementById('announcementList');
-  const maxHeight = 500; // Set your desired max height
-
-  if (container.scrollHeight > maxHeight) {
-    container.style.maxHeight = `${maxHeight}px`;
-    container.style.overflowY = 'auto';
-    container.classList.add('scrollable-container');
-    addScrollButtons(container);
-  }
-}
-
-function addScrollButtons(container) {
-  // Create scroll up button
-  const scrollUp = document.createElement('button');
-  scrollUp.className = 'scroll-btn scroll-up';
-  scrollUp.innerHTML = '<i class="fas fa-chevron-up"></i>';
-  scrollUp.onclick = () => container.scrollBy({ top: -100, behavior: 'smooth' });
-
-  // Create scroll down button
-  const scrollDown = document.createElement('button');
-  scrollDown.className = 'scroll-btn scroll-down';
-  scrollDown.innerHTML = '<i class="fas fa-chevron-down"></i>';
-  scrollDown.onclick = () => container.scrollBy({ top: 100, behavior: 'smooth' });
-
-  // Add buttons to container
-  container.parentNode.insertBefore(scrollUp, container);
-  container.parentNode.appendChild(scrollDown);
-
-  // Show/hide buttons based on scroll position
-  container.addEventListener('scroll', () => {
-    scrollUp.style.display = container.scrollTop > 0 ? 'block' : 'none';
-    scrollDown.style.display = container.scrollTop < container.scrollHeight - container.clientHeight ? 'block' : 'none';
-  });
-}
 
 document.addEventListener('DOMContentLoaded', loadAnnouncements);
 
@@ -2429,15 +2588,15 @@ document.addEventListener('click', function (e) {
   const restoreBtn = e.target.closest('.restore-btn');
   const editBtn = e.target.closest('.edit-btn');
 
-  if (archiveBtn) {
-    const id = archiveBtn.dataset.id;
-    if (confirm('Archive this announcement?')) archiveAnnouncement(id);
-  }
+  // if (archiveBtn) {
+  //   const id = archiveBtn.dataset.id;
+  //   if (confirm('Archive this announcement?')) archiveAnnouncement(id);
+  // }
 
-  if (deleteBtn) {
-    const id = deleteBtn.dataset.id;
-    if (confirm('Delete this announcement?')) deleteAnnouncement(id);
-  }
+  // if (deleteBtn) {
+  //   const id = deleteBtn.dataset.id;
+  //   if (confirm('Delete this announcement?')) deleteAnnouncement(id);
+  // }
 
   if (restoreBtn) {
     const id = restoreBtn.dataset.id;
@@ -2475,17 +2634,55 @@ function editDraft(id) {
   const archiveBtn = e.target.closest('.archive-btn');
   const deleteBtn = e.target.closest('.delete-btn');
 
-  if (archiveBtn) {
-    const id = archiveBtn.dataset.id;
-    if (confirm('Archive this announcement?')) archiveAnnouncement(id);
-  }
+  // if (archiveBtn) {
+  //   const id = archiveBtn.dataset.id;
+  //   if (confirm('Archive this announcement?')) archiveAnnouncement(id);
+  // }
 
-  if (deleteBtn) {
-    const id = deleteBtn.dataset.id;
-    if (confirm('Delete this announcement?')) deleteAnnouncement(id);
-  }
+  // if (deleteBtn) {
+  //   const id = deleteBtn.dataset.id;
+  //   if (confirm('Delete this announcement?')) deleteAnnouncement(id);
+  // }
 });
 
+</script>
+
+<script>
+  function enableScrolling() {
+  const container = document.getElementById('announcementList');
+  const maxHeight = 500; // Set your desired max height
+
+  if (container.scrollHeight > maxHeight) {
+    container.style.maxHeight = `${maxHeight}px`;
+    container.style.overflowY = 'auto';
+    container.classList.add('scrollable-container');
+    addScrollButtons(container);
+  }
+}
+
+function addScrollButtons(container) {
+  // Create scroll up button
+  const scrollUp = document.createElement('button');
+  scrollUp.className = 'scroll-btn scroll-up';
+  scrollUp.innerHTML = '<i class="fas fa-chevron-up"></i>';
+  scrollUp.onclick = () => container.scrollBy({ top: -100, behavior: 'smooth' });
+
+  // Create scroll down button
+  const scrollDown = document.createElement('button');
+  scrollDown.className = 'scroll-btn scroll-down';
+  scrollDown.innerHTML = '<i class="fas fa-chevron-down"></i>';
+  scrollDown.onclick = () => container.scrollBy({ top: 100, behavior: 'smooth' });
+
+  // Add buttons to container
+  container.parentNode.insertBefore(scrollUp, container);
+  container.parentNode.appendChild(scrollDown);
+
+  // Show/hide buttons based on scroll position
+  container.addEventListener('scroll', () => {
+    scrollUp.style.display = container.scrollTop > 0 ? 'block' : 'none';
+    scrollDown.style.display = container.scrollTop < container.scrollHeight - container.clientHeight ? 'block' : 'none';
+  });
+}
 </script>
 
     <script

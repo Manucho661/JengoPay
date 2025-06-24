@@ -449,6 +449,27 @@ margin-left: 2px;
     margin-top: 7px;
   }
 
+.rent-chart-wrapper {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 8px;
+  }
+
+  .rent-chart-wrapper .label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #00192D;
+  }
+
+  .rent-chart-scroll {
+    overflow-x: auto;
+  }
+
+  .rent-chart-scroll canvas {
+    min-width: 600px; /* Ensure chart doesn't squeeze too much */
+    height: 120px !important;
+  }
+  
 
 
   }
