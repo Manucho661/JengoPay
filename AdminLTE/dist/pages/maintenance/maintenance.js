@@ -155,6 +155,8 @@ function populateRequestsTable(requests) {
         document.getElementById('payment-status').innerText= requests.payment_status;
         document.getElementById('request-description').innerText= requests.description;
         document.getElementById('request-imag').src = '/originaltwo/AdminLTE/dist/pages/' + requests.photo_url;
+        const viewProposal= document.getElementById('showProposal');
+        viewProposal.setAttribute("data-request-id", requests.id); 
         const modal = new bootstrap.Modal(document.getElementById('maintenanceRequestModal'));
         modal.show();
       });
@@ -407,6 +409,17 @@ function inSystemPayment(){
       mpesaPhoneSection.style.display = 'none';
     }
   });
+  // send money section
+  const mpesaPaymentMethod = document.getElementById('mpesaPaymentMethod');
+  const sendMoneySection= document.getElementById('sendMoneySection');
+  mpesaPaymentMethod.addEventListener('change', function () {
+    if (this.value === 'sendMoney') {
+      console.log('yoyo');
+      sendMoneySection.style.display = 'block';
+    } else {
+      sendMoneySection.style.display = 'none';
+    }
+  });
 }
 
 
@@ -473,4 +486,19 @@ document.getElementById("paymentForm").addEventListener("submit", function (e) {
       modal.classList.add("d-none");
       backdrop.classList.add("d-none");
     }, 300);
+  }
+  // Job proposals.
+  function showProposals(){
+      const viewProposal = document.getElementById("showProposal");
+      const requestId = viewProposal.getAttribute("data-request-id");
+      
+       fetch(`actions/get_request_proposals.php?request_id=${requestId}`)
+       .then(response => response.json())
+      .then(data => {
+        console.log("Fetched Proposals:", data);
+        // Do something with the data...
+      })
+       .catch(err=>{
+         console.error("Error fetching proposals:", err);
+       })
   }
