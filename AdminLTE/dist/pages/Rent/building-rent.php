@@ -735,19 +735,19 @@ foreach ($tenants as $tenant) {
                           </div>
                         <div class="rentTable section" >
                         <table id="rent" class="tableRent" style="font-size: small; width: 100%; table-layout: fixed;">
-                        <colgroup>
-                            <col style="width: 20%">  <!-- Tenant + unit -->
-                            <col style="width: 12%">  <!-- Collected -->
-                            <col style="width: 10%">  <!-- Unit Type -->
-                            <col style="width: 10%">  <!-- Balances -->
-                            <col style="width: 12%">  <!-- Penalty -->
-                            <col style="width: 10%">  <!-- Arrears -->
-                            <col style="width: 10%">  <!-- Overpayment -->
-                            <col style="width: 16%">  <!-- Action -->
-                        </colgroup>
-                        <thead>
+    <colgroup>
+        <col style="width: 22%">  <!-- Tenant + unit -->
+        <col style="width: 14%">  <!-- Collected -->
+        <col style="width: 10%">  <!-- Unit Type -->
+        <col style="width: 12%">  <!-- Balances -->
+        <col style="width: 12%">  <!-- Penalty -->
+        <col style="width: 10%">  <!-- Arrears -->
+        <col style="width: 10%">  <!-- Overpayment -->
+        <col style="width: 10%">  <!-- Action -->
+    </colgroup>
+    <thead>
         <tr>
-            <th scope="col">Tenant + unit</th>
+            <th scope="col">Tenant + Unit</th>
             <th scope="col">Collected</th>
             <th scope="col">Unit Type</th>
             <th scope="col">Balances</th>
@@ -768,7 +768,7 @@ foreach ($tenants as $tenant) {
                 $currentBuilding = $building;
         ?>
                 <tr class="table-group-header bg-light">
-                    <td colspan="8" style="font-weight: bold; color: #007bff; padding: 8px;">
+                    <td colspan="8" style="font-weight: bold; color: #007bff; padding: 10px 8px;">
                         <?= htmlspecialchars($currentBuilding) ?>
                     </td>
                 </tr>
@@ -788,41 +788,35 @@ foreach ($tenants as $tenant) {
             $paymentDate = !empty($tenant['payment_date']) ? date("d-F", strtotime($tenant['payment_date'])) : '';
         ?>
             <tr>
-                <td style="padding: 8px; vertical-align: middle;">
+                <td style="padding: 10px 8px; vertical-align: middle;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span><?= htmlspecialchars("$firstName $middleName") ?></span>
-                        <span style="color: #FFC107;"><?= $unit ?></span>
+                        <span style="font-weight: 500;"><?= htmlspecialchars("$firstName $middleName") ?></span>
+                        <span style="color: #FFC107; font-weight: 500;"><?= $unit ?></span>
                     </div>
                 </td>
-                <td style="padding: 8px; vertical-align: middle;">
+                <td style="padding: 10px 8px; vertical-align: middle;">
                     <div style="display: flex; flex-direction: column;">
-                        <span>KSH <?= $amount ?></span>
-                        <span class="date late" style="font-size: 0.8em;"><?= $paymentDate ?></span>
+                        <span style="font-weight: 500;">KSH <?= $amount ?></span>
+                        <span class="date late" style="font-size: 0.75em; color: #6c757d;"><?= $paymentDate ?></span>
                     </div>
                 </td>
-                <td style="padding: 8px; vertical-align: middle;"><?= $unit_type ?></td>
-                <td style="padding: 8px; vertical-align: middle;">KSH <?= $balances ?></td>
-                <td style="padding: 8px; vertical-align: middle;">
+                <td style="padding: 10px 8px; vertical-align: middle; text-align: center;"><?= $unit_type ?></td>
+                <td style="padding: 10px 8px; vertical-align: middle; font-weight: 500;">KSH <?= $balances ?></td>
+                <td style="padding: 10px 8px; vertical-align: middle;">
                     <div style="display: flex; flex-direction: column;">
-                        <span>KSH <?= $penalty ?></span>
-                        <span class="rent lateDays" style="font-size: 0.8em;">(<?= $penaltyDays ?> days)</span>
+                        <span style="font-weight: 500;">KSH <?= $penalty ?></span>
+                        <span class="rent lateDays" style="font-size: 0.75em; color: #dc3545;">(<?= $penaltyDays ?> days)</span>
                     </div>
                 </td>
-                <td style="padding: 8px; vertical-align: middle;">KSH <?= $arrears ?></td>
-                <td style="padding: 8px; vertical-align: middle;">KSH <?= $overpayment ?></td>
-                <td style="padding: 8px; vertical-align: middle;">
-                    <div style="display: flex; gap: 4px;">
-                    <button
-  class="btn view"
-  data-bs-toggle="modal"
-  data-bs-target="#tenantProfileModal"
-  data-tenant='<?= json_encode($tenant) ?>'
-  style="padding: 4px 8px;">
-  View
-</button>
-
-                        <button class="btn print" onclick="window.open('print-receipt.php?tenant_id=<?= $tenant['id'] ?>', '_blank')" style="padding: 4px 8px;">
-                            <i class="fas fa-file-invoice"></i> Receipt
+                <td style="padding: 10px 8px; vertical-align: middle; font-weight: 500;">KSH <?= $arrears ?></td>
+                <td style="padding: 10px 8px; vertical-align: middle; font-weight: 500;">KSH <?= $overpayment ?></td>
+                <td style="padding: 10px 8px; vertical-align: middle;">
+                    <div style="display: flex; gap: 6px; justify-content: center;">
+                        <button class="btn view" data-bs-toggle="modal" data-bs-target="#tenantProfileModal" data-tenant='<?= json_encode($tenant) ?>' style="padding: 4px 8px; font-size: 0.8em;">
+                            View
+                        </button>
+                        <button class="btn print" onclick="window.open('print-receipt.php?tenant_id=<?= $tenant['id'] ?>', '_blank')" style="padding: 4px 8px; font-size: 0.8em;">
+                            <i class="fas fa-file-invoice"></i>
                         </button>
                     </div>
                 </td>
@@ -830,7 +824,6 @@ foreach ($tenants as $tenant) {
         <?php endforeach; ?>
     </tbody>
 </table>
-
 
                         </div>
                     </div>
@@ -861,7 +854,7 @@ foreach ($tenants as $tenant) {
     <button class="btn edit rounded" data-bs-toggle="modal" data-bs-target="#editPenaltyModal">Edit</button>
   </div>
 
- 
+
 
 
 

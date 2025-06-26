@@ -66,7 +66,15 @@ foreach ($data as $row) {
     $totals['overpayment'] += $row['overpayment'];
 }
 
-// Build HTML content with better styling
+// Get the first and last day of the report period
+// Get the first and last day of the report period
+$firstDay = !empty($start) ? $start : (!empty($data) ? date('Y-m-01', strtotime(end($data)['month_year'].'-01')) : '');
+$lastDay = !empty($end) ? $end : (!empty($data) ? date('Y-m-t', strtotime($data[0]['month_year'].'-01')) : '');
+
+$displayFrom = !empty($firstDay) ? date('F j, Y', strtotime($firstDay)) : 'Not specified';
+$displayTo = !empty($lastDay) ? date('F j, Y', strtotime($lastDay)) : 'Not specified';
+
+// Build HTML content with improved date range styling
 $html = '
 <!DOCTYPE html>
 <html>
@@ -76,14 +84,30 @@ $html = '
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
         .header { text-align: center; margin-bottom: 20px; }
-        .date-range {
-            display: inline-block;
+        .date-range-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto 15px auto;
             background: #f5f5f5;
-            padding: 8px 15px;
+            padding: 10px 20px;
             border-radius: 4px;
-            margin-bottom: 15px;
         }
-        .date-range div { display: flex; justify-content: center; gap: 30px; font-size: 16px; }
+        .date-range-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .date-range-label {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .date-range-value {
+            font-weight: bold;
+            font-size: 16px;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -138,12 +162,14 @@ $html = '
         <h2 style="margin-bottom: 5px;">' . htmlspecialchars($building) . '</h2>
         <h1 style="margin-top: 0; margin-bottom: 10px;">Rent Report</h1>
 
-        <div class="date-range">
-            <div>
-                <div><strong style="color: #333;">From:</strong> <span style="font-weight: bold;">' .
-                (!empty($start) ? htmlspecialchars(date('F j, Y', strtotime($start))) : 'Not specified') . '</span></div>
-                <div><strong style="color: #333;">To:</strong> <span style="font-weight: bold;">' .
-                (!empty($end) ? htmlspecialchars(date('F j, Y', strtotime($end))) : 'Not specified') . '</span></div>
+        <div class="date-range-container">
+            <div class="date-range-item">
+                <span class="date-range-label">From</span>
+                <span class="date-range-value">' . $displayFrom . '</span>
+            </div>
+            <div class="date-range-item">
+                <span class="date-range-label">To</span>
+                <span class="date-range-value">' . $displayTo . '</span>
             </div>
         </div>
     </div>
@@ -162,7 +188,7 @@ $html = '
         <tbody>';
 
 foreach ($data as $row) {
-    $month = !empty($row['month_year']) ? date('F Y', strtotime($row['month_year'].'-01')) : 'N/A';
+    $month = !empty($row['month_year']) ? date('FY', strtotime($row['month_year'].'-01')) : 'N/A';
     $html .= '
             <tr>
                 <td>' . htmlspecialchars($month) . '</td>
@@ -186,10 +212,12 @@ $html .= '
         </tbody>
     </table>
 
-    <div class="footer">
-        <span class="brand brand-primary">BT</span>
-        <span class="brand brand-secondary">JENGOPAY</span>
-    </div>
+   <div class="footer" style="position: fixed; bottom: 20px; left: 0; right: 0; text-align: center;">
+            <span class="brand-text font-weight-light">
+                <b class="p-2" style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D; padding: 4px 10px;">BT</b>
+                <b class="p-2" style="border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107; padding: 4px 10px;">JENGOPAY</b>
+            </span>
+        </div>
 </body>
 </html>';
 

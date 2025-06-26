@@ -598,6 +598,8 @@ select:hover {
                             <!-- Data will be loaded here via JavaScript -->
                           </tbody>
                         </table>
+
+
                           </div>
                       </div>
                     </div>
@@ -606,7 +608,15 @@ select:hover {
              </div>
             <!-- END ROW -->
 
-
+<!-- Rent Chart Section -->
+<div class="d-flex justify-content-center mt-4">
+  <div class="p-3 rounded shadow-sm" style="background-color: white; width: 99%; max-width:99%;">
+    <h6 class="mb-2" style="color: #00192D; font-size: 16px;">📊 Rent Collection by Building</h6>
+    <div style="height: 180px;">
+      <canvas id="rentBuildingChart"></canvas>
+    </div>
+  </div>
+</div>
 
             </div>
 
@@ -619,16 +629,8 @@ select:hover {
 </div>
 <!-- end -->
 
-                           
-<!-- Rent Chart Section -->
-<div class="d-flex justify-content-center mt-4">
-  <div class="p-3 rounded shadow-sm" style="background-color: white; width: 90%; max-width: 600px;">
-    <h6 class="mb-2" style="color: #00192D; font-size: 16px;">📊 Rent vs Months</h6>
-    <div style="height: 180px;">
-      <canvas id="rentChart"></canvas>
-    </div>
-  </div>
-</div>
+
+
 
 
 
@@ -656,52 +658,89 @@ select:hover {
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-  const ctx = document.getElementById('rentChart').getContext('2d');
-  
-  const rentChart = new Chart(ctx, {
+document.addEventListener('DOMContentLoaded', function() {
+  const ctx = document.getElementById('rentBuildingChart').getContext('2d');
+
+  // Dynamic color generator - creates a rainbow of distinct colors
+  function generateBuildingColors(count) {
+    const colors = [];
+    const hueStep = 360 / count;
+
+    for (let i = 0; i < count; i++) {
+      const hue = Math.floor(i * hueStep);
+      colors.push(`hsla(${hue}, 80%, 60%, 0.8)`); // Vibrant colors with transparency
+    }
+    return colors;
+  }
+
+  // Example data - replace with your actual data from backend
+  const buildings = <?= json_encode(array_column($tenants, 'building_name')) ?>;
+  const rentData = <?= json_encode(array_column($tenants, 'amount_paid')) ?>;
+
+  // Process data to sum rent by building
+  const buildingTotals = {};
+  buildings.forEach((building, index) => {
+    if (!buildingTotals[building]) {
+      buildingTotals[building] = 0;
+    }
+    buildingTotals[building] += rentData[index];
+  });
+
+  const uniqueBuildings = Object.keys(buildingTotals);
+  const totalRents = Object.values(buildingTotals);
+
+  // Generate colors based on number of buildings
+  const backgroundColors = generateBuildingColors(uniqueBuildings.length);
+  const borderColors = backgroundColors.map(color => color.replace('0.8', '1'));
+
+  new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-      ],
+      labels: uniqueBuildings,
       datasets: [{
-        label: 'Rent (KES)',
-        data: [12000, 13000, 12500, 14000, 13500, 15000, 14500, 15500, 16000, 15800, 16500, 17000],
-        backgroundColor: '#FFC107',
-        borderColor: '#00192D',
-        borderWidth: 1,
-        borderRadius: 5
+        label: 'Total Rent Collected',
+        data: totalRents,
+        backgroundColor: backgroundColors,
+        borderColor: borderColors,
+        borderWidth: 2,
+        borderRadius: 6, // Rounded bar corners
+        borderSkipped: false // Applies to all borders
       }]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      layout: {
-        padding: 5
-      },
       scales: {
         y: {
           beginAtZero: true,
-          ticks: {
-            color: '#00192D',
-            font: {
-              size: 10
-            }
+          grid: {
+            color: 'rgba(0,0,0,0.05)'
           },
           title: {
-            display: false
+            display: true,
+            text: 'Amount (KSH)',
+            color: '#555',
+            font: {
+              weight: 'bold'
+            }
+          },
+          ticks: {
+            callback: function(value) {
+              return 'KSH ' + value.toLocaleString();
+            }
           }
         },
         x: {
-          ticks: {
-            color: '#00192D',
-            font: {
-              size: 10
-            }
+          grid: {
+            display: false
           },
           title: {
-            display: false
+            display: true,
+            text: 'Buildings',
+            color: '#555',
+            font: {
+              weight: 'bold'
+            }
           }
         }
       },
@@ -710,21 +749,28 @@ select:hover {
           display: false
         },
         tooltip: {
-          backgroundColor: '#00192D',
-          titleColor: '#FFC107',
-          bodyColor: '#FFFFFF',
-          titleFont: {
-            size: 10
-          },
-          bodyFont: {
-            size: 10
+          backgroundColor: 'rgba(0,0,0,0.8)',
+          titleColor: '#fff',
+          bodyColor: '#fff',
+          padding: 12,
+          callbacks: {
+            label: function(context) {
+              return 'KSH ' + context.raw.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+              });
+            }
           }
         }
+      },
+      animation: {
+        duration: 1000,
+        easing: 'easeOutQuart'
       }
     }
   });
+});
 </script>
-
 
 
 <script>
@@ -1014,9 +1060,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <td class="rent collected">KSH&nbsp;${parseFloat(row.arrears).toLocaleString()}</td>
               <td class="rent overpayment">KSH&nbsp;${parseFloat(row.overpayment).toLocaleString()}</td>
               <td>
-                <button class="btn view">
-                  <a class="view-link" href="building-rent.php?building=${encodeURIComponent(row.building_name)}">View</a>
-                </button>
+              <button class="btn view"> <a class="view-link" href="building-rent.html">View</a> </button>
               </td>
             </tr>`;
         });
@@ -1315,9 +1359,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td class="rent collected">KSH&nbsp;${arrears.toFixed(2)}</td>
                     <td class="rent overpayment">KSH&nbsp;${overpayment.toFixed(2)}</td>
                     <td>
-                        <button class="btn btn-sm btn-info">
-                            <a class="text-white" href="building-rent.php?building=${encodeURIComponent(row.building_name)}&start_date=${startDate.value}&end_date=${endDate.value}">View</a>
-                        </button>
+                    <button class="btn view">  <a class="text-white" href="building-rent.php?building=${encodeURIComponent(row.building_name)}&start_date=${startDate.value}&end_date=${endDate.value}">View</a> </button>
                     </td>
                 </tr>
             `;
