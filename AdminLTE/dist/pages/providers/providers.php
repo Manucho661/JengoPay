@@ -26,7 +26,7 @@
 
     .header-bar .nav-links a {
       color: #FFC107;
-      margin-left: 20px;
+      /* margin-left: 20px; */
       text-decoration: none;
     }
 
@@ -35,7 +35,7 @@
     }
 
     .nav-tabs {
-      justify-content: center;
+    
       margin-bottom: 1.5rem;
     }
 
@@ -139,12 +139,11 @@
   </div>
 
   <!-- Main Content Row -->
-  <div class="container-fluid px-5 py-5">
+  <div class="container-fluid py-5">
     <div class="row">
-
     <!-- Main: Job Tabs and Listings -->
-   <div class="col-lg-9">
-      <ul class="nav nav-tabs mb-3 justify-content-center gap-3" id="jobTabs" role="tablist">
+    <div class="col-lg-9">
+      <ul class="nav nav-tabs mb-3 gap-3" id="jobTabs" role="tablist">
           <li class="nav-item" role="presentation">
            <button class="nav-link active" id="find-tab" data-bs-toggle="tab" data-bs-target="#find" type="button" role="tab">Find a Job</button>
           </li>
@@ -155,13 +154,10 @@
               <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab">Previous Jobs</button>
           </li>
       </ul>
-
-
-    <div class="tab-content" id="jobTabsContent">
+    <div class="tab-content bg-light" id="jobTabsContent">
       <!-- FIND A JOB -->
       <div class="tab-pane fade show active" id="find" role="tabpanel">
-        <div class="section-title">Available Jobs</div>
-
+        <div class="section-title text-mute">Available Jobs</div>
         <!-- Job Card 1 -->
         <div class="job-card">
           <div class="d-flex justify-content-between">

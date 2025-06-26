@@ -2,14 +2,8 @@ body {
     margin: 0%;
     font-family: Arial, sans-serif;
     /* display: flex;\ */
-    
-    
   }
-  
   /* search bar */
-  
-  
-  
   .nav {
     margin-top: 10px;
   }
@@ -22,22 +16,13 @@ body {
   .nav a:hover {
     text-decoration: underline;
   }
-  
-  
   /* sidebar style */
-  
-  
-  
-  
-  
   .col{
     margin: 50px;
-  
   }
   .hidden-items {
   display: none;
   }
-  
   /* Styling for the button */
   #showButton {
   margin: 20px;
@@ -105,12 +90,11 @@ body {
   left: 50px;         /* Distance from the left of the header */
   z-index: 1000;      /* Ensure it stays on top */
   }
+  
   .def{
   background-color:#FFC107;
   color: #00192D;
   }
-  
-  
   
   .item electronics{
     margin-left: 80%;
