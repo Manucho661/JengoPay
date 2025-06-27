@@ -147,8 +147,20 @@ select:hover {
 .container-fluid.app-content .row.details{
   flex: 1;
 }
+.view{
+                                                            height: fit-content;
+                                                            padding: 2px 8px;
+                                                            font-size: 12px;
+                                                            background-color: transparent;
+                                                            color: #00192D;
+                                                            border: 1px solid #FFC107;
+                                                      }
+
+                                                      .view-link{
+  color: #00192D;
+ }
 </style>
-  </head>
+</head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
     <div class="app-wrapper" style="background-color:rgba(128,128,128, 0.1) ;" >
@@ -598,6 +610,8 @@ select:hover {
                             <!-- Data will be loaded here via JavaScript -->
                           </tbody>
                         </table>
+
+
                           </div>
                       </div>
                     </div>
@@ -606,7 +620,15 @@ select:hover {
              </div>
             <!-- END ROW -->
 
-
+<!-- Rent Chart Section -->
+<div class="d-flex justify-content-center mt-4">
+  <div class="p-3 rounded shadow-sm" style="background-color: white; width: 98%; max-width:98%;">
+    <b><h6 class="mb-2" style="color: #00192D; font-size: 16px;">📊Rent Collection by Building</h6></b>
+    <div style="height: 100%;">
+      <canvas id="rentBuildingChart"></canvas>
+    </div>
+  </div>
+</div>
 
             </div>
 
@@ -619,16 +641,8 @@ select:hover {
 </div>
 <!-- end -->
 
-                           
-<!-- Rent Chart Section -->
-<div class="d-flex justify-content-center mt-4">
-  <div class="p-3 rounded shadow-sm" style="background-color: white; width: 90%; max-width: 600px;">
-    <h6 class="mb-2" style="color: #00192D; font-size: 16px;">📊 Rent vs Months</h6>
-    <div style="height: 180px;">
-      <canvas id="rentChart"></canvas>
-    </div>
-  </div>
-</div>
+
+
 
 
 
@@ -654,77 +668,95 @@ select:hover {
 
 <!-- SELECT ELEMENT SCRIPT -->
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-  const ctx = document.getElementById('rentChart').getContext('2d');
-  
-  const rentChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-      ],
-      datasets: [{
-        label: 'Rent (KES)',
-        data: [12000, 13000, 12500, 14000, 13500, 15000, 14500, 15500, 16000, 15800, 16500, 17000],
-        backgroundColor: '#FFC107',
-        borderColor: '#00192D',
-        borderWidth: 1,
-        borderRadius: 5
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      layout: {
-        padding: 5
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            color: '#00192D',
-            font: {
-              size: 10
-            }
-          },
-          title: {
-            display: false
-          }
-        },
-        x: {
-          ticks: {
-            color: '#00192D',
-            font: {
-              size: 10
-            }
-          },
-          title: {
-            display: false
-          }
-        }
-      },
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: '#00192D',
-          titleColor: '#FFC107',
-          bodyColor: '#FFFFFF',
-          titleFont: {
-            size: 10
-          },
-          bodyFont: {
-            size: 10
-          }
-        }
-      }
-    }
-  });
-</script>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    fetch('get_rent_data.php')
+        .then(response => response.json())
+        .then(data => {
+            const labels = data.map(item => item.building_name);
+            const values = data.map(item => parseFloat(item.amount_collected));
+
+            const ctx = document.getElementById('rentBuildingChart').getContext('2d');
+
+            // Create gradient
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, '#00192D');
+            gradient.addColorStop(1, '#00192D');
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Amount Collected (KES)',
+                        data: values,
+                        backgroundColor: gradient,
+                        borderRadius: 8,
+                        borderWidth: 0,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeOutBounce'
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'KES ' + value.toLocaleString();
+                                },
+                                color: '#333',
+                                font: {
+                                    size: 12,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                color: '#eee'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#333',
+                                font: {
+                                    size: 12,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: '#FFC107',
+                            titleFont: { weight: 'bold' },
+                            callbacks: {
+                                label: function(context) {
+                                    return 'KES ' + context.parsed.y.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching chart data:', error);
+        });
+});
+</script>
 
 
 <script>
@@ -1014,9 +1046,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <td class="rent collected">KSH&nbsp;${parseFloat(row.arrears).toLocaleString()}</td>
               <td class="rent overpayment">KSH&nbsp;${parseFloat(row.overpayment).toLocaleString()}</td>
               <td>
-                <button class="btn view">
-                  <a class="view-link" href="building-rent.php?building=${encodeURIComponent(row.building_name)}">View</a>
-                </button>
+              <button class="btn view"> <a class="view-link" href="building-rent.html">View</a> </button>
               </td>
             </tr>`;
         });
@@ -1315,9 +1345,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td class="rent collected">KSH&nbsp;${arrears.toFixed(2)}</td>
                     <td class="rent overpayment">KSH&nbsp;${overpayment.toFixed(2)}</td>
                     <td>
-                        <button class="btn btn-sm btn-info">
-                            <a class="text-white" href="building-rent.php?building=${encodeURIComponent(row.building_name)}&start_date=${startDate.value}&end_date=${endDate.value}">View</a>
-                        </button>
+                    <button class="btn view">  <a class="text-white" href="building-rent.php?building=${encodeURIComponent(row.building_name)}&start_date=${startDate.value}&end_date=${endDate.value}">View</a> </button>
                     </td>
                 </tr>
             `;

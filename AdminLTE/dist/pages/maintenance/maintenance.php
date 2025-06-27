@@ -449,7 +449,6 @@
                   </div>
                 </div>
               </div>
-
                <!-- Record Payment Modal -->
               <div class="modal fade" id="recordPaymentModal" tabindex="-1" aria-labelledby="recordPaymentModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -586,7 +585,7 @@
                         </div>
                         <div class="col-6">
                           <div><strong>BIDS:</strong></div>
-                          <button class="btn btn-primary p-1" onclick="showProposal()" >30 Applications</button>
+                          <button class="btn btn-primary showProposal p-1" onclick="showProposals()" id="showProposal" data-request-id="123">30 Applications</button>
                           <!-- <div id="request-description" style="color:rgb(0 28 63 / 60%); font-weight:500;">--</div> -->
                         </div>
                         
@@ -776,12 +775,13 @@
                             </select>
                           </div>
                           <div id="mpesaPhoneSection" style="display: none;">
-                            <select class="form-select" id="paymentMethod" name="payment_method" required>
-                              <option value="">Send Money</option>
+                            <label for="mpesaPayment_method" class="form-label">Choose M-pesa Payment Method</label>
+                            <select class="form-select" id="mpesaPaymentMethod" name="mpesaPayment_method" required>
+                              <option value="">-- Choose --</option>
                               <option value="sendMoney">Send Money</option>
                               <option value="lipaNaMpesa">Lipa na M-pesa</option>
                             </select>
-                            <div id="sendMoneySection">
+                            <div id="sendMoneySection" style="display: none;">
                               <label for="phoneNumber" class="form-label"><b>Your Phone Number</b></label>
                               <input type="tel" class="form-control" name="senderPhone" id="phoneNumber" placeholder="0753432756" required>
 
