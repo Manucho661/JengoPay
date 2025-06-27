@@ -43,6 +43,8 @@
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
+    <link rel="stylesheet" href="index.css" />
+
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -615,6 +617,7 @@
             <!-- Info boxes -->
             <h3 class="mb-0 contact_section_header">📋Dashboard</h3>
             <p class="text-muted">Manage your Properties</p>
+            <hr>
             <div class="row mb-2 g-3">
               <div class="col-md-3">
                 <div class="card summary-card text-center p-3 rounded-2">
@@ -647,84 +650,31 @@
             </div>
             <!-- /.row -->
             <!--begin::Row-->
-            <div class="row">
-              <div class="col-md-12">
-                <div class="card mb-4">
-                  <div class="card-header">
-                    <h5 class="card-title text-warning">Properties</h5>
-                    <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                      </button>
-                      <div class="btn-group">
-                        <button
-                          type="button"
-                          class="btn btn-tool dropdown-toggle"
-                          data-bs-toggle="dropdown"
-                        >
-                          <i class="bi bi-wrench"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end" role="menu">
-                          <a href="#" class="dropdown-item">Action</a>
-                          <a href="#" class="dropdown-item">Another action</a>
-                          <a href="#" class="dropdown-item"> Something else here </a>
-                          <a class="dropdown-divider"></a>
-                          <a href="#" class="dropdown-item">Separated link</a>
-                        </div>
-                      </div>
-                      <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                        <i class="bi bi-x-lg"></i>
-                      </button>
-                    </div>
+            <div class="row g-4 mt-3 mb-3 d-flex align-items-stretch">
+              <hr class="p-0">
+              <div class="col-md-6 d-flex">
+                <div class="card shadow-sm rounded-2 w-100 h-100 border-0 shadow">
+                  <div class="card-header bg-white border-0">
+                    <h5 class="mb-0 summary-label" >Rent Collected (Previous months)</h5>
                   </div>
-                  <!-- /.card-header -->
                   <div class="card-body">
-                    <!--begin::Row-->
-                    <div class="row">
-                      <table id="myTableOne" class="display" style="">
-                        <thead>
-                          <tr>
-                            <th>Property Name</th>
-                            <th>Units</th>
-                            <th>Location</th>
-                            <th>No of Tenants</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>Manucho Apartments</td>
-                            <td>80</td>
-                            <td>Kisumu</td>
-                            <td>60</td>
-                          </tr>
-                          <tr>
-                            <td>Ethical Apartments</td>
-                            <td>69</td>
-                            <td>Rongai</td>
-                            <td>65</td>
-                          </tr>
-                          <!-- Add more rows as needed -->
-                        </tbody>
-
-                      </table>
-
-
-                      <!-- /.col -->
-                    </div>
-                    <!--end::Row-->
+                    <canvas id="rentLineChart" style="width: 100%; height: 300px;"></canvas>
                   </div>
-                  <!-- ./card-body -->
-                  <div class="card-footer">
-                    <!--begin::Row-->
-                    <div class="row">
-
-                    </div>
-                    <!--end::Row-->
-                  </div>
-                  <!-- /.card-footer -->
                 </div>
-                <!-- /.card -->
+              </div>
+              <!-- /.col -->
+              <div class="col-md-6 d-flex">
+                <div class="card shadow-sm rounded-2 shadow w-100 h-100 border-0">
+                  <div class="card-header bg-white border-0">
+                    <h5 class="mb-0 summary-label">Maintenance Request Categories</h5>
+                  </div>
+                  <div class="card-body d-flex justify-content-center align-items-center" style="height: 100%;">
+                    <!-- Smaller pie chart -->
+                    <div style="width: 300px; height: 300px;">
+                      <canvas id="maintenancePieChart" style="width: 100%; height: 100%;"></canvas>
+                    </div>
+                  </div>
+                </div>
               </div>
               <!-- /.col -->
             </div>
@@ -1154,252 +1104,80 @@
     </script>
 
 
-<script>
-  const cty = document.getElementById('rentalTrends').getContext('2d');
 
-  new Chart(cty, {
+   
+    <script
+      src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
+      integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
+      crossorigin="anonymous"
+    ></script>
+    
+
+<script>
+  // Line Chart: Rent Collected
+  const rentCtx = document.getElementById('rentLineChart').getContext('2d');
+  new Chart(rentCtx, {
     type: 'line',
     data: {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-      datasets: [
-        {
-          label: 'CROWN Z TOWERS',
-          data: [35,'000', 30,'000', 32,'000', 30,'000', 33,'000', 35,'000', 34,'000', 33,'000', 34,'000', 35,'000', 34,'000', 35,'000'],
-          borderColor: 'cyan',
-          backgroundColor: 'transparent',
-          tension: 0.4
-        },
-        {
-          label: 'Manucho Apartments',
-          data: [32,'000', 33,'000', 38,'000', 34,'000', 33,'000', 34,'000', 38,'000', 36,'000', 37,'000', 32,'000', 31,'000', 34,'000'],
-          borderColor: 'green',
-          backgroundColor: 'transparent',
-          tension: 0.4
-        },
-        {
-          label: 'The Mansion Apartments',
-          data:[31,'000', 32,'000', 39,'000', 35,'000', 32,'000', 33,'000', 39,'000', 37,'000', 39,'000', 31,'000', 32,'000', 34,'000'],
-          borderColor: 'black',
-          backgroundColor: 'transparent',
-          tension: 0.4
-        },
-        {
-          label: 'Bsty Apartments',
-          data: [34,'000', 39,'000', 34,'000', 32,'000', 34,'000', 36,'000', 38,'000', 37,'000', 34,'000', 33,'000', 32,'000', 31,'000'],
-          borderColor: 'red',
-          backgroundColor: 'transparent',
-          tension: 0.4
-        }
-      ]
+      labels: ['January', 'February', 'March', 'April','May','June'],
+      datasets: [{
+        label: 'Ksh Collected',
+        data: [90000, 150000, 180000, 200000, 160000, 170000],
+        borderColor: '#FFC107',
+        backgroundColor: 'rgba(0, 123, 255, 0.1)',
+        tension: 0.4,
+        fill: true,
+        pointBackgroundColor: '#007bff'
+      }]
     },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       plugins: {
-        legend: {
-          position: 'top'
-        },
-
+        legend: { display: false }
       },
       scales: {
         y: {
-          beginAtZero: false
+          beginAtZero: true,
+          ticks: {
+            callback: value => 'Ksh ' + value,
+            font: {
+            weight: 'bold', // or use '700'
+            size: 12         // optional: increase size too
+          },
+          }
+        }
+      }
+    }
+  });
+
+  // Pie Chart: Maintenance Categories
+  const maintenanceCtx = document.getElementById('maintenancePieChart').getContext('2d');
+  new Chart(maintenanceCtx, {
+    type: 'pie',
+    data: {
+      labels: ['Plumbing', 'Electrical', 'Cleaning', 'Structural'],
+      datasets: [{
+        data: [10, 5, 3, 2],
+        backgroundColor: ['#ffc107', '#28a745', '#17a2b8', '#dc3545']
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            boxWidth: 20,
+            padding: 15
+          }
         }
       }
     }
   });
 </script>
 
-<script>
-  const ctx = document.getElementById('myPieChart').getContext('2d');
-
-  const myPieChart = new Chart(ctx, {
-      type: 'pie',
-      data: {
-          labels: ['Occupied','Vacant', 'Vacant Soon'],
-          datasets: [{
-              data: [30, 50, 20],
-              backgroundColor: ['#28a745', '#ffc107', '#dc3545']
-          }]
-      },
-      options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          onClick: function(event, elements) {
-              if (elements.length > 0) {
-                  let index = elements[0].index;
-                  let label = this.data.labels[index];
-                  // let links = { "Approved": "approved.html", "Pending": "pending.html", "Rejected": "rejected.html" };
-                  let links = { "Occupied": "occupied.html", "Vacant": "vacant.html", "Vacant Soon": "vacantsoon.html"};
-                  if (links[label]) window.location.href = links[label];
-              }
-          }
-      }
-  });
-</script>
-
-
-
-    <!--end::OverlayScrollbars Configure-->
-    <!-- OPTIONAL SCRIPTS -->
-    <!-- apexcharts -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
-      integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
-      crossorigin="anonymous"
-    ></script>
-    <script>
-
-
-
-      // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
-      // IT'S ALL JUST JUNK FOR DEMO
-      // ++++++++++++++++++++++++++++++++++++++++++
-
-      /* apexcharts
-       * -------
-       * Here we will create a few charts using apexcharts
-       */
-
-      //-----------------------
-      // - MONTHLY SALES CHART -
-      //-----------------------
-
-      const sales_chart_options = {
-        series: [
-          {
-            name: 'Digital Goods',
-            data: [28, 48, 40, 19, 86, 27, 90],
-          },
-          {
-            name: 'Electronics',
-            data: [65, 59, 80, 81, 56, 55, 40],
-          },
-        ],
-        chart: {
-          height: 180,
-          type: 'area',
-          toolbar: {
-            show: false,
-          },
-        },
-        legend: {
-          show: false,
-        },
-        colors: ['#0d6efd', '#20c997'],
-        dataLabels: {
-          enabled: false,
-        },
-        stroke: {
-          curve: 'smooth',
-        },
-        xaxis: {
-          type: 'datetime',
-          categories: [
-            '2023-01-01',
-            '2023-02-01',
-            '2023-03-01',
-            '2023-04-01',
-            '2023-05-01',
-            '2023-06-01',
-            '2023-07-01',
-          ],
-        },
-        tooltip: {
-          x: {
-            format: 'MMMM yyyy',
-          },
-        },
-      };
-
-      const sales_chart = new ApexCharts(
-        document.querySelector('#sales-chart'),
-        sales_chart_options,
-      );
-      sales_chart.render();
-
-      //---------------------------
-      // - END MONTHLY SALES CHART -
-      //---------------------------
-
-      function createSparklineChart(selector, data) {
-        const options = {
-          series: [{ data }],
-          chart: {
-            type: 'line',
-            width: 150,
-            height: 30,
-            sparkline: {
-              enabled: true,
-            },
-          },
-          colors: ['var(--bs-primary)'],
-          stroke: {
-            width: 2,
-          },
-          tooltip: {
-            fixed: {
-              enabled: false,
-            },
-            x: {
-              show: false,
-            },
-            y: {
-              title: {
-                formatter: function (seriesName) {
-                  return '';
-                },
-              },
-            },
-            marker: {
-              show: false,
-            },
-          },
-        };
-
-        const chart = new ApexCharts(document.querySelector(selector), options);
-        chart.render();
-      }
-
-      const table_sparkline_1_data = [25, 66, 41, 89, 63, 25, 44, 12, 36, 9, 54];
-      const table_sparkline_2_data = [12, 56, 21, 39, 73, 45, 64, 52, 36, 59, 44];
-      const table_sparkline_3_data = [15, 46, 21, 59, 33, 15, 34, 42, 56, 19, 64];
-      const table_sparkline_4_data = [30, 56, 31, 69, 43, 35, 24, 32, 46, 29, 64];
-      const table_sparkline_5_data = [20, 76, 51, 79, 53, 35, 54, 22, 36, 49, 64];
-      const table_sparkline_6_data = [5, 36, 11, 69, 23, 15, 14, 42, 26, 19, 44];
-      const table_sparkline_7_data = [12, 56, 21, 39, 73, 45, 64, 52, 36, 59, 74];
-
-      createSparklineChart('#table-sparkline-1', table_sparkline_1_data);
-      createSparklineChart('#table-sparkline-2', table_sparkline_2_data);
-      createSparklineChart('#table-sparkline-3', table_sparkline_3_data);
-      createSparklineChart('#table-sparkline-4', table_sparkline_4_data);
-      createSparklineChart('#table-sparkline-5', table_sparkline_5_data);
-      createSparklineChart('#table-sparkline-6', table_sparkline_6_data);
-      createSparklineChart('#table-sparkline-7', table_sparkline_7_data);
-
-      //-------------
-      // - PIE CHART -
-      //-------------
-
-      const pie_chart_options = {
-        series: [700, 500, 400, 600, 300, 100],
-        chart: {
-          type: 'donut',
-        },
-        labels: ['Chrome', 'Edge', 'FireFox', 'Safari', 'Opera', 'IE'],
-        dataLabels: {
-          enabled: false,
-        },
-        colors: ['#0d6efd', '#20c997', '#ffc107', '#d63384', '#6f42c1', '#adb5bd'],
-      };
-
-      const pie_chart = new ApexCharts(document.querySelector('#pie-chart'), pie_chart_options);
-      pie_chart.render();
-
-      //-----------------
-      // - END PIE CHART -
-      //-----------------
-    </script>
-    <!--end::Script-->
   </body>
   <!--end::Body-->
 </html>

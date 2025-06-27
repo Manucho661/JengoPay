@@ -666,8 +666,8 @@ try {
                   <span class="details title mt-3">Details</span>
                   <div class="row">
                       <div class="col-md-9 ">
-                        <div class="bg-white " style="box-shadow:0 4px 10px rgba(0, 0, 0, 0.1) ; border-radius: 5px;">
-                          <div class="row p-2">
+                        <div class="bg-white p-2" style="box-shadow:0 4px 10px rgba(0, 0, 0, 0.1) ; border-radius: 5px; overflow:auto;">
+                          <div class="row">
                             <div class="col-md-8" >
                               <select id="categoryFilter" class="categoryFilter">
                                 <option value="">-- Select Year--</option>
@@ -680,9 +680,8 @@ try {
                               <button class="excel"><i class="fas fa-file-excel" style="color: green;"></i></button>
                             </div>
                           </div>
-
-                          <div class="row p-2">
-                            <div class="col-md-12 rent-table-details" >
+                          <div class="row">
+                            <div class="col-md-12 rent-table-details py-0" style="overflow:auto">
                               <table>
                                 <thead>
                                   <tr>
@@ -705,29 +704,20 @@ try {
                                         <div class="amount">$ 50,000 </div>
                                         <div class="date"> 2025-04-31 </div>
                                         </div>
-
-
                                       </td>
                                       <td>
                                         <div class="pen amount d-flex">
-
                                           <div class="amount">$1000</div>
                                         </div>
-
                                       </td>
                                       <td class="rent arrears"> $ 51,000</td>
                                       <td>
-
                                       <button class="btn reciept"> <i class="fas fa-receipt"></i> Reciept </button>
-
-
                                       </td>
                                   </tr>
                                   <tr>
-
                                     <td class="month">FEBRUARY
                                       <!-- Rating Section (stars) -->
-
                                       </td>
                                       <td class="rent">$ 50,000</td>
                                       <td class="rent paid">
@@ -735,36 +725,22 @@ try {
                                         <div class="amount">$ 50,000 </div>
                                         <div class="date"> 31-4-2023 </div>
                                         </div>
-
-
                                       </td>
                                       <td>
                                         <div class="pen amount d-flex">
-
                                           <div class="amount">$0</div>
                                         </div>
-
                                       </td>
                                       <td class="rent arrears"> $ 0</td>
                                       <td>
-
                                       <button class="btn reciept"> <i class="fas fa-receipt"></i> Reciept </button>
-
-
-                                      </td>
-
+                                      </td> 
                                   </tr>
                                 </tbody>
                               </table>
                         </div>
-
                           </div>
-
                         </div>
-
-
-
-
                       </div>
 
                       <div class="col-md-3" >
@@ -1013,7 +989,7 @@ try {
                     <input type="hidden" id="user_id" name="user_id" value="<?= htmlspecialchars($_GET['id'] ?? '') ?>">
 
 
-                      <div class="modal-header   rounded-top" style= "background-color: #00192D; color:#FFC107;">
+                      <div class="modal-header rounded-top" style= "background-color: #00192D; color:#FFC107;">
                         <h5 class="modal-title" id="editModalLabel">
                           <i class="fas fa-user-edit me-2"></i> Edit Personal Information
                         </h5>
