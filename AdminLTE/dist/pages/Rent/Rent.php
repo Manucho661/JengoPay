@@ -147,8 +147,20 @@ select:hover {
 .container-fluid.app-content .row.details{
   flex: 1;
 }
+.view{
+                                                            height: fit-content;
+                                                            padding: 2px 8px;
+                                                            font-size: 12px;
+                                                            background-color: transparent;
+                                                            color: #00192D;
+                                                            border: 1px solid #FFC107;
+                                                      }
+
+                                                      .view-link{
+  color: #00192D;
+ }
 </style>
-  </head>
+</head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
     <div class="app-wrapper" style="background-color:rgba(128,128,128, 0.1) ;" >
@@ -610,9 +622,9 @@ select:hover {
 
 <!-- Rent Chart Section -->
 <div class="d-flex justify-content-center mt-4">
-  <div class="p-3 rounded shadow-sm" style="background-color: white; width: 99%; max-width:99%;">
-    <h6 class="mb-2" style="color: #00192D; font-size: 16px;">📊 Rent Collection by Building</h6>
-    <div style="height: 180px;">
+  <div class="p-3 rounded shadow-sm" style="background-color: white; width: 98%; max-width:98%;">
+    <b><h6 class="mb-2" style="color: #00192D; font-size: 16px;">📊Rent Collection by Building</h6></b>
+    <div style="height: 100%;">
       <canvas id="rentBuildingChart"></canvas>
     </div>
   </div>
@@ -656,119 +668,93 @@ select:hover {
 
 <!-- SELECT ELEMENT SCRIPT -->
 
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const ctx = document.getElementById('rentBuildingChart').getContext('2d');
+document.addEventListener('DOMContentLoaded', function () {
+    fetch('get_rent_data.php')
+        .then(response => response.json())
+        .then(data => {
+            const labels = data.map(item => item.building_name);
+            const values = data.map(item => parseFloat(item.amount_collected));
 
-  // Dynamic color generator - creates a rainbow of distinct colors
-  function generateBuildingColors(count) {
-    const colors = [];
-    const hueStep = 360 / count;
+            const ctx = document.getElementById('rentBuildingChart').getContext('2d');
 
-    for (let i = 0; i < count; i++) {
-      const hue = Math.floor(i * hueStep);
-      colors.push(`hsla(${hue}, 80%, 60%, 0.8)`); // Vibrant colors with transparency
-    }
-    return colors;
-  }
+            // Create gradient
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, '#00192D');
+            gradient.addColorStop(1, '#00192D');
 
-  // Example data - replace with your actual data from backend
-  const buildings = <?= json_encode(array_column($tenants, 'building_name')) ?>;
-  const rentData = <?= json_encode(array_column($tenants, 'amount_paid')) ?>;
-
-  // Process data to sum rent by building
-  const buildingTotals = {};
-  buildings.forEach((building, index) => {
-    if (!buildingTotals[building]) {
-      buildingTotals[building] = 0;
-    }
-    buildingTotals[building] += rentData[index];
-  });
-
-  const uniqueBuildings = Object.keys(buildingTotals);
-  const totalRents = Object.values(buildingTotals);
-
-  // Generate colors based on number of buildings
-  const backgroundColors = generateBuildingColors(uniqueBuildings.length);
-  const borderColors = backgroundColors.map(color => color.replace('0.8', '1'));
-
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: uniqueBuildings,
-      datasets: [{
-        label: 'Total Rent Collected',
-        data: totalRents,
-        backgroundColor: backgroundColors,
-        borderColor: borderColors,
-        borderWidth: 2,
-        borderRadius: 6, // Rounded bar corners
-        borderSkipped: false // Applies to all borders
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true,
-          grid: {
-            color: 'rgba(0,0,0,0.05)'
-          },
-          title: {
-            display: true,
-            text: 'Amount (KSH)',
-            color: '#555',
-            font: {
-              weight: 'bold'
-            }
-          },
-          ticks: {
-            callback: function(value) {
-              return 'KSH ' + value.toLocaleString();
-            }
-          }
-        },
-        x: {
-          grid: {
-            display: false
-          },
-          title: {
-            display: true,
-            text: 'Buildings',
-            color: '#555',
-            font: {
-              weight: 'bold'
-            }
-          }
-        }
-      },
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: 'rgba(0,0,0,0.8)',
-          titleColor: '#fff',
-          bodyColor: '#fff',
-          padding: 12,
-          callbacks: {
-            label: function(context) {
-              return 'KSH ' + context.raw.toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-              });
-            }
-          }
-        }
-      },
-      animation: {
-        duration: 1000,
-        easing: 'easeOutQuart'
-      }
-    }
-  });
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Amount Collected (KES)',
+                        data: values,
+                        backgroundColor: gradient,
+                        borderRadius: 8,
+                        borderWidth: 0,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeOutBounce'
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'KES ' + value.toLocaleString();
+                                },
+                                color: '#333',
+                                font: {
+                                    size: 12,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                color: '#eee'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#333',
+                                font: {
+                                    size: 12,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: '#FFC107',
+                            titleFont: { weight: 'bold' },
+                            callbacks: {
+                                label: function(context) {
+                                    return 'KES ' + context.parsed.y.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching chart data:', error);
+        });
 });
 </script>
 

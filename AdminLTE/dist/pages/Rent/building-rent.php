@@ -182,7 +182,7 @@ foreach ($tenants as $tenant) {
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="building-rent.css">
 
@@ -853,19 +853,19 @@ foreach ($tenants as $tenant) {
                        <div class="change-btn d-flex justify-content-end">
     <button class="btn edit rounded" data-bs-toggle="modal" data-bs-target="#editPenaltyModal">Edit</button>
   </div>
-
-
-
-
-
                   </div>
-                           <!-- Rent Chart Section -->
-<div class="p-2 mt-2 rent-chart-wrapper" style="background-color: white;">
-  <div class="label mb-1">RENT VS MONTHS</div>
-  <div class="rent-chart-scroll" style="height: 200px;">
-    <canvas id="rentChart"></canvas>
+
+
+                       <!-- Rent vs Months Chart -->
+<div class="d-flex justify-content-center mt-4">
+  <div class="p-4 rounded-4 shadow" style="background-color: white; color:#00192D; width: 100%; max-width: 100%;">
+    <h5 class="mb-3 fw-bold">📈 Rent Collection Trend (Monthly)</h5>
+    <div style="height: 100%;">
+      <canvas id="rentChart"></canvas>
+    </div>
   </div>
 </div>
+
 
            </div>
 
@@ -984,6 +984,95 @@ foreach ($tenants as $tenant) {
           });
 </script> -->
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    fetch('get_rent_vs_month.php')
+        .then(res => res.json())
+        .then(data => {
+            const labels = data.map(row => row.period);
+            const values = data.map(row => parseFloat(row.total));
+
+            const ctx = document.getElementById('rentChart').getContext('2d');
+
+            // Gradient background
+            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, '#FFC107');
+            gradient.addColorStop(1, '#FFC107');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Total Rent Collected (KES)',
+                        data: values,
+                        fill: true,
+                        backgroundColor: gradient,
+                        borderColor: '#28a745',
+                        tension: 0.3,
+                        pointBackgroundColor: '#28a745',
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeOutQuart'
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: '#00192D',
+                            callbacks: {
+                                label: function(context) {
+                                    return 'KES ' + context.parsed.y.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#333',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#eee'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return 'KES ' + value.toLocaleString();
+                                },
+                                color: '#333',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        })
+        .catch(err => {
+            console.error('Chart loading error:', err);
+        });
+});
+</script>
+
+
+
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const tenantProfileModal = document.getElementById('tenantProfileModal');
@@ -1007,7 +1096,7 @@ foreach ($tenants as $tenant) {
             <table class="table table-striped table-hover table-borderless mb-0">
               <tbody>
                 <tr>
-                  <th scope="row" style="color: #00192D;">Amount Paid</th>
+                  <th scope="row" style="color: #00192D;">Rent Paid</th>
                   <td>${formatCurrency(tenantData.amount_paid)}</td>
                 </tr>
                 <tr>

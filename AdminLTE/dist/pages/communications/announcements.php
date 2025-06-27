@@ -1617,7 +1617,8 @@ body {
                 <p class="text-muted">No announcements for today</p>
             </div>
         <?php endif; ?>
-    </div>
+    <!-- </div> -->
+                <!-- </div> -->
 <!-- </div> -->
     <!-- </div> -->
 <!-- </div> -->

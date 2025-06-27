@@ -255,14 +255,7 @@ align-items: stretch;
 
 
                                                           /* BUTTON */
-                                                          .view{
-                                                            height: fit-content;
-                                                            padding: 2px 8px;
-                                                            font-size: 12px;
-                                                            background-color: transparent;
-                                                            color: #00192D;
-                                                            border: 1px solid #FFC107;
-                                                      }
+
 /* SELECT ELEMENT CONTAINER */
 .select-option-container{
 
@@ -361,9 +354,7 @@ align-items: stretch;
    display: flex;
    overflow: hidden;
  }
- .view-link{
-  color: #00192D;
- }
+ 
 
 
  /* Media Queries */
