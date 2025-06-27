@@ -1915,22 +1915,6 @@ try {
                   <h5 class="mb-0"><i class="fas fa-calendar-day me-2"></i>Today's Announcements</h5>
                   <span class="badge bg-warning"><?= count($announcements) ?> Today</span>
                 </div>
-<<<<<<< HEAD
-=======
-                <?php endforeach; ?>
-            </div>
-        <?php else: ?>
-            <div class="text-center p-4">
-                <i class="far fa-bell-slash fa-2x mb-2" style="color: #6c757d;"></i>
-                <p class="text-muted">No announcements for today</p>
-            </div>
-        <?php endif; ?>
-    <!-- </div> -->
-                <!-- </div> -->
-<!-- </div> -->
-    <!-- </div> -->
-<!-- </div> -->
->>>>>>> 9d0e226642f780663fea98a6c823484caa59d9fe
 
                 <div class="card-body p-0">
                   <?php if (!empty($announcements)): ?>
