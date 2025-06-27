@@ -1690,11 +1690,12 @@ try {
                             <div class="stat-icon">
                               <i class="fas fa-bullhorn"></i>
                             </div>
+                            <!-- Announcements Sent -->
                             <div class="stat-content">
                               <label class="stat-label">
-                                <a href="index.html" class="" style="color: #FFC107; background-color:#00192D;">Announcements Sent</a>
+                                <a href="index.html" style="color: #FFC107; background-color:#00192D;">Announcements Sent</a>
                               </label>
-                              <span class="stat-value">60</span>
+                              <span class="stat-value" id="sentCount">0</span>
                             </div>
                           </div>
                         </div>
@@ -1705,11 +1706,12 @@ try {
                             <div class="stat-icon">
                               <i class="fas fa-clock"></i>
                             </div>
+                            <!-- Drafts -->
                             <div class="stat-content">
                               <label class="stat-label">
-                                <a href="#" class="" style="color: #FFC107; background-color:#00192D;">Drafts</a>
+                                <a href="#" style="color: #FFC107; background-color:#00192D;">Drafts</a>
                               </label>
-                              <span class="stat-value">2</span>
+                              <span class="stat-value" id="draftCount">0</span>
                             </div>
                           </div>
                         </div>
@@ -2113,7 +2115,8 @@ try {
           <div class="actions d-flex justify-content-end">
             <button type="button" class="draft-btn" id="saveDraftBtn">Save Draft</button>
             <button type="button" class="draft-btn text-danger btn" onclick="closenotificationPopup()">Cancel</button>
-            <button type="submit" class="send-btn btn">Send Announcement</button>
+            <!-- Send Announcement Button -->
+<button type="button" class="send-btn btn" onclick="sendAnnouncement()">Send Announcement</button>
           </div>
         </form>
       </div>
@@ -2170,6 +2173,10 @@ function saveAsDraft() {
         const recipient = document.getElementById('property').value;
         const priority = document.getElementById('priority').value;
         const message = document.getElementById('notes').value;
+
+        console.log("Recipient:", recipient);
+console.log("Priority:", priority);
+console.log("Message:", message);
 
         // Don't save empty form
         if (!recipient && !priority && !message) {
@@ -3115,46 +3122,50 @@ function deleteAnnouncement(id) {
     }
   </script>
 
+<script>
+// Change the function name from sendMessage to sendAnnouncement
+function sendAnnouncement() {
+  const recipient = document.getElementById('property').value.trim();
+  const priority = document.getElementById('priority').value.trim();
+  const message = document.getElementById('notes').value.trim();
 
+  if (!recipient || !priority || !message) {
+    alert("Please fill all required fields.");
+    return;
+  }
 
-  <script>
-    function sendMessage() {
-      const recipient = document.getElementById('property').value.trim();
-      const priority = document.getElementById('priority').value.trim();
-      const message = document.getElementById('notes').value.trim();
+  const formData = new FormData();
+  formData.append('recipient', recipient);
+  formData.append('priority', priority);
+  formData.append('message', message);
 
-      if (!recipient || !priority || !message) {
-        alert("Please fill all required fields.");
-        return;
+  fetch('send_announcement.php', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    alert(data.message);
+
+    if (data.status === 'success') {
+      alert("✅ Announcement sent successfully!");
+
+      document.getElementById('notes').value = '';
+      document.getElementById('property').value = '';
+      document.getElementById('priority').value = 'Normal';
+
+      if (typeof closenotificationPopup === 'function') {
+        closenotificationPopup();
       }
-
-      const formData = new FormData();
-      formData.append('recipient', recipient);
-      formData.append('priority', priority);
-      formData.append('message', message);
-
-      fetch('send_announcement.php', {
-          method: 'POST',
-          body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-          alert(data.message);
-          if (data.status === 'success') {
-            alert(Announcement);
-            document.getElementById('notes').value = '';
-            document.getElementById('property').value = '';
-            document.getElementById('priority').value = 'Normal';
-            closenotificationPopup();
-          }
-        })
-        .catch(error => {
-          console.error('Fetch error:', error);
-          alert("Something went wrong. Please try again.");
-        });
     }
-  </script>
-
+  })
+  .catch(error => {
+    console.error('Fetch error:', error);
+    alert("❌ Something went wrong. Please try again.");
+  });
+}
+</script>
+  
   <script>
     function loadAnnouncements() {
       fetch('fetch_announcements.php')
@@ -3734,6 +3745,29 @@ function deleteAnnouncement(id) {
       });
     });
   </script>
+
+  <script>
+function fetchAnnouncementCounts() {
+  fetch('get_announcement_counts.php')
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        document.getElementById('sentCount').textContent = data.sent;
+        document.getElementById('draftCount').textContent = data.drafts;
+      } else {
+        console.error('Failed to load counts:', data.error);
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching counts:', error);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  fetchAnnouncementCounts(); // initial call
+  setInterval(fetchAnnouncementCounts, 2000); // refresh every 2 seconds
+});
+</script>
   <!-- <script>
 document.addEventListener("DOMContentLoaded", function () {
     const notificationList = document.querySelector(".notification-list");
