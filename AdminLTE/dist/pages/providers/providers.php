@@ -241,7 +241,7 @@
     <h5 class="fw-bold">📬 Subscribe to Job Alert</h5>
     <p class="small text-muted">Join thousands getting job updates weekly</p>
     <input type="email" class="form-control mb-2" placeholder="Enter your email here!">
-    <button class="btn btn-dark w-100">Subscribe</button>
+    <button class="btn btn-dark w-100" style="background-color:#00192D;">Subscribe</button>
   </div>
 
   <!-- Jobs by Category -->

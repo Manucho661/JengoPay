@@ -1,31 +1,50 @@
 <?php
 header('Content-Type: application/json');
-
-require_once '../db/connect.php'; // Adjust path if needed
+require '../db/connect.php';
 
 // Get ID from POST request
 $id = $_POST['id'] ?? null;
 
-// Validate input
 if (!$id || !is_numeric($id)) {
     echo json_encode([
         'success' => false,
-        'error' => 'Invalid message ID',
-        'debug_post' => $_POST,
-        'method' => $_SERVER['REQUEST_METHOD']
+        'error' => 'Invalid or missing message ID'
     ]);
     exit;
 }
 
 try {
-    // Delete only if status is 'Sent'
-    $stmt = $pdo->prepare("DELETE FROM announcements WHERE id = ? AND status = 'Sent'");
+    // Optional: Check if message is "Sent"
+    $check = $pdo->prepare("SELECT status FROM announcements WHERE id = ?");
+    $check->execute([$id]);
+    $row = $check->fetch();
+
+    if (!$row) {
+        echo json_encode([
+            'success' => false,
+            'error' => 'No message found with that ID',
+            'id' => $id
+        ]);
+        exit;
+    }
+
+    if ($row['status'] !== 'Sent') {
+        echo json_encode([
+            'success' => false,
+            'error' => 'Message is not in "Sent" status',
+            'status' => $row['status']
+        ]);
+        exit;
+    }
+
+    // Perform delete
+    $stmt = $pdo->prepare("DELETE FROM announcements WHERE id = ?");
     $stmt->execute([$id]);
 
     if ($stmt->rowCount() > 0) {
         echo json_encode(['success' => true]);
     } else {
-        echo json_encode(['success' => false, 'error' => 'No sent message found with that ID']);
+        echo json_encode(['success' => false, 'error' => 'Delete failed unexpectedly']);
     }
 } catch (PDOException $e) {
     echo json_encode([
@@ -33,4 +52,4 @@ try {
         'error' => 'Database error: ' . $e->getMessage()
     ]);
 }
-?>
+
