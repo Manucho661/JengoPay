@@ -292,7 +292,7 @@ try {
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     margin-bottom: 15px;
     padding: 15px;
-    border-left: 4px solid #ddd;
+    border-left: 4px solid  #FFC107;
   }
 
   .notification-item.unread {
@@ -304,11 +304,11 @@ try {
   }
 
   .notification-item.sent {
-    border-left-color: #4CAF50;
+    border-left-color: #FFC107;
   }
 
   .notification-item.archived {
-    border-left-color: #9E9E9E;
+    border-left-color: #FFC107;
     opacity: 0.8;
   }
 
