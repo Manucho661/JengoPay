@@ -31,38 +31,189 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message'])) {
 }
 ?>
 
+
+
 <!DOCTYPE html>
 <html>
 <head>
   <title>Edit Draft</title>
   <style>
-    form { max-width: 500px; margin: 30px auto; }
-    label, textarea, input, select { display: block; width: 100%; margin-bottom: 15px; }
+    :root {
+      --primary: #00192D;
+      --primary-light: #818cf8;
+      --dark: #1e293b;
+      --light: #f8fafc;
+      --gray: #94a3b8;
+      --gray-light: #e2e8f0;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --info: #3b82f6;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f1f5f9;
+      color: var(--dark);
+      padding: 20px;
+    }
+
+    .form-container {
+      max-width: 600px;
+      margin: 2rem auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      overflow: hidden;
+      padding: 2rem;
+    }
+
+    .form-header {
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--gray-light);
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--primary);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--gray-light);
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: all 0.3s;
+      background-color: #f9f9f9;
+    }
+
+    .form-control:focus {
+      border-color: #FFC107;
+      box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.2);
+      outline: none;
+      background-color: white;
+    }
+
+    textarea.form-control {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      background-color: #FFC107;
+      color: #00192D;
+      font-weight: 600;
+    }
+
+    .btn-primary:hover {
+      background-color: #ffd54f;
+      box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .message {
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      border-radius: 6px;
+      background-color: #fff8e1;
+      color: #ff8f00;
+      font-weight: 500;
+    }
+
+    /* Priority color indicators */
+    option[value="Normal"] {
+      color: #388e3c;
+    }
+
+    option[value="Urgent"] {
+      color: #d32f2f;
+      font-weight: bold;
+    }
+
+    option[value="Reminder"] {
+      color: #ffa000;
+    }
+
+    .select-wrapper {
+      position: relative;
+    }
+
+    .select-wrapper::after {
+      content: "";
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 6px solid var(--primary);
+      pointer-events: none;
+    }
+
+    @media (max-width: 768px) {
+      .form-container {
+        padding: 1.5rem;
+      }
+    }
   </style>
 </head>
 <body>
 
-<?php if ($message): ?>
-  <p><?= $message ?></p>
-<?php elseif ($draft): ?>
-  <h2>Edit Draft</h2>
-  <form method="POST">
-    <label>Recipient</label>
-    <input type="text" name="recipient" value="<?= htmlspecialchars($draft['recipient']) ?>" required>
+<div class="form-container">
+  <?php if ($message): ?>
+    <div class="message"><?= $message ?></div>
+  <?php elseif ($draft): ?>
+    <h2 class="form-header">Edit Draft Announcement</h2>
+    <form method="POST">
+      <div class="form-group">
+        <label for="recipient">Recipient</label>
+        <input type="text" id="recipient" name="recipient" class="form-control"
+               value="<?= htmlspecialchars($draft['recipient']) ?>" required>
+      </div>
 
-    <label>Priority</label>
-    <select name="priority" required>
-      <option value="Urgent" <?= $draft['priority'] === 'Urgent' ? 'selected' : '' ?>>Urgent</option>
-      <option value="Normal" <?= $draft['priority'] === 'Normal' ? 'selected' : '' ?>>Normal</option>
-      <option value="Reminder" <?= $draft['priority'] === 'Reminder' ? 'selected' : '' ?>>Reminder</option>
-    </select>
+      <div class="form-group">
+        <label for="priority">Priority</label>
+        <div class="select-wrapper">
+          <select id="priority" name="priority" class="form-control" required>
+            <option value="Urgent" <?= $draft['priority'] === 'Urgent' ? 'selected' : '' ?>>Urgent</option>
+            <option value="Normal" <?= $draft['priority'] === 'Normal' ? 'selected' : '' ?>>Normal</option>
+            <option value="Reminder" <?= $draft['priority'] === 'Reminder' ? 'selected' : '' ?>>Reminder</option>
+          </select>
+        </div>
+      </div>
 
-    <label>Message</label>
-    <textarea name="message" rows="5" required><?= htmlspecialchars($draft['message']) ?></textarea>
+      <div class="form-group">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" class="form-control" rows="5" required><?= htmlspecialchars($draft['message']) ?></textarea>
+      </div>
 
-    <button type="submit">Save Changes</button>
-  </form>
-<?php endif; ?>
+      <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+  <?php endif; ?>
+</div>
 
 </body>
 </html>

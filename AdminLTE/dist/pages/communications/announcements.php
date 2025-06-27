@@ -50,7 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     die("Database error: " . $e->getMessage());
   }
 }
-
 ?>
 
 <?php
@@ -2416,7 +2415,8 @@ function archiveAnnouncement(id) {
           if (data.success) {
             showAlert('Announcement deleted successfully', 'success');
             showArchivedMessages(); // Refresh archived list
-          } else {
+          }
+          else {
             showAlert('Failed to delete: ' + (data.error || 'Unknown error'), 'error');
           }
         })
