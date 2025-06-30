@@ -6,7 +6,7 @@
     <title>AdminLTE | Dashboard v2</title>
     <!--begin::Primary Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="title" content="AdminLTE | Dashboard v2" />
+    <meta name="title" content="AdminLTE | Dashboard v2"/>
     <meta name="author" content="ColorlibHQ" />
     <meta
       name="description"

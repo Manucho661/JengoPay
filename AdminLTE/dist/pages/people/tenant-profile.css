@@ -14,7 +14,7 @@ main{
 .contact_section_header{
   border-bottom: 1px solid rgba(128, 128, 128, 0.5);
   font-weight: 600;
-  width: 80%;
+  width: 100%;
   /* color: #00192D; */
 
 }
@@ -419,6 +419,9 @@ th {
 td{
   background: #EFF2F5;
 }
+tr td{
+  background: #EFF2F5;
+}
 .month{
   color: rgb(41, 41, 41);
 }
@@ -744,7 +747,7 @@ table {
   #fileList li {
   padding: 10px;
   margin-bottom: 6px;
-  background-color: #f9f9f9;
+  /* background-color: #f9f9f9; */
   border-left: 4px solid #00192D;
   border-radius: 5px;
   color: #00192D;

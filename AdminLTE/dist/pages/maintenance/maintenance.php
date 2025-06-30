@@ -507,10 +507,8 @@
                             <label for="uploadReceipt" class="form-label fw-bold" style="color:#FFA000 ! important"><i class="fas fa-upload me-2"></i>Upload Receipt (optional)</label>
                             <input class="form-control" type="file" name="uploadReceipt" id="uploadReceipt" accept="image/*,application/pdf">
                           </div>
-
                         </div>
                       </div>
-
                       <div class="modal-footer">
                         <input type="hidden" name="request_id" id="modal_request_id">
                         <input type="hidden" name="form_type" value="addPaymentForm">
@@ -521,8 +519,6 @@
                   </div>
                 </div>
               </div>
-
-
               <!-- View request Modal -->
               <div class="modal fade" id="maintenanceRequestModal" tabindex="-1" aria-labelledby="maintenanceRequestModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -576,7 +572,6 @@
                           <div><strong>Description:</strong></div>
                           <div id="request-description" style="color:rgb(0 28 63 / 60%); font-weight:500;">--</div>
                         </div>
-
                         <div class="col-md-6">
                           <div><strong>Photo:</strong></div>
                           <div class="mb-4">
@@ -793,6 +788,29 @@
                               </div>
                               <button type="submit" class="btn btn-success mt-3">Pay Now</button>
                             </div>
+                          </div>
+                          <div id="bankTransferSection" class="bankTransferSection" style="display: none;">
+                            <div class="form-group">
+                              <label for="cardNumber">Card Number</label>
+                              <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                            </div>
+                            <!-- <div class="form-row" style="display: flex; gap:15px; width:100%;"> -->
+                              <div class="form-group">
+                                <label for="expiry">Valid Till</label>
+                                <input type="text" id="expiry" placeholder="MM/YY" maxlength="5" required>
+                              </div>
+                              <div class="form-group">
+                                <label for="cvv">CVV</label>
+                                <input type="password" id="cvv" placeholder="123" maxlength="4" required>
+                              </div>
+                              <div class="form-group">
+                                <label for="amount">Amount</label>
+                                <input type="number" id="amount" placeholder="e.g. 1000" required>
+                              </div>
+                            <!-- </div> -->
+                             <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-success mt-3">Pay Now</button>
+                             </div>
                           </div>
                           <div class="d-flex">
                             <button type="button" class="btn btn-secondary me-2 mt-3" id="goBackBtn">← Go Back</button>

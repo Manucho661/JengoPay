@@ -911,9 +911,11 @@ try {
 
 <div class="row mt-3 align-items-start">
   <!-- Left Side: Heading + Table -->
+   <h6 class="mb-2 contact_section_header">Files</h6>
   <div class="col-md-6">
-    <h6 class="mb-2 contact_section_header">Files</h6>
-    <table id="files-table" class="table mb-0">
+    
+    <div class="bg-white p-2 rounded-2">
+    <table id="files-table">
       <thead>
         <tr>
           <th>File Name</th>
@@ -924,10 +926,12 @@ try {
         <!-- File rows will go here -->
       </tbody>
     </table>
+    </div>
+    
   </div>
 
   <!-- Right Side: Add Button aligned with header row -->
-  <div class="col-md-3 d-flex align-items-end" style="padding-top: 38px;">
+  <div class="col-md-3 d-flex align-items-end" >
     <div class="add-file-card shadow-sm bg-white px-2 py-2 rounded d-flex align-items-center justify-content-center" style="width: 300px;">
       <button class="btn btn-sm rounded File-modal" 
               data-bs-toggle="modal" 

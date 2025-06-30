@@ -261,6 +261,7 @@ td .email{
     padding: 6px 12px;
      border-radius: 4px;
     font-size: 14px;
+    white-space: nowrap;
   }
   .status.completed {
     color: #2e7d32; /* Light green */

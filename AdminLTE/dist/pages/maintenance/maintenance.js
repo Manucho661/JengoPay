@@ -45,7 +45,6 @@ function populateRequestsTable(requests) {
             <i class="fas fa-check-circle"></i> Completed
           </span>
         </td>`;
-
     }
 
     else if (status === 'pending') {
@@ -399,14 +398,20 @@ function inSystemPayment(){
   openRecordPaymentModalBtn.removeEventListener('click', handleOpenRecordPaymentModal);
   openRecordPaymentModalBtn.addEventListener('click', handleOpenRecordPaymentModal);
 
- // Mpesa payment
+ // Mpesa/bank payment
   const paymentMethod = document.getElementById('paymentMethod'); // ✅ The <select>
   const mpesaPhoneSection = document.getElementById('mpesaPhoneSection');
+  const bankSection= document.getElementById('bankTransferSection');
   paymentMethod.addEventListener('change', function () {
     if (this.value === 'mpesa') {
       mpesaPhoneSection.style.display = 'block';
-    } else {
+    } else if(this.value === 'bank'){
       mpesaPhoneSection.style.display = 'none';
+      bankSection.style.display = 'block';
+    }
+    else{
+      mpesaPhoneSection.style.display = 'none';
+      bankSection.style.display = 'block';
     }
   });
   // send money section
@@ -453,42 +458,13 @@ document.getElementById("paymentForm").addEventListener("submit", function (e) {
     });
   });
 
-  //Requests Applications
-  function showProposal() {
-  const maintenanceRequestModalEl = document.getElementById('maintenanceRequestModal');
-  const maintenanceRequestModalInstance = bootstrap.Modal.getInstance(maintenanceRequestModalEl);
-
-  if (maintenanceRequestModalInstance) {
-    maintenanceRequestModalInstance.hide(); // 👈 call it properly
-  }
-
-  const modal = document.getElementById("proposalContainer");
-  const backdrop = document.getElementById("customBackdrop");
-
-  backdrop.classList.remove("d-none");
-  modal.classList.remove("d-none");
-
-  setTimeout(() => {
-    backdrop.classList.add("show");
-    modal.classList.add("show", "d-block");
-  }, 10);
-}
-
-  function hideProposal() {
-    const modal = document.getElementById("proposalContainer");
-    const backdrop = document.getElementById("customBackdrop");
-
-    modal.classList.remove("show");
-    backdrop.classList.remove("show");
-
-    setTimeout(() => {
-      modal.classList.remove("d-block");
-      modal.classList.add("d-none");
-      backdrop.classList.add("d-none");
-    }, 300);
-  }
-  // Job proposals.
+  //Show Job proposals.
   function showProposals(){
+      const maintenanceRequestModalEl = document.getElementById('maintenanceRequestModal');
+      const maintenanceRequestModalInstance = bootstrap.Modal.getInstance(maintenanceRequestModalEl);
+      if (maintenanceRequestModalInstance) {
+        maintenanceRequestModalInstance.hide(); // 👈 call it properly
+      }
       const viewProposal = document.getElementById("showProposal");
       const requestId = viewProposal.getAttribute("data-request-id");
       
@@ -501,4 +477,16 @@ document.getElementById("paymentForm").addEventListener("submit", function (e) {
        .catch(err=>{
          console.error("Error fetching proposals:", err);
        })
+
+        const modal = document.getElementById("proposalContainer");
+        const backdrop = document.getElementById("customBackdrop");
+
+        backdrop.classList.remove("d-none");
+        modal.classList.remove("d-none");
+
+        setTimeout(() => {
+          backdrop.classList.add("show");
+          modal.classList.add("show", "d-block");
+        }, 10);
+
   }
