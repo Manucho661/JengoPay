@@ -14,7 +14,7 @@ if (!$id || !is_numeric($id)) {
 }
 
 try {
-    // Optional: Check if message is "Sent"
+    // Check if message is "Sent" or "Archived"
     $check = $pdo->prepare("SELECT status FROM announcements WHERE id = ?");
     $check->execute([$id]);
     $row = $check->fetch();
@@ -28,10 +28,10 @@ try {
         exit;
     }
 
-    if ($row['status'] !== 'Sent') {
+    if (!in_array($row['status'], ['Sent', 'Archived'])) {
         echo json_encode([
             'success' => false,
-            'error' => 'Message is not in "Sent" status',
+            'error' => 'Only "Sent" or "Archived" messages can be deleted',
             'status' => $row['status']
         ]);
         exit;
@@ -52,4 +52,3 @@ try {
         'error' => 'Database error: ' . $e->getMessage()
     ]);
 }
-
