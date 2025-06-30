@@ -618,7 +618,7 @@
             <h3 class="mb-0 contact_section_header">📋Dashboard</h3>
             <p class="text-muted">Manage your Properties</p>
             <hr>
-            <div class="row mb-2 g-3">
+            <div class="row mb-1 g-3">
               <div class="col-md-3">
                 <div class="card summary-card text-center p-3 rounded-2">
                   <div class="summary-icon icon-properties"><i class="bi bi-house-door-fill"></i></div>
@@ -650,7 +650,7 @@
             </div>
             <!-- /.row -->
             <!--begin::Row-->
-            <div class="row g-4 mt-3 mb-3 d-flex align-items-stretch">
+            <div class="row g-4 mt-2 mb-3 d-flex align-items-stretch">
               <hr class="p-0">
               <div class="col-md-6 d-flex">
                 <div class="card shadow-sm rounded-2 w-100 h-100 border-0 shadow">
@@ -682,147 +682,54 @@
 
             <!--begin::Row-->
             <div class="row">
+              <hr class="p-0">
               <!-- Start col -->
-              <div class="col-md-12">
-                <!--begin::Row-->
-                <div class="row g-4 mb-4">
-                  <div class="col-md-12">
-                    <!-- DIRECT CHAT -->
-                    <div class="card direct-chat direct-chat-warning">
-                      <div class="card-header">
-                        <h3 class="card-title text-warning">Communication</h3>
-                        <div class="card-tools">
-                          <span title="3 New Messages" class="badge text-bg-warning"> 3 </span>
-                          <button
-                            type="button"
-                            class="btn btn-tool"
-                            data-lte-toggle="card-collapse"
-                          >
-                            <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                            <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                          </button>
-                          <button
-                            type="button"
-                            class="btn btn-tool"
-                            title="Contacts"
-                            data-lte-toggle="chat-pane"
-                          >
-                            <i class="bi bi-chat-text-fill"></i>
-                          </button>
-                          <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                            <i class="bi bi-x-lg"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <!-- /.card-header -->
-                      <div class="card-body">
-                        <!-- Conversations are loaded here -->
-                        <div class="direct-chat-messages">
-                          <!-- Message. Default to the start -->
-                          <div class="direct-chat-msg">
-                            <div class="direct-chat-infos clearfix">
-                              <span class="direct-chat-name float-start">Landlord</span>
-                              <span class="direct-chat-timestamp float-end"> 23 Jan 2:00 pm </span>
-                            </div>
-                            <!-- /.direct-chat-infos -->
-                            <img
-                              class="direct-chat-img"
-                              src="assets/img/user1-128x128.jpg"
-                              alt="message user image"
-                            />
-                            <!-- /.direct-chat-img -->
-                            <div class="direct-chat-text">
-                              Is this template really for free? That's unbelievable!
-                            </div>
-                            <!-- /.direct-chat-text -->
-                          </div>
-                          <!-- /.direct-chat-msg -->
-                          <!-- Message to the end -->
-                          <div class="direct-chat-msg end">
-                            <div class="direct-chat-infos clearfix">
-                              <span class="direct-chat-name float-end"> Sarah Bullock </span>
-                              <span class="direct-chat-timestamp float-start">
-                                23 Jan 2:05 pm
-                              </span>
-                            </div>
-                            <!-- /.direct-chat-infos -->
-                            <img
-                              class="direct-chat-img"
-                              src="assets/img/user3-128x128.jpg"
-                              alt="message user image"
-                            />
-                            <!-- /.direct-chat-img -->
-                            <div class="direct-chat-text">You better believe it!</div>
-                            <!-- /.direct-chat-text -->
-                          </div>
-                          <!-- /.direct-chat-msg -->
-                          <!-- Message. Default to the start -->
-                          <div class="direct-chat-msg">
-                            <div class="direct-chat-infos clearfix">
-                              <span class="direct-chat-name float-start"> Alexander Pierce </span>
-                              <span class="direct-chat-timestamp float-end"> 23 Jan 5:37 pm </span>
-                            </div>
-                            <!-- /.direct-chat-infos -->
-                            <img
-                              class="direct-chat-img"
-                              src="assets/img/user1-128x128.jpg"
-                              alt="message user image"
-                            />
-                            <!-- /.direct-chat-img -->
-                            <div class="direct-chat-text">
-                              Working with AdminLTE on a great new app! Wanna join?
-                            </div>
-                            <!-- /.direct-chat-text -->
-                          </div>
-                          <!-- /.direct-chat-msg -->
-                          <!-- Message to the end -->
-                          <div class="direct-chat-msg end">
-                            <div class="direct-chat-infos clearfix">
-                              <span class="direct-chat-name float-end"> Sarah Bullock </span>
-                              <span class="direct-chat-timestamp float-start">
-                                23 Jan 6:10 pm
-                              </span>
-                            </div>
-                            <!-- /.direct-chat-infos -->
-                            <img
-                              class="direct-chat-img"
-                              src="../../dist/assets/img/user3-128x128.jpg"
-                              alt="message user image"
-                            />
-                            <!-- /.direct-chat-img -->
-                            <div class="direct-chat-text">I would love to.</div>
-                            <!-- /.direct-chat-text -->
-                          </div>
-                          <!-- /.direct-chat-msg -->
-                        </div>
-                        <!-- /.direct-chat-messages-->
-                        <!-- Contacts are loaded here -->
-
-                            <!-- End Contact Item -->
-                          </ul>
-                          <!-- /.contacts-list -->
-                        </div>
-                        <!-- /.direct-chat-pane -->
-                      </div>
-                      <!-- /.card-body -->
-                    </div>
-                    <!-- /.direct-chat -->
+              <div class="col-md-6">
+                <div class="card border-0 shadow-lg h-100">
+                  <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between">
+                    <span><i class="bi bi-house-door-fill me-2"></i>Property Quick Access</span>
                   </div>
-                  <!-- /.col -->
-
-                  <!-- /.col -->
+                  <div class="card-body">
+                    <div class="d-grid gap-3">
+                      <button class="btn btn-outline-primary text-start"><i class="bi bi-plus-circle me-2"></i>Add New Property</button>
+                      <button class="btn btn-outline-primary text-start"><i class="bi bi-list-ul me-2"></i>View All Properties</button>
+                      <button class="btn btn-outline-primary text-start"><i class="bi bi-wrench-adjustable-circle me-2"></i>Assign Maintenance Task</button>
+                      <button class="btn btn-outline-primary text-start"><i class="bi bi-person-check-fill me-2"></i>Check Occupancy</button>
+                    </div>
+                  </div>
                 </div>
-                <!--end::Row-->
-
-                <!-- /.card -->
               </div>
-              <!-- /.col -->
 
+              <!-- Communication -->
+              <div class="col-md-6">
+                <div class="card border-0 shadow-lg h-100">
+                  <div class="card-header bg-success text-white d-flex align-items-center justify-content-between">
+                    <span><i class="bi bi-chat-dots-fill me-2"></i>Communication</span>
+                    <span class="badge bg-light text-dark rounded-pill">3 new</span>
+                  </div>
+                  <div class="card-body">
+                    <div class="d-grid gap-3">
+                      <button class="btn btn-outline-success text-start" data-bs-toggle="modal" data-bs-target="#messageModal">
+                        <i class="bi bi-envelope-paper-fill me-2"></i>Send Message to Tenant
+                      </button>
+                      <button class="btn btn-outline-success text-start">
+                        <i class="bi bi-megaphone-fill me-2"></i>Broadcast Notice
+                      </button>
+                      <button class="btn btn-outline-success text-start">
+                        <i class="bi bi-inbox-fill me-2"></i>View Inbox
+                      </button>
+                      <button class="btn btn-outline-success text-start">
+                        <i class="bi bi-life-preserver me-2"></i>Support Tickets
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <!--end::Row-->
+            <div class="row g-4 mb-8 mt-2">
+                            <hr class="p-0">
 
-
-            <div class="row g-4 mb-8">
               <!-- First Card -->
               <div class="col-md-6">
                 <!--begin::Row-->

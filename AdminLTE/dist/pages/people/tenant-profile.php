@@ -827,8 +827,6 @@ try {
     </div>
   </div>
 </div>
-
-
                   <!-- Add Pet Modal -->
 <div class="modal fade" id="addPetModal" tabindex="-1" aria-labelledby="addPetModalLabel" aria-hidden="true">
   <div class="modal-dialog">
