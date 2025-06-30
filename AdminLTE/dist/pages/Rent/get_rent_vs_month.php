@@ -1,21 +1,48 @@
 <?php
-// get_rent_vs_months.php
 header('Content-Type: application/json');
 include '../db/connect.php';
 
+$building_id = isset($_GET['building_id']) ? (int)$_GET['building_id'] : 0;
+
+$months = [
+  'January' => [],
+  'February' => [],
+  'March' => [],
+  'April' => [],
+  'May' => [],
+  'June' => [],
+  'July' => [],
+  'August' => [],
+  'September' => [],
+  'October' => [],
+  'November' => [],
+  'December' => []
+];
+
 try {
-    // Format payment_date to 'Month YYYY' (e.g., May 2025)
-    $stmt = $pdo->query("
-        SELECT DATE_FORMAT(payment_date, '%M %Y') AS period,
-               SUM(amount_paid) AS total
-        FROM tenant_rent_summary
-        GROUP BY period
-        ORDER BY MIN(payment_date)
-    ");
+  $stmt = $pdo->prepare("
+    SELECT amount_collected, payment_date
+    FROM building_rent_summary
+    WHERE building_id = ? AND payment_date IS NOT NULL AND amount_collected IS NOT NULL
+    ORDER BY payment_date
+  ");
+  $stmt->execute([$building_id]);
 
-    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    echo json_encode($data);
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $monthName = date('F', strtotime($row['payment_date']));
+    $months[$monthName][] = (float)$row['amount_collected'];
+  }
 
+  // Prepare chart data
+  $chartData = [];
+  foreach ($months as $month => $values) {
+    $chartData[] = [
+      'month' => $month,
+      'values' => $values // could be empty []
+    ];
+  }
+
+  echo json_encode($chartData);
 } catch (PDOException $e) {
-    echo json_encode(['error' => $e->getMessage()]);
+  echo json_encode(['error' => $e->getMessage()]);
 }
