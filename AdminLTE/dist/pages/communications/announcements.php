@@ -74,7 +74,18 @@ try {
 }
 ?>
 
+<?php
+// Example: Fetch buildings from database (if not already done)
+require '../db/connect.php'; // Adjust path as needed
 
+try {
+  $stmt = $pdo->query("SELECT building_id, building_name FROM buildings ORDER BY building_name ASC");
+  $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+  echo "Error fetching buildings: " . $e->getMessage();
+  $buildings = [];
+}
+?>
 
 <!doctype html>
 <html lang="en">
@@ -1502,6 +1513,13 @@ try {
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
   }
+  .list-group-flush::-webkit-scrollbar {
+    width: 6px;
+  }
+  .list-group-flush::-webkit-scrollbar-thumb {
+    background-color:#00192D;
+    border-radius: 4px;
+  }
 </style>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -1788,12 +1806,16 @@ try {
                         <div class="col-md-4 ">
                           <div class="stat-card" style="color: #FFC107; background-color:#00192D;">
                             <div class="select-wrapper">
-                              <select id="property" name="property" class="form-select stylish-select">
-                                <option value="" style="color: #FFC107; background-color:#00192D;" disabled selected>Select Property</option>
-                                <option value="High">Manucho</option>
-                                <option value="Moderate">Ben 10</option>
-                                <option value="Low">Alpha</option>
-                              </select>
+                            <!-- <label for="recipient">Select Recipient*</label> -->
+                            <select name="recipient" id="recipient" onchange="loadAnnouncementsByBuilding()" class="form-select recipient" required>
+                            <option value="" disabled selected>-- Select Building --</option>
+                            <?php foreach ($buildings as $b): ?>
+                              <option value="<?= htmlspecialchars($b['building_name']) ?>">
+                                <?= htmlspecialchars($b['building_name']) ?>
+                              </option>
+                            <?php endforeach; ?>
+                          </select>
+
                               <div class="select-icon">
                                 <i class="fas fa-chevron-down"></i>
                               </div>
@@ -1911,42 +1933,44 @@ try {
               <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center"
                   style="color: #FFC107; background-color:#00192D;">
-                  <h5 class="mb-0"><i class="fas fa-calendar-day me-2"></i>Today's Announcements</h5>
+                  <h5 class="mb-0"><i class="fas fa-calendar-day me-2"></i>Latest Announcements</h5>
                   <span class="badge bg-warning"><?= count($announcements) ?> Today</span>
                 </div>
 
                 <div class="card-body p-0">
-                  <?php if (!empty($announcements)): ?>
-                    <div class="list-group list-group-flush">
-                      <?php foreach ($announcements as $item): ?>
-                        <div class="list-group-item">
-                          <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                              <h6 class="mb-1 fw-bold">
-                                <?= $item['priority'] == 'Urgent' ? '🚨 ' : ($item['priority'] == 'Reminder' ? '⏰ ' : '📢 ') ?>
-                                <?= htmlspecialchars($item['recipient'] ?: 'All Users') ?>
-                              </h6>
-                              <p class="mb-1"><?= htmlspecialchars($item['message']) ?></p>
-                            </div>
-                            <small class="text-muted">
-                              <?= date('h:i A', strtotime($item['created_at'])) ?>
-                            </small>
+                <?php if (!empty($announcements)): ?>
+                  <div class="list-group list-group-flush" style="max-height: 400px; overflow-y: auto;">
+                    <?php foreach ($announcements as $item): ?>
+                      <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                          <div>
+                            <h6 class="mb-1 fw-bold">
+                              <?= $item['priority'] == 'Urgent' ? '🚨 ' : ($item['priority'] == 'Reminder' ? '⏰ ' : '📢 ') ?>
+                              <?= htmlspecialchars($item['recipient'] ?: 'All Users') ?>
+                            </h6>
+                            <p class="mb-1"><?= htmlspecialchars($item['message']) ?></p>
                           </div>
-                          <div class="mt-2">
-                            <span class="badge
-                              <?= $item['priority'] == 'Urgent' ? 'bg-warning text-dark' : ($item['priority'] == 'Reminder' ? 'bg-success' : 'bg-info') ?>">
-                              <?= htmlspecialchars($item['priority']) ?>
-                            </span>
-                          </div>
+                          <small class="text-muted">
+                            <?= date('h:i A', strtotime($item['created_at'])) ?>
+                          </small>
                         </div>
-                      <?php endforeach; ?>
-                    </div>
-                  <?php else: ?>
-                    <div class="text-center p-4">
-                      <i class="far fa-bell-slash fa-2x mb-2" style="color: #6c757d;"></i>
-                      <p class="text-muted">No announcements for today</p>
-                    </div>
-                  <?php endif; ?>
+                        <div class="mt-2">
+                          <span class="badge
+                            <?= $item['priority'] == 'Urgent' ? 'bg-warning text-dark' : ($item['priority'] == 'Reminder' ? 'bg-success' : 'bg-info') ?>">
+                            <?= htmlspecialchars($item['priority']) ?>
+                          </span>
+                        </div>
+                      </div>
+                    <?php endforeach; ?>
+                  </div>
+                <?php else: ?>
+                  <div class="text-center p-4">
+                    <i class="far fa-bell-slash fa-2x mb-2" style="color: #6c757d;"></i>
+                    <p class="text-muted">No announcements for today</p>
+                  </div>
+                <?php endif; ?>
+              <!-- </div> -->
+
                   <!-- </div> -->
                   <!-- </div> -->
                   <!-- </div> -->
@@ -2022,28 +2046,35 @@ try {
         </div>
     </div> -->
 
-              <div class="card mb-4">
-                <div class="card-header" style="color: #FFC107; background-color:#00192D;">
-                  <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
-                </div>
-                <div class="card-body">
-                  <div class="row g-3">
-                    <!-- Pin/Unpin -->
-                    <a href="#" class="btn btn-outline-warning w-100 py-2 mb-2">
-                      <i class="fas fa-thumbtack me-2"></i> Pin Announcement
-                    </a>
+    <div class="card mb-4 shadow-sm">
+  <div class="card-header text-warning fw-bold" style="background-color: #00192D;">
+    <h5 class="mb-0"><i class="fas fa-bolt me-2"></i> Quick Actions</h5>
+  </div>
+  <div class="card-body">
+    <div class="d-grid gap-2">
+    <ul class="list-group mt-3">
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Total Announcements
+    <span class="badge bg-dark rounded-pill" id="totalCount">--</span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Drafts
+    <span class="badge bg-warning text-dark rounded-pill" id="draftCount">--</span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Sent
+    <span class="badge bg-success rounded-pill" id="sentCount">--</span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Archived
+    <span class="badge bg-secondary rounded-pill" id="archivedCount">--</span>
+  </li>
+</ul>
 
-                    <!-- Schedule -->
-                    <a href="#" class="btn btn-outline-warning w-100 py-2 mb-2">
-                      <i class="far fa-clock me-2"></i> Schedule Post
-                    </a>
 
-                    <!-- Edit Drafts -->
-                    <a href="#" class="btn btn-outline-warning w-100 py-2 mb-2">
-                      <i class="fas fa-edit me-2"></i> Edit Drafts
-                    </a>
-                  </div>
-                </div>
+    </div>
+  </div>
+</div>
 
                 <!-- Empty state example (hidden by default) -->
                 <!-- <div class="empty-state">
@@ -2129,10 +2160,7 @@ try {
 
   <!-- End view announcement -->
 
-
   <!-- end of new announcement card-->
-
-
   <!-- notification popup -->
   <div class="notificationpopup-overlay" id="notificationPopup">
     <div class="card" style="margin-top: 20px;">
@@ -2143,14 +2171,15 @@ try {
       <div class="card-body new-message-body">
         <form action="" method="POST" id="notificationForm">
           <div class="form-group">
-            <label for="property">Select Recipient*</label>
-            <select id="property" name="recipient" class="form-select" required>
-              <option value="" disabled selected>Select Recipient*</option>
-              <option value="Manucho">Manucho</option>
-              <option value="Ben 10">Ben 10</option>
-              <option value="Alpha">Alpha</option>
-              <option value="All Tenants">All Tenants</option>
-            </select>
+          <label for="recipient">Select Recipient*</label>
+          <select name="recipient" id="recipient" onchange="toggleShrink()" class="form-select recipient" required>
+            <option value="" disabled selected>-- Select Building --</option>
+            <?php foreach ($buildings as $b): ?>
+              <option value="<?= htmlspecialchars($b['building_name']) ?>">
+                <?= htmlspecialchars($b['building_name']) ?>
+              </option>
+            <?php endforeach; ?>
+          </select>
           </div>
 
           <div class="form-group">
@@ -2189,19 +2218,6 @@ try {
       </div>
     </div>
   </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   <!-- <script>
 function saveAsDraft() {
@@ -2310,6 +2326,46 @@ function archiveAnnouncement(id) {
   });
 }
 </script> -->
+
+<script>
+  function restoreAllArchived() {
+    if (confirm("Restore all archived announcements?")) {
+      fetch('restore_all.php', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+          alert(data.success ? "All archived announcements restored!" : "Failed to restore.");
+          loadAnnouncements(); // reload if applicable
+        });
+    }
+  }
+</script>
+
+<script>
+  function loadAnnouncementCounts() {
+  fetch('announcing_count.php')
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        document.getElementById('totalCount').textContent = data.total;
+        document.getElementById('draftCount').textContent = data.draft;
+        document.getElementById('sentCount').textContent = data.sent;
+        document.getElementById('archivedCount').textContent = data.archived;
+      } else {
+        console.error('Failed to fetch counts:', data.error);
+      }
+    })
+    .catch(err => {
+      console.error('Fetch error:', err);
+    });
+}
+
+// Call the function when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+  loadAnnouncementCounts();
+});
+
+</script>
+
 
   <script>
     function showArchivedMessages() {
@@ -2495,7 +2551,6 @@ function archiveAnnouncement(id) {
       return d.toLocaleString();
     }
   </script>
-
 
   <script>
     function showDrafts() {
@@ -3114,6 +3169,80 @@ document.getElementById('refreshBtn')?.addEventListener('click', showSentMessage
 </script>
 
 
+<script>
+  function loadAnnouncementsByBuilding() {
+  const recipient = document.getElementById('recipient').value;
+
+  fetch(`fetch_announcements.php?building_id=${encodeURIComponent(recipient)}`)
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById('announcementList');
+      container.innerHTML = '';
+
+      if (data.status !== 'success' || !data.data.length) {
+        container.innerHTML = '<p>No announcements found for this building.</p>';
+        return;
+      }
+
+      data.data.forEach(item => {
+        const iconClass = getIconByPriority(item.priority);
+        let actions = '';
+
+        if (item.status === 'Sent') {
+          actions = `
+            <button class="action-btn sent-label" disabled>
+              <i class="fas fa-paper-plane"></i> Sent
+            </button>
+            <button class="action-btn archive-btn" data-id="${item.id}">
+              <i class="fas fa-archive"></i> Archive
+            </button>`;
+        } else if (item.status === 'Draft') {
+          actions = `
+            <span class="badge bg-warning text-dark"><i class="fas fa-pencil-alt"></i> Draft</span>
+            <button class="action-btn edit-btn" data-id="${item.id}">
+              <i class="fas fa-edit"></i> Edit
+            </button>`;
+        } else if (item.status === 'Archived') {
+          actions = `
+            <span class="badge bg-secondary"><i class="fas fa-archive"></i> Archived</span>
+            <button class="action-btn restore-btn" data-id="${item.id}">
+              <i class="fas fa-undo"></i> Restore
+            </button>`;
+        }
+
+        const html = `
+          <div class="notification-item" id="announcement-${item.id}">
+            <div class="notification-icon ${iconClass}">
+              <i class="fas ${getIconSymbol(item.priority)}"></i>
+            </div>
+            <div class="notification-content">
+              <div class="notification-title">
+                <span>${item.priority} ${item.status} to ${item.recipient}</span>
+                <span class="notification-time">${formatTime(item.created_at)}</span>
+              </div>
+              <p class="notification-message">${item.message}</p>
+              <div class="notification-actions">
+                ${actions}
+                <button class="action-btn delete-btn" data-id="${item.id}">
+                  <i class="fas fa-trash-alt"></i> Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+
+        container.insertAdjacentHTML('beforeend', html);
+      });
+    })
+    .catch(error => {
+      console.error('Error loading announcements:', error);
+      document.getElementById('announcementList').innerHTML = '<p>Error loading announcements.</p>';
+    });
+}
+
+</script>
+
+
   <!-- <script>
   document.addEventListener('DOMContentLoaded', function () {
   document.body.addEventListener('click', function (e) {
@@ -3226,215 +3355,220 @@ function deleteAnnouncement(id) {
   </script>
 
   <script>
-    function loadAnnouncements() {
-      fetch('fetch_announcements.php')
-        .then(response => response.json())
-        .then(data => {
-          if (data.status === 'success') {
-            const container = document.getElementById('announcementList');
-            container.innerHTML = '';
+  function loadAnnouncements() {
+    fetch('fetch_announcements.php')
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          const container = document.getElementById('announcementList');
+          container.innerHTML = '';
 
-            data.data.forEach(item => {
-              const iconClass = getIconByPriority(item.priority);
-              let actions = '';
+          data.data.forEach(item => {
+            const iconClass = getIconByPriority(item.priority);
+            let actions = '';
 
-              if (item.status === 'Sent') {
-                actions = `
-              <button class="action-btn sent-label" disabled>
-                <i class="fas fa-paper-plane"></i> Sent
-              </button>
-              <button class="action-btn archive-btn" data-id="${item.id}">
-                <i class="fas fa-archive"></i> Archive
-              </button>
-            `;
-              } else if (item.status === 'Draft') {
-                actions = `
-              <span class="badge bg-warning text-dark" style="padding: 5px 10px; border-radius: 5px;">
-                <i class="fas fa-pencil-alt"></i> Draft
-              </span>
-              <button class="action-btn edit-btn" data-id="${item.id}">
-                <i class="fas fa-edit"></i> Edit
-              </button>
-            `;
-              } else if (item.status === 'Archived') {
-                actions = `
-              <span class="badge bg-secondary" style="padding: 5px 10px; border-radius: 5px;">
-                <i class="fas fa-archive"></i> Archived
-              </span>
-              <button class="action-btn restore-btn" data-id="${item.id}">
-                <i class="fas fa-undo"></i> Restore
-              </button>
-            `;
-              }
+            if (item.status === 'Sent') {
+              actions = `
+                <button class="action-btn sent-label" disabled>
+                  <i class="fas fa-paper-plane"></i> Sent
+                </button>
+                <button class="action-btn archive-btn" data-id="${item.id}">
+                  <i class="fas fa-archive"></i> Archive
+                </button>
+              `;
+            } else if (item.status === 'Draft') {
+              actions = `
+                <span class="badge bg-warning text-dark" style="padding: 5px 10px; border-radius: 5px;">
+                  <i class="fas fa-pencil-alt"></i> Draft
+                </span>
+                <button class="action-btn edit-btn" data-id="${item.id}">
+                  <i class="fas fa-edit"></i> Edit
+                </button>
+              `;
+            } else if (item.status === 'Archived') {
+              actions = `
+                <span class="badge bg-secondary" style="padding: 5px 10px; border-radius: 5px;">
+                  <i class="fas fa-archive"></i> Archived
+                </span>
+                <button class="action-btn restore-btn" data-id="${item.id}">
+                  <i class="fas fa-undo"></i> Restore
+                </button>
+              `;
+            }
 
-              const html = `
-            <div class="notification-item unread" id="announcement-${item.id}">
-              <div class="notification-icon ${iconClass}">
-                <i class="fas ${getIconSymbol(item.priority)}"></i>
-              </div>
-              <div class="notification-content">
-                <div class="notification-title">
-                  <span>${item.priority} ${item.status} to ${item.recipient}</span>
-                  <span class="notification-time">${formatTime(item.created_at)}</span>
+            const html = `
+              <div class="notification-item unread" id="announcement-${item.id}">
+                <div class="notification-icon ${iconClass}">
+                  <i class="fas ${getIconSymbol(item.priority)}"></i>
                 </div>
-                <p class="notification-message">${item.message}</p>
-                <div class="notification-actions">
-                  ${actions}
-                  <button class="action-btn delete-btn" data-id="${item.id}">
-                    <i class="fas fa-trash-alt"></i> Delete
-                  </button>
+                <div class="notification-content">
+                  <div class="notification-title">
+                    <span>${item.priority} ${item.status} to ${item.recipient}</span>
+                    <span class="notification-time">${formatTime(item.created_at)}</span>
+                  </div>
+                  <p class="notification-message">${item.message}</p>
+                  <div class="notification-actions">
+                    ${actions}
+                    <button class="action-btn delete-btn" data-id="${item.id}">
+                      <i class="fas fa-trash-alt"></i> Delete
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          `;
+            `;
 
-              container.insertAdjacentHTML('beforeend', html);
-            });
+            container.insertAdjacentHTML('beforeend', html);
+          });
 
-            enableScrolling();
-          }
-        })
-        .catch(error => console.error('Error loading announcements:', error));
+          enableScrolling();
+        }
+      })
+      .catch(error => console.error('Error loading announcements:', error));
+  }
+
+  function getIconByPriority(priority) {
+    switch (priority.toLowerCase()) {
+      case 'urgent':
+        return 'danger';
+      case 'reminder':
+        return 'info';
+      case 'normal':
+        return 'success';
+      default:
+        return 'info';
     }
+  }
 
-    function getIconByPriority(priority) {
-      switch (priority.toLowerCase()) {
-        case 'urgent':
-          return 'danger';
-        case 'reminder':
-          return 'info';
-        case 'normal':
-          return 'success';
-        default:
-          return 'info';
+  function getIconSymbol(priority) {
+    switch (priority.toLowerCase()) {
+      case 'urgent':
+        return 'fa-exclamation-circle';
+      case 'reminder':
+        return 'fa-info-circle';
+      case 'normal':
+        return 'fa-check-circle';
+      default:
+        return 'fa-info-circle';
+    }
+  }
+
+  function formatTime(datetime) {
+    const d = new Date(datetime);
+    return d.toLocaleString();
+  }
+
+  function showAlert(message, type = 'info') {
+    alert(message); // Customize with toast/snackbar if needed
+  }
+
+  function archiveAnnouncement(id) {
+    fetch('archive_message.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'id=' + encodeURIComponent(id)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          showAlert('Announcement archived successfully', 'success');
+          loadAnnouncements();
+        } else {
+          // showAlert('Failed to archive: ' + (data.error || 'Unknown error'), 'error');
+        }
+      })
+      .catch(error => {
+        console.error('Archive error:', error);
+        showAlert('Error archiving announcement', 'error');
+      });
+  }
+
+
+  function deleteAnnouncement(id) {
+    fetch('delete_message.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'id=' + encodeURIComponent(id)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          showAlert('Announcement deleted successfully', 'success');
+          loadAnnouncements();
+        } else {
+          // showAlert('Failed to delete: ' + (data.error || 'Unknown error'), 'error');
+        }
+      })
+      .catch(error => {
+        console.error('Delete error:', error);
+        showAlert('Error deleting announcement', 'error');
+      });
+  }
+
+  function restoreAnnouncement(id) {
+    fetch('restore_message.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'id=' + encodeURIComponent(id)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          showAlert('Announcement restored successfully', 'success');
+          loadAnnouncements();
+        } else {
+          // showAlert('Failed to restore: ' + (data.error || 'Unknown error'), 'error');
+        }
+      })
+      .catch(error => {
+        console.error('Restore error:', error);
+        showAlert('Error restoring announcement', 'error');
+      });
+  }
+
+  function editDraft(id) {
+    window.location.href = `edit_draft.php?id=${id}`;
+  }
+
+  // Enable interactions after DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    loadAnnouncements();
+
+    document.addEventListener('click', function(e) {
+      const archiveBtn = e.target.closest('.archive-btn');
+      const deleteBtn = e.target.closest('.delete-btn');
+      const restoreBtn = e.target.closest('.restore-btn');
+      const editBtn = e.target.closest('.edit-btn');
+
+      if (archiveBtn) {
+        const id = archiveBtn.dataset.id;
+        if (confirm('Archive this announcement?')) archiveAnnouncement(id);
       }
-    }
 
-    function getIconSymbol(priority) {
-      switch (priority.toLowerCase()) {
-        case 'urgent':
-          return 'fa-exclamation-circle';
-        case 'reminder':
-          return 'fa-info-circle';
-        case 'normal':
-          return 'fa-check-circle';
-        default:
-          return 'fa-info-circle';
+      if (deleteBtn) {
+        const id = deleteBtn.dataset.id;
+        if (confirm('Delete this announcement?')) deleteAnnouncement(id);
       }
-    }
 
-    function formatTime(datetime) {
-      const d = new Date(datetime);
-      return d.toLocaleString();
-    }
+      if (restoreBtn) {
+        const id = restoreBtn.dataset.id;
+        if (confirm('Restore this announcement?')) restoreAnnouncement(id);
+      }
 
-    function showAlert(message, type = 'info') {
-      alert(message); // You can customize with toast/snackbar if needed
-    }
+      if (editBtn) {
+        const id = editBtn.dataset.id;
+        editDraft(id);
+      }
+    });
+  });
 
-// document.addEventListener('DOMContentLoaded', loadAnnouncements);
+</script>
 
-// document.addEventListener('click', function (e) {
-//   const archiveBtn = e.target.closest('.archive-btn');
-//   const deleteBtn = e.target.closest('.delete-btn');
-//   const restoreBtn = e.target.closest('.restore-btn');
-//   const editBtn = e.target.closest('.edit-btn');
-
-  // if (archiveBtn) {
-  //   const id = archiveBtn.dataset.id;
-  //   if (confirm('Archive this announcement?')) archiveAnnouncement(id);
-  // }
-
-  // if (deleteBtn) {
-  //   const id = deleteBtn.dataset.id;
-  //   if (confirm('Delete this announcement?')) deleteAnnouncement(id);
-  // }
-
-  // if (restoreBtn) {
-  //   const id = restoreBtn.dataset.id;
-  //   if (confirm('Restore this announcement?')) restoreAnnouncement(id);
-  // }
-
-  // if (editBtn) {
-  //   const id = editBtn.dataset.id;
-  //   editDraft(id);
-  // }
-
-
-    function archiveAnnouncement(id) {
-      fetch('archive_message.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: 'id=' + encodeURIComponent(id)
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            showAlert('Announcement archived successfully', 'success');
-            loadAnnouncements();
-          } else {
-            showAlert('Failed to archive: ' + (data.error || 'Unknown error'), 'error');
-          }
-        })
-        .catch(error => {
-          console.error('Archive error:', error);
-          showAlert('Error archiving announcement', 'error');
-        });
-    }
-
-    function deleteAnnouncement(id) {
-      fetch('delete_message.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: 'id=' + encodeURIComponent(id)
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            showAlert('Announcement deleted successfully', 'success');
-            loadAnnouncements();
-          } else {
-            showAlert('Failed to delete: ' + (data.error || 'Unknown error'), 'error');
-          }
-        })
-        .catch(error => {
-          console.error('Delete error:', error);
-          showAlert('Error deleting announcement', 'error');
-        });
-    }
-
-    function restoreAnnouncement(id) {
-      fetch('restore_message.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: 'id=' + encodeURIComponent(id)
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            showAlert('Announcement restored successfully', 'success');
-            loadAnnouncements();
-          } else {
-            showAlert('Failed to restore: ' + (data.error || 'Unknown error'), 'error');
-          }
-        })
-        .catch(error => {
-          console.error('Restore error:', error);
-          showAlert('Error restoring announcement', 'error');
-        });
-    }
-
-    function editDraft(id) {
-      // Redirect to edit draft page
-      window.location.href = `edit_draft.php?id=${id}`;
-    }
-  </script>
 
   <script>
     document.addEventListener('click', function(e) {
