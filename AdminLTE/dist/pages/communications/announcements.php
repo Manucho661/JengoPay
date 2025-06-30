@@ -2212,7 +2212,7 @@ try {
           <div class="actions d-flex justify-content-end">
             <button type="button" class="draft-btn" id="saveDraftBtn">Save Draft</button>
             <button type="button" class="draft-btn text-danger btn" onclick="closenotificationPopup()">Cancel</button>
-            <button type="button" class="send-btn btn" onclick="sendMessage()">Send Announcement</button>
+            <button type="submit" class="send-btn btn" onclick="sendMessage()">Send Announcement</button>
           </div>
         </form>
       </div>
@@ -3352,7 +3352,7 @@ function sendMessage() {
   });
 }
 </script> -->
-  
+
 
   <script>
   function loadAnnouncements() {
@@ -4165,7 +4165,7 @@ function sendMessage(event) {
 
   const recipient = document.getElementById('recipient').value.trim();
   const priority = document.getElementById('priority').value.trim();
-  const message = document.getElementById('notes').value.trim();
+  const message = document.getElementById('message').value.trim();
 
   if (!recipient || !priority || !message) {
     alert("Please fill all required fields.");
