@@ -33,9 +33,9 @@ $date = !empty($tenant['payment_date']) ? date("d/m/Y", strtotime($tenant['payme
 $printDate = date("d/m/Y H:i");
 $receiptNo = "RC".str_pad($tenantId, 5, '0', STR_PAD_LEFT);
 
-// Calculate subtotal and total
+// Calculate subtotal and total - Overpayment should not be added to the total
 $subtotal = (float)$tenant['amount_paid'] + (float)$tenant['penalty'];
-$total = $subtotal + (float)$tenant['arrears'] + (float)$tenant['overpayment'];
+$total = $subtotal + (float)$tenant['arrears']; // Removed overpayment from total calculation
 ?>
 
 <!DOCTYPE html>
@@ -130,6 +130,7 @@ $total = $subtotal + (float)$tenant['arrears'] + (float)$tenant['overpayment'];
             }
             body {
                 padding: 0;
+                
             }
         }
     </style>
@@ -137,11 +138,11 @@ $total = $subtotal + (float)$tenant['arrears'] + (float)$tenant['overpayment'];
 <body>
 <div class="receipt-container">
     <div class="company-header">
-        <h1>SUNLAND REAL ESTATES LTD</h1>
+        <h1>BT JENGOPAY</h1>
         <p>P.O BOX 37987 - 00100 - 8TH FLOOR</p>
         <p>INTERNATIONAL LIFE HSE, MAMA NGINA ST.</p>
-        <p>TEL: 0733717726, 0202136440, 0202225507/8,</p>
-        <p>EMAIL: PROPERTYMANAGEMENT@SUNLAND.CO.KE</p>
+        <p>TEL: 0733717726</p>
+        <p>EMAIL: PROPERTYMANAGEMENT@BTJENGOPAY.CO.KE</p>
     </div>
 
     <div class="divider"></div>
@@ -152,7 +153,7 @@ $total = $subtotal + (float)$tenant['arrears'] + (float)$tenant['overpayment'];
         <tr>
             <td>Received From:</td>
             <td><?= $name ?></td>
-            <td>Receipt No.:</td>
+            <td>Receipt No:</td>
             <td><?= $receiptNo ?></td>
         </tr>
         <tr>

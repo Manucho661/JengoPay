@@ -1,4 +1,0 @@
-Array
-(
-    [thread_id] => 251
-)

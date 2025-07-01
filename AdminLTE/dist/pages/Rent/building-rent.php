@@ -182,7 +182,7 @@ foreach ($tenants as $tenant) {
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="building-rent.css">
 
@@ -735,19 +735,19 @@ foreach ($tenants as $tenant) {
                           </div>
                         <div class="rentTable section" >
                         <table id="rent" class="tableRent" style="font-size: small; width: 100%; table-layout: fixed;">
-                        <colgroup>
-                            <col style="width: 20%">  <!-- Tenant + unit -->
-                            <col style="width: 12%">  <!-- Collected -->
-                            <col style="width: 10%">  <!-- Unit Type -->
-                            <col style="width: 10%">  <!-- Balances -->
-                            <col style="width: 12%">  <!-- Penalty -->
-                            <col style="width: 10%">  <!-- Arrears -->
-                            <col style="width: 10%">  <!-- Overpayment -->
-                            <col style="width: 16%">  <!-- Action -->
-                        </colgroup>
-                        <thead>
+    <colgroup>
+        <col style="width: 22%">  <!-- Tenant + unit -->
+        <col style="width: 14%">  <!-- Collected -->
+        <col style="width: 10%">  <!-- Unit Type -->
+        <col style="width: 12%">  <!-- Balances -->
+        <col style="width: 12%">  <!-- Penalty -->
+        <col style="width: 10%">  <!-- Arrears -->
+        <col style="width: 10%">  <!-- Overpayment -->
+        <col style="width: 10%">  <!-- Action -->
+    </colgroup>
+    <thead>
         <tr>
-            <th scope="col">Tenant + unit</th>
+            <th scope="col">Tenant + Unit</th>
             <th scope="col">Collected</th>
             <th scope="col">Unit Type</th>
             <th scope="col">Balances</th>
@@ -768,7 +768,7 @@ foreach ($tenants as $tenant) {
                 $currentBuilding = $building;
         ?>
                 <tr class="table-group-header bg-light">
-                    <td colspan="8" style="font-weight: bold; color: #007bff; padding: 8px;">
+                    <td colspan="8" style="font-weight: bold; color: #007bff; padding: 10px 8px;">
                         <?= htmlspecialchars($currentBuilding) ?>
                     </td>
                 </tr>
@@ -788,41 +788,35 @@ foreach ($tenants as $tenant) {
             $paymentDate = !empty($tenant['payment_date']) ? date("d-F", strtotime($tenant['payment_date'])) : '';
         ?>
             <tr>
-                <td style="padding: 8px; vertical-align: middle;">
+                <td style="padding: 10px 8px; vertical-align: middle;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span><?= htmlspecialchars("$firstName $middleName") ?></span>
-                        <span style="color: #FFC107;"><?= $unit ?></span>
+                        <span style="font-weight: 500;"><?= htmlspecialchars("$firstName $middleName") ?></span>
+                        <span style="color: #FFC107; font-weight: 500;"><?= $unit ?></span>
                     </div>
                 </td>
-                <td style="padding: 8px; vertical-align: middle;">
+                <td style="padding: 10px 8px; vertical-align: middle;">
                     <div style="display: flex; flex-direction: column;">
-                        <span>KSH <?= $amount ?></span>
-                        <span class="date late" style="font-size: 0.8em;"><?= $paymentDate ?></span>
+                        <span style="font-weight: 500;">KSH <?= $amount ?></span>
+                        <span class="date late" style="font-size: 0.75em; color: #6c757d;"><?= $paymentDate ?></span>
                     </div>
                 </td>
-                <td style="padding: 8px; vertical-align: middle;"><?= $unit_type ?></td>
-                <td style="padding: 8px; vertical-align: middle;">KSH <?= $balances ?></td>
-                <td style="padding: 8px; vertical-align: middle;">
+                <td style="padding: 10px 8px; vertical-align: middle; text-align: center;"><?= $unit_type ?></td>
+                <td style="padding: 10px 8px; vertical-align: middle; font-weight: 500;">KSH <?= $balances ?></td>
+                <td style="padding: 10px 8px; vertical-align: middle;">
                     <div style="display: flex; flex-direction: column;">
-                        <span>KSH <?= $penalty ?></span>
-                        <span class="rent lateDays" style="font-size: 0.8em;">(<?= $penaltyDays ?> days)</span>
+                        <span style="font-weight: 500;">KSH <?= $penalty ?></span>
+                        <span class="rent lateDays" style="font-size: 0.75em; color: #dc3545;">(<?= $penaltyDays ?> days)</span>
                     </div>
                 </td>
-                <td style="padding: 8px; vertical-align: middle;">KSH <?= $arrears ?></td>
-                <td style="padding: 8px; vertical-align: middle;">KSH <?= $overpayment ?></td>
-                <td style="padding: 8px; vertical-align: middle;">
-                    <div style="display: flex; gap: 4px;">
-                    <button
-  class="btn view"
-  data-bs-toggle="modal"
-  data-bs-target="#tenantProfileModal"
-  data-tenant='<?= json_encode($tenant) ?>'
-  style="padding: 4px 8px;">
-  View
-</button>
-
-                        <button class="btn print" onclick="window.open('print-receipt.php?tenant_id=<?= $tenant['id'] ?>', '_blank')" style="padding: 4px 8px;">
-                            <i class="fas fa-file-invoice"></i> Receipt
+                <td style="padding: 10px 8px; vertical-align: middle; font-weight: 500;">KSH <?= $arrears ?></td>
+                <td style="padding: 10px 8px; vertical-align: middle; font-weight: 500;">KSH <?= $overpayment ?></td>
+                <td style="padding: 10px 8px; vertical-align: middle;">
+                    <div style="display: flex; gap: 6px; justify-content: center;">
+                        <button class="btn view" data-bs-toggle="modal" data-bs-target="#tenantProfileModal" data-tenant='<?= json_encode($tenant) ?>' style="padding: 4px 8px; font-size: 0.8em;">
+                            View
+                        </button>
+                        <button class="btn print" onclick="window.open('print-receipt.php?tenant_id=<?= $tenant['id'] ?>', '_blank')" style="padding: 4px 8px; font-size: 0.8em;">
+                            <i class="fas fa-file-invoice"></i>
                         </button>
                     </div>
                 </td>
@@ -830,7 +824,6 @@ foreach ($tenants as $tenant) {
         <?php endforeach; ?>
     </tbody>
 </table>
-
 
                         </div>
                     </div>
@@ -860,19 +853,19 @@ foreach ($tenants as $tenant) {
                        <div class="change-btn d-flex justify-content-end">
     <button class="btn edit rounded" data-bs-toggle="modal" data-bs-target="#editPenaltyModal">Edit</button>
   </div>
-
- 
-
-
-
                   </div>
-                           <!-- Rent Chart Section -->
-<div class="p-2 mt-2 rent-chart-wrapper" style="background-color: white;">
-  <div class="label mb-1">RENT VS MONTHS</div>
-  <div class="rent-chart-scroll" style="height: 200px;">
-    <canvas id="rentChart"></canvas>
+
+
+                       <!-- Rent vs Months Chart -->
+<div class="d-flex justify-content-center mt-4">
+  <div class="p-4 rounded-4 shadow" style="background-color: white; color:#00192D; width: 100%;">
+    <h5 class="mb-3 fw-bold">📈 Rent Collection Trend (Monthly)</h5>
+    <div style="height: 100%;">
+      <canvas id="rentChart"></canvas>
+    </div>
   </div>
 </div>
+
 
            </div>
 
@@ -991,6 +984,61 @@ foreach ($tenants as $tenant) {
           });
 </script> -->
 
+<!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const buildingId = 2; // Replace with dynamic ID
+
+  fetch(`get_rent_vs_month.php?building_id=${buildingId}`)
+    .then(res => res.json())
+    .then(monthlyData => {
+      const labels = monthlyData.map(item => item.month);
+      const datasets = [];
+
+      // Find max number of payments in any month to normalize bars
+      const maxBars = Math.max(...monthlyData.map(item => item.values.length));
+
+      for (let i = 0; i < maxBars; i++) {
+        datasets.push({
+          label: `Payment ${i + 1}`,
+          data: monthlyData.map(month => month.values[i] ?? null), // Fill gaps with null
+          backgroundColor: `rgba(#FFC107, ${0.3 + i * 0.1})`,
+          borderRadius: 4
+        });
+      }
+
+      const ctx = document.getElementById('rentChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: datasets
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            title: {
+              display: true,
+              text: 'Rent Payments Per Month (All Months Shown)'
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: 'KES' }
+            },
+            x: {
+              title: { display: true, text: 'Month' }
+            }
+          }
+        }
+      });
+    })
+    .catch(err => console.error('Chart load error:', err));
+});
+</script>
+
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const tenantProfileModal = document.getElementById('tenantProfileModal');
@@ -1014,7 +1062,7 @@ foreach ($tenants as $tenant) {
             <table class="table table-striped table-hover table-borderless mb-0">
               <tbody>
                 <tr>
-                  <th scope="row" style="color: #00192D;">Amount Paid</th>
+                  <th scope="row" style="color: #00192D;">Rent Paid</th>
                   <td>${formatCurrency(tenantData.amount_paid)}</td>
                 </tr>
                 <tr>
@@ -1473,7 +1521,7 @@ document.querySelector('.excel').addEventListener('click', function () {
 });
 </script>
 
-<script>
+<!-- <script>
   const unit = ''; // Optional: set a specific unit type
   const year = new Date().getFullYear();
 
@@ -1523,7 +1571,7 @@ document.querySelector('.excel').addEventListener('click', function () {
       });
     // })
     // .catch(error => console.error('Error fetching tenant rent chart data:', error));
-</script>
+</script> -->
 
 
 

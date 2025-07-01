@@ -1,23 +1,26 @@
 <?php
 header('Content-Type: application/json');
-require_once '../db/connect.php'; // This sets up $pdo
+require '../db/connect.php';
+
+$buildingId = $_GET['building_id'] ?? null;
 
 try {
-    // Use $pdo to fetch announcements
-    // $stmt = $pdo->prepare("SELECT recipient, priority, message, created_at FROM announcements ORDER BY created_at DESC");
-    $stmt = $pdo->query("SELECT id, recipient, priority, message, status, created_at FROM announcements ORDER BY created_at DESC");
+  if ($buildingId) {
+    $stmt = $pdo->prepare("SELECT * FROM announcements WHERE recipient = ? ORDER BY created_at DESC");
+    $stmt->execute([$buildingId]);
+  } else {
+    $stmt = $pdo->query("SELECT * FROM announcements ORDER BY created_at DESC");
+  }
 
-    $stmt->execute();
+  $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $announcements = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    echo json_encode([
-        'status' => 'success',
-        'data' => $announcements
-    ]);
+  echo json_encode([
+    'status' => 'success',
+    'data' => $results
+  ]);
 } catch (PDOException $e) {
-    echo json_encode([
-        'status' => 'error',
-        'message' => $e->getMessage()
-    ]);
+  echo json_encode([
+    'status' => 'error',
+    'message' => $e->getMessage()
+  ]);
 }
