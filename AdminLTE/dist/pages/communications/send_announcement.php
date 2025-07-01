@@ -5,7 +5,6 @@ include '../db/connect.php'; // Make sure this sets up $pdo correctly
 $recipient = $_POST['recipient'] ?? '';
 $priority = $_POST['priority'] ?? '';
 $message = $_POST['message'] ?? '';
-$created_at = 'created_at';
 $status = 'Sent'; // default status
 
 // Validation
@@ -19,8 +18,8 @@ if (empty($recipient) || empty($priority) || empty($message)) {
 
 try {
     // Insert into database
-    $stmt = $pdo->prepare("INSERT INTO announcements (recipient, priority, message, created_at, status) VALUES (?, ?, ?, ?, ?)");
-    $stmt->execute([$recipient, $priority, $message, $created_at, $status]);
+    $stmt = $pdo->prepare("INSERT INTO announcements (recipient, priority, message, status) VALUES (?, ?, ?, ?)");
+    $stmt->execute([$recipient, $priority, $message, $status]);
 
     echo json_encode([
         'success' => true,
