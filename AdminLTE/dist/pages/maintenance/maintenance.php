@@ -770,26 +770,31 @@
                             </select>
                           </div>
                           <div id="mpesaPhoneSection" style="display: none;">
-                            <label for="mpesaPayment_method" class="form-label">Choose M-pesa Payment Method</label>
-                            <select class="form-select" id="mpesaPaymentMethod" name="mpesaPayment_method" required>
-                              <option value="">-- Choose --</option>
-                              <option value="sendMoney">Send Money</option>
-                              <option value="lipaNaMpesa">Lipa na M-pesa</option>
-                            </select>
-                            <div id="sendMoneySection" style="display: none;">
+                            <div class="d-flex justify-content-center">
+                              <img src="images/m-pesa-logo.png" alt="Italian Trulli" width="100px" height="100">
+                            </div>
+                            <div id="sendMoneySection" style="">
                               <label for="phoneNumber" class="form-label"><b>Your Phone Number</b></label>
-                              <input type="tel" class="form-control" name="senderPhone" id="phoneNumber" placeholder="0753432756" required>
+                              <input type="tel" class="form-control border-top-0" name="senderPhone" id="phoneNumber" placeholder="0753432756" required>
 
-                              <label for="phoneNumber" class="form-label"><b>Provider Phone Number</b></label>
-                              <input type="tel" class="form-control" name="phone" id="phoneNumber" placeholder="0757414721" required>
+                              <label for="phoneNumber" class="form-label"><b>Provider Pay Bill/ Till Number</b></label>
+                              <input type="tel" class="form-control" name="phone" id="phoneNumber" placeholder="414721" required>
+                              <label for="phoneNumber" class="form-label"><b>Account Number</b></label>
+                              <input type="text" class="form-control" name="account_number" id="phoneNumber" placeholder="Betika" required>
                               <div class="mt-2">
-                                <label class="form-label">Amount</label>
+                                <label class="form-label"><b>Amount</b></label>
                                 <input type="number" id="mpesaAmount" name="mpesaAmount" placeholder="Amount" required />
                               </div>
-                              <button type="submit" class="btn btn-success mt-3">Pay Now</button>
+                              <!-- </div> -->
+                             <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-success mt-3">Pay Now</button>
+                             </div>
                             </div>
                           </div>
                           <div id="bankTransferSection" class="bankTransferSection" style="display: none;">
+                            <div class="d-flex justify-content-center">
+                              <img src="images/R.png" alt="Italian Trulli" width="100px" height="100">
+                            </div>
                             <div class="form-group">
                               <label for="cardNumber">Card Number</label>
                               <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
@@ -804,10 +809,10 @@
                                 <input type="password" id="cvv" placeholder="123" maxlength="4" required>
                               </div>
                               <div class="form-group">
-                                <label for="amount">Amount</label>
+                                <label for="amount"><b>Amount</b></label>
                                 <input type="number" id="amount" placeholder="e.g. 1000" required>
                               </div>
-                            <!-- </div> -->
+                             <!-- </div> -->
                              <div class="d-flex justify-content-end">
                                 <button type="submit" class="btn btn-success mt-3">Pay Now</button>
                              </div>

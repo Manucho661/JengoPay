@@ -414,17 +414,6 @@ function inSystemPayment(){
       bankSection.style.display = 'block';
     }
   });
-  // send money section
-  const mpesaPaymentMethod = document.getElementById('mpesaPaymentMethod');
-  const sendMoneySection= document.getElementById('sendMoneySection');
-  mpesaPaymentMethod.addEventListener('change', function () {
-    if (this.value === 'sendMoney') {
-      console.log('yoyo');
-      sendMoneySection.style.display = 'block';
-    } else {
-      sendMoneySection.style.display = 'none';
-    }
-  });
 }
 
 

@@ -822,9 +822,9 @@ try {
                 
                  <!-- start row -->
 <div class="row mt-3">
-      <h6 class="mb-0 contact_section_header" style="width:100%;">Pets</h6>
+      <h6 class="mb-0 contact_section_header" style="width:100%; ">Pets</h6>
   <div class="col-md-9 flex align-items-center">
-    <div class="bg-white p-2 rounded-2 mt-1" >
+    <div class="bg-white p-2 rounded-2 mt-1" style="overflow:auto;">
         <table id="pets-table">
         <thead>
           <tr>
@@ -914,7 +914,7 @@ try {
    <h6 class="mb-2 contact_section_header">Files</h6>
   <div class="col-md-6">
     
-    <div class="bg-white p-2 rounded-2">
+    <div class="bg-white p-2 rounded-2" style="overflow: auto;">
     <table id="files-table">
       <thead>
         <tr>
