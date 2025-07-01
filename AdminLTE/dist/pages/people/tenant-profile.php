@@ -912,7 +912,7 @@ try {
 <div class="row mt-3 align-items-start">
   <!-- Left Side: Heading + Table -->
    <h6 class="mb-2 contact_section_header">Files</h6>
-  <div class="col-md-6">
+  <div class="col-md-9">
     
     <div class="bg-white p-2 rounded-2" style="overflow: auto;">
     <table id="files-table">
@@ -932,12 +932,12 @@ try {
 
   <!-- Right Side: Add Button aligned with header row -->
   <div class="col-md-3 d-flex align-items-end" >
-    <div class="add-file-card shadow-sm bg-white px-2 py-2 rounded d-flex align-items-center justify-content-center" style="width: 300px;">
+    <div class="add-file-card shadow-sm bg-white px-2 py-2 rounded d-flex align-items-center justify-content-center" style="width: 100%;">
       <button class="btn btn-sm rounded File-modal" 
               data-bs-toggle="modal" 
               data-bs-target="#addFileModal" 
               style="background-color: #00192D; color: #FFC107; padding: 4px 12px;">
-        <i class="fas fa-plus me-1"></i> Add
+        <i class="fas fa-plus me-1"></i> Add File
       </button>
     </div>
   </div>
