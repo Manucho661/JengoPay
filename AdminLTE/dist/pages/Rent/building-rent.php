@@ -858,7 +858,7 @@ foreach ($tenants as $tenant) {
 
                        <!-- Rent vs Months Chart -->
 <div class="d-flex justify-content-center mt-4">
-  <div class="p-4 rounded-4 shadow" style="background-color: white; color:#00192D; width: 100%; max-width: 100%;">
+  <div class="p-4 rounded-4 shadow" style="background-color: white; color:#00192D; width: 100%;">
     <h5 class="mb-3 fw-bold">📈 Rent Collection Trend (Monthly)</h5>
     <div style="height: 100%;">
       <canvas id="rentChart"></canvas>
@@ -984,94 +984,60 @@ foreach ($tenants as $tenant) {
           });
 </script> -->
 
+<!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    fetch('get_rent_vs_month.php')
-        .then(res => res.json())
-        .then(data => {
-            const labels = data.map(row => row.period);
-            const values = data.map(row => parseFloat(row.total));
+document.addEventListener("DOMContentLoaded", function () {
+  const buildingId = 2; // Replace with dynamic ID
 
-            const ctx = document.getElementById('rentChart').getContext('2d');
+  fetch(`get_rent_vs_month.php?building_id=${buildingId}`)
+    .then(res => res.json())
+    .then(monthlyData => {
+      const labels = monthlyData.map(item => item.month);
+      const datasets = [];
 
-            // Gradient background
-            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-            gradient.addColorStop(0, '#FFC107');
-            gradient.addColorStop(1, '#FFC107');
+      // Find max number of payments in any month to normalize bars
+      const maxBars = Math.max(...monthlyData.map(item => item.values.length));
 
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Total Rent Collected (KES)',
-                        data: values,
-                        fill: true,
-                        backgroundColor: gradient,
-                        borderColor: '#28a745',
-                        tension: 0.3,
-                        pointBackgroundColor: '#28a745',
-                        pointRadius: 5
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    animation: {
-                        duration: 1000,
-                        easing: 'easeOutQuart'
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            backgroundColor: '#00192D',
-                            callbacks: {
-                                label: function(context) {
-                                    return 'KES ' + context.parsed.y.toLocaleString();
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                color: '#333',
-                                font: {
-                                    weight: 'bold'
-                                }
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: '#eee'
-                            },
-                            ticks: {
-                                callback: function(value) {
-                                    return 'KES ' + value.toLocaleString();
-                                },
-                                color: '#333',
-                                font: {
-                                    weight: 'bold'
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        })
-        .catch(err => {
-            console.error('Chart loading error:', err);
+      for (let i = 0; i < maxBars; i++) {
+        datasets.push({
+          label: `Payment ${i + 1}`,
+          data: monthlyData.map(month => month.values[i] ?? null), // Fill gaps with null
+          backgroundColor: `rgba(#FFC107, ${0.3 + i * 0.1})`,
+          borderRadius: 4
         });
+      }
+
+      const ctx = document.getElementById('rentChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: datasets
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            title: {
+              display: true,
+              text: 'Rent Payments Per Month (All Months Shown)'
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: 'KES' }
+            },
+            x: {
+              title: { display: true, text: 'Month' }
+            }
+          }
+        }
+      });
+    })
+    .catch(err => console.error('Chart load error:', err));
 });
 </script>
-
-
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -1555,7 +1521,7 @@ document.querySelector('.excel').addEventListener('click', function () {
 });
 </script>
 
-<script>
+<!-- <script>
   const unit = ''; // Optional: set a specific unit type
   const year = new Date().getFullYear();
 
@@ -1605,7 +1571,7 @@ document.querySelector('.excel').addEventListener('click', function () {
       });
     // })
     // .catch(error => console.error('Error fetching tenant rent chart data:', error));
-</script>
+</script> -->
 
 
 

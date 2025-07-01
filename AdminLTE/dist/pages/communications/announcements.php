@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $priority = $_POST['priority'] ?? 'Normal';
   $message = $_POST['message'] ?? '';
   $created_at = date('Y-m-d H:i:s');
-
+  $updated_at = date('Y-m-d H:i:s');
   // Validate required fields
   if (empty($recipient) || empty($message)) {
     die("Recipient and message are required fields.");
@@ -15,8 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   try {
     // Insert announcement into database
-    $stmt = $pdo->prepare("INSERT INTO announcements (recipient, priority, message, created_at) VALUES (?, ?, ?, ?)");
-    $stmt->execute([$recipient, $priority, $message, $created_at]);
+    $stmt = $pdo->prepare("INSERT INTO announcements (recipient, priority, message, created_at, updated_at) VALUES (?, ?, ?, ?, ?)");
+    $stmt->execute([$recipient, $priority, $message, $created_at,$updated_at]);
     $announcement_id = $pdo->lastInsertId();
 
     // Handle file uploads if any
@@ -2162,7 +2162,8 @@ try {
 
   <!-- end of new announcement card-->
   <!-- notification popup -->
-  <div class="notificationpopup-overlay" id="notificationPopup">
+    <!-- notification popup -->
+    <div class="notificationpopup-overlay" id="notificationPopup">
     <div class="card" style="margin-top: 20px;">
       <div class="card-header new-message-header">
         New Announcement
@@ -2171,15 +2172,14 @@ try {
       <div class="card-body new-message-body">
         <form action="" method="POST" id="notificationForm">
           <div class="form-group">
-          <label for="recipient">Select Recipient*</label>
-          <select name="recipient" id="recipient" onchange="toggleShrink()" class="form-select recipient" required>
-            <option value="" disabled selected>-- Select Building --</option>
-            <?php foreach ($buildings as $b): ?>
-              <option value="<?= htmlspecialchars($b['building_name']) ?>">
-                <?= htmlspecialchars($b['building_name']) ?>
-              </option>
-            <?php endforeach; ?>
-          </select>
+            <label for="property">Select Recipient*</label>
+            <select id="property" name="recipient" class="form-select" required>
+              <option value="" disabled selected>Select Recipient*</option>
+              <option value="Manucho">Manucho</option>
+              <option value="Ben 10">Ben 10</option>
+              <option value="Alpha">Alpha</option>
+              <option value="All Tenants">All Tenants</option>
+            </select>
           </div>
 
           <div class="form-group">
@@ -2212,18 +2212,18 @@ try {
           <div class="actions d-flex justify-content-end">
             <button type="button" class="draft-btn" id="saveDraftBtn">Save Draft</button>
             <button type="button" class="draft-btn text-danger btn" onclick="closenotificationPopup()">Cancel</button>
-            <button type="button" class="send-btn btn" onclick="sendMessage()">Send Announcement</button>
+            <button type="submit" class="send-btn btn">Send Announcement</button>
           </div>
         </form>
       </div>
     </div>
   </div>
 
-  <!-- <script>
+   <!-- <script>
 function saveAsDraft() {
   const recipient = document.getElementById('property').value;
   const priority = document.getElementById('priority').value;
-  const message = document.getElementById('notes').value;
+  const message = document.getElementById('message').value;
 
   if (!recipient && !priority && !message) {
     return; // Don't save empty drafts
@@ -2249,6 +2249,47 @@ function saveAsDraft() {
   });
 }
 </script> -->
+
+  <!-- <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('saveDraftBtn').addEventListener('click', function() {
+        const recipient = document.getElementById('property').value;
+        const priority = document.getElementById('priority').value;
+        const message = document.getElementById('notes').value;
+
+        // Don't save empty form
+        if (!recipient && !priority && !message) {
+          alert('Cannot save empty draft.');
+          return;
+        }
+
+        fetch('save_draft.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              recipient: recipient,
+              priority: priority,
+              message: message
+            })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              alert('Draft saved successfully!');
+            } else {
+              alert('Failed to save draft.');
+            }
+          })
+          .catch(error => {
+            console.error('Error saving draft:', error);
+            alert('An error occurred while saving the draft.');
+          });
+      });
+    });
+  </script> -->
+
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
