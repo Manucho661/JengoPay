@@ -24,12 +24,18 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Initialize totals
+$totalAmountPaid = 0;
+$totalPenalty = 0;
+$totalPenaltyDays = 0;
+$totalArrears = 0;
+$totalOverpayment = 0;
+
 // Build HTML
 $html = '<h2 style="text-align:center;">Tenant Rent Summary - ' . htmlspecialchars($building) . '</h2>
 <table border="1" cellpadding="5" cellspacing="0" width="100%">
 <thead style="background-color:#f2f2f2;">
 <tr>
-    <th>Building</th>
     <th>Tenant</th>
     <th>Unit Code</th>
     <th>Unit Type</th>
@@ -44,8 +50,14 @@ $html = '<h2 style="text-align:center;">Tenant Rent Summary - ' . htmlspecialcha
 <tbody>';
 
 foreach ($data as $row) {
+    // Add to totals
+    $totalAmountPaid += $row['amount_paid'];
+    $totalPenalty += $row['penalty'];
+    $totalPenaltyDays += $row['penalty_days'];
+    $totalArrears += $row['arrears'];
+    $totalOverpayment += $row['overpayment'];
+
     $html .= '<tr>
-        <td>' . htmlspecialchars($row['building_name']) . '</td>
         <td>' . htmlspecialchars($row['tenant_name']) . '</td>
         <td>' . htmlspecialchars($row['unit_code']) . '</td>
         <td>' . htmlspecialchars($row['unit_type']) . '</td>
@@ -57,6 +69,17 @@ foreach ($data as $row) {
         <td>KSH ' . number_format($row['overpayment'], 2) . '</td>
     </tr>';
 }
+
+// Add total row
+$html .= '<tr style="font-weight:bold; background-color:#f2f2f2;">
+    <td colspan="3" style="text-align:right;">TOTAL</td>
+    <td>KSH ' . number_format($totalAmountPaid, 2) . '</td>
+    <td></td>
+    <td>KSH ' . number_format($totalPenalty, 2) . '</td>
+    <td>' . (int)$totalPenaltyDays . '</td>
+    <td>KSH ' . number_format($totalArrears, 2) . '</td>
+    <td>KSH ' . number_format($totalOverpayment, 2) . '</td>
+</tr>';
 
 $html .= '</tbody></table>';
 

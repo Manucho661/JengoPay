@@ -63,6 +63,54 @@ try {
 <?php
 include '../db/connect.php';
 
+$chartLabels = []; // month labels
+$chartData = [];   // tenant-wise amounts
+
+foreach ($tenants as $tenant) {
+    $tenantName = $tenant['tenant_name'] ?? '';
+    $month = date('F', strtotime($tenant['payment_date'] ?? '')); // e.g. 'May'
+    $amountPaid = (float)($tenant['amount_paid'] ?? 0);
+
+    // Track unique months
+    if (!in_array($month, $chartLabels)) {
+        $chartLabels[] = $month;
+    }
+
+    // Group tenant payment per month
+    if (!isset($chartData[$tenantName])) {
+        $chartData[$tenantName] = [];
+    }
+    $chartData[$tenantName][$month] = $amountPaid;
+}
+
+// Sort month labels for consistent X-axis
+$chartLabels = array_values(array_unique($chartLabels));
+
+// Prepare final datasets for Chart.js
+$chartDatasets = [];
+$colors = ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'];
+
+$i = 0;
+foreach ($chartData as $tenant => $amountsByMonth) {
+    $data = [];
+    foreach ($chartLabels as $month) {
+        $data[] = $amountsByMonth[$month] ?? 0;
+    }
+
+    $chartDatasets[] = [
+        'label' => $tenant,
+        'data' => $data,
+        'backgroundColor' => $colors[$i % count($colors)],
+        'borderRadius' => 5
+    ];
+    $i++;
+}
+?>
+
+
+<?php
+include '../db/connect.php';
+
 $buildingName = $_GET['building'] ?? '';
 
 // If nothing is selected, show all buildings
@@ -734,27 +782,17 @@ foreach ($tenants as $tenant) {
                           </div>
                           </div>
                         <div class="rentTable section" >
-                        <table id="rent" class="tableRent" style="font-size: small; width: 100%; table-layout: fixed;">
-    <colgroup>
-        <col style="width: 22%">  <!-- Tenant + unit -->
-        <col style="width: 14%">  <!-- Collected -->
-        <col style="width: 10%">  <!-- Unit Type -->
-        <col style="width: 12%">  <!-- Balances -->
-        <col style="width: 12%">  <!-- Penalty -->
-        <col style="width: 10%">  <!-- Arrears -->
-        <col style="width: 10%">  <!-- Overpayment -->
-        <col style="width: 10%">  <!-- Action -->
-    </colgroup>
+                        <table id="rent" class="tableRent" style="font-size: small; width: 100%; table-layout: fixed; border-collapse: collapse;">
     <thead>
         <tr>
-            <th scope="col">Tenant + Unit</th>
-            <th scope="col">Collected</th>
-            <th scope="col">Unit Type</th>
-            <th scope="col">Balances</th>
-            <th scope="col">Penalty (l.days)</th>
-            <th scope="col">Arrears</th>
-            <th scope="col">Overpayment</th>
-            <th scope="col">Action</th>
+            <th scope="col" style="width: 12.5%; text-align: left;">Tenant + Unit</th>
+            <th scope="col" style="width: 12.5%; text-align: left;">Collected</th>
+            <th scope="col" style="width: 12.5%; text-align: center;">Unit Type</th>
+            <th scope="col" style="width: 12.5%; text-align: right;">Balances</th>
+            <th scope="col" style="width: 12.5%; text-align: right;">Penalty (l.days)</th>
+            <th scope="col" style="width: 12.5%; text-align: right;">Arrears</th>
+            <th scope="col" style="width: 12.5%; text-align: right;">Overpayment</th>
+            <th scope="col" style="width: 12.5%; text-align: center;">Action</th>
         </tr>
     </thead>
     <tbody>
@@ -763,17 +801,17 @@ foreach ($tenants as $tenant) {
         foreach ($tenants as $tenant):
             $building = $tenant['building_name'] ?? '';
 
-            // Show building name as a header row if it has changed
             if ($building !== $currentBuilding):
                 $currentBuilding = $building;
         ?>
-                <tr class="table-group-header bg-light">
-                    <td colspan="8" style="font-weight: bold; color: #007bff; padding: 10px 8px;">
-                        <?= htmlspecialchars($currentBuilding) ?>
-                    </td>
-                </tr>
+            <tr class="table-group-header bg-light">
+                <td colspan="8" style="font-weight: bold; color: #007bff; padding: 10px 8px;">
+                    <?= htmlspecialchars($currentBuilding) ?>
+                </td>
+            </tr>
         <?php
             endif;
+
             $nameParts = explode(" ", $tenant['tenant_name'] ?? '');
             $firstName = $nameParts[0] ?? '';
             $middleName = $nameParts[1] ?? '';
@@ -801,16 +839,16 @@ foreach ($tenants as $tenant) {
                     </div>
                 </td>
                 <td style="padding: 10px 8px; vertical-align: middle; text-align: center;"><?= $unit_type ?></td>
-                <td style="padding: 10px 8px; vertical-align: middle; font-weight: 500;">KSH <?= $balances ?></td>
-                <td style="padding: 10px 8px; vertical-align: middle;">
+                <td style="padding: 10px 8px; vertical-align: middle; text-align: right; font-weight: 500;">KSH <?= $balances ?></td>
+                <td style="padding: 10px 8px; vertical-align: middle; text-align: right;">
                     <div style="display: flex; flex-direction: column;">
                         <span style="font-weight: 500;">KSH <?= $penalty ?></span>
                         <span class="rent lateDays" style="font-size: 0.75em; color: #dc3545;">(<?= $penaltyDays ?> days)</span>
                     </div>
                 </td>
-                <td style="padding: 10px 8px; vertical-align: middle; font-weight: 500;">KSH <?= $arrears ?></td>
-                <td style="padding: 10px 8px; vertical-align: middle; font-weight: 500;">KSH <?= $overpayment ?></td>
-                <td style="padding: 10px 8px; vertical-align: middle;">
+                <td style="padding: 10px 8px; vertical-align: middle; text-align: right; font-weight: 500;">KSH <?= $arrears ?></td>
+                <td style="padding: 10px 8px; vertical-align: middle; text-align: right; font-weight: 500;">KSH <?= $overpayment ?></td>
+                <td style="padding: 10px 8px; vertical-align: middle; text-align: center;">
                     <div style="display: flex; gap: 6px; justify-content: center;">
                         <button class="btn view" data-bs-toggle="modal" data-bs-target="#tenantProfileModal" data-tenant='<?= json_encode($tenant) ?>' style="padding: 4px 8px; font-size: 0.8em;">
                             View
@@ -857,14 +895,19 @@ foreach ($tenants as $tenant) {
 
 
                        <!-- Rent vs Months Chart -->
-<div class="d-flex justify-content-center mt-4">
-  <div class="p-4 rounded-4 shadow" style="background-color: white; color:#00192D; width: 100%;">
-    <h5 class="mb-3 fw-bold">📈 Rent Collection Trend (Monthly)</h5>
-    <div style="height: 100%;">
-      <canvas id="rentChart"></canvas>
+                       <div class="container mt-5">
+  <div class="card shadow-lg rounded-4">
+    <div class="card-header rounded-top-4" style="background-color: #00192D; color:#FFC107;">
+      <h5 class="fw-bold"><i class="fas fa-chart-line me-2"></i> Rent Paid by Tenants (Monthly)</h5>
+    </div>
+    <div class="card-body bg-white rounded-bottom-4">
+      <canvas id="tenantRentChart" height="300px"></canvas>
     </div>
   </div>
 </div>
+
+
+
 
 
            </div>
@@ -988,56 +1031,68 @@ foreach ($tenants as $tenant) {
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-  const buildingId = 2; // Replace with dynamic ID
+  const buildingId = 2; // Set dynamically if needed
 
   fetch(`get_rent_vs_month.php?building_id=${buildingId}`)
     .then(res => res.json())
-    .then(monthlyData => {
-      const labels = monthlyData.map(item => item.month);
-      const datasets = [];
+    .then(({ labels, datasets }) => {
+      const colors = [
+        'rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)',
+        'rgba(255, 206, 86, 0.6)', 'rgba(75, 192, 192, 0.6)',
+        'rgba(153, 102, 255, 0.6)', 'rgba(255, 159, 64, 0.6)',
+        'rgba(199, 199, 199, 0.6)', 'rgba(83, 102, 255, 0.6)',
+        'rgba(233, 30, 99, 0.6)', 'rgba(0, 150, 136, 0.6)'
+      ];
 
-      // Find max number of payments in any month to normalize bars
-      const maxBars = Math.max(...monthlyData.map(item => item.values.length));
+      const formattedDatasets = datasets.map((ds, index) => ({
+        label: ds.label,
+        data: ds.data,
+        backgroundColor: colors[index % colors.length],
+        borderRadius: 6,
+        barThickness: 25
+      }));
 
-      for (let i = 0; i < maxBars; i++) {
-        datasets.push({
-          label: `Payment ${i + 1}`,
-          data: monthlyData.map(month => month.values[i] ?? null), // Fill gaps with null
-          backgroundColor: `rgba(#FFC107, ${0.3 + i * 0.1})`,
-          borderRadius: 4
-        });
-      }
-
-      const ctx = document.getElementById('rentChart').getContext('2d');
+      const ctx = document.getElementById('tenantRentChart').getContext('2d');
       new Chart(ctx, {
         type: 'bar',
         data: {
           labels: labels,
-          datasets: datasets
+          datasets: formattedDatasets
         },
         options: {
           responsive: true,
           plugins: {
             title: {
               display: true,
-              text: 'Rent Payments Per Month (All Months Shown)'
+              text: 'Rent Collection by Tenant per Month'
+            },
+            legend: {
+              position: 'bottom'
             }
           },
           scales: {
             y: {
               beginAtZero: true,
-              title: { display: true, text: 'KES' }
+              title: {
+                display: true,
+                text: 'Amount Paid (KES)'
+              }
             },
             x: {
-              title: { display: true, text: 'Month' }
+              title: {
+                display: true,
+                text: 'Month'
+              }
             }
           }
         }
       });
     })
-    .catch(err => console.error('Chart load error:', err));
+    .catch(error => console.error('Chart loading error:', error));
 });
 </script>
+
+
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
