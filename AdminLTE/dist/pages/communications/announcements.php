@@ -1,55 +1,105 @@
 <?php
 include '../db/connect.php';
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $recipient = $_POST['recipient'] ?? '';
-  $priority = $_POST['priority'] ?? 'Normal';
-  $message = $_POST['message'] ?? '';
-  $created_at = date('Y-m-d H:i:s');
-  $updated_at = date('Y-m-d H:i:s');
-  // Validate required fields
-  if (empty($recipient) || empty($message)) {
-    die("Recipient and message are required fields.");
-  }
+    $recipient = $_POST['recipient'] ?? '';
+    $priority = $_POST['priority'] ?? 'Normal';
+    $message = $_POST['message'] ?? '';
+    $created_at = date('Y-m-d H:i:s');
+    $updated_at = date('Y-m-d H:i:s');
 
-  try {
-    // Insert announcement into database
-    $stmt = $pdo->prepare("INSERT INTO announcements (recipient, priority, message, created_at, updated_at) VALUES (?, ?, ?, ?, ?)");
-    $stmt->execute([$recipient, $priority, $message, $created_at,$updated_at]);
-    $announcement_id = $pdo->lastInsertId();
-
-    // Handle file uploads if any
-    if (!empty($_FILES['attachments']['name'][0])) {
-      $uploadDir = '../uploads/announcements/';
-
-      // Create directory if it doesn't exist
-      if (!file_exists($uploadDir)) {
-        mkdir($uploadDir, 0777, true);
-      }
-
-      foreach ($_FILES['attachments']['tmp_name'] as $key => $tmp_name) {
-        $fileName = $_FILES['attachments']['name'][$key];
-        $fileSize = $_FILES['attachments']['size'][$key];
-        $fileType = $_FILES['attachments']['type'][$key];
-        $filePath = $uploadDir . basename($fileName);
-
-        // Move the file to the upload directory
-        if (move_uploaded_file($tmp_name, $filePath)) {
-          // Insert file info into database
-          $stmt = $pdo->prepare("INSERT INTO announcement_attachments (announcement_id, file_name, file_path, file_type, file_size) VALUES (?, ?, ?, ?, ?)");
-          $stmt->execute([$announcement_id, $fileName, $filePath, $fileType, $fileSize]);
-        }
-      }
+    // Validate required fields
+    if (empty($recipient) || empty($message)) {
+        echo '<div class="alert alert-danger">Recipient and message are required fields.</div>';
+        exit();
     }
 
-    // Redirect or show success message
-    header("Location: " . $_SERVER['HTTP_REFERER'] . "?success=1");
-    exit();
-  } catch (PDOException $e) {
-    die("Database error: " . $e->getMessage());
-  }
+    try {
+        // Insert announcement into database
+        $stmt = $pdo->prepare("INSERT INTO announcements (recipient, priority, message, created_at, updated_at) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$recipient, $priority, $message, $created_at, $updated_at]);
+        $announcement_id = $pdo->lastInsertId();
+
+        // Handle file uploads if any
+        if (!empty($_FILES['attachments']['name'][0])) {
+            $uploadDir = '../uploads/announcements/';
+
+            // Create directory if it doesn't exist
+            if (!file_exists($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            foreach ($_FILES['attachments']['tmp_name'] as $key => $tmp_name) {
+                $fileName = $_FILES['attachments']['name'][$key];
+                $fileSize = $_FILES['attachments']['size'][$key];
+                $fileType = $_FILES['attachments']['type'][$key];
+                $filePath = $uploadDir . basename($fileName);
+
+                // Validate file type and size
+                $allowedTypes = ['image/jpeg', 'image/png', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                $maxSize = 5 * 1024 * 1024; // 5MB
+
+                if (!in_array($fileType, $allowedTypes)) {
+                    continue; // Skip invalid file types
+                }
+
+                if ($fileSize > $maxSize) {
+                    continue; // Skip files that are too large
+                }
+
+                // Move the file to the upload directory
+                if (move_uploaded_file($tmp_name, $filePath)) {
+                    // Insert file info into database
+                    $stmt = $pdo->prepare("INSERT INTO announcement_attachments (announcement_id, file_name, file_path, file_type, file_size) VALUES (?, ?, ?, ?, ?)");
+                    $stmt->execute([$announcement_id, $fileName, $filePath, $fileType, $fileSize]);
+                }
+            }
+        }
+
+        // Show success notification
+        echo '<div class="announcement-notification" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #4CAF50; color: white; padding: 15px 20px; border-radius: 4px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); z-index: 1000; display: flex; align-items: center; max-width: 80%;">
+        <span style="font-size: 24px; margin-right: 10px;">✓</span>
+        <p style="margin: 0;">Announcement sent successfully!</p>
+      </div>
+      <script>
+      setTimeout(() => {
+          document.querySelector(".announcement-notification").style.opacity = "0";
+          document.querySelector(".announcement-notification").style.transition = "opacity 0.5s ease";
+          setTimeout(() => {
+              document.querySelector(".announcement-notification").remove();
+              window.location.href = "' . $_SERVER['HTTP_REFERER'] . '";
+          }, 500);
+      }, 3000);
+      </script>';
+
+        // Optional: Send email notification
+        // sendAnnouncementNotification($recipient, $priority, $message);
+
+        exit();
+
+    } catch (PDOException $e) {
+        error_log("Database error: " . $e->getMessage());
+        echo '<div class="alert alert-danger">Error saving announcement. Please try again.</div>';
+        exit();
+    }
 }
+
+// Optional email notification function
+/*
+function sendAnnouncementNotification($recipient, $priority, $message) {
+    $to = 'admin@example.com';
+    $subject = "New $priority Announcement for $recipient";
+    $headers = "From: announcements@yourdomain.com\r\n";
+    $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+
+    $email_body = "New announcement:\n\n";
+    $email_body .= "Building: $recipient\n";
+    $email_body .= "Priority: $priority\n";
+    $email_body .= "Message:\n$message\n";
+
+    mail($to, $subject, $email_body, $headers);
+}
+*/
 ?>
 
 <?php
@@ -86,6 +136,8 @@ try {
   $buildings = [];
 }
 ?>
+
+
 
 <!doctype html>
 <html lang="en">
@@ -2162,7 +2214,12 @@ try {
 
   <!-- end of new announcement card-->
   <!-- notification popup -->
-  <div class="notificationpopup-overlay" id="notificationPopup">
+
+
+
+
+   <!-- notification popup -->
+   <div class="notificationpopup-overlay" id="notificationPopup">
     <div class="card" style="margin-top: 20px;">
       <div class="card-header new-message-header">
         New Announcement
@@ -2170,7 +2227,7 @@ try {
       </div>
       <div class="card-body new-message-body">
         <form action="" method="POST" id="notificationForm">
-          <div class="form-group">
+        <div class="form-group">
           <label for="recipient">Select Recipient*</label>
           <select name="recipient" id="recipient" onchange="toggleShrink()" class="form-select recipient" required>
             <option value="" disabled selected>-- Select Building --</option>
@@ -2212,88 +2269,24 @@ try {
           <div class="actions d-flex justify-content-end">
             <button type="button" class="draft-btn" id="saveDraftBtn">Save Draft</button>
             <button type="button" class="draft-btn text-danger btn" onclick="closenotificationPopup()">Cancel</button>
-            <button type="submit" class="send-btn btn" onclick="sendMessage()">Send Announcement</button>
+            <button type="submit" class="send-btn btn">Send Announcement</button>
           </div>
         </form>
       </div>
     </div>
   </div>
 
-   <script>
-function saveAsDraft() {
-  const recipient = document.getElementById('property').value;
-  const priority = document.getElementById('priority').value;
-  const message = document.getElementById('message').value;
 
-  if (!recipient && !priority && !message) {
-    return; // Don't save empty drafts
-  }
-
-  fetch('save_draft.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      recipient: recipient,
-      priority: priority,
-      message: message
-    })
-  })
-  .then(response => response.json())
-  .then(data => {
-    document.getElementById('draftStatus').innerText = 'Draft saved!';
-  })
-  .catch(error => {
-    console.error('Error saving draft:', error);
-  });
-}
-</script>
-
-
-<!-- <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      document.getElementById('saveDraftBtn').addEventListener('click', function() {
-        const recipient = document.getElementById('property').value;
-        const priority = document.getElementById('priority').value;
-        const message = document.getElementById('notes').value;
-
-        // Don't save empty form
-        if (!recipient && !priority && !message) {
-          alert('Cannot save empty draft.');
-          return;
-        }
-
-        fetch('save_draft.php', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              recipient: recipient,
-              priority: priority,
-              message: message
-            })
-          })
-          .then(response => response.json())
-          .then(data => {
-            if (data.success) {
-              alert('Draft saved successfully!');
-            } else {
-              alert('Failed to save draft.');
-            }
-          })
-          .catch(error => {
-            console.error('Error saving draft:', error);
-            alert('An error occurred while saving the draft.');
-          });
-      });
-    });
-  </script> -->
+  <!-- <script>
+document.getElementById('notificationForm').addEventListener('submit', function(event) {
+  event.preventDefault(); // Prevent actual form submission
+  sendMessage(); // Call your custom function
+});
+</script> -->
 
 
 
-  <script>
+<script>
     document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('saveDraftBtn').addEventListener('click', function() {
         const recipient = document.getElementById('property').value;
@@ -2332,6 +2325,49 @@ function saveAsDraft() {
       });
     });
   </script>
+
+ <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const saveDraftBtn = document.getElementById('saveDraftBtn');
+    const draftStatus = document.getElementById('draftStatus');
+
+    saveDraftBtn.addEventListener('click', function () {
+      const recipient = document.getElementById('recipient').value;
+      const priority = document.getElementById('priority').value;
+      const message = document.getElementById('notes').value;
+
+      // Don't save empty form
+      if (!recipient && !priority && !message) {
+        alert('Cannot save empty draft.');
+        return;
+      }
+
+      fetch('save_draft.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          recipient: recipient,
+          priority: priority,
+          message: message
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          draftStatus.innerHTML = '<span style="color: green;">✅ Draft saved successfully!</span>';
+        } else {
+          draftStatus.innerHTML = '<span style="color: red;">❌ Failed to save draft.</span>';
+        }
+      })
+      .catch(error => {
+        console.error('Error saving draft:', error);
+        draftStatus.innerHTML = '<span style="color: red;">⚠️ Error occurred while saving draft.</span>';
+      });
+    });
+  });
+</script>
 
 
 <script>
@@ -2759,7 +2795,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   </script>
 
-  <script>
+  <!-- <script>
     function showNotification(message, type = 'success') {
       const box = document.getElementById('notificationBox');
       const messageSpan = document.getElementById('notificationMessage');
@@ -2791,7 +2827,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const box = document.getElementById('notificationBox');
       box.style.display = 'none';
     }
-  </script>
+  </script> -->
 
   <script>
     // Drafts function
@@ -3449,7 +3485,7 @@ function sendMessage() {
   });
 }
 </script> -->
-  
+
 
   <script>
   function loadAnnouncements() {
@@ -4256,6 +4292,7 @@ function submitAnnouncement(event) {
 }
 </script> -->
 
+
 <script>
 function sendMessage() {
   const recipient = document.getElementById('recipient').value.trim();
@@ -4278,21 +4315,36 @@ function sendMessage() {
   })
   .then(response => response.json())
   .then(data => {
+    console.log('Response data:', data);
+
     if (data.success) {
-      // Show success message popup
-      document.getElementById('notificationPopup').style.display = 'block';
+      // alert("✅ Announcement Sent Successfully!");
+
+      // Optional: Close the popup
+      if (typeof closenotificationPopup === 'function') {
+        closenotificationPopup();
+      }
+
+      // Optional: clean the URL
+      if (window.history.replaceState) {
+        const cleanUrl = window.location.href.split('?')[0];
+        window.history.replaceState(null, null, cleanUrl);
+      }
+
+      // Reset the form
       document.getElementById('notificationForm').reset();
     } else {
-      alert("Failed to send announcement.");
+      alert(`❌ Failed: ${data.error || 'Unknown error'}`);
     }
   })
   .catch(error => {
-    console.error('Error:', error);
-    alert("An error occurred while sending the announcement.");
+    console.error('Error sending announcement:', error);
+    alert("❌ Network or server error occurred.");
   });
 }
 </script>
 
+<!-- </script> -->
 
 
     <!--end::Script-->
