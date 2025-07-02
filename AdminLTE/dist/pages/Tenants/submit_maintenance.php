@@ -5,27 +5,27 @@ require_once '../db/connect.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $request_date = $_POST['request_date'] ?? null;
     $category = $_POST['category'] ?? null;
+    $request = $_POST['request'] === 'Other' ? $_POST['custom_request'] : $_POST['request'];
     $description = $_POST['description'] ?? null;
-    
 
     try {
         // 1. Insert maintenance request
         $stmt = $pdo->prepare("INSERT INTO maintenance_requests 
-            (request_date, category, description, created_at) 
-            VALUES (?, ?, ?, NOW())");
+            (request_date, category, request, description, created_at) 
+            VALUES (?, ?, ?, ?, NOW())");
 
         $stmt->execute([
             $request_date,
             $category,
+            $request,       // ✅ Corrected order: request comes before description
             $description
         ]);
 
         $maintenance_request_id = $pdo->lastInsertId();
 
         // 2. Handle photo uploads
-       $uploadDir = __DIR__ . '/../maintenance/uploads/'; // absolute server path
-       $uploadUrl = 'maintenance/uploads/'; // relative path for DB or frontend
-
+        $uploadDir = __DIR__ . '/../maintenance/uploads/'; // server path
+        $uploadUrl = 'maintenance/uploads/';               // for database reference
 
         if (!file_exists($uploadDir)) {
             mkdir($uploadDir, 0777, true);
