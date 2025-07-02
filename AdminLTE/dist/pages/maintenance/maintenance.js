@@ -461,7 +461,7 @@ document.getElementById("paymentForm").addEventListener("submit", function (e) {
        .then(response => response.json())
       .then(data => {
         console.log("Fetched Proposals:", data);
-        // Do something with the data...
+        // Do something with the data...y
       })
        .catch(err=>{
          console.error("Error fetching proposals:", err);
