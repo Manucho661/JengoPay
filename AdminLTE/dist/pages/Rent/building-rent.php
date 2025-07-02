@@ -60,52 +60,6 @@ try {
 
 ?>
 
-<?php
-include '../db/connect.php';
-
-$chartLabels = []; // month labels
-$chartData = [];   // tenant-wise amounts
-
-foreach ($tenants as $tenant) {
-    $tenantName = $tenant['tenant_name'] ?? '';
-    $month = date('F', strtotime($tenant['payment_date'] ?? '')); // e.g. 'May'
-    $amountPaid = (float)($tenant['amount_paid'] ?? 0);
-
-    // Track unique months
-    if (!in_array($month, $chartLabels)) {
-        $chartLabels[] = $month;
-    }
-
-    // Group tenant payment per month
-    if (!isset($chartData[$tenantName])) {
-        $chartData[$tenantName] = [];
-    }
-    $chartData[$tenantName][$month] = $amountPaid;
-}
-
-// Sort month labels for consistent X-axis
-$chartLabels = array_values(array_unique($chartLabels));
-
-// Prepare final datasets for Chart.js
-$chartDatasets = [];
-$colors = ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'];
-
-$i = 0;
-foreach ($chartData as $tenant => $amountsByMonth) {
-    $data = [];
-    foreach ($chartLabels as $month) {
-        $data[] = $amountsByMonth[$month] ?? 0;
-    }
-
-    $chartDatasets[] = [
-        'label' => $tenant,
-        'data' => $data,
-        'backgroundColor' => $colors[$i % count($colors)],
-        'borderRadius' => 5
-    ];
-    $i++;
-}
-?>
 
 
 <?php
@@ -893,24 +847,24 @@ foreach ($tenants as $tenant) {
   </div>
                   </div>
 
-
-                       <!-- Rent vs Months Chart -->
+                  </div>
+<!-- 
+                  !-- Rent vs Months Chart --> 
                        <div class="container mt-5">
   <div class="card shadow-lg rounded-4">
     <div class="card-header rounded-top-4" style="background-color: #00192D; color:#FFC107;">
       <h5 class="fw-bold"><i class="fas fa-chart-line me-2"></i> Rent Paid by Tenants (Monthly)</h5>
     </div>
     <div class="card-body bg-white rounded-bottom-4">
-      <canvas id="tenantRentChart" height="300px"></canvas>
+      <canvas id="tenantRentChart" height="80%"></canvas>
     </div>
   </div>
 </div>
 
+                      
 
 
-
-
-           </div>
+           <!-- </div> -->
 
 
 
