@@ -23,6 +23,7 @@ try {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Job Seeker Portal</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
   <style>
     body {
       background-image: url('building2.jpg');
@@ -213,8 +214,9 @@ try {
                             <?= nl2br(htmlspecialchars($row['description'])) ?>
                           </p>
                         </div>
+                        <!-- Apply Button -->
                         <div class="text-end" style="white-space: nowrap;">
-                          <button class="btn btn-outline-primary">Apply</button>
+                          <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#applyModal">Apply</button>
                         </div>
                       </div>
                     </div>
@@ -224,6 +226,90 @@ try {
                 <?php endif; ?>
 
               </div> <!-- End scrollable -->
+            </div>
+            <!-- Apply Modal -->
+            <div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content border-0 rounded-4 shadow-lg">
+
+                  <!-- Modal Header -->
+                  <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
+                    <h5 class="modal-title d-flex align-items-center" id="applyModalLabel">
+                      <i class="bi bi-briefcase-fill me-2"></i> Apply for Job
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+
+                  <!-- Modal Body -->
+                  <div class="modal-body">
+                    <form id="applyForm" class="px-2" method="POST" action="submit_application.php">
+
+                      <!-- Client Price (Plain Text) -->
+                      <div class="mb-3" style="font-weight: bold; font-style: oblique;">
+                        <label class="form-label">
+                          <i class="bi bi-tags me-1" style="color: #00192D;"></i> Client Price
+                        </label>
+                        <input type="hidden" name="client_price" value="5000">
+                        <div class="form-control-plaintext ps-3" style="border: 1px solid #ced4da; border-radius: 50px; background-color: #f8f9fa;">
+                          5000
+                        </div>
+                      </div>
+
+
+                      <!-- Your Price -->
+                      <div class="mb-3" style="font-weight: bold; font-style: oblique;">
+                        <label for="yourPrice" class="form-label">
+                          <i class="bi bi-currency-dollar me-1" style="color: #00192D;"></i> Your Price
+                        </label>
+                        <input type="number" name="your_price" class="form-control rounded-pill" id="yourPrice" step="1" min="0" placeholder="4500">
+                      </div>
+
+
+                      <!-- Duration -->
+                      <div class="mb-3" style="font-weight: bold; font-style:oblique;">
+                        <label for="duration" class="form-label">
+                          <i class="bi bi-clock me-1" style="color: #00192D;"></i> Select Duration
+                        </label>
+                        <select class="form-select" name="duration" id="duration" onchange="handleDurationChange(this)">
+                          <option selected disabled>Select duration</option>
+                          <option value="less than 24hrs">Less than 24hrs</option>
+                          <option value="1 day">1 day</option>
+                          <option value="2 days">2 days</option>
+                          <option value="3 days">3 days</option>
+                          <option value="other">Other</option>
+                        </select>
+                      </div>
+
+                      <!-- Custom Duration -->
+                      <div class="mb-3 d-none" id="customDurationDiv" style="font-weight: bold; font-style:oblique;">
+                        <label for="customDuration" class="form-label">
+                          <i class="bi bi-calendar-plus me-1" style="color: #00192D;"></i> Specify Duration
+                        </label>
+                        <input type="text" name="custom_duration" class="form-control rounded-pill" id="customDuration" placeholder="e.g. 5 days">
+                      </div>
+
+                      <!-- Cover Letter -->
+                      <div class="mb-3" style="font-weight: bold; font-style:oblique;">
+                        <label for="coverLetter" class="form-label">
+                          <i class="bi bi-envelope-paper me-1" style="color: #00192D;"></i> Cover Letter
+                        </label>
+                        <textarea class="form-control rounded-4" name="cover_letter" id="coverLetter" rows="4"
+                          placeholder="Explain why you are the best fit for this job..."></textarea>
+                      </div>
+
+                    </form>
+                  </div>
+
+                  <!-- Modal Footer -->
+                  <div class="modal-footer justify-content-center" style="background-color: #f8f9fa;">
+                    <button type="submit" class="btn rounded-pill px-4 py-2" form="applyForm"
+                      style="background-color: #00192D; color: #FFC107;">
+                      <i class="bi bi-check2-circle me-1"></i> Submit Application
+                    </button>
+                  </div>
+
+                </div>
+              </div>
             </div>
 
             <!-- APPLICATIONS -->
@@ -272,13 +358,14 @@ try {
           <div class="p-3 mb-4 shadow-sm bg-white rounded border">
             <h6 class="fw-bold">🗂 Jobs by Category</h6>
             <div class="d-flex flex-column gap-2 small">
-              <a href="#" class="text-decoration-none text-dark">IT & Software</a>
-              <a href="#" class="text-decoration-none text-dark">Accounting & Finance</a>
-              <a href="#" class="text-decoration-none text-dark">Sales & Marketing</a>
-              <a href="#" class="text-decoration-none text-dark">Education & Training</a>
-              <a href="#" class="text-decoration-none text-dark">Engineering</a>
-              <a href="#" class="text-decoration-none text-dark">Healthcare</a>
-              <a href="#" class="text-decoration-none text-dark">Customer Service</a>
+              <a href="#" class="text-decoration-none text-dark">Plumber</a>
+              <a href="#" class="text-decoration-none text-dark">Electrician</a>
+              <a href="#" class="text-decoration-none text-dark">HVAC Technician/Heating and Cooling Specialist</a>
+              <a href="#" class="text-decoration-none text-dark">Carpenter, Glazier or Locksmith </a>
+              <a href="#" class="text-decoration-none text-dark">Building Maintenance Technician/Handyman</a>
+              <a href="#" class="text-decoration-none text-dark">Sanitation Worker</a>
+              <a href="#" class="text-decoration-none text-dark">Security Officer</a>
+              <a href="#" class="text-decoration-none text-dark">Janitor</a>
             </div>
           </div>
 
@@ -334,7 +421,47 @@ try {
         });
       }
     });
+
+    function handleDurationChange(select) {
+      const customDiv = document.getElementById("customDurationDiv");
+      if (select.value === "other") {
+        customDiv.classList.remove("d-none");
+      } else {
+        customDiv.classList.add("d-none");
+      }
+    }
+
+   document.getElementById("applyForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const formData = new FormData(this);
+
+  fetch("submit_application.php", {
+      method: "POST",
+      body: formData
+    })
+    .then(response => response.json()) // Expect JSON now
+    .then(data => {
+      if (data.success) {
+        alert("Application submitted successfully!");
+        const modal = bootstrap.Modal.getInstance(document.getElementById("applyModal"));
+        modal.hide();
+        this.reset();
+        document.getElementById("customDurationDiv").classList.add("d-none");
+      } else {
+        alert("Failed to submit application: " + (data.error || "Unknown error"));
+        console.error("Server error:", data.error);
+      }
+    })
+    .catch(error => {
+      console.error("Error submitting form:", error);
+      alert("Something went wrong!");
+    });
+});
+
   </script>
+
+
 </body>
 
 </html>
