@@ -2162,8 +2162,7 @@ try {
 
   <!-- end of new announcement card-->
   <!-- notification popup -->
-    <!-- notification popup -->
-    <div class="notificationpopup-overlay" id="notificationPopup">
+  <div class="notificationpopup-overlay" id="notificationPopup">
     <div class="card" style="margin-top: 20px;">
       <div class="card-header new-message-header">
         New Announcement
@@ -2172,14 +2171,15 @@ try {
       <div class="card-body new-message-body">
         <form action="" method="POST" id="notificationForm">
           <div class="form-group">
-            <label for="property">Select Recipient*</label>
-            <select id="property" name="recipient" class="form-select" required>
-              <option value="" disabled selected>Select Recipient*</option>
-              <option value="Manucho">Manucho</option>
-              <option value="Ben 10">Ben 10</option>
-              <option value="Alpha">Alpha</option>
-              <option value="All Tenants">All Tenants</option>
-            </select>
+          <label for="recipient">Select Recipient*</label>
+          <select name="recipient" id="recipient" onchange="toggleShrink()" class="form-select recipient" required>
+            <option value="" disabled selected>-- Select Building --</option>
+            <?php foreach ($buildings as $b): ?>
+              <option value="<?= htmlspecialchars($b['building_name']) ?>">
+                <?= htmlspecialchars($b['building_name']) ?>
+              </option>
+            <?php endforeach; ?>
+          </select>
           </div>
 
           <div class="form-group">
@@ -2212,14 +2212,14 @@ try {
           <div class="actions d-flex justify-content-end">
             <button type="button" class="draft-btn" id="saveDraftBtn">Save Draft</button>
             <button type="button" class="draft-btn text-danger btn" onclick="closenotificationPopup()">Cancel</button>
-            <button type="submit" class="send-btn btn">Send Announcement</button>
+            <button type="submit" class="send-btn btn" onclick="sendMessage()">Send Announcement</button>
           </div>
         </form>
       </div>
     </div>
   </div>
 
-   <!-- <script>
+   <script>
 function saveAsDraft() {
   const recipient = document.getElementById('property').value;
   const priority = document.getElementById('priority').value;
@@ -2248,9 +2248,10 @@ function saveAsDraft() {
     console.error('Error saving draft:', error);
   });
 }
-</script> -->
+</script>
 
-  <!-- <script>
+
+<!-- <script>
     document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('saveDraftBtn').addEventListener('click', function() {
         const recipient = document.getElementById('property').value;
@@ -2291,12 +2292,13 @@ function saveAsDraft() {
   </script> -->
 
 
+
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('saveDraftBtn').addEventListener('click', function() {
         const recipient = document.getElementById('property').value;
         const priority = document.getElementById('priority').value;
-        const message = document.getElementById('notes').value;
+        const message = document.getElementById('message').value;
 
         // Don't save empty form
         if (!recipient && !priority && !message) {
@@ -2330,6 +2332,60 @@ function saveAsDraft() {
       });
     });
   </script>
+
+
+<script>
+    const form = document.getElementById('notificationForm');
+    const draftKey = 'notification_draft';
+
+    // Load draft if exists
+    document.addEventListener('DOMContentLoaded', () => {
+      const draft = JSON.parse(localStorage.getItem(draftKey));
+      if (draft) {
+        if (draft.recipient) form.recipient.value = draft.recipient;
+        if (draft.priority) form.priority.value = draft.priority;
+        if (draft.message) form.message.value = draft.message;
+        document.getElementById('draftStatus').textContent = 'Draft loaded';
+      }
+    });
+
+    // Auto-save to localStorage on input change
+    form.addEventListener('input', () => {
+      const data = {
+        recipient: form.recipient.value,
+        priority: form.priority.value,
+        message: form.message.value,
+      };
+      localStorage.setItem(draftKey, JSON.stringify(data));
+      document.getElementById('draftStatus').textContent = 'Draft saved';
+    });
+
+    // Save draft manually (on "Save Draft" button)
+    function saveAsDraft() {
+      const data = {
+        recipient: form.recipient.value,
+        priority: form.priority.value,
+        message: form.message.value,
+      };
+      localStorage.setItem(draftKey, JSON.stringify(data));
+      document.getElementById('draftStatus').textContent = 'Draft manually saved';
+    }
+
+    // Optional: clear draft after successful submission
+    form.addEventListener('submit', () => {
+      localStorage.removeItem(draftKey);
+    });
+
+    // Optional: save on popup close
+    function closenotificationPopup() {
+      saveAsDraft(); // Automatically saves before closing
+      document.getElementById('notificationPopup').style.display = 'none';
+    }
+
+  // Make closenotificationPopup global
+  window.closenotificationPopup = closenotificationPopup;
+  window.saveAsDraft = saveAsDraft;
+</script>
 
   <!-- <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -2952,7 +3008,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   </script>
 
-  <script>
+  <!-- <script>
     const form = document.getElementById('notificationForm');
     const draftKey = 'notification_draft';
 
@@ -3003,7 +3059,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Make closenotificationPopup global
   window.closenotificationPopup = closenotificationPopup;
   window.saveAsDraft = saveAsDraft;
-</script>
+</script> -->
 <script>
  function showSentMessages() {
   fetch('get_sent_messages.php')
