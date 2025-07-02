@@ -6,7 +6,8 @@ if (isset($_GET['request_id'])) {
     $requestId = $_GET['request_id'];
 
     try {
-        $stmt = $pdo->prepare("SELECT * FROM maintenance_request_proposals WHERE maintenance_request_id = ?");
+        $stmt = $pdo->prepare("SELECT * FROM maintenance_request_proposals
+        INNER JOIN providers ON maintenance_request_proposals.provider_id = providers.id WHERE maintenance_request_id = ?");
         $stmt->execute([$requestId]);
 
         $proposals = $stmt->fetchAll(PDO::FETCH_ASSOC);

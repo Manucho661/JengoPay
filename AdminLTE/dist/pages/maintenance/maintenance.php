@@ -580,7 +580,7 @@
                         </div>
                         <div class="col-6">
                           <div><strong>BIDS:</strong></div>
-                          <button class="btn btn-primary showProposal p-1" onclick="showProposals()" id="showProposal" data-request-id="123">30 Applications</button>
+                          <button class="btn btn-dark showProposal text-white p-1" onclick="showProposals()" id="showProposal" data-request-id="123"><i class="fas fa-file-alt me-1"></i> 30 Applications</button>
                           <!-- <div id="request-description" style="color:rgb(0 28 63 / 60%); font-weight:500;">--</div> -->
                         </div>
                         
@@ -841,79 +841,31 @@
                     <button class="text-gray-500 text-xl rounded hover:text-white hover:bg-red-500 transition">&times;</button>
                   </div>
                 </div>
-                <div class="proposal-card">
-                  <div class="proposal-header d-flex align-items-start">
-                    <img src="https://i.pravatar.cc/70" alt="Profile Picture" class="profile-pic me-3">
-                    <div>
-                      <h5>Jane Doe <span class="badge bg-success">Top Rated</span></h5>
-                      <p>Full Stack Developer | React & Node.js</p>
+                <div id="job_proposals_container">
+                  <div class="proposal-card mt-2">
+                    <div class="proposal-header d-flex align-items-start">
+                      <img src="https://i.pravatar.cc/70" alt="Profile Picture" class="profile-pic me-3">
+                      <div>
+                        <h5>Jane Doe <span class="badge bg-success">Top Rated</span></h5>
+                        <p>Full Stack Developer | React & Node.js</p>
+                      </div>
+                      <div class="ms-auto proposal-meta text-end">
+                        <h6>$25/hr</h6>
+                        <small>5 days delivery</small><br>
+                        <small class="text-success">✅ 42 jobs completed</small>
+                      </div>
                     </div>
-                    <div class="ms-auto proposal-meta text-end">
-                      <h6>$25/hr</h6>
-                      <small>5 days delivery</small><br>
-                      <small class="text-success">✅ 42 jobs completed</small>
+
+                    <hr>
+
+                    <p><strong>Cover Letter:</strong> I'm excited to help build your job board! I have 3 years of experience with React and recently completed a similar project...</p>
+                    <p><strong>Location:</strong> Nairobi, Kenya (GMT+3)</p>
+
+                    <div class="d-flex justify-content-end mt-3">
+                      <button class="btn btn-outline-secondary btn-sm btn-action">Message</button>
+                      <button class="btn btn-outline-primary btn-sm btn-action">Shortlist</button>
+                      <button class="btn btn-outline-danger btn-sm">Decline</button>
                     </div>
-                  </div>
-
-                  <hr>
-
-                  <p><strong>Cover Letter:</strong> I'm excited to help build your job board! I have 3 years of experience with React and recently completed a similar project...</p>
-                  <p><strong>Location:</strong> Nairobi, Kenya (GMT+3)</p>
-
-                  <div class="d-flex justify-content-end mt-3">
-                    <button class="btn btn-outline-secondary btn-sm btn-action">Message</button>
-                    <button class="btn btn-outline-primary btn-sm btn-action">Shortlist</button>
-                    <button class="btn btn-outline-danger btn-sm">Decline</button>
-                  </div>
-                </div>
-                <div class="proposal-card mt-2">
-                  <div class="proposal-header d-flex align-items-start">
-                    <img src="https://i.pravatar.cc/70" alt="Profile Picture" class="profile-pic me-3">
-                    <div>
-                      <h5>Jane Doe <span class="badge bg-success">Top Rated</span></h5>
-                      <p>Full Stack Developer | React & Node.js</p>
-                    </div>
-                    <div class="ms-auto proposal-meta text-end">
-                      <h6>$25/hr</h6>
-                      <small>5 days delivery</small><br>
-                      <small class="text-success">✅ 42 jobs completed</small>
-                    </div>
-                  </div>
-
-                  <hr>
-
-                  <p><strong>Cover Letter:</strong> I'm excited to help build your job board! I have 3 years of experience with React and recently completed a similar project...</p>
-                  <p><strong>Location:</strong> Nairobi, Kenya (GMT+3)</p>
-
-                  <div class="d-flex justify-content-end mt-3">
-                    <button class="btn btn-outline-secondary btn-sm btn-action">Message</button>
-                    <button class="btn btn-outline-primary btn-sm btn-action">Shortlist</button>
-                    <button class="btn btn-outline-danger btn-sm">Decline</button>
-                  </div>
-                </div>
-                <div class="proposal-card mt-2">
-                  <div class="proposal-header d-flex align-items-start">
-                    <img src="https://i.pravatar.cc/70" alt="Profile Picture" class="profile-pic me-3">
-                    <div>
-                      <h5>Jane Doe <span class="badge bg-success">Top Rated</span></h5>
-                      <p>Full Stack Developer | React & Node.js</p>
-                    </div>
-                    <div class="ms-auto proposal-meta text-end">
-                      <h6>$25/hr</h6>
-                      <small>5 days delivery</small><br>
-                      <small class="text-success">✅ 42 jobs completed</small>
-                    </div>
-                  </div>
-
-                  <hr>
-
-                  <p><strong>Cover Letter:</strong> I'm excited to help build your job board! I have 3 years of experience with React and recently completed a similar project...</p>
-                  <p><strong>Location:</strong> Nairobi, Kenya (GMT+3)</p>
-
-                  <div class="d-flex justify-content-end mt-3">
-                    <button class="btn btn-outline-secondary btn-sm btn-action">Message</button>
-                    <button class="btn btn-outline-primary btn-sm btn-action">Shortlist</button>
-                    <button class="btn btn-outline-danger btn-sm">Decline</button>
                   </div>
                 </div>
               </div>

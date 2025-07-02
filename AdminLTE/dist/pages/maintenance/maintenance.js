@@ -462,6 +462,35 @@ document.getElementById("paymentForm").addEventListener("submit", function (e) {
       .then(data => {
         console.log("Fetched Proposals:", data);
         // Do something with the data...y
+        const container = document.getElementById("job_proposals_container");
+        container.classList.remove("d-none"); // Make sure it's visible
+        container.innerHTML = ""; // Clear previous content if needed
+        data.forEach(p => {
+          container.innerHTML += `
+            <div class="proposal-card mt-2">
+              <div class="proposal-header d-flex align-items-start">
+                <img src="${p.profilePic || 'https://i.pravatar.cc/70'}" alt="Profile Picture" class="profile-pic me-3">
+                <div>
+                  <h5>${p.name} <span class="badge bg-warning">5 <i class="fa fa-star " id="star-rating"></i>${p.ratings}</span></h5>
+                  <p>${p.category}</p>
+                </div>
+                <div class="ms-auto proposal-meta text-end">
+                  <h6>$${p.bid_amount}/hr</h6>
+                  <small>${p.estimated_time}</small><br>
+                  <small class="text-success">✅ ${p.jobs_completed} jobs completed</small>
+                </div>
+              </div>
+              <hr>
+              <p><strong>Cover Letter:</strong> ${p.cover_letter}</p>
+              <p><strong>Location:</strong> ${p.location}</p>
+              <div class="d-flex justify-content-end mt-3">
+                <button class="btn btn-outline-secondary btn-sm btn-action">Message</button>
+                <button class="btn btn-outline-primary btn-sm btn-action" style="margin-right:6px;">Shortlist</button>
+                <button class="btn btn-outline-danger btn-sm">Decline</button>
+              </div>
+            </div>
+          `;
+        });
       })
        .catch(err=>{
          console.error("Error fetching proposals:", err);

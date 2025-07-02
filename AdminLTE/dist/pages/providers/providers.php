@@ -32,7 +32,7 @@ try {
       background-position: center center;
       background-repeat: no-repeat;
       min-height: 100vh;
-      overflow: auto;
+    
     }
     .app-wrapper {
       display: grid;
@@ -40,10 +40,15 @@ try {
       grid-template-rows: 60px 1fr;
       grid-template-areas:
         "header header"
-        "main main";
+        "main main"
+        "footer footer";
         max-width: 100vw;
         min-height: 100vh;
     }
+    .app-wrapper, .row, .col {
+  overflow: visible !important; /* ensure no clipping */
+}
+
     .header {
       grid-area: header;
       background-color: #00192D;
@@ -56,7 +61,62 @@ try {
     .main {
       grid-area: main;
       /* padding: 20px; */
-    }   
+    }  
+    .footer {
+  grid-area: footer;
+  background-color: #00192D;
+  color: #fff;
+  padding: 40px 20px 20px;
+  font-size: 14px;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 30px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.footer-section {
+  flex: 1 1 250px;
+  min-width: 200px;
+}
+
+.footer-section h2,
+.footer-section h3 {
+  color: #FFC107;
+  margin-bottom: 15px;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 10px;
+}
+
+.footer-section ul li a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.footer-section ul li a:hover {
+  text-decoration: underline;
+  color: #FFC107;
+}
+
+.footer-bottom {
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin-top: 30px;
+  padding-top: 15px;
+  color: #ccc;
+}
+
      .header-bar {
       background-color: #00192D;
       color: #FFFFFF;
@@ -179,7 +239,7 @@ try {
       <!-- Left side: Logo and Welcome -->
       <div style="display: flex; align-items: center; gap: 15px;">
         <div style="font-size: 22px; font-weight: bold; color: #FFC107; letter-spacing: 1px;">
-          Jengo<span style="color: white;">Pay</span>
+         <h2>Jengo<span style="color: white;">Pay</span></h2> 
         </div>
         <h1 style="margin: 0; font-size: 20px;">
           <i class="fas fa-users" style="color: #FFC107;"></i> Welcome Abby
@@ -244,11 +304,11 @@ try {
                               <div class="text-muted mb-2">
                                 Posted: <?= date('M j, Y', strtotime($row['request_date'])) ?> •
                                 Budget: <?= !empty($row['budget']) ? htmlspecialchars($row['budget']) : 'N/A' ?> •
-                                <?= !empty($row['location']) ? htmlspecialchars($row['location']) : 'Remote' ?>
+                                <?= !empty($row['location']) ? htmlspecialchars($row['location']) : 'On Site' ?>
                               </div>
-                              <span class="badge badge-skill">React</span>
-                              <span class="badge badge-skill">Tailwind</span>
-                              <span class="badge badge-skill">Git</span>
+                              <span class="badge badge-skill">Plumbing</span>
+                              <span class="badge badge-skill">Electrical</span>
+                              <span class="badge badge-skill">Appliances</span>
                               <p class="mt-2 job-description" style="font-style:italic;">
                                 <?= nl2br(htmlspecialchars($row['description'])) ?>
                               </p>
@@ -384,7 +444,7 @@ try {
             </div>
 
             <!-- RIGHT: Sidebar -->
-            <div class="col-lg-3">
+            <div class="col-lg-3 sticky-top pt-3" style="z-index:1; position:sticky;">
               <!-- Subscribe -->
               <div class="p-4 mb-4 shadow-sm bg-white rounded border">
                 <h5 class="fw-bold">📬 Subscribe to Job Alert</h5>
@@ -423,6 +483,20 @@ try {
                 </div>
                 <button class="btn btn-warning btn-sm mt-2">View All Locations</button>
               </div>
+
+              <div class="p-4 shadow-sm bg-white border border-warning rounded">
+  <h6 class="fw-bold text-warning mb-2">🔧 Featured Service: Jemo Fixers</h6>
+  <p class="text-dark small mb-1">
+    Need quick repairs? <strong>Jemo Fixers</strong> handles plumbing, electrical, and handyman jobs within hours.
+  </p>
+  <div class="mb-2">
+    <span class="badge bg-warning text-dark me-1">Fast Response</span>
+    <span class="badge bg-light text-dark border">Trusted</span>
+  </div>
+  <a href="#" class="btn btn-sm btn-outline-warning w-100">Hire Jemo Fixers</a>
+</div>
+
+
             </div>
 
           </div> <!-- end .row -->
@@ -430,6 +504,34 @@ try {
       </div> <!-- end .container-fluid -->
     </div>
     <!-- end main -->
+     <footer class="footer">
+        <div class="footer-container">
+          <div class="footer-section about">
+            <h2>Jengo Pay</h2>
+            <p>Jengo Pay is your trusted platform for managing properties, tenants, and service providers efficiently. Empowering real estate with smart tech.</p>
+          </div>
+
+          <div class="footer-section links">
+            <h3>Quick Links</h3>
+            <ul>
+              <li><a href="#">Home</a></li>
+              <li><a href="#">Profile</a></li>
+              <li><a href="#">Connects</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-section contact">
+            <h3>Contact Us</h3>
+            <p><i class="fas fa-phone-alt"></i> +254 712 345 678</p>
+            <p><i class="fas fa-envelope"></i> support@jengopay.co.ke</p>
+            <p><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</p>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>© 2025 Jengo Pay. All Rights Reserved.</p>
+        </div>
+      </footer>
   </div>
   <!-- Header -->
   
