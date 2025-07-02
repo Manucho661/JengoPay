@@ -3393,7 +3393,7 @@ function sendMessage() {
   });
 }
 </script> -->
-
+  
 
   <script>
   function loadAnnouncements() {
@@ -4201,12 +4201,10 @@ function submitAnnouncement(event) {
 </script> -->
 
 <script>
-function sendMessage(event) {
-  event?.preventDefault(); // In case it's triggered from a submit form
-
+function sendMessage() {
   const recipient = document.getElementById('recipient').value.trim();
   const priority = document.getElementById('priority').value.trim();
-  const message = document.getElementById('message').value.trim();
+  const message = document.getElementById('notes').value.trim();
 
   if (!recipient || !priority || !message) {
     alert("Please fill all required fields.");
@@ -4225,31 +4223,20 @@ function sendMessage(event) {
   .then(response => response.json())
   .then(data => {
     if (data.success) {
-      alert("Announcement sent successfully");
-
-      // Clear the form
-      document.getElementById('recipient').value = "";
-      document.getElementById('priority').value = "";
-      document.getElementById('notes').value = "";
-
-      // Close the popup
-      closenotificationPopup();
-
-      // OPTIONAL: Refresh or update frontend announcement list
-      // loadAnnouncements(); // if you have a function for this
- // Reload page
-      location.reload();
-
+      // Show success message popup
+      document.getElementById('notificationPopup').style.display = 'block';
+      document.getElementById('notificationForm').reset();
     } else {
-      alert("Failed to send announcement: " + data.message);
+      alert("Failed to send announcement.");
     }
   })
   .catch(error => {
-    console.error("Error:", error);
+    console.error('Error:', error);
     alert("An error occurred while sending the announcement.");
   });
 }
 </script>
+
 
 
     <!--end::Script-->
