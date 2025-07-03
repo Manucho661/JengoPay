@@ -32,8 +32,9 @@ try {
       background-position: center center;
       background-repeat: no-repeat;
       min-height: 100vh;
-    
+
     }
+
     .app-wrapper {
       display: grid;
       grid-template-columns: auto 1fr;
@@ -42,82 +43,93 @@ try {
         "header header"
         "main main"
         "footer footer";
-        max-width: 100vw;
-        min-height: 100vh;
+      max-width: 100vw;
+      min-height: 100vh;
     }
-    .app-wrapper, .row, .col {
-  overflow: visible !important; /* ensure no clipping */
-}
+
+    .app-wrapper,
+    .row,
+    .col {
+      overflow: visible !important;
+      /* ensure no clipping */
+    }
+
+    :root {
+      --header-height: 10vh;
+    }
 
     .header {
       grid-area: header;
       background-color: #00192D;
       color: white;
+      height: var(--header-height);
       padding: 20px;
-      height: 10vh;
       vertical-align: middle;
     }
 
     .main {
       grid-area: main;
       /* padding: 20px; */
-    }  
+      padding-top: var(--header-height);
+
+    }
+
     .footer {
-  grid-area: footer;
-  background-color: #00192D;
-  color: #fff;
-  padding: 40px 20px 20px;
-  font-size: 14px;
-}
+      grid-area: footer;
+      background-color: #00192D;
+      color: #fff;
+      padding: 40px 20px 20px;
+      font-size: 14px;
+    }
 
-.footer-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 30px;
-  max-width: 1200px;
-  margin: auto;
-}
+    .footer-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 30px;
+      max-width: 1200px;
+      margin: auto;
+    }
 
-.footer-section {
-  flex: 1 1 250px;
-  min-width: 200px;
-}
+    .footer-section {
+      flex: 1 1 250px;
+      min-width: 200px;
+    }
 
-.footer-section h2,
-.footer-section h3 {
-  color: #FFC107;
-  margin-bottom: 15px;
-}
+    .footer-section h2,
+    .footer-section h3 {
+      color: #FFC107;
+      margin-bottom: 15px;
+    }
 
-.footer-section ul {
-  list-style: none;
-  padding: 0;
-}
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+    }
 
-.footer-section ul li {
-  margin-bottom: 10px;
-}
+    .footer-section ul li {
+      margin-bottom: 10px;
+    }
 
-.footer-section ul li a {
-  color: #fff;
-  text-decoration: none;
-}
+    .footer-section ul li a {
+      color: #fff;
+      text-decoration: none;
+    }
 
-.footer-section ul li a:hover {
-  text-decoration: underline;
-  color: #FFC107;
-}
+    .footer-section ul li a:hover {
+      text-decoration: underline;
+      color: #FFC107;
+    }
 
-.footer-bottom {
-  text-align: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  margin-top: 30px;
-  padding-top: 15px;
-  color: #ccc;
-}
+    .footer-bottom {
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      margin-top: 30px;
+      padding-top: 15px;
+      color: #ccc;
+    }
 
-     .header-bar {
+    .header-bar {
       background-color: #00192D;
       color: #FFFFFF;
       padding: 15px 25px;
@@ -137,7 +149,6 @@ try {
     }
 
     .nav-tabs {
-
       margin-bottom: 1.5rem;
     }
 
@@ -225,38 +236,37 @@ try {
       background-color: #ccc;
       border-radius: 3px;
     }
-    .apply-btn:hover{
+
+    .apply-btn:hover {
       text-decoration: none !important;
-      color:#00192D !important;
     }
   </style>
 </head>
 
 <body>
   <div class="app-wrapper">
+    <!-- Header -->
     <div class="header header-bar" style="position: fixed; width: 100%; display: flex; justify-content: space-between; align-items: center; background-color: #00192D; padding: 10px 20px; z-index: 1000; color: white;">
-  
       <!-- Left side: Logo and Welcome -->
       <div style="display: flex; align-items: center; gap: 15px;">
         <div style="font-size: 22px; font-weight: bold; color: #FFC107; letter-spacing: 1px;">
-         <h2>Jengo<span style="color: white;">Pay</span></h2> 
+          <h2>Jengo<span style="color: white;">Pay</span></h2>
         </div>
         <h1 style="margin: 0; font-size: 20px;">
-          <i class="fas fa-users" style="color: #FFC107;"></i> Welcome Abby
+          <i class="fas fa-users" style="color: #FFC107;"></i> Welcome Jackson
         </h1>
       </div>
 
       <!-- Right side: Nav links -->
       <div class="nav-links" style="display: flex; gap: 20px;">
         <a href="dashboard.php" style="color: white; text-decoration: none;"><i class="fas fa-home"></i> Dashboard</a>
-        <a href="units_page.php" style="color: white; text-decoration: none;"><i class="fas fa-building"></i> Profile</a>
+        <a href="units_page.php" style="color: white; text-decoration: none;"><i class="fas fa-building"></i> Units</a>
         <a href="logout.php" style="color: white; text-decoration: none;"><i class="fas fa-sign-out-alt"></i> Logout</a>
       </div>
-
     </div>
 
     <div class="main">
-    <!-- Search Bar -->
+      <!-- Search Bar -->
       <div class="container-fluid py-3">
         <div class="container">
           <form class="d-flex justify-content-center" role="search">
@@ -291,7 +301,7 @@ try {
                   <div class="section-title text-mute">Available Jobs</div>
 
                   <!-- Scrollable container for job cards -->
-                  <div style=" overflow-y: auto; padding-right: 10px;">
+                  <div style=" padding-right: 10px;">
 
                     <?php if (!empty($requests)): ?>
                       <?php foreach ($requests as $row): ?>
@@ -304,18 +314,18 @@ try {
                               <div class="text-muted mb-2">
                                 Posted: <?= date('M j, Y', strtotime($row['request_date'])) ?> •
                                 Budget: <?= !empty($row['budget']) ? htmlspecialchars($row['budget']) : 'N/A' ?> •
-                                <?= !empty($row['location']) ? htmlspecialchars($row['location']) : 'On Site' ?>
+                                <?= !empty($row['location']) ? htmlspecialchars($row['location']) : 'Remote' ?>
                               </div>
-                              <span class="badge badge-skill">Plumbing</span>
-                              <span class="badge badge-skill">Electrical</span>
-                              <span class="badge badge-skill">Appliances</span>
+                              <span class="badge badge-skill">React</span>
+                              <span class="badge badge-skill">Tailwind</span>
+                              <span class="badge badge-skill">Git</span>
                               <p class="mt-2 job-description" style="font-style:italic;">
                                 <?= nl2br(htmlspecialchars($row['description'])) ?>
                               </p>
                             </div>
                             <!-- Apply Button -->
                             <div class="text-end" style="white-space: nowrap;">
-                              <button class="btn btn-outline-warning text-dark apply-btn" data-bs-toggle="modal" data-bs-target="#applyModal">Apply</button>
+                              <button class="btn btn-outline-warning apply-btn text-dark" data-bs-toggle="modal" data-bs-target="#applyModal">Apply</button>
                             </div>
                           </div>
                         </div>
@@ -326,90 +336,87 @@ try {
 
                   </div> <!-- End scrollable -->
                 </div>
-                <!-- Apply Modal -->
-                <div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-lg modal-dialog-centered">
-                    <div class="modal-content border-0 rounded-4 shadow-lg">
+     <!-- Apply Modal -->
+<div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content border-0 rounded-4 shadow-lg">
 
-                      <!-- Modal Header -->
-                      <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
-                        <h5 class="modal-title d-flex align-items-center" id="applyModalLabel">
-                          <i class="bi bi-briefcase-fill me-2"></i> Apply for Job
-                        </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
+      <!-- Modal Header -->
+      <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
+        <h5 class="modal-title d-flex align-items-center" id="applyModalLabel">
+          <i class="bi bi-briefcase-fill me-2"></i> Apply for Job
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
 
-                      <!-- Modal Body -->
-                      <div class="modal-body">
-                        <form id="applyForm" class="px-2" method="POST" action="submit_application.php">
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <form id="applyForm" class="px-2">
 
-                          <!-- Client Price (Plain Text) -->
-                          <div class="mb-3" style="font-weight: bold; font-style: oblique;">
-                            <label class="form-label">
-                              <i class="bi bi-tags me-1" style="color: #00192D;"></i> Client Price
-                            </label>
-                            <input type="hidden" name="client_price" value="5000">
-                            <div class="form-control-plaintext ps-3" style="border: 1px solid #ced4da; border-radius: 50px; background-color: #f8f9fa;">
-                              5000
-                            </div>
-                          </div>
+          <!-- Client Price (Plain Text) -->
+          <div class="mb-3" style="font-weight: bold; font-style: oblique;">
+            <label class="form-label">
+              <i class="bi bi-tags me-1" style="color: #00192D;"></i> Client Price
+            </label>
+            <input type="hidden" name="client_price" value="5000">
+            <div class="form-control-plaintext ps-3" style="border: 1px solid #ced4da; border-radius: 50px; background-color: #f8f9fa;">
+              5000
+            </div>
+          </div>
 
+          <!-- Your Price -->
+          <div class="mb-3" style="font-weight: bold; font-style: oblique;">
+            <label for="yourPrice" class="form-label">
+              <i class="bi bi-currency-dollar me-1" style="color: #00192D;"></i> Your Price
+            </label>
+            <input type="number" name="your_price" class="form-control rounded-pill" id="yourPrice" step="1" min="0" placeholder="4500" required>
+          </div>
 
-                          <!-- Your Price -->
-                          <div class="mb-3" style="font-weight: bold; font-style: oblique;">
-                            <label for="yourPrice" class="form-label">
-                              <i class="bi bi-currency-dollar me-1" style="color: #00192D;"></i> Your Price
-                            </label>
-                            <input type="number" name="your_price" class="form-control rounded-pill" id="yourPrice" step="1" min="0" placeholder="4500">
-                          </div>
+          <!-- Duration -->
+          <div class="mb-3" style="font-weight: bold; font-style: oblique;">
+            <label for="duration" class="form-label">
+              <i class="bi bi-clock me-1" style="color: #00192D;"></i> Select Duration
+            </label>
+            <select class="form-select" name="duration" id="duration" onchange="handleDurationChange(this)" required>
+              <option selected disabled value="">Select duration</option>
+              <option value="less than 24hrs">Less than 24hrs</option>
+              <option value="1 day">1 day</option>
+              <option value="2 days">2 days</option>
+              <option value="3 days">3 days</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
 
+          <!-- Custom Duration -->
+          <div class="mb-3 d-none" id="customDurationDiv" style="font-weight: bold; font-style: oblique;">
+            <label for="customDuration" class="form-label">
+              <i class="bi bi-calendar-plus me-1" style="color: #00192D;"></i> Specify Duration
+            </label>
+            <input type="text" name="custom_duration" class="form-control rounded-pill" id="customDuration" placeholder="e.g. 5 days">
+          </div>
 
-                          <!-- Duration -->
-                          <div class="mb-3" style="font-weight: bold; font-style:oblique;">
-                            <label for="duration" class="form-label">
-                              <i class="bi bi-clock me-1" style="color: #00192D;"></i> Select Duration
-                            </label>
-                            <select class="form-select" name="duration" id="duration" onchange="handleDurationChange(this)">
-                              <option selected disabled>Select duration</option>
-                              <option value="less than 24hrs">Less than 24hrs</option>
-                              <option value="1 day">1 day</option>
-                              <option value="2 days">2 days</option>
-                              <option value="3 days">3 days</option>
-                              <option value="other">Other</option>
-                            </select>
-                          </div>
+          <!-- Cover Letter -->
+          <div class="mb-3" style="font-weight: bold; font-style: oblique;">
+            <label for="coverLetter" class="form-label">
+              <i class="bi bi-envelope-paper me-1" style="color: #00192D;"></i> Cover Letter
+            </label>
+            <textarea class="form-control rounded-4" name="cover_letter" id="coverLetter" rows="4"
+              placeholder="Explain why you are the best fit for this job..." required></textarea>
+          </div>
 
-                          <!-- Custom Duration -->
-                          <div class="mb-3 d-none" id="customDurationDiv" style="font-weight: bold; font-style:oblique;">
-                            <label for="customDuration" class="form-label">
-                              <i class="bi bi-calendar-plus me-1" style="color: #00192D;"></i> Specify Duration
-                            </label>
-                            <input type="text" name="custom_duration" class="form-control rounded-pill" id="customDuration" placeholder="e.g. 5 days">
-                          </div>
+          <!-- Modal Footer -->
+          <div class="modal-footer justify-content-center" style="background-color: #f8f9fa;">
+            <button type="submit" class="btn rounded-pill px-4 py-2" style="background-color: #00192D; color: #FFC107;">
+              <i class="bi bi-check2-circle me-1"></i> Submit Application
+            </button>
+          </div>
 
-                          <!-- Cover Letter -->
-                          <div class="mb-3" style="font-weight: bold; font-style:oblique;">
-                            <label for="coverLetter" class="form-label">
-                              <i class="bi bi-envelope-paper me-1" style="color: #00192D;"></i> Cover Letter
-                            </label>
-                            <textarea class="form-control rounded-4" name="cover_letter" id="coverLetter" rows="4"
-                              placeholder="Explain why you are the best fit for this job..."></textarea>
-                          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
-                        </form>
-                      </div>
-
-                      <!-- Modal Footer -->
-                      <div class="modal-footer justify-content-center" style="background-color: #f8f9fa;">
-                        <button type="submit" class="btn rounded-pill px-4 py-2" form="applyForm"
-                          style="background-color: #00192D; color: #FFC107;">
-                          <i class="bi bi-check2-circle me-1"></i> Submit Application
-                        </button>
-                      </div>
-
-                    </div>
-                  </div>
-                </div>
 
                 <!-- APPLICATIONS -->
                 <div class="tab-pane fade" id="applications" role="tabpanel">
@@ -444,127 +451,129 @@ try {
             </div>
 
             <!-- RIGHT: Sidebar -->
-            <div class="col-lg-3 sticky-top pt-3" style="z-index:1; position:sticky;">
-              <!-- Subscribe -->
-              <div class="p-4 mb-4 shadow-sm bg-white rounded border">
-                <h5 class="fw-bold">📬 Subscribe to Job Alert</h5>
-                <p class="small text-muted">Join thousands getting job updates weekly</p>
-                <input type="email" class="form-control mb-2" placeholder="Enter your email here!">
-                <button class="btn btn-dark w-100" style="background-color:#00192D;">Subscribe</button>
-              </div>
+            <div class="col-lg-3">
+              <div class="position-sticky" style="top: 80px; max-height: calc(100vh - 80px); overflow-y: auto;">
+                <!-- Subscribe -->
+                <div class="p-4 mb-4 shadow-sm bg-white rounded border">
+                  <h5 class="fw-bold">📬 Subscribe to Job Alert</h5>
+                  <p class="small text-muted">Join thousands getting job updates weekly</p>
+                  <input type="email" class="form-control mb-2" placeholder="Enter your email here!">
+                  <button class="btn btn-dark w-100" style="background-color:#00192D;">Subscribe</button>
+                </div>
 
-              <!-- Category -->
-              <div class="p-3 mb-4 shadow-sm bg-white rounded border">
-                <h6 class="fw-bold">🗂 Jobs by Category</h6>
-                <div class="d-flex flex-column gap-2 small">
-                  <a href="#" class="text-decoration-none text-dark">Plumber</a>
-                  <a href="#" class="text-decoration-none text-dark">Electrician</a>
-                  <a href="#" class="text-decoration-none text-dark">HVAC Technician/Heating and Cooling Specialist</a>
-                  <a href="#" class="text-decoration-none text-dark">Carpenter, Glazier or Locksmith </a>
-                  <a href="#" class="text-decoration-none text-dark">Building Maintenance Technician/Handyman</a>
-                  <a href="#" class="text-decoration-none text-dark">Sanitation Worker</a>
-                  <a href="#" class="text-decoration-none text-dark">Security Officer</a>
-                  <a href="#" class="text-decoration-none text-dark">Janitor</a>
+                <!-- Category -->
+                <div class="p-3 mb-4 shadow-sm bg-white rounded border">
+                  <h6 class="fw-bold">🗂 Jobs by Category</h6>
+                  <div class="d-flex flex-column gap-2 small">
+                    <a href="#" class="text-decoration-none text-dark">Plumber</a>
+                    <a href="#" class="text-decoration-none text-dark">Electrician</a>
+                    <a href="#" class="text-decoration-none text-dark">HVAC Technician/Heating and Cooling Specialist</a>
+                    <a href="#" class="text-decoration-none text-dark">Carpenter, Glazier or Locksmith </a>
+                    <a href="#" class="text-decoration-none text-dark">Building Maintenance Technician/Handyman</a>
+                    <a href="#" class="text-decoration-none text-dark">Sanitation Worker</a>
+                    <a href="#" class="text-decoration-none text-dark">Security Officer</a>
+                    <a href="#" class="text-decoration-none text-dark">Janitor</a>
+                  </div>
+                </div>
+
+                <!-- Location -->
+                <div class="p-3 mb-4 shadow-sm bg-white rounded border">
+                  <h6 class="fw-bold">📍 Jobs by Location</h6>
+                  <div class="d-flex flex-wrap gap-2 small">
+                    <a href="#" class="text-decoration-none text-dark">Nairobi</a>
+                    <a href="#" class="text-decoration-none text-dark">Mombasa</a>
+                    <a href="#" class="text-decoration-none text-dark">Kisumu</a>
+                    <a href="#" class="text-decoration-none text-dark">Eldoret</a>
+                    <a href="#" class="text-decoration-none text-dark">Nakuru</a>
+                    <a href="#" class="text-decoration-none text-dark">Thika</a>
+                    <a href="#" class="text-decoration-none text-dark">Kitale</a>
+                    <a href="#" class="text-decoration-none text-dark">Machakos</a>
+                  </div>
+                  <button class="btn btn-warning btn-sm mt-2">View All Locations</button>
+                </div>
+                <div class="p-4 shadow-sm bg-white border border-warning rounded">
+                  <h6 class="fw-bold text-warning mb-2">🔧 Featured Service: Jemo Fixers</h6>
+                  <p class="text-dark small mb-1">
+                    Need quick repairs? <strong>Jemo Fixers</strong> handles plumbing, electrical, and handyman jobs within hours.
+                  </p>
+                  <div class="mb-2">
+                    <span class="badge bg-warning text-dark me-1">Fast Response</span>
+                    <span class="badge bg-light text-dark border">Trusted</span>
+                  </div>
+                  <a href="#" class="btn btn-sm btn-outline-warning w-100">Hire Jemo Fixers</a>
                 </div>
               </div>
-
-              <!-- Location -->
-              <div class="p-3 mb-4 shadow-sm bg-white rounded border">
-                <h6 class="fw-bold">📍 Jobs by Location</h6>
-                <div class="d-flex flex-wrap gap-2 small">
-                  <a href="#" class="text-decoration-none text-dark">Nairobi</a>
-                  <a href="#" class="text-decoration-none text-dark">Mombasa</a>
-                  <a href="#" class="text-decoration-none text-dark">Kisumu</a>
-                  <a href="#" class="text-decoration-none text-dark">Eldoret</a>
-                  <a href="#" class="text-decoration-none text-dark">Nakuru</a>
-                  <a href="#" class="text-decoration-none text-dark">Thika</a>
-                  <a href="#" class="text-decoration-none text-dark">Kitale</a>
-                  <a href="#" class="text-decoration-none text-dark">Machakos</a>
-                </div>
-                <button class="btn btn-warning btn-sm mt-2">View All Locations</button>
-              </div>
-
-              <div class="p-4 shadow-sm bg-white border border-warning rounded">
-  <h6 class="fw-bold text-warning mb-2">🔧 Featured Service: Jemo Fixers</h6>
-  <p class="text-dark small mb-1">
-    Need quick repairs? <strong>Jemo Fixers</strong> handles plumbing, electrical, and handyman jobs within hours.
-  </p>
-  <div class="mb-2">
-    <span class="badge bg-warning text-dark me-1">Fast Response</span>
-    <span class="badge bg-light text-dark border">Trusted</span>
-  </div>
-  <a href="#" class="btn btn-sm btn-outline-warning w-100">Hire Jemo Fixers</a>
-</div>
-
-
             </div>
 
           </div> <!-- end .row -->
         </div> <!-- end .container -->
       </div> <!-- end .container-fluid -->
     </div>
-    <!-- end main -->
-     <footer class="footer">
-        <div class="footer-container">
-          <div class="footer-section about">
-            <h2>Jengo Pay</h2>
-            <p>Jengo Pay is your trusted platform for managing properties, tenants, and service providers efficiently. Empowering real estate with smart tech.</p>
-          </div>
-
-          <div class="footer-section links">
-            <h3>Quick Links</h3>
-            <ul>
-              <li><a href="#">Home</a></li>
-              <li><a href="#">Profile</a></li>
-              <li><a href="#">Connects</a></li>
-            </ul>
-          </div>
-
-          <div class="footer-section contact">
-            <h3>Contact Us</h3>
-            <p><i class="fas fa-phone-alt"></i> +254 712 345 678</p>
-            <p><i class="fas fa-envelope"></i> support@jengopay.co.ke</p>
-            <p><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</p>
-          </div>
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-section about">
+          <h2>Jengo Pay</h2>
+          <p>Jengo Pay is your trusted platform for managing properties, tenants, and service providers efficiently. Empowering real estate with smart tech.</p>
         </div>
 
-        <div class="footer-bottom">
-          <p>© 2025 Jengo Pay. All Rights Reserved.</p>
+        <div class="footer-section links">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Units</a></li>
+            <li><a href="#">Tenants</a></li>
+            <li><a href="#">Reports</a></li>
+          </ul>
         </div>
-      </footer>
+
+        <div class="footer-section contact">
+          <h3>Contact Us</h3>
+          <p><i class="fas fa-phone-alt"></i> +254 712 345 678</p>
+          <p><i class="fas fa-envelope"></i> support@jengopay.co.ke</p>
+          <p><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2025 Jengo Pay. All Rights Reserved.</p>
+      </div>
+    </footer>
+
   </div>
-  <!-- Header -->
-  
+
+
+
+
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Read More / Less Script -->
+
   <script>
+    // Read more / less toggle
     document.querySelectorAll('.job-description').forEach(function(desc) {
       const fullText = desc.textContent.trim();
       const maxLength = 200;
 
       if (fullText.length > maxLength) {
         const shortText = fullText.slice(0, maxLength).trim();
-
         desc.setAttribute('data-full', fullText);
         desc.setAttribute('data-short', shortText);
 
         desc.innerHTML = `
-          ${shortText}... <span class="read-toggle">Read more</span>
-        `;
+        ${shortText}... <span class="read-toggle" style="color: blue; cursor: pointer;">Read more</span>
+      `;
 
         desc.querySelector('.read-toggle').addEventListener('click', function toggleHandler() {
           const isShort = desc.textContent.trim().endsWith('Read more');
           desc.innerHTML = isShort ?
-            `${fullText} <span class="read-toggle">Read less</span>` :
-            `${shortText}... <span class="read-toggle">Read more</span>`;
-
+            `${fullText} <span class="read-toggle" style="color: blue; cursor: pointer;">Read less</span>` :
+            `${shortText}... <span class="read-toggle" style="color: blue; cursor: pointer;">Read more</span>`;
           desc.querySelector('.read-toggle').addEventListener('click', toggleHandler);
         });
       }
     });
 
+    // Show/hide custom duration
     function handleDurationChange(select) {
       const customDiv = document.getElementById("customDurationDiv");
       if (select.value === "other") {
@@ -573,36 +582,77 @@ try {
         customDiv.classList.add("d-none");
       }
     }
+    window.handleDurationChange = handleDurationChange;
 
-   document.getElementById("applyForm").addEventListener("submit", function(e) {
-  e.preventDefault();
+    // Form submission with validation
+    document.addEventListener("DOMContentLoaded", function() {
+      const form = document.getElementById("applyForm");
 
-  const formData = new FormData(this);
+      form.addEventListener("submit", function(e) {
+        e.preventDefault();
 
-  fetch("submit_application.php", {
-      method: "POST",
-      body: formData
-    })
-    .then(response => response.json()) // Expect JSON now
-    .then(data => {
-      if (data.success) {
-        alert("Application submitted successfully!");
-        const modal = bootstrap.Modal.getInstance(document.getElementById("applyModal"));
-        modal.hide();
-        this.reset();
-        document.getElementById("customDurationDiv").classList.add("d-none");
-      } else {
-        alert("Failed to submit application: " + (data.error || "Unknown error"));
-        console.error("Server error:", data.error);
-      }
-    })
-    .catch(error => {
-      console.error("Error submitting form:", error);
-      alert("Something went wrong!");
+        // Input validation
+        const yourPrice = document.getElementById("yourPrice").value.trim();
+        const duration = document.getElementById("duration").value;
+        const customDuration = document.getElementById("customDuration").value.trim();
+        const coverLetter = document.getElementById("coverLetter").value.trim();
+
+        if (!yourPrice || isNaN(yourPrice) || parseFloat(yourPrice) <= 0) {
+          alert("Please enter a valid price.");
+          return;
+        }
+
+        if (!duration) {
+          alert("Please select a duration.");
+          return;
+        }
+
+        if (duration === "other" && !customDuration) {
+          alert("Please specify a custom duration.");
+          return;
+        }
+
+        if (!coverLetter) {
+          alert("Please enter a cover letter.");
+          return;
+        }
+
+        const formData = new FormData(form);
+
+        fetch("../providers/actions/submit_application.php", {
+            method: "POST",
+            body: formData
+          })
+          .then(async (response) => {
+            // Make sure it returns JSON
+            const contentType = response.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+              const text = await response.text();
+              throw new Error("Unexpected response format: " + text);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (data.success) {
+              alert("✅ Application submitted successfully!");
+              const modal = bootstrap.Modal.getInstance(document.getElementById("applyModal"));
+              modal.hide();
+              form.reset();
+              document.getElementById("customDurationDiv").classList.add("d-none");
+            } else {
+              alert("❌ Failed to submit: " + (data.error || "Unknown error"));
+              console.error("Server error:", data.error);
+            }
+          })
+          .catch((error) => {
+            console.error("❌ Error submitting form:", error);
+            alert("Something went wrong while submitting the form.\n" + error.message);
+          });
+      });
     });
-});
-
   </script>
+
+
 
 
 </body>
