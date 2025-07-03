@@ -31,6 +31,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message'])) {
 }
 ?>
 
+<?php
+// Example: Fetch buildings from database (if not already done)
+require '../db/connect.php'; // Adjust path as needed
+
+try {
+  $stmt = $pdo->query("SELECT building_id, building_name FROM buildings ORDER BY building_name ASC");
+  $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+  echo "Error fetching buildings: " . $e->getMessage();
+  $buildings = [];
+}
+?>
+
+
 
 
 <!DOCTYPE html>
@@ -189,9 +203,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message'])) {
     <h2 class="form-header">Edit Draft Announcement</h2>
     <form method="POST">
       <div class="form-group">
-        <label for="recipient">Recipient</label>
-        <input type="text" id="recipient" name="recipient" class="form-control"
-               value="<?= htmlspecialchars($draft['recipient']) ?>" required>
+      <label for="recipient">Select Recipient*</label>
+          <select name="recipient" id="recipient" onchange="toggleShrink()" class="form-select recipient" required>
+            <option value="" disabled selected>-- Select Building --</option>
+              <option value="<?= htmlspecialchars($draft['building_name']) ?>">
+                <?= htmlspecialchars($draft['building_name']) ?>
+              </option>
+
+          </select>
+        <!-- <label for="recipient">Recipient</label> -->
+
       </div>
 
       <div class="form-group">

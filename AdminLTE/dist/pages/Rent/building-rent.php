@@ -848,22 +848,32 @@ foreach ($tenants as $tenant) {
                   </div>
 
                   </div>
-<!-- 
-                  !-- Rent vs Months Chart --> 
-                       <div class="container mt-5">
+
+
+
+                 <!-- Rent vs Months Chart -->
+<div class="container mt-5">
   <div class="card shadow-lg rounded-4">
-    <div class="card-header rounded-top-4" style="background-color: #00192D; color:#FFC107;">
-      <h5 class="fw-bold"><i class="fas fa-chart-line me-2"></i> Rent Paid by Tenants (Monthly)</h5>
+    <div class="card-header rounded-top-4 d-flex justify-content-between align-items-center" style="background-color: #00192D; color:#FFC107;">
+      <h5 class="fw-bold mb-0">
+        <i class="fas fa-chart-line me-2"></i> Total Rent Collected Per Month
+      </h5>
+      <div class="d-flex align-items-center">
+        <span class="me-2">Year:</span>
+        <select id="yearSelect" class="form-select form-select-sm" style="width: 100px; background-color: #FFC107; color: #00192D; border-color: #FFC107;">
+          <option value="2023">2023</option>
+          <option value="2024">2024</option>
+          <option value="2025" selected>2025</option>
+        </select>
+      </div>
     </div>
     <div class="card-body bg-white rounded-bottom-4">
-      <canvas id="tenantRentChart" height="80%"></canvas>
+      <div class="chart-container" style="position: relative; height: 400px;">
+        <canvas id="tenantRentChart"></canvas>
+      </div>
     </div>
   </div>
 </div>
-
-                      
-
-
            <!-- </div> -->
 
 
@@ -985,69 +995,152 @@ foreach ($tenants as $tenant) {
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-  const buildingId = 2; // Set dynamically if needed
+  // Get building ID from URL or set a default
+  const urlParams = new URLSearchParams(window.location.search);
+  const buildingId = urlParams.get('building_id') || 1; // Default to 1 if not specified
 
-  fetch(`get_rent_vs_month.php?building_id=${buildingId}`)
-    .then(res => res.json())
-    .then(({ labels, datasets }) => {
-      const colors = [
-        'rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)',
-        'rgba(255, 206, 86, 0.6)', 'rgba(75, 192, 192, 0.6)',
-        'rgba(153, 102, 255, 0.6)', 'rgba(255, 159, 64, 0.6)',
-        'rgba(199, 199, 199, 0.6)', 'rgba(83, 102, 255, 0.6)',
-        'rgba(233, 30, 99, 0.6)', 'rgba(0, 150, 136, 0.6)'
-      ];
+  // Initialize chart
+  let tenantRentChart = null;
+  const currentYear = new Date().getFullYear();
+  const yearSelect = document.getElementById('yearSelect');
 
-      const formattedDatasets = datasets.map((ds, index) => ({
-        label: ds.label,
-        data: ds.data,
-        backgroundColor: colors[index % colors.length],
-        borderRadius: 6,
-        barThickness: 25
-      }));
+  function loadChartData(year = currentYear) {
+    fetch(`get_rent_vs_month.php?building_id=${buildingId}&year=${year}`)
+      .then(res => res.json())
+      .then(monthlyData => {
+        if (!monthlyData || monthlyData.length === 0) {
+          showToast('No rent data found for this building.', 'warning');
+          return;
+        }
 
-      const ctx = document.getElementById('tenantRentChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: formattedDatasets
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            title: {
-              display: true,
-              text: 'Rent Collection by Tenant per Month'
-            },
-            legend: {
-              position: 'bottom'
-            }
+        // Format labels and data
+        const labels = monthlyData.map(item => `${item.month} ${item.year}`);
+        const data = monthlyData.map(item => parseFloat(item.total_collected));
+
+        const ctx = document.getElementById('tenantRentChart').getContext('2d');
+
+        // Destroy previous chart if exists
+        if (tenantRentChart) {
+          tenantRentChart.destroy();
+        }
+
+        // Create new chart
+        tenantRentChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Total Rent Collected (KES)',
+              data: data,
+              backgroundColor: '#FFC107',
+              borderColor: '#00192D',
+              borderWidth: 2,
+              borderRadius: 4,
+              hoverBackgroundColor: '#FFD54F'
+            }]
           },
-          scales: {
-            y: {
-              beginAtZero: true,
-              title: {
-                display: true,
-                text: 'Amount Paid (KES)'
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: {
+                grid: {
+                  display: false
+                },
+                ticks: {
+                  color: '#00192D',
+                  font: {
+                    weight: 'bold'
+                  }
+                }
+              },
+              y: {
+                beginAtZero: true,
+                grid: {
+                  color: 'rgba(0, 25, 45, 0.1)'
+                },
+                ticks: {
+                  color: '#00192D',
+                  callback: function(value) {
+                    return 'KES ' + value.toLocaleString();
+                  }
+                }
               }
             },
-            x: {
-              title: {
-                display: true,
-                text: 'Month'
+            plugins: {
+              legend: {
+                display: false
+              },
+              tooltip: {
+                backgroundColor: '#00192D',
+                titleColor: '#FFC107',
+                bodyColor: '#FFFFFF',
+                borderColor: '#FFC107',
+                borderWidth: 1,
+                callbacks: {
+                  label: function(context) {
+                    return ` KES ${context.parsed.y.toLocaleString()}`;
+                  },
+                  title: function(context) {
+                    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                      'July', 'August', 'September', 'October', 'November', 'December'];
+                    const monthIndex = context[0].dataIndex;
+                    return `${monthNames[monthIndex]} ${year}`;
+                  }
+                }
               }
+            },
+            animation: {
+              duration: 1000,
+              easing: 'easeInOutQuart'
             }
           }
-        }
+        });
+      })
+      .catch(err => {
+        console.error("Chart fetch error:", err);
+        showToast('Failed to load rent data.', 'danger');
       });
-    })
-    .catch(error => console.error('Chart loading error:', error));
+  }
+
+  // Helper function to show toast notifications
+  function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `toast align-items-center text-white bg-${type} border-0 show`;
+    toast.setAttribute('role', 'alert');
+    toast.setAttribute('aria-live', 'assertive');
+    toast.setAttribute('aria-atomic', 'true');
+    toast.style.position = 'fixed';
+    toast.style.bottom = '20px';
+    toast.style.right = '20px';
+    toast.style.zIndex = '9999';
+
+    toast.innerHTML = `
+      <div class="d-flex">
+        <div class="toast-body">
+          ${message}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    `;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
+
+  // Initial load
+  loadChartData();
+
+  // Year selection change handler
+  yearSelect.addEventListener('change', function() {
+    loadChartData(this.value);
+  });
 });
 </script>
-
-
-
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const tenantProfileModal = document.getElementById('tenantProfileModal');

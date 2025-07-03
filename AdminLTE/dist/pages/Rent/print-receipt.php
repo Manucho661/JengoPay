@@ -26,16 +26,28 @@ $penalty = number_format((float)($tenant['penalty']), 2);
 $penaltyDays = (int)$tenant['penalty_days'];
 $arrears = number_format((float)($tenant['arrears']), 2);
 $overpayment = number_format((float)($tenant['overpayment']), 2);
-$balance = number_format((float)($tenant['balances']), 2);
+$rawBalance = (float)$tenant['balances'];
+$balanceLabel = $rawBalance < 0 ? 'Overpayment' : 'Balance';
+$formattedBalance = number_format(abs($rawBalance), 2);
 $paymentMode = htmlspecialchars($tenant['payment_mode'] ?? 'Mpesa');
 $reference = htmlspecialchars($tenant['reference_number'] ?? 'TCO2X12E80');
 $date = !empty($tenant['payment_date']) ? date("d/m/Y", strtotime($tenant['payment_date'])) : date("d/m/Y");
 $printDate = date("d/m/Y H:i");
-$receiptNo = "RC".str_pad($tenantId, 5, '0', STR_PAD_LEFT);
+$receiptNo = "RC" . str_pad($tenantId, 5, '0', STR_PAD_LEFT);
 
-// Calculate subtotal and total - Overpayment should not be added to the total
-$subtotal = (float)$tenant['amount_paid'] + (float)$tenant['penalty'];
-$total = $subtotal + (float)$tenant['arrears']; // Removed overpayment from total calculation
+// Use tenant-specific A/C NO or fallback to unit
+$accountNo = !empty($tenant['account_no']) ? htmlspecialchars($tenant['account_no']) : $unit;
+
+// Calculate total: amount paid + penalty + arrears
+$total = (float)$tenant['amount_paid'] + (float)$tenant['penalty'] + (float)$tenant['arrears'];
+
+// Add balance only if it's a positive balance (not overpayment)
+if ($rawBalance > 0) {
+    $total += $rawBalance;
+}
+
+// Use total as the main amount for display
+$amount = number_format($total, 2);
 ?>
 
 <!DOCTYPE html>
@@ -49,27 +61,29 @@ $total = $subtotal + (float)$tenant['arrears']; // Removed overpayment from tota
             padding: 20px;
             background-color: white;
         }
+
         .receipt-container {
             width: 100%;
             max-width: 600px;
             margin: 0 auto;
-            padding: 0;
         }
+
         .company-header {
             text-align: center;
             margin-bottom: 15px;
             line-height: 1.3;
         }
+
         .company-header h1 {
             font-size: 18px;
             margin: 5px 0;
-            color: black;
         }
+
         .company-header p {
             font-size: 12px;
             margin: 2px 0;
-            color: black;
         }
+
         .receipt-title {
             text-align: center;
             font-size: 16px;
@@ -78,59 +92,60 @@ $total = $subtotal + (float)$tenant['arrears']; // Removed overpayment from tota
             padding-bottom: 5px;
             border-bottom: 1px solid black;
         }
-        .receipt-table {
-            width: 100%;
+
+        table {
             border-collapse: collapse;
+            width: 100%;
+        }
+
+        .receipt-table {
             margin: 10px 0;
-            font-size: 14px;
+            font-size: 13px;
         }
+
         .receipt-table td {
-            padding: 5px;
-            border: none;
-            vertical-align: top;
+            padding: 2px 5px;
+            white-space: nowrap;
         }
-        .receipt-table td:first-child {
+
+        .receipt-table td:first-child,
+        .receipt-table td:nth-child(3) {
             font-weight: bold;
-            width: 30%;
         }
+
         .amount-table {
             width: 100%;
             border-collapse: collapse;
             margin: 15px 0;
             font-size: 14px;
         }
+
         .amount-table td {
             padding: 5px;
             border: none;
         }
+
         .amount-table td:last-child {
             text-align: right;
         }
+
         .divider {
             border-top: 1px dashed black;
             margin: 10px 0;
         }
+
         .footer {
             text-align: center;
             margin-top: 20px;
             font-size: 12px;
         }
-        .signature-line {
-            margin-top: 30px;
-            display: flex;
-            justify-content: space-between;
-        }
-        .total-section {
-            margin-top: 10px;
-            font-weight: bold;
-        }
+
         @media print {
             .print-button {
                 display: none;
             }
             body {
                 padding: 0;
-                
             }
         }
     </style>
@@ -158,7 +173,7 @@ $total = $subtotal + (float)$tenant['arrears']; // Removed overpayment from tota
         </tr>
         <tr>
             <td>A/c NO:</td>
-            <td>TID<?= $tenantId ?></td>
+            <td><?= $accountNo ?></td>
             <td>Date:</td>
             <td><?= $date ?></td>
         </tr>
@@ -171,21 +186,16 @@ $total = $subtotal + (float)$tenant['arrears']; // Removed overpayment from tota
         <tr>
             <td>Property:</td>
             <td><?= $property ?></td>
-            <td>Reference No.:</td>
+            <td>Reference No:</td>
             <td><?= $reference ?></td>
         </tr>
         <tr>
-            <td></td>
-            <td></td>
-            <td>Amount (KES):</td>
-            <td><?= $amount ?></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td>Balance:</td>
-            <td><?= $balance ?></td>
-        </tr>
+    <td></td>
+    <td></td>
+    <td>Amount (KES):</td>
+    <td><?= $amount ?></td>
+</tr>
+
     </table>
 
     <div class="divider"></div>
@@ -206,24 +216,20 @@ $total = $subtotal + (float)$tenant['arrears']; // Removed overpayment from tota
             <td><?= $arrears ?></td>
         </tr>
         <tr>
-            <td>Overpayment</td>
-            <td><?= $overpayment ?></td>
+            <td><?= $balanceLabel ?></td>
+            <td><?= $formattedBalance ?></td>
         </tr>
     </table>
 
     <div class="divider"></div>
 
-    <!-- Subtotal and Total Sections -->
     <table class="amount-table">
-        <tr>
-            <td>SUBTOTAL (KES)</td>
-            <td><?= number_format($subtotal, 2) ?></td>
-        </tr>
-        <tr>
-            <td>TOTAL (KES)</td>
-            <td><?= number_format($total, 2) ?></td>
-        </tr>
-    </table>
+    <tr>
+        <td>TOTAL (KES)</td>
+        <td><?= $amount ?></td>
+    </tr>
+</table>
+
 
     <div class="divider"></div>
 

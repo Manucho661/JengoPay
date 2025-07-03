@@ -1,3 +1,47 @@
+<?php
+include '../db/connect.php';
+
+$stmt = $pdo->prepare("SELECT account_code, account_name FROM chart_of_accounts ORDER BY account_name ASC");
+$stmt->execute();
+$accountItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<?php
+include '../db/connect.php';
+
+// Get the latest invoice number
+$stmt = $pdo->query("SELECT invoice_number FROM invoice ORDER BY id DESC LIMIT 1");
+$lastInvoice = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Extract and increment the numeric part
+if ($lastInvoice && preg_match('/INV(\d+)/', $lastInvoice['invoice_number'], $matches)) {
+    $nextNumber = intval($matches[1]) + 1;
+} else {
+    $nextNumber = 1;
+}
+
+// Format the new invoice number (e.g., INV00001)
+$invoiceNumber = 'INV' . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
+
+$invoiceId = $pdo->lastInsertId();
+$items = $_POST['account_item']; // You'll need all rows submitted as arrays
+
+for ($i = 0; $i < count($items); $i++) {
+    $account_item = $_POST['account_item'][$i];
+    $description = $_POST['Description'][$i];
+    $qty = $_POST['quantity'][$i];
+    $unit_price = $_POST['unit_price'][$i];
+    $tax_type = $_POST['vat_option'][$i];
+    $total = $_POST['total'][$i];
+
+    $itemStmt = $pdo->prepare("INSERT INTO invoice_items (invoice_id, account_item, description, quantity, unit_price, tax_type, total)
+                               VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $itemStmt->execute([$invoiceId, $account_item, $description, $qty, $unit_price, $tax_type, $total]);
+}
+
+?>
+
+
 <!doctype html>
 <html lang="en">
   <!--begin::Head-->
@@ -358,6 +402,7 @@
         </div>
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
+        <div><?php include_once '../includes/sidebar1.php'; ?></div>
         <div class="sidebar-wrapper">
           <nav class="mt-2">
             <!--begin::Sidebar Menu-->
@@ -997,10 +1042,12 @@
                 <div class="card-body text-center">
                     <div class="form-section">
                       <b>  <h2 style="text-align: left; font-weight: 600;">Invoice Details</h2></b>
-                        <div class="form-row">
-                          <input type="text" name="invoice_number" placeholder="INV00001" required disabled>
-                          <input type="date" name="invoice_date" placeholder="Invoice Date" required>
-                        </div>
+                      <div class="form-row">
+  <input type="text" name="invoice_number" value="<?= $invoiceNumber ?>" required disabled>
+  <input type="hidden" name="invoice_number_hidden" value="<?= $invoiceNumber ?>"> <!-- for actual submission -->
+  <input type="date" name="invoice_date" placeholder="Invoice Date" required>
+</div>
+
                       </div>
 
                     <!-- </div> -->
@@ -1008,8 +1055,8 @@
                         <!-- Select Property -->
       <div class="row g-3">
       <div class="form-section col-md-6">
-     <b>  <h2 style="text-align: left;font-weight: 600;">Property</h2></b>
-        <select name="payment_method" required>
+     <b><h2 style="text-align: left;font-weight: 600;">Building</h2></b>
+        <select name="building" required>
           <option value="" disabled selected>Select Property</option>
           <option value="credit_card">Credlings Apartment</option>
           <option value="paypal">PayPal Apartment</option>
@@ -1022,7 +1069,7 @@
                       <!-- Customer Information Section -->
                       <div class="form-section col-md-6">
                         <b><h2 style="text-align: left;font-weight: 600;">Tenant Information</h2></b>
-                        <select name="payment_method" required>
+                        <select name="tenant_information" required>
                           <option value="select_tenant" disabled selected>Select Tenant</option>
                           <option value="peter_mwangi">Peter Mwangi</option>
                           <option value="brian_mwenda">Brian Mwenda</option>
@@ -1039,6 +1086,7 @@
                        <b><h2 style="text-align: left;"></h2></b>
                         <hr>
                         <table class="items-table">
+                          <form>
                           <thead>
                             <tr>
                               <th>Item (Service)</th>
@@ -1052,14 +1100,17 @@
                           </thead>
                           <tbody>
                             <tr>
-                              <td>
-                                <select name="payment_method" required>
-                                  <option value="" disabled selected>Select Option</option>
-                                  <option value="credit_card">Rent</option>
-                                  <option value="paypal">Water Bill</option>
-                                  <option value="bank_transfer">Garbage</option>
-                                </select>
-                              </td>
+                            <td>
+  <select name="account_item" required>
+    <option value="" disabled selected>Select Account Item</option>
+    <?php foreach ($accountItems as $item): ?>
+      <option value="<?= htmlspecialchars($item['account_code']) ?>">
+        <?= htmlspecialchars($item['account_name']) ?>
+      </option>
+    <?php endforeach; ?>
+  </select>
+</td>
+
                               <td><textarea name="Description" placeholder="Description" rows="1" required></textarea></td>
                               <td><input type="number" class="form-control quantity" placeholder="1"></td>
                               <td><input type="number" class="form-control unit-price" placeholder="123"></td>
@@ -1176,7 +1227,7 @@
               </div>
               <!-- /.card -->
             </div>
-            
+
             <script>
                  // Function to view the invoice in the modal
     function viewInvoice() {

@@ -178,11 +178,10 @@ $html = '
         <thead>
             <tr>
                 <th>Month</th>
-                <th class="text-right">Amount Collected</th>
-                <th class="text-right">Balance</th>
+                <th class="text-right">Rent Collected</th>
                 <th class="text-right">Penalty</th>
                 <th class="text-right">Arrears</th>
-                <th class="text-right">Overpayment</th>
+                <th class="text-right">Balance</th>
             </tr>
         </thead>
         <tbody>';
@@ -193,10 +192,10 @@ foreach ($data as $row) {
             <tr>
                 <td>' . htmlspecialchars($month) . '</td>
                 <td class="text-right">KSH ' . number_format($row['amount_collected'], 2) . '</td>
-                <td class="text-right">KSH ' . number_format($row['balances'], 2) . '</td>
                 <td class="text-right">KSH ' . number_format($row['penalties'], 2) . '</td>
                 <td class="text-right">KSH ' . number_format($row['arrears'], 2) . '</td>
-                <td class="text-right">KSH ' . number_format($row['overpayment'], 2) . '</td>
+                <td class="text-right">KSH ' . number_format($row['balances'], 2) . '</td>
+
             </tr>';
 }
 
@@ -204,10 +203,9 @@ $html .= '
             <tr class="total-row">
                 <td>Totals</td>
                 <td class="text-right">KSH ' . number_format($totals['amount'], 2) . '</td>
-                <td class="text-right">KSH ' . number_format($totals['balance'], 2) . '</td>
                 <td class="text-right">KSH ' . number_format($totals['penalty'], 2) . '</td>
                 <td class="text-right">KSH ' . number_format($totals['arrears'], 2) . '</td>
-                <td class="text-right">KSH ' . number_format($totals['overpayment'], 2) . '</td>
+                <td class="text-right">KSH ' . number_format($totals['balance'], 2) . '</td>
             </tr>
         </tbody>
     </table>
