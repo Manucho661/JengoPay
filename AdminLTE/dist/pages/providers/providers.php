@@ -32,8 +32,9 @@ try {
       background-position: center center;
       background-repeat: no-repeat;
       min-height: 100vh;
-    
+
     }
+
     .app-wrapper {
       display: grid;
       grid-template-columns: auto 1fr;
@@ -42,15 +43,21 @@ try {
         "header header"
         "main main"
         "footer footer";
-        max-width: 100vw;
-        min-height: 100vh;
+      max-width: 100vw;
+      min-height: 100vh;
     }
-    .app-wrapper, .row, .col {
-  overflow: visible !important; /* ensure no clipping */
-}
-:root {
-  --header-height: 10vh;
-}
+
+    .app-wrapper,
+    .row,
+    .col {
+      overflow: visible !important;
+      /* ensure no clipping */
+    }
+
+    :root {
+      --header-height: 10vh;
+    }
+
     .header {
       grid-area: header;
       background-color: #00192D;
@@ -63,65 +70,66 @@ try {
     .main {
       grid-area: main;
       /* padding: 20px; */
-        padding-top: var(--header-height);
+      padding-top: var(--header-height);
 
-    }  
+    }
+
     .footer {
-  grid-area: footer;
-  background-color: #00192D;
-  color: #fff;
-  padding: 40px 20px 20px;
-  font-size: 14px;
-}
+      grid-area: footer;
+      background-color: #00192D;
+      color: #fff;
+      padding: 40px 20px 20px;
+      font-size: 14px;
+    }
 
-.footer-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 30px;
-  max-width: 1200px;
-  margin: auto;
-}
+    .footer-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 30px;
+      max-width: 1200px;
+      margin: auto;
+    }
 
-.footer-section {
-  flex: 1 1 250px;
-  min-width: 200px;
-}
+    .footer-section {
+      flex: 1 1 250px;
+      min-width: 200px;
+    }
 
-.footer-section h2,
-.footer-section h3 {
-  color: #FFC107;
-  margin-bottom: 15px;
-}
+    .footer-section h2,
+    .footer-section h3 {
+      color: #FFC107;
+      margin-bottom: 15px;
+    }
 
-.footer-section ul {
-  list-style: none;
-  padding: 0;
-}
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+    }
 
-.footer-section ul li {
-  margin-bottom: 10px;
-}
+    .footer-section ul li {
+      margin-bottom: 10px;
+    }
 
-.footer-section ul li a {
-  color: #fff;
-  text-decoration: none;
-}
+    .footer-section ul li a {
+      color: #fff;
+      text-decoration: none;
+    }
 
-.footer-section ul li a:hover {
-  text-decoration: underline;
-  color: #FFC107;
-}
+    .footer-section ul li a:hover {
+      text-decoration: underline;
+      color: #FFC107;
+    }
 
-.footer-bottom {
-  text-align: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  margin-top: 30px;
-  padding-top: 15px;
-  color: #ccc;
-}
+    .footer-bottom {
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      margin-top: 30px;
+      padding-top: 15px;
+      color: #ccc;
+    }
 
-     .header-bar {
+    .header-bar {
       background-color: #00192D;
       color: #FFFFFF;
       padding: 15px 25px;
@@ -328,7 +336,7 @@ try {
 
                   <!-- Modal Body -->
                   <div class="modal-body">
-                    <form id="applyForm" class="px-2" method="POST" action="submit_application.php">
+                    <form id="applyForm" class="px-2" method="POST">
 
                       <!-- Client Price (Plain Text) -->
                       <div class="mb-3" style="font-weight: bold; font-style: oblique;">
@@ -383,17 +391,16 @@ try {
                           placeholder="Explain why you are the best fit for this job..."></textarea>
                       </div>
 
+                      <!-- Modal Footer -->
+                      <div class="modal-footer justify-content-center" style="background-color: #f8f9fa;">
+                        <button type="submit" class="btn rounded-pill px-4 py-2" form="applyForm"
+                          style="background-color: #00192D; color: #FFC107;">
+                          <i class="bi bi-check2-circle me-1"></i> Submit Application
+                        </button>
+                      </div>
+
                     </form>
                   </div>
-
-                  <!-- Modal Footer -->
-                  <div class="modal-footer justify-content-center" style="background-color: #f8f9fa;">
-                    <button type="submit" class="btn rounded-pill px-4 py-2" form="applyForm"
-                      style="background-color: #00192D; color: #FFC107;">
-                      <i class="bi bi-check2-circle me-1"></i> Submit Application
-                    </button>
-                  </div>
-
                 </div>
               </div>
             </div>
@@ -481,8 +488,9 @@ try {
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Read More / Less Script -->
+
   <script>
+    // Read more / less toggle
     document.querySelectorAll('.job-description').forEach(function(desc) {
       const fullText = desc.textContent.trim();
       const maxLength = 200;
@@ -494,20 +502,21 @@ try {
         desc.setAttribute('data-short', shortText);
 
         desc.innerHTML = `
-          ${shortText}... <span class="read-toggle">Read more</span>
-        `;
+        ${shortText}... <span class="read-toggle" style="color: blue; cursor: pointer;">Read more</span>
+      `;
 
         desc.querySelector('.read-toggle').addEventListener('click', function toggleHandler() {
           const isShort = desc.textContent.trim().endsWith('Read more');
           desc.innerHTML = isShort ?
-            `${fullText} <span class="read-toggle">Read less</span>` :
-            `${shortText}... <span class="read-toggle">Read more</span>`;
+            `${fullText} <span class="read-toggle" style="color: blue; cursor: pointer;">Read less</span>` :
+            `${shortText}... <span class="read-toggle" style="color: blue; cursor: pointer;">Read more</span>`;
 
           desc.querySelector('.read-toggle').addEventListener('click', toggleHandler);
         });
       }
     });
 
+    // Show/hide custom duration field
     function handleDurationChange(select) {
       const customDiv = document.getElementById("customDurationDiv");
       if (select.value === "other") {
@@ -516,36 +525,42 @@ try {
         customDiv.classList.add("d-none");
       }
     }
+    window.handleDurationChange = handleDurationChange; // Make function global
 
-   document.getElementById("applyForm").addEventListener("submit", function(e) {
-  e.preventDefault();
+    // Submit form using AJAX
+    document.addEventListener("DOMContentLoaded", function() {
+      const form = document.getElementById("applyForm");
 
-  const formData = new FormData(this);
+      form.addEventListener("submit", function(e) {
+        e.preventDefault();
 
-  fetch("submit_application.php", {
-      method: "POST",
-      body: formData
-    })
-    .then(response => response.json()) // Expect JSON now
-    .then(data => {
-      if (data.success) {
-        alert("Application submitted successfully!");
-        const modal = bootstrap.Modal.getInstance(document.getElementById("applyModal"));
-        modal.hide();
-        this.reset();
-        document.getElementById("customDurationDiv").classList.add("d-none");
-      } else {
-        alert("Failed to submit application: " + (data.error || "Unknown error"));
-        console.error("Server error:", data.error);
-      }
-    })
-    .catch(error => {
-      console.error("Error submitting form:", error);
-      alert("Something went wrong!");
+        const formData = new FormData(form);
+
+        fetch("submit_application.php", {
+            method: "POST",
+            body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              alert("Application submitted successfully!");
+              const modal = bootstrap.Modal.getInstance(document.getElementById("applyModal"));
+              modal.hide();
+              form.reset();
+              document.getElementById("customDurationDiv").classList.add("d-none");
+            } else {
+              alert("Failed to submit application: " + (data.error || "Unknown error"));
+              console.error("Server error:", data.error);
+            }
+          })
+          .catch(error => {
+            console.error("Error submitting form:", error);
+            alert("Something went wrong while submitting the form.");
+          });
+      });
     });
-});
-
   </script>
+
 
 
 </body>
