@@ -48,19 +48,23 @@ try {
     .app-wrapper, .row, .col {
   overflow: visible !important; /* ensure no clipping */
 }
-
+:root {
+  --header-height: 10vh;
+}
     .header {
       grid-area: header;
       background-color: #00192D;
       color: white;
+      height: var(--header-height);
       padding: 20px;
-      height: 10vh;
       vertical-align: middle;
     }
 
     .main {
       grid-area: main;
       /* padding: 20px; */
+        padding-top: var(--header-height);
+
     }  
     .footer {
   grid-area: footer;
@@ -137,7 +141,6 @@ try {
     }
 
     .nav-tabs {
-
       margin-bottom: 1.5rem;
     }
 
