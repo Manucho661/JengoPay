@@ -3,7 +3,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 header('Content-Type: application/json');
 
-require_once '../db/connect.php'; // $conn is PDO
+require_once '../../db/connect.php'; // $conn is PDO
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $your_price = $_POST['your_price'] ?? '';

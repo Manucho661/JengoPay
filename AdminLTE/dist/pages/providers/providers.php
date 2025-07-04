@@ -620,14 +620,36 @@ try {
 
       form.addEventListener("submit", function(e) {
         e.preventDefault();
+          console.log("Form submitted");
+          const formData = new FormData(form);
+          console.log("FormData created", [...formData.entries()]);
 
-        const formData = new FormData(form);
-
-        fetch("submit_application.php", {
+        fetch("actions/submit_application.php", {
             method: "POST",
             body: formData
           })
-          .then(response => response.json())
+          
+        .then(async (response) => {
+                const contentType = response.headers.get("content-type") || "";
+                    console.log("📦 Content-Type:", contentType); // ← ADD THIS LINE
+                    const rawText = await response.text();
+                    console.log("📝 Raw response text:", rawText); // ✅ Always log the raw
+
+                if (contentType.includes("application/json")) {
+                  try {
+                    const data = await response.json();
+                    console.log("✅ Parsed JSON:", data);
+                    return data;
+                  } catch (err) {
+                     console.error("❌ Failed to parse JSON:", err);
+                    return { success: false, error: "Invalid JSON response", raw: rawText };
+                  }
+                } else {
+                  const raw = await response.text();
+                  console.warn("⚠️ Non-JSON response received:", raw);
+                  return { success: false, error: "Raw response from server", raw };
+                }
+              })
           .then(data => {
             if (data.success) {
               alert("Application submitted successfully!");
