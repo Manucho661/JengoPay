@@ -3,8 +3,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 header('Content-Type: application/json');
 
-// ✅ Fixed include path
-require_once __DIR__ . '/../../../../../db/connect.php';
+require_once '../../db/connect.php'; // $conn is PDO
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $your_price = $_POST['your_price'] ?? '';
