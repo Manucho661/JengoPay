@@ -361,90 +361,87 @@ try {
 
                   </div> <!-- End scrollable -->
                 </div>
-                <!-- Apply Modal -->
-                <div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-lg modal-dialog-centered">
-                    <div class="modal-content border-0 rounded-4 shadow-lg">
+     <!-- Apply Modal -->
+<div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content border-0 rounded-4 shadow-lg">
 
-                      <!-- Modal Header -->
-                      <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
-                        <h5 class="modal-title d-flex align-items-center" id="applyModalLabel">
-                          <i class="bi bi-briefcase-fill me-2"></i> Apply for Job
-                        </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
+      <!-- Modal Header -->
+      <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
+        <h5 class="modal-title d-flex align-items-center" id="applyModalLabel">
+          <i class="bi bi-briefcase-fill me-2"></i> Apply for Job
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
 
-                      <!-- Modal Body -->
-                      <div class="modal-body">
-                        <form id="applyForm" class="px-2" method="POST" action="submit_application.php">
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <form id="applyForm" class="px-2">
 
-                          <!-- Client Price (Plain Text) -->
-                          <div class="mb-3" style="font-weight: bold; font-style: oblique;">
-                            <label class="form-label">
-                              <i class="bi bi-tags me-1" style="color: #00192D;"></i> Client Price
-                            </label>
-                            <input type="hidden" name="client_price" value="5000">
-                            <div class="form-control-plaintext ps-3" style="border: 1px solid #ced4da; border-radius: 50px; background-color: #f8f9fa;">
-                              5000
-                            </div>
-                          </div>
+          <!-- Client Price (Plain Text) -->
+          <div class="mb-3" style="font-weight: bold; font-style: oblique;">
+            <label class="form-label">
+              <i class="bi bi-tags me-1" style="color: #00192D;"></i> Client Price
+            </label>
+            <input type="hidden" name="client_price" value="5000">
+            <div class="form-control-plaintext ps-3" style="border: 1px solid #ced4da; border-radius: 50px; background-color: #f8f9fa;">
+              5000
+            </div>
+          </div>
 
+          <!-- Your Price -->
+          <div class="mb-3" style="font-weight: bold; font-style: oblique;">
+            <label for="yourPrice" class="form-label">
+              <i class="bi bi-currency-dollar me-1" style="color: #00192D;"></i> Your Price
+            </label>
+            <input type="number" name="your_price" class="form-control rounded-pill" id="yourPrice" step="1" min="0" placeholder="4500" required>
+          </div>
 
-                          <!-- Your Price -->
-                          <div class="mb-3" style="font-weight: bold; font-style: oblique;">
-                            <label for="yourPrice" class="form-label">
-                              <i class="bi bi-currency-dollar me-1" style="color: #00192D;"></i> Your Price
-                            </label>
-                            <input type="number" name="your_price" class="form-control rounded-pill" id="yourPrice" step="1" min="0" placeholder="4500">
-                          </div>
+          <!-- Duration -->
+          <div class="mb-3" style="font-weight: bold; font-style: oblique;">
+            <label for="duration" class="form-label">
+              <i class="bi bi-clock me-1" style="color: #00192D;"></i> Select Duration
+            </label>
+            <select class="form-select" name="duration" id="duration" onchange="handleDurationChange(this)" required>
+              <option selected disabled value="">Select duration</option>
+              <option value="less than 24hrs">Less than 24hrs</option>
+              <option value="1 day">1 day</option>
+              <option value="2 days">2 days</option>
+              <option value="3 days">3 days</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
 
+          <!-- Custom Duration -->
+          <div class="mb-3 d-none" id="customDurationDiv" style="font-weight: bold; font-style: oblique;">
+            <label for="customDuration" class="form-label">
+              <i class="bi bi-calendar-plus me-1" style="color: #00192D;"></i> Specify Duration
+            </label>
+            <input type="text" name="custom_duration" class="form-control rounded-pill" id="customDuration" placeholder="e.g. 5 days">
+          </div>
 
-                          <!-- Duration -->
-                          <div class="mb-3" style="font-weight: bold; font-style:oblique;">
-                            <label for="duration" class="form-label">
-                              <i class="bi bi-clock me-1" style="color: #00192D;"></i> Select Duration
-                            </label>
-                            <select class="form-select" name="duration" id="duration" onchange="handleDurationChange(this)">
-                              <option selected disabled>Select duration</option>
-                              <option value="less than 24hrs">Less than 24hrs</option>
-                              <option value="1 day">1 day</option>
-                              <option value="2 days">2 days</option>
-                              <option value="3 days">3 days</option>
-                              <option value="other">Other</option>
-                            </select>
-                          </div>
+          <!-- Cover Letter -->
+          <div class="mb-3" style="font-weight: bold; font-style: oblique;">
+            <label for="coverLetter" class="form-label">
+              <i class="bi bi-envelope-paper me-1" style="color: #00192D;"></i> Cover Letter
+            </label>
+            <textarea class="form-control rounded-4" name="cover_letter" id="coverLetter" rows="4"
+              placeholder="Explain why you are the best fit for this job..." required></textarea>
+          </div>
 
-                          <!-- Custom Duration -->
-                          <div class="mb-3 d-none" id="customDurationDiv" style="font-weight: bold; font-style:oblique;">
-                            <label for="customDuration" class="form-label">
-                              <i class="bi bi-calendar-plus me-1" style="color: #00192D;"></i> Specify Duration
-                            </label>
-                            <input type="text" name="custom_duration" class="form-control rounded-pill" id="customDuration" placeholder="e.g. 5 days">
-                          </div>
+          <!-- Modal Footer -->
+          <div class="modal-footer justify-content-center" style="background-color: #f8f9fa;">
+            <button type="submit" class="btn rounded-pill px-4 py-2" style="background-color: #00192D; color: #FFC107;">
+              <i class="bi bi-check2-circle me-1"></i> Submit Application
+            </button>
+          </div>
 
-                          <!-- Cover Letter -->
-                          <div class="mb-3" style="font-weight: bold; font-style:oblique;">
-                            <label for="coverLetter" class="form-label">
-                              <i class="bi bi-envelope-paper me-1" style="color: #00192D;"></i> Cover Letter
-                            </label>
-                            <textarea class="form-control rounded-4" name="cover_letter" id="coverLetter" rows="4"
-                              placeholder="Explain why you are the best fit for this job..."></textarea>
-                          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
-                        </form>
-                      </div>
-
-                      <!-- Modal Footer -->
-                      <div class="modal-footer justify-content-center" style="background-color: #f8f9fa;">
-                        <button type="submit" class="btn rounded-pill px-4 py-2" form="applyForm"
-                          style="background-color: #00192D; color: #FFC107;">
-                          <i class="bi bi-check2-circle me-1"></i> Submit Application
-                        </button>
-                      </div>
-
-                    </div>
-                  </div>
-                </div>
 
                 <!-- APPLICATIONS -->
                 <div class="tab-pane fade" id="applications" role="tabpanel">
@@ -584,7 +581,6 @@ try {
 
       if (fullText.length > maxLength) {
         const shortText = fullText.slice(0, maxLength).trim();
-
         desc.setAttribute('data-full', fullText);
         desc.setAttribute('data-short', shortText);
 
@@ -597,13 +593,12 @@ try {
           desc.innerHTML = isShort ?
             `${fullText} <span class="read-toggle" style="color: blue; cursor: pointer;">Read less</span>` :
             `${shortText}... <span class="read-toggle" style="color: blue; cursor: pointer;">Read more</span>`;
-
           desc.querySelector('.read-toggle').addEventListener('click', toggleHandler);
         });
       }
     });
 
-    // Show/hide custom duration field
+    // Show/hide custom duration
     function handleDurationChange(select) {
       const customDiv = document.getElementById("customDurationDiv");
       if (select.value === "other") {
@@ -612,9 +607,9 @@ try {
         customDiv.classList.add("d-none");
       }
     }
-    window.handleDurationChange = handleDurationChange; // Make function global
+    window.handleDurationChange = handleDurationChange;
 
-    // Submit form using AJAX
+    // Form submission with validation
     document.addEventListener("DOMContentLoaded", function() {
       const form = document.getElementById("applyForm");
 
@@ -652,23 +647,24 @@ try {
               })
           .then(data => {
             if (data.success) {
-              alert("Application submitted successfully!");
+              alert("✅ Application submitted successfully!");
               const modal = bootstrap.Modal.getInstance(document.getElementById("applyModal"));
               modal.hide();
               form.reset();
               document.getElementById("customDurationDiv").classList.add("d-none");
             } else {
-              alert("Failed to submit application: " + (data.error || "Unknown error"));
+              alert("❌ Failed to submit: " + (data.error || "Unknown error"));
               console.error("Server error:", data.error);
             }
           })
-          .catch(error => {
-            console.error("Error submitting form:", error);
-            alert("Something went wrong while submitting the form.");
+          .catch((error) => {
+            console.error("❌ Error submitting form:", error);
+            alert("Something went wrong while submitting the form.\n" + error.message);
           });
       });
     });
   </script>
+
 
 
 

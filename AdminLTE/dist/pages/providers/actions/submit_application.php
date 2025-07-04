@@ -11,11 +11,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $cover_letter = $_POST['cover_letter'] ?? '';
     $provider_id = 6;
 
+    // ✅ Input validation
+    if (empty($your_price) || empty($duration) || empty($cover_letter)) {
+        echo json_encode(['success' => false, 'error' => 'All fields are required.']);
+        exit;
+    }
+
     try {
         $sql = "INSERT INTO maintenance_request_proposals (bid_amount, estimated_time, cover_letter, provider_id)
                 VALUES (:bid_amount, :estimated_time, :cover_letter, :provider_id)";
 
-        $stmt = $conn->prepare($sql);
+        $stmt = $pdo->prepare($sql);
         $stmt->execute([
             ':bid_amount' => $your_price,
             ':estimated_time' => $duration,
@@ -25,7 +31,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         echo json_encode(['success' => true]);
     } catch (PDOException $e) {
-        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        echo json_encode(['success' => false, 'error' => 'DB Error: ' . $e->getMessage()]);
     }
+} else {
+    echo json_encode(['success' => false, 'error' => 'Invalid request method.']);
 }
-?>
+

@@ -197,6 +197,7 @@ try {
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
   <link rel="stylesheet" href="announcements.css">
 
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <style>
@@ -2277,6 +2278,50 @@ try {
   </div>
 
 
+
+  <!-- Edit Draft Modal -->
+<div class="modal fade" id="editDraftModal" tabindex="-1" aria-labelledby="editDraftModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
+        <h5 class="modal-title" id="editDraftModalLabel">Edit Draft Announcement</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="editDraftForm">
+          <input type="hidden" id="editDraftId" name="id">
+          <div class="mb-3">
+            <label for="editPriority" class="form-label">Priority</label>
+            <select class="form-select" id="editPriority" name="priority" required>
+              <!-- <option value="Normal">Normal</option>
+              <option value="High">High</option>
+              <option value="Urgent">Urgent</option> -->
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="editRecipient" class="form-label">Recipient</label>
+            <!-- <select class="form-select" id="editRecipient" name="recipient" required>
+              <option value="All Tenants">All Tenants</option>
+              <option value="Specific Building">Specific Building</option>
+              <option value="Individual Tenant">Individual Tenant</option>
+            </select> -->
+          </div>
+          <div class="mb-3">
+            <label for="editMessage" class="form-label">Message</label>
+            <textarea class="form-control" id="editMessage" name="message" rows="5" required></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="saveDraftChanges" style="background-color: #FFC107; color: #00192D; border: none;">
+          <i class="fas fa-save me-1"></i> Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
   <!-- <script>
 document.getElementById('notificationForm').addEventListener('submit', function(event) {
   event.preventDefault(); // Prevent actual form submission
@@ -2369,7 +2414,84 @@ document.getElementById('notificationForm').addEventListener('submit', function(
   });
 </script>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize modal
+    const editDraftModal = new bootstrap.Modal(document.getElementById('editDraftModal'));
 
+    // Save changes handler
+    document.getElementById('saveDraftChanges').addEventListener('click', async function() {
+        const saveBtn = this;
+        const originalBtnContent = saveBtn.innerHTML;
+
+        try {
+            // Show loading state
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Saving...';
+
+            // Get form data
+            const form = document.getElementById('editDraftForm');
+            const formData = new FormData(form);
+
+            // Convert to URL-encoded format
+            const urlEncoded = new URLSearchParams(formData).toString();
+
+            // Send update request
+            const response = await fetch('update_draft.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: urlEncoded
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                throw new Error(result.error || 'Failed to save changes');
+            }
+
+            // Show success message
+            showAlert('Draft updated successfully!', 'success');
+
+            // Close modal
+            editDraftModal.hide();
+
+            // Refresh the drafts list
+            showDrafts();
+
+        } catch (error) {
+            console.error('Error saving draft:', error);
+            showAlert(error.message || 'Failed to save changes. Please try again.', 'danger');
+        } finally {
+            // Restore button state
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = originalBtnContent;
+        }
+    });
+
+    // Helper function to show alerts
+    function showAlert(message, type) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+        alertDiv.role = 'alert';
+        alertDiv.innerHTML = `
+            <i class="fas ${type === 'danger' ? 'fa-exclamation-circle' : 'fa-check-circle'} me-2"></i>
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+
+        // Add to page (you might want to adjust this selector)
+        document.body.appendChild(alertDiv);
+
+        // Auto-dismiss after 5 seconds
+        setTimeout(() => {
+            const bsAlert = new bootstrap.Alert(alertDiv);
+            bsAlert.close();
+        }, 5000);
+    }
+});
+</script>
 <script>
     const form = document.getElementById('notificationForm');
     const draftKey = 'notification_draft';
@@ -2685,22 +2807,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   </script>
 
-  <script>
-    function showDrafts() {
-      fetch('get_drafts.php')
-        .then(response => response.json())
-        .then(data => {
-          const container = document.getElementById('announcementList');
-          container.innerHTML = '';
+<script>
+// Initialize Bootstrap modal
+const editDraftModal = new bootstrap.Modal(document.getElementById('editDraftModal'));
 
-          if (data.length === 0) {
-            container.innerHTML = '<p>No drafts found.</p>';
-            return;
-          }
+function showDrafts() {
+  fetch('get_drafts.php')
+    .then(response => response.json())
+    .then(data => {
+      const container = document.getElementById('announcementList');
+      container.innerHTML = '';
 
-          data.forEach(item => {
-            const iconClass = getIconByPriority(item.priority);
-            const html = `
+      if (data.length === 0) {
+        container.innerHTML = '<p>No drafts found.</p>';
+        return;
+      }
+
+      data.forEach(item => {
+        const iconClass = getIconByPriority(item.priority);
+        const html = `
           <div class="notification-item unread" id="announcement-${item.id}">
             <div class="notification-icon ${iconClass}">
               <i class="fas ${getIconSymbol(item.priority)}"></i>
@@ -2722,36 +2847,78 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
           </div>
         `;
-            container.insertAdjacentHTML('beforeend', html);
-          });
+        container.insertAdjacentHTML('beforeend', html);
+      });
 
-          // Add event listeners for drafts
-          document.querySelectorAll('.edit-btn').forEach(button => {
-            button.addEventListener('click', function() {
-              const messageId = this.getAttribute('data-id');
-              editSentMessage(messageId);
-            });
-          });
+      // Add event listeners for edit buttons
+      document.querySelectorAll('.edit-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          const draftId = this.getAttribute('data-id');
+          showEditModal(draftId);
+        });
+      });
 
-          document.querySelectorAll('.archive-btn').forEach(button => {
-            button.addEventListener('click', function() {
-              archiveSentMessage(this.getAttribute('data-id'));
-            });
-          });
+      document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          deleteDraft(this.getAttribute('data-id'));
+        });
+      });
+    })
+    .catch(error => console.error('Error loading drafts:', error));
+}
 
-          document.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', function() {
-              deleteDraft(this.getAttribute('data-id'));
-            });
-          });
-        })
-        .catch(error => console.error('Error loading drafts:', error));
-    }
+function showEditModal(draftId) {
+  // Fetch draft details
+  fetch(`get_draft_details.php?id=${draftId}`)
+    .then(response => response.json())
+    .then(draft => {
+      if (draft) {
+        // Populate modal fields
+        document.getElementById('editDraftId').value = draft.id;
+        document.getElementById('editPriority').value = draft.priority;
+        document.getElementById('editRecipient').value = draft.recipient;
+        document.getElementById('editMessage').value = draft.message;
 
-    function deleteDraft(draftId) {
-      if (!confirm('Are you sure you want to permanently delete this draft? This action cannot be undone.')) {
-        return;
+        // Show modal
+        editDraftModal.show();
+      } else {
+        showAlert('Draft not found', 'error');
       }
+    })
+    .catch(error => {
+      console.error('Error fetching draft details:', error);
+      showAlert('Failed to load draft details', 'error');
+    });
+}
+
+// Save changes handler
+document.getElementById('saveDraftChanges').addEventListener('click', function() {
+  const formData = new FormData(document.getElementById('editDraftForm'));
+
+  fetch('update_draft.php', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      showAlert('Draft updated successfully', 'success');
+      editDraftModal.hide();
+      showDrafts(); // Refresh the list
+    } else {
+      showAlert('Failed to update draft: ' + (data.error || data.message), 'error');
+    }
+  })
+  .catch(error => {
+    console.error('Error updating draft:', error);
+    showAlert('An error occurred while updating the draft', 'error');
+  });
+});
+
+function deleteDraft(draftId) {
+  if (!confirm('Are you sure you want to permanently delete this draft? This action cannot be undone.')) {
+    return;
+  }
 
   fetch('delete_draft.php', {
     method: 'POST',
@@ -2760,23 +2927,172 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     body: `id=${draftId}`
   })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById(`announcement-${draftId}`)?.remove();
+      showAlert('Draft deleted successfully', 'success');
+    } else {
+      showAlert('Failed to delete draft: ' + (data.error || data.message), 'error');
+    }
+  })
+  .catch(error => {
+    console.error('Error deleting draft:', error);
+    showAlert('An error occurred while deleting the draft', 'error');
+  });
 }
-//   .then(response => response.json())
-//   .then(data => {
-//     if (data.success) {
-//       document.getElementById(`announcement-${draftId}`)?.remove();
-//       showAlert('Draft deleted successfully', 'success');
-//     } else {
-//       showAlert('Failed to delete draft: ' + (data.error || data.message), 'error');
-//     }
-//   })
-//   .catch(error => {
-//     console.error('Error deleting draft:', error);
-//     showAlert('An error occurred while deleting the draft', 'error');
-//   });
-// }
+
+// Helper function to show alerts/toasts
+function showAlert(message, type = 'success') {
+  const toast = document.createElement('div');
+  toast.className = `toast align-items-center text-white bg-${type} border-0 show`;
+  toast.setAttribute('role', 'alert');
+  toast.setAttribute('aria-live', 'assertive');
+  toast.setAttribute('aria-atomic', 'true');
+  toast.style.position = 'fixed';
+  toast.style.bottom = '20px';
+  toast.style.right = '20px';
+  toast.style.zIndex = '9999';
+
+  toast.innerHTML = `
+    <div class="d-flex">
+      <div class="toast-body">
+        <i class="fas ${type === 'danger' ? 'fa-exclamation-circle' : 'fa-check-circle'} me-2"></i>
+        ${message}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  `;
+
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, 5000);
+}
 </script>
 
+
+<script>
+  function showEditModal(draftId) {
+  console.log(`Attempting to load draft ID: ${draftId}`); // Debugging
+
+  fetch(`get_draft_details.php?id=${draftId}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(draft => {
+      console.log('Received draft data:', draft); // Debugging
+
+      if (draft.error) {
+        throw new Error(draft.error);
+      }
+
+      if (!draft) {
+        throw new Error('Draft data is empty');
+      }
+
+      // Populate modal fields
+      document.getElementById('editDraftId').value = draft.id;
+      document.getElementById('editPriority').value = draft.priority;
+      document.getElementById('editRecipient').value = draft.recipient;
+      document.getElementById('editMessage').value = draft.message;
+
+      // Show modal
+      editDraftModal.show();
+    })
+    .catch(error => {
+      console.error('Error in showEditModal:', error);
+
+      // Show detailed error to user
+      let errorMessage = 'Failed to load draft details';
+      if (error.message.includes('Draft not found')) {
+        errorMessage = 'This draft no longer exists';
+      } else if (error.message.includes('Invalid draft ID')) {
+        errorMessage = 'Invalid draft selected';
+      }
+
+      showAlert(`${errorMessage}. Please try again.`, 'danger');
+
+      // Optional: Refresh the drafts list
+      showDrafts();
+    });
+}
+</script>
+
+<script>
+  async function showEditModal(draftId) {
+    try {
+        // Show loading state
+        const modal = document.getElementById('editDraftModal');
+        const modalBody = modal.querySelector('.modal-body');
+        modalBody.innerHTML = `
+            <div class="text-center my-5">
+                <div class="spinner-border text-warning" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Loading draft details...</p>
+            </div>
+        `;
+
+        const modalInstance = bootstrap.Modal.getOrCreateInstance(modal);
+        modalInstance.show();
+
+        // Fetch draft data
+        const response = await fetch(`get_draft_details.php?id=${draftId}`);
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.error || 'Failed to fetch draft details');
+        }
+
+        // Populate form
+        modalBody.innerHTML = `
+            <form id="editDraftForm">
+                <input type="hidden" id="editDraftId" name="id" value="${result.data.id}">
+                <div class="mb-3">
+                    <label for="editPriority" class="form-label">Priority</label>
+                    <select class="form-select" id="editPriority" name="priority" required>
+                        <option value="Normal" ${result.data.priority === 'Normal' ? 'selected' : ''}>Normal</option>
+                        <option value="High" ${result.data.priority === 'High' ? 'selected' : ''}>High</option>
+                        <option value="Urgent" ${result.data.priority === 'Urgent' ? 'selected' : ''}>Urgent</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="editRecipient" class="form-label">Recipient</label>
+                    <select class="form-select" id="editRecipient" name="recipient" required>
+                        <option value="All Tenants" ${result.data.recipient === 'All Tenants' ? 'selected' : ''}>All Tenants</option>
+                        <option value="Specific Building" ${result.data.recipient === 'Specific Building' ? 'selected' : ''}>Specific Building</option>
+                        <option value="Individual Tenant" ${result.data.recipient === 'Individual Tenant' ? 'selected' : ''}>Individual Tenant</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="editMessage" class="form-label">Message</label>
+                    <textarea class="form-control" id="editMessage" name="message" rows="5" required>${result.data.message || ''}</textarea>
+                </div>
+            </form>
+        `;
+
+    } catch (error) {
+        console.error('Error loading draft:', error);
+        modalBody.innerHTML = `
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                ${error.message || 'Failed to load draft details'}
+            </div>
+            <div class="text-center mt-3">
+                <button class="btn btn-warning" onclick="showEditModal(${draftId})">
+                    <i class="fas fa-sync-alt me-1"></i> Try Again
+                </button>
+            </div>
+        `;
+    }
+}
+</script>
 
   <script>
     document.addEventListener('click', function(e) {
@@ -2788,12 +3104,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   </script>
 
-  <script>
+  <!-- <script>
     function editDraft(id) {
       console.log('Editing draft with ID:', id); // for testing
       window.location.href = `edit_draft.php?id=${id}`;
     }
-  </script>
+  </script> -->
 
   <!-- <script>
     function showNotification(message, type = 'success') {
@@ -3664,9 +3980,9 @@ function sendMessage() {
       });
   }
 
-  function editDraft(id) {
-    window.location.href = `edit_draft.php?id=${id}`;
-  }
+  // function editDraft(id) {
+  //   window.location.href = `edit_draft.php?id=${id}`;
+  // }
 
   // Enable interactions after DOM is ready
   document.addEventListener('DOMContentLoaded', () => {
