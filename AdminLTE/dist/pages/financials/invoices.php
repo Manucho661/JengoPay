@@ -24,21 +24,6 @@ if ($lastInvoice && preg_match('/INV(\d+)/', $lastInvoice['invoice_number'], $ma
 $invoiceNumber = 'INV' . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
 
 $invoiceId = $pdo->lastInsertId();
-$items = $_POST['account_item']; // You'll need all rows submitted as arrays
-
-for ($i = 0; $i < count($items); $i++) {
-    $account_item = $_POST['account_item'][$i];
-    $description = $_POST['Description'][$i];
-    $qty = $_POST['quantity'][$i];
-    $unit_price = $_POST['unit_price'][$i];
-    $tax_type = $_POST['vat_option'][$i];
-    $total = $_POST['total'][$i];
-
-    $itemStmt = $pdo->prepare("INSERT INTO invoice_items (invoice_id, account_item, description, quantity, unit_price, tax_type, total)
-                               VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $itemStmt->execute([$invoiceId, $account_item, $description, $qty, $unit_price, $tax_type, $total]);
-}
-
 ?>
 
 
@@ -135,49 +120,102 @@ for ($i = 0; $i < count($items); $i++) {
 
   </style>
   <script>
-    function addRow() {
-        const table = document.querySelector(".items-table tbody");
-        const newRow = document.createElement("tr");
-        newRow.innerHTML = `
-          <td>
-                                <select name="payment_method" required>
-                                    <option value="" disabled selected>Select Option</option>
-                                    <option value="credit_card">Rent</option>
-                                    <option value="paypal">Water Bill</option>
-                                    <option value="bank_transfer">Garbage</option>
-                                </select>
-                            </td>
-                            <td><textarea name="Description" placeholder="Description" rows="1" required></textarea></td>
-                            <td><input type="number" class="form-control unit-price" placeholder="123"></td>
-                            <td><input type="number" class="form-control quantity" placeholder="1"></td>
-                            <td><input type="number" class="form-control subtotal" placeholder="0" readonly></td>
-                            <td>
-                              <select class="form-select vat-option">
-                                <option value="" disabled selected>Select Option</option>
-                                <option value="inclusive">VAT 16% Inclusive</option>
-                                <option value="exclusive">VAT 16% Exclusive</option>
-                                <option value="zero">Zero Rated</option>
-                                <option value="exempt">Exempted</option>
-                              </select>
-                            </td>
-                            <td><input type="number" class="form-control vat-amount" placeholder="0" readonly></td>
-                            <td><input type="number" class="form-control total" placeholder="0" readonly></td>
-                            <td><button type="button" class="delete-btn" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>
+function addRow() {
+  const table = document.querySelector(".items-table tbody");
+  const newRow = document.createElement("tr");
 
-        `;
-        table.appendChild(newRow);
-    }
-    function deleteRow(btn) {
-        btn.closest("tr").remove();
-    }
-        function printInvoice() {
-            window.print();
-        }
-        function downloadPDF() {
-            const element = document.querySelector(".invoice-container");
-            html2pdf().from(element).save("invoice.pdf");
-        }
+  newRow.innerHTML = `
+    <td>
+      <select name="account_item[]" required>
+        <option value="" disabled selected>Select Option</option>
+        <option value="rent">Rent</option>
+        <option value="water">Water Bill</option>
+        <option value="garbage">Garbage</option>
+      </select>
+    </td>
+    <td><textarea name="description[]" placeholder="Description" rows="1" required></textarea></td>
+    <td><input type="number" name="unit_price[]" class="form-control unit-price" placeholder="123" required></td>
+    <td><input type="number" name="quantity[]" class="form-control quantity" placeholder="1" required></td>
+    <td><input type="number" class="form-control subtotal" placeholder="0" readonly></td>
+    <td>
+      <select name="taxes[]" class="form-select vat-option" required>
+        <option value="" disabled selected>Select Option</option>
+        <option value="inclusive">VAT 16% Inclusive</option>
+        <option value="exclusive">VAT 16% Exclusive</option>
+        <option value="zero">Zero Rated</option>
+        <option value="exempt">Exempted</option>
+      </select>
+    </td>
+    <td><input type="number" class="form-control vat-amount" placeholder="0" readonly></td>
+    <td><input type="number" name="total[]" class="form-control total" placeholder="0" readonly></td>
+    <td><button type="button" class="delete-btn btn btn-danger btn-sm" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>
+  `;
+
+  table.appendChild(newRow);
+  attachEvents(newRow); // Attach calculation events to new row
+}
+
+function deleteRow(btn) {
+  btn.closest("tr").remove();
+  updateTotals();
+}
+
+function attachEvents(row) {
+  const unitPriceInput = row.querySelector(".unit-price");
+  const quantityInput = row.querySelector(".quantity");
+  const vatSelect = row.querySelector(".vat-option");
+
+  unitPriceInput.addEventListener("input", () => calculateRow(row));
+  quantityInput.addEventListener("input", () => calculateRow(row));
+  vatSelect.addEventListener("change", () => calculateRow(row));
+}
+
+function calculateRow(row) {
+  const unitPrice = parseFloat(row.querySelector(".unit-price").value) || 0;
+  const quantity = parseFloat(row.querySelector(".quantity").value) || 0;
+  const vatOption = row.querySelector(".vat-option").value;
+
+  const subtotal = unitPrice * quantity;
+  let vatAmount = 0;
+
+  if (vatOption === "inclusive") {
+    vatAmount = subtotal - (subtotal / 1.16);
+  } else if (vatOption === "exclusive") {
+    vatAmount = subtotal * 0.16;
+  } else if (vatOption === "zero" || vatOption === "exempt") {
+    vatAmount = 0;
+  }
+
+  const total = (vatOption === "inclusive") ? subtotal : subtotal + vatAmount;
+
+  row.querySelector(".subtotal").value = subtotal.toFixed(2);
+  row.querySelector(".vat-amount").value = vatAmount.toFixed(2);
+  row.querySelector(".total").value = total.toFixed(2);
+
+  updateTotals();
+}
+
+function updateTotals() {
+  // Optional: implement total summary across all rows here if needed
+}
+
+function printInvoice() {
+  window.print();
+}
+
+function downloadPDF() {
+  const element = document.querySelector(".invoice-container");
+  html2pdf().from(element).save("invoice.pdf");
+}
+
+// Attach events to initial row(s) after DOM is ready
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".items-table tbody tr").forEach(row => {
+    attachEvents(row);
+  });
+});
 </script>
+
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -1041,118 +1079,96 @@ for ($i = 0; $i < count($items); $i++) {
                   <!-- <div class="form-section col-md-6"> -->
                 <div class="card-body text-center">
                     <div class="form-section">
-                      <b>  <h2 style="text-align: left; font-weight: 600;">Invoice Details</h2></b>
-                      <div class="form-row">
-  <input type="text" name="invoice_number" value="<?= $invoiceNumber ?>" required disabled>
-  <input type="hidden" name="invoice_number_hidden" value="<?= $invoiceNumber ?>"> <!-- for actual submission -->
-  <input type="date" name="invoice_date" placeholder="Invoice Date" required>
-</div>
+                      <b><h2 style="text-align: left; font-weight: 600;">Invoice Details</h2></b>
+                      <form method="POST" action="submit_invoice.php">
+  <div class="form-row">
+    <input type="text" value="<?= $invoiceNumber ?>" disabled>
+    <input type="hidden" name="invoice_number" value="<?= $invoiceNumber ?>"> <!-- for actual submission -->
+    <input type="date" name="invoice_date" placeholder="Invoice Date" required>
+  </div>
 
-                      </div>
+  <div class="row g-3">
+    <div class="form-section col-md-6">
+      <b><h2 style="text-align: left;font-weight: 600;">Building</h2></b>
+      <select name="building" required>
+        <option value="" disabled selected>Select Property</option>
+        <option value="Credlings Apartment">Credlings Apartment</option>
+        <option value="PayPal Apartment">PayPal Apartment</option>
+        <option value="Banky Apartments">Banky Apartments</option>
+        <option value="Cashy Apartments">Cashy Apartments</option>
+      </select>
+    </div>
 
-                    <!-- </div> -->
-<!-- </div> -->
-                        <!-- Select Property -->
-      <div class="row g-3">
-      <div class="form-section col-md-6">
-     <b><h2 style="text-align: left;font-weight: 600;">Building</h2></b>
-        <select name="building" required>
-          <option value="" disabled selected>Select Property</option>
-          <option value="credit_card">Credlings Apartment</option>
-          <option value="paypal">PayPal Apartment</option>
-          <option value="bank_transfer">Banky Apartments</option>
-          <option value="cash">Cashy Apartments</option>
-        </select>
-      </div>
-      <!-- end -->
+    <div class="form-section col-md-6">
+      <b><h2 style="text-align: left;font-weight: 600;">Tenant Information</h2></b>
+      <select name="tenant" required>
+        <option value="" disabled selected>Select Tenant</option>
+        <option value="peter_mwangi">Peter Mwangi</option>
+        <option value="brian_mwenda">Brian Mwenda</option>
+        <option value="silas_qwetu">Silas Qwetu</option>
+      </select>
+    </div>
+  </div>
 
-                      <!-- Customer Information Section -->
-                      <div class="form-section col-md-6">
-                        <b><h2 style="text-align: left;font-weight: 600;">Tenant Information</h2></b>
-                        <select name="tenant_information" required>
-                          <option value="select_tenant" disabled selected>Select Tenant</option>
-                          <option value="peter_mwangi">Peter Mwangi</option>
-                          <option value="brian_mwenda">Brian Mwenda</option>
-                          <option value="silas_qwetu">Silas Qwetu</option>
-                        </select>
-                      </div>
-                </div>
-                <!-- </div>
-                </div> -->
+  <!-- Item Table -->
+  <div class="form-section">
+    <hr>
+    <table class="items-table">
+      <thead>
+        <tr>
+          <th>Item (Service)</th>
+          <th>Description</th>
+          <th>Qty</th>
+          <th>Unit Price</th>
+          <th>Taxes</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <select name="account_item[]" required>
+              <option value="" disabled selected>Select Account Item</option>
+              <?php foreach ($accountItems as $item): ?>
+                <option value="<?= htmlspecialchars($item['account_code']) ?>">
+                  <?= htmlspecialchars($item['account_name']) ?>
+                </option>
+              <?php endforeach; ?>
+            </select>
+          </td>
+          <td><textarea name="description[]" placeholder="Description" rows="1" required></textarea></td>
+          <td><input type="number" name="quantity[]" class="form-control quantity" placeholder="1" required></td>
+          <td><input type="number" name="unit_price[]" class="form-control unit-price" placeholder="123" required></td>
+          <td>
+            <select name="taxes[]" class="form-select vat-option" required>
+              <option value="" disabled selected>Select Option</option>
+              <option value="inclusive">VAT 16% Inclusive</option>
+              <option value="exclusive">VAT 16% Exclusive</option>
+              <option value="zero">Zero Rated</option>
+              <option value="exempted">Exempted</option>
+            </select>
+          </td>
+          <td>
+            <input type="number" name="total[]" class="form-control total" placeholder="0" readonly>
+            <button type="button" class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
+              <i class="fa fa-trash" style="font-size: 12px;"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <button type="button" class="add-btn" onclick="addRow()">
+      <i class="fa fa-plus"></i> ADD MORE
+    </button>
+  </div>
 
-
-                      <!-- Item Details Section -->
-                      <div class="form-section">
-                       <b><h2 style="text-align: left;"></h2></b>
-                        <hr>
-                        <table class="items-table">
-                          <form>
-                          <thead>
-                            <tr>
-                              <th>Item (Service)</th>
-                              <th>Description</th>
-                              <th>Qty</th>
-                              <th>Unit Price</th>
-                              <th>Taxes</th>
-                              <th>Total</th>
-                              <!-- <th>Delete</th> -->
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                            <td>
-  <select name="account_item" required>
-    <option value="" disabled selected>Select Account Item</option>
-    <?php foreach ($accountItems as $item): ?>
-      <option value="<?= htmlspecialchars($item['account_code']) ?>">
-        <?= htmlspecialchars($item['account_name']) ?>
-      </option>
-    <?php endforeach; ?>
-  </select>
-</td>
-
-                              <td><textarea name="Description" placeholder="Description" rows="1" required></textarea></td>
-                              <td><input type="number" class="form-control quantity" placeholder="1"></td>
-                              <td><input type="number" class="form-control unit-price" placeholder="123"></td>
-                              <td>
-                                <select class="form-select vat-option">
-                                  <option value="" disabled selected>Select Option</option>
-                                  <option value="inclusive">VAT 16% Inclusive</option>
-                                  <option value="exclusive">VAT 16% Exclusive</option>
-                                  <option value="zero">Zero Rated</option>
-                                  <option value="exempted">Exempted</option>
-                                </select>
-                              </td>
-                              <td><input type="number" class="form-control total" placeholder="0" readonly >
-                                <button type="button" class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
-                                  <i class="fa fa-trash" style="font-size: 12px;"></i>
-                                </button>
-
-
-                            </tr>
-                          </tbody>
-                        </table>
+  <!-- Submit -->
+  <div class="form-btns">
+    <button type="submit">Submit</button>
+  </div>
+</form>
 
 
-
-
-                <button type="button" class="add-btn" onclick="addRow()">
-                  <i class="fa fa-plus"></i>
-                  ADD MORE</button>
-            </div>
-
-                      <!-- Total Section
-                      <div class="total-row mt-3">
-                        <div><strong>Total Amount: KSH <span id="totalAmount">0.00</span></strong></div>
-                      </div> -->
-
-
-                      <!-- Buttons -->
-                      <div class="form-btns">
-                        <button type="submit" style="margin-left: 50rem;">Submit</button>
-                        <!-- <button type="reset"></button> -->
-                      </div>
-                    </form>
                 </div>
             </div>
                 <!-- /.card-body -->
