@@ -159,11 +159,14 @@ try {
       font-weight: 500;
       padding: 10px 20px;
       transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
 
     .nav-tabs .nav-link:hover {
       background-color: #FFC107;
       color: #00192D;
+       z-index: 2;
     }
 
     .nav-tabs .nav-link.active {
@@ -172,7 +175,29 @@ try {
       font-weight: bold;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
+    .nav-tabs .nav-link::before{
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 100%;
+      width: 100%;
+      height: 100%;
+      background-color: #FFC107;
+      transition: all 0.4s ease;
+      z-index: 0;
+    }
+  .nav-tabs .nav-link:hover::before {
+      left: 0;
+    }
 
+    .nav-tabs .nav-link:hover {
+      color: #00192D;
+    }
+
+    .nav-tabs .nav-link span {
+      position: relative;
+      z-index: 2;
+    }
     .tab-content {
       background-color: #fff;
       border: 1px solid #dee2e6;
@@ -285,13 +310,13 @@ try {
             <div class="col-lg-9">
               <ul class="nav nav-tabs mb-3 gap-3" id="jobTabs" role="tablist">
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link active" id="find-tab" data-bs-toggle="tab" data-bs-target="#find" type="button" role="tab">Find a Job</button>
+                  <button class="nav-link active " id="find-tab" data-bs-toggle="tab" data-bs-target="#find" type="button" role="tab"> <span>Find a Job</span> </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="apps-tab" data-bs-toggle="tab" data-bs-target="#applications" type="button" role="tab">Your Applications</button>
+                  <button class="nav-link" id="apps-tab" data-bs-toggle="tab" data-bs-target="#applications" type="button" role="tab"><span>Your Applications</span> </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab">Previous Jobs</button>
+                  <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab"><span>Previous Jobs</span></button>
                 </li>
               </ul>
 
@@ -590,49 +615,37 @@ try {
 
       form.addEventListener("submit", function(e) {
         e.preventDefault();
+          console.log("Form submitted");
+          const formData = new FormData(form);
+          console.log("FormData created", [...formData.entries()]);
 
-        // Input validation
-        const yourPrice = document.getElementById("yourPrice").value.trim();
-        const duration = document.getElementById("duration").value;
-        const customDuration = document.getElementById("customDuration").value.trim();
-        const coverLetter = document.getElementById("coverLetter").value.trim();
-
-        if (!yourPrice || isNaN(yourPrice) || parseFloat(yourPrice) <= 0) {
-          alert("Please enter a valid price.");
-          return;
-        }
-
-        if (!duration) {
-          alert("Please select a duration.");
-          return;
-        }
-
-        if (duration === "other" && !customDuration) {
-          alert("Please specify a custom duration.");
-          return;
-        }
-
-        if (!coverLetter) {
-          alert("Please enter a cover letter.");
-          return;
-        }
-
-        const formData = new FormData(form);
-
-        fetch("../providers/actions/submit_application.php", {
+        fetch("actions/submit_application.php", {
             method: "POST",
             body: formData
           })
-          .then(async (response) => {
-            // Make sure it returns JSON
-            const contentType = response.headers.get("content-type");
-            if (!contentType || !contentType.includes("application/json")) {
-              const text = await response.text();
-              throw new Error("Unexpected response format: " + text);
-            }
-            return response.json();
-          })
-          .then((data) => {
+          
+        .then(async (response) => {
+                const contentType = response.headers.get("content-type") || "";
+                    console.log("📦 Content-Type:", contentType); // ← ADD THIS LINE
+                    const rawText = await response.text();
+                    console.log("📝 Raw response text:", rawText); // ✅ Always log the raw
+
+                if (contentType.includes("application/json")) {
+                  try {
+                    const data = await response.json();
+                    console.log("✅ Parsed JSON:", data);
+                    return data;
+                  } catch (err) {
+                     console.error("❌ Failed to parse JSON:", err);
+                    return { success: false, error: "Invalid JSON response", raw: rawText };
+                  }
+                } else {
+                  const raw = await response.text();
+                  console.warn("⚠️ Non-JSON response received:", raw);
+                  return { success: false, error: "Raw response from server", raw };
+                }
+              })
+          .then(data => {
             if (data.success) {
               alert("✅ Application submitted successfully!");
               const modal = bootstrap.Modal.getInstance(document.getElementById("applyModal"));

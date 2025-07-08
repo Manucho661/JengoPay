@@ -374,8 +374,8 @@ width: 100%;
                                                     </label> <sup class="text-danger"><b>*</b></sup>
                                                     <br>
                                                     <select class="form-control" name="unit_type" id="unit_type" >
-                                                      <option value="C219">Residential</option>
-                                                      <option value="B14">Commercial</option>
+                                                      <option value="Residential">Residential</option>
+                                                      <option value="Commercial">Commercial</option>
 
                                                     </select>
                                                     <b class="text-danger" id="unit_nameError"></b>
@@ -386,16 +386,13 @@ width: 100%;
                                                     <b class="text-danger" id="floor_number_nameError"></b>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <label>Unit</label> <sup class="text-danger"><b>*</b></sup>
-                                                    <br>
-                                                    <select class="form-control" name="unit_name" id="unit_name" >
-                                                      <option value="C219">C219</option>
-                                                      <option value="B14">B14</option>
-                                                      <option value="M145">E214</option>
-                                                      <option value="M5">MC23</option>
-                                                    </select>
-                                                    <b class="text-danger" id="unit_nameError"></b>
-                                                </div>
+    <label>Unit</label> <sup class="text-danger"><b>*</b></sup>
+    <br>
+    <select class="form-control" name="unit_name" id="unit_name" required>
+        <option value="">-- Select Unit --</option>
+    </select>
+    <b class="text-danger" id="unit_nameError"></b>
+</div>
                                             </div>
                                         </div>
                                         <div class="card-footer text-right">
@@ -959,9 +956,73 @@ width: 100%;
 
   </script>
 
+<!-- <script> -->
+  <script>
+$(document).ready(function() {
+    // When building or unit type changes
+    $('#building_name, #unit_type').change(function() {
+        updateUnitDropdown();
+    });
+
+    // When unit number input changes
+    $('#unit_number').on('input', function() {
+        updateUnitDropdown();
+    });
+
+    function updateUnitDropdown() {
+        var buildingId = $('#building_name').val();
+        var unitType = $('#unit_type').val();
+        var unitNumber = $('#unit_number').val();
+
+        // Only proceed if both building and type are selected
+        if (!buildingId || !unitType) {
+            $('#unit_name').empty().append('<option value="">-- Select Building and Unit Type First --</option>');
+            return;
+        }
+
+        $.ajax({
+            url: 'fetch_units.php',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                building_id: buildingId,
+                unit_type: unitType,
+                unit_number: unitNumber
+            },
+            success: function(response) {
+                populateUnitDropdown(response);
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching units:", error);
+                $('#unit_name').empty().append('<option value="">Error loading units</option>');
+            }
+        });
+    }
+
+    function populateUnitDropdown(units) {
+        var $dropdown = $('#unit_name');
+        $dropdown.empty().append('<option value="">-- Select Unit --</option>');
+
+        if (units && units.length > 0) {
+            $.each(units, function(index, unit) {
+                $dropdown.append(
+                    $('<option>', {
+                        value: unit.unit_id,
+                        text: unit.unit_number,
+                        'data-building': unit.building_id,
+                        'data-type': unit.unit_type
+                    })
+                );
+            });
+        } else {
+            $dropdown.append('<option value="">No units found</option>');
+        }
+    }
+});
+</script>
+
 
   <script>
-
 $(document).ready(function(){
         var tenant_f_nameError = '';
         var tenant_m_nameError = '';
