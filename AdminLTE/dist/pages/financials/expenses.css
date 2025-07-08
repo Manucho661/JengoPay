@@ -12,6 +12,57 @@
   justify-content: center;
 }
 
+
+ .personal-info-icon{
+      color: #FFC107;
+    }
+    .personal-info.item-name{
+      /* color: rgb(41, 41, 41); */
+      color: #767676;
+      font-weight: 600;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+  .personal-info-card-value.email{color: #0072C6;
+  }
+
+  .personal-info-card-value.email:hover{
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .personal-info-card-value.phone{
+    color: #0072C6;
+    font-size: 14px;
+  }
+  .personal-info-card-value.phone:hover{
+    text-decoration: underline;
+    cursor: pointer;
+  }
+.personal-info-card {
+  position: relative;
+  overflow: hidden; /* Prevent content from spilling out */
+  max-width: 100%;  /* Ensure it doesn’t expand beyond its column */
+  height: fit-content !important;
+  padding: 5px !important;
+}
+.icon {
+  color: #FFC107;
+}
+.personal-info-card-label{
+   font-weight: 600;
+  font-size: 16px;
+  color: #767676;
+  border-radius: 5px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.personal-info-card-value{
+    display: inline-block;
+  max-width: 150px;     /* Adjust to your needs */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 /* Center the content */
 .expenses-content {
   background: white;
