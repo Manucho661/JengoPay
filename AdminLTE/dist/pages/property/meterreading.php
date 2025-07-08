@@ -22,6 +22,10 @@ if (isset($_GET['building_id'])) {
         exit;
     }
 
+    // ✅ Set building prices in session
+$_SESSION['water_price'] = $building['water_price'] ?? 0;
+$_SESSION['electricity_price'] = $building['electricity_price'] ?? 0;
+
     $stmt->closeCursor();
 } else {
     echo "No building selected.";
@@ -734,6 +738,10 @@ $stmt->closeCursor();
         <button id="close-btns" class="text-secondary" onclick="meterreadingclosePopup()">×</button>
         <h2 class="assign-title">Add A Meter Reading</h2>
         <form class="wide-form" id="meterForm" method="POST" action="">
+
+ <!-- ✅ Hidden field for JS to access building ID -->
+      <input type="hidden" id="building_id" value="<?php echo htmlspecialchars($buildingId); ?>">
+        
             <div class="form-group">
                 <b><label for="dateInput" class="filter-label">Reading Date</label></b>
                 <input type="date" id="dateInput" name="reading_date" class="form-control" required />
@@ -1184,45 +1192,80 @@ document.addEventListener("DOMContentLoaded", function () {
 </script> -->
 
 <script>
-// Function to calculate Consumption Units & Cost
+let buildingWaterPrice = 0;
+let buildingElectricityPrice = 0;
+
+document.addEventListener("DOMContentLoaded", function () {
+  const buildingIdEl = document.getElementById("building_id");
+  if (!buildingIdEl) return;
+  const buildingId = buildingIdEl.value;
+
+  // ✅ Fetch prices
+  fetch(`actions/get_building_prices.php?building_id=${buildingId}`)
+    .then(response => {
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+      if (data.success) {
+        buildingWaterPrice = parseFloat(data.water_price);
+        buildingElectricityPrice = parseFloat(data.electricity_price);
+        console.log("✅ Prices loaded:", buildingWaterPrice, buildingElectricityPrice);
+        calculateConsumptionAndCost();
+      } else {
+        console.error("⚠️ Failed to load prices:", data.error);
+        alert("⚠️ Unable to fetch building prices.");
+      }
+    })
+    .catch(error => {
+      console.error("❌ Fetch error:", error);
+      alert("❌ Error loading building prices.");
+    });
+
+  // Add listeners
+  const meterTypeEl = document.getElementById("meter_type");
+  const prevReadingEl = document.getElementById("previous_reading");
+  const currReadingEl = document.getElementById("current_reading");
+
+  if (meterTypeEl) meterTypeEl.addEventListener("change", calculateConsumptionAndCost);
+  if (prevReadingEl) prevReadingEl.addEventListener("input", calculateConsumptionAndCost);
+  if (currReadingEl) currReadingEl.addEventListener("input", calculateConsumptionAndCost);
+});
+
 function calculateConsumptionAndCost() {
-    // Get input values
-    const meterType = document.getElementById("meter_type").value;
-    const prevReading = parseFloat(document.getElementById("previous_reading").value) || 0;
-    const currReading = parseFloat(document.getElementById("current_reading").value) || 0;
+  const meterType = document.getElementById("meter_type")?.value;
+  const prevReading = parseFloat(document.getElementById("previous_reading")?.value || 0);
+  const currReading = parseFloat(document.getElementById("current_reading")?.value || 0);
 
-    // Validate readings
-    if (currReading <= prevReading) {
-        // alert("Current reading must be higher than previous reading!");
-        return;
-    }
+  const consumptionPreview = document.getElementById("consumption_preview");
+  const costDisplay = document.getElementById("consumption_cost");
+  const costValueInput = document.getElementById("consumption_cost_value");
 
-    // Calculate Consumption Units
-    const consumptionUnits = currReading - prevReading;
-    document.getElementById("consumption_preview").textContent = consumptionUnits + " units";
+  if (!meterType || isNaN(prevReading) || isNaN(currReading)) return;
 
-    // Get Unit Price (from localStorage or hardcoded)
-    let unitPrice = 0;
-    if (meterType === "Water") {
-        unitPrice = localStorage.getItem("waterPrice") || 200; // Default: Ksh 200
-    } else if (meterType === "Electrical") {
-        unitPrice = localStorage.getItem("electricityPrice") || 50; // Default: Ksh 50
-    }
+  if (currReading <= prevReading) {
+    consumptionPreview.textContent = "Invalid input";
+    costDisplay.textContent = "Ksh 0.00";
+    costValueInput.value = "";
+    return;
+  }
 
-    // Calculate Cost
-    const consumptionCost = consumptionUnits * unitPrice;
-    document.getElementById("consumption_cost").textContent = "Ksh " + consumptionCost.toFixed(2);
-    document.getElementById("consumption_cost_value").value = consumptionCost.toFixed(2); // Hidden input for form submission
+  const consumptionUnits = currReading - prevReading;
+  consumptionPreview.textContent = `${consumptionUnits} units`;
+
+  let unitPrice = 0;
+  if (meterType === "Water") {
+    unitPrice = buildingWaterPrice;
+  } else if (meterType === "Electrical") {
+    unitPrice = buildingElectricityPrice;
+  }
+
+  const totalCost = consumptionUnits * unitPrice;
+  costDisplay.textContent = "Ksh " + totalCost.toFixed(2);
+  costValueInput.value = totalCost.toFixed(2);
 }
-
-// Trigger calculation when inputs change
-document.getElementById("meter_type").addEventListener("change", calculateConsumptionAndCost);
-document.getElementById("previous_reading").addEventListener("input", calculateConsumptionAndCost);
-document.getElementById("current_reading").addEventListener("input", calculateConsumptionAndCost);
-
-// Initialize calculation on page load (optional)
-document.addEventListener("DOMContentLoaded", calculateConsumptionAndCost);
 </script>
+
 <!--
 <script>
   // Fetch prices from backend and store in localStorage
