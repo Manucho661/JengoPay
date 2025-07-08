@@ -221,8 +221,6 @@ try {
       }
     }
 
-
-
     .job-title {
       font-size: 1.25rem;
       font-weight: 600;

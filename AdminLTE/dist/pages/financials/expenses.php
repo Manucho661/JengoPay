@@ -45,7 +45,7 @@
 
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../../../../dist/css/adminlte.css" />
+    <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
     <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
@@ -346,7 +346,7 @@
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
         <!-- <div id="sidebar"></div> -->
-        <div > <?php include_once '../../includes/sidebar1.php'; ?>  </div> <!-- This is where the sidebar is inserted -->
+        <div > <?php include_once '../includes/sidebar1.php'; ?>  </div> <!-- This is where the sidebar is inserted -->
 
         <!--end::Sidebar Wrapper-->
       </aside>
@@ -360,35 +360,7 @@
             <!--begin::Row-->
             <div class="row">
               <div class="col-sm-8">
-
-                        <h3 class="mb-0 contact_section_header">  <i class="fas fa-tools"></i>Expenses</h3>
-
-                        <div class="row Summary mt-6" >
-                          <!-- Summary -->
-                          <div class="col-md-12 ">
-
-                            <div class="summary-section text-center p-2 row">
-                              <div class="col-6 col-md-4 summary-item total">
-                                  <i class="fas fa-calculator"></i>
-                                   <div class="label">Total Items <b class="value" > 100</b>  </div>
-                              </div>
-
-                              <div class="col-6 col-md-4 summary-item total">
-                                <i class="fas fa-calculator"></i>
-                                 <div class="label">Total Spend <b class="value" >KSH 500</b>  </div>
-
-                            </div>
-                            </div>
-
-                          </div>
-
-                        </div>
-
-
-
-
-
-
+                <h3 class="mb-0 contact_section_header">  <i class="fas fa-tools"></i>Expenses</h3>
               </div>
 
               <div class="col-sm-4">
@@ -401,7 +373,44 @@
             </div>
             <!--end::Row-->
             <!-- begin row -->
-             <div class="row mt-2">
+            <div class="row mt-2">
+              <div class="col-md-3">
+                <div class="personal-info-card shadow-sm bg-white p-3 rounded">
+                    <div class="d-flex align-items-center gap-2">
+                      <i class="fa fa-envelope icon"></i>
+                      <div>
+                        <div class="personal-info-card-label">ITEMS</div>
+                        <b id="email" class="personal-info-card-value email">300</b>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+              <!-- Phone Card -->
+              <div class="col-md-3">
+                <div class="personal-info-card shadow-sm bg-white p-3 rounded">
+                  <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-phone icon"></i>
+                    <div>
+                      <div class="personal-info-card-label">This Month</div>
+                      <b id="phone" class="personal-info-card-value phone">Ksh 100,000</b>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- ID Card -->
+              <div class="col-md-3">
+                <div class="personal-info-card shadow-sm bg-white p-3 rounded">
+                  <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-id-card icon"></i>
+                    <div>
+                      <div class="personal-info-card-label">Pending Approval</div>
+                      <b id="id_no" class="personal-info-card-value" >45862394</b>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-2">
               <div class="col-md-12">
                 <div class="card">
                   <div class="card-header">
@@ -1090,7 +1099,7 @@
     </script>
 
      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
@@ -1109,65 +1118,6 @@
 
 -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<!-- <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const addRowButton = document.getElementById("addRow");
-        const tableBody = document.querySelector("tbody");
-
-        function createNewRow() {
-            const newRow = document.createElement("tr");
-            newRow.innerHTML = `
-               <td>
-                                                        <select class="form-select">
-                                                            <option selected disabled>Repair and Mantainance</option>
-                                                            <option>Salaries</option>
-                                                            <option>Legal Work</option>
-                                                            <option>Internet</option>
-                                                        </select>
-                                                    </td>
-                                                    <td><textarea class="form-control" rows="1" placeholder="Enter details"></textarea></td>
-                                                    <td><input type="number" class="form-control unit-price" placeholder="123"></td>
-                                                    <td><input type="number" class="form-control quantity" placeholder="1"></td>
-                                                    <td><input type="number" class="form-control subtotal" placeholder="0" readonly></td>
-                                                    <td>
-                                                      <select class="form-select vat-option">
-                                                        <option value="" disabled selected>Select Option</option>
-                                                        <option value="inclusive">VAT 16% Inclusive</option>
-                                                        <option value="exclusive">VAT 16% Exclusive</option>
-                                                        <option value="zero">Zero Rated</option>
-                                                        <option value="exempt">Exempted</option>
-                                                      </select>
-                                                    </td>
-                                                    <td><input type="number" class="form-control vat-amount" placeholder="0" readonly></td>
-                                                    <td><input type="number" class="form-control total" placeholder="0" readonly></td>
-                                                    <td><button type="button" class="btn btn-danger remove-row">Delete</button></td>
-            `;
-
-            newRow.querySelector(".remove-row").addEventListener("click", function () {
-                newRow.remove();
-                checkIfTableEmpty();
-            });
-
-            return newRow;
-        }
-
-        function checkIfTableEmpty() {
-            if (tableBody.children.length === 0) {
-                tableBody.appendChild(createNewRow()); // Add default row if empty
-            }
-        }
-
-        addRowButton.addEventListener("click", function () {
-            tableBody.appendChild(createNewRow());
-        });
-
-        // Initialize the first row in case user removes all
-        checkIfTableEmpty();
-    });
-</script> -->
-
-
-
 <script>
   $(document).ready(function() {
       $('#repaireExpenses').DataTable({
@@ -1177,17 +1127,7 @@
       });
   });
 </script>
-    <!-- End script for data_table -->
-
-<!--Begin sidebar script -->
-<!-- <script>
-  fetch('../../bars/sidebar.html')  // Fetch the file
-      .then(response => response.text()) // Convert it to text
-      .then(data => {
-          document.getElementById('sidebar').innerHTML = data; // Insert it
-      })
-      .catch(error => console.error('Error loading the file:', error)); // Handle errors
-</script> -->
+    
 <!-- end sidebar script -->
 
 

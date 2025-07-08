@@ -45,7 +45,7 @@
       <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> 💼 Financials
     </div>
     <div class="submenu">
-      <a href="../financials/expenses/expenses.php">💵 Expenses</a>
+      <a href="../financials/expenses.php">💵 Expenses</a>
       <a href="#">📄 Invoices</a>
       <a href="#">📊 Balance Sheet</a>
     </div>
