@@ -1,59 +1,42 @@
 <?php
-include '../db/connect.php';
+require_once '../db/connect.php'; // Include your PDO connection file
 
-// Enable error reporting
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-// Get POST data
-$buildingId = isset($_POST['building_id']) ? (int)$_POST['building_id'] : 0;
-$unitType = isset($_POST['unit_type']) ? trim($_POST['unit_type']) : '';
-$unitNumber = isset($_POST['unit_number']) ? trim($_POST['unit_number']) : '';
-
-// Validate inputs
-if ($buildingId <= 0) {
-    die(json_encode(['error' => 'Valid Building ID is required']));
-}
-if (empty($unitType)) {
-    die(json_encode(['error' => 'Unit Type is required']));
-}
+header('Content-Type: application/json');
 
 try {
-    // Base query
-    $sql = "
-        SELECT unit_id, unit_number, building_id, unit_type
-        FROM units
-        WHERE building_id = :building_id
-        AND unit_type = :unit_type
-    ";
+    $building_id = $_POST['building_id'] ?? null;
+    $unit_type = $_POST['unit_type'] ?? null;
+    $unit_number = $_POST['unit_number'] ?? null;
 
-    // Add unit_number filter if provided
-    if (!empty($unitNumber)) {
-        $sql .= " AND unit_number = :unit_number";
+    if (!$building_id || !$unit_type) {
+        throw new Exception('Building ID and Unit Type are required');
     }
 
-    $sql .= " ORDER BY unit_number";
+    $query = "SELECT unit_id, unit_number, building_id, unit_type, rent_amount
+              FROM units
+              WHERE building_id = :building_id AND unit_type = :unit_type";
 
-    $stmt = $pdo->prepare($sql);
-
-    // Bind parameters
     $params = [
-        ':building_id' => $buildingId,
-        ':unit_type' => $unitType
+        ':building_id' => $building_id,
+        ':unit_type' => $unit_type
     ];
 
-    if (!empty($unitNumber)) {
-        $params[':unit_number'] = $unitNumber;
+    if (!empty($unit_number)) {
+        $query .= " AND unit_number LIKE :unit_number";
+        $params[':unit_number'] = "%$unit_number%";
     }
 
+    $stmt = $pdo->prepare($query);
     $stmt->execute($params);
 
     $units = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Return results
-    header('Content-Type: application/json');
     echo json_encode($units);
-
 } catch (PDOException $e) {
-    die(json_encode(['error' => 'Database error: ' . $e->getMessage()]));
+    http_response_code(500);
+    echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
+} catch (Exception $e) {
+    http_response_code(400);
+    echo json_encode(['error' => $e->getMessage()]);
 }
+?>

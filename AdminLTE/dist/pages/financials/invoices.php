@@ -27,6 +27,24 @@ $invoiceId = $pdo->lastInsertId();
 ?>
 
 
+<?php
+// At the top of your PHP file (before HTML)
+require_once '../db/connect.php';
+
+try {
+    $stmt = $pdo->prepare("SELECT building_id, building_name FROM buildings ORDER BY building_name");
+    $stmt->execute();
+    $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $buildings = [];
+    // You might want to log this error in production
+    error_log("Error fetching buildings: " . $e->getMessage());
+}
+?>
+
+
+
+
 <!doctype html>
 <html lang="en">
   <!--begin::Head-->
@@ -1090,25 +1108,42 @@ document.addEventListener("DOMContentLoaded", () => {
   <div class="row g-3">
     <div class="form-section col-md-6">
       <b><h2 style="text-align: left;font-weight: 600;">Building</h2></b>
-      <select name="building" required>
-        <option value="" disabled selected>Select Property</option>
-        <option value="Credlings Apartment">Credlings Apartment</option>
-        <option value="PayPal Apartment">PayPal Apartment</option>
-        <option value="Banky Apartments">Banky Apartments</option>
-        <option value="Cashy Apartments">Cashy Apartments</option>
-      </select>
+      <select id="buildingSelect" class="form-control">
+            <option value="" selected>Select Property</option>
+            <?php
+            require_once '../db/connect.php';
+            try {
+                $stmt = $pdo->query("SELECT building_id, building_name FROM buildings ORDER BY building_name");
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    echo '<option value="'.htmlspecialchars($row['building_id']).'">'
+                        .htmlspecialchars($row['building_name'])
+                        .'</option>';
+                }
+            } catch (PDOException $e) {
+                echo '<option value="">Error loading buildings</option>';
+            }
+            ?>
+        </select>
     </div>
 
     <div class="form-section col-md-6">
-      <b><h2 style="text-align: left;font-weight: 600;">Tenant Information</h2></b>
-      <select name="tenant" required>
-        <option value="" disabled selected>Select Tenant</option>
-        <option value="peter_mwangi">Peter Mwangi</option>
-        <option value="brian_mwenda">Brian Mwenda</option>
-        <option value="silas_qwetu">Silas Qwetu</option>
-      </select>
+        <b><h2 style="text-align: left;font-weight: 600;">Tenant Information</h2></b>
+        <select id="tenantSelect" class="form-control" disabled>
+            <option value="" selected>Select a building first</option>
+        </select>
     </div>
-  </div>
+</div>
+
+
+<div id="tenantDetails" class="mt-3" style="display: none;">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Tenant Details</h5>
+                    <p><strong>Unit:</strong> <span id="tenantUnit"></span></p>
+                    <p><strong>Rent Amount:</strong> <span id="tenantRent"></span></p>
+                    <p><strong>Phone:</strong> <span id="tenantPhone"></span></p>
+                    <p><strong>ID No:</strong> <span id="tenantIdNo"></span></p>
+                </div>
 
   <!-- Item Table -->
   <div class="form-section">
@@ -1330,6 +1365,38 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     </script>
 
+<script>
+  $(document).ready(function() {
+    // Fetch buildings when page loads
+    $.ajax({
+        url: 'fetch_building_rent.php',
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            var $dropdown = $('#buildingSelect');
+            $dropdown.empty().append('<option value="" disabled selected>Select Property</option>');
+
+            if (response && response.length > 0) {
+                $.each(response, function(index, building) {
+                    $dropdown.append(
+                        $('<option>', {
+                            value: building.building_name,
+                            text: building.building_name,
+                            'data-id': building.building_id
+                        })
+                    );
+                });
+            } else {
+                $dropdown.append('<option value="" disabled>No buildings found</option>');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("Error fetching buildings:", error);
+            $('#buildingSelect').append('<option value="" disabled>Error loading buildings</option>');
+        }
+    });
+});
+</script>
 
 <!-- Required Scripts -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -1503,6 +1570,152 @@ document.addEventListener("DOMContentLoaded", () => {
     updateTotalAmount();
   });
 </script>
+
+<!-- <script>
+  $(document).ready(function() {
+    // Load buildings on page load
+    $.ajax({
+        url: 'fetch_building_rent.php',
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            var $dropdown = $('#buildingSelect');
+            $dropdown.empty().append('<option value="" disabled selected>Select Property</option>');
+
+            if (response && response.length > 0) {
+                $.each(response, function(index, building) {
+                    $dropdown.append(
+                        $('<option>', {
+                            value: building.id,
+                            text: building.name,
+                            'data-rent': building.default_rent
+                        })
+                    );
+                });
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("Error fetching buildings:", error);
+        }
+    });
+
+    // When building is selected
+    $('#buildingSelect').change(function() {
+        var buildingId = $(this).val();
+        if (buildingId) {
+            fetchTenantsByBuilding(buildingId);
+            // Set default rent for building
+            var defaultRent = $(this).find(':selected').data('rent');
+            if (defaultRent) {
+                $('input[name="unit_price[]"]').first().val(defaultRent);
+            }
+        } else {
+            $('#tenantSelect').empty().append('<option value="" disabled selected>Select Tenant</option>');
+            resetRentAmount();
+        }
+    });
+
+    // When tenant is selected
+    $('#tenantSelect').change(function() {
+        var rentAmount = $(this).find(':selected').data('rent');
+        if (rentAmount) {
+            updateRentAmount(rentAmount);
+        } else {
+            resetRentAmount();
+        }
+    });
+
+    function fetchTenantsByBuilding(buildingId) {
+        $.ajax({
+            url: 'fetch_tenants_by_building.php',
+            type: 'POST',
+            dataType: 'json',
+            data: { building_id: buildingId },
+            success: function(response) {
+                var $dropdown = $('#tenantSelect');
+                $dropdown.empty().append('<option value="" disabled selected>Select Tenant</option>');
+
+                if (response && response.length > 0) {
+                    $.each(response, function(index, tenant) {
+                        $dropdown.append(
+                            $('<option>', {
+                                value: tenant.tenant_id,
+                                text: tenant.full_name + ' - ' + tenant.unit_number,
+                                'data-unit': tenant.unit_id,
+                                'data-rent': tenant.rent_amount
+                            })
+                        );
+                    });
+                } else {
+                    $dropdown.append('<option value="" disabled>No active tenants in this building</option>');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching tenants:", error);
+                $('#tenantSelect').append('<option value="" disabled>Error loading tenants</option>');
+            }
+        });
+    }
+
+    function updateRentAmount(amount) {
+        $('input[name="unit_price[]"]').first().val(amount);
+        calculateRowTotal($('input[name="quantity[]"]').first());
+    }
+
+    function resetRentAmount() {
+        $('input[name="unit_price[]"]').first().val('');
+        $('input[name="total[]"]').first().val('');
+    }
+
+    // Calculate row total when quantity or price changes
+    $(document).on('input', '.quantity, .unit-price', function() {
+        calculateRowTotal($(this));
+    });
+
+    // Calculate row total when tax option changes
+    $(document).on('change', '.vat-option', function() {
+        calculateRowTotal($(this));
+    });
+
+    function calculateRowTotal(element) {
+        var row = element.closest('tr');
+        var quantity = parseFloat(row.find('.quantity').val()) || 0;
+        var unitPrice = parseFloat(row.find('.unit-price').val()) || 0;
+        var taxOption = row.find('.vat-option').val();
+        var subtotal = quantity * unitPrice;
+        var total = subtotal;
+
+        // Apply tax calculations
+        if (taxOption === 'exclusive') {
+            total = subtotal * 1.16; // Add 16% VAT
+        } else if (taxOption === 'inclusive') {
+            // Price already includes VAT
+            total = subtotal;
+        }
+        // Zero rated and exempted remain as subtotal
+
+        row.find('.total').val(total.toFixed(2));
+    }
+
+    // Add new row function
+    window.addRow = function() {
+        var newRow = $('.items-table tbody tr').first().clone();
+        newRow.find('input').val('');
+        newRow.find('textarea').val('');
+        newRow.find('select').prop('selectedIndex', 0);
+        $('.items-table tbody').append(newRow);
+    };
+
+    // Delete row function
+    window.deleteRow = function(btn) {
+        if ($('.items-table tbody tr').length > 1) {
+            $(btn).closest('tr').remove();
+        } else {
+            alert("You need at least one item row.");
+        }
+    };
+});
+</script> -->
 
 
     <!-- Bootstrap Bundle with Popper -->
@@ -1686,6 +1899,358 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 </script>
 
+<!-- <script> -->
+<script>
+document.getElementById('buildingSelect').addEventListener('change', function() {
+    const buildingId = this.value;
+    const tenantSelect = document.getElementById('tenantSelect');
+
+    // Clear and disable tenant dropdown if no building selected
+    if (!buildingId) {
+        tenantSelect.innerHTML = '<option value="" selected>Select a building first</option>';
+        tenantSelect.disabled = true;
+        return;
+    }
+
+    // Enable and show loading state
+    tenantSelect.disabled = false;
+    tenantSelect.innerHTML = '<option value="">Loading tenants...</option>';
+
+    // Fetch tenants with proper error handling
+    fetch(`get_tenants.php?building_id=${buildingId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+
+            if (data.length > 0) {
+                let options = '<option value="" selected>Select Tenant</option>';
+                data.forEach(tenant => {
+                    options += `<option value="${tenant.id}">
+                        ${tenant.first_name} ${tenant.middle_name} - Unit ${tenant.unit || 'N/A'}
+                    </option>`;
+                });
+                tenantSelect.innerHTML = options;
+            } else {
+                tenantSelect.innerHTML = '<option value="" selected>No tenants found for this building</option>';
+            }
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+            tenantSelect.innerHTML = `<option value="" selected>Error: ${error.message}</option>`;
+        });
+});
+</script>
+<!-- </script> -->
+
+<!-- <script>
+  // Function to fetch buildings with tenants
+async function fetchBuildingsWithTenants() {
+  try {
+    const response = await fetch('fetch_data.php', {
+      method: 'POST', // or 'GET' depending on your PHP script
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // body: JSON.stringify({ building_name: 'Pink House' }), // Only if you need to filter by building
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const buildings = await response.json();
+
+    // Process the data
+    displayBuildings(buildings);
+
+    return buildings;
+  } catch (error) {
+    console.error('Error fetching buildings:', error);
+    // Display error to user
+    document.getElementById('error-message').textContent = 'Failed to load buildings. Please try again.';
+    return [];
+  }
+}
+
+// Function to display buildings and tenants
+function displayBuildings(buildings) {
+  const container = document.getElementById('buildings-container');
+  container.innerHTML = ''; // Clear previous content
+
+  buildings.forEach(building => {
+    const buildingElement = document.createElement('div');
+    buildingElement.className = 'building';
+
+    const buildingHeader = document.createElement('h2');
+    buildingHeader.textContent = building.building_name;
+    buildingElement.appendChild(buildingHeader);
+
+    if (building.tenants && building.tenants.length > 0) {
+      const tenantsList = document.createElement('ul');
+      building.tenants.forEach(tenant => {
+        const tenantItem = document.createElement('li');
+        tenantItem.innerHTML = `
+          <strong>${tenant.full_name}</strong>
+          <div>Unit: ${tenant.unit_id}</div>
+          <div>Rent: ${tenant.rent_amount || 'Not specified'}</div>
+          <div>Phone: ${tenant.phone_number}</div>
+        `;
+        tenantsList.appendChild(tenantItem);
+      });
+      buildingElement.appendChild(tenantsList);
+    } else {
+      const noTenants = document.createElement('p');
+      noTenants.textContent = 'No active tenants in this building';
+      buildingElement.appendChild(noTenants);
+    }
+
+    container.appendChild(buildingElement);
+  });
+}
+
+// Call the function when the page loads
+document.addEventListener('DOMContentLoaded', fetchBuildingsWithTenants);
+</script> -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const buildingSelect = document.getElementById('buildingSelect');
+    const tenantSelect = document.getElementById('tenantSelect');
+    const tenantDetails = document.getElementById('tenantDetails');
+    const tenantUnit = document.getElementById('tenantUnit');
+    const tenantRent = document.getElementById('tenantRent');
+    const tenantPhone = document.getElementById('tenantPhone');
+    const tenantIdNo = document.getElementById('tenantIdNo');
+
+    let allBuildingsData = []; // Store all buildings and tenants data
+
+    // Fetch all buildings with their tenants
+    fetch('fetch_data.php') // Replace with your actual endpoint
+        .then(response => response.json())
+        .then(data => {
+            allBuildingsData = data;
+
+            // Populate building dropdown
+            data.forEach(building => {
+                const option = document.createElement('option');
+                option.value = building.building_name;
+                option.textContent = building.building_name;
+                buildingSelect.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching buildings:', error);
+            // alert('Failed to load buildings. Please try again.');
+        });
+
+    // Update tenants when building is selected
+    buildingSelect.addEventListener('change', function() {
+        const buildingName = this.value;
+
+        if (!buildingName) {
+            tenantSelect.disabled = true;
+            tenantSelect.innerHTML = '<option value="" disabled selected>Select Tenant</option>';
+            tenantDetails.style.display = 'none';
+            return;
+        }
+
+        // Find the selected building in our data
+        const selectedBuilding = allBuildingsData.find(b => b.building_name === buildingName);
+
+        if (selectedBuilding && selectedBuilding.tenants) {
+            // Populate tenant dropdown
+            tenantSelect.innerHTML = '<option value="" disabled selected>Select Tenant</option>';
+            selectedBuilding.tenants.forEach(tenant => {
+                const option = document.createElement('option');
+                option.value = tenant.user_id;
+                option.textContent = tenant.full_name;
+                option.dataset.unit = tenant.unit_id;
+                option.dataset.rent = tenant.rent_amount;
+                option.dataset.phone = tenant.phone_number;
+                option.dataset.idNo = tenant.id_no;
+                tenantSelect.appendChild(option);
+            });
+
+            tenantSelect.disabled = false;
+            tenantDetails.style.display = 'none';
+        } else {
+            tenantSelect.innerHTML = '<option value="" disabled selected>No tenants found</option>';
+            tenantSelect.disabled = false;
+        }
+    });
+
+    // Show tenant details when tenant is selected
+    tenantSelect.addEventListener('change', function() {
+        if (!this.value) {
+            tenantDetails.style.display = 'none';
+            return;
+        }
+
+        const selectedOption = this.options[this.selectedIndex];
+        tenantUnit.textContent = selectedOption.dataset.unit || 'N/A';
+        tenantRent.textContent = selectedOption.dataset.rent ?
+            'KSh ' + parseFloat(selectedOption.dataset.rent).toLocaleString() : 'N/A';
+        tenantPhone.textContent = selectedOption.dataset.phone || 'N/A';
+        tenantIdNo.textContent = selectedOption.dataset.idNo || 'N/A';
+
+        tenantDetails.style.display = 'block';
+    });
+});
+</script>
+
+
+<!-- <script>
+  $(document).ready(function() {
+    // When building is selected
+    $('select[name="building"]').change(function() {
+        var buildingName = $(this).val();
+        if (buildingName) {
+            fetchTenantsByBuilding(buildingName);
+            fetchRentAmount(buildingName);
+        } else {
+            $('select[name="tenant"]').empty().append('<option value="" disabled selected>Select Tenant</option>');
+            $('input[name="unit_price[]"]').val('');
+        }
+    });
+
+    // When tenant is selected
+    $('select[name="tenant"]').change(function() {
+        var tenantId = $(this).val();
+        if (tenantId) {
+            fetchTenantDetails(tenantId);
+        }
+    });
+
+    function fetchTenantsByBuilding(buildingName) {
+        $.ajax({
+            url: 'fetch_tenants.php',
+            type: 'POST',
+            dataType: 'json',
+            data: { building_name: buildingName },
+            success: function(response) {
+                populateTenantDropdown(response);
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching tenants:", error);
+                $('select[name="tenant"]').empty().append(
+                    '<option value="" disabled selected>Error loading tenants</option>'
+                );
+            }
+        });
+    }
+
+    function populateTenantDropdown(tenants) {
+        var $dropdown = $('select[name="tenant"]');
+        $dropdown.empty().append('<option value="" disabled selected>Select Tenant</option>');
+
+        if (tenants && tenants.length > 0) {
+            $.each(tenants, function(index, tenant) {
+                $dropdown.append(
+                    $('<option>', {
+                        value: tenant.tenant_id,
+                        text: tenant.full_name,
+                        'data-unit': tenant.unit_id,
+                        'data-rent': tenant.rent_amount
+                    })
+                );
+            });
+        } else {
+            $dropdown.append('<option value="" disabled selected>No tenants found</option>');
+        }
+    }
+
+    function fetchTenantDetails(tenantId) {
+        $.ajax({
+            url: 'fetch_tenant_details.php',
+            type: 'POST',
+            dataType: 'json',
+            data: { tenant_id: tenantId },
+            success: function(response) {
+                if (response && response.rent_amount) {
+                    $('input[name="unit_price[]"]').first().val(response.rent_amount);
+                    calculateRowTotal($('input[name="quantity[]"]').first());
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching tenant details:", error);
+            }
+        });
+    }
+
+    function fetchRentAmount(buildingName) {
+        $.ajax({
+            url: 'fetch_building_rent.php',
+            type: 'POST',
+            dataType: 'json',
+            data: { building_name: buildingName },
+            success: function(response) {
+                if (response && response.default_rent) {
+                    $('input[name="unit_price[]"]').first().val(response.default_rent);
+                    calculateRowTotal($('input[name="quantity[]"]').first());
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching rent amount:", error);
+            }
+        });
+    }
+
+    // Calculate row total when quantity or price changes
+    $(document).on('input', '.quantity, .unit-price', function() {
+        calculateRowTotal($(this));
+    });
+
+    // Calculate row total when tax option changes
+    $(document).on('change', '.vat-option', function() {
+        calculateRowTotal($(this));
+    });
+
+    function calculateRowTotal(element) {
+        var row = element.closest('tr');
+        var quantity = parseFloat(row.find('.quantity').val()) || 0;
+        var unitPrice = parseFloat(row.find('.unit-price').val()) || 0;
+        var taxOption = row.find('.vat-option').val();
+        var subtotal = quantity * unitPrice;
+        var total = subtotal;
+
+        // Apply tax calculations
+        if (taxOption === 'exclusive') {
+            total = subtotal * 1.16; // Add 16% VAT
+        } else if (taxOption === 'inclusive') {
+            // Price already includes VAT
+            total = subtotal;
+        }
+        // Zero rated and exempted remain as subtotal
+
+        row.find('.total').val(total.toFixed(2));
+    }
+
+    // Add new row function
+    window.addRow = function() {
+        var newRow = $('.items-table tbody tr').first().clone();
+        newRow.find('input').val('');
+        newRow.find('textarea').val('');
+        newRow.find('select').prop('selectedIndex', 0);
+        $('.items-table tbody').append(newRow);
+    };
+
+    // Delete row function
+    window.deleteRow = function(btn) {
+        if ($('.items-table tbody tr').length > 1) {
+            $(btn).closest('tr').remove();
+        } else {
+            alert("You need at least one item row.");
+        }
+    };
+});
+</script> -->
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

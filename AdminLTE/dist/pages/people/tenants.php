@@ -956,7 +956,110 @@ width: 100%;
 
   </script>
 
-<!-- <script> -->
+
+  <script>
+$(document).ready(function() {
+    // When building or unit type changes
+    $('#building_name, #unit_type').change(function() {
+        updateUnitDropdown();
+    });
+
+    // When unit number input changes
+    $('#unit_number').on('input', function() {
+        updateUnitDropdown();
+    });
+
+    // When unit is selected from dropdown
+    $('#unit_name').change(function() {
+        var unitId = $(this).val();
+        if (unitId) {
+            fetchUnitDetails(unitId);
+        } else {
+            $('#rent_amount').val('');
+        }
+    });
+
+    function updateUnitDropdown() {
+        var buildingId = $('#building_name').val();
+        var unitType = $('#unit_type').val();
+        var unitNumber = $('#unit_number').val();
+
+        // Only proceed if both building and type are selected
+        if (!buildingId || !unitType) {
+            $('#unit_name').empty().append('<option value="">-- Select Building and Unit Type First --</option>');
+            return;
+        }
+
+        $.ajax({
+            url: 'fetch_units.php',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                building_id: buildingId,
+                unit_type: unitType,
+                unit_number: unitNumber
+            },
+            success: function(response) {
+                populateUnitDropdown(response);
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching units:", error);
+                $('#unit_name').empty().append('<option value="">Error loading units</option>');
+            }
+        });
+    }
+
+    function populateUnitDropdown(units) {
+        var $dropdown = $('#unit_name');
+        $dropdown.empty().append('<option value="">-- Select Unit --</option>');
+
+        if (units && units.length > 0) {
+            $.each(units, function(index, unit) {
+                // Create display text with building name and unit number
+                var displayText = unit.building_name + ' - ' + unit.unit_number;
+
+                $dropdown.append(
+                    $('<option>', {
+                        value: unit.unit_id,
+                        text: displayText,
+                        'data-building': unit.building_id,
+                        'data-type': unit.unit_type,
+                        'data-rent': unit.rent_amount // Add rent amount to data attribute
+                    })
+                );
+            });
+        } else {
+            $dropdown.append('<option value="">No units found</option>');
+        }
+    }
+
+    function fetchUnitDetails(unitId) {
+        $.ajax({
+            url: 'fetch_unit_details.php',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                unit_id: unitId
+            },
+            success: function(response) {
+                if (response && response.rent_amount) {
+                    $('#rent_amount').val(response.rent_amount);
+                } else {
+                    $('#rent_amount').val('');
+                    console.error("No rent amount found for this unit");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching unit details:", error);
+                $('#rent_amount').val('');
+            }
+        });
+    }
+});
+</script>
+
+
+<!-- <script>
   <script>
 $(document).ready(function() {
     // When building or unit type changes
@@ -1019,7 +1122,7 @@ $(document).ready(function() {
         }
     }
 });
-</script>
+</script> -->
 
 
   <script>
