@@ -1,4 +1,5 @@
 <?php
+session_start();
 // Database connection
 $host = "localhost";
 $dbname = "bt_jengopay";
@@ -199,6 +200,10 @@ try {
             ':angle_view_photo' => $angle_view_photo,
             ':interior_view_photo' => $interior_view_photo,
         ]);
+
+        // After successful insert
+$_SESSION['water_price'] = $water_price;
+$_SESSION['electricity_price'] = $electricity_price;
 
         header("Location: " . $_SERVER['PHP_SELF'] . "?success=1");
         exit;
