@@ -12,9 +12,9 @@ $user_id = $_GET['user_id'];
 
 // Fetch tenant, user, and income source details
 $stmt = $pdo->prepare("
-    SELECT 
+    SELECT
         tenants.id AS tenant_id,
-        tenants.residence, tenants.unit, tenants.status, tenants.id_no, tenants.phone_number,
+        tenants.building_id, tenants.unit, tenants.status, tenants.id_no, tenants.phone_number,
         users.first_name, users.middle_name, users.email,
         income_source.income_type AS income_source,
         income_source.place_of_work AS work_place,
