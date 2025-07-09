@@ -13,7 +13,7 @@
               tenants.user_id,
               tenants.building_id,
               tenants.id_no,
-              tenants.unit,
+              tenants.unit_id,
               tenants.status
           FROM tenants
           INNER JOIN users ON tenants.user_id = users.id";

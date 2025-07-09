@@ -16,7 +16,7 @@ if ($building === 'all') {
                 tenants.user_id,
                 tenants.building_id,
                 tenants.id_no,
-                tenants.unit,
+                tenants.unit_id,
                 tenants.status
                 FROM tenants
                 INNER JOIN users ON tenants.user_id = users.id
@@ -29,7 +29,7 @@ if ($building === 'all') {
  else {
     $sql = "SELECT users.id, users.first_name, users.middle_name, users.email,
                tenants.phone_number, tenants.user_id, tenants.building_id,
-               tenants.id_no, tenants.unit, tenants.status
+               tenants.id_no, tenants.unit_id, tenants.status
         FROM tenants
         INNER JOIN users ON tenants.user_id = users.id
         WHERE tenants.building_id = :building
