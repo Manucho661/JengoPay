@@ -50,8 +50,7 @@ body {
 
   }
   .card.content{
-
-  position: relative;
+    position: relative;
     background: white;
     border-radius: 5px;
     color: black;
@@ -73,12 +72,9 @@ body {
 
   .close-btn{
      position: absolute;
-
     right: 15px;
-
     color: white;
     cursor: pointer;
-
   }
 
   #more{

@@ -358,8 +358,6 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                     <input type="date" class="form-control filter-shadow ">
                   </div>
                 </div>
-
-
                 <h6 class="mb-0 contact_section_header summary mb-2"></i> Summary</h6>
                 <div class="row mb-2">
                   <div class="col-12 col-sm-6 col-md-3">
@@ -371,7 +369,6 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                       </div>
                     </div>
                   </div>
-
                   <div class="col-12 col-sm-6 col-md-3">
                     <div class="summary-card" >
                       <div class="summary-card_icon"><i class="fas fa-check-circle"></i></div>
@@ -381,7 +378,6 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
                       </div>
                     </div>
                   </div>
-
                   <div class="col-12 col-sm-6 col-md-3">
                     <div class="summary-card">
                       <div class="summary-card_icon"> <i class="fas fa-spinner fa-spin"></i>  </div>
