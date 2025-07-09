@@ -14,9 +14,11 @@
               tenants.building_id,
               tenants.id_no,
               tenants.unit,
-              tenants.status
+              tenants.status,
+              buildings.building_name AS building_name
           FROM tenants
-          INNER JOIN users ON tenants.user_id = users.id";
+          INNER JOIN users ON tenants.user_id = users.id
+          INNER JOIN buildings ON tenants.building_id = buildings.building_id";
 
   $stmt = $pdo->query($sql);
   $tenantsy = $stmt->fetchAll();

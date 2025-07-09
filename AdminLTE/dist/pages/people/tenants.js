@@ -190,8 +190,8 @@ function fetchTenants(building) {
           <td>${user.first_name} ${user.middle_name}</td>
           <td>${user.id_no}</td>
           <td>
-            <div>${user.building_id}</div>
-            <div style="color: green;">${user.unit}</div>
+            <div>${user.building_name}</div>
+            <div style="color: green;">${user.unit_number}</div>
           </td>
           <td>
             <div class="phone"><i class="fas fa-phone icon"></i> ${user.phone_number}</div>
