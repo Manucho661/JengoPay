@@ -12,17 +12,27 @@ try {
         throw new Exception('Building ID and Unit Type are required');
     }
 
-    $query = "SELECT unit_id, unit_number, building_id, unit_type, rent_amount
-              FROM units
-              WHERE building_id = :building_id AND unit_type = :unit_type";
+    // Proper SQL query without inline comments
+    $query = "SELECT
+                 u.unit_id,
+                 u.unit_number,
+                 u.building_id,
+                 b.building_name,
+                 u.unit_type,
+                 u.rent_amount
+              FROM units u
+              JOIN buildings b ON u.building_id = b.building_id
+              WHERE u.building_id = :building_id
+              AND u.unit_type = :unit_type";
 
     $params = [
         ':building_id' => $building_id,
         ':unit_type' => $unit_type
     ];
 
+    // Optional: Filter by unit_number if provided
     if (!empty($unit_number)) {
-        $query .= " AND unit_number LIKE :unit_number";
+        $query .= " AND u.unit_number LIKE :unit_number";
         $params[':unit_number'] = "%$unit_number%";
     }
 

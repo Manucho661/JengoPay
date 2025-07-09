@@ -11,7 +11,7 @@
               users.email,
               tenants.phone_number,
               tenants.user_id,
-              tenants.residence,
+              tenants.building_id,
               tenants.id_no,
               tenants.unit,
               tenants.status

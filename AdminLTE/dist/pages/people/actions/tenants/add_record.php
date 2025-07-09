@@ -47,7 +47,7 @@
             'email' => $data['tenant_email'] ?? '',
             'phone' => $data['tenant_m_contact'] ?? '',
             'id_no' => $data['tenant_id_no'] ?? '',
-            'residence' => $data['building_name'] ?? '',
+            'building_id' => $data['building_name'] ?? '',
             'unit' => $data['unit_name'] ?? '',
             'income_source' => $data['income_source'] ?? '',
             'work_place' => $data['tenant_workplace'] ?? '',
@@ -114,12 +114,12 @@
 
     // Insert Tenant
     function insertTenant($pdo, $data, $userId) {
-        $stmt = $pdo->prepare("INSERT INTO tenants (user_id, phone_number, id_no, residence, unit, income_source, work_place, job_title, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO tenants (user_id, phone_number, id_no, building_id, unit, income_source, work_place, job_title, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([
             $userId,
             $data['phone'],
             $data['id_no'],
-            $data['residence'],
+            $data['building_id'],
             $data['unit'],
             $data['income_source'],
             $data['work_place'],
@@ -167,5 +167,5 @@
             $data['kra_pin'] ?? null,
             $data['business_location'] ?? null
         ]);
-    }  
+    }
 
