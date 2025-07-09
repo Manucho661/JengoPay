@@ -25,9 +25,20 @@ $inspectionsCount = is_array($inspections) ? count($inspections) : 0;
 <?php
 require_once '../db/connect.php';
 
-$expenses = []; // ✅ ensures it's always defined
+$expenses = [];
+$monthlyTotals = array_fill(1, 12, 0);
 
-// === Handle AJAX request ===
+// === AJAX: Return Monthly Totals ===
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['get_totals'])) {
+    $stmt = $pdo->query("SELECT MONTH(date) as month, SUM(total) as total FROM expenses GROUP BY MONTH(date)");
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $monthlyTotals[(int)$row['month']] = (float)$row['total'];
+    }
+    echo json_encode($monthlyTotals);
+    exit;
+}
+
+// === AJAX: Handle Expense Submission ===
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SERVER['HTTP_X_REQUESTED_WITH'])) {
     $date = $_POST['date'] ?? null;
     $supplier = $_POST['supplier'] ?? null;
@@ -39,7 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SERVER['HTTP_X_REQUESTED_WI
             $stmt = $pdo->prepare("INSERT INTO expenses (date, supplier, expense_number, total) VALUES (?, ?, ?, ?)");
             $stmt->execute([$date, $supplier, $expense_number, $total]);
 
-            // ✅ respond with JSON if AJAX
             echo json_encode([
                 'success' => true,
                 'data' => [
@@ -66,14 +76,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SERVER['HTTP_X_REQUESTED_WI
     }
 }
 
-// === Normal page load (not AJAX) ===
+// === Normal Load ===
 try {
     $stmt = $pdo->query("SELECT * FROM expenses ORDER BY date DESC");
     $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $stmt = $pdo->query("SELECT MONTH(date) as month, SUM(total) as total FROM expenses GROUP BY MONTH(date)");
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $monthlyTotals[(int)$row['month']] = (float)$row['total'];
+    }
 } catch (PDOException $e) {
     $errorMessage = "❌ Failed to fetch expenses: " . $e->getMessage();
 }
 ?>
+
 
 
 <!doctype html>
@@ -428,49 +444,17 @@ try {
                                 </div>
                             </div>
                         </div>
-
                         <script>
                             function calculateTotal() {
                                 let grandTotal = 0;
-                                document.querySelectorAll('#spendTable tbody tr').forEach(row => {
+                                document.querySelectorAll('#expenseForm tbody tr').forEach(row => {
                                     const qty = parseFloat(row.querySelector('.qty')?.value || 0);
                                     const price = parseFloat(row.querySelector('.unit-price')?.value || 0);
                                     const total = qty * price;
-                                    const totalField = row.querySelector('.total-line');
-                                    if (totalField) totalField.value = total.toFixed(2);
+                                    row.querySelector('.total-line').value = total.toFixed(2);
                                     grandTotal += total;
                                 });
                                 document.getElementById('grandTotal').value = grandTotal.toFixed(2);
-                            }
-
-                            document.addEventListener('input', function(e) {
-                                if (e.target.matches('.qty, .unit-price')) {
-                                    calculateTotal();
-                                }
-                            });
-
-                            function deleteRow(btn) {
-                                const row = btn.closest('tr');
-                                row.remove();
-                                calculateTotal();
-                            }
-
-                            function addRow() {
-                                const tableBody = document.querySelector('#spendTable tbody');
-                                const newRow = document.createElement('tr');
-                                newRow.innerHTML = `
-    <td><select class="form-select"><option>Rent</option></select></td>
-    <td><textarea class="form-control" rows="1" placeholder="Description"></textarea></td>
-    <td><input type="number" class="form-control qty" placeholder="1" /></td>
-    <td><input type="number" class="form-control unit-price" placeholder="123" /></td>
-    <td><select class="form-select"><option>VAT 16% Inclusive</option></select></td>
-    <td class="d-flex align-items-center">
-      <input type="text" class="form-control me-2 total-line" placeholder="0" readonly />
-      <button type="button" class="btn btn-sm btn-danger" onclick="deleteRow(this)">
-        <i class="fa fa-trash"></i>
-      </button>
-    </td>`;
-                                tableBody.appendChild(newRow);
                             }
 
                             document.getElementById('expenseForm').addEventListener('submit', function(e) {
@@ -493,20 +477,23 @@ try {
                                             const tbody = document.querySelector('#repaireExpenses tbody');
                                             const row = document.createElement('tr');
                                             row.innerHTML = `
-        <td>${data.data.date}</td>
-        <td>${data.data.supplier}</td>
-        <td>${data.data.expense_number}</td>
-        <td>KSH ${parseFloat(data.data.total).toLocaleString()}</td>
-        <td>
-          <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
-          <button class="btn btn-sm" style="background-color: #193042; color:#fff;"><i class="fa fa-trash"></i></button>
-        </td>`;
+                <td>${data.data.date}</td>
+                <td>${data.data.supplier}</td>
+                <td>${data.data.expense_number}</td>
+                <td>KSH ${parseFloat(data.data.total).toLocaleString()}</td>
+                <td>
+                    <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
+                    <button class="btn btn-sm" style="background-color: #193042; color:#fff;"><i class="fa fa-trash"></i></button>
+                </td>
+            `;
                                             tbody.prepend(row);
+                                            alert("✅ Expense saved and displayed!");
 
                                             form.reset();
                                             document.getElementById('grandTotal').value = "0.00";
-                                            alert("✅ Expense saved and displayed!");
-                                            document.getElementById('toggleIcon')?.click();
+                                            document.getElementById('toggleIcon').click();
+
+                                            updateExpenseChart();
                                         } else {
                                             alert(data.error || "❌ Something went wrong.");
                                         }
@@ -516,7 +503,14 @@ try {
                                         alert("❌ Server error occurred.");
                                     });
                             });
+
+                            document.addEventListener('input', function(e) {
+                                if (e.target.matches('.qty, .unit-price')) {
+                                    calculateTotal();
+                                }
+                            });
                         </script>
+
 
 
                         <div class="row">
@@ -557,6 +551,27 @@ try {
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <?php
+                // Group expenses by month and sum totals
+                $monthlyTotals = [];
+                try {
+                    $stmt = $pdo->query("SELECT MONTH(date) AS month, SUM(total) AS total FROM expenses GROUP BY MONTH(date)");
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        $monthNum = (int)$row['month'];
+                        $monthlyTotals[$monthNum] = (float)$row['total'];
+                    }
+                } catch (PDOException $e) {
+                    $monthlyTotals = [];
+                }
+                ?>
+
+
+                <!-- Line Chart: Expenses vs Months -->
+                <div class="mt-5">
+                    <h6 class="fw-bold text-center">📊 Monthly Expense Trends</h6>
+                    <canvas id="monthlyExpenseChart" height="100"></canvas>
                 </div>
 
 
@@ -1033,7 +1048,77 @@ try {
             alert('Add row functionality goes here');
         }
     </script>
-    
+
+    <!-- Chart Section -->
+    <canvas id="monthlyExpenseChart" height="100"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let expenseChart;
+
+        function updateExpenseChart() {
+            fetch('expense2.php?get_totals=1')
+                .then(res => res.json())
+                .then(monthlyTotals => {
+                    expenseChart.data.datasets[0].data = [
+                        monthlyTotals[1], monthlyTotals[2], monthlyTotals[3], monthlyTotals[4],
+                        monthlyTotals[5], monthlyTotals[6], monthlyTotals[7], monthlyTotals[8],
+                        monthlyTotals[9], monthlyTotals[10], monthlyTotals[11], monthlyTotals[12]
+                    ];
+                    expenseChart.update();
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('monthlyExpenseChart').getContext('2d');
+            expenseChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                    datasets: [{
+                        label: "KSH Expenses",
+                        data: [
+                            <?= $monthlyTotals[1] ?? 0 ?>, <?= $monthlyTotals[2] ?? 0 ?>,
+                            <?= $monthlyTotals[3] ?? 0 ?>, <?= $monthlyTotals[4] ?? 0 ?>,
+                            <?= $monthlyTotals[5] ?? 0 ?>, <?= $monthlyTotals[6] ?? 0 ?>,
+                            <?= $monthlyTotals[7] ?? 0 ?>, <?= $monthlyTotals[8] ?? 0 ?>,
+                            <?= $monthlyTotals[9] ?? 0 ?>, <?= $monthlyTotals[10] ?? 0 ?>,
+                            <?= $monthlyTotals[11] ?? 0 ?>, <?= $monthlyTotals[12] ?? 0 ?>
+                        ],
+                        backgroundColor: "rgba(0, 25, 45, 0.2)",
+                        borderColor: "#00192D",
+                        tension: 0.3,
+                        fill: true,
+                        pointBackgroundColor: "#FFC107",
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: value => 'KSH ' + value.toLocaleString()
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
+
+
 </body>
 <!--end::Body-->
+
 </html>
