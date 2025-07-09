@@ -6,18 +6,18 @@ header('Content-Type: application/json');
 try {
     // Get all buildings with their tenants
     $query = "SELECT
-                t.residence AS building_name,
+                t.unit_id AS building_name,
                 t.user_id,
                 CONCAT(u.first_name, ' ', u.middle_name) AS full_name,
-                t.unit AS unit_id,
+                t.unit_id AS unit_id,
                 t.rent_amount,
                 t.phone_number,
                 t.id_no
               FROM tenants t
               JOIN users u ON t.user_id = u.id
-              WHERE t.residence IS NOT NULL
+              WHERE t.unit_id IS NOT NULL
               AND t.status = 'active'
-              ORDER BY t.residence, full_name";
+              ORDER BY t.unit_id, full_name";
 
     $stmt = $pdo->prepare($query);
     $stmt->execute();

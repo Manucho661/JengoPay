@@ -32,7 +32,7 @@ $invoiceId = $pdo->lastInsertId();
 require_once '../db/connect.php';
 
 try {
-    $stmt = $pdo->prepare("SELECT building_id, building_name FROM buildings ORDER BY building_name");
+    $stmt = $pdo->prepare("SELECT building_id FROM buildings ORDER BY building_id");
     $stmt->execute();
     $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
@@ -1905,48 +1905,57 @@ document.getElementById('buildingSelect').addEventListener('change', function() 
     const buildingId = this.value;
     const tenantSelect = document.getElementById('tenantSelect');
 
-    // Clear and disable tenant dropdown if no building selected
     if (!buildingId) {
         tenantSelect.innerHTML = '<option value="" selected>Select a building first</option>';
         tenantSelect.disabled = true;
         return;
     }
 
-    // Enable and show loading state
     tenantSelect.disabled = false;
     tenantSelect.innerHTML = '<option value="">Loading tenants...</option>';
 
-    // Fetch tenants with proper error handling
     fetch(`get_tenants.php?building_id=${buildingId}`)
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+            if (!response.ok) throw new Error('Network response was not ok');
             return response.json();
         })
         .then(data => {
-            if (data.error) {
-                throw new Error(data.error);
-            }
+            if (data.error) throw new Error(data.error);
 
             if (data.length > 0) {
                 let options = '<option value="" selected>Select Tenant</option>';
                 data.forEach(tenant => {
-                    options += `<option value="${tenant.id}">
-                        ${tenant.first_name} ${tenant.middle_name} - Unit ${tenant.unit || 'N/A'}
-                    </option>`;
+                    // Exact field names from your database schema
+                    const firstName = tenant.first_name || '';
+                    const middleName = tenant.middle_name || '';
+
+                    // Clean name formatting
+                    const displayName = `${firstName} ${middleName}`.trim() || 'Unknown Tenant';
+                    const unitInfo = tenant.unit_id ? ` - Unit ${tenant.unit_id}` : '';
+
+                    options += `
+                        <option value="${tenant.user_id}"
+                                data-user-id="${tenant.user_id}"
+                                data-unit-id="${tenant.unit_id || ''}">
+                            ${displayName}${unitInfo}
+                        </option>`;
                 });
                 tenantSelect.innerHTML = options;
             } else {
-                tenantSelect.innerHTML = '<option value="" selected>No tenants found for this building</option>';
+                tenantSelect.innerHTML = '<option value="" selected>No active tenants found</option>';
             }
         })
         .catch(error => {
-            console.error('Fetch error:', error);
-            tenantSelect.innerHTML = `<option value="" selected>Error: ${error.message}</option>`;
+            console.error('Error:', error);
+            tenantSelect.innerHTML = `
+                <option value="" selected>
+                    Error: ${error.message.substring(0, 30)}${error.message.length > 30 ? '...' : ''}
+                </option>`;
+            tenantSelect.disabled = true;
         });
 });
 </script>
+
 <!-- </script> -->
 
 <!-- <script>
@@ -2019,7 +2028,7 @@ function displayBuildings(buildings) {
 document.addEventListener('DOMContentLoaded', fetchBuildingsWithTenants);
 </script> -->
 
-<script>
+<!-- <script>
 document.addEventListener('DOMContentLoaded', function() {
     const buildingSelect = document.getElementById('buildingSelect');
     const tenantSelect = document.getElementById('tenantSelect');
@@ -2103,7 +2112,7 @@ document.addEventListener('DOMContentLoaded', function() {
         tenantDetails.style.display = 'block';
     });
 });
-</script>
+</script> -->
 
 
 <!-- <script>
