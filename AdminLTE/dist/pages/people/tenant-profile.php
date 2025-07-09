@@ -815,199 +815,181 @@ try {
                   </div>
                 </div>
               </div>
-
-
-
                  <!-- end row -->
-                
                  <!-- start row -->
-<div class="row mt-3">
-      <h6 class="mb-0 contact_section_header" style="width:100%; ">Pets</h6>
-  <div class="col-md-9 flex align-items-center">
-    <div class="bg-white p-2 rounded-2 mt-1" style="overflow:auto;">
-        <table id="pets-table">
-        <thead>
-          <tr>
-            <th>Type</th>
-            <th>Weight</th>
-            <th>License Number</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Pet rows will go here -->
-        </tbody>
-      </table>
-    </div>
-  </div>
+              <div class="row mt-3">
+                    <h6 class="mb-0 contact_section_header" style="width:100%; ">Pets</h6>
+                <div class="col-md-9 flex align-items-center">
+                  <div class="bg-white p-2 rounded-2 mt-1" style="overflow:auto;">
+                      <table id="pets-table">
+                      <thead>
+                        <tr>
+                          <th>Type</th>
+                          <th>Weight</th>
+                          <th>License Number</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <!-- Pet rows will go here -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
 
-  <div class="col-md-3 ">
-    <div class="add-pet-card mt-1 shadow-sm bg-white px-2 py-2 rounded d-flex align-items-cen justify-content-center">
-      <button class="btn btn-sm rounded pet-modal"
-              data-bs-toggle="modal"
-              data-bs-target="#addPetModal"
-              style="background-color: #00192D; color: #FFC107; padding: 4px 12px;">
-        <i class="fas fa-plus me-1"></i> Add
-      </button>
-    </div>
-  </div>
-</div>
-
-
+                <div class="col-md-3 ">
+                  <div class="add-pet-card mt-1 shadow-sm bg-white px-2 py-2 rounded d-flex align-items-cen justify-content-center">
+                    <button class="btn btn-sm rounded pet-modal"
+                            data-bs-toggle="modal"
+                            data-bs-target="#addPetModal"
+                            style="background-color: #00192D; color: #FFC107; padding: 4px 12px;">
+                      <i class="fas fa-plus me-1"></i> Add
+                    </button>
+                  </div>
+                </div>
+              </div>
                   <!-- Add Pet Modal -->
-<div class="modal fade" id="addPetModal" tabindex="-1" aria-labelledby="addPetModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content shadow rounded">
-      <form id="addPetForm">
-             <input type="hidden" id="tenantIdaddPetForm" name="tenant_id" value="">
+              <div class="modal fade" id="addPetModal" tabindex="-1" aria-labelledby="addPetModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content shadow rounded">
+                    <form id="addPetForm">
+                          <input type="hidden" id="tenantIdaddPetForm" name="tenant_id" value="">
 
-        <!-- Modal Header -->
-        <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
-          <h5 class="modal-title" id="addPetModalLabel"><i class="fas fa-paw me-2"></i> Add Pet</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
+                      <!-- Modal Header -->
+                      <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
+                        <h5 class="modal-title" id="addPetModalLabel"><i class="fas fa-paw me-2"></i> Add Pet</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
 
-        <!-- Modal Body -->
-        <div class="modal-body px-4 py-3">
-        
+                      <!-- Modal Body -->
+                      <div class="modal-body px-4 py-3">
+                      
 
-          <!-- Pet Type -->
-          <div class="mb-3">
-            <label for="petType" class="form-label">Pet Type</label>
-            <select class="form-select" id="petType" name="type" required>
-              <option value="" selected disabled>Select type</option>
-              <option value="Dog">Dog</option>
-              <option value="Cat">Cat</option>
-              <option value="Bird">Bird</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
+                        <!-- Pet Type -->
+                        <div class="mb-3">
+                          <label for="petType" class="form-label">Pet Type</label>
+                          <select class="form-select" id="petType" name="type" required>
+                            <option value="" selected disabled>Select type</option>
+                            <option value="Dog">Dog</option>
+                            <option value="Cat">Cat</option>
+                            <option value="Bird">Bird</option>
+                            <option value="Other">Other</option>
+                          </select>
+                        </div>
 
-          <!-- Pet Weight -->
-          <div class="mb-3">
-            <label for="petWeight" class="form-label">Weight (kg)</label>
-            <input type="number" class="form-control" id="petWeight" name="weight" step="0.1" min="0" required placeholder="Enter pet weight">
-          </div>
+                        <!-- Pet Weight -->
+                        <div class="mb-3">
+                          <label for="petWeight" class="form-label">Weight (kg)</label>
+                          <input type="number" class="form-control" id="petWeight" name="weight" step="0.1" min="0" required placeholder="Enter pet weight">
+                        </div>
 
-          <!-- License Number -->
-          <div class="mb-3">
-            <label for="licenseNumber" class="form-label">License Number</label>
-            <input type="text" class="form-control" id="licenseNumber" name="license" required placeholder="Enter license number">
-          </div>
-        </div>
+                        <!-- License Number -->
+                        <div class="mb-3">
+                          <label for="licenseNumber" class="form-label">License Number</label>
+                          <input type="text" class="form-control" id="licenseNumber" name="license" required placeholder="Enter license number">
+                        </div>
+                      </div>
 
-        <!-- Modal Footer -->
-        <div class="modal-footer">
-          
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: white; color: #00192D;">Cancel</button>
-          <button type="submit" class="btn" style="background-color: #00192D; color: #FFC107;">Add Pet</button>
-        </div>
-      </form>
-
-
-    </div>
-  </div>
-</div>
+                      <!-- Modal Footer -->
+                      <div class="modal-footer">
+                        
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: white; color: #00192D;">Cancel</button>
+                        <button type="submit" class="btn" style="background-color: #00192D; color: #FFC107;">Add Pet</button>
+                      </div>
+                    </form>
 
 
-<div class="row mt-3 align-items-start">
-  <!-- Left Side: Heading + Table -->
-   <h6 class="mb-2 contact_section_header">Files</h6>
-  <div class="col-md-9">
-    
-    <div class="bg-white p-2 rounded-2" style="overflow: auto;">
-    <table id="files-table">
-      <thead>
-        <tr>
-          <th>File Name</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- File rows will go here -->
-      </tbody>
-    </table>
-    </div>
-    
-  </div>
-
-  <!-- Right Side: Add Button aligned with header row -->
-  <div class="col-md-3 d-flex align-items-end" >
-    <div class="add-file-card shadow-sm bg-white px-2 py-2 rounded d-flex align-items-center justify-content-center" style="width: 100%;">
-      <button class="btn btn-sm rounded File-modal" 
-              data-bs-toggle="modal" 
-              data-bs-target="#addFileModal" 
-              style="background-color: #00192D; color: #FFC107; padding: 4px 12px;">
-        <i class="fas fa-plus me-1"></i> Add File
-      </button>
-    </div>
-  </div>
-</div>
-
-
-
-
-
-
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-3 align-items-start">
+                <!-- Left Side: Heading + Table -->
+                <h6 class="mb-2 contact_section_header">Files</h6>
+                <div class="col-md-9">
                   
+                  <div class="bg-white p-2 rounded-2" style="overflow: auto;">
+                  <table id="files-table">
+                    <thead>
+                      <tr>
+                        <th>File Name</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- File rows will go here -->
+                    </tbody>
+                  </table>
+                  </div>
+                  
+                </div>
 
-<!-- Add File Modal -->
-<div class="modal fade" id="addFileModal" tabindex="-1" aria-labelledby="addFileModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content shadow">
+                <!-- Right Side: Add Button aligned with header row -->
+                <div class="col-md-3 d-flex align-items-end" >
+                  <div class="add-file-card shadow-sm bg-white px-2 py-2 rounded d-flex align-items-center justify-content-center" style="width: 100%;">
+                    <button class="btn btn-sm rounded File-modal" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#addFileModal" 
+                            style="background-color: #00192D; color: #FFC107; padding: 4px 12px;">
+                      <i class="fas fa-plus me-1"></i> Add File
+                    </button>
+                  </div>
+                </div>
+              </div>
 
-      <!-- Modal Header -->
-      <div class="modal-header" style="background-color:#00192D; color:#FFC107;">
-        <h5 class="modal-title" id="addFileModalLabel"><i class="fas fa-file-upload me-2"></i> Add File</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
+              <!-- Add File Modal -->
+              <div class="modal fade" id="addFileModal" tabindex="-1" aria-labelledby="addFileModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content shadow">
 
-      <!-- Modal Body -->
-      <form id="addFileForm" enctype="multipart/form-data">
-     <input type="hidden" id="tenantIdFile" name="tenant_id" value="">
+                    <!-- Modal Header -->
+                    <div class="modal-header" style="background-color:#00192D; color:#FFC107;">
+                      <h5 class="modal-title" id="addFileModalLabel"><i class="fas fa-file-upload me-2"></i> Add File</h5>
+                      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
 
-
-        <div class="modal-body px-4">
-          <!-- File Name -->
-          <div class="mb-3">
-            <label for="fileName" class="form-label">File Name</label>
-            <input type="text" class="form-control" id="fileName" name="file_name" placeholder="Enter file name" required>
-          </div>
-
-          <!-- File Upload -->
-          <div class="mb-3">
-            <label for="fileUpload" class="form-label">Choose File</label>
-            <input type="file" class="form-control" id="fileUpload" name="file_upload" required>
-          </div>
-        </div>
-
-        <!-- Modal Footer -->
-        <div class="modal-footer px-4">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: white; color: #00192D;">Cancel</button>
-          <button class="btn  add-file-btn" data-tenant-id="39011877" data-bs-toggle="modal" data-bs-target="#addFileModal" style="background-color: #00192D; color: #FFC107;">Upload</button>
-        </div>
-      </form>
-
-      <!-- Add File Modal -->
-<div class="modal fade" id="addFileModal" tabindex="-1" aria-labelledby="addFileModalLabel" aria-hidden="true">
-  <!-- (modal content stays the same) -->
-</div>
-
-<!-- Uploaded Files List (place this after modal) -->
-<div class="mt-4">
- 
-  <ul id="fileList" class="mt-3" style="list-style-type: none; padding-left: 0;">
-    <!-- Newly uploaded files will appear here -->
-  </ul>
-</div>
-
-    </div>
-  </div>
-</div>
+                    <!-- Modal Body -->
+                    <form id="addFileForm" enctype="multipart/form-data">
+                  <input type="hidden" id="tenantIdFile" name="tenant_id" value="">
 
 
+                      <div class="modal-body px-4">
+                        <!-- File Name -->
+                        <div class="mb-3">
+                          <label for="fileName" class="form-label">File Name</label>
+                          <input type="text" class="form-control" id="fileName" name="file_name" placeholder="Enter file name" required>
+                        </div>
 
-        <!-- OVERLAYS -->
-        <!-- Edit Personal Info Modal -->
+                        <!-- File Upload -->
+                        <div class="mb-3">
+                          <label for="fileUpload" class="form-label">Choose File</label>
+                          <input type="file" class="form-control" id="fileUpload" name="file_upload" required>
+                        </div>
+                      </div>
+
+                      <!-- Modal Footer -->
+                      <div class="modal-footer px-4">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: white; color: #00192D;">Cancel</button>
+                        <button class="btn  add-file-btn" data-tenant-id="39011877" data-bs-toggle="modal" data-bs-target="#addFileModal" style="background-color: #00192D; color: #FFC107;">Upload</button>
+                      </div>
+                    </form>
+
+                    <!-- Add File Modal -->
+              <div class="modal fade" id="addFileModal" tabindex="-1" aria-labelledby="addFileModalLabel" aria-hidden="true">
+                <!-- (modal content stays the same) -->
+              </div>
+
+              <!-- Uploaded Files List (place this after modal) -->
+              <div class="mt-4">
+              
+                <ul id="fileList" class="mt-3" style="list-style-type: none; padding-left: 0;">
+                  <!-- Newly uploaded files will appear here -->
+                </ul>
+              </div>
+
+                  </div>
+                </div>
+              </div>
+              <!-- OVERLAYS -->
+              <!-- Edit Personal Info Modal -->
               <div class="modal fade" id="editPersonalInfoModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content shadow-lg border-0 rounded-3">
@@ -1040,12 +1022,12 @@ try {
                           <label for="editPhone"><i class="fas fa-phone me-1"></i> Phone Number</label>
                         </div>
 
-<!-- ID Number -->
-<div class="form-floating mb-3">
-  <input type="text" class="form-control" id="editIDNo" placeholder="ID Number"
-         value="<?= htmlspecialchars($data['id_no'] ?? '') ?>" required>
-  <label for="editIDNo"><i class="fas fa-id-card me-1"></i> National ID Number</label>
-</div>
+                      <!-- ID Number -->
+                      <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="editIDNo" placeholder="ID Number"
+                              value="<?= htmlspecialchars($data['id_no'] ?? '') ?>" required>
+                        <label for="editIDNo"><i class="fas fa-id-card me-1"></i> National ID Number</label>
+                      </div>
 
                       <div class="modal-footer bg-light d-flex justify-content-between">
                         <small class="text-muted"><i class="fas fa-info-circle me-1"></i> Make sure details are accurate</small>
@@ -1112,8 +1094,27 @@ try {
                   </div>
                 </div>
               </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </div>
+      <!--begin::Footer-->
 
-
+      <footer class="app-footer">
+        <!--begin::To the end-->
+        <div class="float-end d-none d-sm-inline">Anything you want</div>
+        <!--end::To the end-->
+        <!--begin::Copyright-->
+        <strong>
+          Copyright &copy; 2014-2024&nbsp;
+          <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;"> JENGO PAY</a>.
+        </strong>
+        All rights reserved.
+        <!--end::Copyright-->
+      </footer>
+      <!--end::Footer-->
+  </div>
 
 
         <?php if (isset($_GET['id'])): ?>
@@ -1218,12 +1219,7 @@ try {
               integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
               crossorigin="anonymous"
             ></script>
-
-
 <!--  -->
-
-
-
   </body>
   <!--end::Body-->
 </html>

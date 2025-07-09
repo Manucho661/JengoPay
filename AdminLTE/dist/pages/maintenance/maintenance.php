@@ -791,31 +791,31 @@
                              </div>
                             </div>
                           </div>
-                          <div id="bankTransferSection" class="bankTransferSection" style="display: none;">
-                            <div class="d-flex justify-content-center">
-                              <img src="images/R.png" alt="Italian Trulli" width="100px" height="100">
-                            </div>
-                            <div class="form-group">
-                              <label for="cardNumber">Card Number</label>
-                              <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
-                            </div>
+                          <!-- <div id="bankTransferSection" class="bankTransferSection" style="display: none;"> -->
+                            <!-- <div class="d-flex justify-content-center"> -->
+                              <!-- <img src="images/R.png" alt="Italian Trulli" width="100px" height="100"> -->
+                            <!-- </div> -->
+                            <!-- <div class="form-group"> -->
+                              <!-- <label for="cardNumber">Card Number</label> -->
+                              <!-- <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required> -->
+                            <!-- </div> -->
                             <!-- <div class="form-row" style="display: flex; gap:15px; width:100%;"> -->
-                              <div class="form-group">
-                                <label for="expiry">Valid Till</label>
-                                <input type="text" id="expiry" placeholder="MM/YY" maxlength="5" required>
-                              </div>
-                              <div class="form-group">
-                                <label for="cvv">CVV</label>
-                                <input type="password" id="cvv" placeholder="123" maxlength="4" required>
-                              </div>
-                              <div class="form-group">
-                                <label for="amount"><b>Amount</b></label>
-                                <input type="number" id="amount" placeholder="e.g. 1000" required>
-                              </div>
+                              <!-- <div class="form-group"> -->
+                                <!-- <label for="expiry">Valid Till</label> -->
+                                <!-- <input type="text" id="expiry" placeholder="MM/YY" maxlength="5" required> -->
+                              <!-- </div> -->
+                              <!-- <div class="form-group"> -->
+                                <!-- <label for="cvv">CVV</label> -->
+                                <!-- <input type="password" id="cvv" placeholder="123" maxlength="4" required> -->
+                              <!-- </div> -->
+                              <!-- <div class="form-group"> -->
+                                <!-- <label for="amount"><b>Amount</b></label> -->
+                                <!-- <input type="number" id="amount" placeholder="e.g. 1000" required> -->
+                              <!-- </div> -->
                              <!-- </div> -->
-                             <div class="d-flex justify-content-end">
-                                <button type="submit" class="btn btn-success mt-3">Pay Now</button>
-                             </div>
+                             <!-- <div class="d-flex justify-content-end"> -->
+                                <!-- <button type="submit" class="btn btn-success mt-3">Pay Now</button> -->
+                             <!-- </div> -->
                           </div>
                           <div class="d-flex">
                             <button type="button" class="btn btn-secondary me-2 mt-3" id="goBackBtn">← Go Back</button>
