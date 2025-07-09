@@ -1,26 +1,3 @@
-<?php
-include '../db/connect.php';
-?>
-
-<?php
-// Fetch tenants with their user details
-$sql = "SELECT
-  inspections.inspection_number,
-  inspections.building_name,
-  inspections.unit_name,
-  inspections.inspection_type,
-  inspections.date
-FROM inspections";
-
-$stmt = $pdo->query($sql);
-
-// Use fetchAll to get all rows as an array
-$inspections = $stmt ? $stmt->fetchAll(PDO::FETCH_ASSOC) : [];
-
-// Safely count the inspections
-$inspectionsCount = is_array($inspections) ? count($inspections) : 0;
-
-?>
 
 <?php
 require_once '../db/connect.php';
