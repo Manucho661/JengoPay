@@ -28,7 +28,27 @@ require_once '../db/connect.php';
 $expenses = [];
 $monthlyTotals = array_fill(1, 12, 0);
 
-// === AJAX: Return Monthly Totals ===
+// === ✅ AJAX: Return Expense Details for Modal Popup ===
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['view_id'])) {
+    header('Content-Type: application/json');
+
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM expenses WHERE id = ?");
+        $stmt->execute([$_GET['view_id']]);
+        $expense = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($expense) {
+            echo json_encode(['success' => true, 'data' => $expense]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Expense not found']);
+        }
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'DB error: ' . $e->getMessage()]);
+    }
+    exit;
+}
+
+// === ✅ AJAX: Return Monthly Totals ===
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['get_totals'])) {
     $stmt = $pdo->query("SELECT MONTH(date) as month, SUM(total) as total FROM expenses GROUP BY MONTH(date)");
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -38,45 +58,78 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['get_totals'])) {
     exit;
 }
 
-// === AJAX: Handle Expense Submission ===
+// === ✅ AJAX: Handle Expense Submission ===
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SERVER['HTTP_X_REQUESTED_WITH'])) {
     $date = $_POST['date'] ?? null;
     $supplier = $_POST['supplier'] ?? null;
     $expense_number = $_POST['expense_number'] ?? null;
     $total = $_POST['total'] ?? null;
 
-    if ($date && $supplier && $expense_number && $total) {
-        try {
-            $stmt = $pdo->prepare("INSERT INTO expenses (date, supplier, expense_number, total) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$date, $supplier, $expense_number, $total]);
+    $items = $_POST['item'] ?? [];
+    $descriptions = $_POST['description'] ?? [];
+    $qtys = $_POST['qty'] ?? [];
+    $unit_prices = $_POST['unit_price'] ?? [];
+    $taxes = $_POST['taxes'] ?? [];
 
-            echo json_encode([
-                'success' => true,
-                'data' => [
-                    'date' => $date,
-                    'supplier' => $supplier,
-                    'expense_number' => $expense_number,
-                    'total' => $total
-                ]
+    try {
+        $pdo->beginTransaction();
+
+        for ($i = 0; $i < count($items); $i++) {
+            if (empty($items[$i]) && empty($qtys[$i]) && empty($unit_prices[$i])) continue;
+
+            // 🧠 Extract values
+            $qty = floatval($qtys[$i]);
+            $price = floatval($unit_prices[$i]);
+            $tax = $taxes[$i];
+            $lineTotal = 0;
+
+            // ✅ Same logic as in JS
+            switch ($tax) {
+                case 'VAT 16% Inclusive':
+                    $base = $price / 1.16;
+                    $lineTotal = $base * $qty * 1.16;
+                    break;
+                case 'VAT 16% Exclusive':
+                    $lineTotal = $price * $qty * 1.16;
+                    break;
+                case 'Zero Rated':
+                case 'Exempted':
+                default:
+                    $lineTotal = $price * $qty;
+            }
+
+            $stmt = $pdo->prepare("INSERT INTO expenses (date, supplier, expense_number, item, description, qty, unit_price, taxes, total) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([
+                $date,
+                $supplier,
+                $expense_number,
+                $items[$i],
+                $descriptions[$i],
+                $qty,
+                $price,
+                $tax,
+                $lineTotal
             ]);
-            exit;
-        } catch (PDOException $e) {
-            echo json_encode([
-                'success' => false,
-                'error' => '❌ Failed to save expense: ' . $e->getMessage()
-            ]);
-            exit;
         }
-    } else {
+
+
+        $pdo->commit();
+
+        echo json_encode(['success' => true]);
+        exit;
+    } catch (PDOException $e) {
+        $pdo->rollBack();
         echo json_encode([
             'success' => false,
-            'error' => '❌ Missing required fields.'
+            'error' => '❌ Failed to save expenses: ' . $e->getMessage()
         ]);
         exit;
     }
 }
 
-// === Normal Load ===
+
+
+// === ✅ Normal Page Load ===
 try {
     $stmt = $pdo->query("SELECT * FROM expenses ORDER BY date DESC");
     $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -89,6 +142,7 @@ try {
     $errorMessage = "❌ Failed to fetch expenses: " . $e->getMessage();
 }
 ?>
+
 
 
 
@@ -159,6 +213,8 @@ try {
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
     <!-- Pdf pluggin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -331,6 +387,7 @@ try {
                                         </a>
                                     </div>
 
+                                    <!-- ✅ Fixed & Complete Expense Form -->
                                     <div class="collapse" id="addExpense">
                                         <div class="card-body border-top border-2">
                                             <div class="card mb-3 shadow-sm">
@@ -399,27 +456,29 @@ try {
                                                                     </thead>
                                                                     <tbody>
                                                                         <tr>
-                                                                            <td><select class="form-select">
+                                                                            <td>
+                                                                                <select class="form-select" name="item[]" required>
                                                                                     <option selected disabled>--Select Option--</option>
                                                                                     <option>Rent</option>
-                                                                                    <option>Water BIll</option>
+                                                                                    <option>Water Bill</option>
                                                                                     <option>Garbage</option>
-                                                                                </select></td>
-                                                                            <td><textarea class="form-control" rows="1" placeholder="Description"></textarea></td>
-                                                                            <td><input type="number" class="form-control qty" placeholder="1" /></td>
-                                                                            <td><input type="number" class="form-control unit-price" placeholder="123" /></td>
-                                                                            <td><select class="form-select">
+                                                                                </select>
+                                                                            </td>
+                                                                            <td><textarea class="form-control" rows="1" placeholder="Description" name="description[]" required></textarea></td>
+                                                                            <td><input type="number" class="form-control qty" placeholder="1" name="qty[]" required /></td>
+                                                                            <td><input type="number" class="form-control unit-price" placeholder="123" name="unit_price[]" required /></td>
+                                                                            <td>
+                                                                                <select class="form-select" name="taxes[]" required>
                                                                                     <option selected disabled>--Select Option--</option>
                                                                                     <option>VAT 16% Inclusive</option>
                                                                                     <option>VAT 16% Exclusive</option>
                                                                                     <option>Zero Rated</option>
                                                                                     <option>Exempted</option>
-                                                                                </select></td>
+                                                                                </select>
+                                                                            </td>
                                                                             <td class="d-flex align-items-center">
                                                                                 <input type="text" class="form-control me-2 total-line" placeholder="0" readonly />
-                                                                                <button type="button" class="btn btn-sm btn-danger" onclick="deleteRow(this)">
-                                                                                    <i class="fa fa-trash"></i>
-                                                                                </button>
+                                                                                <button type="button" class="btn btn-sm btn-danger" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button>
                                                                             </td>
                                                                         </tr>
                                                                     </tbody>
@@ -436,146 +495,291 @@ try {
                                                             </div>
                                                         </div>
                                                     </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
+
+                                    <script>
+                                        function calculateTotal() {
+                                            let grandTotal = 0;
+
+                                            document.querySelectorAll('#spendTable tbody tr').forEach(row => {
+                                                const qty = parseFloat(row.querySelector('.qty')?.value || 0);
+                                                let unitPrice = parseFloat(row.querySelector('.unit-price')?.value || 0);
+                                                const taxOption = row.querySelector('[name="taxes[]"]')?.value;
+                                                let total = 0;
+
+                                                switch (taxOption) {
+                                                    case 'VAT 16% Inclusive':
+                                                        unitPrice = unitPrice / 1.16; // Extract base price
+                                                        total = unitPrice * qty * 1.16; // Add back VAT
+                                                        break;
+                                                    case 'VAT 16% Exclusive':
+                                                        total = unitPrice * qty * 1.16; // Add 16% VAT
+                                                        break;
+                                                    case 'Zero Rated':
+                                                    case 'Exempted':
+                                                        total = unitPrice * qty;
+                                                        break;
+                                                    default:
+                                                        total = unitPrice * qty;
+                                                }
+
+                                                row.querySelector('.total-line').value = total.toFixed(2);
+                                                grandTotal += total;
+                                            });
+
+                                            document.getElementById('grandTotal').value = grandTotal.toFixed(2);
+                                        }
+
+                                        function deleteRow(btn) {
+                                            btn.closest('tr').remove();
+                                            calculateTotal();
+                                        }
+
+                                        function addRow() {
+                                            const tbody = document.querySelector('#spendTable tbody');
+                                            const newRow = tbody.rows[0].cloneNode(true);
+
+                                            newRow.querySelectorAll('input, select, textarea').forEach(input => {
+                                                if (input.tagName.toLowerCase() === 'select') {
+                                                    input.selectedIndex = 0;
+                                                } else {
+                                                    input.value = '';
+                                                }
+                                            });
+
+                                            tbody.appendChild(newRow);
+                                            calculateTotal();
+                                        }
+
+                                        // Auto-calculate when inputs change (qty, unit price, taxes)
+                                        document.addEventListener('input', function(e) {
+                                            if (e.target.matches('.qty, .unit-price, [name="taxes[]"]')) {
+                                                calculateTotal();
+                                            }
+                                        });
+
+                                        // Handle submission
+                                        document.getElementById('expenseForm').addEventListener('submit', function(e) {
+                                            e.preventDefault();
+                                            calculateTotal();
+
+                                            const form = e.target;
+                                            const formData = new FormData(form);
+
+                                            fetch(window.location.href, {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'X-Requested-With': 'XMLHttpRequest'
+                                                    },
+                                                    body: formData
+                                                })
+                                                .then(res => res.json())
+                                                .then(data => {
+                                                    if (data.success) {
+                                                        alert("✅ Expense saved and displayed!");
+                                                        form.reset();
+                                                        document.getElementById('grandTotal').value = "0.00";
+                                                        calculateTotal();
+                                                        if (document.getElementById('toggleIcon')) {
+                                                            document.getElementById('toggleIcon').click();
+                                                        }
+                                                    } else {
+                                                        alert(data.error || "❌ Something went wrong.");
+                                                    }
+                                                })
+                                                .catch(err => {
+                                                    console.error(err);
+                                                    alert("❌ Server error occurred.");
+                                                });
+                                        });
+                                    </script>
+
+
+
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card Content">
+                                                <div class="card-header">
+                                                    <b>All Operational Expenses</b>
+                                                </div>
+                                                <div class="card-body" style="overflow-x: auto;">
+                                                    <table class="table-striped" id="repaireExpenses" style="width: 100%; min-width: 600px;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Date</th>
+                                                                <th>Supplier</th>
+                                                                <th>Expense No</th>
+                                                                <th>Totals</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php foreach ($expenses as $exp): ?>
+                                                                <tr>
+                                                                    <td><?= htmlspecialchars(date('d M Y', strtotime($exp['date']))) ?></td>
+                                                                    <td><?= htmlspecialchars($exp['supplier']) ?></td>
+                                                                    <td><?= htmlspecialchars($exp['expense_number']) ?></td>
+                                                                    <td>KSH <?= number_format($exp['total'], 2) ?></td>
+                                                                    <td>
+                                                                        <!-- view button -->
+                                                                        <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" onclick="openExpenseModal(<?= $exp['id'] ?>)">
+                                                                            <i class="fa fa-file"></i> View
+                                                                        </button>
+
+                                                                        <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Remove"><i class="fa fa-trash"></i></button>
+                                                                    </td>
+                                                                </tr>
+                                                            <?php endforeach; ?>
+                                                        </tbody>
+
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <script>
-                            function calculateTotal() {
-                                let grandTotal = 0;
-                                document.querySelectorAll('#expenseForm tbody tr').forEach(row => {
-                                    const qty = parseFloat(row.querySelector('.qty')?.value || 0);
-                                    const price = parseFloat(row.querySelector('.unit-price')?.value || 0);
-                                    const total = qty * price;
-                                    row.querySelector('.total-line').value = total.toFixed(2);
-                                    grandTotal += total;
-                                });
-                                document.getElementById('grandTotal').value = grandTotal.toFixed(2);
-                            }
 
-                            document.getElementById('expenseForm').addEventListener('submit', function(e) {
-                                e.preventDefault();
-                                calculateTotal();
-
-                                const form = e.target;
-                                const formData = new FormData(form);
-
-                                fetch(window.location.href, {
-                                        method: 'POST',
-                                        headers: {
-                                            'X-Requested-With': 'XMLHttpRequest'
-                                        },
-                                        body: formData
-                                    })
-                                    .then(res => res.json())
-                                    .then(data => {
-                                        if (data.success) {
-                                            const tbody = document.querySelector('#repaireExpenses tbody');
-                                            const row = document.createElement('tr');
-                                            row.innerHTML = `
-                <td>${data.data.date}</td>
-                <td>${data.data.supplier}</td>
-                <td>${data.data.expense_number}</td>
-                <td>KSH ${parseFloat(data.data.total).toLocaleString()}</td>
-                <td>
-                    <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
-                    <button class="btn btn-sm" style="background-color: #193042; color:#fff;"><i class="fa fa-trash"></i></button>
-                </td>
-            `;
-                                            tbody.prepend(row);
-                                            alert("✅ Expense saved and displayed!");
-
-                                            form.reset();
-                                            document.getElementById('grandTotal').value = "0.00";
-                                            document.getElementById('toggleIcon').click();
-
-                                            updateExpenseChart();
-                                        } else {
-                                            alert(data.error || "❌ Something went wrong.");
-                                        }
-                                    })
-                                    .catch(err => {
-                                        console.error(err);
-                                        alert("❌ Server error occurred.");
-                                    });
-                            });
-
-                            document.addEventListener('input', function(e) {
-                                if (e.target.matches('.qty, .unit-price')) {
-                                    calculateTotal();
+                            <?php
+                            // Group expenses by month and sum totals
+                            $monthlyTotals = [];
+                            try {
+                                $stmt = $pdo->query("SELECT MONTH(date) AS month, SUM(total) AS total FROM expenses GROUP BY MONTH(date)");
+                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                    $monthNum = (int)$row['month'];
+                                    $monthlyTotals[$monthNum] = (float)$row['total'];
                                 }
-                            });
-                        </script>
+                            } catch (PDOException $e) {
+                                $monthlyTotals = [];
+                            }
+                            ?>
 
 
+                            <!-- Line Chart: Expenses vs Months -->
+                            <div class="mt-5">
+                                <h6 class="fw-bold text-center">📊 Monthly Expense Trends</h6>
+                                <canvas id="monthlyExpenseChart" height="100"></canvas>
+                            </div>
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="card Content">
-                                    <div class="card-header">
-                                        <b>All Operational Expenses</b>
-                                    </div>
-                                    <div class="card-body" style="overflow-x: auto;">
-                                        <table class="table-striped" id="repaireExpenses" style="width: 100%; min-width: 600px;">
-                                            <thead>
-                                                <tr>
-                                                    <th>Date</th>
-                                                    <th>Supplier</th>
-                                                    <th>Expense No</th>
-                                                    <th>Totals</th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php foreach ($expenses as $exp): ?>
-                                                    <tr>
-                                                        <td><?= htmlspecialchars(date('d M Y', strtotime($exp['date']))) ?></td>
-                                                        <td><?= htmlspecialchars($exp['supplier']) ?></td>
-                                                        <td><?= htmlspecialchars($exp['expense_number']) ?></td>
-                                                        <td>KSH <?= number_format($exp['total'], 2) ?></td>
-                                                        <td>
-                                                            <button onclick="openexpensePopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="view"><i class="fa fa-file"></i></button>
-                                                            <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Remove"><i class="fa fa-trash"></i></button>
-                                                        </td>
-                                                    </tr>
-                                                <?php endforeach; ?>
-                                            </tbody>
+                            <!-- 🎉 Premium Stylish Modal -->
+                            <div class="modal fade" id="expenseModal" tabindex="-1" role="dialog" aria-labelledby="expenseModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                    <div class="modal-content shadow-lg rounded-4">
 
-                                        </table>
+                                        <!-- Header with gradient -->
+                                        <div class="modal-header" style="background: linear-gradient(135deg, #00192D, #004455); color: #FFC107; border-bottom: none; border-top-left-radius: 16px; border-top-right-radius: 16px;">
+                                            <h5 class="modal-title d-flex align-items-center" id="expenseModalLabel">
+                                                <i class="fas fa-file-invoice-dollar fa-lg me-3"></i> Expense Details
+                                            </h5>
+                                        </div>
+
+                                        <!-- Body with subtle background -->
+                                        <div class="modal-body bg-light px-4 py-4">
+
+                                            <!-- Group 1: Date & Supplier -->
+                                            <div class="d-flex flex-wrap gap-3 mb-4">
+                                                <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
+                                                    <div class="d-flex align-items-center mb-2 text-primary">
+                                                        <i class="fas fa-calendar-alt fa-fw me-2"></i>
+                                                        <span class="fw-semibold">Date</span>
+                                                    </div>
+                                                    <div id="modal-date" class="text-break fs-5"></div>
+                                                </div>
+                                                <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
+                                                    <div class="d-flex align-items-center mb-2 text-success">
+                                                        <i class="fas fa-store fa-fw me-2"></i>
+                                                        <span class="fw-semibold">Supplier</span>
+                                                    </div>
+                                                    <div id="modal-supplier" class="text-break fs-5"></div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Group 2: Expense # & Item -->
+                                            <div class="d-flex flex-wrap gap-3 mb-4">
+                                                <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
+                                                    <div class="d-flex align-items-center mb-2 text-warning">
+                                                        <i class="fas fa-hashtag fa-fw me-2"></i>
+                                                        <span class="fw-semibold">Expense Number</span>
+                                                    </div>
+                                                    <div id="modal-expense-number" class="text-break fs-5"></div>
+                                                </div>
+                                                <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
+                                                    <div class="d-flex align-items-center mb-2 text-secondary">
+                                                        <i class="fas fa-box fa-fw me-2"></i>
+                                                        <span class="fw-semibold">Item</span>
+                                                    </div>
+                                                    <div id="modal-item" class="text-break fs-5"></div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Group 3: Description -->
+                                            <div class="mb-4 p-3 bg-white rounded shadow-sm">
+                                                <div class="d-flex align-items-center mb-2 text-muted">
+                                                    <i class="fas fa-align-left fa-fw me-2"></i>
+                                                    <span class="fw-semibold">Description</span>
+                                                </div>
+                                                <div id="modal-description" class="text-break fs-5"></div>
+                                            </div>
+
+                                            <!-- Group 4: Qty, Unit Price & Taxes -->
+                                            <div class="d-flex flex-wrap gap-3 mb-4">
+                                                <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
+                                                    <div class="d-flex align-items-center mb-2 text-info">
+                                                        <i class="fas fa-sort-numeric-up fa-fw me-2"></i>
+                                                        <span class="fw-semibold">Quantity</span>
+                                                    </div>
+                                                    <div id="modal-qty" class="fs-5"></div>
+                                                </div>
+                                                <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
+                                                    <div class="d-flex align-items-center mb-2 text-success">
+                                                        <i class="fas fa-money-bill-wave fa-fw me-2"></i>
+                                                        <span class="fw-semibold">Unit Price</span>
+                                                    </div>
+                                                    <div id="modal-unit-price" class="fs-5"></div>
+                                                </div>
+                                                <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
+                                                    <div class="d-flex align-items-center mb-2 text-warning">
+                                                        <i class="fas fa-percent fa-fw me-2"></i>
+                                                        <span class="fw-semibold">Taxes</span>
+                                                    </div>
+                                                    <div id="modal-taxes" class="fs-5"></div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Total -->
+                                            <div class="p-3 bg-white rounded shadow-sm border border-danger">
+                                                <div class="d-flex align-items-center mb-2 text-danger">
+                                                    <i class="fas fa-calculator fa-fw me-2"></i>
+                                                    <span class="fw-semibold fs-4">Total</span>
+                                                </div>
+                                                <div id="modal-total" class="fs-3 fw-bold text-danger"></div>
+                                            </div>
+
+                                        </div>
+
+                                        <!-- Footer -->
+                                        <div class="modal-footer justify-content-center bg-white rounded-bottom" style="border-top: none;">
+                                            <button type="button" class="btn btn-warning px-4 py-2 fw-semibold shadow-sm" data-bs-dismiss="modal" style="letter-spacing: 0.03em;">
+                                                <i class="fas fa-times me-2"></i> Close
+                                            </button>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <?php
-                // Group expenses by month and sum totals
-                $monthlyTotals = [];
-                try {
-                    $stmt = $pdo->query("SELECT MONTH(date) AS month, SUM(total) AS total FROM expenses GROUP BY MONTH(date)");
-                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        $monthNum = (int)$row['month'];
-                        $monthlyTotals[$monthNum] = (float)$row['total'];
-                    }
-                } catch (PDOException $e) {
-                    $monthlyTotals = [];
-                }
-                ?>
 
 
-                <!-- Line Chart: Expenses vs Months -->
-                <div class="mt-5">
-                    <h6 class="fw-bold text-center">📊 Monthly Expense Trends</h6>
-                    <canvas id="monthlyExpenseChart" height="100"></canvas>
-                </div>
 
 
-                <!--end::App Content-->
+
+
+
+                            <!--end::App Content-->
         </main>
         <!--end::App Main-->
         <!--begin::Footer-->
@@ -1118,6 +1322,41 @@ try {
 
 
 
+
+
+    <!-- ✅ Dynamic Modal Script -->
+    <script>
+        function openExpenseModal(id) {
+            fetch(`expense2.php?view_id=${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const expense = data.data;
+                        document.getElementById('modal-date').textContent = expense.date;
+                        document.getElementById('modal-supplier').textContent = expense.supplier;
+                        document.getElementById('modal-expense-number').textContent = expense.expense_number;
+                        document.getElementById('modal-item').textContent = expense.item;
+                        document.getElementById('modal-description').textContent = expense.description;
+                        document.getElementById('modal-qty').textContent = expense.qty;
+                        document.getElementById('modal-unit-price').textContent = "KES " + expense.unit_price;
+                        document.getElementById('modal-taxes').textContent = "KES " + expense.taxes;
+                        document.getElementById('modal-total').textContent = "KES " + expense.total;
+
+                        $('#expenseModal').modal('show');
+                    } else {
+                        alert("❌ " + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    alert("❌ Failed to load expense.");
+                });
+        }
+    </script>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 <!--end::Body-->
 
