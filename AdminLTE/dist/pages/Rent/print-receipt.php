@@ -20,7 +20,7 @@ if (!$tenant) {
 // Format data
 $name = htmlspecialchars($tenant['tenant_name']);
 $unit = htmlspecialchars($tenant['unit_code']);
-$property = htmlspecialchars($tenant['property_name'] ?? 'XXX');
+$property = htmlspecialchars($tenant['building_name'] ?? 'XXX');
 $amount = number_format((float)($tenant['amount_paid']), 2);
 $penalty = number_format((float)($tenant['penalty']), 2);
 $penaltyDays = (int)$tenant['penalty_days'];
@@ -47,7 +47,7 @@ if ($rawBalance > 0) {
 }
 
 // Use total as the main amount for display
-$amount = number_format($total, 2);
+$totalAmountFormatted = number_format($total, 2);
 ?>
 
 <!DOCTYPE html>
@@ -190,12 +190,11 @@ $amount = number_format($total, 2);
             <td><?= $reference ?></td>
         </tr>
         <tr>
-    <td></td>
-    <td></td>
-    <td>Amount (KES):</td>
-    <td><?= $amount ?></td>
-</tr>
-
+            <td></td>
+            <td></td>
+            <td>Amount (KES):</td>
+            <td><?= $totalAmountFormatted ?></td> <!-- Updated this to totalAmountFormatted -->
+        </tr>
     </table>
 
     <div class="divider"></div>
@@ -224,12 +223,11 @@ $amount = number_format($total, 2);
     <div class="divider"></div>
 
     <table class="amount-table">
-    <tr>
-        <td>TOTAL (KES)</td>
-        <td><?= $amount ?></td>
-    </tr>
-</table>
-
+        <tr>
+            <td>TOTAL (KES)</td>
+            <td><?= $totalAmountFormatted ?></td>
+        </tr>
+    </table>
 
     <div class="divider"></div>
 

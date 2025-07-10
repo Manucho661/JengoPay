@@ -81,8 +81,7 @@ $stmt = $pdo->query("
     SELECT
         u.first_name,
         u.middle_name,
-        t.residence,
-        t.unit,
+        t.unit_id,
         t.phone_number,
         t.job_title,
         t.income_source,
