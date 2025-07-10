@@ -301,13 +301,16 @@ try {
                 <!--begin::Container-->
                 <div class="container-fluid">
                     <!--begin::Row-->
-                    <div class="row mb-4">
+                    <div class="row">
                         <div class="col-sm-8">
-                            <h3 class="mb-0 contact_section_header page-header">  💰 &nbsp; Expenses</h3>  
+                            <h3 class="mb-0 contact_section_header"> <i class="fas fa-search icon title-icon"></i>&nbsp; Expenses</h3>
+
                         </div>
 
                         <div class="col-sm-4 d-flex justify-content-end">
-                            
+                            <button type="button" class="btn newSchedule" data-bs-toggle="modal" data-bs-target="#newSchedule" style="background-color:#FFC107 !important; color:#00192D;">
+                                New Schedule
+                            </button>
                         </div>
                         <!--end::Row-->
                     </div>
@@ -315,31 +318,7 @@ try {
                 </div>
                 <div class="app-content">
                     <div class="container-fluid">
-                        <div class="row g-3 mb-4">
-                            <p class="text-muted">Manage your expenses</p>
-                            <div class="col-md-3">
-                                <select class="form-select filter-shadow">
-                                <option selected>Filter by Building</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <select class="form-select filter-shadow ">
-                                <option selected>Filter by Tenant</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <select class="form-select filter-shadow">
-                                <option selected>Filter Status</option>
-                                <option>Pending</option>
-                                <option>Completed</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <input type="date" class="form-control filter-shadow ">
-                            </div>
-                        </div>
                         <div class="row mt-2 mb-2">
-                            <h6 class="mb-0 contact_section_header summary mb-2"></i> <b>Summary</b></h6>
                             <div class="col-md-3">
                                 <div class="personal-info-card shadow-sm bg-white p-3 rounded">
                                     <div class="d-flex align-items-center gap-2">
@@ -377,7 +356,6 @@ try {
                             </div>
                         </div>
                         <div class="row">
-                            <h6 class="mb-0 contact_section_header summary mb-4"></i> <b></b></h6>
                             <div class="col-md-12 mb-4">
                                 <div class="card shadow">
                                     <div class="card-header d-flex justify-content-between align-items-center" style="background: linear-gradient(to right, #00192D, #003D5B);">
@@ -385,6 +363,7 @@ try {
                                             <span id="toggleIcon">➕</span> Click Here to Add an Expense
                                         </a>
                                     </div>
+
                                     <!-- ✅ Fixed & Complete Expense Form -->
                                     <div class="collapse" id="addExpense">
                                         <div class="card-body border-top border-2">
@@ -497,45 +476,151 @@ try {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <h6 class="mb-0 contact_section_header summary mb-2"></i> <b>Expenses</b></h6>
-                            <div class="col-md-12">
-                                <div class="card Content">
-                                    <div class="card-body" style="overflow-x: auto;">
-                                        <table class="table-striped" id="repaireExpenses" style="width: 100%; min-width: 600px;">
-                                            <thead>
-                                                <tr>
-                                                    <th>Date</th>
-                                                    <th>Supplier</th>
-                                                    <th>Expense No</th>
-                                                    <th>Totals</th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php foreach ($expenses as $exp): ?>
-                                                    <tr>
-                                                        <td><?= htmlspecialchars(date('d M Y', strtotime($exp['date']))) ?></td>
-                                                        <td><?= htmlspecialchars($exp['supplier']) ?></td>
-                                                        <td><?= htmlspecialchars($exp['expense_number']) ?></td>
-                                                        <td>KSH <?= number_format($exp['total'], 2) ?></td>
-                                                        <td>
-                                                            <button onclick="openexpensePopup()" class="btn btn-sm" style="background-color: #0C5662; color:#fff;" data-toggle="modal" data-target="#plumbingIssueModal" title="view"><i class="fa fa-file"></i></button>
-                                                            <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Remove"><i class="fa fa-trash"></i></button>
-                                                        </td>
-                                                    </tr>
-                                                <?php endforeach; ?>
-                                            </tbody>
-                                        </table>
+
+
+                                    <script>
+                                        function calculateTotal() {
+                                            let grandTotal = 0;
+
+                                            document.querySelectorAll('#spendTable tbody tr').forEach(row => {
+                                                const qty = parseFloat(row.querySelector('.qty')?.value || 0);
+                                                let unitPrice = parseFloat(row.querySelector('.unit-price')?.value || 0);
+                                                const taxOption = row.querySelector('[name="taxes[]"]')?.value;
+                                                let total = 0;
+
+                                                switch (taxOption) {
+                                                    case 'VAT 16% Inclusive':
+                                                        unitPrice = unitPrice / 1.16; // Extract base price
+                                                        total = unitPrice * qty * 1.16; // Add back VAT
+                                                        break;
+                                                    case 'VAT 16% Exclusive':
+                                                        total = unitPrice * qty * 1.16; // Add 16% VAT
+                                                        break;
+                                                    case 'Zero Rated':
+                                                    case 'Exempted':
+                                                        total = unitPrice * qty;
+                                                        break;
+                                                    default:
+                                                        total = unitPrice * qty;
+                                                }
+
+                                                row.querySelector('.total-line').value = total.toFixed(2);
+                                                grandTotal += total;
+                                            });
+
+                                            document.getElementById('grandTotal').value = grandTotal.toFixed(2);
+                                        }
+
+                                        function deleteRow(btn) {
+                                            btn.closest('tr').remove();
+                                            calculateTotal();
+                                        }
+
+                                        function addRow() {
+                                            const tbody = document.querySelector('#spendTable tbody');
+                                            const newRow = tbody.rows[0].cloneNode(true);
+
+                                            newRow.querySelectorAll('input, select, textarea').forEach(input => {
+                                                if (input.tagName.toLowerCase() === 'select') {
+                                                    input.selectedIndex = 0;
+                                                } else {
+                                                    input.value = '';
+                                                }
+                                            });
+
+                                            tbody.appendChild(newRow);
+                                            calculateTotal();
+                                        }
+
+                                        // Auto-calculate when inputs change (qty, unit price, taxes)
+                                        document.addEventListener('input', function(e) {
+                                            if (e.target.matches('.qty, .unit-price, [name="taxes[]"]')) {
+                                                calculateTotal();
+                                            }
+                                        });
+
+                                        // Handle submission
+                                        document.getElementById('expenseForm').addEventListener('submit', function(e) {
+                                            e.preventDefault();
+                                            calculateTotal();
+
+                                            const form = e.target;
+                                            const formData = new FormData(form);
+
+                                            fetch(window.location.href, {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'X-Requested-With': 'XMLHttpRequest'
+                                                    },
+                                                    body: formData
+                                                })
+                                                .then(res => res.json())
+                                                .then(data => {
+                                                    if (data.success) {
+                                                        alert("✅ Expense saved and displayed!");
+                                                        form.reset();
+                                                        document.getElementById('grandTotal').value = "0.00";
+                                                        calculateTotal();
+                                                        if (document.getElementById('toggleIcon')) {
+                                                            document.getElementById('toggleIcon').click();
+                                                        }
+                                                    } else {
+                                                        alert(data.error || "❌ Something went wrong.");
+                                                    }
+                                                })
+                                                .catch(err => {
+                                                    console.error(err);
+                                                    alert("❌ Server error occurred.");
+                                                });
+                                        });
+                                    </script>
+
+
+
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card Content">
+                                                <div class="card-header">
+                                                    <b>All Operational Expenses</b>
+                                                </div>
+                                                <div class="card-body" style="overflow-x: auto;">
+                                                    <table class="table-striped" id="repaireExpenses" style="width: 100%; min-width: 600px;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Date</th>
+                                                                <th>Supplier</th>
+                                                                <th>Expense No</th>
+                                                                <th>Totals</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php foreach ($expenses as $exp): ?>
+                                                                <tr>
+                                                                    <td><?= htmlspecialchars(date('d M Y', strtotime($exp['date']))) ?></td>
+                                                                    <td><?= htmlspecialchars($exp['supplier']) ?></td>
+                                                                    <td><?= htmlspecialchars($exp['expense_number']) ?></td>
+                                                                    <td>KSH <?= number_format($exp['total'], 2) ?></td>
+                                                                    <td>
+                                                                        <!-- view button -->
+                                                                        <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" onclick="openExpenseModal(<?= $exp['id'] ?>)">
+                                                                            <i class="fa fa-file"></i> View
+                                                                        </button>
+
+                                                                        <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Remove"><i class="fa fa-trash"></i></button>
+                                                                    </td>
+                                                                </tr>
+                                                            <?php endforeach; ?>
+                                                        </tbody>
+
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
 
                             <?php
                             // Group expenses by month and sum totals
@@ -1211,73 +1296,7 @@ try {
             });
         });
     </script>
-    <!-- Submit -->
-     <script>
-                            function calculateTotal() {
-                                let grandTotal = 0;
-                                document.querySelectorAll('#expenseForm tbody tr').forEach(row => {
-                                    const qty = parseFloat(row.querySelector('.qty')?.value || 0);
-                                    const price = parseFloat(row.querySelector('.unit-price')?.value || 0);
-                                    const total = qty * price;
-                                    row.querySelector('.total-line').value = total.toFixed(2);
-                                    grandTotal += total;
-                                });
-                                document.getElementById('grandTotal').value = grandTotal.toFixed(2);
-                            }
 
-                            document.getElementById('expenseForm').addEventListener('submit', function(e) {
-                                e.preventDefault();
-                                calculateTotal();
-
-                                const form = e.target;
-                                const formData = new FormData(form);
-
-                                fetch(window.location.href, {
-                                        method: 'POST',
-                                        headers: {
-                                            'X-Requested-With': 'XMLHttpRequest'
-                                        },
-                                        body: formData
-                                    })
-                                    .then(res => res.json())
-                                    .then(data => {
-                                        if (data.success) {
-                                            const tbody = document.querySelector('#repaireExpenses tbody');
-                                            const row = document.createElement('tr');
-                                            row.innerHTML = `
-                                                <td>${data.data.date}</td>
-                                                <td>${data.data.supplier}</td>
-                                                <td>${data.data.expense_number}</td>
-                                                <td>KSH ${parseFloat(data.data.total).toLocaleString()}</td>
-                                                <td>
-                                                    <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
-                                                    <button class="btn btn-sm" style="background-color: #193042; color:#fff;"><i class="fa fa-trash"></i></button>
-                                                </td>
-                                            `;
-                                            tbody.prepend(row);
-                                            alert("✅ Expense saved and displayed!");
-
-                                            form.reset();
-                                            document.getElementById('grandTotal').value = "0.00";
-                                            document.getElementById('toggleIcon').click();
-
-                                            updateExpenseChart();
-                                        } else {
-                                            alert(data.error || "❌ Something went wrong.");
-                                        }
-                                    })
-                                    .catch(err => {
-                                        console.error(err);
-                                        alert("❌ Server error occurred.");
-                                    });
-                            });
-
-                            document.addEventListener('input', function(e) {
-                                if (e.target.matches('.qty, .unit-price')) {
-                                    calculateTotal();
-                                }
-                            });
-                        </script>
 
 
 
