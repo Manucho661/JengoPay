@@ -324,14 +324,14 @@ try {
                             </div>
                             <div class="col-md-3">
                                 <select class="form-select filter-shadow ">
-                                <option selected>Filter by Tenant</option>
+                                <option selected>Filter by account</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
                                 <select class="form-select filter-shadow">
                                 <option selected>Filter Status</option>
+                                <option>Approved</option>
                                 <option>Pending</option>
-                                <option>Completed</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
@@ -497,9 +497,9 @@ try {
                                             </div>
                                         </div>
                                     </div>
-                                </div>  
-                            </div> 
-                        </div>                          
+                                </div>
+                            </div>
+                        </div>
                         <div class="row mt-2">
                             <div class="col-md-12">
                                 <div class="card Content">
@@ -539,7 +539,7 @@ try {
                                         </table>
                                     </div>
                                 </div>
-                            </div>    
+                            </div>
                         </div>
                         </div>
                         <div class="row graph">
@@ -720,7 +720,7 @@ try {
     <!-- links for dataTaable buttons -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    
+
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
