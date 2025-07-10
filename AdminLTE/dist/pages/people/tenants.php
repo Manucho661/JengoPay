@@ -39,12 +39,12 @@
 
 
             // Fetch building names from the `buildings` table
-try {
-  $stmt = $pdo->query("SELECT DISTINCT building_id, building_name FROM buildings ORDER BY building_name ASC");
-  $buildings = $stmt->fetchAll();
-} catch (PDOException $e) {
-  die("Query failed: " . $e->getMessage());
-}
+  try {
+    $stmt = $pdo->query("SELECT DISTINCT building_id, building_name FROM buildings ORDER BY building_name ASC");
+    $buildings = $stmt->fetchAll();
+  } catch (PDOException $e) {
+    die("Query failed: " . $e->getMessage());
+  }
 
 ?>
 <!doctype html>
@@ -679,40 +679,31 @@ width: 100%;
               <!-- Start col -->
               <div class="col-md-12 details">
                 <div class="details-container bg-white p-2 rounded">
-                   <h3 class="details-container_header text-start"> <span id="displayed_building">All Tenants</span>  &nbsp;	|&nbsp;	 <span style="color:#FFC107"> <span id="enteries">3</span>  enteries</span></h3>
-                   <div class="table-responsive">
+                  <h3 class="details-container_header text-start"> <span id="displayed_building">All Tenants</span>  &nbsp;	|&nbsp;	 <span style="color:#FFC107"> <span id="enteries">3</span>  enteries</span></h3>
+                  <div class="table-responsive">
                     <div id="top-bar" class="filter-pdf-excel mb-2">
                       <div class="d-flex" style="gap: 10px;">
                         <div class="select-option-container">
                           <div class="custom-select">All Buildings</div>
-                          <div class="select-options mt-1">
-                            <div class="selected" data-value="all">All Buildings</div>
-                            <div data-value="Manucho">Manucho</div>
-                            <div data-value="Pink House">Pink House</div>
-                            <div data-value="White House">White House</div>
+                            <div class="select-options mt-1">
+                              <div class="selected" data-value="all">All Buildings</div>
+                              <div data-value="Manucho">Manucho</div>
+                              <div data-value="Pink House">Pink House</div>
+                              <div data-value="White House">White House</div>
+                            </div>
                           </div>
-                        </div>
-
                         <div id="custom-search">
                           <input type="text" id="searchInput" placeholder="Search tenant...">
                         </div>
-
                       </div>
-
-                      <div>
-
-                      </div>
-
                       <!-- Shift Tenant Button -->
-                    <div class="d-flex">
-                      <button id="add_provider_btn" class="btn shift-tenant rounded" style="height: fit-content;" data-bs-toggle="modal" data-bs-target="#shiftTenantModal">
-                        Shift Tenant
-                      </button>
-                      <div id="custom-buttons"></div>
+                      <div class="d-flex">
+                        <button id="add_provider_btn" class="btn shift-tenant rounded" style="height: fit-content;" data-bs-toggle="modal" data-bs-target="#shiftTenantModal">
+                          Shift Tenant
+                        </button>
+                        <div id="custom-buttons"></div>
+                      </div>
                     </div>
-
-                    </div>
-
                     <table class="table table-hover" id="users-table">
                         <thead class="thead bg-gradient" >
                             <tr>

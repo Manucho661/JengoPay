@@ -324,10 +324,12 @@ try {
                             <h6 class="mb-0 contact_section_header summary mb-4"></i> <b></b></h6>
                             <div class="col-md-12 mb-4">
                                 <div class="card shadow">
-                                    <div class="card-header d-flex justify-content-between align-items-center" style="background: linear-gradient(to right, #00192D, #003D5B);">
+                                    <div class="bg-white p-1 rounded-2 border-0">
+                                        <div class="card-header d-flex justify-content-between align-items-center" style="background: #00192D;">
                                         <a class="text-white fw-bold text-decoration-none" data-bs-toggle="collapse" href="#addExpense" role="button" aria-expanded="false" aria-controls="addExpense" onclick="toggleIcon(this)">
                                             <span id="toggleIcon">➕</span> Click Here to Add an Expense
                                         </a>
+                                    </div>
                                     </div>
                                     <div class="collapse" id="addExpense">
                                         <div class="card-body border-top border-2">
@@ -445,8 +447,29 @@ try {
                         <div class="row">
                             <h6 class="mb-0 contact_section_header summary mb-2"></i> <b>Expenses</b></h6>
                             <div class="col-md-12">
-                                <div class="card Content">
-                                    <div class="card-body" style="overflow-x: auto;">
+                                <div class="details-container bg-white p-2 rounded shadow">
+                                    <h3 class="details-container_header text-start"> <span id="displayed_building">All expenses</span>  &nbsp;	|&nbsp;	 <span style="color:#FFC107"> <span id="enteries">3</span>  enteries</span></h3>
+                                    <div id="top-bar" class="d-flex justify-content-between filter-pdf-excel mb-2">
+                                        <div class="d-flex" style="gap: 10px;">
+                                            <div class="select-option-container">
+                                            <div class="custom-select">All Buildings</div>
+                                                <div class="select-options mt-1">
+                                                <div class="selected" data-value="all">All Buildings</div>
+                                                <div data-value="Manucho">Manucho</div>
+                                                <div data-value="Pink House">Pink House</div>
+                                                <div data-value="White House">White House</div>
+                                                </div>
+                                            </div>
+                                            <div id="custom-search">
+                                            <input type="text" id="searchInput" placeholder="Search tenant...">
+                                            </div>
+                                        </div>
+                                        <!-- Shift Tenant Button -->
+                                        <div class="d-flex">
+                                            <div id="custom-buttons"></div>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive" style="overflow-x: auto;">
                                         <table class="table-striped" id="repaireExpenses" style="width: 100%; min-width: 600px;">
                                             <thead>
                                                 <tr>
@@ -476,30 +499,30 @@ try {
                                 </div>
                             </div>
                         </div>
+                        <div class="row mt-2">
+                             <h6 class="mb-0 contact_section_header summary"></i> <b>Monthly Trends</b></h6>
+                            <?php
+                                // Group expenses by month and sum totals
+                                $monthlyTotals = [];
+                                try {
+                                    $stmt = $pdo->query("SELECT MONTH(date) AS month, SUM(total) AS total FROM expenses GROUP BY MONTH(date)");
+                                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                        $monthNum = (int)$row['month'];
+                                        $monthlyTotals[$monthNum] = (float)$row['total'];
+                                    }
+                                } catch (PDOException $e) {
+                                    $monthlyTotals = [];
+                                }
+                                ?>
+                                <div class="col-md-12">
+                                    <div class="mt-5 p-2 bg-white rounded-2 shadow" >
+                                        <h6 class="fw-bold text-center">📊 Monthly Expense Trends</h6>
+                                       <canvas id="monthlyExpenseChart" height="100"></canvas>
+                                    </div>
+                                </div>
+                        </div>
                     </div>
                 </div>
-
-                <?php
-                // Group expenses by month and sum totals
-                $monthlyTotals = [];
-                try {
-                    $stmt = $pdo->query("SELECT MONTH(date) AS month, SUM(total) AS total FROM expenses GROUP BY MONTH(date)");
-                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        $monthNum = (int)$row['month'];
-                        $monthlyTotals[$monthNum] = (float)$row['total'];
-                    }
-                } catch (PDOException $e) {
-                    $monthlyTotals = [];
-                }
-                ?>
-
-
-                <!-- Line Chart: Expenses vs Months -->
-                <div class="mt-5">
-                    <h6 class="fw-bold text-center">📊 Monthly Expense Trends</h6>
-                    <canvas id="monthlyExpenseChart" height="100"></canvas>
-                </div>
-
 
                 <!--end::App Content-->
         </main>
@@ -521,389 +544,8 @@ try {
     </div>
     <!--end::App Wrapper-->
 
-
-    <!-- OVERLAYS(that Covers whole viewport) -->
-    <!-- Perfom an inspection -->
-    <section id="perform_inspection_modal" class="perform_inspection_modal" style="display: none;">
-
-        <div class="container-fluid">
-            <div class="card">
-                <div class="card-header" style="background-color:#00192D; color:#FFC107"><b>Perform Inspection</b></div>
-                <div class="card-body">
-                    <div class="card shadow" style="border:1px solid rbg(0,25,45,.2)">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label><i class="fa fa-home"></i> Unit No: <span id="modal_unit"></span> </label>
-                                </div>
-                                <div class="col-md-6">
-                                    <label><i class="fa fa-building"></i> Building: <span id="modal_building_name">Angela's Apartment</span> </label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label><i class="fa fa-table"></i> Floor Location: Second Floor</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <label><i class="fa fa-bed"></i> Rental Purpose: Residence</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="card shadow">
-                        <div class="card-header" style="background-color:#00192D; color:#FFC107;"><i class="fa fa-cogs"></i> <b>Inspect this Unit</b></div>
-                        <form id="perform_inspection" onsubmit="performInspectionForm(event)" enctype="multipart/form-data">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="card shadow" style="border:1px solid rgb(0,25,45,.2);">
-                                            <div class="card-header" style="background-color:#00192D; color:#FFC107;"><i class="fa fa-home"></i> <b>Floor Condition</b></div>
-                                            <div class="card-body">
-                                                <div class="row text-center">
-                                                    <div class="col-md-6">
-                                                        <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
-                                                            <i class="fa fa-wrench" style="font-size:30px;"></i>
-                                                            <div class="icheck-dark d-inline">
-                                                                <input type="radio" name="floor_condition" id="floorRepair" value="Needs Repair">
-                                                                <label for="floorRepair"> Needs Repair</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
-                                                            <i class="fa fa-thumbs-up" style="font-size:30px;"></i>
-                                                            <div class="icheck-dark d-inline">
-                                                                <input type="radio" name="floor_condition" id="floorGood" value="Good">
-                                                                <label for="floorGood"> Good</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="card shadow" id="floorBadDescription" style="display:none;">
-                                                    <div class="card-header" style="background-color:#00192D; color:#FFC107;"><b>Describe the Repair Required</b></div>
-                                                    <div class="card-body">
-                                                        <div class="form-group">
-                                                            <label>Describe the State</label>
-                                                            <textarea name="floor_state" id="" class="form-control"></textarea>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Attach Photo</label>
-                                                            <input type="file" class="form-control" name="floor_photo">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="card shadow" style="border:1px solid rgb(0,25,45,.2);">
-                                            <div class="card-header" style="background-color:#00192D; color:#FFC107;"><i class="fa fa-table"></i> <b>Window(s) Condition</b></div>
-                                            <div class="card-body">
-                                                <div class="row text-center">
-                                                    <div class="col-md-6">
-                                                        <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
-                                                            <i class="fa fa-wrench" style="font-size:30px;"></i>
-                                                            <div class="icheck-dark d-inline">
-                                                                <input type="radio" name="window_condition" id="windowNeedsRepair" value="Needs Repair">
-                                                                <label for="windowNeedsRepair"> Needs Repair</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
-                                                            <i class="fa fa-thumbs-up" style="font-size:30px;"></i>
-                                                            <div class="icheck-dark d-inline">
-                                                                <input type="radio" name="window_condition" id="windowGood" value="Good">
-                                                                <label for="windowGood"> Good</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="card shadow" id="windowBadDescription" style="display:none;">
-                                                    <div class="card-header" style="background-color:#00192D; color:#FFC107;"><b>Describe the Repair Required</b></div>
-                                                    <div class="card-body">
-                                                        <div class="form-group">
-                                                            <label>Describe the State</label>
-                                                            <textarea name="window_state" id="" class="form-control"></textarea>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Attach Photo</label>
-                                                            <input type="file" class="form-control" name="window_photo">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="card shadow" style="border:1px solid rgb(0,25,45,.2);">
-                                            <div class="card-header" style="background-color:#00192D; color:#FFC107;"><i class="fa fa-building"></i> <b>Doors Condition</b></div>
-                                            <div class="card-body">
-                                                <div class="row text-center">
-                                                    <div class="col-md-6">
-                                                        <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
-                                                            <i class="fa fa-thumbs-up" style="font-size:30px;"></i>
-                                                            <div class="icheck-dark d-inline">
-                                                                <input type="radio" name="door_condition" id="doorGood" value="Good">
-                                                                <label for="doorGood"> Good</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
-                                                            <i class="fa fa-wrench" style="font-size:30px;"></i>
-                                                            <div class="icheck-dark d-inline">
-                                                                <input type="radio" name="door_condition" id="doorBad" value="Needs Repair">
-                                                                <label for="doorBad"> Needs Repair</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="card shadow mt-2" id="doorBadCard" style="display:none;">
-                                                    <div class="card-header" style="background-color:#00192D; color:#FFC107"><b>Provide More Informations</b></div>
-                                                    <div class="card-body">
-                                                        <div class="form-group">
-                                                            <label for="">Describe the Damage</label>
-                                                            <textarea name="door_state" class="form-control"></textarea>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="">Attach Photo</label>
-                                                            <input type="file" class="form-control" name="door_badphoto">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="card shadow" style="border:1px solid rgb(0,25,45,.2);">
-                                            <div class="card-header" style="background-color:#00192D; color:#FFC107;"><i class="fa fa-bank"></i><b> Wall Condition</b></div>
-                                            <div class="card-body">
-                                                <div class="row text-center">
-                                                    <div class="col-md-6">
-                                                        <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
-                                                            <i class="fa fa-wrench" style="font-size:30px;"></i>
-                                                            <div class="icheck-dark d-inline">
-                                                                <input type="radio" name="wall_condition" id="wallNeedRepair" value="Needs Repair">
-                                                                <label for="wallNeedRepair"> Needs Repair</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
-                                                            <i class="fa fa-thumbs-up" style="font-size:30px;"></i>
-                                                            <div class="icheck-dark d-inline">
-                                                                <input type="radio" name="wall_condition" id="wallGood" value="Good">
-                                                                <label for="wallGood"> Good</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="card shadow mt-2" id="wallNeedsRepairCard" style="display:none;">
-                                                    <div class="card-header" style="background-color:#00192D; color:#FFC107;"><b>More Information</b></div>
-                                                    <div class="card-body">
-                                                        <div class="form-group">
-                                                            <label for="">Describe the Repair Needed</label>
-                                                            <textarea name="wall_state" id="" cols="30" class="form-control"></textarea>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="">Attach Photo</label>
-                                                            <input type="file" class="form-control" name="faulty_wall_photo" id="faulty_wall_photo">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="card shadow" style="border:1px solid rgb(0,25,45,.2);">
-                                            <div class="card-header" style="background-color:#00192D; color:#FFC107;"><i class="fa fa-bell"></i><b> Bulb Holder(s)</b></div>
-                                            <div class="card-body">
-                                                <div class="row text-center">
-                                                    <div class="col-md-6">
-                                                        <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
-                                                            <i class="fa fa-thumbs-up" style="font-size:30px;"></i>
-                                                            <div class="icheck-dark d-inline">
-                                                                <input type="radio" name="bulb_holder_condition" id="bulbHolderGood" value="Good">
-                                                                <label for="bulbHolderGood"> Good</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="card shadow p-3" style="order: 1px solid rgb(0,25,45,.2);">
-                                                            <i class="fa fa-wrench" style="font-size:30px;"></i>
-                                                            <div class="icheck-dark d-inline">
-                                                                <input type="radio" name="bulb_holder_condition" id="bulbHolderNeedsRepair" value="Needs Repair">
-                                                                <label for="bulbHolderNeedsRepair"> Needs Repair</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="card shadow" id="bulbHolderCard" style="display:none;">
-                                                    <div class="card-header" style="background-color:#00192D; color: #FFC107;"><b>Describe the Repair Needed</b></div>
-                                                    <div class="card-body">
-                                                        <div class="form-group">
-                                                            <label for="">Describe the Fault</label>
-                                                            <textarea name="bulb_holder_state" id="bulb_holder_desc" class="form-control"></textarea>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="">Attach Photo</label>
-                                                            <input type="file" name="bulb_holder_photo" id="bulb_holder_photo" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="card shadow" style="border:1px solid rgb(0,25,45,.2);">
-                                            <div class="card-header" style="background-color:#00192D; color:#FFC107;"><i class="fa fa-plug"></i> <b>Sockets</b></div>
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-md-6 text-center">
-                                                        <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
-                                                            <i class="fa fa-thumbs-up" style="font-size:30px;"></i>
-                                                            <div class="icheck-dark d-inline">
-                                                                <input type="radio" name="socket_condition" id="socketGood" value="Good">
-                                                                <label for="socketGood"> Good</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6 text-center">
-                                                        <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
-                                                            <i class="fa fa-wrench" style="font-size:30px;"></i>
-                                                            <div class="icheck-dark d-inline">
-                                                                <input type="radio" name="socket_condition" id="socketNeedsRepair" value="Needs Repair">
-                                                                <label for="socketNeedsRepair"> Needs Repair</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="card shadow" id="socketFaultyCard" style="border:1px solid rgb(0,25,45,.2); display:none;">
-                                                    <div class="card-header" style="background-color:#00192D; color:#FFC107;"><b>Describe the Fault</b></div>
-                                                    <div class="card-body">
-                                                        <div class="form-group">
-                                                            <label>Describe the Fault</label>
-                                                            <textarea name="socket_state" id="fault_socket_description" class="form-control"></textarea>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Attach Photos</label>
-                                                            <input type="file" name="fault_socket_photo" id="fault_socket_photo" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-footer text-right">
-                                <input type="hidden" name="inspection_id" id="modal_inspection_id">
-                                <button type="submit" class="btn btn-sm next-btn" id="fifththStepNextBtn">Submit</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-    <!-- Inspection(inspected) Modal -->
-    <div class="modal fade" id="inspectionModal" tabindex="-1" aria-labelledby="inspectionModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <div class="modal-content rounded-2 shadow-lg">
-                <div class="modal-header d-flex justify-content-between align-items-center" id="inspectionModalHeader" style="background-color: #00192D !important;">
-                    <h5 class="modal-title" style="color: #FFA000 !important; margin-left: 5px;" id="inspectionModalLabel">
-                        Inspection Details - Ebenezer/Unit A12
-                    </h5>
-                    <!-- Centered Icon Button -->
-                    <button type="button" class="btn btn-sm btn-warning mx-auto" id="downloadInspectionBtn" title="Submit Inspection">
-                        <i class="bi bi-download"></i>
-                    </button>
-
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-2">
-                    <table class="table inspection-table table-striped rounded-2">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Item</th>
-                                <th>Status</th>
-                                <th>Description</th>
-                                <th>Photos</th>
-                            </tr>
-                        </thead>
-                        <tbody id="inspectionModalTableBody">
-                            <tr>
-                                <td>Floor</td>
-                                <td><span class="status-bad">Needs Repair</span></td>
-                                <td>Scratches and water damage near the corner.</td>
-                                <td>
-                                    <img src="https://www.districtfloordepot.com/wp-content/uploads/2022/02/types-of-floor-damage.jpg" class="repair-photo" alt="Floor damage">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Window</td>
-                                <td><span class="status-bad">Needs Repair</span></td>
-                                <td>Broken lock on the left window pane.</td>
-                                <td>
-                                    <img src="https://apexwindowwerks.com/wp-content/uploads/2023/03/wood-window-repair-guide.jpg" class="repair-photo" alt="Window issue">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Door</td>
-                                <td><span class="status-good">Good</span></td>
-                                <td>-</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>Wall</td>
-                                <td><span class="status-bad">Needs Repair</span></td>
-                                <td>Peeling paint and minor cracks.</td>
-                                <td>
-                                    <img src="https://images.pexels.com/photos/276267/pexels-photo-276267.jpeg" class="repair-photo" alt="Wall damage">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Bulb</td>
-                                <td><span class="status-good">Good</span></td>
-                                <td>-</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>Sockets</td>
-                                <td><span class="status-bad">Needs Repair</span></td>
-                                <td>One socket in the kitchen is not working.</td>
-                                <td>
-                                    <img src="https://create.vista.com/wp-content/uploads/2021/09/damaged-socket.jpg" class="repair-photo" alt="Socket issue">
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="modal-footer d-flex justify-content-between p-2">
-                    <small class="text-muted">📅 Inspection Date: <strong>2025-05-26</strong></small>
-                    <button type="button" style="background-color:#FFC107 !important; color:#00192D;" class="btn btn-outline" data-bs-dismiss="modal" id="closeInspectionModal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- cloned pdf modal-->
-    <div id="printArea" style="display: none;"></div>
-
-
     <!-- Main Js File -->
-    <script src="inspections.js"></script>
+    <script src="expense.js"></script>
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
@@ -926,8 +568,8 @@ try {
     <script src="../../../dist/js/adminlte.js"></script>
     <!-- links for dataTaable buttons -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
@@ -1043,72 +685,124 @@ try {
     </script>
     <!-- Submit -->
      <script>
-                            function calculateTotal() {
-                                let grandTotal = 0;
-                                document.querySelectorAll('#expenseForm tbody tr').forEach(row => {
-                                    const qty = parseFloat(row.querySelector('.qty')?.value || 0);
-                                    const price = parseFloat(row.querySelector('.unit-price')?.value || 0);
-                                    const total = qty * price;
-                                    row.querySelector('.total-line').value = total.toFixed(2);
-                                    grandTotal += total;
-                                });
-                                document.getElementById('grandTotal').value = grandTotal.toFixed(2);
-                            }
+        function calculateTotal() {
+            let grandTotal = 0;
+            document.querySelectorAll('#expenseForm tbody tr').forEach(row => {
+                const qty = parseFloat(row.querySelector('.qty')?.value || 0);
+                const price = parseFloat(row.querySelector('.unit-price')?.value || 0);
+                const total = qty * price;
+                row.querySelector('.total-line').value = total.toFixed(2);
+                grandTotal += total;
+            });
+            document.getElementById('grandTotal').value = grandTotal.toFixed(2);
+        }
 
-                            document.getElementById('expenseForm').addEventListener('submit', function(e) {
-                                e.preventDefault();
-                                calculateTotal();
+        document.getElementById('expenseForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            calculateTotal();
 
-                                const form = e.target;
-                                const formData = new FormData(form);
+            const form = e.target;
+            const formData = new FormData(form);
 
-                                fetch(window.location.href, {
-                                        method: 'POST',
-                                        headers: {
-                                            'X-Requested-With': 'XMLHttpRequest'
-                                        },
-                                        body: formData
-                                    })
-                                    .then(res => res.json())
-                                    .then(data => {
-                                        if (data.success) {
-                                            const tbody = document.querySelector('#repaireExpenses tbody');
-                                            const row = document.createElement('tr');
-                                            row.innerHTML = `
-                                                <td>${data.data.date}</td>
-                                                <td>${data.data.supplier}</td>
-                                                <td>${data.data.expense_number}</td>
-                                                <td>KSH ${parseFloat(data.data.total).toLocaleString()}</td>
-                                                <td>
-                                                    <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
-                                                    <button class="btn btn-sm" style="background-color: #193042; color:#fff;"><i class="fa fa-trash"></i></button>
-                                                </td>
-                                            `;
-                                            tbody.prepend(row);
-                                            alert("✅ Expense saved and displayed!");
+            fetch(window.location.href, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        const tbody = document.querySelector('#repaireExpenses tbody');
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${data.data.date}</td>
+                            <td>${data.data.supplier}</td>
+                            <td>${data.data.expense_number}</td>
+                            <td>KSH ${parseFloat(data.data.total).toLocaleString()}</td>
+                            <td>
+                                <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;"><i class="fa fa-file"></i></button>
+                                <button class="btn btn-sm" style="background-color: #193042; color:#fff;"><i class="fa fa-trash"></i></button>
+                            </td>
+                        `;
+                        tbody.prepend(row);
+                        alert("✅ Expense saved and displayed!");
 
-                                            form.reset();
-                                            document.getElementById('grandTotal').value = "0.00";
-                                            document.getElementById('toggleIcon').click();
+                        form.reset();
+                        document.getElementById('grandTotal').value = "0.00";
+                        document.getElementById('toggleIcon').click();
 
-                                            updateExpenseChart();
-                                        } else {
-                                            alert(data.error || "❌ Something went wrong.");
-                                        }
-                                    })
-                                    .catch(err => {
-                                        console.error(err);
-                                        alert("❌ Server error occurred.");
-                                    });
-                            });
+                        updateExpenseChart();
+                    } else {
+                        alert(data.error || "❌ Something went wrong.");
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("❌ Server error occurred.");
+                });
+        });
 
-                            document.addEventListener('input', function(e) {
-                                if (e.target.matches('.qty, .unit-price')) {
-                                    calculateTotal();
-                                }
-                            });
-                        </script>
+        document.addEventListener('input', function(e) {
+            if (e.target.matches('.qty, .unit-price')) {
+                calculateTotal();
+            }
+        });
+    </script>
+    <script>
+    $(document).ready(function () {
+      const table = $('#repaireExpenses').DataTable({
+        dom: 'Brtip', // ⬅ Changed to include Buttons in DOM
+        order: [], // ⬅ disables automatic ordering by DataTables
+        buttons: [
+          {
+            extend: 'excelHtml5',
+            text: 'Excel',
+            exportOptions: {
+              columns: ':not(:last-child)' // ⬅ Exclude last column
+            }
+          },
+          {
+            extend: 'pdfHtml5',
+            text: 'PDF',
+            exportOptions: {
+              columns: ':not(:last-child)' // ⬅ Exclude last column
+            },
+            customize: function (doc) {
+              // Center table
+              doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
 
+              // Optional: center-align the entire table
+              doc.styles.tableHeader.alignment = 'center';
+              doc.styles.tableBodyEven.alignment = 'center';
+              doc.styles.tableBodyOdd.alignment = 'center';
+
+              const body = doc.content[1].table.body;
+                  for (let i = 1; i < body.length; i++) { // start from 1 to skip header
+                    if (body[i][4]) {
+                      body[i][4].color = 'blue'; // set email column to blue
+                    }
+                  }
+            }
+          },
+              {
+            extend: 'print',
+            text: 'Print',
+            exportOptions: {
+              columns: ':not(:last-child)' // ⬅ Exclude last column from print
+            }
+          }
+        ]
+      });
+      // Append buttons to your div
+      table.buttons().container().appendTo('#custom-buttons');
+      // Custom search
+      $('#searchInput').on('keyup', function () {
+        table.search(this.value).draw();
+      });
+    });
+    </script>
 
 </body>
 <!--end::Body-->
