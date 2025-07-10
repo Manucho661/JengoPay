@@ -380,6 +380,9 @@ try {
                             </div>
                         </div>
                         <div class="row">
+
+                        </div>
+                        <div class="row">
                             <div class="col-md-12 mb-4">
                                 <div class="card shadow">
                                     <div class="bg-white p-1 rounded-2 border-0">
