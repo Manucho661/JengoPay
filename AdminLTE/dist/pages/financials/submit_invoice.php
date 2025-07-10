@@ -4,7 +4,7 @@ include '../db/connect.php';
 // Retrieve basic invoice data
 $invoice_number = $_POST['invoice_number'] ?? '';
 $invoice_date = $_POST['invoice_date'] ?? '';
-$building = $_POST['building'] ?? '';
+$building_id = $_POST['building_id'] ?? '';
 $tenant = $_POST['tenant'] ?? '';
 
 // Retrieve item arrays
@@ -21,13 +21,13 @@ if (empty($invoice_number) || empty($tenant)) {
 }
 
 // Save to invoice table
-$stmt = $pdo->prepare("INSERT INTO invoice (invoice_number, invoice_date, building, tenant, account_item, description, quantity, unit_price, taxes, total)
+$stmt = $pdo->prepare("INSERT INTO invoice (invoice_number, invoice_date, building_id, tenant, account_item, description, quantity, unit_price, taxes, total)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 $stmt->execute([
   $invoice_number,
   $invoice_date,
-  $building,
+  $building_id,
   $tenant,
   $account_items[0] ?? '',
   $descriptions[0] ?? '',

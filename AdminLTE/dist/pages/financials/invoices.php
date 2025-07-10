@@ -1134,17 +1134,6 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
 </div>
 
-
-<div id="tenantDetails" class="mt-3" style="display: none;">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Tenant Details</h5>
-                    <p><strong>Unit:</strong> <span id="tenantUnit"></span></p>
-                    <p><strong>Rent Amount:</strong> <span id="tenantRent"></span></p>
-                    <p><strong>Phone:</strong> <span id="tenantPhone"></span></p>
-                    <p><strong>ID No:</strong> <span id="tenantIdNo"></span></p>
-                </div>
-
   <!-- Item Table -->
   <div class="form-section">
     <hr>
@@ -1198,11 +1187,15 @@ document.addEventListener("DOMContentLoaded", () => {
   </div>
 
   <!-- Submit -->
-  <div class="form-btns">
-    <button type="submit">Submit</button>
-  </div>
+  <div class="form-btns" style="display: flex; justify-content: flex-end; margin-top: 20px;">
+  <button type="submit">Submit</button>
+</div>
+
 </form>
 
+                    </div>
+
+                    </div>
 
                 </div>
             </div>
@@ -2262,67 +2255,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script> -->
 
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
 
-
-<script>
-$(document).ready(function() {
-  $('#repaireExpenses').DataTable({
-      "lengthChange": false,
-      "dom": 'Bfrtip',
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-  });
-});
-</script>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-      const checkboxes = document.querySelectorAll("#columnFilter input[type='checkbox']");
-      const menuButton = document.getElementById("menuButton");
-      const columnFilter = document.getElementById("columnFilter");
-
-      // Toggle menu visibility when clicking the three dots
-      menuButton.addEventListener("click", function(event) {
-          columnFilter.classList.toggle("hidden");
-          columnFilter.style.display = columnFilter.classList.contains("hidden") ? "none" : "block";
-
-          // Prevent closing immediately when clicking inside
-          event.stopPropagation();
-      });
-
-      // Hide menu when clicking outside
-      document.addEventListener("click", function(event) {
-          if (!menuButton.contains(event.target) && !columnFilter.contains(event.target)) {
-              columnFilter.classList.add("hidden");
-              columnFilter.style.display = "none";
-          }
-      });
-
-      // Column filtering logic
-      checkboxes.forEach(checkbox => {
-          checkbox.addEventListener("change", function() {
-              let columnClass = `.col-${this.dataset.column}`;
-              let elements = document.querySelectorAll(columnClass);
-
-              elements.forEach(el => {
-                  el.style.display = this.checked ? "" : "none";
-              });
-          });
-      });
-  });
-
-      </script>
     <!--end::Script-->
   </body>
   <!--end::Body-->

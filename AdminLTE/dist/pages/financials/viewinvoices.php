@@ -1,3 +1,42 @@
+<?php
+require_once '../db/connect.php';
+
+// Get the invoice_id from the URL (or request)
+$id = $_GET['id'] ?? null;
+
+if ($id) {
+    // Query to fetch invoice data with related building and tenant info
+    $stmt = $pdo->prepare("
+   SELECT
+        i.id,
+        i.invoice_number,
+        b.building_name AS property_name,
+        i.tenant,
+        i.invoice_date,
+        i.taxes,
+        i.total
+    FROM invoice i
+    LEFT JOIN buildings b ON i.building_id = b.building_id
+    LEFT JOIN tenants t ON i.tenant = t.id
+    ORDER BY i.invoice_date DESC
+    ");
+    $stmt->execute(['invoice_id' => $invoice_id]);
+    $invoice = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($invoice) {
+        // Fetch invoice items (assuming they are stored in another table like `invoice_items`)
+        $itemStmt = $pdo->prepare("SELECT description, quantity, unit_price, taxes, amount FROM invoice WHERE invoice_id = :invoice_id");
+        $itemStmt->execute(['invoice_id' => $invoice_id]);
+        $items = $itemStmt->fetchAll(PDO::FETCH_ASSOC);
+    } else {
+        echo "Invoice not found!";
+    }
+} else {
+    echo "No invoice ID provided.";
+}
+?>
+
+
 <!doctype html>
 <html lang="en">
   <!--begin::Head-->
@@ -61,9 +100,9 @@
       a{
           text-decoration: none;
       }
-      
+
       body{
-          
+
           background-color: rgba(128, 128, 128, 0.1);
       }
       .summaryItem{
@@ -103,7 +142,7 @@ color: #00192D;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     /* padding: 20px; */
-    
+
     margin: 30px auto;
   }
   .profile-picture {
@@ -115,7 +154,7 @@ color: #00192D;
   }
   .profile-details h2 {
     /* margin-bottom: 10px; */
-    
+
   }
   .profile-details p {
     /* /margin: 5px 0; */
@@ -123,7 +162,7 @@ color: #00192D;
   }
   .profile_details{
       display: flex;
-      
+
   }
   .profile_picture{
       margin-right: 4%;
@@ -132,7 +171,7 @@ color: #00192D;
       color: #666;
       font-size: 14px;
       display: block;
-      text-align: justify;   
+      text-align: justify;
 
   }
   .other_profile_details{
@@ -147,8 +186,8 @@ color: #00192D;
         }
 
         table {
-             width: 100%; 
-            border-collapse: collapse; 
+             width: 100%;
+            border-collapse: collapse;
             margin-top: 15px;
         }
 
@@ -562,7 +601,7 @@ color: #00192D;
                       <p>Tax Reports</p>
                     </a>
                   </li>
-                  
+
                 </ul>
               </li>
               <li class="nav-item">
@@ -578,14 +617,14 @@ color: #00192D;
                   <p>Service Providers</p>
                 </a>
               </li>
-              
+
               <li class="nav-item">
                 <a href="./rating&reviews.html" class="nav-link">
                   <i class="nav-icon bi bi-palette"></i>
                   <p>Reviews And Rating</p>
                 </a>
               </li>
-              
+
                <!-- Start Communications part -->
                <li class="nav-item">
                 <a href="#" class="nav-link">
@@ -608,12 +647,12 @@ color: #00192D;
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Announcements</p>
                     </a>
-                    
+
                   </li>
                 </ul>
               </li>
 
-              
+
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-filetype-js"></i>
@@ -631,14 +670,14 @@ color: #00192D;
                   </li>
                 </ul>
               </li>
-             
+
               <li class="nav-item">
                 <a href="./docs/faq.html" class="nav-link">
                   <i class="nav-icon bi bi-question-circle-fill"></i>
                   <p>FAQ</p>
                 </a>
               </li>
-              
+
             <!--end::Sidebar Menu-->
           </nav>
         </div>
@@ -649,134 +688,123 @@ color: #00192D;
       <main class="app-main">
         <!--begin::App Content Header-->
         <div class="app-content-header">
-          <!--begin::Container-->
           <div class="container-fluid">
-            <div class="button-container">
-            <button class="print-btn d-flex justify-content-end" onclick="print()">
-              <i class="fas fa-print"></i> 
-              Print</button>
-            <button class="print-btn d-flex justify-content-end" onclick="generatePDF()">
-              <i class="fas fa-file-pdf"></i>
-            Generate PDF</button>
+              <div class="button-container">
+                  <button class="print-btn d-flex justify-content-end" onclick="print()">
+                      <i class="fas fa-print"></i> Print
+                  </button>
+                  <button class="print-btn d-flex justify-content-end" onclick="generatePDF()">
+                      <i class="fas fa-file-pdf"></i> Generate PDF
+                  </button>
+              </div>
+              <hr>
+              <div class="invoice-container">
+    <!-- From Section (Fixed details) -->
+    <div>
+        <p>
+            From:<br>
+            Angela Real Estate, Ltd..<br>
+            795 Pinnacle Building
+        </p>
+        <p>Upperhill, Nairobi Kenya</p>
+        <p>Phone: 0712345678</p>
+        <p>Email: info@angelarealestate.com </p><br>
+    </div>
+
+    <!-- To Section (Dynamic Tenant Information) -->
+    <div style="text-align: right;">
+        <p>
+            To:<br>
+            <?= isset($invoice['tenant_name']) ? htmlspecialchars($invoice['tenant_name']) : 'N/A' ?><br>
+            Angela Real Estate, Ltd..<br>
+            795 Pinnacle Building
+        </p>
+        <p>Upperhill, Nairobi Kenya</p>
+        <p>Phone: <?= isset($invoice['tenant_phone']) ? htmlspecialchars($invoice['tenant_phone']) : 'Phone not available' ?></p>
+        <p>Email: <?= isset($invoice['tenant_email']) ? htmlspecialchars($invoice['tenant_email']) : 'Email not available' ?></p>
+    </div>
 </div>
-            <hr>
-             <div class="invoice-container">
-                <!-- <div class="header"> -->
-                    <div>
-                        <p>
-                        From:<br>
-                        Angela Real Estate, Ltd..
-                        795 Pinnacle Building
-                        </p>
-                        <p>Upperhill, Nairobi Kenya</p>
-                        <p>Phone:0712345678</p>
-                        <p>Email: info@angelarealestate.com </p><br>
-        </div>
-          <!-- <div class="justify-content-end"><br><br><br><br><br><br><br> -->
-            <div style="text-align: right;">
-                        <p>
-                         <!-- To :<br> -->
-                          Mark Kibiru<br>
-                          Angela Real Estate, Ltd..
-                          795 Pinnacle Building
-                          </p>
-                          <p>Upperhill, Nairobi Kenya</p>
-                          <p>Phone:0723456789</p>
-                          <p>Email: markkibiru@angelarealestate.com </p>
-                    </div>
-                  </div>
-                  
-                  <br>
-                <div class="invoice-info">
-                    <p><strong>Invoice No:</strong> #INV00001</p>
-                    <p><strong>Invoice Date:</strong> 11/11/11</p>
-                    <p><strong>Due Date:</strong> 12/12/12</p>
-                </div>
-        
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Description</th>
-                            <th>QTY</th>
-                            <th>Unit Price</th>
-                            <th>Taxes</th>
-                            <th>Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Rent</td>
-                            <td>1</td>
-                            <td>Ksh10,000</td>
-                            <td>VAT(16%)Inclusive</td>
-                            <td>Ksh 10,000</td>
-                        </tr>
-                        <tr>
-                            <td>Water</td>
-                            <td>1</td>
-                            <td>Ksh500</td>
-                            <td>Zero Rated</td>
-                            <td>Ksh 500</td>
-                        </tr>
-                        <tr>
-                            <td>Garbage</td>
-                            <td>1</td>
-                            <td>Ksh200</td>
-                            <td>VAT(16%)Exclusive</td>
-                            <td>Ksh 200</td>
-                        </tr>
-                        <!-- Add more items here -->
-                    </tbody>
-                </table>
-                <div class="row">
+
+<br>
+
+<!-- Invoice Info Section (Dynamic) -->
+<div class="invoice-info">
+    <p><strong>Invoice No:</strong> #<?= isset($invoice['invoice_number']) ? htmlspecialchars($invoice['invoice_number']) : 'N/A' ?></p>
+    <p><strong>Invoice Date:</strong> <?= isset($invoice['invoice_date']) ? date('d/m/Y', strtotime($invoice['invoice_date'])) : 'N/A' ?></p>
+    <p><strong>Due Date:</strong> <?= isset($invoice['due_date']) ? date('d/m/Y', strtotime($invoice['due_date'])) : 'N/A' ?></p>
+</div>
+
+<!-- Invoice Items Table (Dynamic) -->
+<table>
+    <thead>
+        <tr>
+            <th>Description</th>
+            <th>QTY</th>
+            <th>Unit Price</th>
+            <th>Taxes</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php if (!empty($items)): ?>
+            <?php foreach ($items as $item): ?>
+                <tr>
+                    <td><?= htmlspecialchars($item['description']) ?></td>
+                    <td><?= htmlspecialchars($item['quantity']) ?></td>
+                    <td><?= htmlspecialchars($item['unit_price']) ?></td>
+                    <td><?= htmlspecialchars($item['taxes']) ?></td>
+                    <td><?= htmlspecialchars($item['amount']) ?></td>
+                </tr>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <tr>
+                <td colspan="5">No items found for this invoice.</td>
+            </tr>
+        <?php endif; ?>
+    </tbody>
+</table>
+
+
+              <div class="row">
                   <div class="col-md-12 d-flex justify-content-end">
-                    <table style="width: 30%;">
-                      <thead>
-                          <tr>
-                              <th>Sub-Total</th>
-                              <th>VAT 16%</th>
-                              <th>Zero Rated(VAT)</th>
-                            <th>Total</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <tr>
-                              <td>Ksh 10,000</td>
-                              <td>1500</td>
-                              <td>Ksh0</td>
-                              <td>Ksh11,500</td>
-                              
-                          </tr>
-                          
-                          <!-- Add more items here -->
-                      </tbody>
-                    </table>
-                </div>
-            </div>
-            </div>
-                      <!--end::Row-->
+                      <table style="width: 30%;">
+                          <thead>
+                              <tr>
+                                  <th>Sub-Total</th>
+                                  <th>VAT 16%</th>
+                                  <th>Zero Rated(VAT)</th>
+                                  <th>Total</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr>
+                                  <td>Ksh 10,000</td>
+                                  <td>Ksh1,500</td>
+                                  <td>Ksh0</td>
+                                  <td>Ksh11,500</td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+          </div>
 
-                      <div  class="row d-flex justify-content-center mt-2 ">
+          <div class="row d-flex justify-content-center mt-2 ">
+              <p class="mt-6 d-flex justify-content-center" style="width:25%; border-radius: 10px; display: flex; color: white; background: linear-gradient(to right, #FFC107 50%, #00192D 50%); padding: 5px;">
+                  <span style="color: #00192D; width: 10%; font-size: 14px; font-weight: 900; flex: 2; padding: 4px; text-align: center;">BT</span>
+                  <span style="color: #FFC107; font-weight: 900; font-size: 14px; flex: 2; padding: 4px; text-align: center;">JENGOPAY</span>
+              </p>
+              <p class="d-flex justify-content-center">Powered By</p>
+          </div>
+      </div>
 
-                       
-                      <p class="mt-6 d-flex justify-content-center" style="width:25%; border-radius: 10px; display: flex; color: white; background: linear-gradient(to right, #FFC107 50%, #00192D 50%); padding: 5px;">
-
-                        <span style="color: #00192D; width: 10%; font-size: 14px; font-weight: 900; flex: 2; padding: 4px; text-align: center;">BT</span>
-                        <span style="color: #FFC107; font-weight: 900;font-size: 14px; flex: 2; padding: 4px; text-align: center;">JENGOPAY</span>
-                      </p>
-
-                      <p class="d-flex justify-content-center">Powered By</p>
-
-                          </div>  
-                </div>
-                </div>
                 <!-- /.card-body -->
               </div>
               <!-- /.card -->
             </div>
-    
-            
-               
+
+
+
             <script>
                  // Function to view the invoice in the modal
     function viewInvoice() {
@@ -795,7 +823,7 @@ color: #00192D;
                   row.remove();
                   updateTotalAmount();
                 }
-            
+
                 // Function to update the total amount of an item when quantity or price is changed
                 function updateTotal(input) {
                   var row = input.parentElement.parentElement;
@@ -803,10 +831,10 @@ color: #00192D;
                   var price = row.querySelector('[name="item_price[]"]').value;
                   var totalCell = row.querySelector('[name="item_total[]"]');
                   totalCell.value = (quantity * price).toFixed(2);
-            
+
                   updateTotalAmount();
                 }
-            
+
                 // Function to calculate the total invoice amount
                 function updateTotalAmount() {
                   var totalAmount = 0;
@@ -824,7 +852,7 @@ color: #00192D;
     <!--end::App Wrapper-->
     <!--begin::Script-->
 
-   
+
     <script>
       // Function to generate the PDF and enable download
       function generatePDF() {
