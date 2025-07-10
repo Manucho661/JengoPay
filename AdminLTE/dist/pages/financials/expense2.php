@@ -292,29 +292,26 @@ try {
                     </div>
                 </div>
             </div>
-
-
-
             <!--begin::App Content Header-->
+                <div class="app-content-header">
+                    <!--begin::Container-->
+                    <div class="container-fluid">
+                        <!--begin::Row-->
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <h3 class="mb-0 contact_section_header"> <i class="fas fa-search icon title-icon"></i>&nbsp; Expenses</h3>
 
-            <div class="app-content-header">
-                <!--begin::Container-->
-                <div class="container-fluid">
-                    <!--begin::Row-->
-                    <div class="row">
-                        <div class="col-sm-8">
-                            <h3 class="mb-0 contact_section_header"> <i class="fas fa-search icon title-icon"></i>&nbsp; Expenses</h3>
+                            </div>
 
+                            <div class="col-sm-4 d-flex justify-content-end">
+                                <button type="button" class="btn newSchedule" data-bs-toggle="modal" data-bs-target="#newSchedule" style="background-color:#FFC107 !important; color:#00192D;">
+                                    New Schedule
+                                </button>
+                            </div>
+                            <!--end::Row-->
                         </div>
-
-                        <div class="col-sm-4 d-flex justify-content-end">
-                            <button type="button" class="btn newSchedule" data-bs-toggle="modal" data-bs-target="#newSchedule" style="background-color:#FFC107 !important; color:#00192D;">
-                                New Schedule
-                            </button>
-                        </div>
-                        <!--end::Row-->
+                        <!--end::Container-->
                     </div>
-                    <!--end::Container-->
                 </div>
                 <div class="app-content">
                     <div class="container-fluid">
@@ -379,7 +376,7 @@ try {
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mb-2">
                             <div class="col-md-12 mb-4">
                                 <div class="card shadow">
                                     <div class="bg-white p-1 rounded-2 border-0">
@@ -499,54 +496,97 @@ try {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>                               
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="card Content">
-                                                <div class="card-header">
-                                                    <b>All Operational Expenses</b>
-                                                </div>
-                                                <div class="card-body" style="overflow-x: auto;">
-                                                    <table class="table-striped" id="repaireExpenses" style="width: 100%; min-width: 600px;">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Date</th>
-                                                                <th>Supplier</th>
-                                                                <th>Expense No</th>
-                                                                <th>Totals</th>
-                                                                <th>Actions</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <?php foreach ($expenses as $exp): ?>
-                                                                <tr>
-                                                                    <td><?= htmlspecialchars(date('d M Y', strtotime($exp['date']))) ?></td>
-                                                                    <td><?= htmlspecialchars($exp['supplier']) ?></td>
-                                                                    <td><?= htmlspecialchars($exp['expense_number']) ?></td>
-                                                                    <td>KSH <?= number_format($exp['total'], 2) ?></td>
-                                                                    <td>
-                                                                        <!-- view button -->
-                                                                        <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" onclick="openExpenseModal(<?= $exp['id'] ?>)">
-                                                                            <i class="fa fa-file"></i> View
-                                                                        </button>
+                                    </div>
+                                </div>  
+                            </div> 
+                        </div>                          
+                        <div class="row mt-2">
+                            <div class="col-md-12">
+                                <div class="card Content">
+                                    <div class="card-header">
+                                        <b>All Operational Expenses</b>
+                                    </div>
+                                    <div class="card-body" style="overflow-x: auto;">
+                                        <table class="table-striped" id="repaireExpenses" style="width: 100%; min-width: 600px;">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Supplier</th>
+                                                    <th>Expense No</th>
+                                                    <th>Totals</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($expenses as $exp): ?>
+                                                    <tr>
+                                                        <td><?= htmlspecialchars(date('d M Y', strtotime($exp['date']))) ?></td>
+                                                        <td><?= htmlspecialchars($exp['supplier']) ?></td>
+                                                        <td><?= htmlspecialchars($exp['expense_number']) ?></td>
+                                                        <td>KSH <?= number_format($exp['total'], 2) ?></td>
+                                                        <td>
+                                                            <!-- view button -->
+                                                            <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" onclick="openExpenseModal(<?= $exp['id'] ?>)">
+                                                                <i class="fa fa-file"></i> View
+                                                            </button>
 
-                                                                        <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Remove"><i class="fa fa-trash"></i></button>
-                                                                    </td>
-                                                                </tr>
-                                                            <?php endforeach; ?>
-                                                        </tbody>
+                                                            <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Remove"><i class="fa fa-trash"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
 
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        </table>
                                     </div>
                                 </div>
+                            </div>    
+                        </div>
+                        </div>
+                        <div class="row graph">
+                            <div class="col-md-12">
+                                <div class="bg-white p-2">
+                                    <?php
+                                    // Group expenses by month and sum totals
+                                    $monthlyTotals = [];
+                                    try {
+                                        $stmt = $pdo->query("SELECT MONTH(date) AS month, SUM(total) AS total FROM expenses GROUP BY MONTH(date)");
+                                        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                            $monthNum = (int)$row['month'];
+                                            $monthlyTotals[$monthNum] = (float)$row['total'];
+                                        }
+                                    } catch (PDOException $e) {
+                                        $monthlyTotals = [];
+                                    }
+                                    ?>
+                                    <!-- Line Chart: Expenses vs Months -->
+                                        <h6 class="fw-bold text-center">📊 Monthly Expense Trends</h6>
+                                        <canvas id="monthlyExpenseChart" height="100"></canvas>
+                                </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            <!--end::App Content-->
+        </main>
+        <!--end::App Main-->
+        <!--begin::Footer-->
+        <footer class="app-footer">
+            <!--begin::To the end-->
+            <div class="float-end d-none d-sm-inline">Anything you want</div>
+            <!--end::To the end-->
+            <!--begin::Copyright-->
+            <strong>
+                Copyright &copy; 2014-2024&nbsp;
+                <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;">JENGO PAY</a>.
+            </strong>
+            All rights reserved.
+            <!--end::Copyright-->
+        </footer>
+        <!--end::Footer-->
 
-                            
 
-                            <!-- 🎉 Premium Stylish Modal -->
+        <!-- Models -->
+         <!-- 🎉 Premium Stylish Modal -->
                             <div class="modal fade" id="expenseModal" tabindex="-1" role="dialog" aria-labelledby="expenseModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                     <div class="modal-content shadow-lg rounded-4">
@@ -652,47 +692,6 @@ try {
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row graph">
-                            <div class="col-md-12">
-                                <div class="bg-white p-2">
-                                    <?php
-                                    // Group expenses by month and sum totals
-                                    $monthlyTotals = [];
-                                    try {
-                                        $stmt = $pdo->query("SELECT MONTH(date) AS month, SUM(total) AS total FROM expenses GROUP BY MONTH(date)");
-                                        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                            $monthNum = (int)$row['month'];
-                                            $monthlyTotals[$monthNum] = (float)$row['total'];
-                                        }
-                                    } catch (PDOException $e) {
-                                        $monthlyTotals = [];
-                                    }
-                                    ?>
-                                    <!-- Line Chart: Expenses vs Months -->
-                                        <h6 class="fw-bold text-center">📊 Monthly Expense Trends</h6>
-                                        <canvas id="monthlyExpenseChart" height="100"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                            <!--end::App Content-->
-        </main>
-        <!--end::App Main-->
-        <!--begin::Footer-->
-        <footer class="app-footer">
-            <!--begin::To the end-->
-            <div class="float-end d-none d-sm-inline">Anything you want</div>
-            <!--end::To the end-->
-            <!--begin::Copyright-->
-            <strong>
-                Copyright &copy; 2014-2024&nbsp;
-                <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;">JENGO PAY</a>.
-            </strong>
-            All rights reserved.
-            <!--end::Copyright-->
-        </footer>
-        <!--end::Footer-->
     </div>
     <!--end::App Wrapper-->
 
