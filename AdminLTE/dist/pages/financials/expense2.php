@@ -318,6 +318,29 @@ try {
                 </div>
                 <div class="app-content">
                     <div class="container-fluid">
+                        <div class="row g-3 mb-4">
+                            <p class="text-muted">Manage your expenses</p>
+                            <div class="col-md-3">
+                                <select class="form-select filter-shadow">
+                                <option selected>Filter by Building</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select filter-shadow ">
+                                <option selected>Filter by Tenant</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select filter-shadow">
+                                <option selected>Filter Status</option>
+                                <option>Pending</option>
+                                <option>Completed</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="date" class="form-control filter-shadow ">
+                            </div>
+                        </div>
                         <div class="row mt-2 mb-2">
                             <div class="col-md-3">
                                 <div class="personal-info-card shadow-sm bg-white p-3 rounded">
