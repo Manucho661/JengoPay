@@ -58,6 +58,7 @@
 
       if (!summaryTable) {
         summaryTable = document.createElement("table");
+        summaryTable.id = "summary-table"; // 👈 Add this line
         summaryTable.className = "summary-table table table-bordered";
         summaryTable.style = "width: 20%; float: right; font-size: 0.8rem; margin-top: 10px;";
         summaryTable.innerHTML = `<tbody></tbody>`;
