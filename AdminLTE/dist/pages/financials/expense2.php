@@ -342,6 +342,7 @@ try {
                             </div>
                         </div>
                         <div class="row mt-2 mb-2">
+                            <h6 class="mb-0 contact_section_header summary mb-2"></i> <b>Summary</b></h6>
                             <div class="col-md-3">
                                 <div class="personal-info-card shadow-sm bg-white p-3 rounded">
                                     <div class="d-flex align-items-center gap-2">
