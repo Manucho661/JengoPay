@@ -380,9 +380,6 @@ try {
                             </div>
                         </div>
                         <div class="row">
-
-                        </div>
-                        <div class="row">
                             <div class="col-md-12 mb-4">
                                 <div class="card shadow">
                                     <div class="bg-white p-1 rounded-2 border-0">
@@ -391,7 +388,6 @@ try {
                                             <span id="toggleIcon">➕</span> Click Here to Add an Expense
                                         </a>
                                     </div>
-
                                     <!-- ✅ Fixed & Complete Expense Form -->
                                     <div class="collapse" id="addExpense">
                                         <div class="card-body border-top border-2">
@@ -503,109 +499,7 @@ try {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-
-
-                                    <script>
-                                        function calculateTotal() {
-                                            let grandTotal = 0;
-
-                                            document.querySelectorAll('#spendTable tbody tr').forEach(row => {
-                                                const qty = parseFloat(row.querySelector('.qty')?.value || 0);
-                                                let unitPrice = parseFloat(row.querySelector('.unit-price')?.value || 0);
-                                                const taxOption = row.querySelector('[name="taxes[]"]')?.value;
-                                                let total = 0;
-
-                                                switch (taxOption) {
-                                                    case 'VAT 16% Inclusive':
-                                                        unitPrice = unitPrice / 1.16; // Extract base price
-                                                        total = unitPrice * qty * 1.16; // Add back VAT
-                                                        break;
-                                                    case 'VAT 16% Exclusive':
-                                                        total = unitPrice * qty * 1.16; // Add 16% VAT
-                                                        break;
-                                                    case 'Zero Rated':
-                                                    case 'Exempted':
-                                                        total = unitPrice * qty;
-                                                        break;
-                                                    default:
-                                                        total = unitPrice * qty;
-                                                }
-
-                                                row.querySelector('.total-line').value = total.toFixed(2);
-                                                grandTotal += total;
-                                            });
-
-                                            document.getElementById('grandTotal').value = grandTotal.toFixed(2);
-                                        }
-
-                                        function deleteRow(btn) {
-                                            btn.closest('tr').remove();
-                                            calculateTotal();
-                                        }
-
-                                        function addRow() {
-                                            const tbody = document.querySelector('#spendTable tbody');
-                                            const newRow = tbody.rows[0].cloneNode(true);
-
-                                            newRow.querySelectorAll('input, select, textarea').forEach(input => {
-                                                if (input.tagName.toLowerCase() === 'select') {
-                                                    input.selectedIndex = 0;
-                                                } else {
-                                                    input.value = '';
-                                                }
-                                            });
-
-                                            tbody.appendChild(newRow);
-                                            calculateTotal();
-                                        }
-
-                                        // Auto-calculate when inputs change (qty, unit price, taxes)
-                                        document.addEventListener('input', function(e) {
-                                            if (e.target.matches('.qty, .unit-price, [name="taxes[]"]')) {
-                                                calculateTotal();
-                                            }
-                                        });
-
-                                        // Handle submission
-                                        document.getElementById('expenseForm').addEventListener('submit', function(e) {
-                                            e.preventDefault();
-                                            calculateTotal();
-
-                                            const form = e.target;
-                                            const formData = new FormData(form);
-
-                                            fetch(window.location.href, {
-                                                    method: 'POST',
-                                                    headers: {
-                                                        'X-Requested-With': 'XMLHttpRequest'
-                                                    },
-                                                    body: formData
-                                                })
-                                                .then(res => res.json())
-                                                .then(data => {
-                                                    if (data.success) {
-                                                        alert("✅ Expense saved and displayed!");
-                                                        form.reset();
-                                                        document.getElementById('grandTotal').value = "0.00";
-                                                        calculateTotal();
-                                                        if (document.getElementById('toggleIcon')) {
-                                                            document.getElementById('toggleIcon').click();
-                                                        }
-                                                    } else {
-                                                        alert(data.error || "❌ Something went wrong.");
-                                                    }
-                                                })
-                                                .catch(err => {
-                                                    console.error(err);
-                                                    alert("❌ Server error occurred.");
-                                                });
-                                        });
-                                    </script>
-
-
-
-
+                                    </div>                               
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="card Content">
@@ -650,26 +544,7 @@ try {
                                 </div>
                             </div>
 
-                            <?php
-                            // Group expenses by month and sum totals
-                            $monthlyTotals = [];
-                            try {
-                                $stmt = $pdo->query("SELECT MONTH(date) AS month, SUM(total) AS total FROM expenses GROUP BY MONTH(date)");
-                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                    $monthNum = (int)$row['month'];
-                                    $monthlyTotals[$monthNum] = (float)$row['total'];
-                                }
-                            } catch (PDOException $e) {
-                                $monthlyTotals = [];
-                            }
-                            ?>
-
-
-                            <!-- Line Chart: Expenses vs Months -->
-                            <div class="mt-5">
-                                <h6 class="fw-bold text-center">📊 Monthly Expense Trends</h6>
-                                <canvas id="monthlyExpenseChart" height="100"></canvas>
-                            </div>
+                            
 
                             <!-- 🎉 Premium Stylish Modal -->
                             <div class="modal fade" id="expenseModal" tabindex="-1" role="dialog" aria-labelledby="expenseModalLabel" aria-hidden="true">
@@ -777,13 +652,30 @@ try {
                                     </div>
                                 </div>
                             </div>
-
-
-
-
-
-
-
+                        </div>
+                        <div class="row graph">
+                            <div class="col-md-12">
+                                <div class="bg-white p-2">
+                                    <?php
+                                    // Group expenses by month and sum totals
+                                    $monthlyTotals = [];
+                                    try {
+                                        $stmt = $pdo->query("SELECT MONTH(date) AS month, SUM(total) AS total FROM expenses GROUP BY MONTH(date)");
+                                        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                            $monthNum = (int)$row['month'];
+                                            $monthlyTotals[$monthNum] = (float)$row['total'];
+                                        }
+                                    } catch (PDOException $e) {
+                                        $monthlyTotals = [];
+                                    }
+                                    ?>
+                                    <!-- Line Chart: Expenses vs Months -->
+                                        <h6 class="fw-bold text-center">📊 Monthly Expense Trends</h6>
+                                        <canvas id="monthlyExpenseChart" height="100"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                             <!--end::App Content-->
         </main>
         <!--end::App Main-->
@@ -977,6 +869,102 @@ try {
                 });
         }
     </script>
+    <script>
+                                        function calculateTotal() {
+                                            let grandTotal = 0;
+
+                                            document.querySelectorAll('#spendTable tbody tr').forEach(row => {
+                                                const qty = parseFloat(row.querySelector('.qty')?.value || 0);
+                                                let unitPrice = parseFloat(row.querySelector('.unit-price')?.value || 0);
+                                                const taxOption = row.querySelector('[name="taxes[]"]')?.value;
+                                                let total = 0;
+
+                                                switch (taxOption) {
+                                                    case 'VAT 16% Inclusive':
+                                                        unitPrice = unitPrice / 1.16; // Extract base price
+                                                        total = unitPrice * qty * 1.16; // Add back VAT
+                                                        break;
+                                                    case 'VAT 16% Exclusive':
+                                                        total = unitPrice * qty * 1.16; // Add 16% VAT
+                                                        break;
+                                                    case 'Zero Rated':
+                                                    case 'Exempted':
+                                                        total = unitPrice * qty;
+                                                        break;
+                                                    default:
+                                                        total = unitPrice * qty;
+                                                }
+
+                                                row.querySelector('.total-line').value = total.toFixed(2);
+                                                grandTotal += total;
+                                            });
+
+                                            document.getElementById('grandTotal').value = grandTotal.toFixed(2);
+                                        }
+
+                                        function deleteRow(btn) {
+                                            btn.closest('tr').remove();
+                                            calculateTotal();
+                                        }
+
+                                        function addRow() {
+                                            const tbody = document.querySelector('#spendTable tbody');
+                                            const newRow = tbody.rows[0].cloneNode(true);
+
+                                            newRow.querySelectorAll('input, select, textarea').forEach(input => {
+                                                if (input.tagName.toLowerCase() === 'select') {
+                                                    input.selectedIndex = 0;
+                                                } else {
+                                                    input.value = '';
+                                                }
+                                            });
+
+                                            tbody.appendChild(newRow);
+                                            calculateTotal();
+                                        }
+
+                                        // Auto-calculate when inputs change (qty, unit price, taxes)
+                                        document.addEventListener('input', function(e) {
+                                            if (e.target.matches('.qty, .unit-price, [name="taxes[]"]')) {
+                                                calculateTotal();
+                                            }
+                                        });
+
+                                        // Handle submission
+                                        document.getElementById('expenseForm').addEventListener('submit', function(e) {
+                                            e.preventDefault();
+                                            calculateTotal();
+
+                                            const form = e.target;
+                                            const formData = new FormData(form);
+
+                                            fetch(window.location.href, {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'X-Requested-With': 'XMLHttpRequest'
+                                                    },
+                                                    body: formData
+                                                })
+                                                .then(res => res.json())
+                                                .then(data => {
+                                                    if (data.success) {
+                                                        alert("✅ Expense saved and displayed!");
+                                                        form.reset();
+                                                        document.getElementById('grandTotal').value = "0.00";
+                                                        calculateTotal();
+                                                        if (document.getElementById('toggleIcon')) {
+                                                            document.getElementById('toggleIcon').click();
+                                                        }
+                                                    } else {
+                                                        alert(data.error || "❌ Something went wrong.");
+                                                    }
+                                                })
+                                                .catch(err => {
+                                                    console.error(err);
+                                                    alert("❌ Server error occurred.");
+                                                });
+                                        });
+                                    </script>
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
