@@ -1,30 +1,15 @@
 /* Overlay background */
- .personal-info-icon{
+ .summary-info-icon{
       color: #FFC107;
     }
-    .personal-info.item-name{
+    .summary-info.item-name{
       /* color: rgb(41, 41, 41); */
       color: #767676;
       font-weight: 600;
       font-size: 14px;
       white-space: nowrap;
     }
-  .personal-info-card-value.email{color: #0072C6;
-  }
-
-  .personal-info-card-value.email:hover{
-    text-decoration: underline;
-    cursor: pointer;
-  }
-  .personal-info-card-value.phone{
-    color: #0072C6;
-    font-size: 14px;
-  }
-  .personal-info-card-value.phone:hover{
-    text-decoration: underline;
-    cursor: pointer;
-  }
-.personal-info-card {
+.summary-info-card {
   position: relative;
   overflow: hidden; /* Prevent content from spilling out */
   max-width: 100%;  /* Ensure it doesn’t expand beyond its column */
@@ -34,7 +19,7 @@
 .icon {
   color: #FFC107;
 }
-.personal-info-card-label{
+.summary-info-card-label{
    font-weight: 600;
   font-size: 16px;
   color: #767676;
@@ -43,7 +28,7 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.personal-info-card-value{
+.summary-info-card-value{
     display: inline-block;
   max-width: 150px;     /* Adjust to your needs */
   text-overflow: ellipsis;
@@ -80,102 +65,79 @@
         input:focus, select:focus, textarea:focus {
           border-color: #FFC107;
           outline: none;
-          box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+          /* box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); */ 
         }
-        select {
-          background-size: 16px;
-          /* padding-right: 30px; */
-        border-radius: 4px;
-        width: fit-content;
-        padding:  10px;
-        }
-        .select-option-container{
-
-          width: 170px;
-          position: relative;
-          }
-
-        .custom-select{
-          position: relative;
-          padding: 8px;
-          /* padding:10px 20px; */
-          color: #999;
-          border: 1px solid #00192D;
-          border-radius: 5px;
-          font-size: 16px;
-          background-color: #fff;
-          cursor: pointer;
-          margin-right: 20px;
-          width: 100%;
-        }
-        .custom-select:hover{
-          border: 1px solid #FFC107;
-
-        }
-      .custom-select:focus{
-        border-color: #FFC107;
-        outline: none;
-        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-      }
-
-      .custom-select:after{
-          border-bottom: 2px solid #999;
-          border-right: 2px solid #999;
-          content: '';
-          display: block;
-          height: 5px;
-          margin-top: -4px;
-          pointer-events: none;
-          position: absolute;
-          right: 12px;
-          top: 50%;
-          -webkit-transform-origin: 66% 66%;
-          -ms-transform-origin: 66% 66%;
-          transform-origin: 66% 66%;
-          -webkit-transform: rotate(45deg);
-          -ms-transform: rotate(45deg);
-          transform: rotate(45deg);
-          -webkit-transition: all 0.15s ease-in-out;
-          transition: all 0.15s ease-in-out;
-          width: 5px;
-      }
-      .custom-select.open:after {
-        transform: rotate(-135deg);
-      }
-      .select-options{
-        background-color: white;
-          position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: white;
-        border: 1px solid #ccc;
-        border-top: none;
-        z-index: 10;
-        max-height: 200px;
-        overflow-y: auto;
-        border-radius: 5px;
-        color: gray;
-
-        display: none;
-        /* border-radius: 0 0 8px 8px; */
-
-  }
-  .select-options div {
-        padding: 12px;
-        cursor: pointer;
-        transition: background 0.3s;
-      }
-  .select-options div.selected {
-        background-color: #00192D;
-        color: #FFC107;
+        /* select wrapper */
+        
+.custom-select-wrapper {
+      position: relative;
+      width: 250px;
     }
 
-  .select-options div:hover {
-        background-color: #00192D !important;
-        color: #FFC107 !important;
+    .custom-select {
+      appearance: none !important;         /* Most modern browsers */
+  -webkit-appearance: none !important; /* Safari and older WebKit */
+  -moz-appearance: none !important;    
+      padding: 12px 16px;
+      border-radius: 5px;
+      background-color: #fff !important;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      position: relative;
+      user-select: none;
+      background: white !important; /* Remove browser background */
+  background-image: none;
+    }
+    .custom-select:focus{
+          border-color: #FFC107 !important;
+          box-shadow: none !important;
+    }
+    .custom-select:hover{
+      border-color: #FFC107 !important;
+    }
+    .custom-select::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 16px;
+      transform: translateY(-50%) rotate(45deg);
+      width: 6px;
+      height: 6px;
+      border-right: 2px solid #FFC107;
+      border-bottom: 2px solid #FFC107;
+      transition: transform 0.2s;
+    }
+    .custom-select.open::after {
+      transform: translateY(-50%) rotate(-135deg);
+    }
 
-  }
+    .select-options {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      border: 1px solid #ccc;
+      border-top: none;
+      background: white;
+      z-index: 10;
+      border-radius: 0 0 5px 5px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .select-options div {
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .select-options div:hover,
+    .select-options .selected {
+      background-color: #00192D;
+      color: #FFC107;
+    }
+
 
 
 .edit-btn {
@@ -208,10 +170,7 @@
     transition: all 0.3s ease-in-out !important;
 }
 
-.form-control:focus, .form-select:focus {
-    border-color: #007bff !important;
-    box-shadow: 0 0 6px rgba(0, 123, 255, 0.3) !important;
-}
+/*  */
 
 .btn-custom {
     background-color: #00192D !important;
@@ -352,15 +311,15 @@ div.dt-buttons{
   }
 
   .table {
-    border-radius: 12px;
+    /* border-radius: 12px; */
     overflow: hidden;
     font-size: 12px;
   }
   thead {
     background-color: #34495e;
-    color: white;
+    /* color: white; */
     font-size: 16px !important;
-    border-top:2px solid #4f4f52 !important;
+    /* border-top:2px solid #4f4f52 !important; */
   }
   tbody tr:nth-child(even) {
     background-color: #ecf0f1;

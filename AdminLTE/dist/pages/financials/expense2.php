@@ -299,14 +299,7 @@ try {
                         <!--begin::Row-->
                         <div class="row">
                             <div class="col-sm-8">
-                                <h3 class="mb-0 contact_section_header"> <i class="fas fa-search icon title-icon"></i>&nbsp; Expenses</h3>
-
-                            </div>
-
-                            <div class="col-sm-4 d-flex justify-content-end">
-                                <button type="button" class="btn newSchedule" data-bs-toggle="modal" data-bs-target="#newSchedule" style="background-color:#FFC107 !important; color:#00192D;">
-                                    New Schedule
-                                </button>
+                                <h3 class="mb-0 contact_section_header"> 💰 &nbsp; Expenses</h3>
                             </div>
                             <!--end::Row-->
                         </div>
@@ -318,21 +311,38 @@ try {
                         <div class="row g-3 mb-4">
                             <p class="text-muted">Manage your expenses</p>
                             <div class="col-md-3">
-                                <select class="form-select filter-shadow">
-                                <option selected>Filter by Building</option>
-                                </select>
+                                <div class="custom-select-wrapper" id="custom-select-wrapper">
+                                    <div class="custom-select shadow-sm" id="custom-select" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
+                                    Filter By Building
+                                    </div>
+                                    <div class="select-options" id="select-options" role="listbox">
+                                    <div role="option" data-value="option1">Manucho</div>
+                                    <div role="option" data-value="option2">Silver Spoon</div>
+                                    <div role="option" data-value="option3">Ebenezer</div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-3">
-                                <select class="form-select filter-shadow ">
-                                <option selected>Filter by account</option>
-                                </select>
+                                <div class="custom-select-wrapper" id="custom-select-wrapper">
+                                    <div class="custom-select shadow-sm" id="custom-select" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
+                                    Filter By Items
+                                    </div>
+                                    <div class="select-options" id="select-options" role="listbox">
+                                    <div role="option" data-value="option1">Garbage</div>
+                                    <div role="option" data-value="option2">Electricity</div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-3">
-                                <select class="form-select filter-shadow">
-                                <option selected>Filter Status</option>
-                                <option>Approved</option>
-                                <option>Pending</option>
-                                </select>
+                               <div class="custom-select-wrapper" id="custom-select-wrapper">
+                                    <div class="custom-select shadow-sm" id="custom-select" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
+                                    Filter By Status
+                                    </div>
+                                    <div class="select-options" id="select-options" role="listbox">
+                                    <div role="option" data-value="option1">Paid</div>
+                                    <div role="option" data-value="option2">Pending</div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-3">
                                 <input type="date" class="form-control filter-shadow ">
@@ -341,36 +351,47 @@ try {
                         <div class="row mt-2 mb-2">
                             <h6 class="mb-0 contact_section_header summary mb-2"></i> <b>Summary</b></h6>
                             <div class="col-md-3">
-                                <div class="personal-info-card shadow-sm bg-white p-3 rounded">
+                                <div class="summary-info-card shadow-sm bg-white p-3 rounded">
                                     <div class="d-flex align-items-center gap-2">
-                                        <i class="fa fa-envelope icon"></i>
+                                        <i class="fa fa-box icon"></i>
                                         <div>
-                                            <div class="personal-info-card-label">ITEMS</div>
-                                            <b id="email" class="personal-info-card-value email">300</b>
+                                            <div class="summary-info-card-label">ITEMS</div>
+                                            <b id="items" class="summary-info-card-value">300 PIECES</b>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <!-- Phone Card -->
                             <div class="col-md-3">
-                                <div class="personal-info-card shadow-sm bg-white p-3 rounded">
+                                <div class="summary-info-card shadow-sm bg-white p-3 rounded">
                                     <div class="d-flex align-items-center gap-2">
-                                        <i class="fas fa-phone icon"></i>
+                                        <i class="fa fa-calendar-alt icon"></i>
                                         <div>
-                                            <div class="personal-info-card-label">This Month</div>
-                                            <b id="phone" class="personal-info-card-value phone">Ksh 100,000</b>
+                                            <div class="summary-info-card-label">This Month</div>
+                                            <b id="duration" class="summary-info-card-value">Ksh 100,000</b>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <!-- ID Card -->
-                            <div class="col-md-3">
-                                <div class="personal-info-card shadow-sm bg-white p-3 rounded">
+                             <div class="col-md-3">
+                                <div class="summary-info-card shadow-sm bg-white p-3 rounded">
                                     <div class="d-flex align-items-center gap-2">
-                                        <i class="fas fa-id-card icon"></i>
+                                        <i class="fa fa-check-circle icon"></i>
                                         <div>
-                                            <div class="personal-info-card-label">Pending Approval</div>
-                                            <b id="id_no" class="personal-info-card-value">45862394</b>
+                                            <div class="summary-info-card-label">Paid</div>
+                                            <b id="paid" class="summary-info-card-value">KSH 45862394</b>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="summary-info-card shadow-sm bg-white p-3 rounded">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="fa fa-hourglass-half icon"></i> 
+                                        <div>
+                                            <div class="summary-info-card-label">Pending </div>
+                                            <b id="pending" class="summary-info-card-value">KSH 45862394</b>
                                         </div>
                                     </div>
                                 </div>
@@ -378,7 +399,7 @@ try {
                         </div>
                         <div class="row mb-2">
                             <div class="col-md-12 mb-4">
-                                <div class="card shadow">
+                                <div class="card shadow-sm">
                                     <div class="bg-white p-1 rounded-2 border-0">
                                         <div class="card-header d-flex justify-content-between align-items-center" style="background: #00192D;">
                                         <a class="text-white fw-bold text-decoration-none" data-bs-toggle="collapse" href="#addExpense" role="button" aria-expanded="false" aria-controls="addExpense" onclick="toggleIcon(this)">
@@ -388,58 +409,55 @@ try {
                                     <!-- ✅ Fixed & Complete Expense Form -->
                                     <div class="collapse" id="addExpense">
                                         <div class="card-body border-top border-2">
-                                            <div class="card mb-3 shadow-sm">
-                                                <div class="card-header text-white" style="background: linear-gradient(to right, #00192D, #00788D);">
-                                                    <h6 class="mb-0">Enter Expense Details</h6>
-                                                </div>
+                                            <div class="alert mb-4" style="background-color: #FFF3CD; color: #856404; border: 1px solid #FFE8A1;">
+                                                <i class="fas fa-exclamation-circle mr-2"></i> Please fill out all fields carefully to avoid delays.
+                                            </div>
+                                            <div class="text-muted">Expense No <span style="color:rgb(0 28 63 / 60%); "><b>34687</b></span></b> </div>
+                                            <div class="card mb-3 shadow-sm border-0">
                                                 <div class="card-body">
                                                     <form method="POST" id="expenseForm">
                                                         <div class="row g-3">
                                                             <div class="col-md-3">
-                                                                <label class="form-label fw-bold">Expense No</label>
-                                                                <input type="number" class="form-control" placeholder="123" name="expense_number" required />
-                                                            </div>
-                                                            <div class="col-md-5">
                                                                 <label class="form-label fw-bold">Expense for the Month of</label>
-                                                                <select class="form-select" name="month" required>
-                                                                    <option selected disabled>Select Month</option>
-                                                                    <option>January</option>
-                                                                    <option>February</option>
-                                                                    <option>March</option>
-                                                                    <option>April</option>
-                                                                    <option>May</option>
-                                                                    <option>June</option>
-                                                                    <option>July</option>
-                                                                    <option>August</option>
-                                                                    <option>September</option>
-                                                                    <option>October</option>
-                                                                    <option>November</option>
-                                                                    <option>December</option>
-                                                                </select>
+                                                                <div class="custom-select-wrapper" id="custom-select-wrapper" style="width: 100%;">
+                                                                    <div class="custom-select shadow-sm" id="custom-select" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
+                                                                    Select Month
+                                                                    </div>
+                                                                    <div class="select-options" id="select-options" role="listbox">
+                                                                    <div role="option" data-value="option1"> January</div>
+                                                                    <div role="option" data-value="option2">February</div>
+                                                                    <div role="option" data-value="option1"> March</div>
+                                                                    <div role="option" data-value="option2">April</div>
+                                                                    <div role="option" data-value="option1"> May</div>
+                                                                    <div role="option" data-value="option2">June</div>
+                                                                    <div role="option" data-value="option1"> July</div>
+                                                                    <div role="option" data-value="option2">August</div>
+                                                                    <div role="option" data-value="option1"> September</div>
+                                                                    <div role="option" data-value="option2">October</div>
+                                                                    <div role="option" data-value="option1"> November</div>
+                                                                    <div role="option" data-value="option2">December</div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                            <div class="col-md-4">
+                                                            <div class="col-md-3">
                                                                 <label class="form-label fw-bold">Year</label>
                                                                 <input type="number" class="form-control" placeholder="2025" name="year" required />
                                                             </div>
-                                                        </div>
-
-                                                        <div class="row g-3 mt-2">
-                                                            <div class="col-md-8">
-                                                                <label class="form-label fw-bold">Entry Date</label>
-                                                                <input type="date" class="form-control" name="date" required />
-                                                            </div>
-                                                            <div class="col-md-4">
+                                                            <div class="col-md-3">
                                                                 <label class="form-label fw-bold">Supplier</label>
                                                                 <input type="text" class="form-control" placeholder="Supplier" name="supplier" required />
                                                             </div>
+                                                            <div class="col-md-3">
+                                                                <label class="form-label fw-bold">Entry Date</label>
+                                                                <input type="date" class="form-control" name="date" required />
+                                                            </div>
                                                         </div>
-
                                                         <!-- Hidden total -->
                                                         <input type="hidden" name="total" id="grandTotal" value="0.00" />
 
                                                         <!-- Spend items table -->
-                                                        <div class="mt-4">
-                                                            <h6 class="text-center fw-bold text-secondary">Add the Spend items below</h6>
+                                                        <div class="text-muted mt-4">Add the Spend items in the fields below</div>
+                                                        <div class="">
                                                             <div class="table-responsive">
                                                                 <table class="table table-bordered align-middle" id="spendTable">
                                                                     <thead class="table-light">
@@ -455,12 +473,15 @@ try {
                                                                     <tbody>
                                                                         <tr>
                                                                             <td>
-                                                                                <select class="form-select" name="item[]" required>
-                                                                                    <option selected disabled>--Select Option--</option>
-                                                                                    <option>Rent</option>
-                                                                                    <option>Water Bill</option>
-                                                                                    <option>Garbage</option>
-                                                                                </select>
+                                                                                <div class="custom-select-wrapper" id="custom-select-wrapper" style="z-index: 10000;">
+                                                                                    <div class="custom-select shadow-sm" id="custom-select" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false" style="z-index: 1000;">
+                                                                                    select
+                                                                                    </div>
+                                                                                    <div class="select-options" id="select-options" role="listbox" style="z-index: 10000;">
+                                                                                    <div role="option" data-value="option1">Garbage</div>
+                                                                                    <div role="option" data-value="option2">Electricty</div>
+                                                                                    </div>
+                                                                                </div>
                                                                             </td>
                                                                             <td><textarea class="form-control" rows="1" placeholder="Description" name="description[]" required></textarea></td>
                                                                             <td><input type="number" class="form-control qty" placeholder="1" name="qty[]" required /></td>
@@ -485,11 +506,10 @@ try {
                                                         </div>
 
                                                         <div class="row mt-3">
-                                                            <div class="col-md-6">
-                                                                <button type="button" class="btn btn-outline-primary" onclick="addRow()">➕ Add More</button>
-                                                            </div>
-                                                            <div class="col-md-6 text-end">
-                                                                <button type="submit" class="btn btn-success">✅ Submit</button>
+                                                            <div class="col-md-12 d-flex justify-content-between">
+                                                                <button type="button" class="btn btn-outline-warning text-dark" onclick="addRow()">➕ Add More</button>
+                                                                <button type="submit" class="btn btn-secondary">✕  Close</button>
+                                                                <button type="submit" class="btn btn-outline-warning text-dark">✅ Submit</button>
                                                             </div>
                                                         </div>
                                                     </form>
@@ -501,11 +521,10 @@ try {
                             </div>
                         </div>
                         <div class="row mt-2">
+                            <h6 class="mb-0 contact_section_header summary mb-2"></i> <b>Details</b></h6>
                             <div class="col-md-12">
-                                <div class="card Content">
-                                    <div class="card-header">
-                                        <b>All Operational Expenses</b>
-                                    </div>
+                                <div class="details-container bg-white p-2 rounded Content">
+                                    <h3 class="details-container_header text-start"> <span id="displayed_building">All Expenses</span>  &nbsp;	|&nbsp;	 <span style="color:#FFC107"> <span id="enteries">3</span>  enteries</span></h3>
                                     <div class="card-body" style="overflow-x: auto;">
                                         <table class="table-striped" id="repaireExpenses" style="width: 100%; min-width: 600px;">
                                             <thead>
@@ -964,6 +983,54 @@ try {
                                                 });
                                         });
                                     </script>
+
+                                    <!-- select wrapper -->
+<script>  
+  document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
+    const select = wrapper.querySelector('.custom-select');
+    const optionsContainer = wrapper.querySelector('.select-options');
+    const options = wrapper.querySelectorAll('[role="option"]');
+
+    const closeOptions = () => {
+      optionsContainer.style.display = 'none';
+      select.classList.remove('open');
+      select.setAttribute('aria-expanded', 'false');
+    };
+
+    select.addEventListener('click', () => {
+      const isOpen = optionsContainer.style.display === 'block';
+      optionsContainer.style.display = isOpen ? 'none' : 'block';
+      select.classList.toggle('open', !isOpen);
+      select.setAttribute('aria-expanded', !isOpen);
+    });
+
+    options.forEach(option => {
+      option.addEventListener('click', () => {
+        select.textContent = option.textContent;
+        select.setAttribute('data-value', option.dataset.value);
+        options.forEach(opt => opt.classList.remove('selected'));
+        option.classList.add('selected');
+        closeOptions();
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!wrapper.contains(e.target)) {
+        closeOptions();
+      }
+    });
+
+    select.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        select.click();
+      }
+      if (e.key === 'Escape') {
+        closeOptions();
+      }
+    });
+  });
+  </script> 
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
