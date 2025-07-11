@@ -5,7 +5,7 @@ include '../db/connect.php';
 $invoice_number = $_POST['invoice_number'] ?? '';
 $invoice_date = $_POST['invoice_date'] ?? '';
 $building_id = $_POST['building_id'] ?? '';
-$tenant = $_POST['tenant'] ?? '';
+$tenants = $_POST['tenants'] ?? [];
 
 // Retrieve item arrays
 $account_items = $_POST['account_item'] ?? [];
@@ -53,5 +53,7 @@ for ($i = 0; $i < count($account_items); $i++) {
     // $stmt->execute([...]);
 }
 
-echo "Invoice saved successfully.";
+// Redirect with success message
+header("Location: invoices2.php?success=1");
+exit;
 ?>

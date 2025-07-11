@@ -1,7 +1,7 @@
 <?php
 include '../db/connect.php';
 
-$stmt = $pdo->prepare("SELECT account_code, account_name FROM chart_of_accounts_1 ORDER BY account_name ASC");
+$stmt = $pdo->prepare("SELECT account_code, account_name FROM chart_of_accounts ORDER BY account_name ASC");
 $stmt->execute();
 $accountItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -139,6 +139,21 @@ echo "\n";
     <!-- Pdf pluggin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- jQuery (required for Select2) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+
+<!-- Add these to your head or before closing body -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <!--Tailwind CSS  -->
     <style>
@@ -151,6 +166,83 @@ echo "\n";
             opacity: 0.4 !important;
             /* Adjust the value as needed */
         }
+        .custom-select-container {
+  position: relative;
+  width: 100%;
+}
+
+.custom-select-search {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.custom-select-options {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  background: white;
+  z-index: 1000;
+}
+
+.custom-select-option {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.custom-select-option:hover {
+  background-color: #f0f0f0;
+}
+
+.custom-select-option.selected {
+  background-color: #e0e0e0;
+}
+
+.custom-select-option.disabled {
+  color: #999;
+  cursor: not-allowed;
+}
+/* Adjust Select2 to fit in table cell */
+.select2-container {
+  width: 100% !important;
+}
+.select2-selection {
+  border: 1px solid #ced4da !important;
+  height: auto !important;
+  padding: 0.375rem 0.75rem !important;
+}
+
+.invoice-container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .invoice-info {
+        margin-bottom: 20px;
+    }
+
+    @media print {
+        .modal-header, .modal-footer {
+            display: none !important;
+        }
+        .modal-body {
+            padding: 0;
+        }
+        body {
+            visibility: visible;
+        }
+    }
+
+    /* Add some margin between buttons */
+    .modal-footer .btn {
+        margin-left: 5px;
+    }
     </style>
 </head>
 
@@ -306,8 +398,10 @@ echo "\n";
   <div class="form-row">
     <input type="text" value="<?= $invoiceNumber ?>" disabled>
     <input type="hidden" name="invoice_number" value="<?= $invoiceNumber ?>"> <!-- for actual submission -->
-    <input type="date" name="invoice_date" placeholder="Invoice Date" required>
+    <!-- <input type="date" name="invoice_date" placeholder="Invoice Date" required> -->
+
   </div>
+
   <?php
 require_once '../db/connect.php';
 
@@ -330,6 +424,7 @@ $buildings = $pdo->query("SELECT building_id, building_name FROM buildings")->fe
     </select>
   </div>
 
+
   <div class="form-section col-md-6">
                         <b><h2 style="text-align: left;font-weight: 600;">Tenant Information</h2></b>
                         <select name="tenant" required>
@@ -340,6 +435,20 @@ $buildings = $pdo->query("SELECT building_id, building_name FROM buildings")->fe
                         </select>
                       </div>
                 </div>
+
+                <div class="row">
+  <!-- Invoice Date -->
+  <div class="col-md-6 form-group">
+    <label for="invoice_date"><strong>Invoice Date</strong></label>
+    <input type="date" id="invoice_date" name="invoice_date" class="form-control" required>
+  </div>
+
+  <!-- Due Date -->
+  <div class="col-md-6 form-group">
+    <label for="due_date"><strong>Due Date</strong></label>
+    <input type="date" id="due_date" name="due_date" class="form-control" required>
+  </div>
+</div>
                 <!-- </div>
                 </div> -->
 
@@ -359,16 +468,21 @@ $buildings = $pdo->query("SELECT building_id, building_name FROM buildings")->fe
       </thead>
       <tbody>
         <tr>
-          <td>
-            <select name="account_item[]" required>
-              <option value="" disabled selected>Select Account Item</option>
-              <?php foreach ($accountItems as $item): ?>
-                <option value="<?= htmlspecialchars($item['account_code']) ?>">
-                  <?= htmlspecialchars($item['account_name']) ?>
-                </option>
-              <?php endforeach; ?>
-            </select>
-          </td>
+        <td>
+  <select name="account_item[]" class="select-account searchable-select" required>
+    <option value="" disabled selected>Select Account Item</option>
+    <?php foreach ($accountItems as $item): ?>
+      <option value="<?= htmlspecialchars($item['account_code']) ?>">
+        <?= htmlspecialchars($item['account_name']) ?>
+      </option>
+    <?php endforeach; ?>
+  </select>
+</td>
+
+
+<style>
+
+</style>
           <td><textarea name="description[]" placeholder="Description" rows="1" required></textarea></td>
           <td><input type="number" name="quantity[]" class="form-control quantity" placeholder="1" required></td>
           <td><input type="number" name="unit_price[]" class="form-control unit-price" placeholder="123" required></td>
@@ -383,7 +497,7 @@ $buildings = $pdo->query("SELECT building_id, building_name FROM buildings")->fe
           </td>
           <td>
             <input type="number" name="total[]" class="form-control total" placeholder="0" readonly>
-            <button type="button" class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
+            <button type="button"  class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
               <i class="fa fa-trash" style="font-size: 12px;"></i>
             </button>
           </td>
@@ -483,384 +597,116 @@ $buildings = $pdo->query("SELECT building_id, building_name FROM buildings")->fe
 
 
     <!-- OVERLAYS(that Covers whole viewport) -->
-    <!-- Perfom an inspection -->
-    <section id="perform_inspection_modal" class="perform_inspection_modal" style="display: none;">
+  <!-- Invoice Modal -->
+<div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="invoiceModalLabel">Tenant Invoice</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="invoiceContent">
+        <div class="invoice-container">
+          <!-- From Section (Fixed details) -->
+          <div>
+              <p>
+                  From:<br>
+                  Angela Real Estate, Ltd..<br>
+                  795 Pinnacle Building
+              </p>
+              <p>Upperhill, Nairobi Kenya</p>
+              <p>Phone: 0712345678</p>
+              <p>Email: info@angelarealestate.com </p><br>
+          </div>
 
-        <div class="container-fluid">
-            <div class="card">
-                <div class="card-header" style="background-color:#00192D; color:#FFC107"><b>Perform Inspection</b></div>
-                <div class="card-body">
-                    <div class="card shadow" style="border:1px solid rbg(0,25,45,.2)">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label><i class="fa fa-home"></i> Unit No: <span id="modal_unit"></span> </label>
-                                </div>
-                                <div class="col-md-6">
-                                    <label><i class="fa fa-building"></i> Building: <span id="modal_building_name">Angela's Apartment</span> </label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label><i class="fa fa-table"></i> Floor Location: Second Floor</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <label><i class="fa fa-bed"></i> Rental Purpose: Residence</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="card shadow">
-                        <div class="card-header" style="background-color:#00192D; color:#FFC107;"><i class="fa fa-cogs"></i> <b>Inspect this Unit</b></div>
-                        <form id="perform_inspection" onsubmit="performInspectionForm(event)" enctype="multipart/form-data">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="card shadow" style="border:1px solid rgb(0,25,45,.2);">
-                                            <div class="card-header" style="background-color:#00192D; color:#FFC107;"><i class="fa fa-home"></i> <b>Floor Condition</b></div>
-                                            <div class="card-body">
-                                                <div class="row text-center">
-                                                    <div class="col-md-6">
-                                                        <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
-                                                            <i class="fa fa-wrench" style="font-size:30px;"></i>
-                                                            <div class="icheck-dark d-inline">
-                                                                <input type="radio" name="floor_condition" id="floorRepair" value="Needs Repair">
-                                                                <label for="floorRepair"> Needs Repair</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
-                                                            <i class="fa fa-thumbs-up" style="font-size:30px;"></i>
-                                                            <div class="icheck-dark d-inline">
-                                                                <input type="radio" name="floor_condition" id="floorGood" value="Good">
-                                                                <label for="floorGood"> Good</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+          <!-- To Section (Dynamic Tenant Information) -->
+          <div style="text-align: right;">
+              <p>
+                  To:<br>
+                  <span id="tenantName">John Doe</span><br>
+                  Angela Real Estate, Ltd..<br>
+                  795 Pinnacle Building
+              </p>
+              <p>Upperhill, Nairobi Kenya</p>
+              <p>Phone: <span id="tenantPhone">0712345678</span></p>
+              <p>Email: <span id="tenantEmail">john.doe@example.com</span></p>
+          </div>
+        </div>
 
-                                                <div class="card shadow" id="floorBadDescription" style="display:none;">
-                                                    <div class="card-header" style="background-color:#00192D; color:#FFC107;"><b>Describe the Repair Required</b></div>
-                                                    <div class="card-body">
-                                                        <div class="form-group">
-                                                            <label>Describe the State</label>
-                                                            <textarea name="floor_state" id="" class="form-control"></textarea>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Attach Photo</label>
-                                                            <input type="file" class="form-control" name="floor_photo">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="card shadow" style="border:1px solid rgb(0,25,45,.2);">
-                                            <div class="card-header" style="background-color:#00192D; color:#FFC107;"><i class="fa fa-table"></i> <b>Window(s) Condition</b></div>
-                                            <div class="card-body">
-                                                <div class="row text-center">
-                                                    <div class="col-md-6">
-                                                        <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
-                                                            <i class="fa fa-wrench" style="font-size:30px;"></i>
-                                                            <div class="icheck-dark d-inline">
-                                                                <input type="radio" name="window_condition" id="windowNeedsRepair" value="Needs Repair">
-                                                                <label for="windowNeedsRepair"> Needs Repair</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
-                                                            <i class="fa fa-thumbs-up" style="font-size:30px;"></i>
-                                                            <div class="icheck-dark d-inline">
-                                                                <input type="radio" name="window_condition" id="windowGood" value="Good">
-                                                                <label for="windowGood"> Good</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="card shadow" id="windowBadDescription" style="display:none;">
-                                                    <div class="card-header" style="background-color:#00192D; color:#FFC107;"><b>Describe the Repair Required</b></div>
-                                                    <div class="card-body">
-                                                        <div class="form-group">
-                                                            <label>Describe the State</label>
-                                                            <textarea name="window_state" id="" class="form-control"></textarea>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Attach Photo</label>
-                                                            <input type="file" class="form-control" name="window_photo">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="card shadow" style="border:1px solid rgb(0,25,45,.2);">
-                                            <div class="card-header" style="background-color:#00192D; color:#FFC107;"><i class="fa fa-building"></i> <b>Doors Condition</b></div>
-                                            <div class="card-body">
-                                                <div class="row text-center">
-                                                    <div class="col-md-6">
-                                                        <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
-                                                            <i class="fa fa-thumbs-up" style="font-size:30px;"></i>
-                                                            <div class="icheck-dark d-inline">
-                                                                <input type="radio" name="door_condition" id="doorGood" value="Good">
-                                                                <label for="doorGood"> Good</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
-                                                            <i class="fa fa-wrench" style="font-size:30px;"></i>
-                                                            <div class="icheck-dark d-inline">
-                                                                <input type="radio" name="door_condition" id="doorBad" value="Needs Repair">
-                                                                <label for="doorBad"> Needs Repair</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="card shadow mt-2" id="doorBadCard" style="display:none;">
-                                                    <div class="card-header" style="background-color:#00192D; color:#FFC107"><b>Provide More Informations</b></div>
-                                                    <div class="card-body">
-                                                        <div class="form-group">
-                                                            <label for="">Describe the Damage</label>
-                                                            <textarea name="door_state" class="form-control"></textarea>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="">Attach Photo</label>
-                                                            <input type="file" class="form-control" name="door_badphoto">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="card shadow" style="border:1px solid rgb(0,25,45,.2);">
-                                            <div class="card-header" style="background-color:#00192D; color:#FFC107;"><i class="fa fa-bank"></i><b> Wall Condition</b></div>
-                                            <div class="card-body">
-                                                <div class="row text-center">
-                                                    <div class="col-md-6">
-                                                        <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
-                                                            <i class="fa fa-wrench" style="font-size:30px;"></i>
-                                                            <div class="icheck-dark d-inline">
-                                                                <input type="radio" name="wall_condition" id="wallNeedRepair" value="Needs Repair">
-                                                                <label for="wallNeedRepair"> Needs Repair</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
-                                                            <i class="fa fa-thumbs-up" style="font-size:30px;"></i>
-                                                            <div class="icheck-dark d-inline">
-                                                                <input type="radio" name="wall_condition" id="wallGood" value="Good">
-                                                                <label for="wallGood"> Good</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="card shadow mt-2" id="wallNeedsRepairCard" style="display:none;">
-                                                    <div class="card-header" style="background-color:#00192D; color:#FFC107;"><b>More Information</b></div>
-                                                    <div class="card-body">
-                                                        <div class="form-group">
-                                                            <label for="">Describe the Repair Needed</label>
-                                                            <textarea name="wall_state" id="" cols="30" class="form-control"></textarea>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="">Attach Photo</label>
-                                                            <input type="file" class="form-control" name="faulty_wall_photo" id="faulty_wall_photo">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="card shadow" style="border:1px solid rgb(0,25,45,.2);">
-                                            <div class="card-header" style="background-color:#00192D; color:#FFC107;"><i class="fa fa-bell"></i><b> Bulb Holder(s)</b></div>
-                                            <div class="card-body">
-                                                <div class="row text-center">
-                                                    <div class="col-md-6">
-                                                        <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
-                                                            <i class="fa fa-thumbs-up" style="font-size:30px;"></i>
-                                                            <div class="icheck-dark d-inline">
-                                                                <input type="radio" name="bulb_holder_condition" id="bulbHolderGood" value="Good">
-                                                                <label for="bulbHolderGood"> Good</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="card shadow p-3" style="order: 1px solid rgb(0,25,45,.2);">
-                                                            <i class="fa fa-wrench" style="font-size:30px;"></i>
-                                                            <div class="icheck-dark d-inline">
-                                                                <input type="radio" name="bulb_holder_condition" id="bulbHolderNeedsRepair" value="Needs Repair">
-                                                                <label for="bulbHolderNeedsRepair"> Needs Repair</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="card shadow" id="bulbHolderCard" style="display:none;">
-                                                    <div class="card-header" style="background-color:#00192D; color: #FFC107;"><b>Describe the Repair Needed</b></div>
-                                                    <div class="card-body">
-                                                        <div class="form-group">
-                                                            <label for="">Describe the Fault</label>
-                                                            <textarea name="bulb_holder_state" id="bulb_holder_desc" class="form-control"></textarea>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="">Attach Photo</label>
-                                                            <input type="file" name="bulb_holder_photo" id="bulb_holder_photo" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="card shadow" style="border:1px solid rgb(0,25,45,.2);">
-                                            <div class="card-header" style="background-color:#00192D; color:#FFC107;"><i class="fa fa-plug"></i> <b>Sockets</b></div>
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-md-6 text-center">
-                                                        <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
-                                                            <i class="fa fa-thumbs-up" style="font-size:30px;"></i>
-                                                            <div class="icheck-dark d-inline">
-                                                                <input type="radio" name="socket_condition" id="socketGood" value="Good">
-                                                                <label for="socketGood"> Good</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6 text-center">
-                                                        <div class="card shadow p-3" style="border: 1px solid rgb(0,25,45,.2);">
-                                                            <i class="fa fa-wrench" style="font-size:30px;"></i>
-                                                            <div class="icheck-dark d-inline">
-                                                                <input type="radio" name="socket_condition" id="socketNeedsRepair" value="Needs Repair">
-                                                                <label for="socketNeedsRepair"> Needs Repair</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="card shadow" id="socketFaultyCard" style="border:1px solid rgb(0,25,45,.2); display:none;">
-                                                    <div class="card-header" style="background-color:#00192D; color:#FFC107;"><b>Describe the Fault</b></div>
-                                                    <div class="card-body">
-                                                        <div class="form-group">
-                                                            <label>Describe the Fault</label>
-                                                            <textarea name="socket_state" id="fault_socket_description" class="form-control"></textarea>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Attach Photos</label>
-                                                            <input type="file" name="fault_socket_photo" id="fault_socket_photo" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-footer text-right">
-                                <input type="hidden" name="inspection_id" id="modal_inspection_id">
-                                <button type="submit" class="btn btn-sm next-btn" id="fifththStepNextBtn">Submit</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+        <br>
 
+        <!-- Invoice Info Section (Dynamic) -->
+        <div class="invoice-info">
+            <p><strong>Invoice No:</strong> <span id="invoiceNumber">#INV-001</span></p>
+            <p><strong>Invoice Date:</strong> <span id="invoiceDate">15/06/2023</span></p>
+            <p><strong>Due Date:</strong> <span id="dueDate">30/06/2023</span></p>
+        </div>
+
+        <!-- Invoice Items Table (Dynamic) -->
+        <table class="table table-bordered mt-3">
+            <thead class="table-light">
+                <tr>
+                    <th>Description</th>
+                    <th>QTY</th>
+                    <th>Unit Price</th>
+                    <th>Taxes</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody id="invoiceItems">
+                <!-- Items will be populated here -->
+                <tr>
+                    <td>Rent for June 2023</td>
+                    <td>1</td>
+                    <td>Ksh 10,000</td>
+                    <td>Ksh 1,500</td>
+                    <td>Ksh 11,500</td>
+                </tr>
+                <tr>
+                    <td>Water Bill</td>
+                    <td>1</td>
+                    <td>Ksh 500</td>
+                    <td>Ksh 0</td>
+                    <td>Ksh 500</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="row mt-4">
+            <div class="col-md-12 d-flex justify-content-end">
+                <table class="table table-bordered" style="width: 60%;">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Sub-Total</th>
+                            <th>VAT 16%</th>
+                            <th>Zero Rated(VAT)</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Ksh 10,500</td>
+                            <td>Ksh 1,500</td>
+                            <td>Ksh 0</td>
+                            <td>Ksh 12,000</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-    </section>
-    <!-- Inspection(inspected) Modal -->
-    <div class="modal fade" id="inspectionModal" tabindex="-1" aria-labelledby="inspectionModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <div class="modal-content rounded-2 shadow-lg">
-                <div class="modal-header d-flex justify-content-between align-items-center" id="inspectionModalHeader" style="background-color: #00192D !important;">
-                    <h5 class="modal-title" style="color: #FFA000 !important; margin-left: 5px;" id="inspectionModalLabel">
-                        Inspection Details - Ebenezer/Unit A12
-                    </h5>
-                    <!-- Centered Icon Button -->
-                    <button type="button" class="btn btn-sm btn-warning mx-auto" id="downloadInspectionBtn" title="Submit Inspection">
-                        <i class="bi bi-download"></i>
-                    </button>
-
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-2">
-                    <table class="table inspection-table table-striped rounded-2">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Item</th>
-                                <th>Status</th>
-                                <th>Description</th>
-                                <th>Photos</th>
-                            </tr>
-                        </thead>
-                        <tbody id="inspectionModalTableBody">
-                            <tr>
-                                <td>Floor</td>
-                                <td><span class="status-bad">Needs Repair</span></td>
-                                <td>Scratches and water damage near the corner.</td>
-                                <td>
-                                    <img src="https://www.districtfloordepot.com/wp-content/uploads/2022/02/types-of-floor-damage.jpg" class="repair-photo" alt="Floor damage">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Window</td>
-                                <td><span class="status-bad">Needs Repair</span></td>
-                                <td>Broken lock on the left window pane.</td>
-                                <td>
-                                    <img src="https://apexwindowwerks.com/wp-content/uploads/2023/03/wood-window-repair-guide.jpg" class="repair-photo" alt="Window issue">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Door</td>
-                                <td><span class="status-good">Good</span></td>
-                                <td>-</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>Wall</td>
-                                <td><span class="status-bad">Needs Repair</span></td>
-                                <td>Peeling paint and minor cracks.</td>
-                                <td>
-                                    <img src="https://images.pexels.com/photos/276267/pexels-photo-276267.jpeg" class="repair-photo" alt="Wall damage">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Bulb</td>
-                                <td><span class="status-good">Good</span></td>
-                                <td>-</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>Sockets</td>
-                                <td><span class="status-bad">Needs Repair</span></td>
-                                <td>One socket in the kitchen is not working.</td>
-                                <td>
-                                    <img src="https://create.vista.com/wp-content/uploads/2021/09/damaged-socket.jpg" class="repair-photo" alt="Socket issue">
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="modal-footer d-flex justify-content-between p-2">
-                    <small class="text-muted">📅 Inspection Date: <strong>2025-05-26</strong></small>
-                    <button type="button" style="background-color:#FFC107 !important; color:#00192D;" class="btn btn-outline" data-bs-dismiss="modal" id="closeInspectionModal">Close</button>
-                </div>
-            </div>
-        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="window.print()">
+          <i class="bi bi-printer-fill"></i> Print Invoice
+        </button>
+        <button type="button" class="btn btn-success" id="downloadPdf">
+          <i class="bi bi-download"></i> Download PDF
+        </button>
+      </div>
     </div>
-
-    <!-- cloned pdf modal-->
-    <div id="printArea" style="display: none;"></div>
-
+  </div>
+</div>
 
     <!-- Main Js File -->
     <script src="inspections.js"></script>
@@ -1025,6 +871,17 @@ $buildings = $pdo->query("SELECT building_id, building_name FROM buildings")->fe
                         </script>
 
 <script>
+$(document).ready(function() {
+    $('.searchable-select').select2({
+        placeholder: "Search account items...",
+        width: '100%',
+        minimumResultsForSearch: 1 // Always show search box
+    });
+});
+</script>
+
+
+<script>
 function addRow() {
   const table = document.querySelector(".items-table tbody");
   const newRow = document.createElement("tr");
@@ -1169,9 +1026,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         <td>Ksh ${formatCurrency(invoice.taxes)}</td>
                         <td>Ksh ${formatCurrency(invoice.total)}</td>
                         <td>
-                            <a href="../financials/viewinvoices.php">
-                                <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" title="Get Full Report"><i class="fa fa-file"></i>View</button>
-                            </a>
+                           <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#invoiceModal"   style="background-color: #00192D; color:#FFC107;">
+                             <i class="fas fa-eye"></i>
+                            View Invoice
+                          </button>
                             <button class="btn btn-sm" style="background-color: #193042; color:#fff;" title="Delete Invoice">
                                 <i class="fa fa-trash" style="font-size: 12px; color: red;"></i>
                             </button>
@@ -1197,6 +1055,89 @@ document.addEventListener('DOMContentLoaded', function () {
         const num = parseFloat(value || 0);
         return num.toLocaleString('en-KE', { minimumFractionDigits: 0 });
     }
+});
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+  const selectContainers = document.querySelectorAll('.custom-select-container');
+
+  selectContainers.forEach(container => {
+    const searchInput = container.querySelector('.custom-select-search');
+    const originalSelect = container.querySelector('.custom-select');
+    const optionsContainer = container.querySelector('.custom-select-options');
+
+    // Create options
+    const options = Array.from(originalSelect.options).map(option => {
+      return {
+        value: option.value,
+        text: option.textContent,
+        selected: option.selected,
+        disabled: option.disabled
+      };
+    });
+
+    // Render options
+    function renderOptions(filter = '') {
+      optionsContainer.innerHTML = '';
+      const filteredOptions = options.filter(option =>
+        option.text.toLowerCase().includes(filter.toLowerCase())
+      );
+
+      filteredOptions.forEach(option => {
+        const optionElement = document.createElement('div');
+        optionElement.className = 'custom-select-option';
+        optionElement.textContent = option.text;
+        optionElement.dataset.value = option.value;
+
+        if (option.selected) {
+          optionElement.classList.add('selected');
+          searchInput.placeholder = option.text;
+        }
+
+        if (option.disabled) {
+          optionElement.classList.add('disabled');
+        }
+
+        optionElement.addEventListener('click', () => {
+          if (!option.disabled) {
+            originalSelect.value = option.value;
+            searchInput.placeholder = option.text;
+            searchInput.value = '';
+            optionsContainer.querySelectorAll('.custom-select-option').forEach(opt => {
+              opt.classList.remove('selected');
+            });
+            optionElement.classList.add('selected');
+            optionsContainer.style.display = 'none';
+          }
+        });
+
+        optionsContainer.appendChild(optionElement);
+      });
+    }
+
+    // Initial render
+    renderOptions();
+
+    // Toggle options on search input focus
+    searchInput.addEventListener('focus', () => {
+      optionsContainer.style.display = 'block';
+      renderOptions();
+    });
+
+    // Filter options on search (keep dropdown open)
+    searchInput.addEventListener('input', (e) => {
+      renderOptions(e.target.value);
+      optionsContainer.style.display = 'block'; // Ensure it stays open while typing
+    });
+
+    // Close only if clicking outside the entire custom select container
+    document.addEventListener('click', (e) => {
+      if (!container.contains(e.target)) {
+        optionsContainer.style.display = 'none';
+      }
+    });
+  });
 });
 </script>
 
@@ -1237,8 +1178,150 @@ document.addEventListener('DOMContentLoaded', function () {
           });
       });
   });
+</script>
 
-      </script>
+<script>
+/* ---------- helpers ---------- */
+function toNum(v)   { return isNaN(parseFloat(v)) ? 0 : parseFloat(v); }
+function fmt(n)     { return n.toFixed(2); }
+
+/* ---------- per‑row total ---------- */
+function calcRow(row) {
+  const qty   = toNum(row.querySelector('.quantity')  .value);
+  const price = toNum(row.querySelector('.unit-price').value);
+  const vatOp =       row.querySelector('.vat-option').value;
+  let   base  = qty * price;        // raw line amount
+  let   vat   = 0;
+
+  if (vatOp === 'exclusive') { vat = base * 0.16; }
+  // ‘inclusive’ already contains VAT, ‘zero’ & ‘exempted’ add none
+
+  const lineTotal = base + vat;
+  row.querySelector('.total').value = fmt(lineTotal);
+
+  // store numbers on the row for the grand‑totals pass
+  row.dataset.base = base;
+  row.dataset.vat  = vat;
+}
+
+/* ---------- grand totals ---------- */
+function calcInvoice() {
+  let subtotal = 0, vatTotal = 0;
+
+  document.querySelectorAll('.items-table tbody tr').forEach(tr=>{
+    subtotal += +tr.dataset.base || 0;
+    vatTotal += +tr.dataset.vat  || 0;
+  });
+
+  document.getElementById('subtotal-cell').innerText = fmt(subtotal);
+  document.getElementById('vat-cell')     .innerText = fmt(vatTotal);
+  document.getElementById('grand-cell')   .innerText = fmt(subtotal + vatTotal);
+}
+
+/* ---------- live listeners ---------- */
+document.addEventListener('input', e=>{
+  if (e.target.closest('.items-table') &&
+      (e.target.classList.contains('quantity')   ||
+       e.target.classList.contains('unit-price') ||
+       e.target.classList.contains('vat-option'))) {
+
+    const row = e.target.closest('tr');
+    calcRow(row);
+    calcInvoice();
+  }
+});
+
+/* ---------- delete row ---------- */
+function deleteRow(btn) {
+  const tr = btn.closest('tr');
+  tr.parentElement.removeChild(tr);
+  calcInvoice();
+}
+</script>
+
+
+<script>
+// You can use this function to populate the modal with dynamic data
+function showInvoice(invoiceData) {
+    // Populate tenant info
+    document.getElementById('tenantName').textContent = invoiceData.tenant_name || 'N/A';
+    document.getElementById('tenantPhone').textContent = invoiceData.tenant_phone || 'Phone not available';
+    document.getElementById('tenantEmail').textContent = invoiceData.tenant_email || 'Email not available';
+
+    // Populate invoice info
+    document.getElementById('invoiceNumber').textContent = invoiceData.invoice_number || 'N/A';
+    document.getElementById('invoiceDate').textContent = invoiceData.invoice_date || 'N/A';
+    document.getElementById('dueDate').textContent = invoiceData.due_date || 'N/A';
+
+    // Populate items
+    const itemsContainer = document.getElementById('invoiceItems');
+    itemsContainer.innerHTML = '';
+
+    if (invoiceData.items && invoiceData.items.length > 0) {
+        invoiceData.items.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.description || ''}</td>
+                <td>${item.quantity || ''}</td>
+                <td>${item.unit_price || ''}</td>
+                <td>${item.taxes || ''}</td>
+                <td>${item.amount || ''}</td>
+            `;
+            itemsContainer.appendChild(row);
+        });
+    } else {
+        itemsContainer.innerHTML = '<tr><td colspan="5">No items found for this invoice.</td></tr>';
+    }
+
+    // Show the modal
+    var invoiceModal = new bootstrap.Modal(document.getElementById('invoiceModal'));
+    invoiceModal.show();
+}
+
+// PDF Download functionality
+document.getElementById('downloadPdf').addEventListener('click', function() {
+    const element = document.getElementById('invoiceContent');
+    const opt = {
+        margin: 10,
+        filename: 'invoice_' + (document.getElementById('invoiceNumber').textContent || '') + '.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    // Generate PDF
+    html2pdf().set(opt).from(element).save();
+});
+
+// Example usage:
+/*
+const sampleInvoiceData = {
+    tenant_name: "John Doe",
+    tenant_phone: "0712345678",
+    tenant_email: "john.doe@example.com",
+    invoice_number: "INV-001",
+    invoice_date: "15/06/2023",
+    due_date: "30/06/2023",
+    items: [
+        {
+            description: "Rent for June 2023",
+            quantity: 1,
+            unit_price: "Ksh 10,000",
+            taxes: "Ksh 1,500",
+            amount: "Ksh 11,500"
+        },
+        {
+            description: "Water Bill",
+            quantity: 1,
+            unit_price: "Ksh 500",
+            taxes: "Ksh 0",
+            amount: "Ksh 500"
+        }
+    ]
+};
+showInvoice(sampleInvoiceData);
+*/
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!--end::OverlayScrollbars Configure-->
