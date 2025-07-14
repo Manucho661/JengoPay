@@ -12,7 +12,7 @@
     color: #333;
   }
 
-  .form-section {
+  /* .form-section {
     margin-bottom: 20px;
   }
 
@@ -28,9 +28,9 @@
     margin: 10px 0;
     border: 1px solid #ccc;
     border-radius: 5px;
-  }
+  } */
 
-  .form-section .form-row {
+  /* .form-section .form-row {
     display: flex;
     justify-content: space-between;
     gap: 10px;
@@ -38,7 +38,7 @@
 
   .form-section .form-row input {
     width: 48%;
-  }
+  } */
 
   .items-table {
     width: 100%;
