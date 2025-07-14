@@ -402,9 +402,10 @@ try {
                                 <div class="card shadow-sm">
                                     <div class="bg-white p-1 rounded-2 border-0">
                                         <div class="card-header d-flex justify-content-between align-items-center" style="background: #00192D;">
-                                        <a class="text-white fw-bold text-decoration-none" data-bs-toggle="collapse" href="#addExpense" role="button" aria-expanded="false" aria-controls="addExpense" onclick="toggleIcon(this)">
-                                            <span id="toggleIcon">➕</span> Click Here to Add an Expense
-                                        </a>
+                                            <a class="text-white fw-bold text-decoration-none" data-bs-toggle="collapse" href="#addExpense" role="button" aria-expanded="false" aria-controls="addExpense" onclick="toggleIcon(this)">
+                                                <span id="toggleIcon">➕</span> Click Here to Add an Expense
+                                            </a>
+                                        </div>
                                     </div>
                                     <!-- ✅ Fixed & Complete Expense Form -->
                                     <div class="collapse" id="addExpense">
@@ -454,54 +455,85 @@ try {
                                                         </div>
                                                         <!-- Hidden total -->
                                                         <input type="hidden" name="total" id="grandTotal" value="0.00" />
-
+                                                        <div class="row item-row g-3 mt-2">
+                                                            <div class="text-muted mt-4">Add the Spend items in the fields below</div>
+                                                            <div class="col-md-2">
+                                                                <label class="form-label fw-bold">ITEM(SERVICE)</label>
+                                                                <div class="custom-select-wrapper" id="custom-select-wrapper" style="width: 100%;">
+                                                                    <div class="custom-select shadow-sm" id="custom-select" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false" style="z-index: 1000;">
+                                                                        select
+                                                                    </div>
+                                                                    <div class="select-options" id="select-options" role="listbox">
+                                                                    <div role="option" data-value="option1">Garbage</div>
+                                                                    <div role="option" data-value="option2">Electricty</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <label class="form-label fw-bold">Description</label>
+                                                                <textarea class="form-control" rows="1" placeholder="Description" name="description[]" required></textarea>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <label class="form-label fw-bold">Qty</label>
+                                                                <input type="number" class="form-control qty" placeholder="1" name="qty[]" required />
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <label class="form-label fw-bold">Unit Price</label>
+                                                                <input type="number" class="form-control unit-price" placeholder="123" name="unit_price[]" required />
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <label class="form-label fw-bold">Taxes</label>
+                                                                <select class="form-select" name="taxes[]" required>
+                                                                    <option selected disabled>--Select Option--</option>
+                                                                    <option>VAT 16% Inclusive</option>
+                                                                    <option>VAT 16% Exclusive</option>
+                                                                    <option>Zero Rated</option>
+                                                                    <option>Exempted</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-2" style="vertical-align:middle;"> 
+                                                                <label class="form-label fw-bold" ></label>                                      
+                                                                <div class="personal-info-card shadow-sm bg-white rounded d-flex p-1 align-items-center justify-content-center">
+                                                                    <button class="btn btn-sm btn-danger text" data-bs-toggle="modal" data-bs-target="#editPersonalInfoModal">
+                                                                        <i class="fas fa-trash me-1 icon" style="color:white"></i> <b>Remove</b> 
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                         <!-- Spend items table -->
-                                                        <div class="text-muted mt-4">Add the Spend items in the fields below</div>
-                                                        <div class="">
-                                                            <div class="table-responsive">
-                                                                <table class="table table-bordered align-middle" id="spendTable">
-                                                                    <thead class="table-light">
-                                                                        <tr>
-                                                                            <th>Item (Service)</th>
-                                                                            <th>Description</th>
-                                                                            <th>Qty</th>
-                                                                            <th>Unit Price</th>
-                                                                            <th>Taxes</th>
-                                                                            <th>Total</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td>
-                                                                                <div class="custom-select-wrapper" id="custom-select-wrapper" style="z-index: 10000;">
-                                                                                    <div class="custom-select shadow-sm" id="custom-select" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false" style="z-index: 1000;">
-                                                                                    select
-                                                                                    </div>
-                                                                                    <div class="select-options" id="select-options" role="listbox" style="z-index: 10000;">
-                                                                                    <div role="option" data-value="option1">Garbage</div>
-                                                                                    <div role="option" data-value="option2">Electricty</div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </td>
-                                                                            <td><textarea class="form-control" rows="1" placeholder="Description" name="description[]" required></textarea></td>
-                                                                            <td><input type="number" class="form-control qty" placeholder="1" name="qty[]" required /></td>
-                                                                            <td><input type="number" class="form-control unit-price" placeholder="123" name="unit_price[]" required /></td>
-                                                                            <td>
-                                                                                <select class="form-select" name="taxes[]" required>
-                                                                                    <option selected disabled>--Select Option--</option>
-                                                                                    <option>VAT 16% Inclusive</option>
-                                                                                    <option>VAT 16% Exclusive</option>
-                                                                                    <option>Zero Rated</option>
-                                                                                    <option>Exempted</option>
-                                                                                </select>
-                                                                            </td>
-                                                                            <td class="d-flex align-items-center">
-                                                                                <input type="text" class="form-control me-2 total-line" placeholder="0" readonly />
-                                                                                <button type="button" class="btn btn-sm btn-danger" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button>
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
+                                                        <div class="row">
+                                                            <div class="row mt-4">
+                                                                    <div class="col-md-12 d-flex justify-content-end">
+                                                                        <div class="col-md-12 d-flex justify-content-end">
+                                                                        <div class="col-md-12 d-flex justify-content-end">
+                                                                        <div style="width: 100%;">
+                                                                            <div class="d-flex flex-column align-items-end">
+                                                                            
+                                                                            <div class="d-flex justify-content-between w-100 mb-2">
+                                                                                <label class="me-2 border-end pe-3 text-end w-50"><strong>Sub-Total:</strong></label>
+                                                                                <input type="text" readonly class="form-control-plaintext w-50 ps-3" value="Ksh 10,500">
+                                                                            </div>
+
+                                                                            <div class="d-flex justify-content-between w-100 mb-2">
+                                                                                <label class="me-2 border-end pe-3 text-end w-50"><strong>VAT 16%:</strong></label>
+                                                                                <input type="text" readonly class="form-control-plaintext w-50 ps-3" value="Ksh 1,500">
+                                                                            </div>
+
+                                                                            <div class="d-flex justify-content-between w-100 mb-2">
+                                                                                <label class="me-2 border-end pe-3 text-end w-50"><strong>Zero Rated (VAT):</strong></label>
+                                                                                <input type="text" readonly class="form-control-plaintext w-50 ps-3" value="Ksh 0">
+                                                                            </div>
+
+                                                                            <div class="d-flex justify-content-between w-100 mt-3 pt-2 border-top border-warning">
+                                                                                <label class="me-2 border-end pe-3 text-end w-50"><strong>Total:</strong></label>
+                                                                                <input type="text" readonly class="form-control-plaintext w-50 ps-3 fw-bold" value="Ksh 12,000">
+                                                                            </div>
+
+                                                                            </div>
+                                                                        </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
 
@@ -520,12 +552,13 @@ try {
                                 </div>
                             </div>
                         </div>
-                        <div class="row mt-2">
+                        <!-- /raw -->
+                        <div class="row mt-2 mb-5">
                             <h6 class="mb-0 contact_section_header summary mb-2"></i> <b>Details</b></h6>
                             <div class="col-md-12">
                                 <div class="details-container bg-white p-2 rounded Content">
                                     <h3 class="details-container_header text-start"> <span id="displayed_building">All Expenses</span>  &nbsp;	|&nbsp;	 <span style="color:#FFC107"> <span id="enteries">3</span>  enteries</span></h3>
-                                    <div class="card-body" style="overflow-x: auto;">
+                                    <div class="table-responsive" style="overflow-x: auto;">
                                         <table class="table-striped" id="repaireExpenses" style="width: 100%; min-width: 600px;">
                                             <thead>
                                                 <tr>
@@ -554,16 +587,16 @@ try {
                                                     </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
-
                                         </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        </div>
+                        <!-- /row -->
                         <div class="row graph">
+                            <p class="text-mute">Monthly Trends</p>
                             <div class="col-md-12">
-                                <div class="bg-white p-2">
+                                <div class="bg-white p-2 shadow rounded-2">
                                     <?php
                                     // Group expenses by month and sum totals
                                     $monthlyTotals = [];
