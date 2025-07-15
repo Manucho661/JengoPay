@@ -508,3 +508,74 @@ document.getElementById("paymentForm").addEventListener("submit", function (e) {
         }, 10);
 
   }
+
+  function openMaintenanceModal(requestData) {
+  document.getElementById('request-id').textContent = requestData.id;
+  document.getElementById('request-date').textContent = requestData.request_date;
+  document.getElementById('property-name').textContent = requestData.residence;
+  document.getElementById('unit-number').textContent = requestData.unit;
+  document.getElementById('request-category').textContent = requestData.category;
+  document.getElementById('request-status').textContent = requestData.status;
+  document.getElementById('payment-status').textContent = requestData.payment_status;
+  document.getElementById('request-description').textContent = requestData.description;
+  document.getElementById('request-imag').src = 'uploads/' + requestData.photo;
+
+  // ✅ Setup availability button
+  const availabilityBtn = document.getElementById('modalAvailabilityBtn');
+  const availability = requestData.availability;
+
+  availabilityBtn.textContent = availability.charAt(0).toUpperCase() + availability.slice(1);
+  availabilityBtn.dataset.id = requestData.id;
+  availabilityBtn.dataset.status = availability;
+
+  availabilityBtn.classList.toggle('btn-outline-success', availability === 'available');
+  availabilityBtn.classList.toggle('btn-outline-danger', availability === 'unavailable');
+
+  // Show the modal
+  const modal = new bootstrap.Modal(document.getElementById('maintenanceRequestModal'));
+  modal.show();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const availabilityBtn = document.getElementById('modalAvailabilityBtn');
+
+  availabilityBtn.addEventListener('click', function () {
+    const id = document.getElementById('request-id').innerHTML;
+    // const id = this.dataset.id;
+    console.log(id);
+    const currentStatus = this.dataset.status;
+    const newStatus = currentStatus === 'unavailable' ? 'available' : 'unavailable';
+
+    // ✅ Validate values
+    if (!id || (newStatus !== 'available' && newStatus !== 'unavailable')) {
+      alert('❌ Invalid ID or status');
+      return;
+    }
+
+    // ✅ Update UI instantly
+    this.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
+    this.dataset.status = newStatus;
+
+    this.classList.toggle('btn-outline-success', newStatus === 'available');
+    this.classList.toggle('btn-outline-danger', newStatus === 'unavailable');
+
+    // ✅ Send update to backend
+    fetch('update_availability.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `id=${encodeURIComponent(id)}&availability=${encodeURIComponent(newStatus)}`
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (!data.success) {
+        alert('❌ Failed to update availability: ' + (data.error || 'Unknown error'));
+      }
+    })
+    .catch(err => {
+      console.error('Fetch error:', err);
+      alert('❌ Network error');
+    });
+  });
+});
+
+
