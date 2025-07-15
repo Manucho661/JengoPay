@@ -12,7 +12,7 @@
       <!-- Add more options later -->
     </div>
   </div>
-  
+
   <div class="menu-group">
     <div class="menu-header" onclick="toggleMenu(this)">
       <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> 👥 People
@@ -46,7 +46,7 @@
     </div>
     <div class="submenu">
       <a href="../financials/expense2.php">💵 Expenses</a>
-      <a href="../financials/invoices2.php">📄 Invoices</a>
+      <a href="../financials/inv1.php">📄 Invoices</a>
       <a href="#">📊 Balance Sheet</a>
     </div>
   </div>

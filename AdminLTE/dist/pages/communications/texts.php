@@ -1016,8 +1016,6 @@ display: flex;
                         <!-- end -->
 
                       <div class="row h-100 align-items-stretch" id="individual-message-summmary" style="border:1px solid #E2E2E2; padding: 0 !important; display: none; max-height: 95%;">
-
-
                             <div id="message-profiles" class="col-md-4  message-profiles"  >
 
                               <div class="topic-profiles-header-section d-flex">

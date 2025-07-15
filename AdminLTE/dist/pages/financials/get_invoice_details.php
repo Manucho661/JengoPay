@@ -1,97 +1,20 @@
 <?php
-include '../db/connect.php';
+// ---------- SET‑UP ----------
+include '../db/connect.php';      // PDO $pdo
+$id   = $_GET['id'] ?? null;      // if present we’ll show the details pane
 
-$stmt = $pdo->prepare("SELECT account_code, account_name FROM chart_of_accounts ORDER BY account_name ASC");
-$stmt->execute();
-$accountItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-
-<?php
-require_once '../db/connect.php';
-
-// Get the highest existing invoice number
-$stmt = $pdo->query("SELECT invoice_number FROM invoice ORDER BY id DESC LIMIT 1");
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if ($row && preg_match('/INV(\d+)/', $row['invoice_number'], $matches)) {
-    $lastNumber = (int)$matches[1];
-    $newNumber = $lastNumber + 1;
-} else {
-    $newNumber = 1; // Start at 1 if no previous invoice
-}
-
-$invoiceNumber = 'INV' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
-?>
-
-
-<?php
-// At the top of your PHP file (before HTML)
-require_once '../db/connect.php';
-
-try {
-    $stmt = $pdo->prepare("SELECT building_id FROM buildings ORDER BY building_id");
-    $stmt->execute();
-    $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    $buildings = [];
-    // You might want to log this error in production
-    error_log("Error fetching buildings: " . $e->getMessage());
+// small helper for status → badge colour
+function statusClass(string $status): string
+{
+    return match (strtolower($status)) {
+        'paid'        => 'status-paid',
+        'overdue'     => 'status-overdue',
+        'cancelled'   => 'status-cancelled',
+        'sent'        => 'status-pending',   // treat “sent” as pending
+        default       => 'status-draft',     // draft / anything else
+    };
 }
 ?>
-
-<?php
-include '../db/connect.php'; // Adjust this path!
-
-$buildings = [];
-
-// --- DEBUG START ---
-echo "\n";
-try {
-    if (!isset($pdo) || !$pdo instanceof PDO) {
-        echo "\n";
-        die("Error: Database connection not established."); // Or handle more gracefully
-    }
-    $stmt = $pdo->query("SELECT building_id, building_name FROM buildings ORDER BY building_name ASC");
-    $buildings = $stmt->fetchAll();
-    echo "\n";
-    echo "\n";
-} catch (PDOException $e) {
-    error_log("Database error fetching buildings: " . $e->getMessage());
-    echo "\n"; // Show error in source for debug
-    echo "<p>Error loading properties. Please try again later.</p>";
-    $buildings = [];
-}
-echo "\n";
-// --- DEBUG END ---
-?>
-
-
-<?php
-require '../db/connect.php';
-
-$stmt = $pdo->query("
-    SELECT
-        i.invoice_number,
-        i.invoice_date,
-        i.due_date,
-        i.total,
-        CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
-    FROM invoice i
-    LEFT JOIN users u ON i.tenant = u.id
-    ORDER BY i.invoice_number DESC
-");
-
-$invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-
-<?php
-// Get every building you need in the dropdown.
-$buildingsStmt = $pdo->query(
-    "SELECT building_id, building_name FROM buildings ORDER BY building_name"
-);
-$buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-
 
 <!doctype html>
 <html lang="en">
@@ -181,548 +104,61 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    <!--Tailwind CSS  -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
     <style>
-          a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        ul {
-            list-style: none;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 8px 16px;
-            border-radius: 4px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 14px;
-        }
-
-        .btn-primary {
-            background-color: #2a5bd7;
-            color: white;
-            border: 1px solid #2a5bd7;
-        }
-
-        .btn-primary:hover {
-            background-color: #1e4bc4;
-            border-color: #1e4bc4;
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            color: #2a5bd7;
-            border: 1px solid #2a5bd7;
-        }
-
-        .btn-outline:hover {
-            background-color: #f0f5ff;
-        }
-
-        .btn-icon {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* Header Styles */
-        header {
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: 700;
-            color: #2a5bd7;
-        }
-
-        .logo span {
-            color: #ff6b00;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .user-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background-color: #e2e8f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            color: #4a5568;
-        }
-
-        /* Sidebar Navigation */
-        .app-container {
-            display: flex;
-            min-height: calc(100vh - 66px);
-        }
-
-
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            padding: 20px;
-            background-color: #f5f7fa;
-        }
-
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .page-title {
-            font-size: 24px;
-            color: #1a365d;
-        }
-
-        .page-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        /* Invoice List */
-        .invoice-list-container {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        .invoice-list-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .invoice-list-title {
-            font-weight: 600;
-            color: #1a365d;
-        }
-
-        .invoice-list-filters {
-            display: flex;
-            gap: 15px;
-        }
-
-        .filter-dropdown {
-            position: relative;
-        }
-
-        .filter-btn {
-            background-color: transparent;
-            border: 1px solid #e2e8f0;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: #4a5568;
-        }
-
-        .filter-btn:hover {
-            background-color: #f8fafc;
-        }
-
-        .dropdown-menu {
-            position: absolute;
-            right: 0;
-            top: 100%;
-            background-color: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 4px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            min-width: 200px;
-            z-index: 10;
-            display: none;
-        }
-
-        .filter-dropdown:hover .dropdown-menu {
-            display: block;
-        }
-
-        .dropdown-menu ul {
-            padding: 10px 0;
-        }
-
-        .dropdown-menu li {
-            padding: 8px 15px;
-            cursor: pointer;
-        }
-
-        .dropdown-menu li:hover {
-            background-color: #f8fafc;
-        }
-
-        .invoice-list {
-            padding: 0;
-        }
-
-        .invoice-item {
-            display: flex;
-            align-items: center;
-            padding: 15px 20px;
-            border-bottom: 1px solid #e2e8f0;
-            transition: background-color 0.2s ease;
-        }
-
-        .invoice-item:hover {
-            background-color: #f8fafc;
-        }
-
-        .invoice-checkbox {
-            margin-right: 15px;
-        }
-
-        .invoice-number {
-            width: 120px;
-            font-weight: 600;
-            color: #2a5bd7;
-        }
-
-        .invoice-customer {
-            flex: 1;
-            color: #4a5568;
-        }
-
-        .invoice-date {
-            width: 100px;
-            color: #718096;
-            font-size: 14px;
-        }
-
-        .invoice-amount {
-            width: 100px;
-            font-weight: 600;
-            text-align: right;
-        }
-
-        .invoice-status {
-            width: 100px;
-            text-align: center;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .status-paid {
-            background-color: #e6fffa;
-            color: #38b2ac;
-        }
-
-        .status-pending {
-            background-color: #fffaf0;
-            color: #dd6b20;
-        }
-
-        .status-overdue {
-            background-color: #fff5f5;
-            color: #f56565;
-        }
-
-        .invoice-actions {
-            width: 80px;
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .action-btn {
-            background: none;
-            border: none;
-            color: #718096;
-            cursor: pointer;
-            padding: 5px;
-        }
-
-        .action-btn:hover {
-            color: #2a5bd7;
-        }
-
-        /* Create Invoice Page */
-        .invoice-form-container {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-
-        .form-section {
-            margin-bottom: 30px;
-        }
-
-        .section-title {
-            font-size: 18px;
-            color: #1a365d;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 15px;
-        }
-
-        .form-group {
-            flex: 1;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #4a5568;
-            font-size: 14px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #e2e8f0;
-            border-radius: 4px;
-            font-size: 14px;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #2a5bd7;
-        }
-
-        .form-control-sm {
-            padding: 6px 8px;
-            font-size: 13px;
-        }
-
-        /* Items Table */
-        .items-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        .items-table th {
-            text-align: left;
-            padding: 10px;
-            background-color: #f8fafc;
-            color: #718096;
-            font-weight: 500;
-            font-size: 13px;
-        }
-
-        .items-table td {
-            padding: 12px 10px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .item-row input {
-            width: 100%;
-            border: 1px solid #e2e8f0;
-            padding: 8px;
-            border-radius: 4px;
-        }
-
-        .item-row input:focus {
-            outline: none;
-            border-color: #2a5bd7;
-        }
-
-        .item-name {
-            width: 40%;
-        }
-
-        .item-qty, .item-rate, .item-amount {
-            width: 15%;
-        }
-
-        .item-actions {
-            width: 15%;
-            text-align: center;
-        }
-
-        .remove-item {
-            color: #f56565;
-            cursor: pointer;
-        }
-
-        .add-item-btn {
-            background-color: transparent;
-            border: none;
-            color: #2a5bd7;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 8px;
-        }
-
-        /* Summary Section */
-        .summary-row {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 10px;
-        }
-
-        .summary-label {
-            width: 150px;
-            text-align: right;
-            padding-right: 20px;
-            color: #718096;
-        }
-
-        .summary-value {
-            width: 150px;
-            text-align: right;
-            font-weight: 500;
-        }
-
-        .total-row {
-            border-top: 1px solid #e2e8f0;
-            padding-top: 15px;
-            margin-top: 15px;
-            font-size: 16px;
-        }
-
-        .total-value {
-            color: #2a5bd7;
-            font-weight: 600;
-        }
-
-        .invoice-header .over-flow {
-    font-weight: bold;
-}
-.invoice-header {
-    background-color: #f8f9fa;
-    border-bottom: 2px solid #dee2e6;
-}
-
-        /* Form Actions */
-        .form-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e2e8f0;
-        }
-
-        .action-left {
-            display: flex;
-            gap: 10px;
-        }
-
-        .action-right {
-            display: flex;
-            gap: 10px;
-        }
-
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .app-container {
-                flex-direction: column;
-            }
-
-
-            .invoice-item {
-                flex-wrap: wrap;
-                gap: 10px;
-            }
-
-            .invoice-number, .invoice-customer, .invoice-date, .invoice-amount, .invoice-status, .invoice-actions {
-                width: auto;
-                flex: 1 1 100px;
-            }
-
-            .form-row {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .items-table th, .items-table td {
-                padding: 8px 5px;
-            }
-        }
-
-        #invoicePreviewPanel {
-  position: fixed;
-  top: 0;
-  right: -100%;
-  width: 400px;
-  height: 100vh;
-  background: #fff;
-  box-shadow: -2px 0 8px rgba(0,0,0,0.3);
-  transition: right 0.3s ease-in-out;
-  z-index: 9999;
-}
-
-#invoicePreviewPanel.active {
-  right: 0;
-}
-
-.preview-content {
-  padding: 20px;
-  overflow-y: auto;
-  height: 100%;
-}
-
-.close-btn {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  font-size: 24px;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-      </style>
+        /* ---- Page split -------------------------------------------------- */
+        *{box-sizing:border-box;font-family:Inter,Arial,sans-serif}
+        body{margin:0;overflow:hidden;color:#333}
+        .wrapper{display:flex;height:100vh}
+
+        /* ---- LEFT LIST --------------------------------------------------- */
+
+        .btn-new{
+            background:#2e7d32;color:#fff;border:0;border-radius:4px;
+            padding:6px 12px;font-size:13px;cursor:pointer
+        }
+        .invoice-list{flex:1;overflow-y:auto}
+        .invoice-link{display:block;text-decoration:none;color:inherit}
+        .invoice-link:hover,.invoice-link.active{background:#f5f8ff}
+
+        .invoice-item{
+            display:flex;gap:12px;padding:12px 20px;border-bottom:1px solid #f3f3f3;
+            align-items:flex-start
+        }
+        .invoice-checkbox{padding-top:4px}
+        .invoice-summary{flex:1}
+        .invoice-customer{font-weight:600;margin-bottom:2px}
+        .invoice-meta{font-size:12px;color:#7a7a7a}
+        .invoice-status{margin-top:4px}
+        .invoice-amount{font-weight:600;white-space:nowrap}
+
+        /* ---- Status Badges ------------------------------------------------ */
+        .status-badge{
+            font-size:11px;padding:2px 6px;border-radius:4px;font-weight:600;
+            letter-spacing:.3px;text-transform:uppercase
+        }
+        .status-paid      {background:#e8f5e9;color:#2e7d32}
+        .status-overdue   {background:#ffebee;color:#c62828}
+        .status-cancelled {background:#eceff1;color:#546e7a}
+        .status-pending   {background:#fff8e1;color:#ff8f00}
+        .status-draft     {background:#eceff1;color:#546e7a}
+
+        /* ---- RIGHT DETAILS PANE ------------------------------------------ */
+        .viewer{flex:1;overflow-y:auto;padding:24px}
+        .placeholder{
+            height:100%;display:flex;align-items:center;justify-content:center;
+            font-size:18px;color:#9e9e9e
+        }
+        /* quick reset for invoice HTML you may embed later */
+        .viewer h1,.viewer h2,.viewer h3{margin:0 0 .5em}
+    </style>
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
         <!--begin::Header-->
-        <?php include_once '../includes/header.php' ?>
+
         <!--end::Header-->
         <!--begin::Sidebar-->
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
@@ -753,407 +189,265 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
             <!--MAIN MODALS -->
             <!-- add new inspection modal-->
 
-  <!-- Main Content -->
-  <div class="main-content">
-            <!-- Invoice List View (Default) -->
-            <div id="invoice-list-view">
-                <div class="page-header">
-                    <h1 class="page-title"> 🧾 Invoices</h1>
-                    <div class="page-actions">
-                        <button class="btn btn-outline" style="color: #FFC107; background-color:#00192D;">
-                            <i class="fas fa-filter"></i> Filter
-                        </button>
-                        <button class="btn btn-outline" style="color: #FFC107; background-color:#00192D;">
-                            <i class="fas fa-download"></i> Export
-                        </button>
-                        <button class="btn" id="create-invoice-btn" style="color: #FFC107; background-color:#00192D;">
-                            <i class="fas fa-plus"></i> Create Invoice
-                        </button>
-                    </div>
-                </div>
+            <!--begin::App Content Header-->
 
-                <div class="invoice-list-container">
-                    <div class="invoice-list-header">
-                        <div class="invoice-list-title">All Invoices</div>
-                        <div class="invoice-list-filters">
-                            <div class="filter-dropdown">
-                                <button class="filter-btn">
-                                    <span>Status: All</span>
-                                    <i class="fas fa-chevron-down"></i>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <ul>
-                                        <li>All</li>
-                                        <li>Paid</li>
-                                        <li>Pending</li>
-                                        <li>Overdue</li>
-                                        <li>Draft</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="filter-dropdown">
-                                <button class="filter-btn">
-                                    <span>Date: This Month</span>
-                                    <i class="fas fa-chevron-down"></i>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <ul>
-                                        <li>Today</li>
-                                        <li>This Week</li>
-                                        <li>This Month</li>
-                                        <li>This Quarter</li>
-                                        <li>Custom Range</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="app-content-header">
+                <!--begin::Container-->
+                <div class="container-fluid">
+                <div class="wrapper">
 
+<!-- ================================================================ -->
+<!-- LEFT: LIST OF INVOICES                                           -->
+<!-- ================================================================ -->
+<aside class="">
+    <div class="">
+        <span>All Invoices</span>
+    <div class="invoice-list">
+    <?php
+    try {
+        $sql = "SELECT i.*, t.user_id   AS tenant_name
+                FROM invoice i
+                LEFT JOIN tenants t ON i.tenant = t.id
+                ORDER BY i.invoice_date DESC";
+        foreach ($pdo->query($sql) as $row) {
+            $link        = htmlspecialchars('invoice_details.php?id='.$row['id']);
+            $tenantName  = $row['tenant_name'] ?: 'Unknown Tenant';
+            $invoiceDate = date('d M Y', strtotime($row['invoice_date']));
+            $amount      = number_format($row['total'], 2);
+            $badgeClass  = statusClass($row['status']);
+            $statusText  = ucfirst($row['status']);
 
-                    <div class="invoice-item invoice-header">
-        <div class="invoice-checkbox">
-            <input type="checkbox">
-        </div>
-        <div class="invoice-number">
-            <div class="over-flow" title="Invoice #">Invoice<!----></div>
-        </div>
-        <div class="invoice-customer">
-            <div class="over-flow" title="Customer">Tenant<!----></div>
-        </div>
-        <div class="invoice-date">
-            <div class="over-flow" title="Date">Date<!----></div>
-        </div>
-        <div class="invoice-date">
-            <div class="over-flow" title="Date">Due Date<!----></div>
-        </div>
-        <div class="invoice-amount">
-            <div class="over-flow" title="Amount">Amount<!----></div>
-        </div>
-        <div class="invoice-status">
-            <div class="over-flow" title="Status">Status<!----></div>
-        </div>
-        <div class="invoice-actions">
-            <div class="over-flow" title="Actions">Actions<!----></div>
-        </div>
-    </div>
+            echo <<<HTML
+<a href="$link" class="invoice-link".($id==$row[id]?' style="background:#f5f8ff"':'').">
+<div class="invoice-item">
+  <div class="invoice-checkbox">
+      <input type="checkbox" onclick="event.stopPropagation()">
+  </div>
 
+  <div class="invoice-summary">
+      <div class="invoice-customer">$tenantName</div>
+      <div class="invoice-meta">
+          <span class="invoice-number">{$row['invoice_number']}</span> &bull;
+          <span class="invoice-date">$invoiceDate</span>
+      </div>
+      <div class="invoice-status">
+          <span class="status-badge $badgeClass">$statusText</span>
+      </div>
+  </div>
 
-
-   <?php
-// ----------------------------------------------------
-// 1) Fetch every invoice with its tenant's full name
-// ----------------------------------------------------
-$stmt = $pdo->query("
-    SELECT
-        i.id,
-        i.invoice_number,
-        i.invoice_date,
-        i.due_date,
-        i.total,
-        i.status,
-        CONCAT(u.first_name,' ',u.middle_name)  AS tenant_name
-    FROM invoice i
-    LEFT JOIN users u ON u.id = i.tenant
-    ORDER BY i.invoice_number DESC
-");
-
-$invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// ----------------------------------------------------
-// 2) Output each invoice item
-// ----------------------------------------------------
-foreach ($invoices as $invoice) {
-
-    // Friendly formats
-    $tenantName     = $invoice['tenant_name'] ?: 'Unknown';
-    $invoiceDate    = date('M d, Y', strtotime($invoice['invoice_date']));
-    $invoiceDueDate = date('M d, Y', strtotime($invoice['due_date']));
-    $amount         = number_format($invoice['total'], 2);
-
-    // Status badge mapping
-    switch ($invoice['status']) {
-        case 'sent':      $statusClass = 'badge-sent';      $statusText = 'Sent';      break;
-        case 'paid':      $statusClass = 'badge-paid';      $statusText = 'Paid';      break;
-        case 'overdue':   $statusClass = 'badge-overdue';   $statusText = 'Overdue';   break;
-        case 'cancelled': $statusClass = 'badge-cancelled'; $statusText = 'Cancelled'; break;
-        default:          $statusClass = 'badge-draft';     $statusText = 'Draft';
+  <div class="invoice-amount">\$${amount}</div>
+</div>
+</a>
+HTML;
+        }
+    } catch (PDOException $e) {
+        echo "<p style='padding:20px;color:#c62828'>Error: ".$e->getMessage()."</p>";
     }
+    ?>
+    </div><!-- /.invoice-list -->
+</aside>
 
-    // Generate a link to open the invoice details
-    $href = 'invoice_details.php?id=' . $invoice['id'];
+<!-- ================================================================ -->
+<!-- RIGHT: INVOICE DETAILS                                           -->
+<!-- ================================================================ -->
+<main class="viewer">
+    <?php
+    if (!$id) {
+        echo '<div class="placeholder">Select an invoice to view its details</div>';
+    } else {
+        // ── Fetch a single invoice with its line items (simplified) ──
+        $info = $pdo->prepare("SELECT i.*, t.user_id AS tenant_name
+                                FROM invoice i
+                                LEFT JOIN tenants t ON i.tenant = t.id
+                                WHERE i.id = ?");
+        $info->execute([$id]);
+        $inv = $info->fetch(PDO::FETCH_ASSOC);
 
-    // ---- HTML block -------------------------------------------------
-    echo '<a href="'. $href .'" class="invoice-link">';
-    echo '
-        <div class="invoice-item">
-            <div class="invoice-checkbox">
-                <input type="checkbox" onclick="event.stopPropagation()">
-            </div>
+        if (!$inv) {
+            echo '<div class="placeholder">Invoice not found.</div>';
+        } else {
+            // line items
+            $lines = $pdo->prepare("SELECT description, quantity, unit_price
+                                     FROM invoice WHERE id = ?");
+            $lines->execute([$id]);
 
-            <div class="invoice-number">'   . htmlspecialchars($invoice['invoice_number']) . '</div>
-            <div class="invoice-customer">' . htmlspecialchars($tenantName)               . '</div>
-            <div class="invoice-date">'      . $invoiceDate                                . '</div>
-            <div class="invoice-date">'      . $invoiceDueDate                             . '</div>
-            <div class="invoice-amount">'    . $amount                                     . '</div>
+            /* ---------- DETAILS MARK‑UP (simple table) ---------- */
+            echo "<h2>Invoice&nbsp;{$inv['invoice_number']}</h2>";
+            echo "<p><strong>Customer:</strong> {$inv['tenant_name']}</p>";
+            echo "<p><strong>Date:</strong> "
+               . date('d M Y', strtotime($inv['invoice_date'])) . "</p>";
 
-            <div class="invoice-status">
-                <span class="status-badge '. $statusClass .'">'. $statusText .'</span>
-            </div>
+            echo '<table border="0" cellpadding="6" cellspacing="0" style="width:100%;border-collapse:collapse;margin-top:20px">';
+            echo '<thead><tr style="border-bottom:2px solid #eee">
+                    <th align="left">Description</th>
+                    <th align="right">Qty</th>
+                    <th align="right">Unit Price</th>
+                    <th align="right">Line Total</th>
+                  </tr></thead><tbody>';
 
-            <div class="invoice-actions">
-                <button class="action-btn" onclick="event.stopPropagation()">
-                    <i class="fas fa-ellipsis-v"></i>
-                </button>
-            </div>
-        </div>';
-    echo '</a>';
-}
-?>
+            while ($l = $lines->fetch()) {
+                $lineTotal = number_format($l['quantity'] * $l['unit_price'], 2);
+                $unit      = number_format($l['unit_price'], 2);
+                echo "<tr style='border-bottom:1px solid #f5f5f5'>
+                        <td>{$l['description']}</td>
+                        <td align='right'>{$l['quantity']}</td>
+                        <td align='right'>\${$unit}</td>
+                        <td align='right'>\${$lineTotal}</td>
+                      </tr>";
+            }
+            echo '</tbody></table>';
 
-                    <div class="invoice-list">
-                        <!-- Invoice Item -->
-                        <div class="invoice-item">
+            echo '<h3 style="text-align:right;margin-top:20px">'
+               . 'Total: $'.number_format($inv['total'], 2).'</h3>';
+        }
+    }
+    ?>
+</main>
 
-
-                            <!-- <div class="invoice-checkbox">
-                                <input type="checkbox">
-                            </div>
-                            <div class="invoice-number">INV-2023-005</div>
-                            <div class="invoice-customer">Umbrella Corp</div>
-                            <div class="invoice-date">May 25, 2023</div>
-                            <div class="invoice-amount">$1,980.00</div>
-                            <div class="invoice-status">
-                                <span class="status-badge status-pending">Pending</span>
-                            </div>
-                            <div class="invoice-actions">
-                                <button class="action-btn">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </button>
-                            </div> -->
-                        </div>
-                    </div>
-                </div>
-            </div>
+</div><!-- /.wrapper -->
 
 
 
 
-            <!-- Create Invoice View (Hidden by default) -->
-            <div id="create-invoice-view" style="display: none;">
-                <div class="page-header">
-                    <h1 class="page-title">Create Invoice</h1>
-                    <div class="page-actions">
-                        <button class="btn btn-outline" id="cancel-invoice-btn" style="color: #FFC107; background-color:#00192D;">
-                            <i class="fas fa-times"></i> Cancel
-                        </button>
-                        <button  id="saveDraftBtn"  class="btn btn-outline" style="color: #FFC107; background-color:#00192D;">
-                            <i class="fas fa-save"></i> Save Draft
-                        </button>
-                        <button class="btn btn-primary" id="preview-invoice-btn" style="color: #FFC107; background-color:#00192D;">
-                            <i class="fas fa-eye"></i> Preview
-                        </button>
-                    </div>
-                </div>
+                <!-- Line Chart: Expenses vs Months -->
+                <!-- <div class="mt-5">
+                    <h6 class="fw-bold text-center">📊 Monthly Expense Trends</h6>
+                    <canvas id="monthlyExpenseChart" height="100"></canvas>
+                </div> -->
 
-<!-- Sliding Preview Panel -->
-<div id="invoicePreviewPanel">
-  <div class="preview-content">
-    <button id="closePreview" class="close-btn">&times;</button>
-    <h3>Invoice Preview</h3>
-    <div id="previewContent">
-      <!-- Populated by JS -->
+
+                <!--end::App Content-->
+        </main>
+        <!--end::App Main-->
+        <!--begin::Footer-->
+        <footer class="app-footer">
+            <!--begin::To the end-->
+            <div class="float-end d-none d-sm-inline">Anything you want</div>
+            <!--end::To the end-->
+            <!--begin::Copyright-->
+            <strong>
+                Copyright &copy; 2014-2024&nbsp;
+                <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;">JENGO PAY</a>.
+            </strong>
+            All rights reserved.
+            <!--end::Copyright-->
+        </footer>
+        <!--end::Footer-->
     </div>
-  </div>
-</div>
-
-                <div class="invoice-form-container">
-                    <!-- Customer Section -->
-                    <div class="form-section">
-                        <h3 class="section-title">Tenant Details</h3>
-                        <form method="POST" action="submit_invoice.php">
-                        <div class="form-row">
-
-<!-- Existing Invoice # input -->
-<div class="form-group">
-    <label for="invoice-number">Invoice #</label>
-    <input  type="text"
-            id="invoice-number"
-            value="<?= $invoiceNumber ?>"
-            class="form-control"
-            readonly>
-    <input type="hidden"
-           name="invoice_number"
-           value="<?= $invoiceNumber ?>">
-</div>
+    <!--end::App Wrapper-->
 
 
+    <!-- OVERLAYS(that Covers whole viewport) -->
+  <!-- Invoice Modal -->
+<div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="invoiceModalLabel">Tenant Invoice</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="invoiceContent">
+        <div class="invoice-container">
+          <!-- From Section (Fixed details) -->
+          <div>
+              <p>
+                  From:<br>
+                  Angela Real Estate, Ltd..<br>
+                  795 Pinnacle Building
+              </p>
+              <p>Upperhill, Nairobi Kenya</p>
+              <p>Phone: 0712345678</p>
+              <p>Email: info@angelarealestate.com </p><br>
+          </div>
 
-<!-- ▲ NEW: Building selector -->
-<div class="form-group">
-    <label for="building">Building</label>
-    <select id="building" name="building_id" class="form-control" required>
-        <option value="">Select a Building</option>
-        <?php foreach ($buildings as $b): ?>
-            <option value="<?= $b['building_id'] ?>">
-                <?= htmlspecialchars($b['building_name']) ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
-</div>
+          <!-- To Section (Dynamic Tenant Information) -->
+          <div style="text-align: right;">
+              <p>
+                  To:<br>
+                  <span id="tenantName">John Doe</span><br>
+                  Angela Real Estate, Ltd..<br>
+                  795 Pinnacle Building
+              </p>
+              <p>Upperhill, Nairobi Kenya</p>
+              <p>Phone: <span id="tenantPhone">0712345678</span></p>
+              <p>Email: <span id="tenantEmail">john.doe@example.com</span></p>
+          </div>
+        </div>
 
+        <br>
 
-<!-- ▼ Tenant selector (will be filled by JS) -->
-<div class="form-group">
-    <label for="customer">Tenant</label>
-    <select id="customer"
-            name="tenant"
-            class="form-control"
-            required
-            disabled>
-        <option value="">Select a Tenant</option>
-    </select>
-</div>
+        <!-- Invoice Info Section (Dynamic) -->
+        <div class="invoice-info">
+            <p><strong>Invoice No:</strong> <span id="invoiceNumber">#INV-001</span></p>
+            <p><strong>Invoice Date:</strong> <span id="invoiceDate">15/06/2023</span></p>
+            <p><strong>Due Date:</strong> <span id="dueDate">30/06/2023</span></p>
+        </div>
 
-</div>
+        <!-- Invoice Items Table (Dynamic) -->
+        <table class="table table-bordered mt-3">
+            <thead class="table-light">
+                <tr>
+                    <th>Description</th>
+                    <th>QTY</th>
+                    <th>Unit Price</th>
+                    <th>Taxes</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody id="invoiceItems">
+                <!-- Items will be populated here -->
+                <tr>
+                    <td>Rent for June 2023</td>
+                    <td>1</td>
+                    <td>Ksh 10,000</td>
+                    <td>Ksh 1,500</td>
+                    <td>Ksh 11,500</td>
+                </tr>
+                <tr>
+                    <td>Water Bill</td>
+                    <td>1</td>
+                    <td>Ksh 500</td>
+                    <td>Ksh 0</td>
+                    <td>Ksh 500</td>
+                </tr>
+            </tbody>
+        </table>
 
-<div class="form-row">
-<div class="form-group">
-    <label for="invoice-date">Invoice Date</label>
-    <input type="date"
-           id="invoice-date"
-           name="invoice_date"
-           class="form-control"
-           required>
-</div>
-
-<div class="form-group">
-    <label for="due-date">Due Date</label>
-    <input type="date"
-           id="due-date"
-           name="due_date"
-           class="form-control"
-           required>
-</div>
-</div>
-
-
-                    <!-- Items Section -->
-                    <div class="form-section">
-                        <h3 class="section-title">Items</h3>
-                        <table class="items-table">
-      <thead>
-        <tr>
-          <th>Item (Service)</th>
-          <th>Description</th>
-          <th>Qty</th>
-          <th>Unit Price</th>
-          <th>Taxes</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-        <td>
-        <select name="account_item[]" class="select-account searchable-select" required>
-          <option value="" disabled selected>Select Account Item</option>
-          <?php foreach ($accountItems as $item): ?>
-            <option value="<?= htmlspecialchars($item['account_code']) ?>">
-              <?= htmlspecialchars($item['account_name']) ?>
-            </option>
-          <?php endforeach; ?>
-        </select>
-      </td>
-
-      <style>
-
-</style>
-
-          <td><textarea name="description[]" placeholder="Description" rows="1" required></textarea></td>
-          <td><input type="number" name="quantity[]" class="form-control quantity" placeholder="1" required></td>
-          <td><input type="number" name="unit_price[]" class="form-control unit-price" placeholder="123" required></td>
-          <td>
-            <select name="taxes[]" class="form-select vat-option" required>
-              <option value="" disabled selected>Select Option</option>
-              <option value="inclusive">VAT 16% Inclusive</option>
-              <option value="exclusive">VAT 16% Exclusive</option>
-              <option value="zero">Zero Rated</option>
-              <option value="exempted">Exempted</option>
-            </select>
-          </td>
-          <td>
-             <input type="number" name="total[]" class="form-control total" placeholder="0" readonly>
-            <button type="button"  class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
-              <i class="fa fa-trash" style="font-size: 12px;"></i>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <button type="button" class="add-btn" onclick="addRow()">
-      <i class="fa fa-plus"></i> ADD MORE
-    </button>
-  </div>
-
-                    <!-- Notes & Terms -->
-                    <div class="form-section">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="notes">Notes</label>
-                                <textarea id="notes" class="form-control" rows="3" placeholder="Thank you for your business!"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="terms">Terms & Conditions</label>
-                                <textarea id="terms" class="form-control" rows="3" placeholder="Payment due within 15 days"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Summary Section -->
-                    <!-- <div class="form-section">
-                        <div class="summary-row">
-                            <div class="summary-label">Subtotal:</div>
-                            <div class="summary-value">$1,700.00</div>
-                        </div>
-                        <div class="summary-row">
-                            <div class="summary-label">Tax (10%):</div>
-                            <div class="summary-value">$170.00</div>
-                        </div>
-                        <div class="summary-row">
-                            <div class="summary-label">Discount:</div>
-                            <div class="summary-value">$0.00</div>
-                        </div>
-                        <div class="summary-row total-row">
-                            <div class="summary-label">Total:</div>
-                            <div class="summary-value total-value">$1,870.00</div>
-                        </div>
-                    </div> -->
-
-                    <!-- Form Actions -->
-                    <div class="form-actions">
-                        <div class="action-left">
-                            <button class="btn btn-outline">
-                                <i class="fas fa-paperclip"></i> Attach File
-                            </button>
-                        </div>
-                        <div class="action-right">
-                            <!-- <button class="btn btn-outline">
-                                 Send
-                            </button> -->
-                            <button type="submit" style="background-color: #00192D; color: #FFC107; padding: 8px 16px; border: none; border-radius: 4px;">
-                            <i class="fas fa-envelope"></i>
-                            Save&Send
-  </button>
-
-</form>
-                        </div>
-                    </div>
-                </div>
+        <div class="row mt-4">
+            <div class="col-md-12 d-flex justify-content-end">
+                <table class="table table-bordered" style="width: 60%;">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Sub-Total</th>
+                            <th>VAT 16%</th>
+                            <th>Zero Rated(VAT)</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Ksh 10,500</td>
+                            <td>Ksh 1,500</td>
+                            <td>Ksh 0</td>
+                            <td>Ksh 12,000</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="window.print()">
+          <i class="bi bi-printer-fill"></i> Print Invoice
+        </button>
+        <button type="button" class="btn btn-success" id="downloadPdf">
+          <i class="bi bi-download"></i> Download PDF
+        </button>
+      </div>
     </div>
-
-
-
+  </div>
+</div>
 
     <!-- Main Js File -->
     <script src="inspections.js"></script>
@@ -1171,43 +465,6 @@ foreach ($invoices as $invoice) {
         integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
         crossorigin="anonymous">
     </script>
-
-<!-- <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const saveDraftBtn = document.getElementById('saveDraftBtn');
-
-    saveDraftBtn.addEventListener('click', function () {
-        // Example: Collect draft form data
-        const invoiceNumber = document.querySelector('input[name="invoice_number"]').value;
-        const tenant = document.querySelector('input[name="tenant"]').value;
-
-        // Optional: Add more fields as needed
-
-        // Example AJAX call to save draft (using fetch)
-        fetch('save_draft.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({
-                invoice_number: invoiceNumber,
-                tenant: tenant,
-                // Add other data fields here
-            }),
-        })
-        .then(response => response.text())
-        .then(data => {
-            alert("Draft saved successfully!");
-            console.log(data);
-        })
-        .catch(error => {
-            console.error('Error saving draft:', error);
-            alert("Failed to save draft.");
-        });
-    });
-});
-</script> -->
-
     <script
         src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
@@ -1242,19 +499,19 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("inspectionDate").setAttribute("min", today);
     </script>
 
+<script>
+/* simple highlight of active row */
+document.querySelectorAll('.invoice-link').forEach(link=>{
+link.addEventListener('click', ()=> {
+    document.querySelectorAll('.invoice-link').forEach(l=>l.classList.remove('active'));
+    link.classList.add('active');
+});
+});
+</script>
+
     <!-- pdf download plugin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-
-
-
-<script>
-function showInvoiceActions(invoiceId) {
-    // Implement your action menu logic here
-    console.log('Actions for invoice', invoiceId);
-    // Example: show a dropdown menu with view, edit, delete options
-}
-</script>
 
     <script>
         function toggleIcon(anchor) {
@@ -1381,19 +638,18 @@ function addRow() {
   const newRow = document.createElement("tr");
 
   newRow.innerHTML = `
-   <td>
-      <select name="account_item[]" class="select-account searchable-select" required>
-        <option value="" disabled selected>Select Account Item</option>
-        <?php foreach ($accountItems as $item): ?>
-          <option value="<?= htmlspecialchars($item['account_code']) ?>">
-            <?= htmlspecialchars($item['account_name']) ?>
-          </option>
-        <?php endforeach; ?>
+    <td>
+      <select name="account_item[]" required>
+        <option value="" disabled selected>Select Option</option>
+        <option value="rent">Rent</option>
+        <option value="water">Water Bill</option>
+        <option value="garbage">Garbage</option>
       </select>
     </td>
     <td><textarea name="description[]" placeholder="Description" rows="1" required></textarea></td>
-    <td><input type="number" name="quantity[]" class="form-control quantity" placeholder="1" required></td>
     <td><input type="number" name="unit_price[]" class="form-control unit-price" placeholder="123" required></td>
+    <td><input type="number" name="quantity[]" class="form-control quantity" placeholder="1" required></td>
+    <td><input type="number" class="form-control subtotal" placeholder="0" readonly></td>
     <td>
       <select name="taxes[]" class="form-select vat-option" required>
         <option value="" disabled selected>Select Option</option>
@@ -1403,12 +659,9 @@ function addRow() {
         <option value="exempt">Exempted</option>
       </select>
     </td>
-
-    <td>
-      <button type="button" class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
-        <i class="fa fa-trash" style="font-size: 12px;"></i>
-      </button>
-    </td>
+    <td><input type="number" class="form-control vat-amount" placeholder="0" readonly></td>
+    <td><input type="number" name="total[]" class="form-control total" placeholder="0" readonly></td>
+    <td><button type="button" class="delete-btn btn btn-danger btn-sm" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>
   `;
 
   table.appendChild(newRow);
@@ -1475,8 +728,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 </script>
-
-
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -2346,307 +1597,6 @@ document.addEventListener('DOMContentLoaded', function () {
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
 
-
-<script>
-
-        // Initialize the app
-        function initApp() {
-            renderInvoiceList();
-            populateCustomerSelect();
-            setupEventListeners();
-            updateInvoiceNumber();
-        }
-
-        // Render invoice list
-        function renderInvoiceList(filterStatus = 'all', filterDate = 'this-month') {
-            invoiceList.innerHTML = '';
-
-            let filteredInvoices = [...database.invoices];
-
-            // Filter by status
-            if (filterStatus !== 'all') {
-                filteredInvoices = filteredInvoices.filter(inv => inv.status === filterStatus);
-            }
-
-            // Filter by date (simplified for demo)
-            if (filterDate === 'today') {
-                filteredInvoices = filteredInvoices.filter(inv => inv.date === new Date().toISOString().split('T')[0]);
-            } else if (filterDate === 'this-week') {
-                // In a real app, you'd have proper date filtering
-                filteredInvoices = filteredInvoices.slice(0, 3); // Just for demo
-            } else if (filterDate === 'this-month') {
-                // Current month filter would go here
-            }
-
-            // Render each invoice
-            filteredInvoices.forEach(invoice => {
-                const invoiceItem = document.createElement('div');
-                invoiceItem.className = 'invoice-item';
-                invoiceItem.innerHTML = `
-                    <div class="invoice-checkbox">
-                        <input type="checkbox">
-                    </div>
-                    <div class="invoice-number">${invoice.number}</div>
-                    <div class="invoice-customer">${invoice.customer}</div>
-                    <div class="invoice-date">${formatDate(invoice.date)}</div>
-                    <div class="invoice-amount">$${invoice.amount.toFixed(2)}</div>
-                    <div class="invoice-status">
-                        <span class="status-badge status-${invoice.status}">${capitalizeFirstLetter(invoice.status)}</span>
-                    </div>
-                    <div class="invoice-actions">
-                        <button class="action-btn">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </button>
-                    </div>
-                `;
-                invoiceList.appendChild(invoiceItem);
-            });
-        }
-
-        // Format date for display
-        function formatDate(dateString) {
-            const options = { year: 'numeric', month: 'short', day: 'numeric' };
-            return new Date(dateString).toLocaleDateString('en-US', options);
-        }
-
-        // Capitalize first letter
-        function capitalizeFirstLetter(string) {
-            return string.charAt(0).toUpperCase() + string.slice(1);
-        }
-
-        // Populate customer select dropdown
-        function populateCustomerSelect() {
-            customerSelect.innerHTML = '<option value="">Select a tenant</option>';
-            database.customers.forEach(customer => {
-                const option = document.createElement('option');
-                option.value = customer.id;
-                option.textContent = customer.name;
-                customerSelect.appendChild(option);
-            });
-        }
-
-        // Update invoice number
-        function updateInvoiceNumber() {
-            invoiceNumberInput.value = `INV-2023-${String(database.nextInvoiceId).padStart(3, '0')}`;
-        }
-
-        // Calculate invoice totals
-        function calculateTotals() {
-            let subtotal = 0;
-            const itemRows = document.querySelectorAll('.item-row');
-
-            itemRows.forEach(row => {
-                const qty = parseFloat(row.querySelector('.item-qty input').value) || 0;
-                const rate = parseFloat(row.querySelector('.item-rate input').value) || 0;
-                const amount = qty * rate;
-                row.querySelector('.item-amount input').value = '$' + amount.toFixed(2);
-                subtotal += amount;
-            });
-
-            const tax = subtotal * 0.1; // 10% tax for demo
-            const total = subtotal + tax;
-
-            // Update summary section
-            document.querySelector('.summary-row:nth-child(1) .summary-value').textContent = '$' + subtotal.toFixed(2);
-            document.querySelector('.summary-row:nth-child(2) .summary-value').textContent = '$' + tax.toFixed(2);
-            document.querySelector('.summary-row.total-row .summary-value').textContent = '$' + total.toFixed(2);
-
-            return total;
-        }
-
-        // Save invoice to database
-        function saveInvoice(isDraft = false) {
-            const customerId = parseInt(customerSelect.value);
-            const customer = database.customers.find(c => c.id === customerId);
-
-            const items = [];
-            document.querySelectorAll('.item-row').forEach(row => {
-                items.push({
-                    name: row.querySelector('.item-name input').value,
-                    description: row.querySelector('.item-desc input').value,
-                    qty: parseFloat(row.querySelector('.item-qty input').value) || 0,
-                    rate: parseFloat(row.querySelector('.item-rate input').value) || 0
-                });
-            });
-
-            const total = calculateTotals();
-
-            const newInvoice = {
-                id: database.nextInvoiceId++,
-                number: invoiceNumberInput.value,
-                customer: customer ? customer.name : 'Unknown Customer',
-                date: invoiceDateInput.value,
-                dueDate: dueDateInput.value,
-                amount: total,
-                status: isDraft ? 'draft' : 'pending',
-                items: items,
-                notes: notesInput.value,
-                terms: termsInput.value
-            };
-
-            database.invoices.unshift(newInvoice);
-            return newInvoice;
-        }
-
-        // Setup event listeners
-        function setupEventListeners() {
-            // Navigation
-            createInvoiceBtn.addEventListener('click', () => {
-                invoiceListView.style.display = 'none';
-                createInvoiceView.style.display = 'block';
-                updateInvoiceNumber();
-            });
-
-            cancelInvoiceBtn.addEventListener('click', () => {
-                createInvoiceView.style.display = 'none';
-                invoiceListView.style.display = 'block';
-            });
-
-            // Filter dropdowns
-            statusDropdownItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    filterStatusBtn.querySelector('span').textContent = `Status: ${item.textContent}`;
-                    renderInvoiceList(item.textContent.toLowerCase());
-                });
-            });
-
-            dateDropdownItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    filterDateBtn.querySelector('span').textContent = `Date: ${item.textContent}`;
-                    // In a real app, you would filter by date range
-                });
-            });
-
-            // Invoice items
-            addItemBtn.addEventListener('click', addNewItemRow);
-
-            // Calculate totals when values change
-            document.addEventListener('input', function(e) {
-                if (e.target.classList.contains('item-qty') || e.target.classList.contains('item-rate')) {
-                    calculateTotals();
-                }
-            });
-
-            // Save buttons
-            saveDraftBtn.addEventListener('click', () => {
-                saveInvoice(true);
-                alert('Invoice saved as draft!');
-                createInvoiceView.style.display = 'none';
-                invoiceListView.style.display = 'block';
-                renderInvoiceList();
-            });
-
-            saveFinalizeBtn.addEventListener('click', () => {
-                saveInvoice(false);
-                alert('Invoice saved and finalized!');
-                createInvoiceView.style.display = 'none';
-                invoiceListView.style.display = 'block';
-                renderInvoiceList();
-            });
-
-            // Other buttons
-            previewInvoiceBtn.addEventListener('click', () => {
-                alert('Invoice preview would open in a new window');
-            });
-
-            sendBtn.addEventListener('click', () => {
-                const invoice = saveInvoice(false);
-                alert(`Invoice ${invoice.number} would be sent to ${invoice.customer}`);
-                createInvoiceView.style.display = 'none';
-                invoiceListView.style.display = 'block';
-                renderInvoiceList();
-            });
-
-            attachFileBtn.addEventListener('click', () => {
-                alert('File attachment dialog would open');
-            });
-
-            exportBtn.addEventListener('click', () => {
-                alert('Export functionality would be implemented here');
-            });
-
-            filterBtn.addEventListener('click', () => {
-                alert('Advanced filter dialog would open');
-            });
-
-            helpBtn.addEventListener('click', () => {
-                alert('Help documentation would open');
-            });
-
-            // Sidebar navigation
-            sidebarLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    sidebarLinks.forEach(l => l.classList.remove('active'));
-                    link.classList.add('active');
-                    // In a real app, this would load the appropriate view
-                    alert(`Loading ${link.textContent} section`);
-                });
-            });
-        }
-
-        // Add new item row
-        function addNewItemRow() {
-            const newRow = document.createElement('tr');
-            newRow.className = 'item-row';
-            newRow.innerHTML = `
-                <td class="item-name">
-                    <input type="text" placeholder="Item name">
-                </td>
-                <td class="item-desc">
-                    <input type="text" placeholder="Description">
-                </td>
-                <td class="item-qty">
-                    <input type="number" placeholder="Qty" value="1" class="form-control-sm">
-                </td>
-                <td class="item-rate">
-                    <input type="number" placeholder="Rate" class="form-control-sm">
-                </td>
-                <td class="item-amount">
-                    <input type="text" placeholder="Amount" readonly class="form-control-sm">
-                </td>
-                <td class="item-actions">
-                    <span class="remove-item"><i class="fas fa-trash"></i></span>
-                </td>
-            `;
-            invoiceItems.appendChild(newRow);
-
-            // Add event listener to remove button
-            newRow.querySelector('.remove-item').addEventListener('click', () => {
-                invoiceItems.removeChild(newRow);
-                calculateTotals();
-            });
-        }
-
-        // Initialize the app when DOM is loaded
-        document.addEventListener('DOMContentLoaded', initApp);
-    </script>
-
-<script>
-// DOM Elements
-const invoiceListView = document.getElementById('invoice-list-view');
-const createInvoiceView = document.getElementById('create-invoice-view');
-const createInvoiceBtn = document.getElementById('create-invoice-btn');
-const cancelInvoiceBtn = document.getElementById('cancel-invoice-btn');
-
-// View Toggle Functions
-function showCreateInvoiceView() {
-    invoiceListView.style.display = 'none';
-    createInvoiceView.style.display = 'block';
-}
-
-function showInvoiceListView() {
-    createInvoiceView.style.display = 'none';
-    invoiceListView.style.display = 'block';
-}
-
-// Event Listeners
-createInvoiceBtn?.addEventListener('click', showCreateInvoiceView);
-cancelInvoiceBtn?.addEventListener('click', showInvoiceListView);
-
-// Other JavaScript functionality would go here
-// (like handling form submission via AJAX, etc.)
-</script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     function formatNumber(num) {
@@ -2766,33 +1716,31 @@ cancelInvoiceBtn?.addEventListener('click', showInvoiceListView);
       const newRow = document.createElement("tr");
       newRow.innerHTML = `
         <td>
-      <select name="account_item[]" class="select-account searchable-select" required>
-        <option value="" disabled selected>Select Account Item</option>
-        <?php foreach ($accountItems as $item): ?>
-          <option value="<?= htmlspecialchars($item['account_code']) ?>">
-            <?= htmlspecialchars($item['account_name']) ?>
-          </option>
-        <?php endforeach; ?>
-      </select>
-    </td>
-    <td><textarea name="description[]" placeholder="Description" rows="1" required></textarea></td>
-    <td><input type="number" name="quantity[]" class="form-control quantity" placeholder="1" required></td>
-    <td><input type="number" name="unit_price[]" class="form-control unit-price" placeholder="123" required></td>
-    <td>
-      <select name="taxes[]" class="form-select vat-option" required>
-        <option value="" disabled selected>Select Option</option>
-        <option value="inclusive">VAT 16% Inclusive</option>
-        <option value="exclusive">VAT 16% Exclusive</option>
-        <option value="zero">Zero Rated</option>
-        <option value="exempt">Exempted</option>
-      </select>
-    </td>
-    <td>
-      <input type="text" class="form-control total" placeholder="0" readonly>
-      <button type="button" class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
-        <i class="fa fa-trash" style="font-size: 12px;"></i>
-      </button>
-    </td>
+          <select name="payment_method" required>
+            <option value="" disabled selected>Select Option</option>
+            <option value="credit_card">Rent</option>
+            <option value="paypal">Water Bill</option>
+            <option value="bank_transfer">Garbage</option>
+          </select>
+        </td>
+        <td><textarea name="Description" placeholder="Description" rows="1" required></textarea></td>
+        <td><input type="number" class="form-control quantity" placeholder="1"></td>
+        <td><input type="number" class="form-control unit-price" placeholder="123"></td>
+        <td>
+          <select class="form-select vat-option">
+            <option value="" disabled selected>Select Option</option>
+            <option value="inclusive">VAT 16% Inclusive</option>
+            <option value="exclusive">VAT 16% Exclusive</option>
+            <option value="zero">Zero Rated</option>
+            <option value="exempted">Exempted</option>
+          </select>
+        </td>
+        <td>
+          <input type="text" class="form-control total" placeholder="0" readonly>
+          <button type="button" class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
+            <i class="fa fa-trash" style="font-size: 12px;"></i>
+          </button>
+        </td>
       `;
       table.appendChild(newRow);
       attachEvents(newRow);
@@ -2807,117 +1755,6 @@ cancelInvoiceBtn?.addEventListener('click', showInvoiceListView);
     updateTotalAmount();
   });
 </script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Save Draft Button
-    document.getElementById('saveDraftBtn').addEventListener('click', function () {
-        const formData = new FormData(document.querySelector('form'));
-        formData.append('draft', 1); // flag it as draft
-
-        fetch('save_draft.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(res => res.text())
-        .then(response => {
-            alert('Draft saved successfully!');
-            console.log(response);
-        })
-        .catch(error => {
-            console.error('Save draft error:', error);
-            alert('Failed to save draft.');
-        });
-    });
-
-    // Preview Button
-    document.getElementById('preview-invoice-btn').addEventListener('click', function () {
-        const previewPanel = document.getElementById('invoicePreviewPanel');
-        const previewContent = document.getElementById('previewContent');
-
-        // Build preview content manually or use existing fields
-        const invoiceNumber = document.getElementById('invoice-number').value;
-        const building = document.getElementById('building').selectedOptions[0]?.text || 'N/A';
-        const tenant = document.getElementById('customer').selectedOptions[0]?.text || 'N/A';
-        const invoiceDate = document.getElementById('invoice-date').value;
-        const dueDate = document.getElementById('due-date').value;
-
-        let tableRows = '';
-        document.querySelectorAll('.items-table tbody tr').forEach(row => {
-            const item = row.querySelector('select[name="account_item[]"]').selectedOptions[0]?.text || '';
-            const desc = row.querySelector('textarea[name="description[]"]').value;
-            const qty = row.querySelector('input[name="quantity[]"]').value;
-            const price = row.querySelector('input[name="unit_price[]"]').value;
-            const tax = row.querySelector('select[name="taxes[]"]').value;
-            tableRows += `
-                <tr>
-                    <td>${item}</td><td>${desc}</td><td>${qty}</td>
-                    <td>${price}</td><td>${tax}</td>
-                    <td>${(qty * price).toFixed(2)}</td>
-                </tr>`;
-        });
-
-        previewContent.innerHTML = `
-            <p><strong>Invoice #:</strong> ${invoiceNumber}</p>
-            <p><strong>Building:</strong> ${building}</p>
-            <p><strong>Tenant:</strong> ${tenant}</p>
-            <p><strong>Invoice Date:</strong> ${invoiceDate}</p>
-            <p><strong>Due Date:</strong> ${dueDate}</p>
-            <hr>
-            <h4>Items</h4>
-            <table border="1" width="100%" cellpadding="5">
-                <thead>
-                    <tr><th>Item</th><th>Description</th><th>Qty</th><th>Unit Price</th><th>Tax</th><th>Total</th></tr>
-                </thead>
-                <tbody>${tableRows}</tbody>
-            </table>
-        `;
-
-        previewPanel.classList.add('active');
-    });
-
-    // Close Preview Panel
-    document.getElementById('closePreview').addEventListener('click', function () {
-        document.getElementById('invoicePreviewPanel').classList.remove('active');
-    });
-});
-</script>
-
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const buildingSelect = document.getElementById('building');
-    const tenantSelect   = document.getElementById('customer');
-
-    buildingSelect.addEventListener('change', () => {
-        const buildingId = buildingSelect.value;
-
-        // Reset tenant dropdown
-        tenantSelect.innerHTML =
-            '<option value="">Select a Tenant</option>';
-        tenantSelect.disabled = !buildingId;
-
-        if (!buildingId) return;
-
-        // Fetch tenants for that building
-        fetch(`get_tenants.php?building_id=${buildingId}`)
-            .then(r => r.json())
-            .then(tenants => {
-                tenants.forEach(t => {
-                    const opt   = document.createElement('option');
-                    opt.value   = t.id;
-                    opt.textContent = t.name;
-                    tenantSelect.appendChild(opt);
-                });
-            })
-            .catch(err => {
-                console.error('Failed to load tenants', err);
-                alert('Could not load tenants for this building.');
-            });
-    });
-});
-</script>
-
 
 </body>
 <!--end::Body-->
