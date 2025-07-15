@@ -190,7 +190,7 @@ try {
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
-
+    
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
     <!-- Pdf pluggin -->
@@ -560,7 +560,7 @@ try {
                         <div class="row mt-2 mb-5">
                             <h6 class="mb-0 contact_section_header summary mb-2"></i> <b>Details</b></h6>
                             <div class="col-md-12">
-                                <div class="details-container bg-white p-2 rounded Content">
+                                <div class="details-container bg-white p-2 rounded Content shadow-sm">
                                     <h3 class="details-container_header text-start"> <span id="displayed_building">All Expenses</span>  &nbsp;	|&nbsp;	 <span style="color:#FFC107"> <span id="enteries">3</span>  enteries</span></h3>
                                     <div class="table-responsive" style="overflow-x: auto;">
                                         <div id="top-bar" class="filter-pdf-excel mb-2">
@@ -571,9 +571,6 @@ try {
                                             </div>
                                             <!-- Shift Tenant Button -->
                                             <div class="d-flex">
-                                                <button id="add_provider_btn" class="btn shift-tenant rounded" style="height: fit-content;" data-bs-toggle="modal" data-bs-target="#shiftTenantModal">
-                                                Shift Tenant
-                                                </button>
                                                 <div id="custom-buttons"></div>
                                             </div>
                                         </div>
@@ -584,6 +581,7 @@ try {
                                                     <th>Supplier</th>
                                                     <th>Expense No</th>
                                                     <th>Totals</th>
+                                                    <th>Status</th>
                                                     <th>Actions</th>
                                                 </tr>
                                             </thead>
@@ -594,13 +592,14 @@ try {
                                                         <td><?= htmlspecialchars($exp['supplier']) ?></td>
                                                         <td><?= htmlspecialchars($exp['expense_number']) ?></td>
                                                         <td>KSH <?= number_format($exp['total'], 2) ?></td>
+                                                        <td><?= htmlspecialchars($exp['status']) ?></td>
                                                         <td>
                                                             <!-- view button -->
-                                                            <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" onclick="openExpenseModal(<?= $exp['id'] ?>)">
-                                                                <i class="fa fa-file"></i> View
+                                                            <button class="btn btn-sm btn-outline-warning text-dark" style="" onclick="openExpenseModal(<?= $exp['id'] ?>)">
+                                                                 View
                                                             </button>
 
-                                                            <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Remove"><i class="fa fa-trash"></i></button>
+                                                            <button class="btn btn-sm btn-outline-danger" style="" data-toggle="modal" data-target="#assignPlumberModal" title="Remove">Delete</button>
                                                         </td>
                                                     </tr>
                                                 <?php endforeach; ?>
@@ -809,6 +808,8 @@ try {
     <!--end::Script-->
     <!-- dataTable control -->
      <!-- DATE TABLES -->
+      
+</script>
   <script>
     $(document).ready(function () {
       const table = $('#repaireExpenses').DataTable({
@@ -993,7 +994,7 @@ try {
 
 
     <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 <!--end::Body-->
