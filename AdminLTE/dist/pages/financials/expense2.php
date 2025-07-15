@@ -190,7 +190,7 @@ try {
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
-
+    
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
     <!-- Pdf pluggin -->
@@ -454,49 +454,53 @@ try {
                                                             </div>
                                                         </div>
                                                         <!-- Hidden total -->
-                                                        <input type="hidden" name="total" id="grandTotal" value="0.00" />
-                                                        <div class="row item-row g-3 mt-2">
+                                                        <input type="hidden" name="total" id="grandTotaal" value="0.00" />
+                                                        <div class="row mt-2">
                                                             <div class="text-muted mt-4">Add the Spend items in the fields below</div>
-                                                            <div class="col-md-2">
-                                                                <label class="form-label fw-bold">ITEM(SERVICE)</label>
-                                                                <div class="custom-select-wrapper" id="custom-select-wrapper" style="width: 100%;">
-                                                                    <div class="custom-select shadow-sm" id="custom-select" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false" style="z-index: 1000;">
-                                                                        select
+                                                            <div class="col-md-12" id="itemsContainer">
+                                                                <div class="row item-row g-3 mb-2">
+                                                                    <div class="col-md-2">
+                                                                        <label class="form-label fw-bold">ITEM(SERVICE)</label>
+                                                                        <div class="custom-select-wrapper" id="custom-select-wrapper" style="width: 100%;">
+                                                                            <div class="custom-select shadow-sm" id="custom-select" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false" style="z-index: 1000;">
+                                                                                select
+                                                                            </div>
+                                                                            <div class="select-options" id="select-options" role="listbox">
+                                                                            <div role="option" data-value="option1">Garbage</div>
+                                                                            <div role="option" data-value="option2">Electricty</div>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
-                                                                    <div class="select-options" id="select-options" role="listbox">
-                                                                    <div role="option" data-value="option1">Garbage</div>
-                                                                    <div role="option" data-value="option2">Electricty</div>
+                                                                    <div class="col-md-2">
+                                                                        <label class="form-label fw-bold">Qty</label>
+                                                                        <input type="number" class="form-control qty" placeholder="1" name="qty[]" required />
                                                                     </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-2">
-                                                                <label class="form-label fw-bold">Description</label>
-                                                                <textarea class="form-control" rows="1" placeholder="Description" name="description[]" required></textarea>
-                                                            </div>
-                                                            <div class="col-md-2">
-                                                                <label class="form-label fw-bold">Qty</label>
-                                                                <input type="number" class="form-control qty" placeholder="1" name="qty[]" required />
-                                                            </div>
-                                                            <div class="col-md-2">
-                                                                <label class="form-label fw-bold">Unit Price</label>
-                                                                <input type="number" class="form-control unit-price" placeholder="123" name="unit_price[]" required />
-                                                            </div>
-                                                            <div class="col-md-2">
-                                                                <label class="form-label fw-bold">Taxes</label>
-                                                                <select class="form-select" name="taxes[]" required>
-                                                                    <option selected disabled>--Select Option--</option>
-                                                                    <option>VAT 16% Inclusive</option>
-                                                                    <option>VAT 16% Exclusive</option>
-                                                                    <option>Zero Rated</option>
-                                                                    <option>Exempted</option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="col-md-2" style="vertical-align:middle;"> 
-                                                                <label class="form-label fw-bold" ></label>                                      
-                                                                <div class="personal-info-card shadow-sm bg-white rounded d-flex p-1 align-items-center justify-content-center">
-                                                                    <button class="btn btn-sm btn-danger text" data-bs-toggle="modal" data-bs-target="#editPersonalInfoModal">
-                                                                        <i class="fas fa-trash me-1 icon" style="color:white"></i> <b>Remove</b> 
-                                                                    </button>
+                                                                    <div class="col-md-2">
+                                                                        <label class="form-label fw-bold">Unit Price</label>
+                                                                        <input type="number" class="form-control unit-price" placeholder="123" name="unit_price[]" required />
+                                                                    </div>
+                                                                    <div class="col-md-2">
+                                                                        <label class="form-label fw-bold">Taxes</label>
+                                                                        <select class="form-select" name="taxes[]" required>
+                                                                            <option value="" selected disabled>--Select Option--</option>
+                                                                            <option value="inclusive">VAT 16% Inclusive</option>
+                                                                            <option value="exclusive">VAT 16% Exclusive</option>
+                                                                            <option value="zero">Zero Rated</option>
+                                                                            <option value="exempt">Exempted</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="col-md-2">
+                                                                        <label class="form-label fw-bold">Total</label>
+                                                                        <input type="text" class="form-control item-total" placeholder="Ksh 0.00" name="item_total[]" required readonly />
+                                                                    </div>
+                                                                    <div class="col-md-2" style="vertical-align:middle;"> 
+                                                                        <label class="form-label fw-bold" ></label>                                      
+                                                                        <div class="personal-info-card shadow-sm bg-white rounded d-flex p-1 align-items-center justify-content-center">
+                                                                            <button class="btn btn-sm btn-danger text" data-bs-toggle="modal" data-bs-target="#editPersonalInfoModal">
+                                                                                <i class="fas fa-trash me-1 icon" style="color:white"></i> <b>Remove</b> 
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -511,12 +515,12 @@ try {
                                                                             
                                                                             <div class="d-flex justify-content-between w-100 mb-2">
                                                                                 <label class="me-2 border-end pe-3 text-end w-50"><strong>Sub-Total:</strong></label>
-                                                                                <input type="text" readonly class="form-control-plaintext w-50 ps-3" value="Ksh 10,500">
+                                                                                <input type="text" readonly class="form-control-plaintext w-50 ps-3" id="subTotal" value="Ksh 10,500">
                                                                             </div>
 
                                                                             <div class="d-flex justify-content-between w-100 mb-2">
                                                                                 <label class="me-2 border-end pe-3 text-end w-50"><strong>VAT 16%:</strong></label>
-                                                                                <input type="text" readonly class="form-control-plaintext w-50 ps-3" value="Ksh 1,500">
+                                                                                <input type="text" readonly class="form-control-plaintext w-50 ps-3" id="vatAmount" value="Ksh 1,500">
                                                                             </div>
 
                                                                             <div class="d-flex justify-content-between w-100 mb-2">
@@ -526,7 +530,7 @@ try {
 
                                                                             <div class="d-flex justify-content-between w-100 mt-3 pt-2 border-top border-warning">
                                                                                 <label class="me-2 border-end pe-3 text-end w-50"><strong>Total:</strong></label>
-                                                                                <input type="text" readonly class="form-control-plaintext w-50 ps-3 fw-bold" value="Ksh 12,000">
+                                                                                <input type="text" readonly class="form-control-plaintext w-50 ps-3 fw-bold" id="grandTotal" value="Ksh 12,000">
                                                                             </div>
 
                                                                             </div>
@@ -556,16 +560,28 @@ try {
                         <div class="row mt-2 mb-5">
                             <h6 class="mb-0 contact_section_header summary mb-2"></i> <b>Details</b></h6>
                             <div class="col-md-12">
-                                <div class="details-container bg-white p-2 rounded Content">
+                                <div class="details-container bg-white p-2 rounded Content shadow-sm">
                                     <h3 class="details-container_header text-start"> <span id="displayed_building">All Expenses</span>  &nbsp;	|&nbsp;	 <span style="color:#FFC107"> <span id="enteries">3</span>  enteries</span></h3>
                                     <div class="table-responsive" style="overflow-x: auto;">
-                                        <table class="table-striped" id="repaireExpenses" style="width: 100%; min-width: 600px;">
+                                        <div id="top-bar" class="filter-pdf-excel mb-2">
+                                            <div class="d-flex" style="gap: 10px;">
+                                                <div id="custom-search">
+                                                    <input type="text" id="searchInput" placeholder="Search Expense...">
+                                                </div>
+                                            </div>
+                                            <!-- Shift Tenant Button -->
+                                            <div class="d-flex">
+                                                <div id="custom-buttons"></div>
+                                            </div>
+                                        </div>
+                                        <table id="repaireExpenses" style="width: 100%; min-width: 600px;">
                                             <thead>
                                                 <tr>
                                                     <th>Date</th>
                                                     <th>Supplier</th>
                                                     <th>Expense No</th>
                                                     <th>Totals</th>
+                                                    <th>Status</th>
                                                     <th>Actions</th>
                                                 </tr>
                                             </thead>
@@ -576,13 +592,14 @@ try {
                                                         <td><?= htmlspecialchars($exp['supplier']) ?></td>
                                                         <td><?= htmlspecialchars($exp['expense_number']) ?></td>
                                                         <td>KSH <?= number_format($exp['total'], 2) ?></td>
+                                                        <td><?= htmlspecialchars($exp['status']) ?></td>
                                                         <td>
                                                             <!-- view button -->
-                                                            <button class="btn btn-sm" style="background-color: #0C5662; color:#fff;" onclick="openExpenseModal(<?= $exp['id'] ?>)">
-                                                                <i class="fa fa-file"></i> View
+                                                            <button class="btn btn-sm btn-outline-warning text-dark" style="" onclick="openExpenseModal(<?= $exp['id'] ?>)">
+                                                                 View
                                                             </button>
 
-                                                            <button class="btn btn-sm" style="background-color: #193042; color:#fff;" data-toggle="modal" data-target="#assignPlumberModal" title="Remove"><i class="fa fa-trash"></i></button>
+                                                            <button class="btn btn-sm btn-outline-danger" style="" data-toggle="modal" data-target="#assignPlumberModal" title="Remove">Delete</button>
                                                         </td>
                                                     </tr>
                                                 <?php endforeach; ?>
@@ -594,7 +611,6 @@ try {
                         </div>
                         <!-- /row -->
                         <div class="row graph">
-                            <p class="text-mute">Monthly Trends</p>
                             <div class="col-md-12">
                                 <div class="bg-white p-2 shadow rounded-2">
                                     <?php
@@ -748,16 +764,16 @@ try {
     <!--end::App Wrapper-->
 
     <!-- Main Js File -->
+    <script src="../../../dist/js/adminlte.js"></script> 
     <script src="expense.js"></script>
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
+    <!-- pdf download plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 
     <!-- J  A V A S C R I PT -->
-
-    <!-- steeper plugin -->
-    <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
-    <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
     <script
         src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
         integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
@@ -768,11 +784,9 @@ try {
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
         crossorigin="anonymous">
     </script>
-    <script src="../../../dist/js/adminlte.js"></script>
     <!-- links for dataTaable buttons -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
@@ -783,6 +797,7 @@ try {
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
     <!--end::OverlayScrollbars Configure-->
+
     <!-- OPTIONAL SCRIPTS -->
     <!-- apexcharts -->
     <script
@@ -791,15 +806,68 @@ try {
         crossorigin="anonymous"></script>
 
     <!--end::Script-->
+    <!-- dataTable control -->
+     <!-- DATE TABLES -->
+      
+</script>
+  <script>
+    $(document).ready(function () {
+      const table = $('#repaireExpenses').DataTable({
+        dom: 'Brtip', // ⬅ Changed to include Buttons in DOM
+        order: [], // ⬅ disables automatic ordering by DataTables
+        buttons: [
+          {
+            extend: 'excelHtml5',
+            text: 'Excel',
+            exportOptions: {
+              columns: ':not(:last-child)' // ⬅ Exclude last column
+            }
+          },
+          {
+            extend: 'pdfHtml5',
+            text: 'PDF',
+            exportOptions: {
+              columns: ':not(:last-child)' // ⬅ Exclude last column
+            },
+            customize: function (doc) {
+              // Center table
+              doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+
+              // Optional: center-align the entire table
+              doc.styles.tableHeader.alignment = 'center';
+              doc.styles.tableBodyEven.alignment = 'center';
+              doc.styles.tableBodyOdd.alignment = 'center';
+
+              const body = doc.content[1].table.body;
+                  for (let i = 1; i < body.length; i++) { // start from 1 to skip header
+                    if (body[i][4]) {
+                      body[i][4].color = 'blue'; // set email column to blue
+                    }
+                  }
+            }
+          },
+              {
+            extend: 'print',
+            text: 'Print',
+            exportOptions: {
+              columns: ':not(:last-child)' // ⬅ Exclude last column from print
+            }
+          }
+        ]
+      });
+      // Append buttons to your div
+      table.buttons().container().appendTo('#custom-buttons');
+      // Custom search
+      $('#searchInput').on('keyup', function () {
+        table.search(this.value).draw();
+      });
+    });
+  </script>
     <!-- date display only future date -->
     <script>
         const today = new Date().toISOString().split('T')[0];
         document.getElementById("inspectionDate").setAttribute("min", today);
     </script>
-
-    <!-- pdf download plugin -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
 
     <script>
         function toggleIcon(anchor) {
@@ -920,153 +988,13 @@ try {
                 });
         }
     </script>
-    <script>
-                                        function calculateTotal() {
-                                            let grandTotal = 0;
-
-                                            document.querySelectorAll('#spendTable tbody tr').forEach(row => {
-                                                const qty = parseFloat(row.querySelector('.qty')?.value || 0);
-                                                let unitPrice = parseFloat(row.querySelector('.unit-price')?.value || 0);
-                                                const taxOption = row.querySelector('[name="taxes[]"]')?.value;
-                                                let total = 0;
-
-                                                switch (taxOption) {
-                                                    case 'VAT 16% Inclusive':
-                                                        unitPrice = unitPrice / 1.16; // Extract base price
-                                                        total = unitPrice * qty * 1.16; // Add back VAT
-                                                        break;
-                                                    case 'VAT 16% Exclusive':
-                                                        total = unitPrice * qty * 1.16; // Add 16% VAT
-                                                        break;
-                                                    case 'Zero Rated':
-                                                    case 'Exempted':
-                                                        total = unitPrice * qty;
-                                                        break;
-                                                    default:
-                                                        total = unitPrice * qty;
-                                                }
-
-                                                row.querySelector('.total-line').value = total.toFixed(2);
-                                                grandTotal += total;
-                                            });
-
-                                            document.getElementById('grandTotal').value = grandTotal.toFixed(2);
-                                        }
-
-                                        function deleteRow(btn) {
-                                            btn.closest('tr').remove();
-                                            calculateTotal();
-                                        }
-
-                                        function addRow() {
-                                            const tbody = document.querySelector('#spendTable tbody');
-                                            const newRow = tbody.rows[0].cloneNode(true);
-
-                                            newRow.querySelectorAll('input, select, textarea').forEach(input => {
-                                                if (input.tagName.toLowerCase() === 'select') {
-                                                    input.selectedIndex = 0;
-                                                } else {
-                                                    input.value = '';
-                                                }
-                                            });
-
-                                            tbody.appendChild(newRow);
-                                            calculateTotal();
-                                        }
-
-                                        // Auto-calculate when inputs change (qty, unit price, taxes)
-                                        document.addEventListener('input', function(e) {
-                                            if (e.target.matches('.qty, .unit-price, [name="taxes[]"]')) {
-                                                calculateTotal();
-                                            }
-                                        });
-
-                                        // Handle submission
-                                        document.getElementById('expenseForm').addEventListener('submit', function(e) {
-                                            e.preventDefault();
-                                            calculateTotal();
-
-                                            const form = e.target;
-                                            const formData = new FormData(form);
-
-                                            fetch(window.location.href, {
-                                                    method: 'POST',
-                                                    headers: {
-                                                        'X-Requested-With': 'XMLHttpRequest'
-                                                    },
-                                                    body: formData
-                                                })
-                                                .then(res => res.json())
-                                                .then(data => {
-                                                    if (data.success) {
-                                                        alert("✅ Expense saved and displayed!");
-                                                        form.reset();
-                                                        document.getElementById('grandTotal').value = "0.00";
-                                                        calculateTotal();
-                                                        if (document.getElementById('toggleIcon')) {
-                                                            document.getElementById('toggleIcon').click();
-                                                        }
-                                                    } else {
-                                                        alert(data.error || "❌ Something went wrong.");
-                                                    }
-                                                })
-                                                .catch(err => {
-                                                    console.error(err);
-                                                    alert("❌ Server error occurred.");
-                                                });
-                                        });
-                                    </script>
+    
 
                                     <!-- select wrapper -->
-<script>  
-  document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
-    const select = wrapper.querySelector('.custom-select');
-    const optionsContainer = wrapper.querySelector('.select-options');
-    const options = wrapper.querySelectorAll('[role="option"]');
 
-    const closeOptions = () => {
-      optionsContainer.style.display = 'none';
-      select.classList.remove('open');
-      select.setAttribute('aria-expanded', 'false');
-    };
-
-    select.addEventListener('click', () => {
-      const isOpen = optionsContainer.style.display === 'block';
-      optionsContainer.style.display = isOpen ? 'none' : 'block';
-      select.classList.toggle('open', !isOpen);
-      select.setAttribute('aria-expanded', !isOpen);
-    });
-
-    options.forEach(option => {
-      option.addEventListener('click', () => {
-        select.textContent = option.textContent;
-        select.setAttribute('data-value', option.dataset.value);
-        options.forEach(opt => opt.classList.remove('selected'));
-        option.classList.add('selected');
-        closeOptions();
-      });
-    });
-
-    document.addEventListener('click', (e) => {
-      if (!wrapper.contains(e.target)) {
-        closeOptions();
-      }
-    });
-
-    select.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        select.click();
-      }
-      if (e.key === 'Escape') {
-        closeOptions();
-      }
-    });
-  });
-  </script> 
 
     <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 <!--end::Body-->
