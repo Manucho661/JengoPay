@@ -866,9 +866,51 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="page-header">
                     <h1 class="page-title"> 🧾 Invoices</h1>
                     <div class="page-actions">
-                        <button class="btn btn-outline" style="color: #FFC107; background-color:#00192D;">
-                            <i class="fas fa-filter"></i> Filter
-                        </button>
+                    <button class="btn btn-outline" style="color: #FFC107; background-color:#00192D;" id="filterButton">
+                    <i class="fas fa-filter"></i> Filter
+                    </button>
+
+
+                    <!-- Filter Modal (hidden by default) -->
+<div id="filterModal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.4)">
+    <div style="background-color:#00192D; margin:5% auto; padding:20px; border:1px solid #FFC107; width:80%; max-width:600px; color:white;">
+        <span style="float:right; cursor:pointer" id="closeFilter">&times;</span>
+        <h3>Filter Invoices</h3>
+
+        <div style="margin-bottom:15px;">
+            <label>Status:</label>
+            <select id="statusFilter" class="form-control" style="background-color:#00192D; color:#FFC107; border:1px solid #FFC107">
+                <option value="">All</option>
+                <option value="draft">Draft</option>
+                <option value="sent">Sent</option>
+                <option value="paid">Paid</option>
+                <option value="overdue">Overdue</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+        </div>
+
+        <div style="margin-bottom:15px;">
+            <label>Payment Status:</label>
+            <select id="paymentFilter" class="form-control" style="background-color:#00192D; color:#FFC107; border:1px solid #FFC107">
+                <option value="">All</option>
+                <option value="unpaid">Unpaid</option>
+                <option value="partial">Partial</option>
+                <option value="paid">Paid</option>
+            </select>
+        </div>
+
+        <div style="margin-bottom:15px;">
+            <label>Date Range:</label>
+            <div style="display:flex; gap:10px;">
+                <input type="date" id="dateFrom" class="form-control" style="background-color:#00192D; color:#FFC107; border:1px solid #FFC107">
+                <input type="date" id="dateTo" class="form-control" style="background-color:#00192D; color:#FFC107; border:1px solid #FFC107">
+            </div>
+        </div>
+
+        <button id="applyFilter" class="btn" style="background-color:#FFC107; color:#00192D">Apply Filters</button>
+        <button id="resetFilter" class="btn btn-outline" style="color:#FFC107; border-color:#FFC107">Reset</button>
+    </div>
+</div>
                         <!-- <button class="btn btn-outline" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-download"></i> Export
                         </button> -->
@@ -3146,49 +3188,97 @@ $(function () {
 
 </script>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('.searchable-item-container').forEach(container => {
-    const input = container.querySelector('.searchable-item-input');
-    const dropdown = container.querySelector('.searchable-item-dropdown');
-    const hiddenInput = container.querySelector('.selected-item-value');
-    const options = container.querySelectorAll('.searchable-item-option');
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButton = document.getElementById('filterButton');
+    const filterModal = document.getElementById('filterModal');
+    const closeFilter = document.getElementById('closeFilter');
+    const applyFilter = document.getElementById('applyFilter');
+    const resetFilter = document.getElementById('resetFilter');
 
-    input.addEventListener('focus', function() {
-      dropdown.style.display = 'block';
-      filterOptions();
+    // Show modal when filter button is clicked
+    filterButton.addEventListener('click', function() {
+        filterModal.style.display = 'block';
     });
 
-    document.addEventListener('click', function(e) {
-      if (!container.contains(e.target)) {
-        dropdown.style.display = 'none';
-      }
+    // Close modal when X is clicked
+    closeFilter.addEventListener('click', function() {
+        filterModal.style.display = 'none';
     });
 
-    input.addEventListener('input', filterOptions);
-
-    options.forEach(option => {
-      option.addEventListener('click', function() {
-        // Show both code and name in the input when selected
-        input.value = `${this.querySelector('.account-code').textContent} - ${this.querySelector('.account-name').textContent}`;
-        hiddenInput.value = this.getAttribute('data-value');
-        dropdown.style.display = 'none';
-      });
-    });
-
-    function filterOptions() {
-      const searchTerm = input.value.toLowerCase();
-      options.forEach(option => {
-        const code = option.querySelector('.account-code').textContent.toLowerCase();
-        const name = option.querySelector('.account-name').textContent.toLowerCase();
-        if (code.includes(searchTerm) || name.includes(searchTerm)) {
-          option.style.display = 'flex'; /* Changed to flex to maintain layout */
-        } else {
-          option.style.display = 'none';
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+        if (event.target == filterModal) {
+            filterModal.style.display = 'none';
         }
-      });
-    }
-  });
+    });
+
+    // Apply filters
+    applyFilter.addEventListener('click', function() {
+        const status = document.getElementById('statusFilter').value;
+        const paymentStatus = document.getElementById('paymentFilter').value;
+        const dateFrom = document.getElementById('dateFrom').value;
+        const dateTo = document.getElementById('dateTo').value;
+
+        // Here you would typically make an AJAX call to your server with the filter parameters
+        // For this example, we'll just log them
+        console.log('Applying filters:', {
+            status: status,
+            paymentStatus: paymentStatus,
+            dateFrom: dateFrom,
+            dateTo: dateTo
+        });
+
+        // Close the modal
+        filterModal.style.display = 'none';
+
+        // In a real implementation, you would reload the table data with the filters applied
+        // For example:
+        // fetchFilteredInvoices(status, paymentStatus, dateFrom, dateTo);
+    });
+
+    // Reset filters
+    resetFilter.addEventListener('click', function() {
+        document.getElementById('statusFilter').value = '';
+        document.getElementById('paymentFilter').value = '';
+        document.getElementById('dateFrom').value = '';
+        document.getElementById('dateTo').value = '';
+
+        // In a real implementation, you would reload the original unfiltered data
+        // For example:
+        // fetchAllInvoices();
+    });
 });
+
+// Example function for fetching filtered invoices (would need server-side implementation)
+function fetchFilteredInvoices(status, paymentStatus, dateFrom, dateTo) {
+    // This would be an AJAX call to your server
+    fetch('/api/invoices/filter', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            status: status,
+            payment_status: paymentStatus,
+            date_from: dateFrom,
+            date_to: dateTo
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Update your table with the filtered data
+        updateInvoiceTable(data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+// Example function to update the table with filtered data
+function updateInvoiceTable(invoices) {
+    // Implementation would depend on how your table is structured
+    // This would clear and repopulate the table with the filtered invoices
+}
 </script>
 </body>
 <!--end::Body-->
