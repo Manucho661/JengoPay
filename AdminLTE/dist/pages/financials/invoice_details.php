@@ -219,10 +219,12 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             <!--begin::App Content Header-->
 
+
             <div class="app-content-header">
                 <!--begin::Container-->
                 <div class="container-fluid">
                 <div class="wrapper">
+
 
 <!-- ================================================================ -->
 <!-- LEFT: LIST OF INVOICES                                           -->
@@ -241,7 +243,7 @@ try {
 
     foreach ($pdo->query($sql) as $row) {
         $link        = htmlspecialchars('invoice_details.php?id=' . $row['id']);
-        $tenantName  = $row['tenant_name'] ?: 'Unknown Tenant';
+        $tenantName  = $row['tenant'] ?: 'Unknown Tenant';
         $invoiceDate = date('d M Y', strtotime($row['invoice_date']));
         $amount      = number_format($row['total'], 2);
         $badgeClass  = statusClass($row['status']);
@@ -278,6 +280,8 @@ HTML;
     </div><!-- /.invoice-list -->
 </aside>
 
+
+
 <!-- ================================================================ -->
 <!-- RIGHT: INVOICE DETAILS                                           -->
 <!-- ================================================================ -->
@@ -297,7 +301,7 @@ HTML;
         if (!$inv) {
             echo '<div class="placeholder">Invoice not found.</div>';
         } else {
-            $lines = $pdo->prepare("SELECT description, quantity AS qty, unit_price FROM invoice_items WHERE invoice_id = ?");
+            $lines = $pdo->prepare("SELECT description, quantity AS quantity, unit_price FROM invoice WHERE id = ?");
             $lines->execute([$id]);
 
             // Calculate totals
@@ -305,33 +309,31 @@ HTML;
             $vat = 0;
             $lineRows = '';
             while ($l = $lines->fetch()) {
-                $amount = $l['qty'] * $l['unit_price'];
-                $tax = round($amount * 0.16); // 16% VAT
-                $totalLine = $amount + $tax;
-                $subTotal += $amount;
-                $vat += $tax;
+              $quantity = (float) $l['quantity'];
+              $unitPrice = (float) $l['unit_price'];
+              $amount = $quantity * $unitPrice;
+              $tax = round($amount * 0.16);
+              $totalLine = $amount + $tax;
+              $subTotal += $amount;
+              $vat += $tax;
 
-                $lineRows .= "<tr>
-                    <td>" . htmlspecialchars($l['description']) . "</td>
-                    <td>{$l['qty']}</td>
-                    <td>Ksh " . number_format($l['unit_price'], 2) . "</td>
-                    <td>Ksh " . number_format($tax, 2) . "</td>
-                    <td>Ksh " . number_format($totalLine, 2) . "</td>
-                </tr>";
-            }
+              $lineRows .= "<tr>
+                  <td>" . htmlspecialchars($l['description']) . "</td>
+                  <td>{$quantity}</td>
+                  <td>Ksh " . number_format($unitPrice, 2) . "</td>
+                  <td>Ksh " . number_format($tax, 2) . "</td>
+                  <td>Ksh " . number_format($totalLine, 2) . "</td>
+              </tr>";
+          }
+
             $total = $subTotal + $vat;
             ?>
 
 
-                  <div class="modal-footer">
-                  <button   type="button" class="btn btn-primary" onclick="window.print()">
-                                      <i class="bi bi-printer-fill"></i> Print Invoice
-                                    </button>
+                                     <!-- <button type="button" class="btn btn-success" id="downloadPdf">
+                                      <i class="bi bi-download"></i>EDIT
+                                    </button> -->
 
-                                    <button type="button" class="btn btn-success" id="downloadPdf">
-                                      <i class="bi bi-download"></i> Download PDF
-                                    </button>
-                  </div>
 
 
             <!-- Rendered invoice styled like modal -->
@@ -426,7 +428,10 @@ HTML;
         }
     }
     ?>
+
+    
 </main>
+
 
 
 </div><!-- /.wrapper -->

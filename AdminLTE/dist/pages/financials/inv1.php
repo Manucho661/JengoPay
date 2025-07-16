@@ -714,6 +714,50 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
   border: none;
   cursor: pointer;
 }
+.filter-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.filter-btn {
+    padding: 8px 12px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    display: none;
+    background-color: white;
+    border: 1px solid #ddd;
+    z-index: 100;
+    min-width: 120px;
+}
+
+.dropdown-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dropdown-menu ul li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.dropdown-menu ul li:hover {
+    background-color: #f0f0f0;
+}
+
+.filter-dropdown.open .dropdown-menu {
+    display: block;
+}
 
       </style>
 </head>
@@ -870,15 +914,37 @@ foreach ($invoices as $invoice) {
     $invoiceDueDate = date('M d, Y', strtotime($invoice['due_date']));
     $amount         = number_format($invoice['total'], 2);
 
-    // Status badge mapping
+    // Map DB status → badge + display text
     switch ($invoice['status']) {
-        case 'sent':      $statusClass = 'badge-sent';      $statusText = 'Sent';      break;
-        case 'paid':      $statusClass = 'badge-paid';      $statusText = 'Paid';      break;
-        case 'overdue':   $statusClass = 'badge-overdue';   $statusText = 'Overdue';   break;
-        case 'cancelled': $statusClass = 'badge-cancelled'; $statusText = 'Cancelled'; break;
-        default:          $statusClass = 'badge-draft';     $statusText = 'Draft';
-    }
+      case 'sent':
+          $statusClass = 'badge-sent';
+          $statusText  = 'Sent';
+          $dataStatus  = 'pending';      // dropdown key
+          break;
 
+      case 'paid':
+          $statusClass = 'badge-paid';
+          $statusText  = 'Paid';
+          $dataStatus  = 'paid';
+          break;
+
+      case 'overdue':
+          $statusClass = 'badge-overdue';
+          $statusText  = 'Overdue';
+          $dataStatus  = 'overdue';
+          break;
+
+      case 'cancelled':
+          $statusClass = 'badge-cancelled';
+          $statusText  = 'Cancelled';
+          $dataStatus  = 'cancelled';     // not in dropdown yet
+          break;
+
+      default:            // draft
+          $statusClass = 'badge-draft';
+          $statusText  = 'Draft';
+          $dataStatus  = 'draft';
+  }
     // Generate a link to open the invoice details
     $href = 'invoice_details.php?id=' . $invoice['id'];
 
@@ -1099,11 +1165,11 @@ foreach ($invoices as $invoice) {
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="notes">Notes</label>
-                                <textarea id="notes" class="form-control" rows="3" placeholder="Thank you for your business!"></textarea>
+                                <textarea id="notes" name="notes" class="form-control" rows="3" placeholder="Thank you for your business!"></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="terms">Terms & Conditions</label>
-                                <textarea id="terms" class="form-control" rows="3" placeholder="Payment due within 15 days"></textarea>
+                                <textarea id="terms"  name="terms_conditions" class="form-control" rows="3" placeholder="Payment due within 15 days"></textarea>
                             </div>
                         </div>
                     </div>
@@ -1491,6 +1557,53 @@ document.addEventListener("DOMContentLoaded", () => {
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdown = document.querySelector(".filter-dropdown");
+        const btn = dropdown.querySelector(".filter-btn");
+        const menu = dropdown.querySelector(".dropdown-menu");
+        const statusText = btn.querySelector("span");
+
+        // Toggle dropdown visibility
+        btn.addEventListener("click", function (e) {
+            e.stopPropagation(); // Prevent body click from closing immediately
+            dropdown.classList.toggle("open");
+        });
+
+        // Close dropdown when clicking outside
+        document.body.addEventListener("click", function () {
+            dropdown.classList.remove("open");
+        });
+
+        // Handle selection
+        menu.querySelectorAll("li").forEach((item) => {
+            item.addEventListener("click", function () {
+                const selectedStatus = this.getAttribute("data-status");
+                statusText.textContent = `Status: ${this.textContent}`;
+
+                // OPTIONAL: Filter invoices based on status
+                filterInvoicesByStatus(selectedStatus);
+
+                dropdown.classList.remove("open");
+            });
+        });
+
+        // Optional: Sample invoice filter logic
+        function filterInvoicesByStatus(status) {
+            const allInvoices = document.querySelectorAll(".invoice-item");
+            allInvoices.forEach(item => {
+                const itemStatus = item.getAttribute("data-status");
+                if (status === "all" || itemStatus === status) {
+                    item.style.display = "";
+                } else {
+                    item.style.display = "none";
+                }
+            });
+        }
+    });
+</script>
+
 
 
 <script>
