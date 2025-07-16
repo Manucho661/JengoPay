@@ -1985,3 +1985,99 @@ document.addEventListener('DOMContentLoaded', function () {
 <!--end::Body-->
 
 </html>
+
+
+
+<!-- view for invoice page  -->
+<?php
+// ----------------------------------------------------
+// 1) Fetch every invoice with its tenant's full name
+// ----------------------------------------------------
+$stmt = $pdo->query("
+    SELECT
+        i.id,
+        i.invoice_number,
+        i.invoice_date,
+        i.due_date,
+        i.total,
+        i.status,
+        CONCAT(u.first_name,' ',u.middle_name)  AS tenant_name
+    FROM invoice i
+    LEFT JOIN users u ON u.id = i.tenant
+    ORDER BY i.invoice_number DESC
+");
+
+$invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// ----------------------------------------------------
+// 2) Output each invoice item
+// ----------------------------------------------------
+foreach ($invoices as $invoice) {
+
+    // Friendly formats
+    $tenantName     = $invoice['tenant_name'] ?: 'Unknown';
+    $invoiceDate    = date('M d, Y', strtotime($invoice['invoice_date']));
+    $invoiceDueDate = date('M d, Y', strtotime($invoice['due_date']));
+    $amount         = number_format($invoice['total'], 2);
+
+    // Map DB status → badge + display text
+    switch ($invoice['status']) {
+      case 'sent':
+          $statusClass = 'badge-sent';
+          $statusText  = 'Sent';
+          $dataStatus  = 'pending';      // dropdown key
+          break;
+
+      case 'paid':
+          $statusClass = 'badge-paid';
+          $statusText  = 'Paid';
+          $dataStatus  = 'paid';
+          break;
+
+      case 'overdue':
+          $statusClass = 'badge-overdue';
+          $statusText  = 'Overdue';
+          $dataStatus  = 'overdue';
+          break;
+
+      case 'cancelled':
+          $statusClass = 'badge-cancelled';
+          $statusText  = 'Cancelled';
+          $dataStatus  = 'cancelled';     // not in dropdown yet
+          break;
+
+      default:            // draft
+          $statusClass = 'badge-draft';
+          $statusText  = 'Draft';
+          $dataStatus  = 'draft';
+  }
+    // Generate a link to open the invoice details
+    $href = 'invoice_details.php?id=' . $invoice['id'];
+
+    // ---- HTML block -------------------------------------------------
+    echo '<a href="'. $href .'" class="invoice-link">';
+    echo '
+        <div class="invoice-item">
+            <div class="invoice-checkbox">
+                <input type="checkbox" onclick="event.stopPropagation()">
+            </div>
+
+            <div class="invoice-number">'   . htmlspecialchars($invoice['invoice_number']) . '</div>
+            <div class="invoice-customer">' . htmlspecialchars($tenantName)               . '</div>
+            <div class="invoice-date">'      . $invoiceDate                                . '</div>
+            <div class="invoice-date">'      . $invoiceDueDate                             . '</div>
+            <div class="invoice-amount">'    . $amount                                     . '</div>
+
+            <div class="invoice-status">
+                <span class="status-badge '. $statusClass .'">'. $statusText .'</span>
+            </div>
+
+            <div class="invoice-actions">
+                <button class="action-btn" onclick="event.stopPropagation()">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+            </div>
+        </div>';
+    echo '</a>';
+}
+?>

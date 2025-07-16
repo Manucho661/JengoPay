@@ -820,7 +820,73 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
   text-overflow: ellipsis;
   overflow: hidden;
 }
+.payment-status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-width: 60px;
+    text-align: center;
+    border: 1px solid #FFC107; /* Border color for all payment statuses */
+}
 
+.badge-payment-paid {
+    background-color: #e6f7ee;
+    color: #00192D; /* Dark blue text */
+}
+
+.badge-payment-partial {
+    background-color: #fff8e6;
+    color: #00192D; /* Dark blue text */
+    border-color: #FFC107; /* Yellow border */
+}
+
+.badge-payment-unpaid {
+    background-color: #ffebee;
+    color: #00192D; /* Dark blue text */
+    border-color: #FFC107; /* Yellow border */
+}
+
+/* Status Badges (existing) */
+.status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-width: 60px;
+    text-align: center;
+}
+
+.badge-sent {
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+
+.badge-paid {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.badge-overdue {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.badge-cancelled {
+    background-color: #efebe9;
+    color: #4e342e;
+}
+
+.badge-draft {
+    background-color: #e0e0e0;
+    color: #424242;
+}
       </style>
 </head>
 
@@ -980,6 +1046,9 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="invoice-status">
             <div class="over-flow" title="Status">Status<!----></div>
         </div>
+        <div class="invoice-status">
+            <div class="over-flow" title="Status">Payment Status<!----></div>
+        </div>
         <div class="invoice-actions">
             <div class="over-flow" title="Actions">Actions<!----></div>
         </div>
@@ -987,7 +1056,7 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 
-   <?php
+    <?php
 // ----------------------------------------------------
 // 1) Fetch every invoice with its tenant's full name
 // ----------------------------------------------------
@@ -999,7 +1068,8 @@ $stmt = $pdo->query("
         i.due_date,
         i.total,
         i.status,
-        CONCAT(u.first_name,' ',u.middle_name)  AS tenant_name
+        i.payment_status,
+        CONCAT(u.first_name,' ',u.middle_name) AS tenant_name
     FROM invoice i
     LEFT JOIN users u ON u.id = i.tenant
     ORDER BY i.invoice_number DESC
@@ -1048,7 +1118,25 @@ foreach ($invoices as $invoice) {
           $statusClass = 'badge-draft';
           $statusText  = 'Draft';
           $dataStatus  = 'draft';
-  }
+    }
+
+    // Map payment_status → badge + display text
+    switch ($invoice['payment_status']) {
+      case 'paid':
+          $paymentStatusClass = 'badge-paid';
+          $paymentStatusText  = 'Paid';
+          break;
+
+      case 'partial':
+          $paymentStatusClass = 'badge-partial';
+          $paymentStatusText  = 'Partial';
+          break;
+
+      default:            // unpaid
+          $paymentStatusClass = 'badge-unpaid';
+          $paymentStatusText  = 'Unpaid';
+    }
+
     // Generate a link to open the invoice details
     $href = 'invoice_details.php?id=' . $invoice['id'];
 
@@ -1070,6 +1158,10 @@ foreach ($invoices as $invoice) {
                 <span class="status-badge '. $statusClass .'">'. $statusText .'</span>
             </div>
 
+            <div class="invoice-status">
+                <span class="status-badge '. $paymentStatusClass .'">'. $paymentStatusText .'</span>
+            </div>
+
             <div class="invoice-actions">
                 <button class="action-btn" onclick="event.stopPropagation()">
                     <i class="fas fa-ellipsis-v"></i>
@@ -1079,7 +1171,6 @@ foreach ($invoices as $invoice) {
     echo '</a>';
 }
 ?>
-
                     <div class="invoice-list">
                         <!-- Invoice Item -->
                         <div class="invoice-item">
@@ -1250,7 +1341,7 @@ foreach ($invoices as $invoice) {
             </select>
           </td>
           <td>
-             <input type="number" name="total[]" class="form-control total" placeholder="0" readonly>
+             <input type="number" name="total[]" class="form-control total" placeholder="0" readonly  style="display:none;">
             <button type="button"  class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
               <i class="fa fa-trash" style="font-size: 12px;"></i>
             </button>
@@ -3252,7 +3343,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Example function for fetching filtered invoices (would need server-side implementation)
 function fetchFilteredInvoices(status, paymentStatus, dateFrom, dateTo) {
     // This would be an AJAX call to your server
-    fetch('/api/invoices/filter', {
+    fetch('filter.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
