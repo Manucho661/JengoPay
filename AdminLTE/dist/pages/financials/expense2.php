@@ -1,4 +1,3 @@
-
 <?php
 require_once '../db/connect.php';
 
@@ -124,7 +123,7 @@ try {
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
-    
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
     <!-- Pdf pluggin -->
@@ -178,349 +177,347 @@ try {
         <!--begin::App Main-->
         <main class="app-main">
             <!--begin::App Content Header-->
-                <div class="app-content-header">
-                    <!--begin::Container-->
-                    <div class="container-fluid">
-                        <!--begin::Row-->
-                        <div class="row">
-                            <div class="col-sm-8">
-                                <h3 class="mb-0 contact_section_header"> 💰 &nbsp; Expenses</h3>
-                            </div>
-                            <!--end::Row-->
+            <div class="app-content-header">
+                <!--begin::Container-->
+                <div class="container-fluid">
+                    <!--begin::Row-->
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <h3 class="mb-0 contact_section_header"> 💰 &nbsp; Expenses</h3>
                         </div>
-                        <!--end::Container-->
+                        <!--end::Row-->
                     </div>
+                    <!--end::Container-->
                 </div>
-                <div class="app-content">
-                    <div class="container-fluid">
-                        <div class="row g-3 mb-4">
-                            <p class="text-muted">Manage your expenses</p>
-                            <div class="col-md-3">
-                                <div class="custom-select-wrapper">
-                                    <div class="custom-select shadow-sm" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
+            </div>
+            <div class="app-content">
+                <div class="container-fluid">
+                    <div class="row g-3 mb-4">
+                        <p class="text-muted">Manage your expenses</p>
+                        <div class="col-md-3">
+                            <div class="custom-select-wrapper">
+                                <div class="custom-select shadow-sm" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
                                     Filter By Building
-                                    </div>
-                                    <div class="select-options" id="select-options" role="listbox">
+                                </div>
+                                <div class="select-options" id="select-options" role="listbox">
                                     <div role="option" data-value="option1">Manucho</div>
                                     <div role="option" data-value="option2">Silver Spoon</div>
                                     <div role="option" data-value="option3">Ebenezer</div>
-                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <div class="custom-select-wrapper">
-                                    <div class="custom-select shadow-sm" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
+                        </div>
+                        <div class="col-md-3">
+                            <div class="custom-select-wrapper">
+                                <div class="custom-select shadow-sm" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
                                     Filter By Items
-                                    </div>
-                                    <div class="select-options" role="listbox">
+                                </div>
+                                <div class="select-options" role="listbox">
                                     <div role="option" data-value="option1">Garbage</div>
                                     <div role="option" data-value="option2">Electricity</div>
-                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                               <div class="custom-select-wrapper">
-                                    <div class="custom-select shadow-sm" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
+                        </div>
+                        <div class="col-md-3">
+                            <div class="custom-select-wrapper">
+                                <div class="custom-select shadow-sm" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
                                     Filter By Status
-                                    </div>
-                                    <div class="select-options" role="listbox">
+                                </div>
+                                <div class="select-options" role="listbox">
                                     <div role="option" data-value="option1">Paid</div>
                                     <div role="option" data-value="option2">Pending</div>
-                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <input type="date" class="form-control filter-shadow ">
                             </div>
                         </div>
-                        <div class="row mt-2 mb-2">
-                            <h6 class="mb-0 contact_section_header summary mb-2"></i> <b>Summary</b></h6>
-                            <div class="col-md-3">
-                                <div class="summary-info-card shadow-sm bg-white p-3 rounded">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <i class="fa fa-box icon"></i>
-                                        <div>
-                                            <div class="summary-info-card-label">ITEMS</div>
-                                            <b id="items" class="summary-info-card-value">300 PIECES</b>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Phone Card -->
-                            <div class="col-md-3">
-                                <div class="summary-info-card shadow-sm bg-white p-3 rounded">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <i class="fa fa-calendar-alt icon"></i>
-                                        <div>
-                                            <div class="summary-info-card-label">This Month</div>
-                                            <b id="duration" class="summary-info-card-value">Ksh 100,000</b>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- ID Card -->
-                             <div class="col-md-3">
-                                <div class="summary-info-card shadow-sm bg-white p-3 rounded">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <i class="fa fa-check-circle icon"></i>
-                                        <div>
-                                            <div class="summary-info-card-label">Paid</div>
-                                            <b id="paid" class="summary-info-card-value">KSH 45862394</b>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="summary-info-card shadow-sm bg-white p-3 rounded">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <i class="fa fa-hourglass-half icon"></i> 
-                                        <div>
-                                            <div class="summary-info-card-label">Pending </div>
-                                            <b id="pending" class="summary-info-card-value">KSH 45862394</b>
-                                        </div>
+                        <div class="col-md-3">
+                            <input type="date" class="form-control filter-shadow ">
+                        </div>
+                    </div>
+                    <div class="row mt-2 mb-2">
+                        <h6 class="mb-0 contact_section_header summary mb-2"></i> <b>Summary</b></h6>
+                        <div class="col-md-3">
+                            <div class="summary-info-card shadow-sm bg-white p-3 rounded">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="fa fa-box icon"></i>
+                                    <div>
+                                        <div class="summary-info-card-label">ITEMS</div>
+                                        <b id="items" class="summary-info-card-value">300 PIECES</b>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row mb-2">
-                            <div class="col-md-12 mb-4">
-                                <div class="card shadow-sm">
-                                    <div class="bg-white p-1 rounded-2 border-0">
-                                        <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #e9ecef;">
-                                            <a class="text-white fw-bold text-decoration-none text-dark" data-bs-toggle="collapse" href="#addExpense" role="button" aria-expanded="false" aria-controls="addExpense" onclick="toggleIcon(this)">
-                                                <span id="toggleIcon" >➕</span> Click Here to Add an Expense
-                                            </a>
-                                        </div>
+                        <!-- Phone Card -->
+                        <div class="col-md-3">
+                            <div class="summary-info-card shadow-sm bg-white p-3 rounded">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="fa fa-calendar-alt icon"></i>
+                                    <div>
+                                        <div class="summary-info-card-label">This Month</div>
+                                        <b id="duration" class="summary-info-card-value">Ksh 100,000</b>
                                     </div>
-                                    <!-- ✅ Fixed & Complete Expense Form -->
-                                    <div class="collapse" id="addExpense">
-                                        <div class="card-body border-top border-2">
-                                            <div class="alert mb-4" style="background-color: #FFF3CD; color: #856404; border: 1px solid #FFE8A1;">
-                                                <i class="fas fa-exclamation-circle mr-2"></i> Please fill out all fields carefully to avoid delays.
-                                            </div>
-                                            <div class="text-muted">Expense No <span style="color:rgb(0 28 63 / 60%); "><b>34687</b></span></b> </div>
-                                            <div class="card mb-3 shadow-sm border-0">
-                                                <div class="card-body">
-                                                    <form method="POST" id="expenseForm">
-                                                        <div class="row g-3">
-                                                            <div class="col-md-4">
-                                                                <label class="form-label fw-bold">Expense for the Month of</label>
-                                                                <div class="mb-3" style="width: 100%;">
-                                                                    <select class="form-select" id="monthSelect" name="month" required>
-                                                                        <option value="" selected disabled>Select Month</option>
-                                                                        <option value="January">January</option>
-                                                                        <option value="February">February</option>
-                                                                        <option value="March">March</option>
-                                                                        <option value="April">April</option>
-                                                                        <option value="May">May</option>
-                                                                        <option value="June">June</option>
-                                                                        <option value="July">July</option>
-                                                                        <option value="August">August</option>
-                                                                        <option value="September">September</option>
-                                                                        <option value="October">October</option>
-                                                                        <option value="November">November</option>
-                                                                        <option value="December">December</option>
-                                                                    </select>
-                                                            </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <label class="form-label fw-bold">Year</label>
-                                                                <input type="number" class="form-control" placeholder="2025" name="year" required />
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <label class="form-label fw-bold">Supplier</label>
-                                                                <input type="text" class="form-control" placeholder="Supplier" name="supplier" required />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ID Card -->
+                        <div class="col-md-3">
+                            <div class="summary-info-card shadow-sm bg-white p-3 rounded">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="fa fa-check-circle icon"></i>
+                                    <div>
+                                        <div class="summary-info-card-label">Paid</div>
+                                        <b id="paid" class="summary-info-card-value">KSH 45862394</b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="summary-info-card shadow-sm bg-white p-3 rounded">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="fa fa-hourglass-half icon"></i>
+                                    <div>
+                                        <div class="summary-info-card-label">Pending </div>
+                                        <b id="pending" class="summary-info-card-value">KSH 45862394</b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-12 mb-4">
+                            <div class="card shadow-sm">
+                                <div class="bg-white p-1 rounded-2 border-0">
+                                    <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #e9ecef;">
+                                        <a class="text-white fw-bold text-decoration-none text-dark" data-bs-toggle="collapse" href="#addExpense" role="button" aria-expanded="false" aria-controls="addExpense" onclick="toggleIcon(this)">
+                                            <span id="toggleIcon">➕</span> Click Here to Add an Expense
+                                        </a>
+                                    </div>
+                                </div>
+                                <!-- ✅ Fixed & Complete Expense Form -->
+                                <div class="collapse" id="addExpense">
+                                    <div class="card-body border-top border-2">
+                                        <div class="alert mb-4" style="background-color: #FFF3CD; color: #856404; border: 1px solid #FFE8A1;">
+                                            <i class="fas fa-exclamation-circle mr-2"></i> Please fill out all fields carefully to avoid delays.
+                                        </div>
+                                        <div class="text-muted">Expense No <span style="color:rgb(0 28 63 / 60%); "><b>34687</b></span></b> </div>
+                                        <div class="card mb-3 shadow-sm border-0">
+                                            <div class="card-body">
+                                                <form method="POST" id="expenseForm">
+                                                    <div class="row g-3">
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Expense for the Month of</label>
+                                                            <div class="mb-3" style="width: 100%;">
+                                                                <select class="form-select" id="monthSelect" name="month" required>
+                                                                    <option value="" selected disabled>Select Month</option>
+                                                                    <option value="January">January</option>
+                                                                    <option value="February">February</option>
+                                                                    <option value="March">March</option>
+                                                                    <option value="April">April</option>
+                                                                    <option value="May">May</option>
+                                                                    <option value="June">June</option>
+                                                                    <option value="July">July</option>
+                                                                    <option value="August">August</option>
+                                                                    <option value="September">September</option>
+                                                                    <option value="October">October</option>
+                                                                    <option value="November">November</option>
+                                                                    <option value="December">December</option>
+                                                                </select>
                                                             </div>
                                                         </div>
-                                                        <!-- Hidden total -->
-                                                        <div class="row mt-2">
-                                                            <div class="text-muted mt-4">Add the Spend items in the fields below</div>
-                                                            <div class="col-md-12" id="itemsContainer">
-                                                                <div class="row item-row g-3 mb-2">
-                                                                    <div class="col-md-2">
-                                                                        <label class="form-label fw-bold">ITEM(SERVICE)</label>
-                                                                        <div class="custom-select-wrapper" style="width: 100%;">
-                                                                            <div class="custom-select shadow-sm" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false" style="z-index: 1000;">
-                                                                                select
-                                                                            </div>
-                                                                            <div class="select-options" role="listbox">
-                                                                                <div role="option" data-value="option1">Garbage</div>
-                                                                                <div role="option" data-value="option2">Electricty</div>
-                                                                            </div>
-                                                                            <input type="hidden" name="ITEM[]" class="hiddenItemInput">
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Year</label>
+                                                            <input type="number" class="form-control" placeholder="2025" name="year" required />
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Supplier</label>
+                                                            <input type="text" class="form-control" placeholder="Supplier" name="supplier" required />
+                                                        </div>
+                                                    </div>
+                                                    <!-- Hidden total -->
+                                                    <div class="row mt-2">
+                                                        <div class="text-muted mt-4">Add the Spend items in the fields below</div>
+                                                        <div class="col-md-12" id="itemsContainer">
+                                                            <div class="row item-row g-3 mb-2">
+                                                                <div class="col-md-2">
+                                                                    <label class="form-label fw-bold">ITEM(SERVICE)</label>
+                                                                    <div class="custom-select-wrapper" style="width: 100%;">
+                                                                        <div class="custom-select shadow-sm" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false" style="z-index: 1000;">
+                                                                            select
                                                                         </div>
-                                                                        
-                                                                    </div>
-                                                                    <div class="col-md-2">
-                                                                        <label class="form-label fw-bold">Qty</label>
-                                                                        <input type="number" class="form-control qty" placeholder="1" name="qty[]" required />
-                                                                    </div>
-                                                                    <div class="col-md-2">
-                                                                        <label class="form-label fw-bold">Unit Price</label>
-                                                                        <input type="number" class="form-control unit-price" placeholder="123" name="unit_price[]" required />
-                                                                    </div>
-                                                                    <div class="col-md-2">
-                                                                        <label class="form-label fw-bold">Taxes</label>
-                                                                        <select class="form-select" name="taxes[]" required>
-                                                                            <option value="" selected disabled>--Select Option--</option>
-                                                                            <option value="inclusive">VAT 16% Inclusive</option>
-                                                                            <option value="exclusive">VAT 16% Exclusive</option>
-                                                                            <option value="zero">Zero Rated</option>
-                                                                            <option value="exempt">Exempted</option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="col-md-2">
-                                                                        <label class="form-label fw-bold">Total</label>
-                                                                        <input type="text" class="form-control item-total" placeholder="Ksh 0.00" name="item_total[]" required readonly />
-                                                                    </div>
-                                                                    <div class="col-md-2" style="vertical-align:middle;"> 
-                                                                        <label class="form-label fw-bold" ></label>                                      
-                                                                        <div class="personal-info-card shadow-sm bg-white rounded d-flex p-1 align-items-center justify-content-center">
-                                                                            <button class="btn btn-sm btn-danger text" data-bs-toggle="modal" data-bs-target="#editPersonalInfoModal">
-                                                                                <i class="fas fa-trash me-1 icon" style="color:white"></i> <b>Remove</b> 
-                                                                            </button>
+                                                                        <div class="select-options" role="listbox">
+                                                                            <div role="option" data-value="option1">Garbage</div>
+                                                                            <div role="option" data-value="option2">Electricty</div>
                                                                         </div>
+                                                                        <input type="hidden" name="ITEM[]" class="hiddenItemInput">
+                                                                    </div>
+
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label class="form-label fw-bold">Qty</label>
+                                                                    <input type="number" class="form-control qty" placeholder="1" name="qty[]" required />
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label class="form-label fw-bold">Unit Price</label>
+                                                                    <input type="number" class="form-control unit-price" placeholder="123" name="unit_price[]" required />
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label class="form-label fw-bold">Taxes</label>
+                                                                    <select class="form-select" name="taxes[]" required>
+                                                                        <option value="" selected disabled>--Select Option--</option>
+                                                                        <option value="inclusive">VAT 16% Inclusive</option>
+                                                                        <option value="exclusive">VAT 16% Exclusive</option>
+                                                                        <option value="zero">Zero Rated</option>
+                                                                        <option value="exempt">Exempted</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label class="form-label fw-bold">Total</label>
+                                                                    <input type="text" class="form-control item-total" placeholder="Ksh 0.00" name="item_total[]" required readonly />
+                                                                </div>
+                                                                <div class="col-md-2" style="vertical-align:middle;">
+                                                                    <label class="form-label fw-bold"></label>
+                                                                    <div class="personal-info-card shadow-sm bg-white rounded d-flex p-1 align-items-center justify-content-center">
+                                                                        <button class="btn btn-sm btn-danger text" data-bs-toggle="modal" data-bs-target="#editPersonalInfoModal">
+                                                                            <i class="fas fa-trash me-1 icon" style="color:white"></i> <b>Remove</b>
+                                                                        </button>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <!-- Spend items table -->
-                                                        <div class="row">
-                                                            <div class="row mt-4">
+                                                    </div>
+                                                    <!-- Spend items table -->
+                                                    <div class="row">
+                                                        <div class="row mt-4">
+                                                            <div class="col-md-12 d-flex justify-content-end">
+                                                                <div class="col-md-12 d-flex justify-content-end">
                                                                     <div class="col-md-12 d-flex justify-content-end">
-                                                                        <div class="col-md-12 d-flex justify-content-end">
-                                                                        <div class="col-md-12 d-flex justify-content-end">
                                                                         <div style="width: 100%;">
                                                                             <div class="d-flex flex-column align-items-end">
-                                                                            
-                                                                            <div class="d-flex justify-content-between w-100 mb-2">
-                                                                                <label class="me-2 border-end pe-3 text-end w-50"><strong>Sub-Total:</strong></label>
-                                                                                <input type="text" readonly class="form-control-plaintext w-50 ps-3" id="subTotal" value="Ksh 10,500">
-                                                                            </div>
 
-                                                                            <div class="d-flex justify-content-between w-100 mb-2">
-                                                                                <label class="me-2 border-end pe-3 text-end w-50"><strong>VAT 16%:</strong></label>
-                                                                                <input type="text" readonly class="form-control-plaintext w-50 ps-3" id="vatAmount" value="Ksh 1,500">
-                                                                            </div>
+                                                                                <div class="d-flex justify-content-between w-100 mb-2">
+                                                                                    <label class="me-2 border-end pe-3 text-end w-50"><strong>Sub-Total:</strong></label>
+                                                                                    <input type="text" readonly class="form-control-plaintext w-50 ps-3" id="subTotal" value="Ksh 10,500">
+                                                                                </div>
 
-                                                                            <div class="d-flex justify-content-between w-100 mb-2">
-                                                                                <label class="me-2 border-end pe-3 text-end w-50"><strong>Zero Rated (VAT):</strong></label>
-                                                                                <input type="text" readonly class="form-control-plaintext w-50 ps-3" value="Ksh 0">
-                                                                            </div>
+                                                                                <div class="d-flex justify-content-between w-100 mb-2">
+                                                                                    <label class="me-2 border-end pe-3 text-end w-50"><strong>VAT 16%:</strong></label>
+                                                                                    <input type="text" readonly class="form-control-plaintext w-50 ps-3" id="vatAmount" value="Ksh 1,500">
+                                                                                </div>
 
-                                                                            <div class="d-flex justify-content-between w-100 mt-3 pt-2 border-top border-warning">
-                                                                                <label class="me-2 border-end pe-3 text-end w-50"><strong>Total:</strong></label>
-                                                                                <input type="hidden" name="total" id="grandTotalNumber" value="0.00" />
-                                                                                <input type="text" readonly class="form-control-plaintext w-50 ps-3 fw-bold" id="grandTotal" value="Ksh 12,000">
-                                                                            </div>
+                                                                                <div class="d-flex justify-content-between w-100 mb-2">
+                                                                                    <label class="me-2 border-end pe-3 text-end w-50"><strong>Zero Rated (VAT):</strong></label>
+                                                                                    <input type="text" readonly class="form-control-plaintext w-50 ps-3" value="Ksh 0">
+                                                                                </div>
+
+                                                                                <div class="d-flex justify-content-between w-100 mt-3 pt-2 border-top border-warning">
+                                                                                    <label class="me-2 border-end pe-3 text-end w-50"><strong>Total:</strong></label>
+                                                                                    <input type="hidden" name="total" id="grandTotalNumber" value="0.00" />
+                                                                                    <input type="text" readonly class="form-control-plaintext w-50 ps-3 fw-bold" id="grandTotal" value="Ksh 12,000">
+                                                                                </div>
 
                                                                             </div>
-                                                                        </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                    </div>
 
-                                                        <div class="row mt-3">
-                                                            <div class="col-md-12 d-flex justify-content-between">
-                                                                <button type="button" class="btn btn-outline-warning text-dark" onclick="addRow()">➕ Add More</button>
-                                                                <button type="submit" class="btn btn-secondary">✕  Close</button>
-                                                                <button type="submit" class="btn btn-outline-warning text-dark">✅ Submit</button>
-                                                            </div>
+                                                    <div class="row mt-3">
+                                                        <div class="col-md-12 d-flex justify-content-between">
+                                                            <button type="button" class="btn btn-outline-warning text-dark" onclick="addRow()">➕ Add More</button>
+                                                            <button type="submit" class="btn btn-secondary">✕ Close</button>
+                                                            <button type="submit" class="btn btn-outline-warning text-dark">✅ Submit</button>
                                                         </div>
-                                                    </form>
-                                                </div>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- /raw -->
-                        <div class="row mt-2 mb-5">
-                            <h6 class="mb-0 contact_section_header summary mb-2"></i> <b>Details</b></h6>
-                            <div class="col-md-12">
-                                <div class="details-container bg-white p-2 rounded Content shadow-sm">
-                                    <h3 class="details-container_header text-start"> <span id="displayed_building">All Expenses</span>  &nbsp;	|&nbsp;	 <span style="color:#FFC107"> <span id="enteries">3</span>  enteries</span></h3>
-                                    <div class="table-responsive" style="overflow-x: auto;">
-                                        <div id="top-bar" class="filter-pdf-excel mb-2">
-                                            <div class="d-flex" style="gap: 10px;">
-                                                <div id="custom-search">
-                                                    <input type="text" id="searchInput" placeholder="Search Expense...">
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="d-flex">
-                                                <div id="custom-buttons"></div>
+                    </div>
+                    <!-- /raw -->
+                    <div class="row mt-2 mb-5">
+                        <h6 class="mb-0 contact_section_header summary mb-2"></i> <b>Details</b></h6>
+                        <div class="col-md-12">
+                            <div class="details-container bg-white p-2 rounded Content shadow-sm">
+                                <h3 class="details-container_header text-start"> <span id="displayed_building">All Expenses</span> &nbsp; |&nbsp; <span style="color:#FFC107"> <span id="enteries">3</span> enteries</span></h3>
+                                <div class="table-responsive" style="overflow-x: auto;">
+                                    <div id="top-bar" class="filter-pdf-excel mb-2">
+                                        <div class="d-flex" style="gap: 10px;">
+                                            <div id="custom-search">
+                                                <input type="text" id="searchInput" placeholder="Search Expense...">
                                             </div>
                                         </div>
-                                        <table id="repaireExpenses" style="width: 100%; min-width: 600px;">
-                                            <thead>
-                                                <tr>
-                                                    <th>Date</th>
-                                                    <th>Supplier</th>
-                                                    <th>Expense No</th>
-                                                    <th>Totals</th>
-                                                    <th>Status</th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php foreach ($expenses as $exp): ?>
-                                                    <tr>
-                                                        <td><?= htmlspecialchars(date('d M Y', strtotime($exp['created_at']))) ?></td>
-                                                        <td><?= htmlspecialchars($exp['supplier']) ?></td>
-                                                        <td><?= htmlspecialchars($exp['id']) ?></td>
-                                                        <td>KSH <?= number_format($exp['total'], 2) ?></td>
-                                                        <td>
-                                                        <?php
-                                                            $status = strtolower($exp['status']);
-                                                            $statusLabel = '';
-                                                            
-                                                            if ($status === 'paid') {
-                                                            $statusLabel = '<span style="background-color: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Paid</span>';
-                                                            } elseif ($status === 'unpaid') {
-                                                            $statusLabel = '<span style="background-color: #FFC107; color: #00192D; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Unpaid</span>';
-                                                            } else {
-                                                            $statusLabel = '<span class="text-muted">' . htmlspecialchars($exp['status']) . '</span>';
-                                                            }
 
-                                                            echo $statusLabel;
+                                        <div class="d-flex">
+                                            <div id="custom-buttons"></div>
+                                        </div>
+                                    </div>
+                                    <table id="repaireExpenses" style="width: 100%; min-width: 600px;">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Supplier</th>
+                                                <th>Expense No</th>
+                                                <th>Totals</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($expenses as $exp): ?>
+                                                <tr>
+                                                    <td><?= htmlspecialchars(date('d M Y', strtotime($exp['created_at']))) ?></td>
+                                                    <td><?= htmlspecialchars($exp['supplier']) ?></td>
+                                                    <td><?= htmlspecialchars($exp['id']) ?></td>
+                                                    <td>KSH <?= number_format($exp['total'], 2) ?></td>
+                                                    <td>
+                                                        <?php
+                                                        $status = strtolower($exp['status']);
+                                                        $statusLabel = '';
+
+                                                        if ($status === 'paid') {
+                                                            $statusLabel = '<span style="background-color: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Paid</span>';
+                                                        } elseif ($status === 'unpaid') {
+                                                            $statusLabel = '<span style="background-color: #FFC107; color: #00192D; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Unpaid</span>';
+                                                        } else {
+                                                            $statusLabel = '<span class="text-muted">' . htmlspecialchars($exp['status']) . '</span>';
+                                                        }
+
+                                                        echo $statusLabel;
                                                         ?>
 
                                                         <?php if ($status === 'unpaid'): ?>
                                                             <br>
-                                                            <button 
+                                                            <button
                                                                 class="btn btn-sm d-inline-flex align-items-center gap-1 mt-2"
                                                                 style="background-color: #00192D; color: #FFC107; border: none; border-radius: 8px; padding: 6px 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;"
-                                                                onclick="payExpense(<?= $exp['id'] ?>)"
-                                                                >
+                                                                onclick="payExpense(<?= $exp['id'] ?>)">
                                                                 <i class="bi bi-credit-card-fill"></i>
                                                                 Pay
                                                             </button>
                                                         <?php endif; ?>
-                                                        </td>
+                                                    </td>
 
-                                                        <td>
-                                                            <!-- view button -->
-                                                            <button 
-                                                                class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
-                                                                style="background-color: #00192D; color: white; border: none; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;"
-                                                                onclick="openExpenseModal(<?= $exp['id'] ?>)"
-                                                                >
-                                                                <i class="bi bi-eye-fill"></i>
-                                                                View
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                <?php endforeach; ?>
-                                            </tbody>
-                                        </table>
-                                        <!-- payment modal -->
-                                        <div class="modal fade" id="payExpenseModal" tabindex="-1" aria-labelledby="payExpenseLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered">
-                                                <div class="modal-content" style="border-radius: 12px; border: 1px solid #00192D;">
+                                                    <td>
+                                                        <!-- view button -->
+                                                        <button
+                                                            class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
+                                                            style="background-color: #00192D; color: white; border: none; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;"
+                                                            onclick="openExpenseModal(<?= $exp['id'] ?>)">
+                                                            <i class="bi bi-eye-fill"></i>
+                                                            View
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                    <!-- payment modal -->
+                                    <div class="modal fade" id="payExpenseModal" tabindex="-1" aria-labelledby="payExpenseLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content" style="border-radius: 12px; border: 1px solid #00192D;">
                                                 <div class="modal-header" style="background-color: #00192D; color: white;">
                                                     <h5 class="modal-title" id="payExpenseLabel">Pay Expense</h5>
                                                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -528,41 +525,40 @@ try {
 
                                                 <div class="modal-body">
                                                     <form id="payExpenseForm">
-                                                    <input type="hidden" name="expense_id" id="expenseId">
+                                                        <input type="hidden" name="expense_id" id="expenseId">
 
-                                                    <div class="mb-3">
-                                                        <label for="amount" class="form-label">Amount to Pay</label>
-                                                        <input type="number" class="form-control" id="amount" name="amount" required>
-                                                    </div>
+                                                        <div class="mb-3">
+                                                            <label for="amount" class="form-label">Amount to Pay</label>
+                                                            <input type="number" class="form-control" id="amount" name="amount" required>
+                                                        </div>
 
-                                                    <div class="mb-3">
-                                                        <label for="paymentDate" class="form-label">Payment Date</label>
-                                                        <input type="date" class="form-control" id="paymentDate" name="payment_date" required>
-                                                    </div>
+                                                        <div class="mb-3">
+                                                            <label for="paymentDate" class="form-label">Payment Date</label>
+                                                            <input type="date" class="form-control" id="paymentDate" name="payment_date" required>
+                                                        </div>
 
-                                                    <div class="mb-3">
-                                                        <label for="paymentMethod" class="form-label">Payment Method</label>
-                                                        <select class="form-select" id="paymentMethod" name="payment_method" required>
-                                                        <option value="cash">Cash</option>
-                                                        <option value="mpesa">M-Pesa</option>
-                                                        <option value="bank">Bank Transfer</option>
-                                                        <option value="card">Card</option>
-                                                        </select>
-                                                    </div>
+                                                        <div class="mb-3">
+                                                            <label for="paymentMethod" class="form-label">Payment Method</label>
+                                                            <select class="form-select" id="paymentMethod" name="payment_method" required>
+                                                                <option value="cash">Cash</option>
+                                                                <option value="mpesa">M-Pesa</option>
+                                                                <option value="bank">Bank Transfer</option>
+                                                                <option value="card">Card</option>
+                                                            </select>
+                                                        </div>
 
-                                                    <div class="mb-3">
-                                                        <label for="reference" class="form-label">Reference / Memo</label>
-                                                        <input type="text" class="form-control" id="reference" name="reference">
-                                                    </div>
+                                                        <div class="mb-3">
+                                                            <label for="reference" class="form-label">Reference / Memo</label>
+                                                            <input type="text" class="form-control" id="reference" name="reference">
+                                                        </div>
                                                     </form>
                                                 </div>
 
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                                     <button type="submit" form="payExpenseForm" class="btn" style="background-color: #FFC107; color: #00192D;">
-                                                    <i class="bi bi-credit-card"></i> Confirm Payment
+                                                        <i class="bi bi-credit-card"></i> Confirm Payment
                                                     </button>
-                                                </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -570,31 +566,32 @@ try {
                                 </div>
                             </div>
                         </div>
-                        <!-- /row -->
-                        <div class="row graph">
-                            <div class="col-md-12">
-                                <div class="bg-white p-2 shadow rounded-2">
-                                    <?php
-                                    // Group expenses by month and sum totals
-                                    $monthlyTotals = [];
-                                    try {
-                                        $stmt = $pdo->query("SELECT MONTH(created_at) AS month, SUM(total) AS total FROM expenses GROUP BY MONTH(created_at)");
-                                        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                            $monthNum = (int)$row['month'];
-                                            $monthlyTotals[$monthNum] = (float)$row['total'];
-                                        }
-                                    } catch (PDOException $e) {
-                                        $monthlyTotals = [];
+                    </div>
+                    <!-- /row -->
+                    <div class="row graph">
+                        <div class="col-md-12">
+                            <div class="bg-white p-2 shadow rounded-2">
+                                <?php
+                                // Group expenses by month and sum totals
+                                $monthlyTotals = [];
+                                try {
+                                    $stmt = $pdo->query("SELECT MONTH(created_at) AS month, SUM(total) AS total FROM expenses GROUP BY MONTH(created_at)");
+                                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                        $monthNum = (int)$row['month'];
+                                        $monthlyTotals[$monthNum] = (float)$row['total'];
                                     }
-                                    ?>
-                                    <!-- Line Chart: Expenses vs Months -->
-                                        <h6 class="fw-bold text-center">📊 Monthly Expense Trends</h6>
-                                        <canvas id="monthlyExpenseChart" height="100"></canvas>
-                                </div>
+                                } catch (PDOException $e) {
+                                    $monthlyTotals = [];
+                                }
+                                ?>
+                                <!-- Line Chart: Expenses vs Months -->
+                                <h6 class="fw-bold text-center">📊 Monthly Expense Trends</h6>
+                                <canvas id="monthlyExpenseChart" height="100"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
             <!--end::App Content-->
         </main>
         <!--end::App Main-->
@@ -615,117 +612,117 @@ try {
 
 
         <!-- Models -->
-         <!-- 🎉 Premium Stylish Modal -->
-                            <div class="modal fade" id="expenseModal" tabindex="-1" role="dialog" aria-labelledby="expenseModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                                    <div class="modal-content shadow-lg rounded-4">
+        <!-- 🎉 Premium Stylish Modal -->
+        <div class="modal fade" id="expenseModal" tabindex="-1" role="dialog" aria-labelledby="expenseModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content shadow-lg rounded-4">
 
-                                        <!-- Header with gradient -->
-                                        <div class="modal-header" style="background: linear-gradient(135deg, #00192D, #004455); color: #FFC107; border-bottom: none; border-top-left-radius: 16px; border-top-right-radius: 16px;">
-                                            <h5 class="modal-title d-flex align-items-center" id="expenseModalLabel">
-                                                <i class="fas fa-file-invoice-dollar fa-lg me-3"></i> Expense Details
-                                            </h5>
-                                        </div>
+                    <!-- Header with gradient -->
+                    <div class="modal-header" style="background: linear-gradient(135deg, #00192D, #004455); color: #FFC107; border-bottom: none; border-top-left-radius: 16px; border-top-right-radius: 16px;">
+                        <h5 class="modal-title d-flex align-items-center" id="expenseModalLabel">
+                            <i class="fas fa-file-invoice-dollar fa-lg me-3"></i> Expense Details
+                        </h5>
+                    </div>
 
-                                        <!-- Body with subtle background -->
-                                        <div class="modal-body bg-light px-4 py-4">
+                    <!-- Body with subtle background -->
+                    <div class="modal-body bg-light px-4 py-4">
 
-                                            <!-- Group 1: Date & Supplier -->
-                                            <div class="d-flex flex-wrap gap-3 mb-4">
-                                                <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
-                                                    <div class="d-flex align-items-center mb-2 text-primary">
-                                                        <i class="fas fa-calendar-alt fa-fw me-2"></i>
-                                                        <span class="fw-semibold">Date</span>
-                                                    </div>
-                                                    <div id="modal-date" class="text-break fs-5"></div>
-                                                </div>
-                                                <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
-                                                    <div class="d-flex align-items-center mb-2 text-success">
-                                                        <i class="fas fa-store fa-fw me-2"></i>
-                                                        <span class="fw-semibold">Supplier</span>
-                                                    </div>
-                                                    <div id="modal-supplier" class="text-break fs-5"></div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Group 2: Expense # & Item -->
-                                            <div class="d-flex flex-wrap gap-3 mb-4">
-                                                <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
-                                                    <div class="d-flex align-items-center mb-2 text-warning">
-                                                        <i class="fas fa-hashtag fa-fw me-2"></i>
-                                                        <span class="fw-semibold">Expense Number</span>
-                                                    </div>
-                                                    <div id="modal-expense-number" class="text-break fs-5"></div>
-                                                </div>
-                                                <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
-                                                    <div class="d-flex align-items-center mb-2 text-secondary">
-                                                        <i class="fas fa-box fa-fw me-2"></i>
-                                                        <span class="fw-semibold">Item</span>
-                                                    </div>
-                                                    <div id="modal-item" class="text-break fs-5"></div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Group 3: Description -->
-                                            <div class="mb-4 p-3 bg-white rounded shadow-sm">
-                                                <div class="d-flex align-items-center mb-2 text-muted">
-                                                    <i class="fas fa-align-left fa-fw me-2"></i>
-                                                    <span class="fw-semibold">Description</span>
-                                                </div>
-                                                <div id="modal-description" class="text-break fs-5"></div>
-                                            </div>
-
-                                            <!-- Group 4: Qty, Unit Price & Taxes -->
-                                            <div class="d-flex flex-wrap gap-3 mb-4">
-                                                <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
-                                                    <div class="d-flex align-items-center mb-2 text-info">
-                                                        <i class="fas fa-sort-numeric-up fa-fw me-2"></i>
-                                                        <span class="fw-semibold">Quantity</span>
-                                                    </div>
-                                                    <div id="modal-qty" class="fs-5"></div>
-                                                </div>
-                                                <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
-                                                    <div class="d-flex align-items-center mb-2 text-success">
-                                                        <i class="fas fa-money-bill-wave fa-fw me-2"></i>
-                                                        <span class="fw-semibold">Unit Price</span>
-                                                    </div>
-                                                    <div id="modal-unit-price" class="fs-5"></div>
-                                                </div>
-                                                <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
-                                                    <div class="d-flex align-items-center mb-2 text-warning">
-                                                        <i class="fas fa-percent fa-fw me-2"></i>
-                                                        <span class="fw-semibold">Taxes</span>
-                                                    </div>
-                                                    <div id="modal-taxes" class="fs-5"></div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Total -->
-                                            <div class="p-3 bg-white rounded shadow-sm border border-danger">
-                                                <div class="d-flex align-items-center mb-2 text-danger">
-                                                    <i class="fas fa-calculator fa-fw me-2"></i>
-                                                    <span class="fw-semibold fs-4">Total</span>
-                                                </div>
-                                                <div id="modal-total" class="fs-3 fw-bold text-danger"></div>
-                                            </div>
-
-                                        </div>
-
-                                        <!-- Footer -->
-                                        <div class="modal-footer justify-content-center bg-white rounded-bottom" style="border-top: none;">
-                                            <button type="button" class="btn btn-warning px-4 py-2 fw-semibold shadow-sm" data-bs-dismiss="modal" style="letter-spacing: 0.03em;">
-                                                <i class="fas fa-times me-2"></i> Close
-                                            </button>
-                                        </div>
-
-                                    </div>
+                        <!-- Group 1: Date & Supplier -->
+                        <div class="d-flex flex-wrap gap-3 mb-4">
+                            <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
+                                <div class="d-flex align-items-center mb-2 text-primary">
+                                    <i class="fas fa-calendar-alt fa-fw me-2"></i>
+                                    <span class="fw-semibold">Date</span>
                                 </div>
+                                <div id="modal-date" class="text-break fs-5"></div>
                             </div>
+                            <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
+                                <div class="d-flex align-items-center mb-2 text-success">
+                                    <i class="fas fa-store fa-fw me-2"></i>
+                                    <span class="fw-semibold">Supplier</span>
+                                </div>
+                                <div id="modal-supplier" class="text-break fs-5"></div>
+                            </div>
+                        </div>
+
+                        <!-- Group 2: Expense # & Item -->
+                        <div class="d-flex flex-wrap gap-3 mb-4">
+                            <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
+                                <div class="d-flex align-items-center mb-2 text-warning">
+                                    <i class="fas fa-hashtag fa-fw me-2"></i>
+                                    <span class="fw-semibold">Expense Number</span>
+                                </div>
+                                <div id="modal-expense-number" class="text-break fs-5"></div>
+                            </div>
+                            <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
+                                <div class="d-flex align-items-center mb-2 text-secondary">
+                                    <i class="fas fa-box fa-fw me-2"></i>
+                                    <span class="fw-semibold">Item</span>
+                                </div>
+                                <div id="modal-item" class="text-break fs-5"></div>
+                            </div>
+                        </div>
+
+                        <!-- Group 3: Description -->
+                        <div class="mb-4 p-3 bg-white rounded shadow-sm">
+                            <div class="d-flex align-items-center mb-2 text-muted">
+                                <i class="fas fa-align-left fa-fw me-2"></i>
+                                <span class="fw-semibold">Description</span>
+                            </div>
+                            <div id="modal-description" class="text-break fs-5"></div>
+                        </div>
+
+                        <!-- Group 4: Qty, Unit Price & Taxes -->
+                        <div class="d-flex flex-wrap gap-3 mb-4">
+                            <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
+                                <div class="d-flex align-items-center mb-2 text-info">
+                                    <i class="fas fa-sort-numeric-up fa-fw me-2"></i>
+                                    <span class="fw-semibold">Quantity</span>
+                                </div>
+                                <div id="modal-qty" class="fs-5"></div>
+                            </div>
+                            <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
+                                <div class="d-flex align-items-center mb-2 text-success">
+                                    <i class="fas fa-money-bill-wave fa-fw me-2"></i>
+                                    <span class="fw-semibold">Unit Price</span>
+                                </div>
+                                <div id="modal-unit-price" class="fs-5"></div>
+                            </div>
+                            <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
+                                <div class="d-flex align-items-center mb-2 text-warning">
+                                    <i class="fas fa-percent fa-fw me-2"></i>
+                                    <span class="fw-semibold">Taxes</span>
+                                </div>
+                                <div id="modal-taxes" class="fs-5"></div>
+                            </div>
+                        </div>
+
+                        <!-- Total -->
+                        <div class="p-3 bg-white rounded shadow-sm border border-danger">
+                            <div class="d-flex align-items-center mb-2 text-danger">
+                                <i class="fas fa-calculator fa-fw me-2"></i>
+                                <span class="fw-semibold fs-4">Total</span>
+                            </div>
+                            <div id="modal-total" class="fs-3 fw-bold text-danger"></div>
+                        </div>
+
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="modal-footer justify-content-center bg-white rounded-bottom" style="border-top: none;">
+                        <button type="button" class="btn btn-warning px-4 py-2 fw-semibold shadow-sm" data-bs-dismiss="modal" style="letter-spacing: 0.03em;">
+                            <i class="fas fa-times me-2"></i> Close
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
     <!--end::App Wrapper-->
 
     <!-- Main Js File -->
-    <script src="../../../dist/js/adminlte.js"></script> 
+    <script src="../../../dist/js/adminlte.js"></script>
     <script src="expense.js"></script>
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -768,62 +765,61 @@ try {
 
     <!--end::Script-->
     <!-- dataTable control -->
-     <!-- DATE TABLES -->
-      
-</script>
-  <script>
-    $(document).ready(function () {
-      const table = $('#repaireExpenses').DataTable({
-        dom: 'Brtip', // ⬅ Changed to include Buttons in DOM
-        order: [], // ⬅ disables automatic ordering by DataTables
-        buttons: [
-          {
-            extend: 'excelHtml5',
-            text: 'Excel',
-            exportOptions: {
-              columns: ':not(:last-child)' // ⬅ Exclude last column
-            }
-          },
-          {
-            extend: 'pdfHtml5',
-            text: 'PDF',
-            exportOptions: {
-              columns: ':not(:last-child)' // ⬅ Exclude last column
-            },
-            customize: function (doc) {
-              // Center table
-              doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+    <!-- DATE TABLES -->
 
-              // Optional: center-align the entire table
-              doc.styles.tableHeader.alignment = 'center';
-              doc.styles.tableBodyEven.alignment = 'center';
-              doc.styles.tableBodyOdd.alignment = 'center';
+    </script>
+    <script>
+        $(document).ready(function() {
+            const table = $('#repaireExpenses').DataTable({
+                dom: 'Brtip', // ⬅ Changed to include Buttons in DOM
+                order: [], // ⬅ disables automatic ordering by DataTables
+                buttons: [{
+                        extend: 'excelHtml5',
+                        text: 'Excel',
+                        exportOptions: {
+                            columns: ':not(:last-child)' // ⬅ Exclude last column
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: 'PDF',
+                        exportOptions: {
+                            columns: ':not(:last-child)' // ⬅ Exclude last column
+                        },
+                        customize: function(doc) {
+                            // Center table
+                            doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
 
-              const body = doc.content[1].table.body;
-                  for (let i = 1; i < body.length; i++) { // start from 1 to skip header
-                    if (body[i][4]) {
-                      body[i][4].color = 'blue'; // set email column to blue
+                            // Optional: center-align the entire table
+                            doc.styles.tableHeader.alignment = 'center';
+                            doc.styles.tableBodyEven.alignment = 'center';
+                            doc.styles.tableBodyOdd.alignment = 'center';
+
+                            const body = doc.content[1].table.body;
+                            for (let i = 1; i < body.length; i++) { // start from 1 to skip header
+                                if (body[i][4]) {
+                                    body[i][4].color = 'blue'; // set email column to blue
+                                }
+                            }
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print',
+                        exportOptions: {
+                            columns: ':not(:last-child)' // ⬅ Exclude last column from print
+                        }
                     }
-                  }
-            }
-          },
-              {
-            extend: 'print',
-            text: 'Print',
-            exportOptions: {
-              columns: ':not(:last-child)' // ⬅ Exclude last column from print
-            }
-          }
-        ]
-      });
-      // Append buttons to your div
-      table.buttons().container().appendTo('#custom-buttons');
-      // Custom search
-      $('#searchInput').on('keyup', function () {
-        table.search(this.value).draw();
-      });
-    });
-  </script>
+                ]
+            });
+            // Append buttons to your div
+            table.buttons().container().appendTo('#custom-buttons');
+            // Custom search
+            $('#searchInput').on('keyup', function() {
+                table.search(this.value).draw();
+            });
+        });
+    </script>
     <!-- date display only future date -->
 
     <script>
@@ -945,9 +941,9 @@ try {
                 });
         }
     </script>
-    
 
-                                    <!-- select wrapper -->
+
+    <!-- select wrapper -->
 
 
     <!-- Scripts -->
