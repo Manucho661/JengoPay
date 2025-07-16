@@ -334,6 +334,17 @@ HTML;
                                       <i class="bi bi-download"></i>EDIT
                                     </button> -->
 
+                                    <div class="modal-footer">
+    <button type="button" class="btn me-2" style="color: #FFC107; background-color: #00192D;" onclick="window.print()">
+        <i class="bi bi-printer-fill"></i> Print Invoice
+    </button>
+
+    <button type="button" class="btn" style="color: #FFC107; background-color: #00192D;" id="downloadPdf">
+        <i class="bi bi-download"></i> Download PDF
+    </button>
+</div>
+
+
 
 
             <!-- Rendered invoice styled like modal -->
@@ -428,10 +439,7 @@ HTML;
         }
     }
     ?>
-
-    
 </main>
-
 
 
 </div><!-- /.wrapper -->

@@ -683,6 +683,8 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
             }
         }
 
+
+
         #invoicePreviewPanel {
   position: fixed;
   top: 0;
@@ -759,6 +761,66 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
     display: block;
 }
 
+.searchable-item-container {
+  position: relative;
+  width: 100%;
+}
+
+.searchable-item-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.searchable-item-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  min-width: 250px; /* Ensure enough width for content */
+  max-height: 300px; /* Increased to show more items */
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.searchable-item-group {
+  padding: 5px 0;
+}
+
+.searchable-item-option {
+  padding: 8px 15px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.searchable-item-option:hover {
+  background-color: #f5f5f5;
+}
+
+.account-code {
+  font-weight: bold;
+  margin-right: 10px;
+  color: #555;
+  min-width: 60px; /* Ensure code column has consistent width */
+}
+
+.account-name {
+  flex-grow: 1;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
       </style>
 </head>
 
@@ -807,9 +869,9 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
                         <button class="btn btn-outline" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-filter"></i> Filter
                         </button>
-                        <button class="btn btn-outline" style="color: #FFC107; background-color:#00192D;">
+                        <!-- <button class="btn btn-outline" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-download"></i> Export
-                        </button>
+                        </button> -->
                         <button class="btn" id="create-invoice-btn" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-plus"></i> Create Invoice
                         </button>
@@ -1129,7 +1191,6 @@ foreach ($invoices as $invoice) {
           <?php endforeach; ?>
         </select>
       </td>
-
       <style>
 
 </style>
@@ -3032,6 +3093,103 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 
+ <script>
+/**
+ * Turn any .searchable-select <select> into a Select2 box
+ * Call this once at startup *and* after you add a new row dynamically.
+ */
+function initItemSelect($scope = $(document)) {
+    $scope.find('.searchable-select').select2({
+        width: '100%',                 // fills the <td>
+        placeholder: $(this).data('placeholder'),
+        allowClear: true               // little “×” to clear a choice
+    });
+}
+
+$(function () {
+    // ── 1️⃣  first initialise everything already on the page
+    initItemSelect();
+
+    // ── 2️⃣  if you have an “Add Row” button, re‑init the new row
+    $('#addRowBtn').on('click', function () {
+        const $newRow = $('#items-table tbody tr:first').clone(true);   // or however you create rows
+        // clear any previous values
+        $newRow.find('input, textarea').val('');
+        $newRow.find('select').val(null).trigger('change');
+
+        $('#items-table tbody').append($newRow);
+        initItemSelect($newRow);        // ⭐ make its select searchable
+    });
+});
+</script>
+
+
+<script>
+  $('.searchable-select').select2({
+    width:'100%',
+    placeholder:'Select or search an item…',
+    minimumInputLength: 2,
+    ajax: {
+        url: 'account-items-search.php',
+        dataType: 'json',
+        delay: 250,              // throttle queries
+        data: params => ({ q: params.term }),    // term typed by user
+        processResults: data => ({
+            results: data.map(item => ({
+                id: item.account_code,           // value sent to server
+                text: item.account_name          // visible label
+            }))
+        }),
+        cache: true
+    }
+});
+
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.searchable-item-container').forEach(container => {
+    const input = container.querySelector('.searchable-item-input');
+    const dropdown = container.querySelector('.searchable-item-dropdown');
+    const hiddenInput = container.querySelector('.selected-item-value');
+    const options = container.querySelectorAll('.searchable-item-option');
+
+    input.addEventListener('focus', function() {
+      dropdown.style.display = 'block';
+      filterOptions();
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!container.contains(e.target)) {
+        dropdown.style.display = 'none';
+      }
+    });
+
+    input.addEventListener('input', filterOptions);
+
+    options.forEach(option => {
+      option.addEventListener('click', function() {
+        // Show both code and name in the input when selected
+        input.value = `${this.querySelector('.account-code').textContent} - ${this.querySelector('.account-name').textContent}`;
+        hiddenInput.value = this.getAttribute('data-value');
+        dropdown.style.display = 'none';
+      });
+    });
+
+    function filterOptions() {
+      const searchTerm = input.value.toLowerCase();
+      options.forEach(option => {
+        const code = option.querySelector('.account-code').textContent.toLowerCase();
+        const name = option.querySelector('.account-name').textContent.toLowerCase();
+        if (code.includes(searchTerm) || name.includes(searchTerm)) {
+          option.style.display = 'flex'; /* Changed to flex to maintain layout */
+        } else {
+          option.style.display = 'none';
+        }
+      });
+    }
+  });
+});
+</script>
 </body>
 <!--end::Body-->
 
