@@ -65,25 +65,33 @@ echo "\n";
 // --- DEBUG END ---
 ?>
 
-<?php
-include '../db/connect.php';
 
-// Fetch invoices from database with status calculation
-$query = "SELECT
-            i.id,
-            i.invoice_number,
-            i.tenant,
-            i.invoice_date,
-            i.due_date,
-            i.total,
-            MAX(p.payment_date) as last_payment_date,
-            SUM(p.amount) as paid_amount
-          FROM invoice i
-          LEFT JOIN payments p ON i.id = p.invoice_id
-          GROUP BY i.id
-          ORDER BY i.invoice_date DESC";
-$result = $pdo->query($query);
+<?php
+require '../db/connect.php';
+
+$stmt = $pdo->query("
+    SELECT
+        i.invoice_number,
+        i.invoice_date,
+        i.due_date,
+        i.total,
+        CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
+    FROM invoice i
+    LEFT JOIN users u ON i.tenant = u.id
+    ORDER BY i.invoice_number DESC
+");
+
+$invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
+<?php
+// Get every building you need in the dropdown.
+$buildingsStmt = $pdo->query(
+    "SELECT building_id, building_name FROM buildings ORDER BY building_name"
+);
+$buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 
 <!doctype html>
 <html lang="en">
@@ -674,6 +682,145 @@ $result = $pdo->query($query);
                 padding: 8px 5px;
             }
         }
+
+
+
+        #invoicePreviewPanel {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 400px;
+  height: 100vh;
+  background: #fff;
+  box-shadow: -2px 0 8px rgba(0,0,0,0.3);
+  transition: right 0.3s ease-in-out;
+  z-index: 9999;
+}
+
+#invoicePreviewPanel.active {
+  right: 0;
+}
+
+.preview-content {
+  padding: 20px;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.close-btn {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.filter-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.filter-btn {
+    padding: 8px 12px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    display: none;
+    background-color: white;
+    border: 1px solid #ddd;
+    z-index: 100;
+    min-width: 120px;
+}
+
+.dropdown-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dropdown-menu ul li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.dropdown-menu ul li:hover {
+    background-color: #f0f0f0;
+}
+
+.filter-dropdown.open .dropdown-menu {
+    display: block;
+}
+
+.searchable-item-container {
+  position: relative;
+  width: 100%;
+}
+
+.searchable-item-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.searchable-item-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  min-width: 250px; /* Ensure enough width for content */
+  max-height: 300px; /* Increased to show more items */
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.searchable-item-group {
+  padding: 5px 0;
+}
+
+.searchable-item-option {
+  padding: 8px 15px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.searchable-item-option:hover {
+  background-color: #f5f5f5;
+}
+
+.account-code {
+  font-weight: bold;
+  margin-right: 10px;
+  color: #555;
+  min-width: 60px; /* Ensure code column has consistent width */
+}
+
+.account-name {
+  flex-grow: 1;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
       </style>
 </head>
 
@@ -719,13 +866,55 @@ $result = $pdo->query($query);
                 <div class="page-header">
                     <h1 class="page-title"> 🧾 Invoices</h1>
                     <div class="page-actions">
-                        <button class="btn btn-outline">
-                            <i class="fas fa-filter"></i> Filter
-                        </button>
-                        <button class="btn btn-outline">
+                    <button class="btn btn-outline" style="color: #FFC107; background-color:#00192D;" id="filterButton">
+                    <i class="fas fa-filter"></i> Filter
+                    </button>
+
+
+                    <!-- Filter Modal (hidden by default) -->
+<div id="filterModal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.4)">
+    <div style="background-color:#00192D; margin:5% auto; padding:20px; border:1px solid #FFC107; width:80%; max-width:600px; color:white;">
+        <span style="float:right; cursor:pointer" id="closeFilter">&times;</span>
+        <h3>Filter Invoices</h3>
+
+        <div style="margin-bottom:15px;">
+            <label>Status:</label>
+            <select id="statusFilter" class="form-control" style="background-color:#00192D; color:#FFC107; border:1px solid #FFC107">
+                <option value="">All</option>
+                <option value="draft">Draft</option>
+                <option value="sent">Sent</option>
+                <option value="paid">Paid</option>
+                <option value="overdue">Overdue</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+        </div>
+
+        <div style="margin-bottom:15px;">
+            <label>Payment Status:</label>
+            <select id="paymentFilter" class="form-control" style="background-color:#00192D; color:#FFC107; border:1px solid #FFC107">
+                <option value="">All</option>
+                <option value="unpaid">Unpaid</option>
+                <option value="partial">Partial</option>
+                <option value="paid">Paid</option>
+            </select>
+        </div>
+
+        <div style="margin-bottom:15px;">
+            <label>Date Range:</label>
+            <div style="display:flex; gap:10px;">
+                <input type="date" id="dateFrom" class="form-control" style="background-color:#00192D; color:#FFC107; border:1px solid #FFC107">
+                <input type="date" id="dateTo" class="form-control" style="background-color:#00192D; color:#FFC107; border:1px solid #FFC107">
+            </div>
+        </div>
+
+        <button id="applyFilter" class="btn" style="background-color:#FFC107; color:#00192D">Apply Filters</button>
+        <button id="resetFilter" class="btn btn-outline" style="color:#FFC107; border-color:#FFC107">Reset</button>
+    </div>
+</div>
+                        <!-- <button class="btn btn-outline" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-download"></i> Export
-                        </button>
-                        <button class="btn btn-primary" id="create-invoice-btn">
+                        </button> -->
+                        <button class="btn" id="create-invoice-btn" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-plus"></i> Create Invoice
                         </button>
                     </div>
@@ -777,10 +966,13 @@ $result = $pdo->query($query);
             <div class="over-flow" title="Invoice #">Invoice<!----></div>
         </div>
         <div class="invoice-customer">
-            <div class="over-flow" title="Customer">Customer<!----></div>
+            <div class="over-flow" title="Customer">Tenant<!----></div>
         </div>
         <div class="invoice-date">
             <div class="over-flow" title="Date">Date<!----></div>
+        </div>
+        <div class="invoice-date">
+            <div class="over-flow" title="Date">Due Date<!----></div>
         </div>
         <div class="invoice-amount">
             <div class="over-flow" title="Amount">Amount<!----></div>
@@ -795,89 +987,105 @@ $result = $pdo->query($query);
 
 
 
+   <?php
+// ----------------------------------------------------
+// 1) Fetch every invoice with its tenant's full name
+// ----------------------------------------------------
+$stmt = $pdo->query("
+    SELECT
+        i.id,
+        i.invoice_number,
+        i.invoice_date,
+        i.due_date,
+        i.total,
+        i.status,
+        CONCAT(u.first_name,' ',u.middle_name)  AS tenant_name
+    FROM invoice i
+    LEFT JOIN users u ON u.id = i.tenant
+    ORDER BY i.invoice_number DESC
+");
+
+$invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// ----------------------------------------------------
+// 2) Output each invoice item
+// ----------------------------------------------------
+foreach ($invoices as $invoice) {
+
+    // Friendly formats
+    $tenantName     = $invoice['tenant_name'] ?: 'Unknown';
+    $invoiceDate    = date('M d, Y', strtotime($invoice['invoice_date']));
+    $invoiceDueDate = date('M d, Y', strtotime($invoice['due_date']));
+    $amount         = number_format($invoice['total'], 2);
+
+    // Map DB status → badge + display text
+    switch ($invoice['status']) {
+      case 'sent':
+          $statusClass = 'badge-sent';
+          $statusText  = 'Sent';
+          $dataStatus  = 'pending';      // dropdown key
+          break;
+
+      case 'paid':
+          $statusClass = 'badge-paid';
+          $statusText  = 'Paid';
+          $dataStatus  = 'paid';
+          break;
+
+      case 'overdue':
+          $statusClass = 'badge-overdue';
+          $statusText  = 'Overdue';
+          $dataStatus  = 'overdue';
+          break;
+
+      case 'cancelled':
+          $statusClass = 'badge-cancelled';
+          $statusText  = 'Cancelled';
+          $dataStatus  = 'cancelled';     // not in dropdown yet
+          break;
+
+      default:            // draft
+          $statusClass = 'badge-draft';
+          $statusText  = 'Draft';
+          $dataStatus  = 'draft';
+  }
+    // Generate a link to open the invoice details
+    $href = 'invoice_details.php?id=' . $invoice['id'];
+
+    // ---- HTML block -------------------------------------------------
+    echo '<a href="'. $href .'" class="invoice-link">';
+    echo '
+        <div class="invoice-item">
+            <div class="invoice-checkbox">
+                <input type="checkbox" onclick="event.stopPropagation()">
+            </div>
+
+            <div class="invoice-number">'   . htmlspecialchars($invoice['invoice_number']) . '</div>
+            <div class="invoice-customer">' . htmlspecialchars($tenantName)               . '</div>
+            <div class="invoice-date">'      . $invoiceDate                                . '</div>
+            <div class="invoice-date">'      . $invoiceDueDate                             . '</div>
+            <div class="invoice-amount">'    . $amount                                     . '</div>
+
+            <div class="invoice-status">
+                <span class="status-badge '. $statusClass .'">'. $statusText .'</span>
+            </div>
+
+            <div class="invoice-actions">
+                <button class="action-btn" onclick="event.stopPropagation()">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+            </div>
+        </div>';
+    echo '</a>';
+}
+?>
+
                     <div class="invoice-list">
-                    <!-- Invoice Header (Matches invoice-item structure) -->
                         <!-- Invoice Item -->
                         <div class="invoice-item">
-                            <div class="invoice-checkbox">
-                                <input type="checkbox">
-                            </div>
-                            <div class="invoice-number">INV-2023-001</div>
-                            <div class="invoice-customer">Acme Corporation</div>
-                            <div class="invoice-date">May 15, 2023</div>
-                            <div class="invoice-amount">$1,250.00</div>
-                            <div class="invoice-status">
-                                <span class="status-badge status-paid">Paid</span>
-                            </div>
-                            <div class="invoice-actions">
-                                <button class="action-btn">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Invoice Item -->
-                        <div class="invoice-item">
-                            <div class="invoice-checkbox">
-                                <input type="checkbox">
-                            </div>
-                            <div class="invoice-number">INV-2023-002</div>
-                            <div class="invoice-customer">Globex Inc.</div>
-                            <div class="invoice-date">May 18, 2023</div>
-                            <div class="invoice-amount">$3,450.00</div>
-                            <div class="invoice-status">
-                                <span class="status-badge status-pending">Pending</span>
-                            </div>
-                            <div class="invoice-actions">
-                                <button class="action-btn">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Invoice Item -->
-                        <div class="invoice-item">
-                            <div class="invoice-checkbox">
-                                <input type="checkbox">
-                            </div>
-                            <div class="invoice-number">INV-2023-003</div>
-                            <div class="invoice-customer">Wayne Enterprises</div>
-                            <div class="invoice-date">May 5, 2023</div>
-                            <div class="invoice-amount">$2,150.00</div>
-                            <div class="invoice-status">
-                                <span class="status-badge status-overdue">Overdue</span>
-                            </div>
-                            <div class="invoice-actions">
-                                <button class="action-btn">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </button>
-                            </div>
-                        </div>
 
 
-
-                        <!-- Invoice Item -->
-                        <div class="invoice-item">
-                            <div class="invoice-checkbox">
-                                <input type="checkbox">
-                            </div>
-                            <div class="invoice-number">INV-2023-004</div>
-                            <div class="invoice-customer">Stark Industries</div>
-                            <div class="invoice-date">May 22, 2023</div>
-                            <div class="invoice-amount">$5,750.00</div>
-                            <div class="invoice-status">
-                                <span class="status-badge status-paid">Paid</span>
-                            </div>
-                            <div class="invoice-actions">
-                                <button class="action-btn">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Invoice Item -->
-                        <div class="invoice-item">
-                            <div class="invoice-checkbox">
+                            <!-- <div class="invoice-checkbox">
                                 <input type="checkbox">
                             </div>
                             <div class="invoice-number">INV-2023-005</div>
@@ -891,7 +1099,7 @@ $result = $pdo->query($query);
                                 <button class="action-btn">
                                     <i class="fas fa-ellipsis-v"></i>
                                 </button>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -899,66 +1107,34 @@ $result = $pdo->query($query);
 
 
 
-            <?php while ($invoice = $result->fetch(PDO::FETCH_ASSOC)):
-        // Determine invoice status
-        $currentDate = new DateTime();
-        $dueDate = new DateTime($invoice['due_date']);
-        $isOverdue = $currentDate > $dueDate;
-        $isPaid = $invoice['paid_amount'] >= $invoice['total'];
-        $isPartial = $invoice['paid_amount'] > 0 && !$isPaid;
-
-        if ($isPaid) {
-            $statusClass = 'status-paid';
-            $statusText = 'Paid';
-        } elseif ($isPartial) {
-            $statusClass = 'status-partial';
-            $statusText = 'Partial';
-        } elseif ($isOverdue) {
-            $statusClass = 'status-overdue';
-            $statusText = 'Overdue';
-        } else {
-            $statusClass = 'status-pending';
-            $statusText = 'Pending';
-        }
-    ?>
-             <!-- Invoice Item -->
-    <div class="invoice-item" data-invoice-id="<?= $invoice['id'] ?>">
-        <div class="invoice-checkbox">
-            <input type="checkbox" class="invoice-checkbox" data-id="<?= $invoice['id'] ?>">
-        </div>
-        <div class="invoice-number">
-            <a href="view_invoice.php?id=<?= $invoice['id'] ?>" class="invoice-link">
-                <?= htmlspecialchars($invoice['invoice_number']) ?>
-            </a>
-        </div>
-        <div class="invoice-customer"><?= htmlspecialchars($invoice['tenant']) ?></div>
-        <div class="invoice-date"><?= date('M d, Y', strtotime($invoice['invoice_date'])) ?></div>
-        <div class="invoice-due"><?= date('M d, Y', strtotime($invoice['due_date'])) ?></div>
-        <div class="invoice-amount">$<?= number_format($invoice['total'], 2) ?></div>
-        <div class="invoice-status">
-            <span class="status-badge <?= $statusClass ?>"><?= $statusText ?></span>
-            <?php if ($isPartial): ?>
-            <div class="payment-progress">(Paid $<?= number_format($invoice['paid_amount'], 2) ?>)</div>
-            <?php endif; ?>
-        </div>
-
 
             <!-- Create Invoice View (Hidden by default) -->
             <div id="create-invoice-view" style="display: none;">
                 <div class="page-header">
                     <h1 class="page-title">Create Invoice</h1>
                     <div class="page-actions">
-                        <button class="btn btn-outline" id="cancel-invoice-btn">
+                        <button class="btn btn-outline" id="cancel-invoice-btn" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-times"></i> Cancel
                         </button>
-                        <button class="btn btn-outline">
+                        <button  id="saveDraftBtn"  class="btn btn-outline" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-save"></i> Save Draft
                         </button>
-                        <button class="btn btn-primary" id="preview-invoice-btn">
+                        <button class="btn btn-primary" id="preview-invoice-btn" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-eye"></i> Preview
                         </button>
                     </div>
                 </div>
+
+<!-- Sliding Preview Panel -->
+<div id="invoicePreviewPanel">
+  <div class="preview-content">
+    <button id="closePreview" class="close-btn">&times;</button>
+    <h3>Invoice Preview</h3>
+    <div id="previewContent">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</div>
 
                 <div class="invoice-form-container">
                     <!-- Customer Section -->
@@ -966,36 +1142,70 @@ $result = $pdo->query($query);
                         <h3 class="section-title">Tenant Details</h3>
                         <form method="POST" action="submit_invoice.php">
                         <div class="form-row">
-                        <div class="form-group">
-                                <label for="invoice-number">Invoice #</label>
-                                <input type="text" id="invoice-number"  value="<?= $invoiceNumber ?>" class="form-control" readonly>
-                                <input type="hidden" name="invoice_number" value="<?= $invoiceNumber ?>"> <!-- for actual submission -->
-                            </div>
 
-                            <div class="form-group">
-                                <label for="customer">Tenant</label>
-                                <select id="customer" name="tenant" class="form-control" required>
-                                    <option value="">Select a Tenant</option>
-                                    <option value="1">Acme Corporation</option>
-                                    <option value="2">Globex Inc.</option>
-                                    <option value="3">Wayne Enterprises</option>
-                                    <option value="4">Stark Industries</option>
-                                    <option value="5">Umbrella Corp</option>
-                                </select>
-                            </div>
+<!-- Existing Invoice # input -->
+<div class="form-group">
+    <label for="invoice-number">Invoice #</label>
+    <input  type="text"
+            id="invoice-number"
+            value="<?= $invoiceNumber ?>"
+            class="form-control"
+            readonly>
+    <input type="hidden"
+           name="invoice_number"
+           value="<?= $invoiceNumber ?>">
+</div>
 
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="invoice-date">Invoice Date</label>
-                                <input type="date" id="invoice-date"  name="invoice_date"  class="form-control"  required>
-                            </div>
-                            <div class="form-group">
-                                <label for="due-date">Due Date</label>
-                                <input type="date" id="due-date" name="due_date" class="form-control"  required>
-                            </div>
-                        </div>
-                    </div>
+
+
+<!-- ▲ NEW: Building selector -->
+<div class="form-group">
+    <label for="building">Building</label>
+    <select id="building" name="building_id" class="form-control" required>
+        <option value="">Select a Building</option>
+        <?php foreach ($buildings as $b): ?>
+            <option value="<?= $b['building_id'] ?>">
+                <?= htmlspecialchars($b['building_name']) ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+</div>
+
+
+<!-- ▼ Tenant selector (will be filled by JS) -->
+<div class="form-group">
+    <label for="customer">Tenant</label>
+    <select id="customer"
+            name="tenant"
+            class="form-control"
+            required
+            disabled>
+        <option value="">Select a Tenant</option>
+    </select>
+</div>
+
+</div>
+
+<div class="form-row">
+<div class="form-group">
+    <label for="invoice-date">Invoice Date</label>
+    <input type="date"
+           id="invoice-date"
+           name="invoice_date"
+           class="form-control"
+           required>
+</div>
+
+<div class="form-group">
+    <label for="due-date">Due Date</label>
+    <input type="date"
+           id="due-date"
+           name="due_date"
+           class="form-control"
+           required>
+</div>
+</div>
+
 
                     <!-- Items Section -->
                     <div class="form-section">
@@ -1023,7 +1233,6 @@ $result = $pdo->query($query);
           <?php endforeach; ?>
         </select>
       </td>
-
       <style>
 
 </style>
@@ -1059,11 +1268,11 @@ $result = $pdo->query($query);
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="notes">Notes</label>
-                                <textarea id="notes" class="form-control" rows="3" placeholder="Thank you for your business!"></textarea>
+                                <textarea id="notes" name="notes" class="form-control" rows="3" placeholder="Thank you for your business!"></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="terms">Terms & Conditions</label>
-                                <textarea id="terms" class="form-control" rows="3" placeholder="Payment due within 15 days"></textarea>
+                                <textarea id="terms"  name="terms_conditions" class="form-control" rows="3" placeholder="Payment due within 15 days"></textarea>
                             </div>
                         </div>
                     </div>
@@ -1131,6 +1340,43 @@ $result = $pdo->query($query);
         integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
         crossorigin="anonymous">
     </script>
+
+<!-- <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const saveDraftBtn = document.getElementById('saveDraftBtn');
+
+    saveDraftBtn.addEventListener('click', function () {
+        // Example: Collect draft form data
+        const invoiceNumber = document.querySelector('input[name="invoice_number"]').value;
+        const tenant = document.querySelector('input[name="tenant"]').value;
+
+        // Optional: Add more fields as needed
+
+        // Example AJAX call to save draft (using fetch)
+        fetch('save_draft.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                invoice_number: invoiceNumber,
+                tenant: tenant,
+                // Add other data fields here
+            }),
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert("Draft saved successfully!");
+            console.log(data);
+        })
+        .catch(error => {
+            console.error('Error saving draft:', error);
+            alert("Failed to save draft.");
+        });
+    });
+});
+</script> -->
+
     <script
         src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
@@ -1414,6 +1660,53 @@ document.addEventListener("DOMContentLoaded", () => {
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdown = document.querySelector(".filter-dropdown");
+        const btn = dropdown.querySelector(".filter-btn");
+        const menu = dropdown.querySelector(".dropdown-menu");
+        const statusText = btn.querySelector("span");
+
+        // Toggle dropdown visibility
+        btn.addEventListener("click", function (e) {
+            e.stopPropagation(); // Prevent body click from closing immediately
+            dropdown.classList.toggle("open");
+        });
+
+        // Close dropdown when clicking outside
+        document.body.addEventListener("click", function () {
+            dropdown.classList.remove("open");
+        });
+
+        // Handle selection
+        menu.querySelectorAll("li").forEach((item) => {
+            item.addEventListener("click", function () {
+                const selectedStatus = this.getAttribute("data-status");
+                statusText.textContent = `Status: ${this.textContent}`;
+
+                // OPTIONAL: Filter invoices based on status
+                filterInvoicesByStatus(selectedStatus);
+
+                dropdown.classList.remove("open");
+            });
+        });
+
+        // Optional: Sample invoice filter logic
+        function filterInvoicesByStatus(status) {
+            const allInvoices = document.querySelectorAll(".invoice-item");
+            allInvoices.forEach(item => {
+                const itemStatus = item.getAttribute("data-status");
+                if (status === "all" || itemStatus === status) {
+                    item.style.display = "";
+                } else {
+                    item.style.display = "none";
+                }
+            });
+        }
+    });
+</script>
+
 
 
 <script>
@@ -2546,332 +2839,30 @@ document.addEventListener('DOMContentLoaded', function () {
     </script>
 
 <script>
-        // Database simulation
-        const database = {
-            invoices: [
-                { id: 1, number: 'INV-2023-001', customer: 'Acme Corporation', date: '2023-05-15', amount: 1250.00, status: 'paid' },
-                { id: 2, number: 'INV-2023-002', customer: 'Globex Inc.', date: '2023-05-18', amount: 3450.00, status: 'pending' },
-                { id: 3, number: 'INV-2023-003', customer: 'Wayne Enterprises', date: '2023-05-05', amount: 2150.00, status: 'overdue' },
-                { id: 4, number: 'INV-2023-004', customer: 'Stark Industries', date: '2023-05-22', amount: 5750.00, status: 'paid' },
-                { id: 5, number: 'INV-2023-005', customer: 'Umbrella Corp', date: '2023-05-25', amount: 1980.00, status: 'pending' }
-            ],
-            customers: [
-                { id: 1, name: 'Acme Corporation', email: 'contact@acme.com', phone: '(555) 123-4567' },
-                { id: 2, name: 'Globex Inc.', email: 'info@globex.com', phone: '(555) 234-5678' },
-                { id: 3, name: 'Wayne Enterprises', email: 'office@wayne.com', phone: '(555) 345-6789' },
-                { id: 4, name: 'Stark Industries', email: 'contact@stark.com', phone: '(555) 456-7890' },
-                { id: 5, name: 'Umbrella Corp', email: 'support@umbrella.com', phone: '(555) 567-8901' }
-            ],
-            products: [
-                { id: 1, name: 'Website Design', description: 'Custom website design', price: 1200.00 },
-                { id: 2, name: 'SEO Services', description: 'Monthly SEO package', price: 500.00 },
-                { id: 3, name: 'Hosting', description: 'Annual web hosting', price: 300.00 },
-                { id: 4, name: 'Maintenance', description: 'Monthly maintenance', price: 200.00 }
-            ],
-            nextInvoiceId: 6
-        };
+// DOM Elements
+const invoiceListView = document.getElementById('invoice-list-view');
+const createInvoiceView = document.getElementById('create-invoice-view');
+const createInvoiceBtn = document.getElementById('create-invoice-btn');
+const cancelInvoiceBtn = document.getElementById('cancel-invoice-btn');
 
-        // DOM Elements
-        const invoiceListView = document.getElementById('invoice-list-view');
-        const createInvoiceView = document.getElementById('create-invoice-view');
-        const createInvoiceBtn = document.getElementById('create-invoice-btn');
-        const cancelInvoiceBtn = document.getElementById('cancel-invoice-btn');
-        const previewInvoiceBtn = document.getElementById('preview-invoice-btn');
-        const addItemBtn = document.getElementById('add-item-btn');
-        const invoiceItems = document.getElementById('invoice-items');
-        const invoiceList = document.querySelector('.invoice-list');
-        const filterStatusBtn = document.querySelector('.filter-dropdown:first-child .filter-btn');
-        const filterDateBtn = document.querySelector('.filter-dropdown:last-child .filter-btn');
-        const statusDropdownItems = document.querySelectorAll('.filter-dropdown:first-child .dropdown-menu li');
-        const dateDropdownItems = document.querySelectorAll('.filter-dropdown:last-child .dropdown-menu li');
-        const customerSelect = document.getElementById('customer');
-        const invoiceNumberInput = document.getElementById('invoice-number');
-        const invoiceDateInput = document.getElementById('invoice-date');
-        const dueDateInput = document.getElementById('due-date');
-        const notesInput = document.getElementById('notes');
-        const termsInput = document.getElementById('terms');
-        const saveDraftBtn = document.querySelector('.page-actions .btn-outline:nth-child(2)');
-        const saveFinalizeBtn = document.querySelector('.form-actions .btn-primary');
-        const sendBtn = document.querySelector('.form-actions .btn-outline:nth-child(1)');
-        const attachFileBtn = document.querySelector('.action-left .btn-outline');
-        const exportBtn = document.querySelector('.page-actions .btn-outline:nth-child(2)');
-        const filterBtn = document.querySelector('.page-actions .btn-outline:nth-child(1)');
-        const helpBtn = document.querySelector('.header-actions .btn-outline');
-        const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+// View Toggle Functions
+function showCreateInvoiceView() {
+    invoiceListView.style.display = 'none';
+    createInvoiceView.style.display = 'block';
+}
 
-        // Initialize the app
-        function initApp() {
-            renderInvoiceList();
-            populateCustomerSelect();
-            setupEventListeners();
-            updateInvoiceNumber();
-        }
+function showInvoiceListView() {
+    createInvoiceView.style.display = 'none';
+    invoiceListView.style.display = 'block';
+}
 
-        // Render invoice list
-        function renderInvoiceList(filterStatus = 'all', filterDate = 'this-month') {
-            invoiceList.innerHTML = '';
+// Event Listeners
+createInvoiceBtn?.addEventListener('click', showCreateInvoiceView);
+cancelInvoiceBtn?.addEventListener('click', showInvoiceListView);
 
-            let filteredInvoices = [...database.invoices];
-
-            // Filter by status
-            if (filterStatus !== 'all') {
-                filteredInvoices = filteredInvoices.filter(inv => inv.status === filterStatus);
-            }
-
-            // Filter by date (simplified for demo)
-            if (filterDate === 'today') {
-                filteredInvoices = filteredInvoices.filter(inv => inv.date === new Date().toISOString().split('T')[0]);
-            } else if (filterDate === 'this-week') {
-                // In a real app, you'd have proper date filtering
-                filteredInvoices = filteredInvoices.slice(0, 3); // Just for demo
-            } else if (filterDate === 'this-month') {
-                // Current month filter would go here
-            }
-
-            // Render each invoice
-            filteredInvoices.forEach(invoice => {
-                const invoiceItem = document.createElement('div');
-                invoiceItem.className = 'invoice-item';
-                invoiceItem.innerHTML = `
-                    <div class="invoice-checkbox">
-                        <input type="checkbox">
-                    </div>
-                    <div class="invoice-number">${invoice.number}</div>
-                    <div class="invoice-customer">${invoice.customer}</div>
-                    <div class="invoice-date">${formatDate(invoice.date)}</div>
-                    <div class="invoice-amount">$${invoice.amount.toFixed(2)}</div>
-                    <div class="invoice-status">
-                        <span class="status-badge status-${invoice.status}">${capitalizeFirstLetter(invoice.status)}</span>
-                    </div>
-                    <div class="invoice-actions">
-                        <button class="action-btn">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </button>
-                    </div>
-                `;
-                invoiceList.appendChild(invoiceItem);
-            });
-        }
-
-        // Format date for display
-        function formatDate(dateString) {
-            const options = { year: 'numeric', month: 'short', day: 'numeric' };
-            return new Date(dateString).toLocaleDateString('en-US', options);
-        }
-
-        // Capitalize first letter
-        function capitalizeFirstLetter(string) {
-            return string.charAt(0).toUpperCase() + string.slice(1);
-        }
-
-        // Populate customer select dropdown
-        function populateCustomerSelect() {
-            customerSelect.innerHTML = '<option value="">Select a tenant</option>';
-            database.customers.forEach(customer => {
-                const option = document.createElement('option');
-                option.value = customer.id;
-                option.textContent = customer.name;
-                customerSelect.appendChild(option);
-            });
-        }
-
-        // Update invoice number
-        function updateInvoiceNumber() {
-            invoiceNumberInput.value = `INV-2023-${String(database.nextInvoiceId).padStart(3, '0')}`;
-        }
-
-        // Calculate invoice totals
-        function calculateTotals() {
-            let subtotal = 0;
-            const itemRows = document.querySelectorAll('.item-row');
-
-            itemRows.forEach(row => {
-                const qty = parseFloat(row.querySelector('.item-qty input').value) || 0;
-                const rate = parseFloat(row.querySelector('.item-rate input').value) || 0;
-                const amount = qty * rate;
-                row.querySelector('.item-amount input').value = '$' + amount.toFixed(2);
-                subtotal += amount;
-            });
-
-            const tax = subtotal * 0.1; // 10% tax for demo
-            const total = subtotal + tax;
-
-            // Update summary section
-            document.querySelector('.summary-row:nth-child(1) .summary-value').textContent = '$' + subtotal.toFixed(2);
-            document.querySelector('.summary-row:nth-child(2) .summary-value').textContent = '$' + tax.toFixed(2);
-            document.querySelector('.summary-row.total-row .summary-value').textContent = '$' + total.toFixed(2);
-
-            return total;
-        }
-
-        // Save invoice to database
-        function saveInvoice(isDraft = false) {
-            const customerId = parseInt(customerSelect.value);
-            const customer = database.customers.find(c => c.id === customerId);
-
-            const items = [];
-            document.querySelectorAll('.item-row').forEach(row => {
-                items.push({
-                    name: row.querySelector('.item-name input').value,
-                    description: row.querySelector('.item-desc input').value,
-                    qty: parseFloat(row.querySelector('.item-qty input').value) || 0,
-                    rate: parseFloat(row.querySelector('.item-rate input').value) || 0
-                });
-            });
-
-            const total = calculateTotals();
-
-            const newInvoice = {
-                id: database.nextInvoiceId++,
-                number: invoiceNumberInput.value,
-                customer: customer ? customer.name : 'Unknown Customer',
-                date: invoiceDateInput.value,
-                dueDate: dueDateInput.value,
-                amount: total,
-                status: isDraft ? 'draft' : 'pending',
-                items: items,
-                notes: notesInput.value,
-                terms: termsInput.value
-            };
-
-            database.invoices.unshift(newInvoice);
-            return newInvoice;
-        }
-
-        // Setup event listeners
-        function setupEventListeners() {
-            // Navigation
-            createInvoiceBtn.addEventListener('click', () => {
-                invoiceListView.style.display = 'none';
-                createInvoiceView.style.display = 'block';
-                updateInvoiceNumber();
-            });
-
-            cancelInvoiceBtn.addEventListener('click', () => {
-                createInvoiceView.style.display = 'none';
-                invoiceListView.style.display = 'block';
-            });
-
-            // Filter dropdowns
-            statusDropdownItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    filterStatusBtn.querySelector('span').textContent = `Status: ${item.textContent}`;
-                    renderInvoiceList(item.textContent.toLowerCase());
-                });
-            });
-
-            dateDropdownItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    filterDateBtn.querySelector('span').textContent = `Date: ${item.textContent}`;
-                    // In a real app, you would filter by date range
-                });
-            });
-
-            // Invoice items
-            addItemBtn.addEventListener('click', addNewItemRow);
-
-            // Calculate totals when values change
-            document.addEventListener('input', function(e) {
-                if (e.target.classList.contains('item-qty') || e.target.classList.contains('item-rate')) {
-                    calculateTotals();
-                }
-            });
-
-            // Save buttons
-            saveDraftBtn.addEventListener('click', () => {
-                saveInvoice(true);
-                alert('Invoice saved as draft!');
-                createInvoiceView.style.display = 'none';
-                invoiceListView.style.display = 'block';
-                renderInvoiceList();
-            });
-
-            saveFinalizeBtn.addEventListener('click', () => {
-                saveInvoice(false);
-                alert('Invoice saved and finalized!');
-                createInvoiceView.style.display = 'none';
-                invoiceListView.style.display = 'block';
-                renderInvoiceList();
-            });
-
-            // Other buttons
-            previewInvoiceBtn.addEventListener('click', () => {
-                alert('Invoice preview would open in a new window');
-            });
-
-            sendBtn.addEventListener('click', () => {
-                const invoice = saveInvoice(false);
-                alert(`Invoice ${invoice.number} would be sent to ${invoice.customer}`);
-                createInvoiceView.style.display = 'none';
-                invoiceListView.style.display = 'block';
-                renderInvoiceList();
-            });
-
-            attachFileBtn.addEventListener('click', () => {
-                alert('File attachment dialog would open');
-            });
-
-            exportBtn.addEventListener('click', () => {
-                alert('Export functionality would be implemented here');
-            });
-
-            filterBtn.addEventListener('click', () => {
-                alert('Advanced filter dialog would open');
-            });
-
-            helpBtn.addEventListener('click', () => {
-                alert('Help documentation would open');
-            });
-
-            // Sidebar navigation
-            sidebarLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    sidebarLinks.forEach(l => l.classList.remove('active'));
-                    link.classList.add('active');
-                    // In a real app, this would load the appropriate view
-                    alert(`Loading ${link.textContent} section`);
-                });
-            });
-        }
-
-        // Add new item row
-        function addNewItemRow() {
-            const newRow = document.createElement('tr');
-            newRow.className = 'item-row';
-            newRow.innerHTML = `
-                <td class="item-name">
-                    <input type="text" placeholder="Item name">
-                </td>
-                <td class="item-desc">
-                    <input type="text" placeholder="Description">
-                </td>
-                <td class="item-qty">
-                    <input type="number" placeholder="Qty" value="1" class="form-control-sm">
-                </td>
-                <td class="item-rate">
-                    <input type="number" placeholder="Rate" class="form-control-sm">
-                </td>
-                <td class="item-amount">
-                    <input type="text" placeholder="Amount" readonly class="form-control-sm">
-                </td>
-                <td class="item-actions">
-                    <span class="remove-item"><i class="fas fa-trash"></i></span>
-                </td>
-            `;
-            invoiceItems.appendChild(newRow);
-
-            // Add event listener to remove button
-            newRow.querySelector('.remove-item').addEventListener('click', () => {
-                invoiceItems.removeChild(newRow);
-                calculateTotals();
-            });
-        }
-
-        // Initialize the app when DOM is loaded
-        document.addEventListener('DOMContentLoaded', initApp);
-    </script>
-
+// Other JavaScript functionality would go here
+// (like handling form submission via AJAX, etc.)
+</script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     function formatNumber(num) {
@@ -3033,7 +3024,262 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Save Draft Button
+    document.getElementById('saveDraftBtn').addEventListener('click', function () {
+        const formData = new FormData(document.querySelector('form'));
+        formData.append('draft', 1); // flag it as draft
 
+        fetch('save_draft.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.text())
+        .then(response => {
+            alert('Draft saved successfully!');
+            console.log(response);
+        })
+        .catch(error => {
+            console.error('Save draft error:', error);
+            alert('Failed to save draft.');
+        });
+    });
+
+    // Preview Button
+    document.getElementById('preview-invoice-btn').addEventListener('click', function () {
+        const previewPanel = document.getElementById('invoicePreviewPanel');
+        const previewContent = document.getElementById('previewContent');
+
+        // Build preview content manually or use existing fields
+        const invoiceNumber = document.getElementById('invoice-number').value;
+        const building = document.getElementById('building').selectedOptions[0]?.text || 'N/A';
+        const tenant = document.getElementById('customer').selectedOptions[0]?.text || 'N/A';
+        const invoiceDate = document.getElementById('invoice-date').value;
+        const dueDate = document.getElementById('due-date').value;
+
+        let tableRows = '';
+        document.querySelectorAll('.items-table tbody tr').forEach(row => {
+            const item = row.querySelector('select[name="account_item[]"]').selectedOptions[0]?.text || '';
+            const desc = row.querySelector('textarea[name="description[]"]').value;
+            const qty = row.querySelector('input[name="quantity[]"]').value;
+            const price = row.querySelector('input[name="unit_price[]"]').value;
+            const tax = row.querySelector('select[name="taxes[]"]').value;
+            tableRows += `
+                <tr>
+                    <td>${item}</td><td>${desc}</td><td>${qty}</td>
+                    <td>${price}</td><td>${tax}</td>
+                    <td>${(qty * price).toFixed(2)}</td>
+                </tr>`;
+        });
+
+        previewContent.innerHTML = `
+            <p><strong>Invoice #:</strong> ${invoiceNumber}</p>
+            <p><strong>Building:</strong> ${building}</p>
+            <p><strong>Tenant:</strong> ${tenant}</p>
+            <p><strong>Invoice Date:</strong> ${invoiceDate}</p>
+            <p><strong>Due Date:</strong> ${dueDate}</p>
+            <hr>
+            <h4>Items</h4>
+            <table border="1" width="100%" cellpadding="5">
+                <thead>
+                    <tr><th>Item</th><th>Description</th><th>Qty</th><th>Unit Price</th><th>Tax</th><th>Total</th></tr>
+                </thead>
+                <tbody>${tableRows}</tbody>
+            </table>
+        `;
+
+        previewPanel.classList.add('active');
+    });
+
+    // Close Preview Panel
+    document.getElementById('closePreview').addEventListener('click', function () {
+        document.getElementById('invoicePreviewPanel').classList.remove('active');
+    });
+});
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const buildingSelect = document.getElementById('building');
+    const tenantSelect   = document.getElementById('customer');
+
+    buildingSelect.addEventListener('change', () => {
+        const buildingId = buildingSelect.value;
+
+        // Reset tenant dropdown
+        tenantSelect.innerHTML =
+            '<option value="">Select a Tenant</option>';
+        tenantSelect.disabled = !buildingId;
+
+        if (!buildingId) return;
+
+        // Fetch tenants for that building
+        fetch(`get_tenants.php?building_id=${buildingId}`)
+            .then(r => r.json())
+            .then(tenants => {
+                tenants.forEach(t => {
+                    const opt   = document.createElement('option');
+                    opt.value   = t.id;
+                    opt.textContent = t.name;
+                    tenantSelect.appendChild(opt);
+                });
+            })
+            .catch(err => {
+                console.error('Failed to load tenants', err);
+                alert('Could not load tenants for this building.');
+            });
+    });
+});
+</script>
+
+
+ <script>
+/**
+ * Turn any .searchable-select <select> into a Select2 box
+ * Call this once at startup *and* after you add a new row dynamically.
+ */
+function initItemSelect($scope = $(document)) {
+    $scope.find('.searchable-select').select2({
+        width: '100%',                 // fills the <td>
+        placeholder: $(this).data('placeholder'),
+        allowClear: true               // little “×” to clear a choice
+    });
+}
+
+$(function () {
+    // ── 1️⃣  first initialise everything already on the page
+    initItemSelect();
+
+    // ── 2️⃣  if you have an “Add Row” button, re‑init the new row
+    $('#addRowBtn').on('click', function () {
+        const $newRow = $('#items-table tbody tr:first').clone(true);   // or however you create rows
+        // clear any previous values
+        $newRow.find('input, textarea').val('');
+        $newRow.find('select').val(null).trigger('change');
+
+        $('#items-table tbody').append($newRow);
+        initItemSelect($newRow);        // ⭐ make its select searchable
+    });
+});
+</script>
+
+
+<script>
+  $('.searchable-select').select2({
+    width:'100%',
+    placeholder:'Select or search an item…',
+    minimumInputLength: 2,
+    ajax: {
+        url: 'account-items-search.php',
+        dataType: 'json',
+        delay: 250,              // throttle queries
+        data: params => ({ q: params.term }),    // term typed by user
+        processResults: data => ({
+            results: data.map(item => ({
+                id: item.account_code,           // value sent to server
+                text: item.account_name          // visible label
+            }))
+        }),
+        cache: true
+    }
+});
+
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButton = document.getElementById('filterButton');
+    const filterModal = document.getElementById('filterModal');
+    const closeFilter = document.getElementById('closeFilter');
+    const applyFilter = document.getElementById('applyFilter');
+    const resetFilter = document.getElementById('resetFilter');
+
+    // Show modal when filter button is clicked
+    filterButton.addEventListener('click', function() {
+        filterModal.style.display = 'block';
+    });
+
+    // Close modal when X is clicked
+    closeFilter.addEventListener('click', function() {
+        filterModal.style.display = 'none';
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+        if (event.target == filterModal) {
+            filterModal.style.display = 'none';
+        }
+    });
+
+    // Apply filters
+    applyFilter.addEventListener('click', function() {
+        const status = document.getElementById('statusFilter').value;
+        const paymentStatus = document.getElementById('paymentFilter').value;
+        const dateFrom = document.getElementById('dateFrom').value;
+        const dateTo = document.getElementById('dateTo').value;
+
+        // Here you would typically make an AJAX call to your server with the filter parameters
+        // For this example, we'll just log them
+        console.log('Applying filters:', {
+            status: status,
+            paymentStatus: paymentStatus,
+            dateFrom: dateFrom,
+            dateTo: dateTo
+        });
+
+        // Close the modal
+        filterModal.style.display = 'none';
+
+        // In a real implementation, you would reload the table data with the filters applied
+        // For example:
+        // fetchFilteredInvoices(status, paymentStatus, dateFrom, dateTo);
+    });
+
+    // Reset filters
+    resetFilter.addEventListener('click', function() {
+        document.getElementById('statusFilter').value = '';
+        document.getElementById('paymentFilter').value = '';
+        document.getElementById('dateFrom').value = '';
+        document.getElementById('dateTo').value = '';
+
+        // In a real implementation, you would reload the original unfiltered data
+        // For example:
+        // fetchAllInvoices();
+    });
+});
+
+// Example function for fetching filtered invoices (would need server-side implementation)
+function fetchFilteredInvoices(status, paymentStatus, dateFrom, dateTo) {
+    // This would be an AJAX call to your server
+    fetch('/api/invoices/filter', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            status: status,
+            payment_status: paymentStatus,
+            date_from: dateFrom,
+            date_to: dateTo
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Update your table with the filtered data
+        updateInvoiceTable(data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+// Example function to update the table with filtered data
+function updateInvoiceTable(invoices) {
+    // Implementation would depend on how your table is structured
+    // This would clear and repopulate the table with the filtered invoices
+}
+</script>
 </body>
 <!--end::Body-->
 

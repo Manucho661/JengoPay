@@ -1,53 +1,36 @@
 <?php
+require_once '../db/connect.php';   // $pdo comes from here
+
 header('Content-Type: application/json');
-require_once '../db/connect.php'; // Make sure this file defines $pdo
 
-try {
-    // Validate building_id parameter
-    if (!isset($_GET['building_id'])) {
-        throw new Exception('Building ID parameter is missing');
-    }
+// Validate & cast the GET parameter
+$buildingId = isset($_GET['building_id']) ? (int)$_GET['building_id'] : 0;
 
-    $buildingId = $_GET['building_id'];
-
-    // Validate it's a numeric value
-    if (!is_numeric($buildingId)) {
-        throw new Exception('Building ID must be a number');
-    }
-
-    $buildingId = (int)$buildingId;
-    if ($buildingId <= 0) {
-        throw new Exception('Invalid building ID value');
-    }
-
-    // Prepare and execute query using PDO
-    $stmt = $pdo->prepare("
-        SELECT
-            t.id AS tenant_id,
-            t.unit_id,
-            t.building_id,
-            u.first_name,
-            u.middle_name
-        FROM tenants t
-        JOIN users u ON t.user_id = u.id
-        WHERE t.building_id = :building_id
-          AND t.status = 'active'
-        ORDER BY u.first_name, u.middle_name
-    ");
-
-    $stmt->bindParam(':building_id', $buildingId, PDO::PARAM_INT);
-    $stmt->execute();
-
-    $tenants = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    echo json_encode($tenants);
-
-} catch (PDOException $e) {
-    error_log('PDO Error in get_tenants.php: ' . $e->getMessage());
-    http_response_code(500);
-    echo json_encode(['error' => 'Database error occurred']);
-} catch (Exception $e) {
-    error_log('Error in get_tenants.php: ' . $e->getMessage());
-    http_response_code(400);
-    echo json_encode(['error' => $e->getMessage()]);
+// No building? → return empty JSON array
+if ($buildingId <= 0) {
+    echo json_encode([]);
+    exit;
 }
+
+/*
+ |------------------------------------------------------------------
+ | Fetch tenants for the chosen building
+ |------------------------------------------------------------------
+ |  • t.user_id      – keeps the same field you were already sending
+ |  • name           – built from users.first_name + middle_name
+ |  • Add / remove   – any extra columns you may need in the dropdown
+ */
+$sql = "
+    SELECT
+        t.user_id                        AS id,
+        CONCAT(u.first_name, ' ', u.middle_name) AS name
+    FROM tenants  AS t
+    JOIN users    AS u ON u.id = t.user_id
+    WHERE t.building_id = ?
+    ORDER BY name
+";
+
+$stmt = $pdo->prepare($sql);
+$stmt->execute([$buildingId]);
+
+echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
