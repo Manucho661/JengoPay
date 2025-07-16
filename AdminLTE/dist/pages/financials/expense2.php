@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['view_id'])) {
 
 // === ✅ AJAX: Return Monthly Totals ===
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['get_totals'])) {
-    $stmt = $pdo->query("SELECT MONTH(date) as month, SUM(total) as total FROM expenses GROUP BY MONTH(date)");
+    $stmt = $pdo->query("SELECT MONTH(month) as month, SUM(total) as total FROM expenses GROUP BY MONTH(month)");
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $monthlyTotals[(int)$row['month']] = (float)$row['total'];
     }
@@ -36,82 +36,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['get_totals'])) {
 }
 
 // === ✅ AJAX: Handle Expense Submission ===
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SERVER['HTTP_X_REQUESTED_WITH'])) {
-    $date = $_POST['date'] ?? null;
-    $supplier = $_POST['supplier'] ?? null;
-    $expense_number = $_POST['expense_number'] ?? null;
-    $total = $_POST['total'] ?? null;
 
-    $items = $_POST['item'] ?? [];
-    $descriptions = $_POST['description'] ?? [];
-    $qtys = $_POST['qty'] ?? [];
-    $unit_prices = $_POST['unit_price'] ?? [];
-    $taxes = $_POST['taxes'] ?? [];
-
-    try {
-        $pdo->beginTransaction();
-
-        for ($i = 0; $i < count($items); $i++) {
-            if (empty($items[$i]) && empty($qtys[$i]) && empty($unit_prices[$i])) continue;
-
-            // 🧠 Extract values
-            $qty = floatval($qtys[$i]);
-            $price = floatval($unit_prices[$i]);
-            $tax = $taxes[$i];
-            $lineTotal = 0;
-
-            // ✅ Same logic as in JS
-            switch ($tax) {
-                case 'VAT 16% Inclusive':
-                    $base = $price / 1.16;
-                    $lineTotal = $base * $qty * 1.16;
-                    break;
-                case 'VAT 16% Exclusive':
-                    $lineTotal = $price * $qty * 1.16;
-                    break;
-                case 'Zero Rated':
-                case 'Exempted':
-                default:
-                    $lineTotal = $price * $qty;
-            }
-
-            $stmt = $pdo->prepare("INSERT INTO expenses (date, supplier, expense_number, item, description, qty, unit_price, taxes, total) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute([
-                $date,
-                $supplier,
-                $expense_number,
-                $items[$i],
-                $descriptions[$i],
-                $qty,
-                $price,
-                $tax,
-                $lineTotal
-            ]);
-        }
-
-
-        $pdo->commit();
-
-        echo json_encode(['success' => true]);
-        exit;
-    } catch (PDOException $e) {
-        $pdo->rollBack();
-        echo json_encode([
-            'success' => false,
-            'error' => '❌ Failed to save expenses: ' . $e->getMessage()
-        ]);
-        exit;
-    }
-}
 
 
 
 // === ✅ Normal Page Load ===
 try {
-    $stmt = $pdo->query("SELECT * FROM expenses ORDER BY date DESC");
+    $stmt = $pdo->query("SELECT * FROM expenses ORDER BY created_at DESC");
     $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $stmt = $pdo->query("SELECT MONTH(date) as month, SUM(total) as total FROM expenses GROUP BY MONTH(date)");
+    $stmt = $pdo->query("SELECT MONTH(month) as month, SUM(total) as total FROM expenses GROUP BY MONTH(month)");
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $monthlyTotals[(int)$row['month']] = (float)$row['total'];
     }
@@ -243,55 +177,6 @@ try {
         <!--end::Sidebar-->
         <!--begin::App Main-->
         <main class="app-main">
-            <!--MAIN MODALS -->
-            <!-- add new inspection modal-->
-            <div class="modal fade" id="newSchedule" tabindex="-1" aria-labelledby="newScheduleLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content shadow">
-                        <form id="form_new_inspection" onsubmit="submitInspectionForm(event)">
-                            <div class="modal-header" style="background-color:#00192D;">
-                                <h5 class="modal-title" id="newScheduleLabel" style="color:#FFA000 !important">Schedule Inspection</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body px-4">
-                                <div class="form-floating mb-3">
-                                    <input type="date" class="form-control" id="inspectionDate" name="date" required>
-                                    <label for="tenantEmail"><i class="fas fa-envelope me-1"></i> Select Date</label>
-                                </div>
-                                <div class="form-floating mb-3">
-                                    <select class="form-select" id="buildingSelect" name="building_name" required>
-                                        <option value="" selected disabled>Choose...</option>
-                                        <option value="Manucho">Manucho</option>
-                                        <option value="Ebenezer">Ebenezer</option>
-                                    </select>
-                                    <label for="buildingSelect"><i class="fas fa-building me-1"></i> Select Building</label>
-                                </div>
-                                <div class="form-floating mb-3">
-                                    <select class="form-select" id="buildingSelect" name="unit_name" required>
-                                        <option value="" selected disabled>Choose...</option>
-                                        <option value="C234">C234</option>
-                                        <option value="B156">B156</option>
-                                    </select>
-                                    <label for="buildingSelect"><i class="fas fa-building me-1"></i> Select Unit</label>
-                                </div>
-                                <div class="form-floating mb-3">
-                                    <select class="form-select" id="buildingSelect" name="inspection_type" required>
-                                        <option value="" selected disabled>Choose...</option>
-                                        <option value="Move OUT">Move OUT</option>
-                                        <option value="Move In">MOVE IN</option>
-                                    </select>
-                                    <label for="buildingSelect"><i class="fas fa-building me-1"></i> Inspection Type</label>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-shift" style="background-color:#00192D; color:#FFC107;">
-                                    Save
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
             <!--begin::App Content Header-->
                 <div class="app-content-header">
                     <!--begin::Container-->
@@ -311,8 +196,8 @@ try {
                         <div class="row g-3 mb-4">
                             <p class="text-muted">Manage your expenses</p>
                             <div class="col-md-3">
-                                <div class="custom-select-wrapper" id="custom-select-wrapper">
-                                    <div class="custom-select shadow-sm" id="custom-select" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
+                                <div class="custom-select-wrapper">
+                                    <div class="custom-select shadow-sm" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
                                     Filter By Building
                                     </div>
                                     <div class="select-options" id="select-options" role="listbox">
@@ -323,22 +208,22 @@ try {
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <div class="custom-select-wrapper" id="custom-select-wrapper">
-                                    <div class="custom-select shadow-sm" id="custom-select" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
+                                <div class="custom-select-wrapper">
+                                    <div class="custom-select shadow-sm" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
                                     Filter By Items
                                     </div>
-                                    <div class="select-options" id="select-options" role="listbox">
+                                    <div class="select-options" role="listbox">
                                     <div role="option" data-value="option1">Garbage</div>
                                     <div role="option" data-value="option2">Electricity</div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-3">
-                               <div class="custom-select-wrapper" id="custom-select-wrapper">
-                                    <div class="custom-select shadow-sm" id="custom-select" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
+                               <div class="custom-select-wrapper">
+                                    <div class="custom-select shadow-sm" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
                                     Filter By Status
                                     </div>
-                                    <div class="select-options" id="select-options" role="listbox">
+                                    <div class="select-options" role="listbox">
                                     <div role="option" data-value="option1">Paid</div>
                                     <div role="option" data-value="option2">Pending</div>
                                     </div>
@@ -461,15 +346,17 @@ try {
                                                                 <div class="row item-row g-3 mb-2">
                                                                     <div class="col-md-2">
                                                                         <label class="form-label fw-bold">ITEM(SERVICE)</label>
-                                                                        <div class="custom-select-wrapper" id="custom-select-wrapper" style="width: 100%;">
-                                                                            <div class="custom-select shadow-sm" id="custom-select" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false" style="z-index: 1000;">
+                                                                        <div class="custom-select-wrapper" style="width: 100%;">
+                                                                            <div class="custom-select shadow-sm" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false" style="z-index: 1000;">
                                                                                 select
                                                                             </div>
-                                                                            <div class="select-options" id="select-options" role="listbox">
-                                                                            <div role="option" data-value="option1">Garbage</div>
-                                                                            <div role="option" data-value="option2">Electricty</div>
+                                                                            <div class="select-options" role="listbox">
+                                                                                <div role="option" data-value="option1">Garbage</div>
+                                                                                <div role="option" data-value="option2">Electricty</div>
                                                                             </div>
+                                                                            <input type="hidden" name="ITEM[]" class="hiddenItemInput">
                                                                         </div>
+                                                                        
                                                                     </div>
                                                                     <div class="col-md-2">
                                                                         <label class="form-label fw-bold">Qty</label>
@@ -569,7 +456,7 @@ try {
                                                     <input type="text" id="searchInput" placeholder="Search Expense...">
                                                 </div>
                                             </div>
-                                            <!-- Shift Tenant Button -->
+                                            
                                             <div class="d-flex">
                                                 <div id="custom-buttons"></div>
                                             </div>
@@ -588,23 +475,103 @@ try {
                                             <tbody>
                                                 <?php foreach ($expenses as $exp): ?>
                                                     <tr>
-                                                        <td><?= htmlspecialchars(date('d M Y', strtotime($exp['date']))) ?></td>
+                                                        <td><?= htmlspecialchars(date('d M Y', strtotime($exp['created_at']))) ?></td>
                                                         <td><?= htmlspecialchars($exp['supplier']) ?></td>
-                                                        <td><?= htmlspecialchars($exp['expense_number']) ?></td>
+                                                        <td><?= htmlspecialchars($exp['id']) ?></td>
                                                         <td>KSH <?= number_format($exp['total'], 2) ?></td>
-                                                        <td><?= htmlspecialchars($exp['status']) ?></td>
+                                                        <td>
+                                                        <?php
+                                                            $status = strtolower($exp['status']);
+                                                            $statusLabel = '';
+                                                            
+                                                            if ($status === 'paid') {
+                                                            $statusLabel = '<span style="background-color: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Paid</span>';
+                                                            } elseif ($status === 'unpaid') {
+                                                            $statusLabel = '<span style="background-color: #FFC107; color: #00192D; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Unpaid</span>';
+                                                            } else {
+                                                            $statusLabel = '<span class="text-muted">' . htmlspecialchars($exp['status']) . '</span>';
+                                                            }
+
+                                                            echo $statusLabel;
+                                                        ?>
+
+                                                        <?php if ($status === 'unpaid'): ?>
+                                                            <br>
+                                                            <button 
+                                                                class="btn btn-sm d-inline-flex align-items-center gap-1 mt-2"
+                                                                style="background-color: #00192D; color: #FFC107; border: none; border-radius: 8px; padding: 6px 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;"
+                                                                onclick="payExpense(<?= $exp['id'] ?>)"
+                                                                >
+                                                                <i class="bi bi-credit-card-fill"></i>
+                                                                Pay
+                                                            </button>
+                                                        <?php endif; ?>
+                                                        </td>
+
                                                         <td>
                                                             <!-- view button -->
-                                                            <button class="btn btn-sm btn-outline-warning text-dark" style="" onclick="openExpenseModal(<?= $exp['id'] ?>)">
-                                                                 View
+                                                            <button 
+                                                                class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
+                                                                style="background-color: #00192D; color: white; border: none; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;"
+                                                                onclick="openExpenseModal(<?= $exp['id'] ?>)"
+                                                                >
+                                                                <i class="bi bi-eye-fill"></i>
+                                                                View
                                                             </button>
-
-                                                            <button class="btn btn-sm btn-outline-danger" style="" data-toggle="modal" data-target="#assignPlumberModal" title="Remove">Delete</button>
                                                         </td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
                                         </table>
+                                        <!-- payment modal -->
+                                        <div class="modal fade" id="payExpenseModal" tabindex="-1" aria-labelledby="payExpenseLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content" style="border-radius: 12px; border: 1px solid #00192D;">
+                                                <div class="modal-header" style="background-color: #00192D; color: white;">
+                                                    <h5 class="modal-title" id="payExpenseLabel">Pay Expense</h5>
+                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+
+                                                <div class="modal-body">
+                                                    <form id="payExpenseForm">
+                                                    <input type="hidden" name="expense_id" id="expenseId">
+
+                                                    <div class="mb-3">
+                                                        <label for="amount" class="form-label">Amount to Pay</label>
+                                                        <input type="number" class="form-control" id="amount" name="amount" required>
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label for="paymentDate" class="form-label">Payment Date</label>
+                                                        <input type="date" class="form-control" id="paymentDate" name="payment_date" required>
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label for="paymentMethod" class="form-label">Payment Method</label>
+                                                        <select class="form-select" id="paymentMethod" name="payment_method" required>
+                                                        <option value="cash">Cash</option>
+                                                        <option value="mpesa">M-Pesa</option>
+                                                        <option value="bank">Bank Transfer</option>
+                                                        <option value="card">Card</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label for="reference" class="form-label">Reference / Memo</label>
+                                                        <input type="text" class="form-control" id="reference" name="reference">
+                                                    </div>
+                                                    </form>
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="submit" form="payExpenseForm" class="btn" style="background-color: #FFC107; color: #00192D;">
+                                                    <i class="bi bi-credit-card"></i> Confirm Payment
+                                                    </button>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -864,10 +831,6 @@ try {
     });
   </script>
     <!-- date display only future date -->
-    <script>
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById("inspectionDate").setAttribute("min", today);
-    </script>
 
     <script>
         function toggleIcon(anchor) {
