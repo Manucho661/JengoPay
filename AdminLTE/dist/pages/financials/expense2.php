@@ -286,9 +286,9 @@ try {
                             <div class="col-md-12 mb-4">
                                 <div class="card shadow-sm">
                                     <div class="bg-white p-1 rounded-2 border-0">
-                                        <div class="card-header d-flex justify-content-between align-items-center" style="background: #00192D;">
-                                            <a class="text-white fw-bold text-decoration-none" data-bs-toggle="collapse" href="#addExpense" role="button" aria-expanded="false" aria-controls="addExpense" onclick="toggleIcon(this)">
-                                                <span id="toggleIcon">➕</span> Click Here to Add an Expense
+                                        <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #e9ecef;">
+                                            <a class="text-white fw-bold text-decoration-none text-dark" data-bs-toggle="collapse" href="#addExpense" role="button" aria-expanded="false" aria-controls="addExpense" onclick="toggleIcon(this)">
+                                                <span id="toggleIcon" >➕</span> Click Here to Add an Expense
                                             </a>
                                         </div>
                                     </div>
@@ -303,43 +303,36 @@ try {
                                                 <div class="card-body">
                                                     <form method="POST" id="expenseForm">
                                                         <div class="row g-3">
-                                                            <div class="col-md-3">
+                                                            <div class="col-md-4">
                                                                 <label class="form-label fw-bold">Expense for the Month of</label>
-                                                                <div class="custom-select-wrapper" id="custom-select-wrapper" style="width: 100%;">
-                                                                    <div class="custom-select shadow-sm" id="custom-select" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
-                                                                    Select Month
-                                                                    </div>
-                                                                    <div class="select-options" id="select-options" role="listbox">
-                                                                    <div role="option" data-value="option1"> January</div>
-                                                                    <div role="option" data-value="option2">February</div>
-                                                                    <div role="option" data-value="option1"> March</div>
-                                                                    <div role="option" data-value="option2">April</div>
-                                                                    <div role="option" data-value="option1"> May</div>
-                                                                    <div role="option" data-value="option2">June</div>
-                                                                    <div role="option" data-value="option1"> July</div>
-                                                                    <div role="option" data-value="option2">August</div>
-                                                                    <div role="option" data-value="option1"> September</div>
-                                                                    <div role="option" data-value="option2">October</div>
-                                                                    <div role="option" data-value="option1"> November</div>
-                                                                    <div role="option" data-value="option2">December</div>
-                                                                    </div>
-                                                                </div>
+                                                                <div class="mb-3" style="width: 100%;">
+                                                                    <select class="form-select" id="monthSelect" name="month" required>
+                                                                        <option value="" selected disabled>Select Month</option>
+                                                                        <option value="January">January</option>
+                                                                        <option value="February">February</option>
+                                                                        <option value="March">March</option>
+                                                                        <option value="April">April</option>
+                                                                        <option value="May">May</option>
+                                                                        <option value="June">June</option>
+                                                                        <option value="July">July</option>
+                                                                        <option value="August">August</option>
+                                                                        <option value="September">September</option>
+                                                                        <option value="October">October</option>
+                                                                        <option value="November">November</option>
+                                                                        <option value="December">December</option>
+                                                                    </select>
                                                             </div>
-                                                            <div class="col-md-3">
+                                                            </div>
+                                                            <div class="col-md-4">
                                                                 <label class="form-label fw-bold">Year</label>
                                                                 <input type="number" class="form-control" placeholder="2025" name="year" required />
                                                             </div>
-                                                            <div class="col-md-3">
+                                                            <div class="col-md-4">
                                                                 <label class="form-label fw-bold">Supplier</label>
                                                                 <input type="text" class="form-control" placeholder="Supplier" name="supplier" required />
                                                             </div>
-                                                            <div class="col-md-3">
-                                                                <label class="form-label fw-bold">Entry Date</label>
-                                                                <input type="date" class="form-control" name="date" required />
-                                                            </div>
                                                         </div>
                                                         <!-- Hidden total -->
-                                                        <input type="hidden" name="total" id="grandTotaal" value="0.00" />
                                                         <div class="row mt-2">
                                                             <div class="text-muted mt-4">Add the Spend items in the fields below</div>
                                                             <div class="col-md-12" id="itemsContainer">
@@ -417,6 +410,7 @@ try {
 
                                                                             <div class="d-flex justify-content-between w-100 mt-3 pt-2 border-top border-warning">
                                                                                 <label class="me-2 border-end pe-3 text-end w-50"><strong>Total:</strong></label>
+                                                                                <input type="hidden" name="total" id="grandTotalNumber" value="0.00" />
                                                                                 <input type="text" readonly class="form-control-plaintext w-50 ps-3 fw-bold" id="grandTotal" value="Ksh 12,000">
                                                                             </div>
 
@@ -584,7 +578,7 @@ try {
                                     // Group expenses by month and sum totals
                                     $monthlyTotals = [];
                                     try {
-                                        $stmt = $pdo->query("SELECT MONTH(date) AS month, SUM(total) AS total FROM expenses GROUP BY MONTH(date)");
+                                        $stmt = $pdo->query("SELECT MONTH(created_at) AS month, SUM(total) AS total FROM expenses GROUP BY MONTH(created_at)");
                                         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                             $monthNum = (int)$row['month'];
                                             $monthlyTotals[$monthNum] = (float)$row['total'];

@@ -172,34 +172,29 @@ document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
 
 
 // create an expense
-document.getElementById("expenseForm").addEventListener("submit", function(e){
+document.getElementById("expenseForm").addEventListener("submit", function(e) {
   e.preventDefault();
   console.log('expenseForm working');
 
-  // Form Element
   const form = document.getElementById("expenseForm");
-  // formData Object
-
   const formData = new FormData(form);
-  // Send Form
-  // Log the form data
-  for (let [key, value] of formData.entries()) {
-    console.log(`${key}: ${value}`);
-  }
-    fetch("actions/expenses/createExpense.php", {
-     method: "POST",
-     body: formData,
-   })
-   //Then
-   .then(response => response.text()) // You can also use .json() if your PHP returns JSON
-   .then(data => {
-     console.log("Server response:", data);
-     // Optionally display success message or clear form
-   })
-   .catch(error => {
-     console.error("Error submitting form:", error);
-   });
+
+  fetch("actions/expenses/createExpense.php", {
+    method: "POST",
+    body: formData,
+  })
+  .then(response => response.text())
+  .then(data => {
+    console.log("Server response:", data);
+    
+    // ✅ Reload the page without resubmission
+    window.location.href = window.location.href;
+  })
+  .catch(error => {
+    console.error("Error submitting form:", error);
+  });
 });
+
 
 
 // Pay for an expense
