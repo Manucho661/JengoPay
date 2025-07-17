@@ -508,3 +508,27 @@ document.getElementById("paymentForm").addEventListener("submit", function (e) {
         }, 10);
 
   }
+
+  // Record payment
+  document.getElementById("recordPaymentForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  console.log('expenseForm working');
+
+  const form = document.getElementById("recordPaymentForm");
+  const formData = new FormData(form);
+
+  fetch("actions/RecordPayment.php", {
+    method: "POST",
+    body: formData,
+  })
+  .then(response => response.text())
+  .then(data => {
+    console.log("Server response:", data);
+    
+    // ✅ Reload the page without resubmission
+    window.location.href = window.location.href;
+  })
+  .catch(error => {
+    console.error("Error submitting form:", error);
+  });
+});

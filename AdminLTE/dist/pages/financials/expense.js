@@ -44,16 +44,31 @@ function initializeCustomSelect(wrapper) {
   });
 }
 
+// bind item
+function bindItemHiddenInput(wrapper) {
+  const select = wrapper.querySelector('.custom-select');
+  const options = wrapper.querySelectorAll('[role="option"]');
+  const hiddenInput = wrapper.querySelector('.hiddenItemInput'); // ✅ use class selector
+  console.log(hiddenInput);
+  if (!hiddenInput) {
+    console.warn('No hidden input with class `.hiddenItemInput` inside wrapper');
+    return;
+  }
 
-
-
+  options.forEach(option => {
+    option.addEventListener('click', () => {
+      hiddenInput.value = option.dataset.value || option.textContent.trim();
+      console.log('Hidden input updated with:', hiddenInput.value);
+    });
+  });
+}
 document.addEventListener("DOMContentLoaded", function () {
   console.log('document loaded');
 // initialize custom select
 document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
     initializeCustomSelect(wrapper);
+    bindItemHiddenInput(wrapper);        // Specifically binds hidden ITEM[] values
   });
-
   //Add Expenses
   function calculateTotal() {
     console.log('total fired');
@@ -95,7 +110,10 @@ document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
     
     document.getElementById('subTotal').value = 'Ksh ' + subTotal.toFixed(2);
     document.getElementById('vatAmount').value= `Ksh ${vatAmount.toFixed(2)}`;
+    // grandTotal
     document.getElementById('grandTotal').value = 'Ksh ' + grandTotal.toFixed(2);
+    document.getElementById('grandTotalNumber').value = grandTotal.toFixed(2);
+
   }
 
   function attachEvents(row) {
@@ -144,11 +162,92 @@ document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
   const newCustomSelectWrapper = newRow.querySelector('.custom-select-wrapper');
   if (newCustomSelectWrapper) {
     initializeCustomSelect(newCustomSelectWrapper);
+    bindItemHiddenInput(newCustomSelectWrapper);
   }
 
   // Recalculate totals immediately
   calculateTotal();
 };
+});
 
 
+// create an expense
+document.getElementById("expenseForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  console.log('expenseForm working');
+
+  const form = document.getElementById("expenseForm");
+  const formData = new FormData(form);
+
+  fetch("actions/expenses/createExpense.php", {
+    method: "POST",
+    body: formData,
+  })
+  .then(response => response.text())
+  .then(data => {
+    console.log("Server response:", data);
+    
+    // ✅ Reload the page without resubmission
+    window.location.href = window.location.href;
+  })
+  .catch(error => {
+    console.error("Error submitting form:", error);
+  });
+});
+
+
+
+// Pay for an expense
+function payExpense(expenseId) {
+  // Get modal form elements
+  const expenseIdInput = document.getElementById('expenseId');
+  const paymentDateInput = document.getElementById('paymentDate');
+  const payExpenseForm = document.getElementById('payExpenseForm');
+  const modalElement = document.getElementById('payExpenseModal');
+
+  if (!expenseIdInput || !paymentDateInput || !payExpenseForm || !modalElement) {
+    console.error("Modal or form elements not found.");
+    return;
+  }
+
+  // Set hidden input with expense ID
+  expenseIdInput.value = expenseId;
+
+  // Reset the form
+  payExpenseForm.reset();
+
+  // Set today's date by default
+  const today = new Date().toISOString().split('T')[0];
+  paymentDateInput.value = today;
+
+  // Show the Bootstrap modal
+  const modal = new bootstrap.Modal(modalElement);
+  modal.show();
+}
+
+// payExpense
+document.getElementById("payExpenseForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  console.log('PayexpenseForm working');
+
+  const form = document.getElementById("payExpenseForm");
+  const formData = new FormData(form);
+
+  for (let [key, value] of formData.entries()) {
+  console.log(`${key}: ${value}`);
+  }
+  fetch("actions/expenses/payExpense.php", {
+    method: "POST",
+    body: formData,
+  })
+  .then(response => response.text())
+  .then(data => {
+    console.log("Server response:", data);
+    
+    // ✅ Reload the page without resubmission
+     window.location.href = window.location.href;
+  })
+  .catch(error => {
+    console.error("Error submitting form:", error);
+  });
 });

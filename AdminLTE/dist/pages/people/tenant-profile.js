@@ -65,10 +65,6 @@ if (tenantIdInput) {
   console.warn("❌ tenant_id input field not found.");
 }
 
-
-        
-
-
         const statusElement = document.getElementById('status');
         statusElement.textContent = tenant.status;
 
@@ -111,7 +107,6 @@ if (tenantIdInput) {
 
 
   // Fetch pets
-
 function fetchPets(user_id) {
   const tableBody = document.querySelector('#pets-table tbody');
   tableBody.innerHTML = '<tr><td colspan="4"><div class="loader"></div></td></tr>';
