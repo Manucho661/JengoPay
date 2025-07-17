@@ -15,23 +15,7 @@ function statusClass(string $status): string
     };
 }
 ?>
-<?php
-require '../db/connect.php';
 
-$stmt = $pdo->query("
-    SELECT
-        i.invoice_number,
-        i.invoice_date,
-        i.due_date,
-        i.total,
-        CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
-    FROM invoice i
-    LEFT JOIN users u ON i.tenant = u.id
-    ORDER BY i.invoice_number DESC
-");
-
-$invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
 <!doctype html>
 <html lang="en">
 <!--begin::Head-->
@@ -235,7 +219,15 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="invoice-list">
     <?php
 try {
-    $sql = "SELECT i.*, CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
+    $sql = "SELECT
+                i.id,
+                i.invoice_number,
+                i.invoice_date,
+                i.due_date,
+                i.total,
+                i.status,
+                i.payment_status,
+                CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
             FROM invoice i
             LEFT JOIN tenants t ON i.tenant = t.id
             LEFT JOIN users u ON u.id = t.user_id
@@ -243,11 +235,48 @@ try {
 
     foreach ($pdo->query($sql) as $row) {
         $link        = htmlspecialchars('invoice_details.php?id=' . $row['id']);
-        $tenantName  = $row['tenant'] ?: 'Unknown Tenant';
+        $tenantName  = $row['tenant_name'] ?: 'Unknown Tenant';
         $invoiceDate = date('d M Y', strtotime($row['invoice_date']));
+        $dueDate     = date('d M Y', strtotime($row['due_date']));
         $amount      = number_format($row['total'], 2);
-        $badgeClass  = statusClass($row['status']);
-        $statusText  = ucfirst($row['status']);
+
+        // Map status to class/text
+        switch ($row['status']) {
+            case 'sent':
+                $statusClass = 'badge-sent';
+                $statusText  = 'Sent';
+                break;
+            case 'paid':
+                $statusClass = 'badge-paid';
+                $statusText  = 'Paid';
+                break;
+            case 'overdue':
+                $statusClass = 'badge-overdue';
+                $statusText  = 'Overdue';
+                break;
+            case 'cancelled':
+                $statusClass = 'badge-cancelled';
+                $statusText  = 'Cancelled';
+                break;
+            default:
+                $statusClass = 'badge-draft';
+                $statusText  = 'Draft';
+        }
+
+        // Map payment status
+        switch ($row['payment_status']) {
+            case 'paid':
+                $paymentClass = 'badge-paid';
+                $paymentText  = 'Paid';
+                break;
+            case 'partial':
+                $paymentClass = 'badge-partial';
+                $paymentText  = 'Partial';
+                break;
+            default:
+                $paymentClass = 'badge-unpaid';
+                $paymentText  = 'Unpaid';
+        }
 
         echo <<<HTML
 <a href="$link" class="invoice-link">
@@ -260,10 +289,12 @@ try {
         <div class="invoice-customer">$tenantName</div>
         <div class="invoice-meta">
             <span class="invoice-number">{$row['invoice_number']}</span> &bull;
-            <span class="invoice-date">$invoiceDate</span>
+            <span class="invoice-date">Issued: $invoiceDate</span> &bull;
+            <span class="invoice-date">Due: $dueDate</span>
         </div>
         <div class="invoice-status">
-            <span class="status-badge $badgeClass">$statusText</span>
+            <span class="status-badge $statusClass">$statusText</span>
+            <span class="status-badge $paymentClass">$paymentText</span>
         </div>
     </div>
 
