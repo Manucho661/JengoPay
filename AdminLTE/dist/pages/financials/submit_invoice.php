@@ -46,73 +46,77 @@ try {
 }
 
 try {
-    // Begin transaction
-    $pdo->beginTransaction();
+  $pdo->beginTransaction();
 
-    // Prepare the insert statement with all fields
-    $stmt = $pdo->prepare("INSERT INTO invoice
-        (invoice_number, invoice_date, due_date, building_id, tenant,
-         account_item, description, quantity, unit_price, taxes,
-         sub_total, total, notes, terms_conditions, status, payment_status, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())");
+  if (!empty($_POST['invoice_id'])) {
+      // UPDATE existing invoice
+      $invoice_id = intval($_POST['invoice_id']);
 
-    foreach ($account_items as $i => $item) {
-        // Validate numeric fields
-        if (!is_numeric($quantities[$i])) {
-            throw new Exception("Quantity must be numeric for item " . ($i+1));
-        }
-        if (!is_numeric($unit_prices[$i])) {
-            throw new Exception("Unit price must be numeric for item " . ($i+1));
-        }
+      // Delete old items linked to this invoice first (if stored in itemized rows table, adjust accordingly)
+      $deleteStmt = $pdo->prepare("DELETE FROM invoice WHERE id = ?");
+      $deleteStmt->execute([$invoice_id]);
 
-        // Calculate totals
-        $quantity = (float)$quantities[$i];
-        $unit_price = (float)$unit_prices[$i];
-        $sub_total = $quantity * $unit_price;
+      // Continue with insert logic to replace existing rows
+  }
 
-        // Calculate tax if needed (adjust based on your tax logic)
-        $tax_rate = ($taxes[$i] === 'inclusive') ? 1.1 : 1.0; // Example: 10% tax
-        $total = $sub_total * $tax_rate;
+  // Now INSERT new rows (whether for update or fresh creation)
+  $stmt = $pdo->prepare("INSERT INTO invoice
+      (invoice_number, invoice_date, due_date, building_id, tenant,
+       account_item, description, quantity, unit_price, taxes,
+       sub_total, total, notes, terms_conditions, status, payment_status, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())");
 
-        // Execute the insert with all values
-        $stmt->execute([
-            $invoice_number,
-            $invoice_date,
-            $due_date,
-            $building_id,
-            $tenant_id,
-            $account_items[$i],
-            $descriptions[$i],
-            $quantity,
-            $unit_price,
-            $taxes[$i],
-            $sub_total,
-            $total,
-            $notes,
-            $terms_conditions,
-            $status,
-            $payment_status
-        ]);
-    }
+  foreach ($account_items as $i => $item) {
+      if (!is_numeric($quantities[$i])) {
+          throw new Exception("Quantity must be numeric for item " . ($i+1));
+      }
+      if (!is_numeric($unit_prices[$i])) {
+          throw new Exception("Unit price must be numeric for item " . ($i+1));
+      }
 
-    $invoice_id = $pdo->lastInsertId();
+      $quantity = (float)$quantities[$i];
+      $unit_price = (float)$unit_prices[$i];
+      $sub_total = $quantity * $unit_price;
+      $tax_rate = ($taxes[$i] === 'inclusive') ? 1.1 : 1.0;
+      $total = $sub_total * $tax_rate;
 
-    // Fetch tenant name
-    $nameStmt = $pdo->prepare("SELECT CONCAT(first_name, ' ', middle_name) AS full_name FROM users WHERE id = ?");
-    $nameStmt->execute([$tenant_id]);
-    $tenant_name = $nameStmt->fetchColumn() ?: 'Unknown';
+      $stmt->execute([
+          $invoice_number,
+          $invoice_date,
+          $due_date,
+          $building_id,
+          $tenant_id,
+          $account_items[$i],
+          $descriptions[$i],
+          $quantity,
+          $unit_price,
+          $taxes[$i],
+          $sub_total,
+          $total,
+          $notes,
+          $terms_conditions,
+          $status,
+          $payment_status
+      ]);
+  }
 
-    $pdo->commit();
+  $invoice_id = $pdo->lastInsertId();
 
-    // Redirect with success parameters
-    header("Location: inv1.php?success=1&invoice_id=$invoice_id&tenant_id=$tenant_id");
-    exit;
+  $nameStmt = $pdo->prepare("SELECT CONCAT(first_name, ' ', middle_name) AS full_name FROM users WHERE id = ?");
+  $nameStmt->execute([$tenant_id]);
+  $tenant_name = $nameStmt->fetchColumn() ?: 'Unknown';
+
+  $pdo->commit();
+
+  header("Location: inv1.php?success=1&invoice_id=$invoice_id&tenant_id=$tenant_id");
+  exit;
 
 } catch (PDOException $e) {
-    $pdo->rollBack();
-    die("Database error: " . $e->getMessage());
+  $pdo->rollBack();
+  die("Database error: " . $e->getMessage());
 } catch (Exception $e) {
-    $pdo->rollBack();
-    die("Error: " . $e->getMessage());
+  $pdo->rollBack();
+  die("Error: " . $e->getMessage());
 }
+
 ?>

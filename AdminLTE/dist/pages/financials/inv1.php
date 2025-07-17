@@ -894,6 +894,22 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
     background-color: #e0e0e0;
     color: #424242;
 }
+.invoice-menu button {
+    display: block;
+    width: 100%;
+    padding: 6px 12px;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+}
+.invoice-menu button:hover {
+    background-color: #f1f1f1;
+}
+.hidden {
+    display: none;
+}
+
       </style>
 </head>
 
@@ -1092,6 +1108,7 @@ foreach ($invoices as $invoice) {
     $invoiceDate    = date('M d, Y', strtotime($invoice['invoice_date']));
     $invoiceDueDate = date('M d, Y', strtotime($invoice['due_date']));
     $amount         = number_format($invoice['total'], 2);
+    $menuId         = 'menu-' . $invoice['id']; // Unique menu ID
 
     // Map DB status → badge + display text
     switch ($invoice['status']) {
@@ -1146,6 +1163,7 @@ foreach ($invoices as $invoice) {
     $href = 'invoice_details.php?id=' . $invoice['id'];
 
     // ---- HTML block -------------------------------------------------
+    echo '<div class="invoice-item-wrapper" style="position: relative;">';
     echo '<a href="'. $href .'" class="invoice-link">';
     echo '
         <div class="invoice-item">
@@ -1168,12 +1186,25 @@ foreach ($invoices as $invoice) {
             </div>
 
             <div class="invoice-actions">
-                <button class="action-btn" onclick="event.stopPropagation()">
+                <button class="action-btn menu-button" data-menu-id="'. $menuId .'" onclick="event.stopPropagation()">
                     <i class="fas fa-ellipsis-v"></i>
                 </button>
             </div>
-        </div>';
-    echo '</a>';
+        </div>
+    </a>';
+
+    // Dropdown menu
+    echo '
+        <div class="invoice-menu hidden" id="'. $menuId .'" style="position:absolute; right:10px; top:35px; background:#fff; border:1px solid #ccc; z-index:999; padding:8px;">
+            <button onclick="editInvoice('. $invoice['id'] .')">Edit</button>
+            <button onclick="deleteInvoice('. $invoice['id'] .')">Delete</button>
+           <button onclick="cancelInvoice('. $invoice['id'] .')">Cancel</button>
+
+
+
+        </div>
+    ';
+    echo '</div>'; // Close wrapper
 }
 ?>
                     <div class="invoice-list">
@@ -1206,6 +1237,8 @@ foreach ($invoices as $invoice) {
 
             <!-- Create Invoice View (Hidden by default) -->
             <div id="create-invoice-view" style="display: none;">
+            <input type="hidden" id="invoice-id" name="invoice_id">
+
                 <div class="page-header">
                     <h1 class="page-title">Create Invoice</h1>
                     <div class="page-actions">
@@ -1436,6 +1469,100 @@ foreach ($invoices as $invoice) {
         integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
         crossorigin="anonymous">
     </script>
+<script>
+function cancelInvoice(id) {
+    if (!confirm("Are you sure you want to cancel this invoice?")) return;
+
+    fetch('cancel_invoice.php?id=' + id)
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert("Invoice cancelled successfully.");
+                // Optionally: refresh or update the status badge in DOM
+                location.reload();
+            } else {
+                alert("Failed to cancel invoice: " + (data.error || "Unknown error"));
+            }
+        })
+        .catch(err => {
+            alert("Error occurred while cancelling: " + err);
+        });
+
+    closeMenus();
+}
+</script>
+
+<script>
+function deleteInvoice(id) {
+    if (!confirm("Are you sure you want to delete this invoice? This action cannot be undone.")) return;
+
+    fetch('delete_invoice.php?id=' + id)
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert("Invoice deleted successfully.");
+                location.reload(); // Or remove from DOM dynamically
+            } else {
+                alert("Failed to delete invoice: " + (data.error || "Unknown error"));
+            }
+        })
+        .catch(err => {
+            alert("Error occurred while deleting: " + err);
+        });
+
+    closeMenus();
+}
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Toggle the specific menu
+    document.querySelectorAll('.menu-button').forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.stopPropagation();
+            const menuId = this.getAttribute('data-menu-id');
+            const menu = document.getElementById(menuId);
+
+            // Close any other open menus
+            document.querySelectorAll('.invoice-menu').forEach(m => {
+                if (m !== menu) {
+                    m.classList.add('hidden');
+                    m.style.display = 'none';
+                }
+            });
+
+            // Toggle current menu
+            const isHidden = menu.classList.contains('hidden');
+            menu.classList.toggle('hidden', !isHidden);
+            menu.style.display = isHidden ? 'block' : 'none';
+        });
+    });
+
+    // Hide menus when clicking outside
+    document.addEventListener('click', function () {
+        closeMenus();
+    });
+});
+
+function closeMenus() {
+    document.querySelectorAll('.invoice-menu').forEach(menu => {
+        menu.classList.add('hidden');
+        menu.style.display = 'none';
+    });
+}
+
+function editInvoice(id) {
+    window.location.href = 'edit_invoice.php?id=' + id;
+}
+
+function deleteInvoice(id) {
+    if (confirm("Are you sure you want to delete invoice #" + id + "?")) {
+        window.location.href = 'delete_invoice.php?id=' + id;
+    }
+}
+</script>
+
 
 <!-- <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -2826,24 +2953,47 @@ const createInvoiceView = document.getElementById('create-invoice-view');
 const createInvoiceBtn = document.getElementById('create-invoice-btn');
 const cancelInvoiceBtn = document.getElementById('cancel-invoice-btn');
 
-// View Toggle Functions
+// Show form
 function showCreateInvoiceView() {
     invoiceListView.style.display = 'none';
     createInvoiceView.style.display = 'block';
 }
 
+// Back to list
 function showInvoiceListView() {
     createInvoiceView.style.display = 'none';
     invoiceListView.style.display = 'block';
 }
 
-// Event Listeners
+// Click handlers
 createInvoiceBtn?.addEventListener('click', showCreateInvoiceView);
 cancelInvoiceBtn?.addEventListener('click', showInvoiceListView);
 
-// Other JavaScript functionality would go here
-// (like handling form submission via AJAX, etc.)
+// Edit logic
+function editInvoice(invoiceId) {
+    // Show the form view
+    showCreateInvoiceView();
+
+    // Optional: populate form fields via AJAX
+    fetch('get_invoice_data.php?id=' + invoiceId)
+        .then(response => response.json())
+        .then(data => {
+            // Replace the below with actual form field population
+            document.getElementById('invoice-id').value = data.id;
+            document.getElementById('invoice-number').value = data.invoice_number;
+            document.getElementById('invoice-date').value = data.invoice_date;
+            document.getElementById('due-date').value = data.due_date;
+            document.getElementById('total').value = data.total;
+            document.getElementById('tenant').value = data.tenant;
+            // ... populate other fields as needed
+        })
+        .catch(error => {
+            alert("Failed to load invoice data.");
+            console.error(error);
+        });
+}
 </script>
+
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     function formatNumber(num) {
