@@ -4,7 +4,7 @@ include '../db/connect.php';
 
 // 📥 Fetch maintenance requests using PDO
 try {
-  $stmt = $pdo->prepare("SELECT * FROM maintenance_requests ORDER BY request_date DESC");
+  $stmt = $pdo->prepare("SELECT * FROM maintenance_requests WHERE availability = 'unavailable' ORDER BY request_date DESC");
   $stmt->execute();
   $requests = $stmt->fetchAll(PDO::FETCH_ASSOC); // 🎯 Fetch as associative array
 } catch (PDOException $e) {
