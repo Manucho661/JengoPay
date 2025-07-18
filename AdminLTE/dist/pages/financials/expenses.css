@@ -62,13 +62,21 @@
         border: 1px solid #FFC107;
         }
 
-        input:focus, select:focus, textarea:focus {
-          border-color: #FFC107;
+        input:focus, select:focus, textarea:focus, .form-select:focus, .form-control:focus{
+          border-color: #FFC107 !important;
           outline: none;
           /* box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); */ 
         }
-        /* select wrapper */
-        
+        .form-select:hover{
+          border-color: #FFC107 !important;
+          outline: none;
+          cursor: pointer;
+        }
+        .form-control:hover{
+          border-color: #FFC107 !important;
+          outline: none;
+          cursor: pointer;
+        }
 .custom-select-wrapper {
       position: relative;
       width: 250px;
