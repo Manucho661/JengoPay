@@ -1,5 +1,5 @@
 <?php
-include '../db/connect.php'; // Make sure $pdo is initialized properly
+include '../../db/connect.php'; // Make sure $pdo is initialized properly
 header('Content-Type: application/json');
 
 // Decode JSON input

@@ -1,4 +1,3 @@
-
 <?php
 $q = $_GET['q'] ?? '';
 $stmt = $pdo->prepare('SELECT account_code, account_name

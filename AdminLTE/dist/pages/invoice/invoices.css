@@ -1,0 +1,304 @@
+.container {
+    width: 80%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  h1 {
+    text-align: center;
+    color: #333;
+  }
+
+
+
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+
+  .items-table th, .items-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+  }
+
+  .items-table th {
+    background-color:#00192D;
+    color: #00192D;
+  }
+
+  .total-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+
+  .total-row div {
+    font-size: 18px;
+    font-weight: bold;
+  }
+.view{
+    /* padding: 5px 5px; */
+    background-color:#00192D;
+    color:#FFC107;
+    /* border: none; */
+    border-radius: 10px;
+    /* cursor: pointer; */
+    /* transition: background-color 0.3s ease; */
+}
+.view button:hover{
+    background-color: #FFC107;
+    color:white;
+}
+  .form-btns {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+  }
+
+  .form-btns button {
+    padding: 5px 10px;
+    background-color:#00192D;
+    color:#FFC107;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .form-btns button:hover {
+    background-color: #FFC107;
+    color:white;
+  }
+  .delete-btn {
+    background-color: #f44336;  /* Red background */
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .delete-btn:hover {
+    background-color: #d32f2f;  /* Darker red on hover */
+  }
+
+  .delete-btn i {
+    font-size: 14px;
+  }
+  /* .invoice-container { */
+    /* width: 700px; */
+    /* margin: auto 0;
+    border: 1px solid #ccc;
+    padding: 20px; */
+/* } */
+/* .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.header h1 {
+    text-transform: uppercase;
+} */
+.logo {
+    width: 80px;
+    height: 80px;
+    background: gray;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+}
+.invoice-info {
+    text-align: right;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+.totals {
+    text-align: right;
+    margin-top: 20px;
+}
+.footer {
+    margin-top: 20px;
+    font-size: 12px;
+}
+
+.add-btn {
+  margin-top: 10px;
+  padding: 10px;
+  background: #00192D;
+  color: #FFC107;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  margin-right: 90%;  /* Adjusted from 50rem to 50px for more reasonable spacing */
+  font-size: 16px;     /* Added font size for consistency */
+  text-align:left;  /* Centers text if necessary */
+}
+
+.add-btn:hover {
+  background-color: #004C74;  /* Adds a hover effect */
+}
+
+
+#columnFilter {
+  position: absolute;
+  right: 0;
+  top: 30px;
+  background: #f8f8f8;
+  border: 1px solid #ddd;
+  padding: 10px;
+  display: none; /* Initially hidden */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.hidden {
+  display:inline-block;
+}
+.menu-container {
+  position: relative;
+  display: inline-flex;
+}
+
+#menuButton {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px;
+  margin-left: 2rem;
+}
+.items-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* Ensures equal column widths */
+}
+.items-table th, .billing-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+  width: 12.5%; /* 8 columns equally distributed */
+}
+.items-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+ .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        .invoice-table th,
+        .invoice-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            width: 10%; /* Ensuring equal width distribution across 10 columns */
+        }
+        .invoice-table th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+
+        div.dt-buttons{
+          background-color: #00192D !important ;
+        }
+        div.dt-buttons .btn{
+          background-color: #00192D !important
+        }
+
+
+        div.dt-button-collection {
+          background-color: #00192D !important;  /* Change to your preferred color */
+          border: 1px solid #ccc !important;
+          border-radius: 2px;
+        }
+        div.dt-button-collection .dt-button {
+          background-color: #00192D !important;
+          color: white !important; /* Ensure text is visible */
+          border: none !important;
+        }
+
+        /* Change hover effect */
+        div.dt-button-collection .dt-button:hover {
+          background-color: #FFC107 !important;
+          color: white !important;
+          border-radius: 3px;
+        }
+
+        table{
+          font-size: 12px !important; /* Reduce table font size */
+        }
+
+        th, td {
+          text-align: left !important; /* Align text for readability */
+        }
+
+        th:nth-child(1), td:nth-child(1) {
+          text-align: center !important; /* Center align numbers like serial numbers */
+        }
+
+        th:nth-child(3), td:nth-child(3) {
+          text-align: center !important; /* Center align payment status */
+        }
+
+        th:nth-child(4), td:nth-child(4) {
+          text-align: left !important; /* Align provider names to the left */
+        }
+        th, td {
+          padding: 12px 15px !important; /* Top-bottom: 12px, Left-right: 15px */
+        }
+
+        th, td {
+          white-space: nowrap !important;
+          overflow: hidden !important;
+          text-overflow: ellipsis !important; /* Add '...' if text overflows */
+        }
+        th {
+          font-weight: bold !important;
+          text-transform: uppercase !important;
+          background-color: #f4f4f4 !important; /* Light background for contrast */
+          border-bottom: 2px solid #ddd !important;
+        }
+        .print-btn {
+          display: flex;
+          align-items:end;
+          gap: 8px; /* Space between icon and text */
+          padding: 10px 15px;
+          font-weight: bold;
+          border-radius: 5px;
+          background-color:#00192D;
+          color:#FFC107;
+          border: none;
+          transition: all 0.3s ease-in-out;
+      }
+
+      .print-btn i {
+          font-size: 16px;
+      }
+
+      .print-btn:hover {
+          opacity: 0.8;
+          cursor: pointer;
+      }
+      .button-container {
+        display: flex;
+        gap: 8px; /* Spacing between buttons */
+        justify-content: end; /* Center align buttons */
+    }

@@ -383,9 +383,18 @@ HTML;
         <i class="bi bi-printer-fill"></i> Print Invoice
     </button>
 
-    <button type="button" class="btn" style="color: #FFC107; background-color: #00192D;" id="downloadPdf">
-        <i class="bi bi-download"></i> Download PDF
-    </button>
+    <!-- <a href="download_invoice.php?id=<?= $inv['id'] ?>" class="btn" style="color: #FFC107; background-color: #00192D;">
+    <i class="bi bi-download"></i> Download PDF
+</a> -->
+
+<a href="view_invoice_pdf.php?id=<?= $inv['id'] ?>"
+   target="_blank"
+   class="btn"
+   style="color: #FFC107; background-color: #00192D;">
+    <i class="bi bi-eye"></i> View PDF
+</a>
+
+
 </div>
 
 
