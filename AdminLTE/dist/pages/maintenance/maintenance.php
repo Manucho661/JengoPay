@@ -556,9 +556,16 @@
 
                       <div class="col-md-6">
                         <div><strong>Payment Status:</strong></div>
-                        <div class="badge payment-status px-3 py-1 rounded-1 d-flex" style="width:fit-content; vertical-align:middle;">
-                          <div style="vertical-align:middle;">✅</div>
-                          <button id="payment-status" style="border:none;" onclick="makePayment()"></button>
+                        <div class="d-flex align-items-center gap-2 mt-1">
+                          <!-- <span class="badge rounded-pill px-3 py-2 text-dark" style="background-color: #FFC107;">
+                            ✅ Paid
+                          </span> -->
+                          <button id="payment-status"
+                                  onclick="makePayment()"
+                                  class="btn btn-sm rounded-1"
+                                  style="background-color: #00192D; color: white; border: none; padding: 6px 12px; border-radius: 20px;">
+                            Make Payment
+                          </button>
                         </div>
                       </div>
                       <div class="col-6">

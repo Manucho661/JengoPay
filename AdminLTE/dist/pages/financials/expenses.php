@@ -303,7 +303,7 @@ try {
                                                     <div class="row g-3">
                                                         <div class="col-md-4">
                                                             <label class="form-label fw-bold">Date&nbsp;:</label>
-                                                            <input type="date" class="form-control rounded-1 shadow-none" name="date" placeholder="">
+                                                            <input type="date" id="dateInput" class="form-control rounded-1 shadow-none" name="date" placeholder="">
                                                         </div>
                                                         <div class="col-md-4">
                                                             <label class="form-label fw-bold">Expense No</label>
@@ -316,83 +316,91 @@ try {
                                                     </div>
                                                     <!-- Hidden total -->
                                                     <div class="row mt-2">
-                                                        <div class="text-muted mt-4">Add the Spend items in the fields below</div>
-                                                        <div class="col-md-12" id="itemsContainer">
-                                                            <div class="row item-row g-3 mb-2">
-                                                                <div class="col-md-2">
-                                                                    <label class="form-label fw-bold">ITEM(SERVICE)</label>
-                                                                    <select class="form-select shadow-none rounded-1" name="ITEM[]" style="width: 100%;">
-                                                                        <option value="" disabled selected>Select</option>
-                                                                        <option value="Garbage">Garbage</option>
-                                                                        <option value="Electricty">Electricity</option>
-                                                                    </select>
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <label class="form-label fw-bold">Qty</label>
-                                                                    <input type="number" class="form-control qty rounded-1 shadow-none" placeholder="1" name="qty[]" required />
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <label class="form-label fw-bold">Unit Price</label>
-                                                                    <input type="number" class="form-control unit-price rounded-1 shadow-none" placeholder="123" name="unit_price[]" required />
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <label class="form-label fw-bold">Taxes</label>
-                                                                    <select class="form-select rounded-1 shadow-none " name="taxes[]" required>
-                                                                        <option value="" selected disabled>--Select Option--</option>
-                                                                        <option value="inclusive">VAT 16% Inclusive</option>
-                                                                        <option value="exclusive">VAT 16% Exclusive</option>
-                                                                        <option value="zero">Zero Rated</option>
-                                                                        <option value="exempt">Exempted</option>
-                                                                    </select>
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <label class="form-label fw-bold">Total</label>
-                                                                    <input type="text" class="form-control item-total shadow-none rounded-1" placeholder="Ksh 0.00" name="item_total[]" required readonly />
-                                                                </div>
-                                                                <div class="col-md-2" style="vertical-align:middle;">
-                                                                    <label class="form-label fw-bold"></label>
-                                                                    <div class="personal-info-card shadow-sm bg-white rounded d-flex p-1 align-items-center justify-content-center">
-                                                                        <button class="btn btn-sm btn-danger text" data-bs-toggle="modal" data-bs-target="#editPersonalInfoModal">
-                                                                            <i class="fas fa-trash me-1 icon" style="color:white"></i> <b>Remove</b>
-                                                                        </button>
+                                                        <div class="text-muted mt-4 mb-4">Add the Spend items in the fields below</div>
+                                                        <div class="col-md-12 rounded-2" id="itemsContainer" >
+                                                            <div class="row item-row g-3 mb-5 p-2" style="background-color: #f5f5f5;">
+                                                                <div class="col-md-12">
+                                                                    <div class="row">
+                                                                        <div class="col-md-3">
+                                                                            <label class="form-label fw-bold">ITEM(SERVICE)</label>
+                                                                            <select class="form-select shadow-none rounded-1" name="ITEM[]" style="width: 100%;">
+                                                                                <option value="" disabled selected>Select</option>
+                                                                                <option value="Garbage">Garbage</option>
+                                                                                <option value="Electricty">Electricity</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <label class="form-label fw-bold">Description</label>
+                                                                            <input type="text" class="form-control qty rounded-1 shadow-none" placeholder="Electricity" name="Description[]" required />
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <label class="form-label fw-bold">Qty</label>
+                                                                            <input type="number" class="form-control qty rounded-1 shadow-none" placeholder="1" name="qty[]" required />
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <label class="form-label fw-bold">Unit Price</label>
+                                                                            <input type="number" class="form-control unit-price rounded-1 shadow-none" placeholder="123" name="unit_price[]" required />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row mt-2">
+                                                                        <div class="col-md-3">
+                                                                            <label class="form-label fw-bold">Taxes</label>
+                                                                            <select class="form-select rounded-1 shadow-none " name="taxes[]" required>
+                                                                                <option value="" selected disabled>--Select Option--</option>
+                                                                                <option value="inclusive">VAT 16% Inclusive</option>
+                                                                                <option value="exclusive">VAT 16% Exclusive</option>
+                                                                                <option value="zero">Zero Rated</option>
+                                                                                <option value="exempt">Exempted</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <label class="form-label fw-bold">Total</label>
+                                                                            <input type="text" class="form-control item-total shadow-none rounded-1 mb-1" placeholder="Ksh 0.00" name="item_total[]" required readonly />
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <label class="form-label fw-bold">Discount</label>
+                                                                            <input type="text" class="form-control item-total shadow-none rounded-1 mb-1" placeholder="Ksh 0.00" required readonly>
+                                                                        </div>
+                                                                        <div class="col-md-3 d-flex flex-column align-items-center justify-content-center">
+                                                                            <label class="form-label fw-bold">Remove Item</label>
+                                                                            <button class="btn btn-sm btn-danger text" data-bs-toggle="modal" data-bs-target="#editPersonalInfoModal">
+                                                                                <i class="fas fa-trash me-1 icon" style="color:white"></i>
+                                                                            </button>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <!-- Spend items table -->
-                                                    <div class="row">
-                                                        <div class="row mt-4">
-                                                            <div class="col-md-12 d-flex justify-content-end">
-                                                                <div class="col-md-12 d-flex justify-content-end">
-                                                                    <div class="col-md-12 d-flex justify-content-end">
-                                                                        <div style="width: 100%;">
-                                                                            <div class="d-flex flex-column align-items-end">
+                                                    <div class="row mt-4 ">
+                                                        <div class="col-md-12 d-flex justify-content-end">
 
-                                                                                <div class="d-flex justify-content-between w-100 mb-2">
-                                                                                    <label class="me-2 border-end pe-3 text-end w-50"><strong>Sub-Total:</strong></label>
-                                                                                    <input type="text" readonly class="form-control-plaintext w-50 ps-3" id="subTotal" value="Ksh 10,500">
-                                                                                </div>
+                                                            <div class="d-flex justify-content-end">
 
-                                                                                <div class="d-flex justify-content-between w-100 mb-2">
-                                                                                    <label class="me-2 border-end pe-3 text-end w-50"><strong>VAT 16%:</strong></label>
-                                                                                    <input type="text" readonly class="form-control-plaintext w-50 ps-3" id="vatAmount" value="Ksh 1,500">
-                                                                                </div>
+                                                                <div class="d-flex flex-column align-items-end">
 
-                                                                                <div class="d-flex justify-content-between w-100 mb-2">
-                                                                                    <label class="me-2 border-end pe-3 text-end w-50"><strong>Zero Rated (VAT):</strong></label>
-                                                                                    <input type="text" readonly class="form-control-plaintext w-50 ps-3" value="Ksh 0">
-                                                                                </div>
-
-                                                                                <div class="d-flex justify-content-between w-100 mt-3 pt-2 border-top border-warning">
-                                                                                    <label class="me-2 border-end pe-3 text-end w-50"><strong>Total:</strong></label>
-                                                                                    <input type="hidden" name="total" id="grandTotalNumber" value="0.00" />
-                                                                                    <input type="text" readonly class="form-control-plaintext w-50 ps-3 fw-bold" id="grandTotal" value="Ksh 12,000">
-                                                                                </div>
-
-                                                                            </div>
-                                                                        </div>
+                                                                    <div class="d-flex justify-content-end w-100 mb-2">
+                                                                        <label class="me-2 border-end pe-3 text-end w-50"><strong>Sub-Total:</strong></label>
+                                                                        <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="subTotal" value="Ksh 10,500">
                                                                     </div>
+
+                                                                    <div class="d-flex justify-content-end w-100 mb-2" id="vatAmountInclusiveContainer" style="display:none !important;">
+                                                                        <label class="me-2 border-end pe-3 text-end w-50" ><strong id="taxLabel">VAT 16% (Inclusive):</strong></label>
+                                                                        <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountInclusive" value="Ksh 1,500">
+                                                                    </div>
+
+                                                                    <div class="d-flex justify-content-end w-100 mb-2" id="vatAmountExclusiveContainer" style="display:none !important;">
+                                                                        <label class="me-2 border-end pe-3 text-end w-50" ><strong id="taxLabel">VAT 16% (Exlusive):</strong></label>
+                                                                        <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmount" value="Ksh 1,500">
+                                                                    </div>
+
+                                                                    <div class="d-flex justify-content-end w-100 mt-3 pt-2 border-top border-warning">
+                                                                        <label class="me-2 border-end pe-3 text-end w-50"><strong>Total:</strong></label>
+                                                                        <input type="hidden" name="total" id="grandTotalNumber" value="0.00" />
+                                                                        <input type="text" readonly class="form-control-plaintext w-50 ps-3 fw-bold" id="grandTotal" value="Ksh 12,000">
+                                                                    </div>
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -400,9 +408,9 @@ try {
 
                                                     <div class="row mt-3">
                                                         <div class="col-md-12 d-flex justify-content-between">
-                                                            <button type="button" class="btn btn-outline-warning text-dark" onclick="addRow()">➕ Add More</button>
-                                                            <button type="submit" class="btn btn-secondary">✕ Close</button>
-                                                            <button type="submit" class="btn btn-outline-warning text-dark">✅ Submit</button>
+                                                            <button type="button" class="btn btn-outline-warning text-dark shadow-none" onclick="addRow()">➕ Add More</button>
+                                                            <button type="submit" class="btn btn-secondary shadow-none">✕ Close</button>
+                                                            <button type="submit" class="btn btn-outline-warning text-dark shadow-none">✅ Submit</button>
                                                         </div>
                                                     </div>
                                                 </form>
@@ -447,7 +455,9 @@ try {
                                                 <tr>
                                                     <td><?= htmlspecialchars(date('d M Y', strtotime($exp['created_at']))) ?></td>
                                                     <td><?= htmlspecialchars($exp['supplier']) ?></td>
-                                                    <td> <div style="color:#28a745;"><?= htmlspecialchars($exp['expense_no']) ?></div></td>
+                                                    <td>
+                                                        <div style="color:#28a745;"><?= htmlspecialchars($exp['expense_no']) ?></div>
+                                                    </td>
                                                     <td>KSH <?= number_format($exp['total'], 2) ?></td>
                                                     <td>
                                                         <?php
@@ -482,7 +492,7 @@ try {
                                                         <button
                                                             class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
                                                             style="background-color: #00192D; color: white; border: none; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;"
-                                                             onclick="openExpenseModal(<?= $exp['id'] ?>, <?= $exp['total'] ?>)">
+                                                            onclick="openExpenseModal(<?= $exp['id'] ?>, <?= $exp['total'] ?>)">
                                                             <i class="bi bi-eye-fill"></i>
                                                             View
                                                         </button>
@@ -588,113 +598,28 @@ try {
         <!--end::Footer-->
 
 
-        <!-- Models -->
-        <!-- 🎉 Premium Stylish Modal -->
-        <div class="modal fade" id="expenseModal" tabindex="-1" role="dialog" aria-labelledby="expenseModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                <div class="modal-content shadow-lg rounded-4">
-
-                    <!-- Header with gradient -->
-                    <div class="modal-header" style="background: linear-gradient(135deg, #00192D, #004455); color: #FFC107; border-bottom: none; border-top-left-radius: 16px; border-top-right-radius: 16px;">
-                        <h5 class="modal-title d-flex align-items-center" id="expenseModalLabel">
-                            <i class="fas fa-file-invoice-dollar fa-lg me-3"></i> Expense Details
-                        </h5>
+        <!-- Modals -->
+        <!-- Previous year date warning -->
+        <div class="modal fade" id="fyWarningModal" tabindex="-1" aria-labelledby="fyWarningLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content" style="background-color: #F8FAFC; border: 1px solid #193A4D;">
+                    <div class="modal-header" style="background-color: #193A4D; color: white;">
+                        <h5 class="modal-title" id="fyWarningLabel">⚠ Previous Financial Year</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-
-                    <!-- Body with subtle background -->
-                    <div class="modal-body bg-light px-4 py-4">
-
-                        <!-- Group 1: Date & Supplier -->
-                        <div class="d-flex flex-wrap gap-3 mb-4">
-                            <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
-                                <div class="d-flex align-items-center mb-2 text-primary">
-                                    <i class="fas fa-calendar-alt fa-fw me-2"></i>
-                                    <span class="fw-semibold">Date</span>
-                                </div>
-                                <div id="modal-date" class="text-break fs-5"></div>
-                            </div>
-                            <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
-                                <div class="d-flex align-items-center mb-2 text-success">
-                                    <i class="fas fa-store fa-fw me-2"></i>
-                                    <span class="fw-semibold">Supplier</span>
-                                </div>
-                                <div id="modal-supplier" class="text-break fs-5"></div>
-                            </div>
-                        </div>
-
-                        <!-- Group 2: Expense # & Item -->
-                        <div class="d-flex flex-wrap gap-3 mb-4">
-                            <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
-                                <div class="d-flex align-items-center mb-2 text-warning">
-                                    <i class="fas fa-hashtag fa-fw me-2"></i>
-                                    <span class="fw-semibold">Expense Number</span>
-                                </div>
-                                <div id="modal-expense-number" class="text-break fs-5"></div>
-                            </div>
-                            <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
-                                <div class="d-flex align-items-center mb-2 text-secondary">
-                                    <i class="fas fa-box fa-fw me-2"></i>
-                                    <span class="fw-semibold">Item</span>
-                                </div>
-                                <div id="modal-item" class="text-break fs-5"></div>
-                            </div>
-                        </div>
-
-                        <!-- Group 3: Description -->
-                        <div class="mb-4 p-3 bg-white rounded shadow-sm">
-                            <div class="d-flex align-items-center mb-2 text-muted">
-                                <i class="fas fa-align-left fa-fw me-2"></i>
-                                <span class="fw-semibold">Description</span>
-                            </div>
-                            <div id="modal-description" class="text-break fs-5"></div>
-                        </div>
-
-                        <!-- Group 4: Qty, Unit Price & Taxes -->
-                        <div class="d-flex flex-wrap gap-3 mb-4">
-                            <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
-                                <div class="d-flex align-items-center mb-2 text-info">
-                                    <i class="fas fa-sort-numeric-up fa-fw me-2"></i>
-                                    <span class="fw-semibold">Quantity</span>
-                                </div>
-                                <div id="modal-qty" class="fs-5"></div>
-                            </div>
-                            <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
-                                <div class="d-flex align-items-center mb-2 text-success">
-                                    <i class="fas fa-money-bill-wave fa-fw me-2"></i>
-                                    <span class="fw-semibold">Unit Price</span>
-                                </div>
-                                <div id="modal-unit-price" class="fs-5"></div>
-                            </div>
-                            <div class="flex-grow-1 p-3 bg-white rounded shadow-sm">
-                                <div class="d-flex align-items-center mb-2 text-warning">
-                                    <i class="fas fa-percent fa-fw me-2"></i>
-                                    <span class="fw-semibold">Taxes</span>
-                                </div>
-                                <div id="modal-taxes" class="fs-5"></div>
-                            </div>
-                        </div>
-
-                        <!-- Total -->
-                        <div class="p-3 bg-white rounded shadow-sm border border-danger">
-                            <div class="d-flex align-items-center mb-2 text-danger">
-                                <i class="fas fa-calculator fa-fw me-2"></i>
-                                <span class="fw-semibold fs-4">Total</span>
-                            </div>
-                            <div id="modal-total" class="fs-3 fw-bold text-danger"></div>
-                        </div>
-
+                    <div class="modal-body" style="color: #193A4D;">
+                        You’ve selected a date from the previous financial year.<br>
+                        Are you sure you want to continue?
                     </div>
-
-                    <!-- Footer -->
-                    <div class="modal-footer justify-content-center bg-white rounded-bottom" style="border-top: none;">
-                        <button type="button" class="btn btn-warning px-4 py-2 fw-semibold shadow-sm" data-bs-dismiss="modal" style="letter-spacing: 0.03em;">
-                            <i class="fas fa-times me-2"></i> Close
-                        </button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn" style="background-color: #FFC107; color: #193A4D;" id="confirmFY">Yes, continue</button>
+                        <button type="button" class="btn btn-light" id="cancelFY" data-bs-dismiss="modal">No, cancel</button>
                     </div>
-
                 </div>
             </div>
         </div>
+
+
     </div>
     <!--end::App Wrapper-->
 
@@ -797,7 +722,44 @@ try {
             });
         });
     </script>
-    <!-- date display only future date -->
+
+    <!-- date display only Previos dates -->
+    <script>
+        const dateInput = document.getElementById('dateInput');
+        let tempDate = null;
+
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.setAttribute('max', today);
+
+        const fyModalElement = document.getElementById('fyWarningModal');
+        const fyModal = new bootstrap.Modal(fyModalElement);
+
+        dateInput.addEventListener('change', function() {
+            const selectedDate = new Date(this.value);
+            const now = new Date();
+
+            // Financial year start (July 1)
+            const fyStart = new Date(now.getFullYear(), 6, 1); // July = month 6
+
+            if (selectedDate < fyStart) {
+                tempDate = this.value;
+                fyModal.show();
+            }
+        });
+
+        // "No, cancel" button
+        document.getElementById('cancelFY').addEventListener('click', function() {
+            dateInput.value = ""; // Clear input
+            tempDate = null;
+            fyModal.hide(); // Hide modal manually
+        });
+
+        // "Yes, continue" button
+        document.getElementById('confirmFY').addEventListener('click', function() {
+            fyModal.hide(); // Simply hide modal, keep selected date
+        });
+    </script>
+
 
     <script>
         function toggleIcon(anchor) {
@@ -883,40 +845,6 @@ try {
                 }
             });
         });
-    </script>
-
-
-
-
-
-    <!-- ✅ Dynamic Modal Script -->
-    <script>
-        function openExpenseModal(id) {
-            fetch(`expense2.php?view_id=${id}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const expense = data.data;
-                        document.getElementById('modal-date').textContent = expense.date;
-                        document.getElementById('modal-supplier').textContent = expense.supplier;
-                        document.getElementById('modal-expense-number').textContent = expense.expense_number;
-                        document.getElementById('modal-item').textContent = expense.item;
-                        document.getElementById('modal-description').textContent = expense.description;
-                        document.getElementById('modal-qty').textContent = expense.qty;
-                        document.getElementById('modal-unit-price').textContent = "KES " + expense.unit_price;
-                        document.getElementById('modal-taxes').textContent = "KES " + expense.taxes;
-                        document.getElementById('modal-total').textContent = "KES " + expense.total;
-
-                        $('#expenseModal').modal('show');
-                    } else {
-                        alert("❌ " + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Fetch error:', error);
-                    alert("❌ Failed to load expense.");
-                });
-        }
     </script>
 
 
