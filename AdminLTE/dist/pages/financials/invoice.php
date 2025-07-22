@@ -84,9 +84,6 @@ $buildingsStmt = $pdo->query(
 $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-
-
-
 <!doctype html>
 <html lang="en">
 <!--begin::Head-->
@@ -1256,7 +1253,7 @@ foreach ($invoices as $invoice) {
                     <!-- Customer Section -->
                     <div class="form-section">
                         <h3 class="section-title">Tenant Details</h3>
-                        <form method="POST" action="actions/submit_invoice.php">
+                        <form method="POST" action="submit_invoice.php">
                         <div class="form-row">
 
 <!-- Existing Invoice # input -->
