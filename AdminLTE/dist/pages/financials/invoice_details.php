@@ -15,6 +15,71 @@ function statusClass(string $status): string
     };
 }
 ?>
+<?php
+// Include database connection
+include '../db/connect.php';
+
+// Function to fetch invoice data
+function getInvoiceData($pdo, $invoiceId) {
+    $stmt = $pdo->prepare("SELECT * FROM invoice WHERE id = ?");
+    $stmt->execute([$invoiceId]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+// Function to fetch invoice items (you'll need to create this table or adjust query)
+function getInvoiceItems($pdo, $invoiceId) {
+    $stmt = $pdo->prepare("
+        SELECT description, quantity, unit_price
+        FROM invoice
+        WHERE id = ?
+    ");
+    $stmt->execute([$invoiceId]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Function to format date
+function formatDate($dateString) {
+    if ($dateString == '0000-00-00' || empty($dateString)) return '';
+    $date = new DateTime($dateString);
+    return $date->format('d/m/Y');
+}
+
+// Get invoice ID from request or use a default
+$invoiceId = $_GET['id'] ?? 121; // Default to INV056
+$invoice = getInvoiceData($pdo, $invoiceId);
+
+// Get invoice items
+$items = getInvoiceItems($pdo, $invoiceId);
+
+// If no items table exists yet, use sample data
+if (empty($items)) {
+    $items = [
+        ['description' => 'Web Design', 'quantity' => 1, 'unit_price' => 25000],
+        ['description' => 'Hosting (1 year)', 'quantity' => 1, 'unit_price' => 5000]
+    ];
+}
+
+// Calculate totals
+$subtotal = $invoice['sub_total'] ?? array_reduce($items, fn($carry, $item) => $carry + ($item['quantity'] * $item['unit_price']), 0);
+$vat = $invoice['taxes'] ?? $subtotal * 0.16; // Assuming 16% VAT
+$total = $invoice['total'] ?? $subtotal + $vat;
+
+// Company logos
+$logos = [
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Unilever.svg/200px-Unilever.svg.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/200px-IBM_logo.svg.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/200px-Amazon_logo.svg.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Microsoft_logo.svg/200px-Microsoft_logo.svg.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/200px-Google_2015_logo.svg.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/200px-Apple_logo_black.svg.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Pepsi_logo_2014.svg/200px-Pepsi_logo_2014.svg.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Toyota_logo.svg/200px-Toyota_logo.svg.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Adobe_Corporate_Logo.png/200px-Adobe_Corporate_Logo.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Nike_logo.svg/200px-Nike_logo.svg.png"
+];
+$randomLogo = $logos[array_rand($logos)];
+?>
+
 
 <!doctype html>
 <html lang="en">
@@ -163,6 +228,8 @@ function statusClass(string $status): string
         }
         /* quick reset for invoice HTML you may embed later */
         .viewer h1,.viewer h2,.viewer h3{margin:0 0 .5em}
+
+
     </style>
 </head>
 
@@ -398,96 +465,113 @@ HTML;
 </div>
 
 
+<div class="invoice-card">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <img src="<?= $randomLogo ?>" alt="Company Logo" class="invoice-logo">
+                <script>
+                const logos = [
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Unilever.svg/200px-Unilever.svg.png",
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/200px-IBM_logo.svg.png",
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/200px-Amazon_logo.svg.png",
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Microsoft_logo.svg/200px-Microsoft_logo.svg.png",
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/200px-Google_2015_logo.svg.png",
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/200px-Apple_logo_black.svg.png",
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Pepsi_logo_2014.svg/200px-Pepsi_logo_2014.svg.png",
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Toyota_logo.svg/200px-Toyota_logo.svg.png",
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Adobe_Corporate_Logo.png/200px-Adobe_Corporate_Logo.png",
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Nike_logo.svg/200px-Nike_logo.svg.png"
+                ];
 
+                const logoImg = document.getElementById("invoiceLogo");
+                logoImg.src = logos[Math.floor(Math.random() * logos.length)];
+            </script>
 
-            <!-- Rendered invoice styled like modal -->
-            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" style="max-width: 100%; margin: 0; transform: none;">
-              <div class="modal-content" style="border: none;">
-                <div class="modal-header" style="border-bottom: 2px solid #dee2e6;">
-                  <h5 class="modal-title">Tenant Invoice</h5>
+                <div class="text-end" style="background-color: #f0f0f0; padding: 10px; border-radius: 8px;">
+                    <strong>Customer Name</strong><br>
+                    123 Example St<br>
+                    Nairobi, Kenya<br>
+                    customer@example.com<br>
+                    +254 700 123456
                 </div>
-                <div class="modal-body" id="invoiceContent">
-                  <div class="invoice-container">
-                    <!-- From Section -->
-                    <div>
-                      <p>
-                        From:<br>
-                        Angela Real Estate, Ltd..<br>
-                        795 Pinnacle Building
-                      </p>
-                      <p>Upperhill, Nairobi Kenya</p>
-                      <p>Phone: 0712345678</p>
-                      <p>Email: info@angelarealestate.com </p><br>
-                    </div>
-
-                    <!-- To Section -->
-                    <div style="text-align: right;">
-                      <p>
-                        To:<br>
-                        <span id="tenantName"><?= htmlspecialchars($inv['tenant_name']) ?></span><br>
-                        Angela Real Estate, Ltd..<br>
-                        795 Pinnacle Building
-                      </p>
-                      <p>Upperhill, Nairobi Kenya</p>
-                      <p>Phone: <span id="tenantPhone">0712345678</span></p>
-                      <p>Email: <span id="tenantEmail">tenant@example.com</span></p>
-                    </div>
-                  </div>
-
-                  <br>
-
-                  <!-- Invoice Info Section -->
-                  <div class="invoice-info">
-                    <p><strong>Invoice No:</strong> <span id="invoiceNumber"><?= $inv['invoice_number'] ?></span></p>
-                    <p><strong>Invoice Date:</strong> <span id="invoiceDate"><?= date('d/m/Y', strtotime($inv['invoice_date'])) ?></span></p>
-                    <p><strong>Due Date:</strong> <span id="dueDate"><?= date('d/m/Y', strtotime($inv['due_date'])) ?></span></p>
-                  </div>
-
-                  <!-- Invoice Items Table -->
-                  <table class="table table-bordered mt-3">
-                    <thead class="table-light">
-                      <tr>
-                        <th>Description</th>
-                        <th>QTY</th>
-                        <th>Unit Price</th>
-                        <th>Taxes</th>
-                        <th>Amount</th>
-                      </tr>
-                    </thead>
-                    <tbody id="invoiceItems">
-                      <?= $lineRows ?>
-                    </tbody>
-                  </table>
-
-                  <!-- Totals -->
-                  <div class="row mt-4">
-                    <div class="col-md-12 d-flex justify-content-end">
-                      <table class="table table-bordered" style="width: 60%;">
-                        <thead class="table-light">
-                          <tr>
-                            <th>Sub-Total</th>
-                            <th>VAT 16%</th>
-                            <th>Zero Rated(VAT)</th>
-                            <th>Total</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>Ksh <?= number_format($subTotal, 2) ?></td>
-                            <td>Ksh <?= number_format($vat, 2) ?></td>
-                            <td>Ksh 0</td>
-                            <td>Ksh <?= number_format($total, 2) ?></td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-
-
-              </div>
             </div>
 
+            <!-- Invoice Info -->
+            <div class="d-flex justify-content-between">
+                <h6 class="mb-0"><?= htmlspecialchars($invoice['account_item']) ?></h6>
+                <div class="text-end">
+                    <h3><?= htmlspecialchars($invoice['invoice_number']) ?></h3><br>
+                </div>
+            </div>
+
+            <div class="mb-1 rounded-2 d-flex justify-content-between align-items-center"
+                style="border: 1px solid #FFC107; padding: 4px 8px; background-color: #FFF4CC;">
+                <div class="d-flex flex-column Invoice-date m-0">
+                    <span class="m-0"><b>Invoice Date</b></span>
+                    <p class="m-0"><?= formatDate($invoice['invoice_date']) ?></p>
+                </div>
+                <div class="d-flex flex-column due-date m-0">
+                    <span class="m-0"><b>Due Date</b></span>
+                    <p class="m-0"><?= formatDate($invoice['due_date']) ?></p>
+                </div>
+                <div></div>
+            </div>
+
+            <!-- Items Table -->
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered rounded-2 table-sm thick-bordered-table">
+                    <thead class="table">
+                        <tr class="custom-th">
+                            <th>Description</th>
+                            <th class="text-end">Qty</th>
+                            <th class="text-end">Unit Price</th>
+                            <th class="text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($items as $item): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($item['description']) ?></td>
+                            <td class="text-end"><?= $item['quantity'] ?></td>
+                            <td class="text-end">KES <?= number_format($item['unit_price'], 2) ?></td>
+                            <td class="text-end">KES <?= number_format($item['quantity'] * $item['unit_price'], 2) ?></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Totals and Terms -->
+            <div class="row">
+                <div class="col-6 terms-box">
+                    <strong>Terms:</strong><br>
+                    <?= !empty($invoice['terms_conditions']) ? htmlspecialchars($invoice['terms_conditions']) : 'Payment due in 14 days.<br>Late fee: 2% monthly.' ?>
+                </div>
+                <div class="col-6">
+                    <table class="table table-borderless table-sm text-end mb-0">
+                        <tr>
+                            <th>Subtotal:</th>
+                            <td>KES <?= number_format($subtotal, 2) ?></td>
+                        </tr>
+                        <tr>
+                            <th>VAT (16%):</th>
+                            <td>KES <?= number_format($vat, 2) ?></td>
+                        </tr>
+                        <tr>
+                            <th>Total:</th>
+                            <td><strong>KES <?= number_format($total, 2) ?></strong></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="text-center small text-muted">
+                <?= !empty($invoice['notes']) ? htmlspecialchars($invoice['notes']) : 'Thank you for your business!' ?>
+            </div>
+        </div>
+    </div>
             <?php
         }
     }
