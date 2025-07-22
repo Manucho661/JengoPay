@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Compact Invoice</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .invoice-card {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+        }
+
+        .invoice-logo {
+            height: 50px;
+        }
+
+        .table-sm th,
+        .table-sm td {
+            padding: .3rem;
+        }
+
+        .totals-box,
+        .terms-box {
+            font-size: 12px;
+        }
+
+        .terms-box {
+            color: #666;
+        }
+
+        hr {
+            margin: 1rem 0;
+        }
+
+        .custom-th th {
+            background-color: #00192D !important;
+            color: white;
+            /* text-align: right; */
+        }
+
+        .invoice-table-wrapper {
+            border: 1px solid #00192D;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .custom-th th {
+            background-color: #00192D !important;
+            color: white !important;
+        }
+
+        .invoice-table tbody tr:nth-child(even) {
+            background-color: #f4f6f8;
+        }
+
+        .invoice-table td,
+        .invoice-table th {
+            border-color: #00192D;
+            vertical-align: middle;
+        }
+
+        .invoice-table tbody tr:hover {
+            background-color: #e9f1ff;
+        }
+
+        .thick-bordered-table th {
+            border: 1px solid #FFC107 !important;
+            /* You can change width and color */
+        }
+
+        .thick-bordered-table td {
+            border: 1px solid #FFC107 !important;
+            /* You can change width and color */
+        }
+
+        
+    </style>
+</head>
+
+<body>
+
+    <div class="invoice-card">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-start mb-3">
+            <img id="invoiceLogo" alt="Company Logo" class="invoice-logo">
+            <script>
+                const logos = [
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Unilever.svg/200px-Unilever.svg.png",
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/200px-IBM_logo.svg.png",
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/200px-Amazon_logo.svg.png",
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Microsoft_logo.svg/200px-Microsoft_logo.svg.png",
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/200px-Google_2015_logo.svg.png",
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/200px-Apple_logo_black.svg.png",
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Pepsi_logo_2014.svg/200px-Pepsi_logo_2014.svg.png",
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Toyota_logo.svg/200px-Toyota_logo.svg.png",
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Adobe_Corporate_Logo.png/200px-Adobe_Corporate_Logo.png",
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Nike_logo.svg/200px-Nike_logo.svg.png"
+                ];
+
+                const logoImg = document.getElementById("invoiceLogo");
+                logoImg.src = logos[Math.floor(Math.random() * logos.length)];
+            </script>
+
+            <div class="text-end">
+                <strong>Customer Name</strong><br>
+                123 Example St<br>
+                Nairobi, Kenya<br>
+                customer@example.com<br>
+                +254 700 123456
+            </div>
+        </div>
+
+        <!-- Invoice Info -->
+        <div class="d-flex justify-content-between">
+            <h6 class="mb-0">Josephat Koech</h6>
+            <div class="text-end">
+                <h3> INV001</h3><br>
+            </div>
+        </div>
+
+        <div class="mb-1 rounded-2 d-flex justify-content-between align-items-center"
+            style="border: 1px solid #FFC107; padding: 4px 8px; background-color: #FFF4CC;">
+            <div class="d-flex flex-column Invoice-date m-0">
+                <span class="m-0"><b>Due Date</b></span>
+                <p class="m-0">24/6/2025</p>
+            </div>
+            <div class="d-flex flex-column due-date m-0">
+                <span class="m-0"><b>Due Date</b></span>
+                <p class="m-0">24/6/2025</p>
+            </div>
+            <div></div>
+        </div>
+
+        <!-- Items Table -->
+        <div class="table-responsive ">
+            <table class="table table-striped table-bordered rounded-2 table-sm thick-bordered-table">
+                <thead class="table">
+                    <tr class="custom-th">
+                        <th>Description</th>
+                        <th class="text-end">Qty</th>
+                        <th class="text-end">Unit Price</th>
+                        <th class="text-end">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Web Design</td>
+                        <td class="text-end">1</td>
+                        <td class="text-end">KES 25,000</td>
+                        <td class="text-end">KES 25,000</td>
+                    </tr>
+                    <tr>
+                        <td>Hosting (1 year)</td>
+                        <td class="text-end">1</td>
+                        <td class="text-end">KES 5,000</td>
+                        <td class="text-end">KES 5,000</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Totals and Terms -->
+        <div class="row">
+            <div class="col-6 terms-box">
+                <strong>Terms:</strong><br>
+                Payment due in 14 days.<br>
+                Late fee: 2% monthly.
+            </div>
+            <div class="col-6">
+                <table class="table table-borderless table-sm text-end mb-0">
+                    <tr>
+                        <th>Subtotal:</th>
+                        <td>KES 30,000</td>
+                    </tr>
+                    <tr>
+                        <th>VAT (16%):</th>
+                        <td>KES 4,800</td>
+                    </tr>
+                    <tr>
+                        <th>Total:</th>
+                        <td><strong>KES 34,800</strong></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="text-center small text-muted">
+            Thank you for your business!
+        </div>
+    </div>
+
+</body>
+
+</html>
