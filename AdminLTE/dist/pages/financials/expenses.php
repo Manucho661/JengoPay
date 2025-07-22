@@ -331,7 +331,7 @@ try {
                                                                         </div>
                                                                         <div class="col-md-3">
                                                                             <label class="form-label fw-bold">Description</label>
-                                                                            <input type="text" class="form-control qty rounded-1 shadow-none" placeholder="Electricity" name="Description[]" required />
+                                                                            <input type="text" class="form-control description rounded-1 shadow-none" placeholder="Electricity" name="Description[]" required />
                                                                         </div>
                                                                         <div class="col-md-3">
                                                                             <label class="form-label fw-bold">Qty</label>
@@ -392,7 +392,7 @@ try {
 
                                                                     <div class="d-flex justify-content-end w-100 mb-2" id="vatAmountExclusiveContainer" style="display: none;" >
                                                                         <label class="me-2 border-end pe-3 text-end w-50" ><strong id="taxLabel">VAT 16% (Exlusive):</strong></label>
-                                                                        <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmount" value="Ksh 1,500">
+                                                                        <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountExclusive" value="Ksh 1,500">
                                                                     </div>
 
                                                                     <div class="d-flex justify-content-end w-100 mt-3 pt-2 border-top border-warning">
