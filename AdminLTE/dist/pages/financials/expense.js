@@ -178,7 +178,9 @@ document.getElementById("expenseForm").addEventListener("submit", function(e) {
 
   const form = document.getElementById("expenseForm");
   const formData = new FormData(form);
-
+  for (let [key, value] of formData.entries()) {
+  console.log(`${key}: ${value}`);
+  }
   fetch("actions/expenses/createExpense.php", {
     method: "POST",
     body: formData,
@@ -188,7 +190,7 @@ document.getElementById("expenseForm").addEventListener("submit", function(e) {
     console.log("Server response:", data);
     
     // ✅ Reload the page without resubmission
-    window.location.href = window.location.href;
+     window.location.href = window.location.href;
   })
   .catch(error => {
     console.error("Error submitting form:", error);
@@ -198,7 +200,7 @@ document.getElementById("expenseForm").addEventListener("submit", function(e) {
 
 
 // Pay for an expense
-function payExpense(expenseId) {
+function payExpense(expenseId, amountToPay) {
   // Get modal form elements
   const expenseIdInput = document.getElementById('expenseId');
   const paymentDateInput = document.getElementById('paymentDate');
@@ -212,6 +214,9 @@ function payExpense(expenseId) {
 
   // Set hidden input with expense ID
   expenseIdInput.value = expenseId;
+
+  // default value, but user can still change it
+    document.getElementById('amountToPay').value = parseFloat(1200);
 
   // Reset the form
   payExpenseForm.reset();
