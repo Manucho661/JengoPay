@@ -390,7 +390,7 @@ try {
                                                                         <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountInclusive" value="Ksh 1,500">
                                                                     </div>
 
-                                                                    <div class="d-flex justify-content-end w-100 mb-2" id="vatAmountExclusiveContainer" style="display:none !important;">
+                                                                    <div class="d-flex justify-content-end w-100 mb-2" id="vatAmountExclusiveContainer" style="display: none;" >
                                                                         <label class="me-2 border-end pe-3 text-end w-50" ><strong id="taxLabel">VAT 16% (Exlusive):</strong></label>
                                                                         <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmount" value="Ksh 1,500">
                                                                     </div>
@@ -516,17 +516,17 @@ try {
 
                                                         <div class="mb-3">
                                                             <label for="amount" class="form-label">Amount to Pay(KSH)</label>
-                                                            <input type="number" class="form-control" id="amountToPay" style="font-weight: 600;" name="amountToPay" placeholder="1200" required>
+                                                            <input type="number" class="form-control shadow-none rounded-1" id="amountToPay" style="font-weight: 600;" name="amountToPay" value="1200" required>
                                                         </div>
 
                                                         <div class="mb-3">
-                                                            <label for="paymentDate" class="form-label">Payment Date</label>
-                                                            <input type="date" class="form-control" id="paymentDate" name="payment_date" required>
+                                                            <label for="paymentDate" class="form-label shadow-none ">Payment Date</label>
+                                                            <input type="date" class="form-control shadow-none rounded-1" id="paymentDate" name="payment_date" required>
                                                         </div>
 
                                                         <div class="mb-3">
                                                             <label for="paymentMethod" class="form-label">Payment Method</label>
-                                                            <select class="form-select" id="paymentMethod" name="payment_method" required>
+                                                            <select class="form-select shadow-none rounded-1" id="paymentMethod" name="payment_method" required>
                                                                 <option value="cash">Cash</option>
                                                                 <option value="mpesa">M-Pesa</option>
                                                                 <option value="bank">Bank Transfer</option>
@@ -536,7 +536,7 @@ try {
 
                                                         <div class="mb-3">
                                                             <label for="reference" class="form-label">Reference / Memo</label>
-                                                            <input type="text" class="form-control" id="reference" name="reference">
+                                                            <input type="text" class="form-control shadow-none rounded-1" id="reference" name="reference">
                                                         </div>
                                                     </form>
                                                 </div>

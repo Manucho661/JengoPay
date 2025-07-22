@@ -112,8 +112,20 @@ document.addEventListener("DOMContentLoaded", function () {
       grandTotal += total;
     });
 
-    vatInclusiveContainer.style.display = hasInclusive ? 'bloc' : 'non';
-     vatExclusiveContainer.style.display = hasExclusive ? 'block' : 'none';
+    // vatInclusiveContainer.style.display = hasInclusive ? 'block' : 'non';
+     if (hasExclusive) {
+        vatExclusiveContainer.style.setProperty('display', 'flex', 'important');
+
+      } else {
+        vatExclusiveContainer.style.setProperty('display', 'none', 'important');
+      }
+      if (hasInclusive) {
+        vatInclusiveContainer.style.setProperty('display', 'flex', 'important');
+
+      } else {
+        vatInclusiveContainer.style.setProperty('display', 'none', 'important');
+      }
+
 
     document.getElementById('subTotal').value = 'Ksh ' + subTotal.toFixed(2);
     document.getElementById('vatAmount').value = `Ksh ${vatAmount.toFixed(2)}`;
@@ -208,7 +220,6 @@ document.getElementById("expenseForm").addEventListener("submit", function (e) {
 
 // Pay for an expense
 function payExpense(expenseId, amountToPay) {
-  // Get modal form elements
   const expenseIdInput = document.getElementById('expenseId');
   const paymentDateInput = document.getElementById('paymentDate');
   const payExpenseForm = document.getElementById('payExpenseForm');
@@ -219,23 +230,24 @@ function payExpense(expenseId, amountToPay) {
     return;
   }
 
+  // Reset the form first
+  payExpenseForm.reset();
+
   // Set hidden input with expense ID
   expenseIdInput.value = expenseId;
 
-  // default value, but user can still change it
-  document.getElementById('amountToPay').value = parseFloat(1200);
+  // Set amount to pay (now after reset)
+  document.getElementById('amountToPay').value = parseFloat(400);
 
-  // Reset the form
-  payExpenseForm.reset();
-
-  // Set today's date by default
+  // Set today's date
   const today = new Date().toISOString().split('T')[0];
   paymentDateInput.value = today;
 
-  // Show the Bootstrap modal
+  // Show the modal
   const modal = new bootstrap.Modal(modalElement);
   modal.show();
 }
+
 
 // payExpense
 document.getElementById("payExpenseForm").addEventListener("submit", function (e) {
