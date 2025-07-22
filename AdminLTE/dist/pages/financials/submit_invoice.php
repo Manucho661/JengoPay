@@ -108,7 +108,7 @@ try {
 
   $pdo->commit();
 
-  header("Location: invoice.php?success=1&invoice_id=$invoice_id&tenant_id=$tenant_id");
+  header("Location: inv1.php?success=1&invoice_id=$invoice_id&tenant_id=$tenant_id");
   exit;
 
 } catch (PDOException $e) {

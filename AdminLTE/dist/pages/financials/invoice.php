@@ -172,6 +172,8 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!--Tailwind CSS  -->
     <style>
           a {
@@ -1063,7 +1065,7 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
 
     <?php
 // ----------------------------------------------------
-// 1) Fetch every invoice with its tenant's full name
+// 1) Fetch invoices with tenant details and payment summary
 // ----------------------------------------------------
 $stmt = $pdo->query("
     SELECT
@@ -1074,10 +1076,19 @@ $stmt = $pdo->query("
         i.total,
         i.status,
         i.payment_status,
-        CONCAT(u.first_name,' ',u.middle_name) AS tenant_name
+        CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name,
+        (SELECT COALESCE(SUM(p.amount), 0)
+         FROM payments p
+         WHERE p.invoice_id = i.id) AS paid_amount,
+        i.building_id,
+        i.account_item,
+        i.description
     FROM invoice i
     LEFT JOIN users u ON u.id = i.tenant
-    ORDER BY i.invoice_number DESC
+    ORDER BY
+        CASE WHEN i.status = 'draft' THEN 0 ELSE 1 END,
+        i.invoice_date DESC,
+        i.invoice_number DESC
 ");
 
 $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -1086,111 +1097,246 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // 2) Output each invoice item
 // ----------------------------------------------------
 foreach ($invoices as $invoice) {
+    $tenantName = $invoice['tenant_name'] ?? 'Unknown Tenant';
+    $invoiceDate = $invoice['invoice_date'] == '0000-00-00' ? 'Draft' : date('M d, Y', strtotime($invoice['invoice_date']));
+    $dueDate = $invoice['due_date'] == '0000-00-00' ? 'Not set' : date('M d, Y', strtotime($invoice['due_date']));
+    $totalAmount = number_format($invoice['total'], 2);
+    $paidAmount = number_format($invoice['paid_amount'], 2);
+    $balance = number_format($invoice['total'] - $invoice['paid_amount'], 2);
 
-    // Friendly formats
-    $tenantName     = $invoice['tenant_name'] ?: 'Unknown';
-    $invoiceDate    = date('M d, Y', strtotime($invoice['invoice_date']));
-    $invoiceDueDate = date('M d, Y', strtotime($invoice['due_date']));
-    $amount         = number_format($invoice['total'], 2);
-    $menuId         = 'menu-' . $invoice['id']; // Unique menu ID
+    // Calculate overdue status
+    $isOverdue = false;
+    $overdueDays = 0;
+    if ($invoice['due_date'] != '0000-00-00' && $invoice['status'] != 'paid' && $invoice['status'] != 'cancelled') {
+        $today = new DateTime();
+        $dueDateObj = new DateTime($invoice['due_date']);
+        if ($today > $dueDateObj) {
+            $isOverdue = true;
+            $overdueDays = $today->diff($dueDateObj)->days;
+        }
+    }
 
-    // Map DB status → badge + display text
+    // Determine status badge
+    $statusClass = 'badge-';
+    $statusText = ucfirst($invoice['status']);
+
     switch ($invoice['status']) {
-      case 'sent':
-          $statusClass = 'badge-sent';
-          $statusText  = 'Sent';
-          $dataStatus  = 'pending';      // dropdown key
-          break;
-
-      case 'paid':
-          $statusClass = 'badge-paid';
-          $statusText  = 'Paid';
-          $dataStatus  = 'paid';
-          break;
-
-      case 'overdue':
-          $statusClass = 'badge-overdue';
-          $statusText  = 'Overdue';
-          $dataStatus  = 'overdue';
-          break;
-
-      case 'cancelled':
-          $statusClass = 'badge-cancelled';
-          $statusText  = 'Cancelled';
-          $dataStatus  = 'cancelled';     // not in dropdown yet
-          break;
-
-      default:            // draft
-          $statusClass = 'badge-draft';
-          $statusText  = 'Draft';
-          $dataStatus  = 'draft';
+        case 'draft':
+            $statusClass .= 'draft';
+            break;
+        case 'sent':
+            $statusClass .= $isOverdue ? 'overdue' : 'sent';
+            $statusText = $isOverdue ? 'Overdue (' . $overdueDays . 'd)' : 'Sent';
+            break;
+        case 'paid':
+            $statusClass .= 'paid';
+            break;
+        case 'cancelled':
+            $statusClass .= 'cancelled';
+            break;
+        default:
+            $statusClass .= 'draft';
     }
 
-    // Map payment_status → badge + display text
-    switch ($invoice['payment_status']) {
-      case 'paid':
-          $paymentStatusClass = 'badge-paid';
-          $paymentStatusText  = 'Paid';
-          break;
+    // Payment status with amounts - updated logic
+    $paymentStatusClass = 'badge-';
+    $paymentStatusText = '';
 
-      case 'partial':
-          $paymentStatusClass = 'badge-partial';
-          $paymentStatusText  = 'Partial';
-          break;
-
-      default:            // unpaid
-          $paymentStatusClass = 'badge-unpaid';
-          $paymentStatusText  = 'Unpaid';
+    // First check if any payment has been made
+    if ($invoice['paid_amount'] > 0) {
+        if ($invoice['paid_amount'] >= $invoice['total']) {
+            // Fully paid
+            $paymentStatusClass .= 'paid';
+            $paymentStatusText = 'Paid (KES ' . $paidAmount . ')';
+            $invoice['payment_status'] = 'paid'; // Update status in case it wasn't synced
+        } else {
+            // Partial payment
+            $paymentStatusClass .= 'partial';
+            $paymentStatusText = 'Partial (KES ' . $paidAmount . ' of ' . $totalAmount . ')';
+            $invoice['payment_status'] = 'partial'; // Update status in case it wasn't synced
+        }
+    } else {
+        // No payments made
+        $paymentStatusClass .= 'unpaid';
+        $paymentStatusText = $isOverdue ? 'Overdue (' . $overdueDays . 'd)' : 'Unpaid';
+        $invoice['payment_status'] = 'unpaid'; // Update status in case it wasn't synced
     }
 
-    // Generate a link to open the invoice details
-    $href = 'invoice_details.php?id=' . $invoice['id'];
+    echo '<div class="invoice-item" onclick="openInvoiceDetails(' . $invoice['id'] . ')">';
+    echo '<div class="invoice-checkbox">
+            <input type="checkbox" onclick="event.stopPropagation()">
+          </div>
+          <div class="invoice-number">' . htmlspecialchars($invoice['invoice_number']) . '</div>
+          <div class="invoice-customer" title="' . htmlspecialchars($invoice['description']) . '">
+              ' . htmlspecialchars($tenantName) . '
+          </div>
+          <div class="invoice-date">' . $invoiceDate . '</div>
+          <div class="invoice-date' . ($isOverdue ? ' text-danger' : '') . '">
+              ' . $dueDate . '
+          </div>
+          <div class="invoice-amount">KES ' . $totalAmount . '</div>
+          <div class="invoice-status">
+              <span class="status-badge ' . $statusClass . '">' . $statusText . '</span>
+          </div>
+          <div class="invoice-status">
+              <span class="status-badge ' . $paymentStatusClass . '">' . $paymentStatusText . '</span>';
 
-    // ---- HTML block -------------------------------------------------
-    echo '<div class="invoice-item-wrapper" style="position: relative;">';
-    echo '<a href="'. $href .'" class="invoice-link">';
-    echo '
-        <div class="invoice-item">
-            <div class="invoice-checkbox">
-                <input type="checkbox" onclick="event.stopPropagation()">
-            </div>
+    // Show payment button if applicable - updated logic
+    if ($invoice['status'] !== 'draft' && $invoice['status'] !== 'cancelled' && $invoice['paid_amount'] < $invoice['total']) {
+        $buttonText = $invoice['paid_amount'] > 0 ? 'Add Payment' : 'Pay Now';
+        $balance = $invoice['total'] - $invoice['paid_amount'];
 
-            <div class="invoice-number">'   . htmlspecialchars($invoice['invoice_number']) . '</div>
-            <div class="invoice-customer">' . htmlspecialchars($tenantName)               . '</div>
-            <div class="invoice-date">'      . $invoiceDate                                . '</div>
-            <div class="invoice-date">'      . $invoiceDueDate                             . '</div>
-            <div class="invoice-amount">'    . $amount                                     . '</div>
+        echo '<br>
+              <button class="btn pay-btn btn-sm mt-1"
+                  onclick="event.stopPropagation(); openPayModal(this)"
+                  data-invoice-id="' . $invoice['id'] . '"
+                  data-tenant="' . htmlspecialchars($tenantName) . '"
+                  data-total="' . $invoice['total'] . '"
+                  data-paid="' . $invoice['paid_amount'] . '"
+                  data-balance="' . $balance . '"
+                  data-account-item="' . htmlspecialchars($invoice['account_item']) . '"
+                  data-description="' . htmlspecialchars($invoice['description']) . '">
+                  <i class="fas fa-credit-card me-1"></i>
+                  ' . $buttonText . '
+              </button>';
+    }
 
-            <div class="invoice-status">
-                <span class="status-badge '. $statusClass .'">'. $statusText .'</span>
-            </div>
+    echo '</div>
+          <div class="invoice-actions dropdown">
+              <button class="action-btn dropdown-toggle" onclick="event.stopPropagation()" data-bs-toggle="dropdown">
+                  <i class="fas fa-ellipsis-v"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                  <li><a class="dropdown-item" href="#" onclick="viewInvoice(' . $invoice['id'] . ')">
+                      <i class="fas fa-eye me-2"></i>View Details
+                  </a></li>';
 
-            <div class="invoice-status">
-                <span class="status-badge '. $paymentStatusClass .'">'. $paymentStatusText .'</span>
-            </div>
+    if ($invoice['status'] !== 'cancelled') {
+        echo '<li><a class="dropdown-item" href="#" onclick="downloadInvoice(' . $invoice['id'] . ')">
+                  <i class="fas fa-file-pdf me-2"></i>Download PDF
+              </a></li>';
+    }
 
-            <div class="invoice-actions">
-                <button class="action-btn menu-button" data-menu-id="'. $menuId .'" onclick="event.stopPropagation()">
-                    <i class="fas fa-ellipsis-v"></i>
-                </button>
-            </div>
-        </div>
-    </a>';
+    // Edit option - available for drafts and sent invoices without payments
+    if ($invoice['status'] === 'draft' || ($invoice['status'] === 'sent' && $invoice['paid_amount'] == 0)) {
+        echo '<li><a class="dropdown-item" href="#" onclick="editInvoice(' . $invoice['id'] . ')">
+                  <i class="fas fa-edit me-2"></i>Edit Invoice
+              </a></li>';
+    }
 
-    // Dropdown menu
-    echo '
-        <div class="invoice-menu hidden" id="'. $menuId .'" style="position:absolute; right:10px; top:35px; background:#fff; border:1px solid #ccc; z-index:999; padding:8px;">
-            <button onclick="editInvoice('. $invoice['id'] .')">Edit</button>
-            <button onclick="deleteInvoice('. $invoice['id'] .')">Delete</button>
-           <button onclick="cancelInvoice('. $invoice['id'] .')">Cancel</button>
+    echo '<li><hr class="dropdown-divider"></li>';
 
+    // Delete option - only for drafts and cancelled invoices
+    if ($invoice['status'] === 'draft' || $invoice['status'] === 'cancelled') {
+        echo '<li><a class="dropdown-item text-danger" href="#" onclick="confirmDeleteInvoice(' . $invoice['id'] . ')">
+                  <i class="fas fa-trash-alt me-2"></i>Delete Invoice
+              </a></li>';
+    }
 
+    // Cancel/Restore options
+    if ($invoice['status'] !== 'cancelled' && $invoice['status'] !== 'paid') {
+        echo '<li><a class="dropdown-item text-danger" href="#" onclick="confirmCancelInvoice(' . $invoice['id'] . ')">
+                  <i class="fas fa-ban me-2"></i>Cancel Invoice
+              </a></li>';
+    } else if ($invoice['status'] === 'cancelled') {
+        echo '<li><a class="dropdown-item" href="#" onclick="restoreInvoice(' . $invoice['id'] . ')">
+                  <i class="fas fa-undo me-2"></i>Restore Invoice
+              </a></li>';
+    }
 
-        </div>
-    ';
-    echo '</div>'; // Close wrapper
+    echo '</ul>
+          </div>
+      </div>';
 }
 ?>
+
+
+<!-- ✅ PAYMENT MODAL -->
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <form id="paymentForm" method="post" action="/originalTwo/AdminLTE/dist/pages/financials/submit_payment.php">
+      <div class="modal-content shadow-lg border-0 rounded-4">
+
+        <!-- Modal Header -->
+        <div class="modal-header" style="background-color: #00192D;">
+          <h5 class="modal-title text-warning fw-semibold" id="paymentModalLabel">
+            <i class="fa-solid fa-file-invoice-dollar me-2"></i> Make Payment
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="modal-body px-4 py-4 bg-light-subtle">
+          <input type="hidden" name="invoice_id" id="invoiceId">
+          <input type="hidden" id="invoiceTotal" value="0">
+
+          <div class="row g-4">
+            <!-- Payment Date -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold text-dark">
+                <i class="fa-regular fa-calendar-days text-warning me-1"></i> Payment Date
+              </label>
+              <input type="date" class="form-control border-warning" id="paymentDate" name="payment_date" placeholder="Enter payment date">
+              <div class="form-text text-danger small" id="dateError" style="display: none;">
+                ⚠️ Future dates are not allowed.
+              </div>
+            </div>
+
+            <!-- Tenant Name -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold text-dark">
+                <i class="fa-solid fa-user-tag text-warning me-1"></i> Tenant Name
+              </label>
+              <input type="text" class="form-control border-warning" id="tenantName" name="tenant" readonly>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold text-dark">
+                <i class="fa-solid fa-hand-holding-dollar text-warning me-1"></i> Payment Method
+              </label>
+              <select class="form-select border-warning text-dark" name="payment_method" required>
+                <option value="">-- Choose Method --</option>
+                <option value="MPESA">📱 MPESA</option>
+                <option value="Bank">🏦 Bank</option>
+                <option value="Cash">💵 Cash</option>
+              </select>
+            </div>
+
+            <!-- Amount -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold text-dark">
+                <i class="fa-solid fa-sack-dollar text-warning me-1"></i> Amount (KES)
+              </label>
+              <input type="text" class="form-control border-warning" id="amount" name="amount" oninput="checkPaymentStatus()">
+              <div id="paymentStatus" class="mt-2 small fw-semibold"></div>
+            </div>
+
+            <!-- Reference Number -->
+            <div class="col-12">
+              <label class="form-label fw-semibold text-dark">
+                <i class="fa-solid fa-barcode text-warning me-1"></i> Reference Number
+              </label>
+              <input type="text" class="form-control border-warning" name="reference_number" placeholder="e.g. MPESA code or bank slip" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer px-4 py-3" style="background-color: #00192D;">
+          <button type="submit" class="btn fw-semibold" style="background-color: #FFC107; color: #00192D;">
+            <i class="fa-solid fa-paper-plane me-1"></i> Submit Payment
+          </button>
+          <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">
+            <i class="fa-solid fa-xmark-circle me-1"></i> Cancel
+          </button>
+        </div>
+
+      </div>
+    </form>
+  </div>
+</div>
+
                     <div class="invoice-list">
                         <!-- Invoice Item -->
                         <div class="invoice-item">
@@ -1414,6 +1560,357 @@ foreach ($invoices as $invoice) {
             </div>
         </div>
     </div>
+
+
+    <script>
+// Edit Invoice
+function editInvoice(invoiceId) {
+    // Redirect to edit page or open edit modal
+    window.location.href = 'edit_invoice.php?id=' + invoiceId;
+}
+
+// Confirm Delete Invoice
+function confirmDeleteInvoice(invoiceId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            deleteInvoice(invoiceId);
+        }
+    });
+}
+
+// Delete Invoice
+function deleteInvoice(invoiceId) {
+    fetch('delete_invoice.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'id=' + invoiceId
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire(
+                'Deleted!',
+                'Invoice has been deleted.',
+                'success'
+            ).then(() => {
+                location.reload(); // Refresh the page
+            });
+        } else {
+            Swal.fire(
+                'Error!',
+                data.message || 'Failed to delete invoice.',
+                'error'
+            );
+        }
+    })
+    .catch(error => {
+        Swal.fire(
+            'Error!',
+            'An error occurred while deleting the invoice.',
+            'error'
+        );
+    });
+}
+
+// Confirm Cancel Invoice
+function confirmCancelInvoice(invoiceId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This will cancel the invoice and mark it as non-payable.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, cancel it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            cancelInvoice(invoiceId);
+        }
+    });
+}
+
+// Cancel Invoice - Updated version
+function cancelInvoice(invoiceId) {
+    fetch('cancel_invoice.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'id=' + invoiceId
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire(
+                'Cancelled!',
+                'Invoice has been cancelled.',
+                'success'
+            ).then(() => {
+                // Update the UI without full page reload
+                updateInvoiceStatus(invoiceId, 'cancelled');
+            });
+        } else {
+            Swal.fire(
+                'Error!',
+                data.message || 'Failed to cancel invoice.',
+                'error'
+            );
+        }
+    })
+    .catch(error => {
+        Swal.fire(
+            'Error!',
+            'An error occurred while cancelling the invoice.',
+            'error'
+        );
+    });
+}
+
+// Function to update invoice status visually
+function updateInvoiceStatus(invoiceId, newStatus) {
+    const invoiceItem = document.querySelector(`.invoice-item[data-id="${invoiceId}"]`);
+    if (!invoiceItem) {
+        location.reload(); // Fallback if element not found
+        return;
+    }
+
+    // Update status badge
+    const statusBadge = invoiceItem.querySelector('.invoice-status .status-badge');
+    if (statusBadge) {
+        // Remove all status classes
+        statusBadge.classList.remove('badge-draft', 'badge-sent', 'badge-paid', 'badge-overdue');
+
+        // Add new status class
+        statusBadge.classList.add('badge-' + newStatus);
+
+        // Update text
+        statusBadge.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
+    }
+
+    // Update payment status badge if exists
+    const paymentStatusBadges = invoiceItem.querySelectorAll('.invoice-status .status-badge');
+    if (paymentStatusBadges.length > 1) {
+        const paymentStatusBadge = paymentStatusBadges[1];
+        paymentStatusBadge.classList.remove('badge-paid', 'badge-partial', 'badge-unpaid');
+        paymentStatusBadge.classList.add('badge-cancelled');
+        paymentStatusBadge.textContent = 'Cancelled';
+    }
+
+    // Remove payment button if exists
+    const payButton = invoiceItem.querySelector('.pay-btn');
+    if (payButton) {
+        payButton.remove();
+    }
+
+    // Update dropdown menu options
+    const dropdownMenu = invoiceItem.querySelector('.dropdown-menu');
+    if (dropdownMenu) {
+        // Remove Cancel option
+        const cancelOption = dropdownMenu.querySelector('a[onclick*="confirmCancelInvoice"]');
+        if (cancelOption) {
+            cancelOption.parentNode.remove();
+        }
+
+        // Add Restore option
+        const divider = dropdownMenu.querySelector('.dropdown-divider');
+        if (divider) {
+            const restoreOption = document.createElement('li');
+            restoreOption.innerHTML = `
+                <a class="dropdown-item" href="#" onclick="restoreInvoice(${invoiceId})">
+                    <i class="fas fa-undo me-2"></i>Restore Invoice
+                </a>
+            `;
+            dropdownMenu.insertBefore(restoreOption, divider.nextSibling);
+        }
+    }
+}
+
+// Restore Invoice - Updated version
+function restoreInvoice(invoiceId) {
+    fetch('restore_invoice.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'id=' + invoiceId
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire(
+                'Restored!',
+                'Invoice has been restored.',
+                'success'
+            ).then(() => {
+                // Update the UI without full page reload
+                updateInvoiceStatus(invoiceId, data.invoice.status || 'sent');
+            });
+        } else {
+            Swal.fire(
+                'Error!',
+                data.message || 'Failed to restore invoice.',
+                'error'
+            );
+        }
+    })
+    .catch(error => {
+        Swal.fire(
+            'Error!',
+            'An error occurred while restoring the invoice.',
+            'error'
+        );
+    });
+}
+
+// Delete for Sent Invoice
+function deleteSentInvoice(invoiceId) {
+    Swal.fire({
+        title: 'Delete Sent Invoice?',
+        text: "This invoice has been sent to the tenant. Are you sure you want to delete it?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it anyway'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            deleteInvoice(invoiceId);
+        }
+    });
+}
+
+// View Invoice Details
+function viewInvoice(invoiceId) {
+    window.location.href = 'invoice_details.php?id=' + invoiceId;
+}
+</script>
+
+<script>
+function openPayModal(button) {
+  const invoiceId = button.getAttribute('data-invoice-id');
+  const tenant = button.getAttribute('data-tenant');
+  const amount = button.getAttribute('data-amount');
+  const today = new Date().toISOString().split('T')[0];
+
+  document.getElementById('invoiceId').value = invoiceId;
+  document.getElementById('tenantName').value = tenant;
+  document.getElementById('amount').value = amount;
+  document.getElementById('paymentDate').value = today; // set today's date
+
+  const modal = new bootstrap.Modal(document.getElementById('paymentModal'));
+  modal.show();
+}
+
+document.getElementById('paymentForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const form = e.target;
+  const formData = new FormData(form);
+  const invoiceId = formData.get('invoice_id');
+
+  fetch(form.action, {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert('✅ Payment submitted successfully!');
+
+      const modal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
+      modal.hide();
+
+      const payBtn = document.querySelector(`button[data-invoice-id="${invoiceId}"]`);
+      const statusDiv = payBtn?.closest('.invoice-status');
+      const badge = statusDiv?.querySelector('.status-badge');
+
+      if (badge) {
+        badge.classList.remove('badge-unpaid');
+        badge.classList.add('badge-paid');
+        badge.textContent = 'Paid';
+      }
+
+      if (payBtn) payBtn.remove();
+    } else {
+      alert('❌ Failed to submit payment: ' + (data.message || 'Try again'));
+    }
+  })
+  .catch(error => {
+    console.error('❌ Payment error:', error);
+    alert('❌ Network or server error occurred.');
+  });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const paymentDateInput = document.getElementById("paymentDate");
+  const form = document.getElementById("paymentForm");
+  const dateError = document.getElementById("dateError");
+
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  const todayStr = `${yyyy}-${mm}-${dd}`;
+
+  paymentDateInput.setAttribute("max", todayStr);
+
+  // Optional validation to block future dates
+  form.addEventListener("submit", function (e) {
+    const selected = paymentDateInput.value;
+    if (selected > todayStr) {
+      e.preventDefault();
+      dateError.style.display = "block";
+      paymentDateInput.classList.add("is-invalid");
+    } else {
+      dateError.style.display = "none";
+      paymentDateInput.classList.remove("is-invalid");
+    }
+  });
+});
+</script>
+
+<script>
+function checkPaymentStatus() {
+  const amountInput = document.getElementById('amount');
+  const invoiceTotal = parseFloat(document.getElementById('invoiceTotal').value);
+  const paymentStatus = document.getElementById('paymentStatus');
+
+  // Remove non-numeric characters and parse the input value
+  const paidAmount = parseFloat(amountInput.value.replace(/[^0-9.]/g, '')) || 0;
+
+  if (paidAmount <= 0) {
+    paymentStatus.textContent = '';
+    paymentStatus.className = 'mt-2 small fw-semibold';
+    return;
+  }
+
+  if (paidAmount >= invoiceTotal) {
+    paymentStatus.textContent = '✅ Full payment - invoice will be marked as paid';
+    paymentStatus.className = 'mt-2 small fw-semibold text-success';
+  } else if (paidAmount > 0 && paidAmount < invoiceTotal) {
+    paymentStatus.textContent = '⚠️ Partial payment - invoice will be marked as partially paid';
+    paymentStatus.className = 'mt-2 small fw-semibold text-warning';
+  }
+}
+
+// When opening the modal, set the invoice total
+document.getElementById('paymentModal').addEventListener('show.bs.modal', function (event) {
+  const button = event.relatedTarget;
+  const invoiceTotal = button.getAttribute('data-invoice-total');
+  document.getElementById('invoiceTotal').value = invoiceTotal;
+});
+</script>
+
 
 <!-- Main Js File -->
 <script src="invoice.js"></script>

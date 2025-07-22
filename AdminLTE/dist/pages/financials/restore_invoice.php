@@ -11,7 +11,7 @@ if (!isset($_POST['id'])) {
 $invoiceId = $_POST['id'];
 
 try {
-    // First check if invoice exists and is deletable (draft or cancelled)
+    // First check if invoice exists and is restorable
     $stmt = $pdo->prepare("SELECT status FROM invoice WHERE id = ?");
     $stmt->execute([$invoiceId]);
     $invoice = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -21,13 +21,13 @@ try {
         exit;
     }
 
-    if ($invoice['status'] !== 'draft' && $invoice['status'] !== 'cancelled') {
-        echo json_encode(['success' => false, 'message' => 'Only draft or cancelled invoices can be deleted']);
+    if ($invoice['status'] !== 'cancelled') {
+        echo json_encode(['success' => false, 'message' => 'Only cancelled invoices can be restored']);
         exit;
     }
 
-    // Delete the invoice
-    $stmt = $pdo->prepare("DELETE FROM invoice WHERE id = ?");
+    // Restore the invoice to sent status
+    $stmt = $pdo->prepare("UPDATE invoice SET status = 'sent' WHERE id = ?");
     $stmt->execute([$invoiceId]);
 
     echo json_encode(['success' => true]);
