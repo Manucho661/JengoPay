@@ -192,6 +192,7 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!--Tailwind CSS  -->
     <style>
+      
           a {
             text-decoration: none;
             color: inherit;

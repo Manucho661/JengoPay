@@ -171,15 +171,34 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <!--Tailwind CSS  -->
     <style>
+
           a {
             text-decoration: none;
             color: inherit;
         }
+
+        .pay-btn {
+    margin-top: 6px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    background-color: #FFC107;
+    color: #00192D;
+    border: none;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+.pay-btn:hover {
+    background-color: #e6ae00;
+    color: white;
+}
 
         ul {
             list-style: none;
