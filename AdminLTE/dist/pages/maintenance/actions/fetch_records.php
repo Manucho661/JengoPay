@@ -1,4 +1,4 @@
-<?php
+                                                                                                                              <?php
 header('Content-Type: application/json');
 
 require_once '../../db/connect.php';
@@ -6,17 +6,17 @@ require_once '../../db/connect.php';
 try {
     // Fetch maintenance requests along with provider details
     $stmt = $pdo->prepare("
-        SELECT 
-        mr.*, 
-        p.name AS provider_name, 
+        SELECT
+        mr.*,
+        p.name AS provider_name,
         p.email AS provider_email,
         p.phone AS provider_phone,
         mp.photo_url
-    FROM 
+    FROM
         maintenance_requests mr
-    LEFT JOIN 
+    LEFT JOIN
         providers p ON mr.provider_id = p.id
-    LEFT JOIN 
+    LEFT JOIN
         maintenance_photos mp ON mp.maintenance_request_id = mr.id
 
     ");

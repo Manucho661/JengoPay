@@ -15,23 +15,7 @@ function statusClass(string $status): string
     };
 }
 ?>
-<?php
-require '../db/connect.php';
 
-$stmt = $pdo->query("
-    SELECT
-        i.invoice_number,
-        i.invoice_date,
-        i.due_date,
-        i.total,
-        CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
-    FROM invoice i
-    LEFT JOIN users u ON i.tenant = u.id
-    ORDER BY i.invoice_number DESC
-");
-
-$invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
 <!doctype html>
 <html lang="en">
 <!--begin::Head-->
@@ -229,25 +213,75 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <!-- ================================================================ -->
 <!-- LEFT: LIST OF INVOICES                                           -->
 <!-- ================================================================ -->
+
+
 <aside class="soda">
     <div class="soda">
         <span><b> Invoices</b></span>
     <div class="invoice-list">
     <?php
+// Include your database connection
+include '../db/connect.php';
+
 try {
-    $sql = "SELECT i.*, CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
+    $sql = "SELECT
+                i.id,
+                i.invoice_number,
+                i.invoice_date,
+                i.due_date,
+                i.total,
+                i.status,
+                i.payment_status,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.middle_name, '')) AS tenant_name,
+                COALESCE(u.email, '') AS tenant_email,
+                COALESCE(t.phone_number, '') AS tenant_phone
             FROM invoice i
             LEFT JOIN tenants t ON i.tenant = t.id
             LEFT JOIN users u ON u.id = t.user_id
-            ORDER BY i.invoice_date DESC";
+            ORDER BY i.invoice_number DESC";
+
+    echo '<div class="invoice-container">';
 
     foreach ($pdo->query($sql) as $row) {
-        $link        = htmlspecialchars('invoice_details.php?id=' . $row['id']);
-        $tenantName  = $row['tenant'] ?: 'Unknown Tenant';
-        $invoiceDate = date('d M Y', strtotime($row['invoice_date']));
-        $amount      = number_format($row['total'], 2);
-        $badgeClass  = statusClass($row['status']);
-        $statusText  = ucfirst($row['status']);
+        $link = htmlspecialchars('invoice_details.php?id=' . $row['id']);
+
+        // Better handling of potentially NULL values
+        $tenantName = !empty(trim($row['tenant_name'])) ? $row['tenant_name'] : 'Unknown Tenant';
+        $invoiceDate = $row['invoice_date'] ? date('d M Y', strtotime($row['invoice_date'])) : 'Not set';
+        $dueDate = $row['due_date'] ? date('d M Y', strtotime($row['due_date'])) : 'Not set';
+        $amount = $row['total'] ? number_format($row['total'], 2) : '0.00';
+
+        // Status handling with default case
+        $status = $row['status'] ?? 'draft';
+        $statusClass = match(strtolower($status)) {
+            'sent' => 'badge-sent',
+            'paid' => 'badge-paid',
+            'overdue' => 'badge-overdue',
+            'cancelled' => 'badge-cancelled',
+            default => 'badge-draft'
+        };
+
+        $statusText = match(strtolower($status)) {
+            'sent' => 'Sent',
+            'paid' => 'Paid',
+            'overdue' => 'Overdue',
+            'cancelled' => 'Cancelled',
+            default => 'Draft'
+        };
+
+        // Payment status with default case
+        $paymentStatus = $row['payment_status'] ?? 'unpaid';
+        $paymentClass = match(strtolower($paymentStatus)) {
+            'paid' => 'badge-paid',
+            'partial' => 'badge-partial',
+            default => 'badge-unpaid'
+        };
+
+        $paymentText = match(strtolower($paymentStatus)) {
+            'paid' => 'Paid',
+            'partial' => 'Partial',
+            default => 'Unpaid'
+        };
 
         echo <<<HTML
 <a href="$link" class="invoice-link">
@@ -259,11 +293,13 @@ try {
     <div class="invoice-summary">
         <div class="invoice-customer">$tenantName</div>
         <div class="invoice-meta">
-            <span class="invoice-number">{$row['invoice_number']}</span> &bull;
-            <span class="invoice-date">$invoiceDate</span>
+            <span class="invoice-number">{$row['invoice_number']}</span> •
+            <span class="invoice-date">Issued: $invoiceDate</span> •
+            <span class="invoice-date">Due: $dueDate</span>
         </div>
         <div class="invoice-status">
-            <span class="status-badge $badgeClass">$statusText</span>
+            <span class="status-badge $statusClass">$statusText</span>
+            <span class="status-badge $paymentClass">$paymentText</span>
         </div>
     </div>
 
@@ -272,10 +308,16 @@ try {
 </a>
 HTML;
     }
+
+    echo '</div>';
+
 } catch (PDOException $e) {
-    echo "<p style='padding:20px;color:#c62828'>Error: " . $e->getMessage() . "</p>";
+    echo "<div class='error-message'>Error: " . htmlspecialchars($e->getMessage()) . "</div>";
+} catch (Exception $e) {
+    echo "<div class='error-message'>Error: " . htmlspecialchars($e->getMessage()) . "</div>";
 }
 ?>
+
 
     </div><!-- /.invoice-list -->
 </aside>
@@ -291,10 +333,12 @@ HTML;
         echo '<div class="placeholder">Select an invoice to view its details</div>';
     } else {
         // ── Fetch a single invoice with its line items ──
-        $info = $pdo->prepare("SELECT i.*, t.user_id AS tenant_name
-                                FROM invoice i
-                                LEFT JOIN tenants t ON i.tenant = t.id
-                                WHERE i.id = ?");
+        $info = $pdo->prepare("SELECT i.*, CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name,
+                      u.email AS tenant_email, t.phone_number AS tenant_phone
+                      FROM invoice i
+                      LEFT JOIN tenants t ON i.tenant = t.id
+                      LEFT JOIN users u ON u.id = t.user_id
+                      WHERE i.id = ?");
         $info->execute([$id]);
         $inv = $info->fetch(PDO::FETCH_ASSOC);
 
@@ -339,9 +383,18 @@ HTML;
         <i class="bi bi-printer-fill"></i> Print Invoice
     </button>
 
-    <button type="button" class="btn" style="color: #FFC107; background-color: #00192D;" id="downloadPdf">
-        <i class="bi bi-download"></i> Download PDF
-    </button>
+    <!-- <a href="download_invoice.php?id=<?= $inv['id'] ?>" class="btn" style="color: #FFC107; background-color: #00192D;">
+    <i class="bi bi-download"></i> Download PDF
+</a> -->
+
+<a href="view_invoice_pdf.php?id=<?= $inv['id'] ?>"
+   target="_blank"
+   class="btn"
+   style="color: #FFC107; background-color: #00192D;">
+    <i class="bi bi-eye"></i> View PDF
+</a>
+
+
 </div>
 
 

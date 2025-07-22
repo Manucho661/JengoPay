@@ -1,5 +1,5 @@
 <?php
-include '../db/connect.php'; // Ensure $pdo is defined
+include '../../db/connect.php'; // Ensure $pdo is defined
 
 header('Content-Type: application/json');
 
