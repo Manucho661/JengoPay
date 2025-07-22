@@ -64,8 +64,8 @@ function bindItemHiddenInput(wrapper) {
 }
 document.addEventListener("DOMContentLoaded", function () {
   console.log('document loaded');
-// initialize custom select
-document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
+  // initialize custom select
+  document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
     initializeCustomSelect(wrapper);
     bindItemHiddenInput(wrapper);        // Specifically binds hidden ITEM[] values
   });
@@ -81,7 +81,7 @@ document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
       const taxOption = row.querySelector("select[name='taxes[]']")?.value || "";
       const item_total = row.querySelector('.item-total');
       let total = 0;
-      let itemTax= 0;
+      let itemTax = 0;
       // subtotal
       let lineTotal = unitPrice * qty; // ✅ Subtotal line without tax
       // grandTotal
@@ -92,7 +92,7 @@ document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
       } else if (taxOption.includes('exclusive')) {
         total = unitPrice * qty * 1.16;
         itemTax = unitPrice * qty * 0.16;
-      } else if(taxOption === 'zero' || taxOption === 'exempt'){
+      } else if (taxOption === 'zero' || taxOption === 'exempt') {
         total = unitPrice * qty;
         itemTax = 0;
       }
@@ -100,16 +100,16 @@ document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
         total = unitPrice * qty; // fallback
       }
 
-       if (item_total) {
-      item_total.value = 'Ksh ' + total.toFixed(2);
-      } 
+      if (item_total) {
+        item_total.value = 'Ksh ' + total.toFixed(2);
+      }
       subTotal += (total - itemTax);
       vatAmount += itemTax;
       grandTotal += total;
     });
-    
+
     document.getElementById('subTotal').value = 'Ksh ' + subTotal.toFixed(2);
-    document.getElementById('vatAmount').value= `Ksh ${vatAmount.toFixed(2)}`;
+    document.getElementById('vatAmount').value = `Ksh ${vatAmount.toFixed(2)}`;
     // grandTotal
     document.getElementById('grandTotal').value = 'Ksh ' + grandTotal.toFixed(2);
     document.getElementById('grandTotalNumber').value = grandTotal.toFixed(2);
@@ -131,70 +131,70 @@ document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
   calculateTotal();
 
   // add new Item row
-  window.addRow = function() {
-  const container = document.getElementById('itemsContainer');
-  const existingRow = document.querySelector('.item-row');
-  const newRow = existingRow.cloneNode(true);
+  window.addRow = function () {
+    const container = document.getElementById('itemsContainer');
+    const existingRow = document.querySelector('.item-row');
+    const newRow = existingRow.cloneNode(true);
 
-  // Clear inputs in new row
-  newRow.querySelectorAll('input, textarea, select').forEach(el => {
-    if (el.tagName === 'SELECT') {
-      el.selectedIndex = 0;
-    } else {
-      el.value = '';
+    // Clear inputs in new row
+    newRow.querySelectorAll('input, textarea, select').forEach(el => {
+      if (el.tagName === 'SELECT') {
+        el.selectedIndex = 0;
+      } else {
+        el.value = '';
+      }
+    });
+
+    // Reset custom select display text to default placeholder
+    const customSelect = newRow.querySelector('.custom-select');
+    if (customSelect) {
+      customSelect.textContent = 'select'; // replace with your placeholder if different
+      customSelect.removeAttribute('data-value'); // clear selected value if needed
     }
-  });
 
-  // Reset custom select display text to default placeholder
-  const customSelect = newRow.querySelector('.custom-select');
-  if (customSelect) {
-    customSelect.textContent = 'select'; // replace with your placeholder if different
-    customSelect.removeAttribute('data-value'); // clear selected value if needed
-  }
+    // Append new row to container
+    container.appendChild(newRow);
 
-  // Append new row to container
-  container.appendChild(newRow);
+    // Attach calculation events to new row inputs
+    attachEvents(newRow);
 
-  // Attach calculation events to new row inputs
-  attachEvents(newRow);
+    // Reinitialize custom select functionality for the new row
+    const newCustomSelectWrapper = newRow.querySelector('.custom-select-wrapper');
+    if (newCustomSelectWrapper) {
+      initializeCustomSelect(newCustomSelectWrapper);
+      bindItemHiddenInput(newCustomSelectWrapper);
+    }
 
-  // Reinitialize custom select functionality for the new row
-  const newCustomSelectWrapper = newRow.querySelector('.custom-select-wrapper');
-  if (newCustomSelectWrapper) {
-    initializeCustomSelect(newCustomSelectWrapper);
-    bindItemHiddenInput(newCustomSelectWrapper);
-  }
-
-  // Recalculate totals immediately
-  calculateTotal();
-};
+    // Recalculate totals immediately
+    calculateTotal();
+  };
 });
 
 
 // create an expense
-document.getElementById("expenseForm").addEventListener("submit", function(e) {
+document.getElementById("expenseForm").addEventListener("submit", function (e) {
   e.preventDefault();
   console.log('expenseForm working');
 
   const form = document.getElementById("expenseForm");
   const formData = new FormData(form);
   for (let [key, value] of formData.entries()) {
-  console.log(`${key}: ${value}`);
+    console.log(`${key}: ${value}`);
   }
   fetch("actions/expenses/createExpense.php", {
     method: "POST",
     body: formData,
   })
-  .then(response => response.text())
-  .then(data => {
-    console.log("Server response:", data);
-    
-    // ✅ Reload the page without resubmission
-     window.location.href = window.location.href;
-  })
-  .catch(error => {
-    console.error("Error submitting form:", error);
-  });
+    .then(response => response.text())
+    .then(data => {
+      console.log("Server response:", data);
+
+      // ✅ Reload the page without resubmission
+      window.location.href = window.location.href;
+    })
+    .catch(error => {
+      console.error("Error submitting form:", error);
+    });
 });
 
 
@@ -216,7 +216,7 @@ function payExpense(expenseId, amountToPay) {
   expenseIdInput.value = expenseId;
 
   // default value, but user can still change it
-    document.getElementById('amountToPay').value = parseFloat(1200);
+  document.getElementById('amountToPay').value = parseFloat(1200);
 
   // Reset the form
   payExpenseForm.reset();
@@ -231,7 +231,7 @@ function payExpense(expenseId, amountToPay) {
 }
 
 // payExpense
-document.getElementById("payExpenseForm").addEventListener("submit", function(e) {
+document.getElementById("payExpenseForm").addEventListener("submit", function (e) {
   e.preventDefault();
   console.log('PayexpenseForm working');
 
@@ -239,20 +239,20 @@ document.getElementById("payExpenseForm").addEventListener("submit", function(e)
   const formData = new FormData(form);
 
   for (let [key, value] of formData.entries()) {
-  console.log(`${key}: ${value}`);
+    console.log(`${key}: ${value}`);
   }
   fetch("actions/expenses/payExpense.php", {
     method: "POST",
     body: formData,
   })
-  .then(response => response.text())
-  .then(data => {
-    console.log("Server response:", data);
-    
-    // ✅ Reload the page without resubmission
-     window.location.href = window.location.href;
-  })
-  .catch(error => {
-    console.error("Error submitting form:", error);
-  });
+    .then(response => response.text())
+    .then(data => {
+      console.log("Server response:", data);
+
+      // ✅ Reload the page without resubmission
+      window.location.href = window.location.href;
+    })
+    .catch(error => {
+      console.error("Error submitting form:", error);
+    });
 });
