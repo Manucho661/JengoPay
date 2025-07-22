@@ -44,57 +44,65 @@ function initializeCustomSelect(wrapper) {
   });
 }
 
-// bind item
-function bindItemHiddenInput(wrapper) {
-  const select = wrapper.querySelector('.custom-select');
-  const options = wrapper.querySelectorAll('[role="option"]');
-  const hiddenInput = wrapper.querySelector('.hiddenItemInput'); // ✅ use class selector
-  console.log(hiddenInput);
-  if (!hiddenInput) {
-    console.warn('No hidden input with class `.hiddenItemInput` inside wrapper');
-    return;
-  }
 
-  options.forEach(option => {
-    option.addEventListener('click', () => {
-      hiddenInput.value = option.dataset.value || option.textContent.trim();
-      console.log('Hidden input updated with:', hiddenInput.value);
-    });
-  });
-}
 document.addEventListener("DOMContentLoaded", function () {
   console.log('document loaded');
-  // initialize custom select
   document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
     initializeCustomSelect(wrapper);
-    bindItemHiddenInput(wrapper);        // Specifically binds hidden ITEM[] values
+    if (typeof bindItemHiddenInput === 'function') {
+      bindItemHiddenInput(wrapper); // optional, if used
+    }
   });
   //Add Expenses
   function calculateTotal() {
     console.log('total fired');
+    const vatInclusiveContainer = document.getElementById('vatAmountInclusiveContainer');
+    const vatExclusiveContainer = document.getElementById('vatAmountExclusiveContainer');
+
     let subTotal = 0;
     let vatAmount = 0;
     let grandTotal = 0;
+    let hasInclusive = false;
+    let hasExclusive = false;
     document.querySelectorAll('.item-row').forEach(row => {
       const qty = parseFloat(row.querySelector('.qty')?.value || 0);
       let unitPrice = parseFloat(row.querySelector('.unit-price')?.value || 0);
       const taxOption = row.querySelector("select[name='taxes[]']")?.value || "";
       const item_total = row.querySelector('.item-total');
+
       let total = 0;
       let itemTax = 0;
+      let itemTaxInclusive = 0;
+      let itemTaxExclusive = 0;
       // subtotal
       let lineTotal = unitPrice * qty; // ✅ Subtotal line without tax
       // grandTotal
       if (taxOption.includes('inclusive')) {
+         hasInclusive = true;
         const basePrice = unitPrice / 1.16;
         total = basePrice * qty * 1.16;
-        itemTax = (basePrice * qty * 0.16); // VAT portion
+        itemTaxInclusive = (basePrice * qty * 0.16);
+
+        // if (window.getComputedStyle(vatInclusiveContainer).display !== 'block') {
+        //   vatInclusiveContainer.style.display = 'block';
+        // }
       } else if (taxOption.includes('exclusive')) {
+        hasExclusive = true;
         total = unitPrice * qty * 1.16;
-        itemTax = unitPrice * qty * 0.16;
-      } else if (taxOption === 'zero' || taxOption === 'exempt') {
+        itemTaxExclusive = unitPrice * qty * 0.16;
+
+        // if (window.getComputedStyle(vatExclusiveContainer).display !== 'block') {
+        //   vatExclusiveContainer.style.display = 'block';
+        // }
+
+      } else if (taxOption === 'zero') {
         total = unitPrice * qty;
         itemTax = 0;
+        document.getElementById('taxLabel').textContent = "VAT 0%:";
+      } else if (taxOption === 'exempt') {
+        total = unitPrice * qty;
+        itemTax = 0;
+        document.getElementById('taxLabel').textContent = "EXEMPTED";
       }
       else {
         total = unitPrice * qty; // fallback
@@ -104,9 +112,25 @@ document.addEventListener("DOMContentLoaded", function () {
         item_total.value = 'Ksh ' + total.toFixed(2);
       }
       subTotal += (total - itemTax);
+      vatAmountInclusive += itemTaxInclusive;
       vatAmount += itemTax;
       grandTotal += total;
     });
+
+    // vatInclusiveContainer.style.display = hasInclusive ? 'block' : 'non';
+     if (hasExclusive) {
+        vatExclusiveContainer.style.setProperty('display', 'flex', 'important');
+
+      } else {
+        vatExclusiveContainer.style.setProperty('display', 'none', 'important');
+      }
+      if (hasInclusive) {
+        vatInclusiveContainer.style.setProperty('display', 'flex', 'important');
+
+      } else {
+        vatInclusiveContainer.style.setProperty('display', 'none', 'important');
+      }
+
 
     document.getElementById('subTotal').value = 'Ksh ' + subTotal.toFixed(2);
     document.getElementById('vatAmount').value = `Ksh ${vatAmount.toFixed(2)}`;
@@ -201,7 +225,6 @@ document.getElementById("expenseForm").addEventListener("submit", function (e) {
 
 // Pay for an expense
 function payExpense(expenseId, amountToPay) {
-  // Get modal form elements
   const expenseIdInput = document.getElementById('expenseId');
   const paymentDateInput = document.getElementById('paymentDate');
   const payExpenseForm = document.getElementById('payExpenseForm');
@@ -212,23 +235,24 @@ function payExpense(expenseId, amountToPay) {
     return;
   }
 
+  // Reset the form first
+  payExpenseForm.reset();
+
   // Set hidden input with expense ID
   expenseIdInput.value = expenseId;
 
-  // default value, but user can still change it
-  document.getElementById('amountToPay').value = parseFloat(1200);
+  // Set amount to pay (now after reset)
+  document.getElementById('amountToPay').value = parseFloat(400);
 
-  // Reset the form
-  payExpenseForm.reset();
-
-  // Set today's date by default
+  // Set today's date
   const today = new Date().toISOString().split('T')[0];
   paymentDateInput.value = today;
 
-  // Show the Bootstrap modal
+  // Show the modal
   const modal = new bootstrap.Modal(modalElement);
   modal.show();
 }
+
 
 // payExpense
 document.getElementById("payExpenseForm").addEventListener("submit", function (e) {
