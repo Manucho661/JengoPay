@@ -1140,7 +1140,7 @@ foreach ($invoices as $invoice) {
             <span class="status-badge ' . $paymentStatusClass . '">' . $paymentStatusText . '</span>';
             if (strtolower($invoice['payment_status']) === 'unpaid') {
                 echo '<br>
-                <button class="btn pay-btn" 
+                <button class="btn pay-btn"
                     onclick="event.stopPropagation(); openPayModal(this)"
                     data-invoice-id="' . $invoice['id'] . '"
                     data-tenant="' . htmlspecialchars($tenantName) . '"
@@ -1215,7 +1215,7 @@ foreach ($invoices as $invoice) {
               <label class="form-label fw-semibold text-dark">
                 <i class="fa-solid fa-sack-dollar text-warning me-1"></i> Amount (KES)
               </label>
-              <input type="text" class="form-control border-warning" id="amount" name="amount" readonly>
+              <input type="text" class="form-control border-warning" id="amount" name="amount">
             </div>
 
             <!-- Reference Number -->
