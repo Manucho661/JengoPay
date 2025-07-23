@@ -1104,10 +1104,7 @@ $stmt = $pdo->query("
         i.description
     FROM invoice i
     LEFT JOIN users u ON u.id = i.tenant
-    ORDER BY
-        CASE WHEN i.status = 'draft' THEN 0 ELSE 1 END,
-        i.invoice_date DESC,
-        i.invoice_number DESC
+    ORDER BY i.created_at DESC
 ");
 
 $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -1237,11 +1234,17 @@ foreach ($invoices as $invoice) {
     }
 
     // Edit option - available for drafts and sent invoices without payments
+    // if ($invoice['status'] === 'draft' || ($invoice['status'] === 'sent' && $invoice['paid_amount'] == 0)) {
+    //     echo '<li><a class="dropdown-item" href="#" onclick="editInvoice(' . $invoice['id'] . ')">
+    //               <i class="fas fa-edit me-2"></i>Edit Invoice
+    //           </a></li>';
+    // }
     if ($invoice['status'] === 'draft' || ($invoice['status'] === 'sent' && $invoice['paid_amount'] == 0)) {
-        echo '<li><a class="dropdown-item" href="#" onclick="editInvoice(' . $invoice['id'] . ')">
-                  <i class="fas fa-edit me-2"></i>Edit Invoice
-              </a></li>';
-    }
+      echo '<li><a class="dropdown-item" href="#" onclick="editInvoice(' . $invoice['id'] . ')">
+                <i class="fas fa-edit me-2"></i>Edit Invoice
+            </a></li>';
+  }
+
 
     echo '<li><hr class="dropdown-divider"></li>';
 
@@ -1545,13 +1548,13 @@ foreach ($invoices as $invoice) {
                     <div class="form-section">
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="notes">Notes</label>
+                                <label for="notes">Notes(Optional)</label>
                                 <textarea id="notes" name="notes" class="form-control" rows="3" placeholder="Thank you for your business!"></textarea>
                             </div>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label for="terms">Terms & Conditions</label>
                                 <textarea id="terms"  name="terms_conditions" class="form-control" rows="3" placeholder="Payment due within 15 days"></textarea>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
 
