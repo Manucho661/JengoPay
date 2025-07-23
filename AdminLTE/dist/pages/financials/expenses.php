@@ -37,8 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['get_totals'])) {
 // === ✅ AJAX: Handle Expense Submission ===
 
 
-
-
 // === ✅ Normal Page Load ===
 try {
     $stmt = $pdo->query("SELECT * FROM expenses ORDER BY created_at DESC");
@@ -51,8 +49,16 @@ try {
 } catch (PDOException $e) {
     $errorMessage = "❌ Failed to fetch expenses: " . $e->getMessage();
 }
-?>
 
+try {
+    $ExpenseItemsQuery = $pdo->prepare("SELECT account_name FROM chart_of_accounts WHERE account_type = :type LIMIT 8");
+    $ExpenseItemsQuery->execute(['type' => 'expenses']);
+    $items = $ExpenseItemsQuery->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $errorMessage = "❌ Failed to fetch expense items: " . $e->getMessage();
+}
+
+?>
 
 
 
@@ -317,28 +323,31 @@ try {
                                                     <!-- Hidden total -->
                                                     <div class="row mt-2">
                                                         <div class="text-muted mt-4 mb-4">Add the Spend items in the fields below</div>
-                                                        <div class="col-md-12 rounded-2" id="itemsContainer" >
+                                                        <div class="col-md-12 rounded-2" id="itemsContainer">
                                                             <div class="row item-row g-3 mb-5 p-2" style="background-color: #f5f5f5;">
                                                                 <div class="col-md-12">
                                                                     <div class="row">
                                                                         <div class="col-md-3">
                                                                             <label class="form-label fw-bold">ITEM(SERVICE)</label>
-                                                                            <select class="form-select shadow-none rounded-1" name="ITEM[]" style="width: 100%;">
+                                                                            <select class="form-select shadow-none rounded-1" name="item_name[]" style="width: 100%;">
                                                                                 <option value="" disabled selected>Select</option>
-                                                                                <option value="Garbage">Garbage</option>
-                                                                                <option value="Electricty">Electricity</option>
+                                                                                <?php foreach ($items as $item): ?>
+                                                                                    <option value="<?= htmlspecialchars($item['account_name']) ?>">
+                                                                                        <?= htmlspecialchars($item['account_name']) ?>
+                                                                                    </option>
+                                                                                <?php endforeach; ?>
                                                                             </select>
                                                                         </div>
                                                                         <div class="col-md-3">
                                                                             <label class="form-label fw-bold">Description</label>
-                                                                            <input type="text" class="form-control qty rounded-1 shadow-none" placeholder="Electricity" name="Description[]" required />
+                                                                            <input type="text" class="form-control description rounded-1 shadow-none" placeholder="Electricity" name="description[]" required />
                                                                         </div>
                                                                         <div class="col-md-3">
                                                                             <label class="form-label fw-bold">Qty</label>
                                                                             <input type="number" class="form-control qty rounded-1 shadow-none" placeholder="1" name="qty[]" required />
                                                                         </div>
                                                                         <div class="col-md-3">
-                                                                            <label class="form-label fw-bold">Unit Price</label>
+                                                                            <label class="form-label fw-bold">Unit Price (KSH)</label>
                                                                             <input type="number" class="form-control unit-price rounded-1 shadow-none" placeholder="123" name="unit_price[]" required />
                                                                         </div>
                                                                     </div>
@@ -354,12 +363,12 @@ try {
                                                                             </select>
                                                                         </div>
                                                                         <div class="col-md-3">
-                                                                            <label class="form-label fw-bold">Total</label>
-                                                                            <input type="text" class="form-control item-total shadow-none rounded-1 mb-1" placeholder="Ksh 0.00" name="item_total[]" required readonly />
+                                                                            <label class="form-label fw-bold">Discount (KSH)</label>
+                                                                            <input type="number" class="form-control discount shadow-none rounded-1 mb-1" name="discount[]" placeholder="Ksh 0.00" required>
                                                                         </div>
                                                                         <div class="col-md-3">
-                                                                            <label class="form-label fw-bold">Discount</label>
-                                                                            <input type="text" class="form-control item-total shadow-none rounded-1 mb-1" placeholder="Ksh 0.00" required readonly>
+                                                                            <label class="form-label fw-bold">Total (KSH)</label>
+                                                                            <input type="text" class="form-control item-total shadow-none rounded-1 mb-1" placeholder="Ksh 0.00" name="item_total[]" required readonly />
                                                                         </div>
                                                                         <div class="col-md-3 d-flex flex-column align-items-center justify-content-center">
                                                                             <label class="form-label fw-bold">Remove Item</label>
@@ -386,13 +395,18 @@ try {
                                                                     </div>
 
                                                                     <div class="d-flex justify-content-end w-100 mb-2" id="vatAmountInclusiveContainer" style="display:none !important;">
-                                                                        <label class="me-2 border-end pe-3 text-end w-50" ><strong id="taxLabel">VAT 16% (Inclusive):</strong></label>
+                                                                        <label class="me-2 border-end pe-3 text-end w-50"><strong id="taxLabel">VAT 16% (Inclusive):</strong></label>
                                                                         <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountInclusive" value="Ksh 1,500">
                                                                     </div>
 
-                                                                    <div class="d-flex justify-content-end w-100 mb-2" id="vatAmountExclusiveContainer" style="display: none;" >
-                                                                        <label class="me-2 border-end pe-3 text-end w-50" ><strong id="taxLabel">VAT 16% (Exlusive):</strong></label>
-                                                                        <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmount" value="Ksh 1,500">
+                                                                    <div class="d-flex justify-content-end w-100 mb-2" id="vatAmountExclusiveContainer" style="display: none;">
+                                                                        <label class="me-2 border-end pe-3 text-end w-50"><strong id="taxLabel">VAT 16% (Exlusive):</strong></label>
+                                                                        <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountExclusive" value="Ksh 1,500">
+                                                                    </div>
+
+                                                                    <div class="d-flex justify-content-end w-100 mb-2" id="grandDiscountContainer">
+                                                                        <label class="me-2 border-end pe-3 text-end w-50"><strong>Discount:</strong></label>
+                                                                        <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="grandDiscount" value="Ksh 0:00">
                                                                     </div>
 
                                                                     <div class="d-flex justify-content-end w-100 mt-3 pt-2 border-top border-warning">
@@ -468,6 +482,8 @@ try {
                                                             $statusLabel = '<span style="background-color: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Paid</span>';
                                                         } elseif ($status === 'unpaid') {
                                                             $statusLabel = '<span style="background-color: #FFC107; color: #00192D; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Unpaid</span>';
+                                                        } elseif ($status === 'partially paid') {
+                                                            $statusLabel = '<span style="background-color: #17a2b8; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Partially Paid</span>';
                                                         } else {
                                                             $statusLabel = '<span class="text-muted">' . htmlspecialchars($exp['status']) . '</span>';
                                                         }
@@ -475,26 +491,25 @@ try {
                                                         echo $statusLabel;
                                                         ?>
 
-                                                        <?php if ($status === 'unpaid'): ?>
+                                                        <?php if ($status === 'unpaid' || $status === 'partially paid'): ?>
                                                             <br>
                                                             <button
                                                                 class="btn btn-sm d-inline-flex align-items-center gap-1 mt-2"
                                                                 style="background-color: #00192D; color: #FFC107; border: none; border-radius: 8px; padding: 6px 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;"
-                                                                onclick="payExpense(<?= $exp['id'] ?>)">
+                                                                onclick="payExpense(<?= htmlspecialchars(json_encode($exp['id']), ENT_QUOTES, 'UTF-8') ?>, <?= htmlspecialchars(json_encode($exp['total']), ENT_QUOTES, 'UTF-8') ?>)">
                                                                 <i class="bi bi-credit-card-fill"></i>
                                                                 Pay
                                                             </button>
                                                         <?php endif; ?>
                                                     </td>
 
+
                                                     <td>
-                                                        <!-- view button -->
                                                         <button
                                                             class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
                                                             style="background-color: #00192D; color: white; border: none; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;"
-                                                            onclick="openExpenseModal(<?= $exp['id'] ?>, <?= $exp['total'] ?>)">
-                                                            <i class="bi bi-eye-fill"></i>
-                                                            View
+                                                            onclick="openInvoiceModal(<?= $exp['id'] ?>)">
+                                                            <i class="bi bi-eye-fill"></i> View
                                                         </button>
                                                     </td>
                                                 </tr>
@@ -512,7 +527,10 @@ try {
 
                                                 <div class="modal-body">
                                                     <form id="payExpenseForm">
+                                                        <!-- id -->
                                                         <input type="hidden" name="expense_id" id="expenseId">
+                                                        <!-- total amount -->
+                                                        <input type="hidden" name="expected_amount" id="expectedAmount">
 
                                                         <div class="mb-3">
                                                             <label for="amount" class="form-label">Amount to Pay(KSH)</label>
@@ -546,6 +564,129 @@ try {
                                                     <button type="submit" form="payExpenseForm" class="btn" style="background-color: #FFC107; color: #00192D;">
                                                         <i class="bi bi-credit-card"></i> Confirm Payment
                                                     </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- View Expense Modal -->
+                                    <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+
+                                                    <!-- 🔒 DO NOT TOUCH CARD BELOW -->
+                                                    <div class="invoice-card">
+                                                        <!-- Header -->
+                                                        <div class="d-flex justify-content-between align-items-start mb-3">
+                                                            <img id="invoiceLogo" alt="Company Logo" class="invoice-logo">
+                                                            <script>
+                                                                const logos = [
+                                                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Unilever.svg/200px-Unilever.svg.png",
+                                                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/200px-IBM_logo.svg.png",
+                                                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/200px-Amazon_logo.svg.png",
+                                                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Microsoft_logo.svg/200px-Microsoft_logo.svg.png",
+                                                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/200px-Google_2015_logo.svg.png",
+                                                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/200px-Apple_logo_black.svg.png",
+                                                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Pepsi_logo_2014.svg/200px-Pepsi_logo_2014.svg.png",
+                                                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Toyota_logo.svg/200px-Toyota_logo.svg.png",
+                                                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Adobe_Corporate_Logo.png/200px-Adobe_Corporate_Logo.png",
+                                                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Nike_logo.svg/200px-Nike_logo.svg.png"
+                                                                ];
+
+                                                                const logoImg = document.getElementById("invoiceLogo");
+                                                                logoImg.src = logos[Math.floor(Math.random() * logos.length)];
+                                                            </script>
+
+                                                            <div class="text-end" style="background-color: #f0f0f0; padding: 10px; border-radius: 8px;">
+                                                                <strong>Customer Name</strong><br>
+                                                                123 Example St<br>
+                                                                Nairobi, Kenya<br>
+                                                                customer@example.com<br>
+                                                                +254 700 123456
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Invoice Info -->
+                                                        <div class="d-flex justify-content-between">
+                                                            <h6 class="mb-0">Josephat Koech</h6>
+                                                            <div class="text-end">
+                                                                <h3> INV001</h3><br>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mb-1 rounded-2 d-flex justify-content-between align-items-center"
+                                                            style="border: 1px solid #FFC107; padding: 4px 8px; background-color: #FFF4CC;">
+                                                            <div class="d-flex flex-column Invoice-date m-0">
+                                                                <span class="m-0"><b>Due Date</b></span>
+                                                                <p class="m-0">24/6/2025</p>
+                                                            </div>
+                                                            <div class="d-flex flex-column due-date m-0">
+                                                                <span class="m-0"><b>Due Date</b></span>
+                                                                <p class="m-0">24/6/2025</p>
+                                                            </div>
+                                                            <div></div>
+                                                        </div>
+
+                                                        <!-- Items Table -->
+                                                        <div class="table-responsive ">
+                                                            <table class="table table-striped table-bordered rounded-2 table-sm thick-bordered-table">
+                                                                <thead class="table">
+                                                                    <tr class="custom-th">
+                                                                        <th>Description</th>
+                                                                        <th class="text-end">Qty</th>
+                                                                        <th class="text-end">Unit Price</th>
+                                                                        <th class="text-end">Total</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>Web Design</td>
+                                                                        <td class="text-end">1</td>
+                                                                        <td class="text-end">KES 25,000</td>
+                                                                        <td class="text-end">KES 25,000</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Hosting (1 year)</td>
+                                                                        <td class="text-end">1</td>
+                                                                        <td class="text-end">KES 5,000</td>
+                                                                        <td class="text-end">KES 5,000</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+
+                                                        <!-- Totals and Terms -->
+                                                        <div class="row">
+                                                            <div class="col-6 terms-box">
+                                                                <strong>Terms:</strong><br>
+                                                                Payment due in 14 days.<br>
+                                                                Late fee: 2% monthly.
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <table class="table table-borderless table-sm text-end mb-0">
+                                                                    <tr>
+                                                                        <th>Subtotal:</th>
+                                                                        <td>KES 30,000</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>VAT (16%):</th>
+                                                                        <td>KES 4,800</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Total:</th>
+                                                                        <td><strong>KES 34,800</strong></td>
+                                                                    </tr>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+
+                                                        <hr>
+
+                                                        <div class="text-center small text-muted">
+                                                            Thank you for your business!
+                                                        </div>
+                                                    </div>
+                                                    <!-- 🔚 END CARD -->
                                                 </div>
                                             </div>
                                         </div>
@@ -738,10 +879,12 @@ try {
             const selectedDate = new Date(this.value);
             const now = new Date();
 
-            // Financial year start (July 1)
-            const fyStart = new Date(now.getFullYear(), 6, 1); // July = month 6
+            // Financial year: Calendar year (Jan 1 – Dec 31)
+            const yearStart = new Date(now.getFullYear(), 0, 1); // January 1
+            const yearEnd = new Date(now.getFullYear(), 11, 31); // December 31
 
-            if (selectedDate < fyStart) {
+            // Check if selected date is outside current calendar year
+            if (selectedDate < yearStart || selectedDate > yearEnd) {
                 tempDate = this.value;
                 fyModal.show();
             }
@@ -759,6 +902,7 @@ try {
             fyModal.hide(); // Simply hide modal, keep selected date
         });
     </script>
+
 
 
     <script>
@@ -845,6 +989,27 @@ try {
                 }
             });
         });
+    </script>
+    <!-- Expense modal -->
+    <script>
+        function openInvoiceModal(expenseId) {
+            const modalBody = document.getElementById("invoiceModalBody");
+            modalBody.innerHTML = `<div class="text-center text-muted py-4">Loading...</div>`;
+
+            // Optional: Fetch data dynamically via AJAX/PHP
+            fetch(`fetch_invoice.php?id=${expenseId}`)
+                .then(response => response.text())
+                .then(data => {
+                    modalBody.innerHTML = data;
+                })
+                .catch(() => {
+                    modalBody.innerHTML = `<div class="text-danger text-center">Failed to load invoice.</div>`;
+                });
+
+            // Show the modal
+            const invoiceModal = new bootstrap.Modal(document.getElementById('invoiceModal'));
+            invoiceModal.show();
+        }
     </script>
 
 

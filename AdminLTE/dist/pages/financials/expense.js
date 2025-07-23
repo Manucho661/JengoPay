@@ -60,13 +60,18 @@ document.addEventListener("DOMContentLoaded", function () {
     const vatExclusiveContainer = document.getElementById('vatAmountExclusiveContainer');
 
     let subTotal = 0;
+    let vatAmountInclusive = 0;
+    let vatAmountExclusive= 0;
     let vatAmount = 0;
     let grandTotal = 0;
+    let grandDiscount = 0;
+
     let hasInclusive = false;
     let hasExclusive = false;
     document.querySelectorAll('.item-row').forEach(row => {
       const qty = parseFloat(row.querySelector('.qty')?.value || 0);
       let unitPrice = parseFloat(row.querySelector('.unit-price')?.value || 0);
+      let discount = parseFloat(row.querySelector('.discount')?.value || 0);
       const taxOption = row.querySelector("select[name='taxes[]']")?.value || "";
       const item_total = row.querySelector('.item-total');
 
@@ -82,18 +87,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const basePrice = unitPrice / 1.16;
         total = basePrice * qty * 1.16;
         itemTaxInclusive = (basePrice * qty * 0.16);
-
-        // if (window.getComputedStyle(vatInclusiveContainer).display !== 'block') {
-        //   vatInclusiveContainer.style.display = 'block';
-        // }
       } else if (taxOption.includes('exclusive')) {
         hasExclusive = true;
         total = unitPrice * qty * 1.16;
         itemTaxExclusive = unitPrice * qty * 0.16;
-
-        // if (window.getComputedStyle(vatExclusiveContainer).display !== 'block') {
-        //   vatExclusiveContainer.style.display = 'block';
-        // }
 
       } else if (taxOption === 'zero') {
         total = unitPrice * qty;
@@ -109,11 +106,17 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       if (item_total) {
+        // Extract discount From total
+        total= total-discount;
         item_total.value = 'Ksh ' + total.toFixed(2);
       }
-      subTotal += (total - itemTax);
+      
+      // Remove discount, remove inclusive tax, add exclusive tax
+      subTotal += (total - itemTaxInclusive + itemTaxExclusive);
       vatAmountInclusive += itemTaxInclusive;
+      vatAmountExclusive += itemTaxExclusive;
       vatAmount += itemTax;
+      grandDiscount+= discount;
       grandTotal += total;
     });
 
@@ -133,8 +136,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     document.getElementById('subTotal').value = 'Ksh ' + subTotal.toFixed(2);
-    document.getElementById('vatAmount').value = `Ksh ${vatAmount.toFixed(2)}`;
+    document.getElementById('vatAmountInclusive').value = 'Ksh ' + vatAmountInclusive.toFixed(2);
+    document.getElementById('vatAmountExclusive').value = 'Ksh ' + vatAmountExclusive.toFixed(2);
     // grandTotal
+    document.getElementById('grandDiscount').value = 'Ksh' + grandDiscount.toFixed(2);
     document.getElementById('grandTotal').value = 'Ksh ' + grandTotal.toFixed(2);
     document.getElementById('grandTotalNumber').value = grandTotal.toFixed(2);
 
@@ -142,7 +147,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function attachEvents(row) {
     ["input", "change"].forEach(evt => {
-      row.querySelectorAll(".unit-price, .qty, .form-select").forEach(el =>
+      row.querySelectorAll(".unit-price, .qty, .discount, .form-select").forEach(el =>
         el.addEventListener(evt, calculateTotal)
       );
     });
@@ -182,13 +187,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // Attach calculation events to new row inputs
     attachEvents(newRow);
 
-    // Reinitialize custom select functionality for the new row
-    const newCustomSelectWrapper = newRow.querySelector('.custom-select-wrapper');
-    if (newCustomSelectWrapper) {
-      initializeCustomSelect(newCustomSelectWrapper);
-      bindItemHiddenInput(newCustomSelectWrapper);
-    }
-
     // Recalculate totals immediately
     calculateTotal();
   };
@@ -214,7 +212,7 @@ document.getElementById("expenseForm").addEventListener("submit", function (e) {
       console.log("Server response:", data);
 
       // ✅ Reload the page without resubmission
-      window.location.href = window.location.href;
+       window.location.href = window.location.href;
     })
     .catch(error => {
       console.error("Error submitting form:", error);
@@ -223,9 +221,10 @@ document.getElementById("expenseForm").addEventListener("submit", function (e) {
 
 
 
-// Pay for an expense
-function payExpense(expenseId, amountToPay) {
+// Display Pay Expense Modal
+function payExpense(expenseId, expectedAmountToPay) {
   const expenseIdInput = document.getElementById('expenseId');
+  const expectedAmountToPayInput = document.getElementById('expectedAmount');
   const paymentDateInput = document.getElementById('paymentDate');
   const payExpenseForm = document.getElementById('payExpenseForm');
   const modalElement = document.getElementById('payExpenseModal');
@@ -240,9 +239,9 @@ function payExpense(expenseId, amountToPay) {
 
   // Set hidden input with expense ID
   expenseIdInput.value = expenseId;
-
+  expectedAmountToPayInput.value=expectedAmountToPay;
   // Set amount to pay (now after reset)
-  document.getElementById('amountToPay').value = parseFloat(400);
+  document.getElementById('amountToPay').value = parseFloat(expectedAmountToPay);
 
   // Set today's date
   const today = new Date().toISOString().split('T')[0];
@@ -274,7 +273,7 @@ document.getElementById("payExpenseForm").addEventListener("submit", function (e
       console.log("Server response:", data);
 
       // ✅ Reload the page without resubmission
-      window.location.href = window.location.href;
+      // window.location.href = window.location.href;
     })
     .catch(error => {
       console.error("Error submitting form:", error);
