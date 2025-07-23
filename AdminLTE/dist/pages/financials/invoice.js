@@ -182,27 +182,79 @@ cancelInvoiceBtn?.addEventListener('click', showInvoiceListView);
 
 // Edit logic
 function editInvoice(invoiceId) {
-// Show the form view
-showCreateInvoiceView();
+  // Show the form view
+  showCreateInvoiceView();
 
-// Optional: populate form fields via AJAX
-fetch('../invoice/actions/get_invoice_data.php?id=' + invoiceId)
-  .then(response => response.json())
-  .then(data => {
-      // Replace the below with actual form field population
-      document.getElementById('invoice-id').value = data.id;
-      document.getElementById('invoice-number').value = data.invoice_number;
-      document.getElementById('invoice-date').value = data.invoice_date;
-      document.getElementById('due-date').value = data.due_date;
-      document.getElementById('total').value = data.total;
-      document.getElementById('tenant').value = data.tenant;
-      // ... populate other fields as needed
-  })
-  .catch(error => {
-      alert("Failed to load invoice data.");
-      console.error(error);
-  });
+  // Populate form fields via AJAX
+  fetch('../invoice/actions/get_invoice_data.php?id=' + invoiceId)
+      .then(response => response.json())
+      .then(data => {
+        if (!data || !data.id) {
+          alert("Invoice not found.");
+          return;
+      }
+
+
+          // Fill form fields
+          document.getElementById('invoice-id').value = data.id;
+          document.getElementById('invoice-number').value = data.invoice_number;
+          document.getElementById('invoice-date').value = data.invoice_date;
+          document.getElementById('due-date').value = data.due_date;
+          document.getElementById('payment-date').value = data.payment_date ?? '';
+          document.getElementById('building-id').value = data.building_id ?? '';
+          document.getElementById('tenant').value = data.tenant;
+          document.getElementById('account-item').value = data.account_item;
+          document.getElementById('description').value = data.description;
+          document.getElementById('quantity').value = data.quantity;
+          document.getElementById('unit-price').value = data.unit_price;
+          document.getElementById('taxes').value = data.taxes;
+          document.getElementById('sub-total').value = data.sub_total;
+          document.getElementById('total').value = data.total;
+          document.getElementById('notes').value = data.notes;
+          document.getElementById('terms-conditions').value = data.terms_conditions;
+          document.getElementById('status').value = data.status;
+          document.getElementById('payment-status').value = data.payment_status;
+      })
+      .catch(error => {
+          alert("Failed to load invoice data.");
+          console.error(error);
+      });
 }
+
+
+// function editInvoice(invoiceid) {
+//     fetch(`../invoice/actions/get_invoice_data.php?id=${id}`)
+//         .then(response => response.json())
+//         .then(data => {
+//             if (data.error) {
+//                 alert(data.error);
+//                 return;
+//             }
+
+//             // Populate form fields (example)
+//             document.getElementById('invoice_id').value = data.id;
+//             document.getElementById('invoice_number').value = data.invoice_number;
+//             document.getElementById('invoice_date').value = data.invoice_date;
+//             document.getElementById('due_date').value = data.due_date;
+//             document.getElementById('building_id').value = data.building_id;
+//             document.getElementById('tenant').value = data.tenant;
+//             document.getElementById('account_item').value = data.account_item;
+//             document.getElementById('description').value = data.description;
+//             document.getElementById('quantity').value = data.quantity;
+//             document.getElementById('unit_price').value = data.unit_price;
+//             document.getElementById('taxes').value = data.taxes;
+//             document.getElementById('notes').value = data.notes;
+//             document.getElementById('terms_conditions').value = data.terms_conditions;
+
+//             // Open the form modal if using Bootstrap
+//             const modal = new bootstrap.Modal(document.getElementById('editInvoiceModal'));
+//             modal.show();
+//         })
+//         .catch(err => {
+//             alert('Error fetching invoice details.');
+//             console.error(err);
+//         });
+// }
 
 
 

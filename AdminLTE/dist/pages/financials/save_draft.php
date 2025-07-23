@@ -21,18 +21,59 @@ try {
     $tenantId      = $_POST['tenant'] ?? null;
     $invoiceDate   = $_POST['invoice_date'] ?? null;
     $dueDate       = $_POST['due_date'] ?? null;
+    $accountItem   = $_POST['account_item'] ?? '';
+    $description   = $_POST['description'] ?? '';
+    $quantity      = $_POST['quantity'] ?? '';
+    $unitPrice     = $_POST['unit_price'] ?? '';
+    $taxes         = $_POST['taxes'] ?? '';
+    $subTotal      = $_POST['sub_total'] ?? 0;
+    $total         = $_POST['total'] ?? 0;
+    $notes         = $_POST['notes'] ?? '';
+    $termsConditions = $_POST['terms_conditions'] ?? '';
 
-    $sql = "INSERT INTO invoice (invoice_number, building_id, tenant, invoice_date, due_date, status, created_at)
-            VALUES (?, ?, ?, ?, ?, 'draft', NOW())";
+    $sql = "INSERT INTO invoice (
+                invoice_number,
+                building_id,
+                tenant,
+                invoice_date,
+                due_date,
+                account_item,
+                description,
+                quantity,
+                unit_price,
+                taxes,
+                sub_total,
+                total,
+                notes,
+                terms_conditions,
+                status,
+                payment_status,
+                created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'draft', 'unpaid', NOW())";
 
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([$invoiceNumber, $buildingId, $tenantId, $invoiceDate, $dueDate]);
+    $stmt->execute([
+        $invoiceNumber,
+        $buildingId,
+        $tenantId,
+        $invoiceDate,
+        $dueDate,
+        $accountItem,
+        $description,
+        $quantity,
+        $unitPrice,
+        $taxes,
+        $subTotal,
+        $total,
+        $notes,
+        $termsConditions
+    ]);
 
     // Return success with landing page URL
     echo json_encode([
         'success' => true,
         'invoice_number' => $invoiceNumber,
-        'redirect_url' => 'inv1.php?draft_saved=1&invoice_number=' . urlencode($invoiceNumber),
+        'redirect_url' => 'invoice.php?draft_saved=1&invoice_number=' . urlencode($invoiceNumber),
         'message' => "Draft saved successfully"
     ]);
 } catch (PDOException $e) {

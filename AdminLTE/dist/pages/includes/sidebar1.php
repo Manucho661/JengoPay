@@ -46,7 +46,7 @@
     </div>
     <div class="submenu">
       <a href="../financials/expenses.php">💵 Expenses</a>
-      <a href="../financials/inv1.php">📄 Invoices</a>
+      <a href="../financials/invoice.php">📄 Invoices</a>
       <a href="#">📊 Balance Sheet</a>
     </div>
   </div>
