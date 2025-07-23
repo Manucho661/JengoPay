@@ -37,8 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['get_totals'])) {
 // === ✅ AJAX: Handle Expense Submission ===
 
 
-
-
 // === ✅ Normal Page Load ===
 try {
     $stmt = $pdo->query("SELECT * FROM expenses ORDER BY created_at DESC");
@@ -51,8 +49,16 @@ try {
 } catch (PDOException $e) {
     $errorMessage = "❌ Failed to fetch expenses: " . $e->getMessage();
 }
-?>
 
+try {
+    $ExpenseItemsQuery = $pdo->prepare("SELECT account_name FROM chart_of_accounts WHERE account_type = :type LIMIT 8");
+    $ExpenseItemsQuery->execute(['type' => 'expenses']);
+    $items = $ExpenseItemsQuery->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $errorMessage = "❌ Failed to fetch expense items: " . $e->getMessage();
+}
+
+?>
 
 
 
@@ -317,21 +323,24 @@ try {
                                                     <!-- Hidden total -->
                                                     <div class="row mt-2">
                                                         <div class="text-muted mt-4 mb-4">Add the Spend items in the fields below</div>
-                                                        <div class="col-md-12 rounded-2" id="itemsContainer" >
+                                                        <div class="col-md-12 rounded-2" id="itemsContainer">
                                                             <div class="row item-row g-3 mb-5 p-2" style="background-color: #f5f5f5;">
                                                                 <div class="col-md-12">
                                                                     <div class="row">
                                                                         <div class="col-md-3">
                                                                             <label class="form-label fw-bold">ITEM(SERVICE)</label>
-                                                                            <select class="form-select shadow-none rounded-1" name="ITEM[]" style="width: 100%;">
+                                                                            <select class="form-select shadow-none rounded-1" name="item_name[]" style="width: 100%;">
                                                                                 <option value="" disabled selected>Select</option>
-                                                                                <option value="Garbage">Garbage</option>
-                                                                                <option value="Electricty">Electricity</option>
+                                                                                <?php foreach ($items as $item): ?>
+                                                                                    <option value="<?= htmlspecialchars($item['account_name']) ?>">
+                                                                                        <?= htmlspecialchars($item['account_name']) ?>
+                                                                                    </option>
+                                                                                <?php endforeach; ?>
                                                                             </select>
                                                                         </div>
                                                                         <div class="col-md-3">
                                                                             <label class="form-label fw-bold">Description</label>
-                                                                            <input type="text" class="form-control description rounded-1 shadow-none" placeholder="Electricity" name="Description[]" required />
+                                                                            <input type="text" class="form-control description rounded-1 shadow-none" placeholder="Electricity" name="description[]" required />
                                                                         </div>
                                                                         <div class="col-md-3">
                                                                             <label class="form-label fw-bold">Qty</label>
@@ -386,12 +395,12 @@ try {
                                                                     </div>
 
                                                                     <div class="d-flex justify-content-end w-100 mb-2" id="vatAmountInclusiveContainer" style="display:none !important;">
-                                                                        <label class="me-2 border-end pe-3 text-end w-50" ><strong id="taxLabel">VAT 16% (Inclusive):</strong></label>
+                                                                        <label class="me-2 border-end pe-3 text-end w-50"><strong id="taxLabel">VAT 16% (Inclusive):</strong></label>
                                                                         <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountInclusive" value="Ksh 1,500">
                                                                     </div>
 
-                                                                    <div class="d-flex justify-content-end w-100 mb-2" id="vatAmountExclusiveContainer" style="display: none;" >
-                                                                        <label class="me-2 border-end pe-3 text-end w-50" ><strong id="taxLabel">VAT 16% (Exlusive):</strong></label>
+                                                                    <div class="d-flex justify-content-end w-100 mb-2" id="vatAmountExclusiveContainer" style="display: none;">
+                                                                        <label class="me-2 border-end pe-3 text-end w-50"><strong id="taxLabel">VAT 16% (Exlusive):</strong></label>
                                                                         <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountExclusive" value="Ksh 1,500">
                                                                     </div>
 
@@ -468,6 +477,8 @@ try {
                                                             $statusLabel = '<span style="background-color: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Paid</span>';
                                                         } elseif ($status === 'unpaid') {
                                                             $statusLabel = '<span style="background-color: #FFC107; color: #00192D; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Unpaid</span>';
+                                                        } elseif ($status === 'partially paid') {
+                                                            $statusLabel = '<span style="background-color: #17a2b8; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Partially Paid</span>';
                                                         } else {
                                                             $statusLabel = '<span class="text-muted">' . htmlspecialchars($exp['status']) . '</span>';
                                                         }
@@ -475,17 +486,18 @@ try {
                                                         echo $statusLabel;
                                                         ?>
 
-                                                        <?php if ($status === 'unpaid'): ?>
+                                                        <?php if ($status === 'unpaid' || $status === 'partially paid'): ?>
                                                             <br>
                                                             <button
                                                                 class="btn btn-sm d-inline-flex align-items-center gap-1 mt-2"
                                                                 style="background-color: #00192D; color: #FFC107; border: none; border-radius: 8px; padding: 6px 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;"
-                                                                onclick="payExpense(<?= $exp['id'] ?>)">
+                                                                onclick="payExpense(<?= $exp['id'] ?>, <?= number_format($exp['total'], 2) ?>)">
                                                                 <i class="bi bi-credit-card-fill"></i>
                                                                 Pay
                                                             </button>
                                                         <?php endif; ?>
                                                     </td>
+
 
                                                     <td>
                                                         <!-- view button -->
@@ -512,7 +524,10 @@ try {
 
                                                 <div class="modal-body">
                                                     <form id="payExpenseForm">
+                                                        <!-- id -->
                                                         <input type="hidden" name="expense_id" id="expenseId">
+                                                        <!-- total amount -->
+                                                        <input type="hidden" name="expected_amount" id="expectedAmount">
 
                                                         <div class="mb-3">
                                                             <label for="amount" class="form-label">Amount to Pay(KSH)</label>

@@ -204,7 +204,7 @@ document.getElementById("expenseForm").addEventListener("submit", function (e) {
       console.log("Server response:", data);
 
       // ✅ Reload the page without resubmission
-      window.location.href = window.location.href;
+      // window.location.href = window.location.href;
     })
     .catch(error => {
       console.error("Error submitting form:", error);
@@ -213,9 +213,10 @@ document.getElementById("expenseForm").addEventListener("submit", function (e) {
 
 
 
-// Pay for an expense
-function payExpense(expenseId, amountToPay) {
+// Display Pay Expense Modal
+function payExpense(expenseId, expectedAmountToPay) {
   const expenseIdInput = document.getElementById('expenseId');
+  const expectedAmountToPayInput = document.getElementById('expectedAmount');
   const paymentDateInput = document.getElementById('paymentDate');
   const payExpenseForm = document.getElementById('payExpenseForm');
   const modalElement = document.getElementById('payExpenseModal');
@@ -230,9 +231,9 @@ function payExpense(expenseId, amountToPay) {
 
   // Set hidden input with expense ID
   expenseIdInput.value = expenseId;
-
+  expectedAmountToPayInput.value=expectedAmountToPay;
   // Set amount to pay (now after reset)
-  document.getElementById('amountToPay').value = parseFloat(400);
+  document.getElementById('amountToPay').value = parseFloat(expectedAmountToPay);
 
   // Set today's date
   const today = new Date().toISOString().split('T')[0];
@@ -264,7 +265,7 @@ document.getElementById("payExpenseForm").addEventListener("submit", function (e
       console.log("Server response:", data);
 
       // ✅ Reload the page without resubmission
-      window.location.href = window.location.href;
+      // window.location.href = window.location.href;
     })
     .catch(error => {
       console.error("Error submitting form:", error);

@@ -22,9 +22,29 @@
 
         $expense_id = $pdo->lastInsertId();
 
+        $item_names = $_POST['item_name'] ?? [];
+        $descriptions = $_POST['description'] ?? [];
+        $quantities = $_POST['qty'] ?? [];
+        $unit_prices = $_POST['unit_price'] ?? [];
+        $taxes = $_POST['taxes'] ?? [];
+        $totals = $_POST['item_total'] ?? [];
+
+        $stmtItem = $pdo->prepare("INSERT INTO expense_items (item_name, expense_id, description, qty, unit_price, taxes, total) VALUES (?, ?, ?,?, ?, ?, ?)");
+
+        for ($i = 0; $i < count($item_names); $i++) {
+        $stmtItem->execute([
+            $item_names[$i],
+            $expense_id,
+            $descriptions[$i],
+            $quantities[$i],
+            $unit_prices[$i],
+            $taxes[$i],
+            $totals[$i]
+        ]);
+        }
+
         $pdo->commit();
         echo "Inserted successfully with ID: $expense_id";
-
         
     } catch (Exception $e) {
         $pdo->rollBack();
