@@ -181,45 +181,37 @@ createInvoiceBtn?.addEventListener('click', showCreateInvoiceView);
 cancelInvoiceBtn?.addEventListener('click', showInvoiceListView);
 
 // Edit logic
+// JavaScript function
 function editInvoice(invoiceId) {
   // Show the form view
   showCreateInvoiceView();
 
   // Populate form fields via AJAX
-  fetch('../invoice/actions/get_invoice_data.php?id=' + invoiceId)
-      .then(response => response.json())
+  fetch('get_invoice_data.php?id=' + invoiceId)
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return response.json();
+      })
       .then(data => {
-        if (!data || !data.id) {
-          alert("Invoice not found.");
-          return;
-      }
-
+          if (data.error) {
+              alert(data.error);
+              return;
+          }
 
           // Fill form fields
           document.getElementById('invoice-id').value = data.id;
           document.getElementById('invoice-number').value = data.invoice_number;
           document.getElementById('invoice-date').value = data.invoice_date;
-          document.getElementById('due-date').value = data.due_date;
-          document.getElementById('payment-date').value = data.payment_date ?? '';
-          document.getElementById('building-id').value = data.building_id ?? '';
-          document.getElementById('tenant').value = data.tenant;
-          document.getElementById('account-item').value = data.account_item;
-          document.getElementById('description').value = data.description;
-          document.getElementById('quantity').value = data.quantity;
-          document.getElementById('unit-price').value = data.unit_price;
-          document.getElementById('taxes').value = data.taxes;
-          document.getElementById('sub-total').value = data.sub_total;
-          document.getElementById('total').value = data.total;
-          document.getElementById('notes').value = data.notes;
-          document.getElementById('terms-conditions').value = data.terms_conditions;
-          document.getElementById('status').value = data.status;
-          document.getElementById('payment-status').value = data.payment_status;
+          // ... rest of your field population
       })
       .catch(error => {
-          alert("Failed to load invoice data.");
-          console.error(error);
+          alert("Failed to load invoice data: " + error.message);
+          console.error('Error:', error);
       });
 }
+
 
 
 // function editInvoice(invoiceid) {
@@ -419,36 +411,50 @@ updateTotalAmount();
 
 
 
-document.addEventListener('DOMContentLoaded', function () {
-// Save Draft Button - uses server-generated number
-document.getElementById('saveDraftBtn').addEventListener('click', function () {
+document.getElementById('saveDraftBtn').addEventListener('click', async function () {
   const form = document.querySelector('form');
   const formData = new FormData(form);
   formData.append('draft', '1');
 
-  fetch('../invoice/actions/save_draft.php', {
+  try {
+    const response = await fetch('save_draft.php', {
       method: 'POST',
       body: formData
-  })
-  .then(res => res.json())
-  .then(data => {
-      if (data.success) {
-          alert(`Draft saved: ${data.invoice_number}`);
-          document.getElementById('invoice-number').value = data.invoice_number;
+    });
 
-          // Hide draft form, show invoice list
-          createInvoiceView.style.display = 'none';
-          invoiceListView.style.display = 'block';
-          renderInvoiceList();
-      } else {
-          alert('Error: ' + data.message);
+    // First get the response text
+    const responseText = await response.text();
+
+    // Try to parse it as JSON
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (e) {
+      throw new Error(`Invalid JSON response: ${responseText}`);
+    }
+
+    if (data.success) {
+      alert(`Draft saved: ${data.invoice_number}`);
+      document.getElementById('invoice-number').value = data.invoice_number;
+
+      // Hide draft form, show invoice list
+      createInvoiceView.style.display = 'none';
+      invoiceListView.style.display = 'block';
+      renderInvoiceList();
+
+      // Redirect if URL is provided
+      if (data.redirect_url) {
+        window.location.href = data.redirect_url;
       }
-  })
-  .catch(err => {
-      console.error('Error saving draft:', err);
-      // alert('Unexpected error occurred.');
-  });
+    } else {
+      throw new Error(data.message || 'Unknown error saving draft');
+    }
+  } catch (err) {
+    console.error('Error saving draft:', err);
+    alert('Error saving draft: ' + err.message);
+  }
 });
+
 
 // Preview Button - Updated to handle draft numbers
 document.getElementById('preview-invoice-btn').addEventListener('click', function () {
@@ -569,7 +575,7 @@ if (draftCheckbox) {
       }
   });
 }
-});
+// });
 
 
 
