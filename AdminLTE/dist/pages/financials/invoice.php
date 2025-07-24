@@ -1104,10 +1104,7 @@ $stmt = $pdo->query("
         i.description
     FROM invoice i
     LEFT JOIN users u ON u.id = i.tenant
-    ORDER BY
-        CASE WHEN i.status = 'draft' THEN 0 ELSE 1 END,
-        i.invoice_date DESC,
-        i.invoice_number DESC
+    ORDER BY i.created_at DESC
 ");
 
 $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
