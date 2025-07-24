@@ -200,11 +200,51 @@ function editInvoice(invoiceId) {
               return;
           }
 
-          // Fill form fields
-          document.getElementById('invoice-id').value = data.id;
-          document.getElementById('invoice-number').value = data.invoice_number;
-          document.getElementById('invoice-date').value = data.invoice_date;
-          // ... rest of your field population
+          const invoice = data.invoice;
+          const items = data.items;
+
+          // Fill basic fields
+          document.getElementById('invoice-id').value = invoice.id;
+          document.getElementById('invoice-number').value = invoice.invoice_number;
+          document.getElementById('invoice-date').value = invoice.invoice_date;
+          document.getElementById('due-date').value = invoice.due_date;
+          document.getElementById('notes').value = invoice.notes || '';
+
+          // Set building and tenant
+          if (invoice.building_id) {
+              document.getElementById('building').value = invoice.building_id;
+              // Trigger building change to load tenants
+              document.getElementById('building').dispatchEvent(new Event('change'));
+
+              // Wait a bit for tenants to load then set the tenant
+              setTimeout(() => {
+                  document.getElementById('customer').value = invoice.tenant_id;
+                  document.getElementById('customer').disabled = false;
+              }, 500);
+          }
+
+          // Clear existing items (keep one empty row)
+          const tbody = document.querySelector('.items-table tbody');
+          while (tbody.rows.length > 1) {
+              tbody.deleteRow(1);
+          }
+
+          // Populate items
+          if (items && items.length > 0) {
+              const firstRow = tbody.rows[0];
+
+              // Fill first row with first item
+              fillItemRow(firstRow, items[0]);
+
+              // Add additional rows for other items
+              for (let i = 1; i < items.length; i++) {
+                  const newRow = addRow(false); // Add row without triggering events
+                  fillItemRow(newRow, items[i]);
+              }
+          }
+
+          // Change form action to update instead of create
+          document.getElementById('invoice-form').action = 'update_invoice.php';
       })
       .catch(error => {
           alert("Failed to load invoice data: " + error.message);
@@ -212,7 +252,36 @@ function editInvoice(invoiceId) {
       });
 }
 
+function fillItemRow(row, item) {
+  row.querySelector('select[name="account_item[]"]').value = item.account_code;
+  row.querySelector('textarea[name="description[]"]').value = item.description;
+  row.querySelector('input[name="quantity[]"]').value = item.quantity;
+  row.querySelector('input[name="unit_price[]"]').value = item.unit_price;
+  row.querySelector('select[name="taxes[]"]').value = item.tax_type;
+  row.querySelector('input[name="total[]"]').value = item.total_amount;
+}
 
+function addRow(triggerEvents = true) {
+  const tbody = document.querySelector('.items-table tbody');
+  const newRow = tbody.rows[0].cloneNode(true);
+
+  // Clear values in the new row
+  newRow.querySelector('select[name="account_item[]"]').value = '';
+  newRow.querySelector('textarea[name="description[]"]').value = '';
+  newRow.querySelector('input[name="quantity[]"]').value = '';
+  newRow.querySelector('input[name="unit_price[]"]').value = '';
+  newRow.querySelector('select[name="taxes[]"]').value = '';
+  newRow.querySelector('input[name="total[]"]').value = '';
+
+  tbody.appendChild(newRow);
+
+  // Reinitialize any plugins or event listeners if needed
+  if (triggerEvents) {
+      // Trigger any necessary events here
+  }
+
+  return newRow;
+}
 
 // function editInvoice(invoiceid) {
 //     fetch(`../invoice/actions/get_invoice_data.php?id=${id}`)
@@ -437,10 +506,10 @@ document.getElementById('saveDraftBtn').addEventListener('click', async function
       alert(`Draft saved: ${data.invoice_number}`);
       document.getElementById('invoice-number').value = data.invoice_number;
 
-      // Hide draft form, show invoice list
-      createInvoiceView.style.display = 'none';
-      invoiceListView.style.display = 'block';
-      renderInvoiceList();
+      // // Hide draft form, show invoice list
+      // createInvoiceView.style.display = 'none';
+      // invoiceListView.style.display = 'block';
+      // renderInvoiceList();
 
       // Redirect if URL is provided
       if (data.redirect_url) {
