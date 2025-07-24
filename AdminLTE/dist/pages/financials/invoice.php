@@ -1227,18 +1227,24 @@ foreach ($invoices as $invoice) {
                       <i class="fas fa-eye me-2"></i>View Details
                   </a></li>';
 
-    if ($invoice['status'] !== 'cancelled') {
-        echo '<li><a class="dropdown-item" href="#" onclick="downloadInvoice(' . $invoice['id'] . ')">
-                  <i class="fas fa-file-pdf me-2"></i>Download PDF
-              </a></li>';
-    }
+    // if ($invoice['status'] !== 'cancelled') {
+    //     echo '<li><a class="dropdown-item" href="#" onclick="downloadInvoice(' . $invoice['id'] . ')">
+    //               <i class="fas fa-file-pdf me-2"></i>Download PDF
+    //           </a></li>';
+    // }
 
     // Edit option - available for drafts and sent invoices without payments
+    // if ($invoice['status'] === 'draft' || ($invoice['status'] === 'sent' && $invoice['paid_amount'] == 0)) {
+    //     echo '<li><a class="dropdown-item" href="#" onclick="editInvoice(' . $invoice['id'] . ')">
+    //               <i class="fas fa-edit me-2"></i>Edit Invoice
+    //           </a></li>';
+    // }
     if ($invoice['status'] === 'draft' || ($invoice['status'] === 'sent' && $invoice['paid_amount'] == 0)) {
-        echo '<li><a class="dropdown-item" href="#" onclick="editInvoice(' . $invoice['id'] . ')">
-                  <i class="fas fa-edit me-2"></i>Edit Invoice
-              </a></li>';
-    }
+      echo '<li><a class="dropdown-item" href="#" onclick="editInvoice(' . $invoice['id'] . ')">
+                <i class="fas fa-edit me-2"></i>Edit Invoice
+            </a></li>';
+  }
+
 
     echo '<li><hr class="dropdown-divider"></li>';
 
@@ -1391,8 +1397,11 @@ foreach ($invoices as $invoice) {
                         <button class="btn btn-outline" id="cancel-invoice-btn" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-times"></i> Cancel
                         </button>
-                        <button  id="saveDraftBtn"  class="btn btn-outline" style="color: #FFC107; background-color:#00192D;">
+                        <!-- <button  id="saveDraftBtn"  class="btn btn-outline" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-save"></i> Save Draft
+                        </button> -->
+                        <button id="saveDraftBtn" class="btn btn-outline" style="color: #FFC107; background-color:#00192D;" type="button">
+                        <i class="fas fa-save"></i> Save Draft
                         </button>
                         <button class="btn btn-primary" id="preview-invoice-btn" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-eye"></i> Preview
@@ -1499,7 +1508,7 @@ foreach ($invoices as $invoice) {
       <tbody>
         <tr>
         <td>
-        <select name="account_item[]" class="select-account searchable-select" required>
+        <select  id="account-item" name="account_item[]" class="select-account searchable-select" required>
           <option value="" disabled selected>Select Account Item</option>
           <?php foreach ($accountItems as $item): ?>
             <option value="<?= htmlspecialchars($item['account_code']) ?>">
@@ -1512,11 +1521,11 @@ foreach ($invoices as $invoice) {
 
 </style>
 
-          <td><textarea name="description[]" placeholder="Description" rows="1" required></textarea></td>
-          <td><input type="number" name="quantity[]" class="form-control quantity" placeholder="1" required></td>
-          <td><input type="number" name="unit_price[]" class="form-control unit-price" placeholder="123" required></td>
+          <td><textarea id="description" name="description[]" placeholder="Description" rows="1" required></textarea></td>
+          <td><input id="quantity" type="number" name="quantity[]" class="form-control quantity" placeholder="1" required></td>
+          <td><input id="unit_price"  type="number" name="unit_price[]" class="form-control unit-price" placeholder="123" required></td>
           <td>
-            <select name="taxes[]" class="form-select vat-option" required>
+            <select  id="taxes" name="taxes[]" class="form-select vat-option" required>
               <option value="" disabled selected>Select Option</option>
               <option value="inclusive">VAT 16% Inclusive</option>
               <option value="exclusive">VAT 16% Exclusive</option>
@@ -1525,7 +1534,7 @@ foreach ($invoices as $invoice) {
             </select>
           </td>
           <td>
-             <input type="number" name="total[]" class="form-control total" placeholder="0" readonly  style="display:none;">
+             <input  id="total" type="number" name="total[]" class="form-control total" placeholder="0" readonly  style="display:none;">
             <button type="button"  class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
               <i class="fa fa-trash" style="font-size: 12px;"></i>
             </button>
@@ -1542,13 +1551,13 @@ foreach ($invoices as $invoice) {
                     <div class="form-section">
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="notes">Notes</label>
+                                <label for="notes">Notes(Optional)</label>
                                 <textarea id="notes" name="notes" class="form-control" rows="3" placeholder="Thank you for your business!"></textarea>
                             </div>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label for="terms">Terms & Conditions</label>
                                 <textarea id="terms"  name="terms_conditions" class="form-control" rows="3" placeholder="Payment due within 15 days"></textarea>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
 
@@ -1580,10 +1589,10 @@ foreach ($invoices as $invoice) {
 
     <script>
 // Edit Invoice
-function editInvoice(invoiceId) {
-    // Redirect to edit page or open edit modal
-    window.location.href = 'edit_invoice.php?id=' + invoiceId;
-}
+// function editInvoice(invoiceId) {
+//     // Redirect to edit page or open edit modal
+//     window.location.href = 'edit_invoice.php?id=' + invoiceId;
+// }
 
 // Confirm Delete Invoice
 function confirmDeleteInvoice(invoiceId) {
@@ -1811,6 +1820,83 @@ function viewInvoice(invoiceId) {
 }
 </script>
 
+<!-- <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const saveDraftBtn = document.getElementById('saveDraftBtn');
+
+    if (saveDraftBtn) {
+        saveDraftBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            saveAsDraft();
+        });
+    }
+
+    function saveAsDraft() {
+        // Get form element
+        const form = document.querySelector('form[name="invoice-form"]') ||
+                    document.querySelector('form[action="submit_invoice.php"]') ||
+                    document.querySelector('form');
+
+        if (!form) {
+            console.error('Form not found');
+            alert('Error: Form not found');
+            return;
+        }
+
+        // Create FormData object
+        const formData = new FormData(form);
+
+        // Add draft-specific data
+        formData.append('status', 'draft');
+        formData.append('payment_status', 'unpaid');
+
+        // Handle dynamic rows (if any)
+        const rows = document.querySelectorAll('.items-table tbody tr');
+        rows.forEach((row, index) => {
+            const accountItem = row.querySelector('select[name="account_item[]"]');
+            const description = row.querySelector('textarea[name="description[]"]');
+            const quantity = row.querySelector('input[name="quantity[]"]');
+            const unitPrice = row.querySelector('input[name="unit_price[]"]');
+            const taxes = row.querySelector('select[name="taxes[]"]');
+
+            if (accountItem && description && quantity && unitPrice && taxes) {
+                formData.append(`account_item[${index}]`, accountItem.value);
+                formData.append(`description[${index}]`, description.value);
+                formData.append(`quantity[${index}]`, quantity.value);
+                formData.append(`unit_price[${index}]`, unitPrice.value);
+                formData.append(`taxes[${index}]`, taxes.value);
+            }
+        });
+
+        // Send data via AJAX
+        fetch(form.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                alert('Draft saved successfully!');
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                }
+            } else {
+                throw new Error(data.error || 'Unknown error saving draft');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error saving draft: ' + error.message);
+        });
+    }
+});
+</script> -->
+
 <script>
 function openPayModal(button) {
   const invoiceId = button.getAttribute('data-invoice-id');
@@ -1978,6 +2064,8 @@ document.getElementById('paymentModal').addEventListener('show.bs.modal', functi
         const today = new Date().toISOString().split('T')[0];
         document.getElementById("inspectionDate").setAttribute("min", today);
     </script>
+
+
 
     <!-- pdf download plugin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>

@@ -1,43 +1,86 @@
 <?php
-require_once '../db/connect.php';
 header('Content-Type: application/json');
+require_once '../db/connect.php';
 
-function generateDraftNumber($pdo) {
-    $prefix = 'DFT';
-    $stmt = $pdo->prepare("SELECT invoice_number FROM invoice WHERE invoice_number LIKE ? ORDER BY id DESC LIMIT 1");
-    $stmt->execute(["$prefix%"]);
-    $lastInvoice = $stmt->fetch(PDO::FETCH_ASSOC);
+// Get JSON input
+$json = file_get_contents('php://input');
+$data = json_decode($json, true);
 
-    $lastNumber = ($lastInvoice && preg_match('/' . $prefix . '(\d+)/', $lastInvoice['invoice_number'], $matches))
-                    ? (int) $matches[1]
-                    : 0;
+// Set default values for all fields
+$defaultData = [
+    'invoice_number' => '',
+    'building_id' => null,
+    'tenant' => 0,
+    'account_item' => '',
+    'description' => '',
+    'quantity' => '0',
+    'unit_price' => '0',
+    'taxes' => '0',
+    'sub_total' => '0',
+    'total' => '0',
+    'notes' => '',
+    'terms_conditions' => '',
+    'invoice_date' => null,
+    'due_date' => null,
+    'status' => 'draft',
+    'payment_status' => 'unpaid'
+];
 
-    return $prefix . str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
-}
+// Merge with incoming data
+$data = array_merge($defaultData, $data);
 
 try {
-    $invoiceNumber = generateDraftNumber($pdo);
-    $buildingId    = $_POST['building_id'] ?? null;
-    $tenantId      = $_POST['tenant'] ?? null;
-    $invoiceDate   = $_POST['invoice_date'] ?? null;
-    $dueDate       = $_POST['due_date'] ?? null;
+    // Prepare SQL with all possible fields
+    $stmt = $pdo->prepare("INSERT INTO invoice (
+        invoice_number, invoice_date, due_date, building_id, tenant,
+        account_item, description, quantity, unit_price, taxes,
+        sub_total, total, notes, terms_conditions, status, payment_status, created_at
+    ) VALUES (
+        :invoice_number, :invoice_date, :due_date, :building_id, :tenant,
+        :account_item, :description, :quantity, :unit_price, :taxes,
+        :sub_total, :total, :notes, :terms_conditions, :status, :payment_status, NOW()
+    )");
 
-    $sql = "INSERT INTO invoice (invoice_number, building_id, tenant, invoice_date, due_date, status, created_at)
-            VALUES (?, ?, ?, ?, ?, 'draft', NOW())";
+    // Bind parameters with proper NULL handling
+    $params = [
+        ':invoice_number' => $data['invoice_number'],
+        ':invoice_date' => !empty($data['invoice_date']) ? $data['invoice_date'] : null,
+        ':due_date' => !empty($data['due_date']) ? $data['due_date'] : null,
+        ':building_id' => $data['building_id'],
+        ':tenant' => $data['tenant'],
+        ':account_item' => $data['account_item'],
+        ':description' => $data['description'],
+        ':quantity' => $data['quantity'],
+        ':unit_price' => $data['unit_price'],
+        ':taxes' => $data['taxes'],
+        ':sub_total' => $data['sub_total'],
+        ':total' => $data['total'],
+        ':notes' => $data['notes'],
+        ':terms_conditions' => $data['terms_conditions'],
+        ':status' => $data['status'],
+        ':payment_status' => $data['payment_status']
+    ];
 
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([$invoiceNumber, $buildingId, $tenantId, $invoiceDate, $dueDate]);
+    // Execute with parameters
+    $stmt->execute($params);
 
-    // Return success with landing page URL
+    // Return success with all saved data for verification
     echo json_encode([
         'success' => true,
-        'invoice_number' => $invoiceNumber,
-        'redirect_url' => 'inv1.php?draft_saved=1&invoice_number=' . urlencode($invoiceNumber),
-        'message' => "Draft saved successfully"
+        'invoice_id' => $pdo->lastInsertId(),
+        'invoice_number' => $data['invoice_number'],
+        'saved_data' => $params, // Return all saved values for debugging
+        'message' => 'Draft saved successfully'
     ]);
+
 } catch (PDOException $e) {
+    http_response_code(500);
     echo json_encode([
         'success' => false,
-        'message' => 'Database error: ' . $e->getMessage()
+        'message' => 'Database error: ' . $e->getMessage(),
+        'error_info' => $e->errorInfo,
+        'received_data' => $data,
+        'prepared_params' => $params ?? null
     ]);
 }
+?>
