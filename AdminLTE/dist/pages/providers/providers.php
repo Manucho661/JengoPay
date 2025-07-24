@@ -282,7 +282,7 @@ try {
       <div class="nav-links" style="display: flex; gap: 20px;">
         <a href="dashboard.php" style="color: white; text-decoration: none;"><i class="fas fa-home"></i> Dashboard</a>
         <a href="units_page.php" style="color: white; text-decoration: none;"><i class="fas fa-building"></i> Units</a>
-        <a href="logout.php" style="color: white; text-decoration: none;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        <a href="login.php" style="color: white; text-decoration: none;"><i class="fas fa-sign-out-alt"></i> Login</a>
       </div>
     </div>
 
