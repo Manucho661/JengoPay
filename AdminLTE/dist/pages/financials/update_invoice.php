@@ -1,53 +1,68 @@
 <?php
-include '../db/connect.php'; // Update with your correct path
+// update_invoice.php
+require_once 'db_config.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $invoiceId     = $_POST['invoice_id'];
-    $invoiceDate   = $_POST['invoice_date'];
-    $dueDate       = $_POST['due_date'];
-    $items         = $_POST['items'] ?? [];
+// Get POST data
+$invoiceId = $_POST['invoice_id'];
+$invoiceData = [
+    'building_id' => $_POST['building_id'],
+    'tenant_id' => $_POST['tenant'],
+    'invoice_date' => $_POST['invoice_date'],
+    'due_date' => $_POST['due_date'],
+    'notes' => $_POST['notes'] ?? null,
+    // Add other fields as needed
+];
 
-    // Basic validation (you can expand this)
-    if (!$invoiceId || !$invoiceDate || !$dueDate || empty($items)) {
-        die("Missing invoice details.");
-    }
+try {
+    $pdo->beginTransaction();
 
-    try {
-        $pdo->beginTransaction();
+    // Update invoice header
+    $stmt = $pdo->prepare("UPDATE invoices SET
+                          building_id = :building_id,
+                          tenant_id = :tenant_id,
+                          invoice_date = :invoice_date,
+                          due_date = :due_date,
+                          notes = :notes,
+                          status = 'draft',
+                          updated_at = NOW()
+                          WHERE id = :id");
+    $invoiceData['id'] = $invoiceId;
+    $stmt->execute($invoiceData);
 
-        // 1. Update the invoice meta (date & due date)
-        $stmt = $pdo->prepare("UPDATE invoice SET invoice_date = ?, due_date = ? WHERE id = ?");
-        $stmt->execute([$invoiceDate, $dueDate, $invoiceId]);
+    // Delete existing items
+    $stmt = $pdo->prepare("DELETE FROM invoice_items WHERE invoice_id = ?");
+    $stmt->execute([$invoiceId]);
 
-        // 2. Update or insert invoice line items
-        foreach ($items as $item) {
-            $desc       = trim($item['description']);
-            $qty        = (int) $item['quantity'];
-            $unitPrice  = (float) $item['unit_price'];
+    // Insert new items
+    $stmt = $pdo->prepare("INSERT INTO invoice_items
+                          (invoice_id, account_code, description, quantity, unit_price, tax_type, total_amount)
+                          VALUES (?, ?, ?, ?, ?, ?, ?)");
 
-            // Skip empty items
-            if ($desc === '' || $qty <= 0 || $unitPrice < 0) continue;
-
-            if (!empty($item['id'])) {
-                // Update existing item
-                $stmt = $pdo->prepare("UPDATE invoice SET description = ?, quantity = ?, unit_price = ? WHERE id = ? AND id = ?");
-                $stmt->execute([$desc, $qty, $unitPrice, $item['id'], $invoiceId]);
-            } else {
-                // Insert new item
-                $stmt = $pdo->prepare("INSERT INTO invoice (id, description, quantity, unit_price) VALUES (?, ?, ?, ?)");
-                $stmt->execute([$invoiceId, $desc, $qty, $unitPrice]);
-            }
+    foreach ($_POST['account_item'] as $index => $accountCode) {
+        $total = $_POST['quantity'][$index] * $_POST['unit_price'][$index];
+        // Adjust total for tax if needed
+        if ($_POST['taxes'][$index] === 'inclusive') {
+            $total = $total / 1.16; // Example for VAT inclusive
         }
 
-        $pdo->commit();
-        header("Location: invoice_details.php?id=$invoiceId");
-        exit;
-
-    } catch (Exception $e) {
-        $pdo->rollBack();
-        echo "Error updating invoice: " . $e->getMessage();
+        $stmt->execute([
+            $invoiceId,
+            $accountCode,
+            $_POST['description'][$index],
+            $_POST['quantity'][$index],
+            $_POST['unit_price'][$index],
+            $_POST['taxes'][$index],
+            $total
+        ]);
     }
 
-} else {
-    echo "Invalid request.";
+    $pdo->commit();
+    header("Location: invoices.php?success=Invoice updated successfully");
+    exit;
+
+} catch (PDOException $e) {
+    $pdo->rollBack();
+    header("Location: invoices.php?error=Failed to update invoice: " . $e->getMessage());
+    exit;
 }
+?>

@@ -1,48 +1,38 @@
 <?php
-require_once '../db/connect.php';
+// get_invoice_data.php
+require_once 'db_config.php';
+
 header('Content-Type: application/json');
 
-if (isset($_GET['id']) && is_numeric($_GET['id'])) {
-    $invoiceId = (int) $_GET['id'];
+if (!isset($_GET['id'])) {
+    echo json_encode(['error' => 'Invoice ID not provided']);
+    exit;
+}
 
-    try {
-        $stmt = $pdo->prepare("SELECT
-            id,
-            invoice_number,
-            invoice_date,
-            due_date,
-            payment_date,
-            building_id,
-            tenant,
-            account_item,
-            description,
-            quantity,
-            unit_price,
-            taxes,
-            sub_total,
-            total,
-            notes,
-            terms_conditions,
-            created_at,
-            status,
-            payment_status
-        FROM invoice WHERE id = ?");
-        $stmt->execute([$invoiceId]);
-        $invoice = $stmt->fetch(PDO::FETCH_ASSOC);
+$invoiceId = $_GET['id'];
 
-        if ($invoice) {
-            echo json_encode($invoice);
-        } else {
-            http_response_code(404);
-            echo json_encode(['error' => 'Invoice not found']);
-        }
+try {
+    // Fetch invoice header data
+    $stmt = $pdo->prepare("SELECT * FROM invoices WHERE id = ?");
+    $stmt->execute([$invoiceId]);
+    $invoice = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    } catch (PDOException $e) {
-        http_response_code(500);
-        echo json_encode(['error' => 'Database error', 'details' => $e->getMessage()]);
+    if (!$invoice) {
+        echo json_encode(['error' => 'Invoice not found']);
+        exit;
     }
 
-} else {
-    http_response_code(400);
-    echo json_encode(['error' => 'Invalid or missing invoice ID']);
+    // Fetch invoice items
+    $stmt = $pdo->prepare("SELECT * FROM invoice_items WHERE invoice_id = ?");
+    $stmt->execute([$invoiceId]);
+    $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    echo json_encode([
+        'invoice' => $invoice,
+        'items' => $items
+    ]);
+
+} catch (PDOException $e) {
+    echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
 }
+?>

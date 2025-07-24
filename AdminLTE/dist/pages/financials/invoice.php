@@ -1114,8 +1114,16 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // ----------------------------------------------------
 foreach ($invoices as $invoice) {
     $tenantName = $invoice['tenant_name'] ?? 'Unknown Tenant';
-    $invoiceDate = $invoice['invoice_date'] == '0000-00-00' ? 'Draft' : date('M d, Y', strtotime($invoice['invoice_date']));
-    $dueDate = $invoice['due_date'] == '0000-00-00' ? 'Not set' : date('M d, Y', strtotime($invoice['due_date']));
+    // $invoiceDate = $invoice['invoice_date'] == '0000-00-00' ? 'Draft' : date('M d, Y', strtotime($invoice['invoice_date']));
+    $invoiceDate = (empty($invoice['invoice_date']) || $invoice['invoice_date'] === '0000-00-00')
+    ? 'Not Set'
+    : date('M d, Y', strtotime($invoice['invoice_date']));
+
+    // $dueDate = $invoice['due_date'] == '0000-00-00' ? 'Not set' : date('M d, Y', strtotime($invoice['due_date']));
+    $dueDate = (empty($invoice['due_date']) || $invoice['due_date'] === '0000-00-00')
+    ? 'Not set'
+    : date('M d, Y', strtotime($invoice['due_date']));
+
     $totalAmount = number_format($invoice['total'], 2);
     $paidAmount = number_format($invoice['paid_amount'], 2);
     $balance = number_format($invoice['total'] - $invoice['paid_amount'], 2);
@@ -1227,11 +1235,11 @@ foreach ($invoices as $invoice) {
                       <i class="fas fa-eye me-2"></i>View Details
                   </a></li>';
 
-    if ($invoice['status'] !== 'cancelled') {
-        echo '<li><a class="dropdown-item" href="#" onclick="downloadInvoice(' . $invoice['id'] . ')">
-                  <i class="fas fa-file-pdf me-2"></i>Download PDF
-              </a></li>';
-    }
+    // if ($invoice['status'] !== 'cancelled') {
+    //     echo '<li><a class="dropdown-item" href="#" onclick="downloadInvoice(' . $invoice['id'] . ')">
+    //               <i class="fas fa-file-pdf me-2"></i>Download PDF
+    //           </a></li>';
+    // }
 
     // Edit option - available for drafts and sent invoices without payments
     // if ($invoice['status'] === 'draft' || ($invoice['status'] === 'sent' && $invoice['paid_amount'] == 0)) {
@@ -1397,9 +1405,10 @@ foreach ($invoices as $invoice) {
                         <button class="btn btn-outline" id="cancel-invoice-btn" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-times"></i> Cancel
                         </button>
-                        <button  id="saveDraftBtn"  class="btn btn-outline" style="color: #FFC107; background-color:#00192D;">
+                        <!-- <button  id="saveDraftBtn"  class="btn btn-outline" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-save"></i> Save Draft
-                        </button>
+                        </button> -->
+
                         <button class="btn btn-primary" id="preview-invoice-btn" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-eye"></i> Preview
                         </button>
@@ -1421,7 +1430,8 @@ foreach ($invoices as $invoice) {
                     <!-- Customer Section -->
                     <div class="form-section">
                         <h3 class="section-title">Tenant Details</h3>
-                        <form method="POST" action="submit_invoice.php">
+                        <form  method="POST" action="submit_invoice.php">
+
                         <div class="form-row">
 
 <!-- Existing Invoice # input -->
@@ -1573,7 +1583,10 @@ foreach ($invoices as $invoice) {
                             <button type="submit" style="background-color: #00192D; color: #FFC107; padding: 8px 16px; border: none; border-radius: 4px;">
                             <i class="fas fa-envelope"></i>
                             Save&Send
-  </button>
+                            </button>
+                            <button id="saveDraftBtn" class="btn btn-outline" style="color: #FFC107; background-color:#00192D;" type="button" onclick="saveAsDraft()">
+    <i class="fas fa-save"></i> Save Draft
+</button>
 
 </form>
                         </div>
@@ -1817,6 +1830,112 @@ function viewInvoice(invoiceId) {
 }
 </script>
 
+<!-- <script>
+document.getElementById("saveDraftBtn").addEventListener("click", function () {
+  const form = document.getElementById("invoice-form");
+  const formData = new FormData(form);
+
+  // Add an extra field to indicate this is a draft
+  formData.append("is_draft", "1");
+
+  fetch("submit_invoice.php", {
+    method: "POST",
+    body: formData,
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert("Draft saved successfully!");
+        // Optionally redirect or update the UI
+      } else {
+        alert("Error saving draft: " + (data.message || "Unknown error"));
+      }
+    })
+    .catch(error => {
+      console.error("Error submitting draft:", error);
+      alert("Something went wrong.");
+    });
+});
+</script> -->
+
+<!--
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const saveDraftBtn = document.getElementById('saveDraftBtn');
+
+    if (saveDraftBtn) {
+        saveDraftBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            saveAsDraft();
+        });
+    }
+
+    function saveAsDraft() {
+        // Get form element
+        const form = document.querySelector('form[name="invoice-form"]') ||
+                    document.querySelector('form[action="submit_invoice.php"]') ||
+                    document.querySelector('form');
+
+        if (!form) {
+            console.error('Form not found');
+            alert('Error: Form not found');
+            return;
+        }
+
+        // Create FormData object
+        const formData = new FormData(form);
+
+        // Add draft-specific data
+        formData.append('status', 'draft');
+        formData.append('payment_status', 'unpaid');
+
+        // Handle dynamic rows (if any)
+        const rows = document.querySelectorAll('.items-table tbody tr');
+        rows.forEach((row, index) => {
+            const accountItem = row.querySelector('select[name="account_item[]"]');
+            const description = row.querySelector('textarea[name="description[]"]');
+            const quantity = row.querySelector('input[name="quantity[]"]');
+            const unitPrice = row.querySelector('input[name="unit_price[]"]');
+            const taxes = row.querySelector('select[name="taxes[]"]');
+
+            if (accountItem && description && quantity && unitPrice && taxes) {
+                formData.append(`account_item[${index}]`, accountItem.value);
+                formData.append(`description[${index}]`, description.value);
+                formData.append(`quantity[${index}]`, quantity.value);
+                formData.append(`unit_price[${index}]`, unitPrice.value);
+                formData.append(`taxes[${index}]`, taxes.value);
+            }
+        });
+
+        // Send data via AJAX
+        fetch(form.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                alert('Draft saved successfully!');
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                }
+            } else {
+                throw new Error(data.error || 'Unknown error saving draft');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error saving draft: ' + error.message);
+        });
+    }
+});
+</script> -->
+
 <script>
 function openPayModal(button) {
   const invoiceId = button.getAttribute('data-invoice-id');
@@ -1934,6 +2053,7 @@ document.getElementById('paymentModal').addEventListener('show.bs.modal', functi
 </script>
 
 
+
 <!-- Main Js File -->
 <script src="invoice.js"></script>
     <!-- Scripts -->
@@ -1984,6 +2104,8 @@ document.getElementById('paymentModal').addEventListener('show.bs.modal', functi
         const today = new Date().toISOString().split('T')[0];
         document.getElementById("inspectionDate").setAttribute("min", today);
     </script>
+
+
 
     <!-- pdf download plugin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
