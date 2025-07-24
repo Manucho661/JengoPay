@@ -273,7 +273,7 @@ document.getElementById("payExpenseForm").addEventListener("submit", function (e
       console.log("Server response:", data);
 
       // ✅ Reload the page without resubmission
-      // window.location.href = window.location.href;
+       window.location.href = window.location.href;
     })
     .catch(error => {
       console.error("Error submitting form:", error);

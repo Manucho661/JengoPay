@@ -39,9 +39,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['get_totals'])) {
 
 // === ✅ Normal Page Load ===
 try {
-    $stmt = $pdo->query("SELECT * FROM expenses ORDER BY created_at DESC");
+    // Fetch all expenses and include the paid amount (if any)
+    $stmt = $pdo->query("
+        SELECT 
+            expenses.*, 
+            expense_payments.amount_paid AS amount_paid 
+        FROM expenses
+        LEFT JOIN expense_payments 
+        ON expenses.id = expense_payments.expense_id
+        ORDER BY expenses.created_at DESC
+    ");
+
     $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // For summary section
+    $expenseItemsNumber = count($expenses);
+    $totalAmount = 0;
+    foreach ($expenses as $exp) {
+        $totalAmount += $exp['total'];
+    }
+    $stmt = $pdo->query("
+    SELECT 
+        SUM(CASE WHEN status = 'paid' THEN total ELSE 0 END) AS total_paid,
+        SUM(CASE WHEN status = 'unpaid' THEN total ELSE 0 END) AS total_unpaid,
+        SUM(CASE WHEN status = 'partially paid' THEN total ELSE 0 END) AS partially_paid
+    FROM expenses
+");
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $totalPaid = $row['total_paid'] ?? 0;
+    $totalUnpaid = $row['total_unpaid'] ?? 0;
+    $totalPartiallyPaid = $row['partially_paid'] ?? 0;
+
+    $pending = $totalUnpaid + $totalPartiallyPaid;
+
+    // Monthly totals (no changes here)
     $stmt = $pdo->query("SELECT MONTH(expense_date) as month, SUM(total) as total FROM expenses GROUP BY MONTH(expense_date)");
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $monthlyTotals[(int)$row['month']] = (float)$row['total'];
@@ -49,6 +81,7 @@ try {
 } catch (PDOException $e) {
     $errorMessage = "❌ Failed to fetch expenses: " . $e->getMessage();
 }
+
 
 try {
     $ExpenseItemsQuery = $pdo->prepare("SELECT account_name FROM chart_of_accounts WHERE account_type = :type LIMIT 8");
@@ -245,8 +278,8 @@ try {
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="fa fa-box icon"></i>
                                     <div>
-                                        <div class="summary-info-card-label">ITEMS</div>
-                                        <b id="items" class="summary-info-card-value">300 PIECES</b>
+                                        <div class="summary-info-card-label">Total Expenses</div>
+                                        <b id="items" class="summary-info-card-value"><?php echo $expenseItemsNumber ?> Pieces</b>
                                     </div>
                                 </div>
                             </div>
@@ -258,7 +291,7 @@ try {
                                     <i class="fa fa-calendar-alt icon"></i>
                                     <div>
                                         <div class="summary-info-card-label">This Month</div>
-                                        <b id="duration" class="summary-info-card-value">Ksh 100,000</b>
+                                        <b id="duration" class="summary-info-card-value"> KSH <?php echo $totalAmount ?>.00 </b>
                                     </div>
                                 </div>
                             </div>
@@ -270,7 +303,7 @@ try {
                                     <i class="fa fa-check-circle icon"></i>
                                     <div>
                                         <div class="summary-info-card-label">Paid</div>
-                                        <b id="paid" class="summary-info-card-value">KSH 90,000</b>
+                                        <b id="paid" class="summary-info-card-value"> KSH <?php echo $totalPaid ?></b>
                                     </div>
                                 </div>
                             </div>
@@ -281,7 +314,7 @@ try {
                                     <i class="fa fa-hourglass-half icon"></i>
                                     <div>
                                         <div class="summary-info-card-label">Pending </div>
-                                        <b id="pending" class="summary-info-card-value">KSH 45862394</b>
+                                        <b id="pending" class="summary-info-card-value">KSH <?php echo $pending ?></b>
                                     </div>
                                 </div>
                             </div>
@@ -459,7 +492,7 @@ try {
                                                 <th>Date</th>
                                                 <th>Supplier</th>
                                                 <th>Expense No</th>
-                                                <th>Totals</th>
+                                                <th>Totals <span style="text-transform: lowercase;">Vs</span> paid</th>
                                                 <th>Status</th>
                                                 <th>Actions</th>
                                             </tr>
@@ -472,7 +505,15 @@ try {
                                                     <td>
                                                         <div style="color:#28a745;"><?= htmlspecialchars($exp['expense_no']) ?></div>
                                                     </td>
-                                                    <td>KSH <?= number_format($exp['total'], 2) ?></td>
+                                                    <td style="background-color: #f8f9fa; padding: 0.75rem; border-radius: 8px;">
+                                                        <div style="font-weight: 600; color: #00192D; font-size: 1rem;">
+                                                            KSH <?= number_format($exp['total'], 2) ?>
+                                                        </div>
+                                                        <div class="paid_amount" style="color: #007B8A; font-size: 0.9rem; margin-top: 4px;">
+                                                            KSH <?= number_format($exp['amount_paid'] ?? 0, 2) ?>
+                                                        </div>
+                                                    </td>
+
                                                     <td>
                                                         <?php
                                                         $status = strtolower($exp['status']);
@@ -571,8 +612,20 @@ try {
                                     <!-- View Expense Modal -->
                                     <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
-                                            <div class="modal-content">
-                                                <div class="modal-body">
+                                            <div class="modal-content bg-light">
+                                                <div class="d-flex justify-content-between align-items-center p-2" style="background-color: #EAF0F4; border-bottom: 1px solid #CCC; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+                                                    <button class="btn btn-sm me-2" style="background-color: #00192D; color: #FFC107;" title="Download PDF">
+                                                        <i class="bi bi-download"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm me-2" style="background-color: #00192D; color: #FFC107;" title="Print">
+                                                        <i class="bi bi-printer"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-sm" style="background-color: #FFC107; color: #00192D;" data-bs-dismiss="modal" title="Close">
+                                                        <i class="bi bi-x-lg"></i>
+                                                    </button>
+                                                </div>
+
+                                                <div class="modal-body bg-light">
 
                                                     <!-- 🔒 DO NOT TOUCH CARD BELOW -->
                                                     <div class="invoice-card">
@@ -635,6 +688,8 @@ try {
                                                                         <th>Description</th>
                                                                         <th class="text-end">Qty</th>
                                                                         <th class="text-end">Unit Price</th>
+                                                                        <th class="text-end">Taxes</th>
+                                                                        <th class="text-end">Discount</th>
                                                                         <th class="text-end">Total</th>
                                                                     </tr>
                                                                 </thead>
@@ -643,12 +698,16 @@ try {
                                                                         <td>Web Design</td>
                                                                         <td class="text-end">1</td>
                                                                         <td class="text-end">KES 25,000</td>
+                                                                        <td class="text-end">Inclusive</td>
+                                                                        <td class="text-end">KES 25,000</td>
                                                                         <td class="text-end">KES 25,000</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td>Hosting (1 year)</td>
                                                                         <td class="text-end">1</td>
                                                                         <td class="text-end">KES 5,000</td>
+                                                                        <td class="text-end">Exclusive</td>
+                                                                        <td class="text-end">KES 25,000</td>
                                                                         <td class="text-end">KES 5,000</td>
                                                                     </tr>
                                                                 </tbody>
@@ -681,8 +740,7 @@ try {
                                                         </div>
 
                                                         <hr>
-
-                                                        <div class="text-center small text-muted">
+                                                        <div class="text-center small text-muted" style="border-top: 1px solid #e0e0e0; padding-top: 10px;">
                                                             Thank you for your business!
                                                         </div>
                                                     </div>
@@ -994,17 +1052,17 @@ try {
     <script>
         function openInvoiceModal(expenseId) {
             const modalBody = document.getElementById("invoiceModalBody");
-            modalBody.innerHTML = `<div class="text-center text-muted py-4">Loading...</div>`;
+            // modalBody.innerHTML = `<div class="text-center text-muted py-4">Loading...</div>`;
 
             // Optional: Fetch data dynamically via AJAX/PHP
-            fetch(`fetch_invoice.php?id=${expenseId}`)
-                .then(response => response.text())
-                .then(data => {
-                    modalBody.innerHTML = data;
-                })
-                .catch(() => {
-                    modalBody.innerHTML = `<div class="text-danger text-center">Failed to load invoice.</div>`;
-                });
+            // fetch(`fetch_invoice.php?id=${expenseId}`)
+            //     .then(response => response.text())
+            //     .then(data => {
+            //         modalBody.innerHTML = data;
+            //     })
+            //     .catch(() => {
+            //         modalBody.innerHTML = `<div class="text-danger text-center">Failed to load invoice.</div>`;
+            //     });
 
             // Show the modal
             const invoiceModal = new bootstrap.Modal(document.getElementById('invoiceModal'));
