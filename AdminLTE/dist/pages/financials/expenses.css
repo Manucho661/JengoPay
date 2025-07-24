@@ -412,7 +412,7 @@ tr td:first-child {
 
 /* expense card */
 .invoice-card {
-  max-width: 600px;
+  max-width: 700px;
   margin: 0 auto;
   background: #fff;
   border-radius: 8px;
@@ -457,6 +457,7 @@ hr {
 .custom-th th {
   background-color: #00192D !important;
   color: white !important;
+  font-size: small;
 }
 
 .invoice-table tbody tr:nth-child(even) {
@@ -482,3 +483,37 @@ hr {
   border: 1px solid #FFC107 !important;
   /* You can change width and color */
 }
+ .modal-body {
+  /* padding: 10px !important; or adjust as needed */
+  /* width: fit-content !important; */
+      overflow: auto !important;
+}
+
+.modal-dialog-scrollable .modal-content {
+    overflow: auto !important;
+}
+
+/* Chrome, Edge, Safari */
+.modal-dialog-scrollable .modal-content::-webkit-scrollbar {
+    width: 6px; /* Thin scrollbar */
+}
+
+.modal-dialog-scrollable .modal-content::-webkit-scrollbar-track {
+    background: transparent; /* Optional: remove track */
+}
+
+.modal-dialog-scrollable .modal-content::-webkit-scrollbar-thumb {
+    background-color: #bbb;
+    border-radius: 10px;
+}
+
+/* Firefox support */
+.modal-dialog-scrollable .modal-content {
+    scrollbar-width: thin;
+    scrollbar-color: #bbb transparent;
+}
+
+.modal-content{
+    width: fit-content !important;
+    overflow: auto !important;
+} 
