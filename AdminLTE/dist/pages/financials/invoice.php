@@ -1114,16 +1114,8 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // ----------------------------------------------------
 foreach ($invoices as $invoice) {
     $tenantName = $invoice['tenant_name'] ?? 'Unknown Tenant';
-    // $invoiceDate = $invoice['invoice_date'] == '0000-00-00' ? 'Draft' : date('M d, Y', strtotime($invoice['invoice_date']));
-    $invoiceDate = (empty($invoice['invoice_date']) || $invoice['invoice_date'] === '0000-00-00')
-    ? 'Not Set'
-    : date('M d, Y', strtotime($invoice['invoice_date']));
-
-    // $dueDate = $invoice['due_date'] == '0000-00-00' ? 'Not set' : date('M d, Y', strtotime($invoice['due_date']));
-    $dueDate = (empty($invoice['due_date']) || $invoice['due_date'] === '0000-00-00')
-    ? 'Not set'
-    : date('M d, Y', strtotime($invoice['due_date']));
-
+    $invoiceDate = $invoice['invoice_date'] == '0000-00-00' ? 'Draft' : date('M d, Y', strtotime($invoice['invoice_date']));
+    $dueDate = $invoice['due_date'] == '0000-00-00' ? 'Not set' : date('M d, Y', strtotime($invoice['due_date']));
     $totalAmount = number_format($invoice['total'], 2);
     $paidAmount = number_format($invoice['paid_amount'], 2);
     $balance = number_format($invoice['total'] - $invoice['paid_amount'], 2);
@@ -1408,7 +1400,9 @@ foreach ($invoices as $invoice) {
                         <!-- <button  id="saveDraftBtn"  class="btn btn-outline" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-save"></i> Save Draft
                         </button> -->
-
+                        <button id="saveDraftBtn" class="btn btn-outline" style="color: #FFC107; background-color:#00192D;" type="button">
+                        <i class="fas fa-save"></i> Save Draft
+                        </button>
                         <button class="btn btn-primary" id="preview-invoice-btn" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-eye"></i> Preview
                         </button>
@@ -1430,8 +1424,7 @@ foreach ($invoices as $invoice) {
                     <!-- Customer Section -->
                     <div class="form-section">
                         <h3 class="section-title">Tenant Details</h3>
-                        <form  method="POST" action="submit_invoice.php">
-
+                        <form method="POST" action="submit_invoice.php">
                         <div class="form-row">
 
 <!-- Existing Invoice # input -->
@@ -1515,7 +1508,7 @@ foreach ($invoices as $invoice) {
       <tbody>
         <tr>
         <td>
-        <select name="account_item[]" class="select-account searchable-select" required>
+        <select  id="account-item" name="account_item[]" class="select-account searchable-select" required>
           <option value="" disabled selected>Select Account Item</option>
           <?php foreach ($accountItems as $item): ?>
             <option value="<?= htmlspecialchars($item['account_code']) ?>">
@@ -1528,11 +1521,11 @@ foreach ($invoices as $invoice) {
 
 </style>
 
-          <td><textarea name="description[]" placeholder="Description" rows="1" required></textarea></td>
-          <td><input type="number" name="quantity[]" class="form-control quantity" placeholder="1" required></td>
-          <td><input type="number" name="unit_price[]" class="form-control unit-price" placeholder="123" required></td>
+          <td><textarea id="description" name="description[]" placeholder="Description" rows="1" required></textarea></td>
+          <td><input id="quantity" type="number" name="quantity[]" class="form-control quantity" placeholder="1" required></td>
+          <td><input id="unit_price"  type="number" name="unit_price[]" class="form-control unit-price" placeholder="123" required></td>
           <td>
-            <select name="taxes[]" class="form-select vat-option" required>
+            <select  id="taxes" name="taxes[]" class="form-select vat-option" required>
               <option value="" disabled selected>Select Option</option>
               <option value="inclusive">VAT 16% Inclusive</option>
               <option value="exclusive">VAT 16% Exclusive</option>
@@ -1541,7 +1534,7 @@ foreach ($invoices as $invoice) {
             </select>
           </td>
           <td>
-             <input type="number" name="total[]" class="form-control total" placeholder="0" readonly  style="display:none;">
+             <input  id="total" type="number" name="total[]" class="form-control total" placeholder="0" readonly  style="display:none;">
             <button type="button"  class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
               <i class="fa fa-trash" style="font-size: 12px;"></i>
             </button>
@@ -1583,10 +1576,7 @@ foreach ($invoices as $invoice) {
                             <button type="submit" style="background-color: #00192D; color: #FFC107; padding: 8px 16px; border: none; border-radius: 4px;">
                             <i class="fas fa-envelope"></i>
                             Save&Send
-                            </button>
-                            <button id="saveDraftBtn" class="btn btn-outline" style="color: #FFC107; background-color:#00192D;" type="button" onclick="saveAsDraft()">
-    <i class="fas fa-save"></i> Save Draft
-</button>
+  </button>
 
 </form>
                         </div>
@@ -1599,10 +1589,10 @@ foreach ($invoices as $invoice) {
 
     <script>
 // Edit Invoice
-function editInvoice(invoiceId) {
-    // Redirect to edit page or open edit modal
-    window.location.href = 'edit_invoice.php?id=' + invoiceId;
-}
+// function editInvoice(invoiceId) {
+//     // Redirect to edit page or open edit modal
+//     window.location.href = 'edit_invoice.php?id=' + invoiceId;
+// }
 
 // Confirm Delete Invoice
 function confirmDeleteInvoice(invoiceId) {
@@ -1831,35 +1821,6 @@ function viewInvoice(invoiceId) {
 </script>
 
 <!-- <script>
-document.getElementById("saveDraftBtn").addEventListener("click", function () {
-  const form = document.getElementById("invoice-form");
-  const formData = new FormData(form);
-
-  // Add an extra field to indicate this is a draft
-  formData.append("is_draft", "1");
-
-  fetch("submit_invoice.php", {
-    method: "POST",
-    body: formData,
-  })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        alert("Draft saved successfully!");
-        // Optionally redirect or update the UI
-      } else {
-        alert("Error saving draft: " + (data.message || "Unknown error"));
-      }
-    })
-    .catch(error => {
-      console.error("Error submitting draft:", error);
-      alert("Something went wrong.");
-    });
-});
-</script> -->
-
-<!--
-<script>
 document.addEventListener('DOMContentLoaded', function() {
     const saveDraftBtn = document.getElementById('saveDraftBtn');
 
@@ -2051,7 +2012,6 @@ document.getElementById('paymentModal').addEventListener('show.bs.modal', functi
   document.getElementById('invoiceTotal').value = invoiceTotal;
 });
 </script>
-
 
 
 <!-- Main Js File -->

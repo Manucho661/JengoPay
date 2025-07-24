@@ -1,6 +1,6 @@
 <?php
 // update_invoice.php
-require_once 'db_config.php';
+require_once '../db/connect.php';
 
 // Get POST data
 $invoiceId = $_POST['invoice_id'];
@@ -17,7 +17,7 @@ try {
     $pdo->beginTransaction();
 
     // Update invoice header
-    $stmt = $pdo->prepare("UPDATE invoices SET
+    $stmt = $pdo->prepare("UPDATE invoice SET
                           building_id = :building_id,
                           tenant_id = :tenant_id,
                           invoice_date = :invoice_date,
@@ -57,12 +57,12 @@ try {
     }
 
     $pdo->commit();
-    header("Location: invoices.php?success=Invoice updated successfully");
+    header("Location: invoice.php?success=Invoice updated successfully");
     exit;
 
 } catch (PDOException $e) {
     $pdo->rollBack();
-    header("Location: invoices.php?error=Failed to update invoice: " . $e->getMessage());
+    header("Location: invoice.php?error=Failed to update invoice: " . $e->getMessage());
     exit;
 }
 ?>
