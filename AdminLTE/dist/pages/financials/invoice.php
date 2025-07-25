@@ -1247,12 +1247,13 @@ foreach ($invoices as $invoice) {
 
     echo '<li><hr class="dropdown-divider"></li>';
 
-    // Delete option - only for drafts and cancelled invoices
-    if ($invoice['status'] === 'draft' || $invoice['status'] === 'cancelled') {
-        echo '<li><a class="dropdown-item text-danger" href="#" onclick="confirmDeleteInvoice(' . $invoice['id'] . ')">
-                  <i class="fas fa-trash-alt me-2"></i>Delete Invoice
-              </a></li>';
-    }
+  //  Delete option - only for drafts and cancelled invoices
+// Delete option - only for drafts and cancelled invoices
+if ($invoice['status'] === 'draft' || $invoice['status'] === 'cancelled') {
+  echo '<li><a class="dropdown-item text-danger" href="#" onclick="confirmDeleteInvoice(' . $invoice['id'] . ')">
+            <i class="fas fa-trash-alt me-2"></i>Delete Invoice
+        </a></li>';
+}
 
     // Cancel/Restore options
     if ($invoice['status'] !== 'cancelled' && $invoice['status'] !== 'paid') {

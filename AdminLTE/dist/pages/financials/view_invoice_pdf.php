@@ -66,7 +66,7 @@ function statusClass(string $status): string
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css"/>
-   <link rel="stylesheet" href="invoices.css">
+   <!-- <link rel="stylesheet" href="invoices.css"> -->
     <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
@@ -106,7 +106,10 @@ function statusClass(string $status): string
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 <style>
-
+ .expense-logo{
+          width: 20%;
+          height: 20%;
+        }
     </style>
 </head>
 
@@ -124,19 +127,19 @@ function statusClass(string $status): string
                 <a href="./index.html" class="brand-link">
 
                     <!--begin::Brand Text-->
-                    <span class="brand-text font-weight-light"><b class="p-2"
+                    <!-- <span class="brand-text font-weight-light"><b class="p-2"
                             style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
                             class="p-2"
                             style=" border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107;">JENGOPAY</b></span>
                 </a>
-                </span>
+                </span> -->
                 <!--end::Brand Text-->
                 </a>
                 <!--end::Brand Link-->
             </div>
             <!--end::Sidebar Brand-->
             <!--begin::Sidebar Wrapper-->
-            <div> <?php include_once '../includes/sidebar1.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+
             <!--end::Sidebar Wrapper-->
         </aside>
         <!--end::Sidebar-->
@@ -175,8 +178,9 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 <div class="invoice-card">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-start mb-3">
-        <img id="invoiceLogo" alt="Company Logo" class="invoice-logo">
-        <script>
+        <!-- <img id="invoiceLogo" alt="Company Logo" class="invoice-logo"> -->
+        <img id="expenseLogo" src="expenseLogo6.png" alt="JengoPay Logo" class="expense-logo">
+        <!-- <script>
             const logos = [
                 "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Unilever.svg/200px-Unilever.svg.png",
                 "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/200px-IBM_logo.svg.png",
@@ -193,7 +197,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                 const logoImg = document.getElementById("invoiceLogo");
                 logoImg.src = logos[Math.floor(Math.random() * logos.length)];
             });
-        </script>
+        </script> -->
 
 <div class="text-end" style="background-color: #f0f0f0; padding: 10px; border-radius: 8px;">
                     <strong>Customer Name</strong><br>
