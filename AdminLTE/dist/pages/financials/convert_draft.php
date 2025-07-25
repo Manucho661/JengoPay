@@ -3,69 +3,49 @@ require_once '../db/connect.php';
 
 // Check if required data is present
 if (!isset($_POST['invoice_id']) || !isset($_POST['invoice_number'])) {
-    header('Location: invoice.php');
+    header('Location: invoices.php?error=missing_data');
     exit;
 }
 
 $invoiceId = (int)$_POST['invoice_id'];
-$isDraftEdit = $_POST['is_draft_edit'] === '1';
+$newInvoiceNumber = $_POST['invoice_number'];
 $originalInvoiceNumber = $_POST['original_invoice_number'];
 
 try {
-    // Begin transaction
     $pdo->beginTransaction();
 
-    // 1. Delete the old draft record if converting from draft
-    if ($isDraftEdit) {
-        $stmt = $pdo->prepare("DELETE FROM invoice WHERE invoice_number = ? AND status = 'draft'");
-        $stmt->execute([$originalInvoiceNumber]);
+    // 1. Delete the old draft record
+    $deleteStmt = $pdo->prepare("DELETE FROM invoice WHERE id = ? AND invoice_number = ? AND status = 'draft'");
+    $deleteStmt->execute([$invoiceId, $originalInvoiceNumber]);
+
+    if ($deleteStmt->rowCount() === 0) {
+        throw new Exception("Draft invoice not found or already converted");
     }
 
-    // 2. Insert new invoice record
-    $invoiceData = [
-        'invoice_number' => $_POST['invoice_number'],
-        'building_id' => $_POST['building_id'],
-        'tenant' => $_POST['tenant'],
-        'account_item' => $_POST['account_item'][0],
-        'description' => $_POST['description'][0],
-        'quantity' => $_POST['quantity'][0],
-        'unit_price' => $_POST['unit_price'][0],
-        'taxes' => $_POST['taxes'][0],
-        'sub_total' => $_POST['quantity'][0] * $_POST['unit_price'][0],
-        'total' => $_POST['quantity'][0] * $_POST['unit_price'][0], // Adjust for taxes if needed
-        'invoice_date' => $_POST['invoice_date'],
-        'due_date' => $_POST['due_date'],
-        'notes' => $_POST['notes'] ?? '',
-        'status' => 'sent',
-        'payment_status' => 'unpaid'
-    ];
+    // 2. Insert new invoice record with the new number
+    $insertStmt = $pdo->prepare("INSERT INTO invoice (
+        invoice_number, invoice_date, due_date, building_id, tenant,
+        account_item, description, quantity, unit_price, taxes,
+        sub_total, total, notes, terms_conditions, status, payment_status
+    ) SELECT
+        ?, invoice_date, due_date, building_id, tenant,
+        account_item, description, quantity, unit_price, taxes,
+        sub_total, total, notes, terms_conditions, 'sent', 'unpaid'
+    FROM invoice WHERE id = ?");
 
-    $stmt = $pdo->prepare("INSERT INTO invoice (
-        invoice_number, building_id, tenant, account_item, description,
-        quantity, unit_price, taxes, sub_total, total,
-        invoice_date, due_date, notes, status, payment_status, created_at
-    ) VALUES (
-        :invoice_number, :building_id, :tenant, :account_item, :description,
-        :quantity, :unit_price, :taxes, :sub_total, :total,
-        :invoice_date, :due_date, :notes, :status, :payment_status, NOW()
-    )");
-
-    $stmt->execute($invoiceData);
+    $insertStmt->execute([$newInvoiceNumber, $invoiceId]);
     $newInvoiceId = $pdo->lastInsertId();
 
-    // Commit transaction
     $pdo->commit();
 
     // Redirect to the new invoice
-    header('Location: invoice.php?id=' . $newInvoiceId . '&converted=1');
+    header("Location: view_invoice.php?id=$newInvoiceId&converted=1");
     exit;
 
-} catch (PDOException $e) {
-    // Rollback on error
+} catch (Exception $e) {
     $pdo->rollBack();
-
-    // Redirect back with error message
-    header('Location: invoice_edit.php?id=' . $invoiceId . '&error=1');
+    error_log("Error converting draft: " . $e->getMessage());
+    header("Location: invoice_edit.php?id=$invoiceId&error=conversion_failed");
     exit;
 }
 ?>

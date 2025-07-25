@@ -222,6 +222,10 @@ $randomLogo = $logos[array_rand($logos)];
         }
         /* quick reset for invoice HTML you may embed later */
         .viewer h1,.viewer h2,.viewer h3{margin:0 0 .5em}
+        .invoice-logo{
+width: 50%;
+height: 50%;
+        }
     </style>
 </head>
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -459,8 +463,8 @@ HTML;
 <div class="invoice-card">
             <!-- Header -->
             <div class="d-flex justify-content-between align-items-start mb-3">
-                <img src="<?= $randomLogo ?>" alt="Company Logo" class="invoice-logo">
-                <script>
+                <img src="expenseLogo6.png" alt="Company Logo" class="invoice-logo">
+                 <script>
                 const logos = [
                     "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Unilever.svg/200px-Unilever.svg.png",
                     "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/200px-IBM_logo.svg.png",
@@ -476,20 +480,23 @@ HTML;
 
                 const logoImg = document.getElementById("invoiceLogo");
                 logoImg.src = logos[Math.floor(Math.random() * logos.length)];
-            </script>
+            </script> 
 
-                <div class="text-end" style="background-color: #f0f0f0; padding: 10px; border-radius: 8px;">
+
+             </div>
+            </div>
+
+            <div class="text-end" style=" padding: 10px; border-radius: 8px;">
                     <strong>Customer Name</strong><br>
                     123 Example St<br>
                     Nairobi, Kenya<br>
                     customer@example.com<br>
                     +254 700 123456
                 </div>
-            </div>
 
             <!-- Invoice Info -->
             <div class="d-flex justify-content-between">
-                <h6 class="mb-0"><?= htmlspecialchars($invoice['account_item']) ?></h6>
+                <h6 class="mb-0"><?= htmlspecialchars($invoice['tenant']) ?></h6>
                 <div class="text-end">
                     <h3><?= htmlspecialchars($invoice['invoice_number']) ?></h3><br>
                 </div>

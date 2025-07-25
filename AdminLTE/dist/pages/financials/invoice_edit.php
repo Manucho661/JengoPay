@@ -1033,20 +1033,22 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
                         <form method="POST" action="<?= $isDraftEdit ? 'convert_draft.php' : 'update_draft.php' ?>">
                             <input type="hidden" name="invoice_id" value="<?= $invoiceData['id'] ?>">
 
-                            <div class="form-row">
+                            <!-- <div class="form-row"> -->
                                 <!-- Invoice # input -->
-                                <div class="form-group">
-                                    <label for="invoice-number">Invoice #</label>
-                                    <input type="text"
-                                           id="invoice-number"
-                                           value="<?= htmlspecialchars($invoiceData['invoice_number']) ?>"
-                                           class="form-control"
-                                           readonly>
-                                    <input type="hidden"
-                                           name="invoice_number"
-                                           value="<?= htmlspecialchars($invoiceData['invoice_number']) ?>">
-                                </div>
-
+                                <div class="form-row">
+                            <!-- Invoice # input -->
+                            <div class="form-group">
+                                <label for="invoice-number">Invoice #</label>
+                                <input type="text"
+                                       id="invoice-number"
+                                       value="<?= htmlspecialchars($invoiceData['invoice_number']) ?>"
+                                       class="form-control"
+                                       readonly>
+                                <input type="hidden"
+                                       name="invoice_number"
+                                       id="invoice-number-input"
+                                       value="<?= htmlspecialchars($invoiceData['invoice_number']) ?>">
+                            </div>
                                 <!-- Building selector -->
                                 <div class="form-group">
                                     <label for="building">Building</label>
@@ -1324,7 +1326,24 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
     }
     </script>
 
-    <script></script>
+<script>
+// Generate new invoice number when clicking Update Invoice
+document.getElementById('update-invoice-btn').addEventListener('click', function(e) {
+    // Only proceed if this is a draft (starts with DFT-)
+    const currentNumber = document.getElementById('invoice-number').value;
+    if (currentNumber.startsWith('DFT-')) {
+        // Generate new invoice number (INV-YYYYMMDD-XXXX)
+        const newNumber = 'INV-' + new Date().toISOString().slice(0, 10).replace(/-/g, '') +
+                         '-' + Math.floor(1000 + Math.random() * 9000);
+
+        // Update both the display and hidden input
+        document.getElementById('invoice-number').value = newNumber;
+        document.getElementById('invoice-number-input').value = newNumber;
+    }
+
+    // Form will submit normally after this
+});
+</script>
 
     <!-- <script>
       function createOrUpdateSummaryTable({ subtotalSum, taxSum, grandTotal, zeroVatSum, exemptedSum, vat16Used, vat0Used, exemptedUsed }) {
