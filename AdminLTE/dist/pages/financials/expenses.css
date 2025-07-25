@@ -421,7 +421,7 @@ tr td:first-child {
 }
 
 .expense-logo {
-  height: 50px;
+  height: 130px;
 }
 
 .table-sm th,
@@ -446,6 +446,7 @@ hr {
   background-color: #00192D !important;
   color: white;
   /* text-align: right; */
+  font-size: small;
 }
 
 .expense-table-wrapper {
@@ -483,7 +484,7 @@ hr {
   border: 1px solid #FFC107 !important;
   /* You can change width and color */
 }
- .modal-body {
+ .modal-body.expense {
   /* padding: 10px !important; or adjust as needed */
   /* width: fit-content !important; */
       overflow: auto !important;
@@ -513,7 +514,7 @@ hr {
     scrollbar-color: #bbb transparent;
 }
 
-.modal-content{
+.modal-content.expense{
     width: fit-content !important;
     overflow: auto !important;
 } 

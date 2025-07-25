@@ -139,6 +139,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
     document.getElementById('subTotal').value = 'Ksh ' + subTotal.toFixed(2);
+    document.getElementById('subTotalhidden').value = subTotal.toFixed(2);
     document.getElementById('vatAmountInclusive').value = 'Ksh ' + vatAmountInclusive.toFixed(2);
     document.getElementById('vatAmountExclusive').value = 'Ksh ' + vatAmountExclusive.toFixed(2);
     // Visible input
@@ -219,7 +220,7 @@ document.getElementById("expenseForm").addEventListener("submit", function (e) {
       console.log("Server response:", data);
 
       // ✅ Reload the page without resubmission
-       window.location.href = window.location.href;
+        // window.location.href = window.location.href;
     })
     .catch(error => {
       console.error("Error submitting form:", error);
