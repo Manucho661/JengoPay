@@ -181,7 +181,64 @@ try {
             /* Adjust the value as needed */
         }
 
-        
+        .diagonal-paid-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            /* Centered and rotated */
+            background-color: rgba(0, 128, 0, 0.2);
+            /* Light green with transparency */
+            color: green;
+            font-weight: bold;
+            font-size: 24px;
+            padding: 15px 40px;
+            border: 2px solid green;
+            border-radius: 8px;
+            text-transform: uppercase;
+            pointer-events: none;
+            z-index: 10;
+            white-space: nowrap;
+        }
+
+        .diagonal-unpaid-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            /* Centered and rotated */
+            background-color: rgba(255, 0, 0, 0.2);
+            /* Red with transparency for "UNPAID" */
+            color: #ff4d4d;
+            /* Softer red text color */
+            font-weight: bold;
+            font-size: 24px;
+            padding: 15px 40px;
+            border: 2px solid red;
+            border-radius: 8px;
+            text-transform: uppercase;
+            pointer-events: none;
+            z-index: 10;
+            white-space: nowrap;
+        }
+        .diagonal-partially-paid-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg); /* Centered and rotated */
+    background-color: rgba(255, 165, 0, 0.2); /* Amber background with opacity */
+    color: #ff9900; /* Amber or gold text */
+    font-weight: bold;
+    font-size: 24px;
+    padding: 15px 40px;
+    border: 2px solid #ff9900; /* Amber border */
+    border-radius: 8px;
+    text-transform: uppercase;
+    pointer-events: none;
+    z-index: 10;
+    white-space: nowrap;
+}
+
     </style>
 </head>
 
@@ -651,7 +708,7 @@ try {
 
                                                             <!-- Diagonal PAID Label centered in the container -->
                                                             <!-- <div class="diagonal-paid-label">PAID</div> -->
-
+                                                            <div class="diagonal-unpaid-label" id="expenseModalPaymentStatus">UNPAID</div>
                                                             <div class="text-end" style="background-color: #f0f0f0; padding: 10px; border-radius: 8px;">
                                                                 <strong>Silver Spoon Towers</strong><br>
                                                                 50303 Nairobi, Kenya<br>
@@ -719,9 +776,9 @@ try {
                                                         <!-- Totals and Terms -->
                                                         <div class="row">
                                                             <div class="col-6 terms-box">
-                                                                <strong>Terms:</strong><br>
-                                                                Payment due in 14 days.<br>
-                                                                Late fee: 2% monthly.
+                                                                <strong>Note:</strong><br>
+                                                                This Expense Note Belongs to.<br>
+                                                                Silver Spoon Towers
                                                             </div>
                                                             <div class="col-6">
                                                                 <table class="table table-borderless table-sm text-end mb-0">
@@ -1078,13 +1135,25 @@ try {
                     document.getElementById('expenseModalTotalAmount').textContent = `KES ${parseFloat(expense.total || 0).toLocaleString()}`;
                     document.getElementById('expenseModalTaxAmount').textContent = `KES ${parseFloat(expense.total_taxes || 0).toLocaleString()}`;
                     document.getElementById('expenseModalUntaxedAmount').textContent = `KES ${parseFloat(expense.untaxed_amount || 0).toLocaleString()}`;
-                    console.log(expense.untaxed_amount);
-                    // document.getElementById('expenseModalTotalTax').textContent = expense.expense_no || '—';
-                    // document.getElementById('expenseModalItem').textContent = expense.item_name || '—';
-                    // document.getElementById('expenseModalPaymentDate').textContent = expense.payment_date || '—';
-                    // document.getElementById('expenseModalReference').textContent = expense.reference_no || '—';
-                    // ...add any other fields you want to display
+                    // Payment status
 
+                    const status = expense.status || 'paid'; // Defaulting to 'paid' if status is not available
+                    const statusLabelElement = document.getElementById('expenseModalPaymentStatus'); // ID instead of class
+                    // Check the status and apply the appropriate class and text
+                    if (expense.status === "paid") {
+                        statusLabelElement.textContent = "PAID";
+                        statusLabelElement.classList.remove("diagonal-unpaid-label"); // Remove the unpaid
+                        statusLabelElement.classList.add("diagonal-paid-label");
+                    }
+                    else if(expense.status === "partially paid"){
+                        statusLabelElement.textContent = "PARTIALLY PAID";
+                        statusLabelElement.classList.remove("diagonal-unpaid-label"); // Remove the unpaid
+                        statusLabelElement.classList.add("diagonal-partially-paid-label");
+                    }
+                    else{
+                        statusLabelElement.textContent = "UNPAID";
+                    }
+                    console.log(expense.status)
                     const tableBody = document.getElementById('expenseItemsTableBody');
                     tableBody.innerHTML = "";
                     data.forEach((item) => {
