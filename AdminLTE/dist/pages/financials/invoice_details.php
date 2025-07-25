@@ -143,7 +143,7 @@ $randomLogo = $logos[array_rand($logos)];
         crossorigin="anonymous" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="expenses.css">
+    <link rel="stylesheet" href="invoices.css">
     <!-- scripts for data_table -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
@@ -155,23 +155,18 @@ $randomLogo = $logos[array_rand($logos)];
 
 <!-- Select2 CSS -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
 <!-- jQuery (required for Select2) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <!-- Select2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-
 
 <!-- Add these to your head or before closing body -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 <style>
-        /* ---- Page split -------------------------------------------------- */
+        ---- Page split --------------------------------------------------
         *{box-sizing:border-box;font-family:Inter,Arial,sans-serif}
         body{margin:0;overflow:hidden;color:#333}
         .wrapper {
@@ -179,7 +174,6 @@ $randomLogo = $logos[array_rand($logos)];
     height: 100vh;
     border-left: 1px solid #ccc; /* Optional if you want an outer border */
 }
-
         /* ---- LEFT LIST --------------------------------------------------- */
         .soda {
     width: 320px;
@@ -228,11 +222,8 @@ $randomLogo = $logos[array_rand($logos)];
         }
         /* quick reset for invoice HTML you may embed later */
         .viewer h1,.viewer h2,.viewer h3{margin:0 0 .5em}
-
-
     </style>
 </head>
-
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
     <div class="app-wrapper">

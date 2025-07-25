@@ -520,7 +520,8 @@ $(document).ready(function() {
     try {
       // Prepare form data with your specified IDs
       const formData = {
-        invoice_number: isUpdate ? $('#invoice-number').val() : 'DFT-' + new Date().getTime().toString().slice(-6),
+        // invoice_number: isUpdate ? $('#invoice-number').val() : 'DFT-' + new Date().getTime().toString().slice(-6),
+        invoice_number: isUpdate ? $('#invoice-number').val() : 'DFT-' + String(++draftCounter).padStart(4, '0'),
         building_id: $('#building').val() || null,
         tenant: $('#customer').val() || 0,
         account_item: $('#account-item').val() || '',

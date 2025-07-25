@@ -3,7 +3,7 @@ require_once '../db/connect.php';
 
 // Check if required data is present
 if (!isset($_POST['invoice_id']) || !isset($_POST['invoice_number'])) {
-    header('Location: invoices.php');
+    header('Location: invoice.php');
     exit;
 }
 
@@ -49,7 +49,7 @@ try {
     $stmt->execute(array_merge([':id' => $invoiceId], $invoiceData));
 
     // Redirect back to invoices with success message
-    header('Location: invoices.php?success=1');
+    header('Location: invoice.php?success=1');
     exit;
 
 } catch (PDOException $e) {
