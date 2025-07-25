@@ -1240,11 +1240,10 @@ foreach ($invoices as $invoice) {
     //           </a></li>';
     // }
     if ($invoice['status'] === 'draft' || ($invoice['status'] === 'sent' && $invoice['paid_amount'] == 0)) {
-      echo '<li><a class="dropdown-item" href="#" onclick="editInvoice(' . $invoice['id'] . ')">
-                <i class="fas fa-edit me-2"></i>Edit Invoice
-            </a></li>';
-  }
-
+        echo '<li><a class="dropdown-item" href="invoice_edit.php?id=' . $invoice['id'] . '">
+                  <i class="fas fa-edit me-2"></i>Edit Invoice
+              </a></li>';
+    }
 
     echo '<li><hr class="dropdown-divider"></li>';
 

@@ -1,68 +1,60 @@
 <?php
-// update_invoice.php
 require_once '../db/connect.php';
 
-// Get POST data
-$invoiceId = $_POST['invoice_id'];
+// Check if required data is present
+if (!isset($_POST['invoice_id']) || !isset($_POST['invoice_number'])) {
+    header('Location: invoices.php');
+    exit;
+}
+
+// Collect all form data
+$invoiceId = (int)$_POST['invoice_id'];
 $invoiceData = [
+    'invoice_number' => $_POST['invoice_number'],
     'building_id' => $_POST['building_id'],
-    'tenant_id' => $_POST['tenant'],
+    'tenant' => $_POST['tenant'],
+    'account_item' => $_POST['account_item'][0],
+    'description' => $_POST['description'][0],
+    'quantity' => $_POST['quantity'][0],
+    'unit_price' => $_POST['unit_price'][0],
+    'taxes' => $_POST['taxes'][0],
+    'sub_total' => $_POST['quantity'][0] * $_POST['unit_price'][0],
+    'total' => $_POST['quantity'][0] * $_POST['unit_price'][0], // Adjust for taxes if needed
     'invoice_date' => $_POST['invoice_date'],
     'due_date' => $_POST['due_date'],
-    'notes' => $_POST['notes'] ?? null,
-    // Add other fields as needed
+    'notes' => $_POST['notes'] ?? '',
+    'status' => 'sent' // Change status from draft to sent
 ];
 
 try {
-    $pdo->beginTransaction();
-
-    // Update invoice header
+    // Prepare SQL update
     $stmt = $pdo->prepare("UPDATE invoice SET
-                          building_id = :building_id,
-                          tenant_id = :tenant_id,
-                          invoice_date = :invoice_date,
-                          due_date = :due_date,
-                          notes = :notes,
-                          status = 'draft',
-                          updated_at = NOW()
-                          WHERE id = :id");
-    $invoiceData['id'] = $invoiceId;
-    $stmt->execute($invoiceData);
+        invoice_number = :invoice_number,
+        building_id = :building_id,
+        tenant = :tenant,
+        account_item = :account_item,
+        description = :description,
+        quantity = :quantity,
+        unit_price = :unit_price,
+        taxes = :taxes,
+        sub_total = :sub_total,
+        total = :total,
+        invoice_date = :invoice_date,
+        due_date = :due_date,
+        notes = :notes,
+        status = :status
+        WHERE id = :id");
 
-    // Delete existing items
-    $stmt = $pdo->prepare("DELETE FROM invoice_items WHERE invoice_id = ?");
-    $stmt->execute([$invoiceId]);
+    // Execute with parameters
+    $stmt->execute(array_merge([':id' => $invoiceId], $invoiceData));
 
-    // Insert new items
-    $stmt = $pdo->prepare("INSERT INTO invoice_items
-                          (invoice_id, account_code, description, quantity, unit_price, tax_type, total_amount)
-                          VALUES (?, ?, ?, ?, ?, ?, ?)");
-
-    foreach ($_POST['account_item'] as $index => $accountCode) {
-        $total = $_POST['quantity'][$index] * $_POST['unit_price'][$index];
-        // Adjust total for tax if needed
-        if ($_POST['taxes'][$index] === 'inclusive') {
-            $total = $total / 1.16; // Example for VAT inclusive
-        }
-
-        $stmt->execute([
-            $invoiceId,
-            $accountCode,
-            $_POST['description'][$index],
-            $_POST['quantity'][$index],
-            $_POST['unit_price'][$index],
-            $_POST['taxes'][$index],
-            $total
-        ]);
-    }
-
-    $pdo->commit();
-    header("Location: invoice.php?success=Invoice updated successfully");
+    // Redirect back to invoices with success message
+    header('Location: invoices.php?success=1');
     exit;
 
 } catch (PDOException $e) {
-    $pdo->rollBack();
-    header("Location: invoice.php?error=Failed to update invoice: " . $e->getMessage());
+    // Redirect back with error message
+    header('Location: invoice_edit.php?id=' . $invoiceId . '&error=1');
     exit;
 }
 ?>
