@@ -1,72 +1,86 @@
 <?php
-// save_draft.php
+header('Content-Type: application/json');
 require_once '../db/connect.php';
 
-header('Content-Type: application/json');
+// Get JSON input
+$json = file_get_contents('php://input');
+$data = json_decode($json, true);
+
+// Set default values for all fields
+$defaultData = [
+    'invoice_number' => '',
+    'building_id' => null,
+    'tenant' => 0,
+    'account_item' => '',
+    'description' => '',
+    'quantity' => '0',
+    'unit_price' => '0',
+    'taxes' => '0',
+    'sub_total' => '0',
+    'total' => '0',
+    'notes' => '',
+    'terms_conditions' => '',
+    'invoice_date' => null,
+    'due_date' => null,
+    'status' => 'draft',
+    'payment_status' => 'unpaid'
+];
+
+// Merge with incoming data
+$data = array_merge($defaultData, $data);
 
 try {
-    $pdo->beginTransaction();
+    // Prepare SQL with all possible fields
+    $stmt = $pdo->prepare("INSERT INTO invoice (
+        invoice_number, invoice_date, due_date, building_id, tenant,
+        account_item, description, quantity, unit_price, taxes,
+        sub_total, total, notes, terms_conditions, status, payment_status, created_at
+    ) VALUES (
+        :invoice_number, :invoice_date, :due_date, :building_id, :tenant,
+        :account_item, :description, :quantity, :unit_price, :taxes,
+        :sub_total, :total, :notes, :terms_conditions, :status, :payment_status, NOW()
+    )");
 
-    // Generate invoice number if not provided
-    $invoiceNumber = $_POST['invoice_number'] ?? generateInvoiceNumber();
+    // Bind parameters with proper NULL handling
+    $params = [
+        ':invoice_number' => $data['invoice_number'],
+        ':invoice_date' => !empty($data['invoice_date']) ? $data['invoice_date'] : null,
+        ':due_date' => !empty($data['due_date']) ? $data['due_date'] : null,
+        ':building_id' => $data['building_id'],
+        ':tenant' => $data['tenant'],
+        ':account_item' => $data['account_item'],
+        ':description' => $data['description'],
+        ':quantity' => $data['quantity'],
+        ':unit_price' => $data['unit_price'],
+        ':taxes' => $data['taxes'],
+        ':sub_total' => $data['sub_total'],
+        ':total' => $data['total'],
+        ':notes' => $data['notes'],
+        ':terms_conditions' => $data['terms_conditions'],
+        ':status' => $data['status'],
+        ':payment_status' => $data['payment_status']
+    ];
 
-    // Insert invoice header
-    $stmt = $pdo->prepare("INSERT INTO invoice
-                          (invoice_number, building_id, tenant, invoice_date, due_date,
-                           notes, status, created_at, updated_at)
-                          VALUES (?, ?, ?, ?, ?, ?, 'draft', NOW(), NOW())");
+    // Execute with parameters
+    $stmt->execute($params);
 
-    $stmt->execute([
-        $invoiceNumber,
-        $_POST['building_id'],
-        $_POST['tenant'],
-        $_POST['invoice_date'],
-        $_POST['due_date'],
-        $_POST['notes'] ?? null
-    ]);
-
-    $invoiceId = $pdo->lastInsertId();
-
-    // Insert items
-    $stmt = $pdo->prepare("INSERT INTO invoice_items
-                          (invoice_id, account_code, description, quantity, unit_price, tax_type, total_amount)
-                          VALUES (?, ?, ?, ?, ?, ?, ?)");
-
-    foreach ($_POST['account_item'] as $index => $accountCode) {
-        $total = $_POST['quantity'][$index] * $_POST['unit_price'][$index];
-        // Adjust total for tax if needed
-        if ($_POST['taxes'][$index] === 'inclusive') {
-            $total = $total / 1.16; // Example for VAT inclusive
-        }
-
-        $stmt->execute([
-            $invoiceId,
-            $accountCode,
-            $_POST['description'][$index],
-            $_POST['quantity'][$index],
-            $_POST['unit_price'][$index],
-            $_POST['taxes'][$index],
-            $total
-        ]);
-    }
-
-    $pdo->commit();
-
+    // Return success with all saved data for verification
     echo json_encode([
         'success' => true,
-        'invoice_id' => $invoiceId,
+        'invoice_id' => $pdo->lastInsertId(),
+        'invoice_number' => $data['invoice_number'],
+        'saved_data' => $params, // Return all saved values for debugging
         'message' => 'Draft saved successfully'
     ]);
 
 } catch (PDOException $e) {
-    $pdo->rollBack();
+    http_response_code(500);
     echo json_encode([
-        'error' => 'Failed to save draft: ' . $e->getMessage()
+        'success' => false,
+        'message' => 'Database error: ' . $e->getMessage(),
+        'error_info' => $e->errorInfo,
+        'received_data' => $data,
+        'prepared_params' => $params ?? null
     ]);
-}
-
-function generateInvoiceNumber() {
-    // Implement your invoice number generation logic
-    return 'INV-' . date('Ymd') . '-' . strtoupper(uniqid());
 }
 ?>
