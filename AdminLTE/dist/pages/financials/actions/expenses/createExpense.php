@@ -15,10 +15,11 @@
         $expense_date = $_POST['date'] ?? null;
         $expense_no = $_POST['expense_no'] ?? null;
         $supplier = $_POST['supplier'] ?? null;
+        $totalTax = $_POST['totalTax'] ?? 0.00;
         $total = $_POST['total'] ?? 0.00;
 
-        $stmt = $pdo->prepare("INSERT INTO expenses (expense_date, expense_no, supplier, total) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$expense_date, $expense_no, $supplier, $total]);
+        $stmt = $pdo->prepare("INSERT INTO expenses (expense_date, expense_no, supplier,total_taxes, total) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$expense_date, $expense_no, $supplier, $totalTax, $total]);
 
         $expense_id = $pdo->lastInsertId();
 

@@ -46,7 +46,7 @@
         .login-box {
             width: 90%;
             max-width: 420px;
-            background-color: #ffffff;
+            /* background-color: #ffffff; */
             border-radius: 12px;
             padding: 40px 30px;
 
@@ -303,7 +303,7 @@
                         <div class="form-group password-wrapper">
                             <label for="password"><i class="fas fa-lock"></i> Password</label>
                             <input type="password" id="password" name="password" placeholder="Enter your password" required>
-                            <span class="toggle-password" onclick="togglePassword()">👁</span>
+                            <!-- <span class="toggle-password" onclick="togglePassword()">👁</span> -->
                         </div>
 
                         <div class="forgot">

@@ -423,7 +423,7 @@ try {
                                                                 <div class="d-flex flex-column align-items-end">
 
                                                                     <div class="d-flex justify-content-end w-100 mb-2">
-                                                                        <label class="me-2 border-end pe-3 text-end w-50"><strong>Sub-Total:</strong></label>
+                                                                        <label class="me-2 border-end pe-3 text-end w-50"><strong>Untaxed Amount:</strong></label>
                                                                         <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="subTotal" value="Ksh 10,500">
                                                                     </div>
 
@@ -437,13 +437,19 @@ try {
                                                                         <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountExclusive" value="Ksh 1,500">
                                                                     </div>
 
+                                                                    <div class="d-flex justify-content-end w-100 mb-2" id="vatAmount">
+                                                                        <label class="me-2 border-end pe-3 text-end w-50"><strong id="taxLabel">VAT 16% :</strong></label>
+                                                                        <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountTotal" value="Ksh 0.00">
+                                                                        <input type="hidden" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountTotalHidden" name="totalTax" value="Ksh 0.00">
+                                                                    </div>
+
                                                                     <div class="d-flex justify-content-end w-100 mb-2" id="grandDiscountContainer">
                                                                         <label class="me-2 border-end pe-3 text-end w-50"><strong>Discount:</strong></label>
                                                                         <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="grandDiscount" value="Ksh 0:00">
                                                                     </div>
 
                                                                     <div class="d-flex justify-content-end w-100 mt-3 pt-2 border-top border-warning">
-                                                                        <label class="me-2 border-end pe-3 text-end w-50"><strong>Total:</strong></label>
+                                                                        <label class="me-2 border-end pe-3 text-end w-50"><strong>Total Amount Due:</strong></label>
                                                                         <input type="hidden" name="total" id="grandTotalNumber" value="0.00" />
                                                                         <input type="text" readonly class="form-control-plaintext w-50 ps-3 fw-bold" id="grandTotal" value="Ksh 12,000">
                                                                     </div>
@@ -1055,13 +1061,14 @@ try {
             // modalBody.innerHTML = `<div class="text-center text-muted py-4">Loading...</div>`;
 
             // Optional: Fetch data dynamically via AJAX/PHP
-            // fetch(`fetch_invoice.php?id=${expenseId}`)
-            //     .then(response => response.text())
-            //     .then(data => {
-            //         modalBody.innerHTML = data;
-            //     })
-            //     .catch(() => {
-            //         modalBody.innerHTML = `<div class="text-danger text-center">Failed to load invoice.</div>`;
+             fetch(`actions/expenses/getExpense.php?id=${expenseId}`)
+                 .then(response => response.text())
+                 .then(data => {
+                    //  modalBody.innerHTML = data;
+                     console.log('yoyo');
+                 })
+                //  .catch(() => {
+                    //  modalBody.innerHTML = `<div class="text-danger text-center">Failed to load invoice.</div>`;
             //     });
 
             // Show the modal

@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let subTotal = 0;
     let vatAmountInclusive = 0;
     let vatAmountExclusive= 0;
-    let vatAmount = 0;
+    let totalVat = 0;
     let grandTotal = 0;
     let grandDiscount = 0;
 
@@ -115,20 +115,20 @@ document.addEventListener("DOMContentLoaded", function () {
       subTotal += (total - itemTaxInclusive + itemTaxExclusive);
       vatAmountInclusive += itemTaxInclusive;
       vatAmountExclusive += itemTaxExclusive;
-      vatAmount += itemTax;
+      totalVat= vatAmountInclusive + vatAmountExclusive;
       grandDiscount+= discount;
       grandTotal += total;
     });
 
     // vatInclusiveContainer.style.display = hasInclusive ? 'block' : 'non';
      if (hasExclusive) {
-        vatExclusiveContainer.style.setProperty('display', 'flex', 'important');
+        vatExclusiveContainer.style.setProperty('display', 'none', 'important');
 
       } else {
         vatExclusiveContainer.style.setProperty('display', 'none', 'important');
       }
       if (hasInclusive) {
-        vatInclusiveContainer.style.setProperty('display', 'flex', 'important');
+        vatInclusiveContainer.style.setProperty('display', 'none', 'important');
 
       } else {
         vatInclusiveContainer.style.setProperty('display', 'none', 'important');
@@ -138,8 +138,12 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById('subTotal').value = 'Ksh ' + subTotal.toFixed(2);
     document.getElementById('vatAmountInclusive').value = 'Ksh ' + vatAmountInclusive.toFixed(2);
     document.getElementById('vatAmountExclusive').value = 'Ksh ' + vatAmountExclusive.toFixed(2);
+    // Visible input
+    document.getElementById('vatAmountTotal').value = 'Ksh ' + totalVat.toFixed(2); //
+    // hidden input
+    document.getElementById('vatAmountTotalHidden').value = totalVat.toFixed(2);
     // grandTotal
-    document.getElementById('grandDiscount').value = 'Ksh' + grandDiscount.toFixed(2);
+    document.getElementById('grandDiscount').value = 'Ksh ' + grandDiscount.toFixed(2);
     document.getElementById('grandTotal').value = 'Ksh ' + grandTotal.toFixed(2);
     document.getElementById('grandTotalNumber').value = grandTotal.toFixed(2);
 
