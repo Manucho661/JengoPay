@@ -57,8 +57,8 @@ document.addEventListener("DOMContentLoaded", function () {
   function calculateTotal() {
     console.log('total fired');
     const vatInclusiveContainer = document.getElementById('vatAmountInclusiveContainer');
-    const vatExclusiveContainer = document.getElementById('vatAmountExclusiveContainer');
-
+    const vatAmountContainer = document.getElementById('vatAmountContainer');
+    const zeroRatedExmptedContainer= document.getElementById('zeroRated&ExmptedContainer');
     let subTotal = 0;
     let vatAmountInclusive = 0;
     let vatAmountExclusive= 0;
@@ -68,6 +68,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let hasInclusive = false;
     let hasExclusive = false;
+    let isZeroRated = false;
+    let isExempted= false;
     document.querySelectorAll('.item-row').forEach(row => {
       const qty = parseFloat(row.querySelector('.qty')?.value || 0);
       let unitPrice = parseFloat(row.querySelector('.unit-price')?.value || 0);
@@ -93,10 +95,12 @@ document.addEventListener("DOMContentLoaded", function () {
         itemTaxExclusive = unitPrice * qty * 0.16;
 
       } else if (taxOption === 'zero') {
+        isZeroRated=true;
         total = unitPrice * qty;
         itemTax = 0;
         document.getElementById('taxLabel').textContent = "VAT 0%:";
       } else if (taxOption === 'exempt') {
+        isExempted=true;
         total = unitPrice * qty;
         itemTax = 0;
         document.getElementById('taxLabel').textContent = "EXEMPTED";
@@ -121,19 +125,18 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // vatInclusiveContainer.style.display = hasInclusive ? 'block' : 'non';
-     if (hasExclusive) {
-        vatExclusiveContainer.style.setProperty('display', 'none', 'important');
+     if (hasExclusive ||hasInclusive ) {
+        vatAmountContainer.style.setProperty('display', 'flex', 'important');
 
       } else {
-        vatExclusiveContainer.style.setProperty('display', 'none', 'important');
+        vatAmountContainer.style.setProperty('display', 'none', 'important');
       }
-      if (hasInclusive) {
-        vatInclusiveContainer.style.setProperty('display', 'none', 'important');
+      if (isExempted||isZeroRated) {
+        zeroRatedExmptedContainer.style.setProperty('display', 'flex', 'important');
 
       } else {
-        vatInclusiveContainer.style.setProperty('display', 'none', 'important');
+        zeroRatedExmptedContainer.style.setProperty('display', 'none', 'important');
       }
-
 
     document.getElementById('subTotal').value = 'Ksh ' + subTotal.toFixed(2);
     document.getElementById('vatAmountInclusive').value = 'Ksh ' + vatAmountInclusive.toFixed(2);

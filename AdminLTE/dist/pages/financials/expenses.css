@@ -411,7 +411,7 @@ tr td:first-child {
 
 
 /* expense card */
-.invoice-card {
+.expense-card {
   max-width: 700px;
   margin: 0 auto;
   background: #fff;
@@ -420,7 +420,7 @@ tr td:first-child {
   padding: 20px;
 }
 
-.invoice-logo {
+.expense-logo {
   height: 50px;
 }
 
@@ -448,7 +448,7 @@ hr {
   /* text-align: right; */
 }
 
-.invoice-table-wrapper {
+.expense-table-wrapper {
   border: 1px solid #00192D;
   border-radius: 10px;
   overflow: hidden;
@@ -460,17 +460,17 @@ hr {
   font-size: small;
 }
 
-.invoice-table tbody tr:nth-child(even) {
+.expense-table tbody tr:nth-child(even) {
   background-color: #f4f6f8;
 }
 
-.invoice-table td,
-.invoice-table th {
+.expense-table td,
+.expense-table th {
   border-color: #00192D;
   vertical-align: middle;
 }
 
-.invoice-table tbody tr:hover {
+.expense-table tbody tr:hover {
   background-color: #e9f1ff;
 }
 

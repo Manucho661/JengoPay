@@ -432,15 +432,20 @@ try {
                                                                         <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountInclusive" value="Ksh 1,500">
                                                                     </div>
 
-                                                                    <div class="d-flex justify-content-end w-100 mb-2" id="vatAmountExclusiveContainer" style="display: none;">
+                                                                    <div class="d-flex justify-content-end w-100 mb-2" id="vatAmountExclusiveContainer" style="display: none !important;">
                                                                         <label class="me-2 border-end pe-3 text-end w-50"><strong id="taxLabel">VAT 16% (Exlusive):</strong></label>
                                                                         <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountExclusive" value="Ksh 1,500">
                                                                     </div>
 
-                                                                    <div class="d-flex justify-content-end w-100 mb-2" id="vatAmount">
+                                                                    <div class="d-flex justify-content-end w-100 mb-2" id="vatAmountContainer" style="display: none;">
                                                                         <label class="me-2 border-end pe-3 text-end w-50"><strong id="taxLabel">VAT 16% :</strong></label>
                                                                         <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountTotal" value="Ksh 0.00">
                                                                         <input type="hidden" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountTotalHidden" name="totalTax" value="Ksh 0.00">
+                                                                    </div>
+
+                                                                    <div class="d-flex justify-content-end w-100 mb-2" id="zeroRated&ExmptedContainer" style="display: none;">
+                                                                        <label class="me-2 border-end pe-3 text-end w-50"><strong id="taxLabel">VAT 0%:</strong></label>
+                                                                        <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="zeroRated&Exmpted" value="Ksh 0.00">
                                                                     </div>
 
                                                                     <div class="d-flex justify-content-end w-100 mb-2" id="grandDiscountContainer">
@@ -555,7 +560,7 @@ try {
                                                         <button
                                                             class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
                                                             style="background-color: #00192D; color: white; border: none; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;"
-                                                            onclick="openInvoiceModal(<?= $exp['id'] ?>)">
+                                                            onclick="openExpenseModal(<?= $exp['id'] ?>)">
                                                             <i class="bi bi-eye-fill"></i> View
                                                         </button>
                                                     </td>
@@ -616,7 +621,7 @@ try {
                                         </div>
                                     </div>
                                     <!-- View Expense Modal -->
-                                    <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
+                                    <div class="modal fade" id="expenseModal" tabindex="-1" aria-labelledby="expenseModalLabel" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                                             <div class="modal-content bg-light">
                                                 <div class="d-flex justify-content-between align-items-center p-2" style="background-color: #EAF0F4; border-bottom: 1px solid #CCC; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
@@ -631,13 +636,13 @@ try {
                                                     </button>
                                                 </div>
 
-                                                <div class="modal-body bg-light">
+                                                <div class="modal-body bg-light" id="expenseModalBody">
 
                                                     <!-- 🔒 DO NOT TOUCH CARD BELOW -->
-                                                    <div class="invoice-card">
+                                                    <div class="expense-card">
                                                         <!-- Header -->
                                                         <div class="d-flex justify-content-between align-items-start mb-3">
-                                                            <img id="invoiceLogo" alt="Company Logo" class="invoice-logo">
+                                                            <img id="expenseLogo" alt="Company Logo" class="expense-logo">
                                                             <script>
                                                                 const logos = [
                                                                     "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Unilever.svg/200px-Unilever.svg.png",
@@ -652,7 +657,7 @@ try {
                                                                     "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Nike_logo.svg/200px-Nike_logo.svg.png"
                                                                 ];
 
-                                                                const logoImg = document.getElementById("invoiceLogo");
+                                                                const logoImg = document.getElementById("expenseLogo");
                                                                 logoImg.src = logos[Math.floor(Math.random() * logos.length)];
                                                             </script>
 
@@ -665,17 +670,17 @@ try {
                                                             </div>
                                                         </div>
 
-                                                        <!-- Invoice Info -->
+                                                        <!-- expense Info -->
                                                         <div class="d-flex justify-content-between">
-                                                            <h6 class="mb-0">Josephat Koech</h6>
+                                                            <h6 class="mb-0" id="expenseModalSupplierName">Josephat Koech</h6>
                                                             <div class="text-end">
-                                                                <h3> INV001</h3><br>
+                                                                <h3 id="expenseModalInvoiceNo"> INV001</h3><br>
                                                             </div>
                                                         </div>
 
                                                         <div class="mb-1 rounded-2 d-flex justify-content-between align-items-center"
                                                             style="border: 1px solid #FFC107; padding: 4px 8px; background-color: #FFF4CC;">
-                                                            <div class="d-flex flex-column Invoice-date m-0">
+                                                            <div class="d-flex flex-column expense-date m-0">
                                                                 <span class="m-0"><b>Due Date</b></span>
                                                                 <p class="m-0">24/6/2025</p>
                                                             </div>
@@ -1056,24 +1061,37 @@ try {
     </script>
     <!-- Expense modal -->
     <script>
-        function openInvoiceModal(expenseId) {
-            const modalBody = document.getElementById("invoiceModalBody");
-            // modalBody.innerHTML = `<div class="text-center text-muted py-4">Loading...</div>`;
+        function openExpenseModal(expenseId) {
+            fetch(`actions/expenses/getExpense.php?id=${expenseId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch data");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (!data.length) {
+                        console.warn("No expense data found.");
+                        return;
+                    }
 
-            // Optional: Fetch data dynamically via AJAX/PHP
-             fetch(`actions/expenses/getExpense.php?id=${expenseId}`)
-                 .then(response => response.text())
-                 .then(data => {
-                    //  modalBody.innerHTML = data;
-                     console.log('yoyo');
-                 })
-                //  .catch(() => {
-                    //  modalBody.innerHTML = `<div class="text-danger text-center">Failed to load invoice.</div>`;
-            //     });
+                    const expense = data[0]; // Get the first (and likely only) row
 
-            // Show the modal
-            const invoiceModal = new bootstrap.Modal(document.getElementById('invoiceModal'));
-            invoiceModal.show();
+                    // Map values to HTML elements
+                    document.getElementById('expenseModalSupplierName').textContent = expense.supplier || '—';
+                    // document.getElementById('expenseModalTotal').textContent = expense.total || '0.00';
+                    // document.getElementById('expenseModalItem').textContent = expense.item_name || '—';
+                    // document.getElementById('expenseModalPaymentDate').textContent = expense.payment_date || '—';
+                    // document.getElementById('expenseModalReference').textContent = expense.reference_no || '—';
+                    // ...add any other fields you want to display
+
+                    // Show the modal
+                    const expenseModal = new bootstrap.Modal(document.getElementById('expenseModal'));
+                    expenseModal.show();
+                })
+                .catch(error => {
+                    console.error("Error loading expense:", error);
+                });
         }
     </script>
 
