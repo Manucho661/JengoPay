@@ -66,7 +66,7 @@ function statusClass(string $status): string
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css"/>
-    <link rel="stylesheet" href="invoices.css">
+   <link rel="stylesheet" href="invoices.css">
     <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
@@ -78,7 +78,7 @@ function statusClass(string $status): string
         crossorigin="anonymous" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="expenses.css">
+     <!-- <link rel="stylesheet" href="expenses.css"> -->
     <!-- scripts for data_table -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
@@ -106,64 +106,6 @@ function statusClass(string $status): string
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 <style>
-        /* ---- Page split -------------------------------------------------- */
-        *{box-sizing:border-box;font-family:Inter,Arial,sans-serif}
-        body{margin:0;overflow:hidden;color:#333}
-        .wrapper {
-    display: flex;
-    height: 100vh;
-    border-left: 1px solid #ccc; /* Optional if you want an outer border */
-}
-
-        /* ---- LEFT LIST --------------------------------------------------- */
-        .soda {
-    width: 320px;
-    background: #fff;
-    border-right: 2px solid #d0d0d0; /* Makes the divider more visible */
-        }
-        .soda-header{
-            padding:16px 20px;font-weight:600;border-bottom:1px solid #eee;
-            display:flex;justify-content:space-between;align-items:center
-        }
-        .btn-new{
-            background:#2e7d32;color:#fff;border:0;border-radius:4px;
-            padding:6px 12px;font-size:13px;cursor:pointer
-        }
-        .invoice-list{flex:1;overflow-y:auto}
-        .invoice-link{display:block;text-decoration:none;color:inherit}
-        .invoice-link:hover,.invoice-link.active{background:#f5f8ff}
-
-        .invoice-item{
-            display:flex;gap:12px;padding:12px 20px;border-bottom:1px solid #f3f3f3;
-            align-items:flex-start
-        }
-        .invoice-checkbox{padding-top:4px}
-        .invoice-summary{flex:1}
-        .invoice-customer{font-weight:600;margin-bottom:2px}
-        .invoice-meta{font-size:12px;color:#7a7a7a}
-        .invoice-status{margin-top:4px}
-        .invoice-amount{font-weight:600;white-space:nowrap}
-
-        /* ---- Status Badges ------------------------------------------------ */
-        .status-badge{
-            font-size:11px;padding:2px 6px;border-radius:4px;font-weight:600;
-            letter-spacing:.3px;text-transform:uppercase
-        }
-        .status-paid      {background:#e8f5e9;color:#2e7d32}
-        .status-overdue   {background:#ffebee;color:#c62828}
-        .status-cancelled {background:#eceff1;color:#546e7a}
-        .status-pending   {background:#fff8e1;color:#ff8f00}
-        .status-draft     {background:#eceff1;color:#546e7a}
-
-        /* ---- RIGHT DETAILS PANE ------------------------------------------ */
-        .viewer{flex:1;overflow-y:auto;padding:24px}
-        .placeholder{
-            height:100%;display:flex;align-items:center;justify-content:center;
-            font-size:18px;color:#9e9e9e
-        }
-        /* quick reset for invoice HTML you may embed later */
-        .viewer h1,.viewer h2,.viewer h3{margin:0 0 .5em}
-
 
     </style>
 </head>
@@ -204,119 +146,146 @@ function statusClass(string $status): string
             <!-- add new inspection modal-->
 
             <!--begin::App Content Header-->
-            <div class="invoice-card">
-        <!-- Header -->
-        <div class="d-flex justify-content-between align-items-start mb-3">
-            <img id="invoiceLogo" alt="Company Logo" class="invoice-logo">
-            <script>
-                const logos = [
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Unilever.svg/200px-Unilever.svg.png",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/200px-IBM_logo.svg.png",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/200px-Amazon_logo.svg.png",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Microsoft_logo.svg/200px-Microsoft_logo.svg.png",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/200px-Google_2015_logo.svg.png",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/200px-Apple_logo_black.svg.png",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Pepsi_logo_2014.svg/200px-Pepsi_logo_2014.svg.png",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Toyota_logo.svg/200px-Toyota_logo.svg.png",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Adobe_Corporate_Logo.png/200px-Adobe_Corporate_Logo.png",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Nike_logo.svg/200px-Nike_logo.svg.png"
-                ];
+            <?php
+require_once '../db/connect.php';
 
+if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+    $id = (int) $_GET['id'];
+
+    // Fetch invoice
+    $stmt = $pdo->prepare("
+        SELECT i.*, CONCAT(u.first_name, ' ', u.middle_name) AS customer_name, u.email, t.phone_number
+        FROM invoice i
+        LEFT JOIN tenants t ON i.tenant = t.id
+        LEFT JOIN users u ON u.id = t.user_id
+        WHERE i.id = ?
+    ");
+    $stmt->execute([$id]);
+    $invoice = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($invoice):
+        $invoice_date = date('d/m/Y', strtotime($invoice['invoice_date']));
+        $due_date = date('d/m/Y', strtotime($invoice['due_date']));
+        $qty = (float)$invoice['quantity'];
+        $unit_price = (float)$invoice['unit_price'];
+        $subtotal = $qty * $unit_price;
+        $vat = $invoice['taxes'] === 'exclusive' ? $subtotal * 0.16 : 0;
+        $total = $subtotal + $vat;
+?>
+<div class="invoice-card">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-start mb-3">
+        <img id="invoiceLogo" alt="Company Logo" class="invoice-logo">
+        <script>
+            const logos = [
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Unilever.svg/200px-Unilever.svg.png",
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/200px-IBM_logo.svg.png",
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/200px-Amazon_logo.svg.png",
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Microsoft_logo.svg/200px-Microsoft_logo.svg.png",
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/200px-Google_2015_logo.svg.png",
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/200px-Apple_logo_black.svg.png",
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Pepsi_logo_2014.svg/200px-Pepsi_logo_2014.svg.png",
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Toyota_logo.svg/200px-Toyota_logo.svg.png",
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Adobe_Corporate_Logo.png/200px-Adobe_Corporate_Logo.png",
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Nike_logo.svg/200px-Nike_logo.svg.png"
+            ];
+            document.addEventListener("DOMContentLoaded", () => {
                 const logoImg = document.getElementById("invoiceLogo");
                 logoImg.src = logos[Math.floor(Math.random() * logos.length)];
-            </script>
+            });
+        </script>
 
-            <div class="text-end " style="background-color: #f0f0f0; padding: 10px; border-radius: 8px;">
-                <strong>Customer Name</strong><br>
-                123 Example St<br>
-                Nairobi, Kenya<br>
-                customer@example.com<br>
-                +254 700 123456
-            </div>
-        </div>
+<div class="text-end" style="background-color: #f0f0f0; padding: 10px; border-radius: 8px;">
+                    <strong>Customer Name</strong><br>
+                    123 Example St<br>
+                    Nairobi, Kenya<br>
+                    customer@example.com<br>
+                    +254 700 123456
+                </div>
+    </div>
 
-        <!-- Invoice Info -->
-        <div class="d-flex justify-content-between">
-            <h6 class="mb-0">Josephat Koech</h6>
-            <div class="text-end">
-                <h3> INV001</h3><br>
-            </div>
-        </div>
-
-        <div class="mb-1 rounded-2 d-flex justify-content-between align-items-center"
-            style="border: 1px solid #FFC107; padding: 4px 8px; background-color: #FFF4CC;">
-            <div class="d-flex flex-column Invoice-date m-0">
-                <span class="m-0"><b>Due Date</b></span>
-                <p class="m-0">24/6/2025</p>
-            </div>
-            <div class="d-flex flex-column due-date m-0">
-                <span class="m-0"><b>Due Date</b></span>
-                <p class="m-0">24/6/2025</p>
-            </div>
-            <div></div>
-        </div>
-
-        <!-- Items Table -->
-        <div class="table-responsive ">
-            <table class="table table-striped table-bordered rounded-2 table-sm thick-bordered-table">
-                <thead class="table">
-                    <tr class="custom-th">
-                        <th>Description</th>
-                        <th class="text-end">Qty</th>
-                        <th class="text-end">Unit Price</th>
-                        <th class="text-end">Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Web Design</td>
-                        <td class="text-end">1</td>
-                        <td class="text-end">KES 25,000</td>
-                        <td class="text-end">KES 25,000</td>
-                    </tr>
-                    <tr>
-                        <td>Hosting (1 year)</td>
-                        <td class="text-end">1</td>
-                        <td class="text-end">KES 5,000</td>
-                        <td class="text-end">KES 5,000</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Totals and Terms -->
-        <div class="row">
-            <div class="col-6 terms-box">
-                <strong>Terms:</strong><br>
-                Payment due in 14 days.<br>
-                Late fee: 2% monthly.
-            </div>
-            <div class="col-6">
-                <table class="table table-borderless table-sm text-end mb-0">
-                    <tr>
-                        <th>Subtotal:</th>
-                        <td>KES 30,000</td>
-                    </tr>
-                    <tr>
-                        <th>VAT (16%):</th>
-                        <td>KES 4,800</td>
-                    </tr>
-                    <tr>
-                        <th>Total:</th>
-                        <td><strong>KES 34,800</strong></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-
-        <hr>
-
-        <div class="text-center small text-muted">
-            Thank you for your business!
+    <!-- Invoice Info -->
+    <div class="d-flex justify-content-between">
+        <h6 class="mb-0"><?= htmlspecialchars($invoice['account_item']) ?></h6>
+        <div class="text-end">
+            <h3><?= htmlspecialchars($invoice['invoice_number']) ?></h3><br>
         </div>
     </div>
 
-</div><!-- /.wrapper -->
+    <!-- Dates -->
+    <div class="mb-1 rounded-2 d-flex justify-content-between align-items-center"
+         style="border: 1px solid #FFC107; padding: 4px 8px; background-color: #FFF4CC;">
+        <div class="d-flex flex-column invoice-date m-0">
+            <span><b>Invoice Date</b></span>
+            <p class="m-0"><?= $invoice_date ?></p>
+        </div>
+        <div class="d-flex flex-column due-date m-0">
+            <span><b>Due Date</b></span>
+            <p class="m-0"><?= $due_date ?></p>
+        </div>
+        <div></div>
+    </div>
+
+    <!-- Items Table -->
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered rounded-2 table-sm thick-bordered-table">
+            <thead class="table">
+                <tr class="custom-th">
+                    <th>Description</th>
+                    <th class="text-end">Qty</th>
+                    <th class="text-end">Unit Price</th>
+                    <th class="text-end">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><?= htmlspecialchars($invoice['description']) ?></td>
+                    <td class="text-end"><?= $qty ?></td>
+                    <td class="text-end">KES <?= number_format($unit_price, 2) ?></td>
+                    <td class="text-end">KES <?= number_format($subtotal, 2) ?></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Totals and Terms -->
+    <div class="row">
+        <div class="col-6 terms-box">
+            <strong>Terms:</strong><br>
+            <?= !empty($invoice['terms_conditions']) ? htmlspecialchars($invoice['terms_conditions']) : 'Payment due in 14 days.<br>Late fee: 2% monthly.' ?>
+        </div>
+        <div class="col-6">
+            <table class="table table-borderless table-sm text-end mb-0">
+                <tr>
+                    <th>Subtotal:</th>
+                    <td>KES <?= number_format($subtotal, 2) ?></td>
+                </tr>
+                <tr>
+                    <th>VAT (16%):</th>
+                    <td>KES <?= number_format($vat, 2) ?></td>
+                </tr>
+                <tr>
+                    <th>Total:</th>
+                    <td><strong>KES <?= number_format($total, 2) ?></strong></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="text-center small text-muted">
+        <?= !empty($invoice['notes']) ? htmlspecialchars($invoice['notes']) : 'Thank you for your business!' ?>
+    </div>
+</div>
+<?php
+    else:
+        echo "<div class='alert alert-warning'>Invoice not found.</div>";
+    endif;
+} else {
+    echo "<div class='alert alert-info'>No invoice selected.</div>";
+}
+?>
 
 
 
