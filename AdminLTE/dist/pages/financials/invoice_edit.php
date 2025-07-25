@@ -3,11 +3,12 @@ require_once '../db/connect.php';
 
 // Check if invoice ID is provided
 if (!isset($_GET['id'])) {
-    header('Location: invoices.php');
+    header('Location: invoice.php');
     exit;
 }
 
 $invoiceId = (int)$_GET['id'];
+$isDraftEdit = isset($_GET['edit_draft']);
 
 // Fetch invoice data
 $stmt = $pdo->prepare("SELECT * FROM invoice WHERE id = ?");
@@ -15,7 +16,7 @@ $stmt->execute([$invoiceId]);
 $invoiceData = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$invoiceData) {
-    header('Location: invoices.php');
+    header('Location: invoice.php');
     exit;
 }
 
@@ -23,9 +24,16 @@ if (!$invoiceData) {
 $invoiceData['invoice_date'] = $invoiceData['invoice_date'] == '0000-00-00' ? '' : $invoiceData['invoice_date'];
 $invoiceData['due_date'] = $invoiceData['due_date'] == '0000-00-00' ? '' : $invoiceData['due_date'];
 
+// Generate new invoice number if editing a draft
+if ($isDraftEdit && $invoiceData['status'] === 'draft') {
+    $invoiceNumber = 'INV-' . date('Ymd') . '-' . str_pad(rand(1000, 9999), 4, '0', STR_PAD_LEFT);
+} else {
+    $invoiceNumber = $invoiceData['invoice_number'];
+}
+
 // Fetch buildings and account items
 $buildings = $pdo->query("SELECT * FROM buildings")->fetchAll();
-// $accountItem s = $pdo->query("SELECT * FROM account_items")->fetchAll();
+// $accountItems = $pdo->query("SELECT * FROM account_items")->fetchAll();
 ?>
 
 <?php
@@ -984,7 +992,7 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
             <!--MAIN MODALS -->
             <!-- add new inspection modal-->
 
-            
+
 
 <div class="page-container">
         <div class="main-content">
@@ -1021,9 +1029,10 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
                     <!-- Customer Section -->
                     <div class="form-section">
                         <h3 class="section-title">Tenant Details</h3>
-                        <form method="POST" action="update_draft.php">
+                        <!-- <form method="POST" action="update_draft.php"> -->
+                        <form method="POST" action="<?= $isDraftEdit ? 'convert_draft.php' : 'update_draft.php' ?>">
                             <input type="hidden" name="invoice_id" value="<?= $invoiceData['id'] ?>">
-                            
+
                             <div class="form-row">
                                 <!-- Invoice # input -->
                                 <div class="form-group">
@@ -1060,7 +1069,7 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
                                            class="form-control"
                                            required>
                                         <option value="">Select a Tenant</option>
-                                        <?php 
+                                        <?php
                                         // Fetch the specific tenant
                                         $tenantStmt = $pdo->prepare("SELECT id, first_name, middle_name FROM users WHERE id = ?");
                                         $tenantStmt->execute([$invoiceData['tenant']]);
@@ -1127,17 +1136,17 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
                                                 <textarea name="description[]" rows="1" required><?= htmlspecialchars($invoiceData['description']) ?></textarea>
                                             </td>
                                             <td>
-                                                <input type="number" 
-                                                       name="quantity[]" 
-                                                       class="form-control quantity" 
-                                                       value="<?= htmlspecialchars($invoiceData['quantity']) ?>" 
+                                                <input type="number"
+                                                       name="quantity[]"
+                                                       class="form-control quantity"
+                                                       value="<?= htmlspecialchars($invoiceData['quantity']) ?>"
                                                        required>
                                             </td>
                                             <td>
-                                                <input type="number" 
-                                                       name="unit_price[]" 
-                                                       class="form-control unit-price" 
-                                                       value="<?= htmlspecialchars($invoiceData['unit_price']) ?>" 
+                                                <input type="number"
+                                                       name="unit_price[]"
+                                                       class="form-control unit-price"
+                                                       value="<?= htmlspecialchars($invoiceData['unit_price']) ?>"
                                                        required>
                                             </td>
                                             <td>
@@ -1150,11 +1159,11 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
                                                 </select>
                                             </td>
                                             <td>
-                                                <input type="number" 
-                                                       name="total[]" 
-                                                       class="form-control total" 
-                                                       value="<?= htmlspecialchars($invoiceData['total']) ?>" 
-                                                       readonly 
+                                                <input type="number"
+                                                       name="total[]"
+                                                       class="form-control total"
+                                                       value="<?= htmlspecialchars($invoiceData['total']) ?>"
+                                                       readonly
                                                        style="display:none;">
                                                 <button type="button" class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
                                                     <i class="fa fa-trash" style="font-size: 12px;"></i>
@@ -1205,7 +1214,7 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
         if ($.fn.select2) {
             $('.searchable-select').select2();
         }
-        
+
         // Handle building change to load tenants
         $('#building').change(function() {
             const buildingId = $(this).val();
@@ -1213,12 +1222,12 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
                 loadTenants(buildingId);
             }
         });
-        
+
         // Load tenants for the selected building if already set
         <?php if ($invoiceData['building_id']): ?>
             loadTenants(<?= $invoiceData['building_id'] ?>);
         <?php endif; ?>
-        
+
         // Calculate totals when values change
         $(document).on('input', '.quantity, .unit-price', function() {
             const row = $(this).closest('tr');
@@ -1227,7 +1236,7 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
             const total = qty * price;
             row.find('.total').val(total.toFixed(2));
         });
-        
+
         // Cancel button
         $('#cancel-invoice-btn').click(function() {
             if (confirm('Are you sure you want to cancel? Any unsaved changes will be lost.')) {
@@ -1247,13 +1256,13 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
                 if (response.success) {
                     const $select = $('#customer');
                     $select.empty().append('<option value="">Select a Tenant</option>');
-                    
+
                     response.tenants.forEach(tenant => {
                         $select.append(
                             `<option value="${tenant.id}">${tenant.first_name} ${tenant.middle_name}</option>`
                         );
                     });
-                    
+
                     // Select the tenant that was previously selected
                     $select.val(<?= $invoiceData['tenant'] ?>);
                 }
@@ -1298,7 +1307,7 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
                 </td>
             </tr>`;
         $('.items-table tbody').append(newRow);
-        
+
         // Reinitialize select2 if used
         if ($.fn.select2) {
             $('.select-account').select2();
@@ -1315,7 +1324,105 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
     }
     </script>
 
- 
+    <script src="invoice.js"></script>
+
+    <!-- <script>
+      function createOrUpdateSummaryTable({ subtotalSum, taxSum, grandTotal, zeroVatSum, exemptedSum, vat16Used, vat0Used, exemptedUsed }) {
+let summaryTable = document.querySelector(".summary-table");
+
+if (!summaryTable) {
+  summaryTable = document.createElement("table");
+  summaryTable.className = "summary-table table table-bordered";
+  summaryTable.style = "width: 20%; float: right; font-size: 0.8rem; margin-top: 10px;";
+  summaryTable.innerHTML = `<tbody></tbody>`;
+  document.querySelector(".items-table").after(summaryTable);
+}
+
+const tbody = summaryTable.querySelector("tbody");
+tbody.innerHTML = `
+  <tr>
+    <th style="width: 50%; padding: 5px; text-align: left;">Sub-total</th>
+    <td><input type="text" class="form-control" value="${formatNumber(subtotalSum)}" readonly style="padding: 5px;"></td>
+  </tr>
+  ${vat16Used ? `
+  <tr>
+    <th style="width: 50%; padding: 5px; text-align: left;">VAT 16%</th>
+    <td><input type="text" class="form-control" value="${formatNumber(taxSum)}" readonly style="padding: 5px;"></td>
+  </tr>` : ''}
+  ${vat0Used ? `
+  <tr>
+    <th style="width: 50%; padding: 5px; text-align: left;">VAT 0%</th>
+    <td><input type="text" class="form-control" value="0.00" readonly style="padding: 5px;"></td>
+  </tr>` : ''}
+  ${exemptedUsed ? `
+  <tr>
+    <th style="width: 50%; padding: 5px; text-align: left;">Exempted</th>
+    <td><input type="text" class="form-control" value="0.00" readonly style="padding: 5px;"></td>
+  </tr>` : ''}
+  <tr>
+    <th style="width: 50%; padding: 5px; text-align: left;">Total</th>
+    <td><input type="text" class="form-control" value="${formatNumber(grandTotal)}" readonly style="padding: 5px;"></td>
+  </tr>
+`;
+}
+    </script>
+
+    <script>
+
+/**
+* Turn any .searchable-select <select> into a Select2 box
+* Call this once at startup *and* after you add a new row dynamically.
+*/
+function initItemSelect($scope = $(document)) {
+$scope.find('.searchable-select').select2({
+  width: '100%',                 // fills the <td>
+  placeholder: $(this).data('placeholder'),
+  allowClear: true               // little “×” to clear a choice
+});
+}
+
+$(function () {
+// ── 1️⃣  first initialise everything already on the page
+initItemSelect();
+
+// ── 2️⃣  if you have an “Add Row” button, re‑init the new row
+$('#addRowBtn').on('click', function () {
+  const $newRow = $('#items-table tbody tr:first').clone(true);   // or however you create rows
+  // clear any previous values
+  $newRow.find('input, textarea').val('');
+  $newRow.find('select').val(null).trigger('change');
+
+  $('#items-table tbody').append($newRow);
+  initItemSelect($newRow);        // ⭐ make its select searchable
+});
+});
+
+
+
+
+$('.searchable-select').select2({
+width:'100%',
+placeholder:'Select or search an item…',
+minimumInputLength: 2,
+ajax: {
+  url: '../invoice/actions/account-items-search.php',
+  dataType: 'json',
+  delay: 250,              // throttle queries
+  data: params => ({ q: params.term }),    // term typed by user
+  processResults: data => ({
+      results: data.map(item => ({
+          id: item.account_code,           // value sent to server
+          text: item.account_name          // visible label
+      }))
+  }),
+  cache: true
+}
+});
+
+
+    </script> -->
+
+
 
     <!-- pdf download plugin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
