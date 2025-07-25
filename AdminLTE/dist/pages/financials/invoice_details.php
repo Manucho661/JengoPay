@@ -457,12 +457,19 @@ HTML;
     <i class="bi bi-download"></i> Download PDF
 </a> -->
 
-<a href="view_invoice_pdf.php?id=<?= $inv['id'] ?>"
+<!-- <a href="view_invoice_pdf.php?id=<?= $inv['id'] ?>"
    target="_blank"
    class="btn"
    style="color: #FFC107; background-color: #00192D;">
     <i class="bi bi-eye"></i> View PDF
+</a> -->
+<a href="view_invoice_pdf.php?id=<?= $inv['id'] ?>"
+   class="btn"
+   style="color: #FFC107; background-color: #00192D;"
+   download>
+    <i class="bi bi-eye"></i> Download PDF
 </a>
+
 
 
 </div>
