@@ -57,17 +57,19 @@ document.addEventListener("DOMContentLoaded", function () {
   function calculateTotal() {
     console.log('total fired');
     const vatInclusiveContainer = document.getElementById('vatAmountInclusiveContainer');
-    const vatExclusiveContainer = document.getElementById('vatAmountExclusiveContainer');
-
+    const vatAmountContainer = document.getElementById('vatAmountContainer');
+    const zeroRatedExmptedContainer= document.getElementById('zeroRated&ExmptedContainer');
     let subTotal = 0;
     let vatAmountInclusive = 0;
     let vatAmountExclusive= 0;
-    let vatAmount = 0;
+    let totalVat = 0;
     let grandTotal = 0;
     let grandDiscount = 0;
 
     let hasInclusive = false;
     let hasExclusive = false;
+    let isZeroRated = false;
+    let isExempted= false;
     document.querySelectorAll('.item-row').forEach(row => {
       const qty = parseFloat(row.querySelector('.qty')?.value || 0);
       let unitPrice = parseFloat(row.querySelector('.unit-price')?.value || 0);
@@ -93,10 +95,12 @@ document.addEventListener("DOMContentLoaded", function () {
         itemTaxExclusive = unitPrice * qty * 0.16;
 
       } else if (taxOption === 'zero') {
+        isZeroRated=true;
         total = unitPrice * qty;
         itemTax = 0;
         document.getElementById('taxLabel').textContent = "VAT 0%:";
       } else if (taxOption === 'exempt') {
+        isExempted=true;
         total = unitPrice * qty;
         itemTax = 0;
         document.getElementById('taxLabel').textContent = "EXEMPTED";
@@ -115,31 +119,35 @@ document.addEventListener("DOMContentLoaded", function () {
       subTotal += (total - itemTaxInclusive + itemTaxExclusive);
       vatAmountInclusive += itemTaxInclusive;
       vatAmountExclusive += itemTaxExclusive;
-      vatAmount += itemTax;
+      totalVat= vatAmountInclusive + vatAmountExclusive;
       grandDiscount+= discount;
       grandTotal += total;
     });
 
     // vatInclusiveContainer.style.display = hasInclusive ? 'block' : 'non';
-     if (hasExclusive) {
-        vatExclusiveContainer.style.setProperty('display', 'flex', 'important');
+     if (hasExclusive ||hasInclusive ) {
+        vatAmountContainer.style.setProperty('display', 'flex', 'important');
 
       } else {
-        vatExclusiveContainer.style.setProperty('display', 'none', 'important');
+        vatAmountContainer.style.setProperty('display', 'none', 'important');
       }
-      if (hasInclusive) {
-        vatInclusiveContainer.style.setProperty('display', 'flex', 'important');
+      if (isExempted||isZeroRated) {
+        zeroRatedExmptedContainer.style.setProperty('display', 'flex', 'important');
 
       } else {
-        vatInclusiveContainer.style.setProperty('display', 'none', 'important');
+        zeroRatedExmptedContainer.style.setProperty('display', 'none', 'important');
       }
-
 
     document.getElementById('subTotal').value = 'Ksh ' + subTotal.toFixed(2);
+    document.getElementById('subTotalhidden').value = subTotal.toFixed(2);
     document.getElementById('vatAmountInclusive').value = 'Ksh ' + vatAmountInclusive.toFixed(2);
     document.getElementById('vatAmountExclusive').value = 'Ksh ' + vatAmountExclusive.toFixed(2);
+    // Visible input
+    document.getElementById('vatAmountTotal').value = 'Ksh ' + totalVat.toFixed(2); //
+    // hidden input
+    document.getElementById('vatAmountTotalHidden').value = totalVat.toFixed(2);
     // grandTotal
-    document.getElementById('grandDiscount').value = 'Ksh' + grandDiscount.toFixed(2);
+    document.getElementById('grandDiscount').value = 'Ksh ' + grandDiscount.toFixed(2);
     document.getElementById('grandTotal').value = 'Ksh ' + grandTotal.toFixed(2);
     document.getElementById('grandTotalNumber').value = grandTotal.toFixed(2);
 
@@ -212,7 +220,7 @@ document.getElementById("expenseForm").addEventListener("submit", function (e) {
       console.log("Server response:", data);
 
       // ✅ Reload the page without resubmission
-       window.location.href = window.location.href;
+        // window.location.href = window.location.href;
     })
     .catch(error => {
       console.error("Error submitting form:", error);

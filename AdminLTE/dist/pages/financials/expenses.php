@@ -180,6 +180,8 @@ try {
             opacity: 0.4 !important;
             /* Adjust the value as needed */
         }
+
+        
     </style>
 </head>
 
@@ -423,8 +425,9 @@ try {
                                                                 <div class="d-flex flex-column align-items-end">
 
                                                                     <div class="d-flex justify-content-end w-100 mb-2">
-                                                                        <label class="me-2 border-end pe-3 text-end w-50"><strong>Sub-Total:</strong></label>
-                                                                        <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="subTotal" value="Ksh 10,500">
+                                                                        <label class="me-2 border-end pe-3 text-end w-50"><strong>Untaxed Amount:</strong></label>
+                                                                        <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="subTotal" name="" value="Ksh 10,500">
+                                                                        <input type="hidden" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="subTotalhidden" name="untaxedAmount" value="Ksh 10,500">
                                                                     </div>
 
                                                                     <div class="d-flex justify-content-end w-100 mb-2" id="vatAmountInclusiveContainer" style="display:none !important;">
@@ -432,9 +435,20 @@ try {
                                                                         <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountInclusive" value="Ksh 1,500">
                                                                     </div>
 
-                                                                    <div class="d-flex justify-content-end w-100 mb-2" id="vatAmountExclusiveContainer" style="display: none;">
+                                                                    <div class="d-flex justify-content-end w-100 mb-2" id="vatAmountExclusiveContainer" style="display: none !important;">
                                                                         <label class="me-2 border-end pe-3 text-end w-50"><strong id="taxLabel">VAT 16% (Exlusive):</strong></label>
                                                                         <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountExclusive" value="Ksh 1,500">
+                                                                    </div>
+
+                                                                    <div class="d-flex justify-content-end w-100 mb-2" id="vatAmountContainer" style="display: none;">
+                                                                        <label class="me-2 border-end pe-3 text-end w-50"><strong id="taxLabel">VAT 16% :</strong></label>
+                                                                        <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountTotal" value="Ksh 0.00">
+                                                                        <input type="hidden" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountTotalHidden" name="totalTax" value="Ksh 0.00">
+                                                                    </div>
+
+                                                                    <div class="d-flex justify-content-end w-100 mb-2" id="zeroRated&ExmptedContainer" style="display: none;">
+                                                                        <label class="me-2 border-end pe-3 text-end w-50"><strong id="taxLabel">VAT 0%:</strong></label>
+                                                                        <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="zeroRated&Exmpted" value="Ksh 0.00">
                                                                     </div>
 
                                                                     <div class="d-flex justify-content-end w-100 mb-2" id="grandDiscountContainer">
@@ -443,7 +457,7 @@ try {
                                                                     </div>
 
                                                                     <div class="d-flex justify-content-end w-100 mt-3 pt-2 border-top border-warning">
-                                                                        <label class="me-2 border-end pe-3 text-end w-50"><strong>Total:</strong></label>
+                                                                        <label class="me-2 border-end pe-3 text-end w-50"><strong>Total Amount Due:</strong></label>
                                                                         <input type="hidden" name="total" id="grandTotalNumber" value="0.00" />
                                                                         <input type="text" readonly class="form-control-plaintext w-50 ps-3 fw-bold" id="grandTotal" value="Ksh 12,000">
                                                                     </div>
@@ -549,7 +563,7 @@ try {
                                                         <button
                                                             class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
                                                             style="background-color: #00192D; color: white; border: none; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;"
-                                                            onclick="openInvoiceModal(<?= $exp['id'] ?>)">
+                                                            onclick="openExpenseModal(<?= $exp['id'] ?>)">
                                                             <i class="bi bi-eye-fill"></i> View
                                                         </button>
                                                     </td>
@@ -610,9 +624,9 @@ try {
                                         </div>
                                     </div>
                                     <!-- View Expense Modal -->
-                                    <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
+                                    <div class="modal fade" id="expenseModal" tabindex="-1" aria-labelledby="expenseModalLabel" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
-                                            <div class="modal-content bg-light">
+                                            <div class="modal-content expense bg-light">
                                                 <div class="d-flex justify-content-between align-items-center p-2" style="background-color: #EAF0F4; border-bottom: 1px solid #CCC; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
                                                     <button class="btn btn-sm me-2" style="background-color: #00192D; color: #FFC107;" title="Download PDF">
                                                         <i class="bi bi-download"></i>
@@ -625,52 +639,40 @@ try {
                                                     </button>
                                                 </div>
 
-                                                <div class="modal-body bg-light">
+                                                <div class="modal-body bg-light" id="expenseModalBody">
 
                                                     <!-- 🔒 DO NOT TOUCH CARD BELOW -->
-                                                    <div class="invoice-card">
+                                                    <div class="expense-card">
                                                         <!-- Header -->
-                                                        <div class="d-flex justify-content-between align-items-start mb-3">
-                                                            <img id="invoiceLogo" alt="Company Logo" class="invoice-logo">
-                                                            <script>
-                                                                const logos = [
-                                                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Unilever.svg/200px-Unilever.svg.png",
-                                                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/200px-IBM_logo.svg.png",
-                                                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/200px-Amazon_logo.svg.png",
-                                                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Microsoft_logo.svg/200px-Microsoft_logo.svg.png",
-                                                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/200px-Google_2015_logo.svg.png",
-                                                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/200px-Apple_logo_black.svg.png",
-                                                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Pepsi_logo_2014.svg/200px-Pepsi_logo_2014.svg.png",
-                                                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Toyota_logo.svg/200px-Toyota_logo.svg.png",
-                                                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Adobe_Corporate_Logo.png/200px-Adobe_Corporate_Logo.png",
-                                                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Nike_logo.svg/200px-Nike_logo.svg.png"
-                                                                ];
+                                                        <div class="d-flex justify-content-between align-items-start mb-3 position-relative" style="overflow: hidden;">
+                                                            <div>
+                                                                <img id="expenseLogo" src="expenseLogo6.png" alt="JengoPay Logo" class="expense-logo">
+                                                            </div>
 
-                                                                const logoImg = document.getElementById("invoiceLogo");
-                                                                logoImg.src = logos[Math.floor(Math.random() * logos.length)];
-                                                            </script>
+                                                            <!-- Diagonal PAID Label centered in the container -->
+                                                            <!-- <div class="diagonal-paid-label">PAID</div> -->
 
                                                             <div class="text-end" style="background-color: #f0f0f0; padding: 10px; border-radius: 8px;">
-                                                                <strong>Customer Name</strong><br>
-                                                                123 Example St<br>
-                                                                Nairobi, Kenya<br>
-                                                                customer@example.com<br>
+                                                                <strong>Silver Spoon Towers</strong><br>
+                                                                50303 Nairobi, Kenya<br>
+                                                                silver@gmail.com<br>
                                                                 +254 700 123456
                                                             </div>
                                                         </div>
 
-                                                        <!-- Invoice Info -->
+
+                                                        <!-- expense Info -->
                                                         <div class="d-flex justify-content-between">
-                                                            <h6 class="mb-0">Josephat Koech</h6>
+                                                            <h6 class="mb-0" id="expenseModalSupplierName">Josephat Koech</h6>
                                                             <div class="text-end">
-                                                                <h3> INV001</h3><br>
+                                                                <h3 id="expenseModalInvoiceNo"> INV001</h3><br>
                                                             </div>
                                                         </div>
 
                                                         <div class="mb-1 rounded-2 d-flex justify-content-between align-items-center"
                                                             style="border: 1px solid #FFC107; padding: 4px 8px; background-color: #FFF4CC;">
-                                                            <div class="d-flex flex-column Invoice-date m-0">
-                                                                <span class="m-0"><b>Due Date</b></span>
+                                                            <div class="d-flex flex-column expense-date m-0">
+                                                                <span class="m-0"><b>Expense Date</b></span>
                                                                 <p class="m-0">24/6/2025</p>
                                                             </div>
                                                             <div class="d-flex flex-column due-date m-0">
@@ -693,7 +695,7 @@ try {
                                                                         <th class="text-end">Total</th>
                                                                     </tr>
                                                                 </thead>
-                                                                <tbody>
+                                                                <tbody id="expenseItemsTableBody">
                                                                     <tr>
                                                                         <td>Web Design</td>
                                                                         <td class="text-end">1</td>
@@ -724,16 +726,20 @@ try {
                                                             <div class="col-6">
                                                                 <table class="table table-borderless table-sm text-end mb-0">
                                                                     <tr>
-                                                                        <th>Subtotal:</th>
-                                                                        <td>KES 30,000</td>
+                                                                        <th>Untaxed Amount:</th>
+                                                                        <td>
+                                                                            <div id="expenseModalUntaxedAmount">KES 30,000</div>
+                                                                        </td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th>VAT (16%):</th>
-                                                                        <td>KES 4,800</td>
+                                                                        <td>
+                                                                            <div id="expenseModalTaxAmount">KES 4,800</div>
+                                                                        </td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <th>Total:</th>
-                                                                        <td><strong>KES 34,800</strong></td>
+                                                                        <th>Total Amount:</th>
+                                                                        <td><strong id="expenseModalTotalAmount">KES 34,800</strong></td>
                                                                     </tr>
                                                                 </table>
                                                             </div>
@@ -1050,23 +1056,56 @@ try {
     </script>
     <!-- Expense modal -->
     <script>
-        function openInvoiceModal(expenseId) {
-            const modalBody = document.getElementById("invoiceModalBody");
-            // modalBody.innerHTML = `<div class="text-center text-muted py-4">Loading...</div>`;
+        function openExpenseModal(expenseId) {
+            fetch(`actions/expenses/getExpense.php?id=${expenseId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch data");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (!data.length) {
+                        console.warn("No expense data found.");
+                        return;
+                    }
 
-            // Optional: Fetch data dynamically via AJAX/PHP
-            // fetch(`fetch_invoice.php?id=${expenseId}`)
-            //     .then(response => response.text())
-            //     .then(data => {
-            //         modalBody.innerHTML = data;
-            //     })
-            //     .catch(() => {
-            //         modalBody.innerHTML = `<div class="text-danger text-center">Failed to load invoice.</div>`;
-            //     });
+                    const expense = data[0]; // Get the first (and likely only) row
 
-            // Show the modal
-            const invoiceModal = new bootstrap.Modal(document.getElementById('invoiceModal'));
-            invoiceModal.show();
+                    // Map values to HTML elements
+                    document.getElementById('expenseModalSupplierName').textContent = expense.supplier || '—';
+                    document.getElementById('expenseModalInvoiceNo').textContent = expense.expense_no || '—';
+                    document.getElementById('expenseModalTotalAmount').textContent = `KES ${parseFloat(expense.total || 0).toLocaleString()}`;
+                    document.getElementById('expenseModalTaxAmount').textContent = `KES ${parseFloat(expense.total_taxes || 0).toLocaleString()}`;
+                    document.getElementById('expenseModalUntaxedAmount').textContent = `KES ${parseFloat(expense.untaxed_amount || 0).toLocaleString()}`;
+                    console.log(expense.untaxed_amount);
+                    // document.getElementById('expenseModalTotalTax').textContent = expense.expense_no || '—';
+                    // document.getElementById('expenseModalItem').textContent = expense.item_name || '—';
+                    // document.getElementById('expenseModalPaymentDate').textContent = expense.payment_date || '—';
+                    // document.getElementById('expenseModalReference').textContent = expense.reference_no || '—';
+                    // ...add any other fields you want to display
+
+                    const tableBody = document.getElementById('expenseItemsTableBody');
+                    tableBody.innerHTML = "";
+                    data.forEach((item) => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${item.description || '—'}</td>
+                            <td class="text-end">${item.qty || 0}</td>
+                            <td class="text-end">KES ${parseFloat(item.unit_price || 0).toLocaleString()}</td>
+                            <td class="text-end">${item.taxes || '—'}</td>
+                            <td class="text-end">KES ${item.discount || '—'}</td> <!-- Update if you have discount data -->
+                            <td class="text-end">KES ${(item.qty * item.unit_price).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                    // Show the modal
+                    const expenseModal = new bootstrap.Modal(document.getElementById('expenseModal'));
+                    expenseModal.show();
+                })
+                .catch(error => {
+                    console.error("Error loading expense:", error);
+                });
         }
     </script>
 
