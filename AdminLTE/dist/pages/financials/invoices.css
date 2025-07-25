@@ -1,3 +1,12 @@
+.invoice-card {
+  max-width: 200px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+}
+
 .container {
     width: 80%;
     max-width: 1200px;

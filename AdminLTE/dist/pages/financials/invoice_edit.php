@@ -1324,7 +1324,7 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
     }
     </script>
 
-    <script src="invoice.js"></script>
+    <script></script>
 
     <!-- <script>
       function createOrUpdateSummaryTable({ subtotalSum, taxSum, grandTotal, zeroVatSum, exemptedSum, vat16Used, vat0Used, exemptedUsed }) {

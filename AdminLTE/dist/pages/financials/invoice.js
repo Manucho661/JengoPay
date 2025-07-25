@@ -506,131 +506,119 @@ updateTotalAmount();
 
 
 $(document).ready(function() {
-  // Cache these elements if they exist in your DOM
-  const createInvoiceView = document.getElementById('createInvoiceView');
-  const invoiceListView = document.getElementById('invoiceListView');
+  // Save/Update Draft Button
+  $('#saveDraftBtn').click(function() {
+      const invoiceId = $('#invoice_id').val();
+      const isUpdate = !!invoiceId;
 
-  // Save/Update Draft Button - using modern async/await with jQuery
-  $('#saveDraftBtn').click(async function() {
-    const invoiceId = $('#invoice_id').val();
-    const isUpdate = !!invoiceId;
-    const $btn = $(this);
-    const originalHtml = $btn.html();
-
-    try {
       // Prepare form data with your specified IDs
       const formData = {
-        // invoice_number: isUpdate ? $('#invoice-number').val() : 'DFT-' + new Date().getTime().toString().slice(-6),
-        invoice_number: isUpdate ? $('#invoice-number').val() : 'DFT-' + String(++draftCounter).padStart(4, '0'),
-        building_id: $('#building').val() || null,
-        tenant: $('#customer').val() || 0,
-        account_item: $('#account-item').val() || '',
-        description: $('#description').val() || '',
-        quantity: $('#quantity').val() || '0',
-        unit_price: $('#unit_price').val() || '0',
-        taxes: $('#taxes').val() || '0',
-        sub_total: $('#sub_total').val() || '0',
-        total: $('#total').val() || '0',
-        notes: $('#notes').val() || '',
-        terms_conditions: $('#terms_conditions').val() || '',
-        invoice_date: $('#invoice-date').val() || null,
-        due_date: $('#due-date').val() || null,
-        status: 'draft',
-        payment_status: 'unpaid',
-        draft: '1'
+          invoice_number: isUpdate ? $('#invoice-number').val() : 'DFT-' + new Date().getTime().toString().slice(-6),
+          building_id: $('#building').val() || null,
+          tenant: $('#customer').val() || 0,
+          account_item: $('#account-item').val() || '',
+          description: $('#description').val() || '',
+          quantity: $('#quantity').val() || '0',
+          unit_price: $('#unit_price').val() || '0',
+          taxes: $('#taxes').val() || '0',
+          sub_total: $('#sub_total').val() || '0',
+          total: $('#total').val() || '0',
+          notes: $('#notes').val() || '',
+          terms_conditions: $('#terms_conditions').val() || '',
+          invoice_date: $('#invoice-date').val() || null,
+          due_date: $('#due-date').val() || null,
+          status: 'draft',
+          payment_status: 'unpaid'
       };
 
       if (isUpdate) {
-        formData.id = invoiceId;
+          formData.id = invoiceId;
       }
 
       // Show saving state
+      const $btn = $(this);
+      const originalHtml = $btn.html();
       $btn.html('<i class="fas fa-spinner fa-spin"></i> ' + (isUpdate ? 'Updating...' : 'Saving...'));
       $btn.prop('disabled', true);
 
-      // Modern fetch API with jQuery fallback
-      const response = await $.ajax({
-        url: isUpdate ? 'update_draft.php' : 'save_draft.php',
-        type: 'POST',
-        data: JSON.stringify(formData),
-        contentType: 'application/json',
-        dataType: 'json'
+      // AJAX request
+      $.ajax({
+          url: isUpdate ? 'update_draft.php' : 'save_draft.php',
+          type: 'POST',
+          data: JSON.stringify(formData),
+          contentType: 'application/json',
+          success: function(response) {
+              if (response.success) {
+                  $btn.html('<i class="fas fa-check"></i> ' + (isUpdate ? 'Updated!' : 'Saved!'));
+                  setTimeout(() => {
+                      window.location.href = 'invoice.php?id=' + response.invoice_id;
+                  }, 1000);
+              } else {
+                  alert('Error: ' + response.message);
+                  $btn.html(originalHtml).prop('disabled', false);
+              }
+          },
+          error: function(xhr) {
+              alert('Error: ' + (xhr.responseJSON?.message || 'Unknown error'));
+              $btn.html(originalHtml).prop('disabled', false);
+          }
       });
-
-      if (response.success) {
-        $btn.html('<i class="fas fa-check"></i> ' + (isUpdate ? 'Updated!' : 'Saved!'));
-
-        // Update invoice number if new draft
-        if (!isUpdate) {
-          $('#invoice-number').val(response.invoice_number);
-        }
-
-        // Show success message
-        alert(`Draft ${isUpdate ? 'updated' : 'saved'}: ${response.invoice_number}`);
-
-        // Handle view switching if elements exist
-        if (createInvoiceView && invoiceListView) {
-          createInvoiceView.style.display = 'none';
-          invoiceListView.style.display = 'block';
-
-          // If you have a render function
-          if (typeof renderInvoiceList === 'function') {
-            renderInvoiceList();
-          }
-        }
-
-        // Redirect logic - prioritize redirect_url if provided
-        setTimeout(() => {
-          if (response.redirect_url) {
-            window.location.href = response.redirect_url;
-          } else if (response.invoice_id) {
-            window.location.href = 'invoice.php?id=' + response.invoice_id;
-          }
-          // If neither exists, just stay on current page
-        }, 1000);
-      } else {
-        throw new Error(response.message || 'Unknown error saving draft');
-      }
-    } catch (err) {
-      console.error('Error saving draft:', err);
-      alert('Error saving draft: ' + (err.responseJSON?.message || err.message));
-      $btn.html(originalHtml).prop('disabled', false);
-    }
   });
 
   // Auto-calculate when relevant fields change
   $('#quantity, #unit_price, #taxes').on('input', function() {
-    const qty = parseFloat($('#quantity').val()) || 0;
-    const price = parseFloat($('#unit_price').val()) || 0;
-    const tax = parseFloat($('#taxes').val()) || 0;
-    const subTotal = qty * price;
-    $('#sub_total').val(subTotal.toFixed(2));
-    $('#total').val((subTotal + tax).toFixed(2));
+      const qty = parseFloat($('#quantity').val()) || 0;
+      const price = parseFloat($('#unit_price').val()) || 0;
+      const tax = parseFloat($('#taxes').val()) || 0;
+      const subTotal = qty * price;
+      $('#sub_total').val(subTotal.toFixed(2));
+      $('#total').val((subTotal + tax).toFixed(2));
   });
 });
 
-// Edit Invoice Function remains the same
-async function editInvoice(invoiceId) {
-  try {
-    const response = await $.ajax({
+// Edit Invoice Function
+function editInvoice(invoiceId) {
+
+  $.ajax({
       url: 'get_invoice.php',
       type: 'GET',
       data: { id: invoiceId },
-      dataType: 'json'
-    });
+      dataType: 'json',
+      success: function(response) {
+          if (response.success) {
+              // Populate form with your specified IDs
+              $('#invoice_id').val(response.data.id);
+              $('#invoice-number').val(response.data.invoice_number);
+              $('#building').val(response.data.building_id);
+              $('#customer').val(response.data.tenant);
+              $('#account-item').val(response.data.account_item);
+              $('#description').val(response.data.description);
+              $('#quantity').val(response.data.quantity);
+              $('#unit_price').val(response.data.unit_price);
+              $('#taxes').val(response.data.taxes);
+              $('#sub_total').val(response.data.sub_total);
+              $('#total').val(response.data.total);
+              $('#notes').val(response.data.notes);
+              $('#terms_conditions').val(response.data.terms_conditions);
+              $('#invoice-date').val(response.data.invoice_date);
+              $('#due-date').val(response.data.due_date);
 
-    if (response.success) {
-      // Populate form fields...
-      // ... (keep the same implementation as before)
-    } else {
-      throw new Error(response.message || 'Error loading invoice');
-    }
-  } catch (err) {
-    console.error('Error loading invoice:', err);
-    alert('Error: ' + (err.responseJSON?.message || 'Failed to load invoice'));
-  }
+              // Change button text
+              $('#saveDraftBtn').html('<i class="fas fa-save"></i> Update Draft');
+
+              // Scroll to form
+              $('html, body').animate({
+                  scrollTop: $('#invoiceForm').offset().top
+              }, 500);
+          } else {
+              alert('Error loading invoice: ' + response.message);
+          }
+      },
+      error: function(xhr) {
+          alert('Error: ' + (xhr.responseJSON?.message || 'Failed to load invoice'));
+      }
+  });
 }
-
 
 // Preview Button - Updated to handle draft numbers
 document.getElementById('preview-invoice-btn').addEventListener('click', function () {
