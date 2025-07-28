@@ -438,8 +438,7 @@ newRow.innerHTML = `
   <option value="exempt">Exempted</option>
 </select>
 </td>
-<td>
-<input type="text" class="form-control total" placeholder="0" readonly>
+<td><input type="text" class="form-control total" placeholder="0" readonly>
 <button type="button" class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
   <i class="fa fa-trash" style="font-size: 12px;"></i>
 </button>
