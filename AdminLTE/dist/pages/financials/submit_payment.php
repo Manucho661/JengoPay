@@ -6,76 +6,97 @@ header('Content-Type: application/json');
 require_once '../db/connect.php';
 
 try {
+    // Start transaction
+    $pdo->beginTransaction();
+
     // Collect and validate required data
     $invoice_id = $_POST['invoice_id'] ?? null;
-    $payment_method = $_POST['payment_method'] ?? 'Cash'; // Default to Cash if not specified
+    $payment_method = $_POST['payment_method'] ?? null;
     $payment_date = $_POST['payment_date'] ?? date('Y-m-d');
     $amount = floatval($_POST['amount'] ?? 0);
     $reference_number = $_POST['reference_number'] ?? null;
-    $phone = $_POST['phone'] ?? null; // For MPESA payments
-    $total_amount = floatval($_POST['total_amount'] ?? 0); // Expected total from invoice
+    $total_amount = floatval($_POST['total_amount'] ?? 0);
+    $tenant = $_POST['tenant'] ?? null;
 
     // Validate required fields
-    if (empty($invoice_id) || empty($reference_number) || $amount <= 0) {
-        throw new Exception("❌ Missing required fields: invoice ID, reference number, or valid amount.");
+    if (empty($invoice_id)) {
+        throw new Exception("Invoice ID is required");
+    }
+    if (empty($payment_method)) {
+        throw new Exception("Payment method is required");
+    }
+    if ($amount <= 0) {
+        throw new Exception("Amount must be greater than 0");
+    }
+    if (empty($reference_number)) {
+        throw new Exception("Reference number is required");
     }
 
-    // ✅ 1. Insert payment record with status 'pending'
+    // 1. Insert payment record
     $stmt = $pdo->prepare("
         INSERT INTO payments (
             invoice_id,
+            tenant,
+            payment_date,
+            payment_method,
             amount,
             reference_number,
-            phone,
             status,
             created_at
-        ) VALUES (?, ?, ?, ?, 'pending', NOW())
+        ) VALUES (?, ?, ?, ?, ?, ?, 'completed', NOW())
     ");
     $stmt->execute([
         $invoice_id,
+        $tenant,
+        $payment_date,
+        $payment_method,
         $amount,
-        $reference_number,
-        $phone
+        $reference_number
     ]);
 
-    // ✅ 2. Calculate total paid for this invoice (including this payment)
+    // 2. Calculate total paid for this invoice
     $stmt = $pdo->prepare("
         SELECT SUM(amount) AS total_paid
         FROM payments
-        WHERE invoice_id = ? AND status != 'failed'
+        WHERE invoice_id = ? AND status = 'completed'
     ");
     $stmt->execute([$invoice_id]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     $total_paid = floatval($result['total_paid'] ?? 0);
 
-    // ✅ 3. Determine payment status
-    $payment_status = 'pending';
+    // 3. Determine invoice payment status
+    $payment_status = 'unpaid';
     if ($total_paid >= $total_amount) {
-        $payment_status = 'completed';
+        $payment_status = 'paid';
     } elseif ($total_paid > 0) {
         $payment_status = 'partial';
     }
 
-    // ✅ 4. Update payment status (for this transaction)
+    // 4. Update invoice payment status
     $update = $pdo->prepare("
-        UPDATE payments
-        SET status = ?
-        WHERE reference_number = ? AND invoice_id = ?
+        UPDATE invoice 
+        SET payment_status = ?
+        WHERE id = ?
     ");
-    $update->execute([$payment_status, $reference_number, $invoice_id]);
+    $update->execute([$payment_status, $invoice_id]);
+
+    // Commit transaction
+    $pdo->commit();
 
     // Return success response
     echo json_encode([
         'success' => true,
         'payment_status' => $payment_status,
         'total_paid' => $total_paid,
-        'balance' => max(0, $total_amount - $total_paid), // Ensure balance doesn't go negative
-        'message' => ($payment_status === 'completed')
-            ? "✅ Payment completed! Invoice fully paid."
-            : "⚠️ Partial payment received. Remaining balance: KES " . number_format(max(0, $total_amount - $total_paid), 2)
+        'balance' => max(0, $total_amount - $total_paid),
+        'message' => ($payment_status === 'paid')
+            ? "Payment completed successfully! Invoice fully paid."
+            : "Partial payment received. Remaining balance: KES " . number_format(max(0, $total_amount - $total_paid), 2)
     ]);
-
 } catch (Exception $e) {
+    // Rollback transaction on error
+    $pdo->rollBack();
+
     // Log error for debugging
     error_log("Payment Error: " . $e->getMessage());
 
