@@ -174,530 +174,554 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!--Tailwind CSS  -->
-    <style>
-
-          a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .pay-btn {
-    margin-top: 6px;
-    padding: 4px 10px;
-    font-size: 12px;
-    font-weight: 600;
-    background-color: #FFC107;
-    color: #00192D;
-    border: none;
-    border-radius: 20px;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    transition: background-color 0.3s ease, color 0.3s ease;
+<style>
+  /* ================ */
+/* BASE STYLES */
+/* ================ */
+a {
+  text-decoration: none;
+  color: inherit;
 }
+
+ul {
+  list-style: none;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* ================ */
+/* BUTTON STYLES */
+/* ================ */
+.btn {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.btn-primary {
+  background-color: #2a5bd7;
+  color: white;
+  border: 1px solid #2a5bd7;
+}
+
+.btn-primary:hover {
+  background-color: #1e4bc4;
+  border-color: #1e4bc4;
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: #2a5bd7;
+  border: 1px solid #2a5bd7;
+}
+
+.btn-outline:hover {
+  background-color: #f0f5ff;
+}
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pay-btn {
+  margin-top: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  background-color: #FFC107;
+  color: #00192D;
+  border: none;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 .pay-btn:hover {
-    background-color: #e6ae00;
-    color: white;
+  background-color: #e6ae00;
+  color: white;
 }
 
-        ul {
-            list-style: none;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 8px 16px;
-            border-radius: 4px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 14px;
-        }
-
-        .btn-primary {
-            background-color: #2a5bd7;
-            color: white;
-            border: 1px solid #2a5bd7;
-        }
-
-        .btn-primary:hover {
-            background-color: #1e4bc4;
-            border-color: #1e4bc4;
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            color: #2a5bd7;
-            border: 1px solid #2a5bd7;
-        }
-
-        .btn-outline:hover {
-            background-color: #f0f5ff;
-        }
-
-        .btn-icon {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* Header Styles */
-        header {
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: 700;
-            color: #2a5bd7;
-        }
-
-        .logo span {
-            color: #ff6b00;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .user-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background-color: #e2e8f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            color: #4a5568;
-        }
-
-        /* Sidebar Navigation */
-        .app-container {
-            display: flex;
-            min-height: calc(100vh - 66px);
-        }
-
-
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            padding: 20px;
-            background-color: #f5f7fa;
-        }
-
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .page-title {
-            font-size: 24px;
-            color: #1a365d;
-        }
-
-        .page-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        /* Invoice List */
-        .invoice-list-container {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        .invoice-list-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .invoice-list-title {
-            font-weight: 600;
-            color: #1a365d;
-        }
-
-        .invoice-list-filters {
-            display: flex;
-            gap: 15px;
-        }
-
-        .filter-dropdown {
-            position: relative;
-        }
-
-        .filter-btn {
-            background-color: transparent;
-            border: 1px solid #e2e8f0;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: #4a5568;
-        }
-
-        .filter-btn:hover {
-            background-color: #f8fafc;
-        }
-
-        .dropdown-menu {
-            position: absolute;
-            right: 0;
-            top: 100%;
-            background-color: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 4px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            min-width: 200px;
-            z-index: 10;
-            display: none;
-        }
-
-        .filter-dropdown:hover .dropdown-menu {
-            display: block;
-        }
-
-        .dropdown-menu ul {
-            padding: 10px 0;
-        }
-
-        .dropdown-menu li {
-            padding: 8px 15px;
-            cursor: pointer;
-        }
-
-        .dropdown-menu li:hover {
-            background-color: #f8fafc;
-        }
-
-        .invoice-list {
-            padding: 0;
-        }
-
-        .invoice-item {
-            display: flex;
-            align-items: center;
-            padding: 15px 20px;
-            border-bottom: 1px solid #e2e8f0;
-            transition: background-color 0.2s ease;
-        }
-
-        .invoice-item:hover {
-            background-color: #f8fafc;
-        }
-
-        .invoice-checkbox {
-            margin-right: 15px;
-        }
-
-        .invoice-number {
-            width: 120px;
-            font-weight: 600;
-            color: #2a5bd7;
-        }
-
-        .invoice-customer {
-            flex: 1;
-            color: #4a5568;
-        }
-
-        .invoice-date {
-            width: 100px;
-            color: #718096;
-            font-size: 14px;
-        }
-
-        .invoice-amount {
-            width: 100px;
-            font-weight: 600;
-            text-align: right;
-        }
-
-        .invoice-status {
-            width: 100px;
-            text-align: center;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .status-paid {
-            background-color: #e6fffa;
-            color: #38b2ac;
-        }
-
-        .status-pending {
-            background-color: #fffaf0;
-            color: #dd6b20;
-        }
-
-        .status-overdue {
-            background-color: #fff5f5;
-            color: #f56565;
-        }
-
-        .invoice-actions {
-            width: 80px;
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .action-btn {
-            background: none;
-            border: none;
-            color: #718096;
-            cursor: pointer;
-            padding: 5px;
-        }
-
-        .action-btn:hover {
-            color: #2a5bd7;
-        }
-
-        /* Create Invoice Page */
-        .invoice-form-container {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-
-        .form-section {
-            margin-bottom: 30px;
-        }
-
-        .section-title {
-            font-size: 18px;
-            color: #1a365d;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 15px;
-        }
-
-        .form-group {
-            flex: 1;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #4a5568;
-            font-size: 14px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #e2e8f0;
-            border-radius: 4px;
-            font-size: 14px;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #2a5bd7;
-        }
-
-        .form-control-sm {
-            padding: 6px 8px;
-            font-size: 13px;
-        }
-
-        /* Items Table */
-        .items-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        .items-table th {
-            text-align: left;
-            padding: 10px;
-            background-color: #f8fafc;
-            color: #718096;
-            font-weight: 500;
-            font-size: 13px;
-        }
-
-        .items-table td {
-            padding: 12px 10px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .item-row input {
-            width: 100%;
-            border: 1px solid #e2e8f0;
-            padding: 8px;
-            border-radius: 4px;
-        }
-
-        .item-row input:focus {
-            outline: none;
-            border-color: #2a5bd7;
-        }
-
-        .item-name {
-            width: 40%;
-        }
-
-        .item-qty, .item-rate, .item-amount {
-            width: 15%;
-        }
-
-        .item-actions {
-            width: 15%;
-            text-align: center;
-        }
-
-        .remove-item {
-            color: #f56565;
-            cursor: pointer;
-        }
-
-        .add-item-btn {
-            background-color: transparent;
-            border: none;
-            color: #2a5bd7;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 8px;
-        }
-
-        /* Summary Section */
-        .summary-row {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 10px;
-        }
-
-        .summary-label {
-            width: 150px;
-            text-align: right;
-            padding-right: 20px;
-            color: #718096;
-        }
-
-        .summary-value {
-            width: 150px;
-            text-align: right;
-            font-weight: 500;
-        }
-
-        .total-row {
-            border-top: 1px solid #e2e8f0;
-            padding-top: 15px;
-            margin-top: 15px;
-            font-size: 16px;
-        }
-
-        .total-value {
-            color: #2a5bd7;
-            font-weight: 600;
-        }
-
-        .invoice-header .over-flow {
-    font-weight: bold;
+/* ================ */
+/* LAYOUT STYLES */
+/* ================ */
+header {
+  background-color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2a5bd7;
+}
+
+.logo span {
+  color: #ff6b00;
+}
+
+.header-actions {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.app-container {
+  display: flex;
+  min-height: calc(100vh - 66px);
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+  background-color: #f5f7fa;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.page-title {
+  font-size: 24px;
+  color: #1a365d;
+}
+
+.page-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* ================ */
+/* INVOICE TABLE STYLES */
+/* ================ */
+.invoice-list-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.invoice-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.invoice-list-title {
+  font-weight: 600;
+  color: #1a365d;
+}
+
+.invoice-list-filters {
+  display: flex;
+  gap: 15px;
+}
+
+.invoice-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  border-bottom: 1px solid #e2e8f0;
+  transition: background-color 0.2s ease;
+}
+
+.invoice-item:hover {
+  background-color: #f8fafc;
+}
+
 .invoice-header {
-    background-color: #f8f9fa;
-    border-bottom: 2px solid #dee2e6;
+  background-color: #f8f9fa;
+  font-weight: bold;
+  border-bottom: 2px solid #dee2e6;
 }
 
-        /* Form Actions */
-        .form-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e2e8f0;
-        }
+/* Column Widths */
+.invoice-checkbox {
+  flex: 0 0 40px;
+  min-width: 40px;
+}
 
-        .action-left {
-            display: flex;
-            gap: 10px;
-        }
+.invoice-number {
+  flex: 1 0 120px;
+  min-width: 120px;
+}
 
-        .action-right {
-            display: flex;
-            gap: 10px;
-        }
+.invoice-customer {
+  flex: 1 0 150px;
+  min-width: 150px;
+}
 
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .app-container {
-                flex-direction: column;
-            }
+.invoice-date {
+  flex: 1 0 100px;
+  min-width: 100px;
+}
 
+.invoice-sub-total {
+  flex: 1 0 100px;
+  min-width: 100px;
+  text-align: right;
+}
 
-            .invoice-item {
-                flex-wrap: wrap;
-                gap: 10px;
-            }
+.invoice-taxes {
+  flex: 1 0 100px;
+  min-width: 100px;
+  text-align: right;
+}
 
-            .invoice-number, .invoice-customer, .invoice-date, .invoice-amount, .invoice-status, .invoice-actions {
-                width: auto;
-                flex: 1 1 100px;
-            }
+.invoice-amount {
+  flex: 1 0 100px;
+  min-width: 100px;
+  text-align: right;
+}
 
-            .form-row {
-                flex-direction: column;
-                gap: 10px;
-            }
+.invoice-status {
+  flex: 1 0 120px;
+  min-width: 120px;
+  text-align: center;
+}
 
-            .items-table th, .items-table td {
-                padding: 8px 5px;
-            }
-        }
+.invoice-actions {
+  flex: 0 0 80px;
+  min-width: 80px;
+  text-align: right;
+}
 
+.over-flow {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
+/* Status Badges */
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
 
-        #invoicePreviewPanel {
+.status-paid {
+  background-color: #e6fffa;
+  color: #38b2ac;
+}
+
+.status-pending {
+  background-color: #fffaf0;
+  color: #dd6b20;
+}
+
+.status-overdue {
+  background-color: #fff5f5;
+  color: #f56565;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  color: #718096;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.action-btn:hover {
+  color: #2a5bd7;
+}
+
+/* ================ */
+/* FORM STYLES */
+/* ================ */
+.invoice-form-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.form-section {
+  margin-bottom: 30px;
+}
+
+.section-title {
+  font-size: 18px;
+  color: #1a365d;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.form-group {
+  flex: 1;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #4a5568;
+  font-size: 14px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #2a5bd7;
+}
+
+.form-control-sm {
+  padding: 6px 8px;
+  font-size: 13px;
+}
+
+/* Items Table */
+.items-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.items-table th {
+  text-align: left;
+  padding: 10px;
+  background-color: #f8fafc;
+  color: #718096;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.items-table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.item-row input {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.item-row input:focus {
+  outline: none;
+  border-color: #2a5bd7;
+}
+
+.item-name {
+  width: 40%;
+}
+
+.item-qty, .item-rate, .item-amount {
+  width: 15%;
+}
+
+.item-actions {
+  width: 15%;
+  text-align: center;
+}
+
+.remove-item {
+  color: #f56565;
+  cursor: pointer;
+}
+
+.add-item-btn {
+  background-color: transparent;
+  border: none;
+  color: #2a5bd7;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.action-left {
+  display: flex;
+  gap: 10px;
+}
+
+.action-right {
+  display: flex;
+  gap: 10px;
+}
+
+/* ================ */
+/* COMPONENT STYLES */
+/* ================ */
+.filter-dropdown {
+  position: relative;
+}
+
+.filter-btn {
+  background-color: transparent;
+  border: 1px solid #e2e8f0;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #4a5568;
+}
+
+.filter-btn:hover {
+  background-color: #f8fafc;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+  z-index: 10;
+  display: none;
+}
+
+.filter-dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-menu ul {
+  padding: 10px 0;
+}
+
+.dropdown-menu li {
+  padding: 8px 15px;
+  cursor: pointer;
+}
+
+.dropdown-menu li:hover {
+  background-color: #f8fafc;
+}
+
+/* Payment Status Badges */
+.payment-status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 60px;
+  text-align: center;
+  border: 1px solid #FFC107;
+}
+
+.badge-payment-paid {
+  background-color: #e6f7ee;
+  color: #00192D;
+}
+
+.badge-payment-partial {
+  background-color: #fff8e6;
+  color: #00192D;
+  border-color: #FFC107;
+}
+
+.badge-payment-unpaid {
+  background-color: #ffebee;
+  color: #00192D;
+  border-color: #FFC107;
+}
+
+/* Status Badges */
+.badge-sent {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.badge-paid {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.badge-overdue {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.badge-cancelled {
+  background-color: #efebe9;
+  color: #4e342e;
+}
+
+.badge-draft {
+  background-color: #e0e0e0;
+  color: #424242;
+}
+
+/* ================ */
+/* MODAL & PREVIEW STYLES */
+/* ================ */
+#invoicePreviewPanel {
   position: fixed;
   top: 0;
   right: -100%;
@@ -728,194 +752,46 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
   border: none;
   cursor: pointer;
 }
-.filter-dropdown {
-    position: relative;
-    display: inline-block;
-}
 
-.filter-btn {
-    padding: 8px 12px;
-    cursor: pointer;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
+/* ================ */
+/* RESPONSIVE STYLES */
+/* ================ */
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
 
-.dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    display: none;
-    background-color: white;
-    border: 1px solid #ddd;
-    z-index: 100;
-    min-width: 120px;
-}
+  .invoice-item {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
 
-.dropdown-menu ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
+  .form-row {
+    flex-direction: column;
+    gap: 10px;
+  }
 
-.dropdown-menu ul li {
-    padding: 10px;
-    cursor: pointer;
-}
+  .items-table th,
+  .items-table td {
+    padding: 8px 5px;
+  }
 
-.dropdown-menu ul li:hover {
-    background-color: #f0f0f0;
-}
-
-.filter-dropdown.open .dropdown-menu {
-    display: block;
-}
-
-.searchable-item-container {
-  position: relative;
-  width: 100%;
-}
-
-.searchable-item-input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-.searchable-item-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  min-width: 250px; /* Ensure enough width for content */
-  max-height: 300px; /* Increased to show more items */
-  overflow-y: auto;
-  background: white;
-  border: 1px solid #ddd;
-  border-top: none;
-  border-radius: 0 0 4px 4px;
-  z-index: 1000;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.searchable-item-group {
-  padding: 5px 0;
-}
-
-.searchable-item-option {
-  padding: 8px 15px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  white-space: nowrap; /* Prevent text wrapping */
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.searchable-item-option:hover {
-  background-color: #f5f5f5;
-}
-
-.account-code {
-  font-weight: bold;
-  margin-right: 10px;
-  color: #555;
-  min-width: 60px; /* Ensure code column has consistent width */
-}
-
-.account-name {
-  flex-grow: 1;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-.payment-status-badge {
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    min-width: 60px;
-    text-align: center;
-    border: 1px solid #FFC107; /* Border color for all payment statuses */
-}
-
-.badge-payment-paid {
-    background-color: #e6f7ee;
-    color: #00192D; /* Dark blue text */
-}
-
-.badge-payment-partial {
-    background-color: #fff8e6;
-    color: #00192D; /* Dark blue text */
-    border-color: #FFC107; /* Yellow border */
-}
-
-.badge-payment-unpaid {
-    background-color: #ffebee;
-    color: #00192D; /* Dark blue text */
-    border-color: #FFC107; /* Yellow border */
-}
-
-/* Status Badges (existing) */
-.status-badge {
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    min-width: 60px;
-    text-align: center;
-}
-
-.badge-sent {
-    background-color: #e3f2fd;
-    color: #1565c0;
-}
-
-.badge-paid {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-}
-
-.badge-overdue {
-    background-color: #ffebee;
-    color: #c62828;
-}
-
-.badge-cancelled {
-    background-color: #efebe9;
-    color: #4e342e;
-}
-
-.badge-draft {
-    background-color: #e0e0e0;
-    color: #424242;
-}
-.invoice-menu button {
-    display: block;
-    width: 100%;
-    padding: 6px 12px;
-    background: none;
-    border: none;
+  /* Adjust column widths for mobile */
+  .invoice-checkbox,
+  .invoice-number,
+  .invoice-customer,
+  .invoice-date,
+  .invoice-sub-total,
+  .invoice-taxes,
+  .invoice-amount,
+  .invoice-status,
+  .invoice-actions {
+    flex: 1 1 100%;
+    min-width: 100%;
     text-align: left;
-    cursor: pointer;
+  }
 }
-.invoice-menu button:hover {
-    background-color: #f1f1f1;
-}
-.hidden {
-    display: none;
-}
-
-      </style>
+</style>
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -1052,35 +928,43 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
 
 
+
                     <div class="invoice-item invoice-header">
-        <div class="invoice-checkbox">
-            <input type="checkbox">
-        </div>
-        <div class="invoice-number">
-            <div class="over-flow" title="Invoice #">Invoice<!----></div>
-        </div>
-        <div class="invoice-customer">
-            <div class="over-flow" title="Customer">Tenant<!----></div>
-        </div>
-        <div class="invoice-date">
-            <div class="over-flow" title="Date">Date<!----></div>
-        </div>
-        <div class="invoice-date">
-            <div class="over-flow" title="Date">Due Date<!----></div>
-        </div>
-        <div class="invoice-amount">
-            <div class="over-flow" title="Amount">Amount<!----></div>
-        </div>
-        <div class="invoice-status">
-            <div class="over-flow" title="Status">Status<!----></div>
-        </div>
-        <div class="invoice-status">
-            <div class="over-flow" title="Status">Payment Status<!----></div>
-        </div>
-        <div class="invoice-actions">
-            <div class="over-flow" title="Actions">Actions<!----></div>
-        </div>
+    <div class="invoice-checkbox">
+        <input type="checkbox">
     </div>
+    <div class="invoice-number">
+        <div class="over-flow" title="Invoice #">Invoice</div>
+    </div>
+    <div class="invoice-customer">
+        <div class="over-flow" title="Customer">Tenant</div>
+    </div>
+    <div class="invoice-date">
+        <div class="over-flow" title="Date">Date</div>
+    </div>
+    <div class="invoice-date">
+        <div class="over-flow" title="Due Date">Due Date</div>
+    </div>
+    <div class="invoice-sub-total">
+        <div class="over-flow" title="Sub-Total">Sub-Total</div>
+    </div>
+    <div class="invoice-taxes">
+        <div class="over-flow" title="Taxes">Taxes</div>
+    </div>
+    <div class="invoice-amount">
+        <div class="over-flow" title="Amount">Total</div>
+    </div>
+    <div class="invoice-status">
+        <div class="over-flow" title="Status">Status</div>
+    </div>
+    <div class="invoice-status">
+        <div class="over-flow" title="Payment Status">Payment Status</div>
+    </div>
+    <div class="invoice-actions">
+        <div class="over-flow" title="Actions">Actions</div>
+    </div>
+</div>
+
 
     <?php
 // ----------------------------------------------------
@@ -1092,7 +976,9 @@ $stmt = $pdo->query("
         i.invoice_number,
         i.invoice_date,
         i.due_date,
+        i.sub_total,
         i.total,
+        i.taxes,
         i.status,
         i.payment_status,
         CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name,
@@ -1112,13 +998,20 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // ----------------------------------------------------
 // 2) Output each invoice item
 // ----------------------------------------------------
+
+
 foreach ($invoices as $invoice) {
+
     $tenantName = $invoice['tenant_name'] ?? 'Unknown Tenant';
     $invoiceDate = $invoice['invoice_date'] == '0000-00-00' ? 'Draft' : date('M d, Y', strtotime($invoice['invoice_date']));
     $dueDate = $invoice['due_date'] == '0000-00-00' ? 'Not set' : date('M d, Y', strtotime($invoice['due_date']));
-    $totalAmount = number_format($invoice['total'], 2);
-    $paidAmount = number_format($invoice['paid_amount'], 2);
-    $balance = number_format($invoice['total'] - $invoice['paid_amount'], 2);
+    $subtotalFormatted = number_format($invoice['sub_total'], 2);
+    $totalFormatted = number_format($invoice['total'], 2);
+    $taxFormatted = $invoice['taxes'] ?: '0.00';
+    $paidFormatted = number_format($invoice['paid_amount'], 2);
+    $balance = $invoice['total'] - $invoice['paid_amount'];
+    $balanceFormatted = number_format($balance, 2);
+
 
     // Calculate overdue status
     $isOverdue = false;
@@ -1190,7 +1083,10 @@ foreach ($invoices as $invoice) {
           <div class="invoice-date' . ($isOverdue ? ' text-danger' : '') . '">
               ' . $dueDate . '
           </div>
-          <div class="invoice-amount">KES ' . $totalAmount . '</div>
+          <div class="invoice-amount">KES ' . number_format($invoice['sub_total'], 2) . '</div>
+          <div class="invoice-amount">VAT: ' . htmlspecialchars($invoice['taxes'] ?: '0.00') . '</div>
+          <div class="invoice-amount">Total: KES ' . number_format($invoice['total'], 2) . '</div>
+
           <div class="invoice-status">
               <span class="status-badge ' . $statusClass . '">' . $statusText . '</span>
           </div>
@@ -1525,16 +1421,17 @@ if ($invoice['status'] === 'draft' || $invoice['status'] === 'cancelled') {
           <td><input id="quantity" type="number" name="quantity[]" class="form-control quantity" placeholder="1" required></td>
           <td><input id="unit_price"  type="number" name="unit_price[]" class="form-control unit-price" placeholder="123" required></td>
           <td>
-            <select  id="taxes" name="taxes[]" class="form-select vat-option" required>
+            <select  id="taxes" name="vat_type[]" class="form-select vat-option" required>
               <option value="" disabled selected>Select Option</option>
               <option value="inclusive">VAT 16% Inclusive</option>
               <option value="exclusive">VAT 16% Exclusive</option>
               <option value="zero">Zero Rated</option>
               <option value="exempted">Exempted</option>
             </select>
+
           </td>
           <td>
-             <input  id="total" type="number" name="total[]" class="form-control total" placeholder="0" readonly  style="display:none;">
+             <input id="total" type="number"  class="form-control total" placeholder="0" readonly  style="display:none;">
             <button type="button"  class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
               <i class="fa fa-trash" style="font-size: 12px;"></i>
             </button>
