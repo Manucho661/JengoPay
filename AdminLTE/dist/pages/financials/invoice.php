@@ -133,7 +133,7 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../../../dist/css/adminlte.css"/>
+    <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
     <link rel="stylesheet" href="invoices.css">
     <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
@@ -156,49 +156,49 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
     <!-- Pdf pluggin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-<!-- Select2 CSS -->
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-<!-- jQuery (required for Select2) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- jQuery (required for Select2) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- Select2 JS -->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 
 
-<!-- Add these to your head or before closing body -->
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Add these to your head or before closing body -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!--Tailwind CSS  -->
     <style>
-
-          a {
+        a {
             text-decoration: none;
             color: inherit;
         }
 
         .pay-btn {
-    margin-top: 6px;
-    padding: 4px 10px;
-    font-size: 12px;
-    font-weight: 600;
-    background-color: #FFC107;
-    color: #00192D;
-    border: none;
-    border-radius: 20px;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-.pay-btn:hover {
-    background-color: #e6ae00;
-    color: white;
-}
+            margin-top: 6px;
+            padding: 4px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            background-color: #FFC107;
+            color: #00192D;
+            border: none;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .pay-btn:hover {
+            background-color: #e6ae00;
+            color: white;
+        }
 
         ul {
             list-style: none;
@@ -583,7 +583,9 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
             width: 40%;
         }
 
-        .item-qty, .item-rate, .item-amount {
+        .item-qty,
+        .item-rate,
+        .item-amount {
             width: 15%;
         }
 
@@ -642,12 +644,13 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         .invoice-header .over-flow {
-    font-weight: bold;
-}
-.invoice-header {
-    background-color: #f8f9fa;
-    border-bottom: 2px solid #dee2e6;
-}
+            font-weight: bold;
+        }
+
+        .invoice-header {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
 
         /* Form Actions */
         .form-actions {
@@ -680,7 +683,12 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
                 gap: 10px;
             }
 
-            .invoice-number, .invoice-customer, .invoice-date, .invoice-amount, .invoice-status, .invoice-actions {
+            .invoice-number,
+            .invoice-customer,
+            .invoice-date,
+            .invoice-amount,
+            .invoice-status,
+            .invoice-actions {
                 width: auto;
                 flex: 1 1 100px;
             }
@@ -690,7 +698,8 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
                 gap: 10px;
             }
 
-            .items-table th, .items-table td {
+            .items-table th,
+            .items-table td {
                 padding: 8px 5px;
             }
         }
@@ -698,224 +707,238 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
 
 
         #invoicePreviewPanel {
-  position: fixed;
-  top: 0;
-  right: -100%;
-  width: 400px;
-  height: 100vh;
-  background: #fff;
-  box-shadow: -2px 0 8px rgba(0,0,0,0.3);
-  transition: right 0.3s ease-in-out;
-  z-index: 9999;
-}
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 400px;
+            height: 100vh;
+            background: #fff;
+            box-shadow: -2px 0 8px rgba(0, 0, 0, 0.3);
+            transition: right 0.3s ease-in-out;
+            z-index: 9999;
+        }
 
-#invoicePreviewPanel.active {
-  right: 0;
-}
+        #invoicePreviewPanel.active {
+            right: 0;
+        }
 
-.preview-content {
-  padding: 20px;
-  overflow-y: auto;
-  height: 100%;
-}
+        .preview-content {
+            padding: 20px;
+            overflow-y: auto;
+            height: 100%;
+        }
 
-.close-btn {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  font-size: 24px;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-.filter-dropdown {
-    position: relative;
-    display: inline-block;
-}
+        .close-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
 
-.filter-btn {
-    padding: 8px 12px;
-    cursor: pointer;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
+        .filter-dropdown {
+            position: relative;
+            display: inline-block;
+        }
 
-.dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    display: none;
-    background-color: white;
-    border: 1px solid #ddd;
-    z-index: 100;
-    min-width: 120px;
-}
+        .filter-btn {
+            padding: 8px 12px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-.dropdown-menu ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            display: none;
+            background-color: white;
+            border: 1px solid #ddd;
+            z-index: 100;
+            min-width: 120px;
+        }
 
-.dropdown-menu ul li {
-    padding: 10px;
-    cursor: pointer;
-}
+        .dropdown-menu ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
 
-.dropdown-menu ul li:hover {
-    background-color: #f0f0f0;
-}
+        .dropdown-menu ul li {
+            padding: 10px;
+            cursor: pointer;
+        }
 
-.filter-dropdown.open .dropdown-menu {
-    display: block;
-}
+        .dropdown-menu ul li:hover {
+            background-color: #f0f0f0;
+        }
 
-.searchable-item-container {
-  position: relative;
-  width: 100%;
-}
+        .filter-dropdown.open .dropdown-menu {
+            display: block;
+        }
 
-.searchable-item-input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
+        .searchable-item-container {
+            position: relative;
+            width: 100%;
+        }
 
-.searchable-item-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  min-width: 250px; /* Ensure enough width for content */
-  max-height: 300px; /* Increased to show more items */
-  overflow-y: auto;
-  background: white;
-  border: 1px solid #ddd;
-  border-top: none;
-  border-radius: 0 0 4px 4px;
-  z-index: 1000;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
+        .searchable-item-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
 
-.searchable-item-group {
-  padding: 5px 0;
-}
+        .searchable-item-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            min-width: 250px;
+            /* Ensure enough width for content */
+            max-height: 300px;
+            /* Increased to show more items */
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-.searchable-item-option {
-  padding: 8px 15px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  white-space: nowrap; /* Prevent text wrapping */
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+        .searchable-item-group {
+            padding: 5px 0;
+        }
 
-.searchable-item-option:hover {
-  background-color: #f5f5f5;
-}
+        .searchable-item-option {
+            padding: 8px 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            white-space: nowrap;
+            /* Prevent text wrapping */
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
-.account-code {
-  font-weight: bold;
-  margin-right: 10px;
-  color: #555;
-  min-width: 60px; /* Ensure code column has consistent width */
-}
+        .searchable-item-option:hover {
+            background-color: #f5f5f5;
+        }
 
-.account-name {
-  flex-grow: 1;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-.payment-status-badge {
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    min-width: 60px;
-    text-align: center;
-    border: 1px solid #FFC107; /* Border color for all payment statuses */
-}
+        .account-code {
+            font-weight: bold;
+            margin-right: 10px;
+            color: #555;
+            min-width: 60px;
+            /* Ensure code column has consistent width */
+        }
 
-.badge-payment-paid {
-    background-color: #e6f7ee;
-    color: #00192D; /* Dark blue text */
-}
+        .account-name {
+            flex-grow: 1;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
 
-.badge-payment-partial {
-    background-color: #fff8e6;
-    color: #00192D; /* Dark blue text */
-    border-color: #FFC107; /* Yellow border */
-}
+        .payment-status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            min-width: 60px;
+            text-align: center;
+            border: 1px solid #FFC107;
+            /* Border color for all payment statuses */
+        }
 
-.badge-payment-unpaid {
-    background-color: #ffebee;
-    color: #00192D; /* Dark blue text */
-    border-color: #FFC107; /* Yellow border */
-}
+        .badge-payment-paid {
+            background-color: #e6f7ee;
+            color: #00192D;
+            /* Dark blue text */
+        }
 
-/* Status Badges (existing) */
-.status-badge {
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    min-width: 60px;
-    text-align: center;
-}
+        .badge-payment-partial {
+            background-color: #fff8e6;
+            color: #00192D;
+            /* Dark blue text */
+            border-color: #FFC107;
+            /* Yellow border */
+        }
 
-.badge-sent {
-    background-color: #e3f2fd;
-    color: #1565c0;
-}
+        .badge-payment-unpaid {
+            background-color: #ffebee;
+            color: #00192D;
+            /* Dark blue text */
+            border-color: #FFC107;
+            /* Yellow border */
+        }
 
-.badge-paid {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-}
+        /* Status Badges (existing) */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            min-width: 60px;
+            text-align: center;
+        }
 
-.badge-overdue {
-    background-color: #ffebee;
-    color: #c62828;
-}
+        .badge-sent {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
 
-.badge-cancelled {
-    background-color: #efebe9;
-    color: #4e342e;
-}
+        .badge-paid {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
 
-.badge-draft {
-    background-color: #e0e0e0;
-    color: #424242;
-}
-.invoice-menu button {
-    display: block;
-    width: 100%;
-    padding: 6px 12px;
-    background: none;
-    border: none;
-    text-align: left;
-    cursor: pointer;
-}
-.invoice-menu button:hover {
-    background-color: #f1f1f1;
-}
-.hidden {
-    display: none;
-}
+        .badge-overdue {
+            background-color: #ffebee;
+            color: #c62828;
+        }
 
-      </style>
+        .badge-cancelled {
+            background-color: #efebe9;
+            color: #4e342e;
+        }
+
+        .badge-draft {
+            background-color: #e0e0e0;
+            color: #424242;
+        }
+
+        .invoice-menu button {
+            display: block;
+            width: 100%;
+            padding: 6px 12px;
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .invoice-menu button:hover {
+            background-color: #f1f1f1;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -953,140 +976,140 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
             <!--MAIN MODALS -->
             <!-- add new inspection modal-->
 
-  <!-- Main Content -->
-  <div class="main-content">
-            <!-- Invoice List View (Default) -->
-            <div id="invoice-list-view">
-                <div class="page-header">
-                    <h1 class="page-title"> 🧾 Invoices</h1>
-                    <div class="page-actions">
-                    <button class="btn btn-outline" style="color: #FFC107; background-color:#00192D;" id="filterButton">
-                    <i class="fas fa-filter"></i> Filter
-                    </button>
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Invoice List View (Default) -->
+                <div id="invoice-list-view">
+                    <div class="page-header">
+                        <h1 class="page-title"> 🧾 Invoices</h1>
+                        <div class="page-actions">
+                            <button class="btn btn-outline" style="color: #FFC107; background-color:#00192D;" id="filterButton">
+                                <i class="fas fa-filter"></i> Filter
+                            </button>
 
 
-                    <!-- Filter Modal (hidden by default) -->
-<div id="filterModal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.4)">
-    <div style="background-color:#00192D; margin:5% auto; padding:20px; border:1px solid #FFC107; width:80%; max-width:600px; color:white;">
-        <span style="float:right; cursor:pointer" id="closeFilter">&times;</span>
-        <h3>Filter Invoices</h3>
+                            <!-- Filter Modal (hidden by default) -->
+                            <div id="filterModal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.4)">
+                                <div style="background-color:#00192D; margin:5% auto; padding:20px; border:1px solid #FFC107; width:80%; max-width:600px; color:white;">
+                                    <span style="float:right; cursor:pointer" id="closeFilter">&times;</span>
+                                    <h3>Filter Invoices</h3>
 
-        <div style="margin-bottom:15px;">
-            <label>Status:</label>
-            <select id="statusFilter" class="form-control" style="background-color:#00192D; color:#FFC107; border:1px solid #FFC107">
-                <option value="">All</option>
-                <option value="draft">Draft</option>
-                <option value="sent">Sent</option>
-                <option value="paid">Paid</option>
-                <option value="overdue">Overdue</option>
-                <option value="cancelled">Cancelled</option>
-            </select>
-        </div>
+                                    <div style="margin-bottom:15px;">
+                                        <label>Status:</label>
+                                        <select id="statusFilter" class="form-control" style="background-color:#00192D; color:#FFC107; border:1px solid #FFC107">
+                                            <option value="">All</option>
+                                            <option value="draft">Draft</option>
+                                            <option value="sent">Sent</option>
+                                            <option value="paid">Paid</option>
+                                            <option value="overdue">Overdue</option>
+                                            <option value="cancelled">Cancelled</option>
+                                        </select>
+                                    </div>
 
-        <div style="margin-bottom:15px;">
-            <label>Payment Status:</label>
-            <select id="paymentFilter" class="form-control" style="background-color:#00192D; color:#FFC107; border:1px solid #FFC107">
-                <option value="">All</option>
-                <option value="unpaid">Unpaid</option>
-                <option value="partial">Partial</option>
-                <option value="paid">Paid</option>
-            </select>
-        </div>
+                                    <div style="margin-bottom:15px;">
+                                        <label>Payment Status:</label>
+                                        <select id="paymentFilter" class="form-control" style="background-color:#00192D; color:#FFC107; border:1px solid #FFC107">
+                                            <option value="">All</option>
+                                            <option value="unpaid">Unpaid</option>
+                                            <option value="partial">Partial</option>
+                                            <option value="paid">Paid</option>
+                                        </select>
+                                    </div>
 
-        <div style="margin-bottom:15px;">
-            <label>Date Range:</label>
-            <div style="display:flex; gap:10px;">
-                <input type="date" id="dateFrom" class="form-control" style="background-color:#00192D; color:#FFC107; border:1px solid #FFC107">
-                <input type="date" id="dateTo" class="form-control" style="background-color:#00192D; color:#FFC107; border:1px solid #FFC107">
-            </div>
-        </div>
+                                    <div style="margin-bottom:15px;">
+                                        <label>Date Range:</label>
+                                        <div style="display:flex; gap:10px;">
+                                            <input type="date" id="dateFrom" class="form-control" style="background-color:#00192D; color:#FFC107; border:1px solid #FFC107">
+                                            <input type="date" id="dateTo" class="form-control" style="background-color:#00192D; color:#FFC107; border:1px solid #FFC107">
+                                        </div>
+                                    </div>
 
-        <button id="applyFilter" class="btn" style="background-color:#FFC107; color:#00192D">Apply Filters</button>
-        <button id="resetFilter" class="btn btn-outline" style="color:#FFC107; border-color:#FFC107">Reset</button>
-    </div>
-</div>
-                        <!-- <button class="btn btn-outline" style="color: #FFC107; background-color:#00192D;">
+                                    <button id="applyFilter" class="btn" style="background-color:#FFC107; color:#00192D">Apply Filters</button>
+                                    <button id="resetFilter" class="btn btn-outline" style="color:#FFC107; border-color:#FFC107">Reset</button>
+                                </div>
+                            </div>
+                            <!-- <button class="btn btn-outline" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-download"></i> Export
                         </button> -->
-                        <button class="btn" id="create-invoice-btn" style="color: #FFC107; background-color:#00192D;">
-                            <i class="fas fa-plus"></i> Create Invoice
-                        </button>
-                    </div>
-                </div>
-
-                <div class="invoice-list-container">
-                    <div class="invoice-list-header">
-                        <div class="invoice-list-title">All Invoices</div>
-                        <div class="invoice-list-filters">
-                            <div class="filter-dropdown">
-                                <button class="filter-btn">
-                                    <span>Status: All</span>
-                                    <i class="fas fa-chevron-down"></i>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <ul>
-                                        <li>All</li>
-                                        <li>Paid</li>
-                                        <li>Pending</li>
-                                        <li>Overdue</li>
-                                        <li>Draft</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="filter-dropdown">
-                                <button class="filter-btn">
-                                    <span>Date: This Month</span>
-                                    <i class="fas fa-chevron-down"></i>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <ul>
-                                        <li>Today</li>
-                                        <li>This Week</li>
-                                        <li>This Month</li>
-                                        <li>This Quarter</li>
-                                        <li>Custom Range</li>
-                                    </ul>
-                                </div>
-                            </div>
+                            <button class="btn" id="create-invoice-btn" style="color: #FFC107; background-color:#00192D;">
+                                <i class="fas fa-plus"></i> Create Invoice
+                            </button>
                         </div>
                     </div>
 
+                    <div class="invoice-list-container">
+                        <div class="invoice-list-header">
+                            <div class="invoice-list-title">All Invoices</div>
+                            <div class="invoice-list-filters">
+                                <div class="filter-dropdown">
+                                    <button class="filter-btn">
+                                        <span>Status: All</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <ul>
+                                            <li>All</li>
+                                            <li>Paid</li>
+                                            <li>Pending</li>
+                                            <li>Overdue</li>
+                                            <li>Draft</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="filter-dropdown">
+                                    <button class="filter-btn">
+                                        <span>Date: This Month</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <ul>
+                                            <li>Today</li>
+                                            <li>This Week</li>
+                                            <li>This Month</li>
+                                            <li>This Quarter</li>
+                                            <li>Custom Range</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="invoice-item invoice-header">
-        <div class="invoice-checkbox">
-            <input type="checkbox">
-        </div>
-        <div class="invoice-number">
-            <div class="over-flow" title="Invoice #">Invoice<!----></div>
-        </div>
-        <div class="invoice-customer">
-            <div class="over-flow" title="Customer">Tenant<!----></div>
-        </div>
-        <div class="invoice-date">
-            <div class="over-flow" title="Date">Date<!----></div>
-        </div>
-        <div class="invoice-date">
-            <div class="over-flow" title="Date">Due Date<!----></div>
-        </div>
-        <div class="invoice-amount">
-            <div class="over-flow" title="Amount">Amount<!----></div>
-        </div>
-        <div class="invoice-status">
-            <div class="over-flow" title="Status">Status<!----></div>
-        </div>
-        <div class="invoice-status">
-            <div class="over-flow" title="Status">Payment Status<!----></div>
-        </div>
-        <div class="invoice-actions">
-            <div class="over-flow" title="Actions">Actions<!----></div>
-        </div>
-    </div>
 
-    <?php
-// ----------------------------------------------------
-// 1) Fetch invoices with tenant details and payment summary
-// ----------------------------------------------------
-$stmt = $pdo->query("
+                        <div class="invoice-item invoice-header">
+                            <div class="invoice-checkbox">
+                                <input type="checkbox">
+                            </div>
+                            <div class="invoice-number">
+                                <div class="over-flow" title="Invoice #">Invoice<!----></div>
+                            </div>
+                            <div class="invoice-customer">
+                                <div class="over-flow" title="Customer">Tenant<!----></div>
+                            </div>
+                            <div class="invoice-date">
+                                <div class="over-flow" title="Date">Date<!----></div>
+                            </div>
+                            <div class="invoice-date">
+                                <div class="over-flow" title="Date">Due Date<!----></div>
+                            </div>
+                            <div class="invoice-amount">
+                                <div class="over-flow" title="Amount">Amount<!----></div>
+                            </div>
+                            <div class="invoice-status">
+                                <div class="over-flow" title="Status">Status<!----></div>
+                            </div>
+                            <div class="invoice-status">
+                                <div class="over-flow" title="Status">Payment Status<!----></div>
+                            </div>
+                            <div class="invoice-actions">
+                                <div class="over-flow" title="Actions">Actions<!----></div>
+                            </div>
+                        </div>
+
+                        <?php
+                        // ----------------------------------------------------
+                        // 1) Fetch invoices with tenant details and payment summary
+                        // ----------------------------------------------------
+                        $stmt = $pdo->query("
     SELECT
         i.id,
         i.invoice_number,
@@ -1107,79 +1130,79 @@ $stmt = $pdo->query("
     ORDER BY i.created_at DESC
 ");
 
-$invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// ----------------------------------------------------
-// 2) Output each invoice item
-// ----------------------------------------------------
-foreach ($invoices as $invoice) {
-    $tenantName = $invoice['tenant_name'] ?? 'Unknown Tenant';
-    $invoiceDate = $invoice['invoice_date'] == '0000-00-00' ? 'Draft' : date('M d, Y', strtotime($invoice['invoice_date']));
-    $dueDate = $invoice['due_date'] == '0000-00-00' ? 'Not set' : date('M d, Y', strtotime($invoice['due_date']));
-    $totalAmount = number_format($invoice['total'], 2);
-    $paidAmount = number_format($invoice['paid_amount'], 2);
-    $balance = number_format($invoice['total'] - $invoice['paid_amount'], 2);
+                        // ----------------------------------------------------
+                        // 2) Output each invoice item
+                        // ----------------------------------------------------
+                        foreach ($invoices as $invoice) {
+                            $tenantName = $invoice['tenant_name'] ?? 'Unknown Tenant';
+                            $invoiceDate = $invoice['invoice_date'] == '0000-00-00' ? 'Draft' : date('M d, Y', strtotime($invoice['invoice_date']));
+                            $dueDate = $invoice['due_date'] == '0000-00-00' ? 'Not set' : date('M d, Y', strtotime($invoice['due_date']));
+                            $totalAmount = number_format($invoice['total'], 2);
+                            $paidAmount = number_format($invoice['paid_amount'], 2);
+                            $balance = number_format($invoice['total'] - $invoice['paid_amount'], 2);
 
-    // Calculate overdue status
-    $isOverdue = false;
-    $overdueDays = 0;
-    if ($invoice['due_date'] != '0000-00-00' && $invoice['status'] != 'paid' && $invoice['status'] != 'cancelled') {
-        $today = new DateTime();
-        $dueDateObj = new DateTime($invoice['due_date']);
-        if ($today > $dueDateObj) {
-            $isOverdue = true;
-            $overdueDays = $today->diff($dueDateObj)->days;
-        }
-    }
+                            // Calculate overdue status
+                            $isOverdue = false;
+                            $overdueDays = 0;
+                            if ($invoice['due_date'] != '0000-00-00' && $invoice['status'] != 'paid' && $invoice['status'] != 'cancelled') {
+                                $today = new DateTime();
+                                $dueDateObj = new DateTime($invoice['due_date']);
+                                if ($today > $dueDateObj) {
+                                    $isOverdue = true;
+                                    $overdueDays = $today->diff($dueDateObj)->days;
+                                }
+                            }
 
-    // Determine status badge
-    $statusClass = 'badge-';
-    $statusText = ucfirst($invoice['status']);
+                            // Determine status badge
+                            $statusClass = 'badge-';
+                            $statusText = ucfirst($invoice['status']);
 
-    switch ($invoice['status']) {
-        case 'draft':
-            $statusClass .= 'draft';
-            break;
-        case 'sent':
-            $statusClass .= $isOverdue ? 'overdue' : 'sent';
-            $statusText = $isOverdue ? 'Overdue (' . $overdueDays . 'd)' : 'Sent';
-            break;
-        case 'paid':
-            $statusClass .= 'paid';
-            break;
-        case 'cancelled':
-            $statusClass .= 'cancelled';
-            break;
-        default:
-            $statusClass .= 'draft';
-    }
+                            switch ($invoice['status']) {
+                                case 'draft':
+                                    $statusClass .= 'draft';
+                                    break;
+                                case 'sent':
+                                    $statusClass .= $isOverdue ? 'overdue' : 'sent';
+                                    $statusText = $isOverdue ? 'Overdue (' . $overdueDays . 'd)' : 'Sent';
+                                    break;
+                                case 'paid':
+                                    $statusClass .= 'paid';
+                                    break;
+                                case 'cancelled':
+                                    $statusClass .= 'cancelled';
+                                    break;
+                                default:
+                                    $statusClass .= 'draft';
+                            }
 
-    // Payment status with amounts - updated logic
-    $paymentStatusClass = 'badge-';
-    $paymentStatusText = '';
+                            // Payment status with amounts - updated logic
+                            $paymentStatusClass = 'badge-';
+                            $paymentStatusText = '';
 
-    // First check if any payment has been made
-    if ($invoice['paid_amount'] > 0) {
-        if ($invoice['paid_amount'] >= $invoice['total']) {
-            // Fully paid
-            $paymentStatusClass .= 'paid';
-            $paymentStatusText = 'Paid (KES ' . $paidAmount . ')';
-            $invoice['payment_status'] = 'paid'; // Update status in case it wasn't synced
-        } else {
-            // Partial payment
-            $paymentStatusClass .= 'partial';
-            $paymentStatusText = 'Partial (KES ' . $paidAmount . ' of ' . $totalAmount . ')';
-            $invoice['payment_status'] = 'partial'; // Update status in case it wasn't synced
-        }
-    } else {
-        // No payments made
-        $paymentStatusClass .= 'unpaid';
-        $paymentStatusText = $isOverdue ? 'Overdue (' . $overdueDays . 'd)' : 'Unpaid';
-        $invoice['payment_status'] = 'unpaid'; // Update status in case it wasn't synced
-    }
+                            // First check if any payment has been made
+                            if ($invoice['paid_amount'] > 0) {
+                                if ($invoice['paid_amount'] >= $invoice['total']) {
+                                    // Fully paid
+                                    $paymentStatusClass .= 'paid';
+                                    $paymentStatusText = 'Paid (KES ' . $paidAmount . ')';
+                                    $invoice['payment_status'] = 'paid'; // Update status in case it wasn't synced
+                                } else {
+                                    // Partial payment
+                                    $paymentStatusClass .= 'partial';
+                                    $paymentStatusText = 'Partial (KES ' . $paidAmount . ' of ' . $totalAmount . ')';
+                                    $invoice['payment_status'] = 'partial'; // Update status in case it wasn't synced
+                                }
+                            } else {
+                                // No payments made
+                                $paymentStatusClass .= 'unpaid';
+                                $paymentStatusText = $isOverdue ? 'Overdue (' . $overdueDays . 'd)' : 'Unpaid';
+                                $invoice['payment_status'] = 'unpaid'; // Update status in case it wasn't synced
+                            }
 
-    echo '<div class="invoice-item" onclick="openInvoiceDetails(' . $invoice['id'] . ')">';
-    echo '<div class="invoice-checkbox">
+                            echo '<div class="invoice-item" onclick="openInvoiceDetails(' . $invoice['id'] . ')">';
+                            echo '<div class="invoice-checkbox">
             <input type="checkbox" onclick="event.stopPropagation()">
           </div>
           <div class="invoice-number">' . htmlspecialchars($invoice['invoice_number']) . '</div>
@@ -1197,12 +1220,12 @@ foreach ($invoices as $invoice) {
           <div class="invoice-status">
               <span class="status-badge ' . $paymentStatusClass . '">' . $paymentStatusText . '</span>';
 
-    // Show payment button if applicable - updated logic
-    if ($invoice['status'] !== 'draft' && $invoice['status'] !== 'cancelled' && $invoice['paid_amount'] < $invoice['total']) {
-        $buttonText = $invoice['paid_amount'] > 0 ? 'Add Payment' : 'Pay Now';
-        $balance = $invoice['total'] - $invoice['paid_amount'];
+                            // Show payment button if applicable - updated logic
+                            if ($invoice['status'] !== 'draft' && $invoice['status'] !== 'cancelled' && $invoice['paid_amount'] < $invoice['total']) {
+                                $buttonText = $invoice['paid_amount'] > 0 ? 'Add Payment' : 'Pay Now';
+                                $balance = $invoice['total'] - $invoice['paid_amount'];
 
-        echo '<br>
+                                echo '<br>
               <button class="btn pay-btn btn-sm mt-1"
                   onclick="event.stopPropagation(); openPayModal(this)"
                   data-invoice-id="' . $invoice['id'] . '"
@@ -1215,9 +1238,9 @@ foreach ($invoices as $invoice) {
                   <i class="fas fa-credit-card me-1"></i>
                   ' . $buttonText . '
               </button>';
-    }
+                            }
 
-    echo '</div>
+                            echo '</div>
           <div class="invoice-actions dropdown">
               <button class="action-btn dropdown-toggle" onclick="event.stopPropagation()" data-bs-toggle="dropdown">
                   <i class="fas fa-ellipsis-v"></i>
@@ -1227,144 +1250,144 @@ foreach ($invoices as $invoice) {
                       <i class="fas fa-eye me-2"></i>View Details
                   </a></li>';
 
-    // if ($invoice['status'] !== 'cancelled') {
-    //     echo '<li><a class="dropdown-item" href="#" onclick="downloadInvoice(' . $invoice['id'] . ')">
-    //               <i class="fas fa-file-pdf me-2"></i>Download PDF
-    //           </a></li>';
-    // }
+                            // if ($invoice['status'] !== 'cancelled') {
+                            //     echo '<li><a class="dropdown-item" href="#" onclick="downloadInvoice(' . $invoice['id'] . ')">
+                            //               <i class="fas fa-file-pdf me-2"></i>Download PDF
+                            //           </a></li>';
+                            // }
 
-    // Edit option - available for drafts and sent invoices without payments
-    // if ($invoice['status'] === 'draft' || ($invoice['status'] === 'sent' && $invoice['paid_amount'] == 0)) {
-    //     echo '<li><a class="dropdown-item" href="#" onclick="editInvoice(' . $invoice['id'] . ')">
-    //               <i class="fas fa-edit me-2"></i>Edit Invoice
-    //           </a></li>';
-    // }
-    if ($invoice['status'] === 'draft' || ($invoice['status'] === 'sent' && $invoice['paid_amount'] == 0)) {
-        echo '<li><a class="dropdown-item" href="invoice_edit.php?id=' . $invoice['id'] . '">
+                            // Edit option - available for drafts and sent invoices without payments
+                            // if ($invoice['status'] === 'draft' || ($invoice['status'] === 'sent' && $invoice['paid_amount'] == 0)) {
+                            //     echo '<li><a class="dropdown-item" href="#" onclick="editInvoice(' . $invoice['id'] . ')">
+                            //               <i class="fas fa-edit me-2"></i>Edit Invoice
+                            //           </a></li>';
+                            // }
+                            if ($invoice['status'] === 'draft' || ($invoice['status'] === 'sent' && $invoice['paid_amount'] == 0)) {
+                                echo '<li><a class="dropdown-item" href="invoice_edit.php?id=' . $invoice['id'] . '">
                   <i class="fas fa-edit me-2"></i>Edit Invoice
               </a></li>';
-    }
+                            }
 
-    echo '<li><hr class="dropdown-divider"></li>';
+                            echo '<li><hr class="dropdown-divider"></li>';
 
-  //  Delete option - only for drafts and cancelled invoices
-// Delete option - only for drafts and cancelled invoices
-if ($invoice['status'] === 'draft' || $invoice['status'] === 'cancelled') {
-  echo '<li><a class="dropdown-item text-danger" href="#" onclick="confirmDeleteInvoice(' . $invoice['id'] . ')">
+                            //  Delete option - only for drafts and cancelled invoices
+                            // Delete option - only for drafts and cancelled invoices
+                            if ($invoice['status'] === 'draft' || $invoice['status'] === 'cancelled') {
+                                echo '<li><a class="dropdown-item text-danger" href="#" onclick="confirmDeleteInvoice(' . $invoice['id'] . ')">
             <i class="fas fa-trash-alt me-2"></i>Delete Invoice
         </a></li>';
-}
+                            }
 
-    // Cancel/Restore options
-    if ($invoice['status'] !== 'cancelled' && $invoice['status'] !== 'paid') {
-        echo '<li><a class="dropdown-item text-danger" href="#" onclick="confirmCancelInvoice(' . $invoice['id'] . ')">
+                            // Cancel/Restore options
+                            if ($invoice['status'] !== 'cancelled' && $invoice['status'] !== 'paid') {
+                                echo '<li><a class="dropdown-item text-danger" href="#" onclick="confirmCancelInvoice(' . $invoice['id'] . ')">
                   <i class="fas fa-ban me-2"></i>Cancel Invoice
               </a></li>';
-    } else if ($invoice['status'] === 'cancelled') {
-        echo '<li><a class="dropdown-item" href="#" onclick="restoreInvoice(' . $invoice['id'] . ')">
+                            } else if ($invoice['status'] === 'cancelled') {
+                                echo '<li><a class="dropdown-item" href="#" onclick="restoreInvoice(' . $invoice['id'] . ')">
                   <i class="fas fa-undo me-2"></i>Restore Invoice
               </a></li>';
-    }
+                            }
 
-    echo '</ul>
+                            echo '</ul>
           </div>
       </div>';
-}
-?>
+                        }
+                        ?>
 
 
-<!-- ✅ PAYMENT MODAL -->
-<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <form id="paymentForm" method="post" action="/originalTwo/AdminLTE/dist/pages/financials/submit_payment.php">
-      <div class="modal-content shadow-lg border-0 rounded-4">
+                        <!-- ✅ PAYMENT MODAL -->
+                        <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                <form id="paymentForm" method="post" action="/originalTwo/AdminLTE/dist/pages/financials/submit_payment.php">
+                                    <div class="modal-content shadow-lg border-0 rounded-4">
 
-        <!-- Modal Header -->
-        <div class="modal-header" style="background-color: #00192D;">
-          <h5 class="modal-title text-warning fw-semibold" id="paymentModalLabel">
-            <i class="fa-solid fa-file-invoice-dollar me-2"></i> Make Payment
-          </h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
+                                        <!-- Modal Header -->
+                                        <div class="modal-header" style="background-color: #00192D;">
+                                            <h5 class="modal-title text-warning fw-semibold" id="paymentModalLabel">
+                                                <i class="fa-solid fa-file-invoice-dollar me-2"></i> Make Payment
+                                            </h5>
+                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
 
-        <!-- Modal Body -->
-        <div class="modal-body px-4 py-4 bg-light-subtle">
-          <input type="hidden" name="invoice_id" id="invoiceId">
-          <input type="hidden" id="invoiceTotal" value="0">
+                                        <!-- Modal Body -->
+                                        <div class="modal-body px-4 py-4 bg-light-subtle">
+                                            <input type="hidden" name="invoice_id" id="invoiceId">
+                                            <input type="hidden" id="invoiceTotal" name="total_amount" value="0">
 
-          <div class="row g-4">
-            <!-- Payment Date -->
-            <div class="col-md-6">
-              <label class="form-label fw-semibold text-dark">
-                <i class="fa-regular fa-calendar-days text-warning me-1"></i> Payment Date
-              </label>
-              <input type="date" class="form-control border-warning" id="paymentDate" name="payment_date" placeholder="Enter payment date">
-              <div class="form-text text-danger small" id="dateError" style="display: none;">
-                ⚠️ Future dates are not allowed.
-              </div>
-            </div>
+                                            <div class="row g-4">
+                                                <!-- Payment Date -->
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-semibold text-dark">
+                                                        <i class="fa-regular fa-calendar-days text-warning me-1"></i> Payment Date
+                                                    </label>
+                                                    <input type="date" class="form-control border-warning" id="paymentDate" name="payment_date" required>
+                                                    <div class="form-text text-danger small" id="dateError" style="display: none;">
+                                                        ⚠️ Future dates are not allowed.
+                                                    </div>
+                                                </div>
 
-            <!-- Tenant Name -->
-            <div class="col-md-6">
-              <label class="form-label fw-semibold text-dark">
-                <i class="fa-solid fa-user-tag text-warning me-1"></i> Tenant Name
-              </label>
-              <input type="text" class="form-control border-warning" id="tenantName" name="tenant" readonly>
-            </div>
+                                                <!-- Tenant Name -->
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-semibold text-dark">
+                                                        <i class="fa-solid fa-user-tag text-warning me-1"></i> Tenant Name
+                                                    </label>
+                                                    <input type="text" class="form-control border-warning" id="tenantName" name="tenant" readonly>
+                                                </div>
 
-            <!-- Payment Method -->
-            <div class="col-md-6">
-              <label class="form-label fw-semibold text-dark">
-                <i class="fa-solid fa-hand-holding-dollar text-warning me-1"></i> Payment Method
-              </label>
-              <select class="form-select border-warning text-dark" name="payment_method" required>
-                <option value="">-- Choose Method --</option>
-                <option value="MPESA">📱 MPESA</option>
-                <option value="Bank">🏦 Bank</option>
-                <option value="Cash">💵 Cash</option>
-              </select>
-            </div>
+                                                <!-- Payment Method -->
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-semibold text-dark">
+                                                        <i class="fa-solid fa-hand-holding-dollar text-warning me-1"></i> Payment Method
+                                                    </label>
+                                                    <select class="form-select border-warning text-dark" name="payment_method" required>
+                                                        <option value="">-- Choose Method --</option>
+                                                        <option value="MPESA">📱 MPESA</option>
+                                                        <option value="Bank">🏦 Bank</option>
+                                                        <option value="Cash">💵 Cash</option>
+                                                    </select>
+                                                </div>
 
-            <!-- Amount -->
-            <div class="col-md-6">
-              <label class="form-label fw-semibold text-dark">
-                <i class="fa-solid fa-sack-dollar text-warning me-1"></i> Amount (KES)
-              </label>
-              <input type="text" class="form-control border-warning" id="amount" name="amount" oninput="checkPaymentStatus()">
-              <div id="paymentStatus" class="mt-2 small fw-semibold"></div>
-            </div>
+                                                <!-- Amount -->
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-semibold text-dark">
+                                                        <i class="fa-solid fa-sack-dollar text-warning me-1"></i> Amount (KES)
+                                                    </label>
+                                                    <input type="number" class="form-control border-warning" id="amount" name="amount" step="0.01" min="0" required>
+                                                    <div id="paymentStatus" class="mt-2 small fw-semibold"></div>
+                                                </div>
 
-            <!-- Reference Number -->
-            <div class="col-12">
-              <label class="form-label fw-semibold text-dark">
-                <i class="fa-solid fa-barcode text-warning me-1"></i> Reference Number
-              </label>
-              <input type="text" class="form-control border-warning" name="reference_number" placeholder="e.g. MPESA code or bank slip" required>
-            </div>
-          </div>
-        </div>
+                                                <!-- Reference Number -->
+                                                <div class="col-12">
+                                                    <label class="form-label fw-semibold text-dark">
+                                                        <i class="fa-solid fa-barcode text-warning me-1"></i> Reference Number
+                                                    </label>
+                                                    <input type="text" class="form-control border-warning" name="reference_number" placeholder="e.g. MPESA code or bank slip" required>
+                                                </div>
+                                            </div>
+                                        </div>
 
-        <!-- Modal Footer -->
-        <div class="modal-footer px-4 py-3" style="background-color: #00192D;">
-          <button type="submit" class="btn fw-semibold" style="background-color: #FFC107; color: #00192D;">
-            <i class="fa-solid fa-paper-plane me-1"></i> Submit Payment
-          </button>
-          <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">
-            <i class="fa-solid fa-xmark-circle me-1"></i> Cancel
-          </button>
-        </div>
+                                        <!-- Modal Footer -->
+                                        <div class="modal-footer px-4 py-3" style="background-color: #00192D;">
+                                            <button type="submit" class="btn fw-semibold" style="background-color: #FFC107; color: #00192D;">
+                                                <i class="fa-solid fa-paper-plane me-1"></i> Submit Payment
+                                            </button>
+                                            <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">
+                                                <i class="fa-solid fa-xmark-circle me-1"></i> Cancel
+                                            </button>
+                                        </div>
 
-      </div>
-    </form>
-  </div>
-</div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
 
-                    <div class="invoice-list">
-                        <!-- Invoice Item -->
-                        <div class="invoice-item">
+                        <div class="invoice-list">
+                            <!-- Invoice Item -->
+                            <div class="invoice-item">
 
 
-                            <!-- <div class="invoice-checkbox">
+                                <!-- <div class="invoice-checkbox">
                                 <input type="checkbox">
                             </div>
                             <div class="invoice-number">INV-2023-005</div>
@@ -1379,448 +1402,448 @@ if ($invoice['status'] === 'draft' || $invoice['status'] === 'cancelled') {
                                     <i class="fas fa-ellipsis-v"></i>
                                 </button>
                             </div> -->
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
 
 
 
-            <!-- Create Invoice View (Hidden by default) -->
-            <div id="create-invoice-view" style="display: none;">
-            <input type="hidden" id="invoice-id" name="invoice_id">
+                <!-- Create Invoice View (Hidden by default) -->
+                <div id="create-invoice-view" style="display: none;">
+                    <input type="hidden" id="invoice-id" name="invoice_id">
 
-                <div class="page-header">
-                    <h1 class="page-title">Create Invoice</h1>
-                    <div class="page-actions">
-                        <button class="btn btn-outline" id="cancel-invoice-btn" style="color: #FFC107; background-color:#00192D;">
-                            <i class="fas fa-times"></i> Cancel
-                        </button>
-                        <!-- <button  id="saveDraftBtn"  class="btn btn-outline" style="color: #FFC107; background-color:#00192D;">
+                    <div class="page-header">
+                        <h1 class="page-title">Create Invoice</h1>
+                        <div class="page-actions">
+                            <button class="btn btn-outline" id="cancel-invoice-btn" style="color: #FFC107; background-color:#00192D;">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                            <!-- <button  id="saveDraftBtn"  class="btn btn-outline" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-save"></i> Save Draft
                         </button> -->
-                        <button id="saveDraftBtn" class="btn btn-outline" style="color: #FFC107; background-color:#00192D;" type="button">
-                        <i class="fas fa-save"></i> Save Draft
-                        </button>
-                        <button class="btn btn-primary" id="preview-invoice-btn" style="color: #FFC107; background-color:#00192D;">
-                            <i class="fas fa-eye"></i> Preview
-                        </button>
+                            <button id="saveDraftBtn" class="btn btn-outline" style="color: #FFC107; background-color:#00192D;" type="button">
+                                <i class="fas fa-save"></i> Save Draft
+                            </button>
+                            <button class="btn btn-primary" id="preview-invoice-btn" style="color: #FFC107; background-color:#00192D;">
+                                <i class="fas fa-eye"></i> Preview
+                            </button>
+                        </div>
                     </div>
-                </div>
 
-<!-- Sliding Preview Panel -->
-<div id="invoicePreviewPanel">
-  <div class="preview-content">
-    <button id="closePreview" class="close-btn">&times;</button>
-    <h3>Invoice Preview</h3>
-    <div id="previewContent">
-      <!-- Populated by JS -->
-    </div>
-  </div>
-</div>
-
-                <div class="invoice-form-container">
-                    <!-- Customer Section -->
-                    <div class="form-section">
-                        <h3 class="section-title">Tenant Details</h3>
-                        <form method="POST" action="submit_invoice.php">
-                        <div class="form-row">
-
-<!-- Existing Invoice # input -->
-<div class="form-group">
-    <label for="invoice-number">Invoice #</label>
-    <input  type="text"
-            id="invoice-number"
-            value="<?= $invoiceNumber ?>"
-            class="form-control"
-            readonly>
-    <input type="hidden"
-           name="invoice_number"
-           value="<?= $invoiceNumber ?>">
-</div>
-
-
-
-<!-- ▲ NEW: Building selector -->
-<div class="form-group">
-    <label for="building">Building</label>
-    <select id="building" name="building_id" class="form-control" required>
-        <option value="">Select a Building</option>
-        <?php foreach ($buildings as $b): ?>
-            <option value="<?= $b['building_id'] ?>">
-                <?= htmlspecialchars($b['building_name']) ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
-</div>
-
-
-<!-- ▼ Tenant selector (will be filled by JS) -->
-<div class="form-group">
-    <label for="customer">Tenant</label>
-    <select id="customer"
-            name="tenant"
-            class="form-control"
-            required
-            disabled>
-        <option value="">Select a Tenant</option>
-    </select>
-</div>
-
-</div>
-
-<div class="form-row">
-<div class="form-group">
-    <label for="invoice-date">Invoice Date</label>
-    <input type="date"
-           id="invoice-date"
-           name="invoice_date"
-           class="form-control"
-           required>
-</div>
-
-<div class="form-group">
-    <label for="due-date">Due Date</label>
-    <input type="date"
-           id="due-date"
-           name="due_date"
-           class="form-control"
-           required>
-</div>
-</div>
-
-
-                    <!-- Items Section -->
-                    <div class="form-section">
-                        <h3 class="section-title">Items</h3>
-                        <table class="items-table">
-      <thead>
-        <tr>
-          <th>Item (Service)</th>
-          <th>Description</th>
-          <th>Qty</th>
-          <th>Unit Price</th>
-          <th>Taxes</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-        <td>
-        <select  id="account-item" name="account_item[]" class="select-account searchable-select" required>
-          <option value="" disabled selected>Select Account Item</option>
-          <?php foreach ($accountItems as $item): ?>
-            <option value="<?= htmlspecialchars($item['account_code']) ?>">
-              <?= htmlspecialchars($item['account_name']) ?>
-            </option>
-          <?php endforeach; ?>
-        </select>
-      </td>
-      <style>
-
-</style>
-
-          <td><textarea id="description" name="description[]" placeholder="Description" rows="1" required></textarea></td>
-          <td><input id="quantity" type="number" name="quantity[]" class="form-control quantity" placeholder="1" required></td>
-          <td><input id="unit_price"  type="number" name="unit_price[]" class="form-control unit-price" placeholder="123" required></td>
-          <td>
-            <select  id="taxes" name="taxes[]" class="form-select vat-option" required>
-              <option value="" disabled selected>Select Option</option>
-              <option value="inclusive">VAT 16% Inclusive</option>
-              <option value="exclusive">VAT 16% Exclusive</option>
-              <option value="zero">Zero Rated</option>
-              <option value="exempted">Exempted</option>
-            </select>
-          </td>
-          <td>
-             <input  id="total" type="number" name="total[]" class="form-control total" placeholder="0" readonly  style="display:none;">
-            <button type="button"  class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
-              <i class="fa fa-trash" style="font-size: 12px;"></i>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <button type="button" class="add-btn" onclick="addRow()">
-      <i class="fa fa-plus"></i> ADD MORE
-    </button>
-  </div>
-
-                    <!-- Notes & Terms -->
-                    <div class="form-section">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="notes">Notes(Optional)</label>
-                                <textarea id="notes" name="notes" class="form-control" rows="3" placeholder="Thank you for your business!"></textarea>
+                    <!-- Sliding Preview Panel -->
+                    <div id="invoicePreviewPanel">
+                        <div class="preview-content">
+                            <button id="closePreview" class="close-btn">&times;</button>
+                            <h3>Invoice Preview</h3>
+                            <div id="previewContent">
+                                <!-- Populated by JS -->
                             </div>
-                            <!-- <div class="form-group">
+                        </div>
+                    </div>
+
+                    <div class="invoice-form-container">
+                        <!-- Customer Section -->
+                        <div class="form-section">
+                            <h3 class="section-title">Tenant Details</h3>
+                            <form method="POST" action="submit_invoice.php">
+                                <div class="form-row">
+
+                                    <!-- Existing Invoice # input -->
+                                    <div class="form-group">
+                                        <label for="invoice-number">Invoice #</label>
+                                        <input type="text"
+                                            id="invoice-number"
+                                            value="<?= $invoiceNumber ?>"
+                                            class="form-control"
+                                            readonly>
+                                        <input type="hidden"
+                                            name="invoice_number"
+                                            value="<?= $invoiceNumber ?>">
+                                    </div>
+
+
+
+                                    <!-- ▲ NEW: Building selector -->
+                                    <div class="form-group">
+                                        <label for="building">Building</label>
+                                        <select id="building" name="building_id" class="form-control" required>
+                                            <option value="">Select a Building</option>
+                                            <?php foreach ($buildings as $b): ?>
+                                                <option value="<?= $b['building_id'] ?>">
+                                                    <?= htmlspecialchars($b['building_name']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+
+
+                                    <!-- ▼ Tenant selector (will be filled by JS) -->
+                                    <div class="form-group">
+                                        <label for="customer">Tenant</label>
+                                        <select id="customer"
+                                            name="tenant"
+                                            class="form-control"
+                                            required
+                                            disabled>
+                                            <option value="">Select a Tenant</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="invoice-date">Invoice Date</label>
+                                        <input type="date"
+                                            id="invoice-date"
+                                            name="invoice_date"
+                                            class="form-control"
+                                            required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="due-date">Due Date</label>
+                                        <input type="date"
+                                            id="due-date"
+                                            name="due_date"
+                                            class="form-control"
+                                            required>
+                                    </div>
+                                </div>
+
+
+                                <!-- Items Section -->
+                                <div class="form-section">
+                                    <h3 class="section-title">Items</h3>
+                                    <table class="items-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Item (Service)</th>
+                                                <th>Description</th>
+                                                <th>Qty</th>
+                                                <th>Unit Price</th>
+                                                <th>Taxes</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <select id="account-item" name="account_item[]" class="select-account searchable-select" required>
+                                                        <option value="" disabled selected>Select Account Item</option>
+                                                        <?php foreach ($accountItems as $item): ?>
+                                                            <option value="<?= htmlspecialchars($item['account_code']) ?>">
+                                                                <?= htmlspecialchars($item['account_name']) ?>
+                                                            </option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </td>
+                                                <style>
+
+                                                </style>
+
+                                                <td><textarea id="description" name="description[]" placeholder="Description" rows="1" required></textarea></td>
+                                                <td><input id="quantity" type="number" name="quantity[]" class="form-control quantity" placeholder="1" required></td>
+                                                <td><input id="unit_price" type="number" name="unit_price[]" class="form-control unit-price" placeholder="123" required></td>
+                                                <td>
+                                                    <select id="taxes" name="taxes[]" class="form-select vat-option" required>
+                                                        <option value="" disabled selected>Select Option</option>
+                                                        <option value="inclusive">VAT 16% Inclusive</option>
+                                                        <option value="exclusive">VAT 16% Exclusive</option>
+                                                        <option value="zero">Zero Rated</option>
+                                                        <option value="exempted">Exempted</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input id="total" type="number" name="total[]" class="form-control total" placeholder="0" readonly style="display:none;">
+                                                    <button type="button" class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
+                                                        <i class="fa fa-trash" style="font-size: 12px;"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <button type="button" class="add-btn" onclick="addRow()">
+                                        <i class="fa fa-plus"></i> ADD MORE
+                                    </button>
+                                </div>
+
+                                <!-- Notes & Terms -->
+                                <div class="form-section">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="notes">Notes(Optional)</label>
+                                            <textarea id="notes" name="notes" class="form-control" rows="3" placeholder="Thank you for your business!"></textarea>
+                                        </div>
+                                        <!-- <div class="form-group">
                                 <label for="terms">Terms & Conditions</label>
                                 <textarea id="terms"  name="terms_conditions" class="form-control" rows="3" placeholder="Payment due within 15 days"></textarea>
                             </div> -->
-                        </div>
-                    </div>
+                                    </div>
+                                </div>
 
 
-                    <!-- Form Actions -->
-                    <div class="form-actions">
-                        <div class="action-left">
-                            <button class="btn btn-outline">
-                                <i class="fas fa-paperclip"></i> Attach File
-                            </button>
-                        </div>
-                        <div class="action-right">
-                            <!-- <button class="btn btn-outline">
+                                <!-- Form Actions -->
+                                <div class="form-actions">
+                                    <div class="action-left">
+                                        <button class="btn btn-outline">
+                                            <i class="fas fa-paperclip"></i> Attach File
+                                        </button>
+                                    </div>
+                                    <div class="action-right">
+                                        <!-- <button class="btn btn-outline">
                                  Send
                             </button> -->
-                            <button type="submit" style="background-color: #00192D; color: #FFC107; padding: 8px 16px; border: none; border-radius: 4px;">
-                            <i class="fas fa-envelope"></i>
-                            Save&Send
-  </button>
+                                        <button type="submit" style="background-color: #00192D; color: #FFC107; padding: 8px 16px; border: none; border-radius: 4px;">
+                                            <i class="fas fa-envelope"></i>
+                                            Save&Send
+                                        </button>
 
-</form>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+    </div>
     </div>
 
 
     <script>
-// Edit Invoice
-// function editInvoice(invoiceId) {
-//     // Redirect to edit page or open edit modal
-//     window.location.href = 'edit_invoice.php?id=' + invoiceId;
-// }
+        // Edit Invoice
+        // function editInvoice(invoiceId) {
+        //     // Redirect to edit page or open edit modal
+        //     window.location.href = 'edit_invoice.php?id=' + invoiceId;
+        // }
 
-// Confirm Delete Invoice
-function confirmDeleteInvoice(invoiceId) {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            deleteInvoice(invoiceId);
-        }
-    });
-}
-
-// Delete Invoice
-function deleteInvoice(invoiceId) {
-    fetch('delete_invoice.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: 'id=' + invoiceId
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            Swal.fire(
-                'Deleted!',
-                'Invoice has been deleted.',
-                'success'
-            ).then(() => {
-                location.reload(); // Refresh the page
+        // Confirm Delete Invoice
+        function confirmDeleteInvoice(invoiceId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteInvoice(invoiceId);
+                }
             });
-        } else {
-            Swal.fire(
-                'Error!',
-                data.message || 'Failed to delete invoice.',
-                'error'
-            );
         }
-    })
-    .catch(error => {
-        Swal.fire(
-            'Error!',
-            'An error occurred while deleting the invoice.',
-            'error'
-        );
-    });
-}
 
-// Confirm Cancel Invoice
-function confirmCancelInvoice(invoiceId) {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "This will cancel the invoice and mark it as non-payable.",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, cancel it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            cancelInvoice(invoiceId);
+        // Delete Invoice
+        function deleteInvoice(invoiceId) {
+            fetch('delete_invoice.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'id=' + invoiceId
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire(
+                            'Deleted!',
+                            'Invoice has been deleted.',
+                            'success'
+                        ).then(() => {
+                            location.reload(); // Refresh the page
+                        });
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            data.message || 'Failed to delete invoice.',
+                            'error'
+                        );
+                    }
+                })
+                .catch(error => {
+                    Swal.fire(
+                        'Error!',
+                        'An error occurred while deleting the invoice.',
+                        'error'
+                    );
+                });
         }
-    });
-}
 
-// Cancel Invoice - Updated version
-function cancelInvoice(invoiceId) {
-    fetch('cancel_invoice.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: 'id=' + invoiceId
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            Swal.fire(
-                'Cancelled!',
-                'Invoice has been cancelled.',
-                'success'
-            ).then(() => {
-                // Update the UI without full page reload
-                updateInvoiceStatus(invoiceId, 'cancelled');
+        // Confirm Cancel Invoice
+        function confirmCancelInvoice(invoiceId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This will cancel the invoice and mark it as non-payable.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, cancel it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    cancelInvoice(invoiceId);
+                }
             });
-        } else {
-            Swal.fire(
-                'Error!',
-                data.message || 'Failed to cancel invoice.',
-                'error'
-            );
-        }
-    })
-    .catch(error => {
-        Swal.fire(
-            'Error!',
-            'An error occurred while cancelling the invoice.',
-            'error'
-        );
-    });
-}
-
-// Function to update invoice status visually
-function updateInvoiceStatus(invoiceId, newStatus) {
-    const invoiceItem = document.querySelector(`.invoice-item[data-id="${invoiceId}"]`);
-    if (!invoiceItem) {
-        location.reload(); // Fallback if element not found
-        return;
-    }
-
-    // Update status badge
-    const statusBadge = invoiceItem.querySelector('.invoice-status .status-badge');
-    if (statusBadge) {
-        // Remove all status classes
-        statusBadge.classList.remove('badge-draft', 'badge-sent', 'badge-paid', 'badge-overdue');
-
-        // Add new status class
-        statusBadge.classList.add('badge-' + newStatus);
-
-        // Update text
-        statusBadge.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
-    }
-
-    // Update payment status badge if exists
-    const paymentStatusBadges = invoiceItem.querySelectorAll('.invoice-status .status-badge');
-    if (paymentStatusBadges.length > 1) {
-        const paymentStatusBadge = paymentStatusBadges[1];
-        paymentStatusBadge.classList.remove('badge-paid', 'badge-partial', 'badge-unpaid');
-        paymentStatusBadge.classList.add('badge-cancelled');
-        paymentStatusBadge.textContent = 'Cancelled';
-    }
-
-    // Remove payment button if exists
-    const payButton = invoiceItem.querySelector('.pay-btn');
-    if (payButton) {
-        payButton.remove();
-    }
-
-    // Update dropdown menu options
-    const dropdownMenu = invoiceItem.querySelector('.dropdown-menu');
-    if (dropdownMenu) {
-        // Remove Cancel option
-        const cancelOption = dropdownMenu.querySelector('a[onclick*="confirmCancelInvoice"]');
-        if (cancelOption) {
-            cancelOption.parentNode.remove();
         }
 
-        // Add Restore option
-        const divider = dropdownMenu.querySelector('.dropdown-divider');
-        if (divider) {
-            const restoreOption = document.createElement('li');
-            restoreOption.innerHTML = `
+        // Cancel Invoice - Updated version
+        function cancelInvoice(invoiceId) {
+            fetch('cancel_invoice.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'id=' + invoiceId
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire(
+                            'Cancelled!',
+                            'Invoice has been cancelled.',
+                            'success'
+                        ).then(() => {
+                            // Update the UI without full page reload
+                            updateInvoiceStatus(invoiceId, 'cancelled');
+                        });
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            data.message || 'Failed to cancel invoice.',
+                            'error'
+                        );
+                    }
+                })
+                .catch(error => {
+                    Swal.fire(
+                        'Error!',
+                        'An error occurred while cancelling the invoice.',
+                        'error'
+                    );
+                });
+        }
+
+        // Function to update invoice status visually
+        function updateInvoiceStatus(invoiceId, newStatus) {
+            const invoiceItem = document.querySelector(`.invoice-item[data-id="${invoiceId}"]`);
+            if (!invoiceItem) {
+                location.reload(); // Fallback if element not found
+                return;
+            }
+
+            // Update status badge
+            const statusBadge = invoiceItem.querySelector('.invoice-status .status-badge');
+            if (statusBadge) {
+                // Remove all status classes
+                statusBadge.classList.remove('badge-draft', 'badge-sent', 'badge-paid', 'badge-overdue');
+
+                // Add new status class
+                statusBadge.classList.add('badge-' + newStatus);
+
+                // Update text
+                statusBadge.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
+            }
+
+            // Update payment status badge if exists
+            const paymentStatusBadges = invoiceItem.querySelectorAll('.invoice-status .status-badge');
+            if (paymentStatusBadges.length > 1) {
+                const paymentStatusBadge = paymentStatusBadges[1];
+                paymentStatusBadge.classList.remove('badge-paid', 'badge-partial', 'badge-unpaid');
+                paymentStatusBadge.classList.add('badge-cancelled');
+                paymentStatusBadge.textContent = 'Cancelled';
+            }
+
+            // Remove payment button if exists
+            const payButton = invoiceItem.querySelector('.pay-btn');
+            if (payButton) {
+                payButton.remove();
+            }
+
+            // Update dropdown menu options
+            const dropdownMenu = invoiceItem.querySelector('.dropdown-menu');
+            if (dropdownMenu) {
+                // Remove Cancel option
+                const cancelOption = dropdownMenu.querySelector('a[onclick*="confirmCancelInvoice"]');
+                if (cancelOption) {
+                    cancelOption.parentNode.remove();
+                }
+
+                // Add Restore option
+                const divider = dropdownMenu.querySelector('.dropdown-divider');
+                if (divider) {
+                    const restoreOption = document.createElement('li');
+                    restoreOption.innerHTML = `
                 <a class="dropdown-item" href="#" onclick="restoreInvoice(${invoiceId})">
                     <i class="fas fa-undo me-2"></i>Restore Invoice
                 </a>
             `;
-            dropdownMenu.insertBefore(restoreOption, divider.nextSibling);
+                    dropdownMenu.insertBefore(restoreOption, divider.nextSibling);
+                }
+            }
         }
-    }
-}
 
-// Restore Invoice - Updated version
-function restoreInvoice(invoiceId) {
-    fetch('restore_invoice.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: 'id=' + invoiceId
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            Swal.fire(
-                'Restored!',
-                'Invoice has been restored.',
-                'success'
-            ).then(() => {
-                // Update the UI without full page reload
-                updateInvoiceStatus(invoiceId, data.invoice.status || 'sent');
+        // Restore Invoice - Updated version
+        function restoreInvoice(invoiceId) {
+            fetch('restore_invoice.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'id=' + invoiceId
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire(
+                            'Restored!',
+                            'Invoice has been restored.',
+                            'success'
+                        ).then(() => {
+                            // Update the UI without full page reload
+                            updateInvoiceStatus(invoiceId, data.invoice.status || 'sent');
+                        });
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            data.message || 'Failed to restore invoice.',
+                            'error'
+                        );
+                    }
+                })
+                .catch(error => {
+                    Swal.fire(
+                        'Error!',
+                        'An error occurred while restoring the invoice.',
+                        'error'
+                    );
+                });
+        }
+
+        // Delete for Sent Invoice
+        function deleteSentInvoice(invoiceId) {
+            Swal.fire({
+                title: 'Delete Sent Invoice?',
+                text: "This invoice has been sent to the tenant. Are you sure you want to delete it?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it anyway'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteInvoice(invoiceId);
+                }
             });
-        } else {
-            Swal.fire(
-                'Error!',
-                data.message || 'Failed to restore invoice.',
-                'error'
-            );
         }
-    })
-    .catch(error => {
-        Swal.fire(
-            'Error!',
-            'An error occurred while restoring the invoice.',
-            'error'
-        );
-    });
-}
 
-// Delete for Sent Invoice
-function deleteSentInvoice(invoiceId) {
-    Swal.fire({
-        title: 'Delete Sent Invoice?',
-        text: "This invoice has been sent to the tenant. Are you sure you want to delete it?",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it anyway'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            deleteInvoice(invoiceId);
+        // View Invoice Details
+        function viewInvoice(invoiceId) {
+            window.location.href = 'invoice_details.php?id=' + invoiceId;
         }
-    });
-}
+    </script>
 
-// View Invoice Details
-function viewInvoice(invoiceId) {
-    window.location.href = 'invoice_details.php?id=' + invoiceId;
-}
-</script>
-
-<!-- <script>
+    <!-- <script>
 document.addEventListener('DOMContentLoaded', function() {
     const saveDraftBtn = document.getElementById('saveDraftBtn');
 
@@ -1897,125 +1920,164 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script> -->
 
-<script>
-function openPayModal(button) {
-  const invoiceId = button.getAttribute('data-invoice-id');
-  const tenant = button.getAttribute('data-tenant');
-  const amount = button.getAttribute('data-amount');
-  const today = new Date().toISOString().split('T')[0];
+    <script>
+        function openPayModal(button) {
+            // Get all invoice data from button attributes
+            const invoiceId = button.getAttribute('data-invoice-id');
+            const tenant = button.getAttribute('data-tenant');
+            const totalAmount = parseFloat(button.getAttribute('data-total'));
+            const paidAmount = parseFloat(button.getAttribute('data-paid'));
+            const balance = parseFloat(button.getAttribute('data-balance'));
 
-  document.getElementById('invoiceId').value = invoiceId;
-  document.getElementById('tenantName').value = tenant;
-  document.getElementById('amount').value = amount;
-  document.getElementById('paymentDate').value = today; // set today's date
+            // Set today's date as default
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            const todayStr = `${yyyy}-${mm}-${dd}`;
 
-  const modal = new bootstrap.Modal(document.getElementById('paymentModal'));
-  modal.show();
-}
+            // Set modal values
+            document.getElementById('invoiceId').value = invoiceId;
+            document.getElementById('tenantName').value = tenant;
+            document.getElementById('invoiceTotal').value = totalAmount.toFixed(2);
+            document.getElementById('amount').value = balance.toFixed(2);
+            document.getElementById('paymentDate').value = todayStr;
+            document.getElementById('paymentDate').setAttribute('max', todayStr);
 
-document.getElementById('paymentForm').addEventListener('submit', function (e) {
-  e.preventDefault();
+            // Initialize payment status
+            updatePaymentStatus();
 
-  const form = e.target;
-  const formData = new FormData(form);
-  const invoiceId = formData.get('invoice_id');
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('paymentModal'));
+            modal.show();
+        }
 
-  fetch(form.action, {
-    method: 'POST',
-    body: formData
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success) {
-      alert('✅ Payment submitted successfully!');
+        function updatePaymentStatus() {
+            const amountInput = document.getElementById('amount');
+            const paymentStatus = document.getElementById('paymentStatus');
+            const invoiceTotal = parseFloat(document.getElementById('invoiceTotal').value);
+            const paymentAmount = parseFloat(amountInput.value) || 0;
 
-      const modal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
-      modal.hide();
+            if (isNaN(paymentAmount)) {
+                paymentStatus.innerHTML = '<span class="text-secondary">Enter valid payment amount</span>';
+                return;
+            }
 
-      const payBtn = document.querySelector(`button[data-invoice-id="${invoiceId}"]`);
-      const statusDiv = payBtn?.closest('.invoice-status');
-      const badge = statusDiv?.querySelector('.status-badge');
+            if (paymentAmount <= 0) {
+                paymentStatus.innerHTML = '<span class="text-danger">⚠️ Amount must be greater than 0</span>';
+            } else if (paymentAmount > invoiceTotal) {
+                const overpayment = (paymentAmount - invoiceTotal).toFixed(2);
+                paymentStatus.innerHTML = `<span class="text-danger">⚠️ Overpayment (KES ${overpayment} over)</span>`;
+            } else if (paymentAmount === invoiceTotal) {
+                paymentStatus.innerHTML = '<span class="text-success">✓ Full payment will be received</span>';
+            } else {
+                const remaining = (invoiceTotal - paymentAmount).toFixed(2);
+                paymentStatus.innerHTML = `<span class="text-warning">⏳ Partial payment (KES ${remaining} remaining)</span>`;
+            }
+        }
 
-      if (badge) {
-        badge.classList.remove('badge-unpaid');
-        badge.classList.add('badge-paid');
-        badge.textContent = 'Paid';
-      }
+        document.addEventListener("DOMContentLoaded", () => {
+            // Setup amount input listener
+            document.getElementById('amount').addEventListener('input', updatePaymentStatus);
 
-      if (payBtn) payBtn.remove();
-    } else {
-      alert('❌ Failed to submit payment: ' + (data.message || 'Try again'));
-    }
-  })
-  .catch(error => {
-    console.error('❌ Payment error:', error);
-    alert('❌ Network or server error occurred.');
-  });
-});
+            // Setup form submission
+            document.getElementById('paymentForm').addEventListener('submit', function(e) {
+                e.preventDefault();
 
-document.addEventListener("DOMContentLoaded", () => {
-  const paymentDateInput = document.getElementById("paymentDate");
-  const form = document.getElementById("paymentForm");
-  const dateError = document.getElementById("dateError");
+                const form = e.target;
+                const formData = new FormData(form);
+                const invoiceId = formData.get('invoice_id');
+                const paymentAmount = parseFloat(formData.get('amount'));
+                const invoiceTotal = parseFloat(document.getElementById('invoiceTotal').value);
 
-  const today = new Date();
-  const yyyy = today.getFullYear();
-  const mm = String(today.getMonth() + 1).padStart(2, '0');
-  const dd = String(today.getDate()).padStart(2, '0');
-  const todayStr = `${yyyy}-${mm}-${dd}`;
+                // Validate payment amount
+                if (paymentAmount <= 0) {
+                    alert('❌ Payment amount must be greater than 0');
+                    return;
+                }
 
-  paymentDateInput.setAttribute("max", todayStr);
+                if (paymentAmount > invoiceTotal) {
+                    if (!confirm(`This payment will result in an overpayment of KES ${(paymentAmount - invoiceTotal).toFixed(2)}. Continue?`)) {
+                        return;
+                    }
+                }
 
-  // Optional validation to block future dates
-  form.addEventListener("submit", function (e) {
-    const selected = paymentDateInput.value;
-    if (selected > todayStr) {
-      e.preventDefault();
-      dateError.style.display = "block";
-      paymentDateInput.classList.add("is-invalid");
-    } else {
-      dateError.style.display = "none";
-      paymentDateInput.classList.remove("is-invalid");
-    }
-  });
-});
-</script>
+                // Submit payment
+                fetch(form.action, {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Show success message
+                            const alertDiv = document.createElement('div');
+                            alertDiv.className = 'alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3';
+                            alertDiv.style.zIndex = '9999';
+                            alertDiv.innerHTML = `
+          <strong>✅ Success!</strong> ${data.message}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+                            document.body.appendChild(alertDiv);
 
-<script>
-function checkPaymentStatus() {
-  const amountInput = document.getElementById('amount');
-  const invoiceTotal = parseFloat(document.getElementById('invoiceTotal').value);
-  const paymentStatus = document.getElementById('paymentStatus');
+                            // Auto-remove after 5 seconds
+                            setTimeout(() => {
+                                alertDiv.remove();
+                            }, 5000);
 
-  // Remove non-numeric characters and parse the input value
-  const paidAmount = parseFloat(amountInput.value.replace(/[^0-9.]/g, '')) || 0;
+                            // Close modal
+                            const modal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
+                            modal.hide();
 
-  if (paidAmount <= 0) {
-    paymentStatus.textContent = '';
-    paymentStatus.className = 'mt-2 small fw-semibold';
-    return;
-  }
+                            // Refresh the page to update all data
+                            window.location.reload();
+                        } else {
+                            alert('❌ ' + (data.message || 'Failed to submit payment'));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Payment error:', error);
+                        alert('❌ Network or server error occurred');
+                    });
+            });
+        });
+    </script>
 
-  if (paidAmount >= invoiceTotal) {
-    paymentStatus.textContent = '✅ Full payment - invoice will be marked as paid';
-    paymentStatus.className = 'mt-2 small fw-semibold text-success';
-  } else if (paidAmount > 0 && paidAmount < invoiceTotal) {
-    paymentStatus.textContent = '⚠️ Partial payment - invoice will be marked as partially paid';
-    paymentStatus.className = 'mt-2 small fw-semibold text-warning';
-  }
-}
+    <script>
+        function checkPaymentStatus() {
+            const amountInput = document.getElementById('amount');
+            const invoiceTotal = parseFloat(document.getElementById('invoiceTotal').value);
+            const paymentStatus = document.getElementById('paymentStatus');
 
-// When opening the modal, set the invoice total
-document.getElementById('paymentModal').addEventListener('show.bs.modal', function (event) {
-  const button = event.relatedTarget;
-  const invoiceTotal = button.getAttribute('data-invoice-total');
-  document.getElementById('invoiceTotal').value = invoiceTotal;
-});
-</script>
+            // Remove non-numeric characters and parse the input value
+            const paidAmount = parseFloat(amountInput.value.replace(/[^0-9.]/g, '')) || 0;
+
+            if (paidAmount <= 0) {
+                paymentStatus.textContent = '';
+                paymentStatus.className = 'mt-2 small fw-semibold';
+                return;
+            }
+
+            if (paidAmount >= invoiceTotal) {
+                paymentStatus.textContent = '✅ Full payment - invoice will be marked as paid';
+                paymentStatus.className = 'mt-2 small fw-semibold text-success';
+            } else if (paidAmount > 0 && paidAmount < invoiceTotal) {
+                paymentStatus.textContent = '⚠️ Partial payment - invoice will be marked as partially paid';
+                paymentStatus.className = 'mt-2 small fw-semibold text-warning';
+            }
+        }
+
+        // When opening the modal, set the invoice total
+        document.getElementById('paymentModal').addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const invoiceTotal = button.getAttribute('data-invoice-total');
+            document.getElementById('invoiceTotal').value = invoiceTotal;
+        });
+    </script>
 
 
-<!-- Main Js File -->
-<script src="invoice.js"></script>
+    <!-- Main Js File -->
+    <script src="invoice.js"></script>
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
@@ -2031,7 +2093,7 @@ document.getElementById('paymentModal').addEventListener('show.bs.modal', functi
         crossorigin="anonymous">
     </script>
 
-<script
+    <script
         src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
         crossorigin="anonymous">
