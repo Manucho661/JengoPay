@@ -173,7 +173,6 @@ try {
     <style>
         .app-wrapper {
             background-color: rgba(128, 128, 128, 0.1);
-
         }
 
         .modal-backdrop.show {
@@ -221,24 +220,28 @@ try {
             z-index: 10;
             white-space: nowrap;
         }
-        .diagonal-partially-paid-label {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(-45deg); /* Centered and rotated */
-    background-color: rgba(255, 165, 0, 0.2); /* Amber background with opacity */
-    color: #ff9900; /* Amber or gold text */
-    font-weight: bold;
-    font-size: 24px;
-    padding: 15px 40px;
-    border: 2px solid #ff9900; /* Amber border */
-    border-radius: 8px;
-    text-transform: uppercase;
-    pointer-events: none;
-    z-index: 10;
-    white-space: nowrap;
-}
 
+        .diagonal-partially-paid-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            /* Centered and rotated */
+            background-color: rgba(255, 165, 0, 0.2);
+            /* Amber background with opacity */
+            color: #ff9900;
+            /* Amber or gold text */
+            font-weight: bold;
+            font-size: 24px;
+            padding: 15px 40px;
+            border: 2px solid #ff9900;
+            /* Amber border */
+            border-radius: 8px;
+            text-transform: uppercase;
+            pointer-events: none;
+            z-index: 10;
+            white-space: nowrap;
+        }
     </style>
 </head>
 
@@ -399,17 +402,42 @@ try {
                                             <div class="card-body">
                                                 <form method="POST" id="expenseForm">
                                                     <div class="row g-3">
-                                                        <div class="col-md-4">
+                                                        <div class="col-md-3">
+                                                            <div class="custom-select-wrapper">
+                                                                <label class="form-label fw-bold">Building</label>
+                                                                <div class="custom-select shadow-sm" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
+                                                                    Select Building
+                                                                </div>
+                                                                <div class="select-options" id="select-options" role="listbox">
+                                                                    <div role="option" data-value="option1">Manucho</div>
+                                                                    <div role="option" data-value="option2">Silver Spoon</div>
+                                                                    <div role="option" data-value="option3">Ebenezer</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
                                                             <label class="form-label fw-bold">Date&nbsp;:</label>
                                                             <input type="date" id="dateInput" class="form-control rounded-1 shadow-none" name="date" placeholder="">
                                                         </div>
-                                                        <div class="col-md-4">
+                                                        <div class="col-md-3">
                                                             <label class="form-label fw-bold">Expense No</label>
                                                             <input type="text" name="expense_no" class="form-control rounded-1 shadow-none" placeholder="KRA000100039628">
                                                         </div>
-                                                        <div class="col-md-4">
+                                                        <div class="col-md-3">
                                                             <label class="form-label fw-bold">Supplier</label>
-                                                            <input type="text" class="form-control rounded-1 shadow-none" placeholder="Supplier" name="supplier" required />
+                                                            <div class="combo-box">
+                                                                <input type="text" class="form-control rounded-1 shadow-none combo-input" placeholder="Search or select...">
+                                                                <button class="combo-button">▼</button>
+                                                                <ul class="combo-options">
+                                                                    <li class="combo-option" data-value="all">All Rentals</li>
+                                                                    <li class="combo-option" data-value="active">Active Rentals</li>
+                                                                    <li class="combo-option" data-value="future">Future Rentals</li>
+                                                                    <li class="combo-option" data-value="residents">Residents</li>
+                                                                    <li class="combo-option" data-value="owners">Property Owners</li>
+                                                                    <li class="combo-option" data-value="overdue">Overdue Payments</li>
+                                                                    <li class="combo-option" data-value="renewals">Upcoming Renewals</li>
+                                                                </ul>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <!-- Hidden total -->
@@ -417,57 +445,66 @@ try {
                                                         <div class="text-muted mt-4 mb-4">Add the Spend items in the fields below</div>
                                                         <div class="col-md-12 rounded-2" id="itemsContainer">
                                                             <div class="row item-row g-3 mb-5 p-2" style="background-color: #f5f5f5;">
-                                                                <div class="col-md-12">
-                                                                    <div class="row">
-                                                                        <div class="col-md-3">
-                                                                            <label class="form-label fw-bold">ITEM(SERVICE)</label>
-                                                                            <select class="form-select shadow-none rounded-1" name="item_name[]" style="width: 100%;">
-                                                                                <option value="" disabled selected>Select</option>
-                                                                                <?php foreach ($items as $item): ?>
-                                                                                    <option value="<?= htmlspecialchars($item['account_name']) ?>">
-                                                                                        <?= htmlspecialchars($item['account_name']) ?>
-                                                                                    </option>
-                                                                                <?php endforeach; ?>
-                                                                            </select>
-                                                                        </div>
-                                                                        <div class="col-md-3">
-                                                                            <label class="form-label fw-bold">Description</label>
-                                                                            <input type="text" class="form-control description rounded-1 shadow-none" placeholder="Electricity" name="description[]" required />
-                                                                        </div>
-                                                                        <div class="col-md-3">
-                                                                            <label class="form-label fw-bold">Qty</label>
-                                                                            <input type="number" class="form-control qty rounded-1 shadow-none" placeholder="1" name="qty[]" required />
-                                                                        </div>
-                                                                        <div class="col-md-3">
-                                                                            <label class="form-label fw-bold">Unit Price (KSH)</label>
-                                                                            <input type="number" class="form-control unit-price rounded-1 shadow-none" placeholder="123" name="unit_price[]" required />
-                                                                        </div>
+                                                                <!-- ITEM(SERVICE) -->
+                                                                <div class="col-md-2">
+                                                                    <label class="form-label fw-bold">ITEM(SERVICE)</label>
+                                                                    <select class="form-select shadow-none rounded-1" name="item_name[]" style="width: 100%;">
+                                                                        <option value="" disabled selected>Select</option>
+                                                                        <?php foreach ($items as $item): ?>
+                                                                            <option value="<?= htmlspecialchars($item['account_name']) ?>">
+                                                                                <?= htmlspecialchars($item['account_name']) ?>
+                                                                            </option>
+                                                                        <?php endforeach; ?>
+                                                                    </select>
+                                                                </div>
+
+                                                                <!-- Description -->
+                                                                <div class="col-md-2">
+                                                                    <label class="form-label fw-bold">Description</label>
+                                                                    <input type="text" class="form-control description rounded-1 shadow-none" placeholder="Electricity" name="description[]" required />
+                                                                </div>
+
+                                                                <!-- Quantity -->
+                                                                <div class="col-md-1">
+                                                                    <label class="form-label fw-bold">Qty</label>
+                                                                    <input type="number" class="form-control qty rounded-1 shadow-none" placeholder="1" name="qty[]" required />
+                                                                </div>
+
+                                                                <!-- Unit Price & Taxes -->
+                                                                <div class="col-md-3 d-flex align-items-stretch">
+                                                                    <div class="unit-price me-2 flex-grow-1">
+                                                                        <label class="form-label fw-bold">Unit Price</label>
+                                                                        <input type="number" class="form-control unit-price rounded-1 shadow-none" placeholder="123" name="unit_price[]" required />
                                                                     </div>
-                                                                    <div class="row mt-2">
-                                                                        <div class="col-md-3">
-                                                                            <label class="form-label fw-bold">Taxes</label>
-                                                                            <select class="form-select rounded-1 shadow-none " name="taxes[]" required>
-                                                                                <option value="" selected disabled>--Select Option--</option>
-                                                                                <option value="inclusive">VAT 16% Inclusive</option>
-                                                                                <option value="exclusive">VAT 16% Exclusive</option>
-                                                                                <option value="zero">Zero Rated</option>
-                                                                                <option value="exempt">Exempted</option>
-                                                                            </select>
-                                                                        </div>
-                                                                        <div class="col-md-3">
-                                                                            <label class="form-label fw-bold">Discount (KSH)</label>
-                                                                            <input type="number" class="form-control discount shadow-none rounded-1 mb-1" name="discount[]" placeholder="Ksh 0.00" required>
-                                                                        </div>
-                                                                        <div class="col-md-3">
-                                                                            <label class="form-label fw-bold">Total (KSH)</label>
-                                                                            <input type="text" class="form-control item-total shadow-none rounded-1 mb-1" placeholder="Ksh 0.00" name="item_total[]" required readonly />
-                                                                        </div>
-                                                                        <div class="col-md-3 d-flex flex-column align-items-center justify-content-center">
-                                                                            <label class="form-label fw-bold">Remove Item</label>
-                                                                            <button class="btn btn-sm btn-danger text" data-bs-toggle="modal" data-bs-target="#editPersonalInfoModal">
-                                                                                <i class="fas fa-trash me-1 icon" style="color:white"></i>
-                                                                            </button>
-                                                                        </div>
+                                                                    <div class="taxes flex-grow-1">
+                                                                        <label class="form-label fw-bold">Taxes</label>
+                                                                        <select class="form-select rounded-1 shadow-none ellipsis-select" name="taxes[]" required>
+                                                                            <option value="" selected disabled>Select--</option>
+                                                                            <option value="inclusive">VAT 16% Inclusive</option>
+                                                                            <option value="exclusive">VAT 16% Exclusive</option>
+                                                                            <option value="zero">Zero Rated</option>
+                                                                            <option value="exempt">Exempted</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Discount -->
+                                                                <div class="col-md-2">
+                                                                    <label class="form-label fw-bold">Discount(KSH)</label>
+                                                                    <input type="number" class="form-control discount shadow-none rounded-1 mb-1" name="discount[]" placeholder="Ksh 0.00" required>
+                                                                </div>
+
+                                                                <!-- Total & Delete -->
+                                                                <div class="col-md-2 d-flex align-items-stretch">
+                                                                    <div class="flex-grow-1 me-2">
+                                                                        <label class="form-label fw-bold">Total (KSH)</label>
+                                                                        <input type="text" class="form-control item-total shadow-none rounded-1 mb-1" placeholder="Ksh 0.00" name="item_total[]" required readonly />
+                                                                    </div>
+                                                                    <div class="d-flex align-items-end">
+                                                                        <label class="form-label fw-bold invisible">X</label>
+                                                                        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#editPersonalInfoModal">
+                                                                            <i class="fas fa-trash text-white"></i>
+                                                                        </button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1143,13 +1180,11 @@ try {
                         statusLabelElement.textContent = "PAID";
                         statusLabelElement.classList.remove("diagonal-unpaid-label"); // Remove the unpaid
                         statusLabelElement.classList.add("diagonal-paid-label");
-                    }
-                    else if(expense.status === "partially paid"){
+                    } else if (expense.status === "partially paid") {
                         statusLabelElement.textContent = "PARTIALLY PAID";
                         statusLabelElement.classList.remove("diagonal-unpaid-label"); // Remove the unpaid
                         statusLabelElement.classList.add("diagonal-partially-paid-label");
-                    }
-                    else{
+                    } else {
                         statusLabelElement.textContent = "UNPAID";
                     }
                     console.log(expense.status)

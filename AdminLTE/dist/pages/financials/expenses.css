@@ -167,7 +167,7 @@ textarea:focus,
 
 .select-options div:hover,
 .select-options .selected {
-  background-color: #00192D;
+  background-color: #4C5D6E;
   color: #FFC107;
 }
 
@@ -364,7 +364,6 @@ div.dt-button-collection .dt-button:hover {
   border-radius: 5px 5px 0 0;
   text-align: center;
   font-size: 16px;
-
 }
 
 .table {
@@ -484,37 +483,136 @@ hr {
   border: 1px solid #FFC107 !important;
   /* You can change width and color */
 }
- .modal-body.expense {
+
+.modal-body.expense {
   /* padding: 10px !important; or adjust as needed */
   /* width: fit-content !important; */
-      overflow: auto !important;
+  overflow: auto !important;
 }
 
 .modal-dialog-scrollable .modal-content {
-    overflow: auto !important;
+  overflow: auto !important;
 }
 
 /* Chrome, Edge, Safari */
 .modal-dialog-scrollable .modal-content::-webkit-scrollbar {
-    width: 6px; /* Thin scrollbar */
+  width: 6px;
+  /* Thin scrollbar */
 }
 
 .modal-dialog-scrollable .modal-content::-webkit-scrollbar-track {
-    background: transparent; /* Optional: remove track */
+  background: transparent;
+  /* Optional: remove track */
 }
 
 .modal-dialog-scrollable .modal-content::-webkit-scrollbar-thumb {
-    background-color: #bbb;
-    border-radius: 10px;
+  background-color: #bbb;
+  border-radius: 10px;
 }
 
 /* Firefox support */
 .modal-dialog-scrollable .modal-content {
-    scrollbar-width: thin;
-    scrollbar-color: #bbb transparent;
+  scrollbar-width: thin;
+  scrollbar-color: #bbb transparent;
 }
 
-.modal-content.expense{
-    width: fit-content !important;
-    overflow: auto !important;
+.modal-content.expense {
+  width: fit-content !important;
+  overflow: auto !important;
+}
+
+.ellipsis-select {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+/* For modern browsers */
+@supports (-webkit-appearance: none) or (appearance: none) {
+  .ellipsis-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 12px;
+    padding-right: 1.75rem;
+  }
+}
+
+/* combo-box */
+.combo-box {
+  position: relative;
+  width: 250px;
+
+}
+
+.combo-input {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+  padding-right: 40px;
+}
+
+.combo-button {
+  position: absolute;
+  right: 1px;
+  top: 1px;
+  height: calc(100% - 2px);
+  width: 35px;
+  background: #f5f5f5;
+  border: none;
+  border-left: 1px solid #ddd;
+  border-radius: 0 6px 6px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+}
+
+.combo-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  margin: 5px 0 0 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: white;
+  z-index: 1000;
+  max-height: 300px;
+  overflow-y: auto;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  display: none;
+}
+
+.combo-options.show {
+  display: block;
+}
+
+.combo-option {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.combo-option:hover {
+  background-color:#4C5D6E;
+  color: #FFC107;
+}
+
+.combo-option.selected {
+  background-color: #e6f2ff;
+  font-weight: bold;
+}
+
+.no-results {
+  padding: 10px 15px;
+  color: #999;
+  font-style: italic;
 }

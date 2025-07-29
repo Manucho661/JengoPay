@@ -46,9 +46,9 @@
     </div>
     <div class="submenu">
       <a href="../financials/expenses.php">💵 Expenses</a>
+      <a href="../financials/balancesheet.php">💵 Cashflow</a>
       <a href="../financials/invoice.php">📄 Invoices</a>
       <a href="#">📊 Balance Sheet</a>
-      <a href="../financials/profit&loss.php">📄 Profit And Loss</a>
     </div>
   </div>
     <a href="#">⚙️ Settings</a>
