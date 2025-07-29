@@ -308,7 +308,9 @@
         </div>
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
-        <div id="sidebar"></div>
+        <!-- <div id="sidebar"></div> -->
+        <div> <?php include_once '../includes/sidebar1.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+
         <!--end::Sidebar Wrapper-->
       </aside>
       <!--end::Sidebar-->
@@ -448,29 +450,90 @@
                                 <th style="font-size: 16px;">Amount</th>
                             </tr>
                         </thead>
-                        <tbody>
-                          <!-- <tr class="category"><td> <b style="font-size: 16px;">Income</b></td></tr> -->
-                          <tr class="category"><td> <b>Income</b></td></tr>
-                          <tr><td>Rental Income</td><td>Ksh50,000</tr>
-                            <tr><td>Maintenance Fees Collected</td><td>Ksh 2500</td></tr>
-                            <tr><td>Late Payment Fees</td><td>Ksh 10,000</td></tr>
-                            <tr><td>Utility Charges</td><td>Ksh 1500</td></tr>
-                            <tr><td>Management Fees</td><td>Ksh 2000</td></tr>
-                            <tr><td>Other Income</td><td>Ksh 5000</td></tr>
-                            <tr class="category"><td> <b>Total Income</b></td><td> <b>Ksh71,000</b></td></tr>
-                            <tr class="category"><td> <b>Expenses</b></td></tr>
-                            <tr><td>MRI Deductions</td><td> Ksh 20,000</td></tr>
-                            <tr><td>Maintenance and Repairs</td><td>Ksh 3500</td></tr>
-                            <tr><td>Staff Salaries</td><td>Ksh 2,900</td></tr>
-                            <tr><td>Utilities</td><td>Ksh 1200</td></tr>
-                            <tr><td>Marketing Costs</td><td>Ksh 2500</td></tr>
-                            <tr><td>Legal Fees</td><td>Ksh 2300</td></tr>
-                            <tr><td>Depreciation</td><td>Ksh 1000</td></tr>
-                            <tr><td>Loan Interest</td><td>Ksh 5000</td></tr>
-                            <tr><td>Miscellaneous Expenses</td><td>Ksh 4500</td></tr>
-                            <tr class="category"><td> <b>Total Expenses</b> </td><td> <b>Ksh 38,400</b></td></tr>
-                            <tr class="category"><td> <b>Net Profit</b> </td><td> <b>Ksh 32,600</b></td></tr>
-                        </tbody>
+                        <?php
+include '../db/connect.php';
+
+// Helper function to fetch a single value from a query
+function fetchSum($pdo, $query) {
+    return $pdo->query($query)->fetchColumn() ?: 0;
+}
+
+// INCOME from invoice table
+$totalIncome = fetchSum($pdo, "SELECT COALESCE(SUM(paid_amount), 0) FROM invoice WHERE payment_status = 'paid' AND account_item = 'Rent'");
+$maintenanceFees = fetchSum($pdo, "SELECT COALESCE(SUM(paid_amount), 0) FROM invoice WHERE payment_status = 'paid' AND account_item = 'Maintenance Fee'");
+$latePaymentFees = fetchSum($pdo, "SELECT COALESCE(SUM(paid_amount), 0) FROM invoice WHERE payment_status = 'paid' AND account_item = 'Late Payment Fee'");
+$utilityCharges = fetchSum($pdo, "SELECT COALESCE(SUM(paid_amount), 0) FROM invoice WHERE payment_status = 'paid' AND account_item IN ('Water', 'Electricity', 'Utilities')");
+$managementFees = fetchSum($pdo, "SELECT COALESCE(SUM(paid_amount), 0) FROM invoice WHERE payment_status = 'paid' AND account_item = 'Management Fee'");
+$otherIncome = fetchSum($pdo, "
+    SELECT COALESCE(SUM(paid_amount), 0)
+    FROM invoice
+    WHERE payment_status = 'paid'
+      AND account_item NOT IN ('Rent', 'Maintenance Fee', 'Late Payment Fee', 'Water', 'Electricity', 'Utilities', 'Management Fee')
+");
+
+// INCOME from payments table (M-Pesa, Bank, Cash, etc.)
+$externalPayments = fetchSum($pdo, "
+    SELECT COALESCE(SUM(amount), 0)
+    FROM payments
+    WHERE status = 'completed'
+");
+
+// EXPENSES
+$mriDeductions = fetchSum($pdo, "SELECT COALESCE(SUM(total), 0) FROM expenses WHERE (status = 'paid' OR status = 'partially paid') AND description LIKE '%MRI%'");
+$maintenanceRepairs = fetchSum($pdo, "SELECT COALESCE(SUM(total), 0) FROM expenses WHERE (status = 'paid' OR status = 'partially paid') AND description LIKE '%Maintenance%'");
+$staffSalaries = fetchSum($pdo, "SELECT COALESCE(SUM(total), 0) FROM expenses WHERE (status = 'paid' OR status = 'partially paid') AND description LIKE '%Salary%'");
+$utilities = fetchSum($pdo, "SELECT COALESCE(SUM(total), 0) FROM expenses WHERE (status = 'paid' OR status = 'partially paid') AND description LIKE '%Utility%'");
+$marketing = fetchSum($pdo, "SELECT COALESCE(SUM(total), 0) FROM expenses WHERE (status = 'paid' OR status = 'partially paid') AND description LIKE '%Marketing%'");
+$legalFees = fetchSum($pdo, "SELECT COALESCE(SUM(total), 0) FROM expenses WHERE (status = 'paid' OR status = 'partially paid') AND description LIKE '%Legal%'");
+$depreciation = fetchSum($pdo, "SELECT COALESCE(SUM(total), 0) FROM expenses WHERE (status = 'paid' OR status = 'partially paid') AND description LIKE '%Depreciation%'");
+$loanInterest = fetchSum($pdo, "SELECT COALESCE(SUM(total), 0) FROM expenses WHERE (status = 'paid' OR status = 'partially paid') AND description LIKE '%Loan Interest%'");
+
+$miscellaneous = fetchSum($pdo, "
+    SELECT COALESCE(SUM(total), 0)
+    FROM expenses
+    WHERE (status = 'paid' OR status = 'partially paid')
+      AND description NOT LIKE '%MRI%'
+      AND description NOT LIKE '%Maintenance%'
+      AND description NOT LIKE '%Salary%'
+      AND description NOT LIKE '%Utility%'
+      AND description NOT LIKE '%Marketing%'
+      AND description NOT LIKE '%Legal%'
+      AND description NOT LIKE '%Depreciation%'
+      AND description NOT LIKE '%Loan Interest%'
+");
+
+// TOTALS
+$calculatedIncome = $totalIncome + $maintenanceFees + $latePaymentFees + $utilityCharges + $managementFees + $otherIncome + $externalPayments;
+$calculatedExpenses = $mriDeductions + $maintenanceRepairs + $staffSalaries + $utilities + $marketing + $legalFees + $depreciation + $loanInterest + $miscellaneous;
+$netProfit = $calculatedIncome - $calculatedExpenses;
+?>
+
+<tbody>
+    <tr class="category"><td><b>Income</b></td></tr>
+    <tr><td>Rental Income</td><td>Ksh <?= number_format($totalIncome, 2) ?></td></tr>
+    <tr><td>Maintenance Fees Collected</td><td>Ksh <?= number_format($maintenanceFees, 2) ?></td></tr>
+    <tr><td>Late Payment Fees</td><td>Ksh <?= number_format($latePaymentFees, 2) ?></td></tr>
+    <tr><td>Utility Charges</td><td>Ksh <?= number_format($utilityCharges, 2) ?></td></tr>
+    <tr><td>Management Fees</td><td>Ksh <?= number_format($managementFees, 2) ?></td></tr>
+    <tr><td>Other Income</td><td>Ksh <?= number_format($otherIncome, 2) ?></td></tr>
+    <tr class="category"><td><b>Total Income</b></td><td><b>Ksh <?= number_format($calculatedIncome, 2) ?></b></td></tr>
+
+    <tr class="category"><td><b>Expenses</b></td></tr>
+    <tr><td>MRI Deductions</td><td>Ksh <?= number_format($mriDeductions, 2) ?></td></tr>
+    <tr><td>Maintenance and Repairs</td><td>Ksh <?= number_format($maintenanceRepairs, 2) ?></td></tr>
+    <tr><td>Staff Salaries</td><td>Ksh <?= number_format($staffSalaries, 2) ?></td></tr>
+    <tr><td>Utilities</td><td>Ksh <?= number_format($utilities, 2) ?></td></tr>
+    <tr><td>Marketing Costs</td><td>Ksh <?= number_format($marketing, 2) ?></td></tr>
+    <tr><td>Legal Fees</td><td>Ksh <?= number_format($legalFees, 2) ?></td></tr>
+    <tr><td>Depreciation</td><td>Ksh <?= number_format($depreciation, 2) ?></td></tr>
+    <tr><td>Loan Interest</td><td>Ksh <?= number_format($loanInterest, 2) ?></td></tr>
+    <tr><td>Miscellaneous Expenses</td><td>Ksh <?= number_format($miscellaneous, 2) ?></td></tr>
+    <tr class="category"><td><b>Total Expenses</b></td><td><b>Ksh <?= number_format($calculatedExpenses, 2) ?></b></td></tr>
+
+    <tr class="category"><td><b>Net Profit</b></td><td><b>Ksh <?= number_format($netProfit, 2) ?></b></td></tr>
+</tbody>
+
+
                     </table>
                   </div>
                 </div>
@@ -947,14 +1010,14 @@
     <!-- End script for data_table -->
 
 <!--Begin sidebar script -->
-<script>
+<!-- <script>
   fetch('../bars/sidebar.html')  // Fetch the file
       .then(response => response.text()) // Convert it to text
       .then(data => {
           document.getElementById('sidebar').innerHTML = data; // Insert it
       })
       .catch(error => console.error('Error loading the file:', error)); // Handle errors
-</script>
+</script> -->
 <!-- end sidebar script -->
 
 
