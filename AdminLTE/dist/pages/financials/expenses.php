@@ -41,11 +41,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['get_totals'])) {
 try {
     // Fetch all expenses and include the paid amount (if any)
     $stmt = $pdo->query("
-        SELECT 
-            expenses.*, 
-            expense_payments.amount_paid AS amount_paid 
+        SELECT
+            expenses.*,
+            expense_payments.amount_paid AS amount_paid
         FROM expenses
-        LEFT JOIN expense_payments 
+        LEFT JOIN expense_payments
         ON expenses.id = expense_payments.expense_id
         ORDER BY expenses.created_at DESC
     ");
@@ -59,7 +59,7 @@ try {
         $totalAmount += $exp['total'];
     }
     $stmt = $pdo->query("
-    SELECT 
+    SELECT
         SUM(CASE WHEN status = 'paid' THEN total ELSE 0 END) AS total_paid,
         SUM(CASE WHEN status = 'unpaid' THEN total ELSE 0 END) AS total_unpaid,
         SUM(CASE WHEN status = 'partially paid' THEN total ELSE 0 END) AS partially_paid
@@ -942,7 +942,6 @@ try {
     <!--end::Script-->
     <!-- dataTable control -->
     <!-- DATE TABLES -->
-
     </script>
     <script>
         $(document).ready(function() {

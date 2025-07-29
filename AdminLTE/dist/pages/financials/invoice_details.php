@@ -233,6 +233,127 @@ $randomLogo = $logos[array_rand($logos)];
           width: 20%;
           height: 20%;
         }
+
+
+.table-sm th,
+.table-sm td {
+  padding: .3rem;
+}
+
+.totals-box,
+.terms-box {
+  font-size: 12px;
+}
+
+.terms-box {
+  color: #666;
+}
+
+hr {
+  margin: 1rem 0;
+}
+
+.custom-th th {
+  background-color: #00192D !important;
+  color: white;
+  /* text-align: right; */
+  font-size: small;
+}
+
+.expense-table-wrapper {
+  border: 1px solid #00192D;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.custom-th th {
+  background-color: #00192D !important;
+  color: white !important;
+  font-size: small;
+}
+
+.expense-table tbody tr:nth-child(even) {
+  background-color: #f4f6f8;
+}
+
+.expense-table td,
+.expense-table th {
+  border-color: #00192D;
+  vertical-align: middle;
+}
+
+.expense-table tbody tr:hover {
+  background-color: #e9f1ff;
+}
+
+.thick-bordered-table th {
+  border: 1px solid #FFC107 !important;
+  /* You can change width and color */
+}
+
+.thick-bordered-table td {
+  border: 1px solid #FFC107 !important;
+  /* You can change width and color */
+}
+
+.diagonal-paid-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            /* Centered and rotated */
+            background-color: rgba(0, 128, 0, 0.2);
+            /* Light green with transparency */
+            color: green;
+            font-weight: bold;
+            font-size: 24px;
+            padding: 15px 40px;
+            border: 2px solid green;
+            border-radius: 8px;
+            text-transform: uppercase;
+            pointer-events: none;
+            z-index: 10;
+            white-space: nowrap;
+        }
+
+        .diagonal-unpaid-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            /* Centered and rotated */
+            background-color: rgba(255, 0, 0, 0.2);
+            /* Red with transparency for "UNPAID" */
+            color: #ff4d4d;
+            /* Softer red text color */
+            font-weight: bold;
+            font-size: 24px;
+            padding: 15px 40px;
+            border: 2px solid red;
+            border-radius: 8px;
+            text-transform: uppercase;
+            pointer-events: none;
+            z-index: 10;
+            white-space: nowrap;
+        }
+        .diagonal-partially-paid-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg); /* Centered and rotated */
+    background-color: rgba(255, 165, 0, 0.2); /* Amber background with opacity */
+    color: #ff9900; /* Amber or gold text */
+    font-weight: bold;
+    font-size: 24px;
+    padding: 15px 40px;
+    border: 2px solid #ff9900; /* Amber border */
+    border-radius: 8px;
+    text-transform: uppercase;
+    pointer-events: none;
+    z-index: 10;
+    white-space: nowrap;
+}
+
     </style>
 </head>
 
@@ -469,55 +590,132 @@ HTML;
    download>
     <i class="bi bi-eye"></i> Download PDF
 </a>
-
-
-
 </div>
 
 
 <div class="invoice-card">
             <!-- Header -->
-            <div class="d-flex justify-content-between align-items-start mb-3">
-            <img id="expenseLogo" src="expenseLogo6.png" alt="JengoPay Logo" class="expense-logo">
-            </div>
-                <!-- <script>
-                const logos = [
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Unilever.svg/200px-Unilever.svg.png",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/200px-IBM_logo.svg.png",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/200px-Amazon_logo.svg.png",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Microsoft_logo.svg/200px-Microsoft_logo.svg.png",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/200px-Google_2015_logo.svg.png",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/200px-Apple_logo_black.svg.png",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Pepsi_logo_2014.svg/200px-Pepsi_logo_2014.svg.png",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Toyota_logo.svg/200px-Toyota_logo.svg.png",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Adobe_Corporate_Logo.png/200px-Adobe_Corporate_Logo.png",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Nike_logo.svg/200px-Nike_logo.svg.png"
-                ];
-
-                const logoImg = document.getElementById("invoiceLogo");
-                logoImg.src = logos[Math.floor(Math.random() * logos.length)];
-            </script> -->
+            <div class="d-flex justify-content-between align-items-start mb-3 position-relative"
+                            style="overflow: hidden;">
+                            <div>
+                                <img id="expenseLogo" src="expenseLogo6.png" alt="JengoPay Logo" class="expense-logo">
+                            </div>
 
 
-                <div class="text-end" style="background-color: #f0f0f0; padding: 10px; border-radius: 8px;">
-                    <strong>Customer Name</strong><br>
-                    123 Example St<br>
-                    Nairobi, Kenya<br>
-                    customer@example.com<br>
-                    +254 700 123456
-                </div>
+                            <div class="diagonal-unpaid-label" id="expenseModalPaymentStatus">UNPAID</div>
+                            <div class="text-end" style="background-color: #f0f0f0; padding: 10px; border-radius: 8px;">
+                                <strong>Silver Spoon Towers</strong><br>
+                                50303 Nairobi, Kenya<br>
+                                silver@gmail.com<br>
+                                +254 700 123456
+                            </div>
+                        </div>
 
-                </div>
 
-            <!-- Invoice Info -->
+ <!-- expense Info -->
+ <div class="d-flex justify-content-between">
+                            <h6 class="mb-0" id="expenseModalSupplierName">Josephat Koech</h6>
+                            <div class="text-end">
+                                <h3 id="expenseModalInvoiceNo"> INV001</h3><br>
+                            </div>
+                        </div>
+
+
+                        <div class="mb-1 rounded-2 d-flex justify-content-between align-items-center"
+                            style="border: 1px solid #FFC107; padding: 4px 8px; background-color: #FFF4CC;">
+                            <div class="d-flex flex-column expense-date m-0">
+                                <span class="m-0"><b>Expense Date</b></span>
+                                <p class="m-0">24/6/2025</p>
+                            </div>
+                            <div class="d-flex flex-column due-date m-0">
+                                <span class="m-0"><b>Due Date</b></span>
+                                <p class="m-0">24/6/2025</p>
+                            </div>
+                            <div></div>
+                        </div>
+
+
+                        <!-- Items Table -->
+                        <div class="table-responsive ">
+                            <table class="table table-striped table-bordered rounded-2 table-sm thick-bordered-table">
+                                <thead class="table">
+                                    <tr class="custom-th">
+                                        <th>Description</th>
+                                        <th class="text-end">Qty</th>
+                                        <th class="text-end">Unit Price</th>
+                                        <th class="text-end">Taxes</th>
+                                        <th class="text-end">Discount</th>
+                                        <th class="text-end">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="expenseItemsTableBody">
+                                    <tr>
+                                        <td>Web Design</td>
+                                        <td class="text-end">1</td>
+                                        <td class="text-end">KES 25,000</td>
+                                        <td class="text-end">Inclusive</td>
+                                        <td class="text-end">KES 25,000</td>
+                                        <td class="text-end">KES 25,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Hosting (1 year)</td>
+                                        <td class="text-end">1</td>
+                                        <td class="text-end">KES 5,000</td>
+                                        <td class="text-end">Exclusive</td>
+                                        <td class="text-end">KES 25,000</td>
+                                        <td class="text-end">KES 5,000</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                         <!-- Totals and Terms -->
+                         <div class="row">
+                            <div class="col-6 terms-box">
+                                <strong>Note:</strong><br>
+                                This Expense Note Belongs to.<br>
+                                Silver Spoon Towers
+                            </div>
+                            <div class="col-6">
+                                <table class="table table-borderless table-sm text-end mb-0">
+                                    <tr>
+                                        <th>Untaxed Amount:</th>
+                                        <td>
+                                            <div id="expenseModalUntaxedAmount">KES 30,000</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>VAT (16%):</th>
+                                        <td>
+                                            <div id="expenseModalTaxAmount">KES 4,800</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Total Amount:</th>
+                                        <td><strong id="expenseModalTotalAmount">KES 34,800</strong></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <div class="text-center small text-muted"
+                            style="border-top: 1px solid #e0e0e0; padding-top: 10px;">
+                            Thank you for your business!
+                        </div>
+                    </div>
+
+
+            <!-- Invoice Info
             <div class="d-flex justify-content-between">
                 <h6 class="mb-0"><?= htmlspecialchars($invoice['account_item']) ?></h6>
                 <div class="text-end">
                     <h3><?= htmlspecialchars($invoice['invoice_number']) ?></h3><br>
                 </div>
-            </div>
+            </div> -->
 
-            <div class="mb-1 rounded-2 d-flex justify-content-between align-items-center"
+            <!-- <div class="mb-1 rounded-2 d-flex justify-content-between align-items-center"
                 style="border: 1px solid #FFC107; padding: 4px 8px; background-color: #FFF4CC;">
                 <div class="d-flex flex-column Invoice-date m-0">
                     <span class="m-0"><b>Invoice Date</b></span>
@@ -528,10 +726,10 @@ HTML;
                     <p class="m-0"><?= formatDate($invoice['due_date']) ?></p>
                 </div>
                 <div></div>
-            </div>
+            </div> -->
 
             <!-- Items Table -->
-            <div class="table-responsive">
+            <!-- <div class="table-responsive">
                 <table class="table table-striped table-bordered rounded-2 table-sm thick-bordered-table">
                     <thead class="table">
                         <tr class="custom-th">
@@ -554,8 +752,8 @@ HTML;
                 </table>
             </div>
 
-            <!-- Totals and Terms -->
-            <div class="row">
+             Totals and Terms -->
+            <!-- <div class="row">
                 <div class="col-6 terms-box">
                     <strong>Terms:</strong><br>
                     <?= !empty($invoice['terms_conditions']) ? htmlspecialchars($invoice['terms_conditions']) : 'Payment due in 14 days.<br>Late fee: 2% monthly.' ?>
@@ -575,7 +773,7 @@ HTML;
                             <td><strong>KES <?= number_format($total, 2) ?></strong></td>
                         </tr>
                     </table>
-                </div>
+                </div> -->
             </div>
 
             <hr>
@@ -631,7 +829,7 @@ HTML;
 
 
     <!-- Main Js File -->
-    <script src="inspections.js"></script>
+    <script src="invoice.js"></script>
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
@@ -960,7 +1158,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <td>Ksh ${formatCurrency(invoice.total)}</td>
                         <td>
                            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#invoiceModal"   style="background-color: #00192D; color:#FFC107;">
-                             <i class="fas fa-eye"></i>
+                             <i class="fas fa-eye"></i>  onclick="openExpenseModal(<?= $exp['id'] ?>)"
                             View Invoice
                           </button>
                             <button class="btn btn-sm" style="background-color: #193042; color:#fff;" title="Delete Invoice">

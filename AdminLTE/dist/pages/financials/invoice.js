@@ -377,12 +377,12 @@ const tbody = summaryTable.querySelector("tbody");
 tbody.innerHTML = `
   <tr>
     <th style="width: 50%; padding: 5px; text-align: left;">Sub-total</th>
-    <td><input type="text" class="form-control" value="${formatNumber(subtotalSum)}" readonly style="padding: 5px;"></td>
+    <td><input type="text" class="form-control"  name="subtotal" value="${formatNumber(subtotalSum)}" readonly style="padding: 5px;"></td>
   </tr>
   ${vat16Used ? `
   <tr>
     <th style="width: 50%; padding: 5px; text-align: left;">VAT 16%</th>
-    <td><input type="text" class="form-control" value="${formatNumber(taxSum)}" readonly style="padding: 5px;"></td>
+    <td><input type="text" class="form-control" name="taxes[]"  value="${formatNumber(taxSum)}" readonly style="padding: 5px;"></td>
   </tr>` : ''}
   ${vat0Used ? `
   <tr>
@@ -392,7 +392,7 @@ tbody.innerHTML = `
   ${exemptedUsed ? `
   <tr>
     <th style="width: 50%; padding: 5px; text-align: left;">Exempted</th>
-    <td><input type="text" class="form-control" value="0.00" readonly style="padding: 5px;"></td>
+    <td><input type="text" class="form-control" name="taxes[]" value="0.00" readonly style="padding: 5px;"></td>
   </tr>` : ''}
   <tr>
     <th style="width: 50%; padding: 5px; text-align: left;">Total</th>
@@ -438,8 +438,7 @@ newRow.innerHTML = `
   <option value="exempt">Exempted</option>
 </select>
 </td>
-<td>
-<input type="text" class="form-control total" placeholder="0" readonly>
+<td><input type="text" class="form-control total" placeholder="0" readonly>
 <button type="button" class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
   <i class="fa fa-trash" style="font-size: 12px;"></i>
 </button>
@@ -457,6 +456,73 @@ updateTotalAmount();
 document.querySelectorAll(".items-table tbody tr").forEach(attachEvents);
 updateTotalAmount();
 });
+
+
+
+function openExpenseModal(expenseId) {
+    fetch(`actions/expenses/getExpense.php?id=${expenseId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch data");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (!data.length) {
+                console.warn("No expense data found.");
+                return;
+            }
+
+            const expense = data[0]; // Get the first (and likely only) row
+
+            // Map values to HTML elements
+            document.getElementById('expenseModalSupplierName').textContent = expense.supplier || '—';
+            document.getElementById('expenseModalInvoiceNo').textContent = expense.expense_no || '—';
+            document.getElementById('expenseModalTotalAmount').textContent = `KES ${parseFloat(expense.total || 0).toLocaleString()}`;
+            document.getElementById('expenseModalTaxAmount').textContent = `KES ${parseFloat(expense.total_taxes || 0).toLocaleString()}`;
+            document.getElementById('expenseModalUntaxedAmount').textContent = `KES ${parseFloat(expense.untaxed_amount || 0).toLocaleString()}`;
+            // Payment status
+
+            const status = expense.status || 'paid'; // Defaulting to 'paid' if status is not available
+            const statusLabelElement = document.getElementById('expenseModalPaymentStatus'); // ID instead of class
+            // Check the status and apply the appropriate class and text
+            if (expense.status === "paid") {
+                statusLabelElement.textContent = "PAID";
+                statusLabelElement.classList.remove("diagonal-unpaid-label"); // Remove the unpaid
+                statusLabelElement.classList.add("diagonal-paid-label");
+            }
+            else if(expense.status === "partially paid"){
+                statusLabelElement.textContent = "PARTIALLY PAID";
+                statusLabelElement.classList.remove("diagonal-unpaid-label"); // Remove the unpaid
+                statusLabelElement.classList.add("diagonal-partially-paid-label");
+            }
+            else{
+                statusLabelElement.textContent = "UNPAID";
+            }
+            console.log(expense.status)
+            const tableBody = document.getElementById('expenseItemsTableBody');
+            tableBody.innerHTML = "";
+            data.forEach((item) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.description || '—'}</td>
+                    <td class="text-end">${item.qty || 0}</td>
+                    <td class="text-end">KES ${parseFloat(item.unit_price || 0).toLocaleString()}</td>
+                    <td class="text-end">${item.taxes || '—'}</td>
+                    <td class="text-end">KES ${item.discount || '—'}</td> <!-- Update if you have discount data -->
+                    <td class="text-end">KES ${(item.qty * item.unit_price).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+            // Show the modal
+            const expenseModal = new bootstrap.Modal(document.getElementById('expenseModal'));
+            expenseModal.show();
+        })
+        .catch(error => {
+            console.error("Error loading expense:", error);
+        });
+}
+
 
 
 
