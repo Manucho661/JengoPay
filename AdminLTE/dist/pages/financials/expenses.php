@@ -420,66 +420,66 @@ try {
                                                         <div class="text-muted mt-4 mb-4">Add the Spend items in the fields below</div>
                                                         <div class="col-md-12 rounded-2" id="itemsContainer">
                                                             <div class="row item-row g-3 mb-5 p-2" style="background-color: #f5f5f5;">
-                                                                <div class="col-md-12">
-                                                                    <div class="row">
-                                                                        <div class="col-md-2">
-                                                                            <label class="form-label fw-bold">ITEM(SERVICE)</label>
-                                                                            <select class="form-select shadow-none rounded-1" name="item_name[]" style="width: 100%;">
-                                                                                <option value="" disabled selected>Select</option>
-                                                                                <?php foreach ($items as $item): ?>
-                                                                                    <option value="<?= htmlspecialchars($item['account_name']) ?>">
-                                                                                        <?= htmlspecialchars($item['account_name']) ?>
-                                                                                    </option>
-                                                                                <?php endforeach; ?>
-                                                                            </select>
-                                                                        </div>
-                                                                        <div class="col-md-2">
-                                                                            <label class="form-label fw-bold">Description</label>
-                                                                            <input type="text" class="form-control description rounded-1 shadow-none" placeholder="Electricity" name="description[]" required />
-                                                                        </div>
-                                                                        <div class="col-md-1">
-                                                                            <label class="form-label fw-bold">Qty</label>
-                                                                            <input type="number" class="form-control qty rounded-1 shadow-none" placeholder="1" name="qty[]" required />
-                                                                        </div>
-                                                                        <div class="col-md-3 d-flex p-0">
-                                                                            <div class="unit-price" style="width:55% !important">
-                                                                                <label class="form-label fw-bold">Unit Price</label>
-                                                                                <input type="number" class="form-control unit-price rounded-1 shadow-none" placeholder="123" name="unit_price[]" required />
-                                                                            </div>
-                                                                            <div class="taxes" style="margin-left: 4px;">
-                                                                                <label class="form-label fw-bold">Taxes</label>
-                                                                                <select class="form-select rounded-1 shadow-none " name="taxes[]" required>
-                                                                                    <option value="" selected disabled>--Select--</option>
-                                                                                    <option value="inclusive">VAT 16% Inclusive</option>
-                                                                                    <option value="exclusive">VAT 16% Exclusive</option>
-                                                                                    <option value="zero">Zero Rated</option>
-                                                                                    <option value="exempt">Exempted</option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
+                                                                <!-- ITEM(SERVICE) -->
+                                                                <div class="col-md-2">
+                                                                    <label class="form-label fw-bold">ITEM(SERVICE)</label>
+                                                                    <select class="form-select shadow-none rounded-1" name="item_name[]" style="width: 100%;">
+                                                                        <option value="" disabled selected>Select</option>
+                                                                        <?php foreach ($items as $item): ?>
+                                                                            <option value="<?= htmlspecialchars($item['account_name']) ?>">
+                                                                                <?= htmlspecialchars($item['account_name']) ?>
+                                                                            </option>
+                                                                        <?php endforeach; ?>
+                                                                    </select>
+                                                                </div>
 
-                                                                        <div class="col-md-2">
-                                                                            <label class="form-label fw-bold">Discount(KSH)</label>
-                                                                            <input type="number" class="form-control discount shadow-none rounded-1 mb-1" name="discount[]" placeholder="Ksh 0.00" required>
-                                                                        </div>
-                                                                        <div class="col-md-2 d-flex">
-                                                                            <div>
-                                                                                <label class="form-label fw-bold">Total (KSH)</label>
-                                                                                <input type="text" class="form-control item-total shadow-none rounded-1 mb-1" placeholder="Ksh 0.00" name="item_total[]" required readonly />
-                                                                            </div>
+                                                                <!-- Description -->
+                                                                <div class="col-md-2">
+                                                                    <label class="form-label fw-bold">Description</label>
+                                                                    <input type="text" class="form-control description rounded-1 shadow-none" placeholder="Electricity" name="description[]" required />
+                                                                </div>
 
-                                                                            <div style="margin-left: 4px;">
-                                                                                <label class="form-label fw-bold" style="margin-left: 4px;">X</label>
-                                                                                <button class="btn btn-sm btn-danger text" data-bs-toggle="modal" data-bs-target="#editPersonalInfoModal">
-                                                                                    <i class="fas fa-trash me-1 icon" style="color:white"></i>
-                                                                                </button>
-                                                                            </div>
-                                                                        </div>
+                                                                <!-- Quantity -->
+                                                                <div class="col-md-1">
+                                                                    <label class="form-label fw-bold">Qty</label>
+                                                                    <input type="number" class="form-control qty rounded-1 shadow-none" placeholder="1" name="qty[]" required />
+                                                                </div>
+
+                                                                <!-- Unit Price & Taxes -->
+                                                                <div class="col-md-3 d-flex align-items-stretch">
+                                                                    <div class="unit-price me-2 flex-grow-1">
+                                                                        <label class="form-label fw-bold">Unit Price</label>
+                                                                        <input type="number" class="form-control unit-price rounded-1 shadow-none" placeholder="123" name="unit_price[]" required />
                                                                     </div>
-                                                                    <div class="row mt-2">
-                                                                        <div class="col-md-3 d-flex flex-column align-items-center justify-content-center">
+                                                                    <div class="taxes flex-grow-1">
+                                                                        <label class="form-label fw-bold">Taxes</label>
+                                                                        <select class="form-select rounded-1 shadow-none ellipsis-select" name="taxes[]" required>
+                                                                            <option value="" selected disabled>--Select--</option>
+                                                                            <option value="inclusive">VAT 16% Inclusive</option>
+                                                                            <option value="exclusive">VAT 16% Exclusive</option>
+                                                                            <option value="zero">Zero Rated</option>
+                                                                            <option value="exempt">Exempted</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
 
-                                                                        </div>
+                                                                <!-- Discount -->
+                                                                <div class="col-md-2">
+                                                                    <label class="form-label fw-bold">Discount(KSH)</label>
+                                                                    <input type="number" class="form-control discount shadow-none rounded-1 mb-1" name="discount[]" placeholder="Ksh 0.00" required>
+                                                                </div>
+
+                                                                <!-- Total & Delete -->
+                                                                <div class="col-md-2 d-flex align-items-stretch">
+                                                                    <div class="flex-grow-1 me-2">
+                                                                        <label class="form-label fw-bold">Total (KSH)</label>
+                                                                        <input type="text" class="form-control item-total shadow-none rounded-1 mb-1" placeholder="Ksh 0.00" name="item_total[]" required readonly />
+                                                                    </div>
+                                                                    <div class="d-flex align-items-end">
+                                                                        <label class="form-label fw-bold invisible">X</label>
+                                                                        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#editPersonalInfoModal">
+                                                                            <i class="fas fa-trash text-white"></i>
+                                                                        </button>
                                                                     </div>
                                                                 </div>
                                                             </div>
