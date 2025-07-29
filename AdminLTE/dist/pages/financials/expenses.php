@@ -402,17 +402,42 @@ try {
                                             <div class="card-body">
                                                 <form method="POST" id="expenseForm">
                                                     <div class="row g-3">
-                                                        <div class="col-md-4">
+                                                        <div class="col-md-3">
+                                                            <div class="custom-select-wrapper">
+                                                                <label class="form-label fw-bold">Building</label>
+                                                                <div class="custom-select shadow-sm" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
+                                                                    Select Building
+                                                                </div>
+                                                                <div class="select-options" id="select-options" role="listbox">
+                                                                    <div role="option" data-value="option1">Manucho</div>
+                                                                    <div role="option" data-value="option2">Silver Spoon</div>
+                                                                    <div role="option" data-value="option3">Ebenezer</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
                                                             <label class="form-label fw-bold">Date&nbsp;:</label>
                                                             <input type="date" id="dateInput" class="form-control rounded-1 shadow-none" name="date" placeholder="">
                                                         </div>
-                                                        <div class="col-md-4">
+                                                        <div class="col-md-3">
                                                             <label class="form-label fw-bold">Expense No</label>
                                                             <input type="text" name="expense_no" class="form-control rounded-1 shadow-none" placeholder="KRA000100039628">
                                                         </div>
-                                                        <div class="col-md-4">
+                                                        <div class="col-md-3">
                                                             <label class="form-label fw-bold">Supplier</label>
-                                                            <input type="text" class="form-control rounded-1 shadow-none" placeholder="Supplier" name="supplier" required />
+                                                            <div class="combo-box">
+                                                                <input type="text" class="form-control rounded-1 shadow-none combo-input" placeholder="Search or select...">
+                                                                <button class="combo-button">▼</button>
+                                                                <ul class="combo-options">
+                                                                    <li class="combo-option" data-value="all">All Rentals</li>
+                                                                    <li class="combo-option" data-value="active">Active Rentals</li>
+                                                                    <li class="combo-option" data-value="future">Future Rentals</li>
+                                                                    <li class="combo-option" data-value="residents">Residents</li>
+                                                                    <li class="combo-option" data-value="owners">Property Owners</li>
+                                                                    <li class="combo-option" data-value="overdue">Overdue Payments</li>
+                                                                    <li class="combo-option" data-value="renewals">Upcoming Renewals</li>
+                                                                </ul>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <!-- Hidden total -->
@@ -454,7 +479,7 @@ try {
                                                                     <div class="taxes flex-grow-1">
                                                                         <label class="form-label fw-bold">Taxes</label>
                                                                         <select class="form-select rounded-1 shadow-none ellipsis-select" name="taxes[]" required>
-                                                                            <option value="" selected disabled>--Select--</option>
+                                                                            <option value="" selected disabled>Select--</option>
                                                                             <option value="inclusive">VAT 16% Inclusive</option>
                                                                             <option value="exclusive">VAT 16% Exclusive</option>
                                                                             <option value="zero">Zero Rated</option>

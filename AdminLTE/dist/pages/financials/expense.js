@@ -44,9 +44,84 @@ function initializeCustomSelect(wrapper) {
   });
 }
 
+function combobox() {
+  const comboBox = document.querySelector('.combo-box');
+  const input = comboBox.querySelector('.combo-input');
+  const button = comboBox.querySelector('.combo-button');
+  const optionsList = comboBox.querySelector('.combo-options');
+  const options = comboBox.querySelectorAll('.combo-option');
+
+  // Toggle dropdown
+  button.addEventListener('click', function (e) {
+    e.stopPropagation();
+    optionsList.classList.toggle('show');
+    if (optionsList.classList.contains('show')) {
+      input.focus();
+    }
+  });
+
+  // Handle option selection
+  options.forEach(option => {
+    option.addEventListener('click', function () {
+      input.value = this.textContent;
+      optionsList.classList.remove('show');
+
+      // Update selected style
+      options.forEach(opt => opt.classList.remove('selected'));
+      this.classList.add('selected');
+
+      // Here you would filter your table/data
+      console.log('Selected:', this.getAttribute('data-value'));
+    });
+  });
+
+  // Filter options while typing
+  input.addEventListener('input', function () {
+    const searchTerm = this.value.toLowerCase();
+    let hasVisibleOptions = false;
+
+    options.forEach(option => {
+      const optionText = option.textContent.toLowerCase();
+      if (optionText.includes(searchTerm)) {
+        option.style.display = 'block';
+        hasVisibleOptions = true;
+      } else {
+        option.style.display = 'none';
+      }
+    });
+
+    // Show "no results" if needed
+    const noResults = optionsList.querySelector('.no-results');
+    if (!hasVisibleOptions) {
+      if (!noResults) {
+        const noResultsElem = document.createElement('li');
+        noResultsElem.className = 'no-results';
+        noResultsElem.textContent = 'No matches found';
+        optionsList.appendChild(noResultsElem);
+      }
+    } else if (noResults) {
+      noResults.remove();
+    }
+
+    optionsList.classList.add('show');
+  });
+
+  // Close when clicking outside
+  document.addEventListener('click', function () {
+    optionsList.classList.remove('show');
+  });
+
+  // Keyboard navigation
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowDown' && !optionsList.classList.contains('show')) {
+      optionsList.classList.add('show');
+    }
+  });
+}
 
 document.addEventListener("DOMContentLoaded", function () {
   console.log('document loaded');
+  combobox();
   document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
     initializeCustomSelect(wrapper);
     if (typeof bindItemHiddenInput === 'function') {
@@ -58,10 +133,10 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log('total fired');
     const vatInclusiveContainer = document.getElementById('vatAmountInclusiveContainer');
     const vatAmountContainer = document.getElementById('vatAmountContainer');
-    const zeroRatedExmptedContainer= document.getElementById('zeroRated&ExmptedContainer');
+    const zeroRatedExmptedContainer = document.getElementById('zeroRated&ExmptedContainer');
     let subTotal = 0;
     let vatAmountInclusive = 0;
-    let vatAmountExclusive= 0;
+    let vatAmountExclusive = 0;
     let totalVat = 0;
     let grandTotal = 0;
     let grandDiscount = 0;
@@ -69,7 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let hasInclusive = false;
     let hasExclusive = false;
     let isZeroRated = false;
-    let isExempted= false;
+    let isExempted = false;
     document.querySelectorAll('.item-row').forEach(row => {
       const qty = parseFloat(row.querySelector('.qty')?.value || 0);
       let unitPrice = parseFloat(row.querySelector('.unit-price')?.value || 0);
@@ -85,7 +160,7 @@ document.addEventListener("DOMContentLoaded", function () {
       let lineTotal = unitPrice * qty; // ✅ Subtotal line without tax
       // grandTotal
       if (taxOption.includes('inclusive')) {
-         hasInclusive = true;
+        hasInclusive = true;
         const basePrice = unitPrice / 1.16;
         total = basePrice * qty * 1.16;
         itemTaxInclusive = (basePrice * qty * 0.16);
@@ -95,12 +170,12 @@ document.addEventListener("DOMContentLoaded", function () {
         itemTaxExclusive = unitPrice * qty * 0.16;
 
       } else if (taxOption === 'zero') {
-        isZeroRated=true;
+        isZeroRated = true;
         total = unitPrice * qty;
         itemTax = 0;
         document.getElementById('taxLabel').textContent = "VAT 0%:";
       } else if (taxOption === 'exempt') {
-        isExempted=true;
+        isExempted = true;
         total = unitPrice * qty;
         itemTax = 0;
         document.getElementById('taxLabel').textContent = "EXEMPTED";
@@ -111,32 +186,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (item_total) {
         // Extract discount From total
-        total= total-discount;
+        total = total - discount;
         item_total.value = 'Ksh ' + total.toFixed(2);
       }
-      
+
       // Remove discount, remove inclusive tax, add exclusive tax
       subTotal += (total - itemTaxInclusive + itemTaxExclusive);
       vatAmountInclusive += itemTaxInclusive;
       vatAmountExclusive += itemTaxExclusive;
-      totalVat= vatAmountInclusive + vatAmountExclusive;
-      grandDiscount+= discount;
+      totalVat = vatAmountInclusive + vatAmountExclusive;
+      grandDiscount += discount;
       grandTotal += total;
     });
 
     // vatInclusiveContainer.style.display = hasInclusive ? 'block' : 'non';
-     if (hasExclusive ||hasInclusive ) {
-        vatAmountContainer.style.setProperty('display', 'flex', 'important');
+    if (hasExclusive || hasInclusive) {
+      vatAmountContainer.style.setProperty('display', 'flex', 'important');
 
-      } else {
-        vatAmountContainer.style.setProperty('display', 'none', 'important');
-      }
-      if (isExempted||isZeroRated) {
-        zeroRatedExmptedContainer.style.setProperty('display', 'flex', 'important');
+    } else {
+      vatAmountContainer.style.setProperty('display', 'none', 'important');
+    }
+    if (isExempted || isZeroRated) {
+      zeroRatedExmptedContainer.style.setProperty('display', 'flex', 'important');
 
-      } else {
-        zeroRatedExmptedContainer.style.setProperty('display', 'none', 'important');
-      }
+    } else {
+      zeroRatedExmptedContainer.style.setProperty('display', 'none', 'important');
+    }
 
     document.getElementById('subTotal').value = 'Ksh ' + subTotal.toFixed(2);
     document.getElementById('subTotalhidden').value = subTotal.toFixed(2);
@@ -220,7 +295,7 @@ document.getElementById("expenseForm").addEventListener("submit", function (e) {
       console.log("Server response:", data);
 
       // ✅ Reload the page without resubmission
-       window.location.href = window.location.href;
+      window.location.href = window.location.href;
     })
     .catch(error => {
       console.error("Error submitting form:", error);
@@ -247,7 +322,7 @@ function payExpense(expenseId, expectedAmountToPay) {
 
   // Set hidden input with expense ID
   expenseIdInput.value = expenseId;
-  expectedAmountToPayInput.value=expectedAmountToPay;
+  expectedAmountToPayInput.value = expectedAmountToPay;
   // Set amount to pay (now after reset)
   document.getElementById('amountToPay').value = parseFloat(expectedAmountToPay);
 
@@ -281,7 +356,7 @@ document.getElementById("payExpenseForm").addEventListener("submit", function (e
       console.log("Server response:", data);
 
       // ✅ Reload the page without resubmission
-       window.location.href = window.location.href;
+      window.location.href = window.location.href;
     })
     .catch(error => {
       console.error("Error submitting form:", error);
