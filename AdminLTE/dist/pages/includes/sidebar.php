@@ -49,7 +49,7 @@
       <a href="/OriginalTwo/AdminLTE/dist/pages/financials/cashflow.php">💵 Cashflow</a>
       <a href="/OriginalTwo/AdminLTE/dist/pages/financials/invoice.php">📄 Invoices</a>
       <a href="/OriginalTwo/AdminLTE/dist/pages/financials/balanceSheet/balanceSheet.php">📊 Balance Sheet</a>
-      <a href="../financials/profit&loss.php">Profit&Loss</a>
+      <a href="/OriginalTwo/AdminLTE/dist/pages/financials/profit&loss.php">📊 Profit&Loss</a>
     </div>
   </div>
     <a href="#">⚙️ Settings</a>

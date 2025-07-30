@@ -309,7 +309,7 @@
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
         <!-- <div id="sidebar"></div> -->
-        <div> <?php include_once '../includes/sidebar1.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+        <div> <?php include_once '../includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
 
         <!--end::Sidebar Wrapper-->
       </aside>
@@ -450,55 +450,30 @@
                                 <th style="font-size: 16px;">Amount</th>
                             </tr>
                         </thead>
-                        <?php
-                        include '../db/connect.php';
-// Income
-$stmtIncome = $pdo->prepare("
-    SELECT c.account_name, SUM(i.paid_amount) AS total
-    FROM invoice i
-    JOIN chart_of_accounts c ON i.account_item = c.account_name
-    WHERE c.account_type = 'income' AND i.payment_status = 'paid'
-    GROUP BY c.account_name
-");
-$stmtIncome->execute();
-$incomeData = $stmtIncome->fetchAll(PDO::FETCH_ASSOC);
 
-// Expenses
-$stmtExpense = $pdo->prepare("
-    SELECT c.account_name, SUM(i.paid_amount) AS total
-    FROM invoice i
-    JOIN chart_of_accounts c ON i.account_item = c.account_name
-    WHERE c.account_type = 'expense' AND i.payment_status = 'paid'
-    GROUP BY c.account_name
-");
-$stmtExpense->execute();
-$expenseData = $stmtExpense->fetchAll(PDO::FETCH_ASSOC);
-
-                        ?>
-<tbody>
-    <tr class="category"><td><b>Income</b></td></tr>
-    <tr><td>Rental Income</td><td>Ksh <?= number_format($totalIncome, 2) ?></td></tr>
-    <tr><td>Maintenance Fees Collected</td><td>Ksh <?= number_format($maintenanceFees, 2) ?></td></tr>
-    <tr><td>Late Payment Fees</td><td>Ksh <?= number_format($latePaymentFees, 2) ?></td></tr>
-    <tr><td>Utility Charges</td><td>Ksh <?= number_format($utilityCharges, 2) ?></td></tr>
-    <tr><td>Management Fees</td><td>Ksh <?= number_format($managementFees, 2) ?></td></tr>
-    <tr><td>Other Income</td><td>Ksh <?= number_format($otherIncome, 2) ?></td></tr>
-    <tr class="category"><td><b>Total Income</b></td><td><b>Ksh <?= number_format($calculatedIncome, 2) ?></b></td></tr>
-
-    <tr class="category"><td><b>Expenses</b></td></tr>
-    <tr><td>MRI Deductions</td><td>Ksh <?= number_format($mriDeductions, 2) ?></td></tr>
-    <tr><td>Maintenance and Repairs</td><td>Ksh <?= number_format($maintenanceRepairs, 2) ?></td></tr>
-    <tr><td>Staff Salaries</td><td>Ksh <?= number_format($staffSalaries, 2) ?></td></tr>
-    <tr><td>Utilities</td><td>Ksh <?= number_format($utilities, 2) ?></td></tr>
-    <tr><td>Marketing Costs</td><td>Ksh <?= number_format($marketing, 2) ?></td></tr>
-    <tr><td>Legal Fees</td><td>Ksh <?= number_format($legalFees, 2) ?></td></tr>
-    <tr><td>Depreciation</td><td>Ksh <?= number_format($depreciation, 2) ?></td></tr>
-    <tr><td>Loan Interest</td><td>Ksh <?= number_format($loanInterest, 2) ?></td></tr>
-    <tr><td>Miscellaneous Expenses</td><td>Ksh <?= number_format($miscellaneous, 2) ?></td></tr>
-    <tr class="category"><td><b>Total Expenses</b></td><td><b>Ksh <?= number_format($calculatedExpenses, 2) ?></b></td></tr>
-
-    <tr class="category"><td><b>Net Profit</b></td><td><b>Ksh <?= number_format($netProfit, 2) ?></b></td></tr>
-</tbody>
+                        <tbody>
+                          <!-- <tr class="category"><td> <b style="font-size: 16px;">Income</b></td></tr> -->
+                          <tr class="category"><td> <b>Income</b></td></tr>
+                          <tr><td>Rental Income</td><td>Ksh50,000</tr>
+                            <tr><td>Maintenance Fees Collected</td><td>Ksh 2500</td></tr>
+                            <tr><td>Late Payment Fees</td><td>Ksh 10,000</td></tr>
+                            <tr><td>Utility Charges</td><td>Ksh 1500</td></tr>
+                            <tr><td>Management Fees</td><td>Ksh 2000</td></tr>
+                            <tr><td>Other Income</td><td>Ksh 5000</td></tr>
+                            <tr class="category"><td> <b>Total Income</b></td><td> <b>Ksh71,000</b></td></tr>
+                            <tr class="category"><td> <b>Expenses</b></td></tr>
+                            <tr><td>MRI Deductions</td><td> Ksh 20,000</td></tr>
+                            <tr><td>Maintenance and Repairs</td><td>Ksh 3500</td></tr>
+                            <tr><td>Staff Salaries</td><td>Ksh 2,900</td></tr>
+                            <tr><td>Utilities</td><td>Ksh 1200</td></tr>
+                            <tr><td>Marketing Costs</td><td>Ksh 2500</td></tr>
+                            <tr><td>Legal Fees</td><td>Ksh 2300</td></tr>
+                            <tr><td>Depreciation</td><td>Ksh 1000</td></tr>
+                            <tr><td>Loan Interest</td><td>Ksh 5000</td></tr>
+                            <tr><td>Miscellaneous Expenses</td><td>Ksh 4500</td></tr>
+                            <tr class="category"><td> <b>Total Expenses</b> </td><td> <b>Ksh 38,400</b></td></tr>
+                            <tr class="category"><td> <b>Net Profit</b> </td><td> <b>Ksh 32,600</b></td></tr>
+                        </tbody>
 
 
                     </table>
