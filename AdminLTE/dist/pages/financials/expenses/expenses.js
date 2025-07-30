@@ -44,6 +44,7 @@ function initializeCustomSelect(wrapper) {
   });
 }
 
+// combo-box
 function combobox() {
   const comboBox = document.querySelector('.combo-box');
   const input = comboBox.querySelector('.combo-input');
@@ -128,6 +129,7 @@ document.addEventListener("DOMContentLoaded", function () {
       bindItemHiddenInput(wrapper); // optional, if used
     }
   });
+  
   //Add Expenses
   function calculateTotal() {
     console.log('total fired');

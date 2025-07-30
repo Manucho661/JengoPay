@@ -1,5 +1,5 @@
 <?php
-require_once '../db/connect.php';
+require_once '../../db/connect.php';
 
 $expenses = [];
 $monthlyTotals = array_fill(1, 12, 0);
@@ -144,7 +144,7 @@ try {
 
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
+    <link rel="stylesheet" href="../../../../dist/css/adminlte.css" />
     <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
@@ -249,7 +249,7 @@ try {
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
         <!--begin::Header-->
-        <?php include_once '../includes/header.php' ?>
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/OriginalTwo/AdminLTE/dist/pages/includes/header.php'; ?>
         <!--end::Header-->
         <!--begin::Sidebar-->
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
@@ -271,7 +271,7 @@ try {
             </div>
             <!--end::Sidebar Brand-->
             <!--begin::Sidebar Wrapper-->
-            <div> <?php include_once '../includes/sidebar1.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+            <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/OriginalTwo/AdminLTE/dist/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
             <!--end::Sidebar Wrapper-->
         </aside>
         <!--end::Sidebar-->
@@ -923,8 +923,8 @@ try {
     <!--end::App Wrapper-->
 
     <!-- Main Js File -->
-    <script src="../../../dist/js/adminlte.js"></script>
-    <script src="expense.js"></script>
+    <script src="../../../../dist/js/adminlte.js"></script>
+    <script src="expenses.js"></script>
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
