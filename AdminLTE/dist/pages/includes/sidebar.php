@@ -37,7 +37,7 @@
 
   <a href="/OriginalTwo/AdminLTE/dist/pages/inspections/inspections.php">🕵️ Inspections</a>
   <a href="/OriginalTwo/AdminLTE/dist/pages/rent/rent.php">💸 Rent</a>
-  <a href="../maintenance/maintenance.php">🛠 Repairs & Maintenance</a>
+  <a href="/OriginalTwo/AdminLTE/dist/pages/maintenance/maintenance.php">🛠 Repairs & Maintenance</a>
 
   <!-- Financials -->
   <div class="menu-group">
