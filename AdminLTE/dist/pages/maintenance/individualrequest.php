@@ -2,77 +2,43 @@
 <html lang="en">
 
 <head>
-
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>AdminLTE | Dashboard v2</title>
   <!--begin::Primary Meta Tags-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="title" content="AdminLTE | Dashboard v2" />
   <meta name="author" content="ColorlibHQ" />
-  <meta
-    name="description"
-    content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
-  <meta
-    name="keywords"
-    content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
-  <!-- LINKS -->
+  <meta name="description" content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
+  <meta name="keywords" content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
 
+  <!-- LINKS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css">
-  <!--end::Primary Meta Tags-->
   <!--begin::Fonts-->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
-    integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
-    crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css" integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q=" crossorigin="anonymous" />
   <!--end::Fonts-->
 
   <!--begin::Third Party Plugin(OverlayScrollbars)-->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
-    integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg="
-    crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css" integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg=" crossorigin="anonymous" />
   <!--end::Third Party Plugin(OverlayScrollbars)-->
   <!--begin::Third Party Plugin(Bootstrap Icons)-->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
-    crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI=" crossorigin="anonymous" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
-
   <!--end::Third Party Plugin(Bootstrap Icons)-->
   <!--begin::Required Plugin(AdminLTE)-->
   <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
-  <!-- <link rel="stylesheet" href="text.css" /> -->
   <!--end::Required Plugin(AdminLTE)-->
   <!-- apexcharts -->
-
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
-    integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
-    crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css" integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-
   <link rel="stylesheet" href="expenses.css">
   <!-- scripts for data_table -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
   <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
   <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
-
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
   <!-- Pdf pluggin -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-
-
-
-
 
   <style>
     * {
@@ -86,9 +52,11 @@
       background: linear-gradient(135deg, #f8fafc, #ffffff);
       color: #333;
     }
+
     .app-wrapper {
-            background-color: rgba(128, 128, 128, 0.1);
-        }
+      background-color: rgba(128, 128, 128, 0.1);
+    }
+
     .layout {
       display: flex;
       height: calc(100vh - 60px);
@@ -120,11 +88,13 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      margin: 0;
     }
 
     .search-bar {
       padding: 1rem;
       background: #fff;
+      border-bottom: 1px solid #e0e0e0;
     }
 
     .search-bar input {
@@ -142,34 +112,121 @@
       box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.25);
     }
 
+    /* IMPROVED REQUEST LIST STYLES */
     .request-list {
-      flex-grow: 1;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: calc(100vh - 180px);
       overflow-y: auto;
     }
 
     .request-item {
-      padding: 1rem 1.5rem;
-      border-bottom: 1px solid #f0f0f0;
+      padding: 15px;
+      border-bottom: 1px solid rgba(0, 25, 45, 0.1);
       cursor: pointer;
-      transition: background 0.3s ease;
+      transition: all 0.3s ease;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      font-size: 0.95rem;
+      gap: 12px;
+      background: white;
+      margin: 8px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
     .request-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 25, 45, 0.1);
       background: #FFF7E0;
     }
 
-    .badge-new {
+    .request-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
       background: #00192D;
       color: #FFC107;
-      padding: 4px 10px;
-      font-size: 12px;
-      border-radius: 20px;
-      margin-left: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .request-content {
+      flex-grow: 1;
+      min-width: 0;
+    }
+
+    .request-desc {
+      font-weight: 500;
+      color: #00192D;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 4px;
+    }
+
+    .request-meta {
+      display: flex;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: #6c757d;
+      flex-wrap: wrap;
+    }
+
+    .request-date {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .request-status {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .badge-new {
+      background: #FFC107;
+      color: #00192D;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
       font-weight: 600;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    /* Status indicators */
+    .status-pending {
+      color: #FFC107;
+    }
+
+    .status-completed {
+      color: #28a745;
+    }
+
+    .status-in-progress {
+      color: #17a2b8;
+    }
+
+    .status-cancelled {
+      color: #dc3545;
+    }
+
+    /* Priority indicators */
+    .priority-high {
+      color: #dc3545;
+    }
+
+    .priority-medium {
+      color: #fd7e14;
+    }
+
+    .priority-low {
+      color: #28a745;
     }
 
     .main-content {
@@ -247,19 +304,61 @@
       border-left: 5px solid transparent;
     }
 
-    /* ✨ Hover effect */
     .row-card:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
       border-left: 5px solid #FFC107;
       background-color: #fdfaf3;
     }
+
+    .detail-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      line-height: 1.3;
+    }
+
+    .detail-icon {
+      width: 18px;
+      text-align: center;
+      color: #FFC107;
+    }
+
+    .detail-label {
+      font-weight: 500;
+      color: #FFC107;
+      min-width: fit-content;
+    }
+
+    .photo-preview {
+      max-height: 250px;
+      object-fit: cover;
+    }
+
+    .availability-btn {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+      color: #F54927;
+      border-radius: 0.2rem;
+      border: 1px solid #dee2e6;
+      background: #f8f9fa;
+    }
+
+    .availability-btn.active {
+      background: #d4edda;
+      border-color: #c3e6cb;
+      color: #155724;
+    }
+
+    .active-request {
+      background-color: #FFF7E0;
+      border-left: 3px solid #FFC107;
+    }
   </style>
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-dark" style="">
   <div class="app-wrapper">
-
     <!--begin::Header-->
     <?php include_once '../includes/header.php' ?>
     <!--end::Header-->
@@ -268,7 +367,6 @@
       <div class="sidebar-brand">
         <!--begin::Brand Link-->
         <a href="./index.html" class="brand-link">
-
           <!--begin::Brand Text-->
           <span class="brand-text font-weight-light"><b class="p-2"
               style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
@@ -282,7 +380,7 @@
       </div>
       <!--end::Sidebar Brand-->
       <!--begin::Sidebar Wrapper-->
-      <div> <?php include_once '../includes/sidebar1.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+      <div> <?php include_once '../includes/sidebar.php'; ?> </div>
       <!--end::Sidebar Wrapper-->
     </aside>
 
@@ -301,7 +399,7 @@
             <ul class="request-list" id="requestList"></ul>
           </div>
           <div class="main-content" id="detailsPanel">
-            <div class="no-selection"><i class="fa-solid fa-circle-info"></i> Select a request to view details</div>
+            <!-- content displays here -->
           </div>
         </div>
       </div>
@@ -324,6 +422,21 @@
     const searchInput = document.getElementById('searchInput');
     let allRequests = [];
 
+    // Get status icon mapping
+    const statusIcons = {
+      'Pending': 'fa-clock',
+      'Completed': 'fa-check-circle',
+      'In Progress': 'fa-spinner',
+      'Cancelled': 'fa-times-circle'
+    };
+
+    // Get priority icon mapping
+    const priorityIcons = {
+      'High': 'fa-arrow-up',
+      'Medium': 'fa-equals',
+      'Low': 'fa-arrow-down'
+    };
+
     fetch('get_requests.php')
       .then(res => res.json())
       .then(requests => {
@@ -333,18 +446,79 @@
         }
         allRequests = requests;
         renderRequestList(allRequests);
+
+        // Automatically show the first request
+        if (allRequests.length > 0) {
+          showRequestDetails(allRequests[0]);
+          // Highlight the first item
+          const firstItem = requestList.querySelector('.request-item');
+          if (firstItem) {
+            firstItem.classList.add('active-request');
+          }
+        }
       });
 
     function renderRequestList(requests) {
       requestList.innerHTML = '';
-      requests.forEach(req => {
+
+      if (requests.length === 0) {
+        detailsPanel.innerHTML = `<div class="no-selection"><i class="fa-solid fa-triangle-exclamation"></i> No matching requests found.</div>`;
+        return;
+      }
+
+      requests.forEach((req, index) => {
         const li = document.createElement('li');
         li.className = 'request-item';
+
+        // Truncate description
+        const truncatedDesc = req.description.length > 60 ?
+          req.description.substring(0, 60) + '...' :
+          req.description;
+
+        // Format date
+        const formattedDate = new Date(req.request_date).toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        });
+
         li.innerHTML = `
-          <span><i class="fa-solid fa-wrench"></i> ${req.category} ${req.is_read == 0 ? '<span class="badge-new">New</span>' : ''}</span>
-          <i class="fa-solid fa-chevron-right"></i>`;
+          <div class="request-icon">
+            <i class="fas ${statusIcons[req.status] || 'fa-tools'}"></i>
+          </div>
+          <div class="request-content">
+            <div class="request-desc" title="${req.description}">
+              ${truncatedDesc}
+            </div>
+            <div class="request-meta">
+              <div class="request-date">
+                <i class="far fa-calendar-alt"></i>
+                ${formattedDate}
+              </div>
+              <div class="request-status">
+                <i class="fas ${statusIcons[req.status] || 'fa-circle'} status-${req.status.toLowerCase().replace(' ', '-')}"></i>
+                ${req.status}
+              </div>
+              ${req.priority ? `
+              <div class="request-priority">
+                <i class="fas ${priorityIcons[req.priority] || 'fa-circle'} priority-${req.priority.toLowerCase()}"></i>
+                ${req.priority}
+              </div>
+              ` : ''}
+            </div>
+          </div>
+          ${req.is_read == 0 ? '<span class="badge-new">NEW</span>' : ''}
+        `;
 
         li.onclick = () => {
+          // Remove active class from all items
+          document.querySelectorAll('.request-item').forEach(item => {
+            item.classList.remove('active-request');
+          });
+
+          // Add active class to clicked item
+          li.classList.add('active-request');
+
           showRequestDetails(req);
           fetch('mark_as_read.php', {
             method: 'POST',
@@ -369,81 +543,97 @@
       const filtered = allRequests.filter(req =>
         req.category.toLowerCase().includes(query) ||
         req.residence.toLowerCase().includes(query) ||
-        req.unit.toLowerCase().includes(query)
+        req.unit.toLowerCase().includes(query) ||
+        req.description.toLowerCase().includes(query)
       );
       renderRequestList(filtered);
+
+      // Show first result if available
+      if (filtered.length > 0) {
+        showRequestDetails(filtered[0]);
+        // Highlight the first item
+        const firstItem = requestList.querySelector('.request-item');
+        if (firstItem) {
+          firstItem.classList.add('active-request');
+        }
+      }
     });
 
     function showRequestDetails(req) {
+      // Format date for details view
+      const formattedDate = new Date(req.request_date).toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+
       detailsPanel.innerHTML = `
-    <div class="container">
-      <!-- Row 1: Property, Unit, Request ID -->
-      <div class="row-card mb-4 p-3 rounded shadow-sm bg-white">
-        <div class="row">
-          <div class="col-md-4">
-            <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-building"></i></span><span class="detail-label">Property:</span> ${req.residence}</div>
-          </div>
-          <div class="col-md-4">
-            <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-door-closed"></i></span><span class="detail-label">Unit:</span> ${req.unit}</div>
-          </div>
-          <div class="col-md-4">
-            <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-hashtag"></i></span><span class="detail-label">Request ID:</span> ${req.id}</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Row 2: Category & Description -->
-      <div class="row-card mb-4 p-3 rounded shadow-sm bg-white">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-layer-group"></i></span><span class="detail-label">Category:</span> ${req.category}</div>
-          </div>
-          <div class="col-md-6">
-            <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-align-left"></i></span><span class="detail-label">Description:</span> ${req.description}</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Row 3: Photo -->
-      <div class="row-card mb-4 p-3 rounded shadow-sm bg-white">
-        <div class="detail-row">
-          <span class="detail-icon"><i class="fa-solid fa-image"></i></span>
-          <span class="detail-label">Photo:</span><br>
-        </div>
-        <img src="${req.photo || 'https://via.placeholder.com/400x250?text=No+Photo'}" alt="Photo" class="photo-preview mt-2">
-      </div>
-
-      <!-- Row 4: Date, Status, Payment, Bid, Availability -->
-      <div class="row-card mb-4 p-3 rounded shadow-sm bg-white">
-        <div class="row">
-          <div class="col-md-3 mb-3">
-            <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-calendar"></i></span><span class="detail-label">Date:</span> ${req.request_date}</div>
-          </div>
-          <div class="col-md-3 mb-3">
-            <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-tasks"></i></span><span class="detail-label">Status:</span> ${req.status}</div>
-          </div>
-          <div class="col-md-3 mb-3">
-            <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-money-bill"></i></span><span class="detail-label">Payment:</span> ${req.payment_status}</div>
-          </div>
-          <div class="col-md-3 mb-3">
-            <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-gavel"></i></span><span class="detail-label">Bid:</span> ${req.bid ?? 'N/A'}</div>
-          </div>
-          <div class="col-12">
-            <div class="detail-row">
-              <span class="detail-icon"><i class="fa-solid fa-toggle-on"></i></span>
-              <span class="detail-label">Availability:</span>
-              <button class="availability-btn ${req.availability === 'Available' ? 'active' : ''}" onclick="toggleAvailability(this)">
-                ${req.availability}
-              </button>
+        <div class="container px-0">
+          <!-- Row 1: Property, Unit, Request ID -->
+          <div class="row-card mb-3 p-3 rounded shadow-sm bg-white">
+            <div class="row gx-2">
+              <div class="col-md-4 mb-2 mb-md-0">
+                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-building"></i></span><span class="detail-label">Property:</span> ${req.residence}</div>
+              </div>
+              <div class="col-md-4 mb-2 mb-md-0">
+                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-door-closed"></i></span><span class="detail-label">Unit:</span> ${req.unit}</div>
+              </div>
+              <div class="col-md-4">
+                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-hashtag"></i></span><span class="detail-label">Request ID:</span> ${req.id}</div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  `;
+
+          <!-- Row 2: Category & Description -->
+          <div class="row-card mb-3 p-3 rounded shadow-sm bg-white">
+            <div class="row gx-2">
+              <div class="col-md-6 mb-2 mb-md-0">
+                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-layer-group"></i></span><span class="detail-label">Category:</span> ${req.category}</div>
+              </div>
+              <div class="col-md-6">
+                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-align-left"></i></span><span class="detail-label">Description:</span> ${req.description}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 3: Photo -->
+          <div class="row-card mb-3 p-3 rounded shadow-sm bg-white">
+            <div class="detail-row mb-2">
+              <span class="detail-icon"><i class="fa-solid fa-image"></i></span>
+              <span class="detail-label">Photo:</span>
+            </div>
+            <img src="${req.photo || 'https://via.placeholder.com/400x250?text=No+Photo'}" alt="Photo" class="photo-preview w-100 rounded">
+          </div>
+
+          <!-- Row 4: Date, Status, Payment, Bid, Availability -->
+          <div class="row-card p-3 rounded shadow-sm bg-white">
+            <div class="row gx-2">
+              <div class="col-md-3 col-6 mb-2">
+                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-calendar"></i></span><span class="detail-label">Date:</span> ${formattedDate}</div>
+              </div>
+              <div class="col-md-3 col-6 mb-2">
+                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-tasks"></i></span><span class="detail-label">Status:</span> ${req.status}</div>
+              </div>
+              <div class="col-md-3 col-6 mb-2">
+                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-money-bill"></i></span><span class="detail-label">Payment:</span> ${req.payment_status}</div>
+              </div>
+              <div class="col-md-3 col-6 mb-2">
+                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-gavel"></i></span><span class="detail-label">Bid:</span> ${req.bid ?? 'N/A'}</div>
+              </div>
+              <div class="col-12 mt-1">
+                <div class="detail-row">
+                  <span class="detail-icon"><i class="fa-solid fa-toggle-on"></i></span>
+                  <span class="detail-label">Availability:</span>
+                  <button class="availability-btn btn-sm ${req.availability === 'Available' ? 'active' : ''}" onclick="toggleAvailability(this)">
+                    ${req.availability}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>`;
     }
-
-
 
     window.toggleAvailability = (btn) => {
       const current = btn.textContent.trim();

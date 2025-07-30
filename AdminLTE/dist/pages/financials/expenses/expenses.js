@@ -3,6 +3,7 @@ function initializeCustomSelect(wrapper) {
   const select = wrapper.querySelector('.custom-select');
   const optionsContainer = wrapper.querySelector('.select-options');
   const options = wrapper.querySelectorAll('[role="option"]');
+  const hiddenInput = wrapper.querySelector('.custom-hidden-input'); // ✅ get hidden input
 
   const closeOptions = () => {
     optionsContainer.style.display = 'none';
@@ -21,6 +22,8 @@ function initializeCustomSelect(wrapper) {
     option.addEventListener('click', () => {
       select.textContent = option.textContent;
       select.setAttribute('data-value', option.dataset.value);
+      hiddenInput.value = option.dataset.value; // ✅ update hidden input
+
       options.forEach(opt => opt.classList.remove('selected'));
       option.classList.add('selected');
       closeOptions();
@@ -44,12 +47,15 @@ function initializeCustomSelect(wrapper) {
   });
 }
 
+
+// combo-box
 function combobox() {
   const comboBox = document.querySelector('.combo-box');
   const input = comboBox.querySelector('.combo-input');
   const button = comboBox.querySelector('.combo-button');
   const optionsList = comboBox.querySelector('.combo-options');
   const options = comboBox.querySelectorAll('.combo-option');
+  const hiddenInput = comboBox.querySelector('.supplier-hidden-input'); // add this
 
   // Toggle dropdown
   button.addEventListener('click', function (e) {
@@ -64,14 +70,15 @@ function combobox() {
   options.forEach(option => {
     option.addEventListener('click', function () {
       input.value = this.textContent;
+      hiddenInput.value = this.getAttribute('data-value'); // store selected value
       optionsList.classList.remove('show');
 
       // Update selected style
       options.forEach(opt => opt.classList.remove('selected'));
       this.classList.add('selected');
 
-      // Here you would filter your table/data
-      console.log('Selected:', this.getAttribute('data-value'));
+      // Optional: console for debugging
+      console.log('Selected:', hiddenInput.value);
     });
   });
 
@@ -107,8 +114,10 @@ function combobox() {
   });
 
   // Close when clicking outside
-  document.addEventListener('click', function () {
-    optionsList.classList.remove('show');
+  document.addEventListener('click', function (e) {
+    if (!comboBox.contains(e.target)) {
+      optionsList.classList.remove('show');
+    }
   });
 
   // Keyboard navigation
@@ -119,6 +128,7 @@ function combobox() {
   });
 }
 
+
 document.addEventListener("DOMContentLoaded", function () {
   console.log('document loaded');
   combobox();
@@ -128,6 +138,7 @@ document.addEventListener("DOMContentLoaded", function () {
       bindItemHiddenInput(wrapper); // optional, if used
     }
   });
+  
   //Add Expenses
   function calculateTotal() {
     console.log('total fired');
