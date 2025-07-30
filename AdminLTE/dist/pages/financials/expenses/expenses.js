@@ -173,6 +173,8 @@ document.addEventListener("DOMContentLoaded", function () {
       if (taxOption.includes('inclusive')) {
         hasInclusive = true;
         const basePrice = unitPrice / 1.16;
+              console.log(qty);
+              console.log(unitPrice);
         total = basePrice * qty * 1.16;
         itemTaxInclusive = (basePrice * qty * 0.16);
       } else if (taxOption.includes('exclusive')) {
@@ -203,6 +205,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Remove discount, remove inclusive tax, add exclusive tax
       subTotal += (total - itemTaxInclusive + itemTaxExclusive);
+      console.log(total);
       vatAmountInclusive += itemTaxInclusive;
       vatAmountExclusive += itemTaxExclusive;
       totalVat = vatAmountInclusive + vatAmountExclusive;
@@ -297,7 +300,7 @@ document.getElementById("expenseForm").addEventListener("submit", function (e) {
   for (let [key, value] of formData.entries()) {
     console.log(`${key}: ${value}`);
   }
-  fetch("actions/expenses/createExpense.php", {
+  fetch("actions/createExpense.php", {
     method: "POST",
     body: formData,
   })
@@ -306,7 +309,7 @@ document.getElementById("expenseForm").addEventListener("submit", function (e) {
       console.log("Server response:", data);
 
       // ✅ Reload the page without resubmission
-      window.location.href = window.location.href;
+       window.location.href = window.location.href;
     })
     .catch(error => {
       console.error("Error submitting form:", error);

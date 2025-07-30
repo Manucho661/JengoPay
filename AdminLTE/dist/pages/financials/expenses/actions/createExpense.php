@@ -14,13 +14,14 @@
 
         $expense_date = $_POST['date'] ?? null;
         $expense_no = $_POST['expense_no'] ?? null;
+        $building_id = $_POST['building_id'] ?? null;
         $supplier = $_POST['supplier'] ?? null;
         $untaxedAmount = $_POST['untaxedAmount'];
         $totalTax = $_POST['totalTax'] ?? 0.00;
         $total = $_POST['total'] ?? 0.00;
 
-        $stmt = $pdo->prepare("INSERT INTO expenses (expense_date, expense_no, supplier,untaxed_amount, total_taxes, total) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$expense_date, $expense_no, $supplier, $untaxedAmount, $totalTax, $total]);
+        $stmt = $pdo->prepare("INSERT INTO expenses (building_id, expense_date, expense_no, supplier,untaxed_amount, total_taxes, total) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$building_id, $expense_date, $expense_no, $supplier, $untaxedAmount, $totalTax, $total]);
 
         $expense_id = $pdo->lastInsertId();
 

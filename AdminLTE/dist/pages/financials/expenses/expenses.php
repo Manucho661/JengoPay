@@ -453,7 +453,7 @@ try {
                                                                     <li class="combo-option" data-value="overdue">Overdue Payments</li>
                                                                     <li class="combo-option" data-value="renewals">Upcoming Renewals</li>
                                                                 </ul>
-                                                                <input type="hidden" class="supplier-hidden-input" name="supplier_id">
+                                                                <input type="hidden" class="supplier-hidden-input" name="supplier">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -489,7 +489,7 @@ try {
 
                                                                 <!-- Unit Price & Taxes -->
                                                                 <div class="col-md-3 d-flex align-items-stretch">
-                                                                    <div class="unit-price me-2 flex-grow-1">
+                                                                    <div class="unitPrice me-2 flex-grow-1">
                                                                         <label class="form-label fw-bold">Unit Price</label>
                                                                         <input type="number" class="form-control unit-price rounded-1 shadow-none" placeholder="123" name="unit_price[]" required />
                                                                     </div>
