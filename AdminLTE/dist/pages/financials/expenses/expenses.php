@@ -91,6 +91,19 @@ try {
     $errorMessage = "❌ Failed to fetch expense items: " . $e->getMessage();
 }
 
+// get buildings
+try {
+    $buildings = $pdo->prepare("SELECT * FROM buildings");
+    $buildings->execute();
+    $buildings = $buildings->fetchAll(PDO::FETCH_ASSOC);
+
+    if (empty($buildings)) {
+        echo "<p style='color:red;'>No buildings found in database.</p>";
+    }
+} catch (PDOException $e) {
+    $errorMessage = "❌ Failed to fetch buildings: " . $e->getMessage();
+    $buildings = []; // default to empty array if error occurs
+}
 ?>
 
 
@@ -409,9 +422,12 @@ try {
                                                                     Select Building
                                                                 </div>
                                                                 <div class="select-options" id="select-options" role="listbox">
-                                                                    <div role="option" data-value="option1">Manucho</div>
-                                                                    <div role="option" data-value="option2">Silver Spoon</div>
-                                                                    <div role="option" data-value="option3">Ebenezer</div>
+                                                                    <?php foreach ($buildings as $building): ?>
+                                                                        <div role="option" data-value="<?= htmlspecialchars($building['building_id']) ?>">
+                                                                            <?= htmlspecialchars($building['building_name']) ?>
+                                                                        </div>
+                                                                    <?php endforeach; ?>
+                                                                    <input type="hidden" class="custom-hidden-input" name="building_id">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -437,6 +453,7 @@ try {
                                                                     <li class="combo-option" data-value="overdue">Overdue Payments</li>
                                                                     <li class="combo-option" data-value="renewals">Upcoming Renewals</li>
                                                                 </ul>
+                                                                <input type="hidden" class="supplier-hidden-input" name="supplier_id">
                                                             </div>
                                                         </div>
                                                     </div>
