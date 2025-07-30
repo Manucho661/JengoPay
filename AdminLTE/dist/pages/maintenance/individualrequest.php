@@ -86,7 +86,9 @@
       background: linear-gradient(135deg, #f8fafc, #ffffff);
       color: #333;
     }
-
+    .app-wrapper {
+            background-color: rgba(128, 128, 128, 0.1);
+        }
     .layout {
       display: flex;
       height: calc(100vh - 60px);
