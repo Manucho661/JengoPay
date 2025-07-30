@@ -1394,7 +1394,7 @@ header {
                                                 <th>Qty</th>
                                                 <th>Unit Price</th>
                                                 <th>Taxes</th>
-                                                <th>Actions</th>
+                                                <th>Total</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -1488,21 +1488,52 @@ header {
         // }
 
         // Confirm Delete Invoice
-        function confirmDeleteInvoice(invoiceId) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    deleteInvoice(invoiceId);
+       // Confirm Delete Invoice (Soft Delete with 30-day retention)
+       function confirmDeleteInvoice(invoiceId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This invoice will be marked for deletion and permanently removed after 30 days (only allowed for drafts or cancelled invoices with no payments).",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch('delete_invoice.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'id=' + encodeURIComponent(invoiceId)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire(
+                        'Deleted!',
+                        'The invoice has been marked for deletion.',
+                        'success'
+                    ).then(() => location.reload());
+                } else {
+                    Swal.fire(
+                        'Not Allowed',
+                        data.message || 'This invoice cannot be deleted.',
+                        'warning'
+                    );
                 }
+            })
+            .catch(error => {
+                Swal.fire(
+                    'Error!',
+                    'Request failed: ' + error,
+                    'error'
+                );
             });
         }
+    });
+}
+
 
         // Delete Invoice
         function deleteInvoice(invoiceId) {
@@ -1712,6 +1743,8 @@ header {
             window.location.href = 'invoice_details.php?id=' + invoiceId;
         }
     </script>
+
+
 
 
     <!-- <script>

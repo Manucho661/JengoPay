@@ -11,7 +11,7 @@ function generateNextDraftNumber($pdo) {
     return 'DFT-' . str_pad($next, 6, '0', STR_PAD_LEFT);
 }
 
-// Initialize variables with default values
+// Initialize variables
 $isDraft = isset($_POST['is_draft']) && $_POST['is_draft'] == '1';
 $invoice_number = trim($_POST['invoice_number'] ?? '');
 $invoice_date = $_POST['invoice_date'] ?? null;
@@ -22,22 +22,21 @@ $status = $isDraft ? 'draft' : ($_POST['status'] ?? 'sent');
 $payment_status = $_POST['payment_status'] ?? 'unpaid';
 $notes = trim($_POST['notes'] ?? '');
 $terms_conditions = trim($_POST['terms_conditions'] ?? '');
+$paid_amount = 0.00; // Default to 0 unless you want to pass this in via POST
 
-// Process total amount - handle both array and single value cases
+// Process total amount
 $total = 0.00;
 if (isset($_POST['total'])) {
     if (is_array($_POST['total'])) {
-        // If it's an array, sum all values (for cases where name="total[]" is used)
         foreach ($_POST['total'] as $t) {
             $total += floatval(str_replace([',', ' '], '', $t));
         }
     } else {
-        // Single value case
         $total = floatval(str_replace([',', ' '], '', $_POST['total']));
     }
 }
 
-// Process other financial inputs
+// Subtotal and taxes
 $subtotal_input = isset($_POST['subtotal']) ? floatval(str_replace([',', ' '], '', $_POST['subtotal'])) : 0.00;
 
 $taxes_input = 0.00;
@@ -47,14 +46,13 @@ if (!empty($_POST['taxes']) && is_array($_POST['taxes'])) {
     }
 }
 
-// Validate line items
+// Line items
 $account_items = $_POST['account_item'] ?? [];
 $descriptions = $_POST['description'] ?? [];
 $quantities = $_POST['quantity'] ?? [];
 $unit_prices = $_POST['unit_price'] ?? [];
 $vat_type = $_POST['vat_type'] ?? [];
 
-// Basic validation
 if (empty($account_items) || count($account_items) !== count($descriptions)) {
     die("Error: Invalid line items data");
 }
@@ -62,35 +60,28 @@ if (empty($account_items) || count($account_items) !== count($descriptions)) {
 try {
     $pdo->beginTransaction();
 
-    // Generate draft number if needed
     if ($isDraft && (!$invoice_number || !str_starts_with($invoice_number, 'DFT'))) {
         $invoice_number = generateNextDraftNumber($pdo);
     }
 
-    // Prepare the invoice insert statement
+    // Prepared insert with paid_amount included
     $stmt = $pdo->prepare("INSERT INTO invoice
         (invoice_number, invoice_date, due_date, payment_date, building_id, tenant,
          account_item, description, quantity, unit_price, vat_type,
-         sub_total, taxes, total,
+         sub_total, taxes, total, paid_amount,
          notes, terms_conditions, created_at, updated_at, status, payment_status)
-        VALUES (?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?)");
+        VALUES (?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?)");
 
-    // Insert each line item
     foreach ($account_items as $i => $item) {
-        // Sanitize and validate line item data
         $item = trim($item);
         $description = trim($descriptions[$i] ?? '');
         $qty = is_numeric($quantities[$i]) ? floatval($quantities[$i]) : 0.00;
         $price = is_numeric($unit_prices[$i]) ? floatval($unit_prices[$i]) : 0.00;
         $vat = trim($vat_type[$i] ?? '');
 
-        // Calculate row subtotal
-        $row_sub_total = $qty * $price;
-
-        // Only store the full summary totals for the first row
         $final_subtotal = ($i === 0) ? $subtotal_input : 0.00;
-        $final_total = ($i === 0) ? $total : 0.00;
         $final_tax = ($i === 0) ? $taxes_input : 0.00;
+        $final_total = ($i === 0) ? $total : 0.00;
 
         $stmt->execute([
             $invoice_number,
@@ -106,6 +97,7 @@ try {
             $final_subtotal,
             $final_tax,
             $final_total,
+            $paid_amount, // NEW: required column
             $notes,
             $terms_conditions,
             $status,
@@ -115,7 +107,6 @@ try {
 
     $pdo->commit();
 
-    // Return appropriate response
     if ($isDraft) {
         header('Content-Type: application/json');
         echo json_encode([
