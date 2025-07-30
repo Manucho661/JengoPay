@@ -61,6 +61,7 @@ try {
 echo "\n";
 // --- DEBUG END ---
 
+
 $stmt = $pdo->query("
     SELECT
         i.invoice_number,
@@ -173,7 +174,7 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!--Tailwind CSS  -->
-    <style>
+<style>
   /* ================ */
 /* BASE STYLES */
 /* ================ */
@@ -238,8 +239,8 @@ ul {
   padding: 4px 10px;
   font-size: 12px;
   font-weight: 600;
-  background-color:  #00192D;
-  color:#FFC107;
+  background-color: #FFC107;
+  color: #00192D;
   border: none;
   border-radius: 20px;
   display: inline-flex;
@@ -929,7 +930,8 @@ header {
                         </div>
 
 
-                        <div class="invoice-item invoice-header">
+
+                    <div class="invoice-item invoice-header">
     <div class="invoice-checkbox">
         <input type="checkbox">
     </div>
@@ -965,12 +967,13 @@ header {
     </div>
 </div>
 
+
                         <?php
                         // ----------------------------------------------------
                         // 1) Fetch invoices with tenant details and payment summary
                         // ----------------------------------------------------
                         $stmt = $pdo->query("
-  SELECT
+    SELECT
         i.id,
         i.invoice_number,
         i.invoice_date,
@@ -992,22 +995,24 @@ header {
     ORDER BY i.created_at DESC
 ");
 
-
                         $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                        // ----------------------------------------------------
-                        // 2) Output each invoice item
-                        // ----------------------------------------------------
-                        foreach ($invoices as $invoice) {
-                          $tenantName = $invoice['tenant_name'] ?? 'Unknown Tenant';
-                          $invoiceDate = $invoice['invoice_date'] == '0000-00-00' ? 'Draft' : date('M d, Y', strtotime($invoice['invoice_date']));
-                          $dueDate = $invoice['due_date'] == '0000-00-00' ? 'Not set' : date('M d, Y', strtotime($invoice['due_date']));
-                          $subtotalFormatted = number_format($invoice['sub_total'], 2);
-                          $totalAmount = number_format($invoice['total'], 2);
-                          $taxFormatted = $invoice['taxes'] ?: '0.00';
-                          $paidAmount = number_format($invoice['paid_amount'], 2);
-                          $balance = $invoice['total'] - $invoice['paid_amount'];
-                          $balanceFormatted = number_format($balance, 2);
+// ----------------------------------------------------
+// 2) Output each invoice item
+// ----------------------------------------------------
+
+
+foreach ($invoices as $invoice) {
+
+    $tenantName = $invoice['tenant_name'] ?? 'Unknown Tenant';
+    $invoiceDate = $invoice['invoice_date'] == '0000-00-00' ? 'Draft' : date('M d, Y', strtotime($invoice['invoice_date']));
+    $dueDate = $invoice['due_date'] == '0000-00-00' ? 'Not set' : date('M d, Y', strtotime($invoice['due_date']));
+    $subtotalFormatted = number_format($invoice['sub_total'], 2);
+    $totalAmount = number_format($invoice['total'], 2);
+    $taxFormatted = $invoice['taxes'] ?: '0.00';
+    $paidFormatted = number_format($invoice['paid_amount'], 2);
+    $balance = $invoice['total'] - $invoice['paid_amount'];
+    $balanceFormatted = number_format($balance, 2);
 
 
                             // Calculate overdue status
@@ -1083,6 +1088,7 @@ header {
           <div class="invoice-amount">' . number_format($invoice['sub_total'], 2) . '</div>
           <div class="invoice-amount">' . htmlspecialchars($invoice['taxes'] ?: '0.00') . '</div>
           <div class="invoice-amount">' . number_format($invoice['total'], 2) . '</div>
+
           <div class="invoice-status">
               <span class="status-badge ' . $statusClass . '">' . $statusText . '</span>
           </div>
@@ -1091,7 +1097,7 @@ header {
 
                             // Show payment button if applicable - updated logic
                             if ($invoice['status'] !== 'draft' && $invoice['status'] !== 'cancelled' && $invoice['paid_amount'] < $invoice['total']) {
-                                $buttonText = $invoice['paid_amount'] > 0 ? 'Add Payment' : 'Pay';
+                                $buttonText = $invoice['paid_amount'] > 0 ? 'Add Payment' : 'Pay Now';
                                 $balance = $invoice['total'] - $invoice['paid_amount'];
 
                                 echo '<br>
@@ -1412,33 +1418,31 @@ header {
                                                 <style>
 
                                                 </style>
-
-                                                <td><textarea id="description" name="description[]" placeholder="Description" rows="1" required></textarea></td>
-                                                <td><input id="quantity" type="number" name="quantity[]" class="form-control quantity" placeholder="quantity" required></td>
-                                                <td><input id="unit_price" type="number" name="unit_price[]" class="form-control unit-price" placeholder=" unit price" required></td>
-                                                <td>
-                                                    <select id="taxes" name="taxes[]" class="form-select vat-option" required>
-                                                        <option value="" disabled selected>Select Option</option>
-                                                        <option value="inclusive">VAT 16% Inclusive</option>
-                                                        <option value="exclusive">VAT 16% Exclusive</option>
-                                                        <option value="zero">Zero Rated</option>
-                                                        <option value="exempted">Exempted</option>
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                <!-- <input id="total" type="number" name="total[]" class="form-control total" readonly> -->
-                                                    <input id="total" type="number" name="total[]" class="form-control total"  readonly>
-                                                    <!-- <button type="button" class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
-                                                        <i class="fa fa-trash" style="font-size: 12px;"></i>
-                                                    </button> -->
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <button type="button" class="add-btn" onclick="addRow()">
-                                        <i class="fa fa-plus"></i> ADD MORE
-                                    </button>
-                                </div>
+          <td><textarea id="description" name="description[]" placeholder="Description" rows="1" required></textarea></td>
+          <td><input id="quantity" type="number" name="quantity[]" class="form-control quantity" placeholder="1" required></td>
+          <td><input id="unit_price"  type="number" name="unit_price[]" class="form-control unit-price" placeholder="123" required></td>
+          <td>
+            <select  id="taxes" name="vat_type[]" class="form-select vat-option" required>
+              <option value="" disabled selected>Select Option</option>
+              <option value="inclusive">VAT 16% Inclusive</option>
+              <option value="exclusive">VAT 16% Exclusive</option>
+              <option value="zero">Zero Rated</option>
+              <option value="exempted">Exempted</option>
+            </select>
+          </td>
+          <td>
+             <input id="total" type="number" name="total" class="form-control total" placeholder="0" readonly  style="display:none;">
+            <button type="button"  class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
+              <i class="fa fa-trash" style="font-size: 12px;"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <button type="button" class="add-btn" onclick="addRow()">
+      <i class="fa fa-plus"></i> ADD MORE
+    </button>
+  </div>
 
                                 <!-- Notes & Terms -->
                                 <div class="form-section">
@@ -1712,7 +1716,6 @@ header {
             window.location.href = 'invoice_details.php?id=' + invoiceId;
         }
     </script>
-
 
     <!-- <script>
 document.addEventListener('DOMContentLoaded', function() {
