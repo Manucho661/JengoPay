@@ -451,63 +451,30 @@
                             </tr>
                         </thead>
                         <?php
-include '../db/connect.php';
-
-// Helper function to fetch a single value from a query
-function fetchSum($pdo, $query) {
-    return $pdo->query($query)->fetchColumn() ?: 0;
-}
-
-// INCOME from invoice table
-$totalIncome = fetchSum($pdo, "SELECT COALESCE(SUM(paid_amount), 0) FROM invoice WHERE payment_status = 'paid' AND account_item = 'Rent'");
-$maintenanceFees = fetchSum($pdo, "SELECT COALESCE(SUM(paid_amount), 0) FROM invoice WHERE payment_status = 'paid' AND account_item = 'Maintenance Fee'");
-$latePaymentFees = fetchSum($pdo, "SELECT COALESCE(SUM(paid_amount), 0) FROM invoice WHERE payment_status = 'paid' AND account_item = 'Late Payment Fee'");
-$utilityCharges = fetchSum($pdo, "SELECT COALESCE(SUM(paid_amount), 0) FROM invoice WHERE payment_status = 'paid' AND account_item IN ('Water', 'Electricity', 'Utilities')");
-$managementFees = fetchSum($pdo, "SELECT COALESCE(SUM(paid_amount), 0) FROM invoice WHERE payment_status = 'paid' AND account_item = 'Management Fee'");
-$otherIncome = fetchSum($pdo, "
-    SELECT COALESCE(SUM(paid_amount), 0)
-    FROM invoice
-    WHERE payment_status = 'paid'
-      AND account_item NOT IN ('Rent', 'Maintenance Fee', 'Late Payment Fee', 'Water', 'Electricity', 'Utilities', 'Management Fee')
+                        include '../db/connect.php';
+// Income
+$stmtIncome = $pdo->prepare("
+    SELECT c.account_name, SUM(i.paid_amount) AS total
+    FROM invoice i
+    JOIN chart_of_accounts c ON i.account_item = c.account_name
+    WHERE c.account_type = 'income' AND i.payment_status = 'paid'
+    GROUP BY c.account_name
 ");
+$stmtIncome->execute();
+$incomeData = $stmtIncome->fetchAll(PDO::FETCH_ASSOC);
 
-// INCOME from payments table (M-Pesa, Bank, Cash, etc.)
-$externalPayments = fetchSum($pdo, "
-    SELECT COALESCE(SUM(amount), 0)
-    FROM payments
-    WHERE status = 'completed'
+// Expenses
+$stmtExpense = $pdo->prepare("
+    SELECT c.account_name, SUM(i.paid_amount) AS total
+    FROM invoice i
+    JOIN chart_of_accounts c ON i.account_item = c.account_name
+    WHERE c.account_type = 'expense' AND i.payment_status = 'paid'
+    GROUP BY c.account_name
 ");
+$stmtExpense->execute();
+$expenseData = $stmtExpense->fetchAll(PDO::FETCH_ASSOC);
 
-// EXPENSES
-$mriDeductions = fetchSum($pdo, "SELECT COALESCE(SUM(total), 0) FROM expenses WHERE (status = 'paid' OR status = 'partially paid') AND description LIKE '%MRI%'");
-$maintenanceRepairs = fetchSum($pdo, "SELECT COALESCE(SUM(total), 0) FROM expenses WHERE (status = 'paid' OR status = 'partially paid') AND description LIKE '%Maintenance%'");
-$staffSalaries = fetchSum($pdo, "SELECT COALESCE(SUM(total), 0) FROM expenses WHERE (status = 'paid' OR status = 'partially paid') AND description LIKE '%Salary%'");
-$utilities = fetchSum($pdo, "SELECT COALESCE(SUM(total), 0) FROM expenses WHERE (status = 'paid' OR status = 'partially paid') AND description LIKE '%Utility%'");
-$marketing = fetchSum($pdo, "SELECT COALESCE(SUM(total), 0) FROM expenses WHERE (status = 'paid' OR status = 'partially paid') AND description LIKE '%Marketing%'");
-$legalFees = fetchSum($pdo, "SELECT COALESCE(SUM(total), 0) FROM expenses WHERE (status = 'paid' OR status = 'partially paid') AND description LIKE '%Legal%'");
-$depreciation = fetchSum($pdo, "SELECT COALESCE(SUM(total), 0) FROM expenses WHERE (status = 'paid' OR status = 'partially paid') AND description LIKE '%Depreciation%'");
-$loanInterest = fetchSum($pdo, "SELECT COALESCE(SUM(total), 0) FROM expenses WHERE (status = 'paid' OR status = 'partially paid') AND description LIKE '%Loan Interest%'");
-
-$miscellaneous = fetchSum($pdo, "
-    SELECT COALESCE(SUM(total), 0)
-    FROM expenses
-    WHERE (status = 'paid' OR status = 'partially paid')
-      AND description NOT LIKE '%MRI%'
-      AND description NOT LIKE '%Maintenance%'
-      AND description NOT LIKE '%Salary%'
-      AND description NOT LIKE '%Utility%'
-      AND description NOT LIKE '%Marketing%'
-      AND description NOT LIKE '%Legal%'
-      AND description NOT LIKE '%Depreciation%'
-      AND description NOT LIKE '%Loan Interest%'
-");
-
-// TOTALS
-$calculatedIncome = $totalIncome + $maintenanceFees + $latePaymentFees + $utilityCharges + $managementFees + $otherIncome + $externalPayments;
-$calculatedExpenses = $mriDeductions + $maintenanceRepairs + $staffSalaries + $utilities + $marketing + $legalFees + $depreciation + $loanInterest + $miscellaneous;
-$netProfit = $calculatedIncome - $calculatedExpenses;
-?>
-
+                        ?>
 <tbody>
     <tr class="category"><td><b>Income</b></td></tr>
     <tr><td>Rental Income</td><td>Ksh <?= number_format($totalIncome, 2) ?></td></tr>

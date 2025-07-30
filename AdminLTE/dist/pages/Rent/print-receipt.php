@@ -13,15 +13,21 @@ if (!$tenant) { echo "Tenant not found."; exit; }
 $amountPaid  = (float) $tenant['amount_paid'];
 $penaltyAmt  = (float) $tenant['penalty'];
 $arrearsAmt  = (float) $tenant['arrears'];
-$rawBalance  = (float) $tenant['balances'];       // +ve = still owed, –ve = over‑payment
 
 $showPenalty = $penaltyAmt > 0;
-$showArrears = $arrearsAmt > 0;                   // add 30‑day check if required
-$showBalance = $rawBalance != 0;                  // show both +ve and –ve cases
+$showArrears = $arrearsAmt > 0;
 
-/*  ↓↓↓  CHANGED LINES  ↓↓↓  */
-$balanceLabel     = 'Balance';                    // always “Balance”
-$formattedBalance = number_format($rawBalance, 2);/* keeps ± sign intact */
+// Recalculate total due (i.e. Rent + Penalty + Arrears)
+$total = 0;
+$total += $amountPaid; // Rent payment stored as amount_paid
+if ($showPenalty) $total += $penaltyAmt;
+if ($showArrears) $total += $arrearsAmt;
+
+
+$recalculatedBalance = $amountPaid - $total;
+$formattedBalance = number_format($recalculatedBalance, 2);
+
+
 /*  ↑↑↑             ↑↑↑  */
 
 /* ───────── 2. Display strings ───────── */
@@ -47,7 +53,7 @@ $accountNo    = !empty($tenant['account_no'])
 $total = $amountPaid
        + ($showPenalty  ? $penaltyAmt  : 0)
        + ($showArrears  ? $arrearsAmt  : 0)
-       + ($rawBalance   > 0 ? $rawBalance : 0);  // add only when tenant still owes
+       + ($recalculatedBalance   > 0 ? $recalculatedBalance : 0);  // add only when tenant still owes
 
 $totalAmountFormatted = number_format($total, 2);
 ?>
@@ -213,28 +219,31 @@ $totalAmountFormatted = number_format($total, 2);
     <div class="receipt-title">RECEIPT</div>
 
     <table class="receipt-table">
-        <tr>
-            <td>Received From:</td><td><?= $name ?></td>
-            <td>Receipt No:</td><td><?= $receiptNo ?></td>
-        </tr>
-        <tr>
-            <td>A/c NO:</td><td><?= $accountNo ?></td>
-            <td>Date:</td><td><?= $date ?></td>
-        </tr>
-        <tr>
-            <td>Unit No:</td><td><?= $unit ?></td>
-            <td>Payment Mode:</td><td><?= $paymentMode ?></td>
-        </tr>
-        <tr>
-            <td>Property:</td><td><?= $property ?></td>
-            <td>Reference No:</td><td><?= $reference ?></td>
-        </tr>
-        <tr>
-    <td></td><td></td>
-    <td>Amount (KES):</td><td><?= $totalAmountFormatted ?></td>
-</tr>
-
-    </table>
+    <tr>
+        <td>Received From:</td><td><?= $name ?></td>
+        <td>Receipt No:</td><td><?= $receiptNo ?></td>
+    </tr>
+    <tr>
+        <td>A/c NO:</td><td><?= $accountNo ?></td>
+        <td>Date:</td><td><?= $date ?></td>
+    </tr>
+    <tr>
+        <td>Unit No:</td><td><?= $unit ?></td>
+        <td>Payment Mode:</td><td><?= $paymentMode ?></td>
+    </tr>
+    <tr>
+        <td>Property:</td><td><?= $property ?></td>
+        <td>Reference No:</td><td><?= $reference ?></td>
+    </tr>
+    <tr>
+        <td><strong>Balance:</strong></td>
+        <td colspan="1" class=" > 0 ? 'negative' : '' ?>">
+        0.00
+    </td>
+    <td><strong>Amount (KES):</strong></td>
+    <td><?= $totalAmountFormatted ?></td>
+    </tr>
+</table>
 
     <div class="divider"></div>
 
@@ -257,14 +266,7 @@ $totalAmountFormatted = number_format($total, 2);
         </tr>
         <?php endif; ?>
 
-        <?php if ($showBalance): ?>
-        <tr>
-            <td><?= $balanceLabel ?></td>
-            <td class="<?= $rawBalance > 0 ? 'negative' : '' ?>">
-    <?= $formattedBalance ?>
-</td>
-        </tr>
-        <?php endif; ?>
+
     </table>
 
     <div class="divider"></div>

@@ -387,7 +387,7 @@ tbody.innerHTML = `
   ${vat0Used ? `
   <tr>
     <th style="width: 50%; padding: 5px; text-align: left;">VAT 0%</th>
-    <td><input type="text" class="form-control" value="0.00" readonly style="padding: 5px;"></td>
+    <td><input type="text" class="form-control" name="taxes[]" value="0.00" readonly style="padding: 5px;"></td>
   </tr>` : ''}
   ${exemptedUsed ? `
   <tr>
