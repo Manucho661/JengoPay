@@ -415,21 +415,45 @@ hr {
 include '../db/connect.php';
 
 try {
-    $sql = "SELECT
-                i.id,
-                i.invoice_number,
-                i.invoice_date,
-                i.due_date,
-                i.total,
-                i.status,
-                i.payment_status,
-                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.middle_name, '')) AS tenant_name,
-                COALESCE(u.email, '') AS tenant_email,
-                COALESCE(t.phone_number, '') AS tenant_phone
-            FROM invoice i
-            LEFT JOIN tenants t ON i.tenant = t.id
-            LEFT JOIN users u ON u.id = t.user_id
-            ORDER BY i.invoice_number DESC";
+  $sql = "
+      SELECT
+          i.id,
+          i.invoice_number,
+          i.invoice_date,
+          i.due_date,
+          i.status,
+          i.payment_status,
+          i.building_id,
+          CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name,
+
+          -- Payments
+          (SELECT COALESCE(SUM(p.amount), 0)
+           FROM payments p
+           WHERE p.invoice_id = i.id) AS paid_amount,
+
+          -- If invoice_items exist, use their sums; else fallback to i.*
+          CASE
+              WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
+              THEN (SELECT COALESCE(SUM(unit_price * quantity), 0) FROM invoice_items WHERE invoice_number = i.invoice_number)
+              ELSE COALESCE(i.sub_total, 0)
+          END AS display_sub_total,
+
+          CASE
+              WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
+              THEN (SELECT COALESCE(SUM(taxes), 0) FROM invoice_items WHERE invoice_number = i.invoice_number)
+              ELSE COALESCE(i.taxes, 0)
+          END AS display_taxes,
+
+          CASE
+              WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
+              THEN (SELECT COALESCE(SUM(total), 0) FROM invoice_items WHERE invoice_number = i.invoice_number)
+              ELSE COALESCE(i.total, 0)
+          END AS display_total
+
+      FROM invoice i
+      LEFT JOIN users u ON u.id = i.tenant
+      ORDER BY i.created_at DESC
+  ";
 
     echo '<div class="invoice-container">';
 
@@ -440,7 +464,8 @@ try {
         $tenantName = !empty(trim($row['tenant_name'])) ? $row['tenant_name'] : 'Unknown Tenant';
         $invoiceDate = $row['invoice_date'] ? date('d M Y', strtotime($row['invoice_date'])) : 'Not set';
         $dueDate = $row['due_date'] ? date('d M Y', strtotime($row['due_date'])) : 'Not set';
-        $amount = $row['total'] ? number_format($row['total'], 2) : '0.00';
+        $amount = isset($row['display_total']) ? number_format($row['display_total'], 2) : '0.00';
+
 
         // Status handling with default case
         $status = $row['status'] ?? 'draft';
@@ -519,276 +544,149 @@ HTML;
 <!-- RIGHT: INVOICE DETAILS                                           -->
 <!-- ================================================================ -->
 <main class="viewer">
-    <?php
-    if (!$id) {
-        echo '<div class="placeholder">Select an invoice to view its details</div>';
+<?php
+if (!$id) {
+    echo '<div class="placeholder">Select an invoice to view its details</div>';
+} else {
+    // ── Fetch invoice with tenant info ──
+    $info = $pdo->prepare("SELECT i.*, CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name,
+                  u.email AS tenant_email, t.phone_number AS tenant_phone
+                  FROM invoice i
+                  LEFT JOIN tenants t ON i.tenant = t.id
+                  LEFT JOIN users u ON u.id = t.user_id
+                  WHERE i.id = ?");
+    $info->execute([$id]);
+    $inv = $info->fetch(PDO::FETCH_ASSOC);
+
+    if (!$inv) {
+        echo '<div class="placeholder">Invoice not found.</div>';
     } else {
-        // ── Fetch a single invoice with its line items ──
-        $info = $pdo->prepare("SELECT i.*, CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name,
-                      u.email AS tenant_email, t.phone_number AS tenant_phone
-                      FROM invoice i
-                      LEFT JOIN tenants t ON i.tenant = t.id
-                      LEFT JOIN users u ON u.id = t.user_id
-                      WHERE i.id = ?");
-        $info->execute([$id]);
-        $inv = $info->fetch(PDO::FETCH_ASSOC);
+        // ── Fetch line items from invoice_items table ──
+        $itemsStmt = $pdo->prepare("SELECT description, quantity, unit_price, vat_type, taxes, total FROM invoice_items WHERE invoice_number = ?");
+        $itemsStmt->execute([$inv['invoice_number']]);
 
-        if (!$inv) {
-            echo '<div class="placeholder">Invoice not found.</div>';
-        } else {
-            $lines = $pdo->prepare("SELECT description, quantity AS quantity, unit_price FROM invoice WHERE id = ?");
-            $lines->execute([$id]);
+        $lineRows = '';
+        $subTotal = 0;
+        $vatTotal = 0;
+        $grandTotal = 0;
 
-            // Calculate totals
-            $subTotal = 0;
-            $vat = 0;
-            $lineRows = '';
-            while ($l = $lines->fetch()) {
-              $quantity = (float) $l['quantity'];
-              $unitPrice = (float) $l['unit_price'];
-              $amount = $quantity * $unitPrice;
-              $tax = round($amount * 0.16);
-              $totalLine = $amount + $tax;
-              $subTotal += $amount;
-              $vat += $tax;
+        while ($item = $itemsStmt->fetch(PDO::FETCH_ASSOC)) {
+            $qty = (float)$item['quantity'];
+            $price = (float)$item['unit_price'];
+            $tax = (float)$item['taxes'];
+            $lineTotal = (float)$item['total'];
+            $vatLabel = ucfirst($item['vat_type']);
 
-              $lineRows .= "<tr>
-                  <td>" . htmlspecialchars($l['description']) . "</td>
-                  <td>{$quantity}</td>
-                  <td>Ksh " . number_format($unitPrice, 2) . "</td>
-                  <td>Ksh " . number_format($tax, 2) . "</td>
-                  <td>Ksh " . number_format($totalLine, 2) . "</td>
-              </tr>";
-          }
+            $subTotal += $qty * $price;
+            $vatTotal += $tax;
+            $grandTotal += $lineTotal;
 
-            $total = $subTotal + $vat;
-            ?>
+            $lineRows .= "<tr>
+                <td>" . htmlspecialchars($item['description']) . "</td>
+                <td class='text-end'>{$qty}</td>
+                <td class='text-end'>KES " . number_format($price, 2) . "</td>
+                <td class='text-end'>{$vatLabel}</td>
+                <td class='text-end'>KES " . number_format($tax, 2) . "</td>
+               <td class='text-end'>KES " . number_format($qty * $price, 2) . "</td>
 
-
-                                     <!-- <button type="button" class="btn btn-success" id="downloadPdf">
-                                      <i class="bi bi-download"></i>EDIT
-                                    </button> -->
-
-                                    <div class="modal-footer">
+            </tr>";
+        }
+?>
+<div class="modal-footer">
     <button type="button" class="btn me-2" style="color: #FFC107; background-color: #00192D;" onclick="window.print()">
         <i class="bi bi-printer-fill"></i> Print Invoice
     </button>
-
-    <!-- <a href="download_invoice.php?id=<?= $inv['id'] ?>" class="btn" style="color: #FFC107; background-color: #00192D;">
-    <i class="bi bi-download"></i> Download PDF
-</a> -->
-
-<!-- <a href="view_invoice_pdf.php?id=<?= $inv['id'] ?>"
-   target="_blank"
-   class="btn"
-   style="color: #FFC107; background-color: #00192D;">
-    <i class="bi bi-eye"></i> View PDF
-</a> -->
-<a href="view_invoice_pdf.php?id=<?= $inv['id'] ?>"
-   class="btn"
-   style="color: #FFC107; background-color: #00192D;"
-   download>
-    <i class="bi bi-eye"></i> Download PDF
-</a>
+    <a href="view_invoice_pdf.php?id=<?= $inv['id'] ?>" class="btn" style="color: #FFC107; background-color: #00192D;" download>
+        <i class="bi bi-eye"></i> Download PDF
+    </a>
 </div>
 
-
 <div class="invoice-card">
-            <!-- Header -->
-            <div class="d-flex justify-content-between align-items-start mb-3 position-relative"
-                            style="overflow: hidden;">
-                            <div>
-                                <img id="expenseLogo" src="expenseLogo6.png" alt="JengoPay Logo" class="expense-logo">
-                            </div>
-
-
-                            <div class="diagonal-unpaid-label" id="expenseModalPaymentStatus">UNPAID</div>
-                            <div class="text-end" style="background-color: #f0f0f0; padding: 10px; border-radius: 8px;">
-                                <strong>Silver Spoon Towers</strong><br>
-                                50303 Nairobi, Kenya<br>
-                                silver@gmail.com<br>
-                                +254 700 123456
-                            </div>
-                        </div>
-
-
- <!-- expense Info -->
- <div class="d-flex justify-content-between">
-                            <h6 class="mb-0" id="expenseModalSupplierName">Josephat Koech</h6>
-                            <div class="text-end">
-                                <h3 id="expenseModalInvoiceNo"> INV001</h3><br>
-                            </div>
-                        </div>
-
-
-                        <div class="mb-1 rounded-2 d-flex justify-content-between align-items-center"
-                            style="border: 1px solid #FFC107; padding: 4px 8px; background-color: #FFF4CC;">
-                            <div class="d-flex flex-column expense-date m-0">
-                                <span class="m-0"><b>Expense Date</b></span>
-                                <p class="m-0">24/6/2025</p>
-                            </div>
-                            <div class="d-flex flex-column due-date m-0">
-                                <span class="m-0"><b>Due Date</b></span>
-                                <p class="m-0">24/6/2025</p>
-                            </div>
-                            <div></div>
-                        </div>
-
-
-                        <!-- Items Table -->
-                        <div class="table-responsive ">
-                            <table class="table table-striped table-bordered rounded-2 table-sm thick-bordered-table">
-                                <thead class="table">
-                                    <tr class="custom-th">
-                                        <th>Description</th>
-                                        <th class="text-end">Qty</th>
-                                        <th class="text-end">Unit Price</th>
-                                        <th class="text-end">Taxes</th>
-                                        <th class="text-end">Discount</th>
-                                        <th class="text-end">Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="expenseItemsTableBody">
-                                    <tr>
-                                        <td>Web Design</td>
-                                        <td class="text-end">1</td>
-                                        <td class="text-end">KES 25,000</td>
-                                        <td class="text-end">Inclusive</td>
-                                        <td class="text-end">KES 25,000</td>
-                                        <td class="text-end">KES 25,000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Hosting (1 year)</td>
-                                        <td class="text-end">1</td>
-                                        <td class="text-end">KES 5,000</td>
-                                        <td class="text-end">Exclusive</td>
-                                        <td class="text-end">KES 25,000</td>
-                                        <td class="text-end">KES 5,000</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-
-                         <!-- Totals and Terms -->
-                         <div class="row">
-                            <div class="col-6 terms-box">
-                                <strong>Note:</strong><br>
-                                This Expense Note Belongs to.<br>
-                                Silver Spoon Towers
-                            </div>
-                            <div class="col-6">
-                                <table class="table table-borderless table-sm text-end mb-0">
-                                    <tr>
-                                        <th>Untaxed Amount:</th>
-                                        <td>
-                                            <div id="expenseModalUntaxedAmount">KES 30,000</div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>VAT (16%):</th>
-                                        <td>
-                                            <div id="expenseModalTaxAmount">KES 4,800</div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>Total Amount:</th>
-                                        <td><strong id="expenseModalTotalAmount">KES 34,800</strong></td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-
-                        <hr>
-                        <div class="text-center small text-muted"
-                            style="border-top: 1px solid #e0e0e0; padding-top: 10px;">
-                            Thank you for your business!
-                        </div>
-                    </div>
-
-
-            <!-- Invoice Info
-            <div class="d-flex justify-content-between">
-                <h6 class="mb-0"><?= htmlspecialchars($invoice['account_item']) ?></h6>
-                <div class="text-end">
-                    <h3><?= htmlspecialchars($invoice['invoice_number']) ?></h3><br>
-                </div>
-            </div> -->
-
-            <!-- <div class="mb-1 rounded-2 d-flex justify-content-between align-items-center"
-                style="border: 1px solid #FFC107; padding: 4px 8px; background-color: #FFF4CC;">
-                <div class="d-flex flex-column Invoice-date m-0">
-                    <span class="m-0"><b>Invoice Date</b></span>
-                    <p class="m-0"><?= formatDate($invoice['invoice_date']) ?></p>
-                </div>
-                <div class="d-flex flex-column due-date m-0">
-                    <span class="m-0"><b>Due Date</b></span>
-                    <p class="m-0"><?= formatDate($invoice['due_date']) ?></p>
-                </div>
-                <div></div>
-            </div> -->
-
-            <!-- Items Table -->
-            <!-- <div class="table-responsive">
-                <table class="table table-striped table-bordered rounded-2 table-sm thick-bordered-table">
-                    <thead class="table">
-                        <tr class="custom-th">
-                            <th>Description</th>
-                            <th class="text-end">Qty</th>
-                            <th class="text-end">Unit Price</th>
-                            <th class="text-end">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($items as $item): ?>
-                        <tr>
-                            <td><?= htmlspecialchars($item['description']) ?></td>
-                            <td class="text-end"><?= $item['quantity'] ?></td>
-                            <td class="text-end">KES <?= number_format($item['unit_price'], 2) ?></td>
-                            <td class="text-end">KES <?= number_format($item['quantity'] * $item['unit_price'], 2) ?></td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-
-             Totals and Terms -->
-            <!-- <div class="row">
-                <div class="col-6 terms-box">
-                    <strong>Terms:</strong><br>
-                    <?= !empty($invoice['terms_conditions']) ? htmlspecialchars($invoice['terms_conditions']) : 'Payment due in 14 days.<br>Late fee: 2% monthly.' ?>
-                </div>
-                <div class="col-6">
-                    <table class="table table-borderless table-sm text-end mb-0">
-                        <tr>
-                            <th>Subtotal:</th>
-                            <td>KES <?= number_format($subtotal, 2) ?></td>
-                        </tr>
-                        <tr>
-                            <th>VAT (16%):</th>
-                            <td>KES <?= number_format($vat, 2) ?></td>
-                        </tr>
-                        <tr>
-                            <th>Total:</th>
-                            <td><strong>KES <?= number_format($total, 2) ?></strong></td>
-                        </tr>
-                    </table>
-                </div> -->
-            </div>
-
-            <hr>
-
-            <div class="text-center small text-muted">
-                <?= !empty($invoice['notes']) ? htmlspecialchars($invoice['notes']) : 'Thank you for your business!' ?>
-            </div>
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-start mb-3 position-relative" style="overflow: hidden;">
+        <div><img id="expenseLogo" src="expenseLogo6.png" alt="JengoPay Logo" class="expense-logo"></div>
+        <div class="diagonal-unpaid-label" id="expenseModalPaymentStatus"><?= strtoupper($inv['payment_status']) ?></div>
+        <div class="text-end" style="background-color: #f0f0f0; padding: 10px; border-radius: 8px;">
+            <strong>Silver Spoon Towers</strong><br>
+            50303 Nairobi, Kenya<br>
+            silver@gmail.com<br>
+            +254 700 123456
         </div>
     </div>
-            </div>
-            <?php
-        }
+
+    <!-- Invoice Info -->
+    <div class="d-flex justify-content-between">
+        <h6 class="mb-0"><?= htmlspecialchars($inv['tenant_name']) ?></h6>
+        <div class="text-end">
+            <h3><?= htmlspecialchars($inv['invoice_number']) ?></h3><br>
+        </div>
+    </div>
+
+    <div class="mb-1 rounded-2 d-flex justify-content-between align-items-center"
+        style="border: 1px solid #FFC107; padding: 4px 8px; background-color: #FFF4CC;">
+        <div class="d-flex flex-column expense-date m-0">
+            <span class="m-0"><b>Invoice Date</b></span>
+            <p class="m-0"><?= date('d/m/Y', strtotime($inv['invoice_date'])) ?></p>
+        </div>
+        <div class="d-flex flex-column due-date m-0">
+            <span class="m-0"><b>Due Date</b></span>
+            <p class="m-0"><?= date('d/m/Y', strtotime($inv['due_date'])) ?></p>
+        </div>
+        <div></div>
+    </div>
+
+    <!-- Items Table -->
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered rounded-2 table-sm thick-bordered-table">
+            <thead class="table">
+                <tr class="custom-th">
+                    <th>Description</th>
+                    <th class="text-end">Qty</th>
+                    <th class="text-end">Unit Price</th>
+                    <th class="text-end">VAT</th>
+                    <th class="text-end">Taxes</th>
+                    <th class="text-end">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?= $lineRows ?>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Totals -->
+    <div class="row">
+        <div class="col-6 terms-box">
+            <strong>Note:</strong><br>
+            <?= !empty($inv['notes']) ? htmlspecialchars($inv['notes']) : 'This expense note belongs to Silver Spoon Towers.' ?>
+        </div>
+        <div class="col-6">
+            <table class="table table-borderless table-sm text-end mb-0">
+                <tr>
+                    <th>Subtotal:</th>
+                    <td>KES <?= number_format($subTotal, 2) ?></td>
+                </tr>
+                <tr>
+                    <th>VAT (16%):</th>
+                    <td>KES <?= number_format($vatTotal, 2) ?></td>
+                </tr>
+                <tr>
+                    <th>Total Amount:</th>
+                    <td><strong>KES <?= number_format($grandTotal, 2) ?></strong></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <hr>
+    <div class="text-center small text-muted">Thank you for your business!</div>
+</div>
+<?php
     }
-    ?>
+}
+?>
 </main>
+
 
 
 </div><!-- /.wrapper -->
