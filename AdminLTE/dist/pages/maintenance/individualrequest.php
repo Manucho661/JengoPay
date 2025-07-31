@@ -72,7 +72,6 @@
     }
 
     .request-sidebar {
-      width: 320px;
       background: #ffffff;
       display: flex;
       flex-direction: column;
@@ -231,7 +230,7 @@
 
     .main-content {
       flex-grow: 1;
-      padding: 2rem;
+      /* padding: 2rem; */
       overflow-y: auto;
     }
 
@@ -385,33 +384,45 @@
     </aside>
 
     <!-- Main Layout -->
-    <div class="app-main">
+    <main class="app-main">
       <!--begin::App Content Header-->
       <div class="app-content-header">
       </div>
-      <div class="app-content">
-        <div class="layout">
-          <div class="request-sidebar">
-            <h3><i class="fa-solid fa-screwdriver-wrench"></i> Maintenance Requests</h3>
-            <div class="search-bar">
-              <input type="text" id="searchInput" placeholder="Search by unit, category, or property...">
+      <div class="app-content ">
+        <div class="container-fluid bg-white p-0 rounded-2">
+          <div class="row">
+            <div class="col-md-4" style="overflow: hidden;">
+              <div class="request-sidebar">
+                <h3><i class="fa-solid fa-screwdriver-wrench"></i>Other Maintenance Requests</h3>
+                <div class="search-bar rounded-2">
+                  <input class="rounded-2" type="text" id="searchInput" placeholder="Search by unit, category, or property...">
+                </div>
+                <ul class="request-list" id="requestList"></ul>
+              </div>
             </div>
-            <ul class="request-list" id="requestList"></ul>
+            <div class="col-md-8 p-0">
+              <div class="main-content p-0" id="detailsPanel">
+                <!-- content displays here -->
+              </div>
+            </div>
           </div>
-          <div class="main-content" id="detailsPanel">
-            <!-- content displays here -->
-          </div>
+
         </div>
       </div>
-    </div>
-    <!-- Footer -->
-    <footer class="bg-light text-center py-3">
-      <div class="container">
-        <strong>
-          &copy; 2014-2024 <a href="https://adminlte.io" class="text-decoration-none text-dark">JENGO PAY</a>. All rights reserved.
-        </strong>
-      </div>
-    </footer>
+  </div>
+  <!-- Footer -->
+  <footer class="app-footer">
+    <!--begin::To the end-->
+    <div class="float-end d-none d-sm-inline">Anything you want</div>
+    <!--end::To the end-->
+    <!--begin::Copyright-->
+    <strong>
+      Copyright &copy; 2014-2024&nbsp;
+      <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;">JENGO PAY</a>.
+    </strong>
+    All rights reserved.
+    <!--end::Copyright-->
+  </footer>
   </div>
 
   <!-- Scripts -->
@@ -569,7 +580,7 @@
       });
 
       detailsPanel.innerHTML = `
-        <div class="container px-0">
+        <div class="container-fluid px-0">
           <!-- Row 1: Property, Unit, Request ID -->
           <div class="row-card mb-3 p-3 rounded shadow-sm bg-white">
             <div class="row gx-2">
@@ -641,6 +652,7 @@
       btn.classList.toggle('active');
     };
   </script>
+  <script src="../../../dist/js/adminlte.js"></script>
 </body>
 
 </html>
