@@ -640,12 +640,11 @@ header {
   border: 1px solid #e2e8f0;
   border-radius: 4px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  min-width: 200px;
-  z-index: 10;
-  display: none;
+  min-width: 100px;
+  z-index: 70;
+  /* display: none; */
 }
-
-        .filter-dropdown:hover .dropdown-menu {
+ .filter-dropdown:hover .dropdown-menu {
           display: block;
         }
 
@@ -969,46 +968,46 @@ header {
                         // ----------------------------------------------------
                         // 1) Fetch invoices with tenant details and payment summary
                         // ----------------------------------------------------
-                        $stmt = $pdo->query("
-                        SELECT
-                            i.id,
-                            i.invoice_number,
-                            i.invoice_date,
-                            i.due_date,
-                            COALESCE(i.sub_total, 0) AS invoice_sub_total,
-                            COALESCE(i.total, 0) AS total,
-                            COALESCE(i.taxes, 0) AS taxes,
-                            i.status,
-                            i.payment_status,
-                            CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name,
-                            (SELECT COALESCE(SUM(p.amount), 0)
-                             FROM payments p
-                             WHERE p.invoice_id = i.id) AS paid_amount,
-                            i.building_id,
-                            i.account_item,
-                            i.description,
-                            (SELECT COALESCE(SUM(unit_price * quantity), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS sub_total,
-                            (SELECT COALESCE(SUM(taxes), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS taxes,
-                            (SELECT COALESCE(SUM(total), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS total,
-                            CASE
-                                WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
-                                THEN (SELECT SUM(unit_price * quantity) FROM invoice_items WHERE invoice_number = i.invoice_number)
-                                ELSE i.sub_total
-                            END AS display_sub_total,
-                            CASE
-                                WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
-                                THEN (SELECT SUM(taxes) FROM invoice_items WHERE invoice_number = i.invoice_number)
-                                ELSE i.taxes
-                            END AS display_taxes,
-                            CASE
-                                WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
-                                THEN (SELECT SUM(total) FROM invoice_items WHERE invoice_number = i.invoice_number)
-                                ELSE i.total
-                            END AS display_total
-                        FROM invoice i
-                        LEFT JOIN users u ON u.id = i.tenant
-                        ORDER BY i.created_at DESC
-                    ");
+                      $stmt = $pdo->query("
+    SELECT
+        i.id,
+        i.invoice_number,
+        i.invoice_date,
+        i.due_date,
+        COALESCE(i.sub_total, 0) AS sub_total,
+        COALESCE(i.total, 0) AS total,
+        COALESCE(i.taxes, 0) AS taxes,
+        i.status,
+        i.payment_status,
+        CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name,
+        (SELECT COALESCE(SUM(p.amount), 0)
+         FROM payments p
+         WHERE p.invoice_id = i.id) AS paid_amount,
+        i.building_id,
+        i.account_item,
+        i.description,
+        (SELECT COALESCE(SUM(unit_price * quantity), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS sub_total,
+        (SELECT COALESCE(SUM(taxes), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS taxes,
+        (SELECT COALESCE(SUM(total), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS total,
+        CASE
+            WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
+            THEN (SELECT SUM(unit_price * quantity) FROM invoice_items WHERE invoice_number = i.invoice_number)
+            ELSE i.sub_total
+        END AS display_sub_total,
+        CASE
+            WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
+            THEN (SELECT SUM(taxes) FROM invoice_items WHERE invoice_number = i.invoice_number)
+            ELSE i.taxes
+        END AS display_taxes,
+        CASE
+            WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
+            THEN (SELECT SUM(total) FROM invoice_items WHERE invoice_number = i.invoice_number)
+            ELSE i.total
+        END AS display_total
+    FROM invoice i
+    LEFT JOIN users u ON u.id = i.tenant
+    ORDER BY i.created_at DESC
+");
                         $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                         // ----------------------------------------------------
@@ -1086,23 +1085,23 @@ header {
 
                             echo '<div class="invoice-item" onclick="openInvoiceDetails(' . $invoice['id'] . ')">';
                             echo '<div class="invoice-checkbox">
-            <input type="checkbox" onclick="event.stopPropagation()">
-          </div>
-          <div class="invoice-number">' . htmlspecialchars($invoice['invoice_number']) . '</div>
-          <div class="invoice-customer" title="' . htmlspecialchars($invoice['description']) . '">
-              ' . htmlspecialchars($tenantName) . '
-          </div>
-          <div class="invoice-date">' . $invoiceDate . '</div>
-          <div class="invoice-date' . ($isOverdue ? ' text-danger' : '') . '">
-              ' . $dueDate . '
-          </div>
-          <div class="invoice-amount">' . number_format($invoice['sub_total'], 2) . '</div>
-          <div class="invoice-amount">' . htmlspecialchars($invoice['taxes'] ?: '0.00') . '</div>
-          <div class="invoice-amount">' . number_format($invoice['total'], 2) . '</div>
-          <div class="invoice-status">
-              <span class="status-badge ' . $statusClass . '">' . $statusText . '</span>
-          </div>
-          <div class="invoice-status">
+                            <input type="checkbox" onclick="event.stopPropagation()">
+                            </div>
+                            <div class="invoice-number">' . htmlspecialchars($invoice['invoice_number']) . '</div>
+                            <div class="invoice-customer" title="' . htmlspecialchars($invoice['description']) . '">
+                                ' . htmlspecialchars($tenantName) . '
+                            </div>
+                            <div class="invoice-date">' . $invoiceDate . '</div>
+                            <div class="invoice-date' . ($isOverdue ? ' text-danger' : '') . '">
+                                ' . $dueDate . '
+                            </div>
+                            <div class="invoice-amount">' . number_format($invoice['sub_total'], 2) . '</div>
+                            <div class="invoice-amount">' . htmlspecialchars($invoice['taxes'] ?: '0.00') . '</div>
+                            <div class="invoice-amount">' . number_format($invoice['total'], 2) . '</div>
+                            <div class="invoice-status">
+                                <span class="status-badge ' . $statusClass . '">' . $statusText . '</span>
+                            </div>
+                            <div class="invoice-status">
               <span class="status-badge ' . $paymentStatusClass . '">' . $paymentStatusText . '</span>';
 
                             // Show payment button if applicable - updated logic
@@ -1134,19 +1133,6 @@ header {
                   <li><a class="dropdown-item" href="#" onclick="viewInvoice(' . $invoice['id'] . ')">
                       <i class="fas fa-eye me-2"></i>View Details
                   </a></li>';
-
-                            // if ($invoice['status'] !== 'cancelled') {
-                            //     echo '<li><a class="dropdown-item" href="#" onclick="downloadInvoice(' . $invoice['id'] . ')">
-                            //               <i class="fas fa-file-pdf me-2"></i>Download PDF
-                            //           </a></li>';
-                            // }
-
-                            // Edit option - available for drafts and sent invoices without payments
-                            // if ($invoice['status'] === 'draft' || ($invoice['status'] === 'sent' && $invoice['paid_amount'] == 0)) {
-                            //     echo '<li><a class="dropdown-item" href="#" onclick="editInvoice(' . $invoice['id'] . ')">
-                            //               <i class="fas fa-edit me-2"></i>Edit Invoice
-                            //           </a></li>';
-                            // }
                             if ($invoice['status'] === 'draft' || ($invoice['status'] === 'sent' && $invoice['paid_amount'] == 0)) {
                                 echo '<li><a class="dropdown-item" href="invoice_edit.php?id=' . $invoice['id'] . '">
                   <i class="fas fa-edit me-2"></i>Edit Invoice
@@ -1155,7 +1141,6 @@ header {
 
                             echo '<li><hr class="dropdown-divider"></li>';
 
-                            //  Delete option - only for drafts and cancelled invoices
                             // Delete option - only for drafts and cancelled invoices
                             if ($invoice['status'] === 'draft' || $invoice['status'] === 'cancelled') {
                                 echo '<li><a class="dropdown-item text-danger" href="#" onclick="confirmDeleteInvoice(' . $invoice['id'] . ')">
@@ -1489,6 +1474,8 @@ header {
             </div>
     </div>
     </div>
+
+
 
 
     <script>

@@ -983,7 +983,7 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
             <!--end::Sidebar Brand-->
             <!--begin::Sidebar Wrapper-->
-            <div> <?php include_once '../includes/sidebar1.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+            <div> <?php include_once '../includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
             <!--end::Sidebar Wrapper-->
         </aside>
         <!--end::Sidebar-->
@@ -1030,7 +1030,9 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="form-section">
                         <h3 class="section-title">Tenant Details</h3>
                         <!-- <form method="POST" action="update_draft.php"> -->
-                        <form method="POST" action="<?= $isDraftEdit ? 'convert_draft.php' : 'update_draft.php' ?>">
+                        <!-- <form method="POST" action="<?= $isDraftEdit ? 'convert_draft.php' : 'update_draft.php' ?>"> -->
+                        <form method="POST" action="finalize_invoice.php">
+
                             <input type="hidden" name="invoice_id" value="<?= $invoiceData['id'] ?>">
 
                             <!-- <div class="form-row"> -->
@@ -1107,77 +1109,57 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
                                 </div>
                             </div>
 
-                            <!-- Items Section -->
-                            <div class="form-section">
-                                <h3 class="section-title">Items</h3>
-                                <table class="items-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Item (Service)</th>
-                                            <th>Description</th>
-                                            <th>Qty</th>
-                                            <th>Unit Price</th>
-                                            <th>Taxes</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <select name="account_item[]" class="select-account searchable-select" required>
-                                                    <option value="" disabled>Select Account Item</option>
-                                                    <?php foreach ($accountItems as $item): ?>
-                                                        <option value="<?= htmlspecialchars($item['account_code']) ?>"
-                                                            <?= ($invoiceData['account_item'] == $item['account_code']) ? 'selected' : '' ?>>
-                                                            <?= htmlspecialchars($item['account_name']) ?>
-                                                        </option>
-                                                    <?php endforeach; ?>
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <textarea name="description[]" rows="1" required><?= htmlspecialchars($invoiceData['description']) ?></textarea>
-                                            </td>
-                                            <td>
-                                                <input type="number"
-                                                       name="quantity[]"
-                                                       class="form-control quantity"
-                                                       value="<?= htmlspecialchars($invoiceData['quantity']) ?>"
-                                                       required>
-                                            </td>
-                                            <td>
-                                                <input type="number"
-                                                       name="unit_price[]"
-                                                       class="form-control unit-price"
-                                                       value="<?= htmlspecialchars($invoiceData['unit_price']) ?>"
-                                                       required>
-                                            </td>
-                                            <td>
-                                                <select name="taxes[]" class="form-select vat-option" required>
-                                                    <option value="" disabled>Select Option</option>
-                                                    <option value="inclusive" <?= ($invoiceData['taxes'] == 'inclusive') ? 'selected' : '' ?>>VAT 16% Inclusive</option>
-                                                    <option value="exclusive" <?= ($invoiceData['taxes'] == 'exclusive') ? 'selected' : '' ?>>VAT 16% Exclusive</option>
-                                                    <option value="zero" <?= ($invoiceData['taxes'] == 'zero') ? 'selected' : '' ?>>Zero Rated</option>
-                                                    <option value="exempted" <?= ($invoiceData['taxes'] == 'exempted') ? 'selected' : '' ?>>Exempted</option>
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <input type="number"
-                                                       name="total[]"
-                                                       class="form-control total"
-                                                       value="<?= htmlspecialchars($invoiceData['total']) ?>"
-                                                       readonly
-                                                       style="display:none;">
-                                                <button type="button" class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
-                                                    <i class="fa fa-trash" style="font-size: 12px;"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <button type="button" class="add-btn" onclick="addRow()">
-                                    <i class="fa fa-plus"></i> ADD MORE
-                                </button>
-                            </div>
+                                <!-- Items Section -->
+                                <div class="form-section">
+        <h3 class="section-title">Items</h3>
+        <table class="items-table" id="itemsTable">
+            <thead>
+                <tr>
+                    <th>Item (Service)</th>
+                    <th>Description</th>
+                    <th>Qty</th>
+                    <th>Unit Price</th>
+                    <th>Taxes</th>
+                    <th>Total</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody id="itemsBody">
+                <!-- One initial row -->
+                <tr>
+                    <td>
+                        <select name="account_item[]" class="select-account searchable-select" required>
+                            <option value="" disabled selected>Select Account Item</option>
+                            <?php foreach ($accountItems as $item): ?>
+                                <option value="<?= htmlspecialchars($item['account_code']) ?>">
+                                    <?= htmlspecialchars($item['account_name']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </td>
+                    <td><textarea name="description[]" placeholder="Description" rows="1" required></textarea></td>
+                    <td><input type="number" name="quantity[]" class="form-control quantity" required></td>
+                    <td><input type="number" name="unit_price[]" class="form-control unit-price" required></td>
+                    <td>
+                        <select name="vat_type[]" class="form-select vat-option" required>
+                            <option value="" disabled selected>Select Option</option>
+                            <option value="inclusive">VAT 16% Inclusive</option>
+                            <option value="exclusive">VAT 16% Exclusive</option>
+                            <option value="zero">Zero Rated</option>
+                            <option value="exempted">Exempted</option>
+                        </select>
+                    </td>
+                    <td><input type="text" name="total[]" class="form-control total" readonly></td>
+                    <td><button type="button" class="btn btn-danger btn-sm delete-btn"><i class="fa fa-trash"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Add More Button -->
+        <button type="button" class="btn btn-success add-btn" id="addMoreBtn">
+            <i class="fa fa-plus"></i> ADD MORE
+        </button>
+                                </div>
 
                             <!-- Notes -->
                             <div class="form-section">
@@ -1210,12 +1192,64 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 
+
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const addMoreBtn = document.getElementById("addMoreBtn");
+    const itemsBody = document.getElementById("itemsBody");
+
+    addMoreBtn.addEventListener("click", function () {
+        const newRow = document.createElement("tr");
+
+        newRow.innerHTML = `
+            <td>
+                <select name="account_item[]" class="select-account searchable-select" required>
+                    <option value="" disabled selected>Select Account Item</option>
+                    <?php foreach ($accountItems as $item): ?>
+                        <option value="<?= htmlspecialchars($item['account_code']) ?>">
+                            <?= htmlspecialchars($item['account_name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </td>
+            <td><textarea name="description[]" placeholder="Description" rows="1" required></textarea></td>
+            <td><input type="number" name="quantity[]" class="form-control quantity" required></td>
+            <td><input type="number" name="unit_price[]" class="form-control unit-price" required></td>
+            <td>
+                <select name="vat_type[]" class="form-select vat-option" required>
+                    <option value="" disabled selected>Select Option</option>
+                    <option value="inclusive">VAT 16% Inclusive</option>
+                    <option value="exclusive">VAT 16% Exclusive</option>
+                    <option value="zero">Zero Rated</option>
+                    <option value="exempted">Exempted</option>
+                </select>
+            </td>
+            <td><input type="number" name="total[]" class="form-control total" readonly></td>
+            <td><button type="button" class="btn btn-danger btn-sm delete-btn"><i class="fa fa-trash"></i></button></td>
+        `;
+
+        itemsBody.appendChild(newRow);
+    });
+
+    // Event delegation to delete dynamically added rows
+    itemsBody.addEventListener("click", function (e) {
+        if (e.target.closest(".delete-btn")) {
+            const row = e.target.closest("tr");
+            row.remove();
+        }
+    });
+});
+</script>
+
+<script src="invoice.js"></script>
+
+
     <script>
     $(document).ready(function() {
-        // Initialize select2 if used
-        if ($.fn.select2) {
-            $('.searchable-select').select2();
-        }
+        // // Initialize select2 if used
+        // if ($.fn.select2) {
+        //     $('.searchable-select').select2();
+        // }
 
         // Handle building change to load tenants
         $('#building').change(function() {
