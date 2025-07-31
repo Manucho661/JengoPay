@@ -320,7 +320,7 @@
           <!--begin::Row-->
           <div class="row">
             <div class="col-sm-8">
-              <h3 class="mb-0 "> 🛠 <span class="contact_section_header">Maintenance Requests/Electricals</span> </h3>
+              <h3 class="mb-0 "> 🛠 <span class="contact_section_header">Maintenance Requests</span> </h3>
             </div>
             <div class="col-sm-4">
               <ol class="breadcrumb float-sm-end">
@@ -425,7 +425,6 @@
                     <thead class="mb-2">
                       <tr>
                         <th>REQUEST Date</th>
-                        <th>Request ID</th>
                         <th>PROPERTY + UNIT</th>
                         <th>CATEGORY + DESCRIPTION </th>
                         <th>PROVIDER</th>

@@ -478,7 +478,7 @@ foreach ($tenants as $tenant) {
         </div>
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
-        <div><?php include_once '../includes/sidebar1.php'; ?></div>
+        <div><?php include_once '../includes/sidebar.php'; ?></div>
         <!--end::Sidebar Wrapper-->
       </aside>
       <!--end::Sidebar-->

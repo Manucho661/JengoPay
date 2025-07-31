@@ -88,7 +88,6 @@ function populateRequestsTable(requests) {
     }
     row.innerHTML = `
       <td>${requests.request_date || ''}</td>
-      <td>${requests.id || ''}</td>
       <td>
       <div>${requests.residence}</div>
       <div style="color: green;">${requests.unit}</div>
