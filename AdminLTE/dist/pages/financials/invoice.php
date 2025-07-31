@@ -970,29 +970,45 @@ header {
                         // 1) Fetch invoices with tenant details and payment summary
                         // ----------------------------------------------------
                         $stmt = $pdo->query("
-  SELECT
-        i.id,
-        i.invoice_number,
-        i.invoice_date,
-        i.due_date,
-        i.sub_total,
-        i.total,
-        i.taxes,
-        i.status,
-        i.payment_status,
-        CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name,
-        (SELECT COALESCE(SUM(p.amount), 0)
-         FROM payments p
-         WHERE p.invoice_id = i.id) AS paid_amount,
-        i.building_id,
-        i.account_item,
-        i.description
-    FROM invoice i
-    LEFT JOIN users u ON u.id = i.tenant
-    ORDER BY i.created_at DESC
-");
-
-
+                        SELECT
+                            i.id,
+                            i.invoice_number,
+                            i.invoice_date,
+                            i.due_date,
+                            COALESCE(i.sub_total, 0) AS invoice_sub_total,
+                            COALESCE(i.total, 0) AS total,
+                            COALESCE(i.taxes, 0) AS taxes,
+                            i.status,
+                            i.payment_status,
+                            CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name,
+                            (SELECT COALESCE(SUM(p.amount), 0)
+                             FROM payments p
+                             WHERE p.invoice_id = i.id) AS paid_amount,
+                            i.building_id,
+                            i.account_item,
+                            i.description,
+                            (SELECT COALESCE(SUM(unit_price * quantity), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS sub_total,
+                            (SELECT COALESCE(SUM(taxes), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS taxes,
+                            (SELECT COALESCE(SUM(total), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS total,
+                            CASE
+                                WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
+                                THEN (SELECT SUM(unit_price * quantity) FROM invoice_items WHERE invoice_number = i.invoice_number)
+                                ELSE i.sub_total
+                            END AS display_sub_total,
+                            CASE
+                                WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
+                                THEN (SELECT SUM(taxes) FROM invoice_items WHERE invoice_number = i.invoice_number)
+                                ELSE i.taxes
+                            END AS display_taxes,
+                            CASE
+                                WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
+                                THEN (SELECT SUM(total) FROM invoice_items WHERE invoice_number = i.invoice_number)
+                                ELSE i.total
+                            END AS display_total
+                        FROM invoice i
+                        LEFT JOIN users u ON u.id = i.tenant
+                        ORDER BY i.created_at DESC
+                    ");
                         $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                         // ----------------------------------------------------
@@ -1385,59 +1401,54 @@ header {
 
                                 <!-- Items Section -->
                                 <div class="form-section">
-                                    <h3 class="section-title">Items</h3>
-                                    <table class="items-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Item (Service)</th>
-                                                <th>Description</th>
-                                                <th>Qty</th>
-                                                <th>Unit Price</th>
-                                                <th>Taxes</th>
-                                                <th>Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <select id="account-item" name="account_item[]" class="select-account searchable-select" required>
-                                                        <option value="" disabled selected>Select Account Item</option>
-                                                        <?php foreach ($accountItems as $item): ?>
-                                                            <option value="<?= htmlspecialchars($item['account_code']) ?>">
-                                                                <?= htmlspecialchars($item['account_name']) ?>
-                                                            </option>
-                                                        <?php endforeach; ?>
-                                                    </select>
-                                                </td>
-                                                <style>
+        <h3 class="section-title">Items</h3>
+        <table class="items-table" id="itemsTable">
+            <thead>
+                <tr>
+                    <th>Item (Service)</th>
+                    <th>Description</th>
+                    <th>Qty</th>
+                    <th>Unit Price</th>
+                    <th>Taxes</th>
+                    <th>Total</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody id="itemsBody">
+                <!-- One initial row -->
+                <tr>
+                    <td>
+                        <select name="account_item[]" class="select-account searchable-select" required>
+                            <option value="" disabled selected>Select Account Item</option>
+                            <?php foreach ($accountItems as $item): ?>
+                                <option value="<?= htmlspecialchars($item['account_code']) ?>">
+                                    <?= htmlspecialchars($item['account_name']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </td>
+                    <td><textarea name="description[]" placeholder="Description" rows="1" required></textarea></td>
+                    <td><input type="number" name="quantity[]" class="form-control quantity" required></td>
+                    <td><input type="number" name="unit_price[]" class="form-control unit-price" required></td>
+                    <td>
+                        <select name="vat_type[]" class="form-select vat-option" required>
+                            <option value="" disabled selected>Select Option</option>
+                            <option value="inclusive">VAT 16% Inclusive</option>
+                            <option value="exclusive">VAT 16% Exclusive</option>
+                            <option value="zero">Zero Rated</option>
+                            <option value="exempted">Exempted</option>
+                        </select>
+                    </td>
+                    <td><input type="text" name="total[]" class="form-control total" readonly></td>
+                    <td><button type="button" class="btn btn-danger btn-sm delete-btn"><i class="fa fa-trash"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
 
-                                                </style>
-
-                                                <td><textarea id="description" name="description[]" placeholder="Description" rows="1" required></textarea></td>
-                                                <td><input id="quantity" type="number" name="quantity[]" class="form-control quantity" placeholder="quantity" required></td>
-                                                <td><input id="unit_price" type="number" name="unit_price[]" class="form-control unit-price" placeholder=" unit price" required></td>
-                                                <td>
-                                                    <select id="taxes" name="taxes[]" class="form-select vat-option" required>
-                                                        <option value="" disabled selected>Select Option</option>
-                                                        <option value="inclusive">VAT 16% Inclusive</option>
-                                                        <option value="exclusive">VAT 16% Exclusive</option>
-                                                        <option value="zero">Zero Rated</option>
-                                                        <option value="exempted">Exempted</option>
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                <!-- <input id="total" type="number" name="total[]" class="form-control total" readonly> -->
-                                                    <input id="total" type="number" name="total[]" class="form-control total"  readonly>
-                                                    <!-- <button type="button" class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
-                                                        <i class="fa fa-trash" style="font-size: 12px;"></i>
-                                                    </button> -->
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <button type="button" class="add-btn" onclick="addRow()">
-                                        <i class="fa fa-plus"></i> ADD MORE
-                                    </button>
+        <!-- Add More Button -->
+        <button type="button" class="btn btn-success add-btn" id="addMoreBtn">
+            <i class="fa fa-plus"></i> ADD MORE
+        </button>
                                 </div>
 
                                 <!-- Notes & Terms -->
@@ -1478,6 +1489,96 @@ header {
             </div>
     </div>
     </div>
+
+
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const addMoreBtn = document.getElementById("addMoreBtn");
+    const itemsBody = document.getElementById("itemsBody");
+
+    addMoreBtn.addEventListener("click", function () {
+        const newRow = document.createElement("tr");
+
+        newRow.innerHTML = `
+            <td>
+                <select name="account_item[]" class="select-account searchable-select" required>
+                    <option value="" disabled selected>Select Account Item</option>
+                    <?php foreach ($accountItems as $item): ?>
+                        <option value="<?= htmlspecialchars($item['account_code']) ?>">
+                            <?= htmlspecialchars($item['account_name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </td>
+            <td><textarea name="description[]" placeholder="Description" rows="1" required></textarea></td>
+            <td><input type="number" name="quantity[]" class="form-control quantity" required></td>
+            <td><input type="number" name="unit_price[]" class="form-control unit-price" required></td>
+            <td>
+                <select name="vat_type[]" class="form-select vat-option" required>
+                    <option value="" disabled selected>Select Option</option>
+                    <option value="inclusive">VAT 16% Inclusive</option>
+                    <option value="exclusive">VAT 16% Exclusive</option>
+                    <option value="zero">Zero Rated</option>
+                    <option value="exempted">Exempted</option>
+                </select>
+            </td>
+            <td><input type="number" name="total[]" class="form-control total" readonly></td>
+            <td><button type="button" class="btn btn-danger btn-sm delete-btn"><i class="fa fa-trash"></i></button></td>
+        `;
+
+        itemsBody.appendChild(newRow);
+    });
+
+    // Event delegation to delete dynamically added rows
+    itemsBody.addEventListener("click", function (e) {
+        if (e.target.closest(".delete-btn")) {
+            const row = e.target.closest("tr");
+            row.remove();
+        }
+    });
+});
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const itemsBody = document.getElementById("itemsBody");
+
+    // Trigger calculation on input changes
+    itemsBody.addEventListener("input", function (e) {
+        if (e.target.classList.contains("quantity") ||
+            e.target.classList.contains("unit-price") ||
+            e.target.classList.contains("vat-option")) {
+
+            const row = e.target.closest("tr");
+            calculateRowTotal(row);
+        }
+    });
+
+    // Recalculate total when tax option changes
+    itemsBody.addEventListener("change", function (e) {
+        if (e.target.classList.contains("vat-option")) {
+            const row = e.target.closest("tr");
+            calculateRowTotal(row);
+        }
+    });
+
+    function calculateRowTotal(row) {
+        const qty = parseFloat(row.querySelector(".quantity")?.value) || 0;
+        const price = parseFloat(row.querySelector(".unit-price")?.value) || 0;
+        const tax = row.querySelector(".vat-option")?.value;
+
+        let total = qty * price;
+
+        if (tax === "exclusive") {
+            total *= 1.16;
+        } // inclusive means total is already inclusive
+        // zero & exempted = no tax change
+
+        row.querySelector(".total").value = total.toFixed(2);
+    }
+});
+</script>
 
 
     <script>
