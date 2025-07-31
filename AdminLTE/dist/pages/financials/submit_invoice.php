@@ -11,7 +11,7 @@ function generateNextDraftNumber($pdo) {
     return 'DFT-' . str_pad($next, 6, '0', STR_PAD_LEFT);
 }
 
-// Initialize variables
+// --- Collect Main Form Data ---
 $isDraft = isset($_POST['is_draft']) && $_POST['is_draft'] == '1';
 $invoice_number = trim($_POST['invoice_number'] ?? '');
 $invoice_date = $_POST['invoice_date'] ?? null;
@@ -22,86 +22,103 @@ $status = $isDraft ? 'draft' : ($_POST['status'] ?? 'sent');
 $payment_status = $_POST['payment_status'] ?? 'unpaid';
 $notes = trim($_POST['notes'] ?? '');
 $terms_conditions = trim($_POST['terms_conditions'] ?? '');
-$paid_amount = 0.00; // Default to 0 unless you want to pass this in via POST
+$paid_amount = 0.00;
 
-// Process total amount
+// --- Calculate Total, Subtotal and Taxes ---
 $total = 0.00;
-if (isset($_POST['total'])) {
-    if (is_array($_POST['total'])) {
-        foreach ($_POST['total'] as $t) {
-            $total += floatval(str_replace([',', ' '], '', $t));
-        }
-    } else {
-        $total = floatval(str_replace([',', ' '], '', $_POST['total']));
+if (isset($_POST['total']) && is_array($_POST['total'])) {
+    foreach ($_POST['total'] as $t) {
+        $total += floatval(str_replace([',', ' '], '', $t));
     }
 }
-
-// Subtotal and taxes
 $subtotal_input = isset($_POST['subtotal']) ? floatval(str_replace([',', ' '], '', $_POST['subtotal'])) : 0.00;
+$taxes_input = isset($_POST['tax_total']) ? floatval(str_replace([',', ' '], '', $_POST['tax_total'])) : 0.00;
 
-$taxes_input = 0.00;
-if (!empty($_POST['taxes']) && is_array($_POST['taxes'])) {
-    foreach ($_POST['taxes'] as $tax) {
-        $taxes_input += floatval(str_replace([',', ' '], '', $tax));
-    }
-}
-
-// Line items
+// --- Line Item Arrays ---
 $account_items = $_POST['account_item'] ?? [];
 $descriptions = $_POST['description'] ?? [];
 $quantities = $_POST['quantity'] ?? [];
 $unit_prices = $_POST['unit_price'] ?? [];
 $vat_type = $_POST['vat_type'] ?? [];
+$totals = $_POST['total'] ?? [];
 
-if (empty($account_items) || count($account_items) !== count($descriptions)) {
-    die("Error: Invalid line items data");
+if (
+    empty($account_items) ||
+    count($account_items) !== count($descriptions) ||
+    count($account_items) !== count($quantities) ||
+    count($account_items) !== count($unit_prices)
+) {
+    die("Error: Invalid line item data");
 }
 
 try {
     $pdo->beginTransaction();
 
+    // --- Generate Invoice Number if it's a draft ---
     if ($isDraft && (!$invoice_number || !str_starts_with($invoice_number, 'DFT'))) {
         $invoice_number = generateNextDraftNumber($pdo);
     }
 
-    // Prepared insert with paid_amount included
-    $stmt = $pdo->prepare("INSERT INTO invoice
+    // --- Insert into invoice table ---
+    $stmt = $pdo->prepare("
+        INSERT INTO invoice
         (invoice_number, invoice_date, due_date, payment_date, building_id, tenant,
-         account_item, description, quantity, unit_price, vat_type,
          sub_total, taxes, total, paid_amount,
          notes, terms_conditions, created_at, updated_at, status, payment_status)
-        VALUES (?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?)");
+        VALUES (?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?)
+    ");
+
+    $stmt->execute([
+        $invoice_number,
+        $invoice_date ?: null,
+        $due_date ?: null,
+        $building_id,
+        $tenant_id,
+        $subtotal_input,
+        $taxes_input,
+        $total,
+        $paid_amount,
+        $notes,
+        $terms_conditions,
+        $status,
+        $payment_status
+    ]);
+
+    // --- Insert Line Items into invoice_items ---
+    $itemStmt = $pdo->prepare("
+        INSERT INTO invoice_items (
+            invoice_number, account_item, description,
+            quantity, unit_price, vat_type, taxes, total
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ");
 
     foreach ($account_items as $i => $item) {
-        $item = trim($item);
-        $description = trim($descriptions[$i] ?? '');
-        $qty = is_numeric($quantities[$i]) ? floatval($quantities[$i]) : 0.00;
-        $price = is_numeric($unit_prices[$i]) ? floatval($unit_prices[$i]) : 0.00;
+        $qty = floatval($quantities[$i]);
+        $price = floatval($unit_prices[$i]);
+        $subtotal = $qty * $price;
         $vat = trim($vat_type[$i] ?? '');
+        $tax = 0.00;
 
-        $final_subtotal = ($i === 0) ? $subtotal_input : 0.00;
-        $final_tax = ($i === 0) ? $taxes_input : 0.00;
-        $final_total = ($i === 0) ? $total : 0.00;
+        // Tax calculation
+        if ($vat === 'exclusive') {
+            $tax = round($subtotal * 0.16, 2);
+        } elseif ($vat === 'inclusive') {
+            $tax = round($subtotal * 16 / 116, 2); // Extract embedded VAT
+        } elseif ($vat === 'zero' || $vat === 'exempted') {
+            $tax = 0.00;
+        }
 
-        $stmt->execute([
+        $lineTotal = ($vat === 'exclusive') ? $subtotal + $tax : $subtotal;
+
+        $itemStmt->execute([
             $invoice_number,
-            $invoice_date ?: null,
-            $due_date ?: null,
-            $building_id,
-            $tenant_id,
-            $item,
-            $description,
+            trim($item),
+            trim($descriptions[$i]),
             $qty,
             $price,
             $vat,
-            $final_subtotal,
-            $final_tax,
-            $final_total,
-            $paid_amount, // NEW: required column
-            $notes,
-            $terms_conditions,
-            $status,
-            $payment_status
+            $tax,
+            $lineTotal
         ]);
     }
 
@@ -121,6 +138,7 @@ try {
 
 } catch (Exception $e) {
     $pdo->rollBack();
+
     if ($isDraft) {
         header('Content-Type: application/json');
         http_response_code(500);
