@@ -349,6 +349,11 @@
       border-color: #c3e6cb;
       color: #155724;
     }
+
+    .active-request {
+      background-color: #FFF7E0;
+      border-left: 3px solid #FFC107;
+    }
   </style>
 </head>
 
@@ -394,7 +399,7 @@
             <ul class="request-list" id="requestList"></ul>
           </div>
           <div class="main-content" id="detailsPanel">
-            <div class="no-selection"><i class="fa-solid fa-circle-info"></i> Select a request to view details</div>
+            <!-- content displays here -->
           </div>
         </div>
       </div>
@@ -441,12 +446,27 @@
         }
         allRequests = requests;
         renderRequestList(allRequests);
+
+        // Automatically show the first request
+        if (allRequests.length > 0) {
+          showRequestDetails(allRequests[0]);
+          // Highlight the first item
+          const firstItem = requestList.querySelector('.request-item');
+          if (firstItem) {
+            firstItem.classList.add('active-request');
+          }
+        }
       });
 
     function renderRequestList(requests) {
       requestList.innerHTML = '';
 
-      requests.forEach(req => {
+      if (requests.length === 0) {
+        detailsPanel.innerHTML = `<div class="no-selection"><i class="fa-solid fa-triangle-exclamation"></i> No matching requests found.</div>`;
+        return;
+      }
+
+      requests.forEach((req, index) => {
         const li = document.createElement('li');
         li.className = 'request-item';
 
@@ -491,6 +511,14 @@
         `;
 
         li.onclick = () => {
+          // Remove active class from all items
+          document.querySelectorAll('.request-item').forEach(item => {
+            item.classList.remove('active-request');
+          });
+
+          // Add active class to clicked item
+          li.classList.add('active-request');
+
           showRequestDetails(req);
           fetch('mark_as_read.php', {
             method: 'POST',
@@ -519,6 +547,16 @@
         req.description.toLowerCase().includes(query)
       );
       renderRequestList(filtered);
+
+      // Show first result if available
+      if (filtered.length > 0) {
+        showRequestDetails(filtered[0]);
+        // Highlight the first item
+        const firstItem = requestList.querySelector('.request-item');
+        if (firstItem) {
+          firstItem.classList.add('active-request');
+        }
+      }
     });
 
     function showRequestDetails(req) {
@@ -531,73 +569,71 @@
       });
 
       detailsPanel.innerHTML = `
-    <div class="container px-0">
-      <!-- Row 1: Property, Unit, Request ID -->
-      <div class="row-card mb-3 p-3 rounded shadow-sm bg-white">
-        <div class="row gx-2">
-          <div class="col-md-4 mb-2 mb-md-0">
-            <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-building"></i></span><span class="detail-label">Property:</span> ${req.residence}</div>
-          </div>
-          <div class="col-md-4 mb-2 mb-md-0">
-            <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-door-closed"></i></span><span class="detail-label">Unit:</span> ${req.unit}</div>
-          </div>
-          <div class="col-md-4">
-            <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-hashtag"></i></span><span class="detail-label">Request ID:</span> ${req.id}</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Row 2: Category & Description -->
-      <div class="row-card mb-3 p-3 rounded shadow-sm bg-white">
-        <div class="row gx-2">
-          <div class="col-md-6 mb-2 mb-md-0">
-            <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-layer-group"></i></span><span class="detail-label">Category:</span> ${req.category}</div>
-          </div>
-          <div class="col-md-6">
-            <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-align-left"></i></span><span class="detail-label">Description:</span> ${req.description}</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Row 3: Photo -->
-      <div class="row-card mb-3 p-3 rounded shadow-sm bg-white">
-        <div class="detail-row mb-2">
-          <span class="detail-icon"><i class="fa-solid fa-image"></i></span>
-          <span class="detail-label">Photo:</span>
-        </div>
-        <img src="${req.photo || 'https://via.placeholder.com/400x250?text=No+Photo'}" alt="Photo" class="photo-preview w-100 rounded">
-      </div>
-
-      <!-- Row 4: Date, Status, Payment, Bid, Availability -->
-      <div class="row-card p-3 rounded shadow-sm bg-white">
-        <div class="row gx-2">
-          <div class="col-md-3 col-6 mb-2">
-            <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-calendar"></i></span><span class="detail-label">Date:</span> ${formattedDate}</div>
-          </div>
-          <div class="col-md-3 col-6 mb-2">
-            <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-tasks"></i></span><span class="detail-label">Status:</span> ${req.status}</div>
-          </div>
-          <div class="col-md-3 col-6 mb-2">
-            <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-money-bill"></i></span><span class="detail-label">Payment:</span> ${req.payment_status}</div>
-          </div>
-          <div class="col-md-3 col-6 mb-2">
-            <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-gavel"></i></span><span class="detail-label">Bid:</span> ${req.bid ?? 'N/A'}</div>
-          </div>
-          <div class="col-12 mt-1">
-            <div class="detail-row">
-              <span class="detail-icon"><i class="fa-solid fa-toggle-on"></i></span>
-              <span class="detail-label">Availability:</span>
-              <button class="availability-btn btn-sm ${req.availability === 'Available' ? 'active' : ''}" onclick="toggleAvailability(this)">
-                ${req.availability}
-              </button>
+        <div class="container px-0">
+          <!-- Row 1: Property, Unit, Request ID -->
+          <div class="row-card mb-3 p-3 rounded shadow-sm bg-white">
+            <div class="row gx-2">
+              <div class="col-md-4 mb-2 mb-md-0">
+                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-building"></i></span><span class="detail-label">Property:</span> ${req.residence}</div>
+              </div>
+              <div class="col-md-4 mb-2 mb-md-0">
+                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-door-closed"></i></span><span class="detail-label">Unit:</span> ${req.unit}</div>
+              </div>
+              <div class="col-md-4">
+                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-hashtag"></i></span><span class="detail-label">Request ID:</span> ${req.id}</div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>`;
+
+          <!-- Row 2: Category & Description -->
+          <div class="row-card mb-3 p-3 rounded shadow-sm bg-white">
+            <div class="row gx-2">
+              <div class="col-md-6 mb-2 mb-md-0">
+                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-layer-group"></i></span><span class="detail-label">Category:</span> ${req.category}</div>
+              </div>
+              <div class="col-md-6">
+                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-align-left"></i></span><span class="detail-label">Description:</span> ${req.description}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 3: Photo -->
+          <div class="row-card mb-3 p-3 rounded shadow-sm bg-white">
+            <div class="detail-row mb-2">
+              <span class="detail-icon"><i class="fa-solid fa-image"></i></span>
+              <span class="detail-label">Photo:</span>
+            </div>
+            <img src="${req.photo || 'https://via.placeholder.com/400x250?text=No+Photo'}" alt="Photo" class="photo-preview w-100 rounded">
+          </div>
+
+          <!-- Row 4: Date, Status, Payment, Bid, Availability -->
+          <div class="row-card p-3 rounded shadow-sm bg-white">
+            <div class="row gx-2">
+              <div class="col-md-3 col-6 mb-2">
+                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-calendar"></i></span><span class="detail-label">Date:</span> ${formattedDate}</div>
+              </div>
+              <div class="col-md-3 col-6 mb-2">
+                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-tasks"></i></span><span class="detail-label">Status:</span> ${req.status}</div>
+              </div>
+              <div class="col-md-3 col-6 mb-2">
+                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-money-bill"></i></span><span class="detail-label">Payment:</span> ${req.payment_status}</div>
+              </div>
+              <div class="col-md-3 col-6 mb-2">
+                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-gavel"></i></span><span class="detail-label">Bid:</span> ${req.bid ?? 'N/A'}</div>
+              </div>
+              <div class="col-12 mt-1">
+                <div class="detail-row">
+                  <span class="detail-icon"><i class="fa-solid fa-toggle-on"></i></span>
+                  <span class="detail-label">Availability:</span>
+                  <button class="availability-btn btn-sm ${req.availability === 'Available' ? 'active' : ''}" onclick="toggleAvailability(this)">
+                    ${req.availability}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>`;
     }
-
-
 
     window.toggleAvailability = (btn) => {
       const current = btn.textContent.trim();
