@@ -20,12 +20,12 @@
         $totalTax = $_POST['totalTax'] ?? 0.00;
         $total = $_POST['total'] ?? 0.00;
 
-        $stmt = $pdo->prepare("INSERT INTO expenses (building_id, expense_date, expense_no, supplier,untaxed_amount, total_taxes, total) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$building_id, $expense_date, $expense_no, $supplier, $untaxedAmount, $totalTax, $total]);
+        $stmt = $pdo->prepare("INSERT INTO expenses (supplier_id, building_id, expense_date, expense_no, supplier,untaxed_amount, total_taxes, total) VALUES (?,?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$supplier, $building_id, $expense_date, $expense_no, $supplier, $untaxedAmount, $totalTax, $total]);
 
         $expense_id = $pdo->lastInsertId();
 
-        $item_names = $_POST['item_name'] ?? [];
+        $item_account_codes = $_POST['item_account_code'] ?? [];
         $descriptions = $_POST['description'] ?? [];
         $quantities = $_POST['qty'] ?? [];
         $unit_prices = $_POST['unit_price'] ?? [];
@@ -33,11 +33,11 @@
         $item_totals = $_POST['item_total'] ?? [];
         $discounts = $_POST['discount'] ?? [];
 
-        $stmtItem = $pdo->prepare("INSERT INTO expense_items (item_name, expense_id, description, qty, unit_price, taxes, item_total, discount) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmtItem = $pdo->prepare("INSERT INTO expense_items (item_account_code, expense_id, description, qty, unit_price, taxes, item_total, discount) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
-        for ($i = 0; $i < count($item_names); $i++) {
+        for ($i = 0; $i < count($item_account_codes); $i++) {
         $stmtItem->execute([
-            $item_names[$i],
+            $item_account_codes[$i],
             $expense_id,
             $descriptions[$i],
             $quantities[$i],
