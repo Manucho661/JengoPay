@@ -48,6 +48,7 @@
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
+    <link rel="stylesheet" href="../financials/rentdeposit.css">
     <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
@@ -58,7 +59,7 @@
       crossorigin="anonymous"
     />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="profit&loss.css">
+    <link rel="stylesheet" href="balancesheet.css">
 
     <!-- scripts for data_table -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -319,57 +320,98 @@
           <!--begin::Container-->
           <div class="container-fluid">
             <!--begin::Row-->
+            <h3 class="mb-0 contact_section_header"> <i class="fas fa-file-invoice-dollar" style=" color:#FFC107;"></i>Rent Deposit Report</h3>
+<br>
+
+<div class="row Summary mt-6" >
+  <!-- Summary -->
+
+<div class="col-md-12 ">
+<div class="summary-section text-center p-2 row">
+
+<div class="col-6 col-md-6 ">
+  <div class="summary-item total">
+    <i class="fas fa-calculator icon"></i>
+    <div class="label">Total Collection<b class="value" > Ksh 100,000</b>  </div>
+
+  </div>
+
+</div>
+<!-- <div class="col-6 col-md-3">
+  <div class="summary-item completed">
+    <i class="fa-solid fa-circle-check icon"></i>
+    <div class="label">Amount Pending <b class="value">Ksh  30</b></div>
+  </div>
+</div> -->
+<!--
+<div class="col-6 col-md-3 ">
+  <div class="summary-item in-progress">
+    <i class="fas fa-spinner fa-spin icon"></i>
+    <div class="label">In Progress <b class="value">20</b></div>
+  </div>
+</div> -->
+
+<div class="col-6 col-md-6 ">
+  <div class="summary-item in-progress">
+    <i class="fas fa-calculator icon"></i>
+    <div class="label"> Total Rent Refunds <b class="value">Ksh  30,000</b></div>
+  </div>
+</div>
+</div>
+
+</div>
 
 
-            <div class="row">
-              <div class="col-sm-8">
-                        <h3 class="mb-0 contact_section_header"> <i class="fas fa-file-invoice-dollar" style=" color:#FFC107;"></i>  Profit & Loss</h3>
-                        <div class="row Summary mt-6" >
-                          <!-- Summary -->
-                          <div class="col-md-12 ">
 
-                            <div class="summary-section text-center p-2 row g-3">
-                              <div class="col-6 col-md-4 ">
-                                <div class="summary-item assets">
-
-                                    <div class="label "> <i class="fas fa-calculator"></i>  INCOME   </div>
-                                    <div class="value"> <b> KSH 10,000</b> </div>
-                                </div>
-
-                              </div>
-
-                              <div class="col-6 col-md-4 ">
-                                <div class="summary-item liabilities">
-
-
-                                 <div class="label"> <i class="fas fa-calculator"></i>EXPENSES</div>
-                                 <div class="value"> <b>KSH 50,000</b></div>
-                                </div>
-                              </div>
-                              <div class="col-6 col-md-4 ">
-                                <div class="summary-item equity">
-
-                                    <div class="label"> <i class="fas fa-calculator"></i> NET PROFIT</div>
-
-                                    <div class="value"> KSH 500,000</div>
-                                </div>
-
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-              </div>
-
-              <div class="col-sm-4">
-                <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#" style="color: #00192D;">  <i class="bi bi-house"></i> Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                </ol>
-              </div>
-
-            </div>
             <!--end::Row-->
+            <div class="row table_buttons mb-2">
+              <div class="col-md-2 col-12">
+                <div class="filter-container">
+                  <div>
+                    <label for="categoryFilter" class="filter-label">Building</label>
+                    <br>
+                    <select id="categoryFilter" class="form-control">
+                      <option value="">-- Select --</option>
+                      <option value="technology">All</option>
+                      <option value="health">Manucho</option>
+                      <option value="business">Ebenezer</option>
+                      <option value="education">Crown Z</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label for="filterDate" class="filter-label">Start Date</label>
+                    <br>
+                    <input type="date" id="filterDate" class="form-control" />
+                  </div>
+
+                  <div style="padding: 10px;">
+                    <label for="filterDate" class="filter-label">End Date</label>
+                    <br>
+                    <input type="date" id="filterDate" class="form-control"/>
+                  </div>
+                  <div>
+                    <label for="search" class="filter-label">
+                      <i class="fas fa-filter"></i>
+                      Filter</label>
+                    <input type="text" class="search-input form-control" placeholder="Search...">
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-10 col-12 d-flex justify-content-end" style="position: relative; min-height: 100px;">
+                <div style="position: absolute; bottom: 0; right: 0; white-space: nowrap;">
+                  <button class="pdf_button" style="height: fit-content; padding: 4px;" id="downloadBtn">
+                    <i class="fas fa-file-pdf" style="font-size: 30px; padding: 5px; color: white"></i>
+                  </button>
+                  <button class="excel_button" style="height: fit-content; padding: 4px;" onclick="exportToExcel()">
+                    <i class="fas fa-file-excel" style="font-size: 30px; color: white"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+
 
             <!-- /end row -->
           </div>
@@ -378,100 +420,31 @@
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
-            <!-- Info boxes -->
-
-            <!-- /.row -->
             <!--begin::Row-->
-            <div class="row first mb-2 mt-2 rounded-circle">
-
-
+            <div class="row first mb-2 mt-2" style="overflow-x: auto;">
+              <!-- Table for Rent Deposit Report -->
+              <table id="myTable">
+                  <thead>
+                      <tr class="balancesheet-header">
+                          <th>#</th>
+                          <th>Tenant ID</th>
+                          <th>Name</th>
+                          <th>Building</th>
+                          <th>Unit</th>
+                          <th>Deposit Paid</th>
+                          <th>Deductions</th>
+                          <th>Rent Refunds</th>
+                          <th>Date Paid</th>
+                          <th>Status</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <!-- Data rows will be added by JavaScript -->
+                  </tbody>
+              </table>
               <!-- /.col -->
-            </div>
-            <!--end::Row-->
-
-            <!--begin::Row-->
-            <div class="row table_buttons mb-2">
-              <div class="col-md-6 col-12">
-                  <div class="filter-container d-flex flex-wrap">
-                      <div class="mr-2 mb-2">
-                          <label for="categoryFilter" class="filter-label">Property</label>
-                          <br>
-                          <select id="categoryFilter">
-                              <option value="">-- Select --</option>
-                              <option value="technology">All</option>
-                              <option value="health">Manucho</option>
-                              <option value="business">Ebenezer</option>
-                              <option value="education">Crown Z</option>
-                          </select>
-                      </div>
-
-                      <div class="mr-2 mb-2">
-                          <label for="filterDate" class="filter-label">Start Date</label>
-                          <br>
-                          <input type="date" id="filterDate" />
-                      </div>
-
-                      <div class="mr-2 mb-2" style="padding: 10px;">
-                          <label for="filterDate" class="filter-label">End Date</label>
-                          <br>
-                          <input type="date" id="filterDate"/>
-                      </div>
-                  </div>
-              </div>
-
-              <div class="col-md-6 col-12 d-flex justify-content-end" style="position: relative; min-height: 60px;">
-                  <div style="position: absolute; bottom: 0; right: 0;">
-                      <button class="pdf_button" style="height: fit-content; padding: 4px;" id="downloadBtn">
-                          <i class="fas fa-file-pdf" style="font-size: 30px; padding: 50x; color: white"></i>
-                      </button>
-                      <button class="excel_button" style="height: fit-content; padding: 4px;" onclick="exportToExcel()">
-                          <i class="fas fa-file-excel" style="font-size: 30px; color: white"></i>
-                      </button>
-                  </div>
-              </div>
           </div>
-
-
             <!--end::Row-->
-
-           <!--begin::Row-->
-            <div class="row">
-              <!-- Start col -->
-               <div class="container balancesheet">
-                <div>
-                   <h3 class=" text-start  balancesheet-header">December 31, 2024</h3>
-                  <div class="table-responsive">
-                    <table id="myTable" style="width: 100%;">
-                        <thead style="background-color: rgba(128, 128, 128, 0.2); color: black;" >
-                            <tr>
-                                <th style="font-size: 16px;">Description</th>
-                                <th style="font-size: 16px;">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                          <!-- <tr class="category"><td> <b style="font-size: 16px;">Income</b></td></tr> -->
-                          <tr class="category"><td> <b>Income</b></td></tr>
-                          <tr><td>Rental Income</td><td>Ksh50,000</tr>
-                            <tr><td>Maintenance Fees Collected</td><td>Ksh 2500</td></tr>
-                            <tr><td>Late Payment Fees</td><td>Ksh 10,000</td></tr>
-                            <tr><td>Utility Charges</td><td>Ksh 1500</td></tr>
-                            <tr><td>Management Fees</td><td>Ksh 2000</td></tr>
-                            <tr><td>Other Income</td><td>Ksh 5000</td></tr>
-                            <tr class="category"><td> <b>Total Income</b></td><td> <b>Ksh71,000</b></td></tr>
-                            <tr class="category"><td> <b>Expenses</b></td></tr>
-                            <tr><td>MRI Deductions</td><td> Ksh 20,000</td></tr>
-                            <tr><td>Maintenance and Repairs</td><td>Ksh 3500</td></tr>
-                            <tr><td>Staff Salaries</td><td>Ksh 2,900</td></tr>
-                            <tr><td>Utilities</td><td>Ksh 1200</td></tr>
-                            <tr><td>Marketing Costs</td><td>Ksh 2500</td></tr>
-                            <tr><td>Legal Fees</td><td>Ksh 2300</td></tr>
-                            <tr><td>Depreciation</td><td>Ksh 1000</td></tr>
-                            <tr><td>Loan Interest</td><td>Ksh 5000</td></tr>
-                            <tr><td>Miscellaneous Expenses</td><td>Ksh 4500</td></tr>
-                            <tr class="category"><td> <b>Total Expenses</b> </td><td> <b>Ksh 38,400</b></td></tr>
-                            <tr class="category"><td> <b>Net Profit</b> </td><td> <b>Ksh 32,600</b></td></tr>
-                        </tbody>
-                    </table>
                   </div>
                 </div>
               <!-- /.col -->
@@ -503,127 +476,7 @@
     </div>
     <!--end::App Wrapper-->
 
-
-
-
 <!-- Overlay Cards -->
-
-
-  <!-- Lease Modal -->
-<div class="modal fadey" id="leaseyModal" tabindex="-1" aria-labelledby="leaseyModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="leaseyModalLabel"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="container">
-          <div class="form-wrapper">
-              <h1 class="text-warning">Assign Task</h1>
-              <form id="taskForm">
-                <div class="input-group">
-                  <label for="taskName">Task About To Be Assigned:</label>
-                  <input type="text" id="taskName" name="taskName" placeholder="Enter task name" style="border-radius: 10px; width: 100%;"   required>
-              </div>
-
-                  <div class="input-group">
-                      <label for="serviceProvider">Select A Category For The Task</label>
-                  <label for="taskName"></label>
-                      <select id="serviceProvider" name="serviceProvider" style="border-radius: 10px;"  required>
-                          <option value="" id="taskName" disabled selected>Select A Category </option>
-                          <option value="John">Electrical</option>
-                          <option value="Jane">Plumbing</option>
-                          <option value="Mike">Cleaning</option>
-                      </select>
-                  </div>
-                  <div class="input-group">
-                    <label for="serviceProvider">Select Service Provider:</label>
-                    <select id="serviceProvider" name="serviceProvider" style="border-radius: 10px;" required>
-                        <option value="" id="taskName"  disabled selected>Select Provider</option>
-                        <option value="John">John </option>
-                        <option value="Jane">Jane </option>
-                        <option value="Mike">Mike </option>
-                    </select>
-                </div>
-
-
-                  <button type="submit" class="submit-btn" style="border-radius: 10px; background-color: #00192D; width: 50%; margin-left: 6rem;" >Assign</button>
-              </form>
-          </div>
-
-          <!-- <div id="assignedTasks">
-              <h2>Assigned Tasks</h2>
-              <ul id="taskList"></ul>
-          </div> -->
-      </div>
-
-
-      </div>
-    </div>
-  </div>
-</div>
-
-  <!-- Lease Modal -->
-  <div class="modal fade" id="leaseModal" tabindex="-1" aria-labelledby="leaseModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="leaseModalLabel"></h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form class="beasy">
-             <!-- Landlord Information Section -->
-      <!-- Service Provider Information Section -->
-      <div class="form-section">
-        <h3 class="text-warning">Landlord Information</h3>
-         <a href="#"><p>Martin White</p></a>
-        <!-- <label for="landlordName">Landlord Name(Martin White)</label> -->
-        <!-- <input type="text" id="landlordName" name="landlordName" placeholder="Enter your full name" required> -->
-
-        <h3 class="text-warning">Select Service Providers Information</h3>
-        <label for="paymentMethod">Choose:</label>
-        <select id="paymentMethod" name="paymentMethod" required>
-          <option value="bank_transfer">ABX Electricals</option>
-          <option value="bank_transfer">Sunsine Plumbers</option>
-          <option value="bank_transfer">Favored Technologies</option>
-        </select>
-        <h3 class="text-warning">Payment Details</h3>
-        <label for="amount">Payment Amount (KSH)</label>
-        <input type="text" id="landlordName" name="landlordName" placeholder="Enter Amount" required>
-
-        <label for="paymentMethod">Payment Method</label>
-        <select id="paymentMethod" name="paymentMethod" required>
-          <option value="mpesa_transfer" class="bossy">MPESA</option>
-          <option value="mpesa_transfer" class="bossy">Bank</option>
-          <option value="mpesa_transfer" class="bossy">Global Pay</option>
-          <option value="mpesa_transfer" class="bossy">Cash</option>
-
-        </select>
-         <!-- Submit Button -->
-         <button type="submit" class="bossy"> MAKE PAYMENT</button>
-      </div>
-
-
-
-      <!-- Payment Details Section
-      <div class="form-section">
-        <h3>Payment Details</h3>
-        <label for="amount">Payment Amount (KSH)</label>
-        <input type="number" id="amount" name="amount" placeholder="Enter the amount to pay" min="1" required>
-
-        <label for="paymentMethod">Payment Method</label>
-        <select id="paymentMethod" name="paymentMethod" required>
-          <option value="mpesa_transfer" class="bossy">MPESA</option>
-        </select>
-      </div> -->
-
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
 
 <!-- End view announcement -->
 <!-- end overlay card. -->
@@ -636,8 +489,137 @@
 <!-- Overlay scripts -->
  <!-- View announcements script -->
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+ <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> -->
 
+ <!-- Include jsPDF and autoTable plugin from CDN -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.24/jspdf.plugin.autotable.js"></script>
 
+ <script>
+  const tenants = [
+    {
+      id: '1',
+      tenant_id: 'T1001',
+      name: 'John Doe',
+      building: 'Crown Z Towers',
+      unit: 'b2',
+      deposit_paid: 1500,
+      deductions: 200,
+      rent_refunds: 1300,
+      date_paid: '2025-03-01',
+      status: 'paid',
+    },
+    {
+      id: '2',
+      tenant_id: 'T1002',
+      name: 'Jane Smith',
+      building: 'Sunset Apartments',
+      unit: 'a1',
+      deposit_paid: 1000,
+      deductions: 150,
+      rent_refunds: 900,
+      date_paid: '2025-03-05',
+      status: 'unpaid',
+    },
+    {
+      id: '3',
+      tenant_id: 'T1002',
+      name: 'Jane Smith',
+      building: 'Sunset Apartments',
+      unit: 'a1',
+      deposit_paid: 1000,
+      deductions: 150,
+      rent_refunds: 900,
+      date_paid: '2025-03-05',
+      status: 'unpaid',
+    },
+    {
+      id: '4',
+      tenant_id: 'T1002',
+      name: 'Jane Smith',
+      building: 'Sunset Apartments',
+      unit: 'a1',
+      deposit_paid: 1000,
+      deductions: 150,
+      rent_refunds: 900,
+      date_paid: '2025-03-05',
+      status: 'unpaid',
+    },
+  {
+    id: '5',
+    tenant_id: 'T1001',
+    name: 'John Doe',
+    building: 'Crown Z Towers',
+    unit: 'b2',
+    deposit_paid: 1500,
+    deductions: 200,
+    rent_refunds: 1300,
+    date_paid: '2025-03-01',
+    status: 'paid',
+  },
+
+  {  id: '6',
+  tenant_id: 'T1001',
+  name: 'John Doe',
+  building: 'Crown Z Towers',
+  unit: 'b2',
+  deposit_paid: 1500,
+  deductions: 200,
+  rent_refunds: 1300,
+  date_paid: '2025-03-01',
+  status: 'paid',
+},
+  ];
+
+  // Function to render the table with tenant data
+  function renderTable() {
+    const tableBody = document.querySelector('#myTable tbody');
+    tenants.forEach(tenant => {
+      const row = document.createElement('tr');
+
+      // Check if the tenant status is 'paid' and add corresponding classes
+      const statusClass = tenant.status === 'paid' ? 'paid' : 'unpaid';
+
+      row.innerHTML = `
+        <td>${tenant.id}</td>
+        <td>${tenant.tenant_id}</td>
+        <td>${tenant.name}</td>
+        <td>${tenant.building}</td>
+        <td>${tenant.unit}</td>
+        <td>${tenant.deposit_paid}</td>
+        <td>${tenant.deductions}</td>
+        <td>${tenant.rent_refunds}</td>
+        <td>${tenant.date_paid}</td>
+        <td class="status ${statusClass}">${tenant.status}</td>
+      `;
+
+      tableBody.appendChild(row);
+    });
+  }
+
+  // Function to generate PDF using jsPDF
+  function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Title of the PDF
+    doc.text('Rent Deposit Report', 14, 16);
+    doc.setFontSize(12);
+
+    // Get the table content and add it to the PDF
+    const table = document.getElementById('myTable');
+    doc.autoTable({ html: table, startY: 30 });
+
+    // Save the PDF
+    doc.save('rent_deposit_report.pdf');
+  }
+
+  // Initialize the report by rendering the table
+  renderTable();
+</script>
+
+<!-- Include jsPDF Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
  <script>
   const   more_announcement = document.getElementById('more_announcement_btn');
   const   view_announcement = document.getElementById('view_announcement');
@@ -747,7 +729,7 @@
     <script>
 
             document.addEventListener("DOMContentLoaded", function() {
-            let table = $('#maintenanc').DataTable({
+            let table = $('#maintenance').DataTable({
                 lengthChange: false, // Removes "Show [X] entries"
                 dom: 't<"bottom"p>', // Removes default search bar & keeps only table + pagination
             });
@@ -837,7 +819,7 @@
           const { jsPDF } = window.jspdf;
           let doc = new jsPDF();
 
-          doc.text("PROFIT&LOSS/DHABITI PROPERTIES ", 10, 10);  // Title
+          doc.text("Rent Deposit Report ", 10, 10);  // Title
 
           let table = document.getElementById("myTable");
           let rows = [];
@@ -860,7 +842,7 @@
           let workbook = XLSX.utils.table_to_book(table, {sheet: "Sheet1"});
           let excelFile = XLSX.write(workbook, {bookType: 'xlsx', type: 'array'});
           let blob = new Blob([excelFile], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-          saveAs(blob, "profit&loss_data.xlsx");
+          saveAs(blob, "rent-deposit-report.xlsx");
       }
   </script>
 
@@ -878,6 +860,7 @@
 
      const table = document.getElementById("myTable");
      const rows = table.querySelectorAll("tbody tr");
+
 
      const data = [];
      let boldRows = [];
@@ -905,18 +888,13 @@
      doc.text("Ebenezer Apartment,", 105, 6, { align: "center" });
 
 
-     doc.setFontSize(14); // Adjust font size for title
-     doc.setFont("helvetica", "bold"); // Set font style to bold
-     doc.text("Profit and Loss Statement", 105, 10, { align: "center" }); // Center the title
-
-
      doc.setFontSize(12);
      doc.setFont("helvetica", "bold");
      doc.text("From 1 January 2024 to December 31, 2024", 105, 14, { align: "center" });
 
      doc.autoTable({
          startY: 20, // Moves the table down to create space for headers
-         head: [['Description', 'Amount']],
+         head: [['#','Tenant ID', 'Name','Apartment','Unit','Deposit Paid','Deductions','Rent Refunds','Date Paid']],
          body: data,
 
          headStyles: {
@@ -940,9 +918,10 @@
      });
 
      // Trigger the download of the PDF with the filename 'profit_loss_statement.pdf'
-     doc.save('profit_loss_statement.pdf');
+     doc.save('Rent-deposit-report.pdf');
   });
 </script>
+
 
     <!-- End script for data_table -->
 
