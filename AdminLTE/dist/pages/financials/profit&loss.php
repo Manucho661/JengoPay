@@ -58,7 +58,7 @@
       crossorigin="anonymous"
     />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="balancesheet.css">
+    <link rel="stylesheet" href="profit&loss.css">
 
     <!-- scripts for data_table -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -291,26 +291,23 @@
       <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
         <!--begin::Sidebar Brand-->
         <div class="sidebar-brand">
-          <!--begin::Brand Link-->
-          <a href="./index.html" class="brand-link">
-            <!--begin::Brand Image-->
-            <img
-              src="../../../dist/assets/img/AdminLTELogo.png"
-              alt="AdminLTE Logo"
-              class="brand-image opacity-75 shadow"
-            />
-            <!--end::Brand Image-->
-            <!--begin::Brand Text-->
-            <span class="brand-text fw-light">AdminLTE 4</span>
-            <!--end::Brand Text-->
-          </a>
-          <!--end::Brand Link-->
-        </div>
-        <!--end::Sidebar Brand-->
-        <!--begin::Sidebar Wrapper-->
-        <!-- <div id="sidebar"></div> -->
-        <div> <?php include_once '../includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+        <!--begin::Brand Link-->
+        <a href="./index.html" class="brand-link">
 
+          <!--begin::Brand Text-->
+          <span class="brand-text font-weight-light"><b class="p-2"
+              style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
+              class="p-2"
+              style=" border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107;">JENGOPAY</b></span>
+        </a>
+        </span>
+        <!--end::Brand Text-->
+        </a>
+        <!--end::Brand Link-->
+      </div>
+      <!--end::Sidebar Brand-->
+      <!--begin::Sidebar Wrapper-->
+                  <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/OriginalTwo/AdminLTE/dist/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
         <!--end::Sidebar Wrapper-->
       </aside>
       <!--end::Sidebar-->
@@ -450,32 +447,31 @@
                                 <th style="font-size: 16px;">Amount</th>
                             </tr>
                         </thead>
-
                         <tbody>
                           <!-- <tr class="category"><td> <b style="font-size: 16px;">Income</b></td></tr> -->
                           <tr class="category"><td> <b>Income</b></td></tr>
-                          <tr><td>Rental Income</td><td>Ksh50,000</tr>
-                            <tr><td>Maintenance Fees Collected</td><td>Ksh 2500</td></tr>
-                            <tr><td>Late Payment Fees</td><td>Ksh 10,000</td></tr>
-                            <tr><td>Utility Charges</td><td>Ksh 1500</td></tr>
-                            <tr><td>Management Fees</td><td>Ksh 2000</td></tr>
-                            <tr><td>Other Income</td><td>Ksh 5000</td></tr>
+                            <tr><td>Rental Income</td><td>Ksh50,000</tr>
+                            <tr><td>Late Payment Fees</td><td>Ksh 2500</td></tr>
+                            <tr><td> Water Charges (Revenue)</td><td>Ksh 10,000</td></tr>
+                            <tr><td>Garbage Collection Fees(Revenue)</td><td>Ksh 1500</td></tr>
+                            <tr><td>Commissions and Management Fees</td><td>Ksh 2000</td></tr>
+                            <tr><td>Other Income(Advertising,Penalties)  </td><td>Ksh 5000</td></tr>
                             <tr class="category"><td> <b>Total Income</b></td><td> <b>Ksh71,000</b></td></tr>
                             <tr class="category"><td> <b>Expenses</b></td></tr>
-                            <tr><td>MRI Deductions</td><td> Ksh 20,000</td></tr>
-                            <tr><td>Maintenance and Repairs</td><td>Ksh 3500</td></tr>
-                            <tr><td>Staff Salaries</td><td>Ksh 2,900</td></tr>
-                            <tr><td>Utilities</td><td>Ksh 1200</td></tr>
-                            <tr><td>Marketing Costs</td><td>Ksh 2500</td></tr>
-                            <tr><td>Legal Fees</td><td>Ksh 2300</td></tr>
-                            <tr><td>Depreciation</td><td>Ksh 1000</td></tr>
-                            <tr><td>Loan Interest</td><td>Ksh 5000</td></tr>
-                            <tr><td>Miscellaneous Expenses</td><td>Ksh 4500</td></tr>
+                            <tr><td>Maintenance and Repair Costs</td><td> Ksh 20,000</td></tr>
+                            <tr><td>Staff Salaries and Wages</td><td>Ksh 3500</td></tr>
+                            <tr><td>Electricity Expense</td><td>Ksh 2,900</td></tr>
+                            <tr><td>Water Expense</td><td>Ksh 1200</td></tr>
+                            <tr><td>Garbage Collection Expense</td><td>Ksh 2500</td></tr>
+                            <tr><td>Property Management Software Subscription</td><td>Ksh 2300</td></tr>
+                            <tr><td>Marketing And Advertising Costs</td><td>Ksh 1000</td></tr>
+                            <tr><td>Legal and Compliance Fees</td><td>Ksh 4500</td></tr>
+                            <tr><td>Loan Interest Payments</td><td>Ksh 5000</td></tr>
+                            <tr><td>Bank/Mpesa Charges</td><td>Ksh 4500</td></tr>
+                            <tr><td>Other Expenses (Office, Supplies, Travel)</td><td>Ksh 4500</td></tr>
                             <tr class="category"><td> <b>Total Expenses</b> </td><td> <b>Ksh 38,400</b></td></tr>
                             <tr class="category"><td> <b>Net Profit</b> </td><td> <b>Ksh 32,600</b></td></tr>
                         </tbody>
-
-
                     </table>
                   </div>
                 </div>
@@ -950,17 +946,6 @@
 </script>
 
     <!-- End script for data_table -->
-
-<!--Begin sidebar script -->
-<!-- <script>
-  fetch('../bars/sidebar.html')  // Fetch the file
-      .then(response => response.text()) // Convert it to text
-      .then(data => {
-          document.getElementById('sidebar').innerHTML = data; // Insert it
-      })
-      .catch(error => console.error('Error loading the file:', error)); // Handle errors
-</script> -->
-<!-- end sidebar script -->
 
 
 

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Switch with Export Features</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css">
+    
+    <style>
+        .switch-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: Arial, sans-serif;
+            margin-bottom: 15px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 25px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 25px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 3.5px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #4CAF50;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        .authorization-content {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #333;
+            display: none;
+        }
+
+        .upload-container {
+            margin-top: 15px;
+        }
+
+        .disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-4">
+    <div class="switch-container">
+        <label class="switch">
+            <input type="checkbox" id="authSwitch" onchange="toggleAuthorization()">
+            <span class="slider"></span>
+        </label>
+        <span>Authorize Service</span>
+    </div>
+
+    <div id="authorizationContent" class="authorization-content">
+        <p>
+            I authorize the plumbing service provider to inspect and perform the requested services.
+            Depending on the extent of the required service, I understand that additional charges may apply
+            based on the final assessment.
+        </p>
+
+        <!-- Image Upload Feature -->
+        <div class="upload-container">
+            <label for="imageUpload">Upload Images:</label>
+            <input type="file" id="imageUpload" multiple accept="image/*" class="disabled">
+        </div>
+    </div>
+
+    <hr>
+
+    <table id="invoice" class="table table-striped table-bordered" style="width:100%">
+        <thead>
+            <tr>
+                <th>Invoice Number</th>
+                <th>Property Name</th>
+                <th>Tenant</th>
+                <th>Paid Invoices</th>
+                <th>Unpaid Invoices</th>
+                <th>Invoice Date</th>
+                <th>Due Date</th>
+                <th>Sub-totals</th>
+                <th>Taxes</th>
+                <th>Totals</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>INV NO 00001100</td>
+                <td>Huduma Apartments</td>
+                <td>John Doe</td>
+                <td>PAID</td>
+                <td>PENDING</td>
+                <td>10-11-2025</td>
+                <td>11-12-2025</td>
+                <td>Ksh 15,000</td>
+                <td>Ksh 2100</td>
+                <td>Ksh 17,100</td>
+            </tr>
+            <tr>
+                <td>INV NO 00001101</td>
+                <td>Sunrise Apartments</td>
+                <td>Jane Smith</td>
+                <td>PAID</td>
+                <td>OVERDUE</td>
+                <td>15-10-2025</td>
+                <td>15-11-2025</td>
+                <td>Ksh 12,500</td>
+                <td>Ksh 1800</td>
+                <td>Ksh 14,300</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Required Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
+
+<script>
+    function toggleAuthorization() {
+        const authorizationContent = document.getElementById("authorizationContent");
+        const imageUpload = document.getElementById("imageUpload");
+        const switchBtn = document.getElementById("authSwitch");
+
+        if (switchBtn.checked) {
+            authorizationContent.style.display = "block";
+            imageUpload.classList.remove("disabled");
+        } else {
+            authorizationContent.style.display = "none";
+            imageUpload.classList.add("disabled");
+        }
+    }
+
+    $(document).ready(function() {
+        var table = $('#invoice').DataTable({
+            "lengthChange": false,
+            "dom": 'Bfrtip',
+            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+            "initComplete": function() {
+                // Move the buttons to the first .col-md-6
+                table.buttons().container().appendTo('#invoice_wrapper .col-md-6:eq(0)');
+
+                // Move the search box to the second .col-md-6
+                $('#invoice_filter').appendTo('#invoice_wrapper .col-md-6:eq(1)');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
