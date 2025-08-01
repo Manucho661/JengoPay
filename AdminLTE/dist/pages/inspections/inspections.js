@@ -175,14 +175,12 @@ function handleFormSubmit_inspect(formId, url, extraFields = {}) {
       ${statusHTML}
       <td class="align-middle">
         <div class="d-flex align-items-center gap-2">
-          <!-- Inspect Button -->
-          <button class="btn inspect_btn"
-            data-building-name="${inspection.building_name}"
-            data-unit="${inspection.unit || ''}"
-            data-inspection-id="${inspection.id}"
-            style="background-color: #00192D; color:#FFC107;">
-            Inspect
-          </button>
+  <!-- Inspect Button -->
+<a href="doinspection.php?inspection_number=<?= htmlspecialchars($inspection['id']) ?>&building_name=<?= htmlspecialchars(urlencode($inspection['building_name'])) ?>&unit_name=<?= htmlspecialchars(urlencode($inspection['unit_name'] ?? '')) ?>" 
+   class="btn inspect_btn" 
+   style="background-color: #00192D; color:#FFC107;">
+   <i class="fas fa-search"></i> Inspect
+</a>
 
           <!-- View Button -->
           <button class="btn btn-sm view-btn"
