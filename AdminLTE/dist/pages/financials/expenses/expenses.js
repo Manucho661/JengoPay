@@ -54,8 +54,7 @@ function combobox() {
   const input = comboBox.querySelector('.combo-input');
   const button = comboBox.querySelector('.combo-button');
   const optionsList = comboBox.querySelector('.combo-options');
-  const options = comboBox.querySelectorAll('.combo-option');
-  const hiddenInput = comboBox.querySelector('.supplier-hidden-input'); // add this
+  const hiddenInput = comboBox.querySelector('.supplier-hidden-input');
 
   // Toggle dropdown
   button.addEventListener('click', function (e) {
@@ -66,28 +65,30 @@ function combobox() {
     }
   });
 
-  // Handle option selection
-  options.forEach(option => {
-    option.addEventListener('click', function () {
-      input.value = this.textContent;
-      hiddenInput.value = this.getAttribute('data-value'); // store selected value
-      optionsList.classList.remove('show');
+  // Use event delegation for dynamic options
+  optionsList.addEventListener('click', function (e) {
+    const option = e.target.closest('.combo-option');
+    if (!option) return;
 
-      // Update selected style
-      options.forEach(opt => opt.classList.remove('selected'));
-      this.classList.add('selected');
+    input.value = option.textContent.trim();
+    hiddenInput.value = option.getAttribute('data-value');
+    optionsList.classList.remove('show');
 
-      // Optional: console for debugging
-      console.log('Selected:', hiddenInput.value);
-    });
+    // Remove previous selections
+    const allOptions = optionsList.querySelectorAll('.combo-option');
+    allOptions.forEach(opt => opt.classList.remove('selected'));
+    option.classList.add('selected');
+
+    console.log('Selected:', hiddenInput.value);
   });
 
   // Filter options while typing
   input.addEventListener('input', function () {
     const searchTerm = this.value.toLowerCase();
     let hasVisibleOptions = false;
+    const allOptions = optionsList.querySelectorAll('.combo-option');
 
-    options.forEach(option => {
+    allOptions.forEach(option => {
       const optionText = option.textContent.toLowerCase();
       if (optionText.includes(searchTerm)) {
         option.style.display = 'block';
@@ -97,7 +98,7 @@ function combobox() {
       }
     });
 
-    // Show "no results" if needed
+    // Show "no results" message
     const noResults = optionsList.querySelector('.no-results');
     if (!hasVisibleOptions) {
       if (!noResults) {
@@ -120,7 +121,7 @@ function combobox() {
     }
   });
 
-  // Keyboard navigation
+  // Keyboard support
   input.addEventListener('keydown', function (e) {
     if (e.key === 'ArrowDown' && !optionsList.classList.contains('show')) {
       optionsList.classList.add('show');
