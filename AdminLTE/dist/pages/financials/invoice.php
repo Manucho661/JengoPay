@@ -374,11 +374,13 @@ header {
 }
 
 /* Column Widths */
-.invoice-checkbox {
+/* .invoice-checkbox {
   flex: 0 0 40px;
   min-width: 40px;
+} */
+.invoice-checkbox {
+  flex: 0 0 40px;
 }
-
 .invoice-number {
   flex: 1 0 120px;
   min-width: 120px;
@@ -423,13 +425,52 @@ header {
   min-width: 80px;
   text-align: right;
 }
-
 .over-flow {
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.invoice-container {
+  width: 100%;
+  overflow-x: auto;
 }
 
+.invoice-item.invoice-header {
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+  font-weight: bold;
+  font-size: 14px;
+  min-width: 800px;
+}
+
+.invoice-item.invoice-header > div {
+  flex: 1;
+  padding: 6px;
+  white-space: nowrap;
+}
+
+/* Responsive stacking on small screens */
+@media (max-width: 768px) {
+  .invoice-item.invoice-header {
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 100%;
+  }
+
+  .invoice-item.invoice-header > div {
+    width: 100%;
+    flex: none;
+    padding: 8px 0;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .invoice-checkbox {
+    order: -1;
+  }
+}
 /* Status Badges */
 .status-badge {
   display: inline-block;
@@ -791,6 +832,7 @@ header {
     text-align: left;
   }
 }
+
 </style>
 </head>
 
@@ -927,42 +969,44 @@ header {
                             </div>
                         </div>
 
-
-                        <div class="invoice-item invoice-header">
+                        <div class="invoice-container">
+  <div class="invoice-item invoice-header">
     <div class="invoice-checkbox">
-        <input type="checkbox">
+      <input type="checkbox">
     </div>
     <div class="invoice-number">
-        <div class="over-flow" title="Invoice #">Invoice</div>
+      <div class="over-flow" title="Invoice #">Invoice</div>
     </div>
     <div class="invoice-customer">
-        <div class="over-flow" title="Customer">Tenant</div>
+      <div class="over-flow" title="Customer">Tenant</div>
     </div>
     <div class="invoice-date">
-        <div class="over-flow" title="Date">Date</div>
+      <div class="over-flow" title="Date">Date</div>
     </div>
     <div class="invoice-date">
-        <div class="over-flow" title="Due Date">Due Date</div>
+      <div class="over-flow" title="Due Date">Due Date</div>
     </div>
     <div class="invoice-sub-total">
-        <div class="over-flow" title="Sub-Total">Sub-Total</div>
+      <div class="over-flow" title="Sub-Total">Sub-Total</div>
     </div>
     <div class="invoice-taxes">
-        <div class="over-flow" title="Taxes">Taxes</div>
+      <div class="over-flow" title="Taxes">Taxes</div>
     </div>
     <div class="invoice-amount">
-        <div class="over-flow" title="Amount">Total</div>
+      <div class="over-flow" title="Amount">Total</div>
     </div>
     <div class="invoice-status">
-        <div class="over-flow" title="Status">Status</div>
+      <div class="over-flow" title="Status">Status</div>
     </div>
     <div class="invoice-status">
-        <div class="over-flow" title="Payment Status">Payment Status</div>
+      <div class="over-flow" title="Payment Status">Payment Status</div>
     </div>
     <div class="invoice-actions">
-        <div class="over-flow" title="Actions">Actions</div>
+      <div class="over-flow" title="Actions">Actions</div>
     </div>
+  </div>
 </div>
+
 
                         <?php
                         // ----------------------------------------------------

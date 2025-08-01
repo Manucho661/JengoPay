@@ -450,10 +450,11 @@
                         <tbody>
                           <!-- <tr class="category"><td> <b style="font-size: 16px;">Income</b></td></tr> -->
                           <tr class="category"><td> <b>Income</b></td></tr>
-                            <tr><td>Rental Income</td><td>Ksh50,000</tr>
-                            <tr><td>Late Payment Fees</td><td>Ksh 2500</td></tr>
+                            
+                          <tr><td>Rental Income</td><td>Ksh50,000</tr>
                             <tr><td> Water Charges (Revenue)</td><td>Ksh 10,000</td></tr>
                             <tr><td>Garbage Collection Fees(Revenue)</td><td>Ksh 1500</td></tr>
+                            <tr><td>Late Payment Fees</td><td>Ksh 2500</td></tr>
                             <tr><td>Commissions and Management Fees</td><td>Ksh 2000</td></tr>
                             <tr><td>Other Income(Advertising,Penalties)  </td><td>Ksh 5000</td></tr>
                             <tr class="category"><td> <b>Total Income</b></td><td> <b>Ksh71,000</b></td></tr>
@@ -463,6 +464,8 @@
                             <tr><td>Electricity Expense</td><td>Ksh 2,900</td></tr>
                             <tr><td>Water Expense</td><td>Ksh 1200</td></tr>
                             <tr><td>Garbage Collection Expense</td><td>Ksh 2500</td></tr>
+                            <tr><td>Internet Expense</td><td>Ksh 1200</td></tr>
+                            <tr><td>Security Expense</td><td>Ksh 1200</td></tr>
                             <tr><td>Property Management Software Subscription</td><td>Ksh 2300</td></tr>
                             <tr><td>Marketing And Advertising Costs</td><td>Ksh 1000</td></tr>
                             <tr><td>Legal and Compliance Fees</td><td>Ksh 4500</td></tr>
