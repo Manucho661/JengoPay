@@ -75,11 +75,14 @@
   body {
     font-size: 16px;
   }
+
   .app-wrapper {
-            background-color: rgba(128, 128, 128, 0.1);
-    }
+    background-color: rgba(128, 128, 128, 0.1);
+  }
+
   .sub-category {
     padding-left: 35px !important;
+    font-size: 16px;
   }
 
   .sub-category.total {
@@ -88,10 +91,15 @@
 
   .sub-current-assets.total {
     font-weight: 600;
+    font-size: 20px;
+  }
+  .sub-current-assets{
+      font-size: 20px;
   }
 </style>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+  <?php include_once "actions/getAssets.php" ?>
   <!--begin::App Wrapper-->
   <div class="app-wrapper">
     <!--begin::Header-->
@@ -306,7 +314,7 @@
       </div>
       <!--end::Sidebar Brand-->
       <!--begin::Sidebar Wrapper-->
-                  <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/OriginalTwo/AdminLTE/dist/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+      <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/OriginalTwo/AdminLTE/dist/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
 
       <!--end::Sidebar Wrapper-->
     </aside>
@@ -320,7 +328,7 @@
           <!--begin::Row-->
           <div class="row">
             <div class="col-sm-8">
-                <h3 class="mb-0 contact_section_header"> 💰 &nbsp; Balance Sheet</h3>
+              <h3 class="mb-0 contact_section_header"> 💰 &nbsp; Balance Sheet</h3>
             </div>
             <div class="col-sm-4">
               <ol class="breadcrumb float-sm-end">
@@ -341,36 +349,41 @@
           <!-- /.row -->
           <!--begin::Row-->
           <div class="row first mb-2 mt-2 rounded-circle">
-              <p class="text-muted">Manage your Balance Sheet </p>
+            <p class="text-muted">Manage your Balance Sheet </p>
             <!-- /.col -->
           </div>
           <!--end::Row-->
           <!--begin::Row-->
-          <div class="row table_buttons mb-2 bg-white">
+          <div class="row align-items-center py-3 px-4 rounded shadow-sm mb-3" style="background-color: #ffffff;">
             <div class="col-md-6">
-              <div class="filter-container">
-                <div>
-                  <select id="categoryFilter">
-                    <option value=""> Select</option>
-                    <option value="technology">All</option>
-                    <option value="health">Manucho</option>
-                    <option value="business">Ebenezer</option>
-                    <option value="education">Crown Z</option>
-                  </select>
-                </div>
-                <div>
-                  <input type="date" id="filterDate" />
-                </div>
+              <div class="d-flex gap-3 align-items-center">
+                <!-- Category Filter -->
+                <select id="categoryFilter" class="form-select border-1 shadow-sm" style="background-color: #ffffff; color: #00192D; border-color: #00192D;">
+                  <option value="">Select</option>
+                  <option value="technology">All</option>
+                  <option value="health">Manucho</option>
+                  <option value="business">Ebenezer</option>
+                  <option value="education">Crown Z</option>
+                </select>
+
+                <!-- Date Filter -->
+                <input type="date" id="filterDate" class="form-control border-1 shadow-sm" style="background-color: #ffffff; color: #00192D; border-color: #00192D;" />
               </div>
             </div>
-            <div class="col-md-6 d-flex justify-content-end" style="position: relative;">
-              <div style="position: absolute; bottom: 0;">
-                <button class="pdf_button" style="height: fit-content; padding: 4px;" id="downloadBtn"> <i class="fas fa-file-pdf" style="font-size: 30px; padding: 5x; color: white"></i> </button>
-                <button class="excel_button" style="height: fit-content; padding: 4px;" onclick="exportToExcel()"> <i class="fas fa-file-excel" style="font-size: 30px;  color: white"></i> </button>
-              </div>
 
+            <!-- Export Buttons -->
+            <div class="col-md-6 d-flex justify-content-md-end mt-3 mt-md-0">
+              <div class="d-flex gap-2">
+                <button class="btn rounded-circle shadow-sm" id="downloadBtn" style="background-color: #FFC107; border: none;">
+                  <i class="fas fa-file-pdf" style="font-size: 24px; color: #00192D;"></i>
+                </button>
+                <button class="btn rounded-circle shadow-sm" onclick="exportToExcel()" style="background-color: #FFC107; border: none;">
+                  <i class="fas fa-file-excel" style="font-size: 24px; color: #00192D;"></i>
+                </button>
+              </div>
             </div>
           </div>
+
           <!--end::Row-->
 
           <!--begin::Row-->
@@ -392,48 +405,40 @@
                         <td id="assets" class="main-category">Assets</td>
                         <td></td>
                       </tr>
+                      <?php
+                      foreach ($nonCurrentAssets as $item) {
+                        echo '<tr class="sub-current-assets">';
+                        echo '<td class="sub-category">' . htmlspecialchars($item['name']) . '</td>';
+                        echo '<td>' . number_format($item['amount'], 2) . '</td>';
+                        echo '</tr>';
+                      }
+                      echo '<tr class="sub-current-assets total fw-bold">';
+                      echo '<td class="sub-category">Total Non-Current Assets</td>';
+                      echo '<td>' . number_format($totalNonCurrent, 2) . '</td>';
+                      echo '</tr>';
 
-                      <tr>
-                        <td class="non-current-assets">Non-Current Assets:</td>
-                        <td></td>
-                      </tr>
-                      <tr class="sub-current-assets">
-                        <td class="sub-category"> Property Investments </td>
-                        <td>20,000</td>
-                      </tr>
-                      <tr class="sub-current-assets">
-                        <td class="sub-category">Accumulated Depreciation</td>
-                        <td>30,000</td>
-                      </tr>
-                      <tr class="sub-current-assets total" class="fw-bold">
-                        <td class="sub-category">Total Non-Current Assets</td>
-                        <td>50,000</td>
-                      </tr>
-                      <tr>
-                        <td class="current-assets">Current Assets:</td>
-                        <td></td>
-                      </tr>
-                      <tr class="sub-current-assets">
-                        <td class="sub-category">Cash on Hand</td>
-                        <td>15,000</td>
-                      </tr>
-                      <tr class="sub-current-assets">
-                        <td class="sub-category">Petty Cash </td>
-                        <td>10,000</td>
-                      </tr>
-                      <tr class="sub-current-assets">
-                        <td class="sub-category">Bank Checking Account</td>
-                        <td>7,000</td>
-                      </tr>
-                      <tr class="sub-current-assets total " class="fw-bold">
-                        <td class="sub-category">Total Current Assets</td>
-                        <td>32,000</td>
-                      </tr>
+                      ?>
+                      <?php
+                      echo '<tr><td class="current-assets">Current Assets:</td><td></td></tr>';
+                      foreach ($currentAssets as $item) {
+                        echo '<tr class="sub-current-assets">';
+                        echo '<td class="sub-category">' . htmlspecialchars($item['name']) . '</td>';
+                        echo '<td>' . number_format($item['amount'], 2) . '</td>';
+                        echo '</tr>';
+                      }
+                      echo '<tr class="sub-current-assets total fw-bold">';
+                      echo '<td class="sub-category">Total Current Assets</td>';
+                      echo '<td>' . number_format($totalCurrent, 2) . '</td>';
+                      echo '</tr>';
+                      ?>
 
-                      <tr class="fw-bold">
-                        <td>Total Assets</td>
-                        <td>82,000</td>
-                      </tr>
+                      <?php
+                      echo '<tr class="fw-bold">';
+                      echo '<td>Total Assets</td>';
+                      echo '<td>' . number_format($totalAssets, 2) . '</td>';
+                      echo '</tr>';
+
+                      ?>
                       <!-- Liabilities Section -->
                       <tr>
                         <td></td>
