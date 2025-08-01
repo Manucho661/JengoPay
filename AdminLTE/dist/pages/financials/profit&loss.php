@@ -1,3 +1,55 @@
+<?php
+include '../db/connect.php'; // adjust path as needed
+
+try {
+     // Rent Total (account_item = 500)
+     $stmtRent = $pdo->prepare("
+     SELECT SUM(total) AS rent_total
+     FROM invoice_items
+     WHERE account_item = '500'
+ ");
+ $stmtRent->execute();
+ $rentResult = $stmtRent->fetch(PDO::FETCH_ASSOC);
+ $rentTotal = $rentResult['rent_total'] ?? 0;
+ $formattedRent = number_format($rentTotal, 2);
+
+
+    // Water Charges (510)
+    $stmtWater = $pdo->prepare("
+        SELECT SUM(total) AS water_total
+        FROM invoice_items
+        WHERE account_item = '510'
+    ");
+    $stmtWater->execute();
+    $waterTotal = $stmtWater->fetchColumn() ?? 0;
+    $formattedWater = number_format($waterTotal, 2);
+
+    // Garbage Collection Fees (515)
+    $stmtGarbage = $pdo->prepare("
+        SELECT SUM(total) AS garbage_total
+        FROM invoice_items
+        WHERE account_item = '515'
+    ");
+    $stmtGarbage->execute();
+    $garbageTotal = $stmtGarbage->fetchColumn() ?? 0;
+    $formattedGarbage = number_format($garbageTotal, 2);
+
+    // Static zero income sources
+    $lateFees = 0;
+    $managementFees = 0;
+    $otherIncome = 0;
+
+    // Total Income Calculation
+    $totalIncome = $rentTotal + $waterTotal + $garbageTotal + $lateFees + $managementFees + $otherIncome;
+    $formattedTotalIncome = number_format($totalIncome, 2);
+
+} catch (PDOException $e) {
+    echo "Database error: " . $e->getMessage();
+    exit;
+}
+?>
+
+
 <!doctype html>
 <html lang="en">
   <!--begin::Head-->
@@ -420,12 +472,12 @@
 
               <div class="col-md-6 col-12 d-flex justify-content-end" style="position: relative; min-height: 60px;">
                   <div style="position: absolute; bottom: 0; right: 0;">
-                      <button class="pdf_button" style="height: fit-content; padding: 4px;" id="downloadBtn">
-                          <i class="fas fa-file-pdf" style="font-size: 30px; padding: 50x; color: white"></i>
-                      </button>
-                      <button class="excel_button" style="height: fit-content; padding: 4px;" onclick="exportToExcel()">
-                          <i class="fas fa-file-excel" style="font-size: 30px; color: white"></i>
-                      </button>
+                  <button class="btn rounded-circle shadow-sm" id="downloadBtn" style="background-color: #FFC107; border: none;">
+                  <i class="fas fa-file-pdf" style="font-size: 24px; color: #00192D;"></i>
+                </button>
+                <button class="btn rounded-circle shadow-sm" onclick="exportToExcel()" style="background-color: #FFC107; border: none;">
+                  <i class="fas fa-file-excel" style="font-size: 24px; color: #00192D;"></i>
+                </button>
                   </div>
               </div>
           </div>
@@ -449,16 +501,16 @@
                         </thead>
                         <tbody>
                           <!-- <tr class="category"><td> <b style="font-size: 16px;">Income</b></td></tr> -->
-                          <tr class="category"><td> <b>Income</b></td></tr>
+                          <tr class="category"><td style="color:green; font-weight:500;"> <b>Income</b></td></tr>
                             
-                          <tr><td>Rental Income</td><td>Ksh50,000</tr>
-                            <tr><td> Water Charges (Revenue)</td><td>Ksh 10,000</td></tr>
-                            <tr><td>Garbage Collection Fees(Revenue)</td><td>Ksh 1500</td></tr>
-                            <tr><td>Late Payment Fees</td><td>Ksh 2500</td></tr>
-                            <tr><td>Commissions and Management Fees</td><td>Ksh 2000</td></tr>
-                            <tr><td>Other Income(Advertising,Penalties)  </td><td>Ksh 5000</td></tr>
-                            <tr class="category"><td> <b>Total Income</b></td><td> <b>Ksh71,000</b></td></tr>
-                            <tr class="category"><td> <b>Expenses</b></td></tr>
+                          <tr><td>Rental Income</td><td>Ksh<?= $formattedRent ?></td></tr>
+                            <tr><td> Water Charges (Revenue)</td><td>Ksh<?= $formattedWater ?></td></tr>
+                            <tr><td>Garbage Collection Fees(Revenue)</td><td>Ksh<?= $formattedGarbage ?></td></tr>
+                            <tr><td>Late Payment Fees</td><td>Ksh 0.00</td></tr>
+                            <tr><td>Commissions and Management Fees</td><td>Ksh 0.00</td></tr>
+                            <tr><td>Other Income(Advertising,Penalties)</td><td>Ksh 0.00</td></tr>
+                            <tr class="category"><td style="font-weight:500;"> <b>Total Income</b></td><td><b>Ksh<?= $formattedTotalIncome ?></b></td></tr>
+                            <tr class="category"><td style="color:green;"> <b>Expenses</b></td></tr>
                             <tr><td>Maintenance and Repair Costs</td><td> Ksh 20,000</td></tr>
                             <tr><td>Staff Salaries and Wages</td><td>Ksh 3500</td></tr>
                             <tr><td>Electricity Expense</td><td>Ksh 2,900</td></tr>
