@@ -1,3 +1,8 @@
+<?php
+require_once 'actions/getLiabilities.php';
+
+?>
+
 <!doctype html>
 <html lang="en">
 <!--begin::Head-->
@@ -455,35 +460,20 @@
                         <td class="Liabilities main-category">Liabilities</td>
                         <td></td>
                       </tr>
+                      <?php
+                      echo '<tr><td class="current-assets" style="color:green;">Current Liabilities:</td><td></td></tr>';
+                      foreach ($nonCurrentLiabilities as $item) {
+                        echo '<tr class="sub-current-assets">';
+                        echo '<td class="sub-category">' . htmlspecialchars($item['name']) . '</td>';
+                        echo '<td>' . number_format($item['amount'], 2) . '</td>';
+                        echo '</tr>';
+                      }
+                      echo '<tr class="sub-current-assets total fw-bold">';
+                      echo '<td class="sub-category">Total Non-Current Assets</td>';
+                      echo '<td>' . number_format($totalNonCurrentLiabilities, 2) . '</td>';
+                      echo '</tr>';
 
-                      <tr>
-                        <td>Current Liabilities:</td>
-                        <td></td>
-                      </tr>
-                      <tr class="sub-current-assets">
-                        <td class="sub-category">Accounts Payable</td>
-                        <td>5,000</td>
-                      </tr>
-                      <tr class="sub-current-assets">
-                        <td class="sub-category">Tenant Security Deposits </td>
-                        <td>8,000</td>
-                      </tr>
-                      <tr class="sub-current-assets total" class="fw-bold">
-                        <td class="sub-category">Total Current Liabilities</td>
-                        <td>13,000</td>
-                      </tr>
-                      <tr>
-                        <td>Non-Current Liabilities:</td>
-                        <td></td>
-                      </tr>
-                      <tr class="sub-current-assets">
-                        <td class="sub-category">Long-term Loan</td>
-                        <td>12,000</td>
-                      </tr>
-                      <tr class="sub-current-assets total" class="fw-bold">
-                        <td class="sub-category">Total Non-Current Liabilities</td>
-                        <td>12,000</td>
-                      </tr>
+                      ?>
                       <tr class="fw-bold">
                         <td>Total Liabilities</td>
                         <td>25,000</td>

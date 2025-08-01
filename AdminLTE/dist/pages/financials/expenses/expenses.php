@@ -82,14 +82,8 @@ try {
     $errorMessage = "❌ Failed to fetch expenses: " . $e->getMessage();
 }
 
-
-try {
-    $ExpenseItemsQuery = $pdo->prepare("SELECT account_name FROM chart_of_accounts WHERE account_type = :type LIMIT 8");
-    $ExpenseItemsQuery->execute(['type' => 'expenses']);
-    $items = $ExpenseItemsQuery->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    $errorMessage = "❌ Failed to fetch expense items: " . $e->getMessage();
-}
+// Include expense accounts
+require_once 'actions/getExpenseAccounts.php';
 
 // get buildings
 try {
@@ -396,7 +390,7 @@ try {
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <div class="col-md-12 mb-4">
+                        <div class="col-md-12 mb-4" >
                             <div class="card shadow-sm">
                                 <div class="bg-white p-1 rounded-2 border-0">
                                     <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #e9ecef;">
@@ -456,17 +450,17 @@ try {
                                                         </div>
                                                     </div>
                                                     <!-- Hidden total -->
-                                                    <div class="row mt-2">
+                                                    <div class="row no-wrap mt-2">
                                                         <div class="text-muted mt-4 mb-4">Add the Spend items in the fields below</div>
                                                         <div class="col-md-12 rounded-2" id="itemsContainer">
-                                                            <div class="row item-row g-3 mb-5 p-2" style="background-color: #f5f5f5;">
+                                                            <div class="row item-row g-3 mb-5 p-2" style="background-color: #f5f5f5; overflow:auto; white-space:nowrap;">
                                                                 <!-- ITEM(SERVICE) -->
                                                                 <div class="col-md-2">
                                                                     <label class="form-label fw-bold">ITEM(SERVICE)</label>
-                                                                    <select class="form-select shadow-none rounded-1" name="item_name[]" style="width: 100%;">
+                                                                    <select class="form-select shadow-none rounded-1" name="item_account_code[]" style="width: 100%;">
                                                                         <option value="" disabled selected>Select</option>
                                                                         <?php foreach ($items as $item): ?>
-                                                                            <option value="<?= htmlspecialchars($item['account_name']) ?>">
+                                                                            <option value="<?= htmlspecialchars($item['account_code']) ?>">
                                                                                 <?= htmlspecialchars($item['account_name']) ?>
                                                                             </option>
                                                                         <?php endforeach; ?>
