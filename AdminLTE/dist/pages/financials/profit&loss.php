@@ -34,14 +34,230 @@ try {
     $garbageTotal = $stmtGarbage->fetchColumn() ?? 0;
     $formattedGarbage = number_format($garbageTotal, 2);
 
-    // Static zero income sources
-    $lateFees = 0;
-    $managementFees = 0;
-    $otherIncome = 0;
 
-    // Total Income Calculation
-    $totalIncome = $rentTotal + $waterTotal + $garbageTotal + $lateFees + $managementFees + $otherIncome;
-    $formattedTotalIncome = number_format($totalIncome, 2);
+            // Late Payment Fees (account code 505)
+        $stmtLateFees = $pdo->prepare("
+        SELECT SUM(total) AS late_fees_total
+        FROM invoice_items
+        WHERE account_item = '505'
+        ");
+        $stmtLateFees->execute();
+        $lateFees = $stmtLateFees->fetchColumn() ?? 0;
+        $formattedLateFees = number_format($lateFees, 2);
+
+        // Commissions and Management Fees (account code 520)
+        $stmtManagementFees = $pdo->prepare("
+        SELECT SUM(total) AS management_fees_total
+        FROM invoice_items
+        WHERE account_item = '520'
+        ");
+        $stmtManagementFees->execute();
+        $managementFees = $stmtManagementFees->fetchColumn() ?? 0;
+        $formattedManagementFees = number_format($managementFees, 2);
+
+        // Other Income (Advertising, Penalties) (account code 525)
+        $stmtOtherIncome = $pdo->prepare("
+        SELECT SUM(total) AS other_income_total
+        FROM invoice_items
+        WHERE account_item = '525'
+        ");
+        $stmtOtherIncome->execute();
+        $otherIncome = $stmtOtherIncome->fetchColumn() ?? 0;
+        $formattedOtherIncome = number_format($otherIncome, 2);
+
+          // Updated Total Income Calculation
+        $totalIncome = 
+        $rentTotal +
+        $waterTotal +
+        $garbageTotal +
+        $lateFees +
+        $managementFees +
+        $otherIncome;
+
+        $formattedTotalIncome = number_format($totalIncome, 2);
+
+
+        // Get total Maintenance and Repair Costs using account code 600
+        $stmt = $pdo->prepare("
+        SELECT SUM(item_total) AS maintenance_total
+        FROM expense_items
+        WHERE item_account_code = '600'
+      ");
+      $stmt->execute();
+      $maintenanceTotal = $stmt->fetchColumn() ?? 0;
+
+      // Format with thousands separator and 2 decimal places
+      $formattedMaintenance = number_format($maintenanceTotal, 2);
+
+
+     // Fetch total for Staff Salaries and Wages using account code 605
+     $stmt = $pdo->prepare("
+     SELECT SUM(item_total) AS salary_total
+     FROM expense_items
+     WHERE item_account_code = '605'
+ ");
+ $stmt->execute();
+ $salaryTotal = $stmt->fetchColumn() ?? 0;
+
+ // Format the salary total with 2 decimal places and thousands separator
+ $formattedSalaryTotal = number_format($salaryTotal, 2);
+
+ // Fetch total Electricity Expense using account code 610
+ $stmt = $pdo->prepare("
+ SELECT SUM(item_total) AS electricity_total
+ FROM expense_items
+ WHERE item_account_code = '610'
+");
+$stmt->execute();
+$electricityTotal = $stmt->fetchColumn() ?? 0;
+
+// Format result
+$formattedElectricity = number_format($electricityTotal, 2);
+
+// Fetch total Water Expense using account code 615
+$stmt = $pdo->prepare("
+SELECT SUM(item_total) AS water_expense_total
+FROM expense_items
+WHERE item_account_code = '615'
+");
+$stmt->execute();
+$waterExpenseTotal = $stmt->fetchColumn() ?? 0;
+
+// Format result
+$formattedWaterExpense = number_format($waterExpenseTotal, 2);
+
+// Fetch total Garbage Collection Expense using account code 620
+$stmt = $pdo->prepare("
+SELECT SUM(item_total) AS garbage_expense_total
+FROM expense_items
+WHERE item_account_code = '620'
+");
+$stmt->execute();
+$garbageExpenseTotal = $stmt->fetchColumn() ?? 0;
+
+// Format result
+$formattedGarbageExpense = number_format($garbageExpenseTotal, 2);
+
+// Fetch total Internet Expense using account code 625
+$stmt = $pdo->prepare("
+SELECT SUM(item_total) AS internet_expense_total
+FROM expense_items
+WHERE item_account_code = '625'
+");
+$stmt->execute();
+$internetExpenseTotal = $stmt->fetchColumn() ?? 0;
+
+// Format the result
+$formattedInternetExpense = number_format($internetExpenseTotal, 2);
+
+
+// Fetch total Security Expense using account code 630
+$stmt = $pdo->prepare("
+SELECT SUM(item_total) AS security_expense_total
+FROM expense_items
+WHERE item_account_code = '630'
+");
+$stmt->execute();
+$securityExpenseTotal = $stmt->fetchColumn() ?? 0;
+
+// Format the result
+$formattedSecurityExpense = number_format($securityExpenseTotal, 2);
+
+
+  // Fetch total for Property Management Software Subscription using account code 635
+  $stmt = $pdo->prepare("
+  SELECT SUM(item_total) AS software_expense_total
+  FROM expense_items
+  WHERE item_account_code = '635'
+");
+$stmt->execute();
+$softwareExpenseTotal = $stmt->fetchColumn() ?? 0;
+
+// Format the result
+$formattedSoftwareExpense = number_format($softwareExpenseTotal, 2);
+
+ // Fetch total Marketing and Advertising Costs using account code 640
+ $stmt = $pdo->prepare("
+ SELECT SUM(item_total) AS marketing_expense_total
+ FROM expense_items
+ WHERE item_account_code = '640'
+");
+$stmt->execute();
+$marketingExpenseTotal = $stmt->fetchColumn() ?? 0;
+
+// Format the result
+$formattedMarketingExpense = number_format($marketingExpenseTotal, 2);
+
+ // Fetch total Legal and Compliance Fees using account code 645
+ $stmt = $pdo->prepare("
+ SELECT SUM(item_total) AS legal_expense_total
+ FROM expense_items
+ WHERE item_account_code = '645'
+");
+$stmt->execute();
+$legalExpenseTotal = $stmt->fetchColumn() ?? 0;
+
+// Format the result
+$formattedLegalExpense = number_format($legalExpenseTotal, 2);
+
+    // Fetch total Loan Interest Payments using account code 655
+    $stmt = $pdo->prepare("
+        SELECT SUM(item_total) AS loan_interest_total
+        FROM expense_items
+        WHERE item_account_code = '655'
+    ");
+    $stmt->execute();
+    $loanInterestTotal = $stmt->fetchColumn() ?? 0;
+
+    // Format the result
+    $formattedLoanInterest = number_format($loanInterestTotal, 2);
+
+    // Fetch total Bank/Mpesa Charges using account code 660
+    $stmt = $pdo->prepare("
+        SELECT SUM(item_total) AS bank_charges_total
+        FROM expense_items
+        WHERE item_account_code = '660'
+    ");
+    $stmt->execute();
+    $bankChargesTotal = $stmt->fetchColumn() ?? 0;
+
+    // Format the result
+    $formattedBankCharges = number_format($bankChargesTotal, 2);
+
+      // Fetch total for Other Expenses using account code 665
+      $stmt = $pdo->prepare("
+      SELECT SUM(item_total) AS other_expense_total
+      FROM expense_items
+      WHERE item_account_code = '665'
+  ");
+  $stmt->execute();
+  $otherExpenseTotal = $stmt->fetchColumn() ?? 0;
+
+  // Format the result
+  $formattedOtherExpense = number_format($otherExpenseTotal, 2);
+
+  // Total Expenses Calculation
+$totalExpenses = 
+$maintenanceTotal +
+$salaryTotal +
+$electricityTotal +
+$waterExpenseTotal +
+$garbageExpenseTotal +
+$internetExpenseTotal +
+$securityExpenseTotal +
+$softwareExpenseTotal +
+$marketingExpenseTotal +
+$legalExpenseTotal +
+$loanInterestTotal +
+$bankChargesTotal +
+$otherExpenseTotal;
+
+$formattedTotalExpenses = number_format($totalExpenses, 2);
+
+// Net Profit Calculation
+$netProfit = $totalIncome - $totalExpenses;
+$formattedNetProfit = number_format($netProfit, 2);
+
 
 } catch (PDOException $e) {
     echo "Database error: " . $e->getMessage();
@@ -511,21 +727,21 @@ try {
                             <tr><td>Other Income(Advertising,Penalties)</td><td>Ksh 0.00</td></tr>
                             <tr class="category"><td style="font-weight:500;"> <b>Total Income</b></td><td><b>Ksh<?= $formattedTotalIncome ?></b></td></tr>
                             <tr class="category"><td style="color:green;"> <b>Expenses</b></td></tr>
-                            <tr><td>Maintenance and Repair Costs</td><td> Ksh 20,000</td></tr>
-                            <tr><td>Staff Salaries and Wages</td><td>Ksh 3500</td></tr>
-                            <tr><td>Electricity Expense</td><td>Ksh 2,900</td></tr>
-                            <tr><td>Water Expense</td><td>Ksh 1200</td></tr>
-                            <tr><td>Garbage Collection Expense</td><td>Ksh 2500</td></tr>
-                            <tr><td>Internet Expense</td><td>Ksh 1200</td></tr>
-                            <tr><td>Security Expense</td><td>Ksh 1200</td></tr>
-                            <tr><td>Property Management Software Subscription</td><td>Ksh 2300</td></tr>
-                            <tr><td>Marketing And Advertising Costs</td><td>Ksh 1000</td></tr>
-                            <tr><td>Legal and Compliance Fees</td><td>Ksh 4500</td></tr>
-                            <tr><td>Loan Interest Payments</td><td>Ksh 5000</td></tr>
-                            <tr><td>Bank/Mpesa Charges</td><td>Ksh 4500</td></tr>
-                            <tr><td>Other Expenses (Office, Supplies, Travel)</td><td>Ksh 4500</td></tr>
-                            <tr class="category"><td> <b>Total Expenses</b> </td><td> <b>Ksh 38,400</b></td></tr>
-                            <tr class="category"><td> <b>Net Profit</b> </td><td> <b>Ksh 32,600</b></td></tr>
+                            <tr><td>Maintenance and Repair Costs</td> <td>Ksh<?= $formattedMaintenance ?></td></tr>
+                            <tr><td>Staff Salaries and Wages</td><td>Ksh<?= $formattedSalaryTotal ?></td></tr>
+                            <tr><td>Electricity Expense</td> <td>Ksh<?= $formattedElectricity ?></td></tr>
+                            <tr><td>Water Expense</td><td>Ksh<?= $formattedWaterExpense ?></td></tr>
+                            <tr><td>Garbage Collection Expense</td><td>Ksh<?= $formattedGarbageExpense ?></td></tr>
+                            <tr><td>Internet Expense</td> <td>Ksh<?= $formattedInternetExpense ?></td></tr>
+                            <tr><td>Security Expense</td><td>Ksh<?= $formattedSecurityExpense ?></td></tr>
+                            <tr><td>Property Management Software Subscription</td><td>Ksh<?= $formattedSoftwareExpense ?></td></tr>
+                            <tr><td>Marketing And Advertising Costs</td><td>Ksh<?= $formattedMarketingExpense ?></td></tr>
+                            <tr><td>Legal and Compliance Fees</td><td>Ksh<?= $formattedLegalExpense ?></td></tr>
+                            <tr><td>Loan Interest Payments</td><td>Ksh<?= $formattedLoanInterest ?></td></tr>
+                            <tr><td>Bank/Mpesa Charges</td><td>Ksh<?= $formattedBankCharges ?></td></tr>
+                            <tr><td>Other Expenses (Office, Supplies, Travel)</td> <td>Ksh<?= $formattedOtherExpense ?></td></tr>
+                            <tr class="category"><td> <b>Total Expenses</b> </td> <td><b>Ksh<?= $formattedTotalExpenses ?></b></td></tr>
+                            <tr class="category"><td> <b>Net Profit</b> </td><td><b>Ksh<?= $formattedNetProfit ?></b></td></tr>
                         </tbody>
                     </table>
                   </div>
