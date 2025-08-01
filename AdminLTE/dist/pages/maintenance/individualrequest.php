@@ -391,9 +391,9 @@
       <div class="app-content-header">
       </div>
       <div class="app-content ">
-        <div class="container rounded-2" style="background: yellow !important;">
+        <div class="container-fluid rounded-4" style="background: #E6EAF0 !important; padding-top:15px; padding-bottom:15px;">
           <div class="row">
-            <div class="col-md-4" style="overflow: hidden;">
+            <div class="col-md-4" style="overflow: hidden; padding-right:2px;">
               <div class="request-sidebar">
                 <h3><i class="fa-solid fa-screwdriver-wrench"></i>Other Maintenance Requests</h3>
                 <div class="search-bar rounded-2">
@@ -402,8 +402,8 @@
                 <ul class="request-list" id="requestList"></ul>
               </div>
             </div>
-            <div class="col-md-8 p-0">
-              <div class="main-content p-0" id="detailsPanel" style="background: #E6EAF0">
+            <div class="col-md-8" style="padding-right:10px; padding-left:0; padding-top:0 !;">
+              <div class="main-content" id="detailsPanel" style="background: #E6EAF0">
                 <!-- content displays here -->
               </div>
             </div>
@@ -584,7 +584,7 @@
       detailsPanel.innerHTML = `
         <div class="container-fluid px-0" >
           <!-- Row 1: Property, Unit, Request ID -->
-          <div class="row-card mb-3 p-3 rounded shadow-sm bg-white mt-2">
+          <div class="row-card mb-3 p-3 rounded shadow-sm bg-white">
             <div class="row gx-3 gy-3 p-3 rounded border-0" style="background-color: #fdfdfd; border: 1px solid #e0e0e0;">
               <!-- Property -->
               <div class="col-md-3">
@@ -633,8 +633,8 @@
           </div>
           <!-- Row 2: Category & Description -->
           <div class="row-card mb-3 p-3 rounded shadow-sm bg-white">
-            <div class="row gx-3 gy-3 p-3 rounded border-0" style="background-color: #fdfdfd; border: 1px solid #e0e0e0;">
-              <div class="col-md-12">
+            <div class="row gx-3 gy-3 p-3 rounded border-0" style="border: 1px solid #e0e0e0;">
+              <div class="col-md-12 bg-white p-3">
                 <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
                   <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
                     <i class="fa-solid fa-align-left" style="color: white; font-size: 16px;"></i>
