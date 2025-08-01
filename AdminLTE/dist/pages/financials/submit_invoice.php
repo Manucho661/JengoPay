@@ -62,10 +62,10 @@ try {
     // --- Insert into invoice table ---
     $stmt = $pdo->prepare("
         INSERT INTO invoice
-        (invoice_number, invoice_date, due_date, payment_date, building_id, tenant,
-         sub_total, taxes, total, paid_amount,
-         notes, terms_conditions, created_at, updated_at, status, payment_status)
-        VALUES (?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?)
+    (invoice_number, invoice_date, due_date, building_id, tenant,
+     sub_total, taxes, total,
+     notes, terms_conditions, created_at, updated_at, status, payment_status)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?)
     ");
 
     $stmt->execute([
@@ -77,7 +77,6 @@ try {
         $subtotal_input,
         $taxes_input,
         $total,
-        $paid_amount,
         $notes,
         $terms_conditions,
         $status,
@@ -88,39 +87,39 @@ try {
     $itemStmt = $pdo->prepare("
         INSERT INTO invoice_items (
             invoice_number, account_item, description,
-            quantity, unit_price, vat_type, taxes, total
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            quantity, unit_price, vat_type, sub_total, taxes, total
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
     foreach ($account_items as $i => $item) {
-        $qty = floatval($quantities[$i]);
-        $price = floatval($unit_prices[$i]);
-        $subtotal = $qty * $price;
-        $vat = trim($vat_type[$i] ?? '');
-        $tax = 0.00;
+      $qty = floatval($quantities[$i]);
+      $price = floatval($unit_prices[$i]);
+      $sub_total = $qty * $price;
+      $vat = trim($vat_type[$i] ?? '');
+      $tax = 0.00;
 
-        // Tax calculation
-        if ($vat === 'exclusive') {
-            $tax = round($subtotal * 0.16, 2);
-        } elseif ($vat === 'inclusive') {
-            $tax = round($subtotal * 16 / 116, 2); // Extract embedded VAT
-        } elseif ($vat === 'zero' || $vat === 'exempted') {
-            $tax = 0.00;
-        }
+      // Tax calculation
+      if ($vat === 'exclusive') {
+          $tax = round($sub_total * 0.16, 2);
+      } elseif ($vat === 'inclusive') {
+          $tax = round($sub_total * 16 / 116, 2); // Extract VAT from total
+      }
 
-        $lineTotal = ($vat === 'exclusive') ? $subtotal + $tax : $subtotal;
+      $line_total = ($vat === 'exclusive') ? $sub_total + $tax : $sub_total;
 
-        $itemStmt->execute([
-            $invoice_number,
-            trim($item),
-            trim($descriptions[$i]),
-            $qty,
-            $price,
-            $vat,
-            $tax,
-            $lineTotal
-        ]);
-    }
+      $itemStmt->execute([
+          $invoice_number,
+          trim($item),
+          trim($descriptions[$i]),
+          $qty,
+          $price,
+          $vat,
+          $sub_total,   // Corrected: subtotal now goes here
+          $tax,         // Corrected: tax now goes here
+          $line_total   // Corrected: total goes last
+      ]);
+  }
+
 
     $pdo->commit();
 

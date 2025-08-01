@@ -72,7 +72,6 @@
     }
 
     .request-sidebar {
-      width: 320px;
       background: #ffffff;
       display: flex;
       flex-direction: column;
@@ -80,8 +79,8 @@
     }
 
     .request-sidebar h3 {
-      background: #FFC107;
-      color: #00192D;
+      background: #B0B9C6	;
+      color: black;
       padding: 1.2rem;
       font-size: 1.2rem;
       font-weight: 600;
@@ -89,6 +88,8 @@
       align-items: center;
       gap: 10px;
       margin: 0;
+      /* border-top-right-radius: 10px; */
+      border-top-left-radius:10px;
     }
 
     .search-bar {
@@ -231,7 +232,7 @@
 
     .main-content {
       flex-grow: 1;
-      padding: 2rem;
+      /* padding: 2rem; */
       overflow-y: auto;
     }
 
@@ -385,33 +386,45 @@
     </aside>
 
     <!-- Main Layout -->
-    <div class="app-main">
+    <main class="app-main">
       <!--begin::App Content Header-->
       <div class="app-content-header">
       </div>
-      <div class="app-content">
-        <div class="layout">
-          <div class="request-sidebar">
-            <h3><i class="fa-solid fa-screwdriver-wrench"></i> Maintenance Requests</h3>
-            <div class="search-bar">
-              <input type="text" id="searchInput" placeholder="Search by unit, category, or property...">
+      <div class="app-content ">
+        <div class="container-fluid p-0 rounded-2" style="background: #E6EAF0 !important;">
+          <div class="row">
+            <div class="col-md-4" style="overflow: hidden;">
+              <div class="request-sidebar">
+                <h3><i class="fa-solid fa-screwdriver-wrench"></i>Other Maintenance Requests</h3>
+                <div class="search-bar rounded-2">
+                  <input class="rounded-2" type="text" id="searchInput" placeholder="Search by unit, category, or property...">
+                </div>
+                <ul class="request-list" id="requestList"></ul>
+              </div>
             </div>
-            <ul class="request-list" id="requestList"></ul>
+            <div class="col-md-8 p-0">
+              <div class="main-content p-0" id="detailsPanel" style="background: #E6EAF0">
+                <!-- content displays here -->
+              </div>
+            </div>
           </div>
-          <div class="main-content" id="detailsPanel">
-            <!-- content displays here -->
-          </div>
+
         </div>
       </div>
-    </div>
-    <!-- Footer -->
-    <footer class="bg-light text-center py-3">
-      <div class="container">
-        <strong>
-          &copy; 2014-2024 <a href="https://adminlte.io" class="text-decoration-none text-dark">JENGO PAY</a>. All rights reserved.
-        </strong>
-      </div>
-    </footer>
+  </div>
+  <!-- Footer -->
+  <footer class="app-footer">
+    <!--begin::To the end-->
+    <div class="float-end d-none d-sm-inline">Anything you want</div>
+    <!--end::To the end-->
+    <!--begin::Copyright-->
+    <strong>
+      Copyright &copy; 2014-2024&nbsp;
+      <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;">JENGO PAY</a>.
+    </strong>
+    All rights reserved.
+    <!--end::Copyright-->
+  </footer>
   </div>
 
   <!-- Scripts -->
@@ -569,30 +582,66 @@
       });
 
       detailsPanel.innerHTML = `
-        <div class="container px-0">
+        <div class="container-fluid px-0" >
           <!-- Row 1: Property, Unit, Request ID -->
-          <div class="row-card mb-3 p-3 rounded shadow-sm bg-white">
-            <div class="row gx-2">
-              <div class="col-md-4 mb-2 mb-md-0">
-                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-building"></i></span><span class="detail-label">Property:</span> ${req.residence}</div>
+          <div class="row-card mb-3 p-3 rounded shadow-sm bg-white mt-2">
+            <div class="row gx-3 gy-3 p-3 rounded border-0" style="background-color: #fdfdfd; border: 1px solid #e0e0e0;">
+              <!-- Property -->
+              <div class="col-md-3">
+                <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                  <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                    <i class="fa-solid fa-building" style="color: #FFC107; font-size: 16px;"></i>
+                  </span>
+                  <span style="font-weight: 600;">Property</span>
+                </div>
+                <div style="margin-top: 6px; font-size: 15px; color: #333;">${req.residence}</div>
               </div>
-              <div class="col-md-4 mb-2 mb-md-0">
-                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-door-closed"></i></span><span class="detail-label">Unit:</span> ${req.unit}</div>
+
+              <!-- Unit -->
+              <div class="col-md-3">
+                <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                  <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                    <i class="fa-solid fa-door-closed" style="color: #FFC107; font-size: 16px;"></i>
+                  </span>
+                  <span style="font-weight: 600;">Unit</span>
+                </div>
+                <div style="margin-top: 6px; font-size: 15px; color: #333;">${req.unit}</div>
               </div>
-              <div class="col-md-4">
-                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-hashtag"></i></span><span class="detail-label">Request ID:</span> ${req.id}</div>
+
+              <!-- Request ID -->
+              <div class="col-md-3">
+                <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                  <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                    <i class="fa-solid fa-hashtag" style="color: #FFC107; font-size: 16px;"></i>
+                  </span>
+                  <span style="font-weight: 600;">Request ID</span>
+                </div>
+                <div style="margin-top: 6px; font-size: 15px; color: #333;">${req.id}</div>
+              </div>
+
+              <!-- Status -->
+              <div class="col-md-3">
+                <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                  <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                    <i class="fa-solid fa-clipboard-check" style="color: #FFC107; font-size: 16px;"></i>
+                  </span>
+                  <span style="font-weight: 600;">Status</span>
+                </div>
+                <div style="margin-top: 6px; font-size: 15px; color: green;">${req.status}</div>
               </div>
             </div>
           </div>
-
           <!-- Row 2: Category & Description -->
           <div class="row-card mb-3 p-3 rounded shadow-sm bg-white">
-            <div class="row gx-2">
-              <div class="col-md-6 mb-2 mb-md-0">
-                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-layer-group"></i></span><span class="detail-label">Category:</span> ${req.category}</div>
-              </div>
-              <div class="col-md-6">
-                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-align-left"></i></span><span class="detail-label">Description:</span> ${req.description}</div>
+            <div class="row gx-3 gy-3 p-3 rounded border-0" style="background-color: #fdfdfd; border: 1px solid #e0e0e0;">
+              <div class="col-md-12">
+                <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                  <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                    <i class="fa-solid fa-align-left" style="color: white; font-size: 16px;"></i>
+                  </span>
+                  <span style="font-weight: 600;">Description</span>
+                </div>
+                <div style="margin-top: 6px; font-size: 15px; color: #333; line-height: 1.6;">${req.description}</div>
               </div>
             </div>
           </div>
@@ -641,6 +690,7 @@
       btn.classList.toggle('active');
     };
   </script>
+  <script src="../../../dist/js/adminlte.js"></script>
 </body>
 
 </html>

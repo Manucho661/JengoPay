@@ -6,8 +6,10 @@ if (!isset($_GET['id'])) {
   echo json_encode(['success' => false, 'message' => 'Tenant ID not provided']);
   exit;
 }
+
 else{
-  
+
+
 }
 
 $user_id = intval($_GET['id']);
@@ -325,7 +327,7 @@ try {
         <!--end::Sidebar Brand-->
 
         <!--begin::Sidebar Wrapper-->
-        <div ><?php include_once '../includes/sidebar1.php'; ?></div> <!-- This is where the sidebar is inserted -->
+        <div ><?php include_once '../includes/sidebar.php'; ?></div> <!-- This is where the sidebar is inserted -->
         <!--end::Sidebar Wrapper-->
 
       </aside>
