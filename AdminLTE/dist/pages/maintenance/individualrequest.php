@@ -231,9 +231,9 @@
     }
 
     .main-content {
-      flex-grow: 1;
+      /* flex-grow: 1; */
       /* padding: 2rem; */
-      overflow-y: auto;
+      /* overflow-y: auto; */
     }
 
     .detail-row {
@@ -391,7 +391,7 @@
       <div class="app-content-header">
       </div>
       <div class="app-content ">
-        <div class="container-fluid p-0 rounded-2" style="background: #E6EAF0 !important;">
+        <div class="container rounded-2" style="background: yellow !important;">
           <div class="row">
             <div class="col-md-4" style="overflow: hidden;">
               <div class="request-sidebar">

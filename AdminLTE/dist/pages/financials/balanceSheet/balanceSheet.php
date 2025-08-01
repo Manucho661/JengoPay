@@ -96,6 +96,10 @@
   .sub-current-assets{
       font-size: 20px;
   }
+  .current-assets{
+    font-size: 14px;
+    font-weight: bold;
+  }
 </style>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -406,6 +410,7 @@
                         <td></td>
                       </tr>
                       <?php
+                      echo '<tr><td class="current-assets" style="color:green;">Non-Current Assets:</td><td></td></tr>';
                       foreach ($nonCurrentAssets as $item) {
                         echo '<tr class="sub-current-assets">';
                         echo '<td class="sub-category">' . htmlspecialchars($item['name']) . '</td>';
@@ -419,7 +424,7 @@
 
                       ?>
                       <?php
-                      echo '<tr><td class="current-assets">Current Assets:</td><td></td></tr>';
+                      echo '<tr><td class="current-assets" style="color:green;" >Current Assets:</td><td></td></tr>';
                       foreach ($currentAssets as $item) {
                         echo '<tr class="sub-current-assets">';
                         echo '<td class="sub-category">' . htmlspecialchars($item['name']) . '</td>';

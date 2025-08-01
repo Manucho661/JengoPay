@@ -1,6 +1,6 @@
 <?php
 require_once '../../db/connect.php';
-
+include_once 'actions/getSuppliers.php';
 $expenses = [];
 $monthlyTotals = array_fill(1, 12, 0);
 
@@ -444,14 +444,12 @@ try {
                                                             <div class="combo-box">
                                                                 <input type="text" class="form-control rounded-1 shadow-none combo-input" placeholder="Search or select...">
                                                                 <button class="combo-button">▼</button>
-                                                                <ul class="combo-options">
-                                                                    <li class="combo-option" data-value="all">All Rentals</li>
-                                                                    <li class="combo-option" data-value="active">Active Rentals</li>
-                                                                    <li class="combo-option" data-value="future">Future Rentals</li>
-                                                                    <li class="combo-option" data-value="residents">Residents</li>
-                                                                    <li class="combo-option" data-value="owners">Property Owners</li>
-                                                                    <li class="combo-option" data-value="overdue">Overdue Payments</li>
-                                                                    <li class="combo-option" data-value="renewals">Upcoming Renewals</li>
+                                                                <ul class="combo-options">       
+                                                                    <?php foreach ($suppliers as $supplier): ?>
+                                                                        <li class="combo-option" data-value="<?= htmlspecialchars($supplier['id']) ?>">
+                                                                        <?= htmlspecialchars($supplier['supplier_name']) ?>
+                                                                       </li>
+                                                                    <?php endforeach; ?>
                                                                 </ul>
                                                                 <input type="hidden" class="supplier-hidden-input" name="supplier">
                                                             </div>
