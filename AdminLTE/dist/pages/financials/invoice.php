@@ -1,7 +1,17 @@
 <?php
 include '../db/connect.php';
 
-$stmt = $pdo->prepare("SELECT account_code, account_name FROM chart_of_accounts ORDER BY account_name ASC");
+// $stmt = $pdo->prepare("SELECT account_code, account_name FROM chart_of_accounts ORDER BY account_name ASC");
+// $stmt->execute();
+// $accountItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+$stmt = $pdo->prepare("
+  SELECT account_code, account_name
+    FROM chart_of_accounts
+    WHERE account_type = 'Revenue'
+    ORDER BY account_name ASC
+");
 $stmt->execute();
 $accountItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -1407,17 +1417,19 @@ header {
             <tbody id="itemsBody">
                 <!-- One initial row -->
                 <tr>
-                    <td>
-                        <select name="account_item[]" class="select-account searchable-select" required>
-                            <option value="" disabled selected>Select Account Item</option>
-                            <?php foreach ($accountItems as $item): ?>
-                                <option value="<?= htmlspecialchars($item['account_code']) ?>">
-                                    <?= htmlspecialchars($item['account_name']) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </td>
-                    <td><textarea name="description[]" placeholder="Description" rows="1" required></textarea></td>
+                <td>
+                <select name="account_item[]" class="select-account searchable-select" required>
+            <option value="" disabled selected>Select Account Item</option>
+            <?php foreach ($accountItems as $item): ?>
+              <option value="<?= htmlspecialchars($item['account_code']) ?>">
+                <?= htmlspecialchars($item['account_name']) ?>
+              </option>
+            <?php endforeach; ?>
+          </select>
+            </td>
+            <td style="min-width: 200px;">
+          <textarea name="description[]" class="form-control" placeholder="Description" rows="1" required></textarea>
+        </td>
                     <td><input type="number" name="quantity[]" class="form-control quantity" required></td>
                     <td><input type="number" name="unit_price[]" class="form-control unit-price" required></td>
                     <td>
@@ -1645,30 +1657,48 @@ document.addEventListener("DOMContentLoaded", function () {
       const newRow = document.createElement("tr");
 
       newRow.innerHTML = `
-        <td>
-          <select name="account_item[]" class="select-account searchable-select" required>
-            <option value="" disabled selected>Select Account Item</option>
-            <?php foreach ($accountItems as $item): ?>
-              <option value="<?= htmlspecialchars($item['account_code']) ?>">
-                <?= htmlspecialchars($item['account_name']) ?>
-              </option>
-            <?php endforeach; ?>
-          </select>
-        </td>
-        <td><textarea name="description[]" placeholder="Description" rows="1" required></textarea></td>
-        <td><input type="number" name="quantity[]" class="form-control quantity" required></td>
-        <td><input type="number" name="unit_price[]" class="form-control unit-price" required></td>
-        <td>
-          <select name="vat_type[]" class="form-select vat-option" required>
-            <option value="" disabled selected>Select Option</option>
-            <option value="inclusive">VAT 16% Inclusive</option>
-            <option value="exclusive">VAT 16% Exclusive</option>
-            <option value="zero">Zero Rated</option>
-            <option value="exempted">Exempted</option>
-          </select>
-        </td>
-        <td><input type="text" name="total[]" class="form-control total" readonly></td>
-        <td><button type="button" class="btn btn-danger btn-sm delete-btn"><i class="fa fa-trash"></i></button></td>
+       <td style="min-width: 180px;">
+    <select name="account_item[]" class="form-select searchable-select" required>
+      <option value="" disabled selected>Select Account Item</option>
+      <?php foreach ($accountItems as $item): ?>
+        <option value="<?= htmlspecialchars($item['account_code']) ?>">
+          <?= htmlspecialchars($item['account_name']) ?>
+        </option>
+      <?php endforeach; ?>
+    </select>
+  </td>
+
+  <td style="min-width: 200px;">
+    <textarea name="description[]" class="form-control" placeholder="Description" rows="1" required></textarea>
+  </td>
+
+  <td style="min-width: 100px;">
+    <input type="number" name="quantity[]" class="form-control quantity" step="0.01" required>
+  </td>
+
+  <td style="min-width: 120px;">
+    <input type="number" name="unit_price[]" class="form-control unit-price" step="0.01" required>
+  </td>
+
+  <td style="min-width: 180px;">
+    <select name="vat_type[]" class="form-select vat-option" required>
+      <option value="" disabled selected>Select Option</option>
+      <option value="inclusive">VAT 16% Inclusive</option>
+      <option value="exclusive">VAT 16% Exclusive</option>
+      <option value="zero">Zero Rated</option>
+      <option value="exempted">Exempted</option>
+    </select>
+  </td>
+
+  <td style="min-width: 120px;">
+    <input type="text" name="total[]" class="form-control total" readonly>
+  </td>
+
+  <td style="min-width: 50px; text-align: center;">
+    <button type="button" class="btn btn-danger btn-sm delete-btn">
+      <i class="fa fa-trash"></i>
+    </button>
+  </td>
       `;
 
       itemsBody.appendChild(newRow);
