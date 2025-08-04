@@ -4,7 +4,7 @@ include '../db/connect.php'; // adjust path as needed
 try {
      // Rent Total (account_item = 500)
      $stmtRent = $pdo->prepare("
-     SELECT SUM(total) AS rent_total
+     SELECT SUM(sub_total) AS rent_total
      FROM invoice_items
      WHERE account_item = '500'
  ");
@@ -16,7 +16,7 @@ try {
 
     // Water Charges (510)
     $stmtWater = $pdo->prepare("
-        SELECT SUM(total) AS water_total
+        SELECT SUM(sub_total) AS water_total
         FROM invoice_items
         WHERE account_item = '510'
     ");
@@ -26,7 +26,7 @@ try {
 
     // Garbage Collection Fees (515)
     $stmtGarbage = $pdo->prepare("
-        SELECT SUM(total) AS garbage_total
+        SELECT SUM(sub_total) AS garbage_total
         FROM invoice_items
         WHERE account_item = '515'
     ");
@@ -37,7 +37,7 @@ try {
 
             // Late Payment Fees (account code 505)
         $stmtLateFees = $pdo->prepare("
-        SELECT SUM(total) AS late_fees_total
+        SELECT SUM(sub_total) AS late_fees_total
         FROM invoice_items
         WHERE account_item = '505'
         ");
@@ -47,7 +47,7 @@ try {
 
         // Commissions and Management Fees (account code 520)
         $stmtManagementFees = $pdo->prepare("
-        SELECT SUM(total) AS management_fees_total
+        SELECT SUM(sub_total) AS management_fees_total
         FROM invoice_items
         WHERE account_item = '520'
         ");
@@ -57,7 +57,7 @@ try {
 
         // Other Income (Advertising, Penalties) (account code 525)
         $stmtOtherIncome = $pdo->prepare("
-        SELECT SUM(total) AS other_income_total
+        SELECT SUM(sub_total) AS other_income_total
         FROM invoice_items
         WHERE account_item = '525'
         ");
@@ -66,7 +66,7 @@ try {
         $formattedOtherIncome = number_format($otherIncome, 2);
 
           // Updated Total Income Calculation
-        $totalIncome = 
+        $totalIncome =
         $rentTotal +
         $waterTotal +
         $garbageTotal +
@@ -92,6 +92,7 @@ try {
 
      // Fetch total for Staff Salaries and Wages using account code 605
      $stmt = $pdo->prepare("
+
      SELECT SUM(item_total) AS salary_total
      FROM expense_items
      WHERE item_account_code = '605'
@@ -237,7 +238,7 @@ $formattedLegalExpense = number_format($legalExpenseTotal, 2);
   $formattedOtherExpense = number_format($otherExpenseTotal, 2);
 
   // Total Expenses Calculation
-$totalExpenses = 
+$totalExpenses =
 $maintenanceTotal +
 $salaryTotal +
 $electricityTotal +
@@ -718,7 +719,7 @@ $formattedNetProfit = number_format($netProfit, 2);
                         <tbody>
                           <!-- <tr class="category"><td> <b style="font-size: 16px;">Income</b></td></tr> -->
                           <tr class="category"><td style="color:green; font-weight:500;"> <b>Income</b></td></tr>
-                            
+
                           <tr><td>Rental Income</td><td>Ksh<?= $formattedRent ?></td></tr>
                             <tr><td> Water Charges (Revenue)</td><td>Ksh<?= $formattedWater ?></td></tr>
                             <tr><td>Garbage Collection Fees(Revenue)</td><td>Ksh<?= $formattedGarbage ?></td></tr>

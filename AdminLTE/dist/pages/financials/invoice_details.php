@@ -548,15 +548,19 @@ HTML;
 if (!$id) {
     echo '<div class="placeholder">Select an invoice to view its details</div>';
 } else {
-    // ── Fetch invoice with tenant info ──
-    $info = $pdo->prepare("SELECT i.*, CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name,
-                  u.email AS tenant_email, t.phone_number AS tenant_phone
-                  FROM invoice i
-                  LEFT JOIN tenants t ON i.tenant = t.id
-                  LEFT JOIN users u ON u.id = t.user_id
-                  WHERE i.id = ?");
-    $info->execute([$id]);
-    $inv = $info->fetch(PDO::FETCH_ASSOC);
+  // ── Fetch invoice with tenant name via users table ──
+  $info = $pdo->prepare("
+      SELECT
+          i.*,
+          CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name,
+          u.email AS tenant_email,
+          u.phone AS tenant_phone
+      FROM invoice i
+      LEFT JOIN users u ON i.tenant = u.id
+      WHERE i.id = ?
+  ");
+  $info->execute([$id]);
+  $inv = $info->fetch(PDO::FETCH_ASSOC);
 
     if (!$inv) {
         echo '<div class="placeholder">Invoice not found.</div>';
@@ -596,9 +600,10 @@ if (!$id) {
     <button type="button" class="btn me-2" style="color: #FFC107; background-color: #00192D;" onclick="window.print()">
         <i class="bi bi-printer-fill"></i> Print Invoice
     </button>
-    <a href="view_invoice_pdf.php?id=<?= $inv['id'] ?>" class="btn" style="color: #FFC107; background-color: #00192D;" download>
-        <i class="bi bi-eye"></i> Download PDF
-    </a>
+    <a href="view_invoice_pdf.php?id=<?= $inv['id'] ?>" class="btn" style="color: #FFC107; background-color: #00192D;" download="invoice_<?= $inv['invoice_number'] ?>.pdf">
+    <i class="bi bi-download"></i> Download PDF
+</a>
+
 </div>
 
 <div class="invoice-card">
@@ -616,9 +621,9 @@ if (!$id) {
 
     <!-- Invoice Info -->
     <div class="d-flex justify-content-between">
-        <h6 class="mb-0"><?= htmlspecialchars($inv['tenant_name']) ?></h6>
+        <h6 class="mb-0"><strong><b><?= htmlspecialchars($inv['tenant_name']) ?></b></strong></h6>
         <div class="text-end">
-            <h3><?= htmlspecialchars($inv['invoice_number']) ?></h3><br>
+            <h3><strong><b><?= htmlspecialchars($inv['invoice_number']) ?></b></strong></h3><br>
         </div>
     </div>
 
