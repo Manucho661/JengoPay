@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // 2. Handle photo uploads
         $uploadDir = __DIR__ . '/../maintenance/uploads/'; // server path
-        $uploadUrl = 'maintenance/uploads/';               // for database reference
+        $uploadUrl = 'uploads/';               // for database reference
 
         if (!file_exists($uploadDir)) {
             mkdir($uploadDir, 0777, true);

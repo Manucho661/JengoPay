@@ -79,7 +79,7 @@
     }
 
     .request-sidebar h3 {
-      background: #B0B9C6	;
+      background: #B0B9C6;
       color: black;
       padding: 1.2rem;
       font-size: 1.2rem;
@@ -89,7 +89,7 @@
       gap: 10px;
       margin: 0;
       /* border-top-right-radius: 10px; */
-      border-top-left-radius:10px;
+      border-top-left-radius: 10px;
     }
 
     .search-bar {
@@ -388,22 +388,38 @@
     <!-- Main Layout -->
     <main class="app-main">
       <!--begin::App Content Header-->
-      <div class="app-content-header">
-      </div>
-      <div class="app-content ">
+      <a href="javascript:history.back()"
+        class="btn mt-1"
+        style="background-color: white; color: #00192D; border: 1px solid #00192D; font-weight: 500;">
+        <i class="bi bi-arrow-left" style="margin-right: 4px;"></i> Go Back
+      </a>
+      <div class="app-content mt-1">
         <div class="container-fluid rounded-4" style="background: #E6EAF0 !important; padding-top:15px; padding-bottom:15px;">
           <div class="row">
             <div class="col-md-4" style="overflow: hidden; padding-right:2px;">
-              <div class="request-sidebar">
-                <h3><i class="fa-solid fa-screwdriver-wrench"></i>Other Maintenance Requests</h3>
+              <div class="request-sidebar rounded-4">
+                <h3><i class="fa-solid fa-screwdriver-wrench"></i>Request NO 40</h3>
+                <div class="d-flex flex-column gap-2 p-2">
+                  <button class="btn" style="background-color: #6c757d; color: white; border: none;">
+                    <i class="fas fa-ban me-2"></i> Unavailable
+                  </button>
+                  <button class="btn" style="background-color: white; color: #00192D; border: 1px solid #00192D;">
+                    <i class="fas fa-user-clock me-2"></i> UnAssigned
+                  </button>
+                  <button class="btn" style="background-color: #FFC107; color: #00192D; border: none;">
+                    <i class="fas fa-check-circle me-2"></i> Paid
+                  </button>
+                </div>
+
                 <div class="search-bar rounded-2">
+                  <div>Other Requests</div>
                   <input class="rounded-2" type="text" id="searchInput" placeholder="Search by unit, category, or property...">
                 </div>
                 <ul class="request-list" id="requestList"></ul>
               </div>
             </div>
             <div class="col-md-8" style="padding-right:10px; padding-left:0; padding-top:0 !;">
-              <div class="main-content" id="detailsPanel" style="background: #E6EAF0">
+              <div class="main-content" id="detailsPanel" style="background: #f5f5f5">
                 <!-- content displays here -->
               </div>
             </div>
@@ -453,6 +469,7 @@
     fetch('get_requests.php')
       .then(res => res.json())
       .then(requests => {
+        console.log(requests); // 👈 This prints the entire response data
         if (!requests.length || requests.error) {
           detailsPanel.innerHTML = `<div class="no-selection"><i class="fa-solid fa-triangle-exclamation"></i> No requests found.</div>`;
           return;
@@ -645,16 +662,14 @@
               </div>
             </div>
           </div>
-
           <!-- Row 3: Photo -->
           <div class="row-card mb-3 p-3 rounded shadow-sm bg-white">
             <div class="detail-row mb-2">
               <span class="detail-icon"><i class="fa-solid fa-image"></i></span>
-              <span class="detail-label">Photo:</span>
+              <span class="detail-label">Image</span>
             </div>
             <img src="${req.photo || 'https://via.placeholder.com/400x250?text=No+Photo'}" alt="Photo" class="photo-preview w-100 rounded">
           </div>
-
           <!-- Row 4: Date, Status, Payment, Bid, Availability -->
           <div class="row-card p-3 rounded shadow-sm bg-white">
             <div class="row gx-2">
@@ -662,22 +677,10 @@
                 <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-calendar"></i></span><span class="detail-label">Date:</span> ${formattedDate}</div>
               </div>
               <div class="col-md-3 col-6 mb-2">
-                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-tasks"></i></span><span class="detail-label">Status:</span> ${req.status}</div>
-              </div>
-              <div class="col-md-3 col-6 mb-2">
                 <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-money-bill"></i></span><span class="detail-label">Payment:</span> ${req.payment_status}</div>
               </div>
               <div class="col-md-3 col-6 mb-2">
                 <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-gavel"></i></span><span class="detail-label">Bid:</span> ${req.bid ?? 'N/A'}</div>
-              </div>
-              <div class="col-12 mt-1">
-                <div class="detail-row">
-                  <span class="detail-icon"><i class="fa-solid fa-toggle-on"></i></span>
-                  <span class="detail-label">Availability:</span>
-                  <button class="availability-btn btn-sm ${req.availability === 'Available' ? 'active' : ''}" onclick="toggleAvailability(this)">
-                    ${req.availability}
-                  </button>
-                </div>
               </div>
             </div>
           </div>

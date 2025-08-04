@@ -146,6 +146,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const vatInclusiveContainer = document.getElementById('vatAmountInclusiveContainer');
     const vatAmountContainer = document.getElementById('vatAmountContainer');
     const zeroRatedExmptedContainer = document.getElementById('zeroRated&ExmptedContainer');
+    const exemptedContainer = document.getElementById('ExemptedContainer');
     let subTotal = 0;
     let vatAmountInclusive = 0;
     let vatAmountExclusive = 0;
@@ -228,6 +229,12 @@ document.addEventListener("DOMContentLoaded", function () {
       zeroRatedExmptedContainer.style.setProperty('display', 'none', 'important');
     }
 
+    if (isExempted) {
+      exemptedContainer.style.setProperty('display', 'flex', 'important');
+
+    } else {
+      exemptedContainer.style.setProperty('display', 'none', 'important');
+    }
     document.getElementById('subTotal').value = 'Ksh ' + subTotal.toFixed(2);
     document.getElementById('subTotalhidden').value = subTotal.toFixed(2);
     document.getElementById('vatAmountInclusive').value = 'Ksh ' + vatAmountInclusive.toFixed(2);
