@@ -390,7 +390,7 @@ try {
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <div class="col-md-12 mb-4" >
+                        <div class="col-md-12 mb-4">
                             <div class="card shadow-sm">
                                 <div class="bg-white p-1 rounded-2 border-0">
                                     <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #e9ecef;">
@@ -438,11 +438,11 @@ try {
                                                             <div class="combo-box">
                                                                 <input type="text" class="form-control rounded-1 shadow-none combo-input" placeholder="Search or select...">
                                                                 <button class="combo-button">▼</button>
-                                                                <ul class="combo-options">       
+                                                                <ul class="combo-options">
                                                                     <?php foreach ($suppliers as $supplier): ?>
                                                                         <li class="combo-option" data-value="<?= htmlspecialchars($supplier['id']) ?>">
-                                                                        <?= htmlspecialchars($supplier['supplier_name']) ?>
-                                                                       </li>
+                                                                            <?= htmlspecialchars($supplier['supplier_name']) ?>
+                                                                        </li>
                                                                     <?php endforeach; ?>
                                                                 </ul>
                                                                 <input type="hidden" class="supplier-hidden-input" name="supplier">
@@ -547,6 +547,11 @@ try {
                                                                         <label class="me-2 border-end pe-3 text-end w-50"><strong id="taxLabel">VAT 16% :</strong></label>
                                                                         <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountTotal" value="Ksh 0.00">
                                                                         <input type="hidden" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountTotalHidden" name="totalTax" value="Ksh 0.00">
+                                                                    </div>
+
+                                                                    <div class="d-flex justify-content-end w-100 mb-2" id="ExemptedContainer" style="display: none;">
+                                                                        <label class="me-2 border-end pe-3 text-end w-50"><strong id="taxLabel">Exempted</strong></label>
+                                                                        <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" name="Exempted[]" id="Exempted" value="Ksh 0.00">
                                                                     </div>
 
                                                                     <div class="d-flex justify-content-end w-100 mb-2" id="zeroRated&ExmptedContainer" style="display: none;">
