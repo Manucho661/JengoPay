@@ -30,10 +30,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Step 4: Update the expenses table
             if ($amount == 0) {
-                $status = 'unpaid';
+                $status = 'Unpaid';
             } elseif ($amount == $expected_amount) {
-                $status = 'paid';
-            } else {
+                $status = 'Paid';
+            } 
+            elseif($amount > $expected_amount){
+                $status = 'Overpaid';
+            }
+            else {
                 $status = 'partially paid';
             }
 

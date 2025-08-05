@@ -4,103 +4,13 @@ include_once 'actions/getSuppliers.php';
 $expenses = [];
 $monthlyTotals = array_fill(1, 12, 0);
 
-// === ✅ AJAX: Return Expense Details for Modal Popup ===
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['view_id'])) {
-    header('Content-Type: application/json');
-
-    try {
-        $stmt = $pdo->prepare("SELECT * FROM expenses WHERE id = ?");
-        $stmt->execute([$_GET['view_id']]);
-        $expense = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($expense) {
-            echo json_encode(['success' => true, 'data' => $expense]);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Expense not found']);
-        }
-    } catch (PDOException $e) {
-        echo json_encode(['success' => false, 'message' => 'DB error: ' . $e->getMessage()]);
-    }
-    exit;
-}
-
-// === ✅ AJAX: Return Monthly Totals ===
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['get_totals'])) {
-    $stmt = $pdo->query("SELECT MONTH(date) as month, SUM(total) as total FROM expenses GROUP BY MONTH(date)");
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $monthlyTotals[(int)$row['month']] = (float)$row['total'];
-    }
-    echo json_encode($monthlyTotals);
-    exit;
-}
-
-// === ✅ AJAX: Handle Expense Submission ===
-
-
-// === ✅ Normal Page Load ===
-try {
-    // Fetch all expenses and include the paid amount (if any)
-    $stmt = $pdo->query("
-        SELECT
-            expenses.*,
-            expense_payments.amount_paid AS amount_paid
-        FROM expenses
-        LEFT JOIN expense_payments
-        ON expenses.id = expense_payments.expense_id
-        ORDER BY expenses.created_at DESC
-    ");
-
-    $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // For summary section
-    $expenseItemsNumber = count($expenses);
-    $totalAmount = 0;
-    foreach ($expenses as $exp) {
-        $totalAmount += $exp['total'];
-    }
-    $stmt = $pdo->query("
-    SELECT
-        SUM(CASE WHEN status = 'paid' THEN total ELSE 0 END) AS total_paid,
-        SUM(CASE WHEN status = 'unpaid' THEN total ELSE 0 END) AS total_unpaid,
-        SUM(CASE WHEN status = 'partially paid' THEN total ELSE 0 END) AS partially_paid
-    FROM expenses
-");
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    $totalPaid = $row['total_paid'] ?? 0;
-    $totalUnpaid = $row['total_unpaid'] ?? 0;
-    $totalPartiallyPaid = $row['partially_paid'] ?? 0;
-
-    $pending = $totalUnpaid + $totalPartiallyPaid;
-
-    // Monthly totals (no changes here)
-    $stmt = $pdo->query("SELECT MONTH(expense_date) as month, SUM(total) as total FROM expenses GROUP BY MONTH(expense_date)");
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $monthlyTotals[(int)$row['month']] = (float)$row['total'];
-    }
-} catch (PDOException $e) {
-    $errorMessage = "❌ Failed to fetch expenses: " . $e->getMessage();
-}
-
+//Include expense Batches
+require_once 'actions/getExpenseBatches.php';
 // Include expense accounts
 require_once 'actions/getExpenseAccounts.php';
-
-// get buildings
-try {
-    $buildings = $pdo->prepare("SELECT * FROM buildings");
-    $buildings->execute();
-    $buildings = $buildings->fetchAll(PDO::FETCH_ASSOC);
-
-    if (empty($buildings)) {
-        echo "<p style='color:red;'>No buildings found in database.</p>";
-    }
-} catch (PDOException $e) {
-    $errorMessage = "❌ Failed to fetch buildings: " . $e->getMessage();
-    $buildings = []; // default to empty array if error occurs
-}
+// include buildings
+require_once 'actions/getBuildings.php'
 ?>
-
-
 
 <!doctype html>
 <html lang="en">
@@ -333,6 +243,7 @@ try {
                                 <div class="select-options" role="listbox">
                                     <div role="option" data-value="option1">Paid</div>
                                     <div role="option" data-value="option2">Pending</div>
+                                    <div role="option" data-value="option2">Overpaid</div>
                                 </div>
                             </div>
                         </div>
@@ -347,7 +258,7 @@ try {
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="fa fa-box icon"></i>
                                     <div>
-                                        <div class="summary-info-card-label">Total Expenses</div>
+                                        <div class="summary-info-card-label">Total Items</div>
                                         <b id="items" class="summary-info-card-value"><?php echo $expenseItemsNumber ?> Pieces</b>
                                     </div>
                                 </div>
@@ -359,7 +270,7 @@ try {
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="fa fa-calendar-alt icon"></i>
                                     <div>
-                                        <div class="summary-info-card-label">This Month</div>
+                                        <div class="summary-info-card-label">Totals</div>
                                         <b id="duration" class="summary-info-card-value"> KSH <?php echo $totalAmount ?>.00 </b>
                                     </div>
                                 </div>
@@ -491,15 +402,15 @@ try {
                                                                             <option value="" selected disabled>Select--</option>
                                                                             <option value="inclusive">VAT 16% Inclusive</option>
                                                                             <option value="exclusive">VAT 16% Exclusive</option>
-                                                                            <option value="zero">Zero Rated</option>
-                                                                            <option value="exempt">Exempted</option>
+                                                                            <option value="zeroRated">Zero Rated</option>
+                                                                            <option value="exempted">Exempted</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
 
                                                                 <!-- Discount -->
                                                                 <div class="col-md-2">
-                                                                    <label class="form-label fw-bold">Discount(KSH)</label>
+                                                                    <label class="form-label fw-bold">Discount(%)</label>
                                                                     <input type="number" class="form-control discount shadow-none rounded-1 mb-1" name="discount[]" placeholder="Ksh 0.00" required>
                                                                 </div>
 
@@ -541,6 +452,7 @@ try {
                                                                     <div class="d-flex justify-content-end w-100 mb-2" id="vatAmountExclusiveContainer" style="display: none !important;">
                                                                         <label class="me-2 border-end pe-3 text-end w-50"><strong id="taxLabel">VAT 16% (Exlusive):</strong></label>
                                                                         <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountExclusive" value="Ksh 1,500">
+
                                                                     </div>
 
                                                                     <div class="d-flex justify-content-end w-100 mb-2" id="vatAmountContainer" style="display: none;">
@@ -554,9 +466,9 @@ try {
                                                                         <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" name="Exempted[]" id="Exempted" value="Ksh 0.00">
                                                                     </div>
 
-                                                                    <div class="d-flex justify-content-end w-100 mb-2" id="zeroRated&ExmptedContainer" style="display: none;">
+                                                                    <div class="d-flex justify-content-end w-100 mb-2" id="zeroRatedContainer" style="display: none;">
                                                                         <label class="me-2 border-end pe-3 text-end w-50"><strong id="taxLabel">VAT 0%:</strong></label>
-                                                                        <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="zeroRated&Exmpted" value="Ksh 0.00">
+                                                                        <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="zeroRated" value="Ksh 0.00">
                                                                     </div>
 
                                                                     <div class="d-flex justify-content-end w-100 mb-2" id="grandDiscountContainer">
@@ -643,6 +555,8 @@ try {
 
                                                         if ($status === 'paid') {
                                                             $statusLabel = '<span style="background-color: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Paid</span>';
+                                                        } elseif ($status === 'overpaid') {
+                                                            $statusLabel = '<span style="background-color: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Overpaid</span>';
                                                         } elseif ($status === 'unpaid') {
                                                             $statusLabel = '<span style="background-color: #FFC107; color: #00192D; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Unpaid</span>';
                                                         } elseif ($status === 'partially paid') {
@@ -830,6 +744,8 @@ try {
                                                                 <strong>Note:</strong><br>
                                                                 This Expense Note Belongs to.<br>
                                                                 Silver Spoon Towers
+                                                                <br>
+                                                                <p class="text-danger">The paid amount is more than the requied</p>
                                                             </div>
                                                             <div class="col-6">
                                                                 <table class="table table-borderless table-sm text-end mb-0">
@@ -1100,20 +1016,6 @@ try {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         let expenseChart;
-
-        function updateExpenseChart() {
-            fetch('expense2.php?get_totals=1')
-                .then(res => res.json())
-                .then(monthlyTotals => {
-                    expenseChart.data.datasets[0].data = [
-                        monthlyTotals[1], monthlyTotals[2], monthlyTotals[3], monthlyTotals[4],
-                        monthlyTotals[5], monthlyTotals[6], monthlyTotals[7], monthlyTotals[8],
-                        monthlyTotals[9], monthlyTotals[10], monthlyTotals[11], monthlyTotals[12]
-                    ];
-                    expenseChart.update();
-                });
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
             const ctx = document.getElementById('monthlyExpenseChart').getContext('2d');
             expenseChart = new Chart(ctx, {
@@ -1164,7 +1066,7 @@ try {
     <!-- Expense modal -->
     <script>
         function openExpenseModal(expenseId) {
-            fetch(`actions/expenses/getExpense.php?id=${expenseId}`)
+            fetch(`actions/getExpenseBatch.php?id=${expenseId}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error("Failed to fetch data");
