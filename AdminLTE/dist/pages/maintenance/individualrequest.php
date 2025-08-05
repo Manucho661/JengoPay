@@ -258,24 +258,7 @@
       text-align: center;
     }
 
-    .availability-btn {
-      padding: 0.45rem 1.2rem;
-      background: #FFC107;
-      color: #000;
-      border: none;
-      border-radius: 30px;
-      font-weight: bold;
-      transition: 0.3s ease;
-    }
 
-    .availability-btn:hover {
-      background-color: #e0a800;
-    }
-
-    .availability-btn.active {
-      background-color: #28a745;
-      color: white;
-    }
 
     .photo-preview {
       border-radius: 10px;
@@ -336,24 +319,109 @@
       object-fit: cover;
     }
 
-    .availability-btn {
-      padding: 0.25rem 0.5rem;
-      font-size: 0.875rem;
-      color: #F54927;
-      border-radius: 0.2rem;
-      border: 1px solid #dee2e6;
-      background: #f8f9fa;
-    }
-
-    .availability-btn.active {
-      background: #d4edda;
-      border-color: #c3e6cb;
-      color: #155724;
-    }
 
     .active-request {
       background-color: #FFF7E0;
       border-left: 3px solid #FFC107;
+    }
+
+    /* Button Container */
+    /* Button Container */
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.5rem;
+    }
+
+    /* Base Button Styles */
+    .availability-btn,
+    .unassigned-btn,
+    .paid-btn {
+      padding: 0.625rem 1rem;
+      font-weight: 500;
+      width: 100%;
+      border: none;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Availability Button */
+    .availability-btn {
+      background-color: #6c757d;
+      color: white;
+    }
+
+    /* Unassigned Button */
+    .unassigned-btn {
+      background-color: white;
+      color: #00192D;
+      border: 1px solid #00192D !important;
+    }
+
+    /* Paid Button */
+    .paid-btn {
+      background-color: #FFC107;
+      color: #00192D;
+    }
+
+    /* Button Icons */
+    .availability-btn i,
+    .unassigned-btn i,
+    .paid-btn i {
+      width: 1.25rem;
+      text-align: center;
+      margin-right: 0.5rem;
+    }
+
+    /* Hover States */
+    .availability-btn:hover {
+      background-color: #5a6268;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .unassigned-btn:hover {
+      background-color: #f8f9fa;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .paid-btn:hover {
+      background-color: #e0a800;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Active States */
+    .availability-btn:active,
+    .unassigned-btn:active,
+    .paid-btn:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    /* Focus States */
+    .availability-btn:focus,
+    .unassigned-btn:focus,
+    .paid-btn:focus {
+      outline: none;
+      box-shadow: 0 0 0 0.25rem rgba(0, 25, 45, 0.25);
+    }
+
+    /* Secondary Buttons Container */
+    .secondary-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      width: 100%;
+      display: none;
+      /* Hidden by default */
     }
   </style>
 </head>
@@ -400,15 +468,20 @@
               <div class="request-sidebar rounded-4">
                 <h3><i class="fa-solid fa-screwdriver-wrench"></i>Request NO 40</h3>
                 <div class="d-flex flex-column gap-2 p-2">
-                  <button class="btn" style="background-color: #6c757d; color: white; border: none;">
+                  <!-- Availability Button -->
+                  <button id="availabilityBtn" class="btn availability-btn">
                     <i class="fas fa-ban me-2"></i> Unavailable
                   </button>
-                  <button class="btn" style="background-color: white; color: #00192D; border: 1px solid #00192D;">
-                    <i class="fas fa-user-clock me-2"></i> UnAssigned
-                  </button>
-                  <button class="btn" style="background-color: #FFC107; color: #00192D; border: none;">
-                    <i class="fas fa-check-circle me-2"></i> Paid
-                  </button>
+
+                  <!-- Secondary Buttons Container -->
+                  <div id="secondaryButtons" class="secondary-buttons">
+                    <button class="btn unassigned-btn">
+                      <i class="fas fa-user-clock me-2"></i> UnAssigned
+                    </button>
+                    <button class="btn paid-btn">
+                      <i class="fas fa-check-circle me-2"></i> Paid
+                    </button>
+                  </div>
                 </div>
 
                 <div class="search-bar rounded-2">
@@ -450,6 +523,7 @@
     const detailsPanel = document.getElementById('detailsPanel');
     const searchInput = document.getElementById('searchInput');
     let allRequests = [];
+    let currentRequestId = null;
 
     // Get status icon mapping
     const statusIcons = {
@@ -590,6 +664,7 @@
     });
 
     function showRequestDetails(req) {
+      currentRequestId = req.id;
       // Format date for details view
       const formattedDate = new Date(req.request_date).toLocaleDateString('en-US', {
         weekday: 'long',
@@ -598,100 +673,161 @@
         day: 'numeric'
       });
 
+      // Update the availability button based on the request's status
+      updateAvailabilityButton(req.availability);
+
       detailsPanel.innerHTML = `
-        <div class="container-fluid px-0" >
-          <!-- Row 1: Property, Unit, Request ID -->
-          <div class="row-card mb-3 p-3 rounded shadow-sm bg-white">
-            <div class="row gx-3 gy-3 p-3 rounded border-0" style="background-color: #fdfdfd; border: 1px solid #e0e0e0;">
-              <!-- Property -->
-              <div class="col-md-3">
-                <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                  <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                    <i class="fa-solid fa-building" style="color: #FFC107; font-size: 16px;"></i>
-                  </span>
-                  <span style="font-weight: 600;">Property</span>
-                </div>
-                <div style="margin-top: 6px; font-size: 15px; color: #333;">${req.residence}</div>
-              </div>
+        <div class="container-fluid px-0">
+            <!-- Row 1: Property, Unit, Request ID -->
+            <div class="row-card mb-3 p-3 rounded shadow-sm bg-white">
+                <div class="row gx-3 gy-3 p-3 rounded border-0" style="background-color: #fdfdfd; border: 1px solid #e0e0e0;">
+                    <!-- Property -->
+                    <div class="col-md-3">
+                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                            <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                                <i class="fa-solid fa-building" style="color: #FFC107; font-size: 16px;"></i>
+                            </span>
+                            <span style="font-weight: 600;">Property</span>
+                        </div>
+                        <div style="margin-top: 6px; font-size: 15px; color: #333;">${req.residence}</div>
+                    </div>
 
-              <!-- Unit -->
-              <div class="col-md-3">
-                <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                  <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                    <i class="fa-solid fa-door-closed" style="color: #FFC107; font-size: 16px;"></i>
-                  </span>
-                  <span style="font-weight: 600;">Unit</span>
-                </div>
-                <div style="margin-top: 6px; font-size: 15px; color: #333;">${req.unit}</div>
-              </div>
+                    <!-- Unit -->
+                    <div class="col-md-3">
+                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                            <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                                <i class="fa-solid fa-door-closed" style="color: #FFC107; font-size: 16px;"></i>
+                            </span>
+                            <span style="font-weight: 600;">Unit</span>
+                        </div>
+                        <div style="margin-top: 6px; font-size: 15px; color: #333;">${req.unit}</div>
+                    </div>
 
-              <!-- Request ID -->
-              <div class="col-md-3">
-                <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                  <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                    <i class="fa-solid fa-hashtag" style="color: #FFC107; font-size: 16px;"></i>
-                  </span>
-                  <span style="font-weight: 600;">Request ID</span>
-                </div>
-                <div style="margin-top: 6px; font-size: 15px; color: #333;">${req.id}</div>
-              </div>
+                    <!-- Request ID -->
+                    <div class="col-md-3">
+                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                            <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                                <i class="fa-solid fa-hashtag" style="color: #FFC107; font-size: 16px;"></i>
+                            </span>
+                            <span style="font-weight: 600;">Request ID</span>
+                        </div>
+                        <div style="margin-top: 6px; font-size: 15px; color: #333;">${req.id}</div>
+                    </div>
 
-              <!-- Status -->
-              <div class="col-md-3">
-                <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                  <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                    <i class="fa-solid fa-clipboard-check" style="color: #FFC107; font-size: 16px;"></i>
-                  </span>
-                  <span style="font-weight: 600;">Status</span>
+                    <!-- Status -->
+                    <div class="col-md-3">
+                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                            <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                                <i class="fa-solid fa-clipboard-check" style="color: #FFC107; font-size: 16px;"></i>
+                            </span>
+                            <span style="font-weight: 600;">Status</span>
+                        </div>
+                        <div style="margin-top: 6px; font-size: 15px; color: green;">${req.status}</div>
+                    </div>
                 </div>
-                <div style="margin-top: 6px; font-size: 15px; color: green;">${req.status}</div>
-              </div>
             </div>
-          </div>
-          <!-- Row 2: Category & Description -->
-          <div class="row-card mb-3 p-3 rounded shadow-sm bg-white">
-            <div class="row gx-3 gy-3 p-3 rounded border-0" style="border: 1px solid #e0e0e0;">
-              <div class="col-md-12 bg-white p-3">
-                <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                  <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                    <i class="fa-solid fa-align-left" style="color: white; font-size: 16px;"></i>
-                  </span>
-                  <span style="font-weight: 600;">Description</span>
+            <!-- Row 2: Category & Description -->
+            <div class="row-card mb-3 p-3 rounded shadow-sm bg-white">
+                <div class="row gx-3 gy-3 p-3 rounded border-0" style="border: 1px solid #e0e0e0;">
+                    <div class="col-md-12 bg-white p-3">
+                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                            <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                                <i class="fa-solid fa-align-left" style="color: white; font-size: 16px;"></i>
+                            </span>
+                            <span style="font-weight: 600;">Description</span>
+                        </div>
+                        <div style="margin-top: 6px; font-size: 15px; color: #333; line-height: 1.6;">${req.description}</div>
+                    </div>
                 </div>
-                <div style="margin-top: 6px; font-size: 15px; color: #333; line-height: 1.6;">${req.description}</div>
-              </div>
             </div>
-          </div>
-          <!-- Row 3: Photo -->
-          <div class="row-card mb-3 p-3 rounded shadow-sm bg-white">
-            <div class="detail-row mb-2">
-              <span class="detail-icon"><i class="fa-solid fa-image"></i></span>
-              <span class="detail-label">Image</span>
+            <!-- Row 3: Photo -->
+            <div class="row-card mb-3 p-3 rounded shadow-sm bg-white">
+                <div class="detail-row mb-2">
+                    <span class="detail-icon"><i class="fa-solid fa-image"></i></span>
+                    <span class="detail-label">Image</span>
+                </div>
+                <img src="${req.photo || 'https://via.placeholder.com/400x250?text=No+Photo'}" alt="Photo" class="photo-preview w-100 rounded">
             </div>
-            <img src="${req.photo || 'https://via.placeholder.com/400x250?text=No+Photo'}" alt="Photo" class="photo-preview w-100 rounded">
-          </div>
-          <!-- Row 4: Date, Status, Payment, Bid, Availability -->
-          <div class="row-card p-3 rounded shadow-sm bg-white">
-            <div class="row gx-2">
-              <div class="col-md-3 col-6 mb-2">
-                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-calendar"></i></span><span class="detail-label">Date:</span> ${formattedDate}</div>
-              </div>
-              <div class="col-md-3 col-6 mb-2">
-                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-money-bill"></i></span><span class="detail-label">Payment:</span> ${req.payment_status}</div>
-              </div>
-              <div class="col-md-3 col-6 mb-2">
-                <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-gavel"></i></span><span class="detail-label">Bid:</span> ${req.bid ?? 'N/A'}</div>
-              </div>
+            <!-- Row 4: Date, Status, Payment, Bid, Availability -->
+            <div class="row-card p-3 rounded shadow-sm bg-white">
+                <div class="row gx-2">
+                    <div class="col-md-3 col-6 mb-2">
+                        <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-calendar"></i></span><span class="detail-label">Date:</span> ${formattedDate}</div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-2">
+                        <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-money-bill"></i></span><span class="detail-label">Payment:</span> ${req.payment_status}</div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-2">
+                        <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-gavel"></i></span><span class="detail-label">Bid:</span> ${req.bid ?? 'N/A'}</div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>`;
     }
 
-    window.toggleAvailability = (btn) => {
-      const current = btn.textContent.trim();
-      btn.textContent = current === "Available" ? "Unavailable" : "Available";
-      btn.classList.toggle('active');
-    };
+    // New function to update button appearance
+    function updateAvailabilityButton(availability) {
+      const btn = document.getElementById('availabilityBtn');
+      const secondaryButtons = document.getElementById('secondaryButtons');
+
+      if (availability === 'available') {
+        btn.innerHTML = '<i class="fas fa-check me-2"></i> Available';
+        btn.style.backgroundColor = '#28a745';
+        secondaryButtons.style.display = 'flex';
+      } else {
+        btn.innerHTML = '<i class="fas fa-ban me-2"></i> Unavailable';
+        btn.style.backgroundColor = '#6c757d';
+        secondaryButtons.style.display = 'none';
+      }
+    }
+
+    // Updated toggleAvailability function
+    async function toggleAvailability() {
+      if (!currentRequestId) return;
+
+      const btn = document.getElementById('availabilityBtn');
+      const secondaryButtons = document.getElementById('secondaryButtons');
+      const isAvailable = btn.innerHTML.includes('Available');
+      const newStatus = isAvailable ? 'unavailable' : 'available';
+
+      try {
+        const response = await fetch('update_availability.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: `id=${currentRequestId}&availability=${newStatus}`
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          // Update the button appearance
+          if (newStatus === 'available') {
+            btn.innerHTML = '<i class="fas fa-check me-2"></i> Available';
+            btn.style.backgroundColor = '#28a745';
+            secondaryButtons.style.display = 'flex';
+          } else {
+            btn.innerHTML = '<i class="fas fa-ban me-2"></i> Unavailable';
+            btn.style.backgroundColor = '#6c757d';
+            secondaryButtons.style.display = 'none';
+          }
+
+          // Update the local data
+          const updatedRequest = allRequests.find(req => req.id === currentRequestId);
+          if (updatedRequest) {
+            updatedRequest.availability = newStatus;
+          }
+        } else {
+          console.error('Update failed:', data.error);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    // Initialize the button click handler
+    document.getElementById('availabilityBtn').addEventListener('click', toggleAvailability);
   </script>
   <script src="../../../dist/js/adminlte.js"></script>
 </body>

@@ -1471,7 +1471,9 @@ header {
                                 <!-- Form Actions -->
                                 <div class="form-actions">
                                     <div class="action-left">
-                                    <input type="file" name="attachment[]" multiple accept=".pdf,.jpg,.jpeg,.png,.docx" />
+                                        <button class="btn btn-outline">
+                                            <i class="fas fa-paperclip"></i> Attach File
+                                        </button>
                                     </div>
                                     <div class="action-right">
                                         <!-- <button class="btn btn-outline">

@@ -23,7 +23,7 @@ try {
         GROUP BY r.id
         ORDER BY r.request_date DESC
     ");
-    
+
     $stmt->execute();
     $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -31,4 +31,3 @@ try {
 } catch (Exception $e) {
     echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
 }
-?>
