@@ -462,6 +462,19 @@ require_once 'actions/getLiabilities.php';
                       </tr>
                       <?php
                       echo '<tr><td class="current-assets" style="color:green;">Current Liabilities:</td><td></td></tr>';
+                      foreach ($currentLiabilities as $item) {
+                        echo '<tr class="sub-current-assets">';
+                        echo '<td class="sub-category">' . htmlspecialchars($item['name']) . '</td>';
+                        echo '<td>' . number_format($item['amount'], 2) . '</td>';
+                        echo '</tr>';
+                      }
+                      echo '<tr class="sub-current-assets total fw-bold">';
+                      echo '<td class="sub-category">Total Current Liabilities</td>';
+                      echo '<td>' . number_format($totalCurrentLiabilities, 2) . '</td>';
+                      echo '</tr>';
+                      ?>
+                      <?php
+                      echo '<tr><td class="current-assets" style="color:green;">Non-Current Liabilities:</td><td></td></tr>';
                       foreach ($nonCurrentLiabilities as $item) {
                         echo '<tr class="sub-current-assets">';
                         echo '<td class="sub-category">' . htmlspecialchars($item['name']) . '</td>';
@@ -469,10 +482,9 @@ require_once 'actions/getLiabilities.php';
                         echo '</tr>';
                       }
                       echo '<tr class="sub-current-assets total fw-bold">';
-                      echo '<td class="sub-category">Total Non-Current Assets</td>';
+                      echo '<td class="sub-category">Total Non-Current Liabilities</td>';
                       echo '<td>' . number_format($totalNonCurrentLiabilities, 2) . '</td>';
                       echo '</tr>';
-
                       ?>
                       <tr class="fw-bold">
                         <td>Total Liabilities</td>

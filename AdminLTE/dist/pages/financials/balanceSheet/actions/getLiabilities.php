@@ -15,7 +15,7 @@ try {
     $nonCurrentLiabilities = [];
 
     foreach ($liabilities as $liability) {
-        if ($liability['category'] === 'Current Asset') {
+        if ($liability['category'] === 'Current Liability') {
             $currentLiabilities[] = $liability;
         } else {
             $nonCurrentLiabilities[] = $liability;

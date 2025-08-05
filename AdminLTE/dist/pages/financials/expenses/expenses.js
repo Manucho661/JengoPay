@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log('total fired');
     const vatInclusiveContainer = document.getElementById('vatAmountInclusiveContainer');
     const vatAmountContainer = document.getElementById('vatAmountContainer');
-    const zeroRatedExmptedContainer = document.getElementById('zeroRated&ExmptedContainer');
+    const zeroRatedContainer = document.getElementById('zeroRatedContainer');
     const exemptedContainer = document.getElementById('ExemptedContainer');
     let subTotal = 0;
     let vatAmountInclusive = 0;
@@ -201,7 +201,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (item_total) {
         // Extract discount From total
-        total = total - discount;
+        discountAmount= (discount/100)*total;
+        console.log(discountAmount);
+        total = total - discountAmount;
         item_total.value = 'Ksh ' + total.toFixed(2);
       }
 
@@ -222,11 +224,11 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       vatAmountContainer.style.setProperty('display', 'none', 'important');
     }
-    if (isExempted || isZeroRated) {
-      zeroRatedExmptedContainer.style.setProperty('display', 'flex', 'important');
+    if (isZeroRated) {
+      zeroRatedContainer.style.setProperty('display', 'flex', 'important');
 
     } else {
-      zeroRatedExmptedContainer.style.setProperty('display', 'none', 'important');
+      zeroRatedContainer.style.setProperty('display', 'none', 'important');
     }
 
     if (isExempted) {
@@ -369,7 +371,7 @@ document.getElementById("payExpenseForm").addEventListener("submit", function (e
   for (let [key, value] of formData.entries()) {
     console.log(`${key}: ${value}`);
   }
-  fetch("actions/expenses/payExpense.php", {
+  fetch("actions/payExpense.php", {
     method: "POST",
     body: formData,
   })
