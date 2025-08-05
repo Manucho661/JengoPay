@@ -120,6 +120,36 @@ try {
       ]);
   }
 
+  // --- Handle file uploads ---
+if (!empty($_FILES['attachment']['name'][0])) {
+  $uploadDir = 'uploads/invoice_attachments/';
+  if (!is_dir($uploadDir)) {
+      mkdir($uploadDir, 0755, true);
+  }
+
+  $fileInsertStmt = $pdo->prepare("
+      INSERT INTO invoice_attachments (invoice_number, file_name, file_path)
+      VALUES (?, ?, ?)
+  ");
+
+  foreach ($_FILES['attachment']['tmp_name'] as $index => $tmpPath) {
+      if ($_FILES['attachment']['error'][$index] === UPLOAD_ERR_OK) {
+          $originalName = basename($_FILES['attachment']['name'][$index]);
+          $uniqueName = time() . '_' . $originalName;
+          $targetPath = $uploadDir . $uniqueName;
+
+          if (move_uploaded_file($tmpPath, $targetPath)) {
+              $fileInsertStmt->execute([
+                  $invoice_number,
+                  $originalName,
+                  $targetPath
+              ]);
+          }
+      }
+  }
+}
+
+
 
     $pdo->commit();
 
