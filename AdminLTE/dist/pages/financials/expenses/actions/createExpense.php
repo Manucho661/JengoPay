@@ -32,13 +32,14 @@
         $taxes = $_POST['taxes'] ?? [];
         $item_totals = $_POST['item_total'] ?? [];
         $discounts = $_POST['discount'] ?? [];
-        $stmtItem = $pdo->prepare("INSERT INTO expense_items (item_account_code, expense_id, description, qty, unit_price, item_untaxed_amount, taxes, item_total, discount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmtItem = $pdo->prepare("INSERT INTO expense_items (item_account_code, expense_id, building_id, description, qty, unit_price, item_untaxed_amount, taxes, item_total, discount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
         for ($i = 0; $i < count($item_account_codes); $i++) {
             $item_untaxed_amount= $quantities[$i] *$unit_prices[$i];
         $stmtItem->execute([
             $item_account_codes[$i],
             $expense_id,
+            $building_id,
             $descriptions[$i],
             $quantities[$i],
             $unit_prices[$i],
@@ -51,7 +52,7 @@
 
         $pdo->commit();
         echo "Inserted successfully with ID: $expense_id";
-        
+
     } catch (Exception $e) {
         $pdo->rollBack();
         echo "Error: " . $e->getMessage();
