@@ -283,7 +283,7 @@ require_once 'actions/getBuildings.php'
                                     <i class="fa fa-check-circle icon"></i>
                                     <div>
                                         <div class="summary-info-card-label">Paid</div>
-                                        <b id="paid" class="summary-info-card-value"> KSH <?php echo $totalPaid ?></b>
+                                        <b id="paid" class="summary-info-card-value"> KSH <?php echo $totalAmountSend ?></b>
                                     </div>
                                 </div>
                             </div>
@@ -294,7 +294,7 @@ require_once 'actions/getBuildings.php'
                                     <i class="fa fa-hourglass-half icon"></i>
                                     <div>
                                         <div class="summary-info-card-label">Pending </div>
-                                        <b id="pending" class="summary-info-card-value">KSH <?php echo $pending ?></b>
+                                        <b id="pending" class="summary-info-card-value">KSH <?php echo $TotalRemaining; ?></b>
                                     </div>
                                 </div>
                             </div>

@@ -40,10 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             else {
                 $status = 'partially paid';
             }
-
+            // update status
             $update = $pdo->prepare("UPDATE expenses SET status = ? WHERE id = ?");
             $update->execute([$status, $expense_id]);
-
             $pdo->commit();
 
             echo "✅ $status";
