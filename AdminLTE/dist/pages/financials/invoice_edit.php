@@ -1137,7 +1137,9 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
                             <?php endforeach; ?>
                         </select>
                     </td>
-                    <td><textarea name="description[]" placeholder="Description" rows="1" required></textarea></td>
+                    <td style="min-width: 200px;">
+          <textarea name="description[]" class="form-control" placeholder="Description" rows="1" required></textarea>
+        </td>
                     <td><input type="number" name="quantity[]" class="form-control quantity" required></td>
                     <td><input type="number" name="unit_price[]" class="form-control unit-price" required></td>
                     <td>
@@ -1174,9 +1176,7 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
                             <!-- Form Actions -->
                             <div class="form-actions">
                                 <div class="action-left">
-                                    <button class="btn btn-outline">
-                                        <i class="fas fa-paperclip"></i> Attach File
-                                    </button>
+                                <input type="file" name="attachment[]" multiple accept=".pdf,.jpg,.jpeg,.png,.docx" />
                                 </div>
                                 <div class="action-right">
                                     <button type="submit" style="background-color: #00192D; color: #FFC107; padding: 8px 16px; border: none; border-radius: 4px;">
@@ -1194,52 +1194,181 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
 
 
     <script>
-document.addEventListener("DOMContentLoaded", function () {
+  document.addEventListener("DOMContentLoaded", function () {
     const addMoreBtn = document.getElementById("addMoreBtn");
     const itemsBody = document.getElementById("itemsBody");
 
-    addMoreBtn.addEventListener("click", function () {
-        const newRow = document.createElement("tr");
+    function formatNumber(num) {
+      return num.toLocaleString('en-KE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
 
-        newRow.innerHTML = `
-            <td>
-                <select name="account_item[]" class="select-account searchable-select" required>
-                    <option value="" disabled selected>Select Account Item</option>
-                    <?php foreach ($accountItems as $item): ?>
-                        <option value="<?= htmlspecialchars($item['account_code']) ?>">
-                            <?= htmlspecialchars($item['account_name']) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </td>
-            <td><textarea name="description[]" placeholder="Description" rows="1" required></textarea></td>
-            <td><input type="number" name="quantity[]" class="form-control quantity" required></td>
-            <td><input type="number" name="unit_price[]" class="form-control unit-price" required></td>
-            <td>
-                <select name="vat_type[]" class="form-select vat-option" required>
-                    <option value="" disabled selected>Select Option</option>
-                    <option value="inclusive">VAT 16% Inclusive</option>
-                    <option value="exclusive">VAT 16% Exclusive</option>
-                    <option value="zero">Zero Rated</option>
-                    <option value="exempted">Exempted</option>
-                </select>
-            </td>
-            <td><input type="number" name="total[]" class="form-control total" readonly></td>
-            <td><button type="button" class="btn btn-danger btn-sm delete-btn"><i class="fa fa-trash"></i></button></td>
-        `;
+    function calculateRow(row) {
+      const unitInput = row.querySelector(".unit-price");
+      const quantityInput = row.querySelector(".quantity");
+      const vatSelect = row.querySelector(".vat-option");
+      const totalInput = row.querySelector(".total");
 
-        itemsBody.appendChild(newRow);
-    });
+      const unitPrice = parseFloat(unitInput?.value) || 0;
+      const quantity = parseFloat(quantityInput?.value) || 0;
+      let subtotal = unitPrice * quantity;
 
-    // Event delegation to delete dynamically added rows
-    itemsBody.addEventListener("click", function (e) {
-        if (e.target.closest(".delete-btn")) {
-            const row = e.target.closest("tr");
-            row.remove();
+      let vatAmount = 0;
+      let total = subtotal;
+      const vatType = vatSelect?.value;
+
+      if (vatType === "inclusive") {
+        subtotal = subtotal / 1.16;
+        vatAmount = total - subtotal;
+      } else if (vatType === "exclusive") {
+        vatAmount = subtotal * 0.16;
+        total += vatAmount;
+      } else if (vatType === "zero" || vatType === "exempted") {
+        vatAmount = 0;
+        total = subtotal;
+      }
+
+      totalInput.value = formatNumber(total);
+      return { subtotal, vatAmount, total, vatType };
+    }
+
+    function updateTotalAmount() {
+      let subtotalSum = 0, taxSum = 0, grandTotal = 0;
+      let vat16Used = false, vat0Used = false, exemptedUsed = false;
+
+      document.querySelectorAll("#itemsBody tr").forEach(row => {
+        if (row.querySelector(".unit-price")) {
+          const { subtotal, vatAmount, total, vatType } = calculateRow(row);
+          subtotalSum += subtotal;
+          taxSum += vatAmount;
+          grandTotal += total;
+
+          if (vatType === "inclusive" || vatType === "exclusive") {
+            vat16Used = true;
+          } else if (vatType === "zero") {
+            vat0Used = true;
+          } else if (vatType === "exempted") {
+            exemptedUsed = true;
+          }
         }
+      });
+
+      createOrUpdateSummaryTable({ subtotalSum, taxSum, grandTotal, vat16Used, vat0Used, exemptedUsed });
+    }
+
+    function createOrUpdateSummaryTable({ subtotalSum, taxSum, grandTotal, vat16Used, vat0Used, exemptedUsed }) {
+      let summaryTable = document.querySelector(".summary-table");
+
+      if (!summaryTable) {
+        summaryTable = document.createElement("table");
+        summaryTable.className = "summary-table table table-bordered";
+        summaryTable.style = "width: 20%; float: right; font-size: 0.8rem; margin-top: 10px;";
+        summaryTable.innerHTML = `<tbody></tbody>`;
+        document.querySelector(".items-table").after(summaryTable);
+      }
+
+      const tbody = summaryTable.querySelector("tbody");
+      tbody.innerHTML = `
+        <tr>
+          <th style="width: 50%; padding: 5px; text-align: left;">Sub-total</th>
+          <td><input type="text" class="form-control" value="${formatNumber(subtotalSum)}" readonly style="padding: 5px;"></td>
+        </tr>
+        ${vat16Used ? `
+        <tr>
+          <th style="padding: 5px;">VAT 16%</th>
+          <td><input type="text" class="form-control" value="${formatNumber(taxSum)}" readonly style="padding: 5px;"></td>
+        </tr>` : ''}
+        ${vat0Used ? `
+        <tr>
+          <th style="padding: 5px;">VAT 0%</th>
+          <td><input type="text" class="form-control" value="0.00" readonly style="padding: 5px;"></td>
+        </tr>` : ''}
+        ${exemptedUsed ? `
+        <tr>
+          <th style="padding: 5px;">Exempted</th>
+          <td><input type="text" class="form-control" value="0.00" readonly style="padding: 5px;"></td>
+        </tr>` : ''}
+        <tr>
+          <th style="padding: 5px;">Total</th>
+          <td><input type="text" class="form-control" value="${formatNumber(grandTotal)}" readonly style="padding: 5px;"></td>
+        </tr>
+      `;
+    }
+
+    function attachEvents(row) {
+      ["input", "change"].forEach(evt => {
+        row.querySelectorAll(".unit-price, .quantity, .vat-option").forEach(input => {
+          input.addEventListener(evt, updateTotalAmount);
+        });
+      });
+    }
+
+    addMoreBtn.addEventListener("click", function () {
+      const newRow = document.createElement("tr");
+
+      newRow.innerHTML = `
+       <td style="min-width: 180px;">
+    <select name="account_item[]" class="form-select searchable-select" required>
+      <option value="" disabled selected>Select Account Item</option>
+      <?php foreach ($accountItems as $item): ?>
+        <option value="<?= htmlspecialchars($item['account_code']) ?>">
+          <?= htmlspecialchars($item['account_name']) ?>
+        </option>
+      <?php endforeach; ?>
+    </select>
+  </td>
+
+  <td style="min-width: 200px;">
+    <textarea name="description[]" class="form-control" placeholder="Description" rows="1" required></textarea>
+  </td>
+
+  <td style="min-width: 100px;">
+    <input type="number" name="quantity[]" class="form-control quantity" step="0.01" required>
+  </td>
+
+  <td style="min-width: 120px;">
+    <input type="number" name="unit_price[]" class="form-control unit-price" step="0.01" required>
+  </td>
+
+  <td style="min-width: 180px;">
+    <select name="vat_type[]" class="form-select vat-option" required>
+      <option value="" disabled selected>Select Option</option>
+      <option value="inclusive">VAT 16% Inclusive</option>
+      <option value="exclusive">VAT 16% Exclusive</option>
+      <option value="zero">Zero Rated</option>
+      <option value="exempted">Exempted</option>
+    </select>
+  </td>
+
+  <td style="min-width: 120px;">
+    <input type="text" name="total[]" class="form-control total" readonly>
+  </td>
+
+  <td style="min-width: 50px; text-align: center;">
+    <button type="button" class="btn btn-danger btn-sm delete-btn">
+      <i class="fa fa-trash"></i>
+    </button>
+  </td>
+      `;
+
+      itemsBody.appendChild(newRow);
+      attachEvents(newRow);
+      updateTotalAmount();
     });
-});
+
+    // Delete row
+    itemsBody.addEventListener("click", function (e) {
+      if (e.target.closest(".delete-btn")) {
+        e.target.closest("tr").remove();
+        updateTotalAmount();
+      }
+    });
+
+    // Attach events to any existing rows
+    document.querySelectorAll("#itemsBody tr").forEach(attachEvents);
+    updateTotalAmount();
+  });
 </script>
+
 
 <script src="invoice.js"></script>
 

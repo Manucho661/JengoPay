@@ -85,11 +85,12 @@ try {
 
     // --- Insert Line Items into invoice_items ---
     $itemStmt = $pdo->prepare("
-        INSERT INTO invoice_items (
-            invoice_number, account_item, description,
-            quantity, unit_price, vat_type, sub_total, taxes, total
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ");
+    INSERT INTO invoice_items (
+        invoice_number, tenant, building_id, account_item, description,
+        quantity, unit_price, vat_type, sub_total, taxes, total
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+");
+
 
     foreach ($account_items as $i => $item) {
       $qty = floatval($quantities[$i]);
@@ -107,17 +108,31 @@ try {
 
       $line_total = ($vat === 'exclusive') ? $sub_total + $tax : $sub_total;
 
+      // $itemStmt->execute([
+      //     $invoice_number,
+      //     trim($item),
+      //     trim($descriptions[$i]),
+      //     $qty,
+      //     $price,
+      //     $vat,
+      //     $sub_total,   // Corrected: subtotal now goes here
+      //     $tax,         // Corrected: tax now goes here
+      //     $line_total   // Corrected: total goes last
+      // ]);
       $itemStmt->execute([
-          $invoice_number,
-          trim($item),
-          trim($descriptions[$i]),
-          $qty,
-          $price,
-          $vat,
-          $sub_total,   // Corrected: subtotal now goes here
-          $tax,         // Corrected: tax now goes here
-          $line_total   // Corrected: total goes last
-      ]);
+        $invoice_number,
+        $tenant_id,          // added tenant
+        $building_id,        // added building_id
+        trim($item),
+        trim($descriptions[$i]),
+        $qty,
+        $price,
+        $vat,
+        $sub_total,
+        $tax,
+        $line_total
+    ]);
+
   }
 
   // --- Handle file uploads ---
