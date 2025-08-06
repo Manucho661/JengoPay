@@ -1,6 +1,13 @@
 <?php
 require_once 'actions/getLiabilities.php';
+require_once 'actions/getEquity.php';
 
+// formating negative numbers
+function formatAccounting($amount) {
+  return $amount < 0
+    ? '(' . number_format(abs($amount), 2) . ')'
+    : number_format($amount, 2);
+}
 ?>
 
 <!doctype html>
@@ -98,12 +105,17 @@ require_once 'actions/getLiabilities.php';
     font-weight: 600;
     font-size: 20px;
   }
-  .sub-current-assets{
-      font-size: 20px;
+
+  .sub-current-assets {
+    font-size: 20px;
   }
-  .current-assets{
+
+  .current-assets {
     font-size: 14px;
     font-weight: bold;
+  }
+  td{
+    font-size: 14px;
   }
 </style>
 
@@ -444,7 +456,7 @@ require_once 'actions/getLiabilities.php';
 
                       <?php
                       echo '<tr class="fw-bold">';
-                      echo '<td>Total Assets</td>';
+                      echo '<td> <div style="font-size:16px;">Total Assets </div> </td>';
                       echo '<td>' . number_format($totalAssets, 2) . '</td>';
                       echo '</tr>';
 
@@ -486,10 +498,13 @@ require_once 'actions/getLiabilities.php';
                       echo '<td>' . number_format($totalNonCurrentLiabilities, 2) . '</td>';
                       echo '</tr>';
                       ?>
-                      <tr class="fw-bold">
-                        <td>Total Liabilities</td>
-                        <td>25,000</td>
-                      </tr>
+                      <?php
+                      echo '<tr class="fw-bold">';
+                      echo '<td> <div style="font-size:16px;">Total Liabilities </div> </td>';
+                      echo '<td>' . number_format($totalLiabilities, 2) . '</td>';
+                      echo '</tr>';
+
+                      ?>
                       <!-- Equity Section -->
                       <tr class="fw-bold">
                         <td></td>
@@ -500,23 +515,27 @@ require_once 'actions/getLiabilities.php';
                         <td class="main-category"><b>Equity</b> </td>
                         <td></td>
                       </tr>
-                      <tr class="sub-current-assets">
-                        <td class="sub-category">Owner’s Capital</td>
-                        <td>40,000</td>
-                      </tr>
-                      <tr class="sub-current-assets">
-                        <td class="sub-category">Retained Earnings</td>
-                        <td>17,000</td>
-                      </tr>
-                      <tr class="sub-current-assets total" class="fw-bold">
-                        <td class="sub-category">Total Equity</td>
-                        <td>57,000</td>
-                      </tr>
+                      <?php
+                      foreach ($owners_equities as $item) {
+                        echo '<tr class="sub-current-assets">';
+                        echo '<td class="sub-category">' . htmlspecialchars($item['name']) . '</td>';
+                        echo '<td>' . formatAccounting($item['amount']) . '</td>';
+                        echo '</tr>';
+                      }
+
+                      echo '<tr class="sub-current-assets total fw-bold">';
+                      echo '<td class="sub-category">Total Equity</td>';
+                      echo '<td>' . formatAccounting($totalEquity) . '</td>';
+                      echo '</tr>';
+
+                      ?>
                       <!-- Total Liabilities & Equity -->
-                      <tr class="fw-bold">
-                        <td>Total Liabilities & Equity</td>
-                        <td>82,000</td>
-                      </tr>
+                       <?php
+                      echo '<tr class="fw-bold">';
+                      echo '<td> <div style="font-size:16px;">Total Liabilities & Equity </div> </td>';
+                      echo '<td>' . number_format($totalLiabilities + $totalEquity, 2) . '</td>';
+                      echo '</tr>';
+                      ?>
                     </tbody>
                   </table>
                 </div>

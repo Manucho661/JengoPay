@@ -184,12 +184,12 @@ document.addEventListener("DOMContentLoaded", function () {
         total = unitPrice * qty * 1.16;
         itemTaxExclusive = unitPrice * qty * 0.16;
 
-      } else if (taxOption === 'zero') {
+      } else if (taxOption === 'zeroRated') {
         isZeroRated = true;
         total = unitPrice * qty;
         itemTax = 0;
         document.getElementById('taxLabel').textContent = "VAT 0%:";
-      } else if (taxOption === 'exempt') {
+      } else if (taxOption === 'exempted') {
         isExempted = true;
         total = unitPrice * qty;
         itemTax = 0;
@@ -202,14 +202,12 @@ document.addEventListener("DOMContentLoaded", function () {
       if (item_total) {
         // Extract discount From total
         discountAmount= (discount/100)*total;
-        console.log(discountAmount);
         total = total - discountAmount;
         item_total.value = 'Ksh ' + total.toFixed(2);
       }
 
       // Remove discount, remove inclusive tax, add exclusive tax
-      subTotal += (total - itemTaxInclusive + itemTaxExclusive);
-      console.log(total);
+      subTotal += total;
       vatAmountInclusive += itemTaxInclusive;
       vatAmountExclusive += itemTaxExclusive;
       totalVat = vatAmountInclusive + vatAmountExclusive;
@@ -380,7 +378,7 @@ document.getElementById("payExpenseForm").addEventListener("submit", function (e
       console.log("Server response:", data);
 
       // ✅ Reload the page without resubmission
-      window.location.href = window.location.href;
+      // window.location.href = window.location.href;
     })
     .catch(error => {
       console.error("Error submitting form:", error);
