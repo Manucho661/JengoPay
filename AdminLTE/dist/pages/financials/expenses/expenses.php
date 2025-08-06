@@ -347,7 +347,7 @@ require_once 'actions/getBuildings.php'
                                                         <div class="col-md-3">
                                                             <label class="form-label fw-bold">Supplier</label>
                                                             <div class="combo-box">
-                                                                <input type="text" class="form-control rounded-1 shadow-none combo-input" placeholder="Search or select...">
+                                                                <input type="text" class="form-control rounded-1 shadow-none combo-input" name="supplier_name" placeholder="Search or select...">
                                                                 <button class="combo-button">▼</button>
                                                                 <ul class="combo-options">
                                                                     <?php foreach ($suppliers as $supplier): ?>
@@ -356,7 +356,7 @@ require_once 'actions/getBuildings.php'
                                                                         </li>
                                                                     <?php endforeach; ?>
                                                                 </ul>
-                                                                <input type="hidden" class="supplier-hidden-input" name="supplier">
+                                                                <input type="hidden" class="supplier-hidden-input" name="supplier_id">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -419,6 +419,7 @@ require_once 'actions/getBuildings.php'
                                                                     <div class="flex-grow-1 me-2">
                                                                         <label class="form-label fw-bold">Total (KSH)</label>
                                                                         <input type="text" class="form-control item-total shadow-none rounded-1 mb-1" placeholder="Ksh 0.00" name="item_total[]" required readonly />
+                                                                        <input type="hidden" class="form-control item_totalForStorage shadow-none rounded-1 mb-1" placeholder="Ksh 0.00" name="item_totalForStorage[]" required readonly />
                                                                     </div>
                                                                     <div class="d-flex align-items-end">
                                                                         <label class="form-label fw-bold invisible">X</label>
@@ -611,7 +612,7 @@ require_once 'actions/getBuildings.php'
 
                                                         <div class="mb-3">
                                                             <label for="amount" class="form-label">Amount to Pay(KSH)</label>
-                                                            <input type="number" class="form-control shadow-none rounded-1" id="amountToPay" style="font-weight: 600;" name="amountToPay" value="1200" required>
+                                                            <input type="number" step="0.01" class="form-control shadow-none rounded-1" id="amountToPay" style="font-weight: 600;" name="amountToPay" value="1200" required>
                                                         </div>
 
                                                         <div class="mb-3">
@@ -745,7 +746,7 @@ require_once 'actions/getBuildings.php'
                                                                 This Expense Note Belongs to.<br>
                                                                 Silver Spoon Towers
                                                                 <br>
-                                                                <p class="text-danger">The paid amount is more than the requied</p>
+                                                                <p class="text-danger" id="overPaymentNote" style="display:none">The paid amount is more than the requied</p>
                                                             </div>
                                                             <div class="col-6">
                                                                 <table class="table table-borderless table-sm text-end mb-0">
@@ -1092,11 +1093,16 @@ require_once 'actions/getBuildings.php'
                     const status = expense.status || 'paid'; // Defaulting to 'paid' if status is not available
                     const statusLabelElement = document.getElementById('expenseModalPaymentStatus'); // ID instead of class
                     // Check the status and apply the appropriate class and text
-                    if (expense.status === "paid") {
+                    if (expense.status === "Paid") {
                         statusLabelElement.textContent = "PAID";
                         statusLabelElement.classList.remove("diagonal-unpaid-label"); // Remove the unpaid
                         statusLabelElement.classList.add("diagonal-paid-label");
-                    } else if (expense.status === "partially paid") {
+                    } else if(expense.status === "Overpaid"){
+                        statusLabelElement.textContent = "PAID";
+                        statusLabelElement.classList.remove("diagonal-unpaid-label"); // Remove the unpaid
+                        statusLabelElement.classList.add("diagonal-paid-label");
+                        document.getElementById("overPaymentNote").style.display="block";
+                    }else if (expense.status === "partially paid") {
                         statusLabelElement.textContent = "PARTIALLY PAID";
                         statusLabelElement.classList.remove("diagonal-unpaid-label"); // Remove the unpaid
                         statusLabelElement.classList.add("diagonal-partially-paid-label");
@@ -1113,8 +1119,8 @@ require_once 'actions/getBuildings.php'
                             <td class="text-end">${item.qty || 0}</td>
                             <td class="text-end">KES ${parseFloat(item.unit_price || 0).toLocaleString()}</td>
                             <td class="text-end">${item.taxes || '—'}</td>
-                            <td class="text-end">KES ${item.discount || '—'}</td> <!-- Update if you have discount data -->
-                            <td class="text-end">KES ${(item.qty * item.unit_price).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                            <td class="text-end">${item.discount || '—'}%</td> <!-- Update if you have discount data -->
+                            <td class="text-end">KES ${parseFloat(item.total || 0).toLocaleString()} </td>
                         `;
                         tableBody.appendChild(row);
                     });

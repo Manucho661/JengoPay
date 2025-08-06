@@ -1,62 +1,86 @@
 <?php
- include '../../../db/connect.php';
+include '../../../db/connect.php';
 
- if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         // Show errors during development
         ini_set('display_errors', 1);
         error_reporting(E_ALL);
-
-        // Dump post data
-        // var_dump($_POST); exit;
 
         $pdo->beginTransaction();
 
         $expense_date = $_POST['date'] ?? null;
         $expense_no = $_POST['expense_no'] ?? null;
         $building_id = $_POST['building_id'] ?? null;
-        $supplier = $_POST['supplier'] ?? null;
-        $untaxedAmount = $_POST['untaxedAmount'];
+        $supplier_name = $_POST['supplier_name'] ?? null;
+        $supplier_id = $_POST['supplier_id'] ?? null;
+        $untaxedAmount = $_POST['untaxedAmount'] ?? 0.00;
         $totalTax = $_POST['totalTax'] ?? 0.00;
         $total = $_POST['total'] ?? 0.00;
 
-        $stmt = $pdo->prepare("INSERT INTO expenses (supplier_id, building_id, expense_date, expense_no, supplier,untaxed_amount, total_taxes, total) VALUES (?,?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$supplier, $building_id, $expense_date, $expense_no, $supplier, $untaxedAmount, $totalTax, $total]);
+        // Step 1: Create new supplier if supplier_id is empty
+        if (empty($supplier_id) && !empty($supplier_name)) {
+            $stmt = $pdo->prepare("INSERT INTO suppliers (supplier_name, time_stamp) VALUES (?, NOW())");
+            $stmt->execute([$supplier_name]);
+            $supplier_id = $pdo->lastInsertId();
+        }
+
+        // Step 2: Insert into expenses
+        $stmt = $pdo->prepare("INSERT INTO expenses (
+            supplier_id, building_id, expense_date, expense_no, supplier,
+            untaxed_amount, total_taxes, total
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+
+        $stmt->execute([
+            $supplier_id,
+            $building_id,
+            $expense_date,
+            $expense_no,
+            $supplier_name, // save visible name too (redundantly stored in 'supplier' column)
+            $untaxedAmount,
+            $totalTax,
+            $total
+        ]);
 
         $expense_id = $pdo->lastInsertId();
 
+        // Step 3: Insert expense items
         $item_account_codes = $_POST['item_account_code'] ?? [];
         $descriptions = $_POST['description'] ?? [];
         $quantities = $_POST['qty'] ?? [];
         $unit_prices = $_POST['unit_price'] ?? [];
         $taxes = $_POST['taxes'] ?? [];
-        $item_totals = $_POST['item_total'] ?? [];
+        $item_totals = $_POST['item_totalForStorage'] ?? [];
         $discounts = $_POST['discount'] ?? [];
-        $stmtItem = $pdo->prepare("INSERT INTO expense_items (item_account_code, expense_id, building_id, description, qty, unit_price, item_untaxed_amount, taxes, item_total, discount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+        $stmtItem = $pdo->prepare("INSERT INTO expense_items (
+            item_account_code, expense_id, building_id, description, qty,
+            unit_price, item_untaxed_amount, taxes, item_total, discount
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
         for ($i = 0; $i < count($item_account_codes); $i++) {
-            $item_untaxed_amount= $quantities[$i] *$unit_prices[$i];
-        $stmtItem->execute([
-            $item_account_codes[$i],
-            $expense_id,
-            $building_id,
-            $descriptions[$i],
-            $quantities[$i],
-            $unit_prices[$i],
-            $item_untaxed_amount,
-            $taxes[$i],
-            $item_totals[$i],
-            $discounts[$i]
-        ]);
+            $item_untaxed_amount = $quantities[$i] * $unit_prices[$i];
+
+            $stmtItem->execute([
+                $item_account_codes[$i],
+                $expense_id,
+                $building_id,
+                $descriptions[$i],
+                $quantities[$i],
+                $unit_prices[$i],
+                $item_untaxed_amount,
+                $taxes[$i],
+                $item_totals[$i],
+                $discounts[$i]
+            ]);
         }
 
         $pdo->commit();
-        echo "Inserted successfully with ID: $expense_id";
+        echo "Inserted successfully with Expense ID: $expense_id";
 
     } catch (Exception $e) {
         $pdo->rollBack();
         echo "Error: " . $e->getMessage();
     }
 }
-
 ?>

@@ -3,7 +3,8 @@ require_once 'actions/getLiabilities.php';
 require_once 'actions/getEquity.php';
 
 // formating negative numbers
-function formatAccounting($amount) {
+function formatAccounting($amount)
+{
   return $amount < 0
     ? '(' . number_format(abs($amount), 2) . ')'
     : number_format($amount, 2);
@@ -114,7 +115,8 @@ function formatAccounting($amount) {
     font-size: 14px;
     font-weight: bold;
   }
-  td{
+
+  td {
     font-size: 14px;
   }
 </style>
@@ -527,10 +529,9 @@ function formatAccounting($amount) {
                       echo '<td class="sub-category">Total Equity</td>';
                       echo '<td>' . formatAccounting($totalEquity) . '</td>';
                       echo '</tr>';
-
                       ?>
                       <!-- Total Liabilities & Equity -->
-                       <?php
+                      <?php
                       echo '<tr class="fw-bold">';
                       echo '<td> <div style="font-size:16px;">Total Liabilities & Equity </div> </td>';
                       echo '<td>' . number_format($totalLiabilities + $totalEquity, 2) . '</td>';
