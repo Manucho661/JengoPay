@@ -664,13 +664,19 @@ $formattedNetProfit = number_format($netProfit, 2);
                       <div class="mr-2 mb-2">
                           <label for="categoryFilter" class="filter-label">Property</label>
                           <br>
-                          <select id="categoryFilter">
-                              <option value="">-- Select --</option>
-                              <option value="technology">All</option>
-                              <option value="health">Manucho</option>
-                              <option value="business">Ebenezer</option>
-                              <option value="education">Crown Z</option>
+                          <?php
+                          include '../db/connect.php'; // update path as needed
+                          $buildings = $pdo->query("SELECT building_id, building_name FROM buildings ORDER BY building_name")->fetchAll(PDO::FETCH_ASSOC);
+                          ?>
+
+                          <select id="buildingFilter" class="form-control">
+                            <option value="">-- Select Property --</option>
+                            <option value="all">All</option>
+                            <?php foreach ($buildings as $b): ?>
+                              <option value="<?= $b['building_id'] ?>"><?= htmlspecialchars($b['building_name']) ?></option>
+                            <?php endforeach; ?>
                           </select>
+
                       </div>
 
                       <div class="mr-2 mb-2">
@@ -909,6 +915,20 @@ $formattedNetProfit = number_format($netProfit, 2);
 <!-- Overlay scripts -->
  <!-- View announcements script -->
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+ <script>
+document.getElementById('buildingFilter').addEventListener('change', function() {
+    const buildingId = this.value;
+
+    fetch('fetch_building_financials.php?building_id=' + buildingId)
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('myTable').querySelector('tbody').innerHTML = html;
+        })
+        .catch(error => console.error('Error fetching data:', error));
+});
+</script>
+
 
 
  <script>
