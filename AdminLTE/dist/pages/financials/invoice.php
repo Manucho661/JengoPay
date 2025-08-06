@@ -1390,7 +1390,7 @@ header {
                         <!-- Customer Section -->
                         <div class="form-section">
                             <h3 class="section-title">Tenant Details</h3>
-                            <form method="POST" action="submit_invoice.php">
+                            <form  id="myForm" method="POST" action="submit_invoice.php">
                                 <div class="form-row">
 
                                     <!-- Existing Invoice # input -->
@@ -1529,10 +1529,12 @@ header {
                                 <!-- Form Actions -->
                                 <div class="form-actions">
                                     <div class="action-left">
-                                        <button class="btn btn-outline">
-                                            <i class="fas fa-paperclip"></i> Attach File
-                                        </button>
+                                    <!-- Hidden file input (triggered by your Attach File button) -->
+    <input type="file" id="fileInput" name="attachment[]" multiple>
                                     </div>
+
+                                    <!-- Add this hidden file input if you want actual file attachment -->
+<!-- <input type="file" id="fileInput" style="display: none;"> -->
                                     <div class="action-right">
                                         <!-- <button class="btn btn-outline">
                                  Send
@@ -1551,6 +1553,23 @@ header {
     </div>
 
 
+
+   <script>
+    function attachFile() {
+    const fileInput = document.getElementById('fileInput');
+    fileInput.click();
+
+    fileInput.onchange = function() {
+        if (fileInput.files.length > 0) {
+            // Display selected files to user
+            const fileList = Array.from(fileInput.files)
+                .map(file => file.name)
+                .join(', ');
+            alert(`Files ready for upload: ${fileList}`);
+        }
+    };
+}
+   </script>
 
 
     <script src="invoice.js"></script>
