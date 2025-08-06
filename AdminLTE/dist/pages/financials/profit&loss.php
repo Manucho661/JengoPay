@@ -79,7 +79,7 @@ try {
 
         // Get total Maintenance and Repair Costs using account code 600
         $stmt = $pdo->prepare("
-        SELECT SUM(item_total) AS maintenance_total
+        SELECT SUM(item_untaxed_amount) AS maintenance_total
         FROM expense_items
         WHERE item_account_code = '600'
       ");
@@ -93,7 +93,7 @@ try {
      // Fetch total for Staff Salaries and Wages using account code 605
      $stmt = $pdo->prepare("
 
-     SELECT SUM(item_total) AS salary_total
+     SELECT SUM(item_untaxed_amount) AS salary_total
      FROM expense_items
      WHERE item_account_code = '605'
  ");
@@ -105,7 +105,7 @@ try {
 
  // Fetch total Electricity Expense using account code 610
  $stmt = $pdo->prepare("
- SELECT SUM(item_total) AS electricity_total
+ SELECT SUM(item_untaxed_amount) AS electricity_total
  FROM expense_items
  WHERE item_account_code = '610'
 ");
@@ -117,7 +117,7 @@ $formattedElectricity = number_format($electricityTotal, 2);
 
 // Fetch total Water Expense using account code 615
 $stmt = $pdo->prepare("
-SELECT SUM(item_total) AS water_expense_total
+SELECT SUM(item_untaxed_amount) AS water_expense_total
 FROM expense_items
 WHERE item_account_code = '615'
 ");
@@ -129,7 +129,7 @@ $formattedWaterExpense = number_format($waterExpenseTotal, 2);
 
 // Fetch total Garbage Collection Expense using account code 620
 $stmt = $pdo->prepare("
-SELECT SUM(item_total) AS garbage_expense_total
+SELECT SUM(item_untaxed_amount) AS garbage_expense_total
 FROM expense_items
 WHERE item_account_code = '620'
 ");
@@ -141,7 +141,7 @@ $formattedGarbageExpense = number_format($garbageExpenseTotal, 2);
 
 // Fetch total Internet Expense using account code 625
 $stmt = $pdo->prepare("
-SELECT SUM(item_total) AS internet_expense_total
+SELECT SUM(item_untaxed_amount) AS internet_expense_total
 FROM expense_items
 WHERE item_account_code = '625'
 ");
@@ -154,7 +154,7 @@ $formattedInternetExpense = number_format($internetExpenseTotal, 2);
 
 // Fetch total Security Expense using account code 630
 $stmt = $pdo->prepare("
-SELECT SUM(item_total) AS security_expense_total
+SELECT SUM(item_untaxed_amount) AS security_expense_total
 FROM expense_items
 WHERE item_account_code = '630'
 ");
@@ -167,7 +167,7 @@ $formattedSecurityExpense = number_format($securityExpenseTotal, 2);
 
   // Fetch total for Property Management Software Subscription using account code 635
   $stmt = $pdo->prepare("
-  SELECT SUM(item_total) AS software_expense_total
+  SELECT SUM(item_untaxed_amount) AS software_expense_total
   FROM expense_items
   WHERE item_account_code = '635'
 ");
@@ -179,7 +179,7 @@ $formattedSoftwareExpense = number_format($softwareExpenseTotal, 2);
 
  // Fetch total Marketing and Advertising Costs using account code 640
  $stmt = $pdo->prepare("
- SELECT SUM(item_total) AS marketing_expense_total
+ SELECT SUM(item_untaxed_amount) AS marketing_expense_total
  FROM expense_items
  WHERE item_account_code = '640'
 ");
@@ -191,7 +191,7 @@ $formattedMarketingExpense = number_format($marketingExpenseTotal, 2);
 
  // Fetch total Legal and Compliance Fees using account code 645
  $stmt = $pdo->prepare("
- SELECT SUM(item_total) AS legal_expense_total
+ SELECT SUM(item_untaxed_amount) AS legal_expense_total
  FROM expense_items
  WHERE item_account_code = '645'
 ");
@@ -203,7 +203,7 @@ $formattedLegalExpense = number_format($legalExpenseTotal, 2);
 
     // Fetch total Loan Interest Payments using account code 655
     $stmt = $pdo->prepare("
-        SELECT SUM(item_total) AS loan_interest_total
+        SELECT SUM(item_untaxed_amount) AS loan_interest_total
         FROM expense_items
         WHERE item_account_code = '655'
     ");
@@ -215,7 +215,7 @@ $formattedLegalExpense = number_format($legalExpenseTotal, 2);
 
     // Fetch total Bank/Mpesa Charges using account code 660
     $stmt = $pdo->prepare("
-        SELECT SUM(item_total) AS bank_charges_total
+        SELECT SUM(item_untaxed_amount) AS bank_charges_total
         FROM expense_items
         WHERE item_account_code = '660'
     ");
@@ -227,7 +227,7 @@ $formattedLegalExpense = number_format($legalExpenseTotal, 2);
 
       // Fetch total for Other Expenses using account code 665
       $stmt = $pdo->prepare("
-      SELECT SUM(item_total) AS other_expense_total
+      SELECT SUM(item_untaxed_amount) AS other_expense_total
       FROM expense_items
       WHERE item_account_code = '665'
   ");
@@ -664,13 +664,19 @@ $formattedNetProfit = number_format($netProfit, 2);
                       <div class="mr-2 mb-2">
                           <label for="categoryFilter" class="filter-label">Property</label>
                           <br>
-                          <select id="categoryFilter">
-                              <option value="">-- Select --</option>
-                              <option value="technology">All</option>
-                              <option value="health">Manucho</option>
-                              <option value="business">Ebenezer</option>
-                              <option value="education">Crown Z</option>
+                          <?php
+                          include '../db/connect.php'; // update path as needed
+                          $buildings = $pdo->query("SELECT building_id, building_name FROM buildings ORDER BY building_name")->fetchAll(PDO::FETCH_ASSOC);
+                          ?>
+
+                          <select id="buildingFilter" class="form-control">
+                            <option value="">-- Select Property --</option>
+                            <option value="all">All</option>
+                            <?php foreach ($buildings as $b): ?>
+                              <option value="<?= $b['building_id'] ?>"><?= htmlspecialchars($b['building_name']) ?></option>
+                            <?php endforeach; ?>
                           </select>
+
                       </div>
 
                       <div class="mr-2 mb-2">
@@ -909,6 +915,20 @@ $formattedNetProfit = number_format($netProfit, 2);
 <!-- Overlay scripts -->
  <!-- View announcements script -->
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+ <script>
+document.getElementById('buildingFilter').addEventListener('change', function() {
+    const buildingId = this.value;
+
+    fetch('fetch_building_financials.php?building_id=' + buildingId)
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('myTable').querySelector('tbody').innerHTML = html;
+        })
+        .catch(error => console.error('Error fetching data:', error));
+});
+</script>
+
 
 
  <script>

@@ -782,6 +782,30 @@ header {
     gap: 10px;
   }
 
+  .filter-tag {
+    display: inline-block;
+    background-color: #FFC107;
+    color: #00192D;
+    border-radius: 15px;
+    padding: 5px 10px;
+    margin: 5px 5px 0 0;
+    font-size: 0.9em;
+}
+.filter-tag .remove-btn {
+    margin-left: 8px;
+    cursor: pointer;
+    color: #00192D;
+    font-weight: bold;
+}
+
+
+  .table td, .table th {
+    color: white;
+    background-color: #00192D;
+    border: 1px solid #FFC107;
+}
+
+
   .items-table th,
   .items-table td {
     padding: 8px 5px;
@@ -849,13 +873,43 @@ header {
                     <div class="page-header">
                         <h1 class="page-title"> 🧾 Invoices</h1>
                         <div class="page-actions">
-                            <button class="btn btn-outline" style="color: #FFC107; background-color:#00192D;" id="filterButton">
-                                <i class="fas fa-filter"></i> Filter
-                            </button>
+                                          <!-- Filter Button -->
+                        <button id="filterBtn" class="btn btn-outline filter-btn" style="color: #FFC107; background-color:#00192D;">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+
+                        <!-- Filter Panel -->
+                        <div id="filterPanel" style="display: none; margin-top: 10px;">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <select id="filterField" class="form-select">
+                                        <option value="invoice-number">Invoice</option>
+                                        <option value="invoice-customer">Tenant</option>
+                                        <option value="invoice-date">Date</option>
+                                        <option value="due-date">Due Date</option>
+                                        <option value="invoice-sub-total">Sub-Total</option>
+                                        <option value="invoice-taxes">Taxes</option>
+                                        <option value="invoice-amount">Total</option>
+                                        <option value="invoice-status">Status</option>
+                                        <option value="payment-status">Payment Status</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" id="searchInput" placeholder="Enter value" class="form-control" />
+                                </div>
+                                <div class="col-md-4">
+                                    <button onclick="applyFilter()" class="btn btn-sm btn-outline-secondary">Apply</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Active Filter Tags -->
+                        <div id="activeFilters" style="margin-top: 10px;"></div>
+
 
 
                             <!-- Filter Modal (hidden by default) -->
-                            <div id="filterModal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.4)">
+                            <!-- <div id="filterModal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.4)">
                                 <div style="background-color:#00192D; margin:5% auto; padding:20px; border:1px solid #FFC107; width:80%; max-width:600px; color:white;">
                                     <span style="float:right; cursor:pointer" id="closeFilter">&times;</span>
                                     <h3>Filter Invoices</h3>
@@ -893,7 +947,9 @@ header {
                                     <button id="applyFilter" class="btn" style="background-color:#FFC107; color:#00192D">Apply Filters</button>
                                     <button id="resetFilter" class="btn btn-outline" style="color:#FFC107; border-color:#FFC107">Reset</button>
                                 </div>
-                            </div>
+                            </div> -->
+
+
                             <!-- <button class="btn btn-outline" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-download"></i> Export
                         </button> -->
@@ -902,6 +958,8 @@ header {
                             </button>
                         </div>
                     </div>
+
+
 
                     <div class="invoice-list-container">
                         <div class="invoice-list-header">
@@ -940,7 +998,7 @@ header {
                             </div>
                         </div>
 
-                        <div class="invoice-container">
+                        <div class="invoice-container" id="invoice-items-list">
   <div class="invoice-item invoice-header">
     <div class="invoice-checkbox">
       <input type="checkbox">
@@ -1544,6 +1602,455 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script> -->
 
+
+<script>
+// Store the original invoices data
+let originalInvoices = <?php echo json_encode($invoices); ?>;
+let displayedInvoices = [...originalInvoices];
+
+// Toggle filter panel visibility
+document.getElementById('filterBtn').addEventListener('click', function() {
+    const filterPanel = document.getElementById('filterPanel');
+    filterPanel.style.display = filterPanel.style.display === 'none' ? 'block' : 'none';
+});
+
+// Array to store active filters
+let activeFilters = [];
+
+function applyFilter() {
+    const filterField = document.getElementById('filterField');
+    const searchInput = document.getElementById('searchInput');
+
+    const selectedField = filterField.value;
+    const selectedFieldText = filterField.options[filterField.selectedIndex].text;
+    const searchValue = searchInput.value.trim().toLowerCase();
+
+    if (searchValue === '') {
+        alert('Please enter a search value');
+        return;
+    }
+
+    // Add filter to active filters if not already present
+    const filterExists = activeFilters.some(filter =>
+        filter.field === selectedField && filter.value === searchValue
+    );
+
+    if (!filterExists) {
+        activeFilters.push({
+            field: selectedField,
+            fieldText: selectedFieldText,
+            value: searchValue
+        });
+        updateActiveFiltersDisplay();
+        filterInvoices();
+    }
+
+    // Clear the search input
+    searchInput.value = '';
+}
+
+function filterInvoices() {
+    // Start with all invoices
+    let filteredInvoices = [...originalInvoices];
+
+    // Apply each active filter
+    activeFilters.forEach(filter => {
+        filteredInvoices = filteredInvoices.filter(invoice => {
+            switch(filter.field) {
+                case 'invoice-number':
+                    return invoice.invoice_number.toLowerCase().includes(filter.value);
+                case 'invoice-customer':
+                    const tenantName = (invoice.tenant_name || 'Unknown Tenant').toLowerCase();
+                    return tenantName.includes(filter.value);
+                case 'invoice-date':
+                    const invoiceDate = invoice.invoice_date === '0000-00-00' ? 'draft' :
+                                      dateToFilterString(invoice.invoice_date);
+                    return invoiceDate.includes(filter.value);
+                case 'due-date':
+                    const dueDate = invoice.due_date === '0000-00-00' ? 'not set' :
+                                   dateToFilterString(invoice.due_date);
+                    return dueDate.includes(filter.value);
+                case 'invoice-sub-total':
+                    return String(invoice.sub_total).includes(filter.value);
+                case 'invoice-taxes':
+                    return String(invoice.taxes || 0).includes(filter.value);
+                case 'invoice-amount':
+                    return String(invoice.total).includes(filter.value);
+                case 'invoice-status':
+                    return invoice.status.toLowerCase().includes(filter.value);
+                case 'payment-status':
+                    // Calculate payment status
+                    const paidAmount = parseFloat(invoice.paid_amount) || 0;
+                    const total = parseFloat(invoice.total) || 0;
+                    let paymentStatus = '';
+
+                    if (paidAmount >= total) {
+                        paymentStatus = 'paid';
+                    } else if (paidAmount > 0) {
+                        paymentStatus = 'partial';
+                    } else {
+                        paymentStatus = 'unpaid';
+                        if (invoice.due_date !== '0000-00-00') {
+                            const today = new Date();
+                            const dueDate = new Date(invoice.due_date);
+                            if (today > dueDate) {
+                                paymentStatus = 'overdue';
+                            }
+                        }
+                    }
+                    return paymentStatus.includes(filter.value);
+                default:
+                    return true;
+            }
+        });
+    });
+
+    displayedInvoices = filteredInvoices;
+    renderFilteredInvoices();
+}
+
+function dateToFilterString(dateString) {
+    if (dateString === '0000-00-00') return '';
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0]; // YYYY-MM-DD format
+}
+
+function renderFilteredInvoices() {
+    const container = document.getElementById('invoice-items-list');
+
+    // Clear existing items (except header)
+    const header = container.querySelector('.invoice-header');
+    container.innerHTML = '';
+    container.appendChild(header);
+
+    // Render filtered invoices
+    displayedInvoices.forEach(invoice => {
+        const tenantName = invoice.tenant_name || 'Unknown Tenant';
+        const invoiceDate = invoice.invoice_date === '0000-00-00' ? 'Draft' :
+                          formatDate(invoice.invoice_date);
+        const dueDate = invoice.due_date === '0000-00-00' ? 'Not set' :
+                       formatDate(invoice.due_date);
+
+        // Calculate overdue status
+        let isOverdue = false;
+        let overdueDays = 0;
+        if (invoice.due_date != '0000-00-00' && invoice.status != 'paid' && invoice.status != 'cancelled') {
+            const today = new Date();
+            const dueDateObj = new Date(invoice.due_date);
+            if (today > dueDateObj) {
+                isOverdue = true;
+                overdueDays = Math.floor((today - dueDateObj) / (1000 * 60 * 60 * 24));
+            }
+        }
+
+        // Determine status badge
+        let statusClass = 'badge-';
+        let statusText = capitalizeFirstLetter(invoice.status);
+
+        switch (invoice.status) {
+            case 'draft':
+                statusClass += 'draft';
+                break;
+            case 'sent':
+                statusClass += isOverdue ? 'overdue' : 'sent';
+                statusText = isOverdue ? 'Overdue (' + overdueDays + 'd)' : 'Sent';
+                break;
+            case 'paid':
+                statusClass += 'paid';
+                break;
+            case 'cancelled':
+                statusClass += 'cancelled';
+                break;
+            default:
+                statusClass += 'draft';
+        }
+
+        // Payment status with amounts
+        let paymentStatusClass = 'badge-';
+        let paymentStatusText = '';
+        const paidAmount = parseFloat(invoice.paid_amount) || 0;
+        const totalAmount = parseFloat(invoice.total) || 0;
+        const paidFormatted = paidAmount.toFixed(2);
+        const totalFormatted = totalAmount.toFixed(2);
+
+        if (paidAmount > 0) {
+            if (paidAmount >= totalAmount) {
+                paymentStatusClass += 'paid';
+                paymentStatusText = 'Paid (KES ' + paidFormatted + ')';
+            } else {
+                paymentStatusClass += 'partial';
+                paymentStatusText = 'Partial (KES ' + paidFormatted + ' of ' + totalFormatted + ')';
+            }
+        } else {
+            paymentStatusClass += 'unpaid';
+            paymentStatusText = isOverdue ? 'Overdue (' + overdueDays + 'd)' : 'Unpaid';
+        }
+
+        // Create invoice item element
+        const invoiceItem = document.createElement('div');
+        invoiceItem.className = 'invoice-item';
+        invoiceItem.onclick = function() { openInvoiceDetails(invoice.id); };
+
+        invoiceItem.innerHTML = `
+            <div class="invoice-checkbox">
+                <input type="checkbox" onclick="event.stopPropagation()">
+            </div>
+            <div class="invoice-number">${escapeHtml(invoice.invoice_number)}</div>
+            <div class="invoice-customer" title="${escapeHtml(invoice.description)}">
+                ${escapeHtml(tenantName)}
+            </div>
+            <div class="invoice-date">${invoiceDate}</div>
+            <div class="invoice-date${isOverdue ? ' text-danger' : ''}">
+                ${dueDate}
+            </div>
+            <div class="invoice-amount">${numberFormat(invoice.sub_total, 2)}</div>
+            <div class="invoice-amount">${escapeHtml(invoice.taxes || '0.00')}</div>
+            <div class="invoice-amount">${numberFormat(invoice.total, 2)}</div>
+            <div class="invoice-status">
+                <span class="status-badge ${statusClass}">${statusText}</span>
+            </div>
+            <div class="invoice-status">
+                <span class="status-badge ${paymentStatusClass}">${paymentStatusText}</span>
+                ${(invoice.status !== 'draft' && invoice.status !== 'cancelled' && paidAmount < totalAmount) ? `
+                <br>
+                <button class="btn pay-btn btn-sm mt-1"
+                    onclick="event.stopPropagation(); openPayModal(this)"
+                    data-invoice-id="${invoice.id}"
+                    data-tenant="${escapeHtml(tenantName)}"
+                    data-total="${totalAmount}"
+                    data-paid="${paidAmount}"
+                    data-balance="${totalAmount - paidAmount}"
+                    data-account-item="${escapeHtml(invoice.account_item)}"
+                    data-description="${escapeHtml(invoice.description)}">
+                    <i class="fas fa-credit-card me-1"></i>
+                    ${paidAmount > 0 ? 'Add Payment' : 'Pay'}
+                </button>
+                ` : ''}
+            </div>
+            <div class="invoice-actions dropdown">
+                <button class="action-btn dropdown-toggle" onclick="event.stopPropagation()" data-bs-toggle="dropdown">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#" onclick="viewInvoice(${invoice.id})">
+                        <i class="fas fa-eye me-2"></i>View Details
+                    </a></li>
+                    ${(invoice.status === 'draft' || (invoice.status === 'sent' && paidAmount == 0)) ? `
+                    <li><a class="dropdown-item" href="invoice_edit.php?id=${invoice.id}">
+                        <i class="fas fa-edit me-2"></i>Edit Invoice
+                    </a></li>
+                    ` : ''}
+                    <li><hr class="dropdown-divider"></li>
+                    ${(invoice.status === 'draft' || invoice.status === 'cancelled') ? `
+                    <li><a class="dropdown-item text-danger" href="#" onclick="confirmDeleteInvoice(${invoice.id})">
+                        <i class="fas fa-trash-alt me-2"></i>Delete Invoice
+                    </a></li>
+                    ` : ''}
+                    ${(invoice.status !== 'cancelled' && invoice.status !== 'paid') ? `
+                    <li><a class="dropdown-item text-danger" href="#" onclick="confirmCancelInvoice(${invoice.id})">
+                        <i class="fas fa-ban me-2"></i>Cancel Invoice
+                    </a></li>
+                    ` : (invoice.status === 'cancelled') ? `
+                    <li><a class="dropdown-item" href="#" onclick="restoreInvoice(${invoice.id})">
+                        <i class="fas fa-undo me-2"></i>Restore Invoice
+                    </a></li>
+                    ` : ''}
+                </ul>
+            </div>
+        `;
+
+        container.appendChild(invoiceItem);
+    });
+}
+
+// Helper functions
+function escapeHtml(unsafe) {
+    if (!unsafe) return '';
+    return unsafe.toString()
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function numberFormat(number, decimals) {
+    if (isNaN(number)) return '0.00';
+    return parseFloat(number).toFixed(decimals);
+}
+
+function formatDate(dateString) {
+    if (dateString === '0000-00-00') return '';
+    const date = new Date(dateString);
+    const options = { month: 'short', day: 'numeric', year: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+}
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function updateActiveFiltersDisplay() {
+    const activeFiltersContainer = document.getElementById('activeFilters');
+    activeFiltersContainer.innerHTML = '';
+
+    if (activeFilters.length === 0) {
+        return;
+    }
+
+    const filtersTitle = document.createElement('span');
+    filtersTitle.textContent = 'Active Filters: ';
+    filtersTitle.style.marginRight = '10px';
+    activeFiltersContainer.appendChild(filtersTitle);
+
+    activeFilters.forEach((filter, index) => {
+        const filterTag = document.createElement('span');
+        filterTag.className = 'badge bg-warning text-dark me-2';
+        filterTag.style.cursor = 'pointer';
+
+        const filterText = document.createElement('span');
+        filterText.textContent = `${filter.fieldText}: ${filter.value}`;
+        filterTag.appendChild(filterText);
+
+        const removeBtn = document.createElement('span');
+        removeBtn.className = 'ms-2';
+        removeBtn.innerHTML = '&times;';
+        removeBtn.onclick = function(e) {
+            e.stopPropagation();
+            removeFilter(index);
+        };
+        filterTag.appendChild(removeBtn);
+
+        activeFiltersContainer.appendChild(filterTag);
+    });
+}
+
+function removeFilter(index) {
+    activeFilters.splice(index, 1);
+    updateActiveFiltersDisplay();
+    filterInvoices();
+}
+
+// Initialize by rendering all invoices
+document.addEventListener('DOMContentLoaded', function() {
+    renderFilteredInvoices();
+
+    // Add keyboard support for the search input
+    document.getElementById('searchInput').addEventListener('keyup', function(e) {
+        if (e.key === 'Enter') {
+            applyFilter();
+        }
+    });
+});
+</script>
+
+<script>
+document.getElementById('resetFilter').addEventListener('click', function () {
+    document.getElementById('statusFilter').value = '';
+    document.getElementById('paymentFilter').value = '';
+    document.getElementById('dateFrom').value = '';
+    document.getElementById('dateTo').value = '';
+});
+</script>
+
+
+</script>
+
+<!-- <script>
+// Toggle filter panel visibility
+document.getElementById('filterBtn').addEventListener('click', function() {
+    const filterPanel = document.getElementById('filterPanel');
+    filterPanel.style.display = filterPanel.style.display === 'none' ? 'block' : 'none';
+});
+
+// Array to store active filters
+let activeFilters = [];
+
+function applyFilter() {
+    const filterField = document.getElementById('filterField');
+    const searchInput = document.getElementById('searchInput');
+
+    const selectedField = filterField.options[filterField.selectedIndex].text;
+    const searchValue = searchInput.value.trim();
+
+    if (searchValue === '') {
+        alert('Please enter a search value');
+        return;
+    }
+
+    // Add filter to active filters if not already present
+    const filterExists = activeFilters.some(filter =>
+        filter.field === selectedField && filter.value === searchValue
+    );
+
+    if (!filterExists) {
+        activeFilters.push({
+            field: selectedField,
+            value: searchValue,
+            fieldValue: filterField.value
+        });
+        updateActiveFiltersDisplay();
+    }
+
+    // Here you would typically filter your data/table
+    // For now, we'll just log the filters
+    console.log('Applying filter:', selectedField, searchValue);
+
+    // Clear the search input
+    searchInput.value = '';
+}
+
+function updateActiveFiltersDisplay() {
+    const activeFiltersContainer = document.getElementById('activeFilters');
+    activeFiltersContainer.innerHTML = '';
+
+    if (activeFilters.length === 0) {
+        return;
+    }
+
+    const filtersTitle = document.createElement('span');
+    filtersTitle.textContent = 'Active Filters: ';
+    filtersTitle.style.marginRight = '10px';
+    activeFiltersContainer.appendChild(filtersTitle);
+
+    activeFilters.forEach((filter, index) => {
+        const filterTag = document.createElement('span');
+        filterTag.className = 'badge bg-warning text-dark me-2';
+        filterTag.style.cursor = 'pointer';
+
+        const filterText = document.createElement('span');
+        filterText.textContent = `${filter.field}: ${filter.value}`;
+        filterTag.appendChild(filterText);
+
+        const removeBtn = document.createElement('span');
+        removeBtn.className = 'ms-2';
+        removeBtn.innerHTML = '&times;';
+        removeBtn.onclick = function(e) {
+            e.stopPropagation();
+            removeFilter(index);
+        };
+        filterTag.appendChild(removeBtn);
+
+        activeFiltersContainer.appendChild(filterTag);
+    });
+}
+
+function removeFilter(index) {
+    activeFilters.splice(index, 1);
+    updateActiveFiltersDisplay();
+
+    // Here you would typically reapply the remaining filters
+    console.log('Remaining filters:', activeFilters);
+}
+
+// Optional: Add keyboard support for the search input
+document.getElementById('searchInput').addEventListener('keyup', function(e) {
+    if (e.key === 'Enter') {
+        applyFilter();
+    }
+});
+</script> -->
+
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const addMoreBtn = document.getElementById("addMoreBtn");
@@ -2106,6 +2613,13 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script> -->
 
+<!-- <script>
+function filterFunction() {
+    // Add your filter logic here
+    console.log("Filter button clicked!");
+    // Example: Show/hide filter options, filter a list, etc.
+}
+</script> -->
     <script>
         function openPayModal(button) {
             // Get all invoice data from button attributes
