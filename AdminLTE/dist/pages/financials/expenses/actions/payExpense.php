@@ -1,5 +1,8 @@
 <?php
 include '../../../db/connect.php';
+// To update balanceSheet when you pay through Cash
+include '../../balanceSheet/actions/handleCashPay.php';
+// To update balanceSheet when you pay through M-pesa
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
@@ -27,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $pdo->prepare("INSERT INTO expense_payments (expense_id, amount_paid, reference_no, payment_method, payment_date) 
                                VALUES (?, ?, ?, ?, ?)");
             $stmt->execute([$expense_id, $amount, $reference, $payment_method, $payment_date]);
-
+            handleCashPay($amount);
             // Step 4: Update the expenses table
             if ($amount == 0) {
                 $status = 'Unpaid';
