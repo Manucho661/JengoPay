@@ -266,6 +266,20 @@ $formattedNetProfit = number_format($netProfit, 2);
 }
 ?>
 
+<?php
+include '../db/connect.php';
+
+// Calculate INCOME from invoice_items
+$incomeStmt = $pdo->query("SELECT SUM(total) AS income FROM invoice_items");
+$income = $incomeStmt->fetch(PDO::FETCH_ASSOC)['income'] ?? 0;
+
+// Calculate EXPENSES from expense_items
+$expenseStmt = $pdo->query("SELECT SUM(item_total) AS expenses FROM expense_items");
+$expenses = $expenseStmt->fetch(PDO::FETCH_ASSOC)['expenses'] ?? 0;
+
+// Calculate NET PROFIT
+$netProfit = $income - $expenses;
+?>
 
 <!doctype html>
 <html lang="en">
@@ -601,7 +615,7 @@ $formattedNetProfit = number_format($netProfit, 2);
                                 <div class="summary-item assets">
 
                                     <div class="label "> <i class="fas fa-calculator"></i>  INCOME   </div>
-                                    <div class="value"> <b> KSH 10,000</b> </div>
+                                    <div class="value"><b>Ksh<?= $formattedTotalIncome ?></b></div>
                                 </div>
 
                               </div>
@@ -611,7 +625,7 @@ $formattedNetProfit = number_format($netProfit, 2);
 
 
                                  <div class="label"> <i class="fas fa-calculator"></i>EXPENSES</div>
-                                 <div class="value"> <b>KSH 50,000</b></div>
+                                 <div class="value"> <b>Ksh<?= $formattedTotalExpenses ?></b></div>
                                 </div>
                               </div>
                               <div class="col-6 col-md-4 ">
@@ -619,7 +633,7 @@ $formattedNetProfit = number_format($netProfit, 2);
 
                                     <div class="label"> <i class="fas fa-calculator"></i> NET PROFIT</div>
 
-                                    <div class="value"> KSH 500,000</div>
+                                    <div class="value"> Ksh<?= $formattedNetProfit ?></div>
                                 </div>
 
                               </div>
@@ -660,38 +674,48 @@ $formattedNetProfit = number_format($netProfit, 2);
             <!--begin::Row-->
             <div class="row table_buttons mb-2">
               <div class="col-md-6 col-12">
-                  <div class="filter-container d-flex flex-wrap">
-                      <div class="mr-2 mb-2">
-                          <label for="categoryFilter" class="filter-label">Property</label>
-                          <br>
-                          <?php
-                          include '../db/connect.php'; // update path as needed
-                          $buildings = $pdo->query("SELECT building_id, building_name FROM buildings ORDER BY building_name")->fetchAll(PDO::FETCH_ASSOC);
-                          ?>
+                 <!-- Container -->
+                 <div class="container-fluid">
+    <div class="row g-3 align-items-end">
+    <!-- Property Filter -->
+    <div class="col-12 col-md-4">
+      <label for="buildingFilter" class="form-label">Property</label>
+      <?php
+        include '../db/connect.php';
+        $buildings = $pdo->query("SELECT building_id, building_name FROM buildings ORDER BY building_name")->fetchAll(PDO::FETCH_ASSOC);
+      ?>
+      <select id="buildingFilter" class="form-control">
+        <option value="">-- Select Property --</option>
+        <option value="all">All</option>
+        <?php foreach ($buildings as $b): ?>
+          <option value="<?= $b['building_id'] ?>"><?= htmlspecialchars($b['building_name']) ?></option>
+        <?php endforeach; ?>
+      </select>
+    </div>
 
-                          <select id="buildingFilter" class="form-control">
-                            <option value="">-- Select Property --</option>
-                            <option value="all">All</option>
-                            <?php foreach ($buildings as $b): ?>
-                              <option value="<?= $b['building_id'] ?>"><?= htmlspecialchars($b['building_name']) ?></option>
-                            <?php endforeach; ?>
-                          </select>
+    <!-- Start Date -->
+    <div class="col-12 col-md-4">
+    <label class="form-label startDate me-2">Start Date</label>
+    <input type="date" class="form-control" id="startDate" />    </div>
 
-                      </div>
+    <!-- End Date -->
+    <div class="col-12 col-md-4">
+    <label class="form-label endDate me-2">End Date</label>
+    <input type="date" class="form-control" id="endDate" />
+    </div>
 
-                      <div class="mr-2 mb-2">
-                          <label for="filterDate" class="filter-label">Start Date</label>
-                          <br>
-                          <input type="date" id="filterDate" />
-                      </div>
+    <!-- Filter Button -->
+<div class="col-12 mt-3">
+  <button class="btn btn-outline-dark" style="color: #FFC107; background-color: #00192D;" onclick="applyFilters()">
+    <i class="fas fa-filter"></i> Filter
+  </button>
+</div>
 
-                      <div class="mr-2 mb-2" style="padding: 10px;">
-                          <label for="filterDate" class="filter-label">End Date</label>
-                          <br>
-                          <input type="date" id="filterDate"/>
-                      </div>
-                  </div>
+  </div>
+</div>
               </div>
+
+
 
               <div class="col-md-6 col-12 d-flex justify-content-end" style="position: relative; min-height: 60px;">
                   <div style="position: absolute; bottom: 0; right: 0;">
@@ -927,6 +951,82 @@ document.getElementById('buildingFilter').addEventListener('change', function() 
         })
         .catch(error => console.error('Error fetching data:', error));
 });
+</script>
+
+<script>
+function applyFilters() {
+  const startDate = document.getElementById("startDate").value;
+  const endDate = document.getElementById("endDate").value;
+  const buildingId = document.getElementById("buildingFilter").value;
+
+  const params = new URLSearchParams();
+
+  if (startDate) params.append('start_date', startDate);
+  if (endDate) params.append('end_date', endDate);
+  if (buildingId && buildingId !== "") params.append('building_id', buildingId);
+
+  // Reload with filters applied
+  window.location.href = window.location.pathname + '?' + params.toString();
+}
+</script>
+
+
+
+
+<!-- <script>
+  document.getElementById('applyFilter').addEventListener('click', function() {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    const buildingId = document.getElementById('buildingFilter').value;
+
+    if (!startDate || !endDate) {
+        alert('Please select both start and end dates');
+        return;
+    }
+
+    // Send AJAX request to fetch filtered data
+    fetch(`fetch_profit_loss.php?start_date=${startDate}&end_date=${endDate}&building_id=${buildingId}`)
+        .then(response => response.json())
+        .then(data => {
+            updateProfitLossTable(data);
+            updateSummarySection(data.summary);
+        })
+        .catch(error => console.error('Error:', error));
+});
+
+function updateProfitLossTable(data) {
+    // Update the table with new data
+    const tbody = document.querySelector('#myTable tbody');
+    tbody.innerHTML = '';
+
+    // Rebuild table rows with filtered data
+    // ... implementation depends on your data structure
+}
+
+function updateSummarySection(summary) {
+    // Update the summary cards at the top
+    document.querySelector('.summary-item.assets .value').innerHTML = `<b>KSH ${summary.total_income}</b>`;
+    document.querySelector('.summary-item.liabilities .value').innerHTML = `<b>KSH ${summary.total_expenses}</b>`;
+    document.querySelector('.summary-item.equity .value').innerHTML = `<b>KSH ${summary.net_profit}</b>`;
+}
+</script>
+ -->
+
+ <script>
+function applyFilters() {
+  const startDate = document.getElementById("startDate").value;
+  const endDate = document.getElementById("endDate").value;
+  const buildingId = document.getElementById("buildingFilter").value;
+
+  // Redirect to same page with GET parameters
+  const params = new URLSearchParams();
+
+  if (startDate) params.append('start_date', startDate);
+  if (endDate) params.append('end_date', endDate);
+  if (buildingId && buildingId !== "all") params.append('building_id', buildingId);
+
+  window.location.href = window.location.pathname + '?' + params.toString();
+}
 </script>
 
 

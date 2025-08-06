@@ -214,11 +214,11 @@ $randomLogo = $logos[array_rand($logos)];
             font-size:11px;padding:2px 6px;border-radius:4px;font-weight:600;
             letter-spacing:.3px;text-transform:uppercase
         }
-        .status-paid      {background:#e8f5e9;color:#2e7d32}
+        /* .status-paid      {background:#e8f5e9;color:#2e7d32}
         .status-overdue   {background:#ffebee;color:#c62828}
         .status-cancelled {background:#eceff1;color:#546e7a}
         .status-pending   {background:#fff8e1;color:#ff8f00}
-        .status-draft     {background:#eceff1;color:#546e7a}
+        .status-draft     {background:#eceff1;color:#546e7a} */
 
         /* ---- RIGHT DETAILS PANE ------------------------------------------ */
         .viewer{flex:1;overflow-y:auto;padding:24px}
@@ -324,7 +324,7 @@ hr {
             /* Centered and rotated */
             background-color: rgba(255, 0, 0, 0.2);
             /* Red with transparency for "UNPAID" */
-            color: #ff4d4d;
+            color:#ff4d4d;
             /* Softer red text color */
             font-weight: bold;
             font-size: 24px;
