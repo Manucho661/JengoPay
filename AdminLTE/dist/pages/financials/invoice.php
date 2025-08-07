@@ -767,48 +767,169 @@ header {
 /* RESPONSIVE STYLES */
 /* ================ */
 
-@media (max-width:1000px) {
-  .app-container {
-    flex-direction: column;
+/* Table responsive wrapper - must come first */
+.table-responsive {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Button groups */
+.btn-group-responsive {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+/* Filter tags */
+.filter-tag {
+  display: inline-block;
+  background-color: #FFC107;
+  color: #00192D;
+  border-radius: 15px;
+  padding: 5px 10px;
+  margin: 5px 5px 0 0;
+  font-size: 0.9em;
+}
+
+.filter-tag .remove-btn {
+  margin-left: 8px;
+  cursor: pointer;
+  color: #00192D;
+  font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .invoice-item > div {
+    padding: 8px 4px;
+  }
+}
+
+@media (max-width: 992px) {
+  .invoice-container {
+    overflow-x: auto;
   }
 
   .invoice-item {
-    flex-wrap: wrap;
-    gap: 10px;
+    min-width: 900px; /* Forces horizontal scroll */
   }
 
   .form-row {
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
   }
 
-  .filter-tag {
-    display: inline-block;
-    background-color: #FFC107;
-    color: #00192D;
-    border-radius: 15px;
-    padding: 5px 10px;
-    margin: 5px 5px 0 0;
-    font-size: 0.9em;
-}
-.filter-tag .remove-btn {
-    margin-left: 8px;
-    cursor: pointer;
-    color: #00192D;
-    font-weight: bold;
+  .form-group {
+    width: 100%;
+    margin-bottom: 15px;
+  }
 }
 
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
 
-  .table td, .table th {
-    color: white;
-    background-color: #00192D;
-    border: 1px solid #FFC107;
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .page-actions {
+    margin-top: 15px;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .invoice-list-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .invoice-list-filters {
+    margin-top: 15px;
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .filter-dropdown {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  #invoicePreviewPanel {
+    width: 100%;
+  }
+
+  /* Modals */
+  .modal-dialog {
+    margin: 10px;
+    width: calc(100% - 20px) !important;
+    max-width: none;
+  }
+
+  /* Stack form rows vertically */
+  .form-row {
+    flex-direction: column;
+  }
 }
 
+@media (max-width: 576px) {
+  .btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .section-title {
+    font-size: 16px;
+  }
 
   .items-table th,
   .items-table td {
-    padding: 8px 5px;
+    padding: 6px 4px;
+    font-size: 12px;
+  }
+
+  .summary-table {
+    width: 100% !important;
+    float: none !important;
+  }
+
+  .page-actions .btn {
+    margin-bottom: 5px;
+    width: 100%;
+  }
+
+  /* Button groups */
+  .btn-group-responsive .btn {
+    flex: 1 0 calc(50% - 5px);
+    min-width: calc(50% - 5px);
+  }
+}
+
+@media (max-width: 480px) {
+  .filter-panel .row > div {
+    margin-bottom: 10px;
+  }
+
+  .form-control,
+  .form-select {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  /* Mobile table styles */
+  .invoice-item {
+    flex-wrap: wrap;
+  }
+
+  .table td,
+  .table th {
+    color: white;
+    background-color: #00192D;
+    border: 1px solid #FFC107;
   }
 
   /* Adjust column widths for mobile */
@@ -824,10 +945,9 @@ header {
     flex: 1 1 100%;
     min-width: 100%;
     text-align: left;
+    padding: 8px 5px;
   }
 }
-
-
 </style>
 </head>
 
@@ -997,44 +1117,46 @@ header {
                                 </div>
                             </div>
                         </div>
-
-                        <div class="invoice-container" id="invoice-items-list">
-  <div class="invoice-item invoice-header">
-    <div class="invoice-checkbox">
-      <input type="checkbox">
-    </div>
-    <div class="invoice-number">
-      <div class="over-flow" title="Invoice #">Invoice</div>
-    </div>
-    <div class="invoice-customer">
-      <div class="over-flow" title="Customer">Tenant</div>
-    </div>
-    <div class="invoice-date">
-      <div class="over-flow" title="Date">Date</div>
-    </div>
-    <div class="invoice-date">
-      <div class="over-flow" title="Due Date">Due Date</div>
-    </div>
-    <div class="invoice-sub-total">
-      <div class="over-flow" title="Sub-Total">Sub-Total</div>
-    </div>
-    <div class="invoice-taxes">
-      <div class="over-flow" title="Taxes">Taxes</div>
-    </div>
-    <div class="invoice-amount">
-      <div class="over-flow" title="Amount">Total</div>
-    </div>
-    <div class="invoice-status">
-      <div class="over-flow" title="Status">Status</div>
-    </div>
-    <div class="invoice-status">
-      <div class="over-flow" title="Payment Status">Payment Status</div>
-    </div>
-    <div class="invoice-actions">
-      <div class="over-flow" title="Actions">Actions</div>
+<div class="table-responsive">
+  <div class="invoice-container" id="invoice-items-list">
+    <div class="invoice-item invoice-header">
+      <div class="invoice-checkbox">
+        <input type="checkbox">
+      </div>
+      <div class="invoice-number">
+        <div class="over-flow" title="Invoice #">Invoice</div>
+      </div>
+      <div class="invoice-customer">
+        <div class="over-flow" title="Customer">Tenant</div>
+      </div>
+      <div class="invoice-date">
+        <div class="over-flow" title="Date">Date</div>
+      </div>
+      <div class="invoice-date">
+        <div class="over-flow" title="Due Date">Due Date</div>
+      </div>
+      <div class="invoice-sub-total">
+        <div class="over-flow" title="Sub-Total">Sub-Total</div>
+      </div>
+      <div class="invoice-taxes">
+        <div class="over-flow" title="Taxes">Taxes</div>
+      </div>
+      <div class="invoice-amount">
+        <div class="over-flow" title="Amount">Total</div>
+      </div>
+      <div class="invoice-status">
+        <div class="over-flow" title="Status">Status</div>
+      </div>
+      <div class="invoice-status">
+        <div class="over-flow" title="Payment Status">Payment Status</div>
+      </div>
+      <div class="invoice-actions">
+        <div class="over-flow" title="Actions">Actions</div>
+      </div>
     </div>
   </div>
 </div>
+
                         <?php
                         // ----------------------------------------------------
                         // 1) Fetch invoices with tenant details and payment summary
@@ -2868,6 +2990,131 @@ function filterFunction() {
         document.getElementById("inspectionDate").setAttribute("min", today);
     </script>
 
+   <script>
+// // Store the original invoices data
+// let originalInvoices = [];
+// let displayedInvoices = [];
+// let activeFilters = [];
+
+// Handle window resize for responsive adjustments
+function handleResize() {
+  const windowWidth = window.innerWidth;
+
+  // Adjust layout based on screen size
+  const formRows = document.querySelectorAll('.form-row');
+
+  if (windowWidth < 768) {
+    // Mobile-specific adjustments
+    formRows.forEach(row => {
+      row.style.flexDirection = 'column';
+    });
+  } else {
+    // Desktop layout
+    formRows.forEach(row => {
+      row.style.flexDirection = 'row';
+    });
+  }
+}
+
+// Enhanced filter functionality
+function applyFilter() {
+  const filterField = document.getElementById('filterField');
+  const searchInput = document.getElementById('searchInput');
+
+  const selectedField = filterField.value;
+  const selectedFieldText = filterField.options[filterField.selectedIndex].text;
+  const searchValue = searchInput.value.trim().toLowerCase();
+
+  if (searchValue === '') {
+    alert('Please enter a search value');
+    return;
+  }
+
+  // Add filter to active filters if not already present
+  const filterExists = activeFilters.some(filter =>
+    filter.field === selectedField && filter.value === searchValue
+  );
+
+  if (!filterExists) {
+    activeFilters.push({
+      field: selectedField,
+      fieldText: selectedFieldText,
+      value: searchValue
+    });
+    updateActiveFiltersDisplay();
+    filterInvoices();
+  }
+
+  // Clear the search input
+  searchInput.value = '';
+}
+
+function updateActiveFiltersDisplay() {
+  const activeFiltersContainer = document.getElementById('activeFilters');
+  if (!activeFiltersContainer) return;
+
+  activeFiltersContainer.innerHTML = '';
+
+  if (activeFilters.length === 0) {
+    return;
+  }
+
+  const filtersTitle = document.createElement('span');
+  filtersTitle.textContent = 'Active Filters: ';
+  filtersTitle.style.marginRight = '10px';
+  activeFiltersContainer.appendChild(filtersTitle);
+
+  activeFilters.forEach((filter, index) => {
+    const filterTag = document.createElement('span');
+    filterTag.className = 'filter-tag';
+
+    const filterText = document.createElement('span');
+    filterText.textContent = `${filter.fieldText}: ${filter.value}`;
+    filterTag.appendChild(filterText);
+
+    const removeBtn = document.createElement('span');
+    removeBtn.className = 'remove-btn';
+    removeBtn.innerHTML = '&times;';
+    removeBtn.onclick = function(e) {
+      e.stopPropagation();
+      removeFilter(index);
+    };
+    filterTag.appendChild(removeBtn);
+
+    activeFiltersContainer.appendChild(filterTag);
+  });
+}
+
+function removeFilter(index) {
+  activeFilters.splice(index, 1);
+  updateActiveFiltersDisplay();
+  filterInvoices();
+}
+
+function filterInvoices() {
+  // Implement your actual filtering logic here
+  console.log('Filtering invoices with:', activeFilters);
+}
+
+// Initialize on DOM load
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize responsive layout
+  handleResize();
+
+  // Set up event listeners
+  window.addEventListener('resize', handleResize);
+
+  // Initialize filter input
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) {
+    searchInput.addEventListener('keyup', function(e) {
+      if (e.key === 'Enter') {
+        applyFilter();
+      }
+    });
+  }
+});
+</script>
 
 
     <!-- pdf download plugin -->
