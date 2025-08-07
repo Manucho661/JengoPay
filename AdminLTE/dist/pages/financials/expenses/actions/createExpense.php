@@ -6,7 +6,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Show errors during development
         ini_set('display_errors', 1);
         error_reporting(E_ALL);
-
         $pdo->beginTransaction();
 
         $expense_date = $_POST['date'] ?? null;
@@ -18,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $totalTax = $_POST['totalTax'] ?? 0.00;
         $total = $_POST['total'] ?? 0.00;
 
+        
         // Step 1: Create new supplier if supplier_id is empty
         if (empty($supplier_id) && !empty($supplier_name)) {
             $stmt = $pdo->prepare("INSERT INTO suppliers (supplier_name, time_stamp) VALUES (?, NOW())");
