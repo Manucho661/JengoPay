@@ -1155,7 +1155,7 @@ header {
       </div>
     </div>
   </div>
-</div>
+<!-- </div> -->
 
                         <?php
                         // ----------------------------------------------------
@@ -1355,7 +1355,7 @@ header {
       </div>';
                         }
                         ?>
-
+</div>
 
                         <!-- ✅ PAYMENT MODAL -->
                         <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
