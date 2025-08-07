@@ -79,8 +79,8 @@
     }
 
     .request-sidebar h3 {
-      background: #B0B9C6;
-      color: black;
+      background: #00192D;
+      color: white;
       padding: 1.2rem;
       font-size: 1.2rem;
       font-weight: 600;
@@ -351,12 +351,6 @@
       justify-content: center;
     }
 
-    /* Availability Button */
-    .availability-btn {
-      background-color: #6c757d;
-      color: white;
-    }
-
     /* Unassigned Button */
     .unassigned-btn {
       background-color: white;
@@ -365,10 +359,6 @@
     }
 
     /* Paid Button */
-    .paid-btn {
-      background-color: #FFC107;
-      color: #00192D;
-    }
 
     /* Button Icons */
     .availability-btn i,
@@ -423,6 +413,15 @@
       display: none;
       /* Hidden by default */
     }
+
+    .btn:focus {
+      box-shadow: none !important;
+      outline: none;
+    }
+
+    .btn:hover {
+      border: 1px solid #FFC107 !important;
+    }
   </style>
 </head>
 
@@ -456,26 +455,38 @@
     <!-- Main Layout -->
     <main class="app-main">
       <!--begin::App Content Header-->
-      <a href="javascript:history.back()"
-        class="btn mt-1"
-        style="background-color: white; color: #00192D; border: 1px solid #00192D; font-weight: 500;">
-        <i class="bi bi-arrow-left" style="margin-right: 4px;"></i> Go Back
-      </a>
-      <div class="app-content mt-1">
-        <div class="container-fluid rounded-4" style="background: #E6EAF0 !important; padding-top:15px; padding-bottom:15px;">
+
+      <div class="app-content">
+        <p class="text-muted mt-2">Manage a maintanance Request</p>
+        <div class="container-fluid rounded-2 mb-2">
+          <div class="row p-1" style="background-color: #E6EAF0;">
+            <div class="col-md-6 p-0">
+              <a href="javascript:history.back()"
+                class="btn"
+                style="background-color: white; color: #00192D; font-weight: 500; width:100%; margin-right:2px;">
+                <i class="bi bi-arrow-left"></i> Go Back
+              </a>
+            </div>
+            <div class="col-md-6 p-0">
+              <button id="availabilityBtn"
+                class="btn"
+                style="background-color: white; color: #00192D; font-weight: 500; width:100%; margin-left:2px;">
+                <i class="bi bi-arrow-left"></i> Unavailable
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid rounded-2 p-1" style="background: #E6EAF0 !important; ">
           <div class="row">
             <div class="col-md-4" style="overflow: hidden; padding-right:2px;">
-              <div class="request-sidebar rounded-4">
-                <h3><i class="fa-solid fa-screwdriver-wrench"></i>Request NO 40</h3>
+              <div class="request-sidebar rounded-2">
+                <!-- <h3><i class="fa-solid fa-screwdriver-wrench"></i>Request NO 40</h3> -->
                 <div class="d-flex flex-column gap-2 p-2">
                   <!-- Availability Button -->
-                  <button id="availabilityBtn" class="btn availability-btn">
-                    <i class="fas fa-ban me-2"></i> Unavailable
-                  </button>
-
+                  <p>In Progress</p>
                   <!-- Secondary Buttons Container -->
-                  <div id="secondaryButtons" class="secondary-buttons">
-                    <button class="btn unassigned-btn">
+                  <div id="secondaryButtons" class="secondary-buttons p-1 rounded-2" style="background-color: #E6EAF0;">
+                    <button id="assign" class="btn unassigned-btn" onclick="showProposals()" id="showProposal" data-request-id="123">
                       <i class="fas fa-user-clock me-2"></i> UnAssigned
                     </button>
                     <button class="btn paid-btn">
@@ -485,19 +496,18 @@
                 </div>
 
                 <div class="search-bar rounded-2">
-                  <div>Other Requests</div>
+                  <div class="text-muted">Other Requests</div>
                   <input class="rounded-2" type="text" id="searchInput" placeholder="Search by unit, category, or property...">
                 </div>
                 <ul class="request-list" id="requestList"></ul>
               </div>
             </div>
             <div class="col-md-8" style="padding-right:10px; padding-left:0; padding-top:0 !;">
-              <div class="main-content" id="detailsPanel" style="background: #f5f5f5">
+              <div class="main-content" id="detailsPanel">
                 <!-- content displays here -->
               </div>
             </div>
           </div>
-
         </div>
       </div>
   </div>
@@ -514,6 +524,115 @@
     All rights reserved.
     <!--end::Copyright-->
   </footer>
+
+  <!-- ASSign Modal -->
+  <div class="modal fade" id="assignProviderModal" tabindex="-1" aria-labelledby="assignProviderModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content shadow-lg border-0 rounded-3">
+
+        <!-- Modal Header -->
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="assignProviderModalLabel">
+            <i class="bi bi-person-check-fill me-2"></i>Assign Service Provider
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <!-- Modal Form -->
+        <form id="assignProviderForm">
+          <div class="modal-body">
+
+            <!-- Hidden Fields -->
+            <input type="hidden" name="maintenance_request_id" id="maintenance_request_id">
+            <input type="hidden" name="unit_id" id="unit_id">
+
+            <!-- Service Provider Dropdown -->
+            <div class="mb-3">
+              <label for="service_provider_id" class="form-label">
+                <i class="bi bi-tools me-1"></i>Service Provider
+              </label>
+              <select class="form-select" name="service_provider_id" id="service_provider_id" required>
+                <option selected disabled value="">Select a provider</option>
+                <!-- Populate dynamically -->
+                <option value="1">John Doe - Plumbing</option>
+                <option value="2">Jane Smith - Electrical</option>
+              </select>
+            </div>
+
+            <!-- Scheduled Date -->
+            <div class="mb-3">
+              <label for="scheduled_date" class="form-label">
+                <i class="bi bi-calendar-event me-1"></i>Scheduled Date
+              </label>
+              <input type="date" class="form-control" name="scheduled_date" id="scheduled_date">
+            </div>
+
+            <!-- Notes / Instructions -->
+            <div class="mb-3">
+              <label for="instructions" class="form-label">
+                <i class="bi bi-pencil-square me-1"></i>Instructions
+              </label>
+              <textarea class="form-control" name="instructions" id="instructions" rows="3" placeholder="Any special notes..."></textarea>
+            </div>
+
+          </div>
+
+          <!-- Modal Footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              <i class="bi bi-x-circle me-1"></i>Cancel
+            </button>
+            <button type="submit" class="btn btn-success">
+              <i class="bi bi-check2-circle me-1"></i>Assign
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+  </div>
+  <div id="customBackdrop" class="modal-backdrop fade d-none"></div>
+  <div id="proposalContainer" class="container proposalContainer py-2 fade d-none custom-modal bg-light" style="overflow: auto;">
+    <div class="d-flex justify-content-between mb-2">
+      <div class=" text-left" style="color:rgb(0 28 63 / 60%); font-weight:500;"><b> Provider Applications</b></div>
+
+      <div class="text-center">
+        <button class="bg-secondary text-white px-4 py-0 rounded hover:bg-blue-600">← Go Back</button>
+      </div>
+
+      <div class="text-right">
+        <button class="text-gray-500 text-xl rounded hover:text-white hover:bg-red-500 transition">&times;</button>
+      </div>
+    </div>
+    <div id="job_proposals_container">
+      <div class="proposal-card mt-2">
+        <div class="proposal-header d-flex align-items-start">
+          <img src="https://i.pravatar.cc/70" alt="Profile Picture" class="profile-pic me-3">
+          <div>
+            <h5>Jane Doe <span class="badge bg-success">Top Rated</span></h5>
+            <p>Full Stack Developer | React & Node.js</p>
+          </div>
+          <div class="ms-auto proposal-meta text-end">
+            <h6>$25/hr</h6>
+            <small>5 days delivery</small><br>
+            <small class="text-success">✅ 42 jobs completed</small>
+          </div>
+        </div>
+
+        <hr>
+
+        <p><strong>Cover Letter:</strong> I'm excited to help build your job board! I have 3 years of experience with React and recently completed a similar project...</p>
+        <p><strong>Location:</strong> Nairobi, Kenya (GMT+3)</p>
+
+        <div class="d-flex justify-content-end mt-3">
+          <button class="btn btn-outline-secondary btn-sm btn-action">Message</button>
+          <button class="btn btn-outline-primary btn-sm btn-action">Shortlist</button>
+          <button class="btn btn-outline-danger btn-sm">Decline</button>
+        </div>
+      </div>
+    </div>
+  </div>
   </div>
 
   <!-- Scripts -->
@@ -677,10 +796,10 @@
       updateAvailabilityButton(req.availability);
 
       detailsPanel.innerHTML = `
-        <div class="container-fluid px-0">
+        <div class="container-fluid px-1">
             <!-- Row 1: Property, Unit, Request ID -->
-            <div class="row-card mb-3 p-3 rounded shadow-sm bg-white">
-                <div class="row gx-3 gy-3 p-3 rounded border-0" style="background-color: #fdfdfd; border: 1px solid #e0e0e0;">
+            <div class="row-card mb-1 p-3 rounded shadow-sm">
+                <div class="row gx-3 gy-3 p-3 rounded border-0" style="background-color:; border: 1px solid #e0e0e0;">
                     <!-- Property -->
                     <div class="col-md-3">
                         <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
@@ -727,7 +846,7 @@
                 </div>
             </div>
             <!-- Row 2: Category & Description -->
-            <div class="row-card mb-3 p-3 rounded shadow-sm bg-white">
+            <div class="row-card mb-1 p-3 rounded shadow-sm bg-white">
                 <div class="row gx-3 gy-3 p-3 rounded border-0" style="border: 1px solid #e0e0e0;">
                     <div class="col-md-12 bg-white p-3">
                         <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
@@ -736,12 +855,12 @@
                             </span>
                             <span style="font-weight: 600;">Description</span>
                         </div>
-                        <div style="margin-top: 6px; font-size: 15px; color: #333; line-height: 1.6;">${req.description}</div>
+                        <div class="text-muted" style="margin-top: 6px; font-size: 15px; color: #333; line-height: 1.6;">${req.description}</div>
                     </div>
                 </div>
             </div>
             <!-- Row 3: Photo -->
-            <div class="row-card mb-3 p-3 rounded shadow-sm bg-white">
+            <div class="row-card mb-1 p-3 rounded shadow-sm bg-white">
                 <div class="detail-row mb-2">
                     <span class="detail-icon"><i class="fa-solid fa-image"></i></span>
                     <span class="detail-label">Image</span>
@@ -772,11 +891,11 @@
 
       if (availability === 'available') {
         btn.innerHTML = '<i class="fas fa-check me-2"></i> Available';
-        btn.style.backgroundColor = '#28a745';
+        btn.style.backgroundColor = '#FFFFFF';
         secondaryButtons.style.display = 'flex';
       } else {
         btn.innerHTML = '<i class="fas fa-ban me-2"></i> Unavailable';
-        btn.style.backgroundColor = '#6c757d';
+        btn.style.backgroundColor = '#E6EAF0';
         secondaryButtons.style.display = 'none';
       }
     }
@@ -805,11 +924,11 @@
           // Update the button appearance
           if (newStatus === 'available') {
             btn.innerHTML = '<i class="fas fa-check me-2"></i> Available';
-            btn.style.backgroundColor = '#28a745';
+            btn.style.backgroundColor = '#FFFFFF';
             secondaryButtons.style.display = 'flex';
           } else {
             btn.innerHTML = '<i class="fas fa-ban me-2"></i> Unavailable';
-            btn.style.backgroundColor = '#6c757d';
+            btn.style.backgroundColor = '#E6EAF0';
             secondaryButtons.style.display = 'none';
           }
 
@@ -828,6 +947,71 @@
 
     // Initialize the button click handler
     document.getElementById('availabilityBtn').addEventListener('click', toggleAvailability);
+  </script>
+  <script>
+    function showProposals() {
+      // const maintenanceRequestModalEl = document.getElementById('maintenanceRequestModal');
+      // const maintenanceRequestModalInstance = bootstrap.Modal.getInstance(maintenanceRequestModalEl);
+      // if (maintenanceRequestModalInstance) {
+      //   maintenanceRequestModalInstance.hide(); // 👈 call it properly
+      // }
+      const viewProposal = document.getElementById("showProposal");
+      //  const requestId = viewProposal.getAttribute("data-request-id");
+
+      // fetch(`actions/get_request_proposals.php?request_id=${requestId}`)
+      //   .then(response => response.json())
+      //   .then(data => {
+      //     console.log("Fetched Proposals:", data);
+      //     // Do something with the data...y
+      //     const container = document.getElementById("job_proposals_container");
+      //     container.classList.remove("d-none"); // Make sure it's visible
+      //     container.innerHTML = ""; // Clear previous content if needed
+      //     data.forEach(p => {
+      //       container.innerHTML += `
+      //       <div class="proposal-card mt-2">
+      //         <div class="proposal-header d-flex align-items-start">
+      //           <img src="${p.profilePic || 'https://i.pravatar.cc/70'}" alt="Profile Picture" class="profile-pic me-3">
+      //           <div>
+      //             <h5>${p.name} <span class="badge bg-warning">5 <i class="fa fa-star " id="star-rating"></i>${p.ratings}</span></h5>
+      //             <p>${p.category}</p>
+      //           </div>
+      //           <div class="ms-auto proposal-meta text-end">
+      //             <h6>$${p.bid_amount}/hr</h6>
+      //             <small>${p.estimated_time}</small><br>
+      //             <small class="text-success">✅ ${p.jobs_completed} jobs completed</small>
+      //           </div>
+      //         </div>
+      //         <hr>
+      //         <p><strong>Cover Letter:</strong> ${p.cover_letter}</p>
+      //         <p><strong>Location:</strong> ${p.location}</p>
+      //         <div class="d-flex justify-content-end mt-3">
+      //           <button class="btn btn-outline-secondary btn-sm btn-action">Message</button>
+      //           <button class="btn btn-outline-primary btn-sm btn-action" style="margin-right:6px;">Shortlist</button>
+      //           <button class="btn btn-outline-danger btn-sm">Decline</button>
+      //         </div>
+      //       </div>
+      //     `;
+      //     });
+      //   })
+      //   .catch(err => {
+      //     console.error("Error fetching proposals:", err);
+      //   })
+
+      const modal = document.getElementById("proposalContainer");
+      const backdrop = document.getElementById("customBackdrop");
+
+      backdrop.classList.remove("d-none");
+      modal.classList.remove("d-none");
+
+      setTimeout(() => {
+        backdrop.classList.add("show");
+        modal.classList.add("show", "d-block");
+      }, 10);
+
+    }
+
+    
+    
   </script>
   <script src="../../../dist/js/adminlte.js"></script>
 </body>
