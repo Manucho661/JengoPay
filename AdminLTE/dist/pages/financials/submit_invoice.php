@@ -135,22 +135,47 @@ try {
 
   }
 
-  // --- Handle file uploads ---
+ // --- Enhanced File Upload Handling ---
 if (!empty($_FILES['attachment']['name'][0])) {
-  $uploadDir = 'uploads/invoice_attachments/';
-  if (!is_dir($uploadDir)) {
+  $uploadDir = '../uploads/invoice_attachments/';
+  if (!file_exists($uploadDir)) {
       mkdir($uploadDir, 0755, true);
   }
 
   $fileInsertStmt = $pdo->prepare("
-      INSERT INTO invoice_attachments (invoice_number, file_name, file_path)
-      VALUES (?, ?, ?)
+      INSERT INTO invoice_attachments
+      (invoice_number, file_name, file_path, uploaded_at)
+      VALUES (?, ?, ?, NOW())
   ");
 
   foreach ($_FILES['attachment']['tmp_name'] as $index => $tmpPath) {
       if ($_FILES['attachment']['error'][$index] === UPLOAD_ERR_OK) {
+          // Validate file type and size
+          $fileType = $_FILES['attachment']['type'][$index];
+          $fileSize = $_FILES['attachment']['size'][$index];
           $originalName = basename($_FILES['attachment']['name'][$index]);
-          $uniqueName = time() . '_' . $originalName;
+
+          // Allowed file types
+          $allowedTypes = [
+              'application/pdf',
+              'image/jpeg',
+              'image/png',
+              'application/msword',
+              'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+          ];
+
+          // Max 5MB file size
+          if ($fileSize > 5242880) {
+              throw new Exception("File $originalName exceeds 5MB size limit");
+          }
+
+          if (!in_array($fileType, $allowedTypes)) {
+              throw new Exception("Invalid file type for $originalName");
+          }
+
+          // Generate unique filename
+          $fileExt = pathinfo($originalName, PATHINFO_EXTENSION);
+          $uniqueName = uniqid('inv_') . '_' . $invoice_number . '.' . $fileExt;
           $targetPath = $uploadDir . $uniqueName;
 
           if (move_uploaded_file($tmpPath, $targetPath)) {
@@ -159,13 +184,12 @@ if (!empty($_FILES['attachment']['name'][0])) {
                   $originalName,
                   $targetPath
               ]);
+          } else {
+              throw new Exception("Failed to upload $originalName");
           }
       }
   }
 }
-
-
-
     $pdo->commit();
 
     if ($isDraft) {
