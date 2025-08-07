@@ -71,19 +71,19 @@ try {
 echo "\n";
 // --- DEBUG END ---
 
-$stmt = $pdo->query("
-    SELECT
-        i.invoice_number,
-        i.invoice_date,
-        i.due_date,
-        i.total,
-        CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
-    FROM invoice i
-    LEFT JOIN users u ON i.tenant = u.id
-    ORDER BY i.invoice_number DESC
-");
+// $stmt = $pdo->query("
+//     SELECT
+//         i.invoice_number,
+//         i.invoice_date,
+//         i.due_date,
+//         i.total,
+//         CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
+//     FROM invoice i
+//     LEFT JOIN users u ON i.tenant = u.id
+//     ORDER BY i.invoice_number DESC
+// ");
 
-$invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 
@@ -1035,52 +1035,50 @@ header {
     </div>
   </div>
 </div>
-
-
                         <?php
                         // ----------------------------------------------------
                         // 1) Fetch invoices with tenant details and payment summary
                         // ----------------------------------------------------
                       $stmt = $pdo->query("
-    SELECT
-        i.id,
-        i.invoice_number,
-        i.invoice_date,
-        i.due_date,
-        COALESCE(i.sub_total, 0) AS sub_total,
-        COALESCE(i.total, 0) AS total,
-        COALESCE(i.taxes, 0) AS taxes,
-        i.status,
-        i.payment_status,
-        CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name,
-        (SELECT COALESCE(SUM(p.amount), 0)
-         FROM payments p
-         WHERE p.invoice_id = i.id) AS paid_amount,
-        i.building_id,
-        i.account_item,
-        i.description,
-        (SELECT COALESCE(SUM(unit_price * quantity), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS sub_total,
-        (SELECT COALESCE(SUM(taxes), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS taxes,
-        (SELECT COALESCE(SUM(total), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS total,
-        CASE
-            WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
-            THEN (SELECT SUM(unit_price * quantity) FROM invoice_items WHERE invoice_number = i.invoice_number)
-            ELSE i.sub_total
-        END AS display_sub_total,
-        CASE
-            WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
-            THEN (SELECT SUM(taxes) FROM invoice_items WHERE invoice_number = i.invoice_number)
-            ELSE i.taxes
-        END AS display_taxes,
-        CASE
-            WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
-            THEN (SELECT SUM(total) FROM invoice_items WHERE invoice_number = i.invoice_number)
-            ELSE i.total
-        END AS display_total
-    FROM invoice i
-    LEFT JOIN users u ON u.id = i.tenant
-    ORDER BY i.created_at DESC
-");
+                              SELECT
+                                  i.id,
+                                  i.invoice_number,
+                                  i.invoice_date,
+                                  i.due_date,
+                                  COALESCE(i.sub_total, 0) AS sub_total,
+                                  COALESCE(i.total, 0) AS total,
+                                  COALESCE(i.taxes, 0) AS taxes,
+                                  i.status,
+                                  i.payment_status,
+                                  CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name,
+                                  (SELECT COALESCE(SUM(p.amount), 0)
+                                  FROM payments p
+                                  WHERE p.invoice_id = i.id) AS paid_amount,
+                                  i.building_id,
+                                  i.account_item,
+                                  i.description,
+                                  (SELECT COALESCE(SUM(unit_price * quantity), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS sub_total,
+                                  (SELECT COALESCE(SUM(taxes), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS taxes,
+                                  (SELECT COALESCE(SUM(total), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS total,
+                                  CASE
+                                      WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
+                                      THEN (SELECT SUM(unit_price * quantity) FROM invoice_items WHERE invoice_number = i.invoice_number)
+                                      ELSE i.sub_total
+                                  END AS display_sub_total,
+                                  CASE
+                                      WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
+                                      THEN (SELECT SUM(taxes) FROM invoice_items WHERE invoice_number = i.invoice_number)
+                                      ELSE i.taxes
+                                  END AS display_taxes,
+                                  CASE
+                                      WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
+                                      THEN (SELECT SUM(total) FROM invoice_items WHERE invoice_number = i.invoice_number)
+                                      ELSE i.total
+                                  END AS display_total
+                              FROM invoice i
+                              LEFT JOIN users u ON u.id = i.tenant
+                              ORDER BY i.created_at DESC
+                          ");
                         $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                         // ----------------------------------------------------
@@ -1211,9 +1209,7 @@ header {
                   <i class="fas fa-edit me-2"></i>Edit Invoice
               </a></li>';
                             }
-
                             echo '<li><hr class="dropdown-divider"></li>';
-
                             // Delete option - only for drafts and cancelled invoices
                             if ($invoice['status'] === 'draft' || $invoice['status'] === 'cancelled') {
                                 echo '<li><a class="dropdown-item text-danger" href="#" onclick="confirmDeleteInvoice(' . $invoice['id'] . ')">
@@ -1552,7 +1548,7 @@ header {
 
                                 <div class="action-right" style="display: flex; justify-content: flex-end;">
     <button type="submit" style="background-color: #00192D; color: #FFC107; padding: 8px 16px; border: none; border-radius: 4px;">
-        <i class="fas fa-envelope"></i> Save & Send
+    <i class="fas fa-share-square"></i> Save & Send
     </button>
 </div>
 
@@ -1648,7 +1644,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </script> -->
 
 
-<script>
+<!-- <script>
 // Store the original invoices data
 let originalInvoices = <?php echo json_encode($invoices); ?>;
 let displayedInvoices = [...originalInvoices];
@@ -1987,7 +1983,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-</script>
+</script> -->
 
 <script>
 document.getElementById('resetFilter').addEventListener('click', function () {
