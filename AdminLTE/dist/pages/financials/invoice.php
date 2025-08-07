@@ -1390,7 +1390,7 @@ header {
                         <!-- Customer Section -->
                         <div class="form-section">
                             <h3 class="section-title">Tenant Details</h3>
-                            <form  id="myForm" method="POST" action="submit_invoice.php">
+                            <form  id="myForm" method="POST" action="submit_invoice.php" enctype="multipart/form-data">
                                 <div class="form-row">
 
                                     <!-- Existing Invoice # input -->
@@ -1506,7 +1506,7 @@ header {
         </table>
 
         <!-- Add More Button -->
-        <button type="button" class="btn btn-success add-btn" id="addMoreBtn">
+        <button type="button" class="btn btn-success add-btn" id="addMoreBtn" style="background-color: #00192D; color: #FFC107;">
             <i class="fa fa-plus"></i> ADD MORE
         </button>
                                 </div>
@@ -1529,20 +1529,42 @@ header {
                                 <!-- Form Actions -->
                                 <div class="form-actions">
                                     <div class="action-left">
-                                    <!-- Hidden file input (triggered by your Attach File button) -->
-    <input type="file" id="fileInput" name="attachment[]" multiple>
+                                   <!-- File Upload Section -->
+                              <div class="form-section">
+                                  <h3 class="section-title">Attachments</h3>
+                                  <div class="form-row">
+                                      <div class="form-group">
+                                          <!-- Hidden file input -->
+                                          <input type="file" id="fileInput" name="attachment[]" multiple style="display: none;">
+
+                                          <!-- Button to trigger file input -->
+                                          <button type="button"  class="btn btn-outline-secondary" onclick="document.getElementById('fileInput').click()"  style="background-color: #00192D; color: #FFC107;">
+                                              <i class="fas fa-paperclip"></i> Attach Files
+                                          </button>
+
+                                          <!-- Display selected files -->
+                                          <div id="fileList" class="mt-2"></div>
+                                      </div>
+                                  </div>
+</div>
                                     </div>
+                                </div>
+
+                                <div class="action-right" style="display: flex; justify-content: flex-end;">
+    <button type="submit" style="background-color: #00192D; color: #FFC107; padding: 8px 16px; border: none; border-radius: 4px;">
+        <i class="fas fa-envelope"></i> Save & Send
+    </button>
+</div>
 
                                     <!-- Add this hidden file input if you want actual file attachment -->
 <!-- <input type="file" id="fileInput" style="display: none;"> -->
-                                    <div class="action-right">
-                                        <!-- <button class="btn btn-outline">
-                                 Send
-                            </button> -->
-                                        <button type="submit" style="background-color: #00192D; color: #FFC107; padding: 8px 16px; border: none; border-radius: 4px;">
+                                    <!-- <div class="action-right"> -->
+                                        <!-- <button type="submit" style="background-color: #00192D; color: #FFC107; padding: 8px 16px; border: none; border-radius: 4px;">
                                             <i class="fas fa-envelope"></i>
                                             Save&Send
-                                        </button>
+                                        </button> -->
+                                    <!-- </div> -->
+
 
                             </form>
                         </div>
@@ -1554,24 +1576,28 @@ header {
 
 
 
-   <script>
-    function attachFile() {
-    const fileInput = document.getElementById('fileInput');
-    fileInput.click();
+    <script>
+document.getElementById('fileInput').addEventListener('change', function(e) {
+    const fileList = document.getElementById('fileList');
+    fileList.innerHTML = '';
 
-    fileInput.onchange = function() {
-        if (fileInput.files.length > 0) {
-            // Display selected files to user
-            const fileList = Array.from(fileInput.files)
-                .map(file => file.name)
-                .join(', ');
-            alert(`Files ready for upload: ${fileList}`);
+    if (this.files.length > 0) {
+        const list = document.createElement('ul');
+        list.className = 'list-group';
+
+        for (let i = 0; i < this.files.length; i++) {
+            const item = document.createElement('li');
+            item.className = 'list-group-item';
+            item.textContent = this.files[i].name;
+            list.appendChild(item);
         }
-    };
-}
-   </script>
 
-
+        fileList.appendChild(list);
+    } else {
+        fileList.textContent = 'No files selected';
+    }
+});
+</script>
     <script src="invoice.js"></script>
     <!-- <script>
 document.addEventListener("DOMContentLoaded", function () {
