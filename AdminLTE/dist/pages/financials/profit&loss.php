@@ -938,7 +938,7 @@ $netProfit = $income - $expenses;
 
 <!-- Overlay scripts -->
  <!-- View announcements script -->
- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>z
 
  <script>
 document.getElementById('buildingFilter').addEventListener('change', function() {

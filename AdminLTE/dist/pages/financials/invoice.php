@@ -71,19 +71,19 @@ try {
 echo "\n";
 // --- DEBUG END ---
 
-$stmt = $pdo->query("
-    SELECT
-        i.invoice_number,
-        i.invoice_date,
-        i.due_date,
-        i.total,
-        CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
-    FROM invoice i
-    LEFT JOIN users u ON i.tenant = u.id
-    ORDER BY i.invoice_number DESC
-");
+// $stmt = $pdo->query("
+//     SELECT
+//         i.invoice_number,
+//         i.invoice_date,
+//         i.due_date,
+//         i.total,
+//         CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
+//     FROM invoice i
+//     LEFT JOIN users u ON i.tenant = u.id
+//     ORDER BY i.invoice_number DESC
+// ");
 
-$invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 
@@ -811,16 +811,16 @@ header {
   .invoice-container {
     overflow-x: auto;
   }
-  
+
   .invoice-item {
     min-width: 900px; /* Forces horizontal scroll */
   }
-  
+
   .form-row {
     flex-direction: column;
     gap: 15px;
   }
-  
+
   .form-group {
     width: 100%;
     margin-bottom: 15px;
@@ -831,45 +831,45 @@ header {
   .app-container {
     flex-direction: column;
   }
-  
+
   .page-header {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .page-actions {
     margin-top: 15px;
     width: 100%;
     justify-content: flex-start;
   }
-  
+
   .invoice-list-header {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .invoice-list-filters {
     margin-top: 15px;
     width: 100%;
     flex-direction: column;
   }
-  
+
   .filter-dropdown {
     width: 100%;
     margin-bottom: 10px;
   }
-  
+
   #invoicePreviewPanel {
     width: 100%;
   }
-  
+
   /* Modals */
   .modal-dialog {
     margin: 10px;
     width: calc(100% - 20px) !important;
     max-width: none;
   }
-  
+
   /* Stack form rows vertically */
   .form-row {
     flex-direction: column;
@@ -881,27 +881,27 @@ header {
     padding: 6px 12px;
     font-size: 12px;
   }
-  
+
   .section-title {
     font-size: 16px;
   }
-  
-  .items-table th, 
+
+  .items-table th,
   .items-table td {
     padding: 6px 4px;
     font-size: 12px;
   }
-  
+
   .summary-table {
     width: 100% !important;
     float: none !important;
   }
-  
+
   .page-actions .btn {
     margin-bottom: 5px;
     width: 100%;
   }
-  
+
   /* Button groups */
   .btn-group-responsive .btn {
     flex: 1 0 calc(50% - 5px);
@@ -913,25 +913,25 @@ header {
   .filter-panel .row > div {
     margin-bottom: 10px;
   }
-  
-  .form-control, 
+
+  .form-control,
   .form-select {
     font-size: 12px;
     padding: 8px;
   }
-  
+
   /* Mobile table styles */
   .invoice-item {
     flex-wrap: wrap;
   }
-  
-  .table td, 
+
+  .table td,
   .table th {
     color: white;
     background-color: #00192D;
     border: 1px solid #FFC107;
   }
-  
+
   /* Adjust column widths for mobile */
   .invoice-checkbox,
   .invoice-number,
@@ -1155,52 +1155,52 @@ header {
       </div>
     </div>
   </div>
-</div>
+<!-- </div> -->
 
                         <?php
                         // ----------------------------------------------------
                         // 1) Fetch invoices with tenant details and payment summary
                         // ----------------------------------------------------
                       $stmt = $pdo->query("
-    SELECT
-        i.id,
-        i.invoice_number,
-        i.invoice_date,
-        i.due_date,
-        COALESCE(i.sub_total, 0) AS sub_total,
-        COALESCE(i.total, 0) AS total,
-        COALESCE(i.taxes, 0) AS taxes,
-        i.status,
-        i.payment_status,
-        CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name,
-        (SELECT COALESCE(SUM(p.amount), 0)
-         FROM payments p
-         WHERE p.invoice_id = i.id) AS paid_amount,
-        i.building_id,
-        i.account_item,
-        i.description,
-        (SELECT COALESCE(SUM(unit_price * quantity), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS sub_total,
-        (SELECT COALESCE(SUM(taxes), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS taxes,
-        (SELECT COALESCE(SUM(total), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS total,
-        CASE
-            WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
-            THEN (SELECT SUM(unit_price * quantity) FROM invoice_items WHERE invoice_number = i.invoice_number)
-            ELSE i.sub_total
-        END AS display_sub_total,
-        CASE
-            WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
-            THEN (SELECT SUM(taxes) FROM invoice_items WHERE invoice_number = i.invoice_number)
-            ELSE i.taxes
-        END AS display_taxes,
-        CASE
-            WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
-            THEN (SELECT SUM(total) FROM invoice_items WHERE invoice_number = i.invoice_number)
-            ELSE i.total
-        END AS display_total
-    FROM invoice i
-    LEFT JOIN users u ON u.id = i.tenant
-    ORDER BY i.created_at DESC
-");
+                              SELECT
+                                  i.id,
+                                  i.invoice_number,
+                                  i.invoice_date,
+                                  i.due_date,
+                                  COALESCE(i.sub_total, 0) AS sub_total,
+                                  COALESCE(i.total, 0) AS total,
+                                  COALESCE(i.taxes, 0) AS taxes,
+                                  i.status,
+                                  i.payment_status,
+                                  CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name,
+                                  (SELECT COALESCE(SUM(p.amount), 0)
+                                  FROM payments p
+                                  WHERE p.invoice_id = i.id) AS paid_amount,
+                                  i.building_id,
+                                  i.account_item,
+                                  i.description,
+                                  (SELECT COALESCE(SUM(unit_price * quantity), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS sub_total,
+                                  (SELECT COALESCE(SUM(taxes), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS taxes,
+                                  (SELECT COALESCE(SUM(total), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS total,
+                                  CASE
+                                      WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
+                                      THEN (SELECT SUM(unit_price * quantity) FROM invoice_items WHERE invoice_number = i.invoice_number)
+                                      ELSE i.sub_total
+                                  END AS display_sub_total,
+                                  CASE
+                                      WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
+                                      THEN (SELECT SUM(taxes) FROM invoice_items WHERE invoice_number = i.invoice_number)
+                                      ELSE i.taxes
+                                  END AS display_taxes,
+                                  CASE
+                                      WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
+                                      THEN (SELECT SUM(total) FROM invoice_items WHERE invoice_number = i.invoice_number)
+                                      ELSE i.total
+                                  END AS display_total
+                              FROM invoice i
+                              LEFT JOIN users u ON u.id = i.tenant
+                              ORDER BY i.created_at DESC
+                          ");
                         $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                         // ----------------------------------------------------
@@ -1331,9 +1331,7 @@ header {
                   <i class="fas fa-edit me-2"></i>Edit Invoice
               </a></li>';
                             }
-
                             echo '<li><hr class="dropdown-divider"></li>';
-
                             // Delete option - only for drafts and cancelled invoices
                             if ($invoice['status'] === 'draft' || $invoice['status'] === 'cancelled') {
                                 echo '<li><a class="dropdown-item text-danger" href="#" onclick="confirmDeleteInvoice(' . $invoice['id'] . ')">
@@ -1357,7 +1355,7 @@ header {
       </div>';
                         }
                         ?>
-
+</div>
 
                         <!-- ✅ PAYMENT MODAL -->
                         <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
@@ -1672,7 +1670,7 @@ header {
 
                                 <div class="action-right" style="display: flex; justify-content: flex-end;">
     <button type="submit" style="background-color: #00192D; color: #FFC107; padding: 8px 16px; border: none; border-radius: 4px;">
-        <i class="fas fa-envelope"></i> Save & Send
+    <i class="fas fa-share-square"></i> Save & Send
     </button>
 </div>
 
@@ -1768,7 +1766,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </script> -->
 
 
-<script>
+<!-- <script>
 // Store the original invoices data
 let originalInvoices = <?php echo json_encode($invoices); ?>;
 let displayedInvoices = [...originalInvoices];
@@ -2107,7 +2105,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-</script>
+</script> -->
 
 <script>
 document.getElementById('resetFilter').addEventListener('click', function () {
@@ -3001,10 +2999,10 @@ function filterFunction() {
 // Handle window resize for responsive adjustments
 function handleResize() {
   const windowWidth = window.innerWidth;
-  
+
   // Adjust layout based on screen size
   const formRows = document.querySelectorAll('.form-row');
-  
+
   if (windowWidth < 768) {
     // Mobile-specific adjustments
     formRows.forEach(row => {
@@ -3054,7 +3052,7 @@ function applyFilter() {
 function updateActiveFiltersDisplay() {
   const activeFiltersContainer = document.getElementById('activeFilters');
   if (!activeFiltersContainer) return;
-  
+
   activeFiltersContainer.innerHTML = '';
 
   if (activeFilters.length === 0) {
@@ -3069,7 +3067,7 @@ function updateActiveFiltersDisplay() {
   activeFilters.forEach((filter, index) => {
     const filterTag = document.createElement('span');
     filterTag.className = 'filter-tag';
-    
+
     const filterText = document.createElement('span');
     filterText.textContent = `${filter.fieldText}: ${filter.value}`;
     filterTag.appendChild(filterText);
@@ -3102,10 +3100,10 @@ function filterInvoices() {
 document.addEventListener('DOMContentLoaded', function() {
   // Initialize responsive layout
   handleResize();
-  
+
   // Set up event listeners
   window.addEventListener('resize', handleResize);
-  
+
   // Initialize filter input
   const searchInput = document.getElementById('searchInput');
   if (searchInput) {
