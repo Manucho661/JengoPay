@@ -746,7 +746,7 @@ require_once 'actions/getBuildings.php'
                                                                 This Expense Note Belongs to.<br>
                                                                 Silver Spoon Towers
                                                                 <br>
-                                                                <p class="text-danger" id="overPaymentNote" style="display:none">The paid amount is more than the requied</p>
+                                                                <p class="text-danger" id="overPaymentNote" style="display:none">The paid amount (<span class="bg-secondary text-white" id="paidAmount" ></span>) is more than the requied</p>
                                                             </div>
                                                             <div class="col-6">
                                                                 <table class="table table-borderless table-sm text-end mb-0">
@@ -1102,6 +1102,7 @@ require_once 'actions/getBuildings.php'
                         statusLabelElement.classList.remove("diagonal-unpaid-label"); // Remove the unpaid
                         statusLabelElement.classList.add("diagonal-paid-label");
                         document.getElementById("overPaymentNote").style.display="block";
+                        document.getElementById("paidAmount").textContent=`KES ${parseFloat(expense.amount_paid || 0).toLocaleString()}`;
                     }else if (expense.status === "partially paid") {
                         statusLabelElement.textContent = "PARTIALLY PAID";
                         statusLabelElement.classList.remove("diagonal-unpaid-label"); // Remove the unpaid
@@ -1120,7 +1121,7 @@ require_once 'actions/getBuildings.php'
                             <td class="text-end">KES ${parseFloat(item.unit_price || 0).toLocaleString()}</td>
                             <td class="text-end">${item.taxes || '—'}</td>
                             <td class="text-end">${item.discount || '—'}%</td> <!-- Update if you have discount data -->
-                            <td class="text-end">KES ${parseFloat(item.total || 0).toLocaleString()} </td>
+                            <td class="text-end">KES ${parseFloat(item.item_total || 0).toLocaleString()} </td>
                         `;
                         tableBody.appendChild(row);
                     });

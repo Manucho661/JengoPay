@@ -927,7 +927,6 @@
   <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
 
 
-
   <!-- more options -->
   <script>
     // JavaScript to handle hover and hide functionality
