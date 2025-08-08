@@ -693,26 +693,27 @@ $netProfit = $income - $expenses;
       </select>
     </div>
 
-    <!-- Start Date -->
-    <div class="col-12 col-md-4">
-    <label class="form-label startDate me-2">Start Date</label>
-    <input type="date" class="form-control" id="startDate" />    </div>
+                 <!-- Start Date -->
+                  <div class="col-12 col-md-4">
+                    <label class="form-label startDate me-2">Start Date</label>
+                    <input type="date" class="form-control" id="startDate" />
+                  </div>
 
-    <!-- End Date -->
-    <div class="col-12 col-md-4">
-    <label class="form-label endDate me-2">End Date</label>
-    <input type="date" class="form-control" id="endDate" />
-    </div>
+                  <!-- End Date -->
+                  <div class="col-12 col-md-4">
+                    <label class="form-label endDate me-2">End Date</label>
+                    <input type="date" class="form-control" id="endDate" />
+                  </div>
 
-    <!-- Filter Button -->
+                <!-- Filter Button -->
 <div class="col-12 mt-3">
   <button class="btn btn-outline-dark" style="color: #FFC107; background-color: #00192D;" onclick="applyFilters()">
     <i class="fas fa-filter"></i> Filter
   </button>
 </div>
 
-  </div>
-</div>
+                  </div>
+                </div>
               </div>
 
 
@@ -746,7 +747,7 @@ $netProfit = $income - $expenses;
                                 <th style="font-size: 16px;">Amount</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody  id="financialData">
                           <!-- <tr class="category"><td> <b style="font-size: 16px;">Income</b></td></tr> -->
                           <tr class="category"><td style="color:green; font-weight:500;"> <b>Income</b></td></tr>
 
@@ -933,12 +934,122 @@ $netProfit = $income - $expenses;
 
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
-
-
-
 <!-- Overlay scripts -->
  <!-- View announcements script -->
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+ <script>
+function applyFilters() {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+
+    if (!startDate || !endDate) {
+        alert('Please select both start and end dates');
+        return;
+    }
+
+    if (new Date(startDate) > new Date(endDate)) {
+        alert('Start date cannot be after end date');
+        return;
+    }
+
+    // Send AJAX request to fetch filtered data
+    fetchFilteredData(startDate, endDate);
+}
+
+function fetchFilteredData(startDate, endDate) {
+    // Create FormData object
+    const formData = new FormData();
+    formData.append('startDate', startDate);
+    formData.append('endDate', endDate);
+
+    // Send AJAX request
+    fetch('fetch_invoice_data.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Update the table with filtered data
+        updateFinancialTable(data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while fetching data');
+    });
+}
+
+function updateFinancialTable(data) {
+    const tbody = document.getElementById('financialData');
+    tbody.innerHTML = '';
+
+    // Format numbers with commas
+    const formatNumber = (num) => {
+        return 'Ksh' + parseFloat(num).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
+
+    // Create the table rows with the filtered data
+    let html = `
+        <tr class="category"><td style="color:green; font-weight:500;"> <b>Income</b></td></tr>
+        <tr><td>Rental Income</td><td>${formatNumber(data.rent)}</td></tr>
+        <tr><td>Water Charges (Revenue)</td><td>${formatNumber(data.water)}</td></tr>
+        <tr><td>Garbage Collection Fees(Revenue)</td><td>${formatNumber(data.garbage)}</td></tr>
+        <tr><td>Late Payment Fees</td><td>Ksh 0.00</td></tr>
+        <tr><td>Commissions and Management Fees</td><td>Ksh 0.00</td></tr>
+        <tr><td>Other Income(Advertising,Penalties)</td><td>Ksh 0.00</td></tr>
+        <tr class="category"><td style="font-weight:500;"> <b>Total Income</b></td><td><b>${formatNumber(data.totalIncome)}</b></td></tr>
+        <tr class="category"><td style="color:green;"> <b>Expenses</b></td></tr>
+        <tr><td>Maintenance and Repair Costs</td><td>${formatNumber(data.maintenance)}</td></tr>
+        <tr><td>Staff Salaries and Wages</td><td>${formatNumber(data.salaries)}</td></tr>
+        <tr><td>Electricity Expense</td><td>${formatNumber(data.electricity)}</td></tr>
+        <tr><td>Water Expense</td><td>${formatNumber(data.waterExpense)}</td></tr>
+        <tr><td>Garbage Collection Expense</td><td>${formatNumber(data.garbageExpense)}</td></tr>
+        <tr><td>Internet Expense</td><td>${formatNumber(data.internet)}</td></tr>
+        <tr><td>Security Expense</td><td>${formatNumber(data.security)}</td></tr>
+        <tr><td>Property Management Software Subscription</td><td>${formatNumber(data.software)}</td></tr>
+        <tr><td>Marketing And Advertising Costs</td><td>${formatNumber(data.marketing)}</td></tr>
+        <tr><td>Legal and Compliance Fees</td><td>${formatNumber(data.legal)}</td></tr>
+        <tr><td>Loan Interest Payments</td><td>${formatNumber(data.loanInterest)}</td></tr>
+        <tr><td>Bank/Mpesa Charges</td><td>${formatNumber(data.bankCharges)}</td></tr>
+        <tr><td>Other Expenses (Office, Supplies, Travel)</td><td>${formatNumber(data.otherExpenses)}</td></tr>
+        <tr class="category"><td><b>Total Expenses</b></td><td><b>${formatNumber(data.totalExpenses)}</b></td></tr>
+        <tr class="category"><td><b>Net Profit</b></td><td><b>${formatNumber(data.netProfit)}</b></td></tr>
+    `;
+
+    tbody.innerHTML = html;
+}
+
+// Load initial data when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Set default dates (e.g., current month)
+    const today = new Date();
+    const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    document.getElementById('startDate').valueAsDate = firstDay;
+    document.getElementById('endDate').valueAsDate = today;
+
+    // Fetch initial data
+    fetchFilteredData(
+        firstDay.toISOString().split('T')[0],
+        today.toISOString().split('T')[0]
+    );
+});
+</script>
+
+ <script>
+// Wait until the page is loaded
+document.addEventListener("DOMContentLoaded", function () {
+    const startDateInput = document.getElementById("startDate");
+
+    startDateInput.addEventListener("change", function () {
+        const selectedDate = this.value;
+        if (selectedDate) {
+            console.log("Start Date selected:", selectedDate);
+            // Example: Show it in an alert
+            alert("You picked: " + selectedDate);
+        }
+    });
+});
+</script>
 
  <script>
 document.getElementById('buildingFilter').addEventListener('change', function() {
@@ -953,22 +1064,65 @@ document.getElementById('buildingFilter').addEventListener('change', function() 
 });
 </script>
 
+
+
+<!-- <script>
+function applyFilters() {
+  // Get the date values from the inputs
+  const startDate = document.getElementById('startDate').value;
+  const endDate = document.getElementById('endDate').value;
+
+  // Validate the dates
+  if (!startDate || !endDate) {
+    alert('Please select both start and end dates');
+    return;
+  }
+
+  if (new Date(startDate) > new Date(endDate)) {
+    alert('Start date cannot be after end date');
+    return;
+  }
+
+  // Here you would typically use these dates to filter your data
+  console.log('Filtering between:', startDate, 'and', endDate);
+
+  // Example of what you might do next:
+  // 1. Make an API call with these date parameters
+  // 2. Filter a local dataset
+  // 3. Update the UI to show only data within this range
+
+  // For demonstration, we'll just show an alert
+  alert(`Filters applied:\nStart Date: ${startDate}\nEnd Date: ${endDate}`);
+}
+</script> -->
+
 <script>
 function applyFilters() {
-  const startDate = document.getElementById("startDate").value;
-  const endDate = document.getElementById("endDate").value;
-  const buildingId = document.getElementById("buildingFilter").value;
+    // Get the values from the input fields
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
 
-  const params = new URLSearchParams();
+    // Check if both dates are selected
+    if (startDate && endDate) {
+        // You can now use the startDate and endDate variables.
+        // For example, you can print them to the console.
+        console.log("Filtering from:", startDate, "to:", endDate);
 
-  if (startDate) params.append('start_date', startDate);
-  if (endDate) params.append('end_date', endDate);
-  if (buildingId && buildingId !== "") params.append('building_id', buildingId);
+        // Here's where you would add your logic, like:
+        // 1. Making an API call with the dates as parameters.
+        // 2. Filtering a list of items on the page.
+        // 3. Displaying a success message.
 
-  // Reload with filters applied
-  window.location.href = window.location.pathname + '?' + params.toString();
+        alert(`Filters applied! Showing data from ${startDate} to ${endDate}.`);
+
+    } else {
+        // Handle cases where one or both dates are not selected
+        alert("Please select both a start and end date.");
+    }
 }
 </script>
+
+
 
 
 
@@ -1012,7 +1166,7 @@ function updateSummarySection(summary) {
 </script>
  -->
 
- <script>
+ <!-- <script>
 function applyFilters() {
   const startDate = document.getElementById("startDate").value;
   const endDate = document.getElementById("endDate").value;
@@ -1027,7 +1181,7 @@ function applyFilters() {
 
   window.location.href = window.location.pathname + '?' + params.toString();
 }
-</script>
+</script> -->
 
 
 
