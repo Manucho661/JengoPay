@@ -1,7 +1,11 @@
+<?php
+require_once "actions/get_requests.php";
+// var_dump($requests);
+// 'exit;
+?>
 <!doctype html>
 <html lang="en">
 <!--begin::Head-->
-
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>AdminLTE | Dashboard v2</title>
@@ -434,8 +438,33 @@
                         <th>ACTIONS</th>
                       </tr>
                     </thead>
-                    <tbody id="maintenanceRequestsTableBody">
-
+                    <tbody id="maintenanceRequestsTableBod">
+                      <?php
+                      foreach($requests as $request):?>
+                        <tr>
+                          <td><?=$request['request_date']?></td>
+                          <td>
+                          <div><?=$request['residence']?> </div>
+                          <div style='color: green;'><?=$request['unit'] ?></div>
+                          </td>
+                          <td>
+                          <div><?= $request['category']?></div>
+                          <div style='color:green; border:none; width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'><?=$request['description']?> </div>
+                          </td>
+                          <td>
+                            <?php
+                          if(!empty($request['provider_name'])):?>
+                          <div><?=$request['provider_name']?></div>
+                          <?php else :?>
+                            <div>Not assigned</div>
+                            <?php endif ?>
+                          </td>
+                          <td><?= $request['priority']?></td>
+                          <td><?= $request['category']?></td>
+                          <td><?= $request['category']?></td>
+                          <td><?= $request['category']?></td>
+                        </tr>
+                        <?php endforeach; ?>
                     </tbody>
                   </table>
                 </div>

@@ -78,8 +78,8 @@
       display: flex;
       flex-direction: column;
       border-right: 1px solid #e0e0e0;
-      max-height: calc(140vh - 180px);
-      min-height: calc(140vh - 180px);
+      max-height: calc(120vh - 180px);
+      min-height: calc(120vh - 180px);
     }
 
     .request-sidebar h3 {
@@ -238,7 +238,7 @@
       /* flex-grow: 1; */
       /* padding: 2rem; */
       overflow-y: auto;
-      max-height: calc(140vh - 180px);
+      max-height: calc(120vh - 180px);
     }
 
     .detail-row {
@@ -565,7 +565,7 @@
       <!--begin::App Content Header-->
 
       <div class="app-content">
-        <p class="text-muted mt-2">Manage a maintanance Request</p>
+        <p class="text-muted mt-2">Manage a maintanance Request <span id="requestID" style="color: #dc3545;"></span></p>
         <div class="container-fluid rounded-2 mb-2">
           <div class="row p-1" style="background-color: #E6EAF0;">
             <div class="col-md-6 p-0">
@@ -589,13 +589,11 @@
             <div class="col-md-4" style="overflow: hidden; padding-right:2px;">
               <div class="request-sidebar rounded-2">
                 <!-- <h3><i class="fa-solid fa-screwdriver-wrench"></i>Request NO 40</h3> -->
-                <div class="d-flex flex-column gap-2 p-2">
-                  <!-- Availability Button -->
-                  <p>In Progress</p>
+                <div class="d-flex flex-column p-2">
                   <!-- Secondary Buttons Container -->
                   <div id="secondaryButtons" class="secondary-buttons p-1 rounded-2" style="background-color: #E6EAF0;">
                     <button id="assign" class="btn unassigned-btn shadow-none" onclick="showProposals()" id="showProposal" data-request-id="123">
-                      <i class="fas fa-user-clock me-2"></i> UnAssigned
+                      <i class="fas fa-user-clock me-2"></i> Assign
                     </button>
                     <button id="paidBtn" class="btn shadow-none">
                       <i class="fas fa-check-circle me-2"></i> Paid
@@ -764,7 +762,7 @@
         </div>
 
         <div class="modal-body">
-          <form id="payExpenseForm">
+          <form id="payRequestForm">
             <!-- id -->
             <input type="hidden" name="expense_id" id="expenseId">
             <!-- total amount -->
@@ -799,7 +797,7 @@
 
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" form="payExpenseForm" class="btn" style="background-color: #FFC107; color: #00192D;">
+          <button type="submit" form="payRequestForm" class="btn" style="background-color: #FFC107; color: #00192D;">
             <i class="bi bi-credit-card"></i> Confirm Payment
           </button>
         </div>
@@ -967,7 +965,8 @@
 
       // Update the availability button based on the request's status
       updateAvailabilityButton(req.availability);
-
+      // update Request ID
+      document.getElementById('requestID').textContent = req.id;
       detailsPanel.innerHTML = `
         <div class="container-fluid px-1">
             <!-- Row 1: Property, Unit, Request ID -->
@@ -995,33 +994,33 @@
                         <div style="margin-top: 6px; font-size: 15px; color: #333;">${req.unit}</div>
                     </div>
 
-                    <!-- Request ID -->
+                    <!-- Provider -->
+                    <div class="col-md-3">
+                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                            <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                                <i class="bi bi-file-text" style="color: #FFC107; font-size: 16px;"></i>
+                            </span>
+                            <span style="font-weight: 600;">Provider</span>
+                        </div>
+                        <div style="margin-top: 6px; font-size: 15px; color: #b93232ff;">Unassigned</div>
+                    </div>
+                    <!-- Status -->
                     <div class="col-md-3">
                         <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
                             <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
                                 <i class="fa-solid fa-hashtag" style="color: #FFC107; font-size: 16px;"></i>
                             </span>
-                            <span style="font-weight: 600;">Request ID</span>
+                            <span style="font-weight: 600;">Status</span>
                         </div>
-                        <div style="margin-top: 6px; font-size: 15px; color: #333;">${req.id}</div>
+                        <div style="margin-top: 6px; font-size: 15px; color: #c15050ff;">Unassigned</div>
                     </div>
 
                     <!-- Status -->
-                    <div class="col-md-3">
-                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                            <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                                <i class="fa-solid fa-clipboard-check" style="color: #FFC107; font-size: 16px;"></i>
-                            </span>
-                            <span style="font-weight: 600;">Status</span>
-                        </div>
-                        <div style="margin-top: 6px; font-size: 15px; color: green;">${req.status}</div>
-                    </div>
                 </div>
             </div>
             <!-- Row 2: Category & Description -->
-            <div class="row-card mb-1 p-6 rounded shadow-sm bg-white">
+            <div class="row-card mb-1 p-3 rounded shadow-sm bg-white">
                 <div class="row gx-3 gy-3 p-3 rounded border-0" style="border: 1px solid #e0e0e0;">
-                    <div class="col-md-12 bg-white">
                         <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
                             <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
                                 <i class="fa-solid fa-align-left" style="color: white; font-size: 16px;"></i>
@@ -1029,7 +1028,6 @@
                             <span style="font-weight: 600;">Description</span>
                         </div>
                         <div class="text-muted" style="margin-top: 6px; font-size: 15px; color: #333; line-height: 1.6;">${req.description}</div>
-                    </div>
                 </div>
             </div>
             <!-- Row 3: Photo -->
@@ -1043,20 +1041,6 @@
                   </div>
                 <img src="${req.photo || 'https://via.placeholder.com/400x250?text=No+Photo'}" alt="Photo" class="photo-preview w-100 rounded">
               </div>
-            </div>
-            <!-- Row 4: Date, Status, Payment, Bid, Availability -->
-            <div class="row-card p-3 rounded shadow-sm bg-white">
-                <div class="row gx-2 p-3">
-                      <div class="col-md-3 col-6 mb-2">
-                          <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                            <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                                <i class="fa-solid fa-calendar" style="color: white; font-size: 16px;"></i>
-                            </span>
-                            <span style="font-weight: 600;">Provider</span>
-                          </div>
-                      <div class="detail-row"><span class="detail-icon"></span><span class="detail-label"></span> ${formattedDate}</div>
-                     </div>
-                </div>
             </div>
         </div>`;
     }
@@ -1167,6 +1151,35 @@
     });
   </script>
 
+
+  <!-- Pay Request -->
+  <script>
+    document.getElementById("payRequestForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      console.log('PayexpenseForm working');
+
+      const form = document.getElementById("payRequestForm");
+      const formData = new FormData(form);
+
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+      }
+      fetch("actions/individual/payRequest.php", {
+          method: "POST",
+          body: formData,
+        })
+        .then(response => response.text())
+        .then(data => {
+          console.log("Server response:", data);
+
+          // ✅ Reload the page without resubmission
+          // window.location.href = window.location.href;
+        })
+        .catch(error => {
+          console.error("Error submitting form:", error);
+        });
+    });
+  </script>
   <script src="../../../dist/js/adminlte.js"></script>
 </body>
 
