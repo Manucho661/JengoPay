@@ -1415,84 +1415,84 @@ function applyFilters() {
       }
   </script>
 
+
 <script>
-  document.getElementById('downloadBtn').addEventListener('click', function () {
-     const { jsPDF } = window.jspdf;
-     const doc = new jsPDF();
+document.getElementById('downloadBtn').addEventListener('click', function() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
 
-     // Check if autoTable is available
-     if (typeof doc.autoTable !== 'function') {
-         console.error("Error: autoTable plugin is not properly loaded.");
-         alert("Error: autoTable plugin is not available.");
-         return;
-     }
+    // Check if autoTable is available
+    if (typeof doc.autoTable !== 'function') {
+        console.error("Error: autoTable plugin is not properly loaded.");
+        alert("Error: autoTable plugin is not available.");
+        return;
+    }
 
-     const table = document.getElementById("myTable");
-     const rows = table.querySelectorAll("tbody tr");
+    const table = document.getElementById("myTable");
+    const rows = table.querySelectorAll("tbody tr");
+    const header = document.querySelector('.balancesheet-header').textContent;
 
-     const data = [];
-     let boldRows = [];
-     let sectionHeaders = [];
+    // Get the current filter dates or use default text
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    let dateRangeText = "From 1 January 2024 to December 31, 2024"; // Default
 
-     rows.forEach((row, rowIndex) => {
-         const rowData = [];
-         row.querySelectorAll("td").forEach((cell) => {
-             rowData.push(cell.innerText.trim()); // Trim to remove extra spaces
-         });
+    if (startDate && endDate) {
+        const start = new Date(startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        const end = new Date(endDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        dateRangeText = `From ${start} to ${end}`;
+    }
 
-         const firstCellText = rowData[0]?.toLowerCase() || "";
+    const data = [];
+    let sectionHeaders = [];
 
-         // Mark category headers (e.g., Income, Expenses, Net Profit) as bold
-         if (row.classList.contains("category")) {
-             sectionHeaders.push(rowIndex);
-             rowData[0] = `${rowData[0]}`; // Wrap in <b> tags for bold
-         }
+    rows.forEach((row, rowIndex) => {
+        const rowData = [];
+        row.querySelectorAll("td").forEach((cell) => {
+            rowData.push(cell.innerText.trim());
+        });
 
-         data.push(rowData);
-     });
+        if (row.classList.contains("category")) {
+            sectionHeaders.push(rowIndex);
+        }
 
-     doc.setFontSize(14);
-     doc.setFont("helvetica", "bold");
-     doc.text("Ebenezer Apartment,", 105, 6, { align: "center" });
+        data.push(rowData);
+    });
+
+    // Header styling (unchanged from your original)
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("Ebenezer Apartment,", 105, 6, { align: "center" });
 
 
-     doc.setFontSize(14); // Adjust font size for title
-     doc.setFont("helvetica", "bold"); // Set font style to bold
-     doc.text("Profit and Loss Statement", 105, 10, { align: "center" }); // Center the title
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("Profit and Loss Statement", 105, 10, { align: "center" });
 
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text(dateRangeText, 105, 14, { align: "center" });
 
-     doc.setFontSize(12);
-     doc.setFont("helvetica", "bold");
-     doc.text("From 1 January 2024 to December 31, 2024", 105, 14, { align: "center" });
+    // Table configuration (unchanged from your original)
+    doc.autoTable({
+        startY: 20,
+        head: [['Description', 'Amount']],
+        body: data,
+        headStyles: {
+            fillColor: [0, 25, 45],
+            textColor: [255, 255, 255],
+            fontStyle: 'bold'
+        },
+        didParseCell: function(data) {
+            if (data.section === 'body' && sectionHeaders.includes(data.row.index)) {
+                data.cell.styles.fontSize = 12;
+                data.cell.styles.fontStyle = 'bold';
+            }
+        }
+    });
 
-     doc.autoTable({
-         startY: 20, // Moves the table down to create space for headers
-         head: [['Description', 'Amount']],
-         body: data,
-
-         headStyles: {
-             fillColor: [0, 25, 45], // Dark Blue (#00192D)
-             textColor: [255, 255, 255], // White text
-             fontStyle: 'bold'
-         },
-
-         didParseCell: function (data) {
-             if (data.section === 'body') {
-                 const rowIndex = data.row.index;
-                 const colIndex = data.column.index;
-
-                 // Apply bold to section headers (e.g., Income, Expenses, Net Profit)
-                 if (sectionHeaders.includes(rowIndex)) {
-                     data.cell.styles.fontSize = 12;
-                     data.cell.styles.fontStyle = 'bold';
-                 }
-             }
-         }
-     });
-
-     // Trigger the download of the PDF with the filename 'profit_loss_statement.pdf'
-     doc.save('profit_loss_statement.pdf');
-  });
+    doc.save('profit_loss_statement.pdf');
+});
 </script>
     <!-- End script for data_table -->
 
