@@ -6,6 +6,7 @@ require_once "actions/get_requests.php";
 <!doctype html>
 <html lang="en">
 <!--begin::Head-->
+
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>AdminLTE | Dashboard v2</title>
@@ -438,33 +439,60 @@ require_once "actions/get_requests.php";
                         <th>ACTIONS</th>
                       </tr>
                     </thead>
-                    <tbody id="maintenanceRequestsTableBod">
+                    <tbody id="maintenanceRequestsTableBody">
                       <?php
-                      foreach($requests as $request):?>
+                      foreach ($requests as $request): ?>
                         <tr>
-                          <td><?=$request['request_date']?></td>
+                          <td class="text-muted"><?= $request['request_date'] ?></td>
                           <td>
-                          <div><?=$request['residence']?> </div>
-                          <div style='color: green;'><?=$request['unit'] ?></div>
+                            <div><?= $request['residence'] ?> </div>
+                            <div style='color: green;'><?= $request['unit'] ?></div>
                           </td>
                           <td>
-                          <div><?= $request['category']?></div>
-                          <div style='color:green; border:none; width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'><?=$request['description']?> </div>
+                            <div><?= $request['category'] ?></div>
+                            <div style='color:green; border:none; width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'><?= $request['description'] ?> </div>
                           </td>
                           <td>
                             <?php
-                          if(!empty($request['provider_name'])):?>
-                          <div><?=$request['provider_name']?></div>
-                          <?php else :?>
-                            <div>Not assigned</div>
+                            if (!empty($request['provider_name'])): ?>
+                              <div><?= $request['provider_name'] ?></div>
+                            <?php else : ?>
+                              <div>Not assigned</div>
                             <?php endif ?>
                           </td>
-                          <td><?= $request['priority']?></td>
-                          <td><?= $request['category']?></td>
-                          <td><?= $request['category']?></td>
-                          <td><?= $request['category']?></td>
+                          <td><?= $request['priority'] ?></td>
+                          <td><?= $request['status'] ?></td>
+                          <td>
+                            <?php if ($request['payment_status'] === 'Paid') : ?>
+                              <div class="Paid">
+                                <i class="bi bi-check-circle-fill"></i> Paid
+                              </div>
+                            <?php else : ?>
+                              <div class="Pending">
+                                <i class="bi bi-hourglass-split"></i> Pending
+                              </div>
+                            <?php endif; ?>
+                          </td>
+                          <td style="vertical-align: middle;">
+                            <div style="display: flex; gap: 8px; align-items: center; height: 100%;">
+                              <button
+                                class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
+                                style="background-color: #00192D; color: white; border: none; border-radius: 8px; 
+                                box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;">
+                                <i class="bi bi-eye-fill"></i> View
+                              </button>
+
+                              <button
+                                class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
+                                style="background-color: #ec5b53; color: white; border: none; border-radius: 8px; 
+                                box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;">
+                                <i class="bi bi-trash-fill"></i> Delete
+                              </button>
+                            </div>
+                          </td>
+
                         </tr>
-                        <?php endforeach; ?>
+                      <?php endforeach; ?>
                     </tbody>
                   </table>
                 </div>
