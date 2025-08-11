@@ -1,6 +1,7 @@
 <?php
-// header('Content-Type: application/json');
+
 require_once '../db/connect.php'; // ✅ Use your correct DB config path
+global $requests;
 
 try {
     // Fetch requests and join with one photo from maintenance_photos (if available)
@@ -11,25 +12,27 @@ try {
             r.residence, 
             r.unit, 
             r.category, 
-            r.description, 
-            r.priority,
+            r.request, 
+            r.description,
+            r.priority, 
             r.availability,
             r.status, 
             r.payment_status, 
             r.is_read,
-            p.photo_url AS photo
+            (
+                SELECT photo_url 
+                FROM maintenance_photos 
+                WHERE maintenance_request_id = r.id 
+                LIMIT 1
+            ) AS photo
         FROM maintenance_requests r
-        LEFT JOIN maintenance_photos p ON r.id = p.maintenance_request_id
-        GROUP BY r.id
         ORDER BY r.request_date DESC
     ");
-
+    
     $stmt->execute();
     $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $yoyo=10;
-    return $yoyo;  // <--- return data here
+    return $requests;  // <--- return data here
 
-    // echo json_encode($requests);
 } catch (Exception $e) {
     // echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
 }

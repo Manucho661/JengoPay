@@ -69,6 +69,8 @@
       background-color: #00192D;
       color: #fff;
       overflow-y: auto;
+      max-height: calc(100vh - 180px);
+
     }
 
     .request-sidebar {
@@ -76,6 +78,8 @@
       display: flex;
       flex-direction: column;
       border-right: 1px solid #e0e0e0;
+      max-height: calc(120vh - 180px);
+      min-height: calc(120vh - 180px);
     }
 
     .request-sidebar h3 {
@@ -118,7 +122,7 @@
       list-style: none;
       padding: 0;
       margin: 0;
-      max-height: calc(100vh - 180px);
+      /* max-height: calc(100vh - 180px); */
       overflow-y: auto;
     }
 
@@ -233,7 +237,8 @@
     .main-content {
       /* flex-grow: 1; */
       /* padding: 2rem; */
-      /* overflow-y: auto; */
+      overflow-y: auto;
+      max-height: calc(120vh - 180px);
     }
 
     .detail-row {
@@ -262,7 +267,7 @@
 
     .photo-preview {
       border-radius: 10px;
-      border: 1px solid #ccc;
+      /* border: 1px solid #ccc; */
       max-width: 100%;
       margin-top: 5px;
     }
@@ -355,7 +360,7 @@
     .unassigned-btn {
       background-color: white;
       color: #00192D;
-      border: 1px solid #00192D !important;
+      /* border: 1px solid #00192D !important; */
     }
 
     /* Paid Button */
@@ -373,13 +378,11 @@
     .availability-btn:hover {
       background-color: #5a6268;
       transform: translateY(-1px);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .unassigned-btn:hover {
       background-color: #f8f9fa;
       transform: translateY(-1px);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .paid-btn:hover {
@@ -420,7 +423,112 @@
     }
 
     .btn:hover {
-      border: 1px solid #FFC107 !important;
+      /* border: 1px solid #FFC107 !important; */
+      background-color: white !important;
+    }
+
+    /* Applications */
+    .container.proposalContainer {
+      width: 80%;
+      margin: 0 auto;
+    }
+
+    .proposal-card {
+      background-color: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 30px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07);
+      transition: transform 0.2s ease;
+
+      margin: 0 auto;
+    }
+
+    .proposal-card:hover {
+      transform: scale(1.01);
+    }
+
+    .proposal-header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .profile-pic {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #e3e3e3;
+    }
+
+    .proposal-header h5 {
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .proposal-header p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #6c757d;
+    }
+
+    .proposal-meta {
+      text-align: right;
+    }
+
+    .proposal-meta h6 {
+      margin-bottom: 4px;
+      font-size: 1rem;
+      color: #0d6efd;
+    }
+
+    .proposal-meta small {
+      color: #888;
+      display: block;
+    }
+
+    .btn-action {
+      margin-left: 8px;
+    }
+
+    hr {
+      margin: 1rem 0;
+    }
+
+    .custom-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1055;
+      /* Above backdrop */
+      background-color: white;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+      max-width: 700px;
+      width: 90%;
+      border-radius: 8px;
+      max-height: 90vh;
+      /* 👈 set max height */
+      overflow-y: auto;
+      width: 50%;
+      margin: auto;
+    }
+
+    .kmodal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1050;
+      overflow: auto;
+    }
+
+    .payment-container {
+      overflow: hidden;
+      transition: max-height 0.3s ease;
     }
   </style>
 </head>
@@ -457,19 +565,19 @@
       <!--begin::App Content Header-->
 
       <div class="app-content">
-        <p class="text-muted mt-2">Manage a maintanance Request</p>
+        <p class="text-muted mt-2">Manage a maintanance Request <span id="requestID" style="color: #dc3545;"></span></p>
         <div class="container-fluid rounded-2 mb-2">
           <div class="row p-1" style="background-color: #E6EAF0;">
             <div class="col-md-6 p-0">
               <a href="javascript:history.back()"
-                class="btn"
+                class="btn shadow-none"
                 style="background-color: white; color: #00192D; font-weight: 500; width:100%; margin-right:2px;">
                 <i class="bi bi-arrow-left"></i> Go Back
               </a>
             </div>
             <div class="col-md-6 p-0">
               <button id="availabilityBtn"
-                class="btn"
+                class="btn shadow-none"
                 style="background-color: white; color: #00192D; font-weight: 500; width:100%; margin-left:2px;">
                 <i class="bi bi-arrow-left"></i> Unavailable
               </button>
@@ -481,17 +589,26 @@
             <div class="col-md-4" style="overflow: hidden; padding-right:2px;">
               <div class="request-sidebar rounded-2">
                 <!-- <h3><i class="fa-solid fa-screwdriver-wrench"></i>Request NO 40</h3> -->
-                <div class="d-flex flex-column gap-2 p-2">
-                  <!-- Availability Button -->
-                  <p>In Progress</p>
+                <div class="d-flex flex-column p-2">
                   <!-- Secondary Buttons Container -->
                   <div id="secondaryButtons" class="secondary-buttons p-1 rounded-2" style="background-color: #E6EAF0;">
-                    <button id="assign" class="btn unassigned-btn" onclick="showProposals()" id="showProposal" data-request-id="123">
-                      <i class="fas fa-user-clock me-2"></i> UnAssigned
+                    <button id="assign" class="btn unassigned-btn shadow-none" onclick="showProposals()" id="showProposal" data-request-id="123">
+                      <i class="fas fa-user-clock me-2"></i> Assign
                     </button>
-                    <button class="btn paid-btn">
+                    <button id="paidBtn" class="btn shadow-none">
                       <i class="fas fa-check-circle me-2"></i> Paid
                     </button>
+                    <div id="paymentContainer" class="payment-container" style="display: none;">
+                      <p class="text-muted justify-content-between">Choose the Option</p>
+                      <div class="d-flex justify-content-between">
+                        <button class="btn shadow-none">Cash</button>
+                        <button class="btn shadow-none">Mpesa</button>
+                        <button class="btn shadow-none">Bank</button>
+                        <button class="btn shadow-none" id="openRecordPaymentModalBtn">Record</button>
+                      </div>
+                    </div>
+
+
                   </div>
                 </div>
 
@@ -629,6 +746,60 @@
           <button class="btn btn-outline-secondary btn-sm btn-action">Message</button>
           <button class="btn btn-outline-primary btn-sm btn-action">Shortlist</button>
           <button class="btn btn-outline-danger btn-sm">Decline</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Modals -->
+  <!-- Record Payment Modal -->
+  <div class="modal fade" id="recordPaymentModal" tabindex="-1" aria-labelledby="recordPaymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius: 12px; border: 1px solid #00192D;">
+        <div class="modal-header" style="background-color: #00192D; color: white;">
+          <h5 class="modal-title" id="payExpenseLabel">Record Request Payment</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <form id="payRequestForm">
+            <!-- id -->
+            <input type="hidden" name="expense_id" id="expenseId">
+            <!-- total amount -->
+            <input type="hidden" name="expected_amount" id="expectedAmount">
+
+            <div class="mb-3">
+              <label for="amount" class="form-label">Amount to Pay(KSH)</label>
+              <input type="number" step="0.01" class="form-control shadow-none rounded-1" id="amountToPay" style="font-weight: 600;" name="amountToPay" value="1200" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="paymentDate" class="form-label shadow-none ">Payment Date</label>
+              <input type="date" class="form-control shadow-none rounded-1" id="paymentDate" name="payment_date" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="paymentMethod" class="form-label">Payment Method</label>
+              <select class="form-select shadow-none rounded-1" id="paymentMethod" name="payment_method" required>
+                <option value="cash">Cash</option>
+                <option value="mpesa">M-Pesa</option>
+                <option value="bank">Bank Transfer</option>
+                <option value="card">Card</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="reference" class="form-label">Reference / Memo</label>
+              <input type="text" class="form-control shadow-none rounded-1" id="reference" name="reference">
+            </div>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" form="payRequestForm" class="btn" style="background-color: #FFC107; color: #00192D;">
+            <i class="bi bi-credit-card"></i> Confirm Payment
+          </button>
         </div>
       </div>
     </div>
@@ -794,7 +965,8 @@
 
       // Update the availability button based on the request's status
       updateAvailabilityButton(req.availability);
-
+      // update Request ID
+      document.getElementById('requestID').textContent = req.id;
       detailsPanel.innerHTML = `
         <div class="container-fluid px-1">
             <!-- Row 1: Property, Unit, Request ID -->
@@ -822,33 +994,33 @@
                         <div style="margin-top: 6px; font-size: 15px; color: #333;">${req.unit}</div>
                     </div>
 
-                    <!-- Request ID -->
+                    <!-- Provider -->
+                    <div class="col-md-3">
+                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                            <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                                <i class="bi bi-file-text" style="color: #FFC107; font-size: 16px;"></i>
+                            </span>
+                            <span style="font-weight: 600;">Provider</span>
+                        </div>
+                        <div style="margin-top: 6px; font-size: 15px; color: #b93232ff;">Unassigned</div>
+                    </div>
+                    <!-- Status -->
                     <div class="col-md-3">
                         <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
                             <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
                                 <i class="fa-solid fa-hashtag" style="color: #FFC107; font-size: 16px;"></i>
                             </span>
-                            <span style="font-weight: 600;">Request ID</span>
+                            <span style="font-weight: 600;">Status</span>
                         </div>
-                        <div style="margin-top: 6px; font-size: 15px; color: #333;">${req.id}</div>
+                        <div style="margin-top: 6px; font-size: 15px; color: #c15050ff;">Unassigned</div>
                     </div>
 
                     <!-- Status -->
-                    <div class="col-md-3">
-                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                            <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                                <i class="fa-solid fa-clipboard-check" style="color: #FFC107; font-size: 16px;"></i>
-                            </span>
-                            <span style="font-weight: 600;">Status</span>
-                        </div>
-                        <div style="margin-top: 6px; font-size: 15px; color: green;">${req.status}</div>
-                    </div>
                 </div>
             </div>
             <!-- Row 2: Category & Description -->
             <div class="row-card mb-1 p-3 rounded shadow-sm bg-white">
                 <div class="row gx-3 gy-3 p-3 rounded border-0" style="border: 1px solid #e0e0e0;">
-                    <div class="col-md-12 bg-white p-3">
                         <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
                             <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
                                 <i class="fa-solid fa-align-left" style="color: white; font-size: 16px;"></i>
@@ -856,30 +1028,19 @@
                             <span style="font-weight: 600;">Description</span>
                         </div>
                         <div class="text-muted" style="margin-top: 6px; font-size: 15px; color: #333; line-height: 1.6;">${req.description}</div>
-                    </div>
                 </div>
             </div>
             <!-- Row 3: Photo -->
             <div class="row-card mb-1 p-3 rounded shadow-sm bg-white">
-                <div class="detail-row mb-2">
-                    <span class="detail-icon"><i class="fa-solid fa-image"></i></span>
-                    <span class="detail-label">Image</span>
-                </div>
+              <div class="row gx-3 gy-3 p-3 rounded border-0">
+                  <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                    <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                        <i class="fa-solid fa-image" style="color: white; font-size: 16px;"></i>
+                    </span>
+                    <span style="font-weight: 600;">Request Image</span>
+                  </div>
                 <img src="${req.photo || 'https://via.placeholder.com/400x250?text=No+Photo'}" alt="Photo" class="photo-preview w-100 rounded">
-            </div>
-            <!-- Row 4: Date, Status, Payment, Bid, Availability -->
-            <div class="row-card p-3 rounded shadow-sm bg-white">
-                <div class="row gx-2">
-                    <div class="col-md-3 col-6 mb-2">
-                        <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-calendar"></i></span><span class="detail-label">Date:</span> ${formattedDate}</div>
-                    </div>
-                    <div class="col-md-3 col-6 mb-2">
-                        <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-money-bill"></i></span><span class="detail-label">Payment:</span> ${req.payment_status}</div>
-                    </div>
-                    <div class="col-md-3 col-6 mb-2">
-                        <div class="detail-row"><span class="detail-icon"><i class="fa-solid fa-gavel"></i></span><span class="detail-label">Bid:</span> ${req.bid ?? 'N/A'}</div>
-                    </div>
-                </div>
+              </div>
             </div>
         </div>`;
     }
@@ -950,52 +1111,7 @@
   </script>
   <script>
     function showProposals() {
-      // const maintenanceRequestModalEl = document.getElementById('maintenanceRequestModal');
-      // const maintenanceRequestModalInstance = bootstrap.Modal.getInstance(maintenanceRequestModalEl);
-      // if (maintenanceRequestModalInstance) {
-      //   maintenanceRequestModalInstance.hide(); // 👈 call it properly
-      // }
       const viewProposal = document.getElementById("showProposal");
-      //  const requestId = viewProposal.getAttribute("data-request-id");
-
-      // fetch(`actions/get_request_proposals.php?request_id=${requestId}`)
-      //   .then(response => response.json())
-      //   .then(data => {
-      //     console.log("Fetched Proposals:", data);
-      //     // Do something with the data...y
-      //     const container = document.getElementById("job_proposals_container");
-      //     container.classList.remove("d-none"); // Make sure it's visible
-      //     container.innerHTML = ""; // Clear previous content if needed
-      //     data.forEach(p => {
-      //       container.innerHTML += `
-      //       <div class="proposal-card mt-2">
-      //         <div class="proposal-header d-flex align-items-start">
-      //           <img src="${p.profilePic || 'https://i.pravatar.cc/70'}" alt="Profile Picture" class="profile-pic me-3">
-      //           <div>
-      //             <h5>${p.name} <span class="badge bg-warning">5 <i class="fa fa-star " id="star-rating"></i>${p.ratings}</span></h5>
-      //             <p>${p.category}</p>
-      //           </div>
-      //           <div class="ms-auto proposal-meta text-end">
-      //             <h6>$${p.bid_amount}/hr</h6>
-      //             <small>${p.estimated_time}</small><br>
-      //             <small class="text-success">✅ ${p.jobs_completed} jobs completed</small>
-      //           </div>
-      //         </div>
-      //         <hr>
-      //         <p><strong>Cover Letter:</strong> ${p.cover_letter}</p>
-      //         <p><strong>Location:</strong> ${p.location}</p>
-      //         <div class="d-flex justify-content-end mt-3">
-      //           <button class="btn btn-outline-secondary btn-sm btn-action">Message</button>
-      //           <button class="btn btn-outline-primary btn-sm btn-action" style="margin-right:6px;">Shortlist</button>
-      //           <button class="btn btn-outline-danger btn-sm">Decline</button>
-      //         </div>
-      //       </div>
-      //     `;
-      //     });
-      //   })
-      //   .catch(err => {
-      //     console.error("Error fetching proposals:", err);
-      //   })
 
       const modal = document.getElementById("proposalContainer");
       const backdrop = document.getElementById("customBackdrop");
@@ -1009,9 +1125,60 @@
       }, 10);
 
     }
+  </script>
 
-    
-    
+  <!-- payment accordian -->
+  <script>
+    document.getElementById("paidBtn").addEventListener("click", function() {
+      const paymentContainer = document.getElementById("paymentContainer");
+
+      if (paymentContainer.style.display === "none" || paymentContainer.style.display === "") {
+        paymentContainer.style.display = "block";
+        this.style.backgroundColor = "white"; // Change to white when opened
+      } else {
+        paymentContainer.style.display = "none";
+        this.style.backgroundColor = ""; // Revert to default when closed
+      }
+    });
+  </script>
+
+  <!-- Record PAYMENT -->
+  <script>
+    document.getElementById("openRecordPaymentModalBtn").addEventListener("click", function() {
+      // Get the modal element
+      var myModal = new bootstrap.Modal(document.getElementById("recordPaymentModal"));
+      myModal.show();
+    });
+  </script>
+
+
+  <!-- Pay Request -->
+  <script>
+    document.getElementById("payRequestForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      console.log('PayexpenseForm working');
+
+      const form = document.getElementById("payRequestForm");
+      const formData = new FormData(form);
+
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+      }
+      fetch("actions/individual/payRequest.php", {
+          method: "POST",
+          body: formData,
+        })
+        .then(response => response.text())
+        .then(data => {
+          console.log("Server response:", data);
+
+          // ✅ Reload the page without resubmission
+          // window.location.href = window.location.href;
+        })
+        .catch(error => {
+          console.error("Error submitting form:", error);
+        });
+    });
   </script>
   <script src="../../../dist/js/adminlte.js"></script>
 </body>
