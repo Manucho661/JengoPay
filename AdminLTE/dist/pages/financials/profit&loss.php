@@ -693,6 +693,9 @@ $netProfit = $income - $expenses;
       </select>
     </div>
 
+
+
+
     <!-- Start Date -->
     <div class="col-12 col-md-4">
     <label class="form-label startDate me-2">Start Date</label>
@@ -704,12 +707,22 @@ $netProfit = $income - $expenses;
     <input type="date" class="form-control" id="endDate" />
     </div>
 
-    <!-- Filter Button -->
+ <!-- Filter Button -->
 <div class="col-12 mt-3">
-  <button class="btn btn-outline-dark" style="color: #FFC107; background-color: #00192D;" onclick="applyFilters()">
+  <button id="filterBtn" class="btn btn-outline-dark"
+          style="color: #FFC107; background-color: #00192D;">
     <i class="fas fa-filter"></i> Filter
   </button>
 </div>
+
+<!-- Filter Panel (initially hidden) -->
+<div id="filterPanel" style="display:none; margin-top: 10px;">
+  <label for="search">Search:</label>
+  <input type="text" id="search" placeholder="Type something...">
+  <button>Apply</button>
+</div>
+
+
 
   </div>
 </div>
@@ -938,7 +951,152 @@ $netProfit = $income - $expenses;
 
 <!-- Overlay scripts -->
  <!-- View announcements script -->
- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>z
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+ <!-- <script>
+  document.getElementById('filterBtn').addEventListener('click', function() {
+    let filterPanel = document.getElementById('filterPanel');
+    if (filterPanel.style.display === 'none' || filterPanel.style.display === '') {
+      filterPanel.style.display = 'block';
+    } else {
+      filterPanel.style.display = 'none';
+    }
+  });
+</script> -->
+
+<!-- <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Set default dates (current month)
+    const today = new Date();
+    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    document.getElementById('startDate').valueAsDate = firstDayOfMonth;
+    document.getElementById('endDate').valueAsDate = today;
+
+    // Add click event listener to filter button
+    document.getElementById('filterBtn').addEventListener('click', function() {
+        const buildingId = document.getElementById('buildingFilter').value;
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+
+        // Validate dates
+        if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+            alert('End date must be after start date');
+            return;
+        }
+
+        filterBalanceSheet(buildingId, startDate, endDate);
+    });
+});
+</script> -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Set default dates (current month)
+    const today = new Date();
+    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    document.getElementById('startDate').valueAsDate = firstDayOfMonth;
+    document.getElementById('endDate').valueAsDate = today;
+
+    // Add click event listener to filter button
+    document.getElementById('filterBtn').addEventListener('click', function() {
+        const buildingId = document.getElementById('buildingFilter').value;
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+
+        // Validate dates
+        if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+            alert('End date must be after start date');
+            return;
+        }
+
+        filterBalanceSheet(buildingId, startDate, endDate);
+    });
+});
+
+function filterBalanceSheet(buildingId, startDate, endDate) {
+    // Show loading indicator
+    const filterBtn = document.getElementById('filterBtn');
+    filterBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Filtering...';
+    filterBtn.disabled = true;
+
+    fetch('profit_loss_api.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            building_id: buildingId,
+            start_date: startDate,
+            end_date: endDate
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            updateProfitLossTable(data.data);
+
+            // Update the header with date range
+            const header = document.querySelector('.balancesheet-header');
+            if (startDate && endDate) {
+                const start = new Date(startDate).toLocaleDateString();
+                const end = new Date(endDate).toLocaleDateString();
+                header.textContent = `Profit & Loss Statement (${start} to ${end})`;
+            } else {
+                header.textContent = 'Profit & Loss Statement';
+            }
+        } else {
+            throw new Error(data.message || 'Unknown error occurred');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error applying filters: ' + error.message);
+    })
+    .finally(() => {
+        filterBtn.innerHTML = '<i class="fas fa-filter"></i> Filter';
+        filterBtn.disabled = false;
+    });
+}
+
+function updateProfitLossTable(data) {
+    // Update income items
+    document.querySelector('tr:nth-child(2) td:nth-child(2)').textContent = 'Ksh' + (data.income.rent?.toFixed(2) || '0.00');
+    document.querySelector('tr:nth-child(3) td:nth-child(2)').textContent = 'Ksh' + (data.income.water?.toFixed(2) || '0.00');
+    document.querySelector('tr:nth-child(4) td:nth-child(2)').textContent = 'Ksh' + (data.income.garbage?.toFixed(2) || '0.00');
+    document.querySelector('tr:nth-child(5) td:nth-child(2)').textContent = 'Ksh' + (data.income.late_fees?.toFixed(2) || '0.00');
+    document.querySelector('tr:nth-child(6) td:nth-child(2)').textContent = 'Ksh' + (data.income.commissions?.toFixed(2) || '0.00');
+    document.querySelector('tr:nth-child(7) td:nth-child(2)').textContent = 'Ksh' + (data.income.other_income?.toFixed(2) || '0.00');
+    document.querySelector('tr:nth-child(8) td:nth-child(2)').textContent = 'Ksh' + (data.income.total?.toFixed(2) || '0.00');
+
+
+    // Update expense items
+    document.querySelector('tr:nth-child(10) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.maintenance?.toFixed(2) || '0.00');
+    document.querySelector('tr:nth-child(11) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.salaries?.toFixed(2) || '0.00');
+    document.querySelector('tr:nth-child(12) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.electricity?.toFixed(2) || '0.00');
+    document.querySelector('tr:nth-child(13) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.water?.toFixed(2) || '0.00');
+    document.querySelector('tr:nth-child(14) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.garbage?.toFixed(2) || '0.00');
+    document.querySelector('tr:nth-child(15) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.internet?.toFixed(2) || '0.00');
+    document.querySelector('tr:nth-child(16) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.security?.toFixed(2) || '0.00');
+    document.querySelector('tr:nth-child(17) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.software?.toFixed(2) || '0.00');
+    document.querySelector('tr:nth-child(18) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.marketing?.toFixed(2) || '0.00');
+    document.querySelector('tr:nth-child(19) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.legal?.toFixed(2) || '0.00');
+    document.querySelector('tr:nth-child(20) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.loan_interest?.toFixed(2) || '0.00');
+    document.querySelector('tr:nth-child(21) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.bank_charges?.toFixed(2) || '0.00');
+    document.querySelector('tr:nth-child(22) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.other_expenses?.toFixed(2) || '0.00');
+
+    // Update totals
+    document.querySelector('tr:nth-child(23) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.total?.toFixed(2) || '0.00');
+    document.querySelector('tr:nth-child(24) td:nth-child(2)').textContent = 'Ksh' + (data.net_profit?.toFixed(2) || '0.00');
+
+}
+</script>
+
 
  <script>
 document.getElementById('buildingFilter').addEventListener('change', function() {
@@ -953,7 +1111,7 @@ document.getElementById('buildingFilter').addEventListener('change', function() 
 });
 </script>
 
-<script>
+<!-- <script>
 function applyFilters() {
   const startDate = document.getElementById("startDate").value;
   const endDate = document.getElementById("endDate").value;
@@ -968,7 +1126,7 @@ function applyFilters() {
   // Reload with filters applied
   window.location.href = window.location.pathname + '?' + params.toString();
 }
-</script>
+</script> -->
 
 
 
@@ -1012,7 +1170,7 @@ function updateSummarySection(summary) {
 </script>
  -->
 
- <script>
+ <!-- <script>
 function applyFilters() {
   const startDate = document.getElementById("startDate").value;
   const endDate = document.getElementById("endDate").value;
@@ -1027,7 +1185,7 @@ function applyFilters() {
 
   window.location.href = window.location.pathname + '?' + params.toString();
 }
-</script>
+</script> -->
 
 
 
@@ -1336,7 +1494,6 @@ function applyFilters() {
      doc.save('profit_loss_statement.pdf');
   });
 </script>
-
     <!-- End script for data_table -->
 
 
