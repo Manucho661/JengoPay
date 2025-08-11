@@ -212,87 +212,52 @@ tr td:first-child {
   tr td:first-child {
     font-weight: 600;
     font-size: 16px;
+    padding: 30px;
 
   }
   .fw-bold.text-end {
     background-color: #2c3e50;
     color: white;
   }
-td .email{
-    color: #0072C6;
-  }
-  td .email:hover{
-    text-decoration: underline;
-    cursor: pointer;
-  }
 
-.inspection-table{
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 40px;
-  background-color: #fff;
-  box-shadow: 0 4px 12px rgba(93, 63, 211, 0.1);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.inspection-table td,th {
-      padding: 15px;
-      text-align: left;
-      vertical-align: top;
-}
-.inspection-table thead{
-  background-color: #FFECB3;
-}
-
-.inspection-table th{
-  font-weight: 600;
-  color: #FFA000;
-}
-.inspection-table tr:nth-child(even) {
-  background-color: #f9f8fd;
-}
-
-
-  .status {
-    display: inline-flex;
-    align-items: center;
-    font-weight: bold;
-    padding: 6px 12px;
-     border-radius: 4px;
-    font-size: 14px;
+/* Common status styles */
+td .Paid,
+td .Pending {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px; /* pill shape */
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-align: center;
     white-space: nowrap;
-  }
-  .status.completed {
-    color: #2e7d32; /* Light green */
-  }
- .status.cancelled {
-    color: #d32f2f; /* Light green */
-  }
-  .status.incomplete {
-    color: #d32f2f; /* Light red */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
 
-  }
-  .status i {
-    margin-right: 5px;
-  }
-
-  td .Pending{
+/* Paid status - green success */
+td .Paid {
+    background-color: #28a745; /* Bootstrap green */
     color: white;
-    background-color: #F87171;
-    padding:2px 5px;
-    border-radius: 5px; 
-    text-align: center;
+    border: 1px solid #28a745;
+}
 
-  }
-  td .Paid{
+/* Pending status - orange/amber */
+td .Pending {
+    background-color: #e0a800; /* Bootstrap amber */
     color: white;
-    background-color: #4CAF50 !important;
-     padding:2px 5px; 
-    text-align: center;
-  border-radius: 5px; 
-  }
-  
+    border: 1px solid #e0a800;
+}
+
+/* Hover effect for both */
+td .Paid:hover,
+td .Pending:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+}
+
+
+
 
   /* Icon styling */
   .payment i {
