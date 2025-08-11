@@ -1,6 +1,6 @@
 <?php
-require_once "actions/get_requests.php";
- var_dump($requests);
+require_once "get_requests.php";
+//  var_dump($requests);
 // 'exit;
 ?>
 <!doctype html>
