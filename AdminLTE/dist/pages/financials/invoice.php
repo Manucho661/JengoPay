@@ -993,11 +993,10 @@ header {
                     <div class="page-header">
                         <h1 class="page-title"> 🧾 Invoices</h1>
                         <div class="page-actions">
-                                          <!-- Filter Button -->
-                        <button id="filterBtn" class="btn btn-outline filter-btn" style="color: #FFC107; background-color:#00192D;">
-                            <i class="fas fa-filter"></i> Filter
-                        </button>
-
+                                      <!-- Filter Button -->
+<button id="filterBtn" class="btn btn-outline filter-btn" style="color: #FFC107; background-color:#00192D;">
+    <i class="fas fa-filter"></i> Filter
+</button>
                         <!-- Filter Panel -->
                         <div id="filterPanel" style="display: none; margin-top: 10px;">
                             <div class="row">
@@ -1716,6 +1715,47 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
     }
 });
 </script>
+
+
+<!-- Add this script to handle the filtering -->
+<!-- <script>
+document.getElementById('filterBtn').addEventListener('click', function() {
+    // Get the table or data you want to filter
+    const table = document.querySelector('table'); // Adjust selector as needed
+
+    // Create filter options (you can customize this based on your needs)
+    const filterOptions = {
+        invoiceNumber: prompt('Filter by Invoice Number (leave blank for all):'),
+        tenant: prompt('Filter by Tenant ID (leave blank for all):'),
+        accountItem: prompt('Filter by Account Item (leave blank for all):'),
+        minAmount: parseFloat(prompt('Minimum Amount (leave blank for no minimum):')) || 0,
+        maxAmount: parseFloat(prompt('Maximum Amount (leave blank for no maximum):')) || Infinity
+    };
+
+    // Loop through table rows and apply filters
+    const rows = table.querySelectorAll('tbody tr');
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        const invoiceNumber = cells[1].textContent;
+        const tenant = cells[2].textContent;
+        const accountItem = cells[3].textContent;
+        const total = parseFloat(cells[9].textContent);
+
+        const showRow =
+            (filterOptions.invoiceNumber === '' || invoiceNumber.includes(filterOptions.invoiceNumber)) &&
+            (filterOptions.tenant === '' || tenant.includes(filterOptions.tenant)) &&
+            (filterOptions.accountItem === '' || accountItem.includes(filterOptions.accountItem)) &&
+            (total >= filterOptions.minAmount) &&
+            (total <= filterOptions.maxAmount);
+
+        row.style.display = showRow ? '' : 'none';
+    });
+
+    alert('Filter applied!');
+});
+</script> -->
+
+
     <script src="invoice.js"></script>
     <!-- <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -2213,6 +2253,135 @@ document.getElementById('searchInput').addEventListener('keyup', function(e) {
     }
 });
 </script> -->
+
+<!-- Add this script to handle the filtering -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterBtn = document.getElementById('filterBtn');
+    const invoiceItemsList = document.getElementById('invoice-items-list');
+    let originalInvoiceItems = invoiceItemsList.innerHTML;
+    let filterModal = null;
+
+    filterBtn.addEventListener('click', function() {
+        // Remove existing modal if any
+        const existingModal = document.getElementById('filterModal');
+        if (existingModal) existingModal.remove();
+
+        const filterModalHTML = `
+            <div class="modal fade" id="filterModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Filter Invoices</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Status</label>
+                                <select id="filterStatus" class="form-select">
+                                    <option value="">All Statuses</option>
+                                    <option value="draft">Draft</option>
+                                    <option value="sent">Sent</option>
+                                    <option value="paid">Paid</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Payment Status</label>
+                                <select id="filterPaymentStatus" class="form-select">
+                                    <option value="">All</option>
+                                    <option value="paid">Paid</option>
+                                    <option value="partial">Partial</option>
+                                    <option value="unpaid">Unpaid</option>
+                                    <option value="overdue">Overdue</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Amount Range</label>
+                                <div class="input-group">
+                                    <input type="number" id="filterMinAmount" class="form-control" placeholder="Min" step="0.01">
+                                    <span class="input-group-text">to</span>
+                                    <input type="number" id="filterMaxAmount" class="form-control" placeholder="Max" step="0.01">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="resetFilters">Reset</button>
+                            <button type="button" class="btn btn-primary" id="applyFilters">Apply</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.insertAdjacentHTML('beforeend', filterModalHTML);
+        filterModal = new bootstrap.Modal(document.getElementById('filterModal'));
+
+        document.getElementById('applyFilters').addEventListener('click', function() {
+            const statusFilter = document.getElementById('filterStatus').value;
+            const paymentStatusFilter = document.getElementById('filterPaymentStatus').value;
+            const minAmount = parseFloat(document.getElementById('filterMinAmount').value) || 0;
+            const maxAmount = parseFloat(document.getElementById('filterMaxAmount').value) || Infinity;
+
+            applyFilters(statusFilter, paymentStatusFilter, minAmount, maxAmount);
+            filterModal.hide();
+        });
+
+        document.getElementById('resetFilters').addEventListener('click', function() {
+            invoiceItemsList.innerHTML = originalInvoiceItems;
+            filterModal.hide();
+        });
+
+        filterModal.show();
+    });
+
+    function applyFilters(statusFilter, paymentStatusFilter, minAmount, maxAmount) {
+        const items = document.querySelectorAll('.invoice-item:not(.invoice-header)');
+
+        items.forEach(item => {
+            // Get status values
+            const statusBadge = item.querySelector('.invoice-status .status-badge');
+            const status = statusBadge ? statusBadge.textContent.trim().toLowerCase() : '';
+
+            // Get payment status values
+            const paymentBadge = item.querySelector('.invoice-status:nth-of-type(2) .status-badge');
+            const paymentText = paymentBadge ? paymentBadge.textContent.trim().toLowerCase() : '';
+
+            // Get amount value
+            const amountText = item.querySelector('.invoice-amount:nth-of-type(3)')?.textContent || '0';
+            const amount = parseFloat(amountText.replace(/[^0-9.]/g, '')) || 0;
+
+            // Status matching
+            const statusMatch = !statusFilter ||
+                              status.includes(statusFilter) ||
+                              (statusFilter === 'sent' && status.includes('overdue'));
+
+            // Payment status matching - more precise logic
+            let paymentMatch = true;
+            if (paymentStatusFilter) {
+                if (paymentStatusFilter === 'paid') {
+                    paymentMatch = paymentText.includes('paid') && !paymentText.includes('partial');
+                }
+                else if (paymentStatusFilter === 'partial') {
+                    paymentMatch = paymentText.includes('partial');
+                }
+                else if (paymentStatusFilter === 'unpaid') {
+                    paymentMatch = paymentText.includes('unpaid') && !paymentText.includes('partial');
+                }
+                else if (paymentStatusFilter === 'overdue') {
+                    paymentMatch = paymentText.includes('overdue');
+                }
+            }
+
+            // Amount matching
+            const amountMatch = amount >= minAmount && amount <= maxAmount;
+
+            // Show/hide based on all conditions
+            item.style.display = (statusMatch && paymentMatch && amountMatch) ? '' : 'none';
+        });
+    }
+});
+</script>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
