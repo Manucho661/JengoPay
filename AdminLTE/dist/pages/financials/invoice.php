@@ -993,34 +993,60 @@ header {
                     <div class="page-header">
                         <h1 class="page-title"> 🧾 Invoices</h1>
                         <div class="page-actions">
-                                      <!-- Filter Button -->
-<button id="filterBtn" class="btn btn-outline filter-btn" style="color: #FFC107; background-color:#00192D;">
-    <i class="fas fa-filter"></i> Filter
-</button>
-                        <!-- Filter Panel -->
-                        <div id="filterPanel" style="display: none; margin-top: 10px;">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <select id="filterField" class="form-select">
-                                        <option value="invoice-number">Invoice</option>
-                                        <option value="invoice-customer">Tenant</option>
-                                        <option value="invoice-date">Date</option>
-                                        <option value="due-date">Due Date</option>
-                                        <option value="invoice-sub-total">Sub-Total</option>
-                                        <option value="invoice-taxes">Taxes</option>
-                                        <option value="invoice-amount">Total</option>
-                                        <option value="invoice-status">Status</option>
-                                        <option value="payment-status">Payment Status</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <input type="text" id="searchInput" placeholder="Enter value" class="form-control" />
-                                </div>
-                                <div class="col-md-4">
-                                    <button onclick="applyFilter()" class="btn btn-sm btn-outline-secondary">Apply</button>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- Search and Filter Bar -->
+<div class="d-flex align-items-center mb-3" style="gap: 8px;">
+    <!-- Search Icon -->
+    <i class="fas fa-search" style="font-size: 16px; color: #555;"></i>
+
+    <!-- Filter Chip -->
+    <button id="filterBtn" class="btn d-flex align-items-center"
+        style="background-color: #5E3A56; color: white; border-radius: 15px; padding: 3px 10px; font-size: 14px;">
+        <i class="fas fa-filter me-1"></i> Filter
+    </button>
+
+    <!-- Search Box -->
+    <input type="text" id="searchInput" class="form-control"
+        placeholder="Search..." style="max-width: 200px; font-size: 14px;">
+</div>
+
+<!-- Filter Modal -->
+<div class="modal fade" id="filterModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Filter Invoices</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Status</label>
+          <select id="statusFilter" class="form-select">
+            <option value="">All</option>
+            <option value="draft">Draft</option>
+            <option value="sent">Sent</option>
+            <option value="paid">Paid</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Payment Status</label>
+          <select id="paymentStatusFilter" class="form-select">
+            <option value="">All</option>
+            <option value="paid">Paid</option>
+            <option value="partial">Partial</option>
+            <option value="unpaid">Unpaid</option>
+            <option value="overdue">Overdue</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="applyFilter" class="btn btn-primary">Apply</button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
                         <!-- Active Filter Tags -->
                         <div id="activeFilters" style="margin-top: 10px;"></div>
@@ -1717,6 +1743,75 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
 </script>
 
 
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const filterBtn = document.getElementById("filterBtn");
+    const searchInput = document.getElementById("searchInput");
+    const applyFilter = document.getElementById("applyFilter");
+    const statusFilter = document.getElementById("statusFilter");
+    const paymentStatusFilter = document.getElementById("paymentStatusFilter");
+
+    // Open filter modal
+    filterBtn.addEventListener("click", function () {
+        new bootstrap.Modal(document.getElementById("filterModal")).show();
+    });
+
+    // Apply filters
+    applyFilter.addEventListener("click", function () {
+        const statusValue = statusFilter.value.toLowerCase();
+        const paymentValue = paymentStatusFilter.value.toLowerCase();
+        filterInvoices(statusValue, paymentValue, searchInput.value.toLowerCase());
+        bootstrap.Modal.getInstance(document.getElementById("filterModal")).hide();
+    });
+
+    // Live search
+    searchInput.addEventListener("input", function () {
+        filterInvoices(statusFilter.value.toLowerCase(), paymentStatusFilter.value.toLowerCase(), this.value.toLowerCase());
+    });
+
+    function filterInvoices(status, paymentStatus, searchText) {
+        document.querySelectorAll(".invoice-item:not(.invoice-header)").forEach(item => {
+            const invoiceStatus = item.querySelector(".invoice-status span")?.innerText.toLowerCase() || "";
+            const paymentStatusText = item.querySelectorAll(".invoice-status span")[1]?.innerText.toLowerCase() || "";
+            const tenantName = item.querySelector(".invoice-customer")?.innerText.toLowerCase() || "";
+            const invoiceNumber = item.querySelector(".invoice-number")?.innerText.toLowerCase() || "";
+
+            const matchStatus = !status || invoiceStatus.includes(status);
+            const matchPayment = !paymentStatus || paymentStatusText.includes(paymentStatus);
+            const matchSearch = !searchText || tenantName.includes(searchText) || invoiceNumber.includes(searchText);
+
+            item.style.display = matchStatus && matchPayment && matchSearch ? "" : "none";
+        });
+    }
+});
+
+</script>
+
+
+<script>
+  function filterInvoices(status, paymentStatus, searchText) {
+    document.querySelectorAll(".invoice-item:not(.invoice-header)").forEach(item => {
+        const invoiceStatus = item.querySelector(".invoice-status span")?.innerText.toLowerCase() || "";
+        const paymentStatusText = item.querySelectorAll(".invoice-status span")[1]?.innerText.toLowerCase() || "";
+        const tenantName = item.querySelector(".invoice-customer")?.innerText.toLowerCase() || "";
+        const invoiceNumber = item.querySelector(".invoice-number")?.innerText.toLowerCase() || "";
+
+        // ✅ Capture Paid Amount text (second .invoice-status may contain it, or inside button text)
+        const paidAmountText = paymentStatusText.match(/kes\s*[\d,]+(\.\d+)?/i)?.[0].toLowerCase() || "";
+
+        const matchStatus = !status || invoiceStatus.includes(status);
+        const matchPayment = !paymentStatus || paymentStatusText.includes(paymentStatus);
+        const matchSearch = !searchText
+            || tenantName.includes(searchText)
+            || invoiceNumber.includes(searchText)
+            || paymentStatusText.includes(searchText)
+            || paidAmountText.includes(searchText); // ✅ Added
+
+        item.style.display = matchStatus && matchPayment && matchSearch ? "" : "none";
+    });
+}
+
+</script>
 <!-- Add this script to handle the filtering -->
 <!-- <script>
 document.getElementById('filterBtn').addEventListener('click', function() {
@@ -2255,7 +2350,7 @@ document.getElementById('searchInput').addEventListener('keyup', function(e) {
 </script> -->
 
 <!-- Add this script to handle the filtering -->
-<script>
+<!-- <script>
 document.addEventListener('DOMContentLoaded', function() {
     const filterBtn = document.getElementById('filterBtn');
     const invoiceItemsList = document.getElementById('invoice-items-list');
@@ -2281,7 +2376,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <select id="filterStatus" class="form-select">
                                     <option value="">All Statuses</option>
                                     <option value="draft">Draft</option>
-                                    <option value="sent">Sent</option>
+                                    <option value="sent">Sent</option>z
                                     <option value="paid">Paid</option>
                                     <option value="cancelled">Cancelled</option>
                                 </select>
@@ -2381,7 +2476,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-</script>
+</script> -->
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
