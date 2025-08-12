@@ -4,7 +4,7 @@ include '../../db/connect.php';
 try {
     // Assuming $pdo is your PDO connection object
 
-    $sql = "SELECT id, name, category, amount, acquisition_date, description, created_at FROM assets ORDER BY acquisition_date DESC";
+    $sql = "SELECT id, name, category, amount, created_at FROM assets ORDER BY created_at DESC";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
 
@@ -26,6 +26,8 @@ try {
     $totalNonCurrent = array_sum(array_column($nonCurrentAssets, 'amount'));
     $totalAssets = $totalCurrent + $totalNonCurrent;
 
+    // items that must be displayed on the balanceSheet.
+    $mustDisplayedCurrentAssets = array('Accounts Receivable', 'M-pesa', 'Cash', 'Bank');
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }

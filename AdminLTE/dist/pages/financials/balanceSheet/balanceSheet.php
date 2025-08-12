@@ -442,19 +442,22 @@ function formatAccounting($amount)
                       echo '</tr>';
 
                       ?>
-                      <?php
-                      echo '<tr><td class="current-assets" style="color:green;" >Current Assets:</td><td></td></tr>';
-                      foreach ($currentAssets as $item) {
-                        echo '<tr class="sub-current-assets">';
-                        echo '<td class="sub-category">' . htmlspecialchars($item['name']) . '</td>';
-                        echo '<td>' . number_format($item['amount'], 2) . '</td>';
-                        echo '</tr>';
-                      }
-                      echo '<tr class="sub-current-assets total fw-bold">';
-                      echo '<td class="sub-category">Total Current Assets</td>';
-                      echo '<td>' . number_format($totalCurrent, 2) . '</td>';
-                      echo '</tr>';
-                      ?>
+                      <tr>
+                        <td class="current-assets" style="color:green;">Current Assets:</td>
+                        <td></td>
+                      </tr>
+                      <?php foreach ($currentAssets as $item): ?>
+                        <?php if (in_array($item['name'], $mustDisplayedCurrentAssets ) || $item['amount'] > 0): ?>
+                        <tr class="sub-current-assets">
+                          <td class="sub-category"><?= htmlspecialchars($item['name']) ?></td>
+                          <td><?= number_format($item['amount'], 2) ?></td>
+                        </tr>
+                         <?php endif; ?>
+                      <?php endforeach; ?>
+                      <tr class="sub-current-assets total fw-bold">
+                        <td class="sub-category">Total Current Assets</td>
+                        <td><?= number_format($totalCurrent, 2) ?></td>
+                      </tr>
 
                       <?php
                       echo '<tr class="fw-bold">';

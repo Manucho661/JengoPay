@@ -4,7 +4,7 @@ include '../../db/connect.php';
 try {
     // Assuming $pdo is your PDO connection object
 
-    $sql = "SELECT id, name, category, amount, due_date, description, created_at FROM liabilities ORDER BY due_date DESC";
+    $sql = "SELECT id, liability_name, category, amount, due_date, description, created_at FROM liabilities ORDER BY due_date DESC";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
 

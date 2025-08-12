@@ -1,8 +1,14 @@
 <?php
 include '../../../db/connect.php';
 // To update balanceSheet when you pay through Cash
-include '../../balanceSheet/actions/handleCashPay.php';
+include '../..//balanceSheet/actions/handleExpenses/handleExpenseCashPay.php';
 // To update balanceSheet when you pay through M-pesa
+//To update the prepaid expense
+include '../../balanceSheet/actions/handleExpenses/handlePrepaidExpense.php';
+//handle owner contribution
+include '../../balanceSheet/actions/handleExpenses/handleOwnerContribution.php';
+//handle Retained EARNINGS
+include '../../balanceSheet/actions/handleExpenses/handleRetainedEarnings.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
@@ -31,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                VALUES (?, ?, ?, ?, ?)");
             $stmt->execute([$expense_id, $amount, $reference, $payment_method, $payment_date]);
             handleCashPay($amount);
+            handleRetainedEarnings($expected_amount);
             // Step 4: Update the expenses table
             if ($amount == 0) {
                 $status = 'Unpaid';
@@ -39,6 +46,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } 
             elseif($amount > $expected_amount){
                 $status = 'Overpaid';
+                // Update the prepaid in assets
+                $prepaidAmount = $amount - $expected_amount;
+                handlePrepaidExpense($prepaidAmount);
             }
             else {
                 $status = 'partially paid';
@@ -67,6 +77,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // Update the expenses table status to 'paid'
                     $statusUpdate = $pdo->prepare("UPDATE expenses SET status = 'paid' WHERE id = ?");
                     $statusUpdate->execute([$expense_id]);
+                    // update retainedEarnings
+                    handleRetainedEarnings($amount);
                 } else {
                     // Only update the payment amount, no status change
                     $updateStmt = $pdo->prepare("UPDATE expense_payments SET amount_paid = ? WHERE expense_id = ?");

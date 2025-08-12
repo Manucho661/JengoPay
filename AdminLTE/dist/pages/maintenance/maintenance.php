@@ -57,7 +57,7 @@ require_once "get_requests.php";
     crossorigin="anonymous" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-  <link rel="stylesheet" href="electricals.css">
+  <link rel="stylesheet" href="maintenance.css">
   <!-- scripts for data_table -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
@@ -426,7 +426,7 @@ require_once "get_requests.php";
                   </div>
                 </div>
                 <div style="overflow: auto;">
-                  <table id="requests-table" class=" display summary-table">
+                  <table id="requests-table" class=" display requests-table">
                     <thead class="mb-2">
                       <tr>
                         <th>REQUEST Date</th>
@@ -443,7 +443,7 @@ require_once "get_requests.php";
                       <?php
                       foreach ($requests as $request): ?>
                         <tr>
-                          <td><?= $request['request_date'] ?></td>
+                          <td class="text-muted"><?= $request['request_date'] ?></td>
                           <td>
                             <div><?= $request['residence'] ?> </div>
                             <div style='color: green;'><?= $request['unit'] ?></div>
@@ -460,7 +460,7 @@ require_once "get_requests.php";
                               <div>Not assigned</div>
                             <?php endif ?>
                           </td>
-                          <td></td>
+                          <td><?= $request['priority'] ?></td>
                           <td><?= $request['status'] ?></td>
                           <td>
                             <?php if ($request['payment_status'] === 'Paid') : ?>
@@ -485,7 +485,7 @@ require_once "get_requests.php";
                               <button
                                 class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
                                 style="background-color: #ec5b53; color: white; border: none; border-radius: 8px; 
-             box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;">
+                                box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;">
                                 <i class="bi bi-trash-fill"></i> Delete
                               </button>
                             </div>
