@@ -481,7 +481,7 @@ function formatAccounting($amount)
                       echo '<tr><td class="current-assets" style="color:green;">Current Liabilities:</td><td></td></tr>';
                       foreach ($currentLiabilities as $item) {
                         echo '<tr class="sub-current-assets">';
-                        echo '<td class="sub-category">' . htmlspecialchars($item['name']) . '</td>';
+                        echo '<td class="sub-category">' . htmlspecialchars($item['liability_name']) . '</td>';
                         echo '<td>' . number_format($item['amount'], 2) . '</td>';
                         echo '</tr>';
                       }
@@ -494,7 +494,7 @@ function formatAccounting($amount)
                       echo '<tr><td class="current-assets" style="color:green;">Non-Current Liabilities:</td><td></td></tr>';
                       foreach ($nonCurrentLiabilities as $item) {
                         echo '<tr class="sub-current-assets">';
-                        echo '<td class="sub-category">' . htmlspecialchars($item['name']) . '</td>';
+                        echo '<td class="sub-category">' . htmlspecialchars($item['liability_name']) . '</td>';
                         echo '<td>' . number_format($item['amount'], 2) . '</td>';
                         echo '</tr>';
                       }

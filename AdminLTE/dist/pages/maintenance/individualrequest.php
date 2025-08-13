@@ -536,7 +536,12 @@ require_once "actions/individual/getGeralRequests.php";
       transition: max-height 0.3s ease;
     }
 
-    .available {}
+    .unavailable {
+      background-color: #E6EAF0 !important;
+    }
+    .available{
+      background-color: white !important;
+    }
   </style>
 </head>
 
@@ -572,7 +577,7 @@ require_once "actions/individual/getGeralRequests.php";
       <!--begin::App Content Header-->
 
       <div class="app-content">
-        <p class="text-muted mt-2">Manage a maintanance Request <span id="requestID" style="color: #dc3545;"></span></p>
+        <p class="text-muted mt-2">Manage a maintanance Request <span id="requestID" style="color: #dc3545;"><?php echo $requestId; ?></span></p>
         <div class="container-fluid rounded-2 mb-2">
           <div class="row p-1" style="background-color: #E6EAF0;">
             <div class="col-md-6 p-0">
@@ -585,7 +590,7 @@ require_once "actions/individual/getGeralRequests.php";
             <div class="col-md-6 p-0">
               <button id="availabilityBtn"
                 class="btn shadow-none" data-request-id="<?php echo $requestId; ?>" data-status="<?php echo $request['availability']; ?>"
-                style="background-color: white; color: #00192D; font-weight: 500; width:100%; margin-left:2px;">
+                style="color: #00192D; font-weight: 500; width:100%; margin-left:2px;">
                 <?php echo $request['availability'] === 'available' ? 'Set Unavailable' : 'Set Available'; ?>
               </button>
             </div>
@@ -968,11 +973,17 @@ require_once "actions/individual/getGeralRequests.php";
           console.log('Server Response:', data);
 
           if (data.success) {
-            // Update button status and text
+            // Update dataset
             btn.dataset.status = newStatus;
+
+            // Update button text
             btn.textContent = newStatus === 'available' ? 'Set Unavailable' : 'Set Available';
 
-            // Show or hide secondaryButtons based on new status
+            // Update button classes
+            btn.classList.remove('available', 'unavailable'); // remove both first
+            btn.classList.add(newStatus); // add either 'available' or 'unavailable'
+
+            // Show/hide secondary buttons
             const secondaryButtons = document.getElementById('secondaryButtons');
             if (newStatus === 'available') {
               secondaryButtons.style.display = 'flex';
@@ -1180,7 +1191,7 @@ require_once "actions/individual/getGeralRequests.php";
           console.log("Server response:", data);
 
           // ✅ Reload the page without resubmission
-          // window.location.href = window.location.href;
+           window.location.href = window.location.href;
         })
         .catch(error => {
           console.error("Error submitting form:", error);

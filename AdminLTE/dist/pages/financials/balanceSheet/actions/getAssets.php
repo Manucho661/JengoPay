@@ -27,7 +27,7 @@ try {
     $totalAssets = $totalCurrent + $totalNonCurrent;
 
     // items that must be displayed on the balanceSheet.
-    $mustDisplayedCurrentAssets = array('Accounts Receivable', 'M-pesa', 'Cash', 'Bank');
+    $mustDisplayedCurrentAssets = array('Accounts Receivable', 'M-pesa', 'Cash', 'Bank', 'Tenant Security Deposits (held)');
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }
