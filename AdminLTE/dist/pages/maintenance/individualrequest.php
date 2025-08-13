@@ -624,27 +624,28 @@ require_once "actions/individual/getGeralRequests.php";
                       <div class="request-icon">
                         <i class="fas fa-tools"></i>
                       </div>
-                      <p>yoyo</p>
                       <div class="request-content">
                         <div class="request-desc">
                           <?= $requestItem['description'] ?>
                         </div>
                         <div class="request-meta">
-                        <div class="request-date">
-                          <i class="far fa-calendar-alt"></i>
-                          <span class="requestItemDate"><?= $requestItem['request_date'] ?></span>
-                        </div>
-                        <div class="request-status">
-                          <i class="fas fa-circle"></i>
+                          <div class="request-date">
+                            <i class="far fa-calendar-alt"></i>
+                            <span class="requestItemDate"><?= $requestItem['request_date'] ?></span>
+                          </div>
+                          <div class="request-status">
+                            <i class="fas fa-circle"></i>
+                            <?= $requestItem['status'] ?>
+                          </div>
 
-                        </div>
-
-                        <div class="request-priority">
-                          <i class="fas fa-circle"></i>
+                          <div class="request-priority">
+                            <i class="fas fa-circle"></i>
+                            <?= $requestItem['priority'] ?>
+                          </div>
 
                         </div>
                       </div>
-                      </div>
+                      <span class="badge-new">NEW</span>
                     </li>
                   <?php endforeach ?>
                 </ul>
@@ -916,29 +917,29 @@ require_once "actions/individual/getGeralRequests.php";
 
 
   <script>
-// truncate the description in the request list
-document.querySelectorAll('.request-desc').forEach(el => {
-  const text = el.textContent.trim();
-  if (text.length > 60) {
-    el.textContent = text.substring(0, 60) + '...';
-  }
-});
+    // truncate the description in the request list
+    document.querySelectorAll('.request-desc').forEach(el => {
+      const text = el.textContent.trim();
+      if (text.length > 60) {
+        el.textContent = text.substring(0, 60) + '...';
+      }
+    });
   </script>
   <!-- change dates to nice human readabale format -->
-<script>
-document.querySelectorAll('.requestItemDate').forEach(el => {
-  const dateStr = el.textContent.trim(); // Get the date text
-  const dateObj = new Date(dateStr);     // Convert to Date object
+  <script>
+    document.querySelectorAll('.requestItemDate').forEach(el => {
+      const dateStr = el.textContent.trim(); // Get the date text
+      const dateObj = new Date(dateStr); // Convert to Date object
 
-  if (!isNaN(dateObj)) { // Check if it's a valid date
-    el.textContent = dateObj.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+      if (!isNaN(dateObj)) { // Check if it's a valid date
+        el.textContent = dateObj.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        });
+      }
     });
-  }
-});
-</script>
+  </script>
   <script>
     const requestList = document.getElementById('requestList');
     const detailsPanel = document.getElementById('detailsPanel');
