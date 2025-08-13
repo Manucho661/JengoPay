@@ -766,9 +766,9 @@ $netProfit = $income - $expenses;
                           <tr><td>Rental Income</td><td>Ksh<?= $formattedRent ?></td></tr>
                             <tr><td> Water Charges (Revenue)</td><td>Ksh<?= $formattedWater ?></td></tr>
                             <tr><td>Garbage Collection Fees(Revenue)</td><td>Ksh<?= $formattedGarbage ?></td></tr>
-                            <tr><td>Late Payment Fees</td><td>Ksh <?$formattedLateFees?></td></tr>
-                            <tr><td>Commissions and Management Fees</td><td>Ksh <?$formattedManagementFees?></td></tr>
-                            <tr><td>Other Income(Advertising,Penalties)</td><td>Ksh <? $formattedOtherIncome?> </td></tr>
+                            <tr><td>Late Payment Fees</td><td>Ksh 0.00<?$formattedLateFees?></td></tr>
+                            <tr><td>Commissions and Management Fees</td><td>Ksh 0.00 <?$formattedManagementFees?></td></tr>
+                            <tr><td>Other Income(Advertising,Penalties)</td><td>Ksh 0.00<? $formattedOtherIncome?> </td></tr>
                             <tr class="category"><td style="font-weight:500;"> <b>Total Income</b></td><td><b>Ksh<?= $formattedTotalIncome ?></b></td></tr>
                             <tr class="category"><td style="color:green;"> <b>Expenses</b></td></tr>
                             <tr><td>Maintenance and Repair Costs</td> <td>Ksh<?= $formattedMaintenance ?></td></tr>
@@ -1458,7 +1458,7 @@ document.getElementById('downloadBtn').addEventListener('click', function() {
     // Header styling (unchanged from your original)
     doc.setFontSize(14);
     doc.setFont("helvetica", "bold");
-    // doc.text("Ebenezer Apartment,", 105, 6, { align: "center" });
+    doc.text("Ebenezer Apartment,", 105, 6, { align: "center" });
 
 
     doc.setFontSize(14);
