@@ -767,7 +767,7 @@ $netProfit = $income - $expenses;
                             <tr><td> Water Charges (Revenue)</td><td>Ksh<?= $formattedWater ?></td></tr>
                             <tr><td>Garbage Collection Fees(Revenue)</td><td>Ksh<?= $formattedGarbage ?></td></tr>
                             <tr><td>Late Payment Fees</td><td>Ksh 0.00<?$formattedLateFees?></td></tr>
-                            <tr><td>Commissions and Management Fees</td><td>Ksh 0.00<?$formattedManagementFees?></td></tr>
+                            <tr><td>Commissions and Management Fees</td><td>Ksh 0.00 <?$formattedManagementFees?></td></tr>
                             <tr><td>Other Income(Advertising,Penalties)</td><td>Ksh 0.00<? $formattedOtherIncome?> </td></tr>
                             <tr class="category"><td style="font-weight:500;"> <b>Total Income</b></td><td><b>Ksh<?= $formattedTotalIncome ?></b></td></tr>
                             <tr class="category"><td style="color:green;"> <b>Expenses</b></td></tr>

@@ -1,3 +1,8 @@
+<?php
+require_once "actions/individual/getARequest.php";
+require_once "actions/individual/getGeralRequests.php";
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -530,6 +535,8 @@
       overflow: hidden;
       transition: max-height 0.3s ease;
     }
+
+    .available {}
   </style>
 </head>
 
@@ -577,9 +584,9 @@
             </div>
             <div class="col-md-6 p-0">
               <button id="availabilityBtn"
-                class="btn shadow-none"
+                class="btn shadow-none" data-request-id="<?php echo $requestId; ?>" data-status="<?php echo $request['availability']; ?>"
                 style="background-color: white; color: #00192D; font-weight: 500; width:100%; margin-left:2px;">
-                <i class="bi bi-arrow-left"></i> Unavailable
+                <?php echo $request['availability'] === 'available' ? 'Set Unavailable' : 'Set Available'; ?>
               </button>
             </div>
           </div>
@@ -607,8 +614,6 @@
                         <button class="btn shadow-none" id="openRecordPaymentModalBtn">Record</button>
                       </div>
                     </div>
-
-
                   </div>
                 </div>
 
@@ -616,12 +621,115 @@
                   <div class="text-muted">Other Requests</div>
                   <input class="rounded-2" type="text" id="searchInput" placeholder="Search by unit, category, or property...">
                 </div>
-                <ul class="request-list" id="requestList"></ul>
+                <ul class="request-list" id="requestList">
+                  <?php foreach ($requests as $requestItem) : ?>
+                    <li class="request-item">
+                      <div class="request-icon">
+                        <i class="fas fa-tools"></i>
+                      </div>
+                      <div class="request-content">
+                        <div class="request-desc">
+                          <?= $requestItem['description'] ?>
+                        </div>
+                        <div class="request-meta">
+                          <div class="request-date">
+                            <i class="far fa-calendar-alt"></i>
+                            <span class="requestItemDate"><?= $requestItem['request_date'] ?></span>
+                          </div>
+                          <div class="request-status">
+                            <i class="fas fa-circle"></i>
+                            <?= $requestItem['status'] ?>
+                          </div>
+
+                          <div class="request-priority">
+                            <i class="fas fa-circle"></i>
+                            <?= $requestItem['priority'] ?>
+                          </div>
+
+                        </div>
+                      </div>
+                    </li>
+                  <?php endforeach ?>
+                </ul>
               </div>
             </div>
             <div class="col-md-8" style="padding-right:10px; padding-left:0; padding-top:0 !;">
               <div class="main-content" id="detailsPanel">
                 <!-- content displays here -->
+                <div class="container-fluid">
+                  <!-- Row 1: Property, Unit, Request ID -->
+                  <div class="row-card mb-1 p-3 rounded shadow-sm">
+                    <div class="row gx-3 gy-3 p-3 rounded border-0" style="border: 1px solid #e0e0e0;">
+                      <!-- Property -->
+                      <div class="col-md-3">
+                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                          <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                            <i class="fa-solid fa-building" style="color: #FFC107; font-size: 16px;"></i>
+                          </span>
+                          <span style="font-weight: 600;">Property</span>
+                        </div>
+                        <div style="margin-top: 6px; font-size: 15px; color: #333;">
+                          <?= $request['residence'] ?>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                          <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                            <i class="fa-solid fa-door-closed" style="color: #FFC107; font-size: 16px;"></i>
+                          </span>
+                          <span style="font-weight: 600;">Unit</span>
+                        </div>
+                        <div style="margin-top: 6px; font-size: 15px; color: #333;">
+                          <?= $request['unit'] ?>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                          <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                            <i class="bi bi-file-text" style="color: #FFC107; font-size: 16px;"></i>
+                          </span>
+                          <span style="font-weight: 600;">Provider</span>
+                        </div>
+                        <div style="margin-top: 6px; font-size: 15px; color: #b93232ff;">Unassigned</div>
+
+                      </div>
+                      <div class="col-md-3">
+                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                          <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                            <i class="bi bi-file-text" style="color: #FFC107; font-size: 16px;"></i>
+                          </span>
+                          <span style="font-weight: 600;">Status</span>
+                        </div>
+                        <div style="margin-top: 6px; font-size: 15px; color: #b93232ff;">Unassigned</div>
+                      </div>
+                    </div>
+
+                  </div>
+                  <!-- Row 2: Category & Description -->
+                  <div class="row-card mb-1 p-3 rounded shadow-sm bg-white">
+                    <div class="row gx-3 gy-3 p-3 rounded border-0" style="border: 1px solid #e0e0e0;">
+                      <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                        <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                          <i class="fa-solid fa-align-left" style="color: white; font-size: 16px;"></i>
+                        </span>
+                        <span style="font-weight: 600;">Description</span>
+                      </div>
+                      <div class="text-muted" style="margin-top: 6px; font-size: 15px; color: #333; line-height: 1.6;"><?= $request['description'] ?></div>
+                    </div>
+                  </div>
+                  <!-- Row 3: Photo -->
+                  <div class="row-card mb-1 p-3 rounded shadow-sm bg-white">
+                    <div class="row gx-3 gy-3 p-3 rounded border-0">
+                      <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                        <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                          <i class="fa-solid fa-image" style="color: white; font-size: 16px;"></i>
+                        </span>
+                        <span style="font-weight: 600;">Request Image</span>
+                      </div>
+                      <img src="<?= $request['photo_url'] ?>" alt="Photo" class="photo-preview w-100 rounded">
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -808,6 +916,77 @@
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+  <script>
+    // truncate the description in the request list
+    document.querySelectorAll('.request-desc').forEach(el => {
+      const text = el.textContent.trim();
+      if (text.length > 60) {
+        el.textContent = text.substring(0, 60) + '...';
+      }
+    });
+  </script>
+  <!-- change dates to nice human readabale format -->
+  <script>
+    document.querySelectorAll('.requestItemDate').forEach(el => {
+      const dateStr = el.textContent.trim(); // Get the date text
+      const dateObj = new Date(dateStr); // Convert to Date object
+
+      if (!isNaN(dateObj)) { // Check if it's a valid date
+        el.textContent = dateObj.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        });
+      }
+    });
+  </script>
+
+  <!-- Update Availability -->
+  <script>
+    document.getElementById('availabilityBtn').addEventListener('click', function() {
+      const btn = this;
+      const requestId = btn.dataset.requestId;
+      const currentStatus = btn.dataset.status;
+
+      // Determine the new status
+      const newStatus = currentStatus === 'available' ? 'unavailable' : 'available';
+
+      fetch('actions/individual/updateAvailability.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            id: requestId,
+            status: newStatus
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          console.log('Server Response:', data);
+
+          if (data.success) {
+            // Update button status and text
+            btn.dataset.status = newStatus;
+            btn.textContent = newStatus === 'available' ? 'Set Unavailable' : 'Set Available';
+
+            // Show or hide secondaryButtons based on new status
+            const secondaryButtons = document.getElementById('secondaryButtons');
+            if (newStatus === 'available') {
+              secondaryButtons.style.display = 'flex';
+            } else {
+              secondaryButtons.style.display = 'none';
+            }
+          } else {
+            alert('Failed to update availability.');
+          }
+        })
+        .catch(err => console.error('Error:', err));
+    });
+  </script>
+
   <script>
     const requestList = document.getElementById('requestList');
     const detailsPanel = document.getElementById('detailsPanel');
@@ -852,86 +1031,6 @@
         }
       });
 
-    function renderRequestList(requests) {
-      requestList.innerHTML = '';
-
-      if (requests.length === 0) {
-        detailsPanel.innerHTML = `<div class="no-selection"><i class="fa-solid fa-triangle-exclamation"></i> No matching requests found.</div>`;
-        return;
-      }
-
-      requests.forEach((req, index) => {
-        const li = document.createElement('li');
-        li.className = 'request-item';
-
-        // Truncate description
-        const truncatedDesc = req.description.length > 60 ?
-          req.description.substring(0, 60) + '...' :
-          req.description;
-
-        // Format date
-        const formattedDate = new Date(req.request_date).toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric'
-        });
-
-        li.innerHTML = `
-          <div class="request-icon">
-            <i class="fas ${statusIcons[req.status] || 'fa-tools'}"></i>
-          </div>
-          <div class="request-content">
-            <div class="request-desc" title="${req.description}">
-              ${truncatedDesc}
-            </div>
-            <div class="request-meta">
-              <div class="request-date">
-                <i class="far fa-calendar-alt"></i>
-                ${formattedDate}
-              </div>
-              <div class="request-status">
-                <i class="fas ${statusIcons[req.status] || 'fa-circle'} status-${req.status.toLowerCase().replace(' ', '-')}"></i>
-                ${req.status}
-              </div>
-              ${req.priority ? `
-              <div class="request-priority">
-                <i class="fas ${priorityIcons[req.priority] || 'fa-circle'} priority-${req.priority.toLowerCase()}"></i>
-                ${req.priority}
-              </div>
-              ` : ''}
-            </div>
-          </div>
-          ${req.is_read == 0 ? '<span class="badge-new">NEW</span>' : ''}
-        `;
-
-        li.onclick = () => {
-          // Remove active class from all items
-          document.querySelectorAll('.request-item').forEach(item => {
-            item.classList.remove('active-request');
-          });
-
-          // Add active class to clicked item
-          li.classList.add('active-request');
-
-          showRequestDetails(req);
-          fetch('mark_as_read.php', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              id: req.id
-            })
-          }).then(() => {
-            req.is_read = 1;
-            li.querySelector('.badge-new')?.remove();
-          });
-        };
-
-        requestList.appendChild(li);
-      });
-    }
-
     searchInput.addEventListener('input', function() {
       const query = this.value.toLowerCase();
       const filtered = allRequests.filter(req =>
@@ -952,98 +1051,6 @@
         }
       }
     });
-
-    function showRequestDetails(req) {
-      currentRequestId = req.id;
-      // Format date for details view
-      const formattedDate = new Date(req.request_date).toLocaleDateString('en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-
-      // Update the availability button based on the request's status
-      updateAvailabilityButton(req.availability);
-      // update Request ID
-      document.getElementById('requestID').textContent = req.id;
-      detailsPanel.innerHTML = `
-        <div class="container-fluid px-1">
-            <!-- Row 1: Property, Unit, Request ID -->
-            <div class="row-card mb-1 p-3 rounded shadow-sm">
-                <div class="row gx-3 gy-3 p-3 rounded border-0" style="background-color:; border: 1px solid #e0e0e0;">
-                    <!-- Property -->
-                    <div class="col-md-3">
-                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                            <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                                <i class="fa-solid fa-building" style="color: #FFC107; font-size: 16px;"></i>
-                            </span>
-                            <span style="font-weight: 600;">Property</span>
-                        </div>
-                        <div style="margin-top: 6px; font-size: 15px; color: #333;">${req.residence}</div>
-                    </div>
-
-                    <!-- Unit -->
-                    <div class="col-md-3">
-                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                            <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                                <i class="fa-solid fa-door-closed" style="color: #FFC107; font-size: 16px;"></i>
-                            </span>
-                            <span style="font-weight: 600;">Unit</span>
-                        </div>
-                        <div style="margin-top: 6px; font-size: 15px; color: #333;">${req.unit}</div>
-                    </div>
-
-                    <!-- Provider -->
-                    <div class="col-md-3">
-                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                            <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                                <i class="bi bi-file-text" style="color: #FFC107; font-size: 16px;"></i>
-                            </span>
-                            <span style="font-weight: 600;">Provider</span>
-                        </div>
-                        <div style="margin-top: 6px; font-size: 15px; color: #b93232ff;">Unassigned</div>
-                    </div>
-                    <!-- Status -->
-                    <div class="col-md-3">
-                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                            <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                                <i class="fa-solid fa-hashtag" style="color: #FFC107; font-size: 16px;"></i>
-                            </span>
-                            <span style="font-weight: 600;">Status</span>
-                        </div>
-                        <div style="margin-top: 6px; font-size: 15px; color: #c15050ff;">Unassigned</div>
-                    </div>
-
-                    <!-- Status -->
-                </div>
-            </div>
-            <!-- Row 2: Category & Description -->
-            <div class="row-card mb-1 p-3 rounded shadow-sm bg-white">
-                <div class="row gx-3 gy-3 p-3 rounded border-0" style="border: 1px solid #e0e0e0;">
-                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                            <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                                <i class="fa-solid fa-align-left" style="color: white; font-size: 16px;"></i>
-                            </span>
-                            <span style="font-weight: 600;">Description</span>
-                        </div>
-                        <div class="text-muted" style="margin-top: 6px; font-size: 15px; color: #333; line-height: 1.6;">${req.description}</div>
-                </div>
-            </div>
-            <!-- Row 3: Photo -->
-            <div class="row-card mb-1 p-3 rounded shadow-sm bg-white">
-              <div class="row gx-3 gy-3 p-3 rounded border-0">
-                  <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                    <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                        <i class="fa-solid fa-image" style="color: white; font-size: 16px;"></i>
-                    </span>
-                    <span style="font-weight: 600;">Request Image</span>
-                  </div>
-                <img src="${req.photo || 'https://via.placeholder.com/400x250?text=No+Photo'}" alt="Photo" class="photo-preview w-100 rounded">
-              </div>
-            </div>
-        </div>`;
-    }
 
     // New function to update button appearance
     function updateAvailabilityButton(availability) {
