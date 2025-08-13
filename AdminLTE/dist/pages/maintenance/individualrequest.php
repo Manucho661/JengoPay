@@ -629,10 +629,10 @@ require_once "actions/individual/getGeralRequests.php";
                         <div class="request-desc">
                           <?= $requestItem['description'] ?>
                         </div>
-                      </div>
-                      <div class="request-meta">
+                        <div class="request-meta">
                         <div class="request-date">
                           <i class="far fa-calendar-alt"></i>
+                          <span class="requestItemDate"><?= $requestItem['request_date'] ?></span>
                         </div>
                         <div class="request-status">
                           <i class="fas fa-circle"></i>
@@ -643,6 +643,7 @@ require_once "actions/individual/getGeralRequests.php";
                           <i class="fas fa-circle"></i>
 
                         </div>
+                      </div>
                       </div>
                     </li>
                   <?php endforeach ?>
@@ -916,16 +917,29 @@ require_once "actions/individual/getGeralRequests.php";
 
   <script>
 // truncate the description in the request list
-// Select all elements you want to truncate (change '.truncate-me' to your selector)
 document.querySelectorAll('.request-desc').forEach(el => {
   const text = el.textContent.trim();
   if (text.length > 60) {
     el.textContent = text.substring(0, 60) + '...';
   }
 });
-
-
   </script>
+  <!-- change dates to nice human readabale format -->
+<script>
+document.querySelectorAll('.requestItemDate').forEach(el => {
+  const dateStr = el.textContent.trim(); // Get the date text
+  const dateObj = new Date(dateStr);     // Convert to Date object
+
+  if (!isNaN(dateObj)) { // Check if it's a valid date
+    el.textContent = dateObj.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  }
+});
+</script>
   <script>
     const requestList = document.getElementById('requestList');
     const detailsPanel = document.getElementById('detailsPanel');
