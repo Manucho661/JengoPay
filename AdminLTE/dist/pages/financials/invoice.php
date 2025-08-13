@@ -91,7 +91,20 @@ $buildingsStmt = $pdo->query(
     "SELECT building_id, building_name FROM buildings ORDER BY building_name"
 );
 $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
+
+<?php
+// At the top of invoice.php (before any HTML output)
+if (isset($_GET['success']) && isset($_GET['message'])) {
+    $message = htmlspecialchars(urldecode($_GET['message']));
+    echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>' . $message . '</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>';
+}
+?>
+
 
 <!doctype html>
 <html lang="en">
@@ -1062,6 +1075,7 @@ header {
         <i class="fas fa-columns me-1"></i>Custom Column  Filter
     </button>
 
+
     <!-- Filter Button -->
     <!-- <button id="filterBtn" class="btn d-flex align-items-center rounded-pill"
             style="background-color:#00192D; color:#FFC107; padding: 3px 12px; font-size: 14px;">
@@ -1086,8 +1100,8 @@ header {
           </div>
         </div>
         <div class="modal-footer">
-          <button id="applyColumns" class="btn btn-primary">Apply</button>
-          <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button id="applyColumns" class="btn" style="color: #FFC107; background-color:#00192D;" >Apply</button>
+          <button class="btn" data-bs-dismiss="modal" style="color: #FFC107; background-color:#00192D;">Close</button>
         </div>
       </div>
     </div>
@@ -1333,6 +1347,11 @@ header {
                           ");
                         $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+                        if (empty($invoices)) {
+                          echo '<div class="invoice-item text-center py-4">
+                                  <div class="col-12"><b>No invoice found!</b></div>
+                                </div>';
+                      }  else {
                         // ----------------------------------------------------
                         // 2) Output each invoice item
                         // ----------------------------------------------------
@@ -1484,6 +1503,7 @@ header {
           </div>
       </div>';
                         }
+                      }
                         ?>
 </div>
 
