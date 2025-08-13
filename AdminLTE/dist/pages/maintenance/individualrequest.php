@@ -611,8 +611,6 @@ require_once "actions/individual/getGeralRequests.php";
                         <button class="btn shadow-none" id="openRecordPaymentModalBtn">Record</button>
                       </div>
                     </div>
-
-
                   </div>
                 </div>
 
@@ -621,9 +619,33 @@ require_once "actions/individual/getGeralRequests.php";
                   <input class="rounded-2" type="text" id="searchInput" placeholder="Search by unit, category, or property...">
                 </div>
                 <ul class="request-list" id="requestList">
-                  <?php foreach($requests as $requestItem) :?>
-                  <li class="request-item"><?=$requestItem ?> </li>
-                  <?php endforeach?>
+                  <?php foreach ($requests as $requestItem) : ?>
+                    <li class="request-item">
+                      <div class="request-icon">
+                        <i class="fas fa-tools"></i>
+                      </div>
+                      <p>yoyo</p>
+                      <div class="request-content">
+                        <div class="request-desc">
+                          <?= $requestItem['description'] ?>
+                        </div>
+                      </div>
+                      <div class="request-meta">
+                        <div class="request-date">
+                          <i class="far fa-calendar-alt"></i>
+                        </div>
+                        <div class="request-status">
+                          <i class="fas fa-circle"></i>
+
+                        </div>
+
+                        <div class="request-priority">
+                          <i class="fas fa-circle"></i>
+
+                        </div>
+                      </div>
+                    </li>
+                  <?php endforeach ?>
                 </ul>
               </div>
             </div>
@@ -890,6 +912,20 @@ require_once "actions/individual/getGeralRequests.php";
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+  <script>
+// truncate the description in the request list
+// Select all elements you want to truncate (change '.truncate-me' to your selector)
+document.querySelectorAll('.request-desc').forEach(el => {
+  const text = el.textContent.trim();
+  if (text.length > 60) {
+    el.textContent = text.substring(0, 60) + '...';
+  }
+});
+
+
+  </script>
   <script>
     const requestList = document.getElementById('requestList');
     const detailsPanel = document.getElementById('detailsPanel');
@@ -966,6 +1002,7 @@ require_once "actions/individual/getGeralRequests.php";
             <div class="request-desc" title="${req.description}">
               ${truncatedDesc}
             </div>
+            yoyo
             <div class="request-meta">
               <div class="request-date">
                 <i class="far fa-calendar-alt"></i>
