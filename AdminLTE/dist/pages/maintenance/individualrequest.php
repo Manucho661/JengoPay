@@ -1,6 +1,7 @@
 <?php
 require_once "actions/individual/getARequest.php";
 require_once "actions/individual/getGeralRequests.php";
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -534,9 +535,8 @@ require_once "actions/individual/getGeralRequests.php";
       overflow: hidden;
       transition: max-height 0.3s ease;
     }
-    .available{
-      
-    }
+
+    .available {}
   </style>
 </head>
 
@@ -584,9 +584,9 @@ require_once "actions/individual/getGeralRequests.php";
             </div>
             <div class="col-md-6 p-0">
               <button id="availabilityBtn"
-                class="btn shadow-none <?=$request['availability']?>"
+                class="btn shadow-none" data-request-id="<?php echo $requestId; ?>" data-status="<?php echo $request['availability']; ?>"
                 style="background-color: white; color: #00192D; font-weight: 500; width:100%; margin-left:2px;">
-                <i class="bi bi-arrow-left"></i> Unavailable
+                <?php echo $request['availability'] === 'available' ? 'Set Unavailable' : 'Set Available'; ?>
               </button>
             </div>
           </div>
@@ -942,6 +942,51 @@ require_once "actions/individual/getGeralRequests.php";
       }
     });
   </script>
+
+  <!-- Update Availability -->
+  <script>
+    document.getElementById('availabilityBtn').addEventListener('click', function() {
+      const btn = this;
+      const requestId = btn.dataset.requestId;
+      const currentStatus = btn.dataset.status;
+
+      // Determine the new status
+      const newStatus = currentStatus === 'available' ? 'unavailable' : 'available';
+
+      fetch('actions/individual/updateAvailability.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            id: requestId,
+            status: newStatus
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          console.log('Server Response:', data);
+
+          if (data.success) {
+            // Update button status and text
+            btn.dataset.status = newStatus;
+            btn.textContent = newStatus === 'available' ? 'Set Unavailable' : 'Set Available';
+
+            // Show or hide secondaryButtons based on new status
+            const secondaryButtons = document.getElementById('secondaryButtons');
+            if (newStatus === 'available') {
+              secondaryButtons.style.display = 'flex';
+            } else {
+              secondaryButtons.style.display = 'none';
+            }
+          } else {
+            alert('Failed to update availability.');
+          }
+        })
+        .catch(err => console.error('Error:', err));
+    });
+  </script>
+
   <script>
     const requestList = document.getElementById('requestList');
     const detailsPanel = document.getElementById('detailsPanel');
