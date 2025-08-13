@@ -200,8 +200,10 @@ if (!empty($_FILES['attachment']['name'][0])) {
             'redirect_url' => 'invoice.php?draft_saved=1'
         ]);
     } else {
-      header("Location: invoice.php?success=1&message=Invoice+Submitted+successfully&invoice_number=" . urlencode($invoice_number));
+      $_SESSION['success_message'] = "✅ Submitted Successfully! Invoice #{$invoice_number} has been saved.";
+      header("Location: invoice.php");
       exit;
+
     }
 
 } catch (Exception $e) {
