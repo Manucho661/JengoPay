@@ -716,11 +716,11 @@ $netProfit = $income - $expenses;
 </div>
 
 <!-- Filter Panel (initially hidden) -->
-<div id="filterPanel" style="display:none; margin-top: 10px;">
+<!-- <div id="filterPanel" style="display:none; margin-top: 10px;">
   <label for="search">Search:</label>
   <input type="text" id="search" placeholder="Type something...">
   <button>Apply</button>
-</div>
+</div> -->
 
 
 
@@ -766,9 +766,9 @@ $netProfit = $income - $expenses;
                           <tr><td>Rental Income</td><td>Ksh<?= $formattedRent ?></td></tr>
                             <tr><td> Water Charges (Revenue)</td><td>Ksh<?= $formattedWater ?></td></tr>
                             <tr><td>Garbage Collection Fees(Revenue)</td><td>Ksh<?= $formattedGarbage ?></td></tr>
-                            <tr><td>Late Payment Fees</td><td>Ksh 0.00</td></tr>
-                            <tr><td>Commissions and Management Fees</td><td>Ksh 0.00</td></tr>
-                            <tr><td>Other Income(Advertising,Penalties)</td><td>Ksh 0.00</td></tr>
+                            <tr><td>Late Payment Fees</td><td>Ksh <?$formattedLateFees?></td></tr>
+                            <tr><td>Commissions and Management Fees</td><td>Ksh <?$formattedManagementFees?></td></tr>
+                            <tr><td>Other Income(Advertising,Penalties)</td><td>Ksh <? $formattedOtherIncome?> </td></tr>
                             <tr class="category"><td style="font-weight:500;"> <b>Total Income</b></td><td><b>Ksh<?= $formattedTotalIncome ?></b></td></tr>
                             <tr class="category"><td style="color:green;"> <b>Expenses</b></td></tr>
                             <tr><td>Maintenance and Repair Costs</td> <td>Ksh<?= $formattedMaintenance ?></td></tr>
@@ -944,6 +944,9 @@ $netProfit = $income - $expenses;
 <!-- End view announcement -->
 <!-- end overlay card. -->
 
+
+
+<!-- javascript codes begin here  -->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
 
@@ -991,20 +994,19 @@ $netProfit = $income - $expenses;
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Set default dates (current month)
+    // Default date range: current month
     const today = new Date();
     const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
     document.getElementById('startDate').valueAsDate = firstDayOfMonth;
     document.getElementById('endDate').valueAsDate = today;
 
-    // Add click event listener to filter button
+    // Filter button click
     document.getElementById('filterBtn').addEventListener('click', function() {
         const buildingId = document.getElementById('buildingFilter').value;
         const startDate = document.getElementById('startDate').value;
         const endDate = document.getElementById('endDate').value;
 
-        // Validate dates
         if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
             alert('End date must be after start date');
             return;
@@ -1015,38 +1017,27 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function filterBalanceSheet(buildingId, startDate, endDate) {
-    // Show loading indicator
     const filterBtn = document.getElementById('filterBtn');
     filterBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Filtering...';
     filterBtn.disabled = true;
 
     fetch('profit_loss_api.php', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
             building_id: buildingId,
             start_date: startDate,
             end_date: endDate
         })
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
+    .then(res => res.json())
     .then(data => {
         if (data.success) {
             updateProfitLossTable(data.data);
 
-            // Update the header with date range
             const header = document.querySelector('.balancesheet-header');
             if (startDate && endDate) {
-                const start = new Date(startDate).toLocaleDateString();
-                const end = new Date(endDate).toLocaleDateString();
-                header.textContent = `Profit & Loss Statement (${start} to ${end})`;
+                header.textContent = `Profit & Loss Statement (${new Date(startDate).toLocaleDateString()} to ${new Date(endDate).toLocaleDateString()})`;
             } else {
                 header.textContent = 'Profit & Loss Statement';
             }
@@ -1054,9 +1045,8 @@ function filterBalanceSheet(buildingId, startDate, endDate) {
             throw new Error(data.message || 'Unknown error occurred');
         }
     })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Error applying filters: ' + error.message);
+    .catch(err => {
+        alert('Error applying filters: ' + err.message);
     })
     .finally(() => {
         filterBtn.innerHTML = '<i class="fas fa-filter"></i> Filter';
@@ -1065,35 +1055,41 @@ function filterBalanceSheet(buildingId, startDate, endDate) {
 }
 
 function updateProfitLossTable(data) {
-    // Update income items
-    document.querySelector('tr:nth-child(2) td:nth-child(2)').textContent = 'Ksh' + (data.income.rent?.toFixed(2) || '0.00');
-    document.querySelector('tr:nth-child(3) td:nth-child(2)').textContent = 'Ksh' + (data.income.water?.toFixed(2) || '0.00');
-    document.querySelector('tr:nth-child(4) td:nth-child(2)').textContent = 'Ksh' + (data.income.garbage?.toFixed(2) || '0.00');
-    document.querySelector('tr:nth-child(5) td:nth-child(2)').textContent = 'Ksh' + (data.income.late_fees?.toFixed(2) || '0.00');
-    document.querySelector('tr:nth-child(6) td:nth-child(2)').textContent = 'Ksh' + (data.income.commissions?.toFixed(2) || '0.00');
-    document.querySelector('tr:nth-child(7) td:nth-child(2)').textContent = 'Ksh' + (data.income.other_income?.toFixed(2) || '0.00');
-    document.querySelector('tr:nth-child(8) td:nth-child(2)').textContent = 'Ksh' + (data.income.total?.toFixed(2) || '0.00');
+    const updateRow = (label, value) => {
+        const row = Array.from(document.querySelectorAll('tbody tr'))
+            .find(tr => tr.cells[0] && tr.cells[0].textContent.trim().startsWith(label));
+        if (row && row.cells[1]) {
+            row.cells[1].textContent = 'Ksh' + (value?.toFixed(2) || '0.00');
+        }
+    };
 
+    // Income
+    updateRow('Rental Income', data.income.rent);
+    updateRow('Water Charges (Revenue)', data.income.water);
+    updateRow('Garbage Collection Fees(Revenue)', data.income.garbage);
+    updateRow('Late Payment Fees', data.income.late_fees);
+    updateRow('Commissions and Management Fees', data.income.commissions);
+    updateRow('Other Income(Advertising,Penalties)', data.income.other_income);
+    updateRow('Total Income', data.income.total);
 
-    // Update expense items
-    document.querySelector('tr:nth-child(10) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.maintenance?.toFixed(2) || '0.00');
-    document.querySelector('tr:nth-child(11) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.salaries?.toFixed(2) || '0.00');
-    document.querySelector('tr:nth-child(12) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.electricity?.toFixed(2) || '0.00');
-    document.querySelector('tr:nth-child(13) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.water?.toFixed(2) || '0.00');
-    document.querySelector('tr:nth-child(14) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.garbage?.toFixed(2) || '0.00');
-    document.querySelector('tr:nth-child(15) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.internet?.toFixed(2) || '0.00');
-    document.querySelector('tr:nth-child(16) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.security?.toFixed(2) || '0.00');
-    document.querySelector('tr:nth-child(17) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.software?.toFixed(2) || '0.00');
-    document.querySelector('tr:nth-child(18) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.marketing?.toFixed(2) || '0.00');
-    document.querySelector('tr:nth-child(19) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.legal?.toFixed(2) || '0.00');
-    document.querySelector('tr:nth-child(20) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.loan_interest?.toFixed(2) || '0.00');
-    document.querySelector('tr:nth-child(21) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.bank_charges?.toFixed(2) || '0.00');
-    document.querySelector('tr:nth-child(22) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.other_expenses?.toFixed(2) || '0.00');
+    // Expenses
+    updateRow('Maintenance and Repair Costs', data.expenses.maintenance);
+    updateRow('Staff Salaries and Wages', data.expenses.salaries);
+    updateRow('Electricity Expense', data.expenses.electricity);
+    updateRow('Water Expense', data.expenses.water);
+    updateRow('Garbage Collection Expense', data.expenses.garbage);
+    updateRow('Internet Expense', data.expenses.internet);
+    updateRow('Security Expense', data.expenses.security);
+    updateRow('Property Management Software Subscription', data.expenses.software);
+    updateRow('Marketing And Advertising Costs', data.expenses.marketing);
+    updateRow('Legal and Compliance Fees', data.expenses.legal);
+    updateRow('Loan Interest Payments', data.expenses.loan_interest);
+    updateRow('Bank/Mpesa Charges', data.expenses.bank_charges);
+    updateRow('Other Expenses (Office, Supplies, Travel)', data.expenses.other_expenses);
+    updateRow('Total Expenses', data.expenses.total);
 
-    // Update totals
-    document.querySelector('tr:nth-child(23) td:nth-child(2)').textContent = 'Ksh' + (data.expenses.total?.toFixed(2) || '0.00');
-    document.querySelector('tr:nth-child(24) td:nth-child(2)').textContent = 'Ksh' + (data.net_profit?.toFixed(2) || '0.00');
-
+    // Net Profit
+    updateRow('Net Profit', data.net_profit);
 }
 </script>
 
@@ -1462,7 +1458,7 @@ document.getElementById('downloadBtn').addEventListener('click', function() {
     // Header styling (unchanged from your original)
     doc.setFontSize(14);
     doc.setFont("helvetica", "bold");
-    doc.text("Ebenezer Apartment,", 105, 6, { align: "center" });
+    // doc.text("Ebenezer Apartment,", 105, 6, { align: "center" });
 
 
     doc.setFontSize(14);

@@ -808,7 +808,233 @@ if (draftCheckbox) {
 // });
 
 
+$(document).ready(function () {
+  const searchTerms = [];
+  const columnSearches = {};
+  let currentStatusFilter = '';
+  let currentPaymentStatusFilter = '';
+  let visibleColumns = [];
 
+  const paymentStatuses = ['paid', 'unpaid', 'partial', 'overdue'];
+
+  // Initialize column data
+  const columns = [
+    { id: 'number', name: 'Invoice', visible: true },
+    { id: 'customer', name: 'Tenant', visible: true },
+    { id: 'date', name: 'Date', visible: true },
+    { id: 'due-date', name: 'Due Date', visible: true },
+    { id: 'sub-total', name: 'Sub-Total', visible: true },
+    { id: 'taxes', name: 'Taxes', visible: true },
+    { id: 'amount', name: 'Total', visible: true },
+    { id: 'status', name: 'Status', visible: true },
+    { id: 'payment-status', name: 'Payment Status', visible: true },
+    { id: 'actions', name: 'Actions', visible: true }
+  ];
+
+  function initializeUI() {
+    const $columnCheckboxes = $('#columnCheckboxes').empty();
+    columns.forEach(col => {
+      $columnCheckboxes.append(`
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="col-${col.id}"
+                 ${col.visible ? 'checked' : ''} data-column="${col.id}">
+          <label class="form-check-label" for="col-${col.id}">${col.name}</label>
+        </div>
+      `);
+    });
+
+    const $columnSearchSelect = $('#columnSearchSelect').empty();
+    $columnSearchSelect.append('<option value="">All Columns</option>');
+    columns.forEach(col => {
+      $columnSearchSelect.append(`<option value="${col.id}">${col.name}</option>`);
+    });
+
+    visibleColumns = columns.filter(col => col.visible).map(col => col.id);
+    updateColumnVisibility();
+  }
+
+  function updateColumnVisibility() {
+    columns.forEach(col => {
+      $(`.col-${col.id}`).toggle(col.visible);
+    });
+  }
+
+  $('#columnSelectorBtn').click(() => $('#columnSelectorModal').modal('show'));
+
+  $('#applyColumns').click(function () {
+    columns.forEach(col => {
+      col.visible = $(`#col-${col.id}`).is(':checked');
+    });
+    visibleColumns = columns.filter(col => col.visible).map(col => col.id);
+    updateColumnVisibility();
+    $('#columnSelectorModal').modal('hide');
+  });
+
+  $('#filterBtn').click(() => $('#filterModal').modal('show'));
+
+  function addSearchTerm(term, columnId = '') {
+    if (!term) return;
+
+    if (columnId) {
+      if (!columnSearches[columnId]) columnSearches[columnId] = [];
+      if (!columnSearches[columnId].includes(term)) {
+        columnSearches[columnId].push(term);
+        updateSearchDisplay();
+        performSearch();
+      }
+    } else {
+      if (!searchTerms.includes(term)) {
+        searchTerms.push(term);
+        updateSearchDisplay();
+        performSearch();
+      }
+    }
+  }
+
+  function removeSearchTerm(term, columnId = '') {
+    if (columnId) {
+      if (columnSearches[columnId]) {
+        const index = columnSearches[columnId].indexOf(term);
+        if (index > -1) {
+          columnSearches[columnId].splice(index, 1);
+          if (columnSearches[columnId].length === 0) delete columnSearches[columnId];
+          updateSearchDisplay();
+          performSearch();
+        }
+      }
+    } else {
+      const index = searchTerms.indexOf(term);
+      if (index > -1) {
+        searchTerms.splice(index, 1);
+        updateSearchDisplay();
+        performSearch();
+      }
+    }
+  }
+
+  function updateSearchDisplay() {
+    $('#searchTermDisplay').empty();
+
+    searchTerms.forEach(term => {
+      $('#searchTermDisplay').append(`
+        <span class="badge bg-primary d-flex align-items-center" style="font-weight: normal;">
+          ${term}
+          <button type="button" class="btn-close btn-close-white ms-1" style="font-size: 0.5rem;"
+            onclick="removeSearchTerm('${term}')"></button>
+        </span>
+      `);
+    });
+
+    for (const [columnId, terms] of Object.entries(columnSearches)) {
+      const columnName = columns.find(col => col.id === columnId)?.name || columnId;
+      terms.forEach(term => {
+        $('#searchTermDisplay').append(`
+          <span class="badge bg-info d-flex align-items-center" style="font-weight: normal;">
+            ${columnName}: ${term}
+            <button type="button" class="btn-close btn-close-white ms-1" style="font-size: 0.5rem;"
+              onclick="removeSearchTerm('${term}', '${columnId}')"></button>
+          </span>
+        `);
+      });
+    }
+
+    $('#clearSearch').toggleClass('d-none', searchTerms.length === 0 && Object.keys(columnSearches).length === 0);
+    $('#searchInput').attr('placeholder', searchTerms.length === 0 && Object.keys(columnSearches).length === 0 ?
+      'Search invoices...' : '');
+  }
+
+  function performSearch() {
+    if (searchTerms.length === 0 && Object.keys(columnSearches).length === 0 &&
+        !currentStatusFilter && !currentPaymentStatusFilter) {
+      $('.invoice-item:not(.invoice-header)').show();
+      $('#noResultsMessage').hide();
+      return;
+    }
+
+    let foundResults = false;
+    $('.invoice-item:not(.invoice-header)').each(function () {
+      const $row = $(this);
+      const rowText = $row.text().toLowerCase();
+
+      // ✅ General search: special handling for payment statuses
+      const generalSearchMatch = searchTerms.length === 0 || searchTerms.every(term => {
+        const t = term.toLowerCase().trim();
+        if (paymentStatuses.includes(t)) {
+          const paymentText = $row.find('.col-payment-status, .invoice-status:last .status-badge')
+                                  .text().trim().toLowerCase();
+          return paymentText === t;
+        }
+        return rowText.includes(t);
+      });
+
+      // ✅ Column-specific search: if searching payment-status, require exact match
+      let columnSearchMatch = true;
+      for (const [columnId, terms] of Object.entries(columnSearches)) {
+        const columnText = $row.find(`.col-${columnId}`).text().trim().toLowerCase();
+        if (columnId === 'payment-status') {
+          if (!terms.every(term => columnText === term.toLowerCase().trim())) {
+            columnSearchMatch = false;
+            break;
+          }
+        } else {
+          if (!terms.every(term => columnText.includes(term.toLowerCase().trim()))) {
+            columnSearchMatch = false;
+            break;
+          }
+        }
+      }
+
+      const statusMatch = !currentStatusFilter ||
+        $row.find('.invoice-status:first .status-badge').text().toLowerCase().includes(currentStatusFilter);
+
+      const paymentStatus = $row.find('.invoice-status:last .status-badge').text().toLowerCase();
+      const paymentMatch = !currentPaymentStatusFilter ||
+        paymentStatus === currentPaymentStatusFilter ||
+        (currentPaymentStatusFilter === 'overdue' && paymentStatus.includes('overdue'));
+
+      const isMatch = generalSearchMatch && columnSearchMatch && statusMatch && paymentMatch;
+      $row.toggle(isMatch);
+      if (isMatch) foundResults = true;
+    });
+
+    $('#noResultsMessage').toggle(!foundResults);
+  }
+
+  function clearSearch() {
+    searchTerms.length = 0;
+    for (const key in columnSearches) delete columnSearches[key];
+    updateSearchDisplay();
+    performSearch();
+  }
+
+  $('#addColumnSearch').click(function () {
+    const columnId = $('#columnSearchSelect').val();
+    const searchTerm = $('#columnSearchInput').val().trim();
+    if (searchTerm) {
+      addSearchTerm(searchTerm, columnId);
+      $('#columnSearchInput').val('');
+    }
+  });
+
+  $('#applyFilter').click(function () {
+    currentStatusFilter = $('#statusFilter').val().toLowerCase();
+    currentPaymentStatusFilter = $('#paymentStatusFilter').val().toLowerCase();
+    $('#filterModal').modal('hide');
+    performSearch();
+  });
+
+  $('#searchInput').on('keypress', function (e) {
+    if (e.which === 13 && $(this).val().trim()) {
+      addSearchTerm($(this).val().trim());
+      $(this).val('');
+    }
+  });
+
+  $('#clearSearch').on('click', clearSearch);
+
+  initializeUI();
+  window.removeSearchTerm = removeSearchTerm;
+});
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -898,95 +1124,95 @@ ajax: {
 
 
 
-document.addEventListener('DOMContentLoaded', function() {
-const filterButton = document.getElementById('filterButton');
-const filterModal = document.getElementById('filterModal');
-const closeFilter = document.getElementById('closeFilter');
-const applyFilter = document.getElementById('applyFilter');
-const resetFilter = document.getElementById('resetFilter');
+// document.addEventListener('DOMContentLoaded', function() {
+// const filterButton = document.getElementById('filterButton');
+// const filterModal = document.getElementById('filterModal');
+// const closeFilter = document.getElementById('closeFilter');
+// const applyFilter = document.getElementById('applyFilter');
+// const resetFilter = document.getElementById('resetFilter');
 
-// Show modal when filter button is clicked
-filterButton.addEventListener('click', function() {
-  filterModal.style.display = 'block';
-});
+// // Show modal when filter button is clicked
+// filterButton.addEventListener('click', function() {
+//   filterModal.style.display = 'block';
+// });
 
-// Close modal when X is clicked
-closeFilter.addEventListener('click', function() {
-  filterModal.style.display = 'none';
-});
+// // Close modal when X is clicked
+// closeFilter.addEventListener('click', function() {
+//   filterModal.style.display = 'none';
+// });
 
-// Close modal when clicking outside
-window.addEventListener('click', function(event) {
-  if (event.target == filterModal) {
-      filterModal.style.display = 'none';
-  }
-});
+// // Close modal when clicking outside
+// window.addEventListener('click', function(event) {
+//   if (event.target == filterModal) {
+//       filterModal.style.display = 'none';
+//   }
+// });
 
-// Apply filters
-applyFilter.addEventListener('click', function() {
-  const status = document.getElementById('statusFilter').value;
-  const paymentStatus = document.getElementById('paymentFilter').value;
-  const dateFrom = document.getElementById('dateFrom').value;
-  const dateTo = document.getElementById('dateTo').value;
+// // Apply filters
+// applyFilter.addEventListener('click', function() {
+//   const status = document.getElementById('statusFilter').value;
+//   const paymentStatus = document.getElementById('paymentFilter').value;
+//   const dateFrom = document.getElementById('dateFrom').value;
+//   const dateTo = document.getElementById('dateTo').value;
 
-  // Here you would typically make an AJAX call to your server with the filter parameters
-  // For this example, we'll just log them
-  console.log('Applying filters:', {
-      status: status,
-      paymentStatus: paymentStatus,
-      dateFrom: dateFrom,
-      dateTo: dateTo
-  });
+//   // Here you would typically make an AJAX call to your server with the filter parameters
+//   // For this example, we'll just log them
+//   console.log('Applying filters:', {
+//       status: status,
+//       paymentStatus: paymentStatus,
+//       dateFrom: dateFrom,
+//       dateTo: dateTo
+//   });
 
-  // Close the modal
-  filterModal.style.display = 'none';
+//   // Close the modal
+//   filterModal.style.display = 'none';
 
-  // In a real implementation, you would reload the table data with the filters applied
-  // For example:
-  // fetchFilteredInvoices(status, paymentStatus, dateFrom, dateTo);
-});
+//   // In a real implementation, you would reload the table data with the filters applied
+//   // For example:
+//   // fetchFilteredInvoices(status, paymentStatus, dateFrom, dateTo);
+// });
 
-// Reset filters
-resetFilter.addEventListener('click', function() {
-  document.getElementById('statusFilter').value = '';
-  document.getElementById('paymentFilter').value = '';
-  document.getElementById('dateFrom').value = '';
-  document.getElementById('dateTo').value = '';
+// // Reset filters
+// resetFilter.addEventListener('click', function() {
+//   document.getElementById('statusFilter').value = '';
+//   document.getElementById('paymentFilter').value = '';
+//   document.getElementById('dateFrom').value = '';
+//   document.getElementById('dateTo').value = '';
 
-  // In a real implementation, you would reload the original unfiltered data
-  // For example:
-  // fetchAllInvoices();
-});
-});
+//   // In a real implementation, you would reload the original unfiltered data
+//   // For example:
+//   // fetchAllInvoices();
+// });
+// });
 
-// Example function for fetching filtered invoices (would need server-side implementation)
-function fetchFilteredInvoices(status, paymentStatus, dateFrom, dateTo) {
-// This would be an AJAX call to your server
+// // Example function for fetching filtered invoices (would need server-side implementation)
+// function fetchFilteredInvoices(status, paymentStatus, dateFrom, dateTo) {
+// // This would be an AJAX call to your server
 
-fetch('../invoice/actions/filter.php', {
-  method: 'POST',
-  headers: {
-      'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-      status: status,
-      payment_status: paymentStatus,
-      date_from: dateFrom,
-      date_to: dateTo
-  })
-})
-.then(response => response.json())
-.then(data => {
-  // Update your table with the filtered data
-  updateInvoiceTable(data);
-})
-.catch(error => {
-  console.error('Error:', error);
-});
-}
+// fetch('../invoice/actions/filter.php', {
+//   method: 'POST',
+//   headers: {
+//       'Content-Type': 'application/json',
+//   },
+//   body: JSON.stringify({
+//       status: status,
+//       payment_status: paymentStatus,
+//       date_from: dateFrom,
+//       date_to: dateTo
+//   })
+// })
+// .then(response => response.json())
+// .then(data => {
+//   // Update your table with the filtered data
+//   updateInvoiceTable(data);
+// })
+// .catch(error => {
+//   console.error('Error:', error);
+// });
+// }
 
 // Example function to update the table with filtered data
-function updateInvoiceTable(invoices) {
+// function updateInvoiceTable(invoices) {
 // Implementation would depend on how your table is structured
 // This would clear and repopulate the table with the filtered invoices
-}
+// }
