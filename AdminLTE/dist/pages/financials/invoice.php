@@ -95,15 +95,16 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <?php
-// At the top of invoice.php (before any HTML output)
-if (isset($_GET['success']) && isset($_GET['message'])) {
-    $message = htmlspecialchars(urldecode($_GET['message']));
-    echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>' . $message . '</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>';
+session_start();
+if (isset($_SESSION['success_message'])) {
+    echo '<div class="alert alert-success alert-dismissible fade show" role="alert">'
+        . htmlspecialchars($_SESSION['success_message']) .
+        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>';
+    unset($_SESSION['success_message']); // Remove so it won't show on reload
 }
 ?>
+
 
 
 <!doctype html>
