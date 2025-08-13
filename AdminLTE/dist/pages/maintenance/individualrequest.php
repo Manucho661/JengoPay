@@ -932,9 +932,8 @@ document.querySelectorAll('.requestItemDate').forEach(el => {
 
   if (!isNaN(dateObj)) { // Check if it's a valid date
     el.textContent = dateObj.toLocaleDateString('en-US', {
-      weekday: 'long',
       year: 'numeric',
-      month: 'long',
+      month: 'short',
       day: 'numeric'
     });
   }
