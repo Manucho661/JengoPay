@@ -442,7 +442,7 @@ require_once "get_requests.php";
                     <tbody id="maintenanceRequestsTableBod">
                       <?php
                       foreach ($requests as $request): ?>
-                        <tr>
+                        <tr onclick="goToIndividualRequest(<?= $request['id'] ?>)">
                           <td class="text-muted"><?= $request['request_date'] ?></td>
                           <td>
                             <div><?= $request['residence'] ?> </div>
@@ -1099,14 +1099,15 @@ require_once "get_requests.php";
       }
     });
   </script>
-  <!--end::OverlayScrollbars Configure-->
 
-  <!-- DataTable Script -->
-
-
-  <!--end::Script-->
   <!-- plugin for pdf -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <!-- individualRequest open -->
+  <script>
+    function goToIndividualRequest(requestID) {
+      window.location.href = "individualrequest.php?id=" + requestID; // Navigate to the given page
+    }
+  </script>
 </body>
 <!--end::Body-->
 

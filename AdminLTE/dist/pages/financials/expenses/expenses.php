@@ -669,7 +669,7 @@ require_once 'actions/getBuildings.php'
                                                         <!-- Header -->
                                                         <div class="d-flex justify-content-between align-items-start mb-3 position-relative" style="overflow: hidden;">
                                                             <div>
-                                                                <img id="expenseLogo" src="expenseLogo6.png" alt="JengoPay Logo" class="expense-logo">
+                                                                <img id="expenseLogo" src="expensePdfLogo.png" alt="JengoPay Logo" class="expense-logo">
                                                             </div>
 
                                                             <!-- Diagonal PAID Label centered in the container -->

@@ -1,3 +1,7 @@
+<?php
+require_once "actions/individual/getARequest.php";
+require_once "actions/individual/getGeralRequests.php";
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -616,12 +620,90 @@
                   <div class="text-muted">Other Requests</div>
                   <input class="rounded-2" type="text" id="searchInput" placeholder="Search by unit, category, or property...">
                 </div>
-                <ul class="request-list" id="requestList"></ul>
+                <ul class="request-list" id="requestList">
+                  <?php foreach($requests as $requestItem) :?>
+                  <li class="request-item"><?=$requestItem ?> </li>
+                  <?php endforeach?>
+                </ul>
               </div>
             </div>
             <div class="col-md-8" style="padding-right:10px; padding-left:0; padding-top:0 !;">
               <div class="main-content" id="detailsPanel">
                 <!-- content displays here -->
+                <div class="container-fluid">
+                  <!-- Row 1: Property, Unit, Request ID -->
+                  <div class="row-card mb-1 p-3 rounded shadow-sm">
+                    <div class="row gx-3 gy-3 p-3 rounded border-0" style="border: 1px solid #e0e0e0;">
+                      <!-- Property -->
+                      <div class="col-md-3">
+                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                          <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                            <i class="fa-solid fa-building" style="color: #FFC107; font-size: 16px;"></i>
+                          </span>
+                          <span style="font-weight: 600;">Property</span>
+                        </div>
+                        <div style="margin-top: 6px; font-size: 15px; color: #333;">
+                          <?= $request['residence'] ?>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                          <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                            <i class="fa-solid fa-door-closed" style="color: #FFC107; font-size: 16px;"></i>
+                          </span>
+                          <span style="font-weight: 600;">Unit</span>
+                        </div>
+                        <div style="margin-top: 6px; font-size: 15px; color: #333;">
+                          <?= $request['unit'] ?>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                          <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                            <i class="bi bi-file-text" style="color: #FFC107; font-size: 16px;"></i>
+                          </span>
+                          <span style="font-weight: 600;">Provider</span>
+                        </div>
+                        <div style="margin-top: 6px; font-size: 15px; color: #b93232ff;">Unassigned</div>
+
+                      </div>
+                      <div class="col-md-3">
+                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                          <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                            <i class="bi bi-file-text" style="color: #FFC107; font-size: 16px;"></i>
+                          </span>
+                          <span style="font-weight: 600;">Status</span>
+                        </div>
+                        <div style="margin-top: 6px; font-size: 15px; color: #b93232ff;">Unassigned</div>
+                      </div>
+                    </div>
+
+                  </div>
+                  <!-- Row 2: Category & Description -->
+                  <div class="row-card mb-1 p-3 rounded shadow-sm bg-white">
+                    <div class="row gx-3 gy-3 p-3 rounded border-0" style="border: 1px solid #e0e0e0;">
+                      <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                        <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                          <i class="fa-solid fa-align-left" style="color: white; font-size: 16px;"></i>
+                        </span>
+                        <span style="font-weight: 600;">Description</span>
+                      </div>
+                      <div class="text-muted" style="margin-top: 6px; font-size: 15px; color: #333; line-height: 1.6;"><?= $request['description'] ?></div>
+                    </div>
+                  </div>
+                  <!-- Row 3: Photo -->
+                  <div class="row-card mb-1 p-3 rounded shadow-sm bg-white">
+                    <div class="row gx-3 gy-3 p-3 rounded border-0">
+                      <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                        <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                          <i class="fa-solid fa-image" style="color: white; font-size: 16px;"></i>
+                        </span>
+                        <span style="font-weight: 600;">Request Image</span>
+                      </div>
+                      <img src="<?= $request['photo_url'] ?>" alt="Photo" class="photo-preview w-100 rounded">
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -969,7 +1051,7 @@
       document.getElementById('requestID').textContent = req.id;
       detailsPanel.innerHTML = `
         <div class="container-fluid px-1">
-            <!-- Row 1: Property, Unit, Request ID -->
+            <!-- Row 1: Property, Unit, Request ID yoyo-->
             <div class="row-card mb-1 p-3 rounded shadow-sm">
                 <div class="row gx-3 gy-3 p-3 rounded border-0" style="background-color:; border: 1px solid #e0e0e0;">
                     <!-- Property -->
