@@ -925,6 +925,46 @@ header {
     flex-wrap: wrap;
   }
 
+  .search-container {
+    transition: all 0.2s ease;
+    overflow: hidden;
+}
+.search-container:focus-within {
+    border-color: #5E3A56;
+    box-shadow: 0 0 0 2px rgba(94, 58, 86, 0.1);
+}
+#searchTermDisplay {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    max-height: 32px;
+    overflow-y: auto;
+}
+#searchTermDisplay .badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    display: inline-flex;
+    align-items: center;
+}
+#searchTermDisplay .btn-close {
+    font-size: 0.5rem;
+    opacity: 0.8;
+}
+#searchTermDisplay .btn-close:hover {
+    opacity: 1;
+}
+#clearSearch {
+    cursor: pointer;
+}
+#clearSearch:hover {
+    color: #5E3A56 !important;
+}
+#noResultsMessage {
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin: 15px 0;
+}
+
   .table td,
   .table th {
     color: white;
@@ -993,59 +1033,117 @@ header {
                     <div class="page-header">
                         <h1 class="page-title"> 🧾 Invoices</h1>
                         <div class="page-actions">
-                        <!-- Search and Filter Bar -->
-<div class="d-flex align-items-center mb-3" style="gap: 8px;">
-    <!-- Search Icon -->
-    <i class="fas fa-search" style="font-size: 16px; color: #555;"></i>
+  <!-- Search and Filter Bar -->
+  <div class="d-flex justify-content-center align-items-center mb-3" style="gap: 8px;">
+    <!-- Search Container -->
+    <div class="search-container d-flex align-items-center position-relative bg-white rounded-pill ps-3 pe-1 py-1 shadow-sm"
+         style="border: 1px solid #ddd; min-width: 250px; max-width: 400px;">
 
-    <!-- Filter Chip -->
-    <button id="filterBtn" class="btn d-flex align-items-center"
-        style="background-color: #5E3A56; color: white; border-radius: 15px; padding: 3px 10px; font-size: 14px;">
-        <i class="fas fa-filter me-1"></i> Filter
+        <!-- Search Term Display -->
+        <div id="searchTermDisplay" class="d-flex align-items-center flex-wrap gap-2 me-2" style="max-width: 80%;"></div>
+
+        <!-- Search Input -->
+        <input type="text" id="searchInput" class="border-0 flex-grow-1"
+               placeholder="Search invoices..."
+               style="outline: none; font-size: 14px; background: transparent; min-width: 50px;">
+
+        <!-- Clear Button (X) -->
+        <button id="clearSearch" class="btn p-0 d-none" style="color: #999; background: none; border: none; margin-right: 5px;">
+            <i class="fas fa-times"></i>
+        </button>
+
+        <!-- Search Icon -->
+        <i class="fas fa-search ms-1" style="color: #555; font-size: 14px;"></i>
+    </div>
+
+    <!-- Column Selector Button -->
+    <button id="columnSelectorBtn" class="btn d-flex align-items-center rounded-pill"
+            style="background-color:#00192D; color:#FFC107; padding: 3px 12px; font-size: 14px;">
+        <i class="fas fa-columns me-1"></i>Custom Column  Filter
     </button>
 
-    <!-- Search Box -->
-    <input type="text" id="searchInput" class="form-control"
-        placeholder="Search..." style="max-width: 200px; font-size: 14px;">
-</div>
+    <!-- Filter Button -->
+    <!-- <button id="filterBtn" class="btn d-flex align-items-center rounded-pill"
+            style="background-color:#00192D; color:#FFC107; padding: 3px 12px; font-size: 14px;">
+        <i class="fas fa-filter me-1"></i>Filter
+    </button> -->
+  </div>
 
-<!-- Filter Modal -->
-<div class="modal fade" id="filterModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Filter Invoices</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div class="mb-3">
-          <label class="form-label">Status</label>
-          <select id="statusFilter" class="form-select">
-            <option value="">All</option>
-            <option value="draft">Draft</option>
-            <option value="sent">Sent</option>
-            <option value="paid">Paid</option>
-            <option value="cancelled">Cancelled</option>
-          </select>
+  <!-- Column Selector Modal -->
+  <div class="modal fade" id="columnSelectorModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Select Columns</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
-        <div class="mb-3">
-          <label class="form-label">Payment Status</label>
-          <select id="paymentStatusFilter" class="form-select">
-            <option value="">All</option>
-            <option value="paid">Paid</option>
-            <option value="partial">Partial</option>
-            <option value="unpaid">Unpaid</option>
-            <option value="overdue">Overdue</option>
-          </select>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Visible Columns</label>
+            <div id="columnCheckboxes" class="d-flex flex-column gap-2">
+              <!-- Checkboxes will be added dynamically -->
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button id="applyFilter" class="btn btn-primary">Apply</button>
-        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <div class="modal-footer">
+          <button id="applyColumns" class="btn btn-primary">Apply</button>
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
+
+
+
+
+
+  <!-- Filter Modal -->
+  <!-- <div class="modal fade" id="filterModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Filter Invoices</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Status</label>
+            <select id="statusFilter" class="form-select">
+              <option value="">All</option>
+              <option value="sent">Posted</option>
+              <option value="draft">Draft</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Payment Status</label>
+            <select id="paymentStatusFilter" class="form-select">
+              <option value="">All</option>
+              <option value="paid">Paid</option>
+              <option value="partial">Partial</option>
+              <option value="unpaid">Unpaid</option>
+              <option value="overdue">Overdue</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Column Specific Search</label>
+            <select id="columnSearchSelect" class="form-select mb-2">
+              <option value="">All Columns</option>
+              <! Options will be added dynamically -->
+            <!-- </select>
+            <div class="input-group">
+              <input type="text" id="columnSearchInput" class="form-control" placeholder="Search in selected column...">
+              <button id="addColumnSearch" class="btn btn-outline-secondary">Add</button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="applyFilter" class="btn btn-primary">Apply</button>
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div> -->
+  <!-- </div>  -->
+<!-- </div> -->
 
 
                         <!-- Active Filter Tags -->
@@ -1142,45 +1240,52 @@ header {
                                 </div>
                             </div>
                         </div>
-<div class="table-responsive">
+                        <div class="table-responsive">
   <div class="invoice-container" id="invoice-items-list">
     <div class="invoice-item invoice-header">
-      <div class="invoice-checkbox">
+      <div class="invoice-checkbox col-checkbox">
         <input type="checkbox">
       </div>
-      <div class="invoice-number">
+      <div class="invoice-number col-number">
         <div class="over-flow" title="Invoice #">Invoice</div>
       </div>
-      <div class="invoice-customer">
+      <div class="invoice-customer col-customer">
         <div class="over-flow" title="Customer">Tenant</div>
       </div>
-      <div class="invoice-date">
+      <div class="invoice-date col-date">
         <div class="over-flow" title="Date">Date</div>
       </div>
-      <div class="invoice-date">
+      <div class="invoice-date col-due-date">
         <div class="over-flow" title="Due Date">Due Date</div>
       </div>
-      <div class="invoice-sub-total">
+      <div class="invoice-sub-total col-sub-total">
         <div class="over-flow" title="Sub-Total">Sub-Total</div>
       </div>
-      <div class="invoice-taxes">
+      <div class="invoice-taxes col-taxes">
         <div class="over-flow" title="Taxes">Taxes</div>
       </div>
-      <div class="invoice-amount">
+      <div class="invoice-amount col-amount">
         <div class="over-flow" title="Amount">Total</div>
       </div>
-      <div class="invoice-status">
+      <div class="invoice-status col-status">
         <div class="over-flow" title="Status">Status</div>
       </div>
-      <div class="invoice-status">
+      <div class="invoice-status col-payment-status">
         <div class="over-flow" title="Payment Status">Payment Status</div>
       </div>
-      <div class="invoice-actions">
+      <div class="invoice-actions col-actions">
         <div class="over-flow" title="Actions">Actions</div>
       </div>
     </div>
   </div>
 <!-- </div> -->
+
+ <!-- No Results Message -->
+ <div id="noResultsMessage" class="text-center py-4" style="display: none;">
+    <i class="fas fa-file-invoice" style="font-size: 48px; color: #ddd;"></i>
+    <h5 class="mt-3">No invoices found</h5>
+    <p class="text-muted">Try different search terms</p>
+  </div>
 
                         <?php
                         // ----------------------------------------------------
@@ -1743,7 +1848,7 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
 </script>
 
 
-<script>
+<!-- <script>
   document.addEventListener("DOMContentLoaded", function () {
     const filterBtn = document.getElementById("filterBtn");
     const searchInput = document.getElementById("searchInput");
@@ -1785,7 +1890,7 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
     }
 });
 
-</script>
+</script> -->
 
 
 <script>
@@ -2477,6 +2582,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script> -->
+
+
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -3254,7 +3361,7 @@ function filterFunction() {
         document.getElementById("inspectionDate").setAttribute("min", today);
     </script>
 
-   <script>
+   <!-- <script>
 // // Store the original invoices data
 // let originalInvoices = [];
 // let displayedInvoices = [];
@@ -3281,37 +3388,37 @@ function handleResize() {
 }
 
 // Enhanced filter functionality
-function applyFilter() {
-  const filterField = document.getElementById('filterField');
-  const searchInput = document.getElementById('searchInput');
+// function applyFilter() {
+//   const filterField = document.getElementById('filterField');
+//   const searchInput = document.getElementById('searchInput');
 
-  const selectedField = filterField.value;
-  const selectedFieldText = filterField.options[filterField.selectedIndex].text;
-  const searchValue = searchInput.value.trim().toLowerCase();
+//   const selectedField = filterField.value;
+//   const selectedFieldText = filterField.options[filterField.selectedIndex].text;
+//   const searchValue = searchInput.value.trim().toLowerCase();
 
-  if (searchValue === '') {
-    alert('Please enter a search value');
-    return;
-  }
+//   if (searchValue === '') {
+//     alert('Please enter a search value');
+//     return;
+//   }
 
-  // Add filter to active filters if not already present
-  const filterExists = activeFilters.some(filter =>
-    filter.field === selectedField && filter.value === searchValue
-  );
+//   // Add filter to active filters if not already present
+//   const filterExists = activeFilters.some(filter =>
+//     filter.field === selectedField && filter.value === searchValue
+//   );
 
-  if (!filterExists) {
-    activeFilters.push({
-      field: selectedField,
-      fieldText: selectedFieldText,
-      value: searchValue
-    });
-    updateActiveFiltersDisplay();
-    filterInvoices();
-  }
+//   if (!filterExists) {
+//     activeFilters.push({
+//       field: selectedField,
+//       fieldText: selectedFieldText,
+//       value: searchValue
+//     });
+//     updateActiveFiltersDisplay();
+//     filterInvoices();
+//   }
 
-  // Clear the search input
-  searchInput.value = '';
-}
+//   // Clear the search input
+//   searchInput.value = '';
+// }
 
 function updateActiveFiltersDisplay() {
   const activeFiltersContainer = document.getElementById('activeFilters');
@@ -3369,16 +3476,16 @@ document.addEventListener('DOMContentLoaded', function() {
   window.addEventListener('resize', handleResize);
 
   // Initialize filter input
-  const searchInput = document.getElementById('searchInput');
-  if (searchInput) {
-    searchInput.addEventListener('keyup', function(e) {
-      if (e.key === 'Enter') {
-        applyFilter();
-      }
-    });
-  }
-});
-</script>
+  // const searchInput = document.getElementById('searchInput');
+  // if (searchInput) {
+  //   searchInput.addEventListener('keyup', function(e) {
+  //     if (e.key === 'Enter') {
+  //       applyFilter();
+  //     }
+//   //   });
+//   }
+// });
+</script> -->
 
 
     <!-- pdf download plugin -->
