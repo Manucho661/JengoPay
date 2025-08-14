@@ -751,44 +751,105 @@ $netProfit = $income - $expenses;
                <div class="container balancesheet">
                 <div>
                    <h3 class=" text-start  balancesheet-header">December 31, 2024</h3>
-                  <div class="table-responsive">
-                    <table id="myTable" style="width: 100%;">
-                        <thead style="background-color: rgba(128, 128, 128, 0.2); color: black;" >
-                            <tr>
-                                <th style="font-size: 16px;">Description</th>
-                                <th style="font-size: 16px;">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                          <!-- <tr class="category"><td> <b style="font-size: 16px;">Income</b></td></tr> -->
-                          <tr class="category"><td style="color:green; font-weight:500;"> <b>Income</b></td></tr>
+                  <!-- <div class="table-responsive"> -->
+    <div class="table-responsive">
+    <table id="myTable" style="width: 100%;">
+        <thead style="background-color: rgba(128, 128, 128, 0.2); color: black;">
+            <tr>
+                <th style="font-size: 16px;">Description</th>
+                <th style="font-size: 16px;">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="category"><td style="color:green; font-weight:500;"><b>Income</b></td></tr>
 
-                          <tr><td>Rental Income</td><td>Ksh<?= $formattedRent ?></td></tr>
-                            <tr><td> Water Charges (Revenue)</td><td>Ksh<?= $formattedWater ?></td></tr>
-                            <tr><td>Garbage Collection Fees(Revenue)</td><td>Ksh<?= $formattedGarbage ?></td></tr>
-                            <tr><td>Late Payment Fees</td><td>Ksh 0.00<?$formattedLateFees?></td></tr>
-                            <tr><td>Commissions and Management Fees</td><td>Ksh 0.00 <?$formattedManagementFees?></td></tr>
-                            <tr><td>Other Income(Advertising,Penalties)</td><td>Ksh 0.00<? $formattedOtherIncome?> </td></tr>
-                            <tr class="category"><td style="font-weight:500;"> <b>Total Income</b></td><td><b>Ksh<?= $formattedTotalIncome ?></b></td></tr>
-                            <tr class="category"><td style="color:green;"> <b>Expenses</b></td></tr>
-                            <tr><td>Maintenance and Repair Costs</td> <td>Ksh<?= $formattedMaintenance ?></td></tr>
-                            <tr><td>Staff Salaries and Wages</td><td>Ksh<?= $formattedSalaryTotal ?></td></tr>
-                            <tr><td>Electricity Expense</td> <td>Ksh<?= $formattedElectricity ?></td></tr>
-                            <tr><td>Water Expense</td><td>Ksh<?= $formattedWaterExpense ?></td></tr>
-                            <tr><td>Garbage Collection Expense</td><td>Ksh<?= $formattedGarbageExpense ?></td></tr>
-                            <tr><td>Internet Expense</td> <td>Ksh<?= $formattedInternetExpense ?></td></tr>
-                            <tr><td>Security Expense</td><td>Ksh<?= $formattedSecurityExpense ?></td></tr>
-                            <tr><td>Property Management Software Subscription</td><td>Ksh<?= $formattedSoftwareExpense ?></td></tr>
-                            <tr><td>Marketing And Advertising Costs</td><td>Ksh<?= $formattedMarketingExpense ?></td></tr>
-                            <tr><td>Legal and Compliance Fees</td><td>Ksh<?= $formattedLegalExpense ?></td></tr>
-                            <tr><td>Loan Interest Payments</td><td>Ksh<?= $formattedLoanInterest ?></td></tr>
-                            <tr><td>Bank/Mpesa Charges</td><td>Ksh<?= $formattedBankCharges ?></td></tr>
-                            <tr><td>Other Expenses (Office, Supplies, Travel)</td> <td>Ksh<?= $formattedOtherExpense ?></td></tr>
-                            <tr class="category"><td> <b>Total Expenses</b> </td> <td><b>Ksh<?= $formattedTotalExpenses ?></b></td></tr>
-                            <tr class="category"><td> <b>Net Profit</b> </td><td><b>Ksh<?= $formattedNetProfit ?></b></td></tr>
-                        </tbody>
-                    </table>
-                  </div>
+            <?php if ($rentTotal > 0): ?>
+                <tr><td>Rental Income</td><td>Ksh<?= $formattedRent ?></td></tr>
+            <?php endif; ?>
+
+            <?php if ($waterTotal > 0): ?>
+                <tr><td>Water Charges (Revenue)</td><td>Ksh<?= $formattedWater ?></td></tr>
+            <?php endif; ?>
+
+            <?php if ($garbageTotal > 0): ?>
+                <tr><td>Garbage Collection Fees (Revenue)</td><td>Ksh<?= $formattedGarbage ?></td></tr>
+            <?php endif; ?>
+
+            <?php if ($lateFees > 0): ?>
+                <tr><td>Late Payment Fees</td><td>Ksh<?= $formattedLateFees ?></td></tr>
+            <?php endif; ?>
+
+            <?php if ($managementFees > 0): ?>
+                <tr><td>Commissions and Management Fees</td><td>Ksh<?= $formattedManagementFees ?></td></tr>
+            <?php endif; ?>
+
+            <?php if ($otherIncome > 0): ?>
+                <tr><td>Other Income (Advertising, Penalties)</td><td>Ksh<?= $formattedOtherIncome ?></td></tr>
+            <?php endif; ?>
+
+            <tr class="category"><td style="font-weight:500;"><b>Total Income</b></td>
+                <td><b>Ksh<?= $formattedTotalIncome ?></b></td></tr>
+
+            <tr class="category"><td style="color:green;"><b>Expenses</b></td></tr>
+
+            <?php if ($maintenanceTotal > 0): ?>
+                <tr><td>Maintenance and Repair Costs</td><td>Ksh<?= $formattedMaintenance ?></td></tr>
+            <?php endif; ?>
+
+            <?php if ($salaryTotal > 0): ?>
+                <tr><td>Staff Salaries and Wages</td><td>Ksh<?= $formattedSalaryTotal ?></td></tr>
+            <?php endif; ?>
+
+            <?php if ($electricityTotal > 0): ?>
+                <tr><td>Electricity Expense</td><td>Ksh<?= $formattedElectricity ?></td></tr>
+            <?php endif; ?>
+
+            <?php if ($waterExpenseTotal > 0): ?>
+                <tr><td>Water Expense</td><td>Ksh<?= $formattedWaterExpense ?></td></tr>
+            <?php endif; ?>
+
+            <?php if ($garbageExpenseTotal > 0): ?>
+                <tr><td>Garbage Collection Expense</td><td>Ksh<?= $formattedGarbageExpense ?></td></tr>
+            <?php endif; ?>
+
+            <?php if ($internetExpenseTotal > 0): ?>
+                <tr><td>Internet Expense</td><td>Ksh<?= $formattedInternetExpense ?></td></tr>
+            <?php endif; ?>
+
+            <?php if ($securityExpenseTotal > 0): ?>
+                <tr><td>Security Expense</td><td>Ksh<?= $formattedSecurityExpense ?></td></tr>
+            <?php endif; ?>
+
+            <?php if ($softwareExpenseTotal > 0): ?>
+                <tr><td>Property Management Software Subscription</td><td>Ksh<?= $formattedSoftwareExpense ?></td></tr>
+            <?php endif; ?>
+
+            <?php if ($marketingExpenseTotal > 0): ?>
+                <tr><td>Marketing and Advertising Costs</td><td>Ksh<?= $formattedMarketingExpense ?></td></tr>
+            <?php endif; ?>
+
+            <?php if ($legalExpenseTotal > 0): ?>
+                <tr><td>Legal and Compliance Fees</td><td>Ksh<?= $formattedLegalExpense ?></td></tr>
+            <?php endif; ?>
+
+            <?php if ($loanInterestTotal > 0): ?>
+                <tr><td>Loan Interest Payments</td><td>Ksh<?= $formattedLoanInterest ?></td></tr>
+            <?php endif; ?>
+
+            <?php if ($bankChargesTotal > 0): ?>
+                <tr><td>Bank/Mpesa Charges</td><td>Ksh<?= $formattedBankCharges ?></td></tr>
+            <?php endif; ?>
+
+            <?php if ($otherExpenseTotal > 0): ?>
+                <tr><td>Other Expenses (Office, Supplies, Travel)</td><td>Ksh<?= $formattedOtherExpense ?></td></tr>
+            <?php endif; ?>
+
+            <tr class="category"><td><b>Total Expenses</b></td><td><b>Ksh<?= $formattedTotalExpenses ?></b></td></tr>
+            <tr class="category"><td><b>Net Profit</b></td><td><b>Ksh<?= $formattedNetProfit ?></b></td></tr>
+        </tbody>
+    </table>
+</div>
+
                 </div>
               <!-- /.col -->
             </div>

@@ -214,6 +214,12 @@ $randomLogo = $logos[array_rand($logos)];
             font-size:11px;padding:2px 6px;border-radius:4px;font-weight:600;
             letter-spacing:.3px;text-transform:uppercase
         }
+
+        .badge-paid {background:#e8f5e9; color:#2e7d32}
+        .badge-partial {background:#fff8e1; color:#ff8f00} /* Amber for partial payments */
+        .badge-unpaid {background:#ffebee; color:#c62828}  /* Red for unpaid */
+
+        .status-paid {background:#e8f5e9; color:#2e7d32}  /* Green background with dark green text */
         /* .status-paid      {background:#e8f5e9;color:#2e7d32}
         .status-overdue   {background:#ffebee;color:#c62828}
         .status-cancelled {background:#eceff1;color:#546e7a}
@@ -297,24 +303,22 @@ hr {
 }
 
 .diagonal-paid-label {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            /* Centered and rotated */
-            background-color: rgba(0, 128, 0, 0.2);
-            /* Light green with transparency */
-            color: green;
-            font-weight: bold;
-            font-size: 24px;
-            padding: 15px 40px;
-            border: 2px solid green;
-            border-radius: 8px;
-            text-transform: uppercase;
-            pointer-events: none;
-            z-index: 10;
-            white-space: nowrap;
-        }
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    background-color: rgba(46, 125, 50, 0.2); /* Green with transparency */
+    color: #2e7d32; /* Dark green text */
+    font-weight: bold;
+    font-size: 24px;
+    padding: 15px 40px;
+    border: 2px solid #2e7d32; /* Dark green border */
+    border-radius: 8px;
+    text-transform: uppercase;
+    pointer-events: none;
+    z-index: 10;
+    white-space: nowrap;
+}
 
         .diagonal-unpaid-label {
             position: absolute;
@@ -469,14 +473,13 @@ try {
 
         // Status handling with default case
         $status = $row['status'] ?? 'draft';
-        $statusClass = match(strtolower($status)) {
-            'sent' => 'badge-sent',
-            'paid' => 'badge-paid',
-            'overdue' => 'badge-overdue',
-            'cancelled' => 'badge-cancelled',
-            default => 'badge-draft'
-        };
-
+       $statusClass = match(strtolower($status)) {
+    'sent' => 'badge-sent',
+    'paid' => 'badge-paid', // This will now use the green styling
+    'overdue' => 'badge-overdue',
+    'cancelled' => 'badge-cancelled',
+    default => 'badge-draft'
+};
         $statusText = match(strtolower($status)) {
             'sent' => 'Sent',
             'paid' => 'Paid',
@@ -487,11 +490,11 @@ try {
 
         // Payment status with default case
         $paymentStatus = $row['payment_status'] ?? 'unpaid';
-        $paymentClass = match(strtolower($paymentStatus)) {
-            'paid' => 'badge-paid',
-            'partial' => 'badge-partial',
-            default => 'badge-unpaid'
-        };
+       $paymentClass = match(strtolower($paymentStatus)) {
+          'paid' => 'badge-paid', // Green for fully paid
+          'partial' => 'badge-partial', // Amber for partial payments
+          default => 'badge-unpaid' // Red for unpaid
+      };
 
         $paymentText = match(strtolower($paymentStatus)) {
             'paid' => 'Paid',
@@ -550,15 +553,17 @@ if (!$id) {
 } else {
   // ── Fetch invoice with tenant name via users table ──
   $info = $pdo->prepare("
-      SELECT
-          i.*,
-          CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name,
-          u.email AS tenant_email,
-          u.phone AS tenant_phone
-      FROM invoice i
-      LEFT JOIN users u ON i.tenant = u.id
-      WHERE i.id = ?
-  ");
+    SELECT
+        i.*,
+        CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name,
+        u.email AS tenant_email,
+        t.phone_number AS tenant_phone,  
+        t.unit AS unit_number          
+    FROM invoice i
+    LEFT JOIN users u ON i.tenant = u.id
+    LEFT JOIN tenants t ON u.id = t.user_id
+    WHERE i.id = ?
+");
   $info->execute([$id]);
   $inv = $info->fetch(PDO::FETCH_ASSOC);
 
@@ -592,8 +597,20 @@ if (!$id) {
                 <td class='text-end'>{$vatLabel}</td>
                 <td class='text-end'>KES " . number_format($tax, 2) . "</td>
                <td class='text-end'>KES " . number_format($qty * $price, 2) . "</td>
-
             </tr>";
+        }
+        
+        // Determine payment status class and label
+        $paymentStatus = strtolower($inv['payment_status']);
+        $paymentLabelClass = '';
+        $paymentLabelText = strtoupper($inv['payment_status']);
+        
+        if ($paymentStatus === 'paid') {
+            $paymentLabelClass = 'diagonal-paid-label';
+        } elseif ($paymentStatus === 'partial') {
+            $paymentLabelClass = 'diagonal-partially-paid-label';
+        } else {
+            $paymentLabelClass = 'diagonal-unpaid-label';
         }
 ?>
 <div class="modal-footer">
@@ -601,16 +618,15 @@ if (!$id) {
         <i class="bi bi-printer-fill"></i> Print Invoice
     </button>
     <a href="view_invoice_pdf.php?id=<?= $inv['id'] ?>" class="btn" style="color: #FFC107; background-color: #00192D;" download="invoice_<?= $inv['invoice_number'] ?>.pdf">
-    <i class="bi bi-download"></i> Download PDF
-</a>
-
+        <i class="bi bi-download"></i> Download PDF
+    </a>
 </div>
 
 <div class="invoice-card">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-start mb-3 position-relative" style="overflow: hidden;">
         <div><img id="expenseLogo" src="expenseLogo6.png" alt="JengoPay Logo" class="expense-logo"></div>
-        <div class="diagonal-unpaid-label" id="expenseModalPaymentStatus"><?= strtoupper($inv['payment_status']) ?></div>
+        <div class="<?= $paymentLabelClass ?>" id="expenseModalPaymentStatus"><?= $paymentLabelText ?></div>
         <div class="text-end" style="background-color: #f0f0f0; padding: 10px; border-radius: 8px;">
             <strong>Silver Spoon Towers</strong><br>
             50303 Nairobi, Kenya<br>
@@ -620,13 +636,40 @@ if (!$id) {
     </div>
 
     <!-- Invoice Info -->
-    <div class="d-flex justify-content-between">
+<!-- <div class="d-flex justify-content-between">
+    <div>
         <h6 class="mb-0"><strong><b><?= htmlspecialchars($inv['tenant_name']) ?></b></strong></h6>
-        <div class="text-end">
-            <h3><strong><b><?= htmlspecialchars($inv['invoice_number']) ?></b></strong></h3><br>
+        <div class="tenant-details">
+            <small>Email: <?= htmlspecialchars($inv['tenant_email']) ?></small><br>
+            <small>Phone: <?= htmlspecialchars($inv['tenant_phone']) ?></small><br>
+            <small>Unit: <?= htmlspecialchars($inv['unit_number']) ?></small>
+        </div>
+    </div> -->
+
+    <!-- Invoice Info -->
+<div class="d-flex justify-content-between">
+    <div>
+        <h6 class="mb-0"><strong><b><?= htmlspecialchars($inv['tenant_name']) ?></b></strong></h6>
+        <div class="tenant-details" style="font-size: 0.9rem; margin-top: 0.5rem;">
+            <?php if (!empty($inv['tenant_email'])): ?>
+                <div> <?= htmlspecialchars($inv['tenant_email']) ?></div>
+            <?php endif; ?>
+            <?php if (!empty($inv['tenant_phone'])): ?>
+                <div> <?= htmlspecialchars($inv['tenant_phone']) ?></div>
+            <?php endif; ?>
+            <?php if (!empty($inv['unit_number'])): ?>
+                <div> <?= htmlspecialchars($inv['unit_number']) ?></div>
+            <?php endif; ?>
         </div>
     </div>
-
+    <div class="text-end">
+        <h3><strong><b><?= htmlspecialchars($inv['invoice_number']) ?></b></strong></h3>
+    </div>
+</div>
+    <!-- <div class="text-end">
+        <h3><strong><b><?= htmlspecialchars($inv['invoice_number']) ?></b></strong></h3><br>
+    </div> -->
+</div>
     <div class="mb-1 rounded-2 d-flex justify-content-between align-items-center"
         style="border: 1px solid #FFC107; padding: 4px 8px; background-color: #FFF4CC;">
         <div class="d-flex flex-column expense-date m-0">
