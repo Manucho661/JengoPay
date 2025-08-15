@@ -1639,7 +1639,7 @@ header {
                                 <i class="fas fa-save"></i> Save Draft
                             </button>
                             <button class="btn btn-primary" id="preview-invoice-btn" style="color: #FFC107; background-color:#00192D;">
-                                <i class="fas fa-eye"></i> Preview
+                              
                             </button>
                         </div>
                     </div>

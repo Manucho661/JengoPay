@@ -542,7 +542,6 @@ HTML;
 </aside>
 
 
-
 <!-- ================================================================ -->
 <!-- RIGHT: INVOICE DETAILS                                           -->
 <!-- ================================================================ -->
@@ -557,8 +556,8 @@ if (!$id) {
         i.*,
         CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name,
         u.email AS tenant_email,
-        t.phone_number AS tenant_phone,  
-        t.unit AS unit_number          
+        t.phone_number AS tenant_phone,
+        t.unit AS unit_number
     FROM invoice i
     LEFT JOIN users u ON i.tenant = u.id
     LEFT JOIN tenants t ON u.id = t.user_id
@@ -599,12 +598,12 @@ if (!$id) {
                <td class='text-end'>KES " . number_format($qty * $price, 2) . "</td>
             </tr>";
         }
-        
+
         // Determine payment status class and label
         $paymentStatus = strtolower($inv['payment_status']);
         $paymentLabelClass = '';
         $paymentLabelText = strtoupper($inv['payment_status']);
-        
+
         if ($paymentStatus === 'paid') {
             $paymentLabelClass = 'diagonal-paid-label';
         } elseif ($paymentStatus === 'partial') {
@@ -650,25 +649,26 @@ if (!$id) {
 <div class="d-flex justify-content-between">
     <div>
         <h6 class="mb-0"><strong><b><?= htmlspecialchars($inv['tenant_name']) ?></b></strong></h6>
-        <div class="tenant-details" style="font-size: 0.9rem; margin-top: 0.5rem;">
+        <div class="tenant-details" style="margin-top: 0rem;">
             <?php if (!empty($inv['tenant_email'])): ?>
-                <div> <?= htmlspecialchars($inv['tenant_email']) ?></div>
+                <div> <b> <strong><?= htmlspecialchars($inv['tenant_email']) ?></b></strong></div>
             <?php endif; ?>
             <?php if (!empty($inv['tenant_phone'])): ?>
-                <div> <?= htmlspecialchars($inv['tenant_phone']) ?></div>
+                <div> <b><strong><?= htmlspecialchars($inv['tenant_phone']) ?></b></strong> </div>
             <?php endif; ?>
             <?php if (!empty($inv['unit_number'])): ?>
-                <div> <?= htmlspecialchars($inv['unit_number']) ?></div>
+                <div> <b><strong><?= htmlspecialchars($inv['unit_number']) ?></b></strong></div>
             <?php endif; ?>
+            <p><b>B20</b></p>
         </div>
     </div>
-    <div class="text-end">
-        <h3><strong><b><?= htmlspecialchars($inv['invoice_number']) ?></b></strong></h3>
-    </div>
-</div>
     <!-- <div class="text-end">
-        <h3><strong><b><?= htmlspecialchars($inv['invoice_number']) ?></b></strong></h3><br>
+        <h3><strong><b><?= htmlspecialchars($inv['invoice_number']) ?></b></strong></h3>
     </div> -->
+</div>
+     <div class="text-end">
+        <h3><strong><b><?= htmlspecialchars($inv['invoice_number']) ?></b></strong></h3><br>
+    </div>
 </div>
     <div class="mb-1 rounded-2 d-flex justify-content-between align-items-center"
         style="border: 1px solid #FFC107; padding: 4px 8px; background-color: #FFF4CC;">

@@ -687,124 +687,124 @@ function editInvoice(invoiceId) {
 }
 
 // Preview Button - Updated to handle draft numbers
-document.getElementById('preview-invoice-btn').addEventListener('click', function () {
-  const previewPanel = document.getElementById('invoicePreviewPanel');
-  const previewContent = document.getElementById('previewContent');
+// document.getElementById('preview-invoice-btn').addEventListener('click', function () {
+//   const previewPanel = document.getElementById('invoicePreviewPanel');
+//   const previewContent = document.getElementById('previewContent');
 
-  // Draft checkbox check
-  const isDraft = document.getElementById('draftCheckbox')?.checked;
+//   // Draft checkbox check
+//   const isDraft = document.getElementById('draftCheckbox')?.checked;
 
-  // Get form values
-  const invoiceNumber = document.getElementById('invoice-number').value;
-  const building = document.getElementById('building').selectedOptions[0]?.text || 'N/A';
-  const tenant = document.getElementById('customer').selectedOptions[0]?.text || 'N/A';
-  const invoiceDate = document.getElementById('invoice-date').value;
-  const dueDate = document.getElementById('due-date').value;
-  const status = isDraft ? 'DRAFT' : 'PENDING';
+//   // Get form values
+//   const invoiceNumber = document.getElementById('invoice-number').value;
+//   const building = document.getElementById('building').selectedOptions[0]?.text || 'N/A';
+//   const tenant = document.getElementById('customer').selectedOptions[0]?.text || 'N/A';
+//   const invoiceDate = document.getElementById('invoice-date').value;
+//   const dueDate = document.getElementById('due-date').value;
+//   const status = isDraft ? 'DRAFT' : 'PENDING';
 
-  // Build items table
-  let tableRows = '';
-  let subtotal = 0;
+//   // Build items table
+//   let tableRows = '';
+//   let subtotal = 0;
 
-  document.querySelectorAll('.items-table tbody tr').forEach(row => {
-      const item = row.querySelector('select[name="account_item[]"]').selectedOptions[0]?.text || '';
-      const desc = row.querySelector('textarea[name="description[]"]').value;
-      const qty = parseFloat(row.querySelector('input[name="quantity[]"]').value) || 0;
-      const price = parseFloat(row.querySelector('input[name="unit_price[]"]').value) || 0;
-      const tax = row.querySelector('select[name="taxes[]"]').value;
-      const rowTotal = qty * price;
-      subtotal += rowTotal;
+//   document.querySelectorAll('.items-table tbody tr').forEach(row => {
+//       const item = row.querySelector('select[name="account_item[]"]').selectedOptions[0]?.text || '';
+//       const desc = row.querySelector('textarea[name="description[]"]').value;
+//       const qty = parseFloat(row.querySelector('input[name="quantity[]"]').value) || 0;
+//       const price = parseFloat(row.querySelector('input[name="unit_price[]"]').value) || 0;
+//       const tax = row.querySelector('select[name="taxes[]"]').value;
+//       const rowTotal = qty * price;
+//       subtotal += rowTotal;
 
-      tableRows += `
-          <tr>
-              <td>${item}</td>
-              <td>${desc}</td>
-              <td>${qty}</td>
-              <td>${price.toFixed(2)}</td>
-              <td>${tax}</td>
-              <td>${rowTotal.toFixed(2)}</td>
-          </tr>`;
-  });
+//       tableRows += `
+//           <tr>
+//               <td>${item}</td>
+//               <td>${desc}</td>
+//               <td>${qty}</td>
+//               <td>${price.toFixed(2)}</td>
+//               <td>${tax}</td>
+//               <td>${rowTotal.toFixed(2)}</td>
+//           </tr>`;
+//   });
 
-  // Calculate tax and total
-  const taxRate = 0.1;
-  const taxAmount = subtotal * taxRate;
-  const total = subtotal + taxAmount;
+//   // Calculate tax and total
+//   const taxRate = 0.1;
+//   const taxAmount = subtotal * taxRate;
+//   const total = subtotal + taxAmount;
 
-  previewContent.innerHTML = `
-      <div class="invoice-header">
-          <h2>${status}</h2>
-          <div class="invoice-meta">
-              <p><strong>Invoice #:</strong> ${invoiceNumber}</p>
-              <p><strong>Status:</strong> ${status}</p>
-              <p><strong>Date:</strong> ${invoiceDate}</p>
-              <p><strong>Due Date:</strong> ${dueDate}</p>
-          </div>
-      </div>
+//   previewContent.innerHTML = `
+//       <div class="invoice-header">
+//           <h2>${status}</h2>
+//           <div class="invoice-meta">
+//               <p><strong>Invoice #:</strong> ${invoiceNumber}</p>
+//               <p><strong>Status:</strong> ${status}</p>
+//               <p><strong>Date:</strong> ${invoiceDate}</p>
+//               <p><strong>Due Date:</strong> ${dueDate}</p>
+//           </div>
+//       </div>
 
-      <div class="invoice-parties">
-          <div class="from">
-              <h3>From:</h3>
-              <p>Your Company Name</p>
-          </div>
-          <div class="to">
-              <h3>To:</h3>
-              <p><strong>Building:</strong> ${building}</p>
-              <p><strong>Tenant:</strong> ${tenant}</p>
-          </div>
-      </div>
+//       <div class="invoice-parties">
+//           <div class="from">
+//               <h3>From:</h3>
+//               <p>Your Company Name</p>
+//           </div>
+//           <div class="to">
+//               <h3>To:</h3>
+//               <p><strong>Building:</strong> ${building}</p>
+//               <p><strong>Tenant:</strong> ${tenant}</p>
+//           </div>
+//       </div>
 
-      <table class="invoice-items">
-          <thead>
-              <tr>
-                  <th>Item</th>
-                  <th>Description</th>
-                  <th>Qty</th>
-                  <th>Unit Price</th>
-                  <th>Tax</th>
-                  <th>Total</th>
-              </tr>
-          </thead>
-          <tbody>${tableRows}</tbody>
-          <tfoot>
-              <tr>
-                  <td colspan="5" class="text-right">Subtotal:</td>
-                  <td>${subtotal.toFixed(2)}</td>
-              </tr>
-              <tr>
-                  <td colspan="5" class="text-right">Tax (10%):</td>
-                  <td>${taxAmount.toFixed(2)}</td>
-              </tr>
-              <tr class="total">
-                  <td colspan="5" class="text-right"><strong>Total:</strong></td>
-                  <td><strong>${total.toFixed(2)}</strong></td>
-              </tr>
-          </tfoot>
-      </table>
+//       <table class="invoice-items">
+//           <thead>
+//               <tr>
+//                   <th>Item</th>
+//                   <th>Description</th>
+//                   <th>Qty</th>
+//                   <th>Unit Price</th>
+//                   <th>Tax</th>
+//                   <th>Total</th>
+//               </tr>
+//           </thead>
+//           <tbody>${tableRows}</tbody>
+//           <tfoot>
+//               <tr>
+//                   <td colspan="5" class="text-right">Subtotal:</td>
+//                   <td>${subtotal.toFixed(2)}</td>
+//               </tr>
+//               <tr>
+//                   <td colspan="5" class="text-right">Tax (10%):</td>
+//                   <td>${taxAmount.toFixed(2)}</td>
+//               </tr>
+//               <tr class="total">
+//                   <td colspan="5" class="text-right"><strong>Total:</strong></td>
+//                   <td><strong>${total.toFixed(2)}</strong></td>
+//               </tr>
+//           </tfoot>
+//       </table>
 
-      ${isDraft ? '<div class="draft-watermark">DRAFT</div>' : ''}
-  `;
+//       ${isDraft ? '<div class="draft-watermark">DRAFT</div>' : ''}
+//   `;
 
-  previewPanel.classList.add('active');
-});
+//   previewPanel.classList.add('active');
+// });
 
-// Close Preview Panel
-document.getElementById('closePreview').addEventListener('click', function () {
-  document.getElementById('invoicePreviewPanel').classList.remove('active');
-});
+// // Close Preview Panel
+// document.getElementById('closePreview').addEventListener('click', function () {
+//   document.getElementById('invoicePreviewPanel').classList.remove('active');
+// });
 
 // Auto-update draft number if checkbox changes
-const draftCheckbox = document.getElementById('draftCheckbox');
-if (draftCheckbox) {
-  draftCheckbox.addEventListener('change', function () {
-      const invoiceNumberField = document.getElementById('invoice-number');
-      if (this.checked) {
-          invoiceNumberField.value = ''; // clear so backend assigns next
-      } else {
-          invoiceNumberField.value = ''; // same here; backend will assign finalized version later
-      }
-  });
-}
+// const draftCheckbox = document.getElementById('draftCheckbox');
+// if (draftCheckbox) {
+//   draftCheckbox.addEventListener('change', function () {
+//       const invoiceNumberField = document.getElementById('invoice-number');
+//       if (this.checked) {
+//           invoiceNumberField.value = ''; // clear so backend assigns next
+//       } else {
+//           invoiceNumberField.value = ''; // same here; backend will assign finalized version later
+//       }
+//   });
+// }
 // });
 
 
@@ -855,9 +855,15 @@ $(document).ready(function () {
 
   function updateColumnVisibility() {
     columns.forEach(col => {
-      $(`.col-${col.id}`).toggle(col.visible);
+        // Toggle header visibility
+        $(`.invoice-header .col-${col.id}`).toggle(col.visible);
+
+        // Toggle data cell visibility - check for both patterns
+        const selector = `.invoice-item:not(.invoice-header) .col-${col.id},
+                         .invoice-item:not(.invoice-header) .invoice-${col.id.replace('-', '')}`;
+        $(selector).toggle(col.visible);
     });
-  }
+}
 
   $('#columnSelectorBtn').click(() => $('#columnSelectorModal').modal('show'));
 

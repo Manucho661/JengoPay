@@ -386,13 +386,13 @@ width: 100%;
                                                     <input type="number" class="form-control" name="floor_number" id="Floor Number" placeholder="5">
                                                     <b class="text-danger" id="floor_number_nameError"></b>
                                                 </div>
-                                                <div class="col-md-3">
-    <label>Unit</label> <sup class="text-danger"><b>*</b></sup>
-    <br>
-    <select class="form-control" name="unit_name" id="unit_name" required>
-        <option value="">-- Select Unit --</option>
-    </select>
-    <b class="text-danger" id="unit_nameError"></b>
+                                                                                                <div class="col-md-3">
+                                                    <label>Unit</label> <sup class="text-danger"><b>*</b></sup>
+                                                    <br>
+                                                    <select class="form-control" name="unit" id="unit_name" required>
+                                                        <option value="">-- Select Unit --</option>
+                                                    </select>
+                                                    <b class="text-danger" id="unit_nameError"></b>
 </div>
                                             </div>
                                         </div>
