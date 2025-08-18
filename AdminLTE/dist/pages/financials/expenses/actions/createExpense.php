@@ -1,5 +1,7 @@
 <?php
 include '../../../db/connect.php';
+// expense journal
+include '../../../financials/actions/journals/expenseJournal.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
@@ -17,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $totalTax = $_POST['totalTax'] ?? 0.00;
         $total = $_POST['total'] ?? 0.00;
 
-        
+
         // Step 1: Create new supplier if supplier_id is empty
         if (empty($supplier_id) && !empty($supplier_name)) {
             $stmt = $pdo->prepare("INSERT INTO suppliers (supplier_name, time_stamp) VALUES (?, NOW())");
@@ -75,12 +77,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
         }
 
+
+
+        // 4. Create journal entry
+        $journalId = createJournalEntry($pdo, [
+            'description'   => "Expense Transaction",
+            'reference'     => $expense_no,
+            'date'          => $expense_date,
+            'source_table'  => 'expenses',
+            'source_id'     => $expense_id
+        ]);
+
+        // 5. Journal lines
+        for ($i = 0; $i < count($item_account_codes); $i++) {
+
+            $amount =  $item_untaxed_amount = $quantities[$i] * $unit_prices[$i];
+
+            // Debit expense
+            addJournalLine($pdo, $journalId, $item_account_codes[$i], $amount, 0.00);
+
+        }
+
+        // Credit payment account (bank/cash/AP)
+        addJournalLine($pdo, $journalId, 300, 0.00, $untaxedAmount);
+
+
         $pdo->commit();
         echo "Inserted successfully with Expense ID: $expense_id";
-
     } catch (Exception $e) {
         $pdo->rollBack();
         echo "Error: " . $e->getMessage();
     }
 }
-?>

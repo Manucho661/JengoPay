@@ -1,7 +1,6 @@
 <?php
 include '../../../db/connect.php';
 // To update balanceSheet when you pay through Cash
-include __DIR__ . '/../../../financials/balanceSheet/actions/handleExpenses/handleOwnerContribution.php';
 include __DIR__ . '/../../../financials/balanceSheet/actions/handleExpenses/handleRetainedEarnings.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
@@ -10,7 +9,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // ✅ Start the transaction
         $pdo->beginTransaction();
 
-        handleOwnerContribution($amount);
         handleRetainedEarnings($amount);
 
         // ✅ Commit changes
