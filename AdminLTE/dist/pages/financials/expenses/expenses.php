@@ -622,11 +622,10 @@ require_once 'actions/getBuildings.php'
 
                                                         <div class="mb-3">
                                                             <label for="paymentMethod" class="form-label">Payment Method</label>
-                                                            <select class="form-select shadow-none rounded-1" id="paymentMethod" name="payment_method" required>
-                                                                <option value="cash">Cash</option>
-                                                                <option value="mpesa">M-Pesa</option>
-                                                                <option value="bank">Bank Transfer</option>
-                                                                <option value="card">Card</option>
+                                                            <select class="form-select shadow-none rounded-1" id="paymentMethod" name="payment_account_id" required>
+                                                                <option value="100">Cash</option>
+                                                                <option value="110">M-Pesa</option>
+                                                                <option value="120">Bank Transfer</option>
                                                             </select>
                                                         </div>
 

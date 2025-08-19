@@ -4,19 +4,20 @@ ini_set('display_errors', 1);
 header('Content-Type: application/json');
 
 require_once '../db/connect.php';
+include_once 'actions/journals/payInvoiceJournal.php';
 
 try {
     // Start transaction
     $pdo->beginTransaction();
 
     // Collect and validate required data
-    $invoice_id = $_POST['invoice_id'] ?? null;
-    $payment_method = $_POST['payment_method'] ?? null;
-    $payment_date = $_POST['payment_date'] ?? date('Y-m-d');
-    $amount = floatval($_POST['amount'] ?? 0);
+    $invoice_id       = $_POST['invoice_id'] ?? null;
+    $payment_method   = $_POST['payment_method'] ?? null;
+    $payment_date     = $_POST['payment_date'] ?? date('Y-m-d');
+    $amount           = floatval($_POST['amount'] ?? 0);
     $reference_number = $_POST['reference_number'] ?? null;
-    $total_amount = floatval($_POST['total_amount'] ?? 0);
-    $tenant = $_POST['tenant'] ?? null;
+    $total_amount     = floatval($_POST['total_amount'] ?? 0);
+    $tenant           = $_POST['tenant'] ?? null;
 
     // Validate required fields
     if (empty($invoice_id)) {
@@ -54,6 +55,8 @@ try {
         $reference_number
     ]);
 
+    $paymentId = $pdo->lastInsertId();
+
     // 2. Calculate total paid for this invoice
     $stmt = $pdo->prepare("
         SELECT SUM(amount) AS total_paid
@@ -61,8 +64,14 @@ try {
         WHERE invoice_id = ? AND status = 'completed'
     ");
     $stmt->execute([$invoice_id]);
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    $result     = $stmt->fetch(PDO::FETCH_ASSOC);
     $total_paid = floatval($result['total_paid'] ?? 0);
+
+    $customerId = 10;
+    $remaining  = $total_amount - $total_paid;
+    
+
+    createPayInvoiceJournal($pdo, $paymentId, $invoice_id, $customerId, $amount, $payment_method, $remaining);
 
     // 3. Determine invoice payment status
     $payment_status = 'unpaid';
@@ -83,25 +92,44 @@ try {
     // Commit transaction
     $pdo->commit();
 
-    // Return success response
     echo json_encode([
-        'success' => true,
-        'payment_status' => $payment_status,
-        'total_paid' => $total_paid,
-        'balance' => max(0, $total_amount - $total_paid),
-        'message' => ($payment_status === 'paid')
+        'success'       => true,
+        'payment_status'=> $payment_status,
+        'total_paid'    => $total_paid,
+        'balance'       => max(0, $total_amount - $total_paid),
+        'message'       => ($payment_status === 'paid')
             ? "Payment completed successfully! Invoice fully paid."
             : "Partial payment received. Remaining balance: KES " . number_format(max(0, $total_amount - $total_paid), 2)
     ]);
-} catch (Exception $e) {
-    // Rollback transaction on error
-    $pdo->rollBack();
 
-    // Log error for debugging
-    error_log("Payment Error: " . $e->getMessage());
-
+} catch (PDOException $e) {
+    if ($pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
     echo json_encode([
-        'success' => false,
-        'message' => $e->getMessage()
+        'success'       => false,
+        'error_type'    => 'PDOException',
+        'error_code'    => $e->getCode(),
+        'sqlstate'      => $e->errorInfo[0] ?? null,
+        'driver_error'  => $e->errorInfo[2] ?? null,
+        'message'       => $e->getMessage()
+    ]);
+} catch (Exception $e) {
+    if ($pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
+    echo json_encode([
+        'success'    => false,
+        'error_type' => 'Exception',
+        'message'    => $e->getMessage()
+    ]);
+} catch (Throwable $e) {
+    if ($pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
+    echo json_encode([
+        'success'    => false,
+        'error_type' => 'Fatal',
+        'message'    => $e->getMessage()
     ]);
 }

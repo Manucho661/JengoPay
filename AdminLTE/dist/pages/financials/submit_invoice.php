@@ -1,7 +1,11 @@
 <?php
 include '../db/connect.php';
 
-function generateNextDraftNumber($pdo) {
+// add invoice journal
+include_once 'actions/journals/createInvoiceJournal.php';
+
+function generateNextDraftNumber($pdo)
+{
     $stmt = $pdo->query("SELECT invoice_number FROM invoice WHERE invoice_number LIKE 'DFT%' ORDER BY id DESC LIMIT 1");
     $last = $stmt->fetchColumn();
     $next = 1;
@@ -83,6 +87,10 @@ try {
         $payment_status
     ]);
 
+    $invoiceId = $pdo->lastInsertId();
+    // call the invoice journal script
+    createInvoiceJournal($pdo, $invoiceId, $tenant_id, $account_items, $quantities, $unit_prices, $vat_type, $total);
+
     // --- Insert Line Items into invoice_items ---
     $itemStmt = $pdo->prepare("
     INSERT INTO invoice_items (
@@ -93,103 +101,102 @@ try {
 
 
     foreach ($account_items as $i => $item) {
-      $qty = floatval($quantities[$i]);
-      $price = floatval($unit_prices[$i]);
-      $sub_total = $qty * $price;
-      $vat = trim($vat_type[$i] ?? '');
-      $tax = 0.00;
+        $qty = floatval($quantities[$i]);
+        $price = floatval($unit_prices[$i]);
+        $sub_total = $qty * $price;
+        $vat = trim($vat_type[$i] ?? '');
+        $tax = 0.00;
 
-      // Tax calculation
-      if ($vat === 'exclusive') {
-          $tax = round($sub_total * 0.16, 2);
-      } elseif ($vat === 'inclusive') {
-          $tax = round($sub_total * 16 / 116, 2); // Extract VAT from total
-      }
+        // Tax calculation
+        if ($vat === 'exclusive') {
+            $tax = round($sub_total * 0.16, 2);
+        } elseif ($vat === 'inclusive') {
+            $tax = round($sub_total * 16 / 116, 2); // Extract VAT from total
+        }
 
-      $line_total = ($vat === 'exclusive') ? $sub_total + $tax : $sub_total;
+        $line_total = ($vat === 'exclusive') ? $sub_total + $tax : $sub_total;
 
-      // $itemStmt->execute([
-      //     $invoice_number,
-      //     trim($item),
-      //     trim($descriptions[$i]),
-      //     $qty,
-      //     $price,
-      //     $vat,
-      //     $sub_total,   // Corrected: subtotal now goes here
-      //     $tax,         // Corrected: tax now goes here
-      //     $line_total   // Corrected: total goes last
-      // ]);
-      $itemStmt->execute([
-        $invoice_number,
-        $tenant_id,          // added tenant
-        $building_id,        // added building_id
-        trim($item),
-        trim($descriptions[$i]),
-        $qty,
-        $price,
-        $vat,
-        $sub_total,
-        $tax,
-        $line_total
-    ]);
+        // $itemStmt->execute([
+        //     $invoice_number,
+        //     trim($item),
+        //     trim($descriptions[$i]),
+        //     $qty,
+        //     $price,
+        //     $vat,
+        //     $sub_total,   // Corrected: subtotal now goes here
+        //     $tax,         // Corrected: tax now goes here
+        //     $line_total   // Corrected: total goes last
+        // ]);
+        $itemStmt->execute([
+            $invoice_number,
+            $tenant_id,          // added tenant
+            $building_id,        // added building_id
+            trim($item),
+            trim($descriptions[$i]),
+            $qty,
+            $price,
+            $vat,
+            $sub_total,
+            $tax,
+            $line_total
+        ]);
+    }
 
-  }
+    // --- Enhanced File Upload Handling ---
+    if (!empty($_FILES['attachment']['name'][0])) {
+        $uploadDir = '../uploads/invoice_attachments/';
+        if (!file_exists($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
 
- // --- Enhanced File Upload Handling ---
-if (!empty($_FILES['attachment']['name'][0])) {
-  $uploadDir = '../uploads/invoice_attachments/';
-  if (!file_exists($uploadDir)) {
-      mkdir($uploadDir, 0755, true);
-  }
-
-  $fileInsertStmt = $pdo->prepare("
+        $fileInsertStmt = $pdo->prepare("
       INSERT INTO invoice_attachments
       (invoice_number, file_name, file_path, uploaded_at)
       VALUES (?, ?, ?, NOW())
   ");
 
-  foreach ($_FILES['attachment']['tmp_name'] as $index => $tmpPath) {
-      if ($_FILES['attachment']['error'][$index] === UPLOAD_ERR_OK) {
-          // Validate file type and size
-          $fileType = $_FILES['attachment']['type'][$index];
-          $fileSize = $_FILES['attachment']['size'][$index];
-          $originalName = basename($_FILES['attachment']['name'][$index]);
+        foreach ($_FILES['attachment']['tmp_name'] as $index => $tmpPath) {
+            if ($_FILES['attachment']['error'][$index] === UPLOAD_ERR_OK) {
+                // Validate file type and size
+                $fileType = $_FILES['attachment']['type'][$index];
+                $fileSize = $_FILES['attachment']['size'][$index];
+                $originalName = basename($_FILES['attachment']['name'][$index]);
 
-          // Allowed file types
-          $allowedTypes = [
-              'application/pdf',
-              'image/jpeg',
-              'image/png',
-              'application/msword',
-              'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-          ];
+                // Allowed file types
+                $allowedTypes = [
+                    'application/pdf',
+                    'image/jpeg',
+                    'image/png',
+                    'application/msword',
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                ];
 
-          // Max 5MB file size
-          if ($fileSize > 5242880) {
-              throw new Exception("File $originalName exceeds 5MB size limit");
-          }
+                // Max 5MB file size
+                if ($fileSize > 5242880) {
+                    throw new Exception("File $originalName exceeds 5MB size limit");
+                }
 
-          if (!in_array($fileType, $allowedTypes)) {
-              throw new Exception("Invalid file type for $originalName");
-          }
+                if (!in_array($fileType, $allowedTypes)) {
+                    throw new Exception("Invalid file type for $originalName");
+                }
 
-          // Generate unique filename
-          $fileExt = pathinfo($originalName, PATHINFO_EXTENSION);
-          $uniqueName = uniqid('inv_') . '_' . $invoice_number . '.' . $fileExt;
-          $targetPath = $uploadDir . $uniqueName;
+                // Generate unique filename
+                $fileExt = pathinfo($originalName, PATHINFO_EXTENSION);
+                $uniqueName = uniqid('inv_') . '_' . $invoice_number . '.' . $fileExt;
+                $targetPath = $uploadDir . $uniqueName;
 
-          if (move_uploaded_file($tmpPath, $targetPath)) {
-              $fileInsertStmt->execute([
-                  $invoice_number,
-                  $originalName,
-                  $targetPath
-              ]);
-          } else {
-              throw new Exception("Failed to upload $originalName");
-          }
-      }
-  }
-}
+                if (move_uploaded_file($tmpPath, $targetPath)) {
+                    $fileInsertStmt->execute([
+                        $invoice_number,
+                        $originalName,
+                        $targetPath
+                    ]);
+                } else {
+                    throw new Exception("Failed to upload $originalName");
+                }
+            }
+        }
+    }
     $pdo->commit();
 
     if ($isDraft) {
@@ -200,12 +207,10 @@ if (!empty($_FILES['attachment']['name'][0])) {
             'redirect_url' => 'invoice.php?draft_saved=1'
         ]);
     } else {
-      $_SESSION['success_message'] = "✅ Submitted Successfully! Invoice #{$invoice_number} has been saved.";
-      header("Location: invoice.php");
-      exit;
-
+        $_SESSION['success_message'] = "✅ Submitted Successfully! Invoice #{$invoice_number} has been saved.";
+        header("Location: invoice.php");
+        exit;
     }
-
 } catch (Exception $e) {
     $pdo->rollBack();
 
@@ -220,4 +225,3 @@ if (!empty($_FILES['attachment']['name'][0])) {
         die("Error: " . htmlspecialchars($e->getMessage()));
     }
 }
-?>

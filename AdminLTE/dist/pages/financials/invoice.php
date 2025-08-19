@@ -1554,9 +1554,9 @@ header {
                                                     </label>
                                                     <select class="form-select border-warning text-dark" name="payment_method" required>
                                                         <option value="">-- Choose Method --</option>
-                                                        <option value="MPESA">📱 MPESA</option>
-                                                        <option value="Bank">🏦 Bank</option>
-                                                        <option value="Cash">💵 Cash</option>
+                                                        <option value="110">📱 MPESA</option>
+                                                        <option value="120">🏦 Bank</option>
+                                                        <option value="100">💵 Cash</option>
                                                     </select>
                                                 </div>
 
