@@ -34,6 +34,7 @@ try {
         }
     }
 
+    var_dump($currentLiabilities);
     $totalCurrentLiabilities = array_sum(array_column($currentLiabilities, 'amount'));
     $totalNonCurrentLiabilities = array_sum(array_column($nonCurrentLiabilities, 'amount'));
     $totalLiabilities = $totalCurrentLiabilities + $totalNonCurrentLiabilities;

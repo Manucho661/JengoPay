@@ -37,10 +37,10 @@ try {
     $totalCurrent = array_sum(array_column($currentAssets, 'amount'));
     $totalNonCurrent = array_sum(array_column($nonCurrentAssets, 'amount'));
     $totalAssets = $totalCurrent + $totalNonCurrent;
-
-
+    
+    // var_dump($currentAssets);
     // Items that must be displayed on the balance sheet.
-    $mustDisplayedCurrentAssets = array('Accounts Receivable', 'M-pesa', 'Cash', 'Bank', 'Tenant Security Deposits (held)');
+    $mustDisplayedCurrentAssets = array('Accounts Receivable', 'M-pesa', 'Cash', 'Bank', 'Tenant Security Deposits (Held)');
 
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
