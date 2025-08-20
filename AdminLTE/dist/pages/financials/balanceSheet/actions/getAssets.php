@@ -40,7 +40,7 @@ try {
     
     // var_dump($currentAssets);
     // Items that must be displayed on the balance sheet.
-    $mustDisplayedCurrentAssets = array('Accounts Receivable', 'M-pesa', 'Cash', 'Bank', 'Tenant Security Deposits (Held)');
+    $mustDisplayedCurrentAssets = array('Accounts Receivable', 'M-pesa', 'Cash', 'Bank', 'Tenant Security Deposits (Held)', 'Prepayment');
 
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();

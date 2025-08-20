@@ -68,10 +68,10 @@ try {
     $total_paid = floatval($result['total_paid'] ?? 0);
 
     $customerId = 10;
+    
     $remaining  = $total_amount - $total_paid;
     
-
-    createPayInvoiceJournal($pdo, $paymentId, $invoice_id, $customerId, $amount, $payment_method, $remaining);
+    createPayInvoiceJournal($pdo, $paymentId, $invoice_id, $customerId, $amount, $payment_method, $remaining, $total_amount);
 
     // 3. Determine invoice payment status
     $payment_status = 'unpaid';
@@ -96,6 +96,7 @@ try {
         'success'       => true,
         'payment_status'=> $payment_status,
         'total_paid'    => $total_paid,
+        'remaining'     => $remaining,
         'balance'       => max(0, $total_amount - $total_paid),
         'message'       => ($payment_status === 'paid')
             ? "Payment completed successfully! Invoice fully paid."
