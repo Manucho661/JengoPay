@@ -55,6 +55,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $item_totals = $_POST['item_totalForStorage'] ?? [];
         $discounts = $_POST['discount'] ?? [];
 
+        var_dump($item_totals);
+        // exit;
+
         $stmtItem = $pdo->prepare("INSERT INTO expense_items (
             item_account_code, expense_id, building_id, description, qty,
             unit_price, item_untaxed_amount, taxes, item_total, discount
@@ -77,8 +80,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
         }
 
-
-
         // 4. Create journal entry
         $journalId = createJournalEntry($pdo, [
             'description'   => "Expense Transaction",
@@ -90,20 +91,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // 5. Journal lines
         for ($i = 0; $i < count($item_account_codes); $i++) {
+            $item_untaxed_amount = $quantities[$i] * $unit_prices[$i];
+            $tax_type = strtolower($taxes[$i]); // normalize for safety
 
-            $amount =  $item_untaxed_amount = $quantities[$i] * $unit_prices[$i];
+            $tax_amount = 0.00;
+            $amount = $item_untaxed_amount;
+
+            if ($tax_type === 'exclusive') {
+                $tax_amount = $item_untaxed_amount * 0.16;
+                $amount = $item_untaxed_amount; // expense is untaxed
+            } elseif ($tax_type === 'inclusive') {
+                $tax_amount = $item_untaxed_amount * (16 / 116);
+                $amount = $item_untaxed_amount - $tax_amount; // net of VAT
+            } elseif ($tax_type === 'zero rated' || $tax_type === 'exempted') {
+                $tax_amount = 0.00;
+                $amount = $item_untaxed_amount; // whole amount is expense
+            }
 
             // Debit expense
             addJournalLine($pdo, $journalId, $item_account_codes[$i], $amount, 0.00);
 
-        }
+            // Credit Accounts Payable (gross)
+            addJournalLine($pdo, $journalId, 300, 0.00, $amount + $tax_amount);
 
-        // Credit payment account (bank/cash/AP)
-        addJournalLine($pdo, $journalId, 300, 0.00, $untaxedAmount);
+            // Debit VAT receivable (only if tax exists)
+            if ($tax_amount > 0) {
+                addJournalLine($pdo, $journalId, 710, $tax_amount, 0.00);
+            }
+            echo $tax_amount;
+        }
 
 
         $pdo->commit();
         echo "Inserted successfully with Expense ID: $expense_id";
+    
     } catch (Exception $e) {
         $pdo->rollBack();
         echo "Error: " . $e->getMessage();

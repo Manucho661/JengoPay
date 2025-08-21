@@ -529,14 +529,14 @@ function formatAccounting($amount)
                         echo '</tr>';
                       }
 
-                      // ✅ Add Revenue under Equity section
+                      // ✅ Add $retainedEarnings under Equity section
                       echo '<tr class="sub-current-assets">';
                       echo '<td class="sub-category">Retained Earnings</td>';
-                      echo '<td>' . formatAccounting($totalRevenue) . '</td>';
+                      echo '<td>' . formatAccounting($retainedEarnings) . '</td>';
                       echo '</tr>';
 
-                      // ✅ Total Equity (including Revenue)
-                      $grandTotalEquity = $totalEquity + $totalRevenue;
+                      // ✅ Total Equity (including retainedEarnings)
+                      $grandTotalEquity = $totalEquity + $retainedEarnings;
 
                       echo '<tr class="sub-current-assets total fw-bold">';
                       echo '<td class="sub-category">Total Equity</td>';

@@ -402,7 +402,7 @@ require_once 'actions/getBuildings.php'
                                                                             <option value="" selected disabled>Select--</option>
                                                                             <option value="inclusive">VAT 16% Inclusive</option>
                                                                             <option value="exclusive">VAT 16% Exclusive</option>
-                                                                            <option value="zeroRated">Zero Rated</option>
+                                                                            <option value="zerorated">Zero Rated</option>
                                                                             <option value="exempted">Exempted</option>
                                                                         </select>
                                                                     </div>
