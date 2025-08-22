@@ -2,9 +2,21 @@
 include '../../db/connect.php';
 
 try {
-    // Assuming $pdo is your PDO connection object
+    // ✅ Get assets balances directly from journal_lines & chart_of_accounts
+    $sql = "
+        SELECT 
+            coa.account_name AS name,
+            coa.account_type AS category,
+            SUM(jl.debit) - SUM(jl.credit) AS amount,
+            MAX(je.entry_date) AS created_at
+        FROM journal_lines jl
+        JOIN chart_of_accounts coa ON jl.account_id = coa.account_code
+        JOIN journal_entries je ON jl.journal_entry_id = je.id
+        WHERE coa.account_type LIKE '%Assets%'
+        GROUP BY coa.account_name, coa.account_type
+        ORDER BY amount DESC, coa.account_type, coa.account_code
+    ";
 
-    $sql = "SELECT id, name, category, amount, created_at FROM assets ORDER BY created_at DESC";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
 
@@ -15,7 +27,7 @@ try {
     $nonCurrentAssets = [];
 
     foreach ($assets as $asset) {
-        if ($asset['category'] === 'Current Asset') {
+        if ($asset['category'] === 'Current Assets') {
             $currentAssets[] = $asset;
         } else {
             $nonCurrentAssets[] = $asset;
@@ -25,9 +37,11 @@ try {
     $totalCurrent = array_sum(array_column($currentAssets, 'amount'));
     $totalNonCurrent = array_sum(array_column($nonCurrentAssets, 'amount'));
     $totalAssets = $totalCurrent + $totalNonCurrent;
+    
+    // var_dump($currentAssets);
+    // Items that must be displayed on the balance sheet.
+    $mustDisplayedCurrentAssets = array('Accounts Receivable', 'M-pesa', 'Cash', 'Bank', 'Tenant Security Deposits (Held)', 'Prepayment');
 
-    // items that must be displayed on the balanceSheet.
-    $mustDisplayedCurrentAssets = array('Accounts Receivable', 'M-pesa', 'Cash', 'Bank', 'Tenant Security Deposits (held)');
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }

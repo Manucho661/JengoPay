@@ -2,17 +2,29 @@
 include '../../db/connect.php';
 
 try {
-    // Assuming $pdo is your PDO connection object
-    $sql = "SELECT id, name, amount, entry_date, description, created_at FROM owners_equity ORDER BY entry_date ASC";
+    // ✅ Get owners' equity balances from journal_lines & chart_of_accounts
+    $sql = "
+        SELECT 
+            coa.account_name AS name,
+            SUM(jl.credit) - SUM(jl.debit) AS amount,
+            MAX(je.entry_date) AS entry_date,
+            GROUP_CONCAT(je.description SEPARATOR ', ') AS description
+        FROM journal_lines jl
+        JOIN chart_of_accounts coa ON jl.account_id = coa.account_code
+        JOIN journal_entries je ON jl.journal_entry_id = je.id
+        WHERE coa.account_type LIKE '%Equity%'
+        GROUP BY coa.account_name
+        ORDER BY je.entry_date ASC
+    ";
+
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
 
     $owners_equities = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $stmt = $pdo->prepare("SELECT SUM(amount) AS total_equity FROM owners_equity");
-    $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    $totalEquity = $row['total_equity'] ?? 0;
+    // Calculate total equity
+    $totalEquity = array_sum(array_column($owners_equities, 'amount'));
+
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }

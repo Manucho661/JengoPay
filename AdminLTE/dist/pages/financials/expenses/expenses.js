@@ -183,8 +183,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (taxOption.includes('inclusive')) {
         hasInclusive = true;
         const basePrice = unitPrice / 1.16;
-        console.log(qty);
-        console.log(unitPrice);
+        
         total = basePrice * qty * 1.16;
         itemTaxInclusive = (basePrice * qty * 0.16);
       } else if (taxOption.includes('exclusive')) {
@@ -216,7 +215,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       // Remove discount, remove inclusive tax, add exclusive tax
-      subTotal += total;
+      subTotal = lineTotal;
       vatAmountInclusive += itemTaxInclusive;
       vatAmountExclusive += itemTaxExclusive;
       totalVat = vatAmountInclusive + vatAmountExclusive;
