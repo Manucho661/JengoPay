@@ -106,7 +106,14 @@ function combobox() {
         const noResultsElem = document.createElement('li');
         noResultsElem.className = 'no-results';
         noResultsElem.textContent = 'No matches found';
+
+        const registerSupplierButton = document.createElement('li');
+        registerSupplierButton.className = 'registerSupplier';  // ✅ fixed
+        registerSupplierButton.textContent = 'Add Supplier';
+
         optionsList.appendChild(noResultsElem);
+        optionsList.appendChild(registerSupplierButton);
+
       }
     } else if (noResults) {
       noResults.remove();
@@ -140,7 +147,7 @@ document.addEventListener("DOMContentLoaded", function () {
       bindItemHiddenInput(wrapper); // optional, if used
     }
   });
-  
+
   //Add Expenses
   function calculateTotal() {
     console.log('total fired');
@@ -176,8 +183,8 @@ document.addEventListener("DOMContentLoaded", function () {
       if (taxOption.includes('inclusive')) {
         hasInclusive = true;
         const basePrice = unitPrice / 1.16;
-              console.log(qty);
-              console.log(unitPrice);
+        console.log(qty);
+        console.log(unitPrice);
         total = basePrice * qty * 1.16;
         itemTaxInclusive = (basePrice * qty * 0.16);
       } else if (taxOption.includes('exclusive')) {
@@ -202,7 +209,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (item_total) {
         // Extract discount From total
-        discountAmount= (discount/100)*total;
+        discountAmount = (discount / 100) * total;
         total = total - discountAmount;
         item_total.value = 'Ksh ' + total.toFixed(2);
         item_totalForStorage.value = total.toFixed(2);
@@ -319,7 +326,7 @@ document.getElementById("expenseForm").addEventListener("submit", function (e) {
       console.log("Server response:", data);
 
       // ✅ Reload the page without resubmission
-        window.location.href = window.location.href;
+      window.location.href = window.location.href;
     })
     .catch(error => {
       console.error("Error submitting form:", error);
@@ -380,7 +387,7 @@ document.getElementById("payExpenseForm").addEventListener("submit", function (e
       console.log("Server response:", data);
 
       // ✅ Reload the page without resubmission
-        // window.location.href = window.location.href;
+      // window.location.href = window.location.href;
     })
     .catch(error => {
       console.error("Error submitting form:", error);
