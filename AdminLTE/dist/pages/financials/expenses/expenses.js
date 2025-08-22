@@ -107,14 +107,22 @@ function combobox() {
         noResultsElem.className = 'no-results';
         noResultsElem.textContent = 'No matches found';
 
-        const registerSupplierButton = document.createElement('li');
-        registerSupplierButton.className = 'registerSupplier';  // ✅ fixed
-        registerSupplierButton.textContent = 'Add Supplier';
+        const registerSupplierLi = document.createElement('li');
+        registerSupplierLi.className = 'registerSupplier';
 
+        // ✅ Create button first
+        const registerSupplierButton = document.createElement('button');
+        registerSupplierButton.className = 'registerSupplierbtn';
+        registerSupplierButton.innerHTML = '<span class="plus-icon">+</span> Create Supplier';
+
+        // ✅ Put button inside the <li>
+        registerSupplierLi.appendChild(registerSupplierButton);
+
+        // ✅ Append <li> after button is ready
         optionsList.appendChild(noResultsElem);
-        optionsList.appendChild(registerSupplierButton);
-
+        optionsList.appendChild(registerSupplierLi);
       }
+
     } else if (noResults) {
       noResults.remove();
     }
@@ -183,7 +191,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (taxOption.includes('inclusive')) {
         hasInclusive = true;
         const basePrice = unitPrice / 1.16;
-        
+
         total = basePrice * qty * 1.16;
         itemTaxInclusive = (basePrice * qty * 0.16);
       } else if (taxOption.includes('exclusive')) {
