@@ -1521,7 +1521,7 @@ if (isset($_SESSION['success_message'])) {
             <!-- ✅ PAYMENT MODAL -->
             <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered modal-lg">
-                <form id="paymentForm" method="post" action="/originalTwo/AdminLTE/dist/pages/financials/submit_payment.php">
+                <form id="paymentForm" method="post" action="/JengoPay/AdminLTE/dist/pages/financials/submit_payment.php">
                   <div class="modal-content shadow-lg border-0 rounded-4">
 
                     <!-- Modal Header -->

@@ -26,8 +26,6 @@ try {
     $currentLiabilities = [];
     $nonCurrentLiabilities = [];
 
-    var_dump($nonCurrentLiabilities);
-
     foreach ($liabilities as $liability) {
         if ($liability['category'] === 'Current Liabilities') {
             $currentLiabilities[] = $liability;
