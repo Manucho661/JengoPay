@@ -113,7 +113,7 @@ function combobox() {
         // ✅ Create button first
         const registerSupplierButton = document.createElement('button');
         registerSupplierButton.className = 'registerSupplierbtn';
-        registerSupplierButton.innerHTML = '<span class="plus-icon">+</span> Create Supplier';
+        registerSupplierButton.innerHTML = '<span class="plus-icon"></span> Create Supplier';
 
         // ✅ Put button inside the <li>
         registerSupplierLi.appendChild(registerSupplierButton);
