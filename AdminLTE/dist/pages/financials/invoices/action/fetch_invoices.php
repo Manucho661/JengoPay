@@ -1,5 +1,5 @@
 <?php
-require_once '../db/connect.php';
+require_once '../../db/connect.php';
 
 // Query to fetch invoice data with related building and tenant info
 $stmt = $pdo->query("

@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-require_once '../db/connect.php';
+require_once '../../../db/connect.php';
 
 // Get JSON input
 $json = file_get_contents('php://input');

@@ -1,7 +1,17 @@
 <?php
-include '../db/connect.php';
+include '../../db/connect.php';
 
-$stmt = $pdo->prepare("SELECT account_code, account_name FROM chart_of_accounts ORDER BY account_name ASC");
+// $stmt = $pdo->prepare("SELECT account_code, account_name FROM chart_of_accounts ORDER BY account_name ASC");
+// $stmt->execute();
+// $accountItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+$stmt = $pdo->prepare("
+  SELECT account_code, account_name
+    FROM chart_of_accounts
+    WHERE account_type = 'Revenue'
+    ORDER BY account_name ASC
+");
 $stmt->execute();
 $accountItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -61,20 +71,19 @@ try {
 echo "\n";
 // --- DEBUG END ---
 
+// $stmt = $pdo->query("
+//     SELECT
+//         i.invoice_number,
+//         i.invoice_date,
+//         i.due_date,
+//         i.total,
+//         CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
+//     FROM invoice i
+//     LEFT JOIN users u ON i.tenant = u.id
+//     ORDER BY i.invoice_number DESC
+// ");
 
-$stmt = $pdo->query("
-    SELECT
-        i.invoice_number,
-        i.invoice_date,
-        i.due_date,
-        i.total,
-        CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
-    FROM invoice i
-    LEFT JOIN users u ON i.tenant = u.id
-    ORDER BY i.invoice_number DESC
-");
-
-$invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 
@@ -82,7 +91,21 @@ $buildingsStmt = $pdo->query(
     "SELECT building_id, building_name FROM buildings ORDER BY building_name"
 );
 $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
+
+<?php
+session_start();
+if (isset($_SESSION['success_message'])) {
+    echo '<div class="alert alert-success alert-dismissible fade show" role="alert">'
+        . htmlspecialchars($_SESSION['success_message']) .
+        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>';
+    unset($_SESSION['success_message']); // Remove so it won't show on reload
+}
+?>
+
+
 
 <!doctype html>
 <html lang="en">
@@ -133,8 +156,8 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
-    <link rel="stylesheet" href="invoices.css">
+    <link rel="stylesheet" href="../../../../dist/css/adminlte.css" />
+    <link rel="stylesheet" href="/Jengopay/AdminLTE/dist/pages/financials/invoices/css/invoices.css">
     <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
@@ -174,7 +197,7 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!--Tailwind CSS  -->
-<style>
+    <style>
   /* ================ */
 /* BASE STYLES */
 /* ================ */
@@ -239,8 +262,8 @@ ul {
   padding: 4px 10px;
   font-size: 12px;
   font-weight: 600;
-  background-color: #FFC107;
-  color: #00192D;
+  background-color:  #00192D;
+  color:#FFC107;
   border: none;
   border-radius: 20px;
   display: inline-flex;
@@ -641,12 +664,11 @@ header {
   border: 1px solid #e2e8f0;
   border-radius: 4px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  min-width: 200px;
-  z-index: 10;
-  display: none;
+  min-width: 100px;
+  z-index: 70;
+  /* display: none; */
 }
-
-        .filter-dropdown:hover .dropdown-menu {
+ .filter-dropdown:hover .dropdown-menu {
           display: block;
         }
 
@@ -758,24 +780,210 @@ header {
 /* ================ */
 /* RESPONSIVE STYLES */
 /* ================ */
+
+/* Table responsive wrapper - must come first */
+.table-responsive {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Button groups */
+.btn-group-responsive {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+/* Filter tags */
+.filter-tag {
+  display: inline-block;
+  background-color: #FFC107;
+  color: #00192D;
+  border-radius: 15px;
+  padding: 5px 10px;
+  margin: 5px 5px 0 0;
+  font-size: 0.9em;
+}
+
+.filter-tag .remove-btn {
+  margin-left: 8px;
+  cursor: pointer;
+  color: #00192D;
+  font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .invoice-item > div {
+    padding: 8px 4px;
+  }
+}
+
+@media (max-width: 992px) {
+  .invoice-container {
+    overflow-x: auto;
+  }
+
+  .invoice-item {
+    min-width: 900px; /* Forces horizontal scroll */
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .form-group {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+}
+
 @media (max-width: 768px) {
   .app-container {
     flex-direction: column;
   }
 
-  .invoice-item {
-    flex-wrap: wrap;
-    gap: 10px;
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
+  .page-actions {
+    margin-top: 15px;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .invoice-list-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .invoice-list-filters {
+    margin-top: 15px;
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .filter-dropdown {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  #invoicePreviewPanel {
+    width: 100%;
+  }
+
+  /* Modals */
+  .modal-dialog {
+    margin: 10px;
+    width: calc(100% - 20px) !important;
+    max-width: none;
+  }
+
+  /* Stack form rows vertically */
   .form-row {
     flex-direction: column;
-    gap: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  .btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .section-title {
+    font-size: 16px;
   }
 
   .items-table th,
   .items-table td {
-    padding: 8px 5px;
+    padding: 6px 4px;
+    font-size: 12px;
+  }
+
+  .summary-table {
+    width: 100% !important;
+    float: none !important;
+  }
+
+  .page-actions .btn {
+    margin-bottom: 5px;
+    width: 100%;
+  }
+
+  /* Button groups */
+  .btn-group-responsive .btn {
+    flex: 1 0 calc(50% - 5px);
+    min-width: calc(50% - 5px);
+  }
+}
+
+@media (max-width: 480px) {
+  .filter-panel .row > div {
+    margin-bottom: 10px;
+  }
+
+  .form-control,
+  .form-select {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  /* Mobile table styles */
+  .invoice-item {
+    flex-wrap: wrap;
+  }
+
+  .search-container {
+    transition: all 0.2s ease;
+    overflow: hidden;
+}
+.search-container:focus-within {
+    border-color: #5E3A56;
+    box-shadow: 0 0 0 2px rgba(94, 58, 86, 0.1);
+}
+#searchTermDisplay {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    max-height: 32px;
+    overflow-y: auto;
+}
+#searchTermDisplay .badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    display: inline-flex;
+    align-items: center;
+}
+#searchTermDisplay .btn-close {
+    font-size: 0.5rem;
+    opacity: 0.8;
+}
+#searchTermDisplay .btn-close:hover {
+    opacity: 1;
+}
+#clearSearch {
+    cursor: pointer;
+}
+#clearSearch:hover {
+    color: #5E3A56 !important;
+}
+#noResultsMessage {
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin: 15px 0;
+}
+
+  .table td,
+  .table th {
+    color: white;
+    background-color: #00192D;
+    border: 1px solid #FFC107;
   }
 
   /* Adjust column widths for mobile */
@@ -791,6 +999,7 @@ header {
     flex: 1 1 100%;
     min-width: 100%;
     text-align: left;
+    padding: 8px 5px;
   }
 }
 </style>
@@ -800,7 +1009,7 @@ header {
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
         <!--begin::Header-->
-        <?php include_once '../includes/header.php' ?>
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/AdminLTE/dist/pages/includes/header.php'; ?>
         <!--end::Header-->
         <!--begin::Sidebar-->
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
@@ -822,7 +1031,7 @@ header {
             </div>
             <!--end::Sidebar Brand-->
             <!--begin::Sidebar Wrapper-->
-            <div> <?php include_once '../includes/sidebar1.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+            <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/AdminLTE/dist/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
             <!--end::Sidebar Wrapper-->
         </aside>
         <!--end::Sidebar-->
@@ -838,13 +1047,127 @@ header {
                     <div class="page-header">
                         <h1 class="page-title"> 🧾 Invoices</h1>
                         <div class="page-actions">
-                            <button class="btn btn-outline" style="color: #FFC107; background-color:#00192D;" id="filterButton">
-                                <i class="fas fa-filter"></i> Filter
-                            </button>
+  <!-- Search and Filter Bar -->
+  <div class="d-flex justify-content-center align-items-center mb-3" style="gap: 8px;">
+    <!-- Search Container -->
+    <div class="search-container d-flex align-items-center position-relative bg-white rounded-pill ps-3 pe-1 py-1 shadow-sm"
+         style="border: 1px solid #ddd; min-width: 250px; max-width: 400px;">
+
+        <!-- Search Term Display -->
+        <div id="searchTermDisplay" class="d-flex align-items-center flex-wrap gap-2 me-2" style="max-width: 80%;"></div>
+
+        <!-- Search Input -->
+        <input type="text" id="searchInput" class="border-0 flex-grow-1"
+               placeholder="Search invoices..."
+               style="outline: none; font-size: 14px; background: transparent; min-width: 50px;">
+
+        <!-- Clear Button (X) -->
+        <button id="clearSearch" class="btn p-0 d-none" style="color: #999; background: none; border: none; margin-right: 5px;">
+            <i class="fas fa-times"></i>
+        </button>
+
+        <!-- Search Icon -->
+        <i class="fas fa-search ms-1" style="color: #555; font-size: 14px;"></i>
+    </div>
+
+    <!-- Column Selector Button -->
+    <button id="columnSelectorBtn" class="btn d-flex align-items-center rounded-pill"
+            style="background-color:#00192D; color:#FFC107; padding: 3px 12px; font-size: 14px;">
+        <i class="fas fa-columns me-1"></i>Custom Column  Filter
+    </button>
+
+
+    <!-- Filter Button -->
+    <!-- <button id="filterBtn" class="btn d-flex align-items-center rounded-pill"
+            style="background-color:#00192D; color:#FFC107; padding: 3px 12px; font-size: 14px;">
+        <i class="fas fa-filter me-1"></i>Filter
+    </button> -->
+  </div>
+
+  <!-- Column Selector Modal -->
+  <div class="modal fade" id="columnSelectorModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Select Columns</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Visible Columns</label>
+            <div id="columnCheckboxes" class="d-flex flex-column gap-2">
+              <!-- Checkboxes will be added dynamically -->
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="applyColumns" class="btn" style="color: #FFC107; background-color:#00192D;" >Apply</button>
+          <button class="btn" data-bs-dismiss="modal" style="color: #FFC107; background-color:#00192D;">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  <!-- Filter Modal -->
+  <!-- <div class="modal fade" id="filterModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Filter Invoices</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Status</label>
+            <select id="statusFilter" class="form-select">
+              <option value="">All</option>
+              <option value="sent">Posted</option>
+              <option value="draft">Draft</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Payment Status</label>
+            <select id="paymentStatusFilter" class="form-select">
+              <option value="">All</option>
+              <option value="paid">Paid</option>
+              <option value="partial">Partial</option>
+              <option value="unpaid">Unpaid</option>
+              <option value="overdue">Overdue</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Column Specific Search</label>
+            <select id="columnSearchSelect" class="form-select mb-2">
+              <option value="">All Columns</option>
+              <! Options will be added dynamically -->
+            <!-- </select>
+            <div class="input-group">
+              <input type="text" id="columnSearchInput" class="form-control" placeholder="Search in selected column...">
+              <button id="addColumnSearch" class="btn btn-outline-secondary">Add</button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="applyFilter" class="btn btn-primary">Apply</button>
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div> -->
+  <!-- </div>  -->
+<!-- </div> -->
+
+
+                        <!-- Active Filter Tags -->
+                        <div id="activeFilters" style="margin-top: 10px;"></div>
+
 
 
                             <!-- Filter Modal (hidden by default) -->
-                            <div id="filterModal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.4)">
+                            <!-- <div id="filterModal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.4)">
                                 <div style="background-color:#00192D; margin:5% auto; padding:20px; border:1px solid #FFC107; width:80%; max-width:600px; color:white;">
                                     <span style="float:right; cursor:pointer" id="closeFilter">&times;</span>
                                     <h3>Filter Invoices</h3>
@@ -882,7 +1205,9 @@ header {
                                     <button id="applyFilter" class="btn" style="background-color:#FFC107; color:#00192D">Apply Filters</button>
                                     <button id="resetFilter" class="btn btn-outline" style="color:#FFC107; border-color:#FFC107">Reset</button>
                                 </div>
-                            </div>
+                            </div> -->
+
+
                             <!-- <button class="btn btn-outline" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-download"></i> Export
                         </button> -->
@@ -891,6 +1216,8 @@ header {
                             </button>
                         </div>
                     </div>
+
+
 
                     <div class="invoice-list-container">
                         <div class="invoice-list-header">
@@ -928,91 +1255,117 @@ header {
                                 </div>
                             </div>
                         </div>
-
-
-
-                    <div class="invoice-item invoice-header">
-    <div class="invoice-checkbox">
+                        <div class="table-responsive">
+  <div class="invoice-container" id="invoice-items-list">
+    <div class="invoice-item invoice-header">
+      <div class="invoice-checkbox col-checkbox">
         <input type="checkbox">
-    </div>
-    <div class="invoice-number">
+      </div>
+      <div class="invoice-number col-number">
         <div class="over-flow" title="Invoice #">Invoice</div>
-    </div>
-    <div class="invoice-customer">
+      </div>
+      <div class="invoice-customer col-customer">
         <div class="over-flow" title="Customer">Tenant</div>
-    </div>
-    <div class="invoice-date">
+      </div>
+      <div class="invoice-date col-date">
         <div class="over-flow" title="Date">Date</div>
-    </div>
-    <div class="invoice-date">
+      </div>
+      <div class="invoice-date col-due-date">
         <div class="over-flow" title="Due Date">Due Date</div>
-    </div>
-    <div class="invoice-sub-total">
+      </div>
+      <div class="invoice-sub-total col-sub-total">
         <div class="over-flow" title="Sub-Total">Sub-Total</div>
-    </div>
-    <div class="invoice-taxes">
+      </div>
+      <div class="invoice-taxes col-taxes">
         <div class="over-flow" title="Taxes">Taxes</div>
-    </div>
-    <div class="invoice-amount">
+      </div>
+      <div class="invoice-amount col-amount">
         <div class="over-flow" title="Amount">Total</div>
-    </div>
-    <div class="invoice-status">
+      </div>
+      <div class="invoice-status col-status">
         <div class="over-flow" title="Status">Status</div>
-    </div>
-    <div class="invoice-status">
+      </div>
+      <div class="invoice-status col-payment-status">
         <div class="over-flow" title="Payment Status">Payment Status</div>
-    </div>
-    <div class="invoice-actions">
+      </div>
+      <div class="invoice-actions col-actions">
         <div class="over-flow" title="Actions">Actions</div>
+      </div>
     </div>
-</div>
+  </div>
+<!-- </div> -->
 
+ <!-- No Results Message -->
+ <div id="noResultsMessage" class="text-center py-4" style="display: none;">
+    <i class="fas fa-file-invoice" style="font-size: 48px; color: #ddd;"></i>
+    <h5 class="mt-3">No invoices found</h5>
+    <p class="text-muted">Try different search terms</p>
+  </div>
 
                         <?php
                         // ----------------------------------------------------
                         // 1) Fetch invoices with tenant details and payment summary
                         // ----------------------------------------------------
-                        $stmt = $pdo->query("
-    SELECT
-        i.id,
-        i.invoice_number,
-        i.invoice_date,
-        i.due_date,
-        i.sub_total,
-        i.total,
-        i.taxes,
-        i.status,
-        i.payment_status,
-        CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name,
-        (SELECT COALESCE(SUM(p.amount), 0)
-         FROM payments p
-         WHERE p.invoice_id = i.id) AS paid_amount,
-        i.building_id,
-        i.account_item,
-        i.description
-    FROM invoice i
-    LEFT JOIN users u ON u.id = i.tenant
-    ORDER BY i.created_at DESC
-");
-
+                      $stmt = $pdo->query("
+                              SELECT
+                                  i.id,
+                                  i.invoice_number,
+                                  i.invoice_date,
+                                  i.due_date,
+                                  COALESCE(i.sub_total, 0) AS sub_total,
+                                  COALESCE(i.total, 0) AS total,
+                                  COALESCE(i.taxes, 0) AS taxes,
+                                  i.status,
+                                  i.payment_status,
+                                  CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name,
+                                  (SELECT COALESCE(SUM(p.amount), 0)
+                                  FROM payments p
+                                  WHERE p.invoice_id = i.id) AS paid_amount,
+                                  i.building_id,
+                                  i.account_item,
+                                  i.description,
+                                  (SELECT COALESCE(SUM(unit_price * quantity), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS sub_total,
+                                  (SELECT COALESCE(SUM(taxes), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS taxes,
+                                  (SELECT COALESCE(SUM(total), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS total,
+                                  CASE
+                                      WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
+                                      THEN (SELECT SUM(unit_price * quantity) FROM invoice_items WHERE invoice_number = i.invoice_number)
+                                      ELSE i.sub_total
+                                  END AS display_sub_total,
+                                  CASE
+                                      WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
+                                      THEN (SELECT SUM(taxes) FROM invoice_items WHERE invoice_number = i.invoice_number)
+                                      ELSE i.taxes
+                                  END AS display_taxes,
+                                  CASE
+                                      WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
+                                      THEN (SELECT SUM(total) FROM invoice_items WHERE invoice_number = i.invoice_number)
+                                      ELSE i.total
+                                  END AS display_total
+                              FROM invoice i
+                              LEFT JOIN users u ON u.id = i.tenant
+                              ORDER BY i.created_at DESC
+                          ");
                         $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// ----------------------------------------------------
-// 2) Output each invoice item
-// ----------------------------------------------------
-
-
-foreach ($invoices as $invoice) {
-
-    $tenantName = $invoice['tenant_name'] ?? 'Unknown Tenant';
-    $invoiceDate = $invoice['invoice_date'] == '0000-00-00' ? 'Draft' : date('M d, Y', strtotime($invoice['invoice_date']));
-    $dueDate = $invoice['due_date'] == '0000-00-00' ? 'Not set' : date('M d, Y', strtotime($invoice['due_date']));
-    $subtotalFormatted = number_format($invoice['sub_total'], 2);
-    $totalAmount = number_format($invoice['total'], 2);
-    $taxFormatted = $invoice['taxes'] ?: '0.00';
-    $paidFormatted = number_format($invoice['paid_amount'], 2);
-    $balance = $invoice['total'] - $invoice['paid_amount'];
-    $balanceFormatted = number_format($balance, 2);
+                        if (empty($invoices)) {
+                          echo '<div class="invoice-item text-center py-4">
+                                  <div class="col-12"><b>No invoice found!</b></div>
+                                </div>';
+                      }  else {
+                        // ----------------------------------------------------
+                        // 2) Output each invoice item
+                        // ----------------------------------------------------
+                        foreach ($invoices as $invoice) {
+                          $tenantName = $invoice['tenant_name'] ?? 'Unknown Tenant';
+                          $invoiceDate = $invoice['invoice_date'] == '0000-00-00' ? 'Draft' : date('M d, Y', strtotime($invoice['invoice_date']));
+                          $dueDate = $invoice['due_date'] == '0000-00-00' ? 'Not set' : date('M d, Y', strtotime($invoice['due_date']));
+                          $subtotalFormatted = number_format($invoice['sub_total'], 2);
+                          $totalAmount = number_format($invoice['total'], 2);
+                          $taxFormatted = $invoice['taxes'] ?: '0.00';
+                          $paidAmount = number_format($invoice['paid_amount'], 2);
+                          $balance = $invoice['total'] - $invoice['paid_amount'];
+                          $balanceFormatted = number_format($balance, 2);
 
 
                             // Calculate overdue status
@@ -1075,29 +1428,28 @@ foreach ($invoices as $invoice) {
 
                             echo '<div class="invoice-item" onclick="openInvoiceDetails(' . $invoice['id'] . ')">';
                             echo '<div class="invoice-checkbox">
-            <input type="checkbox" onclick="event.stopPropagation()">
-          </div>
-          <div class="invoice-number">' . htmlspecialchars($invoice['invoice_number']) . '</div>
-          <div class="invoice-customer" title="' . htmlspecialchars($invoice['description']) . '">
-              ' . htmlspecialchars($tenantName) . '
-          </div>
-          <div class="invoice-date">' . $invoiceDate . '</div>
-          <div class="invoice-date' . ($isOverdue ? ' text-danger' : '') . '">
-              ' . $dueDate . '
-          </div>
-          <div class="invoice-amount">' . number_format($invoice['sub_total'], 2) . '</div>
-          <div class="invoice-amount">' . htmlspecialchars($invoice['taxes'] ?: '0.00') . '</div>
-          <div class="invoice-amount">' . number_format($invoice['total'], 2) . '</div>
-
-          <div class="invoice-status">
-              <span class="status-badge ' . $statusClass . '">' . $statusText . '</span>
-          </div>
-          <div class="invoice-status">
+                            <input type="checkbox" onclick="event.stopPropagation()">
+                            </div>
+                            <div class="invoice-number">' . htmlspecialchars($invoice['invoice_number']) . '</div>
+                            <div class="invoice-customer" title="' . htmlspecialchars($invoice['description']) . '">
+                                ' . htmlspecialchars($tenantName) . '
+                            </div>
+                            <div class="invoice-date">' . $invoiceDate . '</div>
+                            <div class="invoice-date' . ($isOverdue ? ' text-danger' : '') . '">
+                                ' . $dueDate . '
+                            </div>
+                            <div class="invoice-amount">' . number_format($invoice['sub_total'], 2) . '</div>
+                            <div class="invoice-amount">' . htmlspecialchars($invoice['taxes'] ?: '0.00') . '</div>
+                            <div class="invoice-amount">' . number_format($invoice['total'], 2) . '</div>
+                            <div class="invoice-status">
+                                <span class="status-badge ' . $statusClass . '">' . $statusText . '</span>
+                            </div>
+                            <div class="invoice-status">
               <span class="status-badge ' . $paymentStatusClass . '">' . $paymentStatusText . '</span>';
 
                             // Show payment button if applicable - updated logic
                             if ($invoice['status'] !== 'draft' && $invoice['status'] !== 'cancelled' && $invoice['paid_amount'] < $invoice['total']) {
-                                $buttonText = $invoice['paid_amount'] > 0 ? 'Add Payment' : 'Pay Now';
+                                $buttonText = $invoice['paid_amount'] > 0 ? 'Add Payment' : 'Pay';
                                 $balance = $invoice['total'] - $invoice['paid_amount'];
 
                                 echo '<br>
@@ -1124,28 +1476,12 @@ foreach ($invoices as $invoice) {
                   <li><a class="dropdown-item" href="#" onclick="viewInvoice(' . $invoice['id'] . ')">
                       <i class="fas fa-eye me-2"></i>View Details
                   </a></li>';
-
-                            // if ($invoice['status'] !== 'cancelled') {
-                            //     echo '<li><a class="dropdown-item" href="#" onclick="downloadInvoice(' . $invoice['id'] . ')">
-                            //               <i class="fas fa-file-pdf me-2"></i>Download PDF
-                            //           </a></li>';
-                            // }
-
-                            // Edit option - available for drafts and sent invoices without payments
-                            // if ($invoice['status'] === 'draft' || ($invoice['status'] === 'sent' && $invoice['paid_amount'] == 0)) {
-                            //     echo '<li><a class="dropdown-item" href="#" onclick="editInvoice(' . $invoice['id'] . ')">
-                            //               <i class="fas fa-edit me-2"></i>Edit Invoice
-                            //           </a></li>';
-                            // }
                             if ($invoice['status'] === 'draft' || ($invoice['status'] === 'sent' && $invoice['paid_amount'] == 0)) {
-                                echo '<li><a class="dropdown-item" href="invoice_edit.php?id=' . $invoice['id'] . '">
+                                echo '<li><a class="dropdown-item" href="/Jengopay/AdminLTE/dist/pages/financials/invoices/invoice_edit.php?id=' . $invoice['id'] . '">
                   <i class="fas fa-edit me-2"></i>Edit Invoice
               </a></li>';
                             }
-
                             echo '<li><hr class="dropdown-divider"></li>';
-
-                            //  Delete option - only for drafts and cancelled invoices
                             // Delete option - only for drafts and cancelled invoices
                             if ($invoice['status'] === 'draft' || $invoice['status'] === 'cancelled') {
                                 echo '<li><a class="dropdown-item text-danger" href="#" onclick="confirmDeleteInvoice(' . $invoice['id'] . ')">
@@ -1168,13 +1504,14 @@ foreach ($invoices as $invoice) {
           </div>
       </div>';
                         }
+                      }
                         ?>
-
+</div>
 
                         <!-- ✅ PAYMENT MODAL -->
                         <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-lg">
-                                <form id="paymentForm" method="post" action="/originalTwo/AdminLTE/dist/pages/financials/submit_payment.php">
+                                <form id="paymentForm" method="post" action="/Jengopay/AdminLTE/dist/pages/financials/invoices/action/submit_payment.php">
                                     <div class="modal-content shadow-lg border-0 rounded-4">
 
                                         <!-- Modal Header -->
@@ -1302,7 +1639,7 @@ foreach ($invoices as $invoice) {
                                 <i class="fas fa-save"></i> Save Draft
                             </button>
                             <button class="btn btn-primary" id="preview-invoice-btn" style="color: #FFC107; background-color:#00192D;">
-                                <i class="fas fa-eye"></i> Preview
+                              
                             </button>
                         </div>
                     </div>
@@ -1322,7 +1659,7 @@ foreach ($invoices as $invoice) {
                         <!-- Customer Section -->
                         <div class="form-section">
                             <h3 class="section-title">Tenant Details</h3>
-                            <form method="POST" action="submit_invoice.php">
+                            <form  id="myForm" method="POST" action="/Jengopay/AdminLTE/dist/pages/financials/invoices/action/submit_invoice.php" enctype="multipart/form-data">
                                 <div class="form-row">
 
                                     <!-- Existing Invoice # input -->
@@ -1391,58 +1728,57 @@ foreach ($invoices as $invoice) {
 
                                 <!-- Items Section -->
                                 <div class="form-section">
-                                    <h3 class="section-title">Items</h3>
-                                    <table class="items-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Item (Service)</th>
-                                                <th>Description</th>
-                                                <th>Qty</th>
-                                                <th>Unit Price</th>
-                                                <th>Taxes</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <select id="account-item" name="account_item[]" class="select-account searchable-select" required>
-                                                        <option value="" disabled selected>Select Account Item</option>
-                                                        <?php foreach ($accountItems as $item): ?>
-                                                            <option value="<?= htmlspecialchars($item['account_code']) ?>">
-                                                                <?= htmlspecialchars($item['account_name']) ?>
-                                                            </option>
-                                                        <?php endforeach; ?>
-                                                    </select>
-                                                </td>
-                                                <style>
+        <h3 class="section-title">Items</h3>
+        <table class="items-table" id="itemsTable">
+            <thead>
+                <tr>
+                    <th>Item (Service)</th>
+                    <th>Description</th>
+                    <th>Qty</th>
+                    <th>Unit Price</th>
+                    <th>Taxes</th>
+                    <th>Total</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody id="itemsBody">
+                <!-- One initial row -->
+                <tr>
+                <td>
+                <select name="account_item[]" class="select-account searchable-select" required>
+            <option value="" disabled selected>Select Account Item</option>
+            <?php foreach ($accountItems as $item): ?>
+              <option value="<?= htmlspecialchars($item['account_code']) ?>">
+                <?= htmlspecialchars($item['account_name']) ?>
+              </option>
+            <?php endforeach; ?>
+          </select>
+            </td>
+            <td style="min-width: 200px;">
+          <textarea name="description[]" class="form-control" placeholder="Description" rows="1" required></textarea>
+        </td>
+                    <td><input type="number" name="quantity[]" class="form-control quantity" required></td>
+                    <td><input type="number" name="unit_price[]" class="form-control unit-price" required></td>
+                    <td>
+                        <select name="vat_type[]" class="form-select vat-option" required>
+                            <option value="" disabled selected>Select Option</option>
+                            <option value="inclusive">VAT 16% Inclusive</option>
+                            <option value="exclusive">VAT 16% Exclusive</option>
+                            <option value="zero">Zero Rated</option>
+                            <option value="exempted">Exempted</option>
+                        </select>
+                    </td>
+                    <td><input type="text" name="total[]" class="form-control total" readonly></td>
+                    <td><button type="button" class="btn btn-danger btn-sm delete-btn"><i class="fa fa-trash"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
 
-                                                </style>
-          <td><textarea id="description" name="description[]" placeholder="Description" rows="1" required></textarea></td>
-          <td><input id="quantity" type="number" name="quantity[]" class="form-control quantity" placeholder="1" required></td>
-          <td><input id="unit_price"  type="number" name="unit_price[]" class="form-control unit-price" placeholder="123" required></td>
-          <td>
-            <select  id="taxes" name="vat_type[]" class="form-select vat-option" required>
-              <option value="" disabled selected>Select Option</option>
-              <option value="inclusive">VAT 16% Inclusive</option>
-              <option value="exclusive">VAT 16% Exclusive</option>
-              <option value="zero">Zero Rated</option>
-              <option value="exempted">Exempted</option>
-            </select>
-          </td>
-          <td>
-             <input id="total" type="number" name="total" class="form-control total" placeholder="0" readonly  style="display:none;">
-            <button type="button"  class="btn btn-sm btn-danger delete-btn" onclick="deleteRow(this)" title="Delete">
-              <i class="fa fa-trash" style="font-size: 12px;"></i>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <button type="button" class="add-btn" onclick="addRow()">
-      <i class="fa fa-plus"></i> ADD MORE
-    </button>
-  </div>
+        <!-- Add More Button -->
+        <button type="button" class="btn btn-success add-btn" id="addMoreBtn" style="background-color: #00192D; color: #FFC107;">
+            <i class="fa fa-plus"></i> ADD MORE
+        </button>
+                                </div>
 
                                 <!-- Notes & Terms -->
                                 <div class="form-section">
@@ -1462,18 +1798,42 @@ foreach ($invoices as $invoice) {
                                 <!-- Form Actions -->
                                 <div class="form-actions">
                                     <div class="action-left">
-                                        <button class="btn btn-outline">
-                                            <i class="fas fa-paperclip"></i> Attach File
-                                        </button>
+                                   <!-- File Upload Section -->
+                              <div class="form-section">
+                                  <h3 class="section-title">Attachments</h3>
+                                  <div class="form-row">
+                                      <div class="form-group">
+                                          <!-- Hidden file input -->
+                                          <input type="file" id="fileInput" name="attachment[]" multiple style="display: none;">
+
+                                          <!-- Button to trigger file input -->
+                                          <button type="button"  class="btn btn-outline-secondary" onclick="document.getElementById('fileInput').click()"  style="background-color: #00192D; color: #FFC107;">
+                                              <i class="fas fa-paperclip"></i> Attach Files
+                                          </button>
+
+                                          <!-- Display selected files -->
+                                          <div id="fileList" class="mt-2"></div>
+                                      </div>
+                                  </div>
+</div>
                                     </div>
-                                    <div class="action-right">
-                                        <!-- <button class="btn btn-outline">
-                                 Send
-                            </button> -->
-                                        <button type="submit" style="background-color: #00192D; color: #FFC107; padding: 8px 16px; border: none; border-radius: 4px;">
+                                </div>
+
+                                <div class="action-right" style="display: flex; justify-content: flex-end;">
+    <button type="submit" style="background-color: #00192D; color: #FFC107; padding: 8px 16px; border: none; border-radius: 4px;">
+    <i class="fas fa-share-square"></i> Save & Send
+    </button>
+</div>
+
+                                    <!-- Add this hidden file input if you want actual file attachment -->
+<!-- <input type="file" id="fileInput" style="display: none;"> -->
+                                    <!-- <div class="action-right"> -->
+                                        <!-- <button type="submit" style="background-color: #00192D; color: #FFC107; padding: 8px 16px; border: none; border-radius: 4px;">
                                             <i class="fas fa-envelope"></i>
                                             Save&Send
-                                        </button>
+                                        </button> -->
+                                    <!-- </div> -->
+
 
                             </form>
                         </div>
@@ -1484,6 +1844,984 @@ foreach ($invoices as $invoice) {
     </div>
 
 
+
+    <script>
+document.getElementById('fileInput').addEventListener('change', function(e) {
+    const fileList = document.getElementById('fileList');
+    fileList.innerHTML = '';
+
+    if (this.files.length > 0) {
+        const list = document.createElement('ul');
+        list.className = 'list-group';
+
+        for (let i = 0; i < this.files.length; i++) {
+            const item = document.createElement('li');
+            item.className = 'list-group-item';
+            item.textContent = this.files[i].name;
+            list.appendChild(item);
+        }
+
+        fileList.appendChild(list);
+    } else {
+        fileList.textContent = 'No files selected';
+    }
+});
+</script>
+
+
+<!-- <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const filterBtn = document.getElementById("filterBtn");
+    const searchInput = document.getElementById("searchInput");
+    const applyFilter = document.getElementById("applyFilter");
+    const statusFilter = document.getElementById("statusFilter");
+    const paymentStatusFilter = document.getElementById("paymentStatusFilter");
+
+    // Open filter modal
+    filterBtn.addEventListener("click", function () {
+        new bootstrap.Modal(document.getElementById("filterModal")).show();
+    });
+
+    // Apply filters
+    applyFilter.addEventListener("click", function () {
+        const statusValue = statusFilter.value.toLowerCase();
+        const paymentValue = paymentStatusFilter.value.toLowerCase();
+        filterInvoices(statusValue, paymentValue, searchInput.value.toLowerCase());
+        bootstrap.Modal.getInstance(document.getElementById("filterModal")).hide();
+    });
+
+    // Live search
+    searchInput.addEventListener("input", function () {
+        filterInvoices(statusFilter.value.toLowerCase(), paymentStatusFilter.value.toLowerCase(), this.value.toLowerCase());
+    });
+
+    function filterInvoices(status, paymentStatus, searchText) {
+        document.querySelectorAll(".invoice-item:not(.invoice-header)").forEach(item => {
+            const invoiceStatus = item.querySelector(".invoice-status span")?.innerText.toLowerCase() || "";
+            const paymentStatusText = item.querySelectorAll(".invoice-status span")[1]?.innerText.toLowerCase() || "";
+            const tenantName = item.querySelector(".invoice-customer")?.innerText.toLowerCase() || "";
+            const invoiceNumber = item.querySelector(".invoice-number")?.innerText.toLowerCase() || "";
+
+            const matchStatus = !status || invoiceStatus.includes(status);
+            const matchPayment = !paymentStatus || paymentStatusText.includes(paymentStatus);
+            const matchSearch = !searchText || tenantName.includes(searchText) || invoiceNumber.includes(searchText);
+
+            item.style.display = matchStatus && matchPayment && matchSearch ? "" : "none";
+        });
+    }
+});
+
+</script> -->
+
+
+<script>
+  function filterInvoices(status, paymentStatus, searchText) {
+    document.querySelectorAll(".invoice-item:not(.invoice-header)").forEach(item => {
+        const invoiceStatus = item.querySelector(".invoice-status span")?.innerText.toLowerCase() || "";
+        const paymentStatusText = item.querySelectorAll(".invoice-status span")[1]?.innerText.toLowerCase() || "";
+        const tenantName = item.querySelector(".invoice-customer")?.innerText.toLowerCase() || "";
+        const invoiceNumber = item.querySelector(".invoice-number")?.innerText.toLowerCase() || "";
+
+        // ✅ Capture Paid Amount text (second .invoice-status may contain it, or inside button text)
+        const paidAmountText = paymentStatusText.match(/kes\s*[\d,]+(\.\d+)?/i)?.[0].toLowerCase() || "";
+
+        const matchStatus = !status || invoiceStatus.includes(status);
+        const matchPayment = !paymentStatus || paymentStatusText.includes(paymentStatus);
+        const matchSearch = !searchText
+            || tenantName.includes(searchText)
+            || invoiceNumber.includes(searchText)
+            || paymentStatusText.includes(searchText)
+            || paidAmountText.includes(searchText); // ✅ Added
+
+        item.style.display = matchStatus && matchPayment && matchSearch ? "" : "none";
+    });
+}
+
+</script>
+<!-- Add this script to handle the filtering -->
+<!-- <script>
+document.getElementById('filterBtn').addEventListener('click', function() {
+    // Get the table or data you want to filter
+    const table = document.querySelector('table'); // Adjust selector as needed
+
+    // Create filter options (you can customize this based on your needs)
+    const filterOptions = {
+        invoiceNumber: prompt('Filter by Invoice Number (leave blank for all):'),
+        tenant: prompt('Filter by Tenant ID (leave blank for all):'),
+        accountItem: prompt('Filter by Account Item (leave blank for all):'),
+        minAmount: parseFloat(prompt('Minimum Amount (leave blank for no minimum):')) || 0,
+        maxAmount: parseFloat(prompt('Maximum Amount (leave blank for no maximum):')) || Infinity
+    };
+
+    // Loop through table rows and apply filters
+    const rows = table.querySelectorAll('tbody tr');
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        const invoiceNumber = cells[1].textContent;
+        const tenant = cells[2].textContent;
+        const accountItem = cells[3].textContent;
+        const total = parseFloat(cells[9].textContent);
+
+        const showRow =
+            (filterOptions.invoiceNumber === '' || invoiceNumber.includes(filterOptions.invoiceNumber)) &&
+            (filterOptions.tenant === '' || tenant.includes(filterOptions.tenant)) &&
+            (filterOptions.accountItem === '' || accountItem.includes(filterOptions.accountItem)) &&
+            (total >= filterOptions.minAmount) &&
+            (total <= filterOptions.maxAmount);
+
+        row.style.display = showRow ? '' : 'none';
+    });
+
+    alert('Filter applied!');
+});
+</script> -->
+    <script src="/Jengopay/AdminLTE/dist/pages/financials/invoices/js/invoice.js"></script>
+    <!-- <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const addMoreBtn = document.getElementById("addMoreBtn");
+    const itemsBody = document.getElementById("itemsBody");
+
+    addMoreBtn.addEventListener("click", function () {
+        const newRow = document.createElement("tr");
+
+        newRow.innerHTML = `
+            <td>
+                <select name="account_item[]" class="select-account searchable-select" required>
+                    <option value="" disabled selected>Select Account Item</option>
+                    <?php foreach ($accountItems as $item): ?>
+                        <option value="<?= htmlspecialchars($item['account_code']) ?>">
+                            <?= htmlspecialchars($item['account_name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </td>
+            <td><textarea name="description[]" placeholder="Description" rows="1" required></textarea></td>
+            <td><input type="number" name="quantity[]" class="form-control quantity" required></td>
+            <td><input type="number" name="unit_price[]" class="form-control unit-price" required></td>
+            <td>
+                <select name="vat_type[]" class="form-select vat-option" required>
+                    <option value="" disabled selected>Select Option</option>
+                    <option value="inclusive">VAT 16% Inclusive</option>
+                    <option value="exclusive">VAT 16% Exclusive</option>
+                    <option value="zero">Zero Rated</option>
+                    <option value="exempted">Exempted</option>
+                </select>
+                </td>
+             <td><input type="text" name="total[]" class="form-control total" readonly></td>
+            <td><button type="button" class="btn btn-danger btn-sm delete-btn"><i class="fa fa-trash"></i></button></td>
+        `;
+
+        itemsBody.appendChild(newRow);
+    });
+
+    // Event delegation to delete dynamically added rows
+    itemsBody.addEventListener("click", function (e) {
+        if (e.target.closest(".delete-btn")) {
+            const row = e.target.closest("tr");
+            row.remove();
+        }
+    });
+});
+</script> -->
+
+
+<!-- <script>
+// Store the original invoices data
+let originalInvoices = <?php echo json_encode($invoices); ?>;
+let displayedInvoices = [...originalInvoices];
+
+// Toggle filter panel visibility
+document.getElementById('filterBtn').addEventListener('click', function() {
+    const filterPanel = document.getElementById('filterPanel');
+    filterPanel.style.display = filterPanel.style.display === 'none' ? 'block' : 'none';
+});
+
+// Array to store active filters
+let activeFilters = [];
+
+function applyFilter() {
+    const filterField = document.getElementById('filterField');
+    const searchInput = document.getElementById('searchInput');
+
+    const selectedField = filterField.value;
+    const selectedFieldText = filterField.options[filterField.selectedIndex].text;
+    const searchValue = searchInput.value.trim().toLowerCase();
+
+    if (searchValue === '') {
+        alert('Please enter a search value');
+        return;
+    }
+
+    // Add filter to active filters if not already present
+    const filterExists = activeFilters.some(filter =>
+        filter.field === selectedField && filter.value === searchValue
+    );
+
+    if (!filterExists) {
+        activeFilters.push({
+            field: selectedField,
+            fieldText: selectedFieldText,
+            value: searchValue
+        });
+        updateActiveFiltersDisplay();
+        filterInvoices();
+    }
+
+    // Clear the search input
+    searchInput.value = '';
+}
+
+function filterInvoices() {
+    // Start with all invoices
+    let filteredInvoices = [...originalInvoices];
+
+    // Apply each active filter
+    activeFilters.forEach(filter => {
+        filteredInvoices = filteredInvoices.filter(invoice => {
+            switch(filter.field) {
+                case 'invoice-number':
+                    return invoice.invoice_number.toLowerCase().includes(filter.value);
+                case 'invoice-customer':
+                    const tenantName = (invoice.tenant_name || 'Unknown Tenant').toLowerCase();
+                    return tenantName.includes(filter.value);
+                case 'invoice-date':
+                    const invoiceDate = invoice.invoice_date === '0000-00-00' ? 'draft' :
+                                      dateToFilterString(invoice.invoice_date);
+                    return invoiceDate.includes(filter.value);
+                case 'due-date':
+                    const dueDate = invoice.due_date === '0000-00-00' ? 'not set' :
+                                   dateToFilterString(invoice.due_date);
+                    return dueDate.includes(filter.value);
+                case 'invoice-sub-total':
+                    return String(invoice.sub_total).includes(filter.value);
+                case 'invoice-taxes':
+                    return String(invoice.taxes || 0).includes(filter.value);
+                case 'invoice-amount':
+                    return String(invoice.total).includes(filter.value);
+                case 'invoice-status':
+                    return invoice.status.toLowerCase().includes(filter.value);
+                case 'payment-status':
+                    // Calculate payment status
+                    const paidAmount = parseFloat(invoice.paid_amount) || 0;
+                    const total = parseFloat(invoice.total) || 0;
+                    let paymentStatus = '';
+
+                    if (paidAmount >= total) {
+                        paymentStatus = 'paid';
+                    } else if (paidAmount > 0) {
+                        paymentStatus = 'partial';
+                    } else {
+                        paymentStatus = 'unpaid';
+                        if (invoice.due_date !== '0000-00-00') {
+                            const today = new Date();
+                            const dueDate = new Date(invoice.due_date);
+                            if (today > dueDate) {
+                                paymentStatus = 'overdue';
+                            }
+                        }
+                    }
+                    return paymentStatus.includes(filter.value);
+                default:
+                    return true;
+            }
+        });
+    });
+
+    displayedInvoices = filteredInvoices;
+    renderFilteredInvoices();
+}
+
+function dateToFilterString(dateString) {
+    if (dateString === '0000-00-00') return '';
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0]; // YYYY-MM-DD format
+}
+
+function renderFilteredInvoices() {
+    const container = document.getElementById('invoice-items-list');
+
+    // Clear existing items (except header)
+    const header = container.querySelector('.invoice-header');
+    container.innerHTML = '';
+    container.appendChild(header);
+
+    // Render filtered invoices
+    displayedInvoices.forEach(invoice => {
+        const tenantName = invoice.tenant_name || 'Unknown Tenant';
+        const invoiceDate = invoice.invoice_date === '0000-00-00' ? 'Draft' :
+                          formatDate(invoice.invoice_date);
+        const dueDate = invoice.due_date === '0000-00-00' ? 'Not set' :
+                       formatDate(invoice.due_date);
+
+        // Calculate overdue status
+        let isOverdue = false;
+        let overdueDays = 0;
+        if (invoice.due_date != '0000-00-00' && invoice.status != 'paid' && invoice.status != 'cancelled') {
+            const today = new Date();
+            const dueDateObj = new Date(invoice.due_date);
+            if (today > dueDateObj) {
+                isOverdue = true;
+                overdueDays = Math.floor((today - dueDateObj) / (1000 * 60 * 60 * 24));
+            }
+        }
+
+        // Determine status badge
+        let statusClass = 'badge-';
+        let statusText = capitalizeFirstLetter(invoice.status);
+
+        switch (invoice.status) {
+            case 'draft':
+                statusClass += 'draft';
+                break;
+            case 'sent':
+                statusClass += isOverdue ? 'overdue' : 'sent';
+                statusText = isOverdue ? 'Overdue (' + overdueDays + 'd)' : 'Sent';
+                break;
+            case 'paid':
+                statusClass += 'paid';
+                break;
+            case 'cancelled':
+                statusClass += 'cancelled';
+                break;
+            default:
+                statusClass += 'draft';
+        }
+
+        // Payment status with amounts
+        let paymentStatusClass = 'badge-';
+        let paymentStatusText = '';
+        const paidAmount = parseFloat(invoice.paid_amount) || 0;
+        const totalAmount = parseFloat(invoice.total) || 0;
+        const paidFormatted = paidAmount.toFixed(2);
+        const totalFormatted = totalAmount.toFixed(2);
+
+        if (paidAmount > 0) {
+            if (paidAmount >= totalAmount) {
+                paymentStatusClass += 'paid';
+                paymentStatusText = 'Paid (KES ' + paidFormatted + ')';
+            } else {
+                paymentStatusClass += 'partial';
+                paymentStatusText = 'Partial (KES ' + paidFormatted + ' of ' + totalFormatted + ')';
+            }
+        } else {
+            paymentStatusClass += 'unpaid';
+            paymentStatusText = isOverdue ? 'Overdue (' + overdueDays + 'd)' : 'Unpaid';
+        }
+
+        // Create invoice item element
+        const invoiceItem = document.createElement('div');
+        invoiceItem.className = 'invoice-item';
+        invoiceItem.onclick = function() { openInvoiceDetails(invoice.id); };
+
+        invoiceItem.innerHTML = `
+            <div class="invoice-checkbox">
+                <input type="checkbox" onclick="event.stopPropagation()">
+            </div>
+            <div class="invoice-number">${escapeHtml(invoice.invoice_number)}</div>
+            <div class="invoice-customer" title="${escapeHtml(invoice.description)}">
+                ${escapeHtml(tenantName)}
+            </div>
+            <div class="invoice-date">${invoiceDate}</div>
+            <div class="invoice-date${isOverdue ? ' text-danger' : ''}">
+                ${dueDate}
+            </div>
+            <div class="invoice-amount">${numberFormat(invoice.sub_total, 2)}</div>
+            <div class="invoice-amount">${escapeHtml(invoice.taxes || '0.00')}</div>
+            <div class="invoice-amount">${numberFormat(invoice.total, 2)}</div>
+            <div class="invoice-status">
+                <span class="status-badge ${statusClass}">${statusText}</span>
+            </div>
+            <div class="invoice-status">
+                <span class="status-badge ${paymentStatusClass}">${paymentStatusText}</span>
+                ${(invoice.status !== 'draft' && invoice.status !== 'cancelled' && paidAmount < totalAmount) ? `
+                <br>
+                <button class="btn pay-btn btn-sm mt-1"
+                    onclick="event.stopPropagation(); openPayModal(this)"
+                    data-invoice-id="${invoice.id}"
+                    data-tenant="${escapeHtml(tenantName)}"
+                    data-total="${totalAmount}"
+                    data-paid="${paidAmount}"
+                    data-balance="${totalAmount - paidAmount}"
+                    data-account-item="${escapeHtml(invoice.account_item)}"
+                    data-description="${escapeHtml(invoice.description)}">
+                    <i class="fas fa-credit-card me-1"></i>
+                    ${paidAmount > 0 ? 'Add Payment' : 'Pay'}
+                </button>
+                ` : ''}
+            </div>
+            <div class="invoice-actions dropdown">
+                <button class="action-btn dropdown-toggle" onclick="event.stopPropagation()" data-bs-toggle="dropdown">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#" onclick="viewInvoice(${invoice.id})">
+                        <i class="fas fa-eye me-2"></i>View Details
+                    </a></li>
+                    ${(invoice.status === 'draft' || (invoice.status === 'sent' && paidAmount == 0)) ? `
+                    <li><a class="dropdown-item" href="invoice_edit.php?id=${invoice.id}">
+                        <i class="fas fa-edit me-2"></i>Edit Invoice
+                    </a></li>
+                    ` : ''}
+                    <li><hr class="dropdown-divider"></li>
+                    ${(invoice.status === 'draft' || invoice.status === 'cancelled') ? `
+                    <li><a class="dropdown-item text-danger" href="#" onclick="confirmDeleteInvoice(${invoice.id})">
+                        <i class="fas fa-trash-alt me-2"></i>Delete Invoice
+                    </a></li>
+                    ` : ''}
+                    ${(invoice.status !== 'cancelled' && invoice.status !== 'paid') ? `
+                    <li><a class="dropdown-item text-danger" href="#" onclick="confirmCancelInvoice(${invoice.id})">
+                        <i class="fas fa-ban me-2"></i>Cancel Invoice
+                    </a></li>
+                    ` : (invoice.status === 'cancelled') ? `
+                    <li><a class="dropdown-item" href="#" onclick="restoreInvoice(${invoice.id})">
+                        <i class="fas fa-undo me-2"></i>Restore Invoice
+                    </a></li>
+                    ` : ''}
+                </ul>
+            </div>
+        `;
+
+        container.appendChild(invoiceItem);
+    });
+}
+
+// Helper functions
+function escapeHtml(unsafe) {
+    if (!unsafe) return '';
+    return unsafe.toString()
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function numberFormat(number, decimals) {
+    if (isNaN(number)) return '0.00';
+    return parseFloat(number).toFixed(decimals);
+}
+
+function formatDate(dateString) {
+    if (dateString === '0000-00-00') return '';
+    const date = new Date(dateString);
+    const options = { month: 'short', day: 'numeric', year: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+}
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function updateActiveFiltersDisplay() {
+    const activeFiltersContainer = document.getElementById('activeFilters');
+    activeFiltersContainer.innerHTML = '';
+
+    if (activeFilters.length === 0) {
+        return;
+    }
+
+    const filtersTitle = document.createElement('span');
+    filtersTitle.textContent = 'Active Filters: ';
+    filtersTitle.style.marginRight = '10px';
+    activeFiltersContainer.appendChild(filtersTitle);
+
+    activeFilters.forEach((filter, index) => {
+        const filterTag = document.createElement('span');
+        filterTag.className = 'badge bg-warning text-dark me-2';
+        filterTag.style.cursor = 'pointer';
+
+        const filterText = document.createElement('span');
+        filterText.textContent = `${filter.fieldText}: ${filter.value}`;
+        filterTag.appendChild(filterText);
+
+        const removeBtn = document.createElement('span');
+        removeBtn.className = 'ms-2';
+        removeBtn.innerHTML = '&times;';
+        removeBtn.onclick = function(e) {
+            e.stopPropagation();
+            removeFilter(index);
+        };
+        filterTag.appendChild(removeBtn);
+
+        activeFiltersContainer.appendChild(filterTag);
+    });
+}
+
+function removeFilter(index) {
+    activeFilters.splice(index, 1);
+    updateActiveFiltersDisplay();
+    filterInvoices();
+}
+
+// Initialize by rendering all invoices
+document.addEventListener('DOMContentLoaded', function() {
+    renderFilteredInvoices();
+
+    // Add keyboard support for the search input
+    document.getElementById('searchInput').addEventListener('keyup', function(e) {
+        if (e.key === 'Enter') {
+            applyFilter();
+        }
+    });
+});
+</script> -->
+
+<script>
+document.getElementById('resetFilter').addEventListener('click', function () {
+    document.getElementById('statusFilter').value = '';
+    document.getElementById('paymentFilter').value = '';
+    document.getElementById('dateFrom').value = '';
+    document.getElementById('dateTo').value = '';
+});
+</script>
+
+
+</script>
+
+<!-- <script>
+// Toggle filter panel visibility
+document.getElementById('filterBtn').addEventListener('click', function() {
+    const filterPanel = document.getElementById('filterPanel');
+    filterPanel.style.display = filterPanel.style.display === 'none' ? 'block' : 'none';
+});
+
+// Array to store active filters
+let activeFilters = [];
+
+function applyFilter() {
+    const filterField = document.getElementById('filterField');
+    const searchInput = document.getElementById('searchInput');
+
+    const selectedField = filterField.options[filterField.selectedIndex].text;
+    const searchValue = searchInput.value.trim();
+
+    if (searchValue === '') {
+        alert('Please enter a search value');
+        return;
+    }
+
+    // Add filter to active filters if not already present
+    const filterExists = activeFilters.some(filter =>
+        filter.field === selectedField && filter.value === searchValue
+    );
+
+    if (!filterExists) {
+        activeFilters.push({
+            field: selectedField,
+            value: searchValue,
+            fieldValue: filterField.value
+        });
+        updateActiveFiltersDisplay();
+    }
+
+    // Here you would typically filter your data/table
+    // For now, we'll just log the filters
+    console.log('Applying filter:', selectedField, searchValue);
+
+    // Clear the search input
+    searchInput.value = '';
+}
+
+function updateActiveFiltersDisplay() {
+    const activeFiltersContainer = document.getElementById('activeFilters');
+    activeFiltersContainer.innerHTML = '';
+
+    if (activeFilters.length === 0) {
+        return;
+    }
+
+    const filtersTitle = document.createElement('span');
+    filtersTitle.textContent = 'Active Filters: ';
+    filtersTitle.style.marginRight = '10px';
+    activeFiltersContainer.appendChild(filtersTitle);
+
+    activeFilters.forEach((filter, index) => {
+        const filterTag = document.createElement('span');
+        filterTag.className = 'badge bg-warning text-dark me-2';
+        filterTag.style.cursor = 'pointer';
+
+        const filterText = document.createElement('span');
+        filterText.textContent = `${filter.field}: ${filter.value}`;
+        filterTag.appendChild(filterText);
+
+        const removeBtn = document.createElement('span');
+        removeBtn.className = 'ms-2';
+        removeBtn.innerHTML = '&times;';
+        removeBtn.onclick = function(e) {
+            e.stopPropagation();
+            removeFilter(index);
+        };
+        filterTag.appendChild(removeBtn);
+
+        activeFiltersContainer.appendChild(filterTag);
+    });
+}
+
+function removeFilter(index) {
+    activeFilters.splice(index, 1);
+    updateActiveFiltersDisplay();
+
+    // Here you would typically reapply the remaining filters
+    console.log('Remaining filters:', activeFilters);
+}
+
+// Optional: Add keyboard support for the search input
+document.getElementById('searchInput').addEventListener('keyup', function(e) {
+    if (e.key === 'Enter') {
+        applyFilter();
+    }
+});
+</script> -->
+
+<!-- Add this script to handle the filtering -->
+<!-- <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterBtn = document.getElementById('filterBtn');
+    const invoiceItemsList = document.getElementById('invoice-items-list');
+    let originalInvoiceItems = invoiceItemsList.innerHTML;
+    let filterModal = null;
+
+    filterBtn.addEventListener('click', function() {
+        // Remove existing modal if any
+        const existingModal = document.getElementById('filterModal');
+        if (existingModal) existingModal.remove();
+
+        const filterModalHTML = `
+            <div class="modal fade" id="filterModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Filter Invoices</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Status</label>
+                                <select id="filterStatus" class="form-select">
+                                    <option value="">All Statuses</option>
+                                    <option value="draft">Draft</option>
+                                    <option value="sent">Sent</option>z
+                                    <option value="paid">Paid</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Payment Status</label>
+                                <select id="filterPaymentStatus" class="form-select">
+                                    <option value="">All</option>
+                                    <option value="paid">Paid</option>
+                                    <option value="partial">Partial</option>
+                                    <option value="unpaid">Unpaid</option>
+                                    <option value="overdue">Overdue</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Amount Range</label>
+                                <div class="input-group">
+                                    <input type="number" id="filterMinAmount" class="form-control" placeholder="Min" step="0.01">
+                                    <span class="input-group-text">to</span>
+                                    <input type="number" id="filterMaxAmount" class="form-control" placeholder="Max" step="0.01">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="resetFilters">Reset</button>
+                            <button type="button" class="btn btn-primary" id="applyFilters">Apply</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.insertAdjacentHTML('beforeend', filterModalHTML);
+        filterModal = new bootstrap.Modal(document.getElementById('filterModal'));
+
+        document.getElementById('applyFilters').addEventListener('click', function() {
+            const statusFilter = document.getElementById('filterStatus').value;
+            const paymentStatusFilter = document.getElementById('filterPaymentStatus').value;
+            const minAmount = parseFloat(document.getElementById('filterMinAmount').value) || 0;
+            const maxAmount = parseFloat(document.getElementById('filterMaxAmount').value) || Infinity;
+
+            applyFilters(statusFilter, paymentStatusFilter, minAmount, maxAmount);
+            filterModal.hide();
+        });
+
+        document.getElementById('resetFilters').addEventListener('click', function() {
+            invoiceItemsList.innerHTML = originalInvoiceItems;
+            filterModal.hide();
+        });
+
+        filterModal.show();
+    });
+
+    function applyFilters(statusFilter, paymentStatusFilter, minAmount, maxAmount) {
+        const items = document.querySelectorAll('.invoice-item:not(.invoice-header)');
+
+        items.forEach(item => {
+            // Get status values
+            const statusBadge = item.querySelector('.invoice-status .status-badge');
+            const status = statusBadge ? statusBadge.textContent.trim().toLowerCase() : '';
+
+            // Get payment status values
+            const paymentBadge = item.querySelector('.invoice-status:nth-of-type(2) .status-badge');
+            const paymentText = paymentBadge ? paymentBadge.textContent.trim().toLowerCase() : '';
+
+            // Get amount value
+            const amountText = item.querySelector('.invoice-amount:nth-of-type(3)')?.textContent || '0';
+            const amount = parseFloat(amountText.replace(/[^0-9.]/g, '')) || 0;
+
+            // Status matching
+            const statusMatch = !statusFilter ||
+                              status.includes(statusFilter) ||
+                              (statusFilter === 'sent' && status.includes('overdue'));
+
+            // Payment status matching - more precise logic
+            let paymentMatch = true;
+            if (paymentStatusFilter) {
+                if (paymentStatusFilter === 'paid') {
+                    paymentMatch = paymentText.includes('paid') && !paymentText.includes('partial');
+                }
+                else if (paymentStatusFilter === 'partial') {
+                    paymentMatch = paymentText.includes('partial');
+                }
+                else if (paymentStatusFilter === 'unpaid') {
+                    paymentMatch = paymentText.includes('unpaid') && !paymentText.includes('partial');
+                }
+                else if (paymentStatusFilter === 'overdue') {
+                    paymentMatch = paymentText.includes('overdue');
+                }
+            }
+
+            // Amount matching
+            const amountMatch = amount >= minAmount && amount <= maxAmount;
+
+            // Show/hide based on all conditions
+            item.style.display = (statusMatch && paymentMatch && amountMatch) ? '' : 'none';
+        });
+    }
+});
+</script> -->
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const addMoreBtn = document.getElementById("addMoreBtn");
+    const itemsBody = document.getElementById("itemsBody");
+
+    function formatNumber(num) {
+      return num.toLocaleString('en-KE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function calculateRow(row) {
+      const unitInput = row.querySelector(".unit-price");
+      const quantityInput = row.querySelector(".quantity");
+      const vatSelect = row.querySelector(".vat-option");
+      const totalInput = row.querySelector(".total");
+
+      const unitPrice = parseFloat(unitInput?.value) || 0;
+      const quantity = parseFloat(quantityInput?.value) || 0;
+      let subtotal = unitPrice * quantity;
+
+      let vatAmount = 0;
+      let total = subtotal;
+      const vatType = vatSelect?.value;
+
+      if (vatType === "inclusive") {
+        subtotal = subtotal / 1.16;
+        vatAmount = total - subtotal;
+      } else if (vatType === "exclusive") {
+        vatAmount = subtotal * 0.16;
+        total += vatAmount;
+      } else if (vatType === "zero" || vatType === "exempted") {
+        vatAmount = 0;
+        total = subtotal;
+      }
+
+      totalInput.value = formatNumber(total);
+      return { subtotal, vatAmount, total, vatType };
+    }
+
+    function updateTotalAmount() {
+      let subtotalSum = 0, taxSum = 0, grandTotal = 0;
+      let vat16Used = false, vat0Used = false, exemptedUsed = false;
+
+      document.querySelectorAll("#itemsBody tr").forEach(row => {
+        if (row.querySelector(".unit-price")) {
+          const { subtotal, vatAmount, total, vatType } = calculateRow(row);
+          subtotalSum += subtotal;
+          taxSum += vatAmount;
+          grandTotal += total;
+
+          if (vatType === "inclusive" || vatType === "exclusive") {
+            vat16Used = true;
+          } else if (vatType === "zero") {
+            vat0Used = true;
+          } else if (vatType === "exempted") {
+            exemptedUsed = true;
+          }
+        }
+      });
+
+      createOrUpdateSummaryTable({ subtotalSum, taxSum, grandTotal, vat16Used, vat0Used, exemptedUsed });
+    }
+
+    function createOrUpdateSummaryTable({ subtotalSum, taxSum, grandTotal, vat16Used, vat0Used, exemptedUsed }) {
+      let summaryTable = document.querySelector(".summary-table");
+
+      if (!summaryTable) {
+        summaryTable = document.createElement("table");
+        summaryTable.className = "summary-table table table-bordered";
+        summaryTable.style = "width: 20%; float: right; font-size: 0.8rem; margin-top: 10px;";
+        summaryTable.innerHTML = `<tbody></tbody>`;
+        document.querySelector(".items-table").after(summaryTable);
+      }
+
+      const tbody = summaryTable.querySelector("tbody");
+      tbody.innerHTML = `
+        <tr>
+          <th style="width: 50%; padding: 5px; text-align: left;">Sub-total</th>
+          <td><input type="text" class="form-control" value="${formatNumber(subtotalSum)}" readonly style="padding: 5px;"></td>
+        </tr>
+        ${vat16Used ? `
+        <tr>
+          <th style="padding: 5px;">VAT 16%</th>
+          <td><input type="text" class="form-control" value="${formatNumber(taxSum)}" readonly style="padding: 5px;"></td>
+        </tr>` : ''}
+        ${vat0Used ? `
+        <tr>
+          <th style="padding: 5px;">VAT 0%</th>
+          <td><input type="text" class="form-control" value="0.00" readonly style="padding: 5px;"></td>
+        </tr>` : ''}
+        ${exemptedUsed ? `
+        <tr>
+          <th style="padding: 5px;">Exempted</th>
+          <td><input type="text" class="form-control" value="0.00" readonly style="padding: 5px;"></td>
+        </tr>` : ''}
+        <tr>
+          <th style="padding: 5px;">Total</th>
+          <td><input type="text" class="form-control" value="${formatNumber(grandTotal)}" readonly style="padding: 5px;"></td>
+        </tr>
+      `;
+    }
+
+    function attachEvents(row) {
+      ["input", "change"].forEach(evt => {
+        row.querySelectorAll(".unit-price, .quantity, .vat-option").forEach(input => {
+          input.addEventListener(evt, updateTotalAmount);
+        });
+      });
+    }
+
+    addMoreBtn.addEventListener("click", function () {
+      const newRow = document.createElement("tr");
+
+      newRow.innerHTML = `
+       <td style="min-width: 180px;">
+    <select name="account_item[]" class="form-select searchable-select" required>
+      <option value="" disabled selected>Select Account Item</option>
+      <?php foreach ($accountItems as $item): ?>
+        <option value="<?= htmlspecialchars($item['account_code']) ?>">
+          <?= htmlspecialchars($item['account_name']) ?>
+        </option>
+      <?php endforeach; ?>
+    </select>
+  </td>
+
+  <td style="min-width: 200px;">
+    <textarea name="description[]" class="form-control" placeholder="Description" rows="1" required></textarea>
+  </td>
+
+  <td style="min-width: 100px;">
+    <input type="number" name="quantity[]" class="form-control quantity" step="0.01" required>
+  </td>
+
+  <td style="min-width: 120px;">
+    <input type="number" name="unit_price[]" class="form-control unit-price" step="0.01" required>
+  </td>
+
+  <td style="min-width: 180px;">
+    <select name="vat_type[]" class="form-select vat-option" required>
+      <option value="" disabled selected>Select Option</option>
+      <option value="inclusive">VAT 16% Inclusive</option>
+      <option value="exclusive">VAT 16% Exclusive</option>
+      <option value="zero">Zero Rated</option>
+      <option value="exempted">Exempted</option>
+    </select>
+  </td>
+
+  <td style="min-width: 120px;">
+    <input type="text" name="total[]" class="form-control total" readonly>
+  </td>
+
+  <td style="min-width: 50px; text-align: center;">
+    <button type="button" class="btn btn-danger btn-sm delete-btn">
+      <i class="fa fa-trash"></i>
+    </button>
+  </td>
+      `;
+
+      itemsBody.appendChild(newRow);
+      attachEvents(newRow);
+      updateTotalAmount();
+    });
+
+    // Delete row
+    itemsBody.addEventListener("click", function (e) {
+      if (e.target.closest(".delete-btn")) {
+        e.target.closest("tr").remove();
+        updateTotalAmount();
+      }
+    });
+
+    // Attach events to any existing rows
+    document.querySelectorAll("#itemsBody tr").forEach(attachEvents);
+    updateTotalAmount();
+  });
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const itemsBody = document.getElementById("itemsBody");
+
+    // Trigger calculation on input changes
+    itemsBody.addEventListener("input", function (e) {
+        if (e.target.classList.contains("quantity") ||
+            e.target.classList.contains("unit-price") ||
+            e.target.classList.contains("vat-option")) {
+
+            const row = e.target.closest("tr");
+            calculateRowTotal(row);
+        }
+    });
+
+    // Recalculate total when tax option changes
+    itemsBody.addEventListener("change", function (e) {
+        if (e.target.classList.contains("vat-option")) {
+            const row = e.target.closest("tr");
+            calculateRowTotal(row);
+        }
+    });
+
+    function calculateRowTotal(row) {
+        const qty = parseFloat(row.querySelector(".quantity")?.value) || 0;
+        const price = parseFloat(row.querySelector(".unit-price")?.value) || 0;
+        const tax = row.querySelector(".vat-option")?.value;
+
+        let total = qty * price;
+
+        if (tax === "exclusive") {
+            total *= 1.16;
+        } // inclusive means total is already inclusive
+        // zero & exempted = no tax change
+
+        row.querySelector(".total").value = total.toFixed(2);
+    }
+});
+</script>
+
+
     <script>
         // Edit Invoice
         // function editInvoice(invoiceId) {
@@ -1492,25 +2830,56 @@ foreach ($invoices as $invoice) {
         // }
 
         // Confirm Delete Invoice
-        function confirmDeleteInvoice(invoiceId) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    deleteInvoice(invoiceId);
+       // Confirm Delete Invoice (Soft Delete with 30-day retention)
+       function confirmDeleteInvoice(invoiceId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This invoice will be marked for deletion and permanently removed after 30 days (only allowed for drafts or cancelled invoices with no payments).",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch('/Jengopay/AdminLTE/dist/pages/financials/invoices/action/delete_invoice.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'id=' + encodeURIComponent(invoiceId)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire(
+                        'Deleted!',
+                        'The invoice has been marked for deletion.',
+                        'success'
+                    ).then(() => location.reload());
+                } else {
+                    Swal.fire(
+                        'Not Allowed',
+                        data.message || 'This invoice cannot be deleted.',
+                        'warning'
+                    );
                 }
+            })
+            .catch(error => {
+                Swal.fire(
+                    'Error!',
+                    'Request failed: ' + error,
+                    'error'
+                );
             });
         }
+    });
+}
+
 
         // Delete Invoice
         function deleteInvoice(invoiceId) {
-            fetch('delete_invoice.php', {
+            fetch('/Jengopay/AdminLTE/dist/pages/financials/invoices/delete_invoice.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -1563,7 +2932,7 @@ foreach ($invoices as $invoice) {
 
         // Cancel Invoice - Updated version
         function cancelInvoice(invoiceId) {
-            fetch('cancel_invoice.php', {
+            fetch('/Jengopay/AdminLTE/dist/pages/financials/invoices/action/cancel_invoice.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -1659,7 +3028,7 @@ foreach ($invoices as $invoice) {
 
         // Restore Invoice - Updated version
         function restoreInvoice(invoiceId) {
-            fetch('restore_invoice.php', {
+            fetch('/Jengopay/AdminLTE/dist/pages/financials/action/restore_invoice.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -1713,9 +3082,12 @@ foreach ($invoices as $invoice) {
 
         // View Invoice Details
         function viewInvoice(invoiceId) {
-            window.location.href = 'invoice_details.php?id=' + invoiceId;
+            window.location.href = '/Jengopay/AdminLTE/dist/pages/financials/invoices/invoice_details.php?id=' + invoiceId;
         }
     </script>
+
+
+
 
     <!-- <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -1794,6 +3166,13 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script> -->
 
+<!-- <script>
+function filterFunction() {
+    // Add your filter logic here
+    console.log("Filter button clicked!");
+    // Example: Show/hide filter options, filter a list, etc.
+}
+</script> -->
     <script>
         function openPayModal(button) {
             // Get all invoice data from button attributes
@@ -1951,7 +3330,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     <!-- Main Js File -->
-    <script src="invoice.js"></script>
+    <!-- <script src="invoice.js"></script> -->
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
@@ -2001,6 +3380,131 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById("inspectionDate").setAttribute("min", today);
     </script>
 
+   <!-- <script>
+// // Store the original invoices data
+// let originalInvoices = [];
+// let displayedInvoices = [];
+// let activeFilters = [];
+
+// Handle window resize for responsive adjustments
+function handleResize() {
+  const windowWidth = window.innerWidth;
+
+  // Adjust layout based on screen size
+  const formRows = document.querySelectorAll('.form-row');
+
+  if (windowWidth < 768) {
+    // Mobile-specific adjustments
+    formRows.forEach(row => {
+      row.style.flexDirection = 'column';
+    });
+  } else {
+    // Desktop layout
+    formRows.forEach(row => {
+      row.style.flexDirection = 'row';
+    });
+  }
+}
+
+// Enhanced filter functionality
+// function applyFilter() {
+//   const filterField = document.getElementById('filterField');
+//   const searchInput = document.getElementById('searchInput');
+
+//   const selectedField = filterField.value;
+//   const selectedFieldText = filterField.options[filterField.selectedIndex].text;
+//   const searchValue = searchInput.value.trim().toLowerCase();
+
+//   if (searchValue === '') {
+//     alert('Please enter a search value');
+//     return;
+//   }
+
+//   // Add filter to active filters if not already present
+//   const filterExists = activeFilters.some(filter =>
+//     filter.field === selectedField && filter.value === searchValue
+//   );
+
+//   if (!filterExists) {
+//     activeFilters.push({
+//       field: selectedField,
+//       fieldText: selectedFieldText,
+//       value: searchValue
+//     });
+//     updateActiveFiltersDisplay();
+//     filterInvoices();
+//   }
+
+//   // Clear the search input
+//   searchInput.value = '';
+// }
+
+function updateActiveFiltersDisplay() {
+  const activeFiltersContainer = document.getElementById('activeFilters');
+  if (!activeFiltersContainer) return;
+
+  activeFiltersContainer.innerHTML = '';
+
+  if (activeFilters.length === 0) {
+    return;
+  }
+
+  const filtersTitle = document.createElement('span');
+  filtersTitle.textContent = 'Active Filters: ';
+  filtersTitle.style.marginRight = '10px';
+  activeFiltersContainer.appendChild(filtersTitle);
+
+  activeFilters.forEach((filter, index) => {
+    const filterTag = document.createElement('span');
+    filterTag.className = 'filter-tag';
+
+    const filterText = document.createElement('span');
+    filterText.textContent = `${filter.fieldText}: ${filter.value}`;
+    filterTag.appendChild(filterText);
+
+    const removeBtn = document.createElement('span');
+    removeBtn.className = 'remove-btn';
+    removeBtn.innerHTML = '&times;';
+    removeBtn.onclick = function(e) {
+      e.stopPropagation();
+      removeFilter(index);
+    };
+    filterTag.appendChild(removeBtn);
+
+    activeFiltersContainer.appendChild(filterTag);
+  });
+}
+
+function removeFilter(index) {
+  activeFilters.splice(index, 1);
+  updateActiveFiltersDisplay();
+  filterInvoices();
+}
+
+function filterInvoices() {
+  // Implement your actual filtering logic here
+  console.log('Filtering invoices with:', activeFilters);
+}
+
+// Initialize on DOM load
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize responsive layout
+  handleResize();
+
+  // Set up event listeners
+  window.addEventListener('resize', handleResize);
+
+  // Initialize filter input
+  // const searchInput = document.getElementById('searchInput');
+  // if (searchInput) {
+  //   searchInput.addEventListener('keyup', function(e) {
+  //     if (e.key === 'Enter') {
+  //       applyFilter();
+  //     }
+//   //   });
+//   }
+// });
+</script> -->
 
 
     <!-- pdf download plugin -->

@@ -1,6 +1,6 @@
 <?php
 // fetch_invoice_data.php
-require_once '../db/connect.php'; // Include your database connection file
+require_once '../../db/connect.php'; // Include your database connection file
 
 header('Content-Type: application/json');
 

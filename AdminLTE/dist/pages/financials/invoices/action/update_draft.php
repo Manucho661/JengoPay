@@ -1,5 +1,5 @@
 <?php
-require_once '../db/connect.php';
+require_once '../../db/connect.php';
 
 // Check if required data is present
 if (!isset($_POST['invoice_id']) || !isset($_POST['invoice_number'])) {

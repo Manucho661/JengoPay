@@ -2,7 +2,7 @@
 header('Content-Type: application/json');
 
 // Database connection
-require_once '../db/connect.php';
+require_once '../../db/connect.php';
 
 try {
     // Get parameters from GET request

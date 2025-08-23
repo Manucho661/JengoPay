@@ -1,6 +1,6 @@
 <?php
 // ---------- SET‑UP ----------
-include '../db/connect.php';      // PDO $pdo
+include '../../db/connect.php';      // PDO $pdo
 $id   = $_GET['id'] ?? null;      // if present we’ll show the details pane
 
 // small helper for status → badge colour
@@ -17,7 +17,7 @@ function statusClass(string $status): string
 ?>
 <?php
 // Include database connection
-include '../db/connect.php';
+include '../../db/connect.php';
 
 // Function to fetch invoice data
 function getInvoiceData($pdo, $invoiceId) {
@@ -130,7 +130,7 @@ $randomLogo = $logos[array_rand($logos)];
 
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../../../dist/css/adminlte.css"/>
+    <link rel="stylesheet" href="../../../../dist/css/adminlte.css"/>
     <!-- <link rel="stylesheet" href="invoices.css"> -->
     <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
@@ -387,7 +387,7 @@ hr {
             </div>
             <!--end::Sidebar Brand-->
             <!--begin::Sidebar Wrapper-->
-            <div> <?php include_once '../includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+            <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/AdminLTE/dist/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
             <!--end::Sidebar Wrapper-->
         </aside>
         <!--end::Sidebar-->
@@ -416,7 +416,7 @@ hr {
     <div class="invoice-list">
     <?php
 // Include your database connection
-include '../db/connect.php';
+include '../../db/connect.php';
 
 try {
   $sql = "
@@ -659,7 +659,7 @@ if (!$id) {
             <?php if (!empty($inv['unit_number'])): ?>
                 <div> <b><strong><?= htmlspecialchars($inv['unit_number']) ?></b></strong></div>
             <?php endif; ?>
-            <p><b>B20</b></p>
+            <!-- <p><b>B20</b></p> -->
         </div>
     </div>
     <!-- <div class="text-end">

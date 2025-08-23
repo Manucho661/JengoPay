@@ -1,5 +1,5 @@
 <?php
-require_once '../db/connect.php';   // $pdo comes from here
+require_once '../../../db/connect.php';   // $pdo comes from here
 
 header('Content-Type: application/json');
 

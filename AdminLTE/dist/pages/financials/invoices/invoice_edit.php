@@ -1,5 +1,5 @@
 <?php
-require_once '../db/connect.php';
+require_once '../../db/connect.php';
 
 // Check if invoice ID is provided
 if (!isset($_GET['id'])) {
@@ -37,7 +37,7 @@ $buildings = $pdo->query("SELECT * FROM buildings")->fetchAll();
 ?>
 
 <?php
-include '../db/connect.php';
+include '../../db/connect.php';
 
 $stmt = $pdo->prepare("SELECT account_code, account_name FROM chart_of_accounts ORDER BY account_name ASC");
 $stmt->execute();
@@ -172,8 +172,8 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../../../dist/css/adminlte.css"/>
-    <link rel="stylesheet" href="invoices.css">
+    <link rel="stylesheet" href="../../../../dist/css/adminlte.css"/>
+    <link rel="stylesheet" href="/Jengopay/AdminLTE/dist/pages/financials/invoices/css/invoices.css">
     <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
@@ -961,7 +961,7 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
         <!--begin::Header-->
-        <?php include_once '../includes/header.php' ?>
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/AdminLTE/dist/pages/includes/header.php'; ?>
         <!--end::Header-->
         <!--begin::Sidebar-->
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
@@ -983,7 +983,7 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
             <!--end::Sidebar Brand-->
             <!--begin::Sidebar Wrapper-->
-            <div> <?php include_once '../includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+            <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/AdminLTE/dist/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
             <!--end::Sidebar Wrapper-->
         </aside>
         <!--end::Sidebar-->
@@ -1030,7 +1030,7 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="form-section">
                         <h3 class="section-title">Tenant Details</h3>
                         <!-- <form method="POST" action="update_draft.php"> -->
-                        <!-- <form method="POST" action="<?= $isDraftEdit ? 'convert_draft.php' : 'update_draft.php' ?>"> -->
+                        <!-- <form method="POST" action="<?= $isDraftEdit ? '/Jengopay/AdminLTE/dist/pages/financials/invoices/action/convert_draft.php' : '/Jengopay/AdminLTE/dist/pages/financials/invoices/action/update_draft.php' ?>"> -->
                         <form method="POST" action="finalize_invoice.php">
 
                             <input type="hidden" name="invoice_id" value="<?= $invoiceData['id'] ?>">

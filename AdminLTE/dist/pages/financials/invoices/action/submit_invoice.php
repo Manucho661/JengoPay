@@ -1,5 +1,5 @@
 <?php
-include '../db/connect.php';
+include '../../../db/connect.php';
 
 function generateNextDraftNumber($pdo) {
     $stmt = $pdo->query("SELECT invoice_number FROM invoice WHERE invoice_number LIKE 'DFT%' ORDER BY id DESC LIMIT 1");
@@ -197,11 +197,11 @@ if (!empty($_FILES['attachment']['name'][0])) {
         echo json_encode([
             'success' => true,
             'invoice_number' => $invoice_number,
-            'redirect_url' => 'invoice.php?draft_saved=1'
+            'redirect_url' => '/Jengopay/AdminLTE/dist/pages/financials/invoices/invoice.php?draft_saved=1'
         ]);
     } else {
       $_SESSION['success_message'] = "✅ Submitted Successfully! Invoice #{$invoice_number} has been saved.";
-      header("Location: invoice.php");
+      header("Location: /Jengopay/AdminLTE/dist/pages/financials/invoices/invoice.php");
       exit;
 
     }
