@@ -314,34 +314,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-// create an expense
-document.getElementById("expenseForm").addEventListener("submit", function (e) {
-  e.preventDefault();
-  console.log('expenseForm working');
-
-  const form = document.getElementById("expenseForm");
-  const formData = new FormData(form);
-  for (let [key, value] of formData.entries()) {
-    console.log(`${key}: ${value}`);
-  }
-  fetch("actions/createExpense.php", {
-    method: "POST",
-    body: formData,
-  })
-    .then(response => response.text())
-    .then(data => {
-      console.log("Server response:", data);
-
-      // ✅ Reload the page without resubmission
-      window.location.href = window.location.href;
-    })
-    .catch(error => {
-      console.error("Error submitting form:", error);
-    });
-});
-
-
-
 // Display Pay Expense Modal
 function payExpense(expenseId, expectedAmountToPay) {
   const expenseIdInput = document.getElementById('expenseId');
