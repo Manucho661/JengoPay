@@ -1,6 +1,6 @@
 <?php
 // ---------- SET‑UP ----------
-include '../db/connect.php';      // PDO $pdo
+include '../../../db/connect.php';      // PDO $pdo
 $id   = $_GET['id'] ?? null;      // if present we’ll show the details pane
 
 // small helper for status → badge colour
@@ -65,8 +65,8 @@ function statusClass(string $status): string
 
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../../../dist/css/adminlte.css"/>
-    <link rel="stylesheet" href="invoices.css">
+    <link rel="stylesheet" href="../../../../dist/css/adminlte.css" />
+    <link rel="stylesheet" href="/Jengopay/AdminLTE/dist/pages/financials/invoices/css/invoices.css">
     <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
@@ -180,7 +180,7 @@ function statusClass(string $status): string
             </div>
             <!--end::Sidebar Brand-->
             <!--begin::Sidebar Wrapper-->
-            <div> <?php include_once '../includes/sidebar1.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+            <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/AdminLTE/dist/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
             <!--end::Sidebar Wrapper-->
         </aside>
         <!--end::Sidebar-->

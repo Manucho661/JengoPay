@@ -1,6 +1,7 @@
 <?php
 require_once 'actions/getLiabilities.php';
 require_once 'actions/getEquity.php';
+require_once 'actions/getRetainedEarnings.php';
 
 // formating negative numbers
 function formatAccounting($amount)
@@ -337,7 +338,11 @@ function formatAccounting($amount)
       </div>
       <!--end::Sidebar Brand-->
       <!--begin::Sidebar Wrapper-->
+<<<<<<< HEAD
       <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/AdminLTE/dist/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+=======
+      <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/JengoPay/AdminLTE/dist/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+>>>>>>> fb28413eee9c961bd340d8a00e429e816110e5ff
 
       <!--end::Sidebar Wrapper-->
     </aside>
@@ -447,12 +452,12 @@ function formatAccounting($amount)
                         <td></td>
                       </tr>
                       <?php foreach ($currentAssets as $item): ?>
-                        <?php if (in_array($item['name'], $mustDisplayedCurrentAssets ) || $item['amount'] > 0): ?>
-                        <tr class="sub-current-assets">
-                          <td class="sub-category"><?= htmlspecialchars($item['name']) ?></td>
-                          <td><?= number_format($item['amount'], 2) ?></td>
-                        </tr>
-                         <?php endif; ?>
+                        <?php if (in_array($item['name'], $mustDisplayedCurrentAssets) || $item['amount'] > 0): ?>
+                          <tr class="sub-current-assets">
+                            <td class="sub-category"><?= htmlspecialchars($item['name']) ?></td>
+                            <td><?= number_format($item['amount'], 2) ?></td>
+                          </tr>
+                        <?php endif; ?>
                       <?php endforeach; ?>
                       <tr class="sub-current-assets total fw-bold">
                         <td class="sub-category">Total Current Assets</td>
@@ -528,16 +533,25 @@ function formatAccounting($amount)
                         echo '</tr>';
                       }
 
+                      // ✅ Add $retainedEarnings under Equity section
+                      echo '<tr class="sub-current-assets">';
+                      echo '<td class="sub-category">Retained Earnings</td>';
+                      echo '<td>' . formatAccounting($retainedEarnings) . '</td>';
+                      echo '</tr>';
+
+                      // ✅ Total Equity (including retainedEarnings)
+                      $grandTotalEquity = $totalEquity + $retainedEarnings;
+
                       echo '<tr class="sub-current-assets total fw-bold">';
                       echo '<td class="sub-category">Total Equity</td>';
-                      echo '<td>' . formatAccounting($totalEquity) . '</td>';
+                      echo '<td>' . formatAccounting($grandTotalEquity) . '</td>';
                       echo '</tr>';
                       ?>
                       <!-- Total Liabilities & Equity -->
                       <?php
                       echo '<tr class="fw-bold">';
                       echo '<td> <div style="font-size:16px;">Total Liabilities & Equity </div> </td>';
-                      echo '<td>' . number_format($totalLiabilities + $totalEquity, 2) . '</td>';
+                      echo '<td>' . number_format($totalLiabilities + $grandTotalEquity, 2) . '</td>';
                       echo '</tr>';
                       ?>
                     </tbody>

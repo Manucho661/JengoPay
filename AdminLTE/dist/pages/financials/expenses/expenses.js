@@ -106,8 +106,23 @@ function combobox() {
         const noResultsElem = document.createElement('li');
         noResultsElem.className = 'no-results';
         noResultsElem.textContent = 'No matches found';
+
+        const registerSupplierLi = document.createElement('li');
+        registerSupplierLi.className = 'registerSupplier';
+
+        // ✅ Create button first
+        const registerSupplierButton = document.createElement('button');
+        registerSupplierButton.className = 'registerSupplierbtn';
+        registerSupplierButton.innerHTML = '<span class="plus-icon"></span> Create Supplier';
+
+        // ✅ Put button inside the <li>
+        registerSupplierLi.appendChild(registerSupplierButton);
+
+        // ✅ Append <li> after button is ready
         optionsList.appendChild(noResultsElem);
+        optionsList.appendChild(registerSupplierLi);
       }
+
     } else if (noResults) {
       noResults.remove();
     }
@@ -140,7 +155,7 @@ document.addEventListener("DOMContentLoaded", function () {
       bindItemHiddenInput(wrapper); // optional, if used
     }
   });
-  
+
   //Add Expenses
   function calculateTotal() {
     console.log('total fired');
@@ -176,8 +191,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (taxOption.includes('inclusive')) {
         hasInclusive = true;
         const basePrice = unitPrice / 1.16;
-              console.log(qty);
-              console.log(unitPrice);
+
         total = basePrice * qty * 1.16;
         itemTaxInclusive = (basePrice * qty * 0.16);
       } else if (taxOption.includes('exclusive')) {
@@ -202,14 +216,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (item_total) {
         // Extract discount From total
-        discountAmount= (discount/100)*total;
+        discountAmount = (discount / 100) * total;
         total = total - discountAmount;
         item_total.value = 'Ksh ' + total.toFixed(2);
         item_totalForStorage.value = total.toFixed(2);
       }
 
       // Remove discount, remove inclusive tax, add exclusive tax
-      subTotal += total;
+      subTotal = lineTotal;
       vatAmountInclusive += itemTaxInclusive;
       vatAmountExclusive += itemTaxExclusive;
       totalVat = vatAmountInclusive + vatAmountExclusive;
@@ -319,7 +333,7 @@ document.getElementById("expenseForm").addEventListener("submit", function (e) {
       console.log("Server response:", data);
 
       // ✅ Reload the page without resubmission
-        window.location.href = window.location.href;
+      window.location.href = window.location.href;
     })
     .catch(error => {
       console.error("Error submitting form:", error);
@@ -380,7 +394,7 @@ document.getElementById("payExpenseForm").addEventListener("submit", function (e
       console.log("Server response:", data);
 
       // ✅ Reload the page without resubmission
-        // window.location.href = window.location.href;
+      // window.location.href = window.location.href;
     })
     .catch(error => {
       console.error("Error submitting form:", error);

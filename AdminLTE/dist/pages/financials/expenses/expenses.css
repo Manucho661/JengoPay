@@ -616,3 +616,29 @@ hr {
   color: #999;
   font-style: italic;
 }
+
+.registerSupplier {
+  padding: 10px 15px;
+  color: black;
+  background-color: #E6EAF0;
+}
+.registerSupplierbtn{
+    padding: 8px 12px;
+    border: 0px;
+    border-radius: 5px;
+    color: black;
+    font-weight: 600;
+}
+.registerSupplierbtn:hover{
+  background-color: white;
+  color: black;
+}
+ .registerSupplierbtn::before {
+  content: "+ ";   /* The plus sign */
+  color: black;    /* Make it green */
+  font-weight: bold;
+  margin-right: 4px; /* Add spacing */
+}
+.registerSupplierbtn::before:hover{
+  color: #FFC107;
+}

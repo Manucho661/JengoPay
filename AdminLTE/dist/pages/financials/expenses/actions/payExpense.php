@@ -3,10 +3,10 @@ include '../../../db/connect.php';
 
 //To update the prepaid expense
 include '../../balanceSheet/actions/handleExpenses/handlePrepaidExpense.php';
-//handle owner contribution
-include '../../balanceSheet/actions/handleExpenses/handleOwnerContribution.php';
-//handle Retained EARNINGS
-include '../../balanceSheet/actions/handleExpenses/handleRetainedEarnings.php';
+
+//pay Expense journal
+include '../../../financials/actions/journals/payExpenseJournal.php';
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $expected_amount = $_POST['expected_amount'] ?? null;
         $amount         = $_POST['amountToPay'] ?? 0.00;
         $payment_date   = $_POST['payment_date'] ?? date('Y-m-d');
-        $payment_method = $_POST['payment_method'] ?? 'cash';
+        $paymentAccountId = $_POST['payment_account_id'] ?? '100';
         $reference      = $_POST['reference'] ?? '';
 
         if (!$expense_id) {
@@ -31,11 +31,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($exists == 0) {
             // Step 3: Insert into expense_payments
-            $stmt = $pdo->prepare("INSERT INTO expense_payments (expense_id, amount_paid, reference_no, payment_method, payment_date) 
+            $stmt = $pdo->prepare("INSERT INTO expense_payments (expense_id, amount_paid, reference_no, payment_account_id, payment_date) 
                                VALUES (?, ?, ?, ?, ?)");
-            $stmt->execute([$expense_id, $amount, $reference, $payment_method, $payment_date]);
-            handleOwnerContribution($amount);
-            handleRetainedEarnings($expected_amount);
+            $stmt->execute([$expense_id, $amount, $reference, $paymentAccountId, $payment_date]);
             // Step 4: Update the expenses table
             if ($amount == 0) {
                 $status = 'Unpaid';
@@ -54,6 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // update status
             $update = $pdo->prepare("UPDATE expenses SET status = ? WHERE id = ?");
             $update->execute([$status, $expense_id]);
+
+            // Handle Journal entries
+            recordExpensePaymentJournal($pdo, $expected_amount, $expense_id, $amount, $paymentAccountId, $payment_date);
             $pdo->commit();
 
             echo "✅ $status";
@@ -85,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 echo "⚠️ No payment found for this expense.";
             }
-
+            recordExpensePaymentJournal($pdo, $expected_amount, $expense_id, $amount, $paymentAccountId, $payment_date);
             $pdo->commit();
         }
     } catch (Exception $e) {

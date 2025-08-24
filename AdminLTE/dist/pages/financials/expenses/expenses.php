@@ -402,7 +402,7 @@ require_once 'actions/getBuildings.php'
                                                                             <option value="" selected disabled>Select--</option>
                                                                             <option value="inclusive">VAT 16% Inclusive</option>
                                                                             <option value="exclusive">VAT 16% Exclusive</option>
-                                                                            <option value="zeroRated">Zero Rated</option>
+                                                                            <option value="zerorated">Zero Rated</option>
                                                                             <option value="exempted">Exempted</option>
                                                                         </select>
                                                                     </div>
@@ -622,11 +622,10 @@ require_once 'actions/getBuildings.php'
 
                                                         <div class="mb-3">
                                                             <label for="paymentMethod" class="form-label">Payment Method</label>
-                                                            <select class="form-select shadow-none rounded-1" id="paymentMethod" name="payment_method" required>
-                                                                <option value="cash">Cash</option>
-                                                                <option value="mpesa">M-Pesa</option>
-                                                                <option value="bank">Bank Transfer</option>
-                                                                <option value="card">Card</option>
+                                                            <select class="form-select shadow-none rounded-1" id="paymentMethod" name="payment_account_id" required>
+                                                                <option value="100">Cash</option>
+                                                                <option value="110">M-Pesa</option>
+                                                                <option value="120">Bank Transfer</option>
                                                             </select>
                                                         </div>
 
