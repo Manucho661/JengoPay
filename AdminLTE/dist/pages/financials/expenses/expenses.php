@@ -491,7 +491,7 @@ require_once 'actions/getBuildings.php'
                                                     <div class="row mt-3">
                                                         <div class="col-md-12 d-flex justify-content-between">
                                                             <button type="button" class="btn btn-outline-warning text-dark shadow-none" onclick="addRow()">➕ Add More</button>
-                                                            <button type="submit" class="btn btn-secondary shadow-none">✕ Close</button>
+                                                            <!-- <button type="submit" class="btn btn-secondary shadow-none">✕ Close</button> -->
                                                             <button type="submit" class="btn btn-outline-warning text-dark shadow-none">✅ Submit</button>
                                                         </div>
                                                     </div>
@@ -855,6 +855,7 @@ require_once 'actions/getBuildings.php'
     <!-- Main Js File -->
     <script src="../../../../dist/js/adminlte.js"></script>
     <script src="expenses.js"></script>
+    <script type="module" src="./js/main.js"></script>
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
