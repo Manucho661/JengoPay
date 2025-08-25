@@ -4,6 +4,7 @@ ini_set('display_errors', 1);
 header('Content-Type: application/json');
 
 require_once '../../../db/connect.php';
+include_once '../../actions/journals/payInvoiceJournal.php';
 
 try {
     // Start transaction
@@ -63,6 +64,13 @@ try {
     $stmt->execute([$invoice_id]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     $total_paid = floatval($result['total_paid'] ?? 0);
+
+
+    $customerId = 10;
+    
+    $remaining  = $total_amount - $total_paid;
+    
+    createPayInvoiceJournal($pdo, $paymentId, $invoice_id, $customerId, $amount, $payment_method, $remaining, $total_amount);
 
     // 3. Determine invoice payment status
     $payment_status = 'unpaid';
