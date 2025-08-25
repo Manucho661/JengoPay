@@ -3293,7 +3293,8 @@ function filterFunction() {
                             // Refresh the page to update all data
                             window.location.reload();
                         } else {
-                            alert('❌ ' + (data.message || 'Failed to submit payment'));
+                        console.error("❌ Server returned error:", data); // <-- shows PHP error in console
+        alert('❌ ' + (data.message || 'Failed to submit payment'));
                         }
                     })
                     .catch(error => {

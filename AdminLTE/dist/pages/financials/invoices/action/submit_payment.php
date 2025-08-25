@@ -1,9 +1,10 @@
 <?php
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// ini_set('display_errors', 1);
 header('Content-Type: application/json');
 
 require_once '../../../db/connect.php';
+// Add the pay invoice journal
 include_once '../../actions/journals/payInvoiceJournal.php';
 
 try {
@@ -101,15 +102,14 @@ try {
             ? "Payment completed successfully! Invoice fully paid."
             : "Partial payment received. Remaining balance: KES " . number_format(max(0, $total_amount - $total_paid), 2)
     ]);
-} catch (Exception $e) {
-    // Rollback transaction on error
-    $pdo->rollBack();
-
-    // Log error for debugging
-    error_log("Payment Error: " . $e->getMessage());
-
+} catch (Throwable $e) {
+        if ($pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
     echo json_encode([
         'success' => false,
         'message' => $e->getMessage()
     ]);
+    exit;
+
 }
