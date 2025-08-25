@@ -56,6 +56,7 @@ try {
         $reference_number
     ]);
 
+    $paymentId = $pdo->lastInsertId();
     // 2. Calculate total paid for this invoice
     $stmt = $pdo->prepare("
         SELECT SUM(amount) AS total_paid
