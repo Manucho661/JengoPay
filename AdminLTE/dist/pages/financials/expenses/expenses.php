@@ -851,7 +851,40 @@ require_once 'actions/getBuildings.php'
             </div>
         </div>
 
+        <!-- Create new supplier -->
+        <div class="supplier-modal-overlay" id="supplierOverlay"></div>
+        <div class="supplier-modal" id="supplierModal">
+            <button class="supplier-close-btn" id="supplierCloseBtn">X</button>
+            <div class="d-flex">
+                <h4>
+                    <i class="fas fa-user-plus"></i> Register New Supplier
+                </h4>
 
+
+            </div>
+
+            <form id="supplierForm" class="supplier-form">
+                <label for="supplierKra">KRA Number</label>
+                <input type="text" id="supplierKra" name="kra" required>
+
+                <label for="supplierName">Supplier Name</label>
+                <input type="text" id="supplierName" name="name" required>
+
+                <label for="supplierEmail">Email</label>
+                <input type="email" id="supplierEmail" name="email" required>
+
+                <label for="supplierPhone">Phone</label>
+                <input type="text" id="supplierPhone" name="phone">
+
+                <label for="supplierAddress">Address</label>
+                <input type="text" id="supplierAddress" name="address">
+
+                <div class="supplier-form-actions">
+                    <button type="submit" class="supplier-submit-btn">Save</button>
+                    <button type="button" class="supplier-cancel-btn" id="supplierCancelBtn">Cancel</button>
+                </div>
+            </form>
+        </div>
     </div>
     <!--end::App Wrapper-->
 

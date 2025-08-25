@@ -602,7 +602,7 @@ hr {
 }
 
 .combo-option:hover {
-  background-color:#4C5D6E;
+  background-color: #4C5D6E;
   color: #FFC107;
 }
 
@@ -622,23 +622,137 @@ hr {
   color: black;
   background-color: #E6EAF0;
 }
-.registerSupplierbtn{
-    padding: 8px 12px;
-    border: 0px;
-    border-radius: 5px;
-    color: black;
-    font-weight: 600;
+
+.registerSupplierbtn {
+  padding: 8px 12px;
+  border: 0px;
+  border-radius: 5px;
+  color: black;
+  font-weight: 600;
 }
-.registerSupplierbtn:hover{
+
+.registerSupplierbtn:hover {
   background-color: white;
   color: black;
 }
- .registerSupplierbtn::before {
-  content: "+ ";   /* The plus sign */
-  color: black;    /* Make it green */
+
+.registerSupplierbtn::before {
+  content: "+ ";
+  /* The plus sign */
+  color: black;
+  /* Make it green */
   font-weight: bold;
-  margin-right: 4px; /* Add spacing */
+  margin-right: 4px;
+  /* Add spacing */
 }
-.registerSupplierbtn::before:hover{
+
+.registerSupplierbtn::before:hover {
   color: #FFC107;
+}
+
+
+/* The add supplier modal */
+.supplier-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  z-index: 1000;
+}
+
+/* Drawer modal */
+.supplier-modal {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  /* fully hidden */
+  width: 25%;
+  /* 1/4 of screen */
+  min-width: 300px;
+  /* keep usable on small screens */
+  height: 100%;
+  background: #fff;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3);
+  transition: right 0.3s ease-in-out;
+  padding: 20px;
+  z-index: 1001;
+  overflow-y: auto;
+}
+
+.supplier-modal-overlay.active {
+  display: block;
+}
+
+.supplier-modal.active {
+  right: 0;
+}
+
+/* Buttons */
+.supplier-close-btn {
+  background: gray;
+  border: none;
+  color: white;
+  padding: 6px;
+  cursor: pointer;
+  border-radius: 100%;
+  float: right;
+  font-size: 12px;
+}
+
+.supplier-open-btn {
+  margin: 20px;
+  padding: 10px 20px;
+  background: #002B5B;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Form styling */
+.supplier-form {
+  margin-top: 40px;
+}
+
+.supplier-form label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.supplier-form input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.supplier-form-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.supplier-submit-btn {
+  background: #002B5B;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  flex: 1;
+}
+
+.supplier-cancel-btn {
+  background: #ccc;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  flex: 1;
 }

@@ -59,10 +59,23 @@ export function combobox() {
         const registerSupplierLi = document.createElement('li');
         registerSupplierLi.className = 'registerSupplier';
 
-        // ✅ Create button first
+        // ✅ Create button
         const registerSupplierButton = document.createElement('button');
         registerSupplierButton.className = 'registerSupplierbtn';
+        registerSupplierButton.id = 'registerSupplierButton'; // <-- Added unique id
         registerSupplierButton.innerHTML = '<span class="plus-icon"></span> Create Supplier';
+
+        // ✅ Attach listener immediately
+        registerSupplierButton.addEventListener('click', () => {
+          const supplierOverlay = document.getElementById("supplierOverlay");
+          const supplierModal = document.getElementById("supplierModal");
+
+          if (supplierOverlay && supplierModal) {
+            supplierOverlay.classList.add("active");
+            supplierModal.classList.add("active");
+          }
+        });
+
 
         // ✅ Put button inside the <li>
         registerSupplierLi.appendChild(registerSupplierButton);
