@@ -574,10 +574,13 @@ require_once 'actions/getBuildings.php'
                                                             <button
                                                                 class="btn btn-sm d-inline-flex align-items-center gap-1 mt-2"
                                                                 style="background-color: #00192D; color: #FFC107; border: none; border-radius: 8px; padding: 6px 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;"
-                                                                onclick="payExpense(<?= htmlspecialchars(json_encode($exp['id']), ENT_QUOTES, 'UTF-8') ?>, <?= htmlspecialchars(json_encode($exp['total']), ENT_QUOTES, 'UTF-8') ?>)">
+                                                                data-action="pay-expense"
+                                                                data-expense-id="<?= (int)$exp['id'] ?>"
+                                                                data-expected-amount="<?= htmlspecialchars($exp['total'], ENT_QUOTES, 'UTF-8') ?>">
                                                                 <i class="bi bi-credit-card-fill"></i>
                                                                 Pay
                                                             </button>
+
                                                         <?php endif; ?>
                                                     </td>
 
@@ -668,7 +671,7 @@ require_once 'actions/getBuildings.php'
                                                         <!-- Header -->
                                                         <div class="d-flex justify-content-between align-items-start mb-3 position-relative" style="overflow: hidden;">
                                                             <div>
-                                                                <img id="expenseLogo" src="expensePdfLogo.png" alt="JengoPay Logo" class="expense-logo">
+                                                                <img id="expenseLogo" src="images/expensePdfLogo.png" alt="JengoPay Logo" class="expense-logo">
                                                             </div>
 
                                                             <!-- Diagonal PAID Label centered in the container -->
@@ -745,7 +748,7 @@ require_once 'actions/getBuildings.php'
                                                                 This Expense Note Belongs to.<br>
                                                                 Silver Spoon Towers
                                                                 <br>
-                                                                <p class="text-danger" id="overPaymentNote" style="display:none">The paid amount (<span class="bg-secondary text-white" id="paidAmount" ></span>) is more than the requied</p>
+                                                                <p class="text-danger" id="overPaymentNote" style="display:none">The paid amount (<span class="bg-secondary text-white" id="paidAmount"></span>) is more than the requied</p>
                                                             </div>
                                                             <div class="col-6">
                                                                 <table class="table table-borderless table-sm text-end mb-0">
@@ -1097,13 +1100,13 @@ require_once 'actions/getBuildings.php'
                         statusLabelElement.textContent = "PAID";
                         statusLabelElement.classList.remove("diagonal-unpaid-label"); // Remove the unpaid
                         statusLabelElement.classList.add("diagonal-paid-label");
-                    } else if(expense.status === "Overpaid"){
+                    } else if (expense.status === "Overpaid") {
                         statusLabelElement.textContent = "PAID";
                         statusLabelElement.classList.remove("diagonal-unpaid-label"); // Remove the unpaid
                         statusLabelElement.classList.add("diagonal-paid-label");
-                        document.getElementById("overPaymentNote").style.display="block";
-                        document.getElementById("paidAmount").textContent=`KES ${parseFloat(expense.amount_paid || 0).toLocaleString()}`;
-                    }else if (expense.status === "partially paid") {
+                        document.getElementById("overPaymentNote").style.display = "block";
+                        document.getElementById("paidAmount").textContent = `KES ${parseFloat(expense.amount_paid || 0).toLocaleString()}`;
+                    } else if (expense.status === "partially paid") {
                         statusLabelElement.textContent = "PARTIALLY PAID";
                         statusLabelElement.classList.remove("diagonal-unpaid-label"); // Remove the unpaid
                         statusLabelElement.classList.add("diagonal-partially-paid-label");
