@@ -1,6 +1,9 @@
 <?php
 include '../../../db/connect.php';
 
+// add invoice journal
+include_once '../../actions/journals/createInvoiceJournal.php';
+
 function generateNextDraftNumber($pdo) {
     $stmt = $pdo->query("SELECT invoice_number FROM invoice WHERE invoice_number LIKE 'DFT%' ORDER BY id DESC LIMIT 1");
     $last = $stmt->fetchColumn();
@@ -82,6 +85,11 @@ try {
         $status,
         $payment_status
     ]);
+
+    $invoiceId = $pdo->lastInsertId();
+
+    // call the invoice journal script
+    createInvoiceJournal($pdo, $invoiceId, $tenant_id, $account_items, $quantities, $unit_prices, $vat_type, $total);
 
     // --- Insert Line Items into invoice_items ---
     $itemStmt = $pdo->prepare("
