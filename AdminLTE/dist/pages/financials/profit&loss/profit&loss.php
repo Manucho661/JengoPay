@@ -1,5 +1,5 @@
 <?php
-include '../db/connect.php'; // adjust path as needed
+include '../../db/connect.php'; // adjust path as needed
 
 try {
   // Rent Total (account_item = 500)
@@ -265,7 +265,7 @@ WHERE item_account_code = '630'
 ?>
 
 <?php
-include '../db/connect.php';
+include '../../db/connect.php';
 
 // Calculate INCOME from invoice_items
 $incomeStmt = $pdo->query("SELECT SUM(total) AS income FROM invoice_items");
@@ -324,7 +324,7 @@ $netProfit = $income - $expenses;
 
   <!--end::Third Party Plugin(Bootstrap Icons)-->
   <!--begin::Required Plugin(AdminLTE)-->
-  <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
+  <link rel="stylesheet" href="../../../../dist/css/adminlte.css" />
   <!-- <link rel="stylesheet" href="text.css" /> -->
   <!--end::Required Plugin(AdminLTE)-->
   <!-- apexcharts -->
@@ -577,7 +577,7 @@ $netProfit = $income - $expenses;
       </div>
       <!--end::Sidebar Brand-->
       <!--begin::Sidebar Wrapper-->
-                  <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/AdminLTE/dist/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+      <div > <?php include_once '../../includes/sidebar.php'; ?>  </div> <!-- This is where the sidebar is inserted -->
         <!--end::Sidebar Wrapper-->
       </aside>
       <!--end::Sidebar-->
@@ -668,7 +668,7 @@ $netProfit = $income - $expenses;
                   <div class="col-12 col-md-4">
                     <label for="buildingFilter" class="form-label">Property</label>
                     <?php
-                    include '../db/connect.php';
+                    include '../../db/connect.php';
                     $buildings = $pdo->query("SELECT building_id, building_name FROM buildings ORDER BY building_name")->fetchAll(PDO::FETCH_ASSOC);
                     ?>
                     <select id="buildingFilter" class="form-control">
