@@ -1427,26 +1427,34 @@ header {
                             }
 
                             echo '<div class="invoice-item" onclick="openInvoiceDetails(' . $invoice['id'] . ')">';
-                            echo '<div class="invoice-checkbox">
-                            <input type="checkbox" onclick="event.stopPropagation()">
-                            </div>
-                            <div class="invoice-number">' . htmlspecialchars($invoice['invoice_number']) . '</div>
-                            <div class="invoice-customer" title="' . htmlspecialchars($invoice['description']) . '">
-                                ' . htmlspecialchars($tenantName) . '
-                            </div>
-                            <div class="invoice-date">' . $invoiceDate . '</div>
-                            <div class="invoice-date' . ($isOverdue ? ' text-danger' : '') . '">
-                                ' . $dueDate . '
-                            </div>
-                            <div class="invoice-amount">' . number_format($invoice['sub_total'], 2) . '</div>
-                            <div class="invoice-amount">' . htmlspecialchars($invoice['taxes'] ?: '0.00') . '</div>
-                            <div class="invoice-amount">' . number_format($invoice['total'], 2) . '</div>
-                            <div class="invoice-status">
-                                <span class="status-badge ' . $statusClass . '">' . $statusText . '</span>
-                            </div>
-                            <div class="invoice-status">
-              <span class="status-badge ' . $paymentStatusClass . '">' . $paymentStatusText . '</span>';
 
+                            echo '<div class="invoice-checkbox col-checkbox">
+                                    <input type="checkbox" onclick="event.stopPropagation()">
+                                  </div>';
+                            
+                            echo '<div class="invoice-number col-number">' . htmlspecialchars($invoice['invoice_number']) . '</div>';
+                            
+                            echo '<div class="invoice-customer col-customer" title="' . htmlspecialchars($invoice['description']) . '">'
+                                    . htmlspecialchars($tenantName) . '
+                                  </div>';
+                            
+                            echo '<div class="invoice-date col-date">' . $invoiceDate . '</div>';
+                            
+                            echo '<div class="invoice-date col-due-date' . ($isOverdue ? ' text-danger' : '') . '">' . $dueDate . '</div>';
+                            
+                            echo '<div class="invoice-sub-total col-sub-total">' . number_format($invoice['sub_total'], 2) . '</div>';
+                            
+                            echo '<div class="invoice-taxes col-taxes">' . htmlspecialchars($invoice['taxes'] ?: '0.00') . '</div>';
+                            
+                            echo '<div class="invoice-amount col-amount">' . number_format($invoice['total'], 2) . '</div>';
+                            
+                            echo '<div class="invoice-status col-status">
+                                    <span class="status-badge ' . $statusClass . '">' . $statusText . '</span>
+                                  </div>';
+                            
+                            echo '<div class="invoice-status col-payment-status">
+                                    <span class="status-badge ' . $paymentStatusClass . '">' . $paymentStatusText . '</span>';
+                            
                             // Show payment button if applicable - updated logic
                             if ($invoice['status'] !== 'draft' && $invoice['status'] !== 'cancelled' && $invoice['paid_amount'] < $invoice['total']) {
                                 $buttonText = $invoice['paid_amount'] > 0 ? 'Add Payment' : 'Pay';
@@ -1468,7 +1476,7 @@ header {
                             }
 
                             echo '</div>
-          <div class="invoice-actions dropdown">
+          <div class="invoice-actions col-actions dropdown">
               <button class="action-btn dropdown-toggle" onclick="event.stopPropagation()" data-bs-toggle="dropdown">
                   <i class="fas fa-ellipsis-v"></i>
               </button>
