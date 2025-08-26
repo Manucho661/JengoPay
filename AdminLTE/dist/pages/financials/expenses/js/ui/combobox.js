@@ -7,6 +7,7 @@ export function combobox() {
 
   // Toggle dropdown
   button.addEventListener('click', function (e) {
+    e.preventDefault();
     e.stopPropagation();
     optionsList.classList.toggle('show');
     if (optionsList.classList.contains('show')) {
@@ -50,8 +51,10 @@ export function combobox() {
 
     // Show "no results" message
     const noResults = optionsList.querySelector('.no-results');
+    const registerSupplierLi = optionsList.querySelector('.registerSupplier');
+
     if (!hasVisibleOptions) {
-      if (!noResults) {
+      if (!noResults && !registerSupplierLi) {
         const noResultsElem = document.createElement('li');
         noResultsElem.className = 'no-results';
         noResultsElem.textContent = 'No matches found';
@@ -59,13 +62,12 @@ export function combobox() {
         const registerSupplierLi = document.createElement('li');
         registerSupplierLi.className = 'registerSupplier';
 
-        // ✅ Create button
+        // ✅ Create button (only once)
         const registerSupplierButton = document.createElement('button');
         registerSupplierButton.className = 'registerSupplierbtn';
-        registerSupplierButton.id = 'registerSupplierButton'; // <-- Added unique id
+        registerSupplierButton.id = 'registerSupplierButton';
         registerSupplierButton.innerHTML = '<span class="plus-icon"></span> Create Supplier';
 
-        // ✅ Attach listener immediately
         registerSupplierButton.addEventListener('click', () => {
           const supplierOverlay = document.getElementById("supplierOverlay");
           const supplierModal = document.getElementById("supplierModal");
@@ -76,17 +78,14 @@ export function combobox() {
           }
         });
 
-
-        // ✅ Put button inside the <li>
         registerSupplierLi.appendChild(registerSupplierButton);
 
-        // ✅ Append <li> after button is ready
         optionsList.appendChild(noResultsElem);
         optionsList.appendChild(registerSupplierLi);
       }
-
-    } else if (noResults) {
-      noResults.remove();
+    } else {
+      if (noResults) noResults.remove();
+      if (registerSupplierLi) registerSupplierLi.remove();
     }
 
     optionsList.classList.add('show');

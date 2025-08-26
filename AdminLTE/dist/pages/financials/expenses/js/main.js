@@ -4,6 +4,7 @@ import { combobox } from "./ui/combobox.js";
 import { payExpense } from "./expenses/payExpense.js";
 import { setupExpenseCalculator } from "./expenses/expenseCalculator.js";
 import { initSupplierModal } from "./expenses/createSupplier.js";
+import { initSupplierListModal } from "./expenses/supplierList.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Document ready");
@@ -25,12 +26,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // ✅ Initialize supplier modal (close, form, etc.)
+  // ✅ Initialize supplier create modal
   initSupplierModal();
 
-  // ✅ Use event delegation so dynamically created button works
+  // ✅ Initialize supplier list modal
+  initSupplierListModal();
+
+  // ✅ Open supplier create modal on click
   document.addEventListener("click", (e) => {
-    if (e.target && e.target.id === "registerSupplierButton") {
+    if (e.target && (e.target.id === "registerSupplierButton" || e.target.id === "addSupplier")) {
       e.preventDefault();
       console.log("create supplier button clicked");
 
@@ -43,4 +47,21 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
+
+  // ✅ Open supplier list modal on click
+  document.addEventListener("click", (e) => {
+    if (e.target && e.target.id === "supplier-list-open-btn") {
+      e.preventDefault();
+      console.log("supplier list button clicked");
+
+      const listOverlay = document.getElementById("supplierListOverlay");
+      const listModal = document.getElementById("supplierListModal");
+
+      if (listOverlay && listModal) {
+        listOverlay.classList.add("active");
+        listModal.classList.add("active");
+      }
+    }
+  });
+
 });

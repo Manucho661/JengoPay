@@ -1,4 +1,4 @@
-import { createExpense, payExpense } from "./expenseApi.js";
+import { createExpense, payExpense, registerSupplier } from "./expenseApi.js";
 
 export function setupExpenseForms() {
   const expenseForm = document.getElementById("expenseForm");
@@ -19,5 +19,14 @@ export function setupExpenseForms() {
       console.log("Pay expense response:", result);
     //   window.location.reload();
     });
+  }
+
+  const registerSupplierForm = document.getElementById("supplierForm");
+  if(registerSupplierForm){
+    registerSupplierForm.addEventListener("submit", async(e)=>{
+      e.preventDefault();
+      const result = await registerSupplier(registerSupplierForm);
+      console.log("Register supplier response:", result);
+    })
   }
 }
