@@ -210,8 +210,26 @@ require_once 'actions/getBuildings.php'
             </div>
             <div class="app-content">
                 <div class="container-fluid">
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <p class="text-muted">Manage your expenses</p>
+                        </div>
+
+                        <div class="col-md-4 d-flex justify-content-end">
+                            <div>
+                                <button class="btn shadow-none text-white" id="supplier-list-open-btn"
+                                    style="background: linear-gradient(135deg, #00192D, #002B5B);">
+                                    Registered Suppliers
+                                </button>
+                                <button class="btn shadow-none text-white" id="addSupplier"
+                                    style="background: linear-gradient(135deg, #00192D, #002B5B);">
+                                    Register Supplier
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
                     <div class="row g-3 mb-4">
-                        <p class="text-muted">Manage your expenses</p>
                         <div class="col-md-3">
                             <div class="custom-select-wrapper">
                                 <div class="custom-select shadow-sm" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
@@ -885,6 +903,53 @@ require_once 'actions/getBuildings.php'
                 </div>
             </form>
         </div>
+
+        <!-- Registerd suppliers list -->
+        <!-- Overlay -->
+        <div class="supplier-list-overlay" id="supplierListOverlay"></div>
+
+        <!-- Modal -->
+        <div class="supplier-list-modal" id="supplierListModal">
+            <div class="supplier-list-header">
+                <h2>Suppliers</h2>
+                <button class="supplier-list-close-btn" id="supplierListCloseBtn">X</button>
+            </div>
+
+            <!-- Search bar -->
+            <div class="supplier-list-search">
+                <input type="text" id="supplierSearchInput" placeholder="Search by name...">
+                <button id="supplierSearchBtn">Search</button>
+            </div>
+
+            <!-- Supplier list -->
+            <div class="supplier-list" id="supplierList">
+                <div class="supplier-card">
+                    <div class="supplier-name">ABC Traders Ltd</div>
+                    <div class="supplier-detail">KRA PIN: P012345678A</div>
+                    <div class="supplier-detail">Email: abc@traders.com</div>
+                    <div class="supplier-detail">Phone: +254712345678</div>
+                    <div class="supplier-detail">Address: Nairobi, Kenya</div>
+                    <div class="supplier-detail">Supplied Items: 25</div>
+                </div>
+                <div class="supplier-card">
+                    <div class="supplier-name">Global Supplies</div>
+                    <div class="supplier-detail">KRA PIN: P098765432B</div>
+                    <div class="supplier-detail">Email: info@globalsupplies.com</div>
+                    <div class="supplier-detail">Phone: +254798765432</div>
+                    <div class="supplier-detail">Address: Mombasa, Kenya</div>
+                    <div class="supplier-detail">Supplied Items: 40</div>
+                </div>
+                <div class="supplier-card">
+                    <div class="supplier-name">FreshFarm Produce</div>
+                    <div class="supplier-detail">KRA PIN: P112233445C</div>
+                    <div class="supplier-detail">Email: contact@freshfarm.com</div>
+                    <div class="supplier-detail">Phone: +254701122334</div>
+                    <div class="supplier-detail">Address: Eldoret, Kenya</div>
+                    <div class="supplier-detail">Supplied Items: 15</div>
+                </div>
+            </div>
+        </div>
+
     </div>
     <!--end::App Wrapper-->
 

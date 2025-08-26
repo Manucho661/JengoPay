@@ -16,3 +16,12 @@ export async function payExpense(formElement) {
   });
   return response.text();
 }
+
+export async function registerSupplier(formElement){
+  const formData = new FormData(formElement);
+  const response = await fetch("actions/registerSupplier.php",{
+    method: "POST",
+    body: formData,
+  });
+  return response.text();
+}
