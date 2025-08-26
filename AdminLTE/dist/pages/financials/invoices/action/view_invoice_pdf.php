@@ -1,6 +1,6 @@
 <?php
 require_once('vendor/tecnickcom/tcpdf/tcpdf.php');
-require_once('../db/connect.php');
+require_once('../../db/connect.php');
 
 // Get invoice ID
 $id = $_GET['id'] ?? 0;

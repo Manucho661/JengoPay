@@ -570,34 +570,51 @@ if (!$id) {
         echo '<div class="placeholder">Invoice not found.</div>';
     } else {
         // ── Fetch line items from invoice_items table ──
-        $itemsStmt = $pdo->prepare("SELECT description, quantity, unit_price, vat_type, taxes, total FROM invoice_items WHERE invoice_number = ?");
-        $itemsStmt->execute([$inv['invoice_number']]);
+        // ── Fetch line items with account name from chart_of_accounts ──
+$itemsStmt = $pdo->prepare("
+SELECT 
+    ii.account_item, 
+    ca.account_name, 
+    ii.description, 
+    ii.quantity, 
+    ii.unit_price, 
+    ii.vat_type, 
+    ii.taxes, 
+    ii.total
+FROM invoice_items ii
+LEFT JOIN chart_of_accounts ca 
+    ON ii.account_item = ca.account_code
+WHERE ii.invoice_number = ?
+");
+$itemsStmt->execute([$inv['invoice_number']]);
 
-        $lineRows = '';
-        $subTotal = 0;
-        $vatTotal = 0;
-        $grandTotal = 0;
+$lineRows = '';
+$subTotal = 0;
+$vatTotal = 0;
+$grandTotal = 0;
 
-        while ($item = $itemsStmt->fetch(PDO::FETCH_ASSOC)) {
-            $qty = (float)$item['quantity'];
-            $price = (float)$item['unit_price'];
-            $tax = (float)$item['taxes'];
-            $lineTotal = (float)$item['total'];
-            $vatLabel = ucfirst($item['vat_type']);
+while ($item = $itemsStmt->fetch(PDO::FETCH_ASSOC)) {
+$qty = (float)$item['quantity'];
+$price = (float)$item['unit_price'];
+$tax = (float)$item['taxes'];
+$lineTotal = (float)$item['total'];
+$vatLabel = ucfirst($item['vat_type']);
 
-            $subTotal += $qty * $price;
-            $vatTotal += $tax;
-            $grandTotal += $lineTotal;
+$subTotal += $qty * $price;
+$vatTotal += $tax;
+$grandTotal += $lineTotal;
 
-            $lineRows .= "<tr>
-                <td>" . htmlspecialchars($item['description']) . "</td>
-                <td class='text-end'>{$qty}</td>
-                <td class='text-end'>KES " . number_format($price, 2) . "</td>
-                <td class='text-end'>{$vatLabel}</td>
-                <td class='text-end'>KES " . number_format($tax, 2) . "</td>
-               <td class='text-end'>KES " . number_format($qty * $price, 2) . "</td>
-            </tr>";
-        }
+$lineRows .= "<tr>
+    <td>" . htmlspecialchars($item['account_name']) . "</td>
+    <td>" . htmlspecialchars($item['description']) . "</td>
+    <td class='text-end'>{$qty}</td>
+    <td class='text-end'>KES " . number_format($price, 2) . "</td>
+    <td class='text-end'>{$vatLabel}</td>
+    <td class='text-end'>KES " . number_format($tax, 2) . "</td>
+    <td class='text-end'>KES " . number_format($qty * $price, 2) . "</td>
+</tr>";
+}
+
 
         // Determine payment status class and label
         $paymentStatus = strtolower($inv['payment_status']);
@@ -616,7 +633,7 @@ if (!$id) {
     <button type="button" class="btn me-2" style="color: #FFC107; background-color: #00192D;" onclick="window.print()">
         <i class="bi bi-printer-fill"></i> Print Invoice
     </button>
-    <a href="view_invoice_pdf.php?id=<?= $inv['id'] ?>" class="btn" style="color: #FFC107; background-color: #00192D;" download="invoice_<?= $inv['invoice_number'] ?>.pdf">
+    <a href="/Jengopay/AdminLTE/dist/pages/financials/invoices/action/view_invoice_pdf.php?id=<?= $inv['id'] ?>" class="btn" style="color: #FFC107; background-color: #00192D;" download="invoice_<?= $inv['invoice_number'] ?>.pdf">
         <i class="bi bi-download"></i> Download PDF
     </a>
 </div>
@@ -688,6 +705,8 @@ if (!$id) {
         <table class="table table-striped table-bordered rounded-2 table-sm thick-bordered-table">
             <thead class="table">
                 <tr class="custom-th">
+                    <!-- <th>Item</th> -->
+                    <th>Item</th> <!-- Rental Income -->
                     <th>Description</th>
                     <th class="text-end">Qty</th>
                     <th class="text-end">Unit Price</th>
