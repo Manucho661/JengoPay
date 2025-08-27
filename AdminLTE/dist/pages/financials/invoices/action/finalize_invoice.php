@@ -1,5 +1,5 @@
 <?php
-include '../db/connect.php';
+include '../../../db/connect.php';
 
 // 1. Collect data
 $invoiceId    = $_POST['invoice_id'];
@@ -132,5 +132,5 @@ foreach ($itemData as $item) {
 }
 
 // ✅ Done
-header("Location: invoice.php?message=Invoice finalized successfully!");
+header("Location:/Jengopay/AdminLTE/dist/pages/financials/invoices/invoice.php?message=Invoice finalized successfully!");
 exit;

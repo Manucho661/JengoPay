@@ -1017,7 +1017,6 @@ header {
             <div class="sidebar-brand">
                 <!--begin::Brand Link-->
                 <a href="./index.html" class="brand-link">
-
                     <!--begin::Brand Text-->
                     <span class="brand-text font-weight-light"><b class="p-2"
                             style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
@@ -1031,7 +1030,7 @@ header {
             </div>
             <!--end::Sidebar Brand-->
             <!--begin::Sidebar Wrapper-->
-            <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/JengoPay/AdminLTE/dist/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+            <div><?php include $_SERVER['DOCUMENT_ROOT'] . '/JengoPay/AdminLTE/dist/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
             <!--end::Sidebar Wrapper-->
         </aside>
         <!--end::Sidebar-->
@@ -1646,9 +1645,9 @@ header {
                             <button id="saveDraftBtn" class="btn btn-outline" style="color: #FFC107; background-color:#00192D;" type="button">
                                 <i class="fas fa-save"></i> Save Draft
                             </button>
-                            <button class="btn btn-primary" id="preview-invoice-btn" style="color: #FFC107; background-color:#00192D;">
+                            <!-- <button class="btn btn-primary" id="preview-invoice-btn" style="color: #FFC107; background-color:#00192D;">
                               
-                            </button>
+                            </button> -->
                         </div>
                     </div>
 

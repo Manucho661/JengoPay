@@ -633,7 +633,7 @@ $lineRows .= "<tr>
     <button type="button" class="btn me-2" style="color: #FFC107; background-color: #00192D;" onclick="window.print()">
         <i class="bi bi-printer-fill"></i> Print Invoice
     </button>
-    <a href="/Jengopay/AdminLTE/dist/pages/financials/invoices/action/view_invoice_pdf.php?id=<?= $inv['id'] ?>" class="btn" style="color: #FFC107; background-color: #00192D;" download="invoice_<?= $inv['invoice_number'] ?>.pdf">
+    <a href="\JengoPay\AdminLTE\dist\pages\financials\invoices\action\view_invoice_pdf.php"?id=<?= $inv['id'] ?>" class="btn" style="color: #FFC107; background-color: #00192D;" download="invoice_<?= $inv['invoice_number'] ?>.pdf">
         <i class="bi bi-download"></i> Download PDF
     </a>
 </div>

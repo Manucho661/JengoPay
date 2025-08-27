@@ -3,7 +3,7 @@ require_once '../../db/connect.php';
 
 // Check if invoice ID is provided
 if (!isset($_GET['id'])) {
-    header('Location: invoice.php');
+    header('Location:/Jengopay/AdminLTE/dist/pages/financials/invoices/invoice_edit.php');
     exit;
 }
 
@@ -16,7 +16,7 @@ $stmt->execute([$invoiceId]);
 $invoiceData = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$invoiceData) {
-    header('Location: invoice.php');
+    header('Location: /Jengopay/AdminLTE/dist/pages/financials/invoices/invoice_edit.php');
     exit;
 }
 
@@ -1008,9 +1008,9 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
                         <button id="saveDraftBtn" class="btn btn-outline" style="color: #FFC107; background-color:#00192D;" type="button">
                             <i class="fas fa-save"></i> Save Draft
                         </button>
-                        <button class="btn btn-primary" id="preview-invoice-btn" style="color: #FFC107; background-color:#00192D;">
+                        <!-- <button class="btn btn-primary" id="preview-invoice-btn" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-eye"></i> Preview
-                        </button>
+                        </button> -->
                     </div>
                 </div>
 
@@ -1031,7 +1031,8 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
                         <h3 class="section-title">Tenant Details</h3>
                         <!-- <form method="POST" action="update_draft.php"> -->
                         <!-- <form method="POST" action="<?= $isDraftEdit ? '/Jengopay/AdminLTE/dist/pages/financials/invoices/action/convert_draft.php' : '/Jengopay/AdminLTE/dist/pages/financials/invoices/action/update_draft.php' ?>"> -->
-                        <form method="POST" action="finalize_invoice.php">
+                        <form method="POST" action="/Jengopay/AdminLTE/dist/pages/financials/invoices/action/finalize_invoice.php">
+                        <!-- <form  id="myForm" method="POST" action="/Jengopay/AdminLTE/dist/pages/financials/invoices/action/submit_invoice.php" enctype="multipart/form-data"> -->
 
                             <input type="hidden" name="invoice_id" value="<?= $invoiceData['id'] ?>">
 
@@ -1370,7 +1371,7 @@ $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
 </script>
 
 
-<script src="invoice.js"></script>
+<script src="/Jengopay/AdminLTE/dist/pages/financials/invoices/js/invoice.js"></script>
 
 
     <script>
