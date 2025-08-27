@@ -339,7 +339,6 @@ function formatAccounting($amount)
       <!--end::Sidebar Brand-->
       <!--begin::Sidebar Wrapper-->
       <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/AdminLTE/dist/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
-
       <!--end::Sidebar Wrapper-->
     </aside>
     <!--end::Sidebar-->
