@@ -923,30 +923,16 @@ require_once 'actions/getBuildings.php'
 
             <!-- Supplier list -->
             <div class="supplier-list" id="supplierList">
+                <?php foreach($suppliers as $supplier):?>
                 <div class="supplier-card">
-                    <div class="supplier-name">ABC Traders Ltd</div>
-                    <div class="supplier-detail">KRA PIN: P012345678A</div>
-                    <div class="supplier-detail">Email: abc@traders.com</div>
-                    <div class="supplier-detail">Phone: +254712345678</div>
-                    <div class="supplier-detail">Address: Nairobi, Kenya</div>
+                    <div class="supplier-name"><?= $supplier['supplier_name'] ?></div>
+                    <div class="supplier-detail">KRA PIN: <?= $supplier['kra_pin'] ?></div>
+                    <div class="supplier-detail">Email: <?= $supplier['email'] ?></div>
+                    <div class="supplier-detail">Phone: <?= $supplier['phone'] ?></div>
+                    <div class="supplier-detail">Address: <?= $supplier['address'] ?>, Nairobi</div>
                     <div class="supplier-detail">Supplied Items: 25</div>
                 </div>
-                <div class="supplier-card">
-                    <div class="supplier-name">Global Supplies</div>
-                    <div class="supplier-detail">KRA PIN: P098765432B</div>
-                    <div class="supplier-detail">Email: info@globalsupplies.com</div>
-                    <div class="supplier-detail">Phone: +254798765432</div>
-                    <div class="supplier-detail">Address: Mombasa, Kenya</div>
-                    <div class="supplier-detail">Supplied Items: 40</div>
-                </div>
-                <div class="supplier-card">
-                    <div class="supplier-name">FreshFarm Produce</div>
-                    <div class="supplier-detail">KRA PIN: P112233445C</div>
-                    <div class="supplier-detail">Email: contact@freshfarm.com</div>
-                    <div class="supplier-detail">Phone: +254701122334</div>
-                    <div class="supplier-detail">Address: Eldoret, Kenya</div>
-                    <div class="supplier-detail">Supplied Items: 15</div>
-                </div>
+                <?php endforeach ?>
             </div>
         </div>
 
