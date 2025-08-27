@@ -794,7 +794,7 @@ $lineRows .= "<tr>
 
 
     <!-- Main Js File -->
-    <script src="invoice.js"></script>
+    <script src="/Jengopay/AdminLTE/dist/pages/financials/invoices/js/invoice.js"></script>
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
