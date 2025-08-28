@@ -7,7 +7,7 @@ export function setupExpenseForms() {
       e.preventDefault();
       const result = await createExpense(expenseForm);
       console.log("Created expense:", result);
-    //   window.location.reload();
+      window.location.reload();
     });
   }
 
@@ -17,13 +17,13 @@ export function setupExpenseForms() {
       e.preventDefault();
       const result = await payExpense(payExpenseForm);
       console.log("Pay expense response:", result);
-    //   window.location.reload();
+      window.location.reload();
     });
   }
 
   const registerSupplierForm = document.getElementById("supplierForm");
-  if(registerSupplierForm){
-    registerSupplierForm.addEventListener("submit", async(e)=>{
+  if (registerSupplierForm) {
+    registerSupplierForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const result = await registerSupplier(registerSupplierForm);
       console.log("Register supplier response:", result);
