@@ -1,7 +1,7 @@
 <?php
 include '../../../db/connect.php';
 // expense journal
-include '../../../financials/actions/journals/expenseJournal.php';
+include './journals/expenseJournal.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
@@ -114,9 +114,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Credit Accounts Payable (gross)
             addJournalLine($pdo, $journalId, 300, 0.00, $amount + $tax_amount);
 
-            // Debit VAT receivable (only if tax exists)
+            // Debit VAT payable (only if tax exists)
             if ($tax_amount > 0) {
-                addJournalLine($pdo, $journalId, 710, $tax_amount, 0.00);
+                addJournalLine($pdo, $journalId, 325, $tax_amount, 0.00);
             }
             echo $tax_amount;
         }

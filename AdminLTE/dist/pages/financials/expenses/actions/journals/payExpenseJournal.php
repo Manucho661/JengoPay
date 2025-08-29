@@ -2,6 +2,8 @@
 // payExpenseJournal.php
 
 function recordExpensePaymentJournal($pdo, $expected_amount, $expense_id, $amount, $paymentAccountId, $payment_date) {
+
+    echo "yoyoyoy";
     try {
         // Insert into journal_entries
         $stmtEntry = $pdo->prepare("INSERT INTO journal_entries 
@@ -38,6 +40,9 @@ function recordExpensePaymentJournal($pdo, $expected_amount, $expense_id, $amoun
         } else {
             // ✅ Overpayment → Prepaid Expense
             $overpay = $amount - $expected_amount;
+
+            echo $overpay;
+            echo "hhaha";
 
             // Pay off remaining
             $stmtLine->execute([$journalEntryId, $paymentAccountId, 0.00, $expected_amount]); // Credit Bank

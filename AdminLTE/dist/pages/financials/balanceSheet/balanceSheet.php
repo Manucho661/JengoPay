@@ -400,7 +400,7 @@ function formatAccounting($amount)
                 <button class="btn rounded-circle shadow-sm" id="downloadBtn" style="background-color: #FFC107; border: none;">
                   <i class="fas fa-file-pdf" style="font-size: 24px; color: #00192D;"></i>
                 </button>
-                <button class="btn rounded-circle shadow-sm" onclick="exportToExcel()" style="background-color: #FFC107; border: none;">
+                <button class="btn rounded-circle shadow-sm" id="exportToExcel" style="background-color: #FFC107; border: none;">
                   <i class="fas fa-file-excel" style="font-size: 24px; color: #00192D;"></i>
                 </button>
               </div>
@@ -582,167 +582,9 @@ function formatAccounting($amount)
   </div>
   <!--end::App Wrapper-->
 
-
-
-
-  <!-- Overlay Cards -->
-
-
-  <!-- Lease Modal -->
-  <div class="modal fadey" id="leaseyModal" tabindex="-1" aria-labelledby="leaseyModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="leaseyModalLabel"></h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="container">
-            <div class="form-wrapper">
-              <h1 class="text-warning">Assign Task</h1>
-              <form id="taskForm">
-                <div class="input-group">
-                  <label for="taskName">Task About To Be Assigned:</label>
-                  <input type="text" id="taskName" name="taskName" placeholder="Enter task name" style="border-radius: 10px; width: 100%;" required>
-                </div>
-
-                <div class="input-group">
-                  <label for="serviceProvider">Select A Category For The Task</label>
-                  <label for="taskName"></label>
-                  <select id="serviceProvider" name="serviceProvider" style="border-radius: 10px;" required>
-                    <option value="" id="taskName" disabled selected>Select A Category </option>
-                    <option value="John">Electrical</option>
-                    <option value="Jane">Plumbing</option>
-                    <option value="Mike">Cleaning</option>
-                  </select>
-                </div>
-                <div class="input-group">
-                  <label for="serviceProvider">Select Service Provider:</label>
-                  <select id="serviceProvider" name="serviceProvider" style="border-radius: 10px;" required>
-                    <option value="" id="taskName" disabled selected>Select Provider</option>
-                    <option value="John">John </option>
-                    <option value="Jane">Jane </option>
-                    <option value="Mike">Mike </option>
-                  </select>
-                </div>
-                <button type="submit" class="submit-btn" style="border-radius: 10px; background-color: #00192D; width: 50%; margin-left: 6rem;">Assign</button>
-              </form>
-            </div>
-
-            <!-- <div id="assignedTasks">
-              <h2>Assigned Tasks</h2>
-              <ul id="taskList"></ul>
-          </div> -->
-          </div>
-
-
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Lease Modal -->
-  <div class="modal fade" id="leaseModal" tabindex="-1" aria-labelledby="leaseModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="leaseModalLabel"></h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form class="beasy">
-            <!-- Landlord Information Section -->
-            <!-- Service Provider Information Section -->
-            <div class="form-section">
-              <h3 class="text-warning">Landlord Information</h3>
-              <a href="#">
-                <p>Martin White</p>
-              </a>
-              <!-- <label for="landlordName">Landlord Name(Martin White)</label> -->
-              <!-- <input type="text" id="landlordName" name="landlordName" placeholder="Enter your full name" required> -->
-
-              <h3 class="text-warning">Select Service Providers Information</h3>
-              <label for="paymentMethod">Choose:</label>
-              <select id="paymentMethod" name="paymentMethod" required>
-                <option value="bank_transfer">ABX Electricals</option>
-                <option value="bank_transfer">Sunsine Plumbers</option>
-                <option value="bank_transfer">Favored Technologies</option>
-              </select>
-              <h3 class="text-warning">Payment Details</h3>
-              <label for="amount">Payment Amount (KSH)</label>
-              <input type="text" id="landlordName" name="landlordName" placeholder="Enter Amount" required>
-
-              <label for="paymentMethod">Payment Method</label>
-              <select id="paymentMethod" name="paymentMethod" required>
-                <option value="mpesa_transfer" class="bossy">MPESA</option>
-                <option value="mpesa_transfer" class="bossy">Bank</option>
-                <option value="mpesa_transfer" class="bossy">Global Pay</option>
-                <option value="mpesa_transfer" class="bossy">Cash</option>
-
-              </select>
-              <!-- Submit Button -->
-              <button type="submit" class="bossy"> MAKE PAYMENT</button>
-            </div>
-
-
-
-            <!-- Payment Details Section
-      <div class="form-section">
-        <h3>Payment Details</h3>
-        <label for="amount">Payment Amount (KSH)</label>
-        <input type="number" id="amount" name="amount" placeholder="Enter the amount to pay" min="1" required>
-
-        <label for="paymentMethod">Payment Method</label>
-        <select id="paymentMethod" name="paymentMethod" required>
-          <option value="mpesa_transfer" class="bossy">MPESA</option>
-        </select>
-      </div> -->
-
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- End view announcement -->
-  <!-- end overlay card. -->
-
-  <!--begin::Script-->
-  <!--begin::Third Party Plugin(OverlayScrollbars)-->
-
-
-
   <!-- Overlay scripts -->
   <!-- View announcements script -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
-  <script>
-    const more_announcement = document.getElementById('more_announcement_btn');
-    const view_announcement = document.getElementById('view_announcement');
-    const close_overlay = document.getElementById("close-overlay-btn");
-
-    more_announcement.addEventListener('click', () => {
-
-      view_announcement.style.display = "flex";
-      document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
-      const now = new Date();
-      const formattedTime = now.toLocaleString(); // Format the date and time
-      timestamp.textContent = `Sent on: ${formattedTime}`;
-
-
-    });
-
-    close_overlay.addEventListener('click', () => {
-
-      view_announcement.style.display = "none";
-      document.querySelector('.app-wrapper').style.opacity = '1';
-
-
-    });
-  </script>
-
-  <!-- End view announcement script -->
 
   <script>
     // Function to toggle the visibility of the overlay
@@ -769,40 +611,6 @@ function formatAccounting($amount)
     crossorigin="anonymous"></script>
   <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
 
-
-
-  <!-- more options -->
-  <script>
-    // JavaScript to handle hover and hide functionality
-    const more = document.getElementById("more");
-    const more_icon = document.getElementById("more_icon");
-    const more_options = document.getElementById("more_options");
-
-    // Show panel when hovering over the accordion
-    more_icon.addEventListener("mouseenter", () => {
-      more_options.style.display = "block";
-    });
-
-    // Hide panel when moving out of both accordion and panel
-    more.addEventListener("mouseleave", () => {
-      more_options.style.display = "none";
-    });
-  </script>
-  <!-- Begin script for datatable -->
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      let table = $('#maintenanc').DataTable({
-        lengthChange: false, // Removes "Show [X] entries"
-        dom: 't<"bottom"p>', // Removes default search bar & keeps only table + pagination
-      });
-
-      // Link custom search box to DataTables search
-      $('#searchInput').on('keyup', function() {
-        table.search(this.value).draw();
-      });
-    });
-  </script>
-
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
@@ -823,116 +631,6 @@ function formatAccounting($amount)
 
 -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const addRowButton = document.getElementById("addRow");
-      const tableBody = document.querySelector("tbody");
-
-      function createNewRow() {
-        const newRow = document.createElement("tr");
-        newRow.innerHTML = `
-                <td>
-                    <select class="form-select">
-                        <option selected disabled>Expense</option>
-                        <option>Rent</option>
-                        <option>Water</option>
-                        <option>Internet</option>
-                        <option>Taxes</option>
-                        <option>Salaries</option>
-                        <option>Others</option>
-                    </select>
-                </td>
-                <td><textarea class="form-control" rows="2" placeholder="Enter details"></textarea></td>
-                <td><input type="text" class="form-control" placeholder="123"></td>
-                <td><input type="number" class="form-control" placeholder="1"></td>
-                <td><input type="number" class="form-control" placeholder="123"></td>
-                <td><button type="button" class="btn btn-danger remove-row">Delete</button></td>
-            `;
-
-        newRow.querySelector(".remove-row").addEventListener("click", function() {
-          newRow.remove();
-          checkIfTableEmpty();
-        });
-
-        return newRow;
-      }
-
-      function checkIfTableEmpty() {
-        if (tableBody.children.length === 0) {
-          tableBody.appendChild(createNewRow()); // Add default row if empty
-        }
-      }
-
-      addRowButton.addEventListener("click", function() {
-        tableBody.appendChild(createNewRow());
-      });
-
-      // Initialize the first row in case user removes all
-      checkIfTableEmpty();
-    });
-  </script>
-
-
-
-  <!-- BalanceTable scripts -->
-
-  <script>
-    function exportToPDF() {
-      const {
-        jsPDF
-      } = window.jspdf;
-      let doc = new jsPDF();
-
-      doc.text("BALANCE_SHEET/DHABITI PROPERTIES ", 10, 10); // Title
-
-      let table = document.getElementById("myTable");
-      let rows = [];
-
-      for (let i = 0; i < table.rows.length; i++) {
-        let row = [];
-        for (let j = 0; j < table.rows[i].cells.length; j++) {
-          row.push(table.rows[i].cells[j].innerText);
-        }
-        rows.push(row);
-      }
-
-      doc.autoTable({
-        head: [rows[0]], // Table Headers
-        body: rows.slice(1), // Table Data
-      });
-
-      doc.save("table_data.pdf");
-    }
-
-    function exportToExcel() {
-      let table = document.getElementById("myTable");
-      let workbook = XLSX.utils.table_to_book(table, {
-        sheet: "Sheet1"
-      });
-      let excelFile = XLSX.write(workbook, {
-        bookType: 'xlsx',
-        type: 'array'
-      });
-      let blob = new Blob([excelFile], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      });
-      saveAs(blob, "table_data.xlsx");
-    }
-  </script>
-
-  </script>
-  <!-- End script for data_table -->
-
-  <!--Begin sidebar script -->
-  <script>
-    fetch('../bars/sidebar.html') // Fetch the file
-      .then(response => response.text()) // Convert it to text
-      .then(data => {
-        document.getElementById('sidebar').innerHTML = data; // Insert it
-      })
-      .catch(error => console.error('Error loading the file:', error)); // Handle errors
-  </script>
-  <!-- end sidebar script -->
 
 
 
@@ -946,30 +644,7 @@ function formatAccounting($amount)
   <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
   <script src="../../../../dist/js/adminlte.js"></script>
   <script type="module" src="./js/main.js"></script>
-  <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
-  <script>
-    const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-    const Default = {
-      scrollbarTheme: 'os-theme-light',
-      scrollbarAutoHide: 'leave',
-      scrollbarClickScroll: true,
-    };
-    document.addEventListener('DOMContentLoaded', function() {
-      const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-      if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
-        OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-          scrollbars: {
-            theme: Default.scrollbarTheme,
-            autoHide: Default.scrollbarAutoHide,
-            clickScroll: Default.scrollbarClickScroll,
-          },
-        });
-      }
-    });
-  </script>
-  <!--end::OverlayScrollbars Configure-->
-  <!-- OPTIONAL SCRIPTS -->
-  <!-- apexcharts -->
+
   <script
     src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
     integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="

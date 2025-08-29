@@ -17,7 +17,7 @@ export function setupExpenseForms() {
       e.preventDefault();
       const result = await payExpense(payExpenseForm);
       console.log("Pay expense response:", result);
-      window.location.reload();
+      // window.location.reload();
     });
   }
 
