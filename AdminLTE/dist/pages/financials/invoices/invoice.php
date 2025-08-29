@@ -1210,9 +1210,17 @@ header {
                             <!-- <button class="btn btn-outline" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-download"></i> Export
                         </button> -->
+<!-- Payments Button -->
+<button class="btn" style="color: #FFC107; background-color:#00192D;" data-bs-toggle="modal" data-bs-target="#paymentsModal">
+  <i class="fas fa-money-bill-wave"></i> Payments
+</button>
+
+
                             <button class="btn" id="create-invoice-btn" style="color: #FFC107; background-color:#00192D;">
                                 <i class="fas fa-plus"></i> Create Invoice
                             </button>
+
+                            
                         </div>
                     </div>
 
@@ -1601,6 +1609,217 @@ header {
                             </div>
                         </div>
 
+
+
+                        <!-- PAYMENTS MODAL -->
+<div class="modal fade" id="paymentsModal" tabindex="-1" aria-labelledby="paymentsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header" style="background-color:#00192D; color:#FFC107;">
+        <h5 class="modal-title" id="paymentsModalLabel">
+          <i class="fas fa-money-bill-wave"></i> Payments Made
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+        <div class="container">
+          <!-- Payments Toggle Button -->
+          <button class="btn btn-payments mb-3" id="paymentsToggle">
+            <span><i class="fa-solid fa-file-invoice-dollar me-2"></i> PAYMENT HISTORY</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          
+          <!-- Payments Container (initially hidden, toggle with JS) -->
+          <div class="payments-container" id="paymentsContainer" style="display:none;">
+            <div class="header text-center mb-4">
+              <h1><i class="fa-solid fa-file-invoice-dollar me-2"></i>Invoice Payment System</h1>
+              <p class="lead">Manage payments and view payment history</p>
+            </div>
+
+            <!-- Stats -->
+            <div class="row text-center mb-4">
+              <div class="col-md-4">
+                <div class="stats-box">
+                  <i class="fa-solid fa-sack-dollar"></i>
+                  <h3>KES 12,500.00</h3>
+                  <p>Total Amount</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="stats-box">
+                  <i class="fa-solid fa-circle-check"></i>
+                  <h3>KES 12,500.00</h3>
+                  <p>Amount Paid</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="stats-box">
+                  <i class="fa-solid fa-clock"></i>
+                  <h3>KES 0.00</h3>
+                  <p>Remaining Balance</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Invoice Details + History -->
+            <div class="card">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="fa-solid fa-receipt me-2"></i>Invoice Details</span>
+                <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#newPaymentModal">
+                  <i class="fa-solid fa-plus me-1"></i> New Payment
+                </button>
+              </div>
+              <div class="card-body">
+                <div class="row mb-4">
+                  <div class="col-md-3"><strong>Invoice ID:</strong> INV-2023-005</div>
+                  <div class="col-md-3"><strong>Tenant:</strong> Umbrella Corp</div>
+                  <div class="col-md-3"><strong>Due Date:</strong> May 25, 2023</div>
+                  <div class="col-md-3"><strong>Status:</strong> <span class="badge bg-success">Paid</span></div>
+                </div>
+
+                <h5 class="border-bottom pb-2"><i class="fa-solid fa-clock-rotate-left me-2"></i>Payment History</h5>
+                <div class="payment-history">
+                  <!-- Payment Item 1 -->
+                  <div class="payment-item mb-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <strong>Payment Date:</strong> May 20, 2023
+                        <strong class="ms-3">Method:</strong> MPESA
+                      </div>
+                      <div class="d-flex align-items-center">
+                        <span class="badge bg-success me-3">Paid</span>
+                        <button class="btn btn-sm btn-outline-warning edit-btn" data-bs-toggle="modal" data-bs-target="#editPaymentModal">
+                          <i class="fa-solid fa-pen me-1"></i> Edit
+                        </button>
+                      </div>
+                    </div>
+                    <div class="mt-3 row">
+                      <div class="col-md-6"><strong>Reference:</strong> NLJ87H5J</div>
+                      <div class="col-md-6 d-flex justify-content-between align-items-center">
+                        <strong>Amount:</strong> <span class="text-success fw-bold">KES 7,500.00</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Payment Item 2 -->
+                  <div class="payment-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <strong>Payment Date:</strong> May 10, 2023
+                        <strong class="ms-3">Method:</strong> Bank Transfer
+                      </div>
+                      <div class="d-flex align-items-center">
+                        <span class="badge bg-success me-3">Paid</span>
+                        <button class="btn btn-sm btn-outline-warning edit-btn" data-bs-toggle="modal" data-bs-target="#editPaymentModal">
+                          <i class="fa-solid fa-pen me-1"></i> Edit
+                        </button>
+                      </div>
+                    </div>
+                    <div class="mt-3 row">
+                      <div class="col-md-6"><strong>Reference:</strong> BKT634SD</div>
+                      <div class="col-md-6 d-flex justify-content-between align-items-center">
+                        <strong>Amount:</strong> <span class="text-success fw-bold">KES 5,000.00</span>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div><!-- End Payments Container -->
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- EDIT PAYMENT MODAL -->
+<div class="modal fade" id="editPaymentModal" tabindex="-1" aria-labelledby="editPaymentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <form id="editPaymentForm">
+      <div class="modal-content shadow-lg border-0 rounded-4">
+
+        <!-- Header -->
+        <div class="modal-header">
+          <h5 class="modal-title text-warning fw-semibold" id="editPaymentModalLabel">
+            <i class="fa-solid fa-pen-to-dollar me-2"></i> Edit Payment
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body px-4 py-4 bg-light-subtle">
+          <input type="hidden" name="payment_id" id="editPaymentId">
+          <input type="hidden" name="invoice_id" id="editInvoiceId">
+
+          <div class="row g-4">
+            <!-- Payment Date -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold text-dark"><i class="fa-regular fa-calendar-days text-warning me-1"></i> Payment Date</label>
+              <input type="date" class="form-control border-warning" id="editPaymentDate" name="payment_date" required>
+              <div class="form-text text-danger small" id="editDateError" style="display:none;">⚠️ Future dates are not allowed.</div>
+            </div>
+
+            <!-- Tenant Name -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold text-dark"><i class="fa-solid fa-user-tag text-warning me-1"></i> Tenant Name</label>
+              <input type="text" class="form-control border-warning" id="editTenantName" name="tenant" value="Umbrella Corp" readonly>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold text-dark"><i class="fa-solid fa-hand-holding-dollar text-warning me-1"></i> Payment Method</label>
+              <select class="form-select border-warning text-dark" id="editPaymentMethod" name="payment_method" required>
+                <option value="">-- Choose Method --</option>
+                <option value="110">📱 MPESA</option>
+                <option value="120">🏦 Bank</option>
+                <option value="100">💵 Cash</option>
+              </select>
+            </div>
+
+            <!-- Amount -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold text-dark"><i class="fa-solid fa-sack-dollar text-warning me-1"></i> Amount (KES)</label>
+              <div class="input-group">
+                <span class="input-group-text">KES</span>
+                <input type="number" class="form-control border-warning" id="editAmount" name="amount" step="0.01" min="0" value="7500.00" required>
+              </div>
+              <div id="editPaymentStatus" class="mt-2 small fw-semibold"></div>
+            </div>
+
+            <!-- Reference -->
+            <div class="col-12">
+              <label class="form-label fw-semibold text-dark"><i class="fa-solid fa-barcode text-warning me-1"></i> Reference Number</label>
+              <input type="text" class="form-control border-warning" id="editReferenceNumber" name="reference_number" value="NLJ87H5J" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer px-4 py-3" style="background-color:#00192D;">
+          <button type="submit" class="btn fw-semibold" style="background-color:#FFC107; color:#00192D;">
+            <i class="fa-solid fa-floppy-disk me-1"></i> Update Payment
+          </button>
+          <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">
+            <i class="fa-solid fa-xmark-circle me-1"></i> Cancel
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
                         <div class="invoice-list">
                             <!-- Invoice Item -->
                             <div class="invoice-item">
@@ -1873,6 +2092,14 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
         fileList.textContent = 'No files selected';
     }
 });
+</script>
+
+<!-- JS TOGGLE -->
+<script>
+  document.getElementById("paymentsToggle").addEventListener("click", function() {
+    const container = document.getElementById("paymentsContainer");
+    container.style.display = (container.style.display === "none" || container.style.display === "") ? "block" : "none";
+  });
 </script>
 
 
