@@ -3,7 +3,6 @@ function createPayInvoiceJournal($pdo, $paymentId, $invoiceId, $customerId, $pay
 {
     // Example COA IDs
     $accountsReceivableId = 130;
-    $prepaidCustomerId    = 150; // Customer Advance/Prepaid (Liability)
 
     // Insert journal entry
     $stmt = $pdo->prepare("INSERT INTO journal_entries (reference, description) VALUES (?, ?)");
