@@ -5,7 +5,7 @@ header('Content-Type: application/json');
 
 require_once '../../../db/connect.php';
 // Add the pay invoice journal
-include_once '../../actions/journals/payInvoiceJournal.php';
+include_once './journals/payInvoiceJournal.php';
 
 try {
     // Start transaction
