@@ -1999,6 +1999,10 @@ document.addEventListener('DOMContentLoaded', () => {
 document.getElementById('units').addEventListener('change', checkPreviousReading);
  </script>
     <!--end::Script-->
+
+    <script>
+      const yo= /*html*/`<h2>yoyo<h2>`;
+    </script>
   </body>
   <!--end::Body-->
 </html>
