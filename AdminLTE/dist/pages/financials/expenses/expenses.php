@@ -904,6 +904,41 @@ require_once 'actions/getBuildings.php'
             </form>
         </div>
 
+        <!-- Edit Supplier details -->
+        <div class="supplierEdit-modal-overlay" id="supplierEditOverlay"></div>
+        <div class="supplierEdit-modal" id="supplierEditModal">
+            <button class="supplierEdit-close-btn" id="supplierEditCloseBtn">X</button>
+            <div class="d-flex">
+                <h4>
+                    <i class="fas fa-user-plus"></i> Edit Supplier Details
+                </h4>
+
+
+            </div>
+
+            <form id="supplierEditForm" class="supplierEdit-form">
+                <label for="supplierEditKra">KRA Number</label>
+                <input type="text" id="supplierEditKra" name="kra" required>
+
+                <label for="supplierEditName">Supplier Name</label>
+                <input type="text" id="supplierEditName" name="name" required>
+
+                <label for="supplierEditEmail">Email</label>
+                <input type="email" id="supplierEditEmail" name="email" required>
+
+                <label for="supplierEditPhone">Phone</label>
+                <input type="text" id="supplierEditPhone" name="phone">
+
+                <label for="supplierEditAddress">Address</label>
+                <input type="text" id="supplierEditAddress" name="address">
+
+                <div class="supplierEdit-form-actions">
+                    <button type="submit" class="supplierEdit-submit-btn">Save</button>
+                    <button type="button" class="supplierEdit-cancel-btn" id="supplierEditCancelBtn">Cancel</button>
+                </div>
+            </form>
+        </div>
+
         <!-- Registerd suppliers list -->
         <!-- Overlay -->
         <div class="supplier-list-overlay" id="supplierListOverlay"></div>
@@ -923,63 +958,46 @@ require_once 'actions/getBuildings.php'
 
             <!-- Supplier list -->
             <table class="supplier-list-table">
-                <thead class="supplier-list-tableThead">
-                    <tr>
-                        <th>Name</th>
+                <thead class="supplier-list-tableThead border-0">
+                    <tr class="border-0">
+                        <th class="border-0">Name</th>
                         <th>KRA PIN</th>
                         <th>Address</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Items Items</th>
+                        <th>Contact</th>
+                        <th>Supplied Items</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody class="supplier-list-tableTbody">
                     <?php foreach ($suppliers as $supplier): ?>
-                    <tr class="supplier-list-tableTr">
-                        <td><?= $supplier['supplier_name'] ?></td>
-                        <td><?= $supplier['kra_pin'] ?></td>
-                        <td><?= $supplier['address'] ?>, Nairobi</td>
-                        <td><?= $supplier['email'] ?></td>
-                        <td><?= $supplier['phone'] ?></td>
-                        <td>128</td>
-                    </tr>
+                        <tr class="supplier-list-tableTr shadow-sm">
+                            <td><?= $supplier['supplier_name'] ?></td>
+                            <td><?= $supplier['kra_pin'] ?></td>
+                            <td><?= $supplier['address'] ?>, Nairobi</td>
+                            <td>
+                                <div class="" style="color:green;"><?= $supplier['email'] ?></div>
+                                <div class="text-primary"><?= $supplier['phone'] ?></div>
+                            </td>
+                            <td>128</td>
+                            <td style="vertical-align: middle;">
+                                <div style="display: flex; gap: 8px; align-items: center; height: 100%;">
+                                    <button
+                                        class="editSupplier btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
+                                        style="background-color: #00192D; color: white; border: none; border-radius: 8px; 
+                                      box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
+                                    <button
+                                        class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
+                                        style="background-color: #ec5b53; color: white; border: none; border-radius: 8px; 
+                                box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
                     <?php endforeach ?>
-                    <tr>
-                        <td>Beta Supplies & Logistics</td>
-                        <td>B987654321A</td>
-                        <td>75</td>
-                        <td>P.O. Box 67890-00100, Nairobi</td>
-                        <td>sales@beta.co.ke</td>
-                        <td>+254 722 111 222</td>
-                        <td><span class="badge">Verified</span></td>
-                    </tr>
-                    <tr>
-                        <td>Gamma Hardware Ltd.</td>
-                        <td>C112233445B</td>
-                        <td>200</td>
-                        <td>P.O. Box 22222-00200, Mombasa</td>
-                        <td>info@gammahardware.co.ke</td>
-                        <td>+254 733 555 666</td>
-                        <td><span class="badge">Verified</span></td>
-                    </tr>
-                    <tr>
-                        <td>Delta Foods Supply</td>
-                        <td>D556677889C</td>
-                        <td>50</td>
-                        <td>P.O. Box 33333-00300, Kisumu</td>
-                        <td>orders@deltafoods.co.ke</td>
-                        <td>+254 700 999 888</td>
-                        <td><span class="badge">Verified</span></td>
-                    </tr>
-                    <tr>
-                        <td>Epsilon Electronics</td>
-                        <td>E443322110D</td>
-                        <td>300</td>
-                        <td>P.O. Box 44444-00400, Nakuru</td>
-                        <td>contact@epsilonelec.co.ke</td>
-                        <td>+254 701 123 456</td>
-                        <td><span class="badge">Verified</span></td>
-                    </tr>
                 </tbody>
             </table>
         </div>

@@ -267,7 +267,7 @@ th {
   text-transform: uppercase !important;
   background-color: #f4f4f4 !important;
   /* Light background for contrast */
-  border-bottom: 2px solid #ddd !important;
+  /* border-bottom: 2px solid #ddd !important; */
 }
 
 div.dt-buttons {
@@ -373,7 +373,7 @@ div.dt-button-collection .dt-button:hover {
 }
 
 thead {
-  background-color: #34495e;
+  /* background-color: #34495e; */
   /* color: white; */
   font-size: 16px !important;
   /* border-top:2px solid #4f4f52 !important; */
@@ -442,7 +442,7 @@ hr {
 }
 
 .custom-th th {
-  background-color: #00192D !important;
+  /* background-color: #00192D !important; */
   color: white;
   /* text-align: right; */
   font-size: small;
@@ -455,7 +455,7 @@ hr {
 }
 
 .custom-th th {
-  background-color: #00192D !important;
+  /* background-color: #00192D !important; */
   color: white !important;
   font-size: small;
 }
@@ -466,7 +466,7 @@ hr {
 
 .expense-table td,
 .expense-table th {
-  border-color: #00192D;
+  /* border-color: #00192D; */
   vertical-align: middle;
 }
 
@@ -757,6 +757,114 @@ hr {
   flex: 1;
 }
 
+
+/* Edit supplier Overlay */
+.supplierEdit-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  z-index: 2000;
+}
+
+/* Drawer modal */
+.supplierEdit-modal {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  /* fully hidden */
+  width: 25%;
+  /* 1/4 of screen */
+  min-width: 300px;
+  /* keep usable on small screens */
+  height: 100%;
+  background: #fff;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3);
+  transition: right 0.3s ease-in-out;
+  padding: 20px;
+  z-index: 2001;
+  overflow-y: auto;
+}
+
+.supplierEdit-modal-overlay.active {
+  display: block;
+}
+
+.supplierEdit-modal.active {
+  right: 0;
+}
+
+/* Buttons */
+.supplierEdit-close-btn {
+  background: gray;
+  border: none;
+  color: white;
+  padding: 6px;
+  cursor: pointer;
+  border-radius: 100%;
+  float: right;
+  font-size: 12px;
+}
+
+.supplierEdit-open-btn {
+  margin: 20px;
+  padding: 10px 20px;
+  background: #002B5B;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Form styling */
+.supplierEdit-form {
+  margin-top: 40px;
+}
+
+.supplierEdit-form label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.supplierEdit-form input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.supplierEdit-form-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.supplierEdit-submit-btn {
+  background: #002B5B;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  flex: 1;
+}
+
+.supplierEdit-cancel-btn {
+  background: #ccc;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  flex: 1;
+}
+
+
 /* Registered suppliers overlay */
 /* Overlay */
 .supplier-list-overlay {
@@ -775,7 +883,7 @@ hr {
   position: fixed;
   top: 0;
   right: -100%;
-  width: 50%;
+  width: 65%;
   min-width: 350px;
   height: 100%;
   background: #f7f9fc;
@@ -884,8 +992,8 @@ hr {
   min-width: 800px;
 }
 
-.supplier-list-tableThead{
-  background: #002B5B !important;
+.supplier-list-tableThead {
+  /* background: #002B5B !important; */
   color: black;
 }
 
@@ -894,16 +1002,22 @@ hr {
   padding: 0.75rem 1rem;
   font-weight: 600;
   white-space: nowrap;
+  border-radius: 12px;
+  border: none !important;
+  border-color: transparent !important;
 }
+
 
 .supplier-list-tableTbody tr {
   background: #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); */
   border-radius: 12px;
 }
-.supplier-list-tableTbody tr:nth-child(even){
+
+.supplier-list-tableTbody tr:nth-child(even) {
   background-color: white;
 }
+
 .supplier-list-tableTr td {
   text-align: left;
   padding: 0.75rem 1rem;
