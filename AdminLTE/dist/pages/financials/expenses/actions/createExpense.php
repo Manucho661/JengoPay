@@ -19,15 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $totalTax = $_POST['totalTax'] ?? 0.00;
         $total = $_POST['total'] ?? 0.00;
 
-
-        // Step 1: Create new supplier if supplier_id is empty
-        if (empty($supplier_id) && !empty($supplier_name)) {
-            $stmt = $pdo->prepare("INSERT INTO suppliers (supplier_name, time_stamp) VALUES (?, NOW())");
-            $stmt->execute([$supplier_name]);
-            $supplier_id = $pdo->lastInsertId();
-        }
-
-        // Step 2: Insert into expenses
+        // Step 1: Insert into expenses
         $stmt = $pdo->prepare("INSERT INTO expenses (
             supplier_id, building_id, expense_date, expense_no, supplier,
             untaxed_amount, total_taxes, total

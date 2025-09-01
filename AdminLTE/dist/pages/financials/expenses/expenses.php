@@ -211,11 +211,11 @@ require_once 'actions/getBuildings.php'
             <div class="app-content">
                 <div class="container-fluid">
                     <div class="row mb-4">
-                        <div class="col-md-8">
+                        <div class="col-md-4">
                             <p class="text-muted">Manage your expenses</p>
                         </div>
 
-                        <div class="col-md-4 d-flex justify-content-end">
+                        <div class="col-md-8 d-flex justify-content-end">
                             <div>
                                 <button class="btn shadow-none text-white" id="supplier-list-open-btn"
                                     style="background: linear-gradient(135deg, #00192D, #002B5B);">
@@ -922,18 +922,66 @@ require_once 'actions/getBuildings.php'
             </div>
 
             <!-- Supplier list -->
-            <div class="supplier-list" id="supplierList">
-                <?php foreach($suppliers as $supplier):?>
-                <div class="supplier-card">
-                    <div class="supplier-name"><?= $supplier['supplier_name'] ?></div>
-                    <div class="supplier-detail">KRA PIN: <?= $supplier['kra_pin'] ?></div>
-                    <div class="supplier-detail">Email: <?= $supplier['email'] ?></div>
-                    <div class="supplier-detail">Phone: <?= $supplier['phone'] ?></div>
-                    <div class="supplier-detail">Address: <?= $supplier['address'] ?>, Nairobi</div>
-                    <div class="supplier-detail">Supplied Items: 25</div>
-                </div>
-                <?php endforeach ?>
-            </div>
+            <table class="supplier-list-table">
+                <thead class="supplier-list-tableThead">
+                    <tr>
+                        <th>Name</th>
+                        <th>KRA PIN</th>
+                        <th>Address</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Items Items</th>
+                    </tr>
+                </thead>
+                <tbody class="supplier-list-tableTbody">
+                    <?php foreach ($suppliers as $supplier): ?>
+                    <tr class="supplier-list-tableTr">
+                        <td><?= $supplier['supplier_name'] ?></td>
+                        <td><?= $supplier['kra_pin'] ?></td>
+                        <td><?= $supplier['address'] ?>, Nairobi</td>
+                        <td><?= $supplier['email'] ?></td>
+                        <td><?= $supplier['phone'] ?></td>
+                        <td>128</td>
+                    </tr>
+                    <?php endforeach ?>
+                    <tr>
+                        <td>Beta Supplies & Logistics</td>
+                        <td>B987654321A</td>
+                        <td>75</td>
+                        <td>P.O. Box 67890-00100, Nairobi</td>
+                        <td>sales@beta.co.ke</td>
+                        <td>+254 722 111 222</td>
+                        <td><span class="badge">Verified</span></td>
+                    </tr>
+                    <tr>
+                        <td>Gamma Hardware Ltd.</td>
+                        <td>C112233445B</td>
+                        <td>200</td>
+                        <td>P.O. Box 22222-00200, Mombasa</td>
+                        <td>info@gammahardware.co.ke</td>
+                        <td>+254 733 555 666</td>
+                        <td><span class="badge">Verified</span></td>
+                    </tr>
+                    <tr>
+                        <td>Delta Foods Supply</td>
+                        <td>D556677889C</td>
+                        <td>50</td>
+                        <td>P.O. Box 33333-00300, Kisumu</td>
+                        <td>orders@deltafoods.co.ke</td>
+                        <td>+254 700 999 888</td>
+                        <td><span class="badge">Verified</span></td>
+                    </tr>
+                    <tr>
+                        <td>Epsilon Electronics</td>
+                        <td>E443322110D</td>
+                        <td>300</td>
+                        <td>P.O. Box 44444-00400, Nakuru</td>
+                        <td>contact@epsilonelec.co.ke</td>
+                        <td>+254 701 123 456</td>
+                        <td><span class="badge">Verified</span></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
     </div>

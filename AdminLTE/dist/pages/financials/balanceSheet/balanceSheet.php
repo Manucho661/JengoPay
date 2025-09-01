@@ -650,26 +650,6 @@ function formatAccounting($amount)
     integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
     crossorigin="anonymous"></script>
 
-
-  <!-- DataTable Script -->
-  <script>
-    $(document).ready(function() {
-      var table = $('#balanceSheet').DataTable({
-        "lengthChange": false,
-        "dom": 'Bfrtip',
-        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
-        "initComplete": function() {
-          // Move the buttons to the first .col-md-6
-          table.buttons().container().appendTo('#balanceSheet_wrapper .col-md-6:eq(0)');
-
-          // Move the search box to the second .col-md-6
-          $('#balanceSheet_filter').appendTo('#balanceSheet_wrapper .col-md-6:eq(1)');
-        }
-      });
-    });
-  </script>
-  <!-- Balance Sheet PDF script -->
-
   <!--end::Script-->
 </body>
 <!--end::Body-->
