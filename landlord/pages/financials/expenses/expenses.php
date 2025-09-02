@@ -211,11 +211,8 @@ require_once 'actions/getBuildings.php'
             <div class="app-content">
                 <div class="container-fluid">
                     <div class="row mb-4">
-                        <div class="col-md-4">
+                        <div class="col-md-12 d-flex justify-content-between">
                             <p class="text-muted">Manage your expenses</p>
-                        </div>
-
-                        <div class="col-md-8 d-flex justify-content-end">
                             <div>
                                 <button class="btn shadow-none text-white" id="supplier-list-open-btn"
                                     style="background: linear-gradient(135deg, #00192D, #002B5B);">
@@ -226,7 +223,6 @@ require_once 'actions/getBuildings.php'
                                     Register Supplier
                                 </button>
                             </div>
-
                         </div>
                     </div>
                     <div class="row g-3 mb-4">
@@ -972,7 +968,7 @@ require_once 'actions/getBuildings.php'
                 </thead>
                 <tbody class="supplier-list-tableTbody">
                     <?php foreach ($suppliers as $supplier): ?>
-                        <tr class="supplier-list-tableTr shadow-sm">
+                        <tr class="supplier-list-tableTr shadow-sm text-muted">
                             <td><?= $supplier['supplier_name'] ?></td>
                             <td><?= $supplier['kra_pin'] ?></td>
                             <td><?= $supplier['address'] ?>, Nairobi</td>
