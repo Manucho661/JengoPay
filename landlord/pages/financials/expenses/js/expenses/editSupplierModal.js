@@ -29,4 +29,14 @@ export function openEditModal(button) {
     if (closeBtn) {
       closeBtn.addEventListener("click", closeEditSupplierModal);
     }
+
+    // Close when clicking outside
+    supplierEditOverlay.addEventListener("click", (e)=>{
+      if (e.target === supplierEditOverlay) {
+        supplierEditOverlay.classList.remove("active");
+        supplierEditModal.classList.remove("active");
+      }
+
+    });
+    
 }
