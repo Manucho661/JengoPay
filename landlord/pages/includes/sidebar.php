@@ -8,7 +8,7 @@
       <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> 🏠 Property
     </div>
     <div class="submenu">
-      <a href="/Jengopay/AdminLTE/dist/pages/property/reg_form.php" >🏢 Buildings</a>
+      <a href="/Jengopay/landlord/pages/property/reg_form.php" >🏢 Buildings</a>
       <!-- Add more options later -->
     </div>
   </div>
@@ -44,7 +44,7 @@
     </div>
     <div class="submenu">
       <a href="/Jengopay/AdminLTE/dist/pages/financials/Rent.php">💸Rent</a>
-      <a href="/Jengopay/AdminLTE/dist/pages/financials/expenses/expenses.php">💵 Expenses</a>
+      <a href="/Jengopay/landlord/pages/financials/expenses/expenses.php">💵 Expenses</a>
       <a href="/Jengopay/AdminLTE/dist/pages/financials/cashflow.php">💵 Cashflow</a>
       <a href="/Jengopay/AdminLTE/dist/pages/financials/invoices/invoice.php">📄 Invoices</a>
       <a href="/Jengopay/AdminLTE/dist/pages/financials/balanceSheet/balanceSheet.php">📊 Balance Sheet</a>

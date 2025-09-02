@@ -1,13 +1,12 @@
+import {openEditModal} from "./editSupplier.js";
+
 export function initSupplierListModal() {
   const openBtn = document.getElementById("supplier-list-open-btn");
   const overlay = document.getElementById("supplierListOverlay");
   const modal = document.getElementById("supplierListModal");
   const closeBtn = document.querySelector(".supplier-list-close-btn");
   const openEditBtns = document.querySelectorAll('.editSupplier');
-  const supplierEditOverlay = document.querySelector('#supplierEditOverlay');
-  const supplierEditModal = document.querySelector('#supplierEditModal');
-
-
+  
 
   if (openBtn && overlay && modal) {
     // Open modal
@@ -23,12 +22,7 @@ export function initSupplierListModal() {
       modal.classList.remove("active");
     }
 
-    // open Edit modal function
-    function openEditModal() {
-      supplierEditOverlay.classList.add('active');
-      supplierEditModal.classList.add('active');
-    }
-
+  
     // Close supplier list modal
     if (closeBtn) {
       closeBtn.addEventListener("click", closeListModal);
@@ -40,7 +34,7 @@ export function initSupplierListModal() {
       openEditBtns.forEach((btn) => {
         btn.addEventListener("click", ()=>{
           closeListModal();
-          openEditModal();
+          openEditModal(btn);
         });
       });
     }

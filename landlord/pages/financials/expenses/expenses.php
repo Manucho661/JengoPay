@@ -61,7 +61,7 @@ require_once 'actions/getBuildings.php'
 
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../../../../dist/css/adminlte.css" />
+    <link rel="stylesheet" href="../../../../landlord/css/adminlte.css" />
     <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
@@ -166,7 +166,7 @@ require_once 'actions/getBuildings.php'
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
         <!--begin::Header-->
-        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/AdminLTE/dist/pages/includes/header.php'; ?>
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
         <!--end::Header-->
         <!--begin::Sidebar-->
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
@@ -188,7 +188,7 @@ require_once 'actions/getBuildings.php'
             </div>
             <!--end::Sidebar Brand-->
             <!--begin::Sidebar Wrapper-->
-            <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/AdminLTE/dist/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+            <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
             <!--end::Sidebar Wrapper-->
         </aside>
         <!--end::Sidebar-->
@@ -984,14 +984,19 @@ require_once 'actions/getBuildings.php'
                                     <button
                                         class="editSupplier btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
                                         style="background-color: #00192D; color: white; border: none; border-radius: 8px; 
-                                      box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;">
+                               box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;"
+                                        data-id="<?= $supplier['id'] ?>"
+                                        data-name="<?= htmlspecialchars($supplier['supplier_name'], ENT_QUOTES) ?>"
+                                        data-kra="<?= htmlspecialchars($supplier['kra_pin'], ENT_QUOTES) ?>"
+                                        data-address="<?= htmlspecialchars($supplier['address'], ENT_QUOTES) ?>"
+                                        data-email="<?= htmlspecialchars($supplier['email'], ENT_QUOTES) ?>"
+                                        data-phone="<?= htmlspecialchars($supplier['phone'], ENT_QUOTES) ?>">
                                         <i class="bi bi-pencil-fill"></i>
                                     </button>
-
                                     <button
                                         class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
                                         style="background-color: #ec5b53; color: white; border: none; border-radius: 8px; 
-                                box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;">
+                                                box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;">
                                         <i class="bi bi-trash-fill"></i>
                                     </button>
                                 </div>
@@ -1006,7 +1011,7 @@ require_once 'actions/getBuildings.php'
     <!--end::App Wrapper-->
 
     <!-- Main Js File -->
-    <script src="../../../../dist/js/adminlte.js"></script>
+    <script src="../../../../landlord/js/adminlte.js"></script>
     <script src="expenses.js"></script>
     <script type="module" src="./js/main.js"></script>
     <!-- Scripts -->

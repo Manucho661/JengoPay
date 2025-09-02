@@ -55,7 +55,7 @@ function formatAccounting($amount)
 
   <!--end::Third Party Plugin(Bootstrap Icons)-->
   <!--begin::Required Plugin(AdminLTE)-->
-  <link rel="stylesheet" href="../../../../dist/css/adminlte.css" />
+  <link rel="stylesheet" href="../../../../landlord/css/adminlte.css" />
   <!-- <link rel="stylesheet" href="text.css" /> -->
   <!--end::Required Plugin(AdminLTE)-->
   <!-- apexcharts -->
@@ -338,7 +338,7 @@ function formatAccounting($amount)
       </div>
       <!--end::Sidebar Brand-->
       <!--begin::Sidebar Wrapper-->
-      <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/AdminLTE/dist/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+      <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
       <!--end::Sidebar Wrapper-->
     </aside>
     <!--end::Sidebar-->
@@ -642,7 +642,7 @@ function formatAccounting($amount)
 
 
   <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-  <script src="../../../../dist/js/adminlte.js"></script>
+  <script src="../../../../landlord/js/adminlte.js"></script>
   <script type="module" src="./js/main.js"></script>
 
   <script
