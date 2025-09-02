@@ -1210,10 +1210,10 @@ header {
                             <!-- <button class="btn btn-outline" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-download"></i> Export
                         </button> -->
-<!-- Payments Button -->
-<button class="btn" style="color: #FFC107; background-color:#00192D;" data-bs-toggle="modal" data-bs-target="#paymentsModal">
-  <i class="fas fa-money-bill-wave"></i> Payments
-</button>
+            <!-- Payments Button -->
+            <button class="btn btn-payments" data-bs-toggle="modal" data-bs-target="#paymentsHistoryModal">
+        <i class="fas fa-money-bill-wave"></i> Payments
+    </button>
 
 
                             <button class="btn" id="create-invoice-btn" style="color: #FFC107; background-color:#00192D;">
@@ -1611,212 +1611,93 @@ header {
 
 
 
-                        <!-- PAYMENTS MODAL -->
-<div class="modal fade" id="paymentsModal" tabindex="-1" aria-labelledby="paymentsModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-
-      <!-- Header -->
-      <div class="modal-header" style="background-color:#00192D; color:#FFC107;">
-        <h5 class="modal-title" id="paymentsModalLabel">
-          <i class="fas fa-money-bill-wave"></i> Payments Made
-        </h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-
-      <!-- Body -->
-      <div class="modal-body">
-        <div class="container">
-          <!-- Payments Toggle Button -->
-          <button class="btn btn-payments mb-3" id="paymentsToggle">
-            <span><i class="fa-solid fa-file-invoice-dollar me-2"></i> PAYMENT HISTORY</span>
-            <i class="fa-solid fa-chevron-down"></i>
-          </button>
-          
-          <!-- Payments Container (initially hidden, toggle with JS) -->
-          <div class="payments-container" id="paymentsContainer" style="display:none;">
-            <div class="header text-center mb-4">
-              <h1><i class="fa-solid fa-file-invoice-dollar me-2"></i>Invoice Payment System</h1>
-              <p class="lead">Manage payments and view payment history</p>
+                     <!-- Payments History Modal -->
+<div class="modal fade" id="paymentsHistoryModal" tabindex="-1" aria-labelledby="paymentsHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header modal-header-payments">
+                <h5 class="modal-title text-warning fw-semibold" id="paymentsHistoryModalLabel">
+                    <i class="fas fa-history me-2"></i> Payment History
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
-            <!-- Stats -->
-            <div class="row text-center mb-4">
-              <div class="col-md-4">
-                <div class="stats-box">
-                  <i class="fa-solid fa-sack-dollar"></i>
-                  <h3>KES 12,500.00</h3>
-                  <p>Total Amount</p>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="stats-box">
-                  <i class="fa-solid fa-circle-check"></i>
-                  <h3>KES 12,500.00</h3>
-                  <p>Amount Paid</p>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="stats-box">
-                  <i class="fa-solid fa-clock"></i>
-                  <h3>KES 0.00</h3>
-                  <p>Remaining Balance</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Invoice Details + History -->
-            <div class="card">
-              <div class="card-header d-flex justify-content-between align-items-center">
-                <span><i class="fa-solid fa-receipt me-2"></i>Invoice Details</span>
-                <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#newPaymentModal">
-                  <i class="fa-solid fa-plus me-1"></i> New Payment
-                </button>
-              </div>
-              <div class="card-body">
+            
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <!-- Filter and Search Controls -->
                 <div class="row mb-4">
-                  <div class="col-md-3"><strong>Invoice ID:</strong> INV-2023-005</div>
-                  <div class="col-md-3"><strong>Tenant:</strong> Umbrella Corp</div>
-                  <div class="col-md-3"><strong>Due Date:</strong> May 25, 2023</div>
-                  <div class="col-md-3"><strong>Status:</strong> <span class="badge bg-success">Paid</span></div>
-                </div>
-
-                <h5 class="border-bottom pb-2"><i class="fa-solid fa-clock-rotate-left me-2"></i>Payment History</h5>
-                <div class="payment-history">
-                  <!-- Payment Item 1 -->
-                  <div class="payment-item mb-4">
-                    <div class="d-flex justify-content-between align-items-center">
-                      <div>
-                        <strong>Payment Date:</strong> May 20, 2023
-                        <strong class="ms-3">Method:</strong> MPESA
-                      </div>
-                      <div class="d-flex align-items-center">
-                        <span class="badge bg-success me-3">Paid</span>
-                        <button class="btn btn-sm btn-outline-warning edit-btn" data-bs-toggle="modal" data-bs-target="#editPaymentModal">
-                          <i class="fa-solid fa-pen me-1"></i> Edit
+                    <div class="col-md-3">
+                        <label for="dateFrom" class="form-label">From Date</label>
+                        <input type="date" class="form-control" id="dateFrom">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="dateTo" class="form-label">To Date</label>
+                        <input type="date" class="form-control" id="dateTo">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="searchPayment" class="form-label">Search</label>
+                        <input type="text" class="form-control" id="searchPayment" placeholder="Search by reference, tenant...">
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button class="btn btn-warning w-100" id="applyFilters">
+                            <i class="fas fa-filter me-1"></i> Apply
                         </button>
-                      </div>
                     </div>
-                    <div class="mt-3 row">
-                      <div class="col-md-6"><strong>Reference:</strong> NLJ87H5J</div>
-                      <div class="col-md-6 d-flex justify-content-between align-items-center">
-                        <strong>Amount:</strong> <span class="text-success fw-bold">KES 7,500.00</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Payment Item 2 -->
-                  <div class="payment-item">
-                    <div class="d-flex justify-content-between align-items-center">
-                      <div>
-                        <strong>Payment Date:</strong> May 10, 2023
-                        <strong class="ms-3">Method:</strong> Bank Transfer
-                      </div>
-                      <div class="d-flex align-items-center">
-                        <span class="badge bg-success me-3">Paid</span>
-                        <button class="btn btn-sm btn-outline-warning edit-btn" data-bs-toggle="modal" data-bs-target="#editPaymentModal">
-                          <i class="fa-solid fa-pen me-1"></i> Edit
-                        </button>
-                      </div>
-                    </div>
-                    <div class="mt-3 row">
-                      <div class="col-md-6"><strong>Reference:</strong> BKT634SD</div>
-                      <div class="col-md-6 d-flex justify-content-between align-items-center">
-                        <strong>Amount:</strong> <span class="text-success fw-bold">KES 5,000.00</span>
-                      </div>
-                    </div>
-                  </div>
-
                 </div>
-              </div>
+                
+                <!-- Payments Table -->
+                <div class="table-responsive">
+                    <table class="table table-hover payment-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Tenant</th>
+                                <th>Reference</th>
+                                <th>Method</th>
+                                <th>Amount (KES)</th>
+                                <!-- <th>Status</th> -->
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentsTableBody">
+                            <!-- Payment data will be populated here -->
+                        </tbody>
+                        <tfoot>
+                            <tr class="total-row">
+                                <td colspan="4" class="text-end">Total Paid:</td>
+                                <td id="totalPaidAmount">0.00</td>
+                                <td colspan="2"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                
+                <!-- Pagination (if needed) -->
+                <nav aria-label="Payment history pagination">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-          </div><!-- End Payments Container -->
+            
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-warning" id="exportPayments">
+                    <i class="fas fa-download me-1"></i> Export
+                </button>
+            </div>
         </div>
-      </div>
-
-      <!-- Footer -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
     </div>
-  </div>
-</div>
-
-
-<!-- EDIT PAYMENT MODAL -->
-<div class="modal fade" id="editPaymentModal" tabindex="-1" aria-labelledby="editPaymentModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <form id="editPaymentForm">
-      <div class="modal-content shadow-lg border-0 rounded-4">
-
-        <!-- Header -->
-        <div class="modal-header">
-          <h5 class="modal-title text-warning fw-semibold" id="editPaymentModalLabel">
-            <i class="fa-solid fa-pen-to-dollar me-2"></i> Edit Payment
-          </h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
-
-        <!-- Body -->
-        <div class="modal-body px-4 py-4 bg-light-subtle">
-          <input type="hidden" name="payment_id" id="editPaymentId">
-          <input type="hidden" name="invoice_id" id="editInvoiceId">
-
-          <div class="row g-4">
-            <!-- Payment Date -->
-            <div class="col-md-6">
-              <label class="form-label fw-semibold text-dark"><i class="fa-regular fa-calendar-days text-warning me-1"></i> Payment Date</label>
-              <input type="date" class="form-control border-warning" id="editPaymentDate" name="payment_date" required>
-              <div class="form-text text-danger small" id="editDateError" style="display:none;">⚠️ Future dates are not allowed.</div>
-            </div>
-
-            <!-- Tenant Name -->
-            <div class="col-md-6">
-              <label class="form-label fw-semibold text-dark"><i class="fa-solid fa-user-tag text-warning me-1"></i> Tenant Name</label>
-              <input type="text" class="form-control border-warning" id="editTenantName" name="tenant" value="Umbrella Corp" readonly>
-            </div>
-
-            <!-- Payment Method -->
-            <div class="col-md-6">
-              <label class="form-label fw-semibold text-dark"><i class="fa-solid fa-hand-holding-dollar text-warning me-1"></i> Payment Method</label>
-              <select class="form-select border-warning text-dark" id="editPaymentMethod" name="payment_method" required>
-                <option value="">-- Choose Method --</option>
-                <option value="110">📱 MPESA</option>
-                <option value="120">🏦 Bank</option>
-                <option value="100">💵 Cash</option>
-              </select>
-            </div>
-
-            <!-- Amount -->
-            <div class="col-md-6">
-              <label class="form-label fw-semibold text-dark"><i class="fa-solid fa-sack-dollar text-warning me-1"></i> Amount (KES)</label>
-              <div class="input-group">
-                <span class="input-group-text">KES</span>
-                <input type="number" class="form-control border-warning" id="editAmount" name="amount" step="0.01" min="0" value="7500.00" required>
-              </div>
-              <div id="editPaymentStatus" class="mt-2 small fw-semibold"></div>
-            </div>
-
-            <!-- Reference -->
-            <div class="col-12">
-              <label class="form-label fw-semibold text-dark"><i class="fa-solid fa-barcode text-warning me-1"></i> Reference Number</label>
-              <input type="text" class="form-control border-warning" id="editReferenceNumber" name="reference_number" value="NLJ87H5J" required>
-            </div>
-          </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="modal-footer px-4 py-3" style="background-color:#00192D;">
-          <button type="submit" class="btn fw-semibold" style="background-color:#FFC107; color:#00192D;">
-            <i class="fa-solid fa-floppy-disk me-1"></i> Update Payment
-          </button>
-          <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">
-            <i class="fa-solid fa-xmark-circle me-1"></i> Cancel
-          </button>
-        </div>
-      </div>
-    </form>
-  </div>
 </div>
 
 
@@ -2093,6 +1974,214 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
     }
 });
 </script>
+
+<!-- <script>
+  function openPaymentsModal(invoiceId) {
+  fetch('fetch_payments.php?invoice_id=' + invoiceId)
+    .then(res => res.json())
+    .then(data => {
+      if (data.length === 0) {
+        document.getElementById("invoiceDetails").innerHTML = "<p>No invoice found.</p>";
+        document.getElementById("paymentHistory").innerHTML = "";
+        return;
+      }
+
+      // Use first row for invoice info
+      let invoice = data[0];
+
+      document.getElementById("invoiceDetails").innerHTML = `
+        <div class="col-md-3"><strong>Invoice ID:</strong> ${invoice.invoice_number}</div>
+        <div class="col-md-3"><strong>Tenant:</strong> ${invoice.tenant}</div>
+        <div class="col-md-3"><strong>Due Date:</strong> ${invoice.due_date}</div>
+        <div class="col-md-3"><strong>Status:</strong> 
+          <span class="badge ${invoice.payment_status === 'paid' ? 'bg-success' : 'bg-warning'}">
+            ${invoice.payment_status}
+          </span>
+        </div>
+      `;
+
+      // Payment history
+      let historyHTML = "";
+      data.forEach(payment => {
+        if (payment.payment_id) {
+          historyHTML += `
+            <div class="payment-item mb-4">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <strong>Payment Date:</strong> ${payment.payment_date}
+                  <strong class="ms-3">Method:</strong> ${payment.payment_method}
+                </div>
+                <div class="d-flex align-items-center">
+                  <span class="badge bg-success me-3">${payment.status}</span>
+                  <button class="btn btn-sm btn-outline-warning edit-btn" 
+                          data-bs-toggle="modal" 
+                          data-bs-target="#editPaymentModal" 
+                          data-payment-id="${payment.payment_id}">
+                    <i class="fa-solid fa-pen me-1"></i> Edit
+                  </button>
+                </div>
+              </div>
+              <div class="mt-3 row">
+                <div class="col-md-6"><strong>Reference:</strong> ${payment.reference_number}</div>
+                <div class="col-md-6 d-flex justify-content-between align-items-center">
+                  <strong>Amount:</strong> <span class="text-success fw-bold">KES ${parseFloat(payment.amount).toLocaleString()}</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      });
+
+      document.getElementById("paymentHistory").innerHTML = historyHTML || "<p>No payments recorded.</p>";
+
+      // Show modal
+      new bootstrap.Modal(document.getElementById('paymentsModal')).show();
+    })
+    .catch(err => console.error(err));
+}
+
+</script> -->
+
+<!-- Script to activate functionality -->
+<!-- <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const tbody = document.getElementById("paymentsTableBody");
+    const totalPaidEl = document.getElementById("totalPaidAmount");
+    let paymentsData = [];
+
+    function renderTable(data) {
+        tbody.innerHTML = "";
+        let total = 0;
+        data.forEach(p => {
+            if (["completed", "partial"].includes(p.status.toLowerCase())) {
+                total += parseFloat(p.amount);
+            }
+            tbody.innerHTML += `
+                <tr>
+                    <td>${p.date}</td>
+                    <td>${p.tenant}</td>
+                    <td>${p.reference}</td>
+                    <td>${p.method}</td>
+                    <td>${parseFloat(p.amount).toFixed(2)}</td>
+                  
+                    <td><button class="btn btn-sm btn-primary">View</button></td>
+                </tr>`;
+        });
+        totalPaidEl.textContent = total.toFixed(2);
+    }
+
+    // Fetch from PHP endpoint
+    fetch("fetch_payments.php?invoice_id=" + new URLSearchParams(window.location.search).get("invoice_id"))
+        .then(res => res.json())
+        .then(data => {
+            paymentsData = data;
+            renderTable(paymentsData);
+        })
+        .catch(err => console.error(err));
+
+    // Filters
+    document.getElementById("applyFilters").addEventListener("click", function () {
+        const from = document.getElementById("dateFrom").value;
+        const to = document.getElementById("dateTo").value;
+        const search = document.getElementById("searchPayment").value.toLowerCase();
+
+        let filtered = paymentsData.filter(p => {
+            let validDate = true;
+            if (from && p.date < from) validDate = false;
+            if (to && p.date > to) validDate = false;
+
+            let validSearch = !search || p.tenant.toLowerCase().includes(search) || p.reference.toLowerCase().includes(search);
+            return validDate && validSearch;
+        });
+
+        renderTable(filtered);
+    });
+
+    // Export CSV
+    document.getElementById("exportPayments").addEventListener("click", function () {
+        let csv = "Date,Tenant,Reference,Method,Amount,Status\n";
+        paymentsData.forEach(p => {
+            csv += `${p.date},${p.tenant},${p.reference},${p.method},${p.amount},${p.status}\n`;
+        });
+
+        const blob = new Blob([csv], { type: "text/csv" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "payments.csv";
+        a.click();
+        URL.revokeObjectURL(url);
+    });
+});
+</script> -->
+
+<script>
+// Toggle payment container
+document.getElementById("paymentsToggle")?.addEventListener("click", function() {
+  const container = document.getElementById("paymentsContainer");
+  if (container) {
+    container.style.display = (container.style.display === "none") ? "block" : "none";
+  }
+});
+
+// Function to open modal and fetch data
+function openPaymentsModal(invoiceId) {
+  // Open the correct modal
+  const modal = new bootstrap.Modal(document.getElementById("paymentsHistoryModal"));
+  modal.show();
+
+  // Fetch invoice + payments from backend
+  fetch(`fetch_payments.php?invoice_id=${invoiceId}`)
+    .then(res => res.json())
+    .then(data => {
+      const tbody = document.getElementById("paymentsTableBody");
+      const totalPaidEl = document.getElementById("totalPaidAmount");
+
+      tbody.innerHTML = "";
+      let total = 0;
+
+      if (data.payments && data.payments.length > 0) {
+        data.payments.forEach(p => {
+          total += parseFloat(p.amount);
+
+          tbody.innerHTML += `
+            <tr>
+              <td>${p.payment_date}</td>
+              <td>${p.tenant}</td>
+              <td>${p.reference_number}</td>
+              <td>${p.payment_method}</td>
+              <td>${parseFloat(p.amount).toFixed(2)}</td>
+              <td>
+                <button class="btn btn-sm btn-outline-warning edit-btn" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#editPaymentModal" 
+                        data-id="${p.id}">
+                  <i class="fa-solid fa-pen me-1"></i> Edit
+                </button>
+              </td>
+            </tr>
+          `;
+        });
+      } else {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="text-center text-muted">No payments yet.</td>
+          </tr>
+        `;
+      }
+
+      totalPaidEl.textContent = total.toFixed(2);
+    })
+    .catch(err => {
+      console.error(err);
+      document.getElementById("paymentsTableBody").innerHTML = `
+        <tr><td colspan="6" class="text-danger text-center">Error loading payments.</td></tr>
+      `;
+    });
+}
+</script>
+
+
 
 <!-- JS TOGGLE -->
 <script>
