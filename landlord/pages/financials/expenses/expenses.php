@@ -932,6 +932,8 @@ require_once 'actions/getBuildings.php'
                 <label for="supplierEditAddress">Address</label>
                 <input type="text" id="supplierEditAddress" name="address">
 
+                <!-- id -->
+                <input type="hidden" id="supplierEditId" name="supplierEditId" value="">
                 <div class="supplierEdit-form-actions">
                     <button type="submit" class="supplierEdit-submit-btn">Save</button>
                     <button type="button" class="supplierEdit-cancel-btn" id="supplierEditCancelBtn">Cancel</button>

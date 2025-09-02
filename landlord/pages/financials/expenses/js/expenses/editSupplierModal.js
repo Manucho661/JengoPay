@@ -12,12 +12,14 @@ export function openEditModal(button) {
     const email = button.dataset.email;
     const phone = button.dataset.phone;
     const address = button.dataset.address;
+    const id = button.dataset.id;
 
     document.getElementById('supplierEditKra').value = kra;
     document.getElementById('supplierEditName').value = name;
     document.getElementById('supplierEditEmail').value = email;
     document.getElementById('supplierEditPhone').value = phone;
     document.getElementById('supplierEditAddress').value = address;
+    document.getElementById('supplierEditId').value = id;
 
     function closeEditSupplierModal() {
         supplierEditOverlay.classList.remove('active');

@@ -25,3 +25,12 @@ export async function registerSupplier(formElement){
   });
   return response.text();
 }
+
+export async function editSupplier(formElement){
+  const formData = new FormData(formElement);
+  const response = await fetch("actions/editSupplier.php",{
+    method: "POST",
+    body: formData,
+  });
+  return response.text();
+}

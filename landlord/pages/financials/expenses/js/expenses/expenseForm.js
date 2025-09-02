@@ -1,4 +1,4 @@
-import { createExpense, payExpense, registerSupplier } from "./expenseApi.js";
+import { createExpense, payExpense, registerSupplier, editSupplier } from "./expenseApi.js";
 
 export function setupExpenseForms() {
   const expenseForm = document.getElementById("expenseForm");
@@ -27,6 +27,15 @@ export function setupExpenseForms() {
       e.preventDefault();
       const result = await registerSupplier(registerSupplierForm);
       console.log("Register supplier response:", result);
+    })
+  }
+
+  const editSupplierForm = document.getElementById("supplierEditForm");
+  if (editSupplierForm) {
+    editSupplierForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const result = await editSupplier(editSupplierForm);
+      console.log("Edit supplier response:", result);
     })
   }
 }
