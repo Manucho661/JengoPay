@@ -1951,6 +1951,45 @@ header {
     </div>
 
 
+    <!-- Add Payment Modal -->
+<div class="modal fade" id="addPaymentModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-warning text-dark">
+        <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Add Payment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="addPaymentForm">
+          <input type="hidden" id="invoiceIdField" name="invoice_id">
+
+          <div class="mb-3">
+            <label for="paymentAmount" class="form-label">Amount (KES)</label>
+            <input type="number" class="form-control" id="paymentAmount" name="amount" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="paymentMethod" class="form-label">Payment Method</label>
+            <select class="form-control" id="paymentMethod" name="payment_method" required>
+              <option value="cash">Cash</option>
+              <option value="mpesa">M-Pesa</option>
+              <option value="bank">Bank</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="referenceNumber" class="form-label">Reference Number</label>
+            <input type="text" class="form-control" id="referenceNumber" name="reference_number" required>
+          </div>
+
+          <button type="submit" class="btn btn-warning w-100">Submit Payment</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
     <script>
 document.getElementById('fileInput').addEventListener('change', function(e) {
@@ -2116,72 +2155,141 @@ document.addEventListener("DOMContentLoaded", function () {
 </script> -->
 
 <script>
-// Toggle payment container
-document.getElementById("paymentsToggle")?.addEventListener("click", function() {
-  const container = document.getElementById("paymentsContainer");
-  if (container) {
-    container.style.display = (container.style.display === "none") ? "block" : "none";
-  }
-});
+document.addEventListener("DOMContentLoaded", function () {
+    const tbody = document.getElementById("paymentsTableBody");
+    const totalPaidEl = document.getElementById("totalPaidAmount");
 
-// Function to open modal and fetch data
-function openPaymentsModal(invoiceId) {
-  // Open the correct modal
-  const modal = new bootstrap.Modal(document.getElementById("paymentsHistoryModal"));
-  modal.show();
+    function fetchPayments(filters = {}) {
+        // Build query string from filters
+        const params = new URLSearchParams(filters).toString();
 
-  // Fetch invoice + payments from backend
-  fetch(`fetch_payments.php?invoice_id=${invoiceId}`)
-    .then(res => res.json())
-    .then(data => {
-      const tbody = document.getElementById("paymentsTableBody");
-      const totalPaidEl = document.getElementById("totalPaidAmount");
+        fetch("/Jengopay/AdminLTE/dist/pages/financials/invoices/fetch_payments.php?" + params) // adjust path if needed
+            .then(res => res.json())
+            .then(res => {
+                if (!res.success) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error loading payments</td></tr>`;
+                    return;
+                }
 
-      tbody.innerHTML = "";
-      let total = 0;
+                // Render rows
+                tbody.innerHTML = "";
+                let total = 0;
+                res.data.forEach(p => {
+                    total += parseFloat(p.amount);
 
-      if (data.payments && data.payments.length > 0) {
-        data.payments.forEach(p => {
-          total += parseFloat(p.amount);
+                    tbody.innerHTML += `
+    <tr>
+        <td>${p.payment_date}</td>
+        <td>${p.tenant_name ?? "N/A"}</td>
+        <td>${p.reference_number}</td>
+        <td>${p.payment_method}</td>
+        <td>${parseFloat(p.amount).toLocaleString()}</td>
+        <td>
+            <button class="btn btn-sm btn-outline-success add-payment-btn" data-invoice="${p.invoice_id}">
+                <i class="fas fa-plus"></i> Add
+            </button>
+        </td>
+    </tr>
+`;
 
-          tbody.innerHTML += `
-            <tr>
-              <td>${p.payment_date}</td>
-              <td>${p.tenant}</td>
-              <td>${p.reference_number}</td>
-              <td>${p.payment_method}</td>
-              <td>${parseFloat(p.amount).toFixed(2)}</td>
-              <td>
-                <button class="btn btn-sm btn-outline-warning edit-btn" 
-                        data-bs-toggle="modal" 
-                        data-bs-target="#editPaymentModal" 
-                        data-id="${p.id}">
-                  <i class="fa-solid fa-pen me-1"></i> Edit
-                </button>
-              </td>
-            </tr>
-          `;
-        });
-      } else {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="6" class="text-center text-muted">No payments yet.</td>
-          </tr>
-        `;
-      }
 
-      totalPaidEl.textContent = total.toFixed(2);
-    })
-    .catch(err => {
-      console.error(err);
-      document.getElementById("paymentsTableBody").innerHTML = `
-        <tr><td colspan="6" class="text-danger text-center">Error loading payments.</td></tr>
-      `;
+                });
+
+                // Update total
+                totalPaidEl.textContent = total.toLocaleString();
+            })
+            .catch(err => {
+                console.error(err);
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Failed to load payments</td></tr>`;
+            });
+    }
+
+    // Trigger when modal opens
+    const paymentsModal = document.getElementById("paymentsHistoryModal");
+    paymentsModal.addEventListener("shown.bs.modal", function () {
+        fetchPayments();
     });
-}
+
+    // Apply filters button
+    document.getElementById("applyFilters").addEventListener("click", function () {
+        const filters = {
+            date_from: document.getElementById("dateFrom").value,
+            date_to: document.getElementById("dateTo").value,
+            search: document.getElementById("searchPayment").value
+        };
+        fetchPayments(filters);
+    });
+});
 </script>
 
 
+<script>
+  // Delegate save button clicks
+tbody.addEventListener("click", function (e) {
+    if (e.target.closest(".save-payment")) {
+        const row = e.target.closest("tr");
+        const paymentId = row.getAttribute("data-id");
+        const newAmount = row.querySelector(".payment-amount").value;
+
+        fetch("/Jengopay/AdminLTE/dist/pages/financials/invoices/update_payment.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ payment_id: paymentId, amount: newAmount })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert("Payment updated successfully!");
+                // Refresh table
+                fetchPayments();
+            } else {
+                alert("Error: " + data.error);
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Failed to update payment.");
+        });
+    }
+});
+
+</script>
+
+<script>
+  document.addEventListener("click", function(e) {
+    if (e.target.closest(".add-payment-btn")) {
+        const invoiceId = e.target.closest(".add-payment-btn").dataset.invoice;
+        document.getElementById("invoiceIdField").value = invoiceId;
+        new bootstrap.Modal(document.getElementById("addPaymentModal")).show();
+    }
+});
+
+// Handle form submit
+document.getElementById("addPaymentForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+
+    fetch("/Jengopay/AdminLTE/dist/pages/financials/invoices/add_payment.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(res => {
+        if (res.success) {
+            alert("Payment added successfully!");
+            bootstrap.Modal.getInstance(document.getElementById("addPaymentModal")).hide();
+            // Refresh payment history table
+            document.getElementById("paymentsHistoryModal")
+                .dispatchEvent(new Event("shown.bs.modal"));
+        } else {
+            alert("Error: " + res.error);
+        }
+    })
+    .catch(err => console.error(err));
+});
+
+</script>
 
 <!-- JS TOGGLE -->
 <script>
