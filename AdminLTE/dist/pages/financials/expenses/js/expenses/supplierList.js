@@ -3,6 +3,11 @@ export function initSupplierListModal() {
   const overlay = document.getElementById("supplierListOverlay");
   const modal = document.getElementById("supplierListModal");
   const closeBtn = document.querySelector(".supplier-list-close-btn");
+  const openEditBtns = document.querySelectorAll('.editSupplier');
+  const supplierEditOverlay = document.querySelector('#supplierEditOverlay');
+  const supplierEditModal = document.querySelector('#supplierEditModal');
+
+
 
   if (openBtn && overlay && modal) {
     // Open modal
@@ -12,11 +17,31 @@ export function initSupplierListModal() {
       modal.classList.add("active");
     });
 
-    // Close modal
+    // Close modal function
+    function closeListModal() {
+      overlay.classList.remove("active");
+      modal.classList.remove("active");
+    }
+
+    // open Edit modal function
+    function openEditModal() {
+      supplierEditOverlay.classList.add('active');
+      supplierEditModal.classList.add('active');
+    }
+
+    // Close supplier list modal
     if (closeBtn) {
-      closeBtn.addEventListener("click", () => {
-        overlay.classList.remove("active");
-        modal.classList.remove("active");
+      closeBtn.addEventListener("click", closeListModal);
+    }
+
+
+    // close list modal and open register modal
+    if (openEditBtns.length > 0) {
+      openEditBtns.forEach((btn) => {
+        btn.addEventListener("click", ()=>{
+          closeListModal();
+          openEditModal();
+        });
       });
     }
 

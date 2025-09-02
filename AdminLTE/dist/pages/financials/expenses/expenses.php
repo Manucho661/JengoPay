@@ -211,11 +211,11 @@ require_once 'actions/getBuildings.php'
             <div class="app-content">
                 <div class="container-fluid">
                     <div class="row mb-4">
-                        <div class="col-md-8">
+                        <div class="col-md-4">
                             <p class="text-muted">Manage your expenses</p>
                         </div>
 
-                        <div class="col-md-4 d-flex justify-content-end">
+                        <div class="col-md-8 d-flex justify-content-end">
                             <div>
                                 <button class="btn shadow-none text-white" id="supplier-list-open-btn"
                                     style="background: linear-gradient(135deg, #00192D, #002B5B);">
@@ -904,6 +904,41 @@ require_once 'actions/getBuildings.php'
             </form>
         </div>
 
+        <!-- Edit Supplier details -->
+        <div class="supplierEdit-modal-overlay" id="supplierEditOverlay"></div>
+        <div class="supplierEdit-modal" id="supplierEditModal">
+            <button class="supplierEdit-close-btn" id="supplierEditCloseBtn">X</button>
+            <div class="d-flex">
+                <h4>
+                    <i class="fas fa-user-plus"></i> Edit Supplier Details
+                </h4>
+
+
+            </div>
+
+            <form id="supplierEditForm" class="supplierEdit-form">
+                <label for="supplierEditKra">KRA Number</label>
+                <input type="text" id="supplierEditKra" name="kra" required>
+
+                <label for="supplierEditName">Supplier Name</label>
+                <input type="text" id="supplierEditName" name="name" required>
+
+                <label for="supplierEditEmail">Email</label>
+                <input type="email" id="supplierEditEmail" name="email" required>
+
+                <label for="supplierEditPhone">Phone</label>
+                <input type="text" id="supplierEditPhone" name="phone">
+
+                <label for="supplierEditAddress">Address</label>
+                <input type="text" id="supplierEditAddress" name="address">
+
+                <div class="supplierEdit-form-actions">
+                    <button type="submit" class="supplierEdit-submit-btn">Save</button>
+                    <button type="button" class="supplierEdit-cancel-btn" id="supplierEditCancelBtn">Cancel</button>
+                </div>
+            </form>
+        </div>
+
         <!-- Registerd suppliers list -->
         <!-- Overlay -->
         <div class="supplier-list-overlay" id="supplierListOverlay"></div>
@@ -922,18 +957,49 @@ require_once 'actions/getBuildings.php'
             </div>
 
             <!-- Supplier list -->
-            <div class="supplier-list" id="supplierList">
-                <?php foreach($suppliers as $supplier):?>
-                <div class="supplier-card">
-                    <div class="supplier-name"><?= $supplier['supplier_name'] ?></div>
-                    <div class="supplier-detail">KRA PIN: <?= $supplier['kra_pin'] ?></div>
-                    <div class="supplier-detail">Email: <?= $supplier['email'] ?></div>
-                    <div class="supplier-detail">Phone: <?= $supplier['phone'] ?></div>
-                    <div class="supplier-detail">Address: <?= $supplier['address'] ?>, Nairobi</div>
-                    <div class="supplier-detail">Supplied Items: 25</div>
-                </div>
-                <?php endforeach ?>
-            </div>
+            <table class="supplier-list-table">
+                <thead class="supplier-list-tableThead border-0">
+                    <tr class="border-0">
+                        <th class="border-0">Name</th>
+                        <th>KRA PIN</th>
+                        <th>Address</th>
+                        <th>Contact</th>
+                        <th>Supplied Items</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="supplier-list-tableTbody">
+                    <?php foreach ($suppliers as $supplier): ?>
+                        <tr class="supplier-list-tableTr shadow-sm">
+                            <td><?= $supplier['supplier_name'] ?></td>
+                            <td><?= $supplier['kra_pin'] ?></td>
+                            <td><?= $supplier['address'] ?>, Nairobi</td>
+                            <td>
+                                <div class="" style="color:green;"><?= $supplier['email'] ?></div>
+                                <div class="text-primary"><?= $supplier['phone'] ?></div>
+                            </td>
+                            <td>128</td>
+                            <td style="vertical-align: middle;">
+                                <div style="display: flex; gap: 8px; align-items: center; height: 100%;">
+                                    <button
+                                        class="editSupplier btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
+                                        style="background-color: #00192D; color: white; border: none; border-radius: 8px; 
+                                      box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
+                                    <button
+                                        class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
+                                        style="background-color: #ec5b53; color: white; border: none; border-radius: 8px; 
+                                box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach ?>
+                </tbody>
+            </table>
         </div>
 
     </div>

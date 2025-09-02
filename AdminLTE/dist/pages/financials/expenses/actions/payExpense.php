@@ -5,7 +5,7 @@ include '../../../db/connect.php';
 include '../../balanceSheet/actions/handleExpenses/handlePrepaidExpense.php';
 
 //pay Expense journal
-include '../../../financials/actions/journals/payExpenseJournal.php';
+include './journals/payExpenseJournal.php';
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -42,9 +42,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } 
             elseif($amount > $expected_amount){
                 $status = 'Overpaid';
-                // Update the prepaid in assets
-                $prepaidAmount = $amount - $expected_amount;
-                handlePrepaidExpense($prepaidAmount);
             }
             else {
                 $status = 'partially paid';
@@ -76,8 +73,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // Update the expenses table status to 'paid'
                     $statusUpdate = $pdo->prepare("UPDATE expenses SET status = 'paid' WHERE id = ?");
                     $statusUpdate->execute([$expense_id]);
-                    // update retainedEarnings
-                    handleRetainedEarnings($amount);
                 } else {
                     // Only update the payment amount, no status change
                     $updateStmt = $pdo->prepare("UPDATE expense_payments SET amount_paid = ? WHERE expense_id = ?");
@@ -86,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 echo "⚠️ No payment found for this expense.";
             }
-            recordExpensePaymentJournal($pdo, $expected_amount, $expense_id, $amount, $paymentAccountId, $payment_date);
+             recordExpensePaymentJournal($pdo, $expected_amount, $expense_id, $amount, $paymentAccountId, $payment_date);
             $pdo->commit();
         }
     } catch (Exception $e) {
