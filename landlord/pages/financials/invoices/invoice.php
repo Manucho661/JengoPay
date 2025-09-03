@@ -2207,7 +2207,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 </script> -->
-<script>
+
+<!-- <script>
 document.addEventListener("DOMContentLoaded", function () {
   // Handle edit form submission
   document.getElementById("editPaymentForm").addEventListener("submit", function (e) {
@@ -2217,29 +2218,29 @@ document.addEventListener("DOMContentLoaded", function () {
     let newAmount = document.getElementById("editAmount").value;
 
     fetch("/Jengopay/landlord/pages/financials/invoices/update_payment.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        payment_id: paymentId,
-        amount: newAmount
-      })
-    })
-    .then(res => res.json())
-    .then(data => {
-      console.log("Update response:", data);
-      if (data.success) {
-        const row = document.querySelector(`button[data-id="${paymentId}"]`).closest("tr");
-        row.querySelector("td:nth-child(5)").innerText = parseFloat(newAmount).toLocaleString();
+  method: "POST",
+  headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  body: new URLSearchParams({
+    payment_id: paymentId,
+    amount: newAmount
+  })
+})
+.then(res => res.json())
+.then(data => {
+  console.log("Update response:", data); // 🔍
+  if (data.success) {
+    const row = document.querySelector(`button[data-id="${paymentId}"]`).closest("tr");
+    row.querySelector("td:nth-child(5)").innerText = parseFloat(newAmount).toLocaleString();
+    bootstrap.Modal.getInstance(document.getElementById("editPaymentModal")).hide();
+  } else {
+    alert("Failed to update payment: " + (data.message || "Unknown error"));
+  }
+})
+.catch(err => {
+  console.error("Update error:", err);
+  alert("Error updating payment (network issue).");
+});
 
-        bootstrap.Modal.getInstance(document.getElementById("editPaymentModal")).hide();
-      } else {
-        alert("Failed to update payment: " + (data.message || "Unknown error"));
-      }
-    })
-    .catch(err => {
-      console.error("Update error:", err);
-      alert("Error updating payment (network issue).");
-    });
   });
 
   // Delegate event for edit buttons (since rows are dynamic)
@@ -2256,7 +2257,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
-</script>
+</script> -->
+
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -2295,10 +2297,32 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
 
                 totalPaidEl.textContent = total.toLocaleString();
-            })
-            .catch(err => {
-                console.error("Fetch payments error:", err);
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Failed to fetch payments</td></tr>`;
+
+                // 🔹 Attach edit button events after rendering
+                document.querySelectorAll(".edit-payment").forEach(btn => {
+                    btn.addEventListener("click", function () {
+                        const paymentId = this.dataset.id;
+                        const amount = this.dataset.amount;
+
+                        document.getElementById("editPaymentId").value = paymentId;
+                        document.getElementById("editAmount").value = amount;
+
+                        new bootstrap.Modal(document.getElementById("editPaymentModal")).show();
+                    });
+                });
+
+                // Attach event listeners to Add buttons
+                document.querySelectorAll(".add-payment-btn").forEach(btn => {
+                    btn.addEventListener("click", function () {
+                        const invoiceId = this.dataset.invoice;
+                        const tenantName = this.dataset.tenant;
+
+                        document.getElementById("modalInvoiceId").value = invoiceId;
+                        document.getElementById("modalTenantName").value = tenantName;
+
+                        new bootstrap.Modal(document.getElementById("addPaymentModal")).show();
+                    });
+                });
             });
     }
 
@@ -2320,10 +2344,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 bootstrap.Modal.getInstance(document.getElementById("addPaymentModal")).hide();
                 fetchPayments(); // reload list
             } else {
-                alert("Failed to add payment: " + (res.message ?? ""));
+                alert("Failed to add payment");
             }
         })
-        .catch(err => console.error("Add payment error:", err));
+        .catch(err => console.error(err));
     });
 
     // 🔹 Edit Payment Form submit
@@ -2334,8 +2358,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         fetch("/Jengopay/landlord/pages/financials/invoices/update_payment.php", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ payment_id: paymentId, amount })
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `payment_id=${paymentId}&amount=${amount}`
         })
         .then(res => res.json())
         .then(res => {
@@ -2343,10 +2367,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 bootstrap.Modal.getInstance(document.getElementById("editPaymentModal")).hide();
                 fetchPayments(); // refresh after update
             } else {
-                alert("Failed to update payment: " + (res.message ?? ""));
+                alert("Failed to update payment");
             }
         })
-        .catch(err => console.error("Update payment error:", err));
+        .catch(err => console.error(err));
     });
 
     // 🔹 Load payments when history modal opens
@@ -2359,9 +2383,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-
-
-<!-- <script>
+<script>
   // Delegate save button clicks
 tbody.addEventListener("click", function (e) {
     if (e.target.closest(".save-payment")) {
@@ -2391,7 +2413,7 @@ tbody.addEventListener("click", function (e) {
     }
 });
 
-</script> -->
+</script>
 
 <script>
   document.addEventListener("click", function(e) {

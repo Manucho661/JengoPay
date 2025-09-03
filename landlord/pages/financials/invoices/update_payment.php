@@ -1,22 +1,23 @@
 <?php
-include '../../db/connect.php';
-header('Content-Type: application/json');
+include "../../db/connect.php";  // adjust path
 
-// Decode raw JSON input
-$data = json_decode(file_get_contents("php://input"), true);
+header("Content-Type: application/json");
 
-$paymentId = $data['payment_id'] ?? null;
-$amount    = $data['amount'] ?? null;
+try {
+    $data = json_decode(file_get_contents("php://input"), true);
 
-if ($paymentId && $amount) {
-    try {
-        $stmt = $pdo->prepare("UPDATE payments SET amount = ? WHERE id = ?");
-        $stmt->execute([$amount, $paymentId]);
-
-        echo json_encode(["success" => true]);
-    } catch (Exception $e) {
-        echo json_encode(["success" => false, "message" => $e->getMessage()]);
+    if (!isset($data["payment_id"], $data["amount"])) {
+        echo json_encode(["success" => false, "message" => "Missing fields"]);
+        exit;
     }
-} else {
-    echo json_encode(["success" => false, "message" => "Invalid input"]);
+
+    $paymentId = (int)$data["payment_id"];
+    $amount = (float)$data["amount"];
+
+    $stmt = $pdo->prepare("UPDATE payments SET amount = ? WHERE id = ?");
+    $stmt->execute([$amount, $paymentId]);
+
+    echo json_encode(["success" => true]);
+} catch (Exception $e) {
+    echo json_encode(["success" => false, "message" => $e->getMessage()]);
 }
