@@ -5,27 +5,28 @@ header('Content-Type: application/json');
 try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $invoiceId = $_POST['invoice_id'] ?? null;
-    $amount = $_POST['amount'] ?? null;
-    $method = $_POST['payment_method'] ?? null;
-    $reference = $_POST['reference_number'] ?? null;
+    $data = json_decode(file_get_contents("php://input"), true);
 
-    if (!$invoiceId || !$amount || !$method || !$reference) {
-        throw new Exception("Missing required fields");
+    $invoiceId = $data['invoice_id'] ?? null;
+    $amount    = $data['amount'] ?? null;
+    $method    = $data['method'] ?? null;
+
+    if (!$invoiceId || !$amount || !$method) {
+        echo json_encode(["success" => false, "message" => "Missing fields"]);
+        exit;
     }
 
-    $sql = "INSERT INTO payments (invoice_id, amount, payment_method, reference_number, payment_date, status) 
-            VALUES (:invoice_id, :amount, :method, :reference, NOW(), 'completed')";
-    $stmt = $pdo->prepare($sql);
+    $stmt = $pdo->prepare("
+        INSERT INTO payments (invoice_id, amount, payment_method, payment_date, status)
+        VALUES (:invoice_id, :amount, :method, NOW(), 'completed')
+    ");
     $stmt->execute([
         ':invoice_id' => $invoiceId,
-        ':amount' => $amount,
-        ':method' => $method,
-        ':reference' => $reference
+        ':amount'     => $amount,
+        ':method'     => $method,
     ]);
 
-    echo json_encode(['success' => true]);
-} catch (Throwable $e) {
-    http_response_code(500);
-    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    echo json_encode(["success" => true]);
+} catch (Exception $e) {
+    echo json_encode(["success" => false, "message" => $e->getMessage()]);
 }
