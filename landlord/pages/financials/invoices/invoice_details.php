@@ -130,12 +130,11 @@ $randomLogo = $logos[array_rand($logos)];
 
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../../../../dist/css/adminlte.css"/>
+    <link rel="stylesheet" href="../../../../landlord/css/adminlte.css" />
     <!-- <link rel="stylesheet" href="invoices.css"> -->
     <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
-
     <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
@@ -357,6 +356,30 @@ hr {
     z-index: 10;
     white-space: nowrap;
 }
+@media print {
+  body {
+    -webkit-print-color-adjust: exact !important; /* Chrome, Safari */
+    color-adjust: exact !important;              /* Firefox */
+    print-color-adjust: exact !important;        /* New spec */
+  }
+
+  /* Make sure backgrounds show */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Keep your invoice colors */
+  #invoicePrintArea {
+    background-color: white !important;
+    color: #000 !important;
+  }
+
+  /* Hide buttons, footers, nav */
+  .btn, .modal-footer, .modal-header {
+    display: none !important;
+  }
+}
 
     </style>
 </head>
@@ -387,7 +410,7 @@ hr {
             </div>
             <!--end::Sidebar Brand-->
             <!--begin::Sidebar Wrapper-->
-            <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/AdminLTE/dist/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+            <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
             <!--end::Sidebar Wrapper-->
         </aside>
         <!--end::Sidebar-->
@@ -630,15 +653,19 @@ $lineRows .= "<tr>
         }
 ?>
 <div class="modal-footer">
-    <button type="button" class="btn me-2" style="color: #FFC107; background-color: #00192D;" onclick="window.print()">
-        <i class="bi bi-printer-fill"></i> Print Invoice
-    </button>
-    <a href="\JengoPay\AdminLTE\dist\pages\financials\invoices\action\view_invoice_pdf.php"?id=<?= $inv['id'] ?>" class="btn" style="color: #FFC107; background-color: #00192D;" download="invoice_<?= $inv['invoice_number'] ?>.pdf">
+<div class="modal-footer">
+  <button type="button" class="btn me-2" 
+          style="color: #FFC107; background-color: #00192D;" 
+          onclick="printInvoice()">
+      <i class="bi bi-printer-fill"></i> Print Invoice
+  </button>
+</div>
+    <a href="\JengoPay\landlord\pages\financials\invoices\action\view_invoice_pdf.php"?id=<?= $inv['id'] ?>" class="btn" style="color: #FFC107; background-color: #00192D;" download="invoice_<?= $inv['invoice_number'] ?>.pdf">
         <i class="bi bi-download"></i> Download PDF
     </a>
 </div>
-
-<div class="invoice-card">
+<div id="printArea">
+<div  class="invoice-card">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-start mb-3 position-relative" style="overflow: hidden;">
         <div><img id="expenseLogo" src="expenseLogo6.png" alt="JengoPay Logo" class="expense-logo"></div>
@@ -676,7 +703,7 @@ $lineRows .= "<tr>
             <?php if (!empty($inv['unit_number'])): ?>
                 <div> <b><strong><?= htmlspecialchars($inv['unit_number']) ?></b></strong></div>
             <?php endif; ?>
-            <!-- <p><b>B20</b></p> -->
+            <p><b>B20</b></p> 
         </div>
     </div>
     <!-- <div class="text-end">
@@ -744,6 +771,7 @@ $lineRows .= "<tr>
             </table>
         </div>
     </div>
+            </div>
 
     <hr>
     <div class="text-center small text-muted">Thank you for your business!</div>
@@ -794,7 +822,7 @@ $lineRows .= "<tr>
 
 
     <!-- Main Js File -->
-    <script src="/Jengopay/AdminLTE/dist/pages/financials/invoices/js/invoice.js"></script>
+    <script src="/Jengopay/landlord/pages/financials/invoices/js/invoice.js"></script>
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
@@ -845,14 +873,46 @@ $lineRows .= "<tr>
 
 
 <script>
-/* simple highlight of active row */
-document.querySelectorAll('.invoice-link').forEach(link=>{
-link.addEventListener('click', ()=> {
-    document.querySelectorAll('.invoice-link').forEach(l=>l.classList.remove('active'));
-    link.classList.add('active');
-});
-});
+function printInvoice() {
+    // Get the invoice area
+    let printArea = document.getElementById("printArea").cloneNode(true);
+
+    // Remove the first <th> ("Item") from the table header
+    let headers = printArea.querySelectorAll("table thead tr th");
+    if (headers.length > 0) {
+        headers[0].remove();
+    }
+
+    // Remove the first <td> ("Item" column values) from each row
+    let rows = printArea.querySelectorAll("table tbody tr");
+    rows.forEach(row => {
+        if (row.cells.length > 0) {
+            row.deleteCell(0);
+        }
+    });
+
+    // Open a new print window
+    let printWindow = window.open("", "", "width=900,height=650");
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>Invoice Print</title>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+            <style>
+                /* Preserve your CSS exactly */
+                ${document.querySelector("style") ? document.querySelector("style").innerHTML : ""}
+            </style>
+        </head>
+        <body onload="window.print(); window.close();">
+            ${printArea.innerHTML}
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+}
 </script>
+
+
 
     <!-- pdf download plugin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -1056,10 +1116,9 @@ function calculateRow(row) {
 function updateTotals() {
   // Optional: implement total summary across all rows here if needed
 }
-
-function printInvoice() {
-  window.print();
-}
+//  function printInvoice() {
+//   window.print();
+//  }
 
 function downloadPDF() {
   const element = document.querySelector(".invoice-container");

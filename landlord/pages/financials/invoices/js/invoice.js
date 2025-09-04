@@ -609,7 +609,7 @@ $(document).ready(function() {
 
       // AJAX request
       $.ajax({
-          url: isUpdate ? '/Jengopay/AdminLTE/dist/pages/financials/invoices/action/update_draft.php' : '/Jengopay/AdminLTE/dist/pages/financials/invoices/action/save_draft.php',
+          url: isUpdate ? '/Jengopay/landlord/pages/financials/invoices/action/update_draft.php' : '/Jengopay/landlord/pages/financials/invoices/action/save_draft.php',
           type: 'POST',
           data: JSON.stringify(formData),
           contentType: 'application/json',
@@ -617,7 +617,7 @@ $(document).ready(function() {
               if (response.success) {
                   $btn.html('<i class="fas fa-check"></i> ' + (isUpdate ? 'Updated!' : 'Saved!'));
                   setTimeout(() => {
-                      window.location.href = '/Jengopay/AdminLTE/dist/pages/financials/invoices/invoice.php?id=' + response.invoice_id;
+                      window.location.href = '/Jengopay/landlord/pages/financials/invoices/invoice.php?id=' + response.invoice_id;
                   }, 1000);
               } else {
                   alert('Error: ' + response.message);
@@ -646,7 +646,7 @@ $(document).ready(function() {
 function editInvoice(invoiceId) {
 
   $.ajax({
-      url: '/Jengopay/AdminLTE/dist/pages/actions/get_invoice.php',
+      url: '/Jengopay/landlord/pages/actions/get_invoice.php',
       type: 'GET',
       data: { id: invoiceId },
       dataType: 'json',
@@ -1058,7 +1058,7 @@ buildingSelect.addEventListener('change', () => {
   if (!buildingId) return;
 
   // Fetch tenants for that building
-  fetch(`/Jengopay/AdminLTE/dist/pages/financials/invoices/action/get_tenants.php?building_id=${buildingId}`)
+  fetch(`/Jengopay/landlord/pages/financials/invoices/action/get_tenants.php?building_id=${buildingId}`)
       .then(r => r.json())
       .then(tenants => {
           tenants.forEach(t => {
