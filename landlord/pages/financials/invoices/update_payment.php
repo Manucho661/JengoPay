@@ -1,23 +1,18 @@
 <?php
-include "../../db/connect.php";  // adjust path
-
+include "../../db/connect.php";
 header("Content-Type: application/json");
 
-try {
-    $data = json_decode(file_get_contents("php://input"), true);
+if (!isset($_POST['id'], $_POST['amount'])) {
+    echo json_encode(["success" => false, "message" => "Missing fields"]);
+    exit;
+}
 
-    if (!isset($data["payment_id"], $data["amount"])) {
-        echo json_encode(["success" => false, "message" => "Missing fields"]);
-        exit;
-    }
+$id = (int) $_POST['id'];
+$amount = (float) $_POST['amount'];
 
-    $paymentId = (int)$data["payment_id"];
-    $amount = (float)$data["amount"];
-
-    $stmt = $pdo->prepare("UPDATE payments SET amount = ? WHERE id = ?");
-    $stmt->execute([$amount, $paymentId]);
-
+$stmt = $pdo->prepare("UPDATE payments SET amount = ? WHERE id = ?");
+if ($stmt->execute([$amount, $id])) {
     echo json_encode(["success" => true]);
-} catch (Exception $e) {
-    echo json_encode(["success" => false, "message" => $e->getMessage()]);
+} else {
+    echo json_encode(["success" => false, "message" => "Database error"]);
 }

@@ -871,47 +871,48 @@ $lineRows .= "<tr>
         document.getElementById("inspectionDate").setAttribute("min", today);
     </script>
 
+
 <script>
 function printInvoice() {
-    const printArea = document.getElementById("printArea");
-    if (!printArea) {
-        alert("Nothing to print!");
-        return;
+    // Get the invoice area
+    let printArea = document.getElementById("printArea").cloneNode(true);
+
+    // Remove the first <th> ("Item") from the table header
+    let headers = printArea.querySelectorAll("table thead tr th");
+    if (headers.length > 0) {
+        headers[0].remove();
     }
 
-    const printContent = printArea.innerHTML;
-    const printWindow = window.open('', '', 'width=900,height=650');
+    // Remove the first <td> ("Item" column values) from each row
+    let rows = printArea.querySelectorAll("table tbody tr");
+    rows.forEach(row => {
+        if (row.cells.length > 0) {
+            row.deleteCell(0);
+        }
+    });
 
+    // Open a new print window
+    let printWindow = window.open("", "", "width=900,height=650");
     printWindow.document.write(`
         <html>
         <head>
-            <title>Invoice</title>
+            <title>Invoice Print</title>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
             <style>
-                body { font-family: Arial, sans-serif; padding: 20px; }
-                table { width: 100%; border-collapse: collapse; }
-                th, td { border: 1px solid #ddd; padding: 8px; }
-                th { background: #f4f4f4; }
-                img { max-height: 100px; }
-                
-                /* ✅ Keep design close to your modal */
-                .text-end { text-align: right; }
-                .text-center { text-align: center; }
-                .small { font-size: 0.9rem; }
-                .rounded-2 { border-radius: 8px; }
+                /* Preserve your CSS exactly */
+                ${document.querySelector("style") ? document.querySelector("style").innerHTML : ""}
             </style>
         </head>
-        <body>
-            ${printContent}
+        <body onload="window.print(); window.close();">
+            ${printArea.innerHTML}
         </body>
         </html>
     `);
-
     printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
-    printWindow.close();
 }
 </script>
+
+
 
     <!-- pdf download plugin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>

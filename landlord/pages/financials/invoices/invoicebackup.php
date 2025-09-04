@@ -1210,10 +1210,11 @@ header {
                             <!-- <button class="btn btn-outline" style="color: #FFC107; background-color:#00192D;">
                             <i class="fas fa-download"></i> Export
                         </button> -->
-            <!-- ✅ Payments Button -->
-<button class="btn btn-payments" data-bs-toggle="modal" data-bs-target="#paymentsHistoryModal">
-  <i class="fas fa-money-bill-wave"></i> Payments
-</button>
+            <!-- Payments Button -->
+            <button class="btn btn-payments" data-bs-toggle="modal" data-bs-target="#paymentsHistoryModal">
+        <i class="fas fa-money-bill-wave"></i> Payments
+    </button>
+
 
                             <button class="btn" id="create-invoice-btn" style="color: #FFC107; background-color:#00192D;">
                                 <i class="fas fa-plus"></i> Create Invoice
@@ -1612,7 +1613,105 @@ header {
                         </div>
 
 
+<!-- Payments History Modal -->
+<div class="modal fade" id="paymentsHistoryModal" tabindex="-1" aria-labelledby="paymentsHistoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header modal-header-payments">
+        <h5 class="modal-title text-warning fw-semibold" id="paymentsHistoryModalLabel">
+          <i class="fas fa-history me-2"></i> Payment History
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <!-- Payments Table with Inline Add Row -->
+        <div class="table-responsive">
+          <table class="table table-hover payment-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Tenant</th>
+                <th>Reference</th>
+                <th>Method</th>
+                <th>Amount (KES)</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="paymentsTableBody">
+              <!-- Existing payments will be populated here -->
 
+              <!-- 🔹 New Payment Input Row -->
+              <tr>
+                <td><input type="date" class="form-control" id="newDate"></td>
+                <td><input type="text" class="form-control" id="newTenant" placeholder="Tenant"></td>
+                <td><input type="text" class="form-control" id="newReference" placeholder="Reference"></td>
+                <td>
+                  <select class="form-control" id="newMethod">
+                    <option value="Cash">Cash</option>
+                    <option value="Bank Transfer">Bank Transfer</option>
+                    <option value="M-Pesa">M-Pesa</option>
+                  </select>
+                </td>
+                <td><input type="number" class="form-control" id="newAmount" placeholder="0.00"></td>
+                <td>
+                  <button class="btn btn-success btn-sm" id="savePayment">
+                    <i class="fas fa-plus"></i> Add
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr class="total-row">
+                <td colspan="4" class="text-end">Total Paid:</td>
+                <td id="totalPaidAmount">0.00</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+      
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Edit Payment Modal -->
+<div class="modal fade" id="editPaymentModal" tabindex="-1" aria-labelledby="editPaymentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <!-- Header -->
+      <div class="modal-header">
+        <h5 class="modal-title text-warning" id="editPaymentModalLabel">
+          <i class="fas fa-edit me-2"></i> Edit Payment Amount
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+      <!-- Body -->
+      <div class="modal-body">
+        <form id="editPaymentForm">
+  <input type="hidden" id="editPaymentId" name="payment_id">
+  <div class="mb-3">
+    <label for="editAmount" class="form-label">Amount (KES)</label>
+    <input type="number" class="form-control" id="editAmount" name="amount" required>
+  </div>
+  <button type="submit" class="btn w-100" style="background-color:#00192D; color:#FFC107;">
+    Update Payment
+  </button>
+</form>
+
+      </div>
+    </div>
+  </div>
+</div>
 
          <div class="invoice-list">
                             <!-- Invoice Item -->
@@ -1863,134 +1962,8 @@ header {
     </div>
     </div>
 
- <!-- modals  -->
-<!-- ✅ Payments History Modal -->
-<div class="modal fade" id="paymentsHistoryModal" tabindex="-1" aria-labelledby="paymentsHistoryModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-xl">
-    <div class="modal-content">
-      <div class="modal-header" style="background-color: #00192D; color: #FFC107;" >
-        <h5 class="modal-title" id="paymentsHistoryModalLabel">Payments History</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <table class="table table-striped table-bordered" id="paymentsTable">
-          <thead class="" style="background-color: #00192D; color: #FFC107;">
-            <tr>
-              <th>ID</th>
-              <th>Tenant</th>
-              <th>Invoice</th>
-              <th>Amount</th>
-              <th>Method</th>
-              <th>Date</th>
-              <th>Reference</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-success" onclick="window.open('/Jengopay/landlord/pages/financials/invoices/payments_report.php', '_blank')">
-          <i class="fas fa-file-alt"></i> Generate Report
-        </button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ✅ Edit Payment Modal -->
-<div class="modal fade" id="editPaymentModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <form id="editPaymentForm">
-      <div class="modal-content">
-        <div class="modal-header bg-warning">
-          <h5 class="modal-title">Edit Payment</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <input type="hidden" id="editPaymentId" name="id">
-          <div class="mb-3">
-            <label class="form-label">Amount</label>
-            <input type="number" step="0.01" class="form-control" id="editAmount" name="amount" required>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn" style="background-color: #00192D; color: #FFC107;">PAY</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
-
-
-
- <!-- inline js -->
-
- <script>
-document.addEventListener("DOMContentLoaded", function() {
-  // Load payments when modal is opened
-  document.getElementById("paymentsHistoryModal").addEventListener("show.bs.modal", loadPayments);
-
-  function loadPayments() {
-    fetch("/Jengopay/landlord/pages/financials/invoices/get_payments.php")
-      .then(res => res.json())
-      .then(data => {
-        let tbody = document.querySelector("#paymentsTable tbody");
-        tbody.innerHTML = "";
-        data.forEach(p => {
-          tbody.innerHTML += `
-            <tr>
-              <td>${p.id}</td>
-              <td>${p.tenant}</td>
-              <td>${p.invoice_id}</td>
-              <td>${p.amount}</td>
-              <td>${p.payment_method}</td>
-              <td>${p.payment_date}</td>
-              <td>${p.reference_number ?? ""}</td>
-              <td>${p.status}</td>
-              <td>
-                <button class="btn btn-sm btn-warning" onclick="openEdit(${p.id}, ${p.amount})">
-                  <i class="fas fa-edit"></i> Edit
-                </button>
-              </td>
-            </tr>`;
-        });
-      });
-  }
-
-  // Open edit modal
-  window.openEdit = function(id, amount) {
-    document.getElementById("editPaymentId").value = id;
-    document.getElementById("editAmount").value = amount;
-    new bootstrap.Modal(document.getElementById("editPaymentModal")).show();
-  };
-
-  // Submit edit form
-  document.getElementById("editPaymentForm").addEventListener("submit", function(e) {
-    e.preventDefault();
-    let formData = new FormData(this);
-
-    fetch("/Jengopay/landlord/pages/financials/invoices/update_payment.php", {
-      method: "POST",
-      body: formData
-    })
-    .then(res => res.json())
-    .then(result => {
-      if (result.success) {
-        alert("Payment updated successfully!");
-        bootstrap.Modal.getInstance(document.getElementById("editPaymentModal")).hide();
-        loadPayments();
-      } else {
-        alert("Update failed: " + result.message);
-      }
-    });
-  });
-});
-</script>
-
+    
+<!-- inline js -->
 
     <script>
 document.getElementById('fileInput').addEventListener('change', function(e) {
@@ -2015,6 +1988,410 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
 });
 </script>
 
+<!-- <script>
+  function openPaymentsModal(invoiceId) {
+  fetch('fetch_payments.php?invoice_id=' + invoiceId)
+    .then(res => res.json())
+    .then(data => {
+      if (data.length === 0) {
+        document.getElementById("invoiceDetails").innerHTML = "<p>No invoice found.</p>";
+        document.getElementById("paymentHistory").innerHTML = "";
+        return;
+      }
+
+      // Use first row for invoice info
+      let invoice = data[0];
+
+      document.getElementById("invoiceDetails").innerHTML = `
+        <div class="col-md-3"><strong>Invoice ID:</strong> ${invoice.invoice_number}</div>
+        <div class="col-md-3"><strong>Tenant:</strong> ${invoice.tenant}</div>
+        <div class="col-md-3"><strong>Due Date:</strong> ${invoice.due_date}</div>
+        <div class="col-md-3"><strong>Status:</strong> 
+          <span class="badge ${invoice.payment_status === 'paid' ? 'bg-success' : 'bg-warning'}">
+            ${invoice.payment_status}
+          </span>
+        </div>
+      `;
+
+      // Payment history
+      let historyHTML = "";
+      data.forEach(payment => {
+        if (payment.payment_id) {
+          historyHTML += `
+            <div class="payment-item mb-4">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <strong>Payment Date:</strong> ${payment.payment_date}
+                  <strong class="ms-3">Method:</strong> ${payment.payment_method}
+                </div>
+                <div class="d-flex align-items-center">
+                  <span class="badge bg-success me-3">${payment.status}</span>
+                  <button class="btn btn-sm btn-outline-warning edit-btn" 
+                          data-bs-toggle="modal" 
+                          data-bs-target="#editPaymentModal" 
+                          data-payment-id="${payment.payment_id}">
+                    <i class="fa-solid fa-pen me-1"></i> Edit
+                  </button>
+                </div>
+              </div>
+              <div class="mt-3 row">
+                <div class="col-md-6"><strong>Reference:</strong> ${payment.reference_number}</div>
+                <div class="col-md-6 d-flex justify-content-between align-items-center">
+                  <strong>Amount:</strong> <span class="text-success fw-bold">KES ${parseFloat(payment.amount).toLocaleString()}</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      });
+
+      document.getElementById("paymentHistory").innerHTML = historyHTML || "<p>No payments recorded.</p>";
+
+      // Show modal
+      new bootstrap.Modal(document.getElementById('paymentsModal')).show();
+    })
+    .catch(err => console.error(err));
+}
+
+</script> -->
+
+<!-- Script to activate functionality -->
+<!-- <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const tbody = document.getElementById("paymentsTableBody");
+    const totalPaidEl = document.getElementById("totalPaidAmount");
+    let paymentsData = [];
+
+    function renderTable(data) {
+        tbody.innerHTML = "";
+        let total = 0;
+        data.forEach(p => {
+            if (["completed", "partial"].includes(p.status.toLowerCase())) {
+                total += parseFloat(p.amount);
+            }
+            tbody.innerHTML += `
+                <tr>
+                    <td>${p.date}</td>
+                    <td>${p.tenant}</td>
+                    <td>${p.reference}</td>
+                    <td>${p.method}</td>
+                    <td>${parseFloat(p.amount).toFixed(2)}</td>
+                  
+                    <td><button class="btn btn-sm btn-primary">View</button></td>
+                </tr>`;
+        });
+        totalPaidEl.textContent = total.toFixed(2);
+    }
+
+    // Fetch from PHP endpoint
+    fetch("fetch_payments.php?invoice_id=" + new URLSearchParams(window.location.search).get("invoice_id"))
+        .then(res => res.json())
+        .then(data => {
+            paymentsData = data;
+            renderTable(paymentsData);
+        })
+        .catch(err => console.error(err));
+
+    // Filters
+    document.getElementById("applyFilters").addEventListener("click", function () {
+        const from = document.getElementById("dateFrom").value;
+        const to = document.getElementById("dateTo").value;
+        const search = document.getElementById("searchPayment").value.toLowerCase();
+
+        let filtered = paymentsData.filter(p => {
+            let validDate = true;
+            if (from && p.date < from) validDate = false;
+            if (to && p.date > to) validDate = false;
+
+            let validSearch = !search || p.tenant.toLowerCase().includes(search) || p.reference.toLowerCase().includes(search);
+            return validDate && validSearch;
+        });
+
+        renderTable(filtered);
+    });
+
+    // Export CSV
+    document.getElementById("exportPayments").addEventListener("click", function () {
+        let csv = "Date,Tenant,Reference,Method,Amount,Status\n";
+        paymentsData.forEach(p => {
+            csv += `${p.date},${p.tenant},${p.reference},${p.method},${p.amount},${p.status}\n`;
+        });
+
+        const blob = new Blob([csv], { type: "text/csv" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "payments.csv";
+        a.click();
+        URL.revokeObjectURL(url);
+    });
+});
+</script> -->
+
+<!-- <script>
+document.addEventListener("DOMContentLoaded", function () {
+  // Handle edit form submission
+  document.getElementById("editPaymentForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    let paymentId = document.getElementById("editPaymentId").value;
+    let newAmount = document.getElementById("editAmount").value;
+
+    fetch("/Jengopay/landlord/pages/financials/invoices/update_payment.php", {
+  method: "POST",
+  headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  body: new URLSearchParams({
+    payment_id: paymentId,
+    amount: newAmount
+  })
+})
+.then(res => res.json())
+.then(data => {
+  console.log("Update response:", data); // 🔍
+  if (data.success) {
+    const row = document.querySelector(`button[data-id="${paymentId}"]`).closest("tr");
+    row.querySelector("td:nth-child(5)").innerText = parseFloat(newAmount).toLocaleString();
+    bootstrap.Modal.getInstance(document.getElementById("editPaymentModal")).hide();
+  } else {
+    alert("Failed to update payment: " + (data.message || "Unknown error"));
+  }
+})
+.catch(err => {
+  console.error("Update error:", err);
+  alert("Error updating payment (network issue).");
+});
+
+  });
+
+  // Delegate event for edit buttons (since rows are dynamic)
+  document.getElementById("paymentsTableBody").addEventListener("click", function (e) {
+    if (e.target.closest(".edit-payment")) {
+      const btn = e.target.closest(".edit-payment");
+      let paymentId = btn.dataset.id;
+      let amount = btn.dataset.amount;
+
+      document.getElementById("editPaymentId").value = paymentId;
+      document.getElementById("editAmount").value = amount;
+
+      new bootstrap.Modal(document.getElementById("editPaymentModal")).show();
+    }
+  });
+});
+</script> -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const tbody = document.getElementById("paymentsTableBody");
+    const totalPaidEl = document.getElementById("totalPaidAmount");
+
+    // 🔹 Fetch & render payments
+    function fetchPayments() {
+        fetch("/Jengopay/landlord/pages/financials/invoices/fetch_payments.php")
+            .then(res => res.json())
+            .then(res => {
+                if (!res.success) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error loading payments</td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = "";
+                let total = 0;
+
+                res.data.forEach(p => {
+                    total += parseFloat(p.amount);
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${p.payment_date}</td>
+                            <td>${p.tenant_name ?? "N/A"}</td>
+                            <td>${p.reference_number}</td>
+                            <td>${p.payment_method}</td>
+                            <td>${parseFloat(p.amount).toLocaleString()}</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm edit-payment" 
+                                    data-id="${p.id}" 
+                                    data-amount="${p.amount}">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                            </td>
+                        </tr>`;
+                });
+
+                totalPaidEl.textContent = total.toLocaleString();
+            })
+            .catch(err => {
+                console.error("Fetch error:", err);
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error fetching payments</td></tr>`;
+            });
+    }
+
+    // 🔹 Handle edit button click (event delegation)
+    tbody.addEventListener("click", function (e) {
+        if (e.target.closest(".edit-payment")) {
+            const btn = e.target.closest(".edit-payment");
+            const paymentId = btn.getAttribute("data-id");
+            const amount = btn.getAttribute("data-amount");
+
+            // ✅ Fill modal fields
+            document.getElementById("editPaymentId").value = paymentId;
+            document.getElementById("editAmount").value = amount;
+
+            // ✅ Show the modal
+            const modal = new bootstrap.Modal(document.getElementById("editPaymentModal"));
+            modal.show();
+        }
+    });
+
+    // 🔹 Load payments when history modal opens
+    document.getElementById("paymentsHistoryModal")
+        .addEventListener("shown.bs.modal", function () {
+            fetchPayments();
+        });
+});
+</script>
+
+<script>
+  // When clicking edit button
+document.querySelectorAll('.editPaymentBtn').forEach(btn => {
+  btn.addEventListener('click', function () {
+    let paymentId = this.dataset.id;
+    let amount = this.dataset.amount;
+
+    document.getElementById('editPaymentId').value = paymentId;
+    document.getElementById('editAmount').value = amount;
+
+    let modal = new bootstrap.Modal(document.getElementById('editPaymentModal'));
+    modal.show();
+  });
+});
+
+// Handle form submit
+document.getElementById('editPaymentForm').addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  let paymentId = document.getElementById('editPaymentId').value;
+  let amount = document.getElementById('editAmount').value;
+
+  let response = await fetch('/Jengopay/landlord/pages/financials/invoices/update_payment.php', {
+    method: 'POST',
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ payment_id: paymentId, amount: amount })
+  });
+
+  let result = await response.json();
+  if (result.success) {
+    alert("Payment updated successfully!");
+    location.reload();
+  } else {
+    alert("Update failed: " + result.message);
+  }
+});
+
+</script>
+
+
+
+<!-- <script>
+document.addEventListener("DOMContentLoaded", function () {
+  // Edit Payment Form submit
+  document.getElementById("editPaymentForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const paymentId = document.getElementById("editPaymentId").value;
+    const amount = document.getElementById("editAmount").value;
+
+    fetch("/Jengopay/landlord/pages/financials/invoices/update_payment.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ payment_id: paymentId, amount: amount })
+    })
+    .then(res => res.json())
+    .then(res => {
+      if (res.success) {
+        // Hide modal
+        bootstrap.Modal.getInstance(document.getElementById("editPaymentModal")).hide();
+
+        // Refresh payment list (if you have fetchPayments())
+        if (typeof fetchPayments === "function") {
+          fetchPayments();
+        }
+
+        alert("✅ Payment updated successfully!");
+      } else {
+        alert("❌ Failed to update payment: " + (res.error || "Unknown error"));
+      }
+    })
+    .catch(err => console.error("Update error:", err));
+  });
+});
+</script> -->
+
+
+<!-- <script>
+  // Delegate save button clicks
+tbody.addEventListener("click", function (e) {
+    if (e.target.closest(".save-payment")) {
+        const row = e.target.closest("tr");
+        const paymentId = row.getAttribute("data-id");
+        const newAmount = row.querySelector(".payment-amount").value;
+
+        fetch("/Jengopay/landlord/pages/financials/invoices/update_payment.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ payment_id: paymentId, amount: newAmount })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert("Payment updated successfully!");
+                // Refresh table
+                fetchPayments();
+            } else {
+                alert("Error: " + data.error);
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Failed to update payment.");
+        });
+    }
+});
+
+</script> -->
+
+<script>
+  document.addEventListener("click", function(e) {
+    if (e.target.closest(".add-payment-btn")) {
+        const invoiceId = e.target.closest(".add-payment-btn").dataset.invoice;
+        document.getElementById("invoiceIdField").value = invoiceId;
+        new bootstrap.Modal(document.getElementById("addPaymentModal")).show();
+    }
+});
+
+// Handle form submit
+document.getElementById("addPaymentForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+
+    fetch("/Jengopay/landlord/pages/financials/invoices/add_payment.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(res => {
+        if (res.success) {
+            alert("Payment added successfully!");
+            bootstrap.Modal.getInstance(document.getElementById("addPaymentModal")).hide();
+            // Refresh payment history table
+            document.getElementById("paymentsHistoryModal")
+                .dispatchEvent(new Event("shown.bs.modal"));
+        } else {
+            alert("Error: " + res.error);
+        }
+    })
+    .catch(err => console.error(err));
+});
+
+</script>
 
 <!-- JS TOGGLE -->
 <script>

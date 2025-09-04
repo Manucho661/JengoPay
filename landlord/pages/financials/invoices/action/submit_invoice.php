@@ -205,11 +205,11 @@ if (!empty($_FILES['attachment']['name'][0])) {
         echo json_encode([
             'success' => true,
             'invoice_number' => $invoice_number,
-            'redirect_url' => '/Jengopay/AdminLTE/dist/pages/financials/invoices/invoice.php?draft_saved=1'
+            'redirect_url' => '/Jengopay/landlord/pages/financials/invoices/invoice.php?draft_saved=1'
         ]);
     } else {
       $_SESSION['success_message'] = "✅ Submitted Successfully! Invoice #{$invoice_number} has been saved.";
-      header("Location: /Jengopay/AdminLTE/dist/pages/financials/invoices/invoice.php");
+      header("Location: /Jengopay/landlord/pages/financials/invoices/invoice.php");
       exit;
 
     }
