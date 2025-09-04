@@ -26,11 +26,6 @@ export function initSupplierModal() {
     if (supplierForm) {
         supplierForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            alert("Supplier Registered:\n" +
-                "KRA: " + supplierForm.kra.value + "\n" +
-                "Name: " + supplierForm.name.value + "\n" +
-                "Email: " + supplierForm.email.value);
-            supplierForm.reset();
             closeSupplierModal();
         });
     }

@@ -34,3 +34,20 @@ export async function editSupplier(formElement){
   });
   return response.text();
 }
+
+// expenseApi.js
+export async function checkFieldAvailability(field, value) {
+  if (value.length < 3) return { exists: false, skip: true };
+
+  try {
+    const response = await fetch(
+      `actions/check_Regfields.php?field=${field}&value=${encodeURIComponent(value)}`
+    );
+
+    return await response.json(); 
+
+  } catch (error) {
+    return { error: "Network error: " + error.message };
+  }
+}
+

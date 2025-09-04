@@ -3,6 +3,33 @@
   color: #FFC107;
 }
 
+/* buttons/nav(General styls) */
+.mobile-nav-container {
+  display: none;
+}
+
+@media (max-width: 480px) {
+
+  .mobile-nav-container {
+    display: block;
+    /* Show the collapsed menu container */
+  }
+
+  #addSupplier {
+    display: none;
+  }
+#supplier-list-open-btn{
+    white-space: nowrap;
+    height: fit-content;
+    margin-right: 5px;
+}
+  header {
+    justify-content: space-between;
+    /* To keep logo and icon apart */
+  }
+}
+
+
 .summary-info.item-name {
   /* color: rgb(41, 41, 41); */
   color: #767676;
@@ -97,7 +124,7 @@ textarea:focus,
 
 .custom-select-wrapper {
   position: relative;
-  width: 250px;
+  width: 100%;
 }
 
 .custom-select {
@@ -170,6 +197,16 @@ textarea:focus,
   background-color: #4C5D6E;
   color: #FFC107;
 }
+@media (max-width: 480px){
+  .custom-select{
+    width: 100%;
+  }
+}
+
+
+
+
+
 
 
 

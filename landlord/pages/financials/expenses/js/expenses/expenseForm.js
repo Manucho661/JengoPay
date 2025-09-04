@@ -1,6 +1,10 @@
 import { createExpense, payExpense, registerSupplier, editSupplier } from "./expenseApi.js";
 
-export function setupExpenseForms() {
+export function setupExpenseForms(invalidFields) {
+
+  const submitMsg = document.getElementById("submitMsg");
+  const submitBtn = document.getElementById("registerBtn");
+
   const expenseForm = document.getElementById("expenseForm");
   if (expenseForm) {
     expenseForm.addEventListener("submit", async (e) => {
@@ -25,9 +29,17 @@ export function setupExpenseForms() {
   if (registerSupplierForm) {
     registerSupplierForm.addEventListener("submit", async (e) => {
       e.preventDefault();
+
+      if (invalidFields.size > 0) {
+        submitMsg.textContent = "Please fix the errors before submitting the form.";
+        submitMsg.style.color = "red";
+
+        return; // ❌ stop execution if there are invalid fields
+      }
+
       const result = await registerSupplier(registerSupplierForm);
       console.log("Register supplier response:", result);
-    })
+    });
   }
 
   const editSupplierForm = document.getElementById("supplierEditForm");

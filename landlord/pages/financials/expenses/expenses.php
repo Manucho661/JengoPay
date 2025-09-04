@@ -201,7 +201,7 @@ require_once 'actions/getBuildings.php'
                     <!--begin::Row-->
                     <div class="row">
                         <div class="col-sm-8">
-                            <h3 class="mb-0 contact_section_header"> 💰 &nbsp; Expenses</h3>
+                            <h3 class="mb-0 m-0 contact_section_header"> 💰 Expenses</h3>
                         </div>
                         <!--end::Row-->
                     </div>
@@ -211,22 +211,35 @@ require_once 'actions/getBuildings.php'
             <div class="app-content">
                 <div class="container-fluid">
                     <div class="row mb-4">
-                        <div class="col-md-12 d-flex justify-content-between">
-                            <p class="text-muted">Manage your expenses</p>
-                            <div>
-                                <button class="btn shadow-none text-white" id="supplier-list-open-btn"
-                                    style="background: linear-gradient(135deg, #00192D, #002B5B);">
-                                    Registered Suppliers
-                                </button>
-                                <button class="btn shadow-none text-white" id="addSupplier"
-                                    style="background: linear-gradient(135deg, #00192D, #002B5B);">
-                                    Register Supplier
-                                </button>
+                        <div class="col-md-12 d-flex flex-column justify-content-center">
+                            <div class="d-flex justify-content-between">
+                                <div class="text-muted mt-0">
+                                    Manage your expenses
+                                </div>
+
+                                <div class="d-flex" style="vertical-align: middle;">
+                                    <button class="btn shadow-none text-white" id="supplier-list-open-btn"
+                                        style="background: linear-gradient(135deg, #00192D, #002B5B); margin-right:2px;">
+                                        Registered Suppliers
+                                    </button>
+                                    <button class="btn shadow-none text-white" id="addSupplier"
+                                        style="background: linear-gradient(135deg, #00192D, #002B5B);">
+                                        Register Supplier
+                                    </button>
+                                    <!-- Dropdown on small screens -->
+                                    <div class="mobile-nav-container">
+                                        <button id="menu-toggle"
+                                            class="btn menu-icon"
+                                            style="border-radius: 10%; border: 1px solid #00192D;">
+                                            &#8942;
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="row g-3 mb-4">
-                        <div class="col-md-3">
+                        <div class="col-md-3 col-sm-12">
                             <div class="custom-select-wrapper">
                                 <div class="custom-select shadow-sm" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
                                     Filter By Building
@@ -880,9 +893,11 @@ require_once 'actions/getBuildings.php'
             <form id="supplierForm" class="supplier-form">
                 <label for="supplierKra">KRA Number</label>
                 <input type="text" id="supplierKra" name="kra" required>
+                <small id="supplierKraMsg" style="color:red;"></small> <!-- error/success message -->
 
                 <label for="supplierName">Supplier Name</label>
                 <input type="text" id="supplierName" name="name" required>
+                <small id="supplierNameMsg" style="color:red;"></small> <!-- error/success message -->
 
                 <label for="supplierEmail">Email</label>
                 <input type="email" id="supplierEmail" name="email" required>
@@ -894,8 +909,11 @@ require_once 'actions/getBuildings.php'
                 <input type="text" id="supplierAddress" name="address">
 
                 <div class="supplier-form-actions">
-                    <button type="submit" class="supplier-submit-btn">Save</button>
+
+                    <button type="submit" class="supplier-submit-btn" id="registerBtn">Save</button>
                     <button type="button" class="supplier-cancel-btn" id="supplierCancelBtn">Cancel</button>
+                    <div id="submitMsg" style="color: red; margin-top: 5px;"></div>
+
                 </div>
             </form>
         </div>

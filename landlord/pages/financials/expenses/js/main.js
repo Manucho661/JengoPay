@@ -5,17 +5,20 @@ import { payExpense } from "./expenses/payExpense.js";
 import { setupExpenseCalculator } from "./expenses/expenseCalculator.js";
 import { initSupplierModal } from "./expenses/createSupplier.js";
 import { initSupplierListModal } from "./expenses/supplierList.js";
+import { vldtSupplierReg } from "./expenses/expFormValidations.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("Document ready");
 
   // UI setup
   combobox();
   document.querySelectorAll(".custom-select-wrapper").forEach(initializeCustomSelect);
-
+// Track invalid fields for forms
+  const invalidFields = new Set();
   // Expense features
   setupExpenseCalculator();
-  setupExpenseForms();
+  setupExpenseForms(invalidFields);
+
+  
 
   // Attach payExpense to buttons dynamically
   document.querySelectorAll("[data-action='pay-expense']").forEach(button => {
@@ -26,13 +29,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // ✅ Initialize supplier create modal
+  // Initialize supplier create modal
   initSupplierModal();
 
-  // ✅ Initialize supplier list modal
+  //Initialize supplier list modal
   initSupplierListModal();
 
-  // ✅ Open supplier create modal on click
+  // Open supplier create modal on click
   document.addEventListener("click", (e) => {
     if (e.target && (e.target.id === "registerSupplierButton" || e.target.id === "addSupplier")) {
       e.preventDefault();
@@ -48,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // ✅ Open supplier list modal on click
+  // Open supplier list modal on click
   document.addEventListener("click", (e) => {
     if (e.target && e.target.id === "supplier-list-open-btn") {
       e.preventDefault();
@@ -63,5 +66,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
+
+  // Initialize validation functions
+  vldtSupplierReg(invalidFields);
+
 
 });
