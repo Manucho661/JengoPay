@@ -46,7 +46,7 @@ require_once "get_requests.php";
 
   <!--end::Third Party Plugin(Bootstrap Icons)-->
   <!--begin::Required Plugin(AdminLTE)-->
-  <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
+  <link rel="stylesheet" href="../../css/adminlte.css" />
   <!-- <link rel="stylesheet" href="text.css" /> -->
   <!--end::Required Plugin(AdminLTE)-->
   <!-- apexcharts -->
@@ -311,7 +311,7 @@ require_once "get_requests.php";
       <!--end::Sidebar Brand-->
       <!--begin::Sidebar Wrapper-->
       <!-- <div id="sidebar"></div> -->
-      <div> <?php include_once '../includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+      <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
 
       <!--end::Sidebar Wrapper-->
     </aside>
@@ -952,7 +952,7 @@ require_once "get_requests.php";
   <!-- Overlay scripts -->
   <!-- main js file -->
   <script src="maintenance.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/js/bootstrap.bundle.min.js"></script>
 
   </script>
 
@@ -1057,48 +1057,15 @@ require_once "get_requests.php";
   </script>
 
   </script>
-  <!-- End script for data_table -->
-
-  <!--Begin sidebar script -->
-  <!-- <script>
-  fetch('../bars/sidebar.html')  // Fetch the file
-      .then(response => response.text()) // Convert it to text
-      .then(data => {
-          document.getElementById('sidebar').innerHTML = data; // Insert it
-      })
-      .catch(error => console.error('Error loading the file:', error)); // Handle errors
-</script> -->
-  <!-- end sidebar script -->
-
-
 
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
     integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
     crossorigin="anonymous"></script>
   <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-  <script src="../../../dist/js/adminlte.js"></script>
+  <script src="../../js/adminlte.js"></script>
   <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
-  <script>
-    const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-    const Default = {
-      scrollbarTheme: 'os-theme-light',
-      scrollbarAutoHide: 'leave',
-      scrollbarClickScroll: true,
-    };
-    document.addEventListener('DOMContentLoaded', function() {
-      const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-      if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
-        OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-          scrollbars: {
-            theme: Default.scrollbarTheme,
-            autoHide: Default.scrollbarAutoHide,
-            clickScroll: Default.scrollbarClickScroll,
-          },
-        });
-      }
-    });
-  </script>
+
 
   <!-- plugin for pdf -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>

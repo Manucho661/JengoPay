@@ -1,4 +1,4 @@
-import {openEditModal} from "./editSupplierModal.js";
+import {openEditModal} from "./modals.js";
 
 export function initSupplierListModal() {
   const openBtn = document.getElementById("supplier-list-open-btn");

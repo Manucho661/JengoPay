@@ -14,10 +14,10 @@ function createJournalEntry($pdo, $data) {
     return $pdo->lastInsertId();
 }
 
-function addJournalLine($pdo, $journalId, $accountId, $debit, $credit) {
+function addJournalLine($pdo, $journalId, $accountId, $debit, $credit, $source_table, $expense_id) {
     $stmt = $pdo->prepare("
-        INSERT INTO journal_lines (journal_entry_id, account_id, debit, credit) 
-        VALUES (?, ?, ?, ?)
+        INSERT INTO journal_lines (journal_entry_id, account_id, debit, credit, source_table,source_table_id)
+        VALUES (?, ?, ?, ?, ?, ?)
     ");
-    $stmt->execute([$journalId, $accountId, $debit, $credit]);
+    $stmt->execute([$journalId, $accountId, $debit, $credit, $source_table, $expense_id]);
 }

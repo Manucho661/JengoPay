@@ -101,14 +101,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             // Debit expense
-            addJournalLine($pdo, $journalId, $item_account_codes[$i], $amount, 0.00);
+            addJournalLine($pdo, $journalId, $item_account_codes[$i], $amount, 0.00, 'expenses', $expense_id);
 
             // Credit Accounts Payable (gross)
-            addJournalLine($pdo, $journalId, 300, 0.00, $amount + $tax_amount);
+            addJournalLine($pdo, $journalId, 300, 0.00, $amount + $tax_amount, 'expenses', $expense_id);
 
             // Debit VAT payable (only if tax exists)
             if ($tax_amount > 0) {
-                addJournalLine($pdo, $journalId, 325, $tax_amount, 0.00);
+                addJournalLine($pdo, $journalId, 325, $tax_amount, 0.00, 'expenses', $expense_id);
             }
             echo $tax_amount;
         }
