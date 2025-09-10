@@ -179,7 +179,7 @@ try {
     crossorigin="anonymous" />
   <!--end::Third Party Plugin(Bootstrap Icons)-->
   <!--begin::Required Plugin(AdminLTE)-->
-  <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
+  <link rel="stylesheet" href="../../../landlord/css/adminlte.css" />
   <!-- <link rel="stylesheet" href="text.css" /> -->
   <!--end::Required Plugin(AdminLTE)-->
   <!-- apexcharts -->
@@ -1800,7 +1800,7 @@ try {
       <!-- <div id="sidebar"></div> This is where the sidebar is inserted -->
       <!-- <div id="sidebar"></div> -->
       <!-- <div id="sidebar"></div> -->
-      <div> <?php include_once '../includes/sidebar1.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+      <div> <?php include_once '../includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
       <!--end::Sidebar Wrapper-->
     </aside>
     <!--end::Sidebar-->

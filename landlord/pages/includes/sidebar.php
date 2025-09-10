@@ -29,8 +29,8 @@
       <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> 💬 Communications
     </div>
     <div class="submenu">
-    <a href="/Jengopay/AdminLTE/dist/pages/communications/texts.php">💬 In-app Messages</a>
-      <a href="/Jengopay/AdminLTE/dist/pages/communications/announcements.php">📢 Announcements</a>
+    <a href="/Jengopay/landlord/pages/communications/texts.php">💬 In-app Messages</a>
+      <a href="/Jengopay/landlord/pages/communications/announcements.php">📢 Announcements</a>
     </div>
   </div>
   
@@ -43,12 +43,12 @@
       <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> 💼 Financials
     </div>
     <div class="submenu">
-      <a href="/Jengopay/AdminLTE/dist/pages/financials/Rent.php">💸Rent</a>
+      <a href="/Jengopay/landlord/pages/financials/Rent.php">💸Rent</a>
       <a href="/Jengopay/landlord/pages/financials/expenses/expenses.php">💵 Expenses</a>
-      <a href="/Jengopay/AdminLTE/dist/pages/financials/cashflow.php">💵 Cashflow</a>
-      <a href="/Jengopay/AdminLTE/dist/pages/financials/invoices/invoice.php">📄 Invoices</a>
-      <a href="/Jengopay/AdminLTE/dist/pages/financials/balanceSheet/balanceSheet.php">📊 Balance Sheet</a>
-      <a href="/Jengopay/AdminLTE/dist/pages/financials/profit&loss/profit&loss.php">📊 Profit&Loss</a>
+      <a href="/Jengopay//landlord/pages/financials/cashflow.php">💵 Cashflow</a>
+      <a href="/Jengopay/landlord/pages/financials/invoices/invoice.php">📄 Invoices</a>
+      <a href="/Jengopay/landlord/pages/financials/balanceSheet/balanceSheet.php">📊 Balance Sheet</a>
+      <a href="/Jengopay/landlord/pages/financials/profit&loss/profit&loss.php">📊 Profit&Loss</a>
     </div>
   </div>
     <a href="#">⚙️ Settings</a>
