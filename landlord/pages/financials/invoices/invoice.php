@@ -1876,13 +1876,13 @@ header {
         <table class="table table-striped table-bordered" id="paymentsTable">
           <thead class="" style="background-color: #00192D; color: #FFC107;">
             <tr>
-              <th>ID</th>
+              <!-- <th>ID</th> -->
               <th>Tenant</th>
-              <th>Invoice</th>
+              <!-- <th>Invoice</th> -->
               <th>Amount</th>
-              <th>Method</th>
+              <!-- <th>Method</th> -->
               <th>Date</th>
-              <th>Reference</th>
+              <!-- <th>Reference</th> -->
               <th>Status</th>
               <th>Action</th>
             </tr>
@@ -1943,13 +1943,9 @@ document.addEventListener("DOMContentLoaded", function() {
         data.forEach(p => {
           tbody.innerHTML += `
             <tr>
-              <td>${p.id}</td>
               <td>${p.tenant}</td>
-              <td>${p.invoice_id}</td>
               <td>${p.amount}</td>
-              <td>${p.payment_method}</td>
               <td>${p.payment_date}</td>
-              <td>${p.reference_number ?? ""}</td>
               <td>${p.status}</td>
               <td>
                 <button class="btn btn-sm btn-warning" onclick="openEdit(${p.id}, ${p.amount})">
