@@ -201,7 +201,7 @@ require_once 'actions/getBuildings.php'
                     <!--begin::Row-->
                     <div class="row">
                         <div class="col-sm-8">
-                            <h3 class="mb-0 contact_section_header"> 💰 &nbsp; Expenses</h3>
+                            <h3 class="mb-0 m-0 contact_section_header"> 💰 Expenses</h3>
                         </div>
                         <!--end::Row-->
                     </div>
@@ -211,22 +211,35 @@ require_once 'actions/getBuildings.php'
             <div class="app-content">
                 <div class="container-fluid">
                     <div class="row mb-4">
-                        <div class="col-md-12 d-flex justify-content-between">
-                            <p class="text-muted">Manage your expenses</p>
-                            <div>
-                                <button class="btn shadow-none text-white" id="supplier-list-open-btn"
-                                    style="background: linear-gradient(135deg, #00192D, #002B5B);">
-                                    Registered Suppliers
-                                </button>
-                                <button class="btn shadow-none text-white" id="addSupplier"
-                                    style="background: linear-gradient(135deg, #00192D, #002B5B);">
-                                    Register Supplier
-                                </button>
+                        <div class="col-md-12 d-flex flex-column justify-content-center">
+                            <div class="d-flex justify-content-between">
+                                <div class="text-muted mt-0">
+                                    Manage your expenses
+                                </div>
+
+                                <div class="d-flex" style="vertical-align: middle;">
+                                    <button class="btn shadow-none text-white" id="supplier-list-open-btn"
+                                        style="background: linear-gradient(135deg, #00192D, #002B5B); margin-right:2px;">
+                                        Registered Suppliers
+                                    </button>
+                                    <button class="btn shadow-none text-white" id="addSupplier"
+                                        style="background: linear-gradient(135deg, #00192D, #002B5B);">
+                                        Register Supplier
+                                    </button>
+                                    <!-- Dropdown on small screens -->
+                                    <div class="mobile-nav-container">
+                                        <button id="menu-toggle"
+                                            class="btn menu-icon"
+                                            style="border-radius: 10%; border: 1px solid #00192D;">
+                                            &#8942;
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="row g-3 mb-4">
-                        <div class="col-md-3">
+                        <div class="col-md-3 col-sm-12">
                             <div class="custom-select-wrapper">
                                 <div class="custom-select shadow-sm" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
                                     Filter By Building
@@ -569,7 +582,12 @@ require_once 'actions/getBuildings.php'
                                                         $statusLabel = '';
 
                                                         if ($status === 'paid') {
-                                                            $statusLabel = '<span style="background-color: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Paid</span>';
+                                                            $statusLabel = '<span style="background-color: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Paid</span> '
+                                                                . '<span class="edit-payment-btn"'
+                                                                . ' style="background-color: #28a745; color: white; padding: 6px 10px; border-radius: 50%; cursor: pointer;"'
+                                                                . ' data-bs-toggle="modal" data-amount="' . number_format($exp['amount_paid'] ?? 0, 2) . '" data-bs-target="#editPaymentModal">'
+                                                                . '<i class="bi bi-pencil"></i>'
+                                                                . '</span>';
                                                         } elseif ($status === 'overpaid') {
                                                             $statusLabel = '<span style="background-color: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Overpaid</span>';
                                                         } elseif ($status === 'unpaid') {
@@ -635,6 +653,7 @@ require_once 'actions/getBuildings.php'
                                                         <div class="mb-3">
                                                             <label for="paymentDate" class="form-label shadow-none ">Payment Date</label>
                                                             <input type="date" class="form-control shadow-none rounded-1" id="paymentDate" name="payment_date" required>
+                                                            <small id="paymentMsg" style="color:red;"></small> <!-- error/success message -->
                                                         </div>
 
                                                         <div class="mb-3">
@@ -662,6 +681,64 @@ require_once 'actions/getBuildings.php'
                                             </div>
                                         </div>
                                     </div>
+
+                                    <!-- Edit Payment Modal -->
+                                    <div class="modal fade" id="editPaymentModal" tabindex="-1" aria-labelledby="editPaymentLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content" style="border-radius: 12px; border: 1px solid #00192D;">
+
+                                                <div class="modal-header" style="background-color: #00192D; color: white;">
+                                                    <h5 class="modal-title" id="editPaymentLabel">Edit Payment</h5>
+                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+
+                                                <div class="modal-body">
+                                                    <form id="editPaymentForm">
+                                                        <!-- hidden inputs -->
+                                                        <input type="hidden" name="payment_id" id="editPaymentId">
+
+                                                        <!-- amount -->
+                                                        <div class="mb-3">
+                                                            <label for="editAmount" class="form-label">Amount (KSH)</label>
+                                                            <input type="number" step="0.01" class="form-control shadow-none rounded-1"
+                                                                id="editAmount" name="amount" style="font-weight:600;" required>
+                                                        </div>
+
+                                                        <!-- payment date -->
+                                                        <div class="mb-3">
+                                                            <label for="editPaymentDate" class="form-label">Payment Date</label>
+                                                            <input type="date" class="form-control shadow-none rounded-1" id="editPaymentDate" name="payment_date" required>
+                                                        </div>
+
+                                                        <!-- payment method -->
+                                                        <div class="mb-3">
+                                                            <label for="editPaymentMethod" class="form-label">Payment Method</label>
+                                                            <select class="form-select shadow-none rounded-1" id="editPaymentMethod" name="payment_account_id" required>
+                                                                <option value="100">Cash</option>
+                                                                <option value="110">M-Pesa</option>
+                                                                <option value="120">Bank Transfer</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <!-- reference -->
+                                                        <div class="mb-3">
+                                                            <label for="editReference" class="form-label">Reference / Memo</label>
+                                                            <input type="text" class="form-control shadow-none rounded-1" id="editReference" name="reference">
+                                                        </div>
+                                                    </form>
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="submit" form="editPaymentForm" class="btn" style="background-color: #FFC107; color: #00192D;">
+                                                        <i class="bi bi-pencil-square"></i> Update Payment
+                                                    </button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <!-- View Expense Modal -->
                                     <div class="modal fade" id="expenseModal" tabindex="-1" aria-labelledby="expenseModalLabel" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
@@ -873,16 +950,14 @@ require_once 'actions/getBuildings.php'
                 <h4>
                     <i class="fas fa-user-plus"></i> Register New Supplier
                 </h4>
-
-
             </div>
 
             <form id="supplierForm" class="supplier-form">
-                <label for="supplierKra">KRA Number</label>
-                <input type="text" id="supplierKra" name="kra" required>
+                <div id="submitMsg" style="color: red; margin-top: 5px;"></div>
 
                 <label for="supplierName">Supplier Name</label>
                 <input type="text" id="supplierName" name="name" required>
+                <small id="supplierNameMsg" style="color:red;"></small> <!-- error/success message -->
 
                 <label for="supplierEmail">Email</label>
                 <input type="email" id="supplierEmail" name="email" required>
@@ -890,11 +965,15 @@ require_once 'actions/getBuildings.php'
                 <label for="supplierPhone">Phone</label>
                 <input type="text" id="supplierPhone" name="phone">
 
+                <label for="supplierKra">KRA Number</label>
+                <input type="text" id="supplierKra" name="kra" required>
+                <small id="supplierKraMsg" style="color:red;"></small> <!-- error/success message -->
+
                 <label for="supplierAddress">Address</label>
                 <input type="text" id="supplierAddress" name="address">
 
                 <div class="supplier-form-actions">
-                    <button type="submit" class="supplier-submit-btn">Save</button>
+                    <button type="submit" class="supplier-submit-btn" id="registerBtn">Save</button>
                     <button type="button" class="supplier-cancel-btn" id="supplierCancelBtn">Cancel</button>
                 </div>
             </form>
@@ -1010,7 +1089,6 @@ require_once 'actions/getBuildings.php'
 
     <!-- Main Js File -->
     <script src="../../../../landlord/js/adminlte.js"></script>
-    <script src="expenses.js"></script>
     <script type="module" src="./js/main.js"></script>
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

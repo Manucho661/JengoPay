@@ -34,8 +34,8 @@
     </div>
   </div>
   
-  <a href="/Jengopay/AdminLTE/dist/pages/inspections/inspections.php">🕵️ Inspections</a>
-  <a href="/Jengopay/AdminLTE/dist/pages/maintenance/maintenance.php">🛠 Repairs & Maintenance</a>
+  <a href="/Jengopay/landlord/pages/inspections/inspections.php">🕵️ Inspections</a>
+  <a href="/Jengopay/landlord/pages/maintenance/maintenance.php">🛠 Repairs & Maintenance</a>
 
   <!-- Financials -->
   <div class="menu-group">

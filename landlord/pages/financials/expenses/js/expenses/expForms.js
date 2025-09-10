@@ -1,13 +1,18 @@
-import { createExpense, payExpense, registerSupplier, editSupplier } from "./expenseApi.js";
+import { createExpense, payExpense, registerSupplier, editSupplier } from "./expApi.js";
 
-export function setupExpenseForms() {
+export function setupExpenseForms(invalidFields) {
+
+  const submitMsg = document.getElementById("submitMsg");
+  const submitBtn = document.getElementById("registerBtn");
+
+  // Create expense
   const expenseForm = document.getElementById("expenseForm");
   if (expenseForm) {
     expenseForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const result = await createExpense(expenseForm);
       console.log("Created expense:", result);
-      window.location.reload();
+      // window.location.reload();
     });
   }
 
@@ -25,9 +30,20 @@ export function setupExpenseForms() {
   if (registerSupplierForm) {
     registerSupplierForm.addEventListener("submit", async (e) => {
       e.preventDefault();
+
+      if (invalidFields.size > 0) {
+        submitMsg.textContent = "Please fix the errors before submitting the form.";
+        submitMsg.style.color = "red";
+
+        submitBtn.classList.add("shake");
+        setTimeout(() => submitBtn.classList.remove("shake"), 300);
+
+        return; // stop execution if there are invalid fields
+      }
+
       const result = await registerSupplier(registerSupplierForm);
       console.log("Register supplier response:", result);
-    })
+    });
   }
 
   const editSupplierForm = document.getElementById("supplierEditForm");
