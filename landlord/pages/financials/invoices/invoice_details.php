@@ -660,9 +660,13 @@ $lineRows .= "<tr>
       <i class="bi bi-printer-fill"></i> Print Invoice
   </button>
 </div>
-    <a href="\JengoPay\landlord\pages\financials\invoices\action\view_invoice_pdf.php"?id=<?= $inv['id'] ?> class="btn" style="color: #FFC107; background-color: #00192D;" download="invoice_<?= $inv['invoice_number'] ?>.pdf">
-        <i class="bi bi-download"></i> Download PDF
-    </a>
+<a href="\JengoPay\landlord\pages\financials\invoices\action\view_invoice_pdf.php?id=<?= $inv['id'] ?>" 
+   class="btn" 
+   style="color: #FFC107; background-color: #00192D;">
+    <i class="bi bi-download"></i> Download PDF
+</a>
+
+
 </div>
 <div id="printArea">
 <div  class="invoice-card">
@@ -700,10 +704,8 @@ $lineRows .= "<tr>
             <?php if (!empty($inv['tenant_phone'])): ?>
                 <div> <b><strong><?= htmlspecialchars($inv['tenant_phone']) ?></b></strong> </div>
             <?php endif; ?>
-            <?php if (!empty($inv['unit_number'])): ?>
-                <div> <b><strong><?= htmlspecialchars($inv['unit_number']) ?></b></strong></div>
-            <?php endif; ?>
-            <p><b>B20</b></p> 
+           
+             <p><b>B20</b></p> 
         </div>
     </div>
     <!-- <div class="text-end">
