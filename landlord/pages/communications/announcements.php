@@ -1800,7 +1800,8 @@ try {
       <!-- <div id="sidebar"></div> This is where the sidebar is inserted -->
       <!-- <div id="sidebar"></div> -->
       <!-- <div id="sidebar"></div> -->
-      <div> <?php include_once '../includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+      <!-- /balanceSheet/balanceSheet.php -->
+      <div> <?php include_once '/Jengopay/landlord/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
       <!--end::Sidebar Wrapper-->
     </aside>
     <!--end::Sidebar-->

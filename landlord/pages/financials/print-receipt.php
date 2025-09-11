@@ -107,7 +107,7 @@ $totalAmountFormatted = number_format($total, 2);
 
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../../../dist/css/adminlte.css"/>
+    <link rel="stylesheet" href="../../../landlord/css/adminlte.css"/>
     <link rel="stylesheet" href="invoices.css">
     <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
@@ -196,7 +196,7 @@ $totalAmountFormatted = number_format($total, 2);
             </div>
             <!--end::Sidebar Brand-->
             <!--begin::Sidebar Wrapper-->
-            <div><?php include $_SERVER['DOCUMENT_ROOT'] . '/JengoPay/landlord/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+            <div> <?php include_once '../includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
             <!--end::Sidebar Wrapper-->
         </aside>
         <!--end::Sidebar-->

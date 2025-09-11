@@ -1,6 +1,6 @@
 <nav class="sidebar" style="position:relative;">
   <h5 class="text-center text-uppercase">Dashboard</h5>
-  <a href="/Jengopay/AdminLTE/dist/pages/dashboard/index2.php">📊 Dashboard</a>
+  <a href="/Jengopay/landlord/pages/Dashboard/index2.php">📊 Dashboard</a>
 
   <!-- Property -->
   <div class="menu-group">
@@ -18,8 +18,8 @@
       <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> 👥 People
     </div>
     <div class="submenu">
-      <a href="/Jengopay/AdminLTE/dist/pages/people/tenants.php">👥 Tenants</a>
-      <a href="/Jengopay/AdminLTE/dist/pages/serviceProviders/providers">👥 Providers</a>
+      <a href="/Jengopay/landlord/pages/people/tenants.php">👥 Tenants</a>
+      <a href="/Jengopay/landlord/pages/serviceProviders/providers">👥 Providers</a>
     </div>
   </div>
 

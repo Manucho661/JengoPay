@@ -660,7 +660,7 @@ $lineRows .= "<tr>
       <i class="bi bi-printer-fill"></i> Print Invoice
   </button>
 </div>
-    <a href="\JengoPay\landlord\pages\financials\invoices\action\view_invoice_pdf.php"?id=<?= $inv['id'] ?>" class="btn" style="color: #FFC107; background-color: #00192D;" download="invoice_<?= $inv['invoice_number'] ?>.pdf">
+    <a href="\JengoPay\landlord\pages\financials\invoices\action\view_invoice_pdf.php"?id=<?= $inv['id'] ?> class="btn" style="color: #FFC107; background-color: #00192D;" download="invoice_<?= $inv['invoice_number'] ?>.pdf">
         <i class="bi bi-download"></i> Download PDF
     </a>
 </div>
