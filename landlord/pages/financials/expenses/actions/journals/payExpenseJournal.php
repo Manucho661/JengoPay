@@ -1,7 +1,7 @@
 <?php
 // payExpenseJournal.php
 
-function recordExpensePaymentJournal($pdo, $expected_amount, $expense_id, $amount, $paymentAccountId, $payment_date) {
+function recordExpensePaymentJournal($pdo, $expected_amount, $expense_id, $amount, $paymentAccountId, $payment_date, $expPayId) {
 
     echo "yoyoyoy";
     try {
@@ -14,8 +14,8 @@ function recordExpensePaymentJournal($pdo, $expected_amount, $expense_id, $amoun
             "Payment for Expense #{$expense_id}",
             "EXP-PAY-{$expense_id}",
             $payment_date,
-            "expenses",
-            $expense_id
+            "expenses_payments",
+            $expPayId 
         ]);
 
         $journalEntryId = $pdo->lastInsertId();
@@ -24,33 +24,30 @@ function recordExpensePaymentJournal($pdo, $expected_amount, $expense_id, $amoun
 
         // Insert into journal_lines
         $stmtLine = $pdo->prepare("INSERT INTO journal_lines 
-            (journal_entry_id, account_id, debit, credit, created_at) 
-            VALUES (?, ?, ?, ?, NOW())");
+            (journal_entry_id, account_id, debit, credit, source_table, source_table_id, created_at) 
+            VALUES (?, ?, ?, ?, ?, ?, NOW())");
 
         if ($amount == $expected_amount) {
             // ✅ Full payment
-            $stmtLine->execute([$journalEntryId, $paymentAccountId, 0.00, $amount]); // Credit Bank
-            $stmtLine->execute([$journalEntryId, 300, $amount, 0.00]);              // Debit A/P
+            $stmtLine->execute([$journalEntryId, $paymentAccountId, 0.00, $amount, 'expense_payments', $expPayId]); // Credit Bank
+            $stmtLine->execute([$journalEntryId, 300, $amount, 0.00,'expense_payments', $expPayId ]);              // Debit A/P
 
         } elseif ($amount < $expected_amount) {
             // ✅ Partial payment
-            $stmtLine->execute([$journalEntryId, $paymentAccountId, 0.00, $amount]); // Credit Bank
-            $stmtLine->execute([$journalEntryId, 300, $amount, 0.00]);              // Debit A/P
+            $stmtLine->execute([$journalEntryId, $paymentAccountId, 0.00, $amount, 'expense_payments', $expPayId]); // Credit Bank
+            $stmtLine->execute([$journalEntryId, 300, $amount, 0.00, 'expense_payments', $expPayId]);              // Debit A/P
 
         } else {
             // ✅ Overpayment → Prepaid Expense
-            $overpay = $amount - $expected_amount;
+    $overpay = $amount - $expected_amount;
 
-            echo $overpay;
-            echo "hhaha";
+    // Pay off expected
+    $stmtLine->execute([$journalEntryId, $paymentAccountId, 0.00, $expected_amount, 'expense_payments', $expPayId]); // Credit Bank
+    $stmtLine->execute([$journalEntryId, 300, $expected_amount, 0.00, 'expense_payments', $expPayId]);              // Debit A/P
 
-            // Pay off remaining
-            $stmtLine->execute([$journalEntryId, $paymentAccountId, 0.00, $expected_amount]); // Credit Bank
-            $stmtLine->execute([$journalEntryId, 300, $expected_amount, 0.00]);              // Debit A/P
-
-            // Overpayment
-            $stmtLine->execute([$journalEntryId, $paymentAccountId, 0.00, $overpay]);   // Credit Bank
-            $stmtLine->execute([$journalEntryId, 150, $overpay, 0.00]);                // Debit Prepaid Expense
+    // Record overpayment
+    $stmtLine->execute([$journalEntryId, $paymentAccountId, 0.00, $overpay, 'expense_payments', $expPayId]);        // Credit Bank
+    $stmtLine->execute([$journalEntryId, 150, $overpay, 0.00, 'expense_payments', $expPayId]);                     
         }
 
         return $journalEntryId;

@@ -480,7 +480,8 @@ hr {
 
 .custom-th th {
   /* background-color: #00192D !important; */
-  color: white;
+  /* color: white; */
+  color: #00192D !important;
   /* text-align: right; */
   font-size: small;
 }
@@ -489,12 +490,6 @@ hr {
   border: 1px solid #00192D;
   border-radius: 10px;
   overflow: hidden;
-}
-
-.custom-th th {
-  /* background-color: #00192D !important; */
-  color: white !important;
-  font-size: small;
 }
 
 .expense-table tbody tr:nth-child(even) {

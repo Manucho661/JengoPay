@@ -4,14 +4,16 @@ include '../../db/connect.php';
 try {
     // Fetch all expenses and include the paid amount (if any)
     $stmt = $pdo->prepare("
-        SELECT
-            expenses.*,
-            expense_payments.amount_paid AS amount_paid
-        FROM expenses
-        LEFT JOIN expense_payments
+    SELECT 
+        expenses.*,
+        COALESCE(SUM(expense_payments.amount_paid), 0) AS total_paid
+    FROM expenses
+    LEFT JOIN expense_payments 
         ON expenses.id = expense_payments.expense_id
-        ORDER BY expenses.created_at DESC
-    ");
+    GROUP BY expenses.id
+    ORDER BY expenses.created_at DESC
+");
+
     $stmt->execute();
     $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -19,7 +21,7 @@ try {
     $expenseItemsNumber = count($expenses);
     $totalAmount = 0;
     foreach ($expenses as $exp) {
-        $totalAmount += $exp['total'];
+        $totalAmount += $exp['total_paid'];
     }
 
     $stmt = $pdo->prepare("

@@ -1,3 +1,4 @@
+
 import { setupExpenseForms } from "./expenses/expForms.js";
 import { initializeCustomSelect } from "./ui/customSelect.js";
 import { combobox } from "./ui/combobox.js";
@@ -5,6 +6,7 @@ import { payExpense, initSupplierModal, editExpModal } from "./expenses/modals.j
 import { setupExpenseCalculator } from "./expenses/expCalculator.js";
 import { initSupplierListModal } from "./expenses/supplierList.js";
 import { vldtSupplierReg, checkPayment} from "./expenses/expValidations.js";
+import { downloadExpPDF } from "./expenses/expPdf.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -69,4 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize validation functions
   vldtSupplierReg(invalidFields);
   checkPayment();
+  
+  // expense pdf download
+  document.getElementById('downloadExpPdf').addEventListener('click', downloadExpPDF);
 });

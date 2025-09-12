@@ -115,16 +115,18 @@ export function payExpense(expenseId, expectedAmountToPay) {
 }
 
 // add data to edit expanse payment Modal
-export function editExpModal(){
-        const editButtons = document.querySelectorAll(".edit-payment-btn");
-        editButtons.forEach(button => {
-        button.addEventListener("click", function () {
-            console.log('haha');
+export function editExpModal() {
+    const editButtons = document.querySelectorAll(".edit-payment-btn");
+    editButtons.forEach(button => {
+        button.addEventListener("click", function (e) {
+            e.preventDefault();
             // read the amount from the clicked button
-            const amount = this.getAttribute("data-amount");
-
+            let amount = this.getAttribute("data-amount");
+           
             // populate the modal field
-            document.getElementById("editAmount").value = amount;
+            amount = amount.replace(/,/g, "");
+            document.getElementById("editAmount").value = parseFloat(amount) || 0;
+
         });
     });
 

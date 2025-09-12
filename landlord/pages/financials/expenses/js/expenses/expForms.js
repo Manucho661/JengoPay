@@ -12,7 +12,7 @@ export function setupExpenseForms(invalidFields) {
       e.preventDefault();
       const result = await createExpense(expenseForm);
       console.log("Created expense:", result);
-      // window.location.reload();
+      window.location.reload();
     });
   }
 
@@ -22,7 +22,7 @@ export function setupExpenseForms(invalidFields) {
       e.preventDefault();
       const result = await payExpense(payExpenseForm);
       console.log("Pay expense response:", result);
-      // window.location.reload();
+      window.location.reload();
     });
   }
 
@@ -55,3 +55,5 @@ export function setupExpenseForms(invalidFields) {
     })
   }
 }
+
+// edit the made payment

@@ -572,7 +572,7 @@ require_once 'actions/getBuildings.php'
                                                             KSH <?= number_format($exp['total'], 2) ?>
                                                         </div>
                                                         <div class="paid_amount" style="color: #007B8A; font-size: 0.9rem; margin-top: 4px;">
-                                                            KSH <?= number_format($exp['amount_paid'] ?? 0, 2) ?>
+                                                            KSH <?= number_format($exp['total_paid'] ?? 0, 2) ?>
                                                         </div>
                                                     </td>
 
@@ -589,7 +589,12 @@ require_once 'actions/getBuildings.php'
                                                                 . '<i class="bi bi-pencil"></i>'
                                                                 . '</span>';
                                                         } elseif ($status === 'overpaid') {
-                                                            $statusLabel = '<span style="background-color: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Overpaid</span>';
+                                                            $statusLabel = '<span style="background-color: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Overpaid</span> '
+                                                                . '<span class="edit-payment-btn"'
+                                                                . ' style="background-color: #28a745; color: white; padding: 6px 10px; border-radius: 50%; cursor: pointer;"'
+                                                                . ' data-bs-toggle="modal" data-amount="' . number_format($exp['amount_paid'] ?? 0, 2) . '" data-bs-target="#editPaymentModal">'
+                                                                . '<i class="bi bi-pencil"></i>'
+                                                                . '</span>';
                                                         } elseif ($status === 'unpaid') {
                                                             $statusLabel = '<span style="background-color: #FFC107; color: #00192D; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Unpaid</span>';
                                                         } elseif ($status === 'partially paid') {
@@ -744,7 +749,7 @@ require_once 'actions/getBuildings.php'
                                         <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                                             <div class="modal-content expense bg-light">
                                                 <div class="d-flex justify-content-between align-items-center p-2" style="background-color: #EAF0F4; border-bottom: 1px solid #CCC; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
-                                                    <button class="btn btn-sm me-2" style="background-color: #00192D; color: #FFC107;" title="Download PDF">
+                                                    <button class="btn btn-sm me-2" style="background-color: #00192D; color: #FFC107;" title="Download PDF" id="downloadExpPdf">
                                                         <i class="bi bi-download"></i>
                                                     </button>
                                                     <button class="btn btn-sm me-2" style="background-color: #00192D; color: #FFC107;" title="Print">
@@ -758,9 +763,9 @@ require_once 'actions/getBuildings.php'
                                                 <div class="modal-body bg-light" id="expenseModalBody">
 
                                                     <!-- 🔒 DO NOT TOUCH CARD BELOW -->
-                                                    <div class="expense-card">
+                                                    <div class="expense-card" id="expenseCard">
                                                         <!-- Header -->
-                                                        <div class="d-flex justify-content-between align-items-start mb-3 position-relative" style="overflow: hidden;">
+                                                        <div class="d-flex justify-content-between align-items-stretch mb-3 position-relative" style="overflow: hidden;">
                                                             <div>
                                                                 <img id="expenseLogo" src="images/expensePdfLogo.png" alt="JengoPay Logo" class="expense-logo">
                                                             </div>
@@ -768,7 +773,7 @@ require_once 'actions/getBuildings.php'
                                                             <!-- Diagonal PAID Label centered in the container -->
                                                             <!-- <div class="diagonal-paid-label">PAID</div> -->
                                                             <div class="diagonal-unpaid-label" id="expenseModalPaymentStatus">UNPAID</div>
-                                                            <div class="text-end" style="background-color: #f0f0f0; padding: 10px; border-radius: 8px;">
+                                                            <div class="address text-end" style="background-color: #f0f0f0; padding: 10px; border-radius: 8px;">
                                                                 <strong>Silver Spoon Towers</strong><br>
                                                                 50303 Nairobi, Kenya<br>
                                                                 silver@gmail.com<br>
@@ -802,7 +807,7 @@ require_once 'actions/getBuildings.php'
                                                         <div class="table-responsive ">
                                                             <table class="table table-striped table-bordered rounded-2 table-sm thick-bordered-table">
                                                                 <thead class="table">
-                                                                    <tr class="custom-th">
+                                                                    <tr class="custom-th text-dark">
                                                                         <th>Description</th>
                                                                         <th class="text-end">Qty</th>
                                                                         <th class="text-end">Unit Price</th>
@@ -873,6 +878,9 @@ require_once 'actions/getBuildings.php'
                                             </div>
                                         </div>
                                     </div>
+                                    <!-- for expense pdf -->
+                                    <!-- for pdf -->
+                                    <div id="printArea"></div>
                                 </div>
                             </div>
                         </div>
@@ -1087,14 +1095,18 @@ require_once 'actions/getBuildings.php'
     </div>
     <!--end::App Wrapper-->
 
+    <!-- plugin for pdf -->
+
+
     <!-- Main Js File -->
     <script src="../../../../landlord/js/adminlte.js"></script>
+    <!-- html2pdf depends on html2canvas and jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script type="module" src="./js/main.js"></script>
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
     <!-- pdf download plugin -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 
     <!-- J  A V A S C R I PT -->
@@ -1338,7 +1350,7 @@ require_once 'actions/getBuildings.php'
                         document.getElementById("overPaymentNote").style.display = "block";
                         document.getElementById("paidAmount").textContent = `KES ${parseFloat(expense.amount_paid || 0).toLocaleString()}`;
                     } else if (expense.status === "partially paid") {
-                        statusLabelElement.textContent = "PARTIALLY PAID";
+                        statusLabelElement.textContent = "PARTIAl";
                         statusLabelElement.classList.remove("diagonal-unpaid-label"); // Remove the unpaid
                         statusLabelElement.classList.add("diagonal-partially-paid-label");
                     } else {
