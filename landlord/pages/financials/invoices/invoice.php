@@ -1866,39 +1866,70 @@ header {
  <!-- modals  -->
 <!-- ✅ Payments History Modal -->
 <div class="modal fade" id="paymentsHistoryModal" tabindex="-1" aria-labelledby="paymentsHistoryModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-xl">
+  <div class="modal-dialog modal-dialog-centered modal-m">
     <div class="modal-content">
-      <div class="modal-header" style="background-color: #00192D; color: #FFC107;" >
+      
+      <!-- Modal Header -->
+      <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
         <h5 class="modal-title" id="paymentsHistoryModalLabel">Payments History</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
+
+      <!-- Modal Body -->
       <div class="modal-body">
-        <table class="table table-striped table-bordered" id="paymentsTable">
-          <thead class="" style="background-color: #00192D; color: #FFC107;">
-            <tr>
-              <!-- <th>ID</th> -->
-              <th>Tenant</th>
-              <!-- <th>Invoice</th> -->
-              <th>Amount</th>
-              <!-- <th>Method</th> -->
-              <th>Date</th>
-              <!-- <th>Reference</th> -->
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+
+        <!-- ✅ Filters Row -->
+        <div class="row g-3 mb-3">
+          <div class="col-12 col-md-4">
+            <label for="filterMonth" class="form-label">Filter by Month</label>
+            <input type="month" id="filterMonth" class="form-control">
+          </div>
+          <div class="col-12 col-md-4">
+            <label for="filterMethod" class="form-label">Payment Method</label>
+            <select id="filterMethod" class="form-control">
+              <option value="">All</option>
+              <option value="cash">Cash</option>
+              <option value="bank">Bank Transfer</option>
+              <option value="mpesa">M-Pesa</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-4 d-flex align-items-end">
+            <button id="applyFilters" class="btn w-100" style="color: #FFC107; background-color:#00192D;">
+              <i class="fas fa-filter"></i> Apply Filters
+            </button>
+          </div>
+        </div>
+
+        <!-- ✅ Responsive Table -->
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered align-middle text-nowrap" id="paymentsTable">
+            <thead style="background-color: #00192D; color: #FFC107;">
+              <tr>
+                <th>Tenant</th>
+                <th>Amount</th>
+                <th>Payment Method</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-success" onclick="window.open('/Jengopay/landlord/pages/financials/invoices/payments_report.php', '_blank')">
-          <i class="fas fa-file-alt"></i> Generate Report
+
+      <!-- Modal Footer -->
+      <div class="modal-footer flex-wrap">
+        <button class="btn btn-success me-2 mb-2" onclick="window.location.href='/Jengopay/landlord/pages/financials/invoices/payments_report.php'">
+          <i class="fas fa-file-excel"></i> Download Excel
         </button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary mb-2" data-bs-dismiss="modal">Close</button>
       </div>
+
     </div>
   </div>
 </div>
+
 
 <!-- ✅ Edit Payment Modal -->
 <div class="modal fade" id="editPaymentModal" tabindex="-1" aria-hidden="true">
@@ -1909,13 +1940,65 @@ header {
           <h5 class="modal-title">Edit Payment</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
-        <div class="modal-body">
-          <input type="hidden" id="editPaymentId" name="id">
-          <div class="mb-3">
-            <label class="form-label">Amount</label>
-            <input type="number" step="0.01" class="form-control" id="editAmount" name="amount" required>
+
+        <!-- Modal Body -->
+        <div class="modal-body px-4 py-4 bg-light-subtle">
+          <input type="hidden" name="id" id="editPaymentId">
+          <input type="hidden" id="invoiceId" name="invoice_id">
+          <input type="hidden" id="invoiceTotal" name="total_amount" value="0">
+
+          <div class="row g-4">
+            <!-- Payment Date -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold text-dark">
+                <i class="fa-regular fa-calendar-days text-warning me-1"></i> Payment Date
+              </label>
+              <input type="date" class="form-control border-warning" id="paymentDate" name="payment_date" required>
+              <div class="form-text text-danger small" id="dateError" style="display: none;">
+                ⚠️ Future dates are not allowed.
+              </div>
+            </div>
+
+            <!-- Tenant Name -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold text-dark">
+                <i class="fa-solid fa-user-tag text-warning me-1"></i> Tenant Name
+              </label>
+              <input type="text" class="form-control border-warning" id="tenantName" name="tenant">
+            </div>
+
+            <!-- Payment Method -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold text-dark">
+                <i class="fa-solid fa-hand-holding-dollar text-warning me-1"></i> Payment Method
+              </label>
+              <select class="form-select border-warning text-dark" name="payment_method" required>
+                <option value="">-- Choose Method --</option>
+                <option value="mpesa">📱 MPESA</option>
+                <option value="bank">🏦 Bank</option>
+                <option value="cash">💵 Cash</option>
+              </select>
+            </div>
+
+            <!-- Amount -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold text-dark">
+                <i class="fa-solid fa-sack-dollar text-warning me-1"></i> Amount (KES)
+              </label>
+              <input type="number" class="form-control border-warning" id="editAmount" name="amount" step="0.01" min="0" required>
+              <div id="paymentStatus" class="mt-2 small fw-semibold"></div>
+            </div>
+
+            <!-- Reference Number -->
+            <div class="col-12">
+              <label class="form-label fw-semibold text-dark">
+                <i class="fa-solid fa-barcode text-warning me-1"></i> Reference Number
+              </label>
+              <input type="text" class="form-control border-warning" name="reference_number" placeholder="e.g. MPESA code or bank slip" required>
+            </div>
           </div>
         </div>
+
         <div class="modal-footer">
           <button type="submit" class="btn" style="background-color: #00192D; color: #FFC107;">PAY</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -1945,10 +2028,12 @@ document.addEventListener("DOMContentLoaded", function() {
             <tr>
               <td>${p.tenant}</td>
               <td>${p.amount}</td>
+              <td>${p.payment_method}</td>
               <td>${p.payment_date}</td>
               <td>${p.status}</td>
               <td>
-                <button class="btn btn-sm btn-warning" onclick="openEdit(${p.id}, ${p.amount})">
+                <button class="btn btn-sm btn-warning" 
+                        onclick="openEdit(${p.id}, ${p.amount}, '${p.tenant}', '${p.payment_date}')">
                   <i class="fas fa-edit"></i> Edit
                 </button>
               </td>
@@ -1958,15 +2043,23 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   // Open edit modal
-  window.openEdit = function(id, amount) {
+  window.openEdit = function(id, amount, tenant, payment_date) {
     document.getElementById("editPaymentId").value = id;
     document.getElementById("editAmount").value = amount;
+    document.getElementById("tenantName").value = tenant;
+    document.getElementById("paymentDate").value = payment_date;
     new bootstrap.Modal(document.getElementById("editPaymentModal")).show();
   };
 
-  // Submit edit form
+  // Submit edit form with confirmation
   document.getElementById("editPaymentForm").addEventListener("submit", function(e) {
     e.preventDefault();
+
+    let amount = document.getElementById("editAmount").value;
+    if (!confirm(`Are you sure you want to record this amount: KES ${amount}?`)) {
+      return; // Stop if user cancels
+    }
+
     let formData = new FormData(this);
 
     fetch("/Jengopay/landlord/pages/financials/invoices/update_payment.php", {
@@ -1986,6 +2079,8 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 </script>
+
+
 
 
     <script>

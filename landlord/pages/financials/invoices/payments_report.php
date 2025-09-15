@@ -1,42 +1,43 @@
 <?php
-include "../../db/connect.php";
+require 'vendor/autoload.php';   // PhpSpreadsheet autoload
+include '../../db/connect.php';        // your DB connection
 
-$stmt = $pdo->query("SELECT * FROM payments ORDER BY payment_date DESC");
-$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Payments Report</title>
-  <style>
-    table {border-collapse: collapse; width: 100%;}
-    th, td {border: 1px solid #ccc; padding: 8px; text-align: left;}
-    th {background: #f4f4f4;}
-  </style>
-</head>
-<body>
-  <h2>Payments Report</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th><th>Tenant</th><th>Invoice</th><th>Amount</th>
-        <th>Method</th><th>Date</th><th>Reference</th><th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php foreach ($rows as $r): ?>
-        <tr>
-          <td><?= $r['id'] ?></td>
-          <td><?= htmlspecialchars($r['tenant']) ?></td>
-          <td><?= $r['invoice_id'] ?></td>
-          <td><?= $r['amount'] ?></td>
-          <td><?= $r['payment_method'] ?></td>
-          <td><?= $r['payment_date'] ?></td>
-          <td><?= $r['reference_number'] ?></td>
-          <td><?= $r['status'] ?></td>
-        </tr>
-      <?php endforeach; ?>
-    </tbody>
-  </table>
-</body>
-</html>
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
+// Fetch payments
+$stmt = $pdo->query("SELECT id, tenant, amount, payment_method, payment_date, reference_number, status FROM payments ORDER BY payment_date DESC");
+$payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Create spreadsheet
+$spreadsheet = new Spreadsheet();
+$sheet = $spreadsheet->getActiveSheet();
+
+// Headers
+$headers = ["ID", "Tenant", "Amount", "Payment Method", "Payment Date", "Reference Number", "Status"];
+$col = "A";
+foreach ($headers as $header) {
+    $sheet->setCellValue($col . "1", $header);
+    $col++;
+}
+
+// Data
+$row = 2;
+foreach ($payments as $payment) {
+    $sheet->setCellValue("A$row", $payment['id']);
+    $sheet->setCellValue("B$row", $payment['tenant']);
+    $sheet->setCellValue("C$row", $payment['amount']);
+    $sheet->setCellValue("D$row", $payment['payment_method']);
+    $sheet->setCellValue("E$row", $payment['payment_date']);
+    $sheet->setCellValue("F$row", $payment['reference_number']);
+    $sheet->setCellValue("G$row", $payment['status']);
+    $row++;
+}
+
+// Send file to browser
+header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+header('Content-Disposition: attachment; filename="payments_report.xlsx"');
+
+$writer = new Xlsx($spreadsheet);
+$writer->save("php://output");
+exit;
