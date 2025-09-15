@@ -279,6 +279,30 @@ $expenses = $expenseStmt->fetch(PDO::FETCH_ASSOC)['expenses'] ?? 0;
 $netProfit = $income - $expenses;
 ?>
 
+
+<?php 
+include '../../db/connect.php';
+
+// Fetch Rent Total
+$stmtRent = $pdo->prepare("
+   SELECT SUM(sub_total) AS rent_total
+   FROM invoice_items
+   WHERE account_item = '500'
+");
+$stmtRent->execute();
+$rentResult = $stmtRent->fetch(PDO::FETCH_ASSOC);
+$rentTotal = $rentResult['rent_total'] ?? 0;
+$formattedRent = number_format($rentTotal, 2);
+
+// Fetch Rent Items
+$stmtRentItems = $pdo->prepare("
+   SELECT invoice_number, description, quantity, unit_price, sub_total
+   FROM invoice_items
+   WHERE account_item = '500'
+");
+$stmtRentItems->execute();
+$rentItems = $stmtRentItems->fetchAll(PDO::FETCH_ASSOC);
+?>
 <!doctype html>
 <html lang="en">
 <!--begin::Head-->
@@ -754,11 +778,45 @@ $netProfit = $income - $expenses;
                       </tr>
 
                       <?php if ($rentTotal > 0): ?>
-                        <tr>
-                          <td>Rental Income</td>
-                          <td>Ksh<?= $formattedRent ?></td>
-                        </tr>
-                      <?php endif; ?>
+  <!-- Main Row (click to toggle) -->
+  <tr data-bs-toggle="collapse" data-bs-target="#rentDetails" aria-expanded="false" aria-controls="rentDetails" style="cursor: pointer;">
+    <td>
+      <strong>Rental Income</strong> 
+      <span class="ms-2 text-muted small">(click to expand/collapse)</span>
+    </td>
+    <td>Ksh<?= $formattedRent ?></td>
+  </tr>
+
+  <!-- Collapsible Row -->
+  <tr>
+    <td colspan="2" class="p-0">
+      <div id="rentDetails" class="collapse">
+        <table class="table table-sm mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Invoice #</th>
+              <th>Description</th>
+              <th>Qty</th>
+              <th>Unit Price</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($rentItems as $item): ?>
+              <tr>
+                <td><?= htmlspecialchars($item['invoice_number']) ?></td>
+                <td><?= htmlspecialchars($item['description']) ?></td>
+                <td><?= htmlspecialchars($item['quantity']) ?></td>
+                <td>Ksh<?= number_format($item['unit_price'], 2) ?></td>
+                <td>Ksh<?= number_format($item['sub_total'], 2) ?></td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+    </td>
+  </tr>
+<?php endif; ?>
 
                       <?php if ($waterTotal > 0): ?>
                         <tr>
