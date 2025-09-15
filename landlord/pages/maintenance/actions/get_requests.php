@@ -1,38 +1,36 @@
-<?php
+                                                                                                                              <?php
+header('Content-Type: application/json');
 
-require_once '../db/connect.php'; // ✅ Use your correct DB config path
-global $requests;
+require_once '../../db/connect.php';
 
 try {
-    // Fetch requests and join with one photo from maintenance_photos (if available)
+    // Fetch maintenance requests along with provider details
     $stmt = $pdo->prepare("
-        SELECT 
-            r.id, 
-            r.request_date, 
-            r.residence, 
-            r.unit, 
-            r.category, 
-            r.request, 
-            r.description,
-            r.priority, 
-            r.availability,
-            r.status, 
-            r.payment_status, 
-            r.is_read,
-            (
-                SELECT photo_url 
-                FROM maintenance_photos 
-                WHERE maintenance_request_id = r.id 
-                LIMIT 1
-            ) AS photo
-        FROM maintenance_requests r
-        ORDER BY r.request_date DESC
+        SELECT
+        mr.*,
+        p.name AS provider_name,
+        p.email AS provider_email,
+        p.phone AS provider_phone,
+        mp.photo_url
+    FROM
+        maintenance_requests mr
+    LEFT JOIN
+        providers p ON mr.provider_id = p.id
+    LEFT JOIN
+        maintenance_photos mp ON mp.maintenance_request_id = mr.id
+
     ");
-    
     $stmt->execute();
     $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    return $requests;  // <--- return data here
 
-} catch (Exception $e) {
-    // echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
+    echo json_encode([
+        'success' => true,
+        'data' => $requests
+    ]);
+} catch (PDOException $e) {
+    echo json_encode([
+        'success' => false,
+        'error' => $e->getMessage()
+    ]);
 }
+?>
