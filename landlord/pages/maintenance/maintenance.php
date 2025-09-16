@@ -1,8 +1,4 @@
-<?php
-require_once "get_requests.php";
-//  var_dump($requests);
-// 'exit;
-?>
+
 <!doctype html>
 <html lang="en">
 <!--begin::Head-->
@@ -440,59 +436,6 @@ require_once "get_requests.php";
                       </tr>
                     </thead>
                     <tbody id="maintenanceRequestsTableBod">
-                      <?php
-                      foreach ($requests as $request): ?>
-                        <tr onclick="goToIndividualRequest(<?= $request['id'] ?>)">
-                          <td class="text-muted"><?= $request['request_date'] ?></td>
-                          <td>
-                            <div><?= $request['residence'] ?> </div>
-                            <div style='color: green;'><?= $request['unit'] ?></div>
-                          </td>
-                          <td>
-                            <div><?= $request['category'] ?></div>
-                            <div style='color:green; border:none; width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'><?= $request['description'] ?> </div>
-                          </td>
-                          <td>
-                            <?php
-                            if (!empty($request['provider_name'])): ?>
-                              <div><?= $request['provider_name'] ?></div>
-                            <?php else : ?>
-                              <div>Not assigned</div>
-                            <?php endif ?>
-                          </td>
-                          <td><?= $request['priority'] ?></td>
-                          <td><?= $request['status'] ?></td>
-                          <td>
-                            <?php if ($request['payment_status'] === 'Paid') : ?>
-                              <div class="Paid">
-                                <i class="bi bi-check-circle-fill"></i> Paid
-                              </div>
-                            <?php else : ?>
-                              <div class="Pending">
-                                <i class="bi bi-hourglass-split"></i> Pending
-                              </div>
-                            <?php endif; ?>
-                          </td>
-                          <td style="vertical-align: middle;">
-                            <div style="display: flex; gap: 8px; align-items: center; height: 100%;">
-                              <button
-                                class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
-                                style="background-color: #00192D; color: white; border: none; border-radius: 8px; 
-                                      box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;">
-                                <i class="bi bi-eye-fill"></i> View
-                              </button>
-
-                              <button
-                                class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
-                                style="background-color: #ec5b53; color: white; border: none; border-radius: 8px; 
-                                box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;">
-                                <i class="bi bi-trash-fill"></i> Delete
-                              </button>
-                            </div>
-                          </td>
-
-                        </tr>
-                      <?php endforeach; ?>
                     </tbody>
                   </table>
                 </div>
@@ -952,6 +895,7 @@ require_once "get_requests.php";
   <!-- Overlay scripts -->
   <!-- main js file -->
   <script src="maintenance.js"></script>
+  <script type="module" src="js/main.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/js/bootstrap.bundle.min.js"></script>
 
   </script>
@@ -984,24 +928,6 @@ require_once "get_requests.php";
   <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
 
 
-  <!-- more options -->
-  <script>
-    // JavaScript to handle hover and hide functionality
-    const more = document.getElementById("more");
-    const more_icon = document.getElementById("more_icon");
-    const more_options = document.getElementById("more_options");
-
-    // Show panel when hovering over the accordion
-    more_icon.addEventListener("mouseenter", () => {
-      more_options.style.display = "block";
-    });
-
-    // Hide panel when moving out of both accordion and panel
-    more.addEventListener("mouseleave", () => {
-      more_options.style.display = "none";
-    });
-  </script>
-  <!-- Begin script for datatable -->
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       let table = $('#maintanance').DataTable({
@@ -1063,7 +989,6 @@ require_once "get_requests.php";
     integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
     crossorigin="anonymous"></script>
   <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-  <script src="../../js/adminlte.js"></script>
   <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
 
 

@@ -30,7 +30,7 @@ require_once "actions/individual/getGeralRequests.php";
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <!--end::Third Party Plugin(Bootstrap Icons)-->
   <!--begin::Required Plugin(AdminLTE)-->
-  <link rel="stylesheet" href="../../../dist/css/adminlte.css" />
+  <link rel="stylesheet" href="../../css/adminlte.css" />
   <!--end::Required Plugin(AdminLTE)-->
   <!-- apexcharts -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css" integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous" />
@@ -74,8 +74,6 @@ require_once "actions/individual/getGeralRequests.php";
       background-color: #00192D;
       color: #fff;
       overflow-y: auto;
-      max-height: calc(100vh - 180px);
-
     }
 
     .request-sidebar {
@@ -83,8 +81,6 @@ require_once "actions/individual/getGeralRequests.php";
       display: flex;
       flex-direction: column;
       border-right: 1px solid #e0e0e0;
-      max-height: calc(120vh - 180px);
-      min-height: calc(120vh - 180px);
     }
 
     .request-sidebar h3 {
@@ -127,7 +123,6 @@ require_once "actions/individual/getGeralRequests.php";
       list-style: none;
       padding: 0;
       margin: 0;
-      /* max-height: calc(100vh - 180px); */
       overflow-y: auto;
     }
 
@@ -239,13 +234,6 @@ require_once "actions/individual/getGeralRequests.php";
       color: #28a745;
     }
 
-    .main-content {
-      /* flex-grow: 1; */
-      /* padding: 2rem; */
-      overflow-y: auto;
-      max-height: calc(120vh - 180px);
-    }
-
     .detail-row {
       margin-bottom: 1.4rem;
       display: flex;
@@ -294,14 +282,14 @@ require_once "actions/individual/getGeralRequests.php";
       border-radius: 10px;
       box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
       padding: 1.5rem;
-      transition: all 0.3s ease;
+      /* transition: all 0.3s ease; */
       border-left: 5px solid transparent;
     }
 
     .row-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-      border-left: 5px solid #FFC107;
+      /* transform: translateY(-2px); */
+      /* box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12); */
+      /* border-left: 5px solid #FFC107; */
       background-color: #fdfaf3;
     }
 
@@ -539,14 +527,19 @@ require_once "actions/individual/getGeralRequests.php";
     .unavailable {
       background-color: #E6EAF0 !important;
     }
-    .available{
+
+    .available {
       background-color: white !important;
+    }
+
+    .requestsArea {
+      min-height: 100vh;
     }
   </style>
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-dark" style="">
-  <div class="app-wrapper">
+  <div class="app-wrapper" style="height: 100 vh; ">
     <!--begin::Header-->
     <?php include_once '../includes/header.php' ?>
     <!--end::Header-->
@@ -568,7 +561,7 @@ require_once "actions/individual/getGeralRequests.php";
       </div>
       <!--end::Sidebar Brand-->
       <!--begin::Sidebar Wrapper-->
-      <div> <?php include_once '../includes/sidebar.php'; ?> </div>
+      <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
       <!--end::Sidebar Wrapper-->
     </aside>
 
@@ -579,24 +572,31 @@ require_once "actions/individual/getGeralRequests.php";
       <div class="app-content">
         <p class="text-muted mt-2">Manage a maintanance Request <span id="requestID" style="color: #dc3545;"><?php echo $requestId; ?></span></p>
         <div class="container-fluid rounded-2 mb-2">
-          <div class="row p-1" style="background-color: #E6EAF0;">
-            <div class="col-md-6 p-0">
+          <div class="row p-1" >
+            <div class="col-md-4 px-2">
               <a href="javascript:history.back()"
                 class="btn shadow-none"
-                style="background-color: white; color: #00192D; font-weight: 500; width:100%; margin-right:2px;">
+                style="background-color: #E6EAF0;; color: #00192D; font-weight: 500; width:100%;">
                 <i class="bi bi-arrow-left"></i> Go Back
               </a>
             </div>
-            <div class="col-md-6 p-0">
+            <div class="col-md-4 px-2">
               <button id="availabilityBtn"
                 class="btn shadow-none" data-request-id="<?php echo $requestId; ?>" data-status="<?php echo $request['availability']; ?>"
-                style="color: #00192D; font-weight: 500; width:100%; margin-left:2px;">
+                style="background-color: #E6EAF0; color: #00192D; font-weight: 500; width:100%;">
                 <?php echo $request['availability'] === 'available' ? 'Set Unavailable' : 'Set Available'; ?>
+              </button>
+            </div>
+            <div class="col-md-4 px-2">
+              <button id="availabilityBtn"
+                class="btn shadow-none text-danger" data-request-id="<?php echo $requestId; ?>" data-status="<?php echo $request['availability']; ?>"
+                style="background-color: #E6EAF0; color: #00192D; font-weight: 500; width:100%;  margin-left:2px; ">
+                Cancel
               </button>
             </div>
           </div>
         </div>
-        <div class="container-fluid rounded-2 p-1" style="background: #E6EAF0 !important; ">
+        <div class="container-fluid rounded-2 p-1">
           <div class="row">
             <div class="col-md-4" style="overflow: hidden; padding-right:2px;">
               <div class="request-sidebar rounded-2">
@@ -658,81 +658,79 @@ require_once "actions/individual/getGeralRequests.php";
                 </ul>
               </div>
             </div>
-            <div class="col-md-8" style="padding-right:10px; padding-left:0; padding-top:0 !;">
-              <div class="main-content" id="detailsPanel">
-                <!-- content displays here -->
-                <div class="container-fluid">
-                  <!-- Row 1: Property, Unit, Request ID -->
-                  <div class="row-card mb-1 p-3 rounded shadow-sm">
-                    <div class="row gx-3 gy-3 p-3 rounded border-0" style="border: 1px solid #e0e0e0;">
-                      <!-- Property -->
-                      <div class="col-md-3">
-                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                          <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                            <i class="fa-solid fa-building" style="color: #FFC107; font-size: 16px;"></i>
-                          </span>
-                          <span style="font-weight: 600;">Property</span>
-                        </div>
-                        <div style="margin-top: 6px; font-size: 15px; color: #333;">
-                          <?= $request['residence'] ?>
-                        </div>
+            <div class="col-md-8" style="padding-right:5px; padding-left:0; padding-top:0 !;">
+              <!-- content displays here -->
+              <div class="container-fluid main-content" style="padding: 0px !important;">
+                <!-- Row 1: Property, Unit, Request ID -->
+                <div class="row-card mb-1 p-3 rounded border-0">
+                  <div class="row gx-3 gy-3 p-3 rounded border-0">
+                    <!-- Property -->
+                    <div class="col-md-3">
+                      <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                        <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                          <i class="fa-solid fa-building" style="color: #FFC107; font-size: 16px;"></i>
+                        </span>
+                        <span style="font-weight: 600;">Property</span>
                       </div>
-                      <div class="col-md-3">
-                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                          <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                            <i class="fa-solid fa-door-closed" style="color: #FFC107; font-size: 16px;"></i>
-                          </span>
-                          <span style="font-weight: 600;">Unit</span>
-                        </div>
-                        <div style="margin-top: 6px; font-size: 15px; color: #333;">
-                          <?= $request['unit'] ?>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                          <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                            <i class="bi bi-file-text" style="color: #FFC107; font-size: 16px;"></i>
-                          </span>
-                          <span style="font-weight: 600;">Provider</span>
-                        </div>
-                        <div style="margin-top: 6px; font-size: 15px; color: #b93232ff;">Unassigned</div>
-
-                      </div>
-                      <div class="col-md-3">
-                        <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                          <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                            <i class="bi bi-file-text" style="color: #FFC107; font-size: 16px;"></i>
-                          </span>
-                          <span style="font-weight: 600;">Status</span>
-                        </div>
-                        <div style="margin-top: 6px; font-size: 15px; color: #b93232ff;">Unassigned</div>
+                      <div style="margin-top: 6px; font-size: 15px; color: #333;">
+                        <?= $request['residence'] ?>
                       </div>
                     </div>
-
-                  </div>
-                  <!-- Row 2: Category & Description -->
-                  <div class="row-card mb-1 p-3 rounded shadow-sm bg-white">
-                    <div class="row gx-3 gy-3 p-3 rounded border-0" style="border: 1px solid #e0e0e0;">
+                    <div class="col-md-3">
                       <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                        <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                          <i class="fa-solid fa-align-left" style="color: white; font-size: 16px;"></i>
+                        <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                          <i class="fa-solid fa-door-closed" style="color: #FFC107; font-size: 16px;"></i>
                         </span>
-                        <span style="font-weight: 600;">Description</span>
+                        <span style="font-weight: 600;">Unit</span>
                       </div>
-                      <div class="text-muted" style="margin-top: 6px; font-size: 15px; color: #333; line-height: 1.6;"><?= $request['description'] ?></div>
+                      <div style="margin-top: 6px; font-size: 15px; color: #333;">
+                        <?= $request['unit'] ?>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                        <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                          <i class="bi bi-file-text" style="color: #FFC107; font-size: 16px;"></i>
+                        </span>
+                        <span style="font-weight: 600;">Provider</span>
+                      </div>
+                      <div style="margin-top: 6px; font-size: 15px; color: #b93232ff;">Unassigned</div>
+
+                    </div>
+                    <div class="col-md-3">
+                      <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                        <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                          <i class="bi bi-file-text" style="color: #FFC107; font-size: 16px;"></i>
+                        </span>
+                        <span style="font-weight: 600;">Status</span>
+                      </div>
+                      <div style="margin-top: 6px; font-size: 15px; color: #b93232ff;">Unassigned</div>
                     </div>
                   </div>
-                  <!-- Row 3: Photo -->
-                  <div class="row-card mb-1 p-3 rounded shadow-sm bg-white">
-                    <div class="row gx-3 gy-3 p-3 rounded border-0">
-                      <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                        <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                          <i class="fa-solid fa-image" style="color: white; font-size: 16px;"></i>
-                        </span>
-                        <span style="font-weight: 600;">Request Image</span>
-                      </div>
-                      <img src="<?= $request['photo_url'] ?>" alt="Photo" class="photo-preview w-100 rounded">
+
+                </div>
+                <!-- Row 2: Category & Description -->
+                <div class="row-card mb-1 p-3 rounded shadow-sm bg-white">
+                  <div class="row gx-3 gy-3 p-3 rounded border-0" style="border: 1px solid #e0e0e0;">
+                    <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                      <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                        <i class="fa-solid fa-align-left" style="color: white; font-size: 16px;"></i>
+                      </span>
+                      <span style="font-weight: 600;">Description</span>
                     </div>
+                    <div class="text-muted" style="margin-top: 6px; font-size: 15px; color: #333; line-height: 1.6;"><?= $request['description'] ?></div>
+                  </div>
+                </div>
+                <!-- Row 3: Photo -->
+                <div class="row-card mb-1 p-3 rounded shadow-sm bg-white">
+                  <div class="row gx-3 gy-3 p-3 rounded border-0">
+                    <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                      <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                        <i class="fa-solid fa-image" style="color: white; font-size: 16px;"></i>
+                      </span>
+                      <span style="font-weight: 600;">Request Image</span>
+                    </div>
+                    <img src="<?= $request['photo_url'] ?>" alt="Photo" class="photo-preview w-100 rounded">
                   </div>
                 </div>
               </div>
@@ -740,20 +738,21 @@ require_once "actions/individual/getGeralRequests.php";
           </div>
         </div>
       </div>
+    </main>
+    <!-- Footer -->
+    <footer class="app-footer">
+      <!--begin::To the end-->
+      <div class="float-end d-none d-sm-inline">Anything you want</div>
+      <!--end::To the end-->
+      <!--begin::Copyright-->
+      <strong>
+        Copyright &copy; 2014-2024&nbsp;
+        <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;">JENGO PAY</a>.
+      </strong>
+      All rights reserved.
+      <!--end::Copyright-->
+    </footer>
   </div>
-  <!-- Footer -->
-  <footer class="app-footer">
-    <!--begin::To the end-->
-    <div class="float-end d-none d-sm-inline">Anything you want</div>
-    <!--end::To the end-->
-    <!--begin::Copyright-->
-    <strong>
-      Copyright &copy; 2014-2024&nbsp;
-      <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;">JENGO PAY</a>.
-    </strong>
-    All rights reserved.
-    <!--end::Copyright-->
-  </footer>
 
   <!-- ASSign Modal -->
   <div class="modal fade" id="assignProviderModal" tabindex="-1" aria-labelledby="assignProviderModalLabel" aria-hidden="true">
@@ -1191,14 +1190,33 @@ require_once "actions/individual/getGeralRequests.php";
           console.log("Server response:", data);
 
           // ✅ Reload the page without resubmission
-           window.location.href = window.location.href;
+          window.location.href = window.location.href;
         })
         .catch(error => {
           console.error("Error submitting form:", error);
         });
     });
   </script>
-  <script src="../../../dist/js/adminlte.js"></script>
+
+  <!-- control the requests list sidebar height -->
+  <script>
+    const first = document.querySelector('.main-content');
+    const second = document.querySelector('.request-sidebar');
+
+
+    function syncHeight() {
+      const firstHeight = first.offsetHeight; // measure first element
+      console.log(firstHeight);
+
+      second.style.maxHeight = firstHeight + 'px'; // cap second
+    }
+
+    window.addEventListener('resize', syncHeight);
+    window.addEventListener('load', syncHeight);
+    syncHeight();
+  </script>
+
+  <script src="../../js/adminlte.js"></script>
 </body>
 
 </html>
