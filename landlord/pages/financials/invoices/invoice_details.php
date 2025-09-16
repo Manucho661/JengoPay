@@ -512,7 +512,7 @@ try {
         };
 
         // Payment status with default case
-        $paymentStatus = $row['payment_status'] ?? 'unpaid';
+      $paymentStatus = $row['payment_status'] ?? 'unpaid';
        $paymentClass = match(strtolower($paymentStatus)) {
           'paid' => 'badge-paid', // Green for fully paid
           'partial' => 'badge-partial', // Amber for partial payments
