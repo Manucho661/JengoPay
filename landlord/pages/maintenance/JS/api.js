@@ -26,7 +26,7 @@ function renderRequestsTable(requests) {
     const rowsTemplate = html`
     ${requests.map(req => html`
       <tr
-          @click=${() => window.location.href = `individualrequest.php?id=${req.id}`}
+          @click=${() => window.location.href = `request_details.php?id=${req.id}`}
       >
             <td>${req.request_date}</td>
             <td>

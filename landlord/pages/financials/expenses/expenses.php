@@ -844,7 +844,15 @@ require_once 'actions/getBuildings.php'
                                                                 This Expense Note Belongs to.<br>
                                                                 Silver Spoon Towers
                                                                 <br>
-                                                                <p class="text-danger" id="overPaymentNote" style="display:none">The paid amount (<span class="bg-secondary text-white" id="paidAmount"></span>) is more than the requied</p>
+                                                                <br>
+                                                                <div class="overPaymentNote" id="overPaymentNote" style="display:none">
+                                                                    <p class="text-dark mb-0" style="">Paid:- <span class="text-dark" id="overPaidAmount"></span></p>
+                                                                    <p class="text-dark mb-0">Prepaid:- <b><span id="prepaidAmount" class="text-success"></span></b> </p>
+                                                                </div>
+                                                                <div id="patialPaymentNote" style="display:none">
+                                                                    <p class="text-dark mb-0" id="patialPaymentNote" style="">Paid:- <span class="text-dark" id="partalPaidAmount"></span></p>
+                                                                    <p class="text-dark mb-0">Balance:- <b><span id="balanceAmount" class="text-danger"></span></b></p>
+                                                                </div>
                                                             </div>
                                                             <div class="col-6">
                                                                 <table class="table table-borderless table-sm text-end mb-0">
@@ -1348,11 +1356,30 @@ require_once 'actions/getBuildings.php'
                         statusLabelElement.classList.remove("diagonal-unpaid-label"); // Remove the unpaid
                         statusLabelElement.classList.add("diagonal-paid-label");
                         document.getElementById("overPaymentNote").style.display = "block";
-                        document.getElementById("paidAmount").textContent = `KES ${parseFloat(expense.amount_paid || 0).toLocaleString()}`;
+                        document.getElementById("overPaidAmount").textContent = `KES ${parseFloat(expense.amount_paid || 0).toLocaleString()}`;
+                        const total = parseFloat(expense.total || 0);
+                        const paid = parseFloat(expense.amount_paid || 0);
+                        const prepaid = paid - total;
+                         document.getElementById("prepaidAmount").textContent =
+                            `KES ${prepaid.toLocaleString()}`;
+
+                            console.log(prepaid);
+
                     } else if (expense.status === "partially paid") {
                         statusLabelElement.textContent = "PARTIAl";
                         statusLabelElement.classList.remove("diagonal-unpaid-label"); // Remove the unpaid
                         statusLabelElement.classList.add("diagonal-partially-paid-label");
+                        document.getElementById("patialPaymentNote").style.display = "block";
+                        document.getElementById("partalPaidAmount").textContent = `KES ${parseFloat(expense.amount_paid || 0).toLocaleString()}`;
+                        const total = parseFloat(expense.total || 0);
+                        const paid = parseFloat(expense.amount_paid || 0);
+                        const balance = total - paid;
+
+                        document.getElementById("balanceAmount").textContent =
+                            `KES ${balance.toLocaleString()}`;
+
+                        // patialPaymentNote
+
                     } else {
                         statusLabelElement.textContent = "UNPAID";
                     }

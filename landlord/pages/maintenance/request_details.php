@@ -120,6 +120,7 @@ require_once "actions/individual/getGeralRequests.php";
 
     /* IMPROVED REQUEST LIST STYLES */
     .request-list {
+      display: none; 
       list-style: none;
       padding: 0;
       margin: 0;
@@ -535,6 +536,40 @@ require_once "actions/individual/getGeralRequests.php";
     .requestsArea {
       min-height: 100vh;
     }
+
+    /* the propsal and requests section */
+    .visible {
+      display: block;
+    }
+
+    /* proposals */
+    .proposals {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      overflow-y: auto;
+    }
+
+    .proposals-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      overflow-y: auto;
+    }
+
+    .proposal-item {
+      padding: 15px;
+      border-bottom: 1px solid rgba(0, 25, 45, 0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: white;
+      margin: 8px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
   </style>
 </head>
 
@@ -570,9 +605,12 @@ require_once "actions/individual/getGeralRequests.php";
       <!--begin::App Content Header-->
 
       <div class="app-content">
-        <p class="text-muted mt-2">Manage a maintanance Request <span id="requestID" style="color: #dc3545;"><?php echo $requestId; ?></span></p>
+        <div class="d-flex">
+          <p class="text-muted mt-2">Manage a maintanance Request:- <b><span id="requestID" class="text-success"><?php echo $requestId; ?></span></b></p>
+          <p class="text-muted mx-5 mt-2"> Received:- <span class="text-dark">19-02-25</span></p>
+        </div>
         <div class="container-fluid rounded-2 mb-2">
-          <div class="row p-1" >
+          <div class="row p-1">
             <div class="col-md-4 px-2">
               <a href="javascript:history.back()"
                 class="btn shadow-none"
@@ -598,67 +636,8 @@ require_once "actions/individual/getGeralRequests.php";
         </div>
         <div class="container-fluid rounded-2 p-1">
           <div class="row">
-            <div class="col-md-4" style="overflow: hidden; padding-right:2px;">
-              <div class="request-sidebar rounded-2">
-                <!-- <h3><i class="fa-solid fa-screwdriver-wrench"></i>Request NO 40</h3> -->
-                <div class="d-flex flex-column p-2">
-                  <!-- Secondary Buttons Container -->
-                  <div id="secondaryButtons" class="secondary-buttons p-1 rounded-2" style="background-color: #E6EAF0;">
-                    <button id="assign" class="btn unassigned-btn shadow-none" onclick="showProposals()" id="showProposal" data-request-id="123">
-                      <i class="fas fa-user-clock me-2"></i> Assign
-                    </button>
-                    <button id="paidBtn" class="btn shadow-none">
-                      <i class="fas fa-check-circle me-2"></i> Paid
-                    </button>
-                    <div id="paymentContainer" class="payment-container" style="display: none;">
-                      <p class="text-muted justify-content-between">Choose the Option</p>
-                      <div class="d-flex justify-content-between">
-                        <button class="btn shadow-none">Cash</button>
-                        <button class="btn shadow-none">Mpesa</button>
-                        <button class="btn shadow-none">Bank</button>
-                        <button class="btn shadow-none" id="openRecordPaymentModalBtn">Record</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
 
-                <div class="search-bar rounded-2">
-                  <div class="text-muted">Other Requests</div>
-                  <input class="rounded-2" type="text" id="searchInput" placeholder="Search by unit, category, or property...">
-                </div>
-                <ul class="request-list" id="requestList">
-                  <?php foreach ($requests as $requestItem) : ?>
-                    <li class="request-item">
-                      <div class="request-icon">
-                        <i class="fas fa-tools"></i>
-                      </div>
-                      <div class="request-content">
-                        <div class="request-desc">
-                          <?= $requestItem['description'] ?>
-                        </div>
-                        <div class="request-meta">
-                          <div class="request-date">
-                            <i class="far fa-calendar-alt"></i>
-                            <span class="requestItemDate"><?= $requestItem['request_date'] ?></span>
-                          </div>
-                          <div class="request-status">
-                            <i class="fas fa-circle"></i>
-                            <?= $requestItem['status'] ?>
-                          </div>
-
-                          <div class="request-priority">
-                            <i class="fas fa-circle"></i>
-                            <?= $requestItem['priority'] ?>
-                          </div>
-
-                        </div>
-                      </div>
-                    </li>
-                  <?php endforeach ?>
-                </ul>
-              </div>
-            </div>
-            <div class="col-md-8" style="padding-right:5px; padding-left:0; padding-top:0 !;">
+            <div class="col-md-8" style="padding-right:5px; padding-top:0 !;">
               <!-- content displays here -->
               <div class="container-fluid main-content" style="padding: 0px !important;">
                 <!-- Row 1: Property, Unit, Request ID -->
@@ -735,9 +714,102 @@ require_once "actions/individual/getGeralRequests.php";
                 </div>
               </div>
             </div>
+            <div class="col-md-4" style="overflow: hidden; padding-right:10px; padding-left:0px !important;">
+              <div class="request-sidebar rounded-2">
+                <!-- <h3><i class="fa-solid fa-screwdriver-wrench"></i>Request NO 40</h3> -->
+                <div class="d-flex flex-column p-2">
+                  <!-- Secondary Buttons Container -->
+                  <div id="secondaryButtons" class="secondary-buttons p-1 rounded-2" style="background-color: #E6EAF0;">
+                    <button id="assign" class="btn unassigned-btn shadow-none" onclick="showProposals()" id="showProposal" data-request-id="123">
+                      <i class="fas fa-user-clock me-2"></i> Assign
+                    </button>
+                    <button id="paidBtn" class="btn shadow-none">
+                      <i class="fas fa-check-circle me-2"></i> Paid
+                    </button>
+                    <div id="paymentContainer" class="payment-container" style="display: none;">
+                      <p class="text-muted justify-content-between">Choose the Option</p>
+                      <div class="d-flex justify-content-between">
+                        <button class="btn shadow-none">Cash</button>
+                        <button class="btn shadow-none">Mpesa</button>
+                        <button class="btn shadow-none">Bank</button>
+                        <button class="btn shadow-none" id="openRecordPaymentModalBtn">Record</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="search-bar rounded-2">
+                  <div class="text-muted rounded-2 w-100 mb-2 d-flex" style="background-color: #E6EAF0;">
+                    <button id="proposals" class="btn shadow-none m-1 border-0 shadow-0 flex-fill proposals">Proposals</button>
+                    <button id="otherRequests" class="btn shadow-none m-1 border-0 flex-fill">Other Requests</button>
+                  </div>
+                  <div>
+                    <input class="rounded-2" type="text" id="searchInput" placeholder="Search by unit, category, or property...">
+                  </div>
+                  <!-- proposals list -->
+                  <ul class="proposals-list">
+                    <li class="proposal-item">
+                      <div>
+                        <img src="https://i.pravatar.cc/70" alt="Profile Picture" class="profile-pic me-3">
+                      </div>
+                      <div class="proposal-content">
+                        <div class="d-flex my-0 py-0 mb-0">
+                          <p class="text-dark proposalProviderName my-0"><b>John Doe</b> &nbsp;</p>
+                          <p class="text-muted requestItemDate my-0">12-9-25</p>
+                          
+                        </div>
+                        <div class="request-meta">
+                          <div class="request-status">
+                            <i class="fas fa-circle"></i>
+                            4.5
+                          </div>
+                          <div class="request-priority">
+                            <i class="fas fa-circle"></i>
+                            $25/hr
+                          </div>
+                          <div>
+                            <p>I'm excited to help you build...</p>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                  <!-- request list -->
+                  <ul class="request-list " id="requestList">
+                    <?php foreach ($requests as $requestItem) : ?>
+                      <li class="request-item">
+                        <div class="request-icon">
+                          <i class="fas fa-tools"></i>
+                        </div>
+                        <div class="request-content">
+                          <div class="request-desc">
+                            <?= $requestItem['description'] ?>
+                          </div>
+                          <div class="request-meta">
+                            <div class="request-date">
+                              <i class="far fa-calendar-alt"></i>
+                              <span class="requestItemDate"><?= $requestItem['request_date'] ?></span>
+                            </div>
+                            <div class="request-status">
+                              <i class="fas fa-circle"></i>
+                              <?= $requestItem['status'] ?>
+                            </div>
+
+                            <div class="request-priority">
+                              <i class="fas fa-circle"></i>
+                              <?= $requestItem['priority'] ?>
+                            </div>
+
+                          </div>
+                        </div>
+                      </li>
+                    <?php endforeach ?>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
     </main>
     <!-- Footer -->
     <footer class="app-footer">
@@ -919,6 +991,7 @@ require_once "actions/individual/getGeralRequests.php";
   </div>
 
   <!-- Scripts -->
+   <script type="module" src="./JS/requestDetails/main.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 
