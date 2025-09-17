@@ -1024,7 +1024,7 @@ $stmt->closeCursor();
             </script>
 
 
-            <script>
+            <!-- <script>
               function openmeterPopup() {
                   document.getElementById('meteringPopup').style.display = 'flex'; // Make the overlay visible
               }
@@ -1032,7 +1032,7 @@ $stmt->closeCursor();
               function closemeterPopup() {
                   document.getElementById('meteringPopup').style.display = 'none'; // Hide the overlay
               }
-          </script>
+          </script> -->
 
 
 
