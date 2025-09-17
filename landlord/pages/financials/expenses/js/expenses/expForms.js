@@ -12,7 +12,7 @@ export function setupExpenseForms(invalidFields) {
       e.preventDefault();
       const result = await createExpense(expenseForm);
       console.log("Created expense:", result);
-      window.location.reload();
+      // window.location.reload();
     });
   }
 
