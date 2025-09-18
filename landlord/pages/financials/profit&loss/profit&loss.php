@@ -2307,102 +2307,108 @@ function applyFilters() {
   </script>
 
 
-  <script>
-    document.getElementById('downloadBtn').addEventListener('click', function() {
-      const {
-        jsPDF
-      } = window.jspdf;
-      const doc = new jsPDF();
+<script>
+document.getElementById('downloadBtn').addEventListener('click', function() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
 
-      // Check if autoTable is available
-      if (typeof doc.autoTable !== 'function') {
-        console.error("Error: autoTable plugin is not properly loaded.");
-        alert("Error: autoTable plugin is not available.");
-        return;
-      }
+  if (typeof doc.autoTable !== 'function') {
+    console.error("Error: autoTable plugin is not properly loaded.");
+    alert("Error: autoTable plugin is not available.");
+    return;
+  }
 
-      const table = document.getElementById("myTable");
-      const rows = table.querySelectorAll("tbody tr");
-      const header = document.querySelector('.balancesheet-header').textContent;
+  const table = document.getElementById("myTable");
+  const rows = table.querySelectorAll("tbody tr");
 
-      // Get the current filter dates or use default text
-      const startDate = document.getElementById('startDate').value;
-      const endDate = document.getElementById('endDate').value;
-      let dateRangeText = "From 1 January 2024 to December 31, 2024"; // Default
+  // Company info
+  const header = document.querySelector('.balancesheet-header')?.textContent || "";
+  const logoUrl = "/Jengopay/landlord/pages/financials/profit&loss/expenseLogo6.png"; // 🔹 update this path
 
-      if (startDate && endDate) {
-        const start = new Date(startDate).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        });
-        const end = new Date(endDate).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        });
-        dateRangeText = `From ${start} to ${end}`;
-      }
+  // Get filter dates or use default text
+  const startDate = document.getElementById('startDate')?.value;
+  const endDate = document.getElementById('endDate')?.value;
+  let dateRangeText = "From 1 January 2024 to December 31, 2024";
 
-      const data = [];
-      let sectionHeaders = [];
-
-      rows.forEach((row, rowIndex) => {
-        const rowData = [];
-        row.querySelectorAll("td").forEach((cell) => {
-          rowData.push(cell.innerText.trim());
-        });
-
-        if (row.classList.contains("category")) {
-          sectionHeaders.push(rowIndex);
-        }
-
-        data.push(rowData);
-      });
-
-      // Header styling (unchanged from your original)
-      doc.setFontSize(14);
-      doc.setFont("helvetica", "bold");
-      doc.text("Ebenezer Apartment,", 105, 6, {
-        align: "center"
-      });
-
-
-      doc.setFontSize(14);
-      doc.setFont("helvetica", "bold");
-      doc.text("Profit and Loss Statement", 105, 10, {
-        align: "center"
-      });
-
-      doc.setFontSize(12);
-      doc.setFont("helvetica", "bold");
-      doc.text(dateRangeText, 105, 14, {
-        align: "center"
-      });
-
-      // Table configuration (unchanged from your original)
-      doc.autoTable({
-        startY: 20,
-        head: [
-          ['Description', 'Amount']
-        ],
-        body: data,
-        headStyles: {
-          fillColor: [0, 25, 45],
-          textColor: [255, 255, 255],
-          fontStyle: 'bold'
-        },
-        didParseCell: function(data) {
-          if (data.section === 'body' && sectionHeaders.includes(data.row.index)) {
-            data.cell.styles.fontSize = 12;
-            data.cell.styles.fontStyle = 'bold';
-          }
-        }
-      });
-
-      doc.save('profit_loss_statement.pdf');
+  if (startDate && endDate) {
+    const start = new Date(startDate).toLocaleDateString('en-US', {
+      year: 'numeric', month: 'long', day: 'numeric'
     });
-  </script>
+    const end = new Date(endDate).toLocaleDateString('en-US', {
+      year: 'numeric', month: 'long', day: 'numeric'
+    });
+    dateRangeText = `From ${start} to ${end}`;
+  }
+
+  const data = [];
+  let sectionHeaders = [];
+
+  rows.forEach((row) => {
+    // ❌ Skip collapsed detail rows
+    if (row.classList.contains("collapse") || row.closest(".collapse")) return;
+
+    const rowData = [];
+    row.querySelectorAll("td").forEach((cell) => {
+      rowData.push(cell.innerText.trim().replace(/▶/g, "").trim()); // remove chevron
+    });
+
+    if (row.classList.contains("category")) {
+      sectionHeaders.push(data.length);
+    }
+
+    if (rowData.length > 0) {
+      data.push(rowData);
+    }
+  });
+
+  // 🔹 Add logo
+  const img = new Image();
+  img.src = logoUrl;
+  img.onload = function() {
+    doc.addImage(img, "PNG", 10, 6, 20, 20); // logo on top-left
+
+    // 🔹 Header text (no background bar now)
+    doc.setFontSize(14);
+    doc.setTextColor(0, 0, 0); // black text
+    doc.setFont("helvetica", "bold");
+    doc.text("Ebenezer Apartment,", 105, 12, { align: "center" });
+
+    doc.setFontSize(14);
+    doc.text("Profit and Loss Statement", 105, 18, { align: "center" });
+
+    doc.setFontSize(12);
+    doc.text(dateRangeText, 105, 24, { align: "center" });
+
+    // 🔹 Table
+    doc.autoTable({
+      startY: 36,
+      head: [['Description', 'Amount']],
+      body: data,
+      headStyles: {
+        fillColor: [0, 25, 45],   // dark navy header background
+        textColor: [255, 193, 7], // gold text
+        fontStyle: 'bold'
+      },
+      bodyStyles: {
+        textColor: [0, 0, 0]
+      },
+      didParseCell: function(tableData) {
+        if (tableData.section === 'body' && sectionHeaders.includes(tableData.row.index)) {
+          tableData.cell.styles.fontSize = 12;
+          tableData.cell.styles.fontStyle = 'bold';
+          tableData.cell.styles.textColor = [0, 25, 45]; // category text dark navy
+        }
+      }
+    });
+
+    // Save
+    doc.save('profit_loss_statement.pdf');
+  };
+});
+</script>
+
+
+
   <!-- End script for data_table -->
 
 
