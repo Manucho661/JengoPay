@@ -676,6 +676,8 @@
                     <button class="btn btn-outline-secondary btn-sm btn-action">Message</button>
                     <button class="btn btn-outline-primary btn-sm btn-action">Shortlist</button>
                     <button class="btn btn-outline-danger btn-sm">Decline</button>
+
+                    <div>You're about to assign this request to</div>
                   </div>
                 </div>
               </div>
