@@ -512,7 +512,7 @@ try {
         };
 
         // Payment status with default case
-        $paymentStatus = $row['payment_status'] ?? 'unpaid';
+      $paymentStatus = $row['payment_status'] ?? 'unpaid';
        $paymentClass = match(strtolower($paymentStatus)) {
           'paid' => 'badge-paid', // Green for fully paid
           'partial' => 'badge-partial', // Amber for partial payments
@@ -660,13 +660,11 @@ $lineRows .= "<tr>
       <i class="bi bi-printer-fill"></i> Print Invoice
   </button>
 </div>
-<a href="\JengoPay\landlord\pages\financials\invoices\action\view_invoice_pdf.php?id=<?= $inv['id'] ?>" 
-   class="btn" 
-   style="color: #FFC107; background-color: #00192D;">
-    <i class="bi bi-download"></i> Download PDF
-</a>
-
-
+<button type="button" class="btn" 
+          style="color: #FFC107; background-color: #00192D;" 
+          onclick="generatePDF()">
+      <i class="bi bi-download"></i> Download PDF
+  </button>
 </div>
 <div id="printArea">
 <div  class="invoice-card">
@@ -872,6 +870,82 @@ $lineRows .= "<tr>
         const today = new Date().toISOString().split('T')[0];
         document.getElementById("inspectionDate").setAttribute("min", today);
     </script>
+
+
+<script>
+function generatePDF() {
+  // Get the invoice area
+  const element = document.getElementById('printArea');
+  
+  // Clone the element to modify for PDF
+  const printArea = element.cloneNode(true);
+  
+  // Remove the first <th> ("Item") from the table header for cleaner PDF
+  let headers = printArea.querySelectorAll("table thead tr th");
+  if (headers.length > 0) {
+      headers[0].remove();
+  }
+
+  // Remove the first <td> ("Item" column values) from each row
+  let rows = printArea.querySelectorAll("table tbody tr");
+  rows.forEach(row => {
+      if (row.cells.length > 0) {
+          row.deleteCell(0);
+      }
+  });
+
+  // PDF options
+  const opt = {
+    margin: 10,
+    filename: 'invoice_<?= htmlspecialchars($inv['invoice_number']) ?>.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+
+  // Generate and download PDF
+  html2pdf().set(opt).from(printArea).save();
+}
+
+// Update your existing printInvoice function to be more PDF-friendly
+function printInvoice() {
+  // Get the invoice area
+  let printArea = document.getElementById("printArea").cloneNode(true);
+
+  // Remove the first <th> ("Item") from the table header
+  let headers = printArea.querySelectorAll("table thead tr th");
+  if (headers.length > 0) {
+      headers[0].remove();
+  }
+
+  // Remove the first <td> ("Item" column values) from each row
+  let rows = printArea.querySelectorAll("table tbody tr");
+  rows.forEach(row => {
+      if (row.cells.length > 0) {
+          row.deleteCell(0);
+      }
+  });
+
+  // Open a new print window
+  let printWindow = window.open("", "", "width=900,height=650");
+  printWindow.document.write(`
+      <html>
+      <head>
+          <title>Invoice Print</title>
+          <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+          <style>
+              /* Preserve your CSS exactly */
+              ${document.querySelector("style") ? document.querySelector("style").innerHTML : ""}
+          </style>
+      </head>
+      <body onload="window.print(); window.close();">
+          ${printArea.innerHTML}
+      </body>
+      </html>
+  `);
+  printWindow.document.close();
+}
+</script>
 
 
 <script>
