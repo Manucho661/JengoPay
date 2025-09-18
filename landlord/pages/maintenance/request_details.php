@@ -31,11 +31,11 @@ require_once "actions/individual/getGeralRequests.php";
   <!--end::Third Party Plugin(Bootstrap Icons)-->
   <!--begin::Required Plugin(AdminLTE)-->
   <link rel="stylesheet" href="../../css/adminlte.css" />
+  <link rel="stylesheet" href="request_details.css">
   <!--end::Required Plugin(AdminLTE)-->
   <!-- apexcharts -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css" integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="expenses.css">
   <!-- scripts for data_table -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
@@ -120,7 +120,7 @@ require_once "actions/individual/getGeralRequests.php";
 
     /* IMPROVED REQUEST LIST STYLES */
     .request-list {
-      display: none; 
+      display: none;
       list-style: none;
       padding: 0;
       margin: 0;
@@ -489,36 +489,44 @@ require_once "actions/individual/getGeralRequests.php";
     hr {
       margin: 1rem 0;
     }
+#customBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: 10000;
+}
 
-    .custom-modal {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 1055;
-      /* Above backdrop */
-      background-color: white;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
-      max-width: 700px;
-      width: 90%;
-      border-radius: 8px;
-      max-height: 90vh;
-      /* 👈 set max height */
-      overflow-y: auto;
-      width: 50%;
-      margin: auto;
-    }
+    #proposalContainer {
+  position: fixed;        /* detach from page flow */
+  top: 50%;               /* vertical center */
+  left: 50%;              /* horizontal center */
+  transform: translate(-50%, -50%);
+  max-height: 90vh;
+  width: 600px;           /* adjust width as needed */
+  overflow-y: auto;
+  background: black;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  z-index: 10000;          /* above backdrop */
+}
 
-    .kmodal-backdrop {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 1050;
-      overflow: auto;
-    }
+    #proposalContainer {
+  position: fixed;        /* detach from page flow */
+  top: 50%;               /* vertical center */
+  left: 50%;              /* horizontal center */
+  transform: translate(-50%, -50%);
+  max-height: 90vh;
+  width: 600px;           /* adjust width as needed */
+  overflow-y: auto;
+  background: black;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  z-index: 1050;          /* above backdrop */
+}
+
 
     .payment-container {
       overflow: hidden;
@@ -538,9 +546,6 @@ require_once "actions/individual/getGeralRequests.php";
     }
 
     /* the propsal and requests section */
-    .visible {
-      display: block;
-    }
 
     /* proposals */
     .proposals {
@@ -551,10 +556,15 @@ require_once "actions/individual/getGeralRequests.php";
     }
 
     .proposals-list {
+      display: none;
       list-style: none;
       padding: 0;
       margin: 0;
       overflow-y: auto;
+    }
+
+    .visible {
+      display: block;
     }
 
     .proposal-item {
@@ -570,6 +580,55 @@ require_once "actions/individual/getGeralRequests.php";
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
+
+    .active-btn {
+      background-color: white;
+      /* your brand blue */
+
+      font-weight: bold;
+    }
+
+    /* Custom modal theme */
+/* Modal container */
+.custom-modal {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Navy + Gold palette */
+.text-navy {
+  color: #00192D !important;
+}
+.border-navy {
+  border-color: #00192D !important;
+}
+.text-accent {
+  color: #e0a800 !important;
+}
+
+/* Accent button */
+.btn-accent {
+  background-color: #e0a800;
+  color: #00192D;
+  border: none;
+}
+.btn-accent:hover {
+  background-color: #c99700;
+  color: #fff;
+}
+
+/* Outline navy button */
+.btn-outline-navy {
+  border: 1px solid #00192D;
+  color: #00192D;
+}
+.btn-outline-navy:hover {
+  background-color: #00192D;
+  color: #fff;
+}
+
+
   </style>
 </head>
 
@@ -603,19 +662,38 @@ require_once "actions/individual/getGeralRequests.php";
     <!-- Main Layout -->
     <main class="app-main">
       <!--begin::App Content Header-->
-
-      <div class="app-content">
-        <div class="d-flex">
-          <p class="text-muted mt-2">Manage a maintanance Request:- <b><span id="requestID" class="text-success"><?php echo $requestId; ?></span></b></p>
-          <p class="text-muted mx-5 mt-2"> Received:- <span class="text-dark">19-02-25</span></p>
+      <div class="app-content-header">
+        <!--begin::Container-->
+        <div class="container-fluid">
+          <!--begin::Row-->
+          <div class="row">
+            <div class="col-sm-8">
+              <!-- <h3 class="mb-0 "> 🛠 <span class="contact_section_header">Maintenance Requests</span> </h3> -->
+              <div class="d-flex">
+                <h3 class="mb-0 "> 🛠 <span class="contact_section_header">Maintenance Requests</span> </h3>
+                <p class="text-muted mt-2">&nbsp;:- <b><span id="requestID" class="text-success"><?php echo $requestId; ?></span></b></p>
+                <p class="text-muted mx-5 mt-2"> Received:- <span class="text-dark">19-02-25</span></p>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <ol class="breadcrumb float-sm-end">
+                <li class="breadcrumb-item"><a href="#" style="color: #00192D;"> <i class="bi bi-house"></i> Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+              </ol>
+            </div>
+          </div>
+          <!--end::Row-->
         </div>
+        <!--end::Container-->
+      </div>
+      <div class="app-content">
         <div class="container-fluid rounded-2 mb-2">
           <div class="row p-1">
             <div class="col-md-4 px-2">
               <a href="javascript:history.back()"
                 class="btn shadow-none"
                 style="background-color: #E6EAF0;; color: #00192D; font-weight: 500; width:100%;">
-                <i class="bi bi-arrow-left"></i> Go Back
+                All Requests
               </a>
             </div>
             <div class="col-md-4 px-2">
@@ -637,12 +715,14 @@ require_once "actions/individual/getGeralRequests.php";
         <div class="container-fluid rounded-2 p-1">
           <div class="row">
 
-            <div class="col-md-8" style="padding-right:5px; padding-top:0 !;">
+            <div class="col-md-7" style="padding-right:5px; padding-top:0 !important;">
               <!-- content displays here -->
               <div class="container-fluid main-content" style="padding: 0px !important;">
-                <!-- Row 1: Property, Unit, Request ID -->
+
+                <!-- Row 1: Property, Unit, Provider, Status -->
                 <div class="row-card mb-1 p-3 rounded border-0">
                   <div class="row gx-3 gy-3 p-3 rounded border-0">
+
                     <!-- Property -->
                     <div class="col-md-3">
                       <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
@@ -651,10 +731,10 @@ require_once "actions/individual/getGeralRequests.php";
                         </span>
                         <span style="font-weight: 600;">Property</span>
                       </div>
-                      <div style="margin-top: 6px; font-size: 15px; color: #333;">
-                        <?= $request['residence'] ?>
-                      </div>
+                      <div id="request-property" style="margin-top: 6px; font-size: 15px; color: #333;"></div>
                     </div>
+
+                    <!-- Unit -->
                     <div class="col-md-3">
                       <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
                         <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
@@ -662,10 +742,10 @@ require_once "actions/individual/getGeralRequests.php";
                         </span>
                         <span style="font-weight: 600;">Unit</span>
                       </div>
-                      <div style="margin-top: 6px; font-size: 15px; color: #333;">
-                        <?= $request['unit'] ?>
-                      </div>
+                      <div id="request-unit" style="margin-top: 6px; font-size: 15px; color: #333;"></div>
                     </div>
+
+                    <!-- Provider -->
                     <div class="col-md-3">
                       <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
                         <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
@@ -673,9 +753,10 @@ require_once "actions/individual/getGeralRequests.php";
                         </span>
                         <span style="font-weight: 600;">Provider</span>
                       </div>
-                      <div style="margin-top: 6px; font-size: 15px; color: #b93232ff;">Unassigned</div>
-
+                      <div id="request-provider" style="margin-top: 6px; font-size: 15px; color: #b93232ff;">Unassigned</div>
                     </div>
+
+                    <!-- Status -->
                     <div class="col-md-3">
                       <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
                         <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
@@ -683,11 +764,12 @@ require_once "actions/individual/getGeralRequests.php";
                         </span>
                         <span style="font-weight: 600;">Status</span>
                       </div>
-                      <div style="margin-top: 6px; font-size: 15px; color: #b93232ff;">Unassigned</div>
+                      <div id="request-status" style="margin-top: 6px; font-size: 15px; color: #b93232ff;">Unassigned</div>
                     </div>
-                  </div>
 
+                  </div>
                 </div>
+
                 <!-- Row 2: Category & Description -->
                 <div class="row-card mb-1 p-3 rounded shadow-sm bg-white">
                   <div class="row gx-3 gy-3 p-3 rounded border-0" style="border: 1px solid #e0e0e0;">
@@ -697,9 +779,10 @@ require_once "actions/individual/getGeralRequests.php";
                       </span>
                       <span style="font-weight: 600;">Description</span>
                     </div>
-                    <div class="text-muted" style="margin-top: 6px; font-size: 15px; color: #333; line-height: 1.6;"><?= $request['description'] ?></div>
+                    <div id="request-description" class="text-muted" style="margin-top: 6px; font-size: 15px; color: #333; line-height: 1.6;"></div>
                   </div>
                 </div>
+
                 <!-- Row 3: Photo -->
                 <div class="row-card mb-1 p-3 rounded shadow-sm bg-white">
                   <div class="row gx-3 gy-3 p-3 rounded border-0">
@@ -709,20 +792,18 @@ require_once "actions/individual/getGeralRequests.php";
                       </span>
                       <span style="font-weight: 600;">Request Image</span>
                     </div>
-                    <img src="<?= $request['photo_url'] ?>" alt="Photo" class="photo-preview w-100 rounded">
+                    <img id="request-photo" src="" alt="Photo" class="photo-preview w-100 rounded">
                   </div>
                 </div>
+
               </div>
             </div>
-            <div class="col-md-4" style="overflow: hidden; padding-right:10px; padding-left:0px !important;">
+            <div class="col-md-5" style="overflow: hidden; padding-right:10px; padding-left:0px !important;">
               <div class="request-sidebar rounded-2">
                 <!-- <h3><i class="fa-solid fa-screwdriver-wrench"></i>Request NO 40</h3> -->
                 <div class="d-flex flex-column p-2">
                   <!-- Secondary Buttons Container -->
                   <div id="secondaryButtons" class="secondary-buttons p-1 rounded-2" style="background-color: #E6EAF0;">
-                    <button id="assign" class="btn unassigned-btn shadow-none" onclick="showProposals()" id="showProposal" data-request-id="123">
-                      <i class="fas fa-user-clock me-2"></i> Assign
-                    </button>
                     <button id="paidBtn" class="btn shadow-none">
                       <i class="fas fa-check-circle me-2"></i> Paid
                     </button>
@@ -740,42 +821,18 @@ require_once "actions/individual/getGeralRequests.php";
 
                 <div class="search-bar rounded-2">
                   <div class="text-muted rounded-2 w-100 mb-2 d-flex" style="background-color: #E6EAF0;">
-                    <button id="proposals" class="btn shadow-none m-1 border-0 shadow-0 flex-fill proposals">Proposals</button>
-                    <button id="otherRequests" class="btn shadow-none m-1 border-0 flex-fill">Other Requests</button>
+                    <button onclick="toggleProposalsORotherRequests(proposals-list)" id="proposals" class="btn shadow-none m-1 border-0 shadow-0 flex-fill proposals">Proposals</button>
+                    <button onclick="toggleProposalsORotherRequests(requestList)" id="otherRequests" class="btn shadow-none m-1 border-0 flex-fill">Other Requests</button>
                   </div>
                   <div>
                     <input class="rounded-2" type="text" id="searchInput" placeholder="Search by unit, category, or property...">
                   </div>
                   <!-- proposals list -->
-                  <ul class="proposals-list">
-                    <li class="proposal-item">
-                      <div>
-                        <img src="https://i.pravatar.cc/70" alt="Profile Picture" class="profile-pic me-3">
-                      </div>
-                      <div class="proposal-content">
-                        <div class="d-flex my-0 py-0 mb-0">
-                          <p class="text-dark proposalProviderName my-0"><b>John Doe</b> &nbsp;</p>
-                          <p class="text-muted requestItemDate my-0">12-9-25</p>
-                          
-                        </div>
-                        <div class="request-meta">
-                          <div class="request-status">
-                            <i class="fas fa-circle"></i>
-                            4.5
-                          </div>
-                          <div class="request-priority">
-                            <i class="fas fa-circle"></i>
-                            $25/hr
-                          </div>
-                          <div>
-                            <p>I'm excited to help you build...</p>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
+                  <ul id="proposals-list" class="proposals-list visible">
+
                   </ul>
                   <!-- request list -->
-                  <ul class="request-list " id="requestList">
+                  <ul class="request-list" id="requestList">
                     <?php foreach ($requests as $requestItem) : ?>
                       <li class="request-item">
                         <div class="request-icon">
@@ -893,47 +950,65 @@ require_once "actions/individual/getGeralRequests.php";
     </div>
   </div>
   </div>
-  <div id="customBackdrop" class="modal-backdrop fade d-none"></div>
-  <div id="proposalContainer" class="container proposalContainer py-2 fade d-none custom-modal bg-light" style="overflow: auto;">
-    <div class="d-flex justify-content-between mb-2">
-      <div class=" text-left" style="color:rgb(0 28 63 / 60%); font-weight:500;"><b> Provider Applications</b></div>
+  <!-- Modal -->
+<div class="modal fade" id="proposalModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content custom-modal">
 
-      <div class="text-center">
-        <button class="bg-secondary text-white px-4 py-0 rounded hover:bg-blue-600">← Go Back</button>
+      <!-- Header -->
+      <div class="modal-header border-bottom">
+        <h5 class="modal-title text-navy fw-bold">Provider Application</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
-      <div class="text-right">
-        <button class="text-gray-500 text-xl rounded hover:text-white hover:bg-red-500 transition">&times;</button>
-      </div>
-    </div>
-    <div id="job_proposals_container">
-      <div class="proposal-card mt-2">
-        <div class="proposal-header d-flex align-items-start">
-          <img src="https://i.pravatar.cc/70" alt="Profile Picture" class="profile-pic me-3">
+      <!-- Body -->
+      <div class="modal-body text-dark">
+        <div class="d-flex align-items-start mb-3">
+          <img id="modalPhoto"
+               src="https://i.pravatar.cc/70"
+               alt="Profile Picture"
+               class="rounded-circle me-3 border border-2 border-navy"
+               style="width:70px; height:70px;">
           <div>
-            <h5>Jane Doe <span class="badge bg-success">Top Rated</span></h5>
-            <p>Full Stack Developer | React & Node.js</p>
+            <h5 id="modalName" class="mb-0">
+              Jane Doe 
+              <span id="modalBadge" class="badge bg-warning text-dark ms-2">Top Rated</span>
+            </h5>
+            <p id="modalTitle" class="text-muted mb-0">Full Stack Developer | React & Node.js</p>
           </div>
-          <div class="ms-auto proposal-meta text-end">
-            <h6>$25/hr</h6>
-            <small>5 days delivery</small><br>
-            <small class="text-success">✅ 42 jobs completed</small>
+          <div class="ms-auto text-end">
+            <h6 id="modalRate" class="text-accent mb-0">$25/hr</h6>
+            <small id="modalDelivery" class="d-block text-muted">5 days delivery</small>
+            <small id="modalJobs" class="text-success">✅ 42 jobs completed</small>
           </div>
         </div>
 
         <hr>
 
-        <p><strong>Cover Letter:</strong> I'm excited to help build your job board! I have 3 years of experience with React and recently completed a similar project...</p>
-        <p><strong>Location:</strong> Nairobi, Kenya (GMT+3)</p>
+        <p><strong>Cover Letter:</strong></p>
+        <p id="modalDescription" class="bg-light p-2 rounded border">
+          Default cover letter here...
+        </p>
 
-        <div class="d-flex justify-content-end mt-3">
-          <button class="btn btn-outline-secondary btn-sm btn-action">Message</button>
-          <button class="btn btn-outline-primary btn-sm btn-action">Shortlist</button>
-          <button class="btn btn-outline-danger btn-sm">Decline</button>
-        </div>
+        <p><strong>Location:</strong> 
+          <span id="modalLocation" class="text-accent">Nairobi, Kenya</span>
+        </p>
       </div>
+
+      <!-- Footer -->
+      <div class="modal-footer border-top">
+        <button type="button" class="btn btn-outline-navy">Message</button>
+        <button type="button" class="btn btn-accent">Assign</button>
+        <button type="button" class="btn btn-outline-danger">Reject</button>
+      </div>
+
     </div>
   </div>
+</div>
+
+
+
+
 
   <!-- Payment Modals -->
   <!-- Record Payment Modal -->
@@ -991,7 +1066,7 @@ require_once "actions/individual/getGeralRequests.php";
   </div>
 
   <!-- Scripts -->
-   <script type="module" src="./JS/requestDetails/main.js"></script>
+  <script type="module" src="./JS/requestDetails/main.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 
@@ -1199,7 +1274,7 @@ require_once "actions/individual/getGeralRequests.php";
     // Initialize the button click handler
     document.getElementById('availabilityBtn').addEventListener('click', toggleAvailability);
   </script>
-  <script>
+  <!-- <script>
     function showProposals() {
       const viewProposal = document.getElementById("showProposal");
 
@@ -1215,7 +1290,7 @@ require_once "actions/individual/getGeralRequests.php";
       }, 10);
 
     }
-  </script>
+  </script> -->
 
   <!-- payment accordian -->
   <script>

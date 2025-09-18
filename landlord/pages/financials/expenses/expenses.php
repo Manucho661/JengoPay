@@ -689,55 +689,112 @@ require_once 'actions/getBuildings.php'
 
                                     <!-- Edit Payment Modal -->
                                     <div class="modal fade" id="editPaymentModal" tabindex="-1" aria-labelledby="editPaymentLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content" style="border-radius: 12px; border: 1px solid #00192D;">
+                                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                                            <div class="modal-content rounded-4 bg-white" style=" border: 1px solid #00192D;">
 
-                                                <div class="modal-header" style="background-color: #00192D; color: white;">
-                                                    <h5 class="modal-title" id="editPaymentLabel">Edit Payment</h5>
-                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                <!-- Header -->
+                                                <div class="modal-header border-bottom align-items-center" style="padding: 0.75rem 1rem;">
+                                                    <h3 class="modal-title m-0" id="editPaymentLabel"
+                                                        style="font-size: 1.25rem; font-weight: 600; color: #00192D;">
+                                                        Edit Payments <span style="font-weight: 400; font-size: 1rem; color: #6c757d;">
+                                                            KRACU0100039628
+                                                        </span>
+                                                    </h3>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
 
-                                                <div class="modal-body">
-                                                    <form id="editPaymentForm">
-                                                        <!-- hidden inputs -->
-                                                        <input type="hidden" name="payment_id" id="editPaymentId">
 
-                                                        <!-- amount -->
-                                                        <div class="mb-3">
-                                                            <label for="editAmount" class="form-label">Amount (KSH)</label>
-                                                            <input type="number" step="0.01" class="form-control shadow-none rounded-1"
-                                                                id="editAmount" name="amount" style="font-weight:600;" required>
+                                                <!-- Body -->
+                                                <div class="modal-body p-4">
+                                                    <!-- Single Payment Form Block -->
+                                                    <form class="payment-form border-0 rounded mb-2 p-4" style="border:1px solid #e0e0e0; background:#f5f5f5;">
+                                                        <input type="hidden" name="payment_id" value="123">
+
+                                                        <div class="d-flex flex-wrap gap-2 align-items-end">
+                                                            <!-- amount -->
+                                                            <div style="flex:1 1 120px;">
+                                                                <label class="form-label small fw-semibold mb-1">Amount</label>
+                                                                <input type="number" step="0.01" class="form-control form-control-sm shadow-none" name="amount" required>
+                                                            </div>
+
+                                                            <!-- date -->
+                                                            <div style="flex:1 1 140px;">
+                                                                <label class="form-label small fw-semibold mb-1">Date</label>
+                                                                <input type="date" class="form-control form-control-sm shadow-none" name="payment_date" required>
+                                                            </div>
+
+                                                            <!-- method -->
+                                                            <div style="flex:1 1 140px;">
+                                                                <label class="form-label small fw-semibold mb-1">Method</label>
+                                                                <select class="form-select form-select-sm shadow-none" name="payment_account_id" required>
+                                                                    <option value="100">Cash</option>
+                                                                    <option value="110">M-Pesa</option>
+                                                                    <option value="120">Bank</option>
+                                                                </select>
+                                                            </div>
+
+                                                            <!-- reference -->
+                                                            <div style="flex:2 1 180px;">
+                                                                <label class="form-label small fw-semibold mb-1">Reference</label>
+                                                                <input type="text" class="form-control form-control-sm shadow-none" name="reference">
+                                                            </div>
+
+                                                            <!-- save -->
+                                                            <div class="ms-auto">
+                                                                <button type="submit"
+                                                                    class="btn btn-sm fw-semibold"
+                                                                    style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; border-radius:6px;">
+                                                                    Save
+                                                                </button>
+                                                            </div>
+
                                                         </div>
+                                                    </form>
 
-                                                        <!-- payment date -->
-                                                        <div class="mb-3">
-                                                            <label for="editPaymentDate" class="form-label">Payment Date</label>
-                                                            <input type="date" class="form-control shadow-none rounded-1" id="editPaymentDate" name="payment_date" required>
-                                                        </div>
+                                                    <!-- Another Payment Form Example -->
+                                                    <form class="payment-form border-0 rounded mb-2 p-4" style="border:1px solid #e0e0e0; background:#f5f5f5;">
+                                                        <input type="hidden" name="payment_id" value="124">
 
-                                                        <!-- payment method -->
-                                                        <div class="mb-3">
-                                                            <label for="editPaymentMethod" class="form-label">Payment Method</label>
-                                                            <select class="form-select shadow-none rounded-1" id="editPaymentMethod" name="payment_account_id" required>
-                                                                <option value="100">Cash</option>
-                                                                <option value="110">M-Pesa</option>
-                                                                <option value="120">Bank Transfer</option>
-                                                            </select>
-                                                        </div>
+                                                        <div class="d-flex flex-wrap gap-2 align-items-end">
+                                                            <div style="flex:1 1 120px;">
+                                                                <label class="form-label small fw-semibold mb-1">Amount</label>
+                                                                <input type="number" step="0.01" class="form-control form-control-sm shadow-none" name="amount" value="2500" required>
+                                                            </div>
 
-                                                        <!-- reference -->
-                                                        <div class="mb-3">
-                                                            <label for="editReference" class="form-label">Reference / Memo</label>
-                                                            <input type="text" class="form-control shadow-none rounded-1" id="editReference" name="reference">
+                                                            <div style="flex:1 1 140px;">
+                                                                <label class="form-label small fw-semibold mb-1">Date</label>
+                                                                <input type="date" class="form-control form-control-sm shadow-none" name="payment_date" value="2025-09-15" required>
+                                                            </div>
+
+                                                            <div style="flex:1 1 140px;">
+                                                                <label class="form-label small fw-semibold mb-1">Method</label>
+                                                                <select class="form-select form-select-sm shadow-none" name="payment_account_id" required>
+                                                                    <option value="100">Cash</option>
+                                                                    <option value="110" selected>M-Pesa</option>
+                                                                    <option value="120">Bank</option>
+                                                                </select>
+                                                            </div>
+
+                                                            <div style="flex:2 1 180px;">
+                                                                <label class="form-label small fw-semibold mb-1">Reference</label>
+                                                                <input type="text" class="form-control form-control-sm shadow-none" name="reference" value="MP123XYZ">
+                                                            </div>
+
+                                                            <div class="ms-auto">
+                                                                <button type="submit"
+                                                                    class="btn btn-sm fw-semibold"
+                                                                    style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; border-radius:6px;">
+                                                                    Save
+                                                                </button>
+                                                            </div>
+
                                                         </div>
                                                     </form>
                                                 </div>
 
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                    <button type="submit" form="editPaymentForm" class="btn" style="background-color: #FFC107; color: #00192D;">
-                                                        <i class="bi bi-pencil-square"></i> Update Payment
-                                                    </button>
+                                                <!-- Footer -->
+                                                <div class="modal-footer p-4">
+                                                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
                                                 </div>
 
                                             </div>
@@ -1360,10 +1417,10 @@ require_once 'actions/getBuildings.php'
                         const total = parseFloat(expense.total || 0);
                         const paid = parseFloat(expense.amount_paid || 0);
                         const prepaid = paid - total;
-                         document.getElementById("prepaidAmount").textContent =
+                        document.getElementById("prepaidAmount").textContent =
                             `KES ${prepaid.toLocaleString()}`;
 
-                            console.log(prepaid);
+                        console.log(prepaid);
 
                     } else if (expense.status === "partially paid") {
                         statusLabelElement.textContent = "PARTIAl";
