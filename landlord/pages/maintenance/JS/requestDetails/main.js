@@ -1,5 +1,20 @@
-import { fetchProposals } from "./api.js";
+import { otherRequests, get_request_details } from "./api.js";
+import { toggleProposalsORotherRequests } from "./uiControl.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  fetchProposals();       // Load proposals
+  // Load data
+  get_request_details();
+  otherRequests();
+
+  // Tab switching
+  const proposalsTab = document.getElementById("proposals");
+  const otherRequestsTab = document.getElementById("otherRequests");
+
+  proposalsTab?.addEventListener("click", () =>
+    toggleProposalsORotherRequests("proposals-list")
+  );
+
+  otherRequestsTab?.addEventListener("click", () =>
+    toggleProposalsORotherRequests("requestList")
+  );
 });
