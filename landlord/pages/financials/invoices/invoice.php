@@ -1866,7 +1866,7 @@ header {
  <!-- modals  -->
 <!-- ✅ Payments History Modal -->
 <div class="modal fade" id="paymentsHistoryModal" tabindex="-1" aria-labelledby="paymentsHistoryModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-m">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content">
       
       <!-- Modal Header -->
@@ -1934,7 +1934,7 @@ header {
 <!-- ✅ Edit Payment Modal -->
 <div class="modal fade" id="editPaymentModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <form id="editPaymentForm">
+    <form id="editPaymentForm" action="update_payment.php" method="POST">
       <div class="modal-content">
         <div class="modal-header bg-warning">
           <h5 class="modal-title">Edit Payment</h5>
@@ -1964,7 +1964,7 @@ header {
               <label class="form-label fw-semibold text-dark">
                 <i class="fa-solid fa-user-tag text-warning me-1"></i> Tenant Name
               </label>
-              <input type="text" class="form-control border-warning" id="tenantName" name="tenant">
+              <input type="text" class="form-control border-warning" id="tenantName" name="tenant" required>
             </div>
 
             <!-- Payment Method -->
@@ -1972,7 +1972,7 @@ header {
               <label class="form-label fw-semibold text-dark">
                 <i class="fa-solid fa-hand-holding-dollar text-warning me-1"></i> Payment Method
               </label>
-              <select class="form-select border-warning text-dark" name="payment_method" required>
+              <select class="form-select border-warning text-dark" id="paymentMethod" name="payment_method" required>
                 <option value="">-- Choose Method --</option>
                 <option value="mpesa">📱 MPESA</option>
                 <option value="bank">🏦 Bank</option>
@@ -1994,20 +1994,19 @@ header {
               <label class="form-label fw-semibold text-dark">
                 <i class="fa-solid fa-barcode text-warning me-1"></i> Reference Number
               </label>
-              <input type="text" class="form-control border-warning" name="reference_number" placeholder="e.g. MPESA code or bank slip" required>
+              <input type="text" class="form-control border-warning" id="referenceNumber" name="reference_number" placeholder="e.g. MPESA code or bank slip" required>
             </div>
           </div>
         </div>
 
         <div class="modal-footer">
-          <button type="submit" class="btn" style="background-color: #00192D; color: #FFC107;">PAY</button>
+          <button type="submit" class="btn" style="background-color: #00192D; color: #FFC107;">UPDATE PAYMENT</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         </div>
       </div>
     </form>
   </div>
 </div>
-
 
 
  <!-- inline js -->
@@ -2185,6 +2184,83 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
 }
 
 </script>
+
+
+<script>
+document.getElementById("applyFilters").addEventListener("click", function () {
+  let month = document.getElementById("filterMonth").value;
+  let method = document.getElementById("filterMethod").value;
+
+  fetch("/Jengopay/landlord/pages/financials/invoices/get_payments.php?month=" 
+        + encodeURIComponent(month) + "&method=" + encodeURIComponent(method))
+    .then(response => response.json())
+    .then(data => {
+      let tbody = document.querySelector("#paymentsTable tbody");
+      tbody.innerHTML = "";
+
+      if (data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center">No records found</td></tr>`;
+        return;
+      }
+
+      data.forEach(row => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${row.tenant || "-"}</td>
+            <td>Ksh ${parseFloat(row.amount).toLocaleString()}</td>
+            <td>${row.payment_method}</td>
+            <td>${row.payment_date}</td>
+            <td>${row.status}</td>
+            <td>
+              <button class="btn btn-sm btn-warning edit-payment" data-id="${row.id}">
+                <i class="fas fa-edit">Edit</i>
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+
+      // ✅ Re-bind edit button click after refreshing table
+      document.querySelectorAll(".edit-payment").forEach(btn => {
+        btn.addEventListener("click", function () {
+          let id = this.getAttribute("data-id");
+          loadPaymentForEdit(id); 
+          new bootstrap.Modal(document.getElementById("editPaymentModal")).show();
+        });
+      });
+    })
+    .catch(err => {
+      console.error("Error fetching payments:", err);
+    });
+});
+
+
+// ✅ Define how payment details load into edit modal
+function loadPaymentForEdit(id) {
+  fetch("/Jengopay/landlord/pages/financials/invoices/get_payments.php?id=" + encodeURIComponent(id))
+    .then(response => response.json())
+    .then(data => {
+      if (!data) {
+        alert("Could not load payment details.");
+        return;
+      }
+
+      // Fill your modal inputs
+      document.getElementById("editPaymentId").value = data.id;
+      document.getElementById("editTenant").value = data.tenant;
+      document.getElementById("editAmount").value = data.amount;
+      document.getElementById("editMethod").value = data.payment_method;
+      document.getElementById("editDate").value = data.payment_date;
+      document.getElementById("editStatus").value = data.status;
+    })
+    .catch(err => {
+      console.error("Error loading payment details:", err);
+    });
+}
+</script>
+
+
+
 <!-- Add this script to handle the filtering -->
 <!-- <script>
 document.getElementById('filterBtn').addEventListener('click', function() {

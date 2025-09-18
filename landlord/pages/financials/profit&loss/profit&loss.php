@@ -718,17 +718,23 @@ $netProfit = $income - $expenses;
 
 
 
-            <div class="col-md-6 col-12 d-flex justify-content-end" style="position: relative; min-height: 60px;">
-              <div style="position: absolute; bottom: 0; right: 0;">
-                <button class="btn rounded-circle shadow-sm" id="downloadBtn" style="background-color: #FFC107; border: none;">
-                  <i class="fas fa-file-pdf" style="font-size: 24px; color: #00192D;"></i>
-                </button>
-                <button class="btn rounded-circle shadow-sm" onclick="exportToExcel()" style="background-color: #FFC107; border: none;">
-                  <i class="fas fa-file-excel" style="font-size: 24px; color: #00192D;"></i>
-                </button>
-              </div>
-            </div>
-          </div>
+           <!-- Add these buttons near the export buttons -->
+<div class="col-md-6 col-12 d-flex justify-content-end" style="position: relative; min-height: 60px;">
+  <div style="position: absolute; bottom: 0; right: 0;">
+    <button class="btn rounded-circle shadow-sm me-2" id="hideAllBtn" style="background-color: #FFC107; border: none;">
+      <i class="fas fa-eye-slash" style="font-size: 18px; color: #00192D;"></i>
+    </button>
+    <button class="btn rounded-circle shadow-sm me-2" id="showAllBtn" style="background-color: #FFC107; border: none;">
+      <i class="fas fa-eye" style="font-size: 18px; color: #00192D;"></i>
+    </button>
+    <button class="btn rounded-circle shadow-sm" id="downloadBtn" style="background-color: #FFC107; border: none;">
+      <i class="fas fa-file-pdf" style="font-size: 24px; color: #00192D;"></i>
+    </button>
+    <button class="btn rounded-circle shadow-sm" onclick="exportToExcel()" style="background-color: #FFC107; border: none;">
+      <i class="fas fa-file-excel" style="font-size: 24px; color: #00192D;"></i>
+    </button>
+  </div>
+</div>
 
 
           <!--end::Row-->
@@ -748,19 +754,21 @@ $netProfit = $income - $expenses;
                         <th style="font-size: 16px;">Amount</th>
                       </tr>
                     </thead>
-                    <tbody>
+
+                    
+                    <tbody id="accordionFinance">
                       <tr class="category">
                         <td style="color:green; font-weight:500;"><b>Income</b></td>
                       </tr>
 
                       <?php if ($rentTotal > 0): ?>
-  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#rentDetails" style="cursor:pointer;">
-    <td><i class="fas fa-chevron-right me-2"></i> Rental Income</td>
+  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#rentDetails" aria-expanded="false" aria-controls="rentDetails" style="cursor:pointer;">
+    <td><i class="fas fa-chevron-right me-2 toggle-icon"></i> Rental Income</td>
     <td>Ksh<?= $formattedRent ?></td>
   </tr>
 
   <!-- Collapsible section -->
-  <tr class="collapse" id="rentDetails">
+  <tr class="collapse" id="rentDetails" data-bs-parent="#accordionFinance">
     <td colspan="2">
       <table class="table table-sm table-bordered mb-0">
         <thead class="table-light">
@@ -771,7 +779,7 @@ $netProfit = $income - $expenses;
             <th>Subtotal</th>
           </tr>
         </thead>
-        <tbody id="accordionFinance">
+        <tbody>
           <?php
           // Fetch rental invoice details (account_item = 500)
           $stmtRentInvoices = $pdo->prepare("
@@ -797,8 +805,7 @@ $netProfit = $income - $expenses;
       </table>
     </td>
   </tr>
-<?php endif; ?>
-
+  <?php endif; ?>
 
                       
 
@@ -820,7 +827,7 @@ $netProfit = $income - $expenses;
         <table class="table table-sm table-bordered mb-0">
           <thead class="table-light">
             <tr>
-              <th>Invoice #</th>
+              <th>Invoice Number</th>
               <th>Tenant</th>
               <th>Date</th>
               <th>Subtotal</th>
@@ -861,7 +868,7 @@ $netProfit = $income - $expenses;
       <table class="table table-sm table-bordered mb-0">
         <thead class="table-light">
           <tr>
-            <th>Invoice #</th>
+          <th>Invoice Number</th>
             <th>Tenant</th>
             <th>Date</th>
             <th>Subtotal</th>
@@ -901,7 +908,7 @@ $netProfit = $income - $expenses;
       <table class="table table-sm table-bordered mb-0">
         <thead class="table-light">
           <tr>
-            <th>Invoice #</th>
+          <th>Invoice Number</th>
             <th>Tenant</th>
             <th>Date</th>
             <th>Subtotal</th>
@@ -941,7 +948,7 @@ $netProfit = $income - $expenses;
       <table class="table table-sm table-bordered mb-0">
         <thead class="table-light">
           <tr>
-            <th>Invoice #</th>
+          <th>Invoice Number</th>
             <th>Tenant</th>
             <th>Date</th>
             <th>Subtotal</th>
@@ -981,7 +988,7 @@ $netProfit = $income - $expenses;
       <table class="table table-sm table-bordered mb-0">
         <thead class="table-light">
           <tr>
-            <th>Invoice #</th>
+          <th>Invoice Number</th>
             <th>Tenant</th>
             <th>Date</th>
             <th>Subtotal</th>
@@ -1659,7 +1666,157 @@ $netProfit = $income - $expenses;
 
   <!-- Overlay scripts -->
   <!-- View announcements script -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Expand all sections
+            document.getElementById('expandAll').addEventListener('click', function() {
+                const collapses = document.querySelectorAll('.collapse-content');
+                collapses.forEach(collapse => {
+                    const bsCollapse = new bootstrap.Collapse(collapse, { toggle: true });
+                    bsCollapse.show();
+                    
+                    // Rotate chevron icon
+                    const targetId = collapse.getAttribute('id');
+                    const trigger = document.querySelector(`[data-bs-target="#${targetId}"]`);
+                    if (trigger) {
+                        const icon = trigger.querySelector('i.fas');
+                        if (icon) {
+                            icon.classList.remove('fa-chevron-right');
+                            icon.classList.add('fa-chevron-down');
+                        }
+                    }
+                });
+            });
+            
+            // Collapse all sections
+            document.getElementById('collapseAll').addEventListener('click', function() {
+                const collapses = document.querySelectorAll('.collapse-content');
+                collapses.forEach(collapse => {
+                    const bsCollapse = new bootstrap.Collapse(collapse, { toggle: true });
+                    bsCollapse.hide();
+                    
+                    // Rotate chevron icon
+                    const targetId = collapse.getAttribute('id');
+                    const trigger = document.querySelector(`[data-bs-target="#${targetId}"]`);
+                    if (trigger) {
+                        const icon = trigger.querySelector('i.fas');
+                        if (icon) {
+                            icon.classList.remove('fa-chevron-down');
+                            icon.classList.add('fa-chevron-right');
+                        }
+                    }
+                });
+            });
+            
+            // Toggle collapse functionality
+            const toggleCollapseBtn = document.getElementById('toggleCollapse');
+            let collapseEnabled = true;
+            
+            toggleCollapseBtn.addEventListener('click', function() {
+                const table = document.getElementById('profitLossTable');
+                const categoryRows = document.querySelectorAll('.category-row');
+                const collapses = document.querySelectorAll('.collapse-content');
+                
+                if (collapseEnabled) {
+                    // Disable collapse functionality
+                    table.classList.add('no-collapse');
+                    categoryRows.forEach(row => {
+                        row.setAttribute('data-bs-toggle', '');
+                    });
+                    
+                    // Expand all sections
+                    collapses.forEach(collapse => {
+                        collapse.classList.add('show');
+                    });
+                    
+                    toggleCollapseBtn.innerHTML = '<i class="fas fa-eye me-1"></i> Show Collapse';
+                    collapseEnabled = false;
+                } else {
+                    // Enable collapse functionality
+                    table.classList.remove('no-collapse');
+                    categoryRows.forEach(row => {
+                        row.setAttribute('data-bs-toggle', 'collapse');
+                    });
+                    
+                    toggleCollapseBtn.innerHTML = '<i class="fas fa-eye-slash me-1"></i> Hide Collapse';
+                    collapseEnabled = true;
+                }
+            });
+            
+            // Handle chevron icon rotation on collapse toggle
+            const categoryRows = document.querySelectorAll('.category-row');
+            categoryRows.forEach(row => {
+                row.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-bs-target').substring(1);
+                    const target = document.getElementById(targetId);
+                    const icon = this.querySelector('i.fas');
+                    
+                    if (target.classList.contains('show')) {
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-right');
+                    } else {
+                        icon.classList.remove('fa-chevron-right');
+                        icon.classList.add('fa-chevron-down');
+                    }
+                });
+            });
+        });
+    </script>
+
+<script>
+// Toggle icon rotation on collapse
+document.addEventListener('DOMContentLoaded', function() {
+  // Handle individual collapse toggles
+  var collapseElements = document.querySelectorAll('.collapse');
+  collapseElements.forEach(function(collapseEl) {
+    collapseEl.addEventListener('show.bs.collapse', function() {
+      var trigger = document.querySelector('[data-bs-target="#' + this.id + '"]');
+      if (trigger) {
+        var icon = trigger.querySelector('i.toggle-icon');
+        if (icon) {
+          icon.classList.remove('fa-chevron-right');
+          icon.classList.add('fa-chevron-down');
+        }
+      }
+    });
+
+    collapseEl.addEventListener('hide.bs.collapse', function() {
+      var trigger = document.querySelector('[data-bs-target="#' + this.id + '"]');
+      if (trigger) {
+        var icon = trigger.querySelector('i.toggle-icon');
+        if (icon) {
+          icon.classList.remove('fa-chevron-down');
+          icon.classList.add('fa-chevron-right');
+        }
+      }
+    });
+  });
+
+  // Hide all details
+  document.getElementById('hideAllBtn').addEventListener('click', function() {
+    var collapses = document.querySelectorAll('.collapse');
+    collapses.forEach(function(collapse) {
+      var bsCollapse = new bootstrap.Collapse(collapse, {
+        toggle: false
+      });
+      bsCollapse.hide();
+    });
+  });
+
+  // Show all details
+  document.getElementById('showAllBtn').addEventListener('click', function() {
+    var collapses = document.querySelectorAll('.collapse');
+    collapses.forEach(function(collapse) {
+      var bsCollapse = new bootstrap.Collapse(collapse, {
+        toggle: false
+      });
+      bsCollapse.show();
+    });
+  });
+});
+</script>
   <!-- <script>
   document.getElementById('filterBtn').addEventListener('click', function() {
     let filterPanel = document.getElementById('filterPanel');
