@@ -2013,50 +2013,89 @@ header {
 
  <script>
 document.addEventListener("DOMContentLoaded", function() {
-  // Load payments when modal is opened
-  document.getElementById("paymentsHistoryModal").addEventListener("show.bs.modal", loadPayments);
+  // Open modal and load payments
+  document.getElementById("paymentsHistoryModal").addEventListener("show.bs.modal", function () {
+    loadPayments(); // default load without filters
+  });
 
+  // 🔹 Apply Filters button
+  document.getElementById("applyFilters").addEventListener("click", function () {
+    loadPayments();
+  });
+
+  // 🔹 Load payments (with optional filters)
   function loadPayments() {
-    fetch("/Jengopay/landlord/pages/financials/invoices/get_payments.php")
+    let month = document.getElementById("filterMonth").value;
+    let method = document.getElementById("filterMethod").value;
+
+    fetch("/Jengopay/landlord/pages/financials/invoices/get_payments.php?month=" 
+          + encodeURIComponent(month) + "&method=" + encodeURIComponent(method))
       .then(res => res.json())
       .then(data => {
         let tbody = document.querySelector("#paymentsTable tbody");
         tbody.innerHTML = "";
+
+        if (!data || data.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" class="text-center">No records found</td></tr>`;
+          return;
+        }
+
         data.forEach(p => {
           tbody.innerHTML += `
             <tr>
               <td>${p.tenant}</td>
-              <td>${p.amount}</td>
+              <td>Ksh ${parseFloat(p.amount).toLocaleString()}</td>
               <td>${p.payment_method}</td>
               <td>${p.payment_date}</td>
               <td>${p.status}</td>
               <td>
-                <button class="btn btn-sm btn-warning" 
-                        onclick="openEdit(${p.id}, ${p.amount}, '${p.tenant}', '${p.payment_date}')">
+                <button class="btn btn-sm btn-warning edit-payment" 
+                        data-id="${p.id}"
+                        data-amount="${p.amount}"
+                        data-tenant="${p.tenant}"
+                        data-date="${p.payment_date}"
+                        data-method="${p.payment_method}"
+                        data-ref="${p.reference_number}">
                   <i class="fas fa-edit"></i> Edit
                 </button>
               </td>
             </tr>`;
         });
+
+        // Re-bind edit buttons
+        document.querySelectorAll(".edit-payment").forEach(btn => {
+          btn.addEventListener("click", function () {
+            openEdit(
+              this.dataset.id,
+              this.dataset.amount,
+              this.dataset.tenant,
+              this.dataset.date,
+              this.dataset.method,
+              this.dataset.ref
+            );
+          });
+        });
       });
   }
 
-  // Open edit modal
-  window.openEdit = function(id, amount, tenant, payment_date) {
+  // 🔹 Open edit modal
+  window.openEdit = function(id, amount, tenant, payment_date, method, ref) {
     document.getElementById("editPaymentId").value = id;
     document.getElementById("editAmount").value = amount;
     document.getElementById("tenantName").value = tenant;
     document.getElementById("paymentDate").value = payment_date;
+    document.getElementById("paymentMethod").value = method;
+    document.getElementById("referenceNumber").value = ref;
     new bootstrap.Modal(document.getElementById("editPaymentModal")).show();
   };
 
-  // Submit edit form with confirmation
+  // 🔹 Submit edit form
   document.getElementById("editPaymentForm").addEventListener("submit", function(e) {
     e.preventDefault();
 
     let amount = document.getElementById("editAmount").value;
     if (!confirm(`Are you sure you want to record this amount: KES ${amount}?`)) {
-      return; // Stop if user cancels
+      return;
     }
 
     let formData = new FormData(this);
@@ -2068,19 +2107,19 @@ document.addEventListener("DOMContentLoaded", function() {
     .then(res => res.json())
     .then(result => {
       if (result.success) {
-        alert("Payment updated successfully!");
+        alert("✅ Payment updated successfully!");
         bootstrap.Modal.getInstance(document.getElementById("editPaymentModal")).hide();
-        loadPayments();
+        loadPayments(); // refresh table with current filters
       } else {
-        alert("Update failed: " + result.message);
+        alert("❌ Update failed: " + result.message);
       }
+    })
+    .catch(err => {
+      console.error("Error updating payment:", err);
     });
   });
 });
 </script>
-
-
-
 
     <script>
 document.getElementById('fileInput').addEventListener('change', function(e) {
@@ -2245,19 +2284,21 @@ function loadPaymentForEdit(id) {
         return;
       }
 
-      // Fill your modal inputs
+      // ✅ Match modal inputs
       document.getElementById("editPaymentId").value = data.id;
-      document.getElementById("editTenant").value = data.tenant;
+      document.getElementById("invoiceId").value = data.invoice_id;
+      document.getElementById("tenantName").value = data.tenant;
       document.getElementById("editAmount").value = data.amount;
-      document.getElementById("editMethod").value = data.payment_method;
-      document.getElementById("editDate").value = data.payment_date;
-      document.getElementById("editStatus").value = data.status;
+      document.getElementById("paymentMethod").value = data.payment_method;
+      document.getElementById("paymentDate").value = data.payment_date;
+      document.getElementById("referenceNumber").value = data.reference_number;
     })
     .catch(err => {
       console.error("Error loading payment details:", err);
     });
 }
 </script>
+
 
 
 

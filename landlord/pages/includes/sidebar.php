@@ -49,7 +49,8 @@
       <a href="/Jengopay/landlord/pages/financials/invoices/invoice.php">📄 Invoices</a>
       <a href="/Jengopay/landlord/pages/financials/balanceSheet/balanceSheet.php">📊 Balance Sheet</a>
       <a href="/Jengopay/landlord/pages/financials/profit&loss/profit&loss.php">📊 Profit&Loss</a>
-      <a href="/Jengopay/landlord/pages/financials/gl/gL.php">📊 General Ledger</a>
+      <a href="/Jengopay/landlord/pages/financials/generalledger/general_ledger.php">📊General Ledger</a>
+
     </div>
   </div>
     <a href="#">⚙️ Settings</a>
