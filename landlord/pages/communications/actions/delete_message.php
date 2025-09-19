@@ -21,7 +21,7 @@ $singleFile = $stmtSingle->fetchColumn();
 
 $allFiles = array_merge($attachedFiles, $singleFile ? [$singleFile] : []);
 
-$baseUploadDir = $_SERVER['DOCUMENT_ROOT'] . '/originalTwo/AdminLTE/dist/pages/communications/uploads/';
+$baseUploadDir = $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/communications/uploads/';
 
 foreach ($allFiles as $file) {
     $filePath = $baseUploadDir . basename($file);

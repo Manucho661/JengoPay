@@ -80,7 +80,7 @@ foreach ($messages as $msg) {
         foreach ($file_paths as $index => $file_path) {
             if (empty($file_path)) continue;
 
-            $base_upload_dir = '/originalTwo/AdminLTE/dist/pages/communications/uploads/';
+            $base_upload_dir = '/Jengopay/landlord/pages/communications/uploads/';
             $full_path = $_SERVER['DOCUMENT_ROOT'] . $base_upload_dir . basename($file_path);
             error_log("FULL PATH: " . $full_path);
 

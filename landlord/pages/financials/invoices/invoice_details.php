@@ -752,7 +752,7 @@ $lineRows .= "<tr>
     <div class="row">
         <div class="col-6 terms-box">
             <strong>Note:</strong><br>
-            <?= !empty($inv['notes']) ? htmlspecialchars($inv['notes']) : 'This expense note belongs to Silver Spoon Towers.' ?>
+            <?= !empty($inv['notes']) ? htmlspecialchars($inv['notes']) : 'Thankyou for business!.' ?>
         </div>
         <div class="col-6">
             <table class="table table-borderless table-sm text-end mb-0">

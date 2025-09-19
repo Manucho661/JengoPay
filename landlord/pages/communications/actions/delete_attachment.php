@@ -18,7 +18,7 @@ try {
     }
 
     // Delete physical file
-    $uploadDir = '/originalTwo/AdminLTE/dist/pages/communications/uploads/';
+    $uploadDir = '/Jengopay/landlord/pages/communications/uploads/';
     $filePath = $_SERVER['DOCUMENT_ROOT'] . $uploadDir . $filename;
 
     if (file_exists($filePath)) {

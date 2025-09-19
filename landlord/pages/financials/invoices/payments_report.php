@@ -1,43 +1,19 @@
 <?php
-require 'vendor/autoload.php';   // PhpSpreadsheet autoload
-include '../../db/connect.php';        // your DB connection
+include '../../db/connect.php';
 
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+header('Content-Type: text/csv; charset=utf-8');
+header('Content-Disposition: attachment; filename=payments_report.csv');
 
-// Fetch payments
-$stmt = $pdo->query("SELECT id, tenant, amount, payment_method, payment_date, reference_number, status FROM payments ORDER BY payment_date DESC");
-$payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Create spreadsheet
-$spreadsheet = new Spreadsheet();
-$sheet = $spreadsheet->getActiveSheet();
+$output = fopen('php://output', 'w');
 
 // Headers
-$headers = ["ID", "Tenant", "Amount", "Payment Method", "Payment Date", "Reference Number", "Status"];
-$col = "A";
-foreach ($headers as $header) {
-    $sheet->setCellValue($col . "1", $header);
-    $col++;
+fputcsv($output, ['Tenant', 'Amount', 'Payment Method', 'Payment Date', 'Reference Number', 'Status']);
+
+// Fetch data
+$stmt = $pdo->query("SELECT tenant, amount, payment_method, payment_date, reference_number, status FROM payments ORDER BY payment_date DESC");
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    fputcsv($output, $row);
 }
 
-// Data
-$row = 2;
-foreach ($payments as $payment) {
-    $sheet->setCellValue("A$row", $payment['id']);
-    $sheet->setCellValue("B$row", $payment['tenant']);
-    $sheet->setCellValue("C$row", $payment['amount']);
-    $sheet->setCellValue("D$row", $payment['payment_method']);
-    $sheet->setCellValue("E$row", $payment['payment_date']);
-    $sheet->setCellValue("F$row", $payment['reference_number']);
-    $sheet->setCellValue("G$row", $payment['status']);
-    $row++;
-}
-
-// Send file to browser
-header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment; filename="payments_report.xlsx"');
-
-$writer = new Xlsx($spreadsheet);
-$writer->save("php://output");
+fclose($output);
 exit;
