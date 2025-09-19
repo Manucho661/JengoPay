@@ -1,5 +1,5 @@
 <?php
-require 'db.php';  // Include your database connection file
+require '../../db/connect.php';  // Include your database connection file
 
 // Get message_id from URL query parameter, sanitize as integer
 $message_id = isset($_GET['message_id']) ? intval($_GET['message_id']) : 0;

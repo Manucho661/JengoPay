@@ -1,5 +1,5 @@
 <?php
-require 'db.php';
+require '../../db/connect.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $message_id = isset($_POST['message_id']) ? intval($_POST['message_id']) : 0;

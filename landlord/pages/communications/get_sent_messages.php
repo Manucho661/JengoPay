@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-include '../db/connect.php';
+include '../../db/connect.php';
 
 try {
     $query = "SELECT * FROM announcements

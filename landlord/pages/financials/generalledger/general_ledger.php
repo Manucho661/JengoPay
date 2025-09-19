@@ -3,7 +3,7 @@ include '../../db/connect.php';
 
 $sql = "
     SELECT 
-        je.entry_date,
+        je.created_at,
         je.reference,
         je.description,
         je.source_table,
@@ -27,7 +27,7 @@ $sql = "
             ELSE 0
         END AS credit
     FROM journal_entries je
-    ORDER BY je.entry_date, je.id
+    ORDER BY je.created_at, je.id
 ";
 
 $stmt = $pdo->query($sql);
@@ -362,7 +362,7 @@ $runningBalance = 0;
                 $runningBalance += $r['debit'] - $r['credit'];
             ?>
             <tr>
-                <td><?= htmlspecialchars($r['entry_date']) ?></td>
+                <td><?= htmlspecialchars($r['created_at']) ?></td>
                 <td><?= htmlspecialchars($r['reference']) ?></td>
                 <td><?= htmlspecialchars($r['description']) ?></td>
                 <td><?= htmlspecialchars($r['account_name']) ?></td>
@@ -407,42 +407,4 @@ $runningBalance = 0;
   <!--end::Script-->
 </body>
 <!--end::Body-->
-</html>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>General Ledger</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="p-4">
-    <h2>General Ledger</h2>
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-            <tr>
-                <th>Date</th>
-                <th>Reference</th>
-                <th>Description</th>
-                <th>Account</th>
-                <th>Debit (Ksh)</th>
-                <th>Credit (Ksh)</th>
-                <th>Balance (Ksh)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($rows as $r): 
-                $runningBalance += $r['debit'] - $r['credit'];
-            ?>
-            <tr>
-                <td><?= htmlspecialchars($r['entry_date']) ?></td>
-                <td><?= htmlspecialchars($r['reference']) ?></td>
-                <td><?= htmlspecialchars($r['description']) ?></td>
-                <td><?= htmlspecialchars($r['account_name']) ?></td>
-                <td><?= number_format($r['debit'], 2) ?></td>
-                <td><?= number_format($r['credit'], 2) ?></td>
-                <td><?= number_format($runningBalance, 2) ?></td>
-            </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-</body>
 </html>
