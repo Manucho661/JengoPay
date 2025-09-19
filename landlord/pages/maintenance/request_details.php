@@ -489,43 +489,54 @@ require_once "actions/individual/getGeralRequests.php";
     hr {
       margin: 1rem 0;
     }
-#customBackdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.6);
-  z-index: 10000;
-}
+
+    #customBackdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 10000;
+    }
 
     #proposalContainer {
-  position: fixed;        /* detach from page flow */
-  top: 50%;               /* vertical center */
-  left: 50%;              /* horizontal center */
-  transform: translate(-50%, -50%);
-  max-height: 90vh;
-  width: 600px;           /* adjust width as needed */
-  overflow-y: auto;
-  background: black;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-  z-index: 10000;          /* above backdrop */
-}
+      position: fixed;
+      /* detach from page flow */
+      top: 50%;
+      /* vertical center */
+      left: 50%;
+      /* horizontal center */
+      transform: translate(-50%, -50%);
+      max-height: 90vh;
+      width: 600px;
+      /* adjust width as needed */
+      overflow-y: auto;
+      background: black;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      z-index: 10000;
+      /* above backdrop */
+    }
 
     #proposalContainer {
-  position: fixed;        /* detach from page flow */
-  top: 50%;               /* vertical center */
-  left: 50%;              /* horizontal center */
-  transform: translate(-50%, -50%);
-  max-height: 90vh;
-  width: 600px;           /* adjust width as needed */
-  overflow-y: auto;
-  background: black;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-  z-index: 1050;          /* above backdrop */
-}
+      position: fixed;
+      /* detach from page flow */
+      top: 50%;
+      /* vertical center */
+      left: 50%;
+      /* horizontal center */
+      transform: translate(-50%, -50%);
+      max-height: 90vh;
+      width: 600px;
+      /* adjust width as needed */
+      overflow-y: auto;
+      background: black;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      z-index: 1050;
+      /* above backdrop */
+    }
 
 
     .payment-container {
@@ -589,46 +600,62 @@ require_once "actions/individual/getGeralRequests.php";
     }
 
     /* Custom modal theme */
-/* Modal container */
-.custom-modal {
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
+    /* Modal container */
+    .custom-modal {
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
 
-/* Navy + Gold palette */
-.text-navy {
-  color: #00192D !important;
-}
-.border-navy {
-  border-color: #00192D !important;
-}
-.text-accent {
-  color: #e0a800 !important;
-}
+    /* Navy + Gold palette */
+    .text-navy {
+      color: #00192D !important;
+    }
 
-/* Accent button */
-.btn-accent {
-  background-color: #e0a800;
-  color: #00192D;
-  border: none;
-}
-.btn-accent:hover {
-  background-color: #c99700;
-  color: #fff;
-}
+    .border-navy {
+      border-color: #00192D !important;
+    }
 
-/* Outline navy button */
-.btn-outline-navy {
-  border: 1px solid #00192D;
-  color: #00192D;
-}
-.btn-outline-navy:hover {
-  background-color: #00192D;
-  color: #fff;
-}
+    .text-accent {
+      color: #e0a800 !important;
+    }
+
+    /* Accent button */
+    .btn-accent {
+      background-color: #e0a800;
+      color: #00192D;
+      border: none;
+    }
+
+    .btn-accent:hover {
+      background-color: #c99700;
+      color: #fff;
+    }
+
+    /* Outline navy button */
+    .btn-outline-navy {
+      border: 1px solid #00192D;
+      color: #00192D;
+    }
+
+    .btn-outline-navy:hover {
+      background-color: #00192D;
+      color: #fff;
+    }
 
 
+    #assignBox .btn-outline-navy:hover {
+      color: navy !important;
+      /* Keep text navy */
+      background-color: rgba(0, 43, 91, 0.1) !important;
+      /* optional subtle bg */
+    }
+
+    #assignBox .btn-outline-danger:hover {
+      color: red !important;
+      /* Keep text red */
+      background-color: rgba(220, 53, 69, 0.1) !important;
+    }
   </style>
 </head>
 
@@ -951,60 +978,66 @@ require_once "actions/individual/getGeralRequests.php";
   </div>
   </div>
   <!-- Modal -->
-<div class="modal fade" id="proposalModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content custom-modal">
+  <div class="modal fade" id="proposalModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content custom-modal">
 
-      <!-- Header -->
-      <div class="modal-header border-bottom">
-        <h5 class="modal-title text-navy fw-bold">Provider Application</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-
-      <!-- Body -->
-      <div class="modal-body text-dark">
-        <div class="d-flex align-items-start mb-3">
-          <img id="modalPhoto"
-               src="https://i.pravatar.cc/70"
-               alt="Profile Picture"
-               class="rounded-circle me-3 border border-2 border-navy"
-               style="width:70px; height:70px;">
-          <div>
-            <h5 id="modalName" class="mb-0">
-              Jane Doe 
-              <span id="modalBadge" class="badge bg-warning text-dark ms-2">Top Rated</span>
-            </h5>
-            <p id="modalTitle" class="text-muted mb-0">Full Stack Developer | React & Node.js</p>
-          </div>
-          <div class="ms-auto text-end">
-            <h6 id="modalRate" class="text-accent mb-0">$25/hr</h6>
-            <small id="modalDelivery" class="d-block text-muted">5 days delivery</small>
-            <small id="modalJobs" class="text-success">✅ 42 jobs completed</small>
-          </div>
+        <!-- Header -->
+        <div class="modal-header border-bottom">
+          <h5 class="modal-title text-navy fw-bold">Provider Application</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
-        <hr>
+        <!-- Body -->
+        <div class="modal-body text-dark">
+          <div class="d-flex align-items-start mb-3">
+            <img id="modalPhoto"
+              src="https://i.pravatar.cc/70"
+              alt="Profile Picture"
+              class="rounded-circle me-3 border border-2 border-navy"
+              style="width:70px; height:70px;">
+            <div>
+              <h5 id="modalName" class="mb-0">
+                Jane Doe
+                <span id="modalBadge" class="badge bg-warning text-dark ms-2">Top Rated</span>
+              </h5>
+              <p id="modalTitle" class="text-muted mb-0">Full Stack Developer | React & Node.js</p>
+            </div>
+            <div class="ms-auto text-end">
+              <h6 id="modalRate" class="text-accent mb-0">$25/hr</h6>
+              <small id="modalDelivery" class="d-block text-muted">5 days delivery</small>
+              <small id="modalJobs" class="text-success">✅ 42 jobs completed</small>
+            </div>
+          </div>
 
-        <p><strong>Cover Letter:</strong></p>
-        <p id="modalDescription" class="bg-light p-2 rounded border">
-          Default cover letter here...
-        </p>
+          <hr>
 
-        <p><strong>Location:</strong> 
-          <span id="modalLocation" class="text-accent">Nairobi, Kenya</span>
-        </p>
+          <p><strong>Cover Letter:</strong></p>
+          <p id="modalDescription" class="bg-light p-2 rounded border">
+            Default cover letter here...
+          </p>
+
+          <p><strong>Location:</strong>
+            <span id="modalLocation" class="text-accent">Nairobi, Kenya</span>
+          </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer border-top">
+          <div id="assignBox">
+            <button type="button" class="btn btn-outline-navy">Message</button>
+            <button type="button" id="assignBtn" class="btn btn-accent">Assign</button>
+            <button type="button" class="btn btn-outline-danger">Reject</button>
+          </div>
+          <div id="confirmAssign" style="display:none; align-items: center; gap: 0.5rem;">
+            <p class="mb-0">You're about to assign the request to the above provider, are sure?</p>
+            <button class="m-1 btn btn-success">Yes, Assign</button>
+            <button id="cancelAssignBtn" class="m-1 btn btn-outline-danger">Cancel</button>
+          </div>
+        </div>
       </div>
-
-      <!-- Footer -->
-      <div class="modal-footer border-top">
-        <button type="button" class="btn btn-outline-navy">Message</button>
-        <button type="button" class="btn btn-accent">Assign</button>
-        <button type="button" class="btn btn-outline-danger">Reject</button>
-      </div>
-
     </div>
   </div>
-</div>
 
 
 

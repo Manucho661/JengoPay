@@ -34,3 +34,23 @@ export function toggleProposalsORotherRequests(sectionId) {
   list.classList.add("visible");
   btn.classList.add("active-btn");
 }
+
+
+// the assign buttons
+export function confirmAssignBox() {
+  const assignBox = document.getElementById("assignBox");
+  const confirmAssignBox = document.getElementById("confirmAssign");
+
+  assignBox.style.display = "none";
+  confirmAssignBox.style.display = "flex";
+}
+
+// cancel confirm button box
+export function hideAssignBox() {
+  const assignBox = document.getElementById("assignBox");
+  const confirmAssignBox = document.getElementById("confirmAssign");
+
+  assignBox.style.display = "block";
+  confirmAssignBox.style.display = "none";
+
+}
