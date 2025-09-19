@@ -27,6 +27,10 @@ export function openProposalModal(proposal) {
   safeSet("modalDescription", proposal.cover_letter || "No description provided");
   safeSet("modalLocation", proposal.location || "Unknown");
 
+  const actualAssignBtn = document.getElementById("actualAssignBtn");
+  actualAssignBtn.setAttribute("data-provider-id", proposal.provider_id);
+  
+
   // --- show modal with Bootstrap ---
   const modalEl = document.getElementById("proposalModal");
   if (!modalEl) {

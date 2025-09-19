@@ -656,6 +656,11 @@ require_once "actions/individual/getGeralRequests.php";
       /* Keep text red */
       background-color: rgba(220, 53, 69, 0.1) !important;
     }
+
+    .request-provider:hover{
+      cursor: pointer;
+      text-decoration: underline;
+    }
   </style>
 </head>
 
@@ -762,7 +767,7 @@ require_once "actions/individual/getGeralRequests.php";
                     </div>
 
                     <!-- Unit -->
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                       <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
                         <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
                           <i class="fa-solid fa-door-closed" style="color: #FFC107; font-size: 16px;"></i>
@@ -773,14 +778,14 @@ require_once "actions/individual/getGeralRequests.php";
                     </div>
 
                     <!-- Provider -->
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                       <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
                         <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
                           <i class="bi bi-file-text" style="color: #FFC107; font-size: 16px;"></i>
                         </span>
                         <span style="font-weight: 600;">Provider</span>
                       </div>
-                      <div id="request-provider" style="margin-top: 6px; font-size: 15px; color: #b93232ff;">Unassigned</div>
+                      <div id="request-provider" class="request-provider text-success" style="margin-top: 6px; font-size: 15px; color: #b93232ff;">Unassigned</div>
                     </div>
 
                     <!-- Status -->
@@ -1031,7 +1036,7 @@ require_once "actions/individual/getGeralRequests.php";
           </div>
           <div id="confirmAssign" style="display:none; align-items: center; gap: 0.5rem;">
             <p class="mb-0">You're about to assign the request to the above provider, are sure?</p>
-            <button class="m-1 btn btn-success">Yes, Assign</button>
+            <button class="m-1 btn btn-success" id="actualAssignBtn">Yes, Assign</button>
             <button id="cancelAssignBtn" class="m-1 btn btn-outline-danger">Cancel</button>
           </div>
         </div>

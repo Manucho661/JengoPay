@@ -70,8 +70,8 @@ const proposalTemplate = (p) => html`
 const proposalsListTemplate = (proposals) => html`
   <ul id="proposals-list" class="proposals-list visible">
     ${proposals.length
-      ? proposals.map(proposalTemplate)
-      : html`<li class="no-proposals">No proposals available.</li>`}
+    ? proposals.map(proposalTemplate)
+    : html`<li class="no-proposals">No proposals available.</li>`}
   </ul>
 `;
 
@@ -166,4 +166,42 @@ function renderRequestsList(requests) {
 
     container.appendChild(li);
   });
+}
+
+/* ===========================
+   ASSIGN PROVIDER
+=========================== */
+export async function assignProvider() {
+  // Get provider_id from button attribute
+  let providerId = this.getAttribute("data-provider-id");
+
+  // Get request_id from page URL
+  let urlParamss = new URLSearchParams(window.location.search);
+  let requestId = urlParamss.get("id");
+
+  try {
+    // Make fetch call to your PHP action
+    let response = await fetch(
+      `./actions/request_details/assign_provider.php?request_id=${requestId}&provider_id=${providerId}`
+    );
+
+    // Parse JSON response
+    let data = await response.json();
+
+    if (data.status === "success") {
+      console.log("✅ Provider assigned successfully:", data);
+
+      // Re-fetch and update the UI after assigning the provider
+      get_request_details();  // This will fetch and update the page automatically
+      const proposalModalEl = document.getElementById('proposalModal');
+      const proposalModal = bootstrap.Modal.getInstance(proposalModalEl) || new bootstrap.Modal(proposalModalEl);
+      proposalModal.hide();
+
+
+    } else {
+      console.log("⚠️ Assignment failed:", data.message);
+    }
+  } catch (err) {
+    console.error("❌ Error assigning provider:", err);
+  }
 }

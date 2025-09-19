@@ -16,8 +16,18 @@ if (!$requestId || !is_numeric($requestId)) {
 }
 
 try {
-    // Step 1: Get the main request
-    $stmt = $pdo->prepare("SELECT * FROM maintenance_requests WHERE id = :id");
+    // Step 1: Get the main request along with provider name
+    $stmt = $pdo->prepare("
+        SELECT 
+            mr.*, 
+            pr.name AS provider_name 
+        FROM 
+            maintenance_requests mr
+        LEFT JOIN 
+            providers pr ON mr.provider_id = pr.id
+        WHERE 
+            mr.id = :id
+    ");
     $stmt->execute(['id' => $requestId]);
     $request = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -34,21 +44,20 @@ try {
 
     // Step 3: Get proposals with provider details using JOIN
     $stmt = $pdo->prepare("
-    SELECT 
-        p.*, 
-        pr.name, 
-        pr.phone,
-        pr.ratings
-    FROM 
-        maintenance_request_proposals p
-    JOIN 
-        providers pr ON p.provider_id = pr.id
-    WHERE 
-        p.maintenance_request_id = :id
+        SELECT 
+            p.*, 
+            pr.name, 
+            pr.phone,
+            pr.ratings
+        FROM 
+            maintenance_request_proposals p
+        JOIN 
+            providers pr ON p.provider_id = pr.id
+        WHERE 
+            p.maintenance_request_id = :id
     ");
     $stmt->execute(['id' => $requestId]);
     $proposals = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 
     // Step 4: Get payments
     $stmt = $pdo->prepare("SELECT * FROM maintenance_payments WHERE maintenance_request_id = :id");
@@ -68,3 +77,4 @@ try {
     http_response_code(500);
     echo json_encode(["error" => $e->getMessage()]);
 }
+?>

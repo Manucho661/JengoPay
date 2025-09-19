@@ -690,19 +690,22 @@ require_once 'actions/getBuildings.php'
                                     <!-- Edit Payment Modal -->
                                     <div class="modal fade" id="editPaymentModal" tabindex="-1" aria-labelledby="editPaymentLabel" aria-hidden="true">
                                         <div class="modal-dialog modal-lg modal-dialog-centered">
-                                            <div class="modal-content rounded-4 bg-white" style=" border: 1px solid #00192D;">
+                                            <div class="modal-content rounded-2 bg-white" style=" border: 1px solid #00192D;">
 
                                                 <!-- Header -->
-                                                <div class="modal-header border-bottom align-items-center" style="padding: 0.75rem 1rem;">
+                                                <div class="modal-header border-bottom align-items-center" style="padding: 0.75rem 1rem; background-color: #EAF0F4;">
                                                     <h3 class="modal-title m-0" id="editPaymentLabel"
                                                         style="font-size: 1.25rem; font-weight: 600; color: #00192D;">
-                                                        Edit Payments <span style="font-weight: 400; font-size: 1rem; color: #6c757d;">
+                                                        <i class="bi bi-pencil" style="margin-right: 6px; color: #00192D;"></i>
+                                                        Edit Payments
+                                                        <span style="font-weight: 400; font-size: 1rem; color: #6c757d;">
                                                             KRACU0100039628
                                                         </span>
                                                     </h3>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                     <button type="button" class="btn btn-sm" style="background-color: #FFC107; color: #00192D;" data-bs-dismiss="modal" title="Close">
+                                                        <i class="bi bi-x-lg"></i>
+                                                    </button>
                                                 </div>
-
 
                                                 <!-- Body -->
                                                 <div class="modal-body p-4">

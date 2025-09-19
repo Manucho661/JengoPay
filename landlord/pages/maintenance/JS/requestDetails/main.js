@@ -1,4 +1,4 @@
-import { otherRequests, get_request_details } from "./api.js";
+import { otherRequests, get_request_details, assignProvider } from "./api.js";
 import { toggleProposalsORotherRequests, confirmAssignBox, hideAssignBox } from "./uiControl.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -21,5 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // display confirm assign btn
   document.getElementById('assignBtn').addEventListener('click', confirmAssignBox );
     document.getElementById('cancelAssignBtn').addEventListener('click', hideAssignBox );
+
+    // assign provider
+    document.getElementById('actualAssignBtn').addEventListener('click', assignProvider );
 
 });
