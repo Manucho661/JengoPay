@@ -312,9 +312,9 @@ export async function getProviderDetails() {
       `./actions/request_details/get_provider_details.php?provider_id=${providerId}`
     );
 
-    const data = await response.json();
-    console.log(data);
-    openProviderDetailsModal();
+    const details = await response.json();
+    console.log(details);
+    openProviderDetailsModal(details);
 
 
   } catch (err) {
