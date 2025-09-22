@@ -20,7 +20,8 @@ try {
     $stmt = $pdo->prepare("
         SELECT 
             mr.*, 
-            pr.name AS provider_name
+            pr.name AS provider_name,
+            pr.id as provider_id
         FROM 
             maintenance_requests mr
         LEFT JOIN 

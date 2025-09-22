@@ -1,5 +1,5 @@
 import { html, render } from "https://unpkg.com/lit@3.1.4/index.js?module";
-import { openProposalModal } from "./modals.js";
+import { openProposalModal, openProviderDetailsModal } from "./modals.js";
 import { applyAvailabilityStyles } from "./uiControl.js";
 
 /* ===========================
@@ -44,6 +44,10 @@ function fillRequestDetails(request, photos) {
     request?.status || "Unassigned";
   document.getElementById("request-description").textContent =
     request?.description || "No description provided";
+
+  // add provider id to provider name
+  const requestProvider = document.getElementById("request-provider");
+  requestProvider.setAttribute("data-provider-id", request.provider_id);
 
   // Photo
   const photoEl = document.getElementById("request-photo");
@@ -280,7 +284,7 @@ export async function updateAvailabilty() {
       btn.textContent =
         newStatus === "available" ? "Set Unavailable" : "Set Available";
 
-          applyAvailabilityStyles(newStatus);
+      applyAvailabilityStyles(newStatus);
     } else {
       console.warn("⚠️ Failed to update availability:", data.message);
       btn.textContent =
@@ -301,17 +305,19 @@ export async function updateAvailabilty() {
 export async function getProviderDetails() {
 
   console.log("get provider details is being reached");
-  // const providerId = this.getAttribute("data-provider-id");
+  const providerId = this.getAttribute("data-provider-id");
 
-  // try {
-  //   const response = await fetch(
-  //     `./actions/request_details/get_provider_details.php?provider_id=${providerId}`
-  //   );
+  try {
+    const response = await fetch(
+      `./actions/request_details/get_provider_details.php?provider_id=${providerId}`
+    );
 
-  //   const data = await response.json();
+    const data = await response.json();
+    console.log(data);
+    openProviderDetailsModal();
 
-    
-  // } catch (err) {
-  //   console.error("❌ Error assigning provider:", err);
-  // }
+
+  } catch (err) {
+    console.error("❌ Error fetching provider details:", err);
+  }
 }

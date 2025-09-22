@@ -29,10 +29,22 @@ export function openProposalModal(proposal) {
 
   const actualAssignBtn = document.getElementById("actualAssignBtn");
   actualAssignBtn.setAttribute("data-provider-id", proposal.provider_id);
-  
+
 
   // --- show modal with Bootstrap ---
   const modalEl = document.getElementById("proposalModal");
+  if (!modalEl) {
+    console.error("❌ Cannot open modal: #proposalModal not found in DOM");
+    return;
+  }
+
+  const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+  modal.show();
+}
+
+export function openProviderDetailsModal(){
+// --- show modal with Bootstrap ---
+  const modalEl = document.getElementById("providerModal");
   if (!modalEl) {
     console.error("❌ Cannot open modal: #proposalModal not found in DOM");
     return;

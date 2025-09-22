@@ -1065,8 +1065,75 @@ require_once "actions/individual/getGeralRequests.php";
     </div>
   </div>
 
+  <!-- provider details-->
+  <div class="modal fade" id="providerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content custom-modal">
 
+        <!-- Header -->
+        <div class="modal-header border-bottom">
+          <h5 class="modal-title text-navy fw-bold">Provider Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
 
+        <!-- Body -->
+        <div class="modal-body text-dark">
+          <div class="d-flex align-items-start mb-3">
+            <img id="providerModalPhoto"
+              src="https://i.pravatar.cc/70"
+              alt="Profile Picture"
+              class="rounded-circle me-3 border border-2 border-navy"
+              style="width:70px; height:70px;">
+            <div>
+              <h5 id="providerModalName" class="mb-0">
+                Jane Doe
+                <span id="modalBadge" class="badge bg-warning text-dark ms-2">Top Rated</span>
+              </h5>
+              <p id="providerModalTitle" class="text-muted mb-1">Full Stack Developer | React & Node.js</p>
+
+              <!-- ✅ New contact details -->
+              <p class="mb-0">
+                <strong>Email:</strong> <span id="providerModalEmail" class="text-accent">jane.doe@email.com</span>
+              </p>
+              <p class="mb-0">
+                <strong>Phone:</strong> <span id="providerModalPhone" class="text-accent">+254 700 123 456</span>
+              </p>
+            </div>
+            <div class="ms-auto text-end">
+              <h6 id="providerModalRate" class="text-accent mb-0">$25/hr</h6>
+              <small id="providerModalDelivery" class="d-block text-muted">5 days delivery</small>
+              <small id="providerModalJobs" class="text-success">✅ 42 jobs completed</small>
+            </div>
+          </div>
+
+          <hr>
+
+          <p><strong>Cover Letter:</strong></p>
+          <p id="providerModalDescription" class="bg-light p-2 rounded border">
+            Default cover letter here...
+          </p>
+
+          <p><strong>Location:</strong>
+            <span id="providerModalLocation" class="text-accent">Nairobi, Kenya</span>
+          </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer border-top">
+          <div id="assignBox">
+            <button type="button" class="btn btn-outline-navy">Message</button>
+            <button type="button" class="btn btn-accent">Assign</button>
+            <button type="button" class="btn btn-outline-danger">Reject</button>
+          </div>
+          <div  style="display:none; align-items: center; gap: 0.5rem;">
+            <p class="mb-0">You're about to assign the request to the above provider, are sure?</p>
+            <button class="m-1 btn btn-success" id="actualAssignBtn">Yes, Assign</button>
+            <button class="m-1 btn btn-outline-danger">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
   <!-- Payment Modals -->
