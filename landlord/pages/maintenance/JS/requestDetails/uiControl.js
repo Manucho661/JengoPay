@@ -54,3 +54,16 @@ export function hideAssignBox() {
   confirmAssignBox.style.display = "none";
 
 }
+
+// Availability background color
+export function applyAvailabilityStyles(status) {
+  const btn = document.getElementById("availabilityBtn");
+
+  if (status === "available") {
+    btn.style.backgroundColor = "#fff"; // always white
+    btn.style.color = "#00192D";        // text color consistent
+  } else {
+    btn.style.backgroundColor = "#E6EAF0"; // your default grey
+    btn.style.color = "#00192D";
+  }
+}

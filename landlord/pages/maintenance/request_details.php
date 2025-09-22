@@ -46,18 +46,6 @@ require_once "actions/individual/getGeralRequests.php";
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #f8fafc, #ffffff);
-      color: #333;
-    }
-
     .app-wrapper {
       background-color: rgba(128, 128, 128, 0.1);
     }
@@ -194,16 +182,6 @@ require_once "actions/individual/getGeralRequests.php";
       gap: 4px;
     }
 
-    .badge-new {
-      background: #FFC107;
-      color: #00192D;
-      padding: 3px 8px;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      margin-left: auto;
-      flex-shrink: 0;
-    }
 
     /* Status indicators */
     .status-pending {
@@ -283,14 +261,10 @@ require_once "actions/individual/getGeralRequests.php";
       border-radius: 10px;
       box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
       padding: 1.5rem;
-      /* transition: all 0.3s ease; */
       border-left: 5px solid transparent;
     }
 
     .row-card:hover {
-      /* transform: translateY(-2px); */
-      /* box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12); */
-      /* border-left: 5px solid #FFC107; */
       background-color: #fdfaf3;
     }
 
@@ -572,6 +546,7 @@ require_once "actions/individual/getGeralRequests.php";
       padding: 0;
       margin: 0;
       overflow-y: auto;
+      min-height: 600px;
     }
 
     .visible {
@@ -655,11 +630,49 @@ require_once "actions/individual/getGeralRequests.php";
       color: red !important;
       /* Keep text red */
       background-color: rgba(220, 53, 69, 0.1) !important;
+      border: none;
     }
 
-    .request-provider:hover{
+    #assignBox .btn-accent:hover {
+      color: #00192D !important;
+      border-color: #c99700 !important;
+      border: 1px solid #c99700 !important;
+    }
+
+    .request-provider:hover {
       cursor: pointer;
       text-decoration: underline;
+    }
+
+    #requestNav .nav-link {
+      color: #00192D;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-bottom: 3px solid transparent;
+      transition: border-color 0.2s ease;
+    }
+
+    #requestNav .nav-link.active {
+      border-bottom-color: #00192D;
+      /* underline highlight */
+    }
+
+    #confirmAssign .btn-success:hover {
+      color: #28a745 !important;
+      background-color: rgba(40, 167, 69, 0.1) !important;
+      border: none;
+    }
+
+    #confirmAssign .btn-outline-danger:hover {
+      color: red !important;
+      background-color: rgba(220, 53, 69, 0.1) !important;
+      border: none;
+    }
+
+    .contact_section_header,
+    h3,
+    .emoji {
+      font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", "Twemoji Mozilla", sans-serif;
     }
   </style>
 </head>
@@ -698,20 +711,28 @@ require_once "actions/individual/getGeralRequests.php";
         <!--begin::Container-->
         <div class="container-fluid">
           <!--begin::Row-->
-          <div class="row">
+          <div class="row align-items-center mb-3">
             <div class="col-sm-8">
-              <!-- <h3 class="mb-0 "> 🛠 <span class="contact_section_header">Maintenance Requests</span> </h3> -->
               <div class="d-flex">
-                <h3 class="mb-0 "> 🛠 <span class="contact_section_header">Maintenance Requests</span> </h3>
-                <p class="text-muted mt-2">&nbsp;:- <b><span id="requestID" class="text-success"><?php echo $requestId; ?></span></b></p>
+                <h3 class="mb-0"> 🛠 <span class="contact_section_header">Maintenance Requests</span> </h3>
+                <p class="text-muted mt-2">&nbsp;:-
+                  <b><span id="requestID" class="text-success"><?php echo $requestId; ?></span></b>
+                </p>
                 <p class="text-muted mx-5 mt-2"> Received:- <span class="text-dark">19-02-25</span></p>
               </div>
             </div>
             <div class="col-sm-4">
-              <ol class="breadcrumb float-sm-end">
-                <li class="breadcrumb-item"><a href="#" style="color: #00192D;"> <i class="bi bi-house"></i> Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-              </ol>
+              <ul class="nav justify-content-end border-bottom" id="requestNav">
+                <li class="nav-item">
+                  <a class="nav-link" href="maintenance.php" data-tab="all">All Requests</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#" data-tab="saved">Saved</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#" data-tab="cancelled">Cancelled</a>
+                </li>
+              </ul>
             </div>
           </div>
           <!--end::Row-->
@@ -723,21 +744,21 @@ require_once "actions/individual/getGeralRequests.php";
           <div class="row p-1">
             <div class="col-md-4 px-2">
               <a href="javascript:history.back()"
-                class="btn shadow-none"
+                class="btn shadow-none rounded-4 shadow-sm"
                 style="background-color: #E6EAF0;; color: #00192D; font-weight: 500; width:100%;">
                 All Requests
               </a>
             </div>
             <div class="col-md-4 px-2">
               <button id="availabilityBtn"
-                class="btn shadow-none" data-request-id="<?php echo $requestId; ?>" data-status="<?php echo $request['availability']; ?>"
+                class="btn shadow-none rounded-4 shadow-sm"
                 style="background-color: #E6EAF0; color: #00192D; font-weight: 500; width:100%;">
-                <?php echo $request['availability'] === 'available' ? 'Set Unavailable' : 'Set Available'; ?>
+                <!-- JS will fill this -->
               </button>
             </div>
             <div class="col-md-4 px-2">
-              <button id="availabilityBtn"
-                class="btn shadow-none text-danger" data-request-id="<?php echo $requestId; ?>" data-status="<?php echo $request['availability']; ?>"
+              <button id="cancelRequestBtn"
+                class="btn shadow-none text-danger rounded-4 shadow-sm" data-request-id="<?php echo $requestId; ?>" data-status="<?php echo $request['availability']; ?>"
                 style="background-color: #E6EAF0; color: #00192D; font-weight: 500; width:100%;  margin-left:2px; ">
                 Cancel
               </button>
@@ -1133,202 +1154,7 @@ require_once "actions/individual/getGeralRequests.php";
     });
   </script>
 
-  <!-- Update Availability -->
-  <script>
-    document.getElementById('availabilityBtn').addEventListener('click', function() {
-      const btn = this;
-      const requestId = btn.dataset.requestId;
-      const currentStatus = btn.dataset.status;
 
-      // Determine the new status
-      const newStatus = currentStatus === 'available' ? 'unavailable' : 'available';
-
-      fetch('actions/individual/updateAvailability.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            id: requestId,
-            status: newStatus
-          })
-        })
-        .then(res => res.json())
-        .then(data => {
-          console.log('Server Response:', data);
-
-          if (data.success) {
-            // Update dataset
-            btn.dataset.status = newStatus;
-
-            // Update button text
-            btn.textContent = newStatus === 'available' ? 'Set Unavailable' : 'Set Available';
-
-            // Update button classes
-            btn.classList.remove('available', 'unavailable'); // remove both first
-            btn.classList.add(newStatus); // add either 'available' or 'unavailable'
-
-            // Show/hide secondary buttons
-            const secondaryButtons = document.getElementById('secondaryButtons');
-            if (newStatus === 'available') {
-              secondaryButtons.style.display = 'flex';
-            } else {
-              secondaryButtons.style.display = 'none';
-            }
-          } else {
-            alert('Failed to update availability.');
-          }
-        })
-        .catch(err => console.error('Error:', err));
-    });
-  </script>
-
-  <script>
-    const requestList = document.getElementById('requestList');
-    const detailsPanel = document.getElementById('detailsPanel');
-    const searchInput = document.getElementById('searchInput');
-    let allRequests = [];
-    let currentRequestId = null;
-
-    // Get status icon mapping
-    const statusIcons = {
-      'Pending': 'fa-clock',
-      'Completed': 'fa-check-circle',
-      'In Progress': 'fa-spinner',
-      'Cancelled': 'fa-times-circle'
-    };
-
-    // Get priority icon mapping
-    const priorityIcons = {
-      'High': 'fa-arrow-up',
-      'Medium': 'fa-equals',
-      'Low': 'fa-arrow-down'
-    };
-
-    fetch('get_requests.php')
-      .then(res => res.json())
-      .then(requests => {
-        console.log(requests); // 👈 This prints the entire response data
-        if (!requests.length || requests.error) {
-          detailsPanel.innerHTML = `<div class="no-selection"><i class="fa-solid fa-triangle-exclamation"></i> No requests found.</div>`;
-          return;
-        }
-        allRequests = requests;
-        renderRequestList(allRequests);
-
-        // Automatically show the first request
-        if (allRequests.length > 0) {
-          showRequestDetails(allRequests[0]);
-          // Highlight the first item
-          const firstItem = requestList.querySelector('.request-item');
-          if (firstItem) {
-            firstItem.classList.add('active-request');
-          }
-        }
-      });
-
-    searchInput.addEventListener('input', function() {
-      const query = this.value.toLowerCase();
-      const filtered = allRequests.filter(req =>
-        req.category.toLowerCase().includes(query) ||
-        req.residence.toLowerCase().includes(query) ||
-        req.unit.toLowerCase().includes(query) ||
-        req.description.toLowerCase().includes(query)
-      );
-      renderRequestList(filtered);
-
-      // Show first result if available
-      if (filtered.length > 0) {
-        showRequestDetails(filtered[0]);
-        // Highlight the first item
-        const firstItem = requestList.querySelector('.request-item');
-        if (firstItem) {
-          firstItem.classList.add('active-request');
-        }
-      }
-    });
-
-    // New function to update button appearance
-    function updateAvailabilityButton(availability) {
-      const btn = document.getElementById('availabilityBtn');
-      const secondaryButtons = document.getElementById('secondaryButtons');
-
-      if (availability === 'available') {
-        btn.innerHTML = '<i class="fas fa-check me-2"></i> Available';
-        btn.style.backgroundColor = '#FFFFFF';
-        secondaryButtons.style.display = 'flex';
-      } else {
-        btn.innerHTML = '<i class="fas fa-ban me-2"></i> Unavailable';
-        btn.style.backgroundColor = '#E6EAF0';
-        secondaryButtons.style.display = 'none';
-      }
-    }
-
-    // Updated toggleAvailability function
-    async function toggleAvailability() {
-      if (!currentRequestId) return;
-
-      const btn = document.getElementById('availabilityBtn');
-      const secondaryButtons = document.getElementById('secondaryButtons');
-      const isAvailable = btn.innerHTML.includes('Available');
-      const newStatus = isAvailable ? 'unavailable' : 'available';
-
-      try {
-        const response = await fetch('update_availability.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: `id=${currentRequestId}&availability=${newStatus}`
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-          // Update the button appearance
-          if (newStatus === 'available') {
-            btn.innerHTML = '<i class="fas fa-check me-2"></i> Available';
-            btn.style.backgroundColor = '#FFFFFF';
-            secondaryButtons.style.display = 'flex';
-          } else {
-            btn.innerHTML = '<i class="fas fa-ban me-2"></i> Unavailable';
-            btn.style.backgroundColor = '#E6EAF0';
-            secondaryButtons.style.display = 'none';
-          }
-
-          // Update the local data
-          const updatedRequest = allRequests.find(req => req.id === currentRequestId);
-          if (updatedRequest) {
-            updatedRequest.availability = newStatus;
-          }
-        } else {
-          console.error('Update failed:', data.error);
-        }
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    }
-
-    // Initialize the button click handler
-    document.getElementById('availabilityBtn').addEventListener('click', toggleAvailability);
-  </script>
-  <!-- <script>
-    function showProposals() {
-      const viewProposal = document.getElementById("showProposal");
-
-      const modal = document.getElementById("proposalContainer");
-      const backdrop = document.getElementById("customBackdrop");
-
-      backdrop.classList.remove("d-none");
-      modal.classList.remove("d-none");
-
-      setTimeout(() => {
-        backdrop.classList.add("show");
-        modal.classList.add("show", "d-block");
-      }, 10);
-
-    }
-  </script> -->
 
   <!-- payment accordian -->
   <script>

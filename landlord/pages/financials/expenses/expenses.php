@@ -580,25 +580,20 @@ require_once 'actions/getBuildings.php'
                                                         <?php
                                                         $status = strtolower($exp['status']);
                                                         $statusLabel = '';
+                                                        $editButton = '<span class="edit-payment-btn"'
+                                                            . ' style="background-color: #00192D; color: #FFC107; padding: 6px 10px; border-radius: 50%; cursor: pointer;"'
+                                                            . ' data-bs-toggle="modal" data-amount="' . number_format($exp['id']) . '" data-bs-target="#editPaymentModal">'
+                                                            . '<i class="bi bi-pencil"></i>'
+                                                            . '</span>';
 
                                                         if ($status === 'paid') {
-                                                            $statusLabel = '<span style="background-color: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Paid</span> '
-                                                                . '<span class="edit-payment-btn"'
-                                                                . ' style="background-color: #28a745; color: white; padding: 6px 10px; border-radius: 50%; cursor: pointer;"'
-                                                                . ' data-bs-toggle="modal" data-amount="' . number_format($exp['amount_paid'] ?? 0, 2) . '" data-bs-target="#editPaymentModal">'
-                                                                . '<i class="bi bi-pencil"></i>'
-                                                                . '</span>';
+                                                            $statusLabel = '<span style="background-color: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Paid</span> ' . $editButton;
                                                         } elseif ($status === 'overpaid') {
-                                                            $statusLabel = '<span style="background-color: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Overpaid</span> '
-                                                                . '<span class="edit-payment-btn"'
-                                                                . ' style="background-color: #28a745; color: white; padding: 6px 10px; border-radius: 50%; cursor: pointer;"'
-                                                                . ' data-bs-toggle="modal" data-amount="' . number_format($exp['amount_paid'] ?? 0, 2) . '" data-bs-target="#editPaymentModal">'
-                                                                . '<i class="bi bi-pencil"></i>'
-                                                                . '</span>';
+                                                            $statusLabel = '<span style="background-color: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Overpaid</span> ' . $editButton;
+                                                        } elseif ($status === 'partially paid') {
+                                                            $statusLabel = '<span style="background-color: #17a2b8; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Partially Paid</span> ' . $editButton;
                                                         } elseif ($status === 'unpaid') {
                                                             $statusLabel = '<span style="background-color: #FFC107; color: #00192D; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Unpaid</span>';
-                                                        } elseif ($status === 'partially paid') {
-                                                            $statusLabel = '<span style="background-color: #17a2b8; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Partially Paid</span>';
                                                         } else {
                                                             $statusLabel = '<span class="text-muted">' . htmlspecialchars($exp['status']) . '</span>';
                                                         }
@@ -617,10 +612,8 @@ require_once 'actions/getBuildings.php'
                                                                 <i class="bi bi-credit-card-fill"></i>
                                                                 Pay
                                                             </button>
-
                                                         <?php endif; ?>
                                                     </td>
-
 
                                                     <td>
                                                         <button
@@ -702,97 +695,14 @@ require_once 'actions/getBuildings.php'
                                                             KRACU0100039628
                                                         </span>
                                                     </h3>
-                                                     <button type="button" class="btn btn-sm" style="background-color: #FFC107; color: #00192D;" data-bs-dismiss="modal" title="Close">
+                                                    <button type="button" class="btn btn-sm" style="background-color: #FFC107; color: #00192D;" data-bs-dismiss="modal" title="Close">
                                                         <i class="bi bi-x-lg"></i>
                                                     </button>
                                                 </div>
 
                                                 <!-- Body -->
                                                 <div class="modal-body p-4">
-                                                    <!-- Single Payment Form Block -->
-                                                    <form class="payment-form border-0 rounded mb-2 p-4" style="border:1px solid #e0e0e0; background:#f5f5f5;">
-                                                        <input type="hidden" name="payment_id" value="123">
-
-                                                        <div class="d-flex flex-wrap gap-2 align-items-end">
-                                                            <!-- amount -->
-                                                            <div style="flex:1 1 120px;">
-                                                                <label class="form-label small fw-semibold mb-1">Amount</label>
-                                                                <input type="number" step="0.01" class="form-control form-control-sm shadow-none" name="amount" required>
-                                                            </div>
-
-                                                            <!-- date -->
-                                                            <div style="flex:1 1 140px;">
-                                                                <label class="form-label small fw-semibold mb-1">Date</label>
-                                                                <input type="date" class="form-control form-control-sm shadow-none" name="payment_date" required>
-                                                            </div>
-
-                                                            <!-- method -->
-                                                            <div style="flex:1 1 140px;">
-                                                                <label class="form-label small fw-semibold mb-1">Method</label>
-                                                                <select class="form-select form-select-sm shadow-none" name="payment_account_id" required>
-                                                                    <option value="100">Cash</option>
-                                                                    <option value="110">M-Pesa</option>
-                                                                    <option value="120">Bank</option>
-                                                                </select>
-                                                            </div>
-
-                                                            <!-- reference -->
-                                                            <div style="flex:2 1 180px;">
-                                                                <label class="form-label small fw-semibold mb-1">Reference</label>
-                                                                <input type="text" class="form-control form-control-sm shadow-none" name="reference">
-                                                            </div>
-
-                                                            <!-- save -->
-                                                            <div class="ms-auto">
-                                                                <button type="submit"
-                                                                    class="btn btn-sm fw-semibold"
-                                                                    style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; border-radius:6px;">
-                                                                    Save
-                                                                </button>
-                                                            </div>
-
-                                                        </div>
-                                                    </form>
-
-                                                    <!-- Another Payment Form Example -->
-                                                    <form class="payment-form border-0 rounded mb-2 p-4" style="border:1px solid #e0e0e0; background:#f5f5f5;">
-                                                        <input type="hidden" name="payment_id" value="124">
-
-                                                        <div class="d-flex flex-wrap gap-2 align-items-end">
-                                                            <div style="flex:1 1 120px;">
-                                                                <label class="form-label small fw-semibold mb-1">Amount</label>
-                                                                <input type="number" step="0.01" class="form-control form-control-sm shadow-none" name="amount" value="2500" required>
-                                                            </div>
-
-                                                            <div style="flex:1 1 140px;">
-                                                                <label class="form-label small fw-semibold mb-1">Date</label>
-                                                                <input type="date" class="form-control form-control-sm shadow-none" name="payment_date" value="2025-09-15" required>
-                                                            </div>
-
-                                                            <div style="flex:1 1 140px;">
-                                                                <label class="form-label small fw-semibold mb-1">Method</label>
-                                                                <select class="form-select form-select-sm shadow-none" name="payment_account_id" required>
-                                                                    <option value="100">Cash</option>
-                                                                    <option value="110" selected>M-Pesa</option>
-                                                                    <option value="120">Bank</option>
-                                                                </select>
-                                                            </div>
-
-                                                            <div style="flex:2 1 180px;">
-                                                                <label class="form-label small fw-semibold mb-1">Reference</label>
-                                                                <input type="text" class="form-control form-control-sm shadow-none" name="reference" value="MP123XYZ">
-                                                            </div>
-
-                                                            <div class="ms-auto">
-                                                                <button type="submit"
-                                                                    class="btn btn-sm fw-semibold"
-                                                                    style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; border-radius:6px;">
-                                                                    Save
-                                                                </button>
-                                                            </div>
-
-                                                        </div>
-                                                    </form>
+                                                    <!-- Forms from js-->
                                                 </div>
 
                                                 <!-- Footer -->
