@@ -1,3 +1,4 @@
+
 <?php
 include '../../db/connect.php';
 
@@ -346,7 +347,7 @@ $runningBalance = 0;
             <!--begin::Row-->
             <h2>General Ledger</h2>
     <table class="table table-bordered table-striped">
-        <thead class="table-dark">
+        <thead class="table" style="background-color:#00192D; color:#FFC107;">
             <tr>
                 <th>Date</th>
                 <th>Reference</th>

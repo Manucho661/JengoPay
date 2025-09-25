@@ -1,395 +1,346 @@
 <?php 
 include '../../db/connect.php';
 
-// Fetch aggregated debits & credits by account
+// Build filters
+$where = [];
+$params = [];
+
+// Date range
+if (!empty($_GET['from_date']) && !empty($_GET['to_date'])) {
+    $where[] = "jl.created_at BETWEEN :from AND :to";
+    $params[':from'] = $_GET['from_date'];
+    $params[':to']   = $_GET['to_date'];
+}
+
+// Account filter
+if (!empty($_GET['account_id'])) {
+    $where[] = "jl.account_id = :account_id";
+    $params[':account_id'] = $_GET['account_id'];
+}
+
+$whereSql = $where ? "WHERE " . implode(" AND ", $where) : "";
+
+// Fetch ALL accounts from chart_of_accounts, even those with no transactions
 $sql = "
     SELECT 
+        a.account_code,
         a.account_name,
-        SUM(jl.debit) AS total_debit,
-        SUM(jl.credit) AS total_credit
-    FROM journal_lines jl
-    JOIN chart_of_accounts a ON jl.account_id = a.account_code
-    GROUP BY a.account_name
-    ORDER BY a.account_name
+        a.account_type,
+        COALESCE(SUM(jl.debit), 0) AS total_debit,
+        COALESCE(SUM(jl.credit), 0) AS total_credit
+    FROM chart_of_accounts a
+    LEFT JOIN journal_lines jl ON a.account_code = jl.account_id 
+    " . ($whereSql ? "AND " . str_replace("WHERE", "", $whereSql) : "") . "
+    GROUP BY a.account_code, a.account_name, a.account_type
+    HAVING COALESCE(SUM(jl.debit), 0) != 0 OR COALESCE(SUM(jl.credit), 0) != 0
+    ORDER BY a.account_code
 ";
-$stmt = $pdo->query($sql);
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $totalDebit = 0;
 $totalCredit = 0;
+
+// Fetch account list for dropdown
+$accounts = $pdo->query("SELECT account_code, account_name FROM chart_of_accounts ORDER BY account_name")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!doctype html>
 <html lang="en">
-<!--begin::Head-->
-
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>AdminLTE | Dashboard v2</title>
-  <!--begin::Primary Meta Tags-->
+  <title>Trial Balance Report</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="title" content="AdminLTE | Dashboard v2" />
-  <meta name="author" content="ColorlibHQ" />
-  <meta
-    name="description"
-    content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
-  <meta
-    name="keywords"
-    content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
-  <!--end::Primary Meta Tags-->
-  <!--begin::Fonts-->
-
-
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
-    integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
-    crossorigin="anonymous" />
-  <!--end::Fonts-->
-  <!--begin::Third Party Plugin(OverlayScrollbars)-->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
-    integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg="
-    crossorigin="anonymous" />
-  <!--end::Third Party Plugin(OverlayScrollbars)-->
-  <!--begin::Third Party Plugin(Bootstrap Icons)-->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
-    crossorigin="anonymous" />
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
-
-  <!--end::Third Party Plugin(Bootstrap Icons)-->
-  <!--begin::Required Plugin(AdminLTE)-->
-  <link rel="stylesheet" href="../../../../landlord/css/adminlte.css" />
-  <!-- <link rel="stylesheet" href="text.css" /> -->
-  <!--end::Required Plugin(AdminLTE)-->
-  <!-- apexcharts -->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
-    integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
-    crossorigin="anonymous" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="profit&loss.css">
-
-  <!-- scripts for data_table -->
+  <link rel="stylesheet" href="../../../../landlord/css/adminlte.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
   <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
-
-  <!-- Include XLSX and FileSaver.js for Excel export -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-
-  <!-- Include jsPDF library (latest version) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-  <!-- Include jsPDF autoTable plugin (latest compatible version with jsPDF 2.5.1) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
-
-  <!-- Include jsPDF library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <!-- Include jsPDF autoTable plugin -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+  
   <style>
-    body {
-      font-size: 16px;
-    }
+    body { font-size: 16px; }
+    .table th { background-color: #343a40; color: white; }
+    .balance-positive { color: #28a745; font-weight: bold; }
+    .balance-negative { color: #dc3545; font-weight: bold; }
+    .account-code { color: #6c757d; font-size: 0.9em; }
   </style>
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
-  <!--begin::App Wrapper-->
   <div class="app-wrapper">
-    <!--begin::Header-->
+    <!-- Header -->
     <nav class="app-header navbar navbar-expand bg-body">
-      <!--begin::Container-->
       <div class="container-fluid">
-        <!--begin::Start Navbar Links-->
         <ul class="navbar-nav">
           <li class="nav-item">
             <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
               <i class="bi bi-list"></i>
             </a>
           </li>
-          <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
-          <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li>
         </ul>
-        <!--end::Start Navbar Links-->
-        <!--begin::End Navbar Links-->
         <ul class="navbar-nav ms-auto">
-          <!--begin::Navbar Search-->
-          <li class="nav-item">
-            <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-              <i class="bi bi-search"></i>
-            </a>
-          </li>
-          <!--end::Navbar Search-->
-          <!--begin::Messages Dropdown Menu-->
-          <li class="nav-item dropdown">
-            <a class="nav-link" data-bs-toggle="dropdown" href="#">
-              <i class="bi bi-chat-text"></i>
-              <span class="navbar-badge badge text-bg-danger">3</span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-              <a href="#" class="dropdown-item">
-                <!--begin::Message-->
-                <div class="d-flex">
-                  <div class="flex-shrink-0">
-                    <img
-                      src="../../../dist/assets/img/user1-128x128.jpg"
-                      alt="User Avatar"
-                      class="img-size-50 rounded-circle me-3" />
-                  </div>
-                  <div class="flex-grow-1">
-                    <h3 class="dropdown-item-title">
-                      Brad Diesel
-                      <span class="float-end fs-7 text-danger"><i class="bi bi-star-fill"></i></span>
-                    </h3>
-                    <p class="fs-7">Call me whenever you can...</p>
-                    <p class="fs-7 text-secondary">
-                      <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                    </p>
-                  </div>
-                </div>
-                <!--end::Message-->
-              </a>
-              <div class="dropdown-divider"></div>
-              <a href="#" class="dropdown-item">
-                <!--begin::Message-->
-                <div class="d-flex">
-                  <div class="flex-shrink-0">
-                    <img
-                      src="../../../dist/assets/img/user8-128x128.jpg"
-                      alt="User Avatar"
-                      class="img-size-50 rounded-circle me-3" />
-                  </div>
-                  <div class="flex-grow-1">
-                    <h3 class="dropdown-item-title">
-                      John Pierce
-                      <span class="float-end fs-7 text-secondary">
-                        <i class="bi bi-star-fill"></i>
-                      </span>
-                    </h3>
-                    <p class="fs-7">I got your message bro</p>
-                    <p class="fs-7 text-secondary">
-                      <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                    </p>
-                  </div>
-                </div>
-                <!--end::Message-->
-              </a>
-              <div class="dropdown-divider"></div>
-              <a href="#" class="dropdown-item">
-                <!--begin::Message-->
-                <div class="d-flex">
-                  <div class="flex-shrink-0">
-                    <img
-                      src="../../../dist/assets/img/user3-128x128.jpg"
-                      alt="User Avatar"
-                      class="img-size-50 rounded-circle me-3" />
-                  </div>
-                  <div class="flex-grow-1">
-                    <h3 class="dropdown-item-title">
-                      Nora Silvester
-                      <span class="float-end fs-7 text-warning">
-                        <i class="bi bi-star-fill"></i>
-                      </span>
-                    </h3>
-                    <p class="fs-7">The subject goes here</p>
-                    <p class="fs-7 text-secondary">
-                      <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                    </p>
-                  </div>
-                </div>
-                <!--end::Message-->
-              </a>
-              <div class="dropdown-divider"></div>
-              <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-            </div>
-          </li>
-          <!--end::Messages Dropdown Menu-->
-          <!--begin::Notifications Dropdown Menu-->
-          <li class="nav-item dropdown">
-            <a class="nav-link" data-bs-toggle="dropdown" href="#">
-              <i class="bi bi-bell-fill"></i>
-              <span class="navbar-badge badge text-bg-warning">15</span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-              <span class="dropdown-item dropdown-header">15 Notifications</span>
-              <div class="dropdown-divider"></div>
-              <a href="#" class="dropdown-item">
-                <i class="bi bi-envelope me-2"></i> 4 new messages
-                <span class="float-end text-secondary fs-7">3 mins</span>
-              </a>
-              <div class="dropdown-divider"></div>
-              <a href="#" class="dropdown-item">
-                <i class="bi bi-people-fill me-2"></i> 8 friend requests
-                <span class="float-end text-secondary fs-7">12 hours</span>
-              </a>
-              <div class="dropdown-divider"></div>
-              <a href="#" class="dropdown-item">
-                <i class="bi bi-file-earmark-fill me-2"></i> 3 new reports
-                <span class="float-end text-secondary fs-7">2 days</span>
-              </a>
-              <div class="dropdown-divider"></div>
-              <a href="#" class="dropdown-item dropdown-footer"> See All Notifications </a>
-            </div>
-          </li>
-          <!--end::Notifications Dropdown Menu-->
-          <!--begin::Fullscreen Toggle-->
-          <li class="nav-item">
-            <a class="nav-link" href="#" data-lte-toggle="fullscreen">
-              <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
-              <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none"></i>
-            </a>
-          </li>
-          <!--end::Fullscreen Toggle-->
-          <!--begin::User Menu Dropdown-->
+          <!-- User menu items -->
           <li class="nav-item dropdown user-menu">
             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-              <img
-                src="17.jpg"
-                class="user-image rounded-circle shadow"
-                alt="User Image" />
-              <span class="d-none d-md-inline"> <b>JENGO PAY</b> </span>
+              <img src="17.jpg" class="user-image rounded-circle shadow" alt="User Image" />
+              <span class="d-none d-md-inline"><b>JENGO PAY</b></span>
             </a>
             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-              <!--begin::User Image-->
               <li class="user-header text-bg-primary">
-                <img
-                  src="../../dist/assets/img/user2-160x160.jpg"
-                  class="rounded-circle shadow"
-                  alt="User Image" />
-                <p>
-                  Alexander Pierce - Web Developer
-                  <small>Member since Nov. 2023</small>
-                </p>
+                <img src="../../dist/assets/img/user2-160x160.jpg" class="rounded-circle shadow" alt="User Image" />
+                <p>Alexander Pierce - Web Developer<small>Member since Nov. 2023</small></p>
               </li>
-              <!--end::User Image-->
-              <!--begin::Menu Body-->
-              <li class="user-body">
-                <!--begin::Row-->
-                <div class="row">
-                  <div class="col-4 text-center"><a href="#">Followers</a></div>
-                  <div class="col-4 text-center"><a href="#">Sales</a></div>
-                  <div class="col-4 text-center"><a href="#">Friends</a></div>
-                </div>
-                <!--end::Row-->
-              </li>
-              <!--end::Menu Body-->
-              <!--begin::Menu Footer-->
               <li class="user-footer">
                 <a href="#" class="btn btn-default btn-flat">Profile</a>
                 <a href="#" class="btn btn-default btn-flat float-end">Sign out</a>
               </li>
-              <!--end::Menu Footer-->
             </ul>
           </li>
-          <!--end::User Menu Dropdown-->
         </ul>
-        <!--end::End Navbar Links-->
       </div>
-      <!--end::Container-->
     </nav>
-    <!--end::Header-->
-    <!--begin::Sidebar-->
+
+    <!-- Sidebar -->
     <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-      <!--begin::Sidebar Brand-->
       <div class="sidebar-brand">
-        <!--begin::Brand Link-->
         <a href="./index.html" class="brand-link">
-
-          <!--begin::Brand Text-->
-          <span class="brand-text font-weight-light"><b class="p-2"
-              style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
-              class="p-2"
-              style=" border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107;">JENGOPAY</b></span>
+          <span class="brand-text font-weight-light">
+            <b class="p-2" style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b>
+            <b class="p-2" style="border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107;">JENGOPAY</b>
+          </span>
         </a>
-        </span>
-        <!--end::Brand Text-->
-        </a>
-        <!--end::Brand Link-->
       </div>
-      <!--end::Sidebar Brand-->
-      <!--begin::Sidebar Wrapper-->
-      <div > <?php include_once '../../includes/sidebar.php'; ?>  </div> <!-- This is where the sidebar is inserted -->
-        <!--end::Sidebar Wrapper-->
-      </aside>
-      <!--end::Sidebar-->
-      <!--begin::App Main-->
-      <main class="app-main">
-        <!--begin::App Content Header-->
-        <div class="app-content-header">
-          <!--begin::Container-->
-          <div class="container-fluid">
-            <!--begin::Row-->
-            <h2>Trial Balance</h2>
-  <table class="table table-bordered table-striped">
-    <thead class="table-dark">
-      <tr>
-        <th>Account</th>
-        <th>Debit (Ksh)</th>
-        <th>Credit (Ksh)</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php foreach ($rows as $r): 
-        $debit = $r['total_debit'] > $r['total_credit'] ? $r['total_debit'] - $r['total_credit'] : 0;
-        $credit = $r['total_credit'] > $r['total_debit'] ? $r['total_credit'] - $r['total_debit'] : 0;
-        $totalDebit += $debit;
-        $totalCredit += $credit;
-      ?>
-      <tr>
-        <td><?= htmlspecialchars($r['account_name']) ?></td>
-        <td><?= number_format($debit, 2) ?></td>
-        <td><?= number_format($credit, 2) ?></td>
-      </tr>
-      <?php endforeach; ?>
-    </tbody>
-    <tfoot class="table-dark">
-      <tr>
-        <th>Total</th>
-        <th><?= number_format($totalDebit, 2) ?></th>
-        <th><?= number_format($totalCredit, 2) ?></th>
-      </tr>
-    </tfoot>
-  </table>
+      <div><?php include_once '../../includes/sidebar.php'; ?></div>
+    </aside>
 
-  <!-- End view announcement -->
-  <!-- javascript codes begin here  -->
-  <!--begin::Script-->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script
-    src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-    integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
-    crossorigin="anonymous"></script>
-  <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-  <script
-    src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-    crossorigin="anonymous"></script>
-  <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-  <!-- more options -->
-  </script>
+    <!-- Main Content -->
+    <main class="app-main">
+      <div class="app-content-header">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <h2 class="mb-3">Trial Balance Report</h2>
+              
+              <!-- Filters -->
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h5 class="card-title mb-0">Filter Report</h5>
+                </div>
+                <div class="card-body">
+                  <form method="get" class="row g-3">
+                    <div class="col-md-3">
+                      <label class="form-label">From Date</label>
+                      <input type="date" name="from_date" class="form-control" value="<?= htmlspecialchars($_GET['from_date'] ?? '') ?>">
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label">To Date</label>
+                      <input type="date" name="to_date" class="form-control" value="<?= htmlspecialchars($_GET['to_date'] ?? '') ?>">
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label">Account</label>
+                      <select name="account_id" class="form-select">
+                        <option value="">-- All Accounts --</option>
+                        <?php foreach ($accounts as $acc): ?>
+                          <option value="<?= $acc['account_code'] ?>" <?= (!empty($_GET['account_id']) && $_GET['account_id'] == $acc['account_code']) ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($acc['account_name']) ?>
+                          </option>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                      <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
 
+              <!-- Trial Balance Table -->
+              <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                  <h5 class="card-title mb-0">Trial Balance</h5>
+                  <div class="btn-group">
+                    <button class="btn btn-sm btn-outline-primary" onclick="exportToExcel()">
+                      <i class="fas fa-file-excel"></i> Excel
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="exportToPDF()">
+                      <i class="fas fa-file-pdf"></i> PDF
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="window.print()">
+                      <i class="fas fa-print"></i> Print
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table id="trialBalance" class="table table-bordered table-striped mb-0">
+                      <thead class="table-dark">
+                        <tr>
+                          <th width="50%">Account</th>
+                          <th width="25%">Debit (Ksh)</th>
+                          <th width="25%">Credit (Ksh)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php 
+                        $totalDebit = 0;
+                        $totalCredit = 0;
+                        
+                        foreach ($rows as $r): 
+                          // Calculate net balance
+                          $netBalance = $r['total_debit'] - $r['total_credit'];
+                          
+                          if ($netBalance > 0) {
+                            $debit = $netBalance;
+                            $credit = 0;
+                          } else {
+                            $debit = 0;
+                            $credit = abs($netBalance);
+                          }
+                          
+                          $totalDebit += $debit;
+                          $totalCredit += $credit;
+                          
+                          // Skip accounts with zero balance
+                          if ($debit == 0 && $credit == 0) continue;
+                        ?>
+                        <tr data-account-id="<?= $r['account_code'] ?>" style="cursor: pointer;">
+                          <td>
+                            <div class="fw-bold"><?= htmlspecialchars($r['account_name']) ?></div>
+                            <small class="account-code">Code: <?= $r['account_code'] ?> | Type: <?= $r['account_type'] ?? 'N/A' ?></small>
+                          </td>
+                          <td class="text-end <?= $debit > 0 ? 'balance-positive' : '' ?>">
+                            <?= number_format($debit, 2) ?>
+                          </td>
+                          <td class="text-end <?= $credit > 0 ? 'balance-negative' : '' ?>">
+                            <?= number_format($credit, 2) ?>
+                          </td>
+                        </tr>
+                        <?php endforeach; ?>
+                        
+                        <?php if (empty($rows)): ?>
+                        <tr>
+                          <td colspan="3" class="text-center text-muted py-4">
+                            <i class="fas fa-info-circle me-2"></i>
+                            No transactions found for the selected period
+                          </td>
+                        </tr>
+                        <?php endif; ?>
+                      </tbody>
+                      <tfoot class="table-dark">
+                        <tr>
+                          <th class="text-end">Total</th>
+                          <th class="text-end"><?= number_format($totalDebit, 2) ?></th>
+                          <th class="text-end"><?= number_format($totalCredit, 2) ?></th>
+                        </tr>
+                        <tr class="<?= $totalDebit == $totalCredit ? 'table-success' : 'table-danger' ?>">
+                          <td colspan="3" class="text-center fw-bold">
+                            <?php if ($totalDebit == $totalCredit): ?>
+                              <i class="fas fa-check-circle me-2"></i>Trial Balance is Balanced!
+                            <?php else: ?>
+                              <i class="fas fa-exclamation-triangle me-2"></i>
+                              Trial Balance is Out of Balance by: Ksh <?= number_format(abs($totalDebit - $totalCredit), 2) ?>
+                            <?php endif; ?>
+                          </td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
+                <div class="card-footer text-muted">
+                  <small>Generated on: <?= date('Y-m-d H:i:s') ?></small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal for General Ledger -->
+  <div class="modal fade" id="ledgerModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">General Ledger - <span id="modalAccountName"></span></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">Loading ledger details...</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <!--end::Script-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <script>
+  $(document).ready(function () {
+    // Initialize DataTable
+    var table = $('#trialBalance').DataTable({
+      dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+      pageLength: 25,
+      ordering: true,
+      order: [[0, 'asc']],
+      language: {
+        search: "Search accounts:"
+      }
+    });
+
+    // Drilldown to ledger
+    $('#trialBalance tbody').on('click', 'tr[data-account-id]', function () {
+      var accountId = $(this).data('account-id');
+      var accountName = $(this).find('td:first .fw-bold').text();
+      
+      if (!accountId) return;
+
+      $('#modalAccountName').text(accountName);
+      $('#ledgerModal .modal-body').html('<div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x"></i><br>Loading ledger details...</div>');
+      $('#ledgerModal').modal('show');
+
+      // Simulate loading ledger data (replace with actual API call)
+      setTimeout(function() {
+        $('#ledgerModal .modal-body').html(
+          '<div class="alert alert-info">Ledger details for ' + accountName + ' (ID: ' + accountId + ') would be loaded here.</div>' +
+          '<p>This would typically show all transactions for this account within the selected date range.</p>'
+        );
+      }, 1000);
+    });
+  });
+
+  function exportToExcel() {
+    const table = document.getElementById('trialBalance');
+    const wb = XLSX.utils.table_to_book(table, {sheet: "Trial Balance"});
+    XLSX.writeFile(wb, 'Trial_Balance_' + new Date().toISOString().split('T')[0] + '.xlsx');
+  }
+
+  function exportToPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    doc.text('Trial Balance Report', 14, 15);
+    doc.autoTable({
+      html: '#trialBalance',
+      startY: 25,
+      theme: 'grid',
+      headStyles: { fillColor: [52, 58, 64] }
+    });
+    
+    doc.save('Trial_Balance_' + new Date().toISOString().split('T')[0] + '.pdf');
+  }
+  </script>
 </body>
-<!--end::Body-->
 </html>
