@@ -2,6 +2,11 @@
 <?php
 include '../../db/connect.php';
 
+// Capture filter inputs
+$from_date = $_GET['from_date'] ?? '';
+$to_date   = $_GET['to_date'] ?? '';
+
+// Build base query
 $sql = "
     SELECT 
         je.created_at,
@@ -28,10 +33,21 @@ $sql = "
             ELSE 0
         END AS credit
     FROM journal_entries je
-    ORDER BY je.created_at, je.id
+    WHERE 1=1
 ";
 
-$stmt = $pdo->query($sql);
+// Add date filters if provided
+$params = [];
+if (!empty($from_date) && !empty($to_date)) {
+    $sql .= " AND DATE(je.created_at) BETWEEN :from AND :to";
+    $params[':from'] = $from_date;
+    $params[':to']   = $to_date;
+}
+
+$sql .= " ORDER BY je.created_at, je.id";
+
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $runningBalance = 0;
@@ -345,7 +361,26 @@ $runningBalance = 0;
           <!--begin::Container-->
           <div class="container-fluid">
             <!--begin::Row-->
-            <h2>General Ledger</h2>
+            <h2 style="color:#FFC107;">General Ledger</h2>
+            
+  <!-- Date Filter Form -->
+  <form method="get" class="row g-3 mb-4">
+      <div class="col-md-3">
+          <label for="from_date" class="form-label">From Date</label>
+          <input type="date" id="from_date" name="from_date" value="<?= htmlspecialchars($from_date) ?>" class="form-control">
+      </div>
+      <div class="col-md-3">
+          <label for="to_date" class="form-label">To Date</label>
+          <input type="date" id="to_date" name="to_date" value="<?= htmlspecialchars($to_date) ?>" class="form-control">
+      </div>
+      <div class="col-md-2 d-flex align-items-end">
+          <button type="submit" class="btn w-100" style= "background-color:#FFC107; color:#00192D;">Filter</button>
+      </div>
+      <div class="col-md-2 d-flex align-items-end">
+          <a href="" class="btn  w-100" style= "background-color:#FFC107; color:#00192D;">Reset</a>
+      </div>
+  </form>
+
     <table class="table table-bordered table-striped">
         <thead class="table" style="background-color:#00192D; color:#FFC107;">
             <tr>

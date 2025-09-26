@@ -153,7 +153,7 @@ $accounts = $pdo->query("SELECT account_code, account_name FROM chart_of_account
                       </select>
                     </div>
                     <div class="col-md-2 d-flex align-items-end">
-                      <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                      <button type="submit" class="btn  w-100"  style= "background-color:#FFC107; color:#00192D;">Apply Filters</button>
                     </div>
                   </form>
                 </div>
@@ -288,38 +288,79 @@ $accounts = $pdo->query("SELECT account_code, account_name FROM chart_of_account
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <script>
-  $(document).ready(function () {
-    // Initialize DataTable
-    var table = $('#trialBalance').DataTable({
-      dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
-      pageLength: 25,
-      ordering: true,
-      order: [[0, 'asc']],
-      language: {
-        search: "Search accounts:"
+$('#trialBalance tbody').on('click', 'tr[data-account-id]', function () {
+  var accountId = $(this).data('account-id');
+  var accountName = $(this).find('td:first .fw-bold').text();
+  if (!accountId) return;
+
+  $('#modalAccountName').text(accountName);
+  $('#ledgerModal .modal-body').html('<div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x"></i><br>Loading ledger details...</div>');
+  $('#ledgerModal').modal('show');
+
+  // Fetch ledger data from backend
+  $.ajax({
+    url: '/Jengopay/landlord/pages/financials/generalledger/get_ledger.php',
+    type: 'GET',
+    data: { account_id: accountId },
+    success: function (response) {
+      let data;
+      try {
+        data = JSON.parse(response);
+      } catch (e) {
+        $('#ledgerModal .modal-body').html('<div class="alert alert-danger">Failed to load ledger data.</div>');
+        return;
       }
-    });
 
-    // Drilldown to ledger
-    $('#trialBalance tbody').on('click', 'tr[data-account-id]', function () {
-      var accountId = $(this).data('account-id');
-      var accountName = $(this).find('td:first .fw-bold').text();
-      
-      if (!accountId) return;
+      if (data.error) {
+        $('#ledgerModal .modal-body').html('<div class="alert alert-warning">' + data.error + '</div>');
+        return;
+      }
 
-      $('#modalAccountName').text(accountName);
-      $('#ledgerModal .modal-body').html('<div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x"></i><br>Loading ledger details...</div>');
-      $('#ledgerModal').modal('show');
+      if (data.length === 0) {
+        $('#ledgerModal .modal-body').html('<div class="alert alert-info">No transactions found for this account.</div>');
+        return;
+      }
 
-      // Simulate loading ledger data (replace with actual API call)
-      setTimeout(function() {
-        $('#ledgerModal .modal-body').html(
-          '<div class="alert alert-info">Ledger details for ' + accountName + ' (ID: ' + accountId + ') would be loaded here.</div>' +
-          '<p>This would typically show all transactions for this account within the selected date range.</p>'
-        );
-      }, 1000);
-    });
+      // Build table
+      let tableHtml = `
+        <table class="table table-striped table-bordered">
+          <thead class="table-dark">
+            <tr>
+              <th>Date</th>
+              <th>Reference</th>
+              <th>Description</th>
+              <th class="text-end">Debit</th>
+              <th class="text-end">Credit</th>
+              <th class="text-end">Running Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      let runningBalance = 0;
+      data.forEach(row => {
+        runningBalance += parseFloat(row.debit) - parseFloat(row.credit);
+        tableHtml += `
+          <tr>
+            <td>${row.entry_date || '-'}</td>
+            <td>${row.reference || '-'}</td>
+            <td>${row.description || '-'}</td>
+            <td class="text-end">${parseFloat(row.debit).toLocaleString()}</td>
+            <td class="text-end">${parseFloat(row.credit).toLocaleString()}</td>
+            <td class="text-end">${runningBalance.toLocaleString()}</td>
+          </tr>
+        `;
+      });
+
+      tableHtml += `</tbody></table>`;
+      $('#ledgerModal .modal-body').html(tableHtml);
+    },
+    error: function () {
+      $('#ledgerModal .modal-body').html('<div class="alert alert-danger">Error loading ledger data.</div>');
+    }
   });
+});
+
 
   function exportToExcel() {
     const table = document.getElementById('trialBalance');

@@ -1964,7 +1964,7 @@ header {
               <label class="form-label fw-semibold text-dark">
                 <i class="fa-solid fa-user-tag text-warning me-1"></i> Tenant Name
               </label>
-              <input type="text" class="form-control border-warning" id="tenantName" name="tenant" required>
+              <input type="text" class="form-control border-warning" id="tenantName" name="tenant" readonly required>
             </div>
 
             <!-- Payment Method -->

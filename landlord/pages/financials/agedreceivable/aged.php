@@ -417,7 +417,7 @@ foreach ($invoices as $inv) {
       </div>
     <?php endforeach; ?>
     <div class="col-md-3">
-      <div class="card aged-bucket" style="background-color:#FFC107; color:#00192D;">
+      <div class="card aged-bucket bg-primary text-white">
         <div class="card-body">
           <h5 class="card-title">Total</h5>
           <p class="card-text fs-4"><?= number_format($totals['grand'], 2) ?></p>
