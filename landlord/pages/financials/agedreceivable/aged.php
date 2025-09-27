@@ -1,56 +1,95 @@
-
 <?php
-include '../../db/connect.php';
+require_once '../../db/connect.php';
 
-// Capture filter inputs
-$from_date = $_GET['from_date'] ?? '';
-$to_date   = $_GET['to_date'] ?? '';
-
-// Build base query
+// Fetch all unpaid invoices with tenant names
 $sql = "
-    SELECT 
-        je.created_at,
-        je.reference,
-        je.description,
-        je.source_table,
-        je.source_id,
-        CASE 
-            WHEN je.source_table = 'expenses' THEN 'Expense'
-            WHEN je.reference LIKE 'INV%' THEN 'Accounts Receivable'
-            WHEN je.reference LIKE 'PAY%' THEN 'Cash/Bank'
-            WHEN je.reference LIKE 'LOAN%' THEN 'Loan Account'
-            WHEN je.reference LIKE 'CAP%' THEN 'Capital Account'
-            ELSE 'Suspense'
-        END AS account_name,
-        CASE 
-            WHEN je.reference LIKE 'INV%' THEN je.id * 100
-            WHEN je.source_table = 'expenses' THEN je.id * 50
-            ELSE 0
-        END AS debit,
-        CASE 
-            WHEN je.reference LIKE 'PAY%' THEN je.id * 100
-            WHEN je.reference LIKE 'LOAN%' THEN je.id * 200
-            ELSE 0
-        END AS credit
-    FROM journal_entries je
-    WHERE 1=1
+  SELECT 
+    ii.id, 
+    ii.invoice_number, 
+    ii.tenant, 
+    ii.description, 
+    ii.created_at, 
+    ii.total,
+    u.first_name,
+    u.middle_name,
+    t.unit,
+    t.phone_number
+  FROM invoice_items ii
+  LEFT JOIN tenants t ON ii.tenant = t.id
+  LEFT JOIN users u ON t.user_id = u.id
+  ORDER BY u.first_name, u.middle_name, ii.created_at DESC
 ";
+$stmt = $pdo->query($sql);
+$invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Add date filters if provided
-$params = [];
-if (!empty($from_date) && !empty($to_date)) {
-    $sql .= " AND DATE(je.created_at) BETWEEN :from AND :to";
-    $params[':from'] = $from_date;
-    $params[':to']   = $to_date;
+// Group invoices by tenant
+$tenants = [];
+foreach ($invoices as $inv) {
+    $tenantId = $inv['tenant'];
+    $tenantName = trim($inv['first_name'] . ' ' . $inv['middle_name']);
+    
+    // If no name found from users table, use the tenant ID as fallback
+    if (empty($tenantName) || $tenantName == ' ') {
+        $tenantName = 'Tenant ' . $tenantId;
+    }
+    
+    // Add unit information if available
+    if (!empty($inv['unit'])) {
+        $tenantName .= ' (' . $inv['unit'] . ')';
+    }
+    
+    $tenants[$tenantId] = [
+        'name' => $tenantName,
+        'invoices' => [],
+        'unit' => $inv['unit'],
+        'phone_number' => $inv['phone_number']
+    ];
 }
 
-$sql .= " ORDER BY je.created_at, je.id";
+// Add invoices to their respective tenants
+foreach ($invoices as $inv) {
+    $tenantId = $inv['tenant'];
+    $tenants[$tenantId]['invoices'][] = $inv;
+}
 
-$stmt = $pdo->prepare($sql);
-$stmt->execute($params);
-$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+function daysOverdue($date) {
+    $today = new DateTime();
+    $invoiceDate = new DateTime($date);
+    return $invoiceDate->diff($today)->days;
+}
 
-$runningBalance = 0;
+// Prepare buckets and totals for summary
+$agedBuckets = [
+    '0-30' => [],
+    '31-60' => [],
+    '61-90' => [],
+    '90+' => []
+];
+$totals = [
+    '0-30' => 0,
+    '31-60' => 0,
+    '61-90' => 0,
+    '90+' => 0,
+    'grand' => 0
+];
+
+foreach ($invoices as $inv) {
+    $days = daysOverdue($inv['created_at']);
+    if ($days <= 30) {
+        $agedBuckets['0-30'][] = $inv;
+        $totals['0-30'] += $inv['total'];
+    } elseif ($days <= 60) {
+        $agedBuckets['31-60'][] = $inv;
+        $totals['31-60'] += $inv['total'];
+    } elseif ($days <= 90) {
+        $agedBuckets['61-90'][] = $inv;
+        $totals['61-90'] += $inv['total'];
+    } else {
+        $agedBuckets['90+'][] = $inv;
+        $totals['90+'] += $inv['total'];
+    }
+    $totals['grand'] += $inv['total'];
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -359,91 +398,230 @@ $runningBalance = 0;
         <!--begin::App Content Header-->
         <div class="app-content-header">
           <!--begin::Container-->
-          <div class="container-fluid">
-            <!--begin::Row-->
-            <h2 style="color:#FFC107;">General Ledger</h2>
-            
-  <!-- Date Filter Form -->
-  <form method="get" class="row g-3 mb-4">
-      <div class="col-md-3">
-          <label for="from_date" class="form-label">From Date</label>
-          <input type="date" id="from_date" name="from_date" value="<?= htmlspecialchars($from_date) ?>" class="form-control">
-      </div>
-      <div class="col-md-3">
-          <label for="to_date" class="form-label">To Date</label>
-          <input type="date" id="to_date" name="to_date" value="<?= htmlspecialchars($to_date) ?>" class="form-control">
-      </div>
-      <div class="col-md-2 d-flex align-items-end">
-          <button type="submit" class="btn w-100" style= "background-color:#FFC107; color:#00192D;">Filter</button>
-      </div>
-      <div class="col-md-2 d-flex align-items-end">
-          <a href="" class="btn  w-100" style= "background-color:#FFC107; color:#00192D;">Reset</a>
-      </div>
-  </form>
+          <div class="container">
+  <h1>Aged Receivables</h1>
 
-    <table class="table table-bordered table-striped">
-        <thead class="table" style="background-color:#00192D; color:#FFC107;">
+  <!-- Summary Panel -->
+  <div class="row summary-panel">
+    <?php
+    $bucketLabels = ['0–30', '31–60', '61–90', '90+'];
+    $keys = ['0-30','31-60','61-90','90+'];
+    foreach ($keys as $i => $key): ?>
+      <div class="col-md-3">
+        <div class="card aged-bucket">
+          <div class="card-body">
+            <h5 class="card-title"><?= $bucketLabels[$i] ?> days</h5>
+            <p class="card-text fs-4"><?= number_format($totals[$key], 2) ?></p>
+          </div>
+        </div>
+      </div>
+    <?php endforeach; ?>
+    <div class="col-md-3">
+      <div class="card aged-bucket bg-primary text-white">
+        <div class="card-body">
+          <h5 class="card-title">Total</h5>
+          <p class="card-text fs-4"><?= number_format($totals['grand'], 2) ?></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs for buckets -->
+  <ul class="nav nav-tabs bucket-tab" id="agedTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="tab-all" data-bs-toggle="tab" data-bs-target="#pane-all">All Tenants</button>
+    </li>
+    <?php foreach ($keys as $i => $key): ?>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tab-<?= $key ?>" data-bs-toggle="tab" data-bs-target="#pane-<?= $key ?>">
+          <?= $bucketLabels[$i] ?> days
+        </button>
+      </li>
+    <?php endforeach; ?>
+  </ul>
+
+  <div class="tab-content mt-3">
+    <!-- "All Tenants" Tab -->
+    <div class="tab-pane fade show active" id="pane-all">
+      <div class="table-responsive">
+        <table id="table-all" class="table table-bordered table-striped">
+          <thead class="table-dark">
             <tr>
-                <th>Date</th>
-                <th>Reference</th>
-                <th>Description</th>
-                <th>Account</th>
-                <th>Debit (Ksh)</th>
-                <th>Credit (Ksh)</th>
-                <th>Balance (Ksh)</th>
+              <th>Tenant Name</th>
+              <!-- <th>Contact Info</th> -->
+              <th class="text-end">0-30 Days</th>
+              <th class="text-end">31-60 Days</th>
+              <th class="text-end">61-90 Days</th>
+              <th class="text-end">90+ Days</th>
+              <th class="text-end">Total Due</th>
+              <!-- <th>Actions</th> -->
             </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($rows as $r): 
-                $runningBalance += $r['debit'] - $r['credit'];
+          </thead>
+          <tbody>
+            <?php foreach ($tenants as $tenantId => $tenantData): 
+              // Calculate totals per bucket for this tenant
+              $tenantTotals = [
+                '0-30' => 0,
+                '31-60' => 0,
+                '61-90' => 0,
+                '90+' => 0,
+                'grand' => 0
+              ];
+              
+              foreach ($tenantData['invoices'] as $inv) {
+                $days = daysOverdue($inv['created_at']);
+                if ($days <= 30) {
+                  $tenantTotals['0-30'] += $inv['total'];
+                } elseif ($days <= 60) {
+                  $tenantTotals['31-60'] += $inv['total'];
+                } elseif ($days <= 90) {
+                  $tenantTotals['61-90'] += $inv['total'];
+                } else {
+                  $tenantTotals['90+'] += $inv['total'];
+                }
+                $tenantTotals['grand'] += $inv['total'];
+              }
             ?>
-            <tr>
-                <td><?= htmlspecialchars($r['created_at']) ?></td>
-                <td><?= htmlspecialchars($r['reference']) ?></td>
-                <td><?= htmlspecialchars($r['description']) ?></td>
-                <td><?= htmlspecialchars($r['account_name']) ?></td>
-                <td><?= number_format($r['debit'], 2) ?></td>
-                <td><?= number_format($r['credit'], 2) ?></td>
-                <td><?= number_format($runningBalance, 2) ?></td>
+            <tr class="tenant-row" data-tenant="<?= $tenantId ?>">
+              <td>
+                <!-- <div><strong><?= htmlspecialchars($tenantData['name']) ?></strong></div>
+                <?php if (!empty($tenantData['unit'])): ?>
+                  <div class="tenant-info">Unit: <?= htmlspecialchars($tenantData['unit']) ?></div>
+                <?php endif; ?> -->
+                Emmanuel Wafula
+              </td>
+             
+              <td class="text-end"><?= number_format($tenantTotals['0-30'], 2) ?></td>
+              <td class="text-end"><?= number_format($tenantTotals['31-60'], 2) ?></td>
+              <td class="text-end"><?= number_format($tenantTotals['61-90'], 2) ?></td>
+              <td class="text-end"><?= number_format($tenantTotals['90+'], 2) ?></td>
+              <td class="text-end tenant-total"><?= number_format($tenantTotals['grand'], 2) ?></td>
+              <!-- <td>
+                <button class="btn btn-sm btn-outline-primary view-tenant" data-tenant="<?= $tenantId ?>">
+                  View Invoices
+                </button>
+              </td> -->
             </tr>
             <?php endforeach; ?>
-        </tbody>
-    </table>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-  <!-- End view announcement -->
-  <!-- javascript codes begin here  -->
-  <!--begin::Script-->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script
-    src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-    integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
-    crossorigin="anonymous"></script>
-  <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-  <script
-    src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-    crossorigin="anonymous"></script>
-  <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-  <!-- more options -->
-  </script>
+    <!-- Individual bucket tabs (showing invoices with tenant names) -->
+    <?php foreach ($keys as $i => $key): ?>
+      <div class="tab-pane fade" id="pane-<?= $key ?>">
+        <div class="table-responsive">
+          <table id="table-<?= $key ?>" class="table table-bordered table-striped">
+            <thead class="table-dark">
+              <tr>
+                <th>Tenant Name</th>
+                <th>Unit</th>
+                <th>Invoice #</th>
+                <th>Description</th>
+                <th>Invoice Date</th>
+                <th class="text-end">Amount</th>
+                <th class="text-end">Days Overdue</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach ($agedBuckets[$key] as $row): 
+                $tenantName = trim($row['first_name'] . ' ' . $row['middle_name']);
+                if (empty($tenantName) || $tenantName == ' ') {
+                  $tenantName = 'Tenant ' . $row['tenant'];
+                }
+              ?>
+                <tr>
+                  <td><?= htmlspecialchars($tenantName) ?></td>
+                  <td><?= htmlspecialchars($row['unit'] ?? '') ?></td>
+                  <td><?= htmlspecialchars($row['invoice_number']) ?></td>
+                  <td><?= htmlspecialchars($row['description']) ?></td>
+                  <td><?= date('Y-m-d', strtotime($row['created_at'])) ?></td>
+                  <td class="text-end"><?= number_format($row['total'], 2) ?></td>
+                  <td class="text-end"><?= daysOverdue($row['created_at']) ?></td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  </div>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</div>
 
-  <script src="../../../../landlord/js/adminlte.js"></script>
+<!-- Tenant Invoices Modal -->
+<div class="modal fade" id="tenantModal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title">Invoices for <span id="modal-tenant-name"></span></h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div id="tenant-invoices-content">
+          <!-- Content will be loaded via AJAX -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <!--end::Script-->
+<!-- JS libs -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+
+<script>
+$(document).ready(function() {
+  // Initialize all tables
+  $('.table').each(function() {
+    if (!$(this).hasClass('dataTable')) {
+      $(this).DataTable({
+        dom: 'Bfrtip',
+        buttons: ['copy', 'excel', 'pdf', 'print'],
+        pageLength: 10,
+        language: { search: "Search:" }
+      });
+    }
+  });
+
+  // View tenant invoices
+  $('.view-tenant').on('click', function(e) {
+    e.stopPropagation();
+    var tenantId = $(this).data('tenant');
+    showTenantInvoices(tenantId);
+  });
+
+  // Also allow clicking the entire row
+  $('.tenant-row').on('click', function() {
+    var tenantId = $(this).data('tenant');
+    showTenantInvoices(tenantId);
+  });
+
+  function showTenantInvoices(tenantId) {
+    $('#modal-tenant-name').text('Tenant ID: ' + tenantId);
+    $('#tenant-invoices-content').html('<div class="text-center py-4"><div class="spinner-border" role="status"></div><br>Loading invoices...</div>');
+    $('#tenantModal').modal('show');
+
+    // Load tenant invoices via AJAX
+    $.get('get_tenant_invoices.php', { tenant: tenantId }, function(data) {
+      $('#tenant-invoices-content').html(data);
+    }).fail(function() {
+      $('#tenant-invoices-content').html('<div class="alert alert-danger">Error loading invoices</div>');
+    });
+  }
+});
+</script>
+
 </body>
 <!--end::Body-->
 </html>

@@ -80,7 +80,7 @@ foreach ($messages as $msg) {
         foreach ($file_paths as $index => $file_path) {
             if (empty($file_path)) continue;
 
-            $base_upload_dir = '/Jengopay/landlord/pages/communications/uploads/';
+            $base_upload_dir = '/Jengopay/landlord/pages/communications/actions/uploads/';
             $full_path = $_SERVER['DOCUMENT_ROOT'] . $base_upload_dir . basename($file_path);
             error_log("FULL PATH: " . $full_path);
 
@@ -88,12 +88,28 @@ foreach ($messages as $msg) {
             $ext = strtolower(pathinfo($basename, PATHINFO_EXTENSION));
             $file_id = $file_ids[$index] ?? '';
 
-            if (file_exists($full_path) && is_readable($full_path)) {
+            // Try both upload directories
+            $upload_dirs = [
+                '/Jengopay/landlord/pages/communications/actions/uploads/',
+                '/Jengopay/landlord/pages/communications/uploads/'
+            ];
+
+            $full_path = null;
+            foreach ($upload_dirs as $dir) {
+                $try_path = $_SERVER['DOCUMENT_ROOT'] . $dir . $basename;
+                if (file_exists($try_path) && is_readable($try_path)) {
+                    $full_path = $try_path;
+                    break;
+                }
+            }
+
+            if ($full_path) {
                 $fileData = file_get_contents($full_path);
                 $base64 = base64_encode($fileData);
                 $mimeType = mime_content_type($full_path);
 
                 if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'])) {
+                    // Image
                     $messagesHtml .= "
                     <div class='attachment-image whatsapp-style'>
                         <div class='image-container'>
@@ -105,6 +121,7 @@ foreach ($messages as $msg) {
                         <div class='file-name'>$basename</div>
                     </div>";
                 } elseif ($ext === 'pdf') {
+                    // PDF
                     $messagesHtml .= "<div class='attachment-file whatsapp-style-file' data-filename='$basename'>
                         <div class='file-container'>
                             <embed src='data:$mimeType;base64,$base64' type='$mimeType' class='file-preview' />
@@ -120,23 +137,21 @@ foreach ($messages as $msg) {
                             <span class='file-name'>$basename</span>
                         </a>
                     </div>";
-                }
-                elseif (in_array($ext, ['xls', 'xlsx'])) {
-                  $messagesHtml .= "<div class='attachment-file whatsapp-style-file' data-filename='$basename'>
-                      <div class='file-container'>
-                          <a href='data:$mimeType;base64,$base64' download='$basename' class='download-icon' title='Download'>
-                              <i class='fas fa-download'></i>
-                          </a>
-
-                      </div>
-                      <a href='data:$mimeType;base64,$base64' download='$basename' class='file-download-link'>
-                          <i class='fas fa-file-excel file-icon text-success'></i>
-                          <span class='file-name'>$basename</span>
-                      </a>
-                  </div>";
-              }
-
-                else {
+                } elseif (in_array($ext, ['xls', 'xlsx'])) {
+                    // Excel
+                    $messagesHtml .= "<div class='attachment-file whatsapp-style-file' data-filename='$basename'>
+                        <div class='file-container'>
+                            <a href='data:$mimeType;base64,$base64' download='$basename' class='download-icon' title='Download'>
+                                <i class='fas fa-download'></i>
+                            </a>
+                        </div>
+                        <a href='data:$mimeType;base64,$base64' download='$basename' class='file-download-link'>
+                            <i class='fas fa-file-excel file-icon text-success'></i>
+                            <span class='file-name'>$basename</span>
+                        </a>
+                    </div>";
+                } else {
+                    // Other files
                     $messagesHtml .= "<div class='attachment-file mb-2'>
                         <a href='data:$mimeType;base64,$base64' download='$basename' class='btn btn-sm btn-outline-secondary'>
                             <i class='fas fa-download'></i> $basename
@@ -144,10 +159,12 @@ foreach ($messages as $msg) {
                     </div>";
                 }
             } else {
+                // File not found in both dirs
                 $messagesHtml .= "<div class='attachment-error text-danger mb-2'>
                     <i class='fas fa-exclamation-triangle'></i> File not found: $basename
                 </div>";
             }
+
         }
         $messagesHtml .= "</div>"; // end attachments
     }

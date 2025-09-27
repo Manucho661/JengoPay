@@ -30,7 +30,7 @@
     </div>
     <div class="submenu">
     <a href="/Jengopay/landlord/pages/communications/texts.php">💬 In-app Messages</a>
-      <a href="/Jengopay/landlord/pages/communications/announcements.php">📢 Announcements</a>
+      <a href="/Jengopay/landlord/pages/communications/announcements/announcements.php">📢 Announcements</a>
     </div>
   </div>
   
@@ -49,9 +49,18 @@
       <a href="/Jengopay/landlord/pages/financials/invoices/invoice.php">📄 Invoices</a>
       <a href="/Jengopay/landlord/pages/financials/balanceSheet/balanceSheet.php">📊 Balance Sheet</a>
       <a href="/Jengopay/landlord/pages/financials/profit&loss/profit&loss.php">📊 Profit&Loss</a>
-      <a href="/Jengopay/landlord/pages/financials/generalledger/general_ledger.php">📊General Ledger</a>
-      <a href="/Jengopay/landlord/pages/financials/agedpayable/aged_payable.php">📊Aged Payable</a>
-
+    </div>
+  </div>
+  <!-- Financials -->
+  <div class="menu-group">
+    <div class="menu-header" onclick="toggleMenu(this)">
+      <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> 💼 Reports
+    </div>
+    <div class="submenu">
+      <a href="/Jengopay/landlord/pages/financials/generalledger/general_ledger.php"><i class="fas fa-book-open"></i>General Ledger</a>
+      <a href="/Jengopay/landlord/pages/financials/trialbalance/trial_balance.php"><i class="fas fa-balance-scale"></i> Trial Balance</a>
+      <a href="/Jengopay//landlord/pages/financials/agedreceivable/aged_receivable.php"><i class="bi bi-receipt"></i> Aged Receivable</a>
+      <a href="/Jengopay/landlord/pages/financials/agedpayable/aged_payable.php"><i class="bi bi-journal-minus"></i>Aged Payable</a>
     </div>
   </div>
     <a href="#">⚙️ Settings</a>

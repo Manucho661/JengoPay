@@ -60,39 +60,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['title']) && !empty($
           }
      }
 
-
-    //   if (!empty($uploaded_files)) {
-    //     foreach ($uploaded_files as $file_path) {
-    //         $stmt = $pdo->prepare("INSERT INTO messages  (message_id, thread_id, file_path) VALUES (?, ?, ?)");
-    //         $stmt->execute([$message_id, $thread_id, $file_path]);
-    //     }
-
-    // } else {
-    //     $stmt = $pdo->prepare("INSERT INTO message_files  (message_id, thread_id) VALUES (?, ?)");
-    //     $stmt->execute([$message_id, $thread_id]);
-    // }
-
-
-      // Insert initial message (no file_path here)
-    //   if (!empty($uploaded_files)) {
-    //     $stmt_file = $pdo->prepare("INSERT INTO messages (thread_id, sender, content, timestamp, file_path) VALUES (?, ?, ?, ?, ?)");
-    //     foreach ($uploaded_files as $file_path) {
-    //         $stmt_file->execute([$thread_id, 'landlord', $message, $now,$file_path]);
-    //     }
-    // }
-
-        // $stmt = $pdo->prepare("INSERT INTO messages (thread_id, sender, content, timestamp) VALUES (?, ?, ?, ?)");
-        // $stmt->execute([$thread_id, 'landlord', $message, $now]);
-
-
-        // Store attachments
-        // if (!empty($uploaded_files)) {
-        //     $stmt_file = $pdo->prepare("INSERT INTO message_files (message_id, thread_id, file_path) VALUES (?, ?, ?)");
-        //     foreach ($uploaded_files as $file_path) {
-        //         $stmt_file->execute([$message_id, $thread_id, $file_path]);
-        //     }
-        // }
-
         header("Location: " . $_SERVER['PHP_SELF']);
         exit;
 
@@ -135,9 +102,7 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute();
 $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 ?>
-
 
 
 <!doctype html>
@@ -854,7 +819,7 @@ display: flex;
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
         <!-- <div id="sidebar"></div> This is where the sidebar is inserted -->
-        <div > <?php include_once '../includes/sidebar.php'; ?>  </div> <!-- This is where the sidebar is inserted -->
+        <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
 
         <!--end::Sidebar Wrapper-->
       </aside>
@@ -950,62 +915,62 @@ display: flex;
                               </div>
                               <div class="table-responsive">
                               <table class="table table-hover table-summary-messages" style="border-radius: 20px; flex-grow: 1;">
-  <thead>
-    <tr>
-      <th>DATE</th>
-      <th>TITLE</th>
-      <th>SENT BY</th>
-      <th>SENT TO</th>
-      <th>ACTION</th>
-    </tr>
-  </thead>
-  <tbody id="conversationTableBody">
-    <?php if (!empty($communications)): ?>
-      <?php foreach ($communications as $comm):
-        $datetime = new DateTime($comm['created_at'] ?? date('Y-m-d H:i:s'));
-        $date = $datetime->format('d-m-Y');
-        $time = $datetime->format('h:iA');
-        $sender = htmlspecialchars($comm['tenant'] ?: 'Tenant');
-        $email = ''; // Add email logic if needed
-        $recipient = htmlspecialchars($comm['recipient'] ?? 'Sender Name'); // Adjust key as needed
-        $title = htmlspecialchars($comm['title']);
-        $threadId = $comm['thread_id'];
-      ?>
-        <tr class="table-row" data-date="<?= $datetime->format('Y-m-d') ?>">
-          <td class="timestamp">
-            <div class="date"><?= $date ?></div>
-            <div class="time"><?= $time ?></div>
-          </td>
-          <td class="title"><?= $title ?></td>
-          <td><div class="recipient"><?= $recipient ?></div></td>
-          <td>
-            <div class="sender"><?= $sender ?></div>
-            <div class="sender-email"><?= $email ?></div>
-          </td>
-          <td>
-            <button class="btn btn-primary view" onclick="loadConversation(<?= $threadId ?>)">
-              <i class="bi bi-eye"></i> View
-            </button>
-            <button class="btn btn-danger delete" data-thread-id="<?= $threadId ?>">
-            <i class="bi bi-trash3"></i> Delete
-            </button>
-          </td>
-        </tr>
-      <?php endforeach; ?>
-      <tr id="noResultsRow" style="display: none;">
-  <td colspan="5" class="text-center text-danger">No matching results found.</td>
-</tr>
+                              <thead>
+                                <tr>
+                                  <th>DATE</th>
+                                  <th>TITLE</th>
+                                  <th>SENT BY</th>
+                                  <th>SENT TO</th>
+                                  <th>ACTION</th>
+                                </tr>
+                              </thead>
+                              <tbody id="conversationTableBody">
+                                <?php if (!empty($communications)): ?>
+                                  <?php foreach ($communications as $comm):
+                                    $datetime = new DateTime($comm['created_at'] ?? date('Y-m-d H:i:s'));
+                                    $date = $datetime->format('d-m-Y');
+                                    $time = $datetime->format('h:iA');
+                                    $sender = htmlspecialchars($comm['tenant'] ?: 'Tenant');
+                                    $email = ''; // Add email logic if needed
+                                    $recipient = htmlspecialchars($comm['recipient'] ?? 'Sender Name'); // Adjust key as needed
+                                    $title = htmlspecialchars($comm['title']);
+                                    $threadId = $comm['thread_id'];
+                                  ?>
+                                    <tr class="table-row" data-date="<?= $datetime->format('Y-m-d') ?>">
+                                      <td class="timestamp">
+                                        <div class="date"><?= $date ?></div>
+                                        <div class="time"><?= $time ?></div>
+                                      </td>
+                                      <td class="title"><?= $title ?></td>
+                                      <td><div class="recipient"><?= $recipient ?></div></td>
+                                      <td>
+                                        <div class="sender"><?= $sender ?></div>
+                                        <div class="sender-email"><?= $email ?></div>
+                                      </td>
+                                      <td>
+                                        <button class="btn btn-primary view" onclick="loadConversation(<?= $threadId ?>)">
+                                          <i class="bi bi-eye"></i> View
+                                        </button>
+                                        <button class="btn btn-danger delete" data-thread-id="<?= $threadId ?>">
+                                        <i class="bi bi-trash3"></i> Delete
+                                        </button>
+                                      </td>
+                                    </tr>
+                                  <?php endforeach; ?>
+                                  <tr id="noResultsRow" style="display: none;">
+                              <td colspan="5" class="text-center text-danger">No matching results found.</td>
+                            </tr>
 
-    <?php else: ?>
-      <tr>
-        <td colspan="5" class="text-center">No message available</td>
-      </tr>
-    <?php endif; ?>
+                                <?php else: ?>
+                                  <tr>
+                                    <td colspan="5" class="text-center">No message available</td>
+                                  </tr>
+                                <?php endif; ?>
 
-  </tbody>
-</table>
+                              </tbody>
+                            </table>
 
-                              </div>
+                                                          </div>
                           </div>
                       </div>
                         <!-- End Row messages-summmary -->
@@ -1037,47 +1002,51 @@ display: flex;
                               </div>
 
                               <div class="h-80 other-topics-section">
-  <?php foreach ($communications as $comm): ?>
-    <div class="individual-topic-profiles d-flex"
-         data-message-id="<?= $comm['thread_id'] ?>"
-         onclick="loadConversation(this.dataset.messageId)">
+                              <?php foreach ($communications as $comm): ?>
+                                <div class="individual-topic-profiles d-flex"
+                                    data-message-id="<?= $comm['thread_id'] ?>"
+                                    onclick="loadConversation(this.dataset.messageId)">
 
-      <div class="individual-topic-profile-container">
-        <div class="individual-topic"><?= htmlspecialchars($comm['title']) ?></div>
-        <div class="individual-message mt-2">
-        <?php if (!empty($comm['last_file'])): ?>
-            <!-- Show file preview if last message is a file -->
-            <span class="file-preview">
-              <i class="fas fa-paperclip"></i>
-              <?php
-                $filename = basename($comm['last_file']);
-                echo htmlspecialchars(mb_strimwidth($filename, 0, 30, '...'));
-              ?>
-            </span>
-          <?php elseif (!empty($comm['last_message'])): ?>
-            <!-- Show message preview if last message is text -->
-            <?= htmlspecialchars(mb_strimwidth($comm['last_message'], 0, 60, '...')) ?>
-          <?php else: ?>
-            <!-- Fallback if neither exists (shouldn't happen but good practice) -->
-            <span class="text-muted">No messages yet</span>
-          <?php endif; ?>
-        </div>
-      </div>
+                                  <div class="individual-topic-profile-container">
+                                    <div class="individual-topic"><?= htmlspecialchars($comm['title']) ?></div>
+                                    <div class="individual-message mt-2">
+                                      <?php if (!empty($comm['last_file'])): ?>
+                                        <!-- Show file preview if last message is a file -->
+                                        <span class="file-preview">
+                                          <i class="fas fa-paperclip"></i>
+                                          <?php
+                                            $filename = basename($comm['last_file']);
+                                            echo htmlspecialchars(mb_strimwidth($filename, 0, 30, '...'));
+                                          ?>
+                                        </span>
+                                      <?php elseif (!empty($comm['last_message'])): ?>
+                                        <!-- Show message preview if last message is text -->
+                                        <?= htmlspecialchars(mb_strimwidth($comm['last_message'], 0, 60, '...')) ?>
+                                      <?php else: ?>
+                                        <!-- Fallback if neither exists -->
+                                        <span class="text-muted">No messages yet</span>
+                                      <?php endif; ?>
+                                    </div>
+                                  </div>
 
-      <div class="d-flex justify-content-end time-count">
-        <div class="time">
-          <?php
-            $datetime = new DateTime($comm['created_at']);
-            echo $datetime->format('d/m/y');
-          ?>
-        </div>
-        <div class="message-count mt-2">
-          <?= $comm['unread_count'] > 0 ? $comm['unread_count'] : '' ?>
-        </div>
-      </div>
-    </div>
-  <?php endforeach; ?>
-</div>
+                                  <div class="d-flex justify-content-end time-count">
+                                    <div class="time">
+                                      <?php
+                                        // Prefer last_sent_at if available, else fallback to thread creation
+                                        $datetime = !empty($comm['last_sent_at']) 
+                                          ? new DateTime($comm['last_sent_at']) 
+                                          : new DateTime($comm['created_at']);
+                                        echo $datetime->format('d/m/y H:i');
+                                      ?>
+                                    </div>
+                                    <div class="message-count mt-2">
+                                      <?= $comm['unread_count'] > 0 ? $comm['unread_count'] : '' ?>
+                                    </div>
+                                  </div>
+                                </div>
+                              <?php endforeach; ?>
+                            </div>
+
 
 
                             </div>
@@ -1104,37 +1073,46 @@ display: flex;
                                 </div>
                                 </div>
 
-
                                 <div class="input-area">
-    <!-- Attachment input -->
-    <input type="file" name="file[]" id="fileInput" class="form-control" style="display: none;" onchange="showFilePreview()" multiple accept=".xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-    <button class="btn attach-button" onclick="document.getElementById('fileInput').click();">
-        <i class="fa fa-paperclip"></i>
-    </button>
+                                  <!-- Attachment input -->
+                                  <input 
+                                      type="file" 
+                                      name="file[]" 
+                                      id="fileInput" 
+                                      class="form-control" 
+                                      style="display: none;" 
+                                      onchange="showFilePreview()" 
+                                      multiple
+                                      accept=".jpg,.jpeg,.png,.gif,.webp,.bmp,.xls,.xlsx,.pdf,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,image/*">
+                                  
+                                  <button class="btn attach-button" onclick="document.getElementById('fileInput').click();">
+                                      <i class="fa fa-paperclip"></i>
+                                  </button>
 
-    <!-- File preview container -->
-    <div id="filePreviewContainer" style="display: none; margin-right: 10px; max-width: 200px; flex-wrap: wrap; gap: 10px;">
-        <div style="display: flex; align-items: center; background: #f5f5f5; padding: 5px; border-radius: 4px;">
-            <!-- Image thumbnail (shown only for image files) -->
-            <img id="fileThumbnail" src="" style="max-height: 40px; max-width: 40px; margin-right: 8px; display: none;">
-            <!-- File info -->
-            <div style="flex-grow: 1;">
-                <div id="fileName" style="font-size: 12px; color: #333;"></div>
-                <div style="font-size: 10px; color: #666;">Click to remove</div>
-            </div>
-            <button onclick="clearFileSelection()" style="background: none; border: none; color: #999; cursor: pointer; margin-left: 5px;">×</button>
-        </div>
-    </div>
+                                  <!-- File preview container -->
+                                  <div id="filePreviewContainer" style="display: none; margin-right: 10px; max-width: 200px; flex-wrap: wrap; gap: 10px;">
+                                      <div style="display: flex; align-items: center; background: #f5f5f5; padding: 5px; border-radius: 4px;">
+                                          <!-- Image thumbnail (shown only for image files) -->
+                                          <img id="fileThumbnail" src="" style="max-height: 40px; max-width: 40px; margin-right: 8px; display: none;">
+                                          <!-- File info -->
+                                          <div style="flex-grow: 1;">
+                                              <div id="fileName" style="font-size: 12px; color: #333;"></div>
+                                              <div style="font-size: 10px; color: #666;">Click to remove</div>
+                                          </div>
+                                          <button onclick="clearFileSelection()" style="background: none; border: none; color: #999; cursor: pointer; margin-left: 5px;">×</button>
+                                      </div>
+                                  </div>
 
-    <div class="input-box" id="inputBox" contenteditable="true" placeholder="Type your message..."></div>
+                                  <div class="input-box" id="inputBox" contenteditable="true" placeholder="Type your message..."></div>
 
-    <!-- MESSAGE SEND BUTTON -->
-    <div class="message-input-wrapper">
-        <button name="incoming_message" class="btn message-send-button" onclick="sendMessage()">
-            <i class="fa fa-paper-plane"></i>
-        </button>
-    </div>
-</div>
+                                  <!-- MESSAGE SEND BUTTON -->
+                                  <div class="message-input-wrapper">
+                                      <button name="incoming_message" class="btn message-send-button" onclick="sendMessage()">
+                                          <i class="fa fa-paper-plane"></i>
+                                      </button>
+                                  </div>
+                              </div>
+
 
 
                               </div>
@@ -1408,7 +1386,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const formData = new FormData(form);
 
-    fetch('texts.php', {
+    fetch('/Jengopay/landlord/pages/communications/texts.php', {
       method: 'POST',
       body: formData
     })
@@ -1605,23 +1583,6 @@ function handleFiles(event) {
 
 </script>
 
-<!--Begin sidebar script -->
-<!-- <script>
-  fetch('../bars/sidebar.html')  // Fetch the file
-      .then(response => response.text()) // Convert it to text
-      .then(data => {
-          document.getElementById('sidebar').innerHTML = data; // Insert it
-      })
-      .catch(error => console.error('Error loading the file:', error)); // Handle errors
-</script> -->
-<!-- end sidebar script -->
-
-
-                      <!-- SCRIPT FOR MESSAGES -->
-    <!-- Begin -->
-
-  <!-- End  -->
-
 
 <script>
 document.getElementById('sendMessage').addEventListener('click', function() {
@@ -1643,12 +1604,6 @@ document.getElementById('sendMessage').addEventListener('click', function() {
     }
 });
 </script>
-
-
-
-
-
-
 
 <!-- loadConversation -->
 <script>
@@ -1703,9 +1658,6 @@ function loadConversation(threadId) {
         });
 }
 </script>
-
-
-
 
 
 <!-- send & get message -->
@@ -2103,7 +2055,6 @@ document.getElementById("endDate").addEventListener("change", filterByDate);
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <script src="../../../dist/js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
@@ -2155,84 +2106,6 @@ document.getElementById("endDate").addEventListener("change", filterByDate);
 });
     </script>
 
-    <!-- <script>
-document.getElementById('buildingSelector').addEventListener('change', function () {
-  const buildingId = this.value;
-  const tbody = document.getElementById('conversationTableBody');
-
-  if (!buildingId) {
-    // alert(buildingId);
-    // No building selected: clear table or show default message
-    tbody.innerHTML = `<tr><td colspan="5" class="text-center">Loading...</td></tr>`;
-    // tbody.innerHTML = '<tr><td colspan="5" class="text-center">No message available</td></tr>';
-    return;
-  }
-
-  // Fetch conversations via AJAX from backend PHP endpoint
-  fetch(`get-conversations.php?building_id=${encodeURIComponent(buildingId)}`)
-  .then(response => {
-    if (!response.ok) throw new Error('Network response was not OK');
-    return response.json();
-  })
-  .then(data => {
-    if (!data.length) {
-      tbody.innerHTML = '<tr><td colspan="5" class="text-center">No message available</td></tr>';
-      return;
-    }
-
-      // Build rows HTML dynamically
-      let rows = '';
-      data.forEach(comm => {
-        const datetime = new Date(comm.created_at);
-        const date = datetime.toLocaleDateString('en-GB'); // dd/mm/yyyy
-        const time = datetime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-
-        const sender = escapeHtml(comm.tenant) || 'Tenant';
-        const recipient = escapeHtml(comm.recipient) || 'Sender Name';
-        const title = escapeHtml(comm.title);
-        const threadId = comm.thread_id;
-
-        rows += `
-          <tr class="table-row">
-            <td class="timestamp">
-              <div class="date">${date}</div>
-              <div class="time">${time}</div>
-            </td>
-            <td class="title">${title}</td>
-            <td><div class="recipient">${recipient}</div></td>
-            <td>
-              <div class="sender">${sender}</div>
-              <div class="sender-email"></div>
-            </td>
-            <td>
-              <button class="btn btn-primary view" onclick="loadConversation(${threadId})">
-                <i class="bi bi-eye"></i> View
-              </button>
-              <button class="btn btn-danger delete" data-thread-id="${threadId}">
-                <i class="bi bi-trash3"></i> Delete
-              </button>
-            </td>
-          </tr>
-        `;
-      });
-
-      tbody.innerHTML = rows;
-    })
-    .catch(error => {
-      console.error('Error fetching conversations:', error);
-      tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Error loading conversations.</td></tr>';
-    });
-});
-
-// Simple HTML escape helper
-function escapeHtml(text) {
-  if (!text) return '';
-  return text.replace(/[&<>"']/g, function(m) {
-    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];
-  });
-}
-</script> -->
-
 <script>
 function dismissWelcome() {
   const box = document.getElementById('welcomeNotification');
@@ -2243,9 +2116,7 @@ window.addEventListener('DOMContentLoaded', () => {
     dismissWelcome();
   }, 5000); // 5000ms = 5 seconds
 });
-
 </script>
-
 
     <!-- Bootstrap Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
@@ -2263,8 +2134,8 @@ window.addEventListener("error", function(e) {
 });
 </script>
 
-
-    <!--end::Script-->
+<script src="../../../../landlord/js/adminlte.js"></script>
+<!--end::Script-->
   </body>
   <!--end::Body-->
 </html>
