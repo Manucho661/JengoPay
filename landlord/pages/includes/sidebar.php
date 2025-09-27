@@ -50,6 +50,7 @@
       <a href="/Jengopay/landlord/pages/financials/balanceSheet/balanceSheet.php">📊 Balance Sheet</a>
       <a href="/Jengopay/landlord/pages/financials/profit&loss/profit&loss.php">📊 Profit&Loss</a>
       <a href="/Jengopay/landlord/pages/financials/generalledger/general_ledger.php">📊General Ledger</a>
+      <a href="/Jengopay/landlord/pages/financials/agedpayable/aged_payable.php">📊Aged Payable</a>
 
     </div>
   </div>

@@ -259,7 +259,7 @@ require_once "actions/individual/getGeralRequests.php";
     .row-card {
       background-color: #fff;
       border-radius: 10px;
-      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+      /* box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08); */
       padding: 1.5rem;
       border-left: 5px solid transparent;
     }
@@ -824,7 +824,7 @@ require_once "actions/individual/getGeralRequests.php";
                 </div>
 
                 <!-- Row 2: Category & Description -->
-                <div class="row-card mb-1 p-3 rounded shadow-sm bg-white">
+                <div class="row-card mb-1 p-3 rounded bg-white">
                   <div class="row gx-3 gy-3 p-3 rounded border-0" style="border: 1px solid #e0e0e0;">
                     <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
                       <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
@@ -837,7 +837,7 @@ require_once "actions/individual/getGeralRequests.php";
                 </div>
 
                 <!-- Row 3: Photo -->
-                <div class="row-card mb-1 p-3 rounded shadow-sm bg-white">
+                <div class="row-card mb-1 p-3 rounded bg-white">
                   <div class="row gx-3 gy-3 p-3 rounded border-0">
                     <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
                       <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">

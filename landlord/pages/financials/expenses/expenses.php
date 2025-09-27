@@ -239,45 +239,41 @@ require_once 'actions/getBuildings.php'
                         </div>
                     </div>
                     <div class="row g-3 mb-4">
+                        <!-- Filter by Building -->
                         <div class="col-md-3 col-sm-12">
-                            <div class="custom-select-wrapper">
-                                <div class="custom-select shadow-sm" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
-                                    Filter By Building
-                                </div>
-                                <div class="select-options" id="select-options" role="listbox">
-                                    <div role="option" data-value="option1">Manucho</div>
-                                    <div role="option" data-value="option2">Silver Spoon</div>
-                                    <div role="option" data-value="option3">Ebenezer</div>
-                                </div>
-                            </div>
+                            <select class="form-select shadow-sm rounded-3">
+                                <option selected disabled>Filter By Building</option>
+                                <option value="manucho">Manucho</option>
+                                <option value="silver">Silver Spoon</option>
+                                <option value="ebenezer">Ebenezer</option>
+                            </select>
                         </div>
-                        <div class="col-md-3">
-                            <div class="custom-select-wrapper">
-                                <div class="custom-select shadow-sm" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
-                                    Filter By Items
-                                </div>
-                                <div class="select-options" role="listbox">
-                                    <div role="option" data-value="option1">Garbage</div>
-                                    <div role="option" data-value="option2">Electricity</div>
-                                </div>
-                            </div>
+
+                        <!-- Filter by Items -->
+                        <div class="col-md-3 col-sm-12">
+                            <select class="form-select shadow-sm rounded-3">
+                                <option selected disabled>Filter By Items</option>
+                                <option value="garbage">Garbage</option>
+                                <option value="electricity">Electricity</option>
+                            </select>
                         </div>
-                        <div class="col-md-3">
-                            <div class="custom-select-wrapper">
-                                <div class="custom-select shadow-sm" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
-                                    Filter By Status
-                                </div>
-                                <div class="select-options" role="listbox">
-                                    <div role="option" data-value="option1">Paid</div>
-                                    <div role="option" data-value="option2">Pending</div>
-                                    <div role="option" data-value="option2">Overpaid</div>
-                                </div>
-                            </div>
+
+                        <!-- Filter by Status -->
+                        <div class="col-md-3 col-sm-12">
+                            <select class="form-select shadow-sm rounded-3">
+                                <option selected disabled>Filter By Status</option>
+                                <option value="paid">Paid</option>
+                                <option value="pending">Pending</option>
+                                <option value="overpaid">Overpaid</option>
+                            </select>
                         </div>
-                        <div class="col-md-3">
-                            <input type="date" class="form-control filter-shadow ">
+
+                        <!-- Date Picker -->
+                        <div class="col-md-3 col-sm-12">
+                            <input type="date" class="form-control shadow-sm rounded-3">
                         </div>
                     </div>
+
                     <div class="row mt-2 mb-2">
                         <h6 class="mb-0 contact_section_header summary mb-2"></i> <b>Summary</b></h6>
                         <div class="col-md-3">
