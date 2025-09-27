@@ -78,18 +78,17 @@
       color: #FFA000 !important;
     }
 
-    .more-btn {
-      background-color: #132E45;
-      color: white;
-      margin-left: 2px;
-      margin-right: 2px;
-      border: none;
-    }
 
-    .more-btn:hover {
-      background-color: #00192D;
-      color: white;
-    }
+    #requestNav .nav-link {
+    color: #00192D;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-bottom: 3px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+  #requestNav .nav-link.active {
+    border-bottom-color: #00192D; /* underline highlight */
+  }
   </style>
   </style>
 </head>
@@ -98,7 +97,7 @@
   <!--begin::App Wrapper-->
   <div class="app-wrapper" style="height: 100 vh; ">
     <!--begin::Header-->
-          <?php include_once '../includes/header.php' ?>
+    <?php include_once '../includes/header.php' ?>
     <!--end::Header-->
     <!--begin::Sidebar-->
     <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
@@ -132,15 +131,28 @@
         <!--begin::Container-->
         <div class="container-fluid">
           <!--begin::Row-->
-          <div class="row">
+          <div class="row align-items-center mb-3">
             <div class="col-sm-8">
-              <h3 class="mb-0 "> 🛠 <span class="contact_section_header">Maintenance Requests</span> </h3>
+              <h3 class="mb-0">🛠 <span class="contact_section_header">Maintenance Requests</span></h3>
             </div>
             <div class="col-sm-4">
-              <ol class="breadcrumb float-sm-end">
-                <li class="breadcrumb-item"><a href="#" style="color: #00192D;"> <i class="bi bi-house"></i> Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-              </ol>
+              <ul class="nav justify-content-end border-bottom" id="requestNav">
+                <li class="nav-item">
+                  <a class="nav-link active" href="#" data-tab="all">
+                    All Requests
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#" data-tab="saved">
+                    Saved
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#" data-tab="cancelled">
+                    Cancelled
+                  </a>
+                </li>
+              </ul>
             </div>
           </div>
           <!--end::Row-->

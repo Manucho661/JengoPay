@@ -27,8 +27,42 @@ export function openProposalModal(proposal) {
   safeSet("modalDescription", proposal.cover_letter || "No description provided");
   safeSet("modalLocation", proposal.location || "Unknown");
 
+  const actualAssignBtn = document.getElementById("actualAssignBtn");
+  actualAssignBtn.setAttribute("data-provider-id", proposal.provider_id);
+
+
   // --- show modal with Bootstrap ---
   const modalEl = document.getElementById("proposalModal");
+  if (!modalEl) {
+    console.error("❌ Cannot open modal: #proposalModal not found in DOM");
+    return;
+  }
+
+  const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+  modal.show();
+}
+
+export function openProviderDetailsModal(details) {
+
+  // --- helper: safely set content or attribute ---
+  const safeSet = (id, value, prop = "innerText") => {
+    const el = document.getElementById(id);
+    if (!el) {
+      console.warn(`⚠️ Missing element: #${id}`);
+      return;
+    }
+
+    if (prop === "src") {
+      el.src = value;
+    } else {
+      el[prop] = value;
+    }
+  };
+
+    safeSet("providerModalName", details.details.name || "Unknown Provider");
+
+// --- show modal---
+  const modalEl = document.getElementById("providerModal");
   if (!modalEl) {
     console.error("❌ Cannot open modal: #proposalModal not found in DOM");
     return;

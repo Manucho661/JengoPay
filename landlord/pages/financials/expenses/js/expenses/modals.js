@@ -125,7 +125,7 @@ export function editExpModal() {
            
             // populate the modal field
             amount = amount.replace(/,/g, "");
-            document.getElementById("editAmount").value = parseFloat(amount) || 0;
+            // document.getElementById("editAmount").value = parseFloat(amount) || 0;
 
         });
     });

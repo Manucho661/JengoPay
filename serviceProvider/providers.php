@@ -164,7 +164,7 @@ try {
     .nav-tabs .nav-link:hover {
       background-color: #FFC107;
       color: #00192D;
-       z-index: 2;
+      z-index: 2;
     }
 
     .nav-tabs .nav-link.active {
@@ -173,7 +173,8 @@ try {
       font-weight: bold;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
-    .nav-tabs .nav-link::before{
+
+    .nav-tabs .nav-link::before {
       content: "";
       position: absolute;
       top: 0;
@@ -184,7 +185,8 @@ try {
       transition: all 0.4s ease;
       z-index: 0;
     }
-  .nav-tabs .nav-link:hover::before {
+
+    .nav-tabs .nav-link:hover::before {
       left: 0;
     }
 
@@ -196,6 +198,7 @@ try {
       position: relative;
       z-index: 2;
     }
+
     .tab-content {
       background-color: #fff;
       border: 1px solid #dee2e6;
@@ -357,86 +360,86 @@ try {
 
                   </div> <!-- End scrollable -->
                 </div>
-     <!-- Apply Modal -->
-<div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content border-0 rounded-4 shadow-lg">
+                <!-- Apply Modal -->
+                <div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content border-0 rounded-4 shadow-lg">
 
-      <!-- Modal Header -->
-      <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
-        <h5 class="modal-title d-flex align-items-center" id="applyModalLabel">
-          <i class="bi bi-briefcase-fill me-2"></i> Apply for Job
-        </h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
+                      <!-- Modal Header -->
+                      <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
+                        <h5 class="modal-title d-flex align-items-center" id="applyModalLabel">
+                          <i class="bi bi-briefcase-fill me-2"></i> Apply for Job
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
 
-      <!-- Modal Body -->
-      <div class="modal-body">
-        <form id="applyForm" class="px-2">
+                      <!-- Modal Body -->
+                      <div class="modal-body">
+                        <form id="applyForm" class="px-2">
 
-          <!-- Client Price (Plain Text) -->
-          <div class="mb-3" style="font-weight: bold; font-style: oblique;">
-            <label class="form-label">
-              <i class="bi bi-tags me-1" style="color: #00192D;"></i> Client Price
-            </label>
-            <input type="hidden" name="client_price" value="5000">
-            <div class="form-control-plaintext ps-3" style="border: 1px solid #ced4da; border-radius: 50px; background-color: #f8f9fa;">
-              5000
-            </div>
-          </div>
+                          <!-- Client Price (Plain Text) -->
+                          <div class="mb-3" style="font-weight: bold; font-style: oblique;">
+                            <label class="form-label">
+                              <i class="bi bi-tags me-1" style="color: #00192D;"></i> Client Price
+                            </label>
+                            <input type="hidden" name="client_price" value="5000">
+                            <div class="form-control-plaintext ps-3" style="border: 1px solid #ced4da; border-radius: 50px; background-color: #f8f9fa;">
+                              5000
+                            </div>
+                          </div>
 
-          <!-- Your Price -->
-          <div class="mb-3" style="font-weight: bold; font-style: oblique;">
-            <label for="yourPrice" class="form-label">
-              <i class="bi bi-currency-dollar me-1" style="color: #00192D;"></i> Your Price
-            </label>
-            <input type="number" name="your_price" class="form-control rounded-pill" id="yourPrice" step="1" min="0" placeholder="4500" required>
-          </div>
+                          <!-- Your Price -->
+                          <div class="mb-3" style="font-weight: bold; font-style: oblique;">
+                            <label for="yourPrice" class="form-label">
+                              <i class="bi bi-currency-dollar me-1" style="color: #00192D;"></i> Your Price
+                            </label>
+                            <input type="number" name="your_price" class="form-control rounded-pill" id="yourPrice" step="1" min="0" placeholder="4500" required>
+                          </div>
 
-          <!-- Duration -->
-          <div class="mb-3" style="font-weight: bold; font-style: oblique;">
-            <label for="duration" class="form-label">
-              <i class="bi bi-clock me-1" style="color: #00192D;"></i> Select Duration
-            </label>
-            <select class="form-select" name="duration" id="duration" onchange="handleDurationChange(this)" required>
-              <option selected disabled value="">Select duration</option>
-              <option value="less than 24hrs">Less than 24hrs</option>
-              <option value="1 day">1 day</option>
-              <option value="2 days">2 days</option>
-              <option value="3 days">3 days</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
+                          <!-- Duration -->
+                          <div class="mb-3" style="font-weight: bold; font-style: oblique;">
+                            <label for="duration" class="form-label">
+                              <i class="bi bi-clock me-1" style="color: #00192D;"></i> Select Duration
+                            </label>
+                            <select class="form-select" name="duration" id="duration" onchange="handleDurationChange(this)" required>
+                              <option selected disabled value="">Select duration</option>
+                              <option value="less than 24hrs">Less than 24hrs</option>
+                              <option value="1 day">1 day</option>
+                              <option value="2 days">2 days</option>
+                              <option value="3 days">3 days</option>
+                              <option value="other">Other</option>
+                            </select>
+                          </div>
 
-          <!-- Custom Duration -->
-          <div class="mb-3 d-none" id="customDurationDiv" style="font-weight: bold; font-style: oblique;">
-            <label for="customDuration" class="form-label">
-              <i class="bi bi-calendar-plus me-1" style="color: #00192D;"></i> Specify Duration
-            </label>
-            <input type="text" name="custom_duration" class="form-control rounded-pill" id="customDuration" placeholder="e.g. 5 days">
-          </div>
+                          <!-- Custom Duration -->
+                          <div class="mb-3 d-none" id="customDurationDiv" style="font-weight: bold; font-style: oblique;">
+                            <label for="customDuration" class="form-label">
+                              <i class="bi bi-calendar-plus me-1" style="color: #00192D;"></i> Specify Duration
+                            </label>
+                            <input type="text" name="custom_duration" class="form-control rounded-pill" id="customDuration" placeholder="e.g. 5 days">
+                          </div>
 
-          <!-- Cover Letter -->
-          <div class="mb-3" style="font-weight: bold; font-style: oblique;">
-            <label for="coverLetter" class="form-label">
-              <i class="bi bi-envelope-paper me-1" style="color: #00192D;"></i> Cover Letter
-            </label>
-            <textarea class="form-control rounded-4" name="cover_letter" id="coverLetter" rows="4"
-              placeholder="Explain why you are the best fit for this job..." required></textarea>
-          </div>
+                          <!-- Cover Letter -->
+                          <div class="mb-3" style="font-weight: bold; font-style: oblique;">
+                            <label for="coverLetter" class="form-label">
+                              <i class="bi bi-envelope-paper me-1" style="color: #00192D;"></i> Cover Letter
+                            </label>
+                            <textarea class="form-control rounded-4" name="cover_letter" id="coverLetter" rows="4"
+                              placeholder="Explain why you are the best fit for this job..." required></textarea>
+                          </div>
 
-          <!-- Modal Footer -->
-          <div class="modal-footer justify-content-center" style="background-color: #f8f9fa;">
-            <button type="submit" class="btn rounded-pill px-4 py-2" style="background-color: #00192D; color: #FFC107;">
-              <i class="bi bi-check2-circle me-1"></i> Submit Application
-            </button>
-          </div>
+                          <!-- Modal Footer -->
+                          <div class="modal-footer justify-content-center" style="background-color: #f8f9fa;">
+                            <button type="submit" class="btn rounded-pill px-4 py-2" style="background-color: #00192D; color: #FFC107;">
+                              <i class="bi bi-check2-circle me-1"></i> Submit Application
+                            </button>
+                          </div>
 
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
 
                 <!-- APPLICATIONS -->
@@ -611,36 +614,44 @@ try {
 
       form.addEventListener("submit", function(e) {
         e.preventDefault();
-          console.log("Form submitted");
-          const formData = new FormData(form);
-          console.log("FormData created", [...formData.entries()]);
+        console.log("Form submitted");
+        const formData = new FormData(form);
+        console.log("FormData created", [...formData.entries()]);
 
         fetch("actions/submit_application.php", {
             method: "POST",
             body: formData
           })
-          
-        .then(async (response) => {
-                const contentType = response.headers.get("content-type") || "";
-                    console.log("📦 Content-Type:", contentType); // ← ADD THIS LINE
-                    const rawText = await response.text();
-                    console.log("📝 Raw response text:", rawText); // ✅ Always log the raw
 
-                if (contentType.includes("application/json")) {
-                  try {
-                    const data = await response.json();
-                    console.log("✅ Parsed JSON:", data);
-                    return data;
-                  } catch (err) {
-                     console.error("❌ Failed to parse JSON:", err);
-                    return { success: false, error: "Invalid JSON response", raw: rawText };
-                  }
-                } else {
-                  const raw = await response.text();
-                  console.warn("⚠️ Non-JSON response received:", raw);
-                  return { success: false, error: "Raw response from server", raw };
-                }
-              })
+          .then(async (response) => {
+            const contentType = response.headers.get("content-type") || "";
+            console.log("📦 Content-Type:", contentType); // ← ADD THIS LINE
+            const rawText = await response.text();
+            console.log("📝 Raw response text:", rawText); // ✅ Always log the raw
+
+            if (contentType.includes("application/json")) {
+              try {
+                const data = await response.json();
+                console.log("✅ Parsed JSON:", data);
+                return data;
+              } catch (err) {
+                console.error("❌ Failed to parse JSON:", err);
+                return {
+                  success: false,
+                  error: "Invalid JSON response",
+                  raw: rawText
+                };
+              }
+            } else {
+              const raw = await response.text();
+              console.warn("⚠️ Non-JSON response received:", raw);
+              return {
+                success: false,
+                error: "Raw response from server",
+                raw
+              };
+            }
+          })
           .then(data => {
             if (data.success) {
               alert("✅ Application submitted successfully!");

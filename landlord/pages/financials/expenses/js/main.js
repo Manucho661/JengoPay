@@ -2,11 +2,12 @@
 import { setupExpenseForms } from "./expenses/expForms.js";
 import { initializeCustomSelect } from "./ui/customSelect.js";
 import { combobox } from "./ui/combobox.js";
-import { payExpense, initSupplierModal, editExpModal } from "./expenses/modals.js";
+import { payExpense, initSupplierModal} from "./expenses/modals.js";
 import { setupExpenseCalculator } from "./expenses/expCalculator.js";
 import { initSupplierListModal } from "./expenses/supplierList.js";
 import { vldtSupplierReg, checkPayment} from "./expenses/expValidations.js";
 import { downloadExpPDF } from "./expenses/expPdf.js";
+import { get_payment_details, edit_submittedPayments } from "./expenses/api1.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -20,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupExpenseForms(invalidFields);
 
   // initialize edit
-  editExpModal();
+  // editExpModal();
 
   // Attach payExpense to buttons dynamically
   document.querySelectorAll("[data-action='pay-expense']").forEach(button => {
@@ -74,4 +75,25 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // expense pdf download
   document.getElementById('downloadExpPdf').addEventListener('click', downloadExpPDF);
+
+
+  // Get expense payment details
+  document.querySelectorAll(".edit-payment-btn").forEach(button => {
+    button.addEventListener("click", get_payment_details);
+  });
+
+  
+  // edit the payments 
+const editPaymentModal = document.getElementById("editPaymentModal");
+
+if (editPaymentModal) {
+
+  editPaymentModal.addEventListener("submit", (e) => {
+    if (e.target.classList.contains("payment-form")) {
+      e.preventDefault();
+      edit_submittedPayments(e.target);
+    }
+  });
+}
+
 });
