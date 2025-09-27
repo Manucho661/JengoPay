@@ -115,7 +115,7 @@ $accounts = $pdo->query("SELECT account_code, account_name FROM chart_of_account
           </span>
         </a>
       </div>
-      <div><?php include_once '../../includes/sidebar.php'; ?></div>
+      <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
     </aside>
 
     <!-- Main Content -->
@@ -383,5 +383,6 @@ $('#trialBalance tbody').on('click', 'tr[data-account-id]', function () {
     doc.save('Trial_Balance_' + new Date().toISOString().split('T')[0] + '.pdf');
   }
   </script>
+   <script src="../../../../landlord/js/adminlte.js"></script>
 </body>
 </html>

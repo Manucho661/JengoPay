@@ -600,6 +600,8 @@ $(document).ready(function() {
   }
 });
 </script>
+<script src="../../../../landlord/js/adminlte.js"></script>
+
 
 </body>
 <!--end::Body-->

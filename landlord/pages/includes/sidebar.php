@@ -30,7 +30,7 @@
     </div>
     <div class="submenu">
     <a href="/Jengopay/landlord/pages/communications/texts.php">💬 In-app Messages</a>
-      <a href="/Jengopay/landlord/pages/communications/announcements.php">📢 Announcements</a>
+      <a href="/Jengopay/landlord/pages/communications/announcements/announcements.php">📢 Announcements</a>
     </div>
   </div>
   

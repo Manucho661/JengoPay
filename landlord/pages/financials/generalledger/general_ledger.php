@@ -440,6 +440,9 @@ $runningBalance = 0;
   <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script src="../../../../landlord/js/adminlte.js"></script>
+
   <!--end::Script-->
 </body>
 <!--end::Body-->
