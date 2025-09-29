@@ -289,9 +289,9 @@ try {
       </div>
     </div>
 
-    <div class="main">
+    <div class="main py-4">
       <!-- Search Bar -->
-      <div class="container-fluid py-3">
+      <div class="container-fluid">
         <div class="container">
           <form class="d-flex justify-content-center" role="search">
             <input class="form-control me-2 w-50" type="search" placeholder="Search Jobs" aria-label="Search" style="border-radius: 8px; border: none;">
@@ -301,7 +301,7 @@ try {
       </div>
 
       <!-- Main Content Row -->
-      <div class="container-fluid py-5">
+      <div class="container-fluid py-3">
         <div class="container-fluid">
           <div class="row">
 
@@ -319,44 +319,15 @@ try {
                 </li>
               </ul>
 
-              <div class="tab-content bg-light" id="jobTabsContent">
+              <div class="tab-content rounded bg-light" id="jobTabsContent">
                 <!-- FIND A JOB -->
                 <div class="tab-pane fade show active" id="find" role="tabpanel">
                   <div class="section-title text-mute">Available Jobs</div>
 
                   <!-- Scrollable container for job cards -->
-                  <div style=" padding-right: 10px;">
+                  <div id="requests-list-container" style=" padding-right: 10px;">
 
-                    <?php if (!empty($requests)): ?>
-                      <?php foreach ($requests as $row): ?>
-                        <div class="job-card mb-3 p-3 bg-white shadow-sm rounded">
-                          <div class="d-flex justify-content-between">
-                            <div style="width: 100%;">
-                              <div class="request" style="font-weight:bold; color: #00192D;">
-                                <?= htmlspecialchars($row['request']) ?>
-                              </div>
-                              <div class="text-muted mb-2">
-                                Posted: <?= date('M j, Y', strtotime($row['request_date'])) ?> •
-                                Budget: <?= !empty($row['budget']) ? htmlspecialchars($row['budget']) : 'N/A' ?> •
-                                <?= !empty($row['location']) ? htmlspecialchars($row['location']) : 'Remote' ?>
-                              </div>
-                              <span class="badge badge-skill">React</span>
-                              <span class="badge badge-skill">Tailwind</span>
-                              <span class="badge badge-skill">Git</span>
-                              <p class="mt-2 job-description" style="font-style:italic;">
-                                <?= nl2br(htmlspecialchars($row['description'])) ?>
-                              </p>
-                            </div>
-                            <!-- Apply Button -->
-                            <div class="text-end" style="white-space: nowrap;">
-                              <button class="btn btn-outline-warning apply-btn text-dark" data-bs-toggle="modal" data-bs-target="#applyModal">Apply</button>
-                            </div>
-                          </div>
-                        </div>
-                      <?php endforeach; ?>
-                    <?php else: ?>
-                      <p class="text-muted">No requests found.</p>
-                    <?php endif; ?>
+
 
                   </div> <!-- End scrollable -->
                 </div>
@@ -376,6 +347,8 @@ try {
                       <!-- Modal Body -->
                       <div class="modal-body">
                         <form id="applyForm" class="px-2">
+
+                          <input type="hidden" id="requestId" name="requestId" value="">
 
                           <!-- Client Price (Plain Text) -->
                           <div class="mb-3" style="font-weight: bold; font-style: oblique;">
@@ -570,8 +543,7 @@ try {
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
+  <script type="module" src="js/main.js"></script>
   <script>
     // Read more / less toggle
     document.querySelectorAll('.job-description').forEach(function(desc) {
@@ -609,67 +581,6 @@ try {
     window.handleDurationChange = handleDurationChange;
 
     // Form submission with validation
-    document.addEventListener("DOMContentLoaded", function() {
-      const form = document.getElementById("applyForm");
-
-      form.addEventListener("submit", function(e) {
-        e.preventDefault();
-        console.log("Form submitted");
-        const formData = new FormData(form);
-        console.log("FormData created", [...formData.entries()]);
-
-        fetch("actions/submit_application.php", {
-            method: "POST",
-            body: formData
-          })
-
-          .then(async (response) => {
-            const contentType = response.headers.get("content-type") || "";
-            console.log("📦 Content-Type:", contentType); // ← ADD THIS LINE
-            const rawText = await response.text();
-            console.log("📝 Raw response text:", rawText); // ✅ Always log the raw
-
-            if (contentType.includes("application/json")) {
-              try {
-                const data = await response.json();
-                console.log("✅ Parsed JSON:", data);
-                return data;
-              } catch (err) {
-                console.error("❌ Failed to parse JSON:", err);
-                return {
-                  success: false,
-                  error: "Invalid JSON response",
-                  raw: rawText
-                };
-              }
-            } else {
-              const raw = await response.text();
-              console.warn("⚠️ Non-JSON response received:", raw);
-              return {
-                success: false,
-                error: "Raw response from server",
-                raw
-              };
-            }
-          })
-          .then(data => {
-            if (data.success) {
-              alert("✅ Application submitted successfully!");
-              const modal = bootstrap.Modal.getInstance(document.getElementById("applyModal"));
-              modal.hide();
-              form.reset();
-              document.getElementById("customDurationDiv").classList.add("d-none");
-            } else {
-              alert("❌ Failed to submit: " + (data.error || "Unknown error"));
-              console.error("Server error:", data.error);
-            }
-          })
-          .catch((error) => {
-            console.error("❌ Error submitting form:", error);
-            alert("Something went wrong while submitting the form.\n" + error.message);
-          });
-      });
-    });
   </script>
 
 

@@ -394,161 +394,140 @@ foreach ($invoices as $inv) {
       </aside>
       <!--end::Sidebar-->
       <!--begin::App Main-->
-      <main class="app-main">
-        <!--begin::App Content Header-->
-        <div class="app-content-header">
-          <!--begin::Container-->
-          <div class="container">
-  <h1>Aged Receivables</h1>
+<main class="app-main">
+  <!--begin::App Content Header-->
+  <div class="app-content-header py-3">
+    <!--begin::Container-->
+    <div class="container-fluid px-4">
+      <h1 class="mb-4">Aged Receivables</h1>
 
-  <!-- Summary Panel -->
-  <div class="row summary-panel">
-    <?php
-    $bucketLabels = ['0–30', '31–60', '61–90', '90+'];
-    $keys = ['0-30','31-60','61-90','90+'];
-    foreach ($keys as $i => $key): ?>
-      <div class="col-md-3">
-        <div class="card aged-bucket">
-          <div class="card-body">
-            <h5 class="card-title"><?= $bucketLabels[$i] ?> days</h5>
-            <p class="card-text fs-4"><?= number_format($totals[$key], 2) ?></p>
+      <!-- Summary Panel -->
+      <div class="row g-3 mb-4">
+        <?php
+        $bucketLabels = ['0–30', '31–60', '61–90', '90+'];
+        $keys = ['0-30','31-60','61-90','90+'];
+        foreach ($keys as $i => $key): ?>
+          <div class="col-lg-2 col-md-3 col-sm-6">
+            <div class="card aged-bucket h-100 shadow-sm">
+              <div class="card-body text-center">
+                <h6 class="card-title mb-2"><?= $bucketLabels[$i] ?> days</h6>
+                <p class="card-text fs-4 fw-bold"><?= number_format($totals[$key], 2) ?></p>
+              </div>
+            </div>
+          </div>
+        <?php endforeach; ?>
+        <div class="col-lg-3 col-md-6">
+          <div class="card aged-bucket h-100 shadow-sm" style="background-color:#FFC107; color:#00192D;">
+            <div class="card-body text-center">
+              <h6 class="card-title mb-2">Total</h6>
+              <p class="card-text fs-4 fw-bold"><?= number_format($totals['grand'], 2) ?></p>
+            </div>
           </div>
         </div>
       </div>
-    <?php endforeach; ?>
-    <div class="col-md-3">
-      <div class="card aged-bucket" style="background-color:#FFC107; color:#00192D;">
-        <div class="card-body">
-          <h5 class="card-title">Total</h5>
-          <p class="card-text fs-4"><?= number_format($totals['grand'], 2) ?></p>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- Tabs for buckets -->
-  <ul class="nav nav-tabs bucket-tab" id="agedTabs" role="tablist">
-    <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="tab-all" data-bs-toggle="tab" data-bs-target="#pane-all">All Tenants</button>
-    </li>
-    <?php foreach ($keys as $i => $key): ?>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="tab-<?= $key ?>" data-bs-toggle="tab" data-bs-target="#pane-<?= $key ?>">
-          <?= $bucketLabels[$i] ?> days
-        </button>
-      </li>
-    <?php endforeach; ?>
-  </ul>
+      <!-- Tabs for buckets -->
+      <ul class="nav nav-tabs bucket-tab mb-3" id="agedTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="tab-all" data-bs-toggle="tab" data-bs-target="#pane-all">
+            All Tenants
+          </button>
+        </li>
+        <?php foreach ($keys as $i => $key): ?>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="tab-<?= $key ?>" data-bs-toggle="tab" data-bs-target="#pane-<?= $key ?>">
+              <?= $bucketLabels[$i] ?> days
+            </button>
+          </li>
+        <?php endforeach; ?>
+      </ul>
 
-  <div class="tab-content mt-3">
-    <!-- "All Tenants" Tab -->
-    <div class="tab-pane fade show active" id="pane-all">
-      <div class="table-responsive">
-        <table id="table-all" class="table table-bordered table-striped">
-          <thead class="table-dark">
-            <tr>
-              <th>Tenant Name</th>
-              <!-- <th>Contact Info</th> -->
-              <th class="text-end">0-30 Days</th>
-              <th class="text-end">31-60 Days</th>
-              <th class="text-end">61-90 Days</th>
-              <th class="text-end">90+ Days</th>
-              <th class="text-end">Total Due</th>
-              <!-- <th>Actions</th> -->
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($tenants as $tenantId => $tenantData): 
-              // Calculate totals per bucket for this tenant
-              $tenantTotals = [
-                '0-30' => 0,
-                '31-60' => 0,
-                '61-90' => 0,
-                '90+' => 0,
-                'grand' => 0
-              ];
-              
-              foreach ($tenantData['invoices'] as $inv) {
-                $days = daysOverdue($inv['created_at']);
-                if ($days <= 30) {
-                  $tenantTotals['0-30'] += $inv['total'];
-                } elseif ($days <= 60) {
-                  $tenantTotals['31-60'] += $inv['total'];
-                } elseif ($days <= 90) {
-                  $tenantTotals['61-90'] += $inv['total'];
-                } else {
-                  $tenantTotals['90+'] += $inv['total'];
-                }
-                $tenantTotals['grand'] += $inv['total'];
-              }
-            ?>
-            <tr class="tenant-row" data-tenant="<?= $tenantId ?>">
-              <td>
-                <!-- <div><strong><?= htmlspecialchars($tenantData['name']) ?></strong></div>
-                <?php if (!empty($tenantData['unit'])): ?>
-                  <div class="tenant-info">Unit: <?= htmlspecialchars($tenantData['unit']) ?></div>
-                <?php endif; ?> -->
-                Emmanuel Wafula
-              </td>
-             
-              <td class="text-end"><?= number_format($tenantTotals['0-30'], 2) ?></td>
-              <td class="text-end"><?= number_format($tenantTotals['31-60'], 2) ?></td>
-              <td class="text-end"><?= number_format($tenantTotals['61-90'], 2) ?></td>
-              <td class="text-end"><?= number_format($tenantTotals['90+'], 2) ?></td>
-              <td class="text-end tenant-total"><?= number_format($tenantTotals['grand'], 2) ?></td>
-              <!-- <td>
-                <button class="btn btn-sm btn-outline-primary view-tenant" data-tenant="<?= $tenantId ?>">
-                  View Invoices
-                </button>
-              </td> -->
-            </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Individual bucket tabs (showing invoices with tenant names) -->
-    <?php foreach ($keys as $i => $key): ?>
-      <div class="tab-pane fade" id="pane-<?= $key ?>">
-        <div class="table-responsive">
-          <table id="table-<?= $key ?>" class="table table-bordered table-striped">
-            <thead class="table-dark">
-              <tr>
-                <th>Tenant Name</th>
-                <th>Unit</th>
-                <th>Invoice #</th>
-                <th>Description</th>
-                <th>Invoice Date</th>
-                <th class="text-end">Amount</th>
-                <th class="text-end">Days Overdue</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php foreach ($agedBuckets[$key] as $row): 
-                $tenantName = trim($row['first_name'] . ' ' . $row['middle_name']);
-                if (empty($tenantName) || $tenantName == ' ') {
-                  $tenantName = 'Tenant ' . $row['tenant'];
-                }
-              ?>
+      <div class="tab-content">
+        <!-- All Tenants Tab -->
+        <div class="tab-pane fade show active" id="pane-all">
+          <div class="table-responsive">
+            <table id="table-all" class="table table-bordered table-striped align-middle">
+              <thead class="table-dark">
                 <tr>
-                  <td><?= htmlspecialchars($tenantName) ?></td>
-                  <td><?= htmlspecialchars($row['unit'] ?? '') ?></td>
-                  <td><?= htmlspecialchars($row['invoice_number']) ?></td>
-                  <td><?= htmlspecialchars($row['description']) ?></td>
-                  <td><?= date('Y-m-d', strtotime($row['created_at'])) ?></td>
-                  <td class="text-end"><?= number_format($row['total'], 2) ?></td>
-                  <td class="text-end"><?= daysOverdue($row['created_at']) ?></td>
+                  <th>Tenant Name</th>
+                  <th class="text-end">0-30 Days</th>
+                  <th class="text-end">31-60 Days</th>
+                  <th class="text-end">61-90 Days</th>
+                  <th class="text-end">90+ Days</th>
+                  <th class="text-end">Total Due</th>
                 </tr>
-              <?php endforeach; ?>
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                <?php foreach ($tenants as $tenantId => $tenantData): 
+                  $tenantTotals = ['0-30'=>0,'31-60'=>0,'61-90'=>0,'90+'=>0,'grand'=>0];
+                  foreach ($tenantData['invoices'] as $inv) {
+                    $days = daysOverdue($inv['created_at']);
+                    if ($days <= 30) $tenantTotals['0-30'] += $inv['total'];
+                    elseif ($days <= 60) $tenantTotals['31-60'] += $inv['total'];
+                    elseif ($days <= 90) $tenantTotals['61-90'] += $inv['total'];
+                    else $tenantTotals['90+'] += $inv['total'];
+                    $tenantTotals['grand'] += $inv['total'];
+                  }
+                ?>
+                <tr class="tenant-row" data-tenant="<?= $tenantId ?>">
+                  <td class="fw-semibold"><?= htmlspecialchars($tenantData['name']) ?></td>
+                  <td class="text-end"><?= number_format($tenantTotals['0-30'], 2) ?></td>
+                  <td class="text-end"><?= number_format($tenantTotals['31-60'], 2) ?></td>
+                  <td class="text-end"><?= number_format($tenantTotals['61-90'], 2) ?></td>
+                  <td class="text-end"><?= number_format($tenantTotals['90+'], 2) ?></td>
+                  <td class="text-end fw-bold"><?= number_format($tenantTotals['grand'], 2) ?></td>
+                </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
-    <?php endforeach; ?>
-  </div>
 
-</div>
+        <!-- Individual bucket tabs -->
+        <?php foreach ($keys as $i => $key): ?>
+          <div class="tab-pane fade" id="pane-<?= $key ?>">
+            <div class="table-responsive">
+              <table id="table-<?= $key ?>" class="table table-bordered table-striped align-middle">
+                <thead class="">
+                  <tr>
+                    <th>Tenant Name</th>
+                    <th>Unit</th>
+                    <th>Invoice #</th>
+                    <th>Description</th>
+                    <th>Invoice Date</th>
+                    <th class="text-end">Amount</th>
+                    <th class="text-end">Days Overdue</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php foreach ($agedBuckets[$key] as $row): 
+                    $tenantName = trim($row['first_name'].' '.$row['middle_name']);
+                    if (empty($tenantName)) $tenantName = 'Tenant '.$row['tenant'];
+                  ?>
+                  <tr>
+                    <td><?= htmlspecialchars($tenantName) ?></td>
+                    <td><?= htmlspecialchars($row['unit'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($row['invoice_number']) ?></td>
+                    <td><?= htmlspecialchars($row['description']) ?></td>
+                    <td><?= date('Y-m-d', strtotime($row['created_at'])) ?></td>
+                    <td class="text-end"><?= number_format($row['total'], 2) ?></td>
+                    <td class="text-end"><?= daysOverdue($row['created_at']) ?></td>
+                  </tr>
+                  <?php endforeach; ?>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        <?php endforeach; ?>
+      </div>
+
+    </div>
+    <!--end::Container-->
+  </div>
+  <!--end::App Content Header-->
+</main>
+<!--end::App Main-->
+
 
 <!-- Tenant Invoices Modal -->
 <div class="modal fade" id="tenantModal" tabindex="-1">
@@ -621,6 +600,8 @@ $(document).ready(function() {
   }
 });
 </script>
+<script src="../../../../landlord/js/adminlte.js"></script>
+
 
 </body>
 <!--end::Body-->

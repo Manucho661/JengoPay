@@ -35,6 +35,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById('availabilityBtn').addEventListener('click', updateAvailabilty);
 
   // get request details
-    document.getElementById('request-provider').addEventListener('click', getProviderDetails);
+  document.getElementById('request-provider').addEventListener('click', getProviderDetails);
 
 });

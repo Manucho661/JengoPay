@@ -87,11 +87,10 @@ echo "\n";
 
 
 
-$buildingsStmt = $pdo->query(
-    "SELECT building_id, building_name FROM buildings ORDER BY building_name"
-);
-$buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
-
+// $buildingsStmt = $pdo->query(
+//     "SELECT building_id, building_name FROM buildings ORDER BY building_name"
+// );
+// $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <?php
@@ -3716,8 +3715,7 @@ function filterFunction() {
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
         crossorigin="anonymous">
     </script>
-    <script src="../../../dist/js/adminlte.js"></script>
-    <!-- links for dataTaable buttons -->
+<script src="../../../../landlord/js/adminlte.js"></script>    <!-- links for dataTaable buttons -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
