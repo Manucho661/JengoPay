@@ -63,32 +63,6 @@
       background-color: #FFC107 !important;
     }
 
-    .app-wrapper {
-      background-color: rgba(128, 128, 128, 0.1);
-    }
-
-
-    .dropdown-menu {
-      min-width: 120px;
-      background-color: #132E45;
-      color: #FFA000 !important;
-    }
-
-    .dropdown-menu li {
-      color: #FFA000 !important;
-    }
-
-
-    #requestNav .nav-link {
-    color: #00192D;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-    border-bottom: 3px solid transparent;
-    transition: border-color 0.2s ease;
-  }
-  #requestNav .nav-link.active {
-    border-bottom-color: #00192D; /* underline highlight */
-  }
   </style>
   </style>
 </head>
@@ -132,9 +106,13 @@
         <div class="container-fluid">
           <!--begin::Row-->
           <div class="row align-items-center mb-3">
-            <div class="col-sm-8">
-              <h3 class="mb-0">🛠 <span class="contact_section_header">Maintenance Requests</span></h3>
+            <div class="col-sm-8 d-flex">
+              <span class="info-box-icon p-2 rounded" style="background-color:#00192D; color:#fff;">
+                <i class="bi bi-tools"></i>
+              </span>
+              <h3 class="mb-0 mx-2">Maintenance Requests</h3>
             </div>
+
             <div class="col-sm-4">
               <ul class="nav justify-content-end border-bottom" id="requestNav">
                 <li class="nav-item">
@@ -230,8 +208,6 @@
           </div>
           <!--begin::Row-->
           <div class="row">
-
-            <h6 class="mb-0 contact_section_header summary mb-2"></i> Requests</h6>
 
             <div class="col-md-12">
               <div class="Table-section bg-white p-2 rounded-2">
