@@ -8,7 +8,7 @@
       <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> 🏠 Property
     </div>
     <div class="submenu">
-      <a href="/Jengopay/landlord/pages/property/reg_form.php" >🏢 Buildings</a>
+      <a href="/Jengopay/landlord/pages/Buildings/Building.php" >🏢 Buildings</a>
       <!-- Add more options later -->
     </div>
   </div>
