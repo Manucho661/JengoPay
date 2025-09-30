@@ -1,4 +1,43 @@
 <?php
+include '../db/connect.php'; // adjust path
+
+try {
+    $sql = "
+        SELECT id AS id, entity_name AS building_name, 'bed_seaters' AS source_table
+        FROM bed_seaters
+        GROUP BY entity_name
+
+        UNION
+
+        SELECT id AS id, entity_name AS building_name, 'single_units' AS source_table
+        FROM single_units
+        GROUP BY entity_name
+
+        UNION
+
+        SELECT id AS id, entity_name AS building_name, 'multi_rooms' AS source_table
+        FROM multi_rooms
+        GROUP BY entity_name
+    ";
+
+    $stmt = $pdo->query($sql);
+    $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+}
+?>
+<?php
+include '../db/connect.php';
+
+try {
+    $stmt = $pdo->query("SELECT id, building_name, building_type FROM buildings ORDER BY building_name ASC");
+    $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+}
+?>
+<?php
 include '../db/connect.php'; // Make sure $pdo is available
 
 // === HANDLE NEW THREAD SUBMISSION (POST) ===
@@ -70,17 +109,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['title']) && !empty($
 }
 
 // === FETCH BUILDINGS ===
-$stmt = $pdo->prepare("SELECT building_id, building_name FROM buildings");
+$stmt = $pdo->prepare("SELECT id, building_name FROM buildings");
 $stmt->execute();
 $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // === FETCH UNITS IF BUILDING SELECTED ===
-$building_id = $_POST['building_id'] ?? null;
+$id = $_POST['id'] ?? null;
 $units = [];
 
-if ($building_id) {
-    $stmt = $pdo->prepare("SELECT unit_id, unit_number FROM units WHERE building_id = ?");
-    $stmt->execute([$building_id]);
+if ($id) {
+    $stmt = $pdo->prepare("SELECT unit_id, unit_number FROM units WHERE id = ?");
+    $stmt->execute([$id]);
     $units = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
@@ -580,8 +619,6 @@ display: flex;
 </style>
 </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
-
-
   <div id="welcomeNotification" class="alert-box">
   <span>👋 Welcome! Glad Your Here!</span>
   <button onclick="dismissWelcome()" class="close-btn">&times;</button>
@@ -863,14 +900,14 @@ display: flex;
                               <div class="row">
                                   <div class="col-md-8 col-12">
                                   <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; margin-bottom: 1rem;">
-                                      <select id="buildingSelector"  name="building_id" class="categoryFilter form-select">
-                                      <option value="">-- Select Building --</option>
-                                      <?php foreach ($buildings as $b): ?>
-                                        <option value="<?= htmlspecialchars($b['building_id']) ?>">
-                                          <?= htmlspecialchars($b['building_name']) ?>
-                                        </option>
-                                      <?php endforeach; ?>
-                                      </select>
+                                  <select id="buildingSelector" name="id" class="categoryFilter form-select">
+                                  <option value="">-- Select Building --</option>
+                                  <?php foreach ($buildings as $b): ?>
+                                    <option value="<?= htmlspecialchars($b['id']) ?>">
+                                      <?= htmlspecialchars($b['building_name']) ?> (<?= htmlspecialchars($b['building_type']) ?>)
+                                    </option>
+                                  <?php endforeach; ?>
+                                </select>
                                       <input type="text" class="search-input" id="searchInput" placeholder="Search Tenant...">
                                   </div>
                                   </div>
@@ -1179,7 +1216,7 @@ display: flex;
                               <select name="building_name"  id="recipient" onchange="toggleShrink()" class="recipient" >
                               <option value="">-- Select Building --</option>
                               <?php foreach ($buildings as $b): ?>
-                              <option value="<?= htmlspecialchars($b['building_id']) ?>">
+                              <option value="<?= htmlspecialchars($b['id']) ?>">
                               <?= htmlspecialchars($b['building_name']) ?>
                               </option>
                               <?php endforeach;?>
@@ -1415,7 +1452,7 @@ document.getElementById('buildingSelector').addEventListener('change', function 
 
     // ✅ Debug: log what’s being sent
     console.log("Sending buildingId:", buildingId);
-    fetch('../communications/actions/get_conversations.php?building_id=' + buildingId)
+    fetch('../communications/actions/get_conversations.php?id=' + buildingId)
         .then(response => response.text()) // expect HTML fragment
         .then(html => {
             document.getElementById('conversationTableBody').innerHTML = html;
@@ -1799,11 +1836,11 @@ function getMessage(messageId) {
 </script>
 
 
-<script>
+<!-- <script>
 document.getElementById('recipient').addEventListener('change', function () {
     var buildingId = this.value;
 
-    // Clear unit dropdown
+    // Grab unit dropdown
     var unitSelect = document.getElementById('unit-select');
     unitSelect.innerHTML = '<option value="">-- Loading Units... --</option>';
 
@@ -1813,16 +1850,24 @@ document.getElementById('recipient').addEventListener('change', function () {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: 'building_id=' + encodeURIComponent(buildingId)
+            body: 'id=' + encodeURIComponent(buildingId)
         })
         .then(response => response.json())
         .then(data => {
-            unitSelect.innerHTML = ''; // Clear and refill
+            unitSelect.innerHTML = ''; // Reset
+
             if (data.length > 0) {
+                // Default option
+                var defaultOpt = document.createElement('option');
+                defaultOpt.value = "";
+                defaultOpt.textContent = "-- Select Unit --";
+                unitSelect.appendChild(defaultOpt);
+
+                // Add units
                 data.forEach(function (unit) {
                     var option = document.createElement('option');
                     option.value = unit.unit_id;
-                    option.textContent = unit.unit_number;
+                    option.textContent = unit.unit_number + " (" + unit.unit_type + ")";
                     unitSelect.appendChild(option);
                 });
             } else {
@@ -1837,7 +1882,7 @@ document.getElementById('recipient').addEventListener('change', function () {
         unitSelect.innerHTML = '<option value="">-- Select Unit --</option>';
     }
 });
-</script>
+</script> -->
 
 
 <script>
@@ -2134,6 +2179,25 @@ window.addEventListener("error", function(e) {
 });
 </script>
 
+
+<script>
+  document.getElementById('buildingSelector').addEventListener('change', function() {
+    let buildingId = this.value;
+    if (buildingId) {
+        fetch('get_units.php?id=' + buildingId)
+            .then(res => res.json())
+            .then(units => {
+                let output = '<h4>Units in this Building</h4><ul>';
+                units.forEach(u => {
+                    output += `<li>${u.entity_name} - ${u.unit_type} - Rent: ${u.monthly_rent} (${u.occupancy_status})</li>`;
+                });
+                output += '</ul>';
+                document.getElementById('buildingDetails').innerHTML = output;
+            });
+    }
+});
+
+</script>
 <script src="../../../../landlord/js/adminlte.js"></script>
 <!--end::Script-->
   </body>
