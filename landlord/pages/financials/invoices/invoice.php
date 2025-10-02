@@ -52,23 +52,23 @@ try {
 $buildings = [];
 
 // --- DEBUG START ---
-echo "\n";
-try {
-    if (!isset($pdo) || !$pdo instanceof PDO) {
-        echo "\n";
-        die("Error: Database connection not established."); // Or handle more gracefully
-    }
-    $stmt = $pdo->query("SELECT building_id, building_name FROM buildings ORDER BY building_name ASC");
-    $buildings = $stmt->fetchAll();
-    echo "\n";
-    echo "\n";
-} catch (PDOException $e) {
-    error_log("Database error fetching buildings: " . $e->getMessage());
-    echo "\n"; // Show error in source for debug
-    echo "<p>Error loading properties. Please try again later.</p>";
-    $buildings = [];
-}
-echo "\n";
+// echo "\n";
+// try {
+//     if (!isset($pdo) || !$pdo instanceof PDO) {
+//         echo "\n";
+//         die("Error: Database connection not established."); // Or handle more gracefully
+//     }
+//     $stmt = $pdo->query("SELECT building_id, building_name FROM buildings ORDER BY building_name ASC");
+//     $buildings = $stmt->fetchAll();
+//     echo "\n";
+//     echo "\n";
+// } catch (PDOException $e) {
+//     error_log("Database error fetching buildings: " . $e->getMessage());
+//     echo "\n"; // Show error in source for debug
+//     echo "<p>Error loading properties. Please try again later.</p>";
+//     $buildings = [];
+// }
+// echo "\n";
 // --- DEBUG END ---
 
 // $stmt = $pdo->query("
@@ -1678,75 +1678,47 @@ header {
                         <!-- Customer Section -->
                         <div class="form-section">
                             <h3 class="section-title">Tenant Details</h3>
-                            <form  id="myForm" method="POST" action="/Jengopay/landlord/pages/financials/invoices/action/submit_invoice.php" enctype="multipart/form-data">
-                                <div class="form-row">
+                            <form id="myForm" method="POST" action="/Jengopay/landlord/pages/financials/invoices/action/submit_invoice.php" enctype="multipart/form-data">
+    <div class="form-row">
 
-                                    <!-- Existing Invoice # input -->
-                                    <div class="form-group">
-                                        <label for="invoice-number">Invoice #</label>
-                                        <input type="text"
-                                            id="invoice-number"
-                                            value="<?= $invoiceNumber ?>"
-                                            class="form-control"
-                                            readonly>
-                                        <input type="hidden"
-                                            name="invoice_number"
-                                            value="<?= $invoiceNumber ?>">
-                                    </div>
+        <!-- Invoice # -->
+        <div class="form-group">
+            <label for="invoice-number">Invoice #</label>
+            <input type="text" id="invoice-number" value="<?= $invoiceNumber ?>" class="form-control" readonly>
+            <input type="hidden" name="invoice_number" value="<?= $invoiceNumber ?>">
+        </div>
 
-
-
-                                    <!-- ▲ NEW: Building selector -->
-                                    <div class="form-group">
-                                        <label for="building">Building</label>
-                                        <select id="building" name="building_id" class="form-control" required>
-                                            <option value="">Select a Building</option>
-                                            <?php foreach ($buildings as $b): ?>
-                                                <option value="<?= $b['building_id'] ?>">
-                                                    <?= htmlspecialchars($b['building_name']) ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
+       
+       <!-- Tenant (readonly text + hidden id) -->
+<div class="form-group">
+    <label for="tenant_name">Tenant</label>
+    <input type="text" id="tenant_name" class="form-control" value="<?= htmlspecialchars($tenant['tenant_name'] ?? '') ?>" readonly>
+    <input type="hidden" id="tenant_id" name="tenant_id" value="<?= $tenant['tenant_id'] ?? '' ?>">
+</div>
 
 
-                                    <!-- ▼ Tenant selector (will be filled by JS) -->
-                                    <div class="form-group">
-                                        <label for="customer">Tenant</label>
-                                        <select id="customer"
-                                            name="tenant"
-                                            class="form-control"
-                                            required
-                                            disabled>
-                                            <option value="">Select a Tenant</option>
-                                        </select>
-                                    </div>
 
-                                </div>
+        <!-- Read-only Rent field -->
+        <div class="form-group">
+            <label for="rent">Monthly Rent</label>
+            <input type="text" id="rent" name="rent_amount" class="form-control" readonly>
+        </div>
+    </div>
 
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="invoice-date">Invoice Date</label>
-                                        <input type="date"
-                                            id="invoice-date"
-                                            name="invoice_date"
-                                            class="form-control"
-                                            required>
-                                    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="invoice-date">Invoice Date</label>
+            <input type="date" id="invoice-date" name="invoice_date" class="form-control" required>
+        </div>
 
-                                    <div class="form-group">
-                                        <label for="due-date">Due Date</label>
-                                        <input type="date"
-                                            id="due-date"
-                                            name="due_date"
-                                            class="form-control"
-                                            required>
-                                    </div>
-                                </div>
+        <div class="form-group">
+            <label for="due-date">Due Date</label>
+            <input type="date" id="due-date" name="due_date" class="form-control" required>
+        </div>
+    </div>
 
-
-                                <!-- Items Section -->
-                                <div class="form-section">
+    <!-- Items Section -->
+    <div class="form-section">
         <h3 class="section-title">Items</h3>
         <table class="items-table" id="itemsTable">
             <thead>
@@ -1761,21 +1733,20 @@ header {
                 </tr>
             </thead>
             <tbody id="itemsBody">
-                <!-- One initial row -->
                 <tr>
-                <td>
-                <select name="account_item[]" class="select-account searchable-select" required>
-            <option value="" disabled selected>Select Account Item</option>
-            <?php foreach ($accountItems as $item): ?>
-              <option value="<?= htmlspecialchars($item['account_code']) ?>">
-                <?= htmlspecialchars($item['account_name']) ?>
-              </option>
-            <?php endforeach; ?>
-          </select>
-            </td>
-            <td style="min-width: 200px;">
-          <textarea name="description[]" class="form-control" placeholder="Description" rows="1" required></textarea>
-        </td>
+                    <td>
+                        <select name="account_item[]" class="select-account searchable-select" required>
+                            <option value="" disabled selected>Select Account Item</option>
+                            <?php foreach ($accountItems as $item): ?>
+                                <option value="<?= htmlspecialchars($item['account_code']) ?>">
+                                    <?= htmlspecialchars($item['account_name']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </td>
+                    <td style="min-width: 200px;">
+                        <textarea name="description[]" class="form-control" placeholder="Description" rows="1" required></textarea>
+                    </td>
                     <td><input type="number" name="quantity[]" class="form-control quantity" required></td>
                     <td><input type="number" name="unit_price[]" class="form-control unit-price" required></td>
                     <td>
@@ -1797,64 +1768,42 @@ header {
         <button type="button" class="btn btn-success add-btn" id="addMoreBtn" style="background-color: #00192D; color: #FFC107;">
             <i class="fa fa-plus"></i> ADD MORE
         </button>
-                                </div>
+    </div>
 
-                                <!-- Notes & Terms -->
-                                <div class="form-section">
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label for="notes">Notes(Optional)</label>
-                                            <textarea id="notes" name="notes" class="form-control" rows="3" placeholder="Thank you for your business!"></textarea>
-                                        </div>
-                                        <!-- <div class="form-group">
-                                <label for="terms">Terms & Conditions</label>
-                                <textarea id="terms"  name="terms_conditions" class="form-control" rows="3" placeholder="Payment due within 15 days"></textarea>
-                            </div> -->
-                                    </div>
-                                </div>
+    <!-- Notes & Terms -->
+    <div class="form-section">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="notes">Notes (Optional)</label>
+                <textarea id="notes" name="notes" class="form-control" rows="3" placeholder="Thank you for your business!"></textarea>
+            </div>
+        </div>
+    </div>
 
+    <!-- Form Actions -->
+    <div class="form-actions">
+        <div class="action-left">
+            <div class="form-section">
+                <h3 class="section-title">Attachments</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="file" id="fileInput" name="attachment[]" multiple style="display: none;">
+                        <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('fileInput').click()" style="background-color: #00192D; color: #FFC107;">
+                            <i class="fas fa-paperclip"></i> Attach Files
+                        </button>
+                        <div id="fileList" class="mt-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="action-right" style="display: flex; justify-content: flex-end;">
+            <button type="submit" style="background-color: #00192D; color: #FFC107; padding: 8px 16px; border: none; border-radius: 4px;">
+                <i class="fas fa-share-square"></i> Save & Send
+            </button>
+        </div>
+    </div>
+</form>
 
-                                <!-- Form Actions -->
-                                <div class="form-actions">
-                                    <div class="action-left">
-                                   <!-- File Upload Section -->
-                              <div class="form-section">
-                                  <h3 class="section-title">Attachments</h3>
-                                  <div class="form-row">
-                                      <div class="form-group">
-                                          <!-- Hidden file input -->
-                                          <input type="file" id="fileInput" name="attachment[]" multiple style="display: none;">
-
-                                          <!-- Button to trigger file input -->
-                                          <button type="button"  class="btn btn-outline-secondary" onclick="document.getElementById('fileInput').click()"  style="background-color: #00192D; color: #FFC107;">
-                                              <i class="fas fa-paperclip"></i> Attach Files
-                                          </button>
-
-                                          <!-- Display selected files -->
-                                          <div id="fileList" class="mt-2"></div>
-                                      </div>
-                                  </div>
-</div>
-                                    </div>
-                                </div>
-
-                                <div class="action-right" style="display: flex; justify-content: flex-end;">
-    <button type="submit" style="background-color: #00192D; color: #FFC107; padding: 8px 16px; border: none; border-radius: 4px;">
-    <i class="fas fa-share-square"></i> Save & Send
-    </button>
-</div>
-
-                                    <!-- Add this hidden file input if you want actual file attachment -->
-<!-- <input type="file" id="fileInput" style="display: none;"> -->
-                                    <!-- <div class="action-right"> -->
-                                        <!-- <button type="submit" style="background-color: #00192D; color: #FFC107; padding: 8px 16px; border: none; border-radius: 4px;">
-                                            <i class="fas fa-envelope"></i>
-                                            Save&Send
-                                        </button> -->
-                                    <!-- </div> -->
-
-
-                            </form>
                         </div>
                     </div>
                 </div>
@@ -2009,6 +1958,46 @@ header {
 
 
  <!-- inline js -->
+
+
+ <script>
+document.getElementById('tenant').addEventListener('change', function () {
+    var tenantId = this.value;
+
+    if (tenantId) {
+        fetch('/Jengopay/landlord/pages/financials/invoices/action/fetch_rent.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'tenant_id=' + encodeURIComponent(tenantId)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Autofill Unit Price with rent
+                let unitPriceInput = document.querySelector('#itemsBody .unit-price');
+                let qtyInput = document.querySelector('#itemsBody .quantity');
+                let totalInput = document.querySelector('#itemsBody .total');
+                let descriptionInput = document.querySelector('#itemsBody textarea');
+
+                qtyInput.value = 1; // Rent is usually 1 month
+                unitPriceInput.value = data.rent_amount;
+                descriptionInput.value = "Monthly Rent for " + data.unit_number;
+
+                // Calculate total
+                totalInput.value = (1 * parseFloat(data.rent_amount)).toFixed(2);
+            } else {
+                alert("No rent details found for this tenant.");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+    }
+});
+</script>
+
 
  <script>
 document.addEventListener("DOMContentLoaded", function() {

@@ -904,7 +904,7 @@ display: flex;
                                   <option value="">-- Select Building --</option>
                                   <?php foreach ($buildings as $b): ?>
                                     <option value="<?= htmlspecialchars($b['id']) ?>">
-                                      <?= htmlspecialchars($b['building_name']) ?> (<?= htmlspecialchars($b['building_type']) ?>)
+                                      <?= htmlspecialchars($b['building_name']) ?> 
                                     </option>
                                   <?php endforeach; ?>
                                 </select>
@@ -1222,13 +1222,12 @@ display: flex;
                               <?php endforeach;?>
                               </select>
                               </div>
-                            <div id="field-group-second" class="field-group second" style="display:block">
+                            <!-- <div id="field-group-second" class="field-group second" style="display:block">
                             <label for="recipient-units">Unit</label>
                             <select name="unit_id" id="unit-select">
                             <option value="">-- Select Unit --</option>
                             </select>
-
-                          </div>
+                          </div> -->
 
 
 

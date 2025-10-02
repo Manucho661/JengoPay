@@ -1,3 +1,50 @@
+<?php 
+include '../../db/connect.php';
+
+// Build filters
+$where = [];
+$params = [];
+
+// Date range
+if (!empty($_GET['from_date']) && !empty($_GET['to_date'])) {
+    $where[] = "jl.created_at BETWEEN :from AND :to";
+    $params[':from'] = $_GET['from_date'];
+    $params[':to']   = $_GET['to_date'];
+}
+
+// Account filter
+if (!empty($_GET['account_id'])) {
+    $where[] = "jl.account_id = :account_id";
+    $params[':account_id'] = $_GET['account_id'];
+}
+
+$whereSql = $where ? "WHERE " . implode(" AND ", $where) : "";
+
+// Fetch ALL accounts from chart_of_accounts, even those with no transactions
+$sql = "
+    SELECT 
+        a.account_code,
+        a.account_name,
+        a.account_type,
+        COALESCE(SUM(jl.debit), 0) AS total_debit,
+        COALESCE(SUM(jl.credit), 0) AS total_credit
+    FROM chart_of_accounts a
+    LEFT JOIN journal_lines jl ON a.account_code = jl.account_id 
+    " . ($whereSql ? "AND " . str_replace("WHERE", "", $whereSql) : "") . "
+    GROUP BY a.account_code, a.account_name, a.account_type
+    HAVING COALESCE(SUM(jl.debit), 0) != 0 OR COALESCE(SUM(jl.credit), 0) != 0
+    ORDER BY a.account_code
+";
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$totalDebit = 0;
+$totalCredit = 0;
+
+// Fetch account list for dropdown
+$accounts = $pdo->query("SELECT account_code, account_name FROM chart_of_accounts ORDER BY account_name")->fetchAll(PDO::FETCH_ASSOC);
+?>
 
 <?php
 include '../../db/connect.php';
@@ -373,6 +420,19 @@ $runningBalance = 0;
           <label for="to_date" class="form-label">To Date</label>
           <input type="date" id="to_date" name="to_date" value="<?= htmlspecialchars($to_date) ?>" class="form-control">
       </div>
+
+      <div class="col-md-4">
+                      <label class="form-label">Account</label>
+                      <select name="account_id" class="form-select">
+                        <option value="">-- All Accounts --</option>
+                        <?php foreach ($accounts as $acc): ?>
+                          <option value="<?= $acc['account_code'] ?>" <?= (!empty($_GET['account_id']) && $_GET['account_id'] == $acc['account_code']) ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($acc['account_name']) ?>
+                          </option>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
+
       <div class="col-md-2 d-flex align-items-end">
           <button type="submit" class="btn w-100" style= "background-color:#FFC107; color:#00192D;">Filter</button>
       </div>
@@ -427,6 +487,102 @@ $runningBalance = 0;
   <!-- more options -->
   </script>
 
+  <script>
+$('#trialBalance tbody').on('click', 'tr[data-account-id]', function () {
+  var accountId = $(this).data('account-id');
+  var accountName = $(this).find('td:first .fw-bold').text();
+  if (!accountId) return;
+
+  $('#modalAccountName').text(accountName);
+  $('#ledgerModal .modal-body').html('<div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x"></i><br>Loading ledger details...</div>');
+  $('#ledgerModal').modal('show');
+
+  // Fetch ledger data from backend
+  $.ajax({
+    url: '/Jengopay/landlord/pages/financials/generalledger/get_ledger.php',
+    type: 'GET',
+    data: { account_id: accountId },
+    success: function (response) {
+      let data;
+      try {
+        data = JSON.parse(response);
+      } catch (e) {
+        $('#ledgerModal .modal-body').html('<div class="alert alert-danger">Failed to load ledger data.</div>');
+        return;
+      }
+
+      if (data.error) {
+        $('#ledgerModal .modal-body').html('<div class="alert alert-warning">' + data.error + '</div>');
+        return;
+      }
+
+      if (data.length === 0) {
+        $('#ledgerModal .modal-body').html('<div class="alert alert-info">No transactions found for this account.</div>');
+        return;
+      }
+
+      // Build table
+      let tableHtml = `
+        <table class="table table-striped table-bordered">
+          <thead class="table-dark">
+            <tr>
+              <th>Date</th>
+              <th>Reference</th>
+              <th>Description</th>
+              <th class="text-end">Debit</th>
+              <th class="text-end">Credit</th>
+              <th class="text-end">Running Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      let runningBalance = 0;
+      data.forEach(row => {
+        runningBalance += parseFloat(row.debit) - parseFloat(row.credit);
+        tableHtml += `
+          <tr>
+            <td>${row.entry_date || '-'}</td>
+            <td>${row.reference || '-'}</td>
+            <td>${row.description || '-'}</td>
+            <td class="text-end">${parseFloat(row.debit).toLocaleString()}</td>
+            <td class="text-end">${parseFloat(row.credit).toLocaleString()}</td>
+            <td class="text-end">${runningBalance.toLocaleString()}</td>
+          </tr>
+        `;
+      });
+
+      tableHtml += `</tbody></table>`;
+      $('#ledgerModal .modal-body').html(tableHtml);
+    },
+    error: function () {
+      $('#ledgerModal .modal-body').html('<div class="alert alert-danger">Error loading ledger data.</div>');
+    }
+  });
+});
+
+
+  function exportToExcel() {
+    const table = document.getElementById('trialBalance');
+    const wb = XLSX.utils.table_to_book(table, {sheet: "Trial Balance"});
+    XLSX.writeFile(wb, 'Trial_Balance_' + new Date().toISOString().split('T')[0] + '.xlsx');
+  }
+
+  function exportToPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    doc.text('Trial Balance Report', 14, 15);
+    doc.autoTable({
+      html: '#trialBalance',
+      startY: 25,
+      theme: 'grid',
+      headStyles: { fillColor: [52, 58, 64] }
+    });
+    
+    doc.save('Trial_Balance_' + new Date().toISOString().split('T')[0] + '.pdf');
+  }
+  </script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
