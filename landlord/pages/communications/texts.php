@@ -191,7 +191,7 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
     />
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../../../landlord/css/adminlte.css" />
+    <link rel="stylesheet" href="../../../landlord/assets/main.css" />
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
      <link rel="stylesheet" href="texts.css">

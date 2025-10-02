@@ -17,7 +17,7 @@ $sql = "SELECT
               buildings.building_name AS building_name
           FROM tenants
           INNER JOIN users ON tenants.user_id = users.id
-          INNER JOIN buildings ON tenants.building_id = buildings.building_id";
+          INNER JOIN buildings ON tenants.building_id = buildings.id";
 
 $stmt = $pdo->query($sql);
 $tenantsy = $stmt->fetchAll();
@@ -39,7 +39,7 @@ foreach ($tenantsy as $tenant) {
 
 // Fetch building names from the `buildings` table
 try {
-  $stmt = $pdo->query("SELECT DISTINCT building_id, building_name FROM buildings ORDER BY building_name ASC");
+  $stmt = $pdo->query("SELECT DISTINCT id, building_name FROM buildings ORDER BY building_name ASC");
   $buildings = $stmt->fetchAll();
 } catch (PDOException $e) {
   die("Query failed: " . $e->getMessage());
@@ -108,7 +108,7 @@ try {
 
   <!--end::Third Party Plugin(Bootstrap Icons)-->
   <!--begin::Required Plugin(AdminLTE)-->
-  <link rel="stylesheet" href="../../css/adminlte.css" />
+  <link rel="stylesheet" href="../../assets/main.css" />
   <!-- <link rel="stylesheet" href="text.css" /> -->
   <!--end::Required Plugin(AdminLTE)-->
   <!-- apexcharts -->
@@ -1047,73 +1047,6 @@ try {
       }
     });
   </script>
-
-
-  <!-- <script>
-  <script>
-$(document).ready(function() {
-    // When building or unit type changes
-    $('#building_name, #unit_type').change(function() {
-        updateUnitDropdown();
-    });
-
-    // When unit number input changes
-    $('#unit_number').on('input', function() {
-        updateUnitDropdown();
-    });
-
-    function updateUnitDropdown() {
-        var buildingId = $('#building_name').val();
-        var unitType = $('#unit_type').val();
-        var unitNumber = $('#unit_number').val();
-
-        // Only proceed if both building and type are selected
-        if (!buildingId || !unitType) {
-            $('#unit_name').empty().append('<option value="">-- Select Building and Unit Type First --</option>');
-            return;
-        }
-
-        $.ajax({
-            url: 'fetch_units.php',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                building_id: buildingId,
-                unit_type: unitType,
-                unit_number: unitNumber
-            },
-            success: function(response) {
-                populateUnitDropdown(response);
-            },
-            error: function(xhr, status, error) {
-                console.error("Error fetching units:", error);
-                $('#unit_name').empty().append('<option value="">Error loading units</option>');
-            }
-        });
-    }
-
-    function populateUnitDropdown(units) {
-        var $dropdown = $('#unit_name');
-        $dropdown.empty().append('<option value="">-- Select Unit --</option>');
-
-        if (units && units.length > 0) {
-            $.each(units, function(index, unit) {
-                $dropdown.append(
-                    $('<option>', {
-                        value: unit.unit_id,
-                        text: unit.unit_number,
-                        'data-building': unit.building_id,
-                        'data-type': unit.unit_type
-                    })
-                );
-            });
-        } else {
-            $dropdown.append('<option value="">No units found</option>');
-        }
-    }
-});
-</script> -->
-
 
   <script>
     $(document).ready(function() {

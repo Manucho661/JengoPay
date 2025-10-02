@@ -15,6 +15,7 @@ function formatAccounting($amount)
 <!doctype html>
 <html lang="en">
 <!--begin::Head-->
+
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>AdminLTE | Dashboard v2</title>
@@ -118,6 +119,42 @@ function formatAccounting($amount)
 
   td {
     font-size: 14px;
+  }
+
+  .total-row {
+    font-weight: bold;
+    background-color: #f2f2f2;
+    /* light gray */
+    font-size: 1.1em;
+  }
+
+  .total-row td {
+    border-bottom: 2px solid #000;
+    /* top border to separate total */
+  }
+
+  .main-section-header {
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .section-header {
+    color: green !important;
+    font-size: 14px;
+    font-weight: bold;
+  }
+.main-row td:first-child {
+  font-weight: 600;
+  font-size: 14px;
+  color: #002B5B; /* navy */
+  margin-left: 10px;
+}
+
+  .main-row[aria-expanded="true"] {
+    font-weight: bold;
+  }
+  .asset-name-cell:focus{
+    background-color: #00192D !important;
   }
 </style>
 
@@ -423,24 +460,6 @@ function formatAccounting($amount)
                     </thead>
                     <tbody>
                       <!-- Assets Section -->
-                      <tr class="fw-bold">
-                        <td id="assets" class="main-category">Assets</td>
-                        <td></td>
-                      </tr>
-                      <?php
-                      echo '<tr><td class="current-assets" style="color:green;">Non-Current Assets:</td><td></td></tr>';
-                      foreach ($nonCurrentAssets as $item) {
-                        echo '<tr class="sub-current-assets">';
-                        echo '<td class="sub-category">' . htmlspecialchars($item['name']) . '</td>';
-                        echo '<td>' . number_format($item['amount'], 2) . '</td>';
-                        echo '</tr>';
-                      }
-                      echo '<tr class="sub-current-assets total fw-bold">';
-                      echo '<td class="sub-category">Total Non-Current Assets</td>';
-                      echo '<td>' . number_format($totalNonCurrent, 2) . '</td>';
-                      echo '</tr>';
-
-                      ?>
                       <tr>
                         <td class="current-assets" style="color:green;">Current Assets:</td>
                         <td></td>

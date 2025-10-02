@@ -140,33 +140,11 @@
       <div class="app-content">
         <!--begin::Container-->
         <div class="container-fluid">
-          <div class="row g-3 mb-4">
-            <p class="text-muted">Manage maintenance requests for tenants</p>
-            <div class="col-md-3">
-              <select class="form-select filter-shadow">
-                <option selected>Filter by Building</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <select class="form-select filter-shadow ">
-                <option selected>Filter by Tenant</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <select class="form-select filter-shadow">
-                <option selected>Filter Status</option>
-                <option>Pending</option>
-                <option>Completed</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <input type="date" class="form-control filter-shadow ">
-            </div>
-          </div>
           <!-- begin row -->
-
           <div class="row">
+            <p class="text-muted">Manage maintenance requests for tenants</p>
             <div class="col-12 col-sm-6 col-md-3">
+              
               <div class="summary-card mb-2">
                 <div class="summary-card_icon"> <i class="fas fa-clipboard-check"></i></div>
                 <div>
@@ -206,9 +184,32 @@
               </div>
             </div>
           </div>
+          <hr>
           <!--begin::Row-->
+          <div class="row g-3 mb-4">
+            <div class="col-md-3">
+              <select class="form-select filter-shadow">
+                <option selected>Filter by Building</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <select class="form-select filter-shadow ">
+                <option selected>Filter by Tenant</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <select class="form-select filter-shadow">
+                <option selected>Filter Status</option>
+                <option>Pending</option>
+                <option>Completed</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <input type="date" class="form-control filter-shadow ">
+            </div>
+          </div>
+          <!-- begin row -->
           <div class="row">
-
             <div class="col-md-12">
               <div class="Table-section bg-white p-2 rounded-2">
                 <div class="table-section-header">
@@ -242,434 +243,6 @@
                 </div>
               </div>
             </div>
-            <!-- Record Payment Modal -->
-            <div class="modal fade" id="recordPaymentModal" tabindex="-1" aria-labelledby="recordPaymentModalLabel" aria-hidden="true">
-              <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content rounded-2 shadow-sm">
-                  <div class="modal-header bg-primary text-white rounded-top" style="background-color: #00192D !important;">
-                    <h5 class="modal-title" id="recordPaymentModalLabel" style="color:#FFA000 !important; margin-left:5px;" id="inspectionModalLabel">
-                      <i class="fas fa-money-check-alt me-2"></i> Record Payment
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="alert mb-4" style="background-color: #FFF3CD; color: #856404; border: 1px solid #FFE8A1;">
-                    <i class="fas fa-exclamation-circle mr-2"></i> Please fill out all fields carefully to avoid delays.
-                  </div>
-                  <form id="recordPaymentForm" onsubmit="addRequestPayment(event)" enctype="multipart/form-data">
-                    <div class="modal-body">
-                      <div class="row g-3">
-
-                        <!-- Amount Paid -->
-                        <div class="col-md-6 form-floating">
-                          <input type="number" class="form-control" id="amountPaid" name="amountPaid" placeholder="Amount Paid" required>
-                          <label for="amountPaid"><i class="fas fa-coins me-2" style="color:#FFA000 ! important"></i>Amount Paid</label>
-                        </div>
-
-                        <!-- Payment Method -->
-                        <div class="col-md-6 form-floating">
-                          <select class="form-select" name="paymentMethod" id="recordPaymentMethod" required>
-                            <option value="" selected disabled>Select Method</option>
-                            <option>Cash</option>
-                            <option>M-Pesa</option>
-                            <option>Bank Transfer</option>
-                            <option>Cheque</option>
-                          </select>
-                          <label for="paymentMethod"><i class="fas fa-wallet me-2" style="color:#FFA000 ! important"></i>Payment Method</label>
-                        </div>
-
-                        <!-- Date Paid -->
-                        <div class="col-md-6 form-floating">
-                          <input type="date" class="form-control" id="datePaid" name="datePaid" placeholder="Date Paid" required>
-                          <label for="datePaid"><i class="fas fa-calendar-day me-2" style="color:#FFA000 ! important"></i>Date Paid</label>
-                        </div>
-
-                        <!-- Reference Number -->
-                        <div class="col-md-6 form-floating">
-                          <input type="text" class="form-control" id="referenceNumber" name="referenceNumber" placeholder="Reference Number" required>
-                          <label for="referenceNumber"><i class="fas fa-hashtag me-2" style="color:#FFA000 ! important"></i>Reference Number</label>
-                        </div>
-
-                        <!-- Notes -->
-                        <div class="col-12 form-floating">
-                          <textarea class="form-control" id="paymentNotes" name="paymentNotes" placeholder="Notes" style="height: 100px;"></textarea>
-                          <label for="paymentNotes"><i class="fas fa-comment-dots me-2" style="color:#FFA000 ! important"></i>Payment Notes</label>
-                        </div>
-
-                        <!-- Upload Receipt (Optional) -->
-                        <div class="col-12">
-                          <label for="uploadReceipt" class="form-label fw-bold" style="color:#FFA000 ! important"><i class="fas fa-upload me-2"></i>Upload Receipt (optional)</label>
-                          <input class="form-control" type="file" name="uploadReceipt" id="uploadReceipt" accept="image/*,application/pdf">
-                        </div>
-                      </div>
-                    </div>
-                    <div class="modal-footer">
-                      <input type="hidden" name="request_id" id="modal_request_id">
-                      <input type="hidden" name="form_type" value="addPaymentForm">
-                      <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                      <button type="submit" class="btn" style="background-color:#00192D; color:#FFA000;"><i class="fas fa-save me-1"></i> Save Payment</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-            <!-- View request Modal -->
-            <div class="modal fade" id="maintenanceRequestModal" tabindex="-1" aria-labelledby="maintenanceRequestModalLabel" aria-hidden="true">
-              <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content rounded-2 shadow">
-
-                  <div class="modal-header bg-dark text-white rounded-top-2">
-                    <h5 class="modal-title" id="maintenanceRequestModalLabel" style="color: #FFA000;">🛠 Maintenance Request Details</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-
-                  <div class="modal-body p-4">
-                    <!-- 📋 Info Table -->
-                    <div class="row g-3">
-                      <div class="col-md-6">
-                        <div><strong>Request ID:</strong></div>
-                        <div id="request-id" style="color:rgb(0 28 63 / 60%); font-weight:500;">--</div>
-                      </div>
-                      <div class="col-md-6">
-                        <div><strong>Request Date:</strong></div>
-                        <div id="request-date" style="color:rgb(0 28 63 / 60%); font-weight:500;">--</div>
-                      </div>
-                      <div class="col-md-6">
-                        <div><strong>Property:</strong></div>
-                        <div id="property-name" style="color:rgb(0 28 63 / 60%); font-weight:500;">--</div>
-                      </div>
-                      <div class="col-md-6">
-                        <div><strong>Unit:</strong></div>
-                        <div id="unit-number" style="color:rgb(0 28 63 / 60%); font-weight:500;">--</div>
-                      </div>
-                      <div class="col-md-6">
-                        <div><strong>Category:</strong></div>
-                        <div id="request-category" style="color:rgb(0 28 63 / 60%); font-weight:500;">--</div>
-                      </div>
-
-                      <div class="col-md-6">
-                        <div><strong>Status:</strong></div>
-                        <div class="bg-info d-flex text-dark px-1 rounded-2" style="width: fit-content;">
-                          <div>✅</div>
-                          <div id="request-status" class="badge  ">--</div>
-                        </div>
-                      </div>
-
-                      <div class="col-md-6">
-                        <div><strong>Payment Status:</strong></div>
-                        <div class="badge payment-status px-3 py-1 rounded-1 d-flex" style="width:fit-content; vertical-align:middle;">
-                          <div style="vertical-align:middle;">✅</div>
-                          <button id="payment-status" style="border:none;" onclick="makePayment()"></button>
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div><strong>Description:</strong></div>
-                        <div id="request-description" style="color:rgb(0 28 63 / 60%); font-weight:500;">--</div>
-                      </div>
-                      <div class="col-md-6">
-                        <div><strong>Photo:</strong></div>
-                        <div class="mb-4">
-                          <img id="request-imag" src="uploads/1750247840_Tenants.png" alt="Maintenance Picture" class="img-fluid rounded-3 shadow-sm" style="max-height: 250px; object-fit: cover;">
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div><strong>BIDS:</strong></div>
-                        <button class="btn btn-dark showProposal text-white p-1" onclick="showProposals()" id="showProposal" data-request-id="123"><i class="fas fa-file-alt me-1"></i> 30 Applications</button>
-                        <!-- <div id="request-description" style="color:rgb(0 28 63 / 60%); font-weight:500;">--</div> -->
-                      </div>
-
-                    </div>
-
-                  </div>
-
-                  <div class="modal-footer bg-light rounded-bottom-4 d-flex justify-content-between align-items-center">
-                    <!-- Date on the far left -->
-                    <div class="text-muted" id="footer-date">18 June 2025</div>
-
-                    <!-- Availability button (default: Unavailable) -->
-                    <!-- Availability Button -->
-                    <button
-                      type="button"
-                      id="modalAvailabilityBtn"
-                      class="btn btn-outline-danger"
-                      data-id=""
-                      data-status="unavailable">
-                      Unavailable
-                    </button>
-
-                    <!-- Close button on the right -->
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- /end view request -->
-
-            <!-- View Payment Modal -->
-            <div class="modal fade" id="viewPaymentModal" tabindex="-1" aria-labelledby="viewPaymentModalLabel" aria-hidden="true">
-              <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content rounded-4 shadow-sm">
-                  <div class="modal-header bg-dark text-white rounded-top">
-                    <h5 class="modal-title" id="viewPaymentModalLabel" style="color:#FFA000 !important;">
-                      <i class="fas fa-eye me-2"></i> View Payment Details
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-
-                  <div class="modal-body">
-                    <div class="row g-3">
-
-                      <div class="col-md-6">
-                        <label><strong>Amount Paid:</strong></label>
-                        <p id="view_amountPaid"></p>
-                      </div>
-
-                      <div class="col-md-6">
-                        <label><strong>Payment Method:</strong></label>
-                        <p id="view_paymentMethod"></p>
-                      </div>
-
-                      <div class="col-md-6">
-                        <label><strong>Date Paid:</strong></label>
-                        <p id="view_datePaid"></p>
-                      </div>
-
-                      <div class="col-md-6">
-                        <label><strong>Service Provider:</strong></label>
-                        <p id="view_serviceProvider"></p>
-                      </div>
-
-                      <div class="col-md-6">
-                        <label><strong>Cheque Number:</strong></label>
-                        <p id="view_chequeNumber"></p>
-                      </div>
-
-                      <div class="col-md-6">
-                        <label><strong>Invoice Number:</strong></label>
-                        <p id="view_invoiceNumber"></p>
-                      </div>
-
-                      <div class="col-12">
-                        <label><strong>Notes:</strong></label>
-                        <p id="view_paymentNotes"></p>
-                      </div>
-
-                      <div class="col-12">
-                        <label><strong>Receipt:</strong></label>
-                        <div id="view_receiptLink"></div>
-                      </div>
-
-                    </div>
-                  </div>
-
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="background-color: #00192D; color:#FFC107;">Close</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- end view payment -->
-            <!-- ASSign Modal -->
-            <div class="modal fade" id="assignProviderModal" tabindex="-1" aria-labelledby="assignProviderModalLabel" aria-hidden="true">
-              <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content shadow-lg border-0 rounded-3">
-
-                  <!-- Modal Header -->
-                  <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="assignProviderModalLabel">
-                      <i class="bi bi-person-check-fill me-2"></i>Assign Service Provider
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-
-                  <!-- Modal Form -->
-                  <form id="assignProviderForm">
-                    <div class="modal-body">
-
-                      <!-- Hidden Fields -->
-                      <input type="hidden" name="maintenance_request_id" id="maintenance_request_id">
-                      <input type="hidden" name="unit_id" id="unit_id">
-
-                      <!-- Service Provider Dropdown -->
-                      <div class="mb-3">
-                        <label for="service_provider_id" class="form-label">
-                          <i class="bi bi-tools me-1"></i>Service Provider
-                        </label>
-                        <select class="form-select" name="service_provider_id" id="service_provider_id" required>
-                          <option selected disabled value="">Select a provider</option>
-                          <!-- Populate dynamically -->
-                          <option value="1">John Doe - Plumbing</option>
-                          <option value="2">Jane Smith - Electrical</option>
-                        </select>
-                      </div>
-
-                      <!-- Scheduled Date -->
-                      <div class="mb-3">
-                        <label for="scheduled_date" class="form-label">
-                          <i class="bi bi-calendar-event me-1"></i>Scheduled Date
-                        </label>
-                        <input type="date" class="form-control" name="scheduled_date" id="scheduled_date">
-                      </div>
-
-                      <!-- Notes / Instructions -->
-                      <div class="mb-3">
-                        <label for="instructions" class="form-label">
-                          <i class="bi bi-pencil-square me-1"></i>Instructions
-                        </label>
-                        <textarea class="form-control" name="instructions" id="instructions" rows="3" placeholder="Any special notes..."></textarea>
-                      </div>
-
-                    </div>
-
-                    <!-- Modal Footer -->
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-x-circle me-1"></i>Cancel
-                      </button>
-                      <button type="submit" class="btn btn-success">
-                        <i class="bi bi-check2-circle me-1"></i>Assign
-                      </button>
-                    </div>
-                  </form>
-
-                </div>
-              </div>
-            </div>
-            <!-- Payment Modal -->
-            <div class="modal fade" id="payProviderModal" tabindex="-1" aria-labelledby="payProviderModalLabel" aria-hidden="true" style="background-color: rgba(128,128,128, 0.1) !important;">
-              <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                  <!-- Modal Header -->
-                  <div class="modal-header" style="background-color: #00192D !important;">
-                    <h5 class="modal-title" id="payProviderModalLabel" style="color:#FFA000 !important">Pay Provider</h5>
-                    <span id="currentDate" class="me-3 text-muted small"> <b class="text" style="color:#FFA000;">10/34/2014</b> </span>
-                    <div class="d-flex align-items-center text-white" style="color:white;">
-                      <button type="button" style="color:white !important;" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close">&times;</button>
-                    </div>
-                  </div>
-                  <!-- Modal Body with Step Content -->
-                  <div class="modal-body shadow">
-                    <!-- Step 1: Show Provider Details -->
-                    <div id="step-1" class="shadow p-2 rounded-bottom-2">
-                      <p><strong>Provider Name:</strong> <span id="providerName">John Doe Ltd</span></p>
-                      <p><strong>Work Done:</strong> <span id="workDescription">Fixed leaking roof in Block A</span></p>
-                      <p><strong>Amount:</strong> <span id="paymentAmount" style="color:forestgreen">KES 8,500</span></p>
-                      <button type="button" class="btn btn-secondary me-2" id="goBackBtn">← Go Back</button>
-                      <button class="btn btn-primary" id="nextStepBtn">Proceed to Payment</button>
-                      <button class="btn btn-primary" id="openRecordPaymentModalBtn">Record Instead</button>
-                    </div>
-                    <!-- Step 2: Choose Payment Method -->
-                    <div id="step-2" style="display: none;">
-                      <form id="paymentForm">
-                        <div class="mb-3">
-                          <label for="paymentMethod" class="form-label">Select Payment Method</label>
-                          <select class="form-select" id="paymentMethod" name="payment_method" required>
-                            <option value="">-- Choose --</option>
-                            <option value="mpesa">M-Pesa</option>
-                            <option value="bank">Bank Transfer</option>
-                          </select>
-                        </div>
-                        <div id="mpesaPhoneSection" style="display: none;">
-                          <div class="d-flex justify-content-center">
-                            <img src="images/m-pesa-logo.png" alt="Italian Trulli" width="100px" height="100">
-                          </div>
-                          <div id="sendMoneySection" style="">
-                            <label for="phoneNumber" class="form-label"><b>Your Phone Number</b></label>
-                            <input type="tel" class="form-control border-top-0" name="senderPhone" id="phoneNumber" placeholder="0753432756" required>
-
-                            <label for="phoneNumber" class="form-label"><b>Provider Pay Bill/ Till Number</b></label>
-                            <input type="tel" class="form-control" name="phone" id="phoneNumber" placeholder="414721" required>
-                            <label for="phoneNumber" class="form-label"><b>Account Number</b></label>
-                            <input type="text" class="form-control" name="account_number" id="phoneNumber" placeholder="Betika" required>
-                            <div class="mt-2">
-                              <label class="form-label"><b>Amount</b></label>
-                              <input type="number" id="mpesaAmount" name="mpesaAmount" placeholder="Amount" required />
-                            </div>
-                            <!-- </div> -->
-                            <div class="d-flex justify-content-end">
-                              <button type="submit" class="btn btn-success mt-3">Pay Now</button>
-                            </div>
-                          </div>
-                        </div>
-                        <div id="bankTransferSection" class="bankTransferSection" style="display: none;">
-                          <div class="d-flex justify-content-center">
-                            <img src="images/R.png" alt="Italian Trulli" width="100px" height="100">
-                          </div>
-                          <div class="form-group">
-                            <label for="cardNumber">Card Number</label>
-                            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
-                          </div>
-                          <!-- <div class="form-row" style="display: flex; gap:15px; width:100%;"> -->
-                          <div class="form-group">
-                            <label for="expiry">Valid Till</label>
-                            <input type="text" id="expiry" placeholder="MM/YY" maxlength="5" required>
-                          </div>
-                          <div class="form-group">
-                            <label for="cvv">CVV</label>
-                            <input type="password" id="cvv" placeholder="123" maxlength="4" required>
-                          </div>
-                          <div class="form-group">
-                            <label for="amount"><b>Amount</b></label>
-                            <input type="number" id="amount" placeholder="e.g. 1000" required>
-                          </div>
-                          <!-- </div> -->
-                          <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn btn-success mt-3">Pay Now</button>
-                          </div>
-                        </div>
-                        <div class="d-flex">
-                          <button type="button" class="btn btn-secondary me-2 mt-3" id="goBackBtn">← Go Back</button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- end payment modal -->
-            <!-- Applications Modal -->
-            <div id="customBackdrop" class="modal-backdrop fade d-none"></div>
-            <div id="proposalContainer" class="container proposalContainer py-2 fade d-none custom-modal bg-light" style="overflow: auto;">
-              <div class="d-flex justify-content-between mb-2">
-                <div class=" text-left" style="color:rgb(0 28 63 / 60%); font-weight:500;"><b> Provider Applications</b></div>
-
-                <div class="text-center">
-                  <button class="bg-secondary text-white px-4 py-0 rounded hover:bg-blue-600">← Go Back</button>
-                </div>
-
-                <div class="text-right">
-                  <button class="text-gray-500 text-xl rounded hover:text-white hover:bg-red-500 transition">&times;</button>
-                </div>
-              </div>
-              <div id="job_proposals_container">
-                <div class="proposal-card mt-2">
-                  <div class="proposal-header d-flex align-items-start">
-                    <img src="https://i.pravatar.cc/70" alt="Profile Picture" class="profile-pic me-3">
-                    <div>
-                      <h5>Jane Doe <span class="badge bg-success">Top Rated</span></h5>
-                      <p>Full Stack Developer | React & Node.js</p>
-                    </div>
-                    <div class="ms-auto proposal-meta text-end">
-                      <h6>$25/hr</h6>
-                      <small>5 days delivery</small><br>
-                      <small class="text-success">✅ 42 jobs completed</small>
-                    </div>
-                  </div>
-
-                  <hr>
-
-                  <p><strong>Cover Letter:</strong> I'm excited to help build your job board! I have 3 years of experience with React and recently completed a similar project...</p>
-                  <p><strong>Location:</strong> Nairobi, Kenya (GMT+3)</p>
-
-                  <div class="d-flex justify-content-end mt-3">
-                    <button class="btn btn-outline-secondary btn-sm btn-action">Message</button>
-                    <button class="btn btn-outline-primary btn-sm btn-action">Shortlist</button>
-                    <button class="btn btn-outline-danger btn-sm">Decline</button>
-
-                    <div>You're about to assign this request to</div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
           <!--end::Row-->
         </div>
@@ -679,20 +252,8 @@
     </main>
     <!--end::App Main-->
     <!--begin::Footer-->
-    <footer class="app-footer">
-      <!--begin::To the end-->
-      <div class="float-end d-none d-sm-inline">Anything you want</div>
-      <!--end::To the end-->
-      <!--begin::Copyright-->
-      <strong>
-        Copyright &copy; 2014-2024&nbsp;
-        <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;"> JENGO PAY</a>.
-      </strong>
-      All rights reserved.
-      <!--end::Copyright-->
-    </footer>
-    <!--end::Footer-->
-  </div>
+          <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?> </div> 
+    <!-- end::footer -->
   <!--end::App Wrapper-->
   <!-- Overlay Cards -->
   <!-- Overlay scripts -->
