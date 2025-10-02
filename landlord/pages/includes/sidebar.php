@@ -5,10 +5,10 @@
   <!-- Property -->
   <div class="menu-group">
     <div class="menu-header" onclick="toggleMenu(this)">
-      <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> 🏠 Property
+      <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> 🏠 Buildings
     </div>
     <div class="submenu">
-      <a href="/Jengopay/landlord/pages/property/reg_form.php" >🏢 Buildings</a>
+      <a href="/Jengopay/landlord/pages/buildings/buildings.php" >🏢 Buildings</a>
       <!-- Add more options later -->
     </div>
   </div>

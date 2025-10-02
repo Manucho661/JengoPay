@@ -14,6 +14,7 @@ export async function get_aged_payables() {
         populateAccountsTable(data);  // Populate the table with the data
     } catch (err) {
         console.log('Server couldn\'t be reached');
+        console.error('Error:', err.message);
     }
 }
 
