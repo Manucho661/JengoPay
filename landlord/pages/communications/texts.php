@@ -191,7 +191,7 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
     />
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../../../landlord/assets/main.css" />
+    <link rel="stylesheet" href="../../../landlord/css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
      <link rel="stylesheet" href="texts.css">
@@ -904,7 +904,7 @@ display: flex;
                                   <option value="">-- Select Building --</option>
                                   <?php foreach ($buildings as $b): ?>
                                     <option value="<?= htmlspecialchars($b['id']) ?>">
-                                      <?= htmlspecialchars($b['building_name']) ?> 
+                                      <?= htmlspecialchars($b['building_name']) ?> (<?= htmlspecialchars($b['building_type']) ?>)
                                     </option>
                                   <?php endforeach; ?>
                                 </select>
@@ -1211,23 +1211,24 @@ display: flex;
                         <form action="texts.php" method="POST" id="messageForm" enctype="multipart/form-data">
                           <div class="col-md-12" style="display: flex;">
 
-                            <div id="field-group-first" class="field-group first">
-                              <label for="recipient" style="color: black;">Recepient<i class="fas fa-mouse-pointer title-icon" style="transform: rotate(110deg);"></i>                                Building</label>
-                              <select name="building_name"  id="recipient" onchange="toggleShrink()" class="recipient" >
-                              <option value="">-- Select Building --</option>
-                              <?php foreach ($buildings as $b): ?>
+                          <div id="field-group-first" class="field-group first">
+                          <label for="recipient" style="color: black;">Recepient<i class="fas fa-mouse-pointer title-icon" style="transform: rotate(110deg);"></i> Building</label>
+                          <select name="building_id" id="recipient" onchange="fetchUnits(this.value)" class="recipient">
+                            <option value="">-- Select Building --</option>
+                            <?php foreach ($buildings as $b): ?>
                               <option value="<?= htmlspecialchars($b['id']) ?>">
-                              <?= htmlspecialchars($b['building_name']) ?>
+                                <?= htmlspecialchars($b['building_name']) ?>
                               </option>
-                              <?php endforeach;?>
-                              </select>
-                              </div>
-                            <!-- <div id="field-group-second" class="field-group second" style="display:block">
-                            <label for="recipient-units">Unit</label>
-                            <select name="unit_id" id="unit-select">
+                            <?php endforeach; ?>
+                          </select>
+                        </div>
+
+                        <div id="field-group-second" class="field-group second" style="display:block">
+                          <label for="recipient-units">Unit</label>
+                          <select name="unit_id" id="unit-select">
                             <option value="">-- Select Unit --</option>
-                            </select>
-                          </div> -->
+                          </select>
+                        </div>
 
 
 
@@ -2180,6 +2181,26 @@ window.addEventListener("error", function(e) {
 
 
 <script>
+function fetchUnits(buildingId) {
+    if(buildingId === "") {
+        document.getElementById("unit-select").innerHTML = "<option value=''>-- Select Unit --</option>";
+        return;
+    }
+
+    // AJAX call
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "fetch_units.php?building_id=" + buildingId, true);
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            document.getElementById("unit-select").innerHTML = xhr.responseText;
+        }
+    };
+    xhr.send();
+}
+</script>
+
+
+<!-- <script>
   document.getElementById('buildingSelector').addEventListener('change', function() {
     let buildingId = this.value;
     if (buildingId) {
@@ -2196,7 +2217,7 @@ window.addEventListener("error", function(e) {
     }
 });
 
-</script>
+</script> -->
 <script src="../../../../landlord/js/adminlte.js"></script>
 <!--end::Script-->
   </body>

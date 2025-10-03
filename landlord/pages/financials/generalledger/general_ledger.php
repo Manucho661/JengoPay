@@ -1,104 +1,59 @@
-<?php 
+<?php
 include '../../db/connect.php';
 
-// Build filters
-$where = [];
+// Capture filters
+$from_date  = $_GET['from_date'] ?? '';
+$to_date    = $_GET['to_date'] ?? '';
+$account_id = $_GET['account_id'] ?? '';
+
+$where  = [];
 $params = [];
 
-// Date range
-if (!empty($_GET['from_date']) && !empty($_GET['to_date'])) {
-    $where[] = "jl.created_at BETWEEN :from AND :to";
-    $params[':from'] = $_GET['from_date'];
-    $params[':to']   = $_GET['to_date'];
+// Date filter
+if (!empty($from_date) && !empty($to_date)) {
+    $where[] = "DATE(je.created_at) BETWEEN :from AND :to";
+    $params[':from'] = $from_date;
+    $params[':to']   = $to_date;
 }
 
 // Account filter
-if (!empty($_GET['account_id'])) {
+if (!empty($account_id)) {
     $where[] = "jl.account_id = :account_id";
-    $params[':account_id'] = $_GET['account_id'];
+    $params[':account_id'] = $account_id;
 }
 
 $whereSql = $where ? "WHERE " . implode(" AND ", $where) : "";
 
-// Fetch ALL accounts from chart_of_accounts, even those with no transactions
-$sql = "
-    SELECT 
-        a.account_code,
-        a.account_name,
-        a.account_type,
-        COALESCE(SUM(jl.debit), 0) AS total_debit,
-        COALESCE(SUM(jl.credit), 0) AS total_credit
-    FROM chart_of_accounts a
-    LEFT JOIN journal_lines jl ON a.account_code = jl.account_id 
-    " . ($whereSql ? "AND " . str_replace("WHERE", "", $whereSql) : "") . "
-    GROUP BY a.account_code, a.account_name, a.account_type
-    HAVING COALESCE(SUM(jl.debit), 0) != 0 OR COALESCE(SUM(jl.credit), 0) != 0
-    ORDER BY a.account_code
-";
-$stmt = $pdo->prepare($sql);
-$stmt->execute($params);
-$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-$totalDebit = 0;
-$totalCredit = 0;
-
-// Fetch account list for dropdown
-$accounts = $pdo->query("SELECT account_code, account_name FROM chart_of_accounts ORDER BY account_name")->fetchAll(PDO::FETCH_ASSOC);
-?>
-
-<?php
-include '../../db/connect.php';
-
-// Capture filter inputs
-$from_date = $_GET['from_date'] ?? '';
-$to_date   = $_GET['to_date'] ?? '';
-
-// Build base query
+// General Ledger query
 $sql = "
     SELECT 
         je.created_at,
         je.reference,
         je.description,
-        je.source_table,
-        je.source_id,
-        CASE 
-            WHEN je.source_table = 'expenses' THEN 'Expense'
-            WHEN je.reference LIKE 'INV%' THEN 'Accounts Receivable'
-            WHEN je.reference LIKE 'PAY%' THEN 'Cash/Bank'
-            WHEN je.reference LIKE 'LOAN%' THEN 'Loan Account'
-            WHEN je.reference LIKE 'CAP%' THEN 'Capital Account'
-            ELSE 'Suspense'
-        END AS account_name,
-        CASE 
-            WHEN je.reference LIKE 'INV%' THEN je.id * 100
-            WHEN je.source_table = 'expenses' THEN je.id * 50
-            ELSE 0
-        END AS debit,
-        CASE 
-            WHEN je.reference LIKE 'PAY%' THEN je.id * 100
-            WHEN je.reference LIKE 'LOAN%' THEN je.id * 200
-            ELSE 0
-        END AS credit
+        a.account_code,
+        a.account_name,
+        jl.debit,
+        jl.credit
     FROM journal_entries je
-    WHERE 1=1
+    INNER JOIN journal_lines jl ON je.id = jl.journal_entry_id
+    INNER JOIN chart_of_accounts a ON jl.account_id = a.account_code
+    $whereSql
+    ORDER BY je.created_at, je.id
 ";
-
-// Add date filters if provided
-$params = [];
-if (!empty($from_date) && !empty($to_date)) {
-    $sql .= " AND DATE(je.created_at) BETWEEN :from AND :to";
-    $params[':from'] = $from_date;
-    $params[':to']   = $to_date;
-}
-
-$sql .= " ORDER BY je.created_at, je.id";
-
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
-$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$ledgerRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Accounts for dropdown filter
+$accounts = $pdo->query("
+    SELECT account_code, account_name 
+    FROM chart_of_accounts 
+    ORDER BY account_name ASC
+")->fetchAll(PDO::FETCH_ASSOC);
 
 $runningBalance = 0;
 ?>
+
 <!doctype html>
 <html lang="en">
 <!--begin::Head-->
@@ -411,64 +366,61 @@ $runningBalance = 0;
             <h2 style="color:#FFC107;">General Ledger</h2>
             
   <!-- Date Filter Form -->
-  <form method="get" class="row g-3 mb-4">
-      <div class="col-md-3">
-          <label for="from_date" class="form-label">From Date</label>
-          <input type="date" id="from_date" name="from_date" value="<?= htmlspecialchars($from_date) ?>" class="form-control">
-      </div>
-      <div class="col-md-3">
-          <label for="to_date" class="form-label">To Date</label>
-          <input type="date" id="to_date" name="to_date" value="<?= htmlspecialchars($to_date) ?>" class="form-control">
-      </div>
-
-      <div class="col-md-4">
-                      <label class="form-label">Account</label>
-                      <select name="account_id" class="form-select">
-                        <option value="">-- All Accounts --</option>
-                        <?php foreach ($accounts as $acc): ?>
-                          <option value="<?= $acc['account_code'] ?>" <?= (!empty($_GET['account_id']) && $_GET['account_id'] == $acc['account_code']) ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($acc['account_name']) ?>
-                          </option>
-                        <?php endforeach; ?>
-                      </select>
-                    </div>
-
-      <div class="col-md-2 d-flex align-items-end">
-          <button type="submit" class="btn w-100" style= "background-color:#FFC107; color:#00192D;">Filter</button>
-      </div>
-      <div class="col-md-2 d-flex align-items-end">
-          <a href="" class="btn  w-100" style= "background-color:#FFC107; color:#00192D;">Reset</a>
-      </div>
+  <!-- Filters -->
+  <form method="get" class="row g-3 mb-3">
+    <div class="col-md-3">
+      <label for="from_date" class="form-label">From Date</label>
+      <input type="date" id="from_date" name="from_date" value="<?= htmlspecialchars($from_date) ?>" class="form-control">
+    </div>
+    <div class="col-md-3">
+      <label for="to_date" class="form-label">To Date</label>
+      <input type="date" id="to_date" name="to_date" value="<?= htmlspecialchars($to_date) ?>" class="form-control">
+    </div>
+    <div class="col-md-3">
+      <label for="account_id" class="form-label">Account</label>
+      <select id="account_id" name="account_id" class="form-select">
+        <option value="">-- All Accounts --</option>
+        <?php foreach ($accounts as $acc): ?>
+          <option value="<?= $acc['account_code'] ?>" <?= $account_id == $acc['account_code'] ? 'selected' : '' ?>>
+            <?= htmlspecialchars($acc['account_name']) ?>
+          </option>
+        <?php endforeach; ?>
+      </select>
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+      <button type="submit" class="btn btn-primary w-100">Filter</button>
+    </div>
   </form>
 
-    <table class="table table-bordered table-striped">
-        <thead class="table" style="background-color:#00192D; color:#FFC107;">
-            <tr>
-                <th>Date</th>
-                <th>Reference</th>
-                <th>Description</th>
-                <th>Account</th>
-                <th>Debit (Ksh)</th>
-                <th>Credit (Ksh)</th>
-                <th>Balance (Ksh)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($rows as $r): 
-                $runningBalance += $r['debit'] - $r['credit'];
-            ?>
-            <tr>
-                <td><?= htmlspecialchars($r['created_at']) ?></td>
-                <td><?= htmlspecialchars($r['reference']) ?></td>
-                <td><?= htmlspecialchars($r['description']) ?></td>
-                <td><?= htmlspecialchars($r['account_name']) ?></td>
-                <td><?= number_format($r['debit'], 2) ?></td>
-                <td><?= number_format($r['credit'], 2) ?></td>
-                <td><?= number_format($runningBalance, 2) ?></td>
-            </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+
+  <!-- Ledger Table -->
+  <table class="table table-bordered table-striped">
+    <thead class="table-dark">
+      <tr>
+        <th>Date</th>
+        <th>Reference</th>
+        <th>Description</th>
+        <th>Account</th>
+        <th>Debit (KSH)</th>
+        <th>Credit (KSH)</th>
+        <th>Running Balance</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php foreach ($ledgerRows as $row): ?>
+        <?php $runningBalance += $row['debit'] - $row['credit']; ?>
+        <tr>
+          <td><?= htmlspecialchars(date('Y-m-d', strtotime($row['created_at']))) ?></td>
+          <td><?= htmlspecialchars($row['reference']) ?></td>
+          <td><?= htmlspecialchars($row['description']) ?></td>
+          <td><?= htmlspecialchars($row['account_name']) ?></td>
+          <td><?= number_format($row['debit'], 2) ?></td>
+          <td><?= number_format($row['credit'], 2) ?></td>
+          <td><?= number_format($runningBalance, 2) ?></td>
+        </tr>
+      <?php endforeach; ?>
+    </tbody>
+  </table>
 
   <!-- End view announcement -->
   <!-- javascript codes begin here  -->

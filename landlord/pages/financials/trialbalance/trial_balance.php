@@ -5,9 +5,9 @@ include '../../db/connect.php';
 $where = [];
 $params = [];
 
-// Date range
+// Date range - FIXED: Use journal_entries.entry_date instead of journal_lines.created_at
 if (!empty($_GET['from_date']) && !empty($_GET['to_date'])) {
-    $where[] = "jl.created_at BETWEEN :from AND :to";
+    $where[] = "je.entry_date BETWEEN :from AND :to";
     $params[':from'] = $_GET['from_date'];
     $params[':to']   = $_GET['to_date'];
 }
@@ -20,39 +20,48 @@ if (!empty($_GET['account_id'])) {
 
 $whereSql = $where ? "WHERE " . implode(" AND ", $where) : "";
 
-// Fetch ALL accounts from chart_of_accounts, even those with no transactions
+// SQL query
 $sql = "
     SELECT 
         a.account_code,
         a.account_name,
         a.account_type,
+        a.financial_statement,
+        a.debit_credit,
         COALESCE(SUM(jl.debit), 0) AS total_debit,
         COALESCE(SUM(jl.credit), 0) AS total_credit
     FROM chart_of_accounts a
     LEFT JOIN journal_lines jl ON a.account_code = jl.account_id 
-    " . ($whereSql ? "AND " . str_replace("WHERE", "", $whereSql) : "") . "
-    GROUP BY a.account_code, a.account_name, a.account_type
+    LEFT JOIN journal_entries je ON jl.journal_entry_id = je.id
+    $whereSql
+    GROUP BY a.account_code, a.account_name, a.account_type, a.financial_statement, a.debit_credit
     HAVING COALESCE(SUM(jl.debit), 0) != 0 OR COALESCE(SUM(jl.credit), 0) != 0
     ORDER BY a.account_code
 ";
+
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$totalDebit = 0;
-$totalCredit = 0;
-
 // Fetch account list for dropdown
 $accounts = $pdo->query("SELECT account_code, account_name FROM chart_of_accounts ORDER BY account_name")->fetchAll(PDO::FETCH_ASSOC);
+
+// Debug info
+$debug_info = [
+    'sql_query' => $sql,
+    'where_conditions' => $where,
+    'params' => $params,
+    'row_count' => count($rows)
+];
 ?>
 <!doctype html>
 <html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta charset="utf-8" />
   <title>Trial Balance Report</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <!-- Stylesheets -->
+  <!-- Styles -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -68,6 +77,7 @@ $accounts = $pdo->query("SELECT account_code, account_name FROM chart_of_account
     .balance-positive { color: #28a745; font-weight: bold; }
     .balance-negative { color: #dc3545; font-weight: bold; }
     .account-code { color: #6c757d; font-size: 0.9em; }
+    .debug-info { background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 10px; margin-bottom: 15px; border-radius: 5px; }
   </style>
 </head>
 
@@ -84,7 +94,6 @@ $accounts = $pdo->query("SELECT account_code, account_name FROM chart_of_account
           </li>
         </ul>
         <ul class="navbar-nav ms-auto">
-          <!-- User menu items -->
           <li class="nav-item dropdown user-menu">
             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
               <img src="17.jpg" class="user-image rounded-circle shadow" alt="User Image" />
@@ -126,11 +135,17 @@ $accounts = $pdo->query("SELECT account_code, account_name FROM chart_of_account
             <div class="col-12">
               <h2 class="mb-3">Trial Balance Report</h2>
               
+              <!-- Debug Info -->
+              <?php if (isset($_GET['debug'])): ?>
+              <div class="debug-info">
+                <h6>Debug Information:</h6>
+                <pre><?php print_r($debug_info); ?></pre>
+              </div>
+              <?php endif; ?>
+              
               <!-- Filters -->
               <div class="card mb-4">
-                <div class="card-header">
-                  <h5 class="card-title mb-0">Filter Report</h5>
-                </div>
+                <div class="card-header"><h5 class="card-title mb-0">Filter Report</h5></div>
                 <div class="card-body">
                   <form method="get" class="row g-3">
                     <div class="col-md-3">
@@ -153,9 +168,13 @@ $accounts = $pdo->query("SELECT account_code, account_name FROM chart_of_account
                       </select>
                     </div>
                     <div class="col-md-2 d-flex align-items-end">
-                      <button type="submit" class="btn  w-100"  style= "background-color:#FFC107; color:#00192D;">Apply Filters</button>
+                      <button type="submit" class="btn w-100" style="background-color:#FFC107; color:#00192D;">Apply Filters</button>
                     </div>
                   </form>
+                  <div class="mt-2">
+                    <a href="?debug=1&<?= http_build_query($_GET) ?>" class="btn btn-sm btn-outline-warning"><i class="fas fa-bug"></i> Debug Mode</a>
+                    <a href="?" class="btn btn-sm btn-outline-secondary"><i class="fas fa-refresh"></i> Reset</a>
+                  </div>
                 </div>
               </div>
 
@@ -163,17 +182,6 @@ $accounts = $pdo->query("SELECT account_code, account_name FROM chart_of_account
               <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                   <h5 class="card-title mb-0">Trial Balance</h5>
-                  <div class="btn-group">
-                    <button class="btn btn-sm btn-outline-primary" onclick="exportToExcel()">
-                      <i class="fas fa-file-excel"></i> Excel
-                    </button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="exportToPDF()">
-                      <i class="fas fa-file-pdf"></i> PDF
-                    </button>
-                    <button class="btn btn-sm btn-outline-secondary" onclick="window.print()">
-                      <i class="fas fa-print"></i> Print
-                    </button>
-                  </div>
                 </div>
                 <div class="card-body p-0">
                   <div class="table-responsive">
@@ -191,43 +199,39 @@ $accounts = $pdo->query("SELECT account_code, account_name FROM chart_of_account
                         $totalCredit = 0;
                         
                         foreach ($rows as $r): 
-                          // Calculate net balance
                           $netBalance = $r['total_debit'] - $r['total_credit'];
-                          
-                          if ($netBalance > 0) {
-                            $debit = $netBalance;
-                            $credit = 0;
+
+                          if ($r['debit_credit'] === 'Debit') {
+                              $debit = $netBalance > 0 ? $netBalance : 0;
+                              $credit = $netBalance < 0 ? abs($netBalance) : 0;
                           } else {
-                            $debit = 0;
-                            $credit = abs($netBalance);
+                              $debit = $netBalance < 0 ? abs($netBalance) : 0;
+                              $credit = $netBalance > 0 ? $netBalance : 0;
                           }
-                          
-                          $totalDebit += $debit;
-                          $totalCredit += $credit;
-                          
-                          // Skip accounts with zero balance
-                          if ($debit == 0 && $credit == 0) continue;
+
+                          // totals MUST use raw values
+                          $totalDebit  += $r['total_debit'];
+                          $totalCredit += $r['total_credit'];
+
+                          if (abs($debit) < 0.01 && abs($credit) < 0.01) continue;
                         ?>
                         <tr data-account-id="<?= $r['account_code'] ?>" style="cursor: pointer;">
                           <td>
                             <div class="fw-bold"><?= htmlspecialchars($r['account_name']) ?></div>
-                            <small class="account-code">Code: <?= $r['account_code'] ?> | Type: <?= $r['account_type'] ?? 'N/A' ?></small>
+                            <small class="account-code">
+                              Code: <?= $r['account_code'] ?> | 
+                              Type: <?= $r['account_type'] ?? 'N/A' ?> | 
+                              Normal: <?= $r['debit_credit'] ?>
+                            </small>
                           </td>
-                          <td class="text-end <?= $debit > 0 ? 'balance-positive' : '' ?>">
-                            <?= number_format($debit, 2) ?>
-                          </td>
-                          <td class="text-end <?= $credit > 0 ? 'balance-negative' : '' ?>">
-                            <?= number_format($credit, 2) ?>
-                          </td>
+                          <td class="text-end <?= $debit > 0 ? 'balance-positive' : '' ?>"><?= number_format($debit, 2) ?></td>
+                          <td class="text-end <?= $credit > 0 ? 'balance-negative' : '' ?>"><?= number_format($credit, 2) ?></td>
                         </tr>
                         <?php endforeach; ?>
                         
                         <?php if (empty($rows)): ?>
                         <tr>
-                          <td colspan="3" class="text-center text-muted py-4">
-                            <i class="fas fa-info-circle me-2"></i>
-                            No transactions found for the selected period
-                          </td>
+                          <td colspan="3" class="text-center text-muted py-4"><i class="fas fa-info-circle me-2"></i>No transactions found for the selected period</td>
                         </tr>
                         <?php endif; ?>
                       </tbody>
@@ -237,9 +241,9 @@ $accounts = $pdo->query("SELECT account_code, account_name FROM chart_of_account
                           <th class="text-end"><?= number_format($totalDebit, 2) ?></th>
                           <th class="text-end"><?= number_format($totalCredit, 2) ?></th>
                         </tr>
-                        <tr class="<?= $totalDebit == $totalCredit ? 'table-success' : 'table-danger' ?>">
+                        <tr class="<?= abs($totalDebit - $totalCredit) < 0.01 ? 'table-success' : 'table-danger' ?>">
                           <td colspan="3" class="text-center fw-bold">
-                            <?php if ($totalDebit == $totalCredit): ?>
+                            <?php if (abs($totalDebit - $totalCredit) < 0.01): ?>
                               <i class="fas fa-check-circle me-2"></i>Trial Balance is Balanced!
                             <?php else: ?>
                               <i class="fas fa-exclamation-triangle me-2"></i>
@@ -251,8 +255,9 @@ $accounts = $pdo->query("SELECT account_code, account_name FROM chart_of_account
                     </table>
                   </div>
                 </div>
-                <div class="card-footer text-muted">
+                <div class="card-footer text-muted d-flex justify-content-between">
                   <small>Generated on: <?= date('Y-m-d H:i:s') ?></small>
+                  <small>Accounts: <?= count($rows) ?> | Period: <?= $_GET['from_date'] ?? 'All' ?> to <?= $_GET['to_date'] ?? 'All' ?></small>
                 </div>
               </div>
             </div>
@@ -262,7 +267,7 @@ $accounts = $pdo->query("SELECT account_code, account_name FROM chart_of_account
     </main>
   </div>
 
-  <!-- Modal for General Ledger -->
+  <!-- Ledger Modal -->
   <div class="modal fade" id="ledgerModal" tabindex="-1">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
       <div class="modal-content">
@@ -288,100 +293,94 @@ $accounts = $pdo->query("SELECT account_code, account_name FROM chart_of_account
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <script>
-$('#trialBalance tbody').on('click', 'tr[data-account-id]', function () {
-  var accountId = $(this).data('account-id');
-  var accountName = $(this).find('td:first .fw-bold').text();
-  if (!accountId) return;
-
-  $('#modalAccountName').text(accountName);
-  $('#ledgerModal .modal-body').html('<div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x"></i><br>Loading ledger details...</div>');
-  $('#ledgerModal').modal('show');
-
-  // Fetch ledger data from backend
-  $.ajax({
-    url: '/Jengopay/landlord/pages/financials/generalledger/get_ledger.php',
-    type: 'GET',
-    data: { account_id: accountId },
-    success: function (response) {
-      let data;
-      try {
-        data = JSON.parse(response);
-      } catch (e) {
-        $('#ledgerModal .modal-body').html('<div class="alert alert-danger">Failed to load ledger data.</div>');
-        return;
-      }
-
-      if (data.error) {
-        $('#ledgerModal .modal-body').html('<div class="alert alert-warning">' + data.error + '</div>');
-        return;
-      }
-
-      if (data.length === 0) {
-        $('#ledgerModal .modal-body').html('<div class="alert alert-info">No transactions found for this account.</div>');
-        return;
-      }
-
-      // Build table
-      let tableHtml = `
-        <table class="table table-striped table-bordered">
-          <thead class="table-dark">
-            <tr>
-              <th>Date</th>
-              <th>Reference</th>
-              <th>Description</th>
-              <th class="text-end">Debit</th>
-              <th class="text-end">Credit</th>
-              <th class="text-end">Running Balance</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
-
-      let runningBalance = 0;
-      data.forEach(row => {
-        runningBalance += parseFloat(row.debit) - parseFloat(row.credit);
-        tableHtml += `
-          <tr>
-            <td>${row.entry_date || '-'}</td>
-            <td>${row.reference || '-'}</td>
-            <td>${row.description || '-'}</td>
-            <td class="text-end">${parseFloat(row.debit).toLocaleString()}</td>
-            <td class="text-end">${parseFloat(row.credit).toLocaleString()}</td>
-            <td class="text-end">${runningBalance.toLocaleString()}</td>
-          </tr>
-        `;
-      });
-
-      tableHtml += `</tbody></table>`;
-      $('#ledgerModal .modal-body').html(tableHtml);
-    },
-    error: function () {
-      $('#ledgerModal .modal-body').html('<div class="alert alert-danger">Error loading ledger data.</div>');
-    }
-  });
-});
-
-
-  function exportToExcel() {
-    const table = document.getElementById('trialBalance');
-    const wb = XLSX.utils.table_to_book(table, {sheet: "Trial Balance"});
-    XLSX.writeFile(wb, 'Trial_Balance_' + new Date().toISOString().split('T')[0] + '.xlsx');
-  }
-
-  function exportToPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    
-    doc.text('Trial Balance Report', 14, 15);
-    doc.autoTable({
-      html: '#trialBalance',
-      startY: 25,
-      theme: 'grid',
-      headStyles: { fillColor: [52, 58, 64] }
+  $(document).ready(function() {
+    $('#trialBalance').DataTable({
+      paging: false,
+      searching: true,
+      ordering: true,
+      info: false,
+      order: [[0, 'asc']]
     });
-    
-    doc.save('Trial_Balance_' + new Date().toISOString().split('T')[0] + '.pdf');
-  }
+  });
+
+  $('#trialBalance tbody').on('click', 'tr[data-account-id]', function () {
+    var accountId = $(this).data('account-id');
+    var accountName = $(this).find('td:first .fw-bold').text();
+    if (!accountId) return;
+
+    $('#modalAccountName').text(accountName);
+    $('#ledgerModal .modal-body').html('<div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x"></i><br>Loading ledger details...</div>');
+    $('#ledgerModal').modal('show');
+
+    $.ajax({
+      url: '/Jengopay/landlord/pages/financials/generalledger/get_ledger.php',
+      type: 'GET',
+      data: { 
+        account_id: accountId,
+        from_date: '<?= $_GET['from_date'] ?? '' ?>',
+        to_date: '<?= $_GET['to_date'] ?? '' ?>'
+      },
+      success: function (response) {
+        let data;
+        try {
+          data = JSON.parse(response);
+        } catch (e) {
+          $('#ledgerModal .modal-body').html('<div class="alert alert-danger">Failed to load ledger data.</div>');
+          return;
+        }
+
+        if (data.error) {
+          $('#ledgerModal .modal-body').html('<div class="alert alert-warning">' + data.error + '</div>');
+          return;
+        }
+
+        if (data.length === 0) {
+          $('#ledgerModal .modal-body').html('<div class="alert alert-info">No transactions found for this account.</div>');
+          return;
+        }
+
+        let tableHtml = `
+          <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+              <thead class="table-dark">
+                <tr>
+                  <th>Date</th>
+                  <th>Reference</th>
+                  <th>Description</th>
+                  <th>Source</th>
+                  <th class="text-end">Debit</th>
+                  <th class="text-end">Credit</th>
+                  <th class="text-end">Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+        `;
+
+        let runningBalance = 0;
+        data.forEach(row => {
+          runningBalance += parseFloat(row.debit) - parseFloat(row.credit);
+          tableHtml += `
+            <tr>
+              <td>${row.entry_date || '-'}</td>
+              <td>${row.reference || '-'}</td>
+              <td>${row.description || '-'}</td>
+              <td>${row.source_table || '-'}</td>
+              <td class="text-end">${parseFloat(row.debit).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+              <td class="text-end">${parseFloat(row.credit).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+              <td class="text-end fw-bold ${runningBalance >= 0 ? 'text-success' : 'text-danger'}">
+                ${runningBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+              </td>
+            </tr>`;
+        });
+
+        tableHtml += '</tbody></table></div>';
+        $('#ledgerModal .modal-body').html(tableHtml);
+      },
+      error: function () {
+        $('#ledgerModal .modal-body').html('<div class="alert alert-danger">Error loading ledger data.</div>');
+      }
+    });
+  });
   </script>
 </body>
 </html>
