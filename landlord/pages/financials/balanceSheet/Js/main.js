@@ -1,6 +1,6 @@
 import { downloadBS } from "./DownloadPDF.js";
 import { exportToExcel } from "./downloadExcel.js";
-import { getNonCurrentAssets, getCurrentAssets } from "./api.js";
+import { getNonCurrentAssets, getCurrentAssets } from "./AssetsApi.js";
 import { getNonCurrentLiabilities, getCurrentLiabilities  } from "./liabilitiesApi.js";
 import { getEquity } from "./equityAPI.js";
 

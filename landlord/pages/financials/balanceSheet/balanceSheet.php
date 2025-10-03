@@ -112,10 +112,7 @@ function formatAccounting($amount)
     font-size: 20px;
   }
 
-  .current-assets {
-    font-size: 14px;
-    font-weight: bold;
-  }
+  
 
   td {
     font-size: 14px;
@@ -132,7 +129,17 @@ function formatAccounting($amount)
     /* border-bottom: 2px solid #000; */
     /* top border to separate total */
   }
-
+/* liabilities */
+.totalLiabilities-row td{
+ border-bottom: 2px solid #000;
+    font-weight: bold;
+    font-size: 16px;
+}
+/* equity */
+.totalEquityCell{
+   font-weight: bold;
+    font-size: 14px;
+}
   .totalAssets-row td {
     border-bottom: 2px solid #000;
     font-weight: bold;
@@ -165,6 +172,12 @@ function formatAccounting($amount)
 
   .asset-name-cell:focus {
     background-color: #00192D !important;
+  }
+  .totalLiabilitiesEquityCell{
+    font-weight:bold;
+    font-size: 16px;
+        border-bottom: 2px solid #000;
+
   }
 </style>
 
@@ -469,89 +482,7 @@ function formatAccounting($amount)
                       </tr>
                     </thead>
                     <tbody>
-                      <!-- Liabilities Section -->
-                      <tr>
-                        <td></td>
-                        <td></td>
-                      </tr>
-
-
-                      <tr class="fw-bold">
-                        <td class="Liabilities main-category">Liabilities</td>
-                        <td></td>
-                      </tr>
-                      <?php
-                      echo '<tr><td class="current-assets" style="color:green;">Current Liabilities:</td><td></td></tr>';
-                      foreach ($currentLiabilities as $item) {
-                        echo '<tr class="sub-current-assets">';
-                        echo '<td class="sub-category">' . htmlspecialchars($item['liability_name']) . '</td>';
-                        echo '<td>' . formatAccounting($item['amount']) . '</td>';
-                        echo '</tr>';
-                      }
-                      echo '<tr class="sub-current-assets total fw-bold">';
-                      echo '<td class="sub-category">Total Current Liabilities</td>';
-                      echo '<td>' . formatAccounting($totalCurrentLiabilities) . '</td>';
-                      echo '</tr>';
-                      ?>
-                      <?php
-                      echo '<tr><td class="current-assets" style="color:green;">Non-Current Liabilities:</td><td></td></tr>';
-                      foreach ($nonCurrentLiabilities as $item) {
-                        echo '<tr class="sub-current-assets">';
-                        echo '<td class="sub-category">' . htmlspecialchars($item['liability_name']) . '</td>';
-                        echo '<td>' . formatAccounting($item['amount']) . '</td>';
-                        echo '</tr>';
-                      }
-                      echo '<tr class="sub-current-assets total fw-bold">';
-                      echo '<td class="sub-category">Total Non-Current Liabilities</td>';
-                      echo '<td>' . formatAccounting($totalNonCurrentLiabilities) . '</td>';
-                      echo '</tr>';
-                      ?>
-                      <?php
-                      echo '<tr class="fw-bold">';
-                      echo '<td> <div style="font-size:16px;">Total Liabilities </div> </td>';
-                      echo '<td>' . formatAccounting($totalLiabilities) . '</td>';
-                      echo '</tr>';
-
-                      ?>
-                      <!-- Equity Section -->
-                      <tr class="fw-bold">
-                        <td></td>
-                        <td></td>
-                      </tr>
-
-                      <tr class="equity" class="fw-bold">
-                        <td class="main-category"><b>Equity</b> </td>
-                        <td></td>
-                      </tr>
-                      <?php
-                      foreach ($owners_equities as $item) {
-                        echo '<tr class="sub-current-assets">';
-                        echo '<td class="sub-category">' . htmlspecialchars($item['name']) . '</td>';
-                        echo '<td>' . formatAccounting($item['amount']) . '</td>';
-                        echo '</tr>';
-                      }
-
-                      // ✅ Add $retainedEarnings under Equity section
-                      echo '<tr class="sub-current-assets">';
-                      echo '<td class="sub-category">Retained Earnings</td>';
-                      echo '<td>' . formatAccounting($retainedEarnings) . '</td>';
-                      echo '</tr>';
-
-                      // ✅ Total Equity (including retainedEarnings)
-                      $grandTotalEquity = $totalEquity + $retainedEarnings;
-
-                      echo '<tr class="sub-current-assets total fw-bold">';
-                      echo '<td class="sub-category">Total Equity</td>';
-                      echo '<td>' . formatAccounting($grandTotalEquity) . '</td>';
-                      echo '</tr>';
-                      ?>
-                      <!-- Total Liabilities & Equity -->
-                      <?php
-                      echo '<tr class="fw-bold">';
-                      echo '<td> <div style="font-size:16px;">Total Liabilities & Equity </div> </td>';
-                      echo '<td>' . number_format($totalLiabilities + $grandTotalEquity, 2) . '</td>';
-                      echo '</tr>';
-                      ?>
+                      
                     </tbody>
                   </table>
                 </div>

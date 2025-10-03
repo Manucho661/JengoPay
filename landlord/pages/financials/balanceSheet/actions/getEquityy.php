@@ -12,7 +12,7 @@ try {
     // Define the account_id
     $account_id = 400;
 
-    // Total Debit for account_id 400 (credit amount in journal_lines)
+    // Total credit for account_id 400 (credit amount in journal_lines)
     $sql = "
         SELECT SUM(credit) AS total_credit 
         FROM journal_lines 
@@ -21,7 +21,7 @@ try {
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':account_id', $account_id, PDO::PARAM_INT);
     $stmt->execute();
-    $totalEquity = $stmt->fetchColumn();  // Fetching the total credit amount
+    $owners_capital = $stmt->fetchColumn();  // Fetching the total credit amount
 
     // Query for total revenue (sum of credit - debit for revenue accounts)
     $sqlRevenue = "
@@ -47,13 +47,15 @@ try {
 
     // Calculate retained earnings (revenue - expenses)
     $retainedEarnings = $totalRevenue - $totalExpenses;
+    $totalEquity = $retainedEarnings + $owners_capital;
 
     // Return the response in JSON format
     echo json_encode([
-        'total_equity' => $totalEquity,
+        'owners_capital' => $owners_capital,
         'retainedEarnings' => $retainedEarnings,
         'revenue' => $totalRevenue,
-        'expenses' => $totalExpenses
+        'expenses' => $totalExpenses,
+        'totalEquity' => $totalEquity
     ]);
 
 } catch (Throwable $e) {

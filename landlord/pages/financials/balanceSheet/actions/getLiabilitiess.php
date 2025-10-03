@@ -47,10 +47,11 @@ try {
     $totalLiabilities = $totalCurrentLiabilities + $totalNonCurrentLiabilities;
 
     echo json_encode([
-        'nonCurrentLiabilities' => $nonCurrentLiabilities,
         'currentLiabilities' => $currentLiabilities,
-        'totalNonCurrent' => $totalCurrentLiabilities,
-        'totalCurrent' => $totalLiabilities,
+        'totalCurrent' => $totalCurrentLiabilities,
+        'nonCurrentLiabilities' => $nonCurrentLiabilities,
+        'totalNonCurrent' => $totalNonCurrentLiabilities,
+        'totalLiabilities' => $totalLiabilities
     ]);
 
 } catch (PDOException $e) {

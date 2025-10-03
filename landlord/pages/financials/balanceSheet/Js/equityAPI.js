@@ -1,3 +1,6 @@
+import {total_liabilities} from "./liabilitiesApi.js"
+import { attachCollapseHandler } from "./AssetsApi.js"
+
 export async function getEquity() {
     try {
         const response = await fetch("actions/getEquityy.php");
@@ -10,8 +13,8 @@ export async function getEquity() {
         const data = await response.json();
         // console.log(data);
     
-        addTbodyOwnersCapital(data.totalEquity, data.totalExpenses);
-        addTbodyRetainedEarnings(data.retainedEarnings, data.totalRevenue, data.totalExpenses);
+        addTbodyOwnersCapital(data.owners_capital);
+        addTbodyRetainedEarnings(data.retainedEarnings, data.revenue, data.expenses, data.totalEquity);
 
         return data; // good practice to return the result
     } catch (err) {
@@ -19,7 +22,7 @@ export async function getEquity() {
     }
 }
 
-export function addTbodyRetainedEarnings(retainedEarnings, totalRevenue, totalExpenses) {
+export function addTbodyRetainedEarnings(retainedEarnings, totalRevenue, totalExpenses, totalEquity) {
     const table = document.getElementById("myTable");
 
     if (!table) {
@@ -35,16 +38,13 @@ export function addTbodyRetainedEarnings(retainedEarnings, totalRevenue, totalEx
 
     // Add rows with proper structure
     newTbody.innerHTML = `
-        <tr><th colspan="2">Equity</th></tr>
-
         <!-- Main row (clickable) -->
         <tr class="main-row" data-bs-target="#${collapseId}" aria-expanded="false" style="cursor: pointer;">
             <td>
-                <span style="margin-right:5px;">▸</span> Retained Earnings
+                <span class="text-warning" style="font-size: 20px;">▸</span> Retained Earnings
             </td>
             <td>${retainedEarnings}</td>
         </tr>
-
         <!-- Collapsible row -->
         <tr class="collapse" id="${collapseId}">
             <td colspan="2">
@@ -55,6 +55,18 @@ export function addTbodyRetainedEarnings(retainedEarnings, totalRevenue, totalEx
                     </tr>
                 </table>
             </td>
+        </tr>
+        <tr>
+            <td class="totalEquityCell">
+                 Total Equity
+            </td>
+            <td>${totalEquity}</td>
+        </tr>
+       <tr>
+        <td class="totalLiabilitiesEquityCell">
+            Total Liabilities and Equity
+        </td>
+        <td class="totalLiabilitiesEquityCell">${totalEquity + total_liabilities}</td>
         </tr>
     `;
 
@@ -88,7 +100,7 @@ export function addTbodyRetainedEarnings(retainedEarnings, totalRevenue, totalEx
     }
 }
 
-export function addTbodyOwnersCapital(ownersCapital, total) {
+export function addTbodyOwnersCapital(ownersCapital) {
     const table = document.getElementById("myTable");
     if (!table) {
         console.log("Table not found");
@@ -98,17 +110,17 @@ export function addTbodyOwnersCapital(ownersCapital, total) {
     // Create a new tbody
     const newTbody = document.createElement("tbody");
 
-    // Unique collapse id
+    // Unique collapse id for the Owner's Capital section
     const collapseId = "ownersCapitalDetails";
 
-    // Main structure
+    // Main structure for the Owner's Capital section
     newTbody.innerHTML = `
         <tr><th colspan="2">Equity</th></tr>
 
         <!-- Main row (clickable) -->
         <tr class="main-row" data-bs-target="#${collapseId}" aria-expanded="false" style="cursor:pointer;">
             <td>
-                <span style="margin-right:5px;">▸</span> Owner's Capital
+                <span class="text-warning" style="font-size: 20px;">▸</span> Owner's Capital
             </td>
             <td>${ownersCapital}</td>
         </tr>
@@ -119,88 +131,13 @@ export function addTbodyOwnersCapital(ownersCapital, total) {
                 <div class="p-2 text-muted">Click to load details...</div>
             </td>
         </tr>
-
-        <!-- Total row -->
-        <tr class="total-row fw-bold">
-            <td>Total</td>
-            <td>${total}</td>
-        </tr>
     `;
 
     // Append to table
     table.appendChild(newTbody);
 
-    // Attach handlers once
-    if (!table.dataset.collapseHandlers) {
-        table.dataset.collapseHandlers = "true";
-
-        // Toggle on click
-        table.addEventListener("click", (e) => {
-            const row = e.target.closest(".main-row");
-            if (!row) return;
-
-            const targetSelector = row.getAttribute("data-bs-target");
-            const collapseEl = document.querySelector(targetSelector);
-            if (!collapseEl) return;
-
-            const bsCollapse = bootstrap.Collapse.getOrCreateInstance(collapseEl, { toggle: false });
-            bsCollapse.toggle();
-
-            // Update arrow
-            const span = row.querySelector("span");
-            if (span) {
-                span.textContent = collapseEl.classList.contains("show") ? "▾" : "▸";
-            }
-
-            row.setAttribute("aria-expanded", collapseEl.classList.contains("show").toString());
-        });
-
-        // Lazy-load details when expanding
-        table.addEventListener("show.bs.collapse", async (e) => {
-            const collapseRow = e.target; // the <tr class="collapse">
-            if (!collapseRow.classList.contains("collapse")) return;
-
-            const account_id = collapseRow.getAttribute("account_id");
-            if (!account_id || collapseRow.dataset.loaded) return;
-
-            const td = collapseRow.querySelector("td"); // the container cell
-
-            try {
-                const res = await fetch(`actions/getOwnersCapitalDetails.php?account=${encodeURIComponent(account_id)}`);
-                const json = await res.json();
-
-                const detailsTable = `
-                    <table class="details table table-sm mb-0">
-                        <tbody>
-                            ${json.data.map(d => {
-                    // Replace source table names
-                    let sourceTableText = d.source_table;
-                    if (sourceTableText === "expense_payments") sourceTableText = "Expense Payment";
-                    else if (sourceTableText === "invoice_payment") sourceTableText = "Invoice Payment";
-
-                    // Calculate total
-                    let total = 0;
-                    if (d.debit && d.credit) total = d.debit - d.credit;
-                    else if (d.debit) total = d.debit;
-                    else if (d.credit) total = -d.credit;
-
-                    return `
-                                    <tr>
-                                        <td class="text-muted">${d.created_at}</td>
-                                        <td>${sourceTableText}</td>
-                                        <td class="text-danger">KSH&nbsp;${total.toFixed(2)}</td>
-                                    </tr>
-                                `;
-                }).join("")}
-                        </tbody>
-                    </table>
-                `;
-
-                td.innerHTML = detailsTable;
-                collapseRow.dataset.loaded = "true";
-            } catch (err) {
-                td.innerHTML = `<div class="text-danger p-2">Failed to load details</div>`;
-            }
-        });
-    }
+    // Use the attachCollapseHandler function to handle the collapse behavior for this section
+    attachCollapseHandler(newTbody.querySelector(".main-row"), newTbody.querySelector(`#${collapseId}`), "owners_capital");
 }
+
+

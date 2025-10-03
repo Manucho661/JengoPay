@@ -1,4 +1,7 @@
-import { attachCollapseHandler } from "./api.js";
+import { attachCollapseHandler } from "./AssetsApi.js";
+
+let total_liabilities;
+export { total_liabilities };
 
 export async function getNonCurrentLiabilities() {
     try {
@@ -11,14 +14,16 @@ export async function getNonCurrentLiabilities() {
 
         const data = await response.json();
         console.log(data);
-        addTbodyNonCurrentLiabilities(data.nonCurrentLiabilities, data.totalNonCurrent);
+        addTbodyNonCurrentLiabilities(data.nonCurrentLiabilities, data.totalNonCurrent, data.totalLiabilities);
+
+        total_liabilities = data.totalLiabilities;
         return data; // good practice to return the result
     } catch (err) {
         console.log('Runtime error encountered:', err);
     }
 }
 
-export function addTbodyNonCurrentLiabilities(liabilities, total) {
+export function addTbodyNonCurrentLiabilities(nonCrtliabilities, total, $totalLiabilities) {
     const table = document.getElementById("myTable");
 
     if (!table) {
@@ -29,16 +34,17 @@ export function addTbodyNonCurrentLiabilities(liabilities, total) {
     // Create a new tbody
     const newTbody = document.createElement("tbody");
 
-    // Add the header row
-    const headerRow = document.createElement("tr");
-    const headerCell = document.createElement("td");
-    headerCell.colSpan = 2; // span across two columns
-    headerCell.textContent = "NonCurrent Liabilities";
-    headerRow.appendChild(headerCell);
-    newTbody.appendChild(headerRow);
-
+    
+    // --- Sub-header row ("liabilities") ---
+    const subHeaderRow = document.createElement("tr");
+    const subHeaderCell = document.createElement("td");
+    subHeaderCell.colSpan = 2;
+    subHeaderCell.textContent = "Non-Current liabilties";
+    subHeaderCell.classList.add("section-header");
+    subHeaderRow.appendChild(subHeaderCell);
+    newTbody.appendChild(subHeaderRow);
     // Add rows for each liability
-    liabilities.forEach((liability, index) => {
+    nonCrtliabilities.forEach((liability, index) => {
         const collapseId = `collapse-${index}`;
 
         // Create the main row
@@ -50,7 +56,7 @@ export function addTbodyNonCurrentLiabilities(liabilities, total) {
         row.setAttribute("aria-controls", collapseId);
 
         const nameCell = document.createElement("td");
-        nameCell.innerHTML = `<span class="text-warning" style="font-size: 20px;">▸</span> ${liability.name}`;
+        nameCell.innerHTML = `<span class="text-warning" style="font-size: 20px;">▸</span> ${liability.liability_name}`;
         row.appendChild(nameCell);
 
         const amountCell = document.createElement("td");
@@ -75,7 +81,7 @@ export function addTbodyNonCurrentLiabilities(liabilities, total) {
         attachCollapseHandler(row, collapseDiv, liability.account_id);
     });
 
-    // Add the total row at the end with custom styling
+    // Add the total row for non-current-liabilities
     const totalRow = document.createElement("tr");
     totalRow.classList.add("total-row");
 
@@ -88,6 +94,20 @@ export function addTbodyNonCurrentLiabilities(liabilities, total) {
     totalRow.appendChild(totalValueCell);
 
     newTbody.appendChild(totalRow);
+
+    // Add the total liabilities row
+    const totalLiabilitiesRow = document.createElement("tr");
+    totalLiabilitiesRow.classList.add("totalLiabilities-row");
+
+    const totalLiabilitiesLabelCell = document.createElement("td");
+    totalLiabilitiesLabelCell.textContent = "Total Liabilities"; // Corrected cell
+    totalLiabilitiesRow.appendChild(totalLiabilitiesLabelCell);
+
+    const totalLiabilitiesValueCell = document.createElement("td");
+    totalLiabilitiesValueCell.textContent = $totalLiabilities; // Corrected cell
+    totalLiabilitiesRow.appendChild(totalLiabilitiesValueCell);
+
+    newTbody.appendChild(totalLiabilitiesRow); // Append to the tbody
 
     // Append the new tbody to the table
     table.appendChild(newTbody);
@@ -124,14 +144,23 @@ export function addTbodyCurrentLiabilities(currentLiabilities, total) {
     // Create a new tbody
     const newTbody = document.createElement("tbody");
 
-    // Add the header row for the liabilities section
-    const headerRow = document.createElement("tr");
-    const headerCell = document.createElement("td");
-    headerCell.colSpan = 2;
-    headerCell.classList.add("section-header");
-    headerCell.textContent = "Current Liabilities";
-    headerRow.appendChild(headerCell);
-    newTbody.appendChild(headerRow);
+    // --- First main header row ("Liabilities") ---
+    const mainHeaderRow = document.createElement("tr");
+    const mainHeaderCell = document.createElement("td");
+    mainHeaderCell.colSpan = 2;
+    mainHeaderCell.textContent = "Liabilities";
+    mainHeaderCell.classList.add("main-section-header");
+    mainHeaderRow.appendChild(mainHeaderCell);
+    newTbody.appendChild(mainHeaderRow);
+
+    // --- Sub-header row ("Non-Current Liabilities") ---
+    const subHeaderRow = document.createElement("tr");
+    const subHeaderCell = document.createElement("td");
+    subHeaderCell.colSpan = 2;
+    subHeaderCell.textContent = "Current Liabilities";
+    subHeaderCell.classList.add("section-header");
+    subHeaderRow.appendChild(subHeaderCell);
+    newTbody.appendChild(subHeaderRow);
 
     // Loop through the liabilities and create rows
     currentLiabilities.forEach((currentLiability, index) => {

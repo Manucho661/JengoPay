@@ -351,7 +351,7 @@ require_once 'actions/getBuildings.php'
                                                                 </div>
                                                                 <div class="select-options" id="select-options" role="listbox">
                                                                     <?php foreach ($buildings as $building): ?>
-                                                                        <div role="option" data-value="<?= htmlspecialchars($building['building_id']) ?>">
+                                                                        <div role="option" data-value="<?= htmlspecialchars($building['id']) ?>">
                                                                             <?= htmlspecialchars($building['building_name']) ?>
                                                                         </div>
                                                                     <?php endforeach; ?>
