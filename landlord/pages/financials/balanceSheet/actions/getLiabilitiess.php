@@ -13,6 +13,7 @@ try {
         SELECT 
             coa.account_name AS liability_name,
             coa.account_type AS category,
+            coa.account_code AS account_id, 
             SUM(jl.credit) - SUM(jl.debit) AS amount,
             MAX(je.entry_date) AS due_date
         FROM journal_lines jl

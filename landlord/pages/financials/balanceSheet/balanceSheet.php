@@ -129,8 +129,15 @@ function formatAccounting($amount)
   }
 
   .total-row td {
-    border-bottom: 2px solid #000;
+    /* border-bottom: 2px solid #000; */
     /* top border to separate total */
+  }
+
+  .totalAssets-row td {
+    border-bottom: 2px solid #000;
+    font-weight: bold;
+    font-size: 16px;
+    /* color:green; */
   }
 
   .main-section-header {
@@ -143,17 +150,20 @@ function formatAccounting($amount)
     font-size: 14px;
     font-weight: bold;
   }
-.main-row td:first-child {
-  font-weight: 600;
-  font-size: 14px;
-  color: #002B5B; /* navy */
-  margin-left: 10px;
-}
+
+  .main-row td:first-child {
+    font-weight: 600;
+    font-size: 14px;
+    color: #002B5B;
+    /* navy */
+    margin-left: 10px;
+  }
 
   .main-row[aria-expanded="true"] {
     font-weight: bold;
   }
-  .asset-name-cell:focus{
+
+  .asset-name-cell:focus {
     background-color: #00192D !important;
   }
 </style>
@@ -459,31 +469,6 @@ function formatAccounting($amount)
                       </tr>
                     </thead>
                     <tbody>
-                      <!-- Assets Section -->
-                      <tr>
-                        <td class="current-assets" style="color:green;">Current Assets:</td>
-                        <td></td>
-                      </tr>
-                      <?php foreach ($currentAssets as $item): ?>
-                        <?php if (in_array($item['name'], $mustDisplayedCurrentAssets) || $item['amount'] > 0): ?>
-                          <tr class="sub-current-assets">
-                            <td class="sub-category"><?= htmlspecialchars($item['name']) ?></td>
-                            <td><?= formatAccounting($item['amount']) ?></td>
-                          </tr>
-                        <?php endif; ?>
-                      <?php endforeach; ?>
-                      <tr class="sub-current-assets total fw-bold">
-                        <td class="sub-category">Total Current Assets</td>
-                        <td><?= formatAccounting($totalCurrent) ?></td>
-                      </tr>
-
-                      <?php
-                      echo '<tr class="fw-bold">';
-                      echo '<td> <div style="font-size:16px;">Total Assets </div> </td>';
-                      echo '<td>' . formatAccounting($totalAssets) . '</td>';
-                      echo '</tr>';
-
-                      ?>
                       <!-- Liabilities Section -->
                       <tr>
                         <td></td>

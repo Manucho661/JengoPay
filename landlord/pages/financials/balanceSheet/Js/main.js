@@ -1,8 +1,7 @@
 import { downloadBS } from "./DownloadPDF.js";
 import { exportToExcel } from "./downloadExcel.js";
-import { getNonCurrentAssets, getCurrentLiabilities } from "./api.js";
-import { getCurrentAssets } from "./currentAssetsApi.js";
-import { getNonCurrentLiabilities } from "./nonCurrentLiabilitiesApi.js";
+import { getNonCurrentAssets, getCurrentAssets } from "./api.js";
+import { getNonCurrentLiabilities, getCurrentLiabilities  } from "./liabilitiesApi.js";
 import { getEquity } from "./equityAPI.js";
 
 console.log("main issa working");

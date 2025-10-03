@@ -54,6 +54,7 @@ try {
         'currentAssets' => $currentAssets,
         'totalNonCurrent' => $totalNonCurrent,
         'totalCurrent' => $totalCurrent,
+        'totalAssets' => $totalAssets
     ]);
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();

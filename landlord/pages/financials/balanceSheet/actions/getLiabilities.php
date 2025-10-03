@@ -7,6 +7,7 @@ try {
         SELECT 
             coa.account_name AS liability_name,
             coa.account_type AS category,
+            coa.account_code AS account_id, 
             SUM(jl.credit) - SUM(jl.debit) AS amount,
             MAX(je.entry_date) AS due_date
         FROM journal_lines jl
@@ -38,7 +39,6 @@ try {
     $totalCurrentLiabilities = array_sum(array_column($currentLiabilities, 'amount'));
     $totalNonCurrentLiabilities = array_sum(array_column($nonCurrentLiabilities, 'amount'));
     $totalLiabilities = $totalCurrentLiabilities + $totalNonCurrentLiabilities;
-
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }
