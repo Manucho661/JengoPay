@@ -575,7 +575,7 @@
                                                                         } else if (htmlspecialchars($occupancy_status) == 'Vacant') {
                                                                             ?>
                                                                                 <a class="dropdown-item" href="bed_seater_unit_details.php?details=<?php echo $id;?>"><i class="bi bi-eye"></i> Details</a>
-                                                                                <a class="dropdown-item" href="rent_single_unit.php"><i class="bi bi-wallet"></i> Rent It</a>
+                                                                                <a class="dropdown-item" href="rent_bed_sitter_unit.php"><i class="bi bi-wallet"></i> Rent It</a>
                                                                                 <a class="dropdown-item" href="inspect_bed_sitter_unit.php?inspect=<?php echo $id;?>"><i class="bi bi-sliders"></i> Inspect</a>
                                                                                 <a class="dropdown-item" href="edit_bed_seater.php?edit=<?php echo $id;?>"><i class="bi bi-pen"></i> Edit</a>
                                                                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#occupiedModal<?php echo $id;?>"><i class="bi bi-person-fill-check"></i> Mark as Occupied</a>

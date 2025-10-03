@@ -1,21 +1,15 @@
 <?php
 include '../../db/connect.php';
 
-// $stmt = $pdo->prepare("SELECT account_code, account_name FROM chart_of_accounts ORDER BY account_name ASC");
-// $stmt->execute();
-// $accountItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
+// Fetch only revenue accounts
 $stmt = $pdo->prepare("
   SELECT account_code, account_name
-    FROM chart_of_accounts
-    WHERE account_type = 'Revenue'
-    ORDER BY account_name ASC
+  FROM chart_of_accounts
+  WHERE account_type = 'Revenue'
+  ORDER BY account_name ASC
 ");
 $stmt->execute();
 $accountItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
 
 // Determine if this is a draft (adjust based on your form input)
 $isDraft = isset($_POST['status']) && $_POST['status'] === 'draft';
@@ -37,73 +31,16 @@ if ($row && preg_match('/' . $prefix . '(\d+)/', $row['invoice_number'], $matche
 // Generate the new invoice number (e.g., DFT001 or INV001)
 $invoiceNumber = $prefix . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
 
+// Fetch buildings list
 try {
-    $stmt = $pdo->prepare("SELECT building_id FROM buildings ORDER BY building_id");
+    $stmt = $pdo->prepare("SELECT id, building_name FROM buildings ORDER BY building_name ASC");
     $stmt->execute();
     $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    $buildings = [];
-    // You might want to log this error in production
     error_log("Error fetching buildings: " . $e->getMessage());
-}
-
-
-
-$buildings = [];
-
-// --- DEBUG START ---
-echo "\n";
-try {
-    if (!isset($pdo) || !$pdo instanceof PDO) {
-        echo "\n";
-        die("Error: Database connection not established."); // Or handle more gracefully
-    }
-    $stmt = $pdo->query("SELECT building_id, building_name FROM buildings ORDER BY building_name ASC");
-    $buildings = $stmt->fetchAll();
-    echo "\n";
-    echo "\n";
-} catch (PDOException $e) {
-    error_log("Database error fetching buildings: " . $e->getMessage());
-    echo "\n"; // Show error in source for debug
-    echo "<p>Error loading properties. Please try again later.</p>";
     $buildings = [];
 }
-echo "\n";
-// --- DEBUG END ---
-
-// $stmt = $pdo->query("
-//     SELECT
-//         i.invoice_number,
-//         i.invoice_date,
-//         i.due_date,
-//         i.total,
-//         CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
-//     FROM invoice i
-//     LEFT JOIN users u ON i.tenant = u.id
-//     ORDER BY i.invoice_number DESC
-// ");
-
-// $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-
-// $buildingsStmt = $pdo->query(
-//     "SELECT building_id, building_name FROM buildings ORDER BY building_name"
-// );
-// $buildings = $buildingsStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
-<?php
-session_start();
-if (isset($_SESSION['success_message'])) {
-    echo '<div class="alert alert-success alert-dismissible fade show" role="alert">'
-        . htmlspecialchars($_SESSION['success_message']) .
-        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>';
-    unset($_SESSION['success_message']); // Remove so it won't show on reload
-}
-?>
-
 
 
 <!doctype html>
@@ -1702,7 +1639,7 @@ header {
                                         <select id="building" name="building_id" class="form-control" required>
                                             <option value="">Select a Building</option>
                                             <?php foreach ($buildings as $b): ?>
-                                                <option value="<?= $b['building_id'] ?>">
+                                                <option value="<?= $b['id'] ?>">
                                                     <?= htmlspecialchars($b['building_name']) ?>
                                                 </option>
                                             <?php endforeach; ?>
@@ -1716,7 +1653,7 @@ header {
                                         <select id="customer"
                                             name="tenant"
                                             class="form-control"
-                                            required
+                                          
                                             disabled>
                                             <option value="">Select a Tenant</option>
                                         </select>
@@ -1762,9 +1699,9 @@ header {
             </thead>
             <tbody id="itemsBody">
                 <!-- One initial row -->
-                <tr>
-                <td>
-                <select name="account_item[]" class="select-account searchable-select" required>
+                <!-- <tr> -->
+                <!-- <td> -->
+                <!-- <select name="account_item[]" class="select-account searchable-select" required>
             <option value="" disabled selected>Select Account Item</option>
             <?php foreach ($accountItems as $item): ?>
               <option value="<?= htmlspecialchars($item['account_code']) ?>">
@@ -1788,7 +1725,7 @@ header {
                         </select>
                     </td>
                     <td><input type="text" name="total[]" class="form-control total" readonly></td>
-                    <td><button type="button" class="btn btn-danger btn-sm delete-btn"><i class="fa fa-trash"></i></button></td>
+                    <td><button type="button" class="btn btn-danger btn-sm delete-btn"><i class="fa fa-trash"></i></button></td> -->
                 </tr>
             </tbody>
         </table>

@@ -1,57 +1,59 @@
-
 <?php
 include '../../db/connect.php';
 
-// Capture filter inputs
-$from_date = $_GET['from_date'] ?? '';
-$to_date   = $_GET['to_date'] ?? '';
+// Capture filters
+$from_date  = $_GET['from_date'] ?? '';
+$to_date    = $_GET['to_date'] ?? '';
+$account_id = $_GET['account_id'] ?? '';
 
-// Build base query
+$where  = [];
+$params = [];
+
+// Date filter
+if (!empty($from_date) && !empty($to_date)) {
+    $where[] = "DATE(je.created_at) BETWEEN :from AND :to";
+    $params[':from'] = $from_date;
+    $params[':to']   = $to_date;
+}
+
+// Account filter
+if (!empty($account_id)) {
+    $where[] = "jl.account_id = :account_id";
+    $params[':account_id'] = $account_id;
+}
+
+$whereSql = $where ? "WHERE " . implode(" AND ", $where) : "";
+
+// General Ledger query
 $sql = "
     SELECT 
         je.created_at,
         je.reference,
         je.description,
-        je.source_table,
-        je.source_id,
-        CASE 
-            WHEN je.source_table = 'expenses' THEN 'Expense'
-            WHEN je.reference LIKE 'INV%' THEN 'Accounts Receivable'
-            WHEN je.reference LIKE 'PAY%' THEN 'Cash/Bank'
-            WHEN je.reference LIKE 'LOAN%' THEN 'Loan Account'
-            WHEN je.reference LIKE 'CAP%' THEN 'Capital Account'
-            ELSE 'Suspense'
-        END AS account_name,
-        CASE 
-            WHEN je.reference LIKE 'INV%' THEN je.id * 100
-            WHEN je.source_table = 'expenses' THEN je.id * 50
-            ELSE 0
-        END AS debit,
-        CASE 
-            WHEN je.reference LIKE 'PAY%' THEN je.id * 100
-            WHEN je.reference LIKE 'LOAN%' THEN je.id * 200
-            ELSE 0
-        END AS credit
+        a.account_code,
+        a.account_name,
+        jl.debit,
+        jl.credit
     FROM journal_entries je
-    WHERE 1=1
+    INNER JOIN journal_lines jl ON je.id = jl.journal_entry_id
+    INNER JOIN chart_of_accounts a ON jl.account_id = a.account_code
+    $whereSql
+    ORDER BY je.created_at, je.id
 ";
-
-// Add date filters if provided
-$params = [];
-if (!empty($from_date) && !empty($to_date)) {
-    $sql .= " AND DATE(je.created_at) BETWEEN :from AND :to";
-    $params[':from'] = $from_date;
-    $params[':to']   = $to_date;
-}
-
-$sql .= " ORDER BY je.created_at, je.id";
-
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
-$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$ledgerRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Accounts for dropdown filter
+$accounts = $pdo->query("
+    SELECT account_code, account_name 
+    FROM chart_of_accounts 
+    ORDER BY account_name ASC
+")->fetchAll(PDO::FETCH_ASSOC);
 
 $runningBalance = 0;
 ?>
+
 <!doctype html>
 <html lang="en">
 <!--begin::Head-->
@@ -364,51 +366,61 @@ $runningBalance = 0;
             <h2 style="color:#FFC107;">General Ledger</h2>
             
   <!-- Date Filter Form -->
-  <form method="get" class="row g-3 mb-4">
-      <div class="col-md-3">
-          <label for="from_date" class="form-label">From Date</label>
-          <input type="date" id="from_date" name="from_date" value="<?= htmlspecialchars($from_date) ?>" class="form-control">
-      </div>
-      <div class="col-md-3">
-          <label for="to_date" class="form-label">To Date</label>
-          <input type="date" id="to_date" name="to_date" value="<?= htmlspecialchars($to_date) ?>" class="form-control">
-      </div>
-      <div class="col-md-2 d-flex align-items-end">
-          <button type="submit" class="btn w-100" style= "background-color:#FFC107; color:#00192D;">Filter</button>
-      </div>
-      <div class="col-md-2 d-flex align-items-end">
-          <a href="" class="btn  w-100" style= "background-color:#FFC107; color:#00192D;">Reset</a>
-      </div>
+  <!-- Filters -->
+  <form method="get" class="row g-3 mb-3">
+    <div class="col-md-3">
+      <label for="from_date" class="form-label">From Date</label>
+      <input type="date" id="from_date" name="from_date" value="<?= htmlspecialchars($from_date) ?>" class="form-control">
+    </div>
+    <div class="col-md-3">
+      <label for="to_date" class="form-label">To Date</label>
+      <input type="date" id="to_date" name="to_date" value="<?= htmlspecialchars($to_date) ?>" class="form-control">
+    </div>
+    <div class="col-md-3">
+      <label for="account_id" class="form-label">Account</label>
+      <select id="account_id" name="account_id" class="form-select">
+        <option value="">-- All Accounts --</option>
+        <?php foreach ($accounts as $acc): ?>
+          <option value="<?= $acc['account_code'] ?>" <?= $account_id == $acc['account_code'] ? 'selected' : '' ?>>
+            <?= htmlspecialchars($acc['account_name']) ?>
+          </option>
+        <?php endforeach; ?>
+      </select>
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+      <button type="submit" class="btn btn-primary w-100">Filter</button>
+    </div>
   </form>
 
-    <table class="table table-bordered table-striped">
-        <thead class="table" style="background-color:#00192D; color:#FFC107;">
-            <tr>
-                <th>Date</th>
-                <th>Reference</th>
-                <th>Description</th>
-                <th>Account</th>
-                <th>Debit (Ksh)</th>
-                <th>Credit (Ksh)</th>
-                <th>Balance (Ksh)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($rows as $r): 
-                $runningBalance += $r['debit'] - $r['credit'];
-            ?>
-            <tr>
-                <td><?= htmlspecialchars($r['created_at']) ?></td>
-                <td><?= htmlspecialchars($r['reference']) ?></td>
-                <td><?= htmlspecialchars($r['description']) ?></td>
-                <td><?= htmlspecialchars($r['account_name']) ?></td>
-                <td><?= number_format($r['debit'], 2) ?></td>
-                <td><?= number_format($r['credit'], 2) ?></td>
-                <td><?= number_format($runningBalance, 2) ?></td>
-            </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+
+  <!-- Ledger Table -->
+  <table class="table table-bordered table-striped">
+    <thead class="table-dark">
+      <tr>
+        <th>Date</th>
+        <th>Reference</th>
+        <th>Description</th>
+        <th>Account</th>
+        <th>Debit (KSH)</th>
+        <th>Credit (KSH)</th>
+        <th>Running Balance</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php foreach ($ledgerRows as $row): ?>
+        <?php $runningBalance += $row['debit'] - $row['credit']; ?>
+        <tr>
+          <td><?= htmlspecialchars(date('Y-m-d', strtotime($row['created_at']))) ?></td>
+          <td><?= htmlspecialchars($row['reference']) ?></td>
+          <td><?= htmlspecialchars($row['description']) ?></td>
+          <td><?= htmlspecialchars($row['account_name']) ?></td>
+          <td><?= number_format($row['debit'], 2) ?></td>
+          <td><?= number_format($row['credit'], 2) ?></td>
+          <td><?= number_format($runningBalance, 2) ?></td>
+        </tr>
+      <?php endforeach; ?>
+    </tbody>
+  </table>
 
   <!-- End view announcement -->
   <!-- javascript codes begin here  -->
@@ -427,6 +439,102 @@ $runningBalance = 0;
   <!-- more options -->
   </script>
 
+  <script>
+$('#trialBalance tbody').on('click', 'tr[data-account-id]', function () {
+  var accountId = $(this).data('account-id');
+  var accountName = $(this).find('td:first .fw-bold').text();
+  if (!accountId) return;
+
+  $('#modalAccountName').text(accountName);
+  $('#ledgerModal .modal-body').html('<div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x"></i><br>Loading ledger details...</div>');
+  $('#ledgerModal').modal('show');
+
+  // Fetch ledger data from backend
+  $.ajax({
+    url: '/Jengopay/landlord/pages/financials/generalledger/get_ledger.php',
+    type: 'GET',
+    data: { account_id: accountId },
+    success: function (response) {
+      let data;
+      try {
+        data = JSON.parse(response);
+      } catch (e) {
+        $('#ledgerModal .modal-body').html('<div class="alert alert-danger">Failed to load ledger data.</div>');
+        return;
+      }
+
+      if (data.error) {
+        $('#ledgerModal .modal-body').html('<div class="alert alert-warning">' + data.error + '</div>');
+        return;
+      }
+
+      if (data.length === 0) {
+        $('#ledgerModal .modal-body').html('<div class="alert alert-info">No transactions found for this account.</div>');
+        return;
+      }
+
+      // Build table
+      let tableHtml = `
+        <table class="table table-striped table-bordered">
+          <thead class="table-dark">
+            <tr>
+              <th>Date</th>
+              <th>Reference</th>
+              <th>Description</th>
+              <th class="text-end">Debit</th>
+              <th class="text-end">Credit</th>
+              <th class="text-end">Running Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      let runningBalance = 0;
+      data.forEach(row => {
+        runningBalance += parseFloat(row.debit) - parseFloat(row.credit);
+        tableHtml += `
+          <tr>
+            <td>${row.entry_date || '-'}</td>
+            <td>${row.reference || '-'}</td>
+            <td>${row.description || '-'}</td>
+            <td class="text-end">${parseFloat(row.debit).toLocaleString()}</td>
+            <td class="text-end">${parseFloat(row.credit).toLocaleString()}</td>
+            <td class="text-end">${runningBalance.toLocaleString()}</td>
+          </tr>
+        `;
+      });
+
+      tableHtml += `</tbody></table>`;
+      $('#ledgerModal .modal-body').html(tableHtml);
+    },
+    error: function () {
+      $('#ledgerModal .modal-body').html('<div class="alert alert-danger">Error loading ledger data.</div>');
+    }
+  });
+});
+
+
+  function exportToExcel() {
+    const table = document.getElementById('trialBalance');
+    const wb = XLSX.utils.table_to_book(table, {sheet: "Trial Balance"});
+    XLSX.writeFile(wb, 'Trial_Balance_' + new Date().toISOString().split('T')[0] + '.xlsx');
+  }
+
+  function exportToPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    doc.text('Trial Balance Report', 14, 15);
+    doc.autoTable({
+      html: '#trialBalance',
+      startY: 25,
+      theme: 'grid',
+      headStyles: { fillColor: [52, 58, 64] }
+    });
+    
+    doc.save('Trial_Balance_' + new Date().toISOString().split('T')[0] + '.pdf');
+  }
+  </script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>

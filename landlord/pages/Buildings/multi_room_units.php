@@ -375,6 +375,7 @@
                                                                         if(htmlspecialchars($occupancy_status) == 'Occupied') {
                                                                             ?>
                                                                                 <a class="dropdown-item" href="bed_seater_unit_details.php?details=<?php echo $id;?>"><i class="bi bi-eye"></i> Details</a>
+                                                                                <a class="dropdown-item" href="rent_multi_room.php"><i class="bi bi-wallet"></i> Rent It</a>
                                                                                 <a class="dropdown-item" href="edit_bed_seater.php?edit=<?php echo $id;?>"><i class="bi bi-pen"></i> Edit</a>
                                                                             <?php
                                                                         } else if (htmlspecialchars($occupancy_status) == 'Vacant') {
