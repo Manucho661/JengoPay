@@ -1,0 +1,33 @@
+<?php
+header('Content-Type: application/json'); // Ensure the content type is JSON
+
+require_once '../../db/connect.php'; // include your PDO connection
+
+// Set PDO to throw exceptions on error
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+    // Log errors to a file or console if needed, for debugging
+    error_log("Error: [$errno] $errstr on line $errline in file $errfile");
+    throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+});
+
+try {
+    // Correct query with quotes around 'available'
+    $stmt = $pdo->prepare("SELECT * FROM maintenance_requests WHERE provider_id = 2");
+    $stmt->execute();
+
+    $AssignedRequests = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Return a success response
+    echo json_encode([
+        "success" => true,
+        "data" => $AssignedRequests
+    ]);
+} catch (Throwable $e) {
+    // Handle other errors that are not related to PDO
+    echo json_encode([
+        "success" => false,
+        "error" => "Error: " . $e->getMessage()
+    ]);
+}

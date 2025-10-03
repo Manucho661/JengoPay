@@ -669,7 +669,7 @@ $netProfit = $income - $expenses;
                     <label for="buildingFilter" class="form-label">Property</label>
                     <?php
                     include '../../db/connect.php';
-                    $buildings = $pdo->query("SELECT building_id, building_name FROM buildings ORDER BY building_name")->fetchAll(PDO::FETCH_ASSOC);
+                    $buildings = $pdo->query("SELECT id, building_name FROM buildings ORDER BY building_name")->fetchAll(PDO::FETCH_ASSOC);
                     ?>
                     <select id="buildingFilter" class="form-control">
                       <option value="">-- Select Property --</option>

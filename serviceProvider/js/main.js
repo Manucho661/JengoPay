@@ -1,10 +1,11 @@
 import { get_requests, submit_proposal } from "./api.js";
 import { add_request_id } from "./modal.js";
+import { getAssignedRequests } from "./api/getAssignedJobs.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     // Fetch requests
     get_requests();
-
+    getAssignedRequests();
     // Check if the buttons exist
     const buttons = document.querySelectorAll('.apply-btn');
     if (buttons.length > 0) {

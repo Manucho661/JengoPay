@@ -205,6 +205,7 @@ try {
       border-top: none;
       border-radius: 0 0 8px 8px;
       padding: 24px;
+      min-height: 80%;
     }
 
     .job-card {
@@ -315,6 +316,9 @@ try {
                   <button class="nav-link" id="apps-tab" data-bs-toggle="tab" data-bs-target="#applications" type="button" role="tab"><span>Your Applications</span> </button>
                 </li>
                 <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="apps-tab" data-bs-toggle="tab" data-bs-target="#applications" type="button" role="tab"><span>Assigned Jobs</span> </button>
+                </li>
+                <li class="nav-item" role="presentation">
                   <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab"><span>Previous Jobs</span></button>
                 </li>
               </ul>
@@ -417,15 +421,13 @@ try {
 
                 <!-- APPLICATIONS -->
                 <div class="tab-pane fade" id="applications" role="tabpanel">
-                  <div class="section-title">Jobs You've Applied To</div>
-                  <ul class="list-group">
+                  <div class="section-title">Jobs You've been assigned .<span class="text-muted"> <i>Click Accept button to accept</i> </span></div>
+                  <ul class="list-group" id="list-group">
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                       Backend Developer for Payment Gateway
-                      <span class="badge bg-info">Under Review</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                       Mobile App React Native
-                      <span class="badge bg-warning text-dark">Interview Scheduled</span>
                     </li>
                   </ul>
                 </div>

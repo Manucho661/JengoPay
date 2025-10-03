@@ -388,7 +388,7 @@ $runningBalance = 0;
       </select>
     </div>
     <div class="col-md-3 d-flex align-items-end">
-      <button type="submit" class="btn btn-primary w-100">Filter</button>
+      <button type="submit" class="btn w-100"  style="color: #FFC107; background-color: #00192D;">Filter</button>
     </div>
   </form>
 

@@ -5,9 +5,9 @@
       <div class="col-md-4 mb-4">
         <h5 class="fw-bold text-uppercase bg-white" style="color:#00192D;">JENGO PAY</h5>
         <p class="small" style="color:#6c757d;">
-          A secure and reliable payment solution designed to simplify
-          your financial transactions. Fast, safe, and trusted by thousands
-          of businesses.
+          A comprehensive and efficient property management solution designed to simplify
+          your property operations. Streamline tenant management, maintenance requests,
+          and financial tracking with ease. Trusted by property owners and managers alike.
         </p>
         <div class="d-flex gap-3">
           <a href="#" style="color:#1877F2;"><i class="bi bi-facebook fs-5"></i></a>
