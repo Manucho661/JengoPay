@@ -669,7 +669,7 @@ $netProfit = $income - $expenses;
                     <label for="buildingFilter" class="form-label">Property</label>
                     <?php
                     include '../../db/connect.php';
-                    $buildings = $pdo->query("SELECT building_id, building_name FROM buildings ORDER BY building_name")->fetchAll(PDO::FETCH_ASSOC);
+                    $buildings = $pdo->query("SELECT id, building_name FROM buildings ORDER BY building_name")->fetchAll(PDO::FETCH_ASSOC);
                     ?>
                     <select id="buildingFilter" class="form-control">
                       <option value="">-- Select Property --</option>
@@ -747,759 +747,138 @@ $netProfit = $income - $expenses;
                 <h3 class=" text-start  balancesheet-header">December 31, 2024</h3>
                 <!-- <div class="table-responsive"> -->
                 <div class="table-responsive">
-                  <table id="myTable" style="width: 100%;">
-                    <thead style="background-color: rgba(128, 128, 128, 0.2); color: black;">
-                      <tr>
-                        <th style="font-size: 16px;">Description</th>
-                        <th style="font-size: 16px;">Amount</th>
-                      </tr>
-                    </thead>
+  <table id="myTable" style="width: 100%;">
+    <thead style="background-color: rgba(128, 128, 128, 0.2); color: black;">
+      <tr>
+        <th style="font-size: 16px;">Description</th>
+        <th style="font-size: 16px;">Amount</th>
+      </tr>
+    </thead>
 
-                    
-                    <tbody id="accordionFinance">
-                      <tr class="category">
-                        <td style="color:green; font-weight:500;"><b>Income</b></td>
-                      </tr>
+    <tbody id="accordionFinance"> <!-- Accordion parent for Income -->
+      <tr class="category">
+        <td style="color:green; font-weight:500;"><b>Income</b></td>
+      </tr>
 
-                      <?php if ($rentTotal > 0): ?>
-  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#rentDetails" aria-expanded="false" aria-controls="rentDetails" style="cursor:pointer;">
-    <td><i class="fas fa-chevron-right me-2 toggle-icon"></i> Rental Income</td>
-    <td>Ksh<?= $formattedRent ?></td>
-  </tr>
+      <?php if ($rentTotal > 0): ?>
+        <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#rentDetails" aria-expanded="false" style="cursor:pointer;">
+          <td><i class="fas fa-chevron-right me-2 toggle-icon"></i> Rental Income</td>
+          <td>Ksh<?= $formattedRent ?></td>
+        </tr>
+        <tr class="collapse" id="rentDetails" data-bs-parent="#accordionFinance">
+          <td colspan="2">
+            <table class="table table-sm table-bordered mb-0">
+              <thead class="table-light">
+                <tr><th>Invoice #</th><th>Tenant</th><th>Date</th><th>Subtotal</th></tr>
+              </thead>
+              <tbody>
+                <?php
+                $stmt = $pdo->prepare("
+                  SELECT ii.invoice_number, ii.sub_total, ii.created_at,
+                         CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
+                  FROM invoice_items ii
+                  JOIN users u ON ii.tenant = u.id
+                  WHERE ii.account_item = '500'
+                  ORDER BY ii.created_at DESC
+                ");
+                $stmt->execute();
+                foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $inv): ?>
+                  <tr>
+                    <td><?= htmlspecialchars($inv['invoice_number']) ?></td>
+                    <td><?= htmlspecialchars($inv['tenant_name']) ?></td>
+                    <td><?= date('Y-m-d', strtotime($inv['created_at'])) ?></td>
+                    <td>Ksh<?= number_format($inv['sub_total'], 2) ?></td>
+                  </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      <?php endif; ?>
 
-  <!-- Collapsible section -->
-  <tr class="collapse" id="rentDetails" data-bs-parent="#accordionFinance">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>Invoice #</th>
-            <th>Tenant</th>
-            <th>Date</th>
-            <th>Subtotal</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          // Fetch rental invoice details (account_item = 500)
-          $stmtRentInvoices = $pdo->prepare("
-              SELECT ii.invoice_number, ii.sub_total, ii.created_at,
-                     CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
-              FROM invoice_items ii
-              JOIN users u ON ii.tenant = u.id
-              WHERE ii.account_item = '500'
-              ORDER BY ii.created_at DESC
-          ");
-          $stmtRentInvoices->execute();
-          $rentInvoices = $stmtRentInvoices->fetchAll(PDO::FETCH_ASSOC);
+      <!-- Example for other income categories (ensure unique IDs like #waterDetails, #garbageDetails, etc.) -->
+      <?php if ($waterTotal > 0): ?>
+        <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#waterDetails" aria-expanded="false" style="cursor:pointer;">
+          <td><i class="fas fa-chevron-right me-2 toggle-icon"></i> Water Charges (Revenue)</td>
+          <td>Ksh<?= $formattedWater ?></td>
+        </tr>
+        <tr class="collapse" id="waterDetails" data-bs-parent="#accordionFinance">
+          <td colspan="2">
+            <table class="table table-sm table-bordered mb-0">
+              <thead class="table-light">
+                <tr><th>Invoice #</th><th>Tenant</th><th>Date</th><th>Subtotal</th></tr>
+              </thead>
+              <tbody>
+                <?php
+                $stmt = $pdo->prepare("
+                  SELECT ii.invoice_number, ii.sub_total, ii.created_at,
+                         CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
+                  FROM invoice_items ii
+                  JOIN users u ON ii.tenant = u.id
+                  WHERE ii.account_item = '510'
+                ");
+                $stmt->execute();
+                foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $inv): ?>
+                  <tr>
+                    <td><?= htmlspecialchars($inv['invoice_number']) ?></td>
+                    <td><?= htmlspecialchars($inv['tenant_name']) ?></td>
+                    <td><?= date('Y-m-d', strtotime($inv['created_at'])) ?></td>
+                    <td>Ksh<?= number_format($inv['sub_total'], 2) ?></td>
+                  </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      <?php endif; ?>
 
-          foreach ($rentInvoices as $inv): ?>
-            <tr>
-              <td><?= htmlspecialchars($inv['invoice_number']) ?></td>
-              <td><?= htmlspecialchars($inv['tenant_name']) ?></td>
-              <td><?= date('Y-m-d', strtotime($inv['created_at'])) ?></td>
-              <td>Ksh<?= number_format($inv['sub_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-  <?php endif; ?>
+      <!-- Total Income -->
+      <tr class="category">
+        <td><b>Total Income</b></td>
+        <td><b>Ksh<?= $formattedTotalIncome ?></b></td>
+      </tr>
+    </tbody>
 
-                      
+    <!-- EXPENSES SECTION -->
+    <tbody id="accordionExpenses"> <!-- Accordion parent for Expenses -->
+      <tr class="category">
+        <td style="color:green;"><b>Expenses</b></td>
+      </tr>
 
-
-<?php if ($waterTotal > 0): ?>
-  <!-- Clickable row -->
-  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#waterDetails" style="cursor:pointer;">
-    <td>
-      <i class="fas fa-chevron-right me-2"></i> Water Charges (Revenue)
-    </td>
-    <td>Ksh<?= $formattedWater ?></td>
-  </tr>
-
-  <!-- Collapsible row -->
-  <tr>
-    <td colspan="2" class="p-0">
-      <!-- 👇 collapse wrapper must be inside a td -->
-      <div id="waterDetails" class="collapse" data-bs-parent="#accordionFinance">
-        <table class="table table-sm table-bordered mb-0">
-          <thead class="table-light">
-            <tr>
-              <th>Invoice Number</th>
-              <th>Tenant</th>
-              <th>Date</th>
-              <th>Subtotal</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php
-            $stmt = $pdo->prepare("
-              SELECT ii.invoice_number, ii.sub_total, ii.created_at,
-                     CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
-              FROM invoice_items ii
-              JOIN users u ON ii.tenant = u.id
-              WHERE ii.account_item = '510'
-            ");
-            $stmt->execute();
-            foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $inv): ?>
-              <tr>
-                <td><?= htmlspecialchars($inv['invoice_number']) ?></td>
-                <td><?= htmlspecialchars($inv['tenant_name']) ?></td>
-                <td><?= date('Y-m-d', strtotime($inv['created_at'])) ?></td>
-                <td>Ksh<?= number_format($inv['sub_total'], 2) ?></td>
-              </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
-      </div>
-    </td>
-  </tr>
-<?php endif; ?>
-
-<?php if ($garbageTotal > 0): ?>
-  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#garbageDetails" style="cursor:pointer;">
-    <td><i class="fas fa-chevron-right me-2"></i> Garbage Collection Fees (Revenue)</td>
-    <td>Ksh<?= $formattedGarbage ?></td>
-  </tr>
-  <tr class="collapse" id="garbageDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-          <th>Invoice Number</th>
-            <th>Tenant</th>
-            <th>Date</th>
-            <th>Subtotal</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmt = $pdo->prepare("
-            SELECT ii.invoice_number, ii.sub_total, ii.created_at,
-                   CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
-            FROM invoice_items ii
-            JOIN users u ON ii.tenant = u.id
-            WHERE ii.account_item = '515'
-          ");
-          $stmt->execute();
-          foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $inv): ?>
-            <tr>
-              <td><?= htmlspecialchars($inv['invoice_number']) ?></td>
-              <td><?= htmlspecialchars($inv['tenant_name']) ?></td>
-              <td><?= date('Y-m-d', strtotime($inv['created_at'])) ?></td>
-              <td>Ksh<?= number_format($inv['sub_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-<?php endif; ?>
-
-<?php if ($lateFees > 0): ?>
-  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#lateDetails" style="cursor:pointer;">
-    <td><i class="fas fa-chevron-right me-2"></i> Late Payment Fees</td>
-    <td>Ksh<?= $formattedLateFees ?></td>
-  </tr>
-  <tr class="collapse" id="lateDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-          <th>Invoice Number</th>
-            <th>Tenant</th>
-            <th>Date</th>
-            <th>Subtotal</th>
-          </tr>
-        </thead>
-        <tbody  id="accordionExpenses">
-          <?php
-          $stmt = $pdo->prepare("
-            SELECT ii.invoice_number, ii.sub_total, ii.created_at,
-                   CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
-            FROM invoice_items ii
-            JOIN users u ON ii.tenant = u.id
-            WHERE ii.account_item = '505'
-          ");
-          $stmt->execute();
-          foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $inv): ?>
-            <tr>
-              <td><?= htmlspecialchars($inv['invoice_number']) ?></td>
-              <td><?= htmlspecialchars($inv['tenant_name']) ?></td>
-              <td><?= date('Y-m-d', strtotime($inv['created_at'])) ?></td>
-              <td>Ksh<?= number_format($inv['sub_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-<?php endif; ?>
-
-<?php if ($managementFees > 0): ?>
-  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#managementDetails" style="cursor:pointer;">
-    <td><i class="fas fa-chevron-right me-2"></i> Commissions and Management Fees</td>
-    <td>Ksh<?= $formattedManagementFees ?></td>
-  </tr>
-  <tr class="collapse" id="managementDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-          <th>Invoice Number</th>
-            <th>Tenant</th>
-            <th>Date</th>
-            <th>Subtotal</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmt = $pdo->prepare("
-            SELECT ii.invoice_number, ii.sub_total, ii.created_at,
-                   CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
-            FROM invoice_items ii
-            JOIN users u ON ii.tenant = u.id
-            WHERE ii.account_item = '520'
-          ");
-          $stmt->execute();
-          foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $inv): ?>
-            <tr>
-              <td><?= htmlspecialchars($inv['invoice_number']) ?></td>
-              <td><?= htmlspecialchars($inv['tenant_name']) ?></td>
-              <td><?= date('Y-m-d', strtotime($inv['created_at'])) ?></td>
-              <td>Ksh<?= number_format($inv['sub_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-<?php endif; ?>
-
-<?php if ($otherIncome > 0): ?>
-  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#otherDetails" style="cursor:pointer;">
-    <td><i class="fas fa-chevron-right me-2"></i> Other Income (Advertising, Penalties)</td>
-    <td>Ksh<?= $formattedOtherIncome ?></td>
-  </tr>
-  <tr class="collapse" id="otherDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-          <th>Invoice Number</th>
-            <th>Tenant</th>
-            <th>Date</th>
-            <th>Subtotal</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmt = $pdo->prepare("
-            SELECT ii.invoice_number, ii.sub_total, ii.created_at,
-                   CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
-            FROM invoice_items ii
-            JOIN users u ON ii.tenant = u.id
-            WHERE ii.account_item = '525'
-          ");
-          $stmt->execute();
-          foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $inv): ?>
-            <tr>
-              <td><?= htmlspecialchars($inv['invoice_number']) ?></td>
-              <td><?= htmlspecialchars($inv['tenant_name']) ?></td>
-              <td><?= date('Y-m-d', strtotime($inv['created_at'])) ?></td>
-              <td>Ksh<?= number_format($inv['sub_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-<?php endif; ?>
-
-<!-- Total -->
-<tr class="category">
-  <td><b>Total Income</b></td>
-  <td><b>Ksh<?= $formattedTotalIncome ?></b></td>
-</tr>
-                     <tr class="category">
-  <td style="color:green;"><b>Expenses</b></td>
-</tr>
-
-<?php if ($maintenanceTotal > 0): ?>
-  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#maintenanceDetails" style="cursor:pointer;">
-    <td><i class="fas fa-chevron-right me-2"></i> Maintenance and Repair Costs</td>
-    <td>Ksh<?= $formattedMaintenance ?></td>
-  </tr>
-  <tr class="collapse" id="maintenanceDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmt = $pdo->prepare("
-            SELECT description, item_total, created_at
-            FROM expense_items
-            WHERE item_account_code = '600'
-          ");
-          $stmt->execute();
-          foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
-            <tr>
-              <td><?= htmlspecialchars($exp['description']) ?></td>
-              <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
-              <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-<?php endif; ?>
-
-<?php if ($salaryTotal > 0): ?>
-  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#salaryDetails" style="cursor:pointer;">
-    <td><i class="fas fa-chevron-right me-2"></i> Staff Salaries and Wages</td>
-    <td>Ksh<?= $formattedSalaryTotal ?></td>
-  </tr>
-  <tr class="collapse" id="salaryDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmt = $pdo->prepare("
-            SELECT description, item_total, created_at
-            FROM expense_items
-            WHERE item_account_code = '605'
-          ");
-          $stmt->execute();
-          foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
-            <tr>
-              <td><?= htmlspecialchars($exp['description']) ?></td>
-              <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
-              <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-<?php endif; ?>
-
-<?php if ($electricityTotal > 0): ?>
-  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#electricityDetails" style="cursor:pointer;">
-    <td><i class="fas fa-chevron-right me-2"></i> Electricity Expense</td>
-    <td>Ksh<?= $formattedElectricity ?></td>
-  </tr>
-  <tr class="collapse" id="electricityDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmt = $pdo->prepare("
-            SELECT description, item_total, created_at
-            FROM expense_items
-            WHERE item_account_code = '610'
-          ");
-          $stmt->execute();
-          foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
-            <tr>
-              <td><?= htmlspecialchars($exp['description']) ?></td>
-              <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
-              <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-<?php endif; ?>
-
-<?php if ($waterExpenseTotal > 0): ?>
-  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#waterExpDetails" style="cursor:pointer;">
-    <td><i class="fas fa-chevron-right me-2"></i> Water Expense</td>
-    <td>Ksh<?= $formattedWaterExpense ?></td>
-  </tr>
-  <tr class="collapse" id="waterExpDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmt = $pdo->prepare("
-            SELECT description, item_total, created_at
-            FROM expense_items
-            WHERE item_account_code = '615'
-          ");
-          $stmt->execute();
-          foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
-            <tr>
-              <td><?= htmlspecialchars($exp['description']) ?></td>
-              <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
-              <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-<?php endif; ?>
-
-<?php if ($internetExpenseTotal > 0): ?>
-  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#internetDetails" style="cursor:pointer;">
-    <td><i class="fas fa-chevron-right me-2"></i> Internet Expense</td>
-    <td>Ksh<?= $formattedInternetExpense ?></td>
-  </tr>
-  <tr class="collapse" id="internetDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmt = $pdo->prepare("
-            SELECT description, item_total, created_at
-            FROM expense_items
-            WHERE item_account_code = '625'
-          ");
-          $stmt->execute();
-          foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
-            <tr>
-              <td><?= htmlspecialchars($exp['description']) ?></td>
-              <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
-              <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-<?php endif; ?>
-
-<?php if ($securityExpenseTotal > 0): ?>
-  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#securityDetails" style="cursor:pointer;">
-    <td><i class="fas fa-chevron-right me-2"></i> Security Expense</td>
-    <td>Ksh<?= $formattedSecurityExpense ?></td>
-  </tr>
-  <tr class="collapse" id="securityDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>Expense ID</th>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmtSecurity = $pdo->prepare("
-              SELECT e.id, e.description, e.item_total, e.created_at
-              FROM expense_items e
-              WHERE e.item_account_code = '630' -- replace with actual code for Security
-              ORDER BY e.created_at DESC
-          ");
-          $stmtSecurity->execute();
-          foreach ($stmtSecurity->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
-            <tr>
-              <td><?= htmlspecialchars($exp['id']) ?></td>
-              <td><?= htmlspecialchars($exp['description']) ?></td>
-              <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
-              <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-<?php endif; ?>
-
-
-<?php if ($softwareExpenseTotal > 0): ?>
-  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#softwareDetails" style="cursor:pointer;">
-    <td><i class="fas fa-chevron-right me-2"></i> Property Management Software Subscription</td>
-    <td>Ksh<?= $formattedSoftwareExpense ?></td>
-  </tr>
-  <tr class="collapse" id="softwareDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>Expense ID</th>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmtSoftware = $pdo->prepare("
-              SELECT e.id, e.description, e.item_total, e.created_at
-              FROM expense_items e
-              WHERE e.item_account_code = '635' -- replace with actual code for Software
-              ORDER BY e.created_at DESC
-          ");
-          $stmtSoftware->execute();
-          foreach ($stmtSoftware->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
-            <tr>
-              <td><?= htmlspecialchars($exp['id']) ?></td>
-              <td><?= htmlspecialchars($exp['description']) ?></td>
-              <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
-              <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-<?php endif; ?>
-
-
-<?php if ($marketingExpenseTotal > 0): ?>
-  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#marketingDetails" style="cursor:pointer;">
-    <td><i class="fas fa-chevron-right me-2"></i> Marketing and Advertising Costs</td>
-    <td>Ksh<?= $formattedMarketingExpense ?></td>
-  </tr>
-  <tr class="collapse" id="marketingDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>Expense ID</th>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmtMarketing = $pdo->prepare("
-              SELECT e.id, e.description, e.item_total, e.created_at
-              FROM expense_items e
-              WHERE e.item_account_code = '640' -- replace with actual code for Marketing
-              ORDER BY e.created_at DESC
-          ");
-          $stmtMarketing->execute();
-          foreach ($stmtMarketing->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
-            <tr>
-              <td><?= htmlspecialchars($exp['id']) ?></td>
-              <td><?= htmlspecialchars($exp['description']) ?></td>
-              <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
-              <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-<?php endif; ?>
-
-
-<?php if ($legalExpenseTotal > 0): ?>
-  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#legalDetails" style="cursor:pointer;">
-    <td><i class="fas fa-chevron-right me-2"></i> Legal and Compliance Fees</td>
-    <td>Ksh<?= $formattedLegalExpense ?></td>
-  </tr>
-  <tr class="collapse" id="legalDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>Expense ID</th>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmtLegal = $pdo->prepare("
-              SELECT e.id, e.description, e.item_total, e.created_at
-              FROM expense_items e
-              WHERE e.item_account_code = '645' -- replace with actual code for Legal
-              ORDER BY e.created_at DESC
-          ");
-          $stmtLegal->execute();
-          foreach ($stmtLegal->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
-            <tr>
-              <td><?= htmlspecialchars($exp['id']) ?></td>
-              <td><?= htmlspecialchars($exp['description']) ?></td>
-              <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
-              <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-<?php endif; ?>
-
-
-<?php if ($loanInterestTotal > 0): ?>
-  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#loanDetails" style="cursor:pointer;">
-    <td><i class="fas fa-chevron-right me-2"></i> Loan Interest Payments</td>
-    <td>Ksh<?= $formattedLoanInterest ?></td>
-  </tr>
-  <tr class="collapse" id="loanDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>Expense ID</th>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmtLoan = $pdo->prepare("
-              SELECT e.id, e.description, e.item_total, e.created_at
-              FROM expense_items e
-              WHERE e.item_account_code = '655' -- replace with actual code for Loan Interest
-              ORDER BY e.created_at DESC
-          ");
-          $stmtLoan->execute();
-          foreach ($stmtLoan->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
-            <tr>
-              <td><?= htmlspecialchars($exp['id']) ?></td>
-              <td><?= htmlspecialchars($exp['description']) ?></td>
-              <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
-              <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-<?php endif; ?>
-
-
-<?php if ($bankChargesTotal > 0): ?>
-  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#bankDetails" style="cursor:pointer;">
-    <td><i class="fas fa-chevron-right me-2"></i> Bank/Mpesa Charges</td>
-    <td>Ksh<?= $formattedBankCharges ?></td>
-  </tr>
-  <tr class="collapse" id="bankDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>Expense ID</th>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmtBank = $pdo->prepare("
-              SELECT e.id, e.description, e.item_total, e.created_at
-              FROM expense_items e
-              WHERE e.item_account_code = '660' -- replace with actual code for Bank Charges
-              ORDER BY e.created_at DESC
-          ");
-          $stmtBank->execute();
-          foreach ($stmtBank->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
-            <tr>
-              <td><?= htmlspecialchars($exp['id']) ?></td>
-              <td><?= htmlspecialchars($exp['description']) ?></td>
-              <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
-              <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-<?php endif; ?>
-
-
-<?php if ($otherExpenseTotal > 0): ?>
-  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#otherDetails" style="cursor:pointer;">
-    <td><i class="fas fa-chevron-right me-2"></i> Other Expenses (Office, Supplies, Travel)</td>
-    <td>Ksh<?= $formattedOtherExpense ?></td>
-  </tr>
-  <tr class="collapse" id="otherDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>Expense ID</th>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmtOther = $pdo->prepare("
-              SELECT e.id, e.description, e.item_total, e.created_at
-              FROM expense_items e
-              WHERE e.item_account_code = '665' -- replace with actual code for Other
-              ORDER BY e.created_at DESC
-          ");
-          $stmtOther->execute();
-          foreach ($stmtOther->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
-            <tr>
-              <td><?= htmlspecialchars($exp['id']) ?></td>
-              <td><?= htmlspecialchars($exp['description']) ?></td>
-              <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
-              <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-<?php endif; ?>
-
-<tr class="category">
-  <td><b>Total Expenses</b></td>
-  <td><b>Ksh<?= $formattedTotalExpenses ?></b></td>
-</tr>
-
-                      <tr class="category">
-                        <td><b>Net Profit</b></td>
-                        <td><b>Ksh<?= $formattedNetProfit ?></b></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-              </div>
+      <?php if ($maintenanceTotal > 0): ?>
+        <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#maintenanceDetails" aria-expanded="false" style="cursor:pointer;">
+          <td><i class="fas fa-chevron-right me-2 toggle-icon"></i> Maintenance and Repair Costs</td>
+          <td>Ksh<?= $formattedMaintenance ?></td>
+        </tr>
+        <tr class="collapse" id="maintenanceDetails" data-bs-parent="#accordionExpenses">
+          <td colspan="2">
+            <table class="table table-sm table-bordered mb-0">
+              <thead class="table-light">
+                <tr><th>Description</th><th>Date</th><th>Amount</th></tr>
+              </thead>
+              <tbody>
+                <?php
+                $stmt = $pdo->prepare("
+                  SELECT description, item_total, created_at
+                  FROM expense_items
+                  WHERE item_account_code = '600'
+                ");
+                $stmt->execute();
+                foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
+                  <tr>
+                    <td><?= htmlspecialchars($exp['description']) ?></td>
+                    <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
+                    <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
+                  </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      <?php endif; ?>
+    </tbody>
+  </table>
+</div>
               <!-- /.col -->
             </div>
             <!--end::Row-->
@@ -2000,6 +1379,22 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   </script>
 
+
+<script>
+  document.querySelectorAll('.category-row').forEach(row => {
+    row.addEventListener('click', function() {
+      const icon = this.querySelector('.toggle-icon');
+      // Reset all icons
+      document.querySelectorAll('.toggle-icon').forEach(i => i.classList.remove('fa-chevron-down'));
+      // Toggle this icon
+      if (icon.classList.contains('fa-chevron-right')) {
+        icon.classList.replace('fa-chevron-right', 'fa-chevron-down');
+      } else {
+        icon.classList.replace('fa-chevron-down', 'fa-chevron-right');
+      }
+    });
+  });
+</script>
   <!-- <script>
 function applyFilters() {
   const startDate = document.getElementById("startDate").value;
