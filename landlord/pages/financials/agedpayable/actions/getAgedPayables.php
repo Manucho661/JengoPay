@@ -8,20 +8,24 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
 });
 
 try {
-
     $sql = "
-    SELECT
-        supplier,
-        SUM(CASE WHEN DATEDIFF(CURDATE(), created_at) BETWEEN 0 AND 30 THEN total ELSE 0 END) AS '0-30 Days',
-        SUM(CASE WHEN DATEDIFF(CURDATE(), created_at) BETWEEN 31 AND 60 THEN total ELSE 0 END) AS '31-60 Days',
-        SUM(CASE WHEN DATEDIFF(CURDATE(), created_at) BETWEEN 61 AND 90 THEN total ELSE 0 END) AS '61-90 Days',
-        SUM(CASE WHEN DATEDIFF(CURDATE(), created_at) > 90 THEN total ELSE 0 END) AS '90+ Days',
-        SUM(total) AS 'Total Payable'
-    FROM
-        expenses
-    GROUP BY
-        supplier
-    ORDER BY
+    SELECT *
+    FROM (
+        SELECT
+            COALESCE(supplier, 'TOTAL') AS supplier,
+            SUM(CASE WHEN DATEDIFF(CURDATE(), created_at) BETWEEN 0 AND 30 THEN total ELSE 0 END) AS `0-30 Days`,
+            SUM(CASE WHEN DATEDIFF(CURDATE(), created_at) BETWEEN 31 AND 60 THEN total ELSE 0 END) AS `31-60 Days`,
+            SUM(CASE WHEN DATEDIFF(CURDATE(), created_at) BETWEEN 61 AND 90 THEN total ELSE 0 END) AS `61-90 Days`,
+            SUM(CASE WHEN DATEDIFF(CURDATE(), created_at) > 90 THEN total ELSE 0 END) AS `90+ Days`,
+            SUM(total) AS `Total Payable`
+        FROM
+            expenses
+            WHERE status IN ('unpaid','partially_paid')
+        GROUP BY
+            supplier WITH ROLLUP
+    ) AS t
+    ORDER BY 
+        CASE WHEN supplier = 'TOTAL' THEN 2 ELSE 1 END, 
         supplier;
     ";
 

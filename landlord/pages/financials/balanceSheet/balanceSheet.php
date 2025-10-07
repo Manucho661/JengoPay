@@ -94,25 +94,6 @@ function formatAccounting($amount)
     background-color: rgba(128, 128, 128, 0.1);
   }
 
-  .sub-category {
-    padding-left: 35px !important;
-    font-size: 16px;
-  }
-
-  .sub-category.total {
-    font-weight: 600;
-  }
-
-  .sub-current-assets.total {
-    font-weight: 600;
-    font-size: 20px;
-  }
-
-  .sub-current-assets {
-    font-size: 20px;
-  }
-
-  
 
   td {
     font-size: 14px;
@@ -129,17 +110,20 @@ function formatAccounting($amount)
     /* border-bottom: 2px solid #000; */
     /* top border to separate total */
   }
-/* liabilities */
-.totalLiabilities-row td{
- border-bottom: 2px solid #000;
+
+  /* liabilities */
+  .totalLiabilities-row td {
+    border-bottom: 2px solid #000;
     font-weight: bold;
     font-size: 16px;
-}
-/* equity */
-.totalEquityCell{
-   font-weight: bold;
+  }
+
+  /* equity */
+  .totalEquityCell {
+    font-weight: bold;
     font-size: 14px;
-}
+  }
+
   .totalAssets-row td {
     border-bottom: 2px solid #000;
     font-weight: bold;
@@ -173,11 +157,16 @@ function formatAccounting($amount)
   .asset-name-cell:focus {
     background-color: #00192D !important;
   }
-  .totalLiabilitiesEquityCell{
-    font-weight:bold;
-    font-size: 16px;
-        border-bottom: 2px solid #000;
 
+  .totalLiabilitiesEquityCell {
+    font-weight: bold;
+    font-size: 16px;
+    border-bottom: 2px solid #000;
+  }
+
+  .form-label {
+    white-space: nowrap;
+    /* Prevent the label text from wrapping */
   }
 </style>
 
@@ -410,7 +399,11 @@ function formatAccounting($amount)
           <!--begin::Row-->
           <div class="row">
             <div class="col-sm-8">
-              <h3 class="mb-0 contact_section_header"> 💰 &nbsp; Balance Sheet</h3>
+              <div class="col-sm-8 d-flex">
+                <span class="info-box-icon p-2 rounded" style="background-color:#FFC107; color:#fff;">
+                  <i class="bi bi-currency-exchange" style="color:#00192D;"></i> </span>
+                <h3 class="mb-0 mx-2">Balance Sheet</h3>
+              </div>
             </div>
             <div class="col-sm-4">
               <ol class="breadcrumb float-sm-end">
@@ -436,25 +429,31 @@ function formatAccounting($amount)
           </div>
           <!--end::Row-->
           <!--begin::Row-->
-          <div class="row align-items-center py-3 px-4 rounded shadow-sm mb-3" style="background-color: #ffffff;">
-            <div class="col-md-6">
-              <div class="d-flex gap-3 align-items-center">
+          <div class="row align-items-center p-2 rounded mb-3" style="background-color: #ffffff;">
+            <div class="col-md-9">
+              <div class="d-flex gap-3 align-items-center w-100">
                 <!-- Category Filter -->
-                <select id="categoryFilter" class="form-select border-1 shadow-sm" style="background-color: #ffffff; color: #00192D; border-color: #00192D;">
-                  <option value="">Select</option>
-                  <option value="technology">All</option>
-                  <option value="health">Manucho</option>
-                  <option value="business">Ebenezer</option>
-                  <option value="education">Crown Z</option>
-                </select>
+                <div class="form-group w-100">
+                  <label for="selectFilter" class="form-label p-2">Choose a Building</label>
+                  <select id="selectFilter" class="form-select w-100" aria-label="Select filter">
+                    <option selected>Select a building</option>
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                    <option value="3">Option 3</option>
+                    <option value="4">Option 4</option>
+                  </select>
+                </div>
 
                 <!-- Date Filter -->
-                <input type="date" id="filterDate" class="form-control border-1 shadow-sm" style="background-color: #ffffff; color: #00192D; border-color: #00192D;" />
+                <div class="form-group w-100">
+                  <label for="filterDate" class="form-label p-2">Select Date</label>
+                  <input type="date" id="filterDate" class="form-control w-100 border-1 shadow-sm" />
+                </div>
               </div>
             </div>
 
             <!-- Export Buttons -->
-            <div class="col-md-6 d-flex justify-content-md-end mt-3 mt-md-0">
+            <div class="col-md-3 d-flex justify-content-md-end mt-3 mt-md-0">
               <div class="d-flex gap-2">
                 <button class="btn rounded-circle shadow-sm" id="downloadBtn" style="background-color: #FFC107; border: none;">
                   <i class="fas fa-file-pdf" style="font-size: 24px; color: #00192D;"></i>
@@ -482,7 +481,7 @@ function formatAccounting($amount)
                       </tr>
                     </thead>
                     <tbody>
-                      
+
                     </tbody>
                   </table>
                 </div>
@@ -496,22 +495,9 @@ function formatAccounting($amount)
         <!--end::App Content-->
     </main>
     <!--end::App Main-->
+
     <!--begin::Footer-->
-
-
-
-    <footer class="app-footer">
-      <!--begin::To the end-->
-      <div class="float-end d-none d-sm-inline">Anything you want</div>
-      <!--end::To the end-->
-      <!--begin::Copyright-->
-      <strong>
-        Copyright &copy; 2014-2024&nbsp;
-        <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;"> JENGO PAY</a>.
-      </strong>
-      All rights reserved.
-      <!--end::Copyright-->
-    </footer>
+    <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?> </div>
     <!--end::Footer-->
   </div>
   <!--end::App Wrapper-->

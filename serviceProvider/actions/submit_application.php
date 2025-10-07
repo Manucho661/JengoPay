@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $your_price = $_POST['your_price'] ?? '';
     $duration = ($_POST['duration'] ?? '') === 'other' ? ($_POST['custom_duration'] ?? '') : $_POST['duration'];
     $cover_letter = $_POST['cover_letter'] ?? '';
-    $provider_id = 6; // Change this if you want to use dynamic provider_id from POST
+    $provider_id = 2; // Change this if you want to use dynamic provider_id from POST
 
     //  ✅ Input validation
     if (empty($your_price) || empty($request_id) || empty($duration) || empty($cover_letter)) {

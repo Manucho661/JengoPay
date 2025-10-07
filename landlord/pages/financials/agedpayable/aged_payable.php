@@ -141,69 +141,6 @@
             /* underline highlight */
         }
 
-        .custom-select-wrapper {
-            position: relative;
-            width: 100%;
-        }
-
-        .custom-select {
-            appearance: none !important;
-            /* Most modern browsers */
-            -webkit-appearance: none !important;
-            /* Safari and older WebKit */
-            -moz-appearance: none !important;
-            padding: 12px 16px;
-            border-radius: 5px;
-            background-color: #fff !important;
-            border: 1px solid #ccc;
-            cursor: pointer;
-            position: relative;
-            user-select: none;
-            background: white !important;
-            /* Remove browser background */
-            background-image: none;
-        }
-
-        .custom-select:focus {
-            border-color: #FFC107 !important;
-            box-shadow: none !important;
-        }
-
-        .custom-select:hover {
-            border-color: #FFC107 !important;
-        }
-
-        .custom-select::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            right: 16px;
-            transform: translateY(-50%) rotate(45deg);
-            width: 6px;
-            height: 6px;
-            border-right: 2px solid #FFC107;
-            border-bottom: 2px solid #FFC107;
-            transition: transform 0.2s;
-        }
-
-        .custom-select.open::after {
-            transform: translateY(-50%) rotate(-135deg);
-        }
-
-        .select-options {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            border: 1px solid #ccc;
-            border-top: none;
-            background: white;
-            z-index: 10;
-            border-radius: 0 0 5px 5px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
 
         .select-options div {
             padding: 12px 16px;
@@ -269,7 +206,7 @@
         <!--begin::App Main-->
         <main class="app-main" style=" height:100%;">
             <!--begin::App Content Header-->
-            <div class="app-content-header" style="height:30%;">
+            <div class="app-content-header" style="">
                 <!--begin::Container-->
                 <div class="container-fluid">
                     <!--begin::Row-->
@@ -316,9 +253,9 @@
                 </div>
                 <!--end::Container-->
             </div>
-            <div class="app-content" style="height: 75%;">
+            <div class="app-content" style="">
                 <!--begin::Container-->
-                <div class="container-fluid details bg-white rounded-2 p-2 shadow-sm" style="height: 100%;">
+                <div class="container-fluid details bg-white rounded-2 p-2" style="height: 100%;">
                     <!-- Aging Payables Table -->
                     <div class="">
                         <div class="table-summary-section text-warning p-2 rounded-top-2 d-flex justify-content-between mb-2"
@@ -396,18 +333,7 @@
         </main>
         <!--end::App Main-->
         <!--begin::Footer-->
-        <footer class="app-footer">
-            <!--begin::To the end-->
-            <div class="float-end d-none d-sm-inline">Anything you want</div>
-            <!--end::To the end-->
-            <!--begin::Copyright-->
-            <strong>
-                Copyright &copy; 2014-2024&nbsp;
-                <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;"> JENGO PAY</a>.
-            </strong>
-            All rights reserved.
-            <!--end::Copyright-->
-        </footer>
+        <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?> </div>
         <!--end::Footer-->
     </div>
     <!--end::App Wrapper-->

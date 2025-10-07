@@ -59,7 +59,7 @@ const requestsListTemplate = (requests) => html`
     <div class="requests-container">
         ${requests.length
         ? requests.map(requestTemplate) // Dynamically render each request
-        : html`<p>No requests availa=ble.</p>`}
+        : html`<p class="text-danger">No requests available.</p>`}
     </div>
 `;
 
@@ -78,7 +78,7 @@ function fillRequests(requests) {
 
         if (requestList.length === 0) {
             // If there are no requests, display a "No requests available" message
-            container.innerHTML = `<p>No requests available.</p>`;
+            container.innerHTML = `<p class="text-danger">No requests available.</p>`;
         } else {
             // Render the list of requests
             render(requestsListTemplate(requestList), container); // Pass only the requests array to the template
@@ -119,7 +119,11 @@ export async function submit_proposal(e, proposalForm) {
         // Assuming the response is JSON, parse it
         const data = await response.json();
         console.log("✅ Proposals fetched:", data);
+
+        // Reload the page after successful submission
+        window.location.reload();
     } catch (err) {
         console.error("❌ Failed to fetch proposals:", err);
     }
 }
+
