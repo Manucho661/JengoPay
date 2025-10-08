@@ -1,13 +1,16 @@
+import { combobox } from "./combobox.js";
+import { initSupplierModal, payExpenseModal } from "./modals.js";
+import { setupExpenseCalculator } from "./calculateExpense.js";
+import { vldtSupplierReg, checkPayment } from "./validations.js";
+import { downloadExpPDF } from "./downloadPdf.js";
+import { createExpense } from "./APIs/createExpense.js";
+import { payExpense } from "./APIs/payExpense.js";
+import { registerSupplier } from "./APIs/registerSupplier.js";
+import { editSupplier } from "./APIs/editSupplier.js";
+import { get_payment_details } from "./APIs/getPaymentDetails.js";
+import { edit_submittedPayments } from "./APIs/editPayment.js";
+import { initSupplierListModal } from "./modals.js";
 
-import { setupExpenseForms } from "./expenses/expForms.js";
-import { initializeCustomSelect } from "./ui/customSelect.js";
-import { combobox } from "./ui/combobox.js";
-import { payExpense, initSupplierModal} from "./expenses/modals.js";
-import { setupExpenseCalculator } from "./expenses/expCalculator.js";
-import { initSupplierListModal } from "./expenses/supplierList.js";
-import { vldtSupplierReg, checkPayment} from "./expenses/expValidations.js";
-import { downloadExpPDF } from "./expenses/expPdf.js";
-import { get_payment_details, edit_submittedPayments } from "./expenses/api1.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -18,22 +21,66 @@ document.addEventListener("DOMContentLoaded", () => {
   const invalidFields = new Set();
   // Expense features
   setupExpenseCalculator();
-  setupExpenseForms(invalidFields);
 
-  // initialize edit
-  // editExpModal();
 
-  // Attach payExpense to buttons dynamically
-  document.querySelectorAll("[data-action='pay-expense']").forEach(button => {
-    button.addEventListener("click", () => {
-      const expenseId = button.getAttribute("data-expense-id");
-      const expectedAmount = parseFloat(button.getAttribute("data-expected-amount"));
-      payExpense(expenseId, expectedAmount);
-    });
+  // Create expense
+  document.getElementById("expenseForm").addEventListener('submit', (e) => {
+    e.preventDefault();
+    createExpense(e.target);
   });
 
+
+  // PAYMENTS
+  // pay expense modal
+  document.addEventListener("click", (e) => {
+    const button = e.target.closest("[data-action='pay-expense']");
+    if (button) {
+      const expenseId = button.getAttribute("data-expense-id");
+      const expectedAmount = parseFloat(button.getAttribute("data-expected-amount"));
+      payExpenseModal(expenseId, expectedAmount);
+    }
+  });
+
+  // payExpense
+  document.getElementById("payExpenseForm").addEventListener('submit', (e) => {
+    e.preventDefault();
+    payExpense(e.target);
+  });
+
+  // edit payment
+  document.addEventListener("click", (e) => {
+    const editBtn = e.target.closest(".edit-payment-btn");
+    if (editBtn) {
+      e.preventDefault();
+      get_payment_details(editBtn); // pass the element, not the event
+    }
+  });
+
+  // edit the payments 
+  const editPaymentModal = document.getElementById("editPaymentModal");
+
+  if (editPaymentModal) {
+
+    editPaymentModal.addEventListener("submit", (e) => {
+      if (e.target.classList.contains("payment-form")) {
+        e.preventDefault();
+        edit_submittedPayments(e.target);
+      }
+    });
+  }
+
+
+
+  // SUPPLIERS
   // Initialize supplier create modal
   initSupplierModal(invalidFields);
+
+  // creat supplier
+  document.getElementById("supplierForm").addEventListener('submit', (e) => {
+    e.preventDefault();
+    registerSupplier(invalidFields, e.target);
+  });
+
   //Initialize supplier list modal
   initSupplierListModal();
 
@@ -69,31 +116,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Edit supplier
+  document.getElementById("supplierEditForm").addEventListener('submit', (e) => {
+    e.preventDefault();
+    editSupplier(e.target);
+  });
+
+
   // Initialize validation functions
   vldtSupplierReg(invalidFields);
   checkPayment();
-  
+
   // expense pdf download
   document.getElementById('downloadExpPdf').addEventListener('click', downloadExpPDF);
 
-
-  // Get expense payment details
-  document.querySelectorAll(".edit-payment-btn").forEach(button => {
-    button.addEventListener("click", get_payment_details);
-  });
-
-  
-  // edit the payments 
-const editPaymentModal = document.getElementById("editPaymentModal");
-
-if (editPaymentModal) {
-
-  editPaymentModal.addEventListener("submit", (e) => {
-    if (e.target.classList.contains("payment-form")) {
-      e.preventDefault();
-      edit_submittedPayments(e.target);
-    }
-  });
-}
 
 });

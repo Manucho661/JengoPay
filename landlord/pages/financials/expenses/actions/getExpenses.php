@@ -1,5 +1,5 @@
 <?php
-include '../../db/connect.php';
+
 
 try {
     // Fetch all expenses and include the paid amount (if any)
