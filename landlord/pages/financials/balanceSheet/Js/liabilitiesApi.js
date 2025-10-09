@@ -1,4 +1,5 @@
 import { attachCollapseHandler } from "./AssetsApi.js";
+import { attachCollapseHandlerAccPayables } from "./AssetsApi.js";
 
 let total_liabilities;
 export { total_liabilities };
@@ -34,7 +35,7 @@ export function addTbodyNonCurrentLiabilities(nonCrtliabilities, total, $totalLi
     // Create a new tbody
     const newTbody = document.createElement("tbody");
 
-    
+
     // --- Sub-header row ("liabilities") ---
     const subHeaderRow = document.createElement("tr");
     const subHeaderCell = document.createElement("td");
@@ -198,7 +199,12 @@ export function addTbodyCurrentLiabilities(currentLiabilities, total) {
         newTbody.appendChild(collapseRow);
 
         // Attach the collapse handler for each row
-        attachCollapseHandler(row, collapseDiv, currentLiability.account_id);
+        // Attach the appropriate collapse handler based on account_id
+        if (currentLiability.account_id === 300) {
+            attachCollapseHandlerAccPayables(row, collapseDiv, currentLiability.account_id);
+        } else {
+            attachCollapseHandler(row, collapseDiv, currentLiability.account_id);
+        }
     });
 
     // Add the total row for liabilities

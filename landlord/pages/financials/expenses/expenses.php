@@ -5,7 +5,7 @@ $expenses = [];
 $monthlyTotals = array_fill(1, 12, 0);
 
 //Include expense Batches
-require_once 'actions/getExpenseBatches.php';
+require_once 'actions/getExpenses.php';
 // Include expense accounts
 require_once 'actions/getExpenseAccounts.php';
 // include buildings
@@ -238,46 +238,10 @@ require_once 'actions/getBuildings.php'
                             </div>
                         </div>
                     </div>
-                    <div class="row g-3 mb-4">
-                        <!-- Filter by Building -->
-                        <div class="col-md-3 col-sm-12">
-                            <select class="form-select shadow-sm rounded-3">
-                                <option selected disabled>Filter By Building</option>
-                                <option value="manucho">Manucho</option>
-                                <option value="silver">Silver Spoon</option>
-                                <option value="ebenezer">Ebenezer</option>
-                            </select>
-                        </div>
-
-                        <!-- Filter by Items -->
-                        <div class="col-md-3 col-sm-12">
-                            <select class="form-select shadow-sm rounded-3">
-                                <option selected disabled>Filter By Items</option>
-                                <option value="garbage">Garbage</option>
-                                <option value="electricity">Electricity</option>
-                            </select>
-                        </div>
-
-                        <!-- Filter by Status -->
-                        <div class="col-md-3 col-sm-12">
-                            <select class="form-select shadow-sm rounded-3">
-                                <option selected disabled>Filter By Status</option>
-                                <option value="paid">Paid</option>
-                                <option value="pending">Pending</option>
-                                <option value="overpaid">Overpaid</option>
-                            </select>
-                        </div>
-
-                        <!-- Date Picker -->
-                        <div class="col-md-3 col-sm-12">
-                            <input type="date" class="form-control shadow-sm rounded-3">
-                        </div>
-                    </div>
 
                     <div class="row mt-2 mb-2">
-                        <h6 class="mb-0 contact_section_header summary mb-2"></i> <b>Summary</b></h6>
                         <div class="col-md-3">
-                            <div class="summary-info-card shadow-sm bg-white p-3 rounded">
+                            <div class="summary-info-card bg-white p-3 rounded">
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="fa fa-box icon"></i>
                                     <div>
@@ -289,7 +253,7 @@ require_once 'actions/getBuildings.php'
                         </div>
                         <!-- Phone Card -->
                         <div class="col-md-3">
-                            <div class="summary-info-card shadow-sm bg-white p-3 rounded">
+                            <div class="summary-info-card bg-white p-3 rounded">
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="fa fa-calendar-alt icon"></i>
                                     <div>
@@ -301,7 +265,7 @@ require_once 'actions/getBuildings.php'
                         </div>
                         <!-- ID Card -->
                         <div class="col-md-3">
-                            <div class="summary-info-card shadow-sm bg-white p-3 rounded">
+                            <div class="summary-info-card bg-white p-3 rounded">
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="fa fa-check-circle icon"></i>
                                     <div>
@@ -312,7 +276,7 @@ require_once 'actions/getBuildings.php'
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <div class="summary-info-card shadow-sm bg-white p-3 rounded">
+                            <div class="summary-info-card bg-white p-3 rounded">
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="fa fa-hourglass-half icon"></i>
                                     <div>
@@ -323,9 +287,10 @@ require_once 'actions/getBuildings.php'
                             </div>
                         </div>
                     </div>
+                    
                     <div class="row mb-2">
-                        <div class="col-md-12 mb-4">
-                            <div class="card shadow-sm">
+                        <div class="col-md-12 mb-2">
+                            <div class="card border-0">
                                 <div class="bg-white p-1 rounded-2 border-0">
                                     <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #e9ecef;">
                                         <a class="text-white fw-bold text-decoration-none text-dark" data-bs-toggle="collapse" href="#addExpense" role="button" aria-expanded="false" aria-controls="addExpense" onclick="toggleIcon(this)">
@@ -393,7 +358,7 @@ require_once 'actions/getBuildings.php'
                                                                     <label class="form-label fw-bold">ITEM(SERVICE)</label>
                                                                     <select class="form-select shadow-none rounded-1" name="item_account_code[]" style="width: 100%;">
                                                                         <option value="" disabled selected>Select</option>
-                                                                        <?php foreach ($items as $item): ?>
+                                                                        <?php foreach ($accountItems as $item): ?>
                                                                             <option value="<?= htmlspecialchars($item['account_code']) ?>">
                                                                                 <?= htmlspecialchars($item['account_name']) ?>
                                                                             </option>
@@ -526,11 +491,48 @@ require_once 'actions/getBuildings.php'
                             </div>
                         </div>
                     </div>
+                    <!-- row --> 
+                     <hr class="text-dark" style="background-color: #00192D;">
+                     <div class="row g-3 mb-4">
+                        <!-- Filter by Building -->
+                        <div class="col-md-3 col-sm-12">
+                            <select class="form-select rounded-3">
+                                <option selected disabled>Filter By Building</option>
+                                <option value="manucho">Manucho</option>
+                                <option value="silver">Silver Spoon</option>
+                                <option value="ebenezer">Ebenezer</option>
+                            </select>
+                        </div>
+
+                        <!-- Filter by Items -->
+                        <div class="col-md-3 col-sm-12">
+                            <select class="form-select rounded-3">
+                                <option selected disabled>Filter By Items</option>
+                                <option value="garbage">Garbage</option>
+                                <option value="electricity">Electricity</option>
+                            </select>
+                        </div>
+
+                        <!-- Filter by Status -->
+                        <div class="col-md-3 col-sm-12">
+                            <select class="form-select rounded-3">
+                                <option selected disabled>Filter By Status</option>
+                                <option value="paid">Paid</option>
+                                <option value="pending">Pending</option>
+                                <option value="overpaid">Overpaid</option>
+                            </select>
+                        </div>
+
+                        <!-- Date Picker -->
+                        <div class="col-md-3 col-sm-12">
+                            <input type="date" class="form-control rounded-3">
+                        </div>
+                    </div>
+                    <!-- /raw -->
                     <!-- /raw -->
                     <div class="row mt-2 mb-5">
-                        <h6 class="mb-0 contact_section_header summary mb-2"></i> <b>Details</b></h6>
                         <div class="col-md-12">
-                            <div class="details-container bg-white p-2 rounded Content shadow-sm">
+                            <div class="details-container bg-white p-2 rounded Content">
                                 <h3 class="details-container_header text-start"> <span id="displayed_building">All Expenses</span> &nbsp; |&nbsp; <span style="color:#FFC107"> <span id="enteries">3</span> enteries</span></h3>
                                 <div class="table-responsive" style="overflow-x: auto;">
                                     <div id="top-bar" class="filter-pdf-excel mb-2">
@@ -544,7 +546,7 @@ require_once 'actions/getBuildings.php'
                                             <div id="custom-buttons"></div>
                                         </div>
                                     </div>
-                                    <table id="repaireExpenses" style="width: 100%; min-width: 600px;">
+                                    <table id="expensesTable" class="expensesTable" style="width: 100%; min-width: 600px;">
                                         <thead>
                                             <tr>
                                                 <th>Date</th>
@@ -561,7 +563,7 @@ require_once 'actions/getBuildings.php'
                                                     <td><?= htmlspecialchars(date('d M Y', strtotime($exp['created_at']))) ?></td>
                                                     <td><?= htmlspecialchars($exp['supplier']) ?></td>
                                                     <td>
-                                                        <div style="color:#28a745;"><?= htmlspecialchars($exp['expense_no']) ?></div>
+                                                         <div style="color:#28a745;"><?= htmlspecialchars($exp['expense_no']) ?></div>
                                                     </td>
                                                     <td style="background-color: #f8f9fa; padding: 0.75rem; border-radius: 8px;">
                                                         <div style="font-weight: 600; color: #00192D; font-size: 1rem;">
@@ -862,7 +864,7 @@ require_once 'actions/getBuildings.php'
                     <!-- /row -->
                     <div class="row graph">
                         <div class="col-md-12">
-                            <div class="bg-white p-2 shadow rounded-2">
+                            <div class="bg-white p-2 rounded">
                                 <?php
                                 // Group expenses by month and sum totals
                                 $monthlyTotals = [];
@@ -888,7 +890,7 @@ require_once 'actions/getBuildings.php'
         </main>
         <!--end::App Main-->
         <!--begin::Footer-->
-        <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?> </div>
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?> 
         <!--end::Footer-->
 
 
@@ -1370,6 +1372,7 @@ require_once 'actions/getBuildings.php'
     <!-- Scripts -->
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
 </body>
 <!--end::Body-->
 

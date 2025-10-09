@@ -66,7 +66,17 @@ export function addTbodyNonCurrentAssets(assets, total) {
         row.appendChild(nameCell);
 
         const amountCell = document.createElement("td");
-        amountCell.textContent = asset.amount;
+        let amount = Number(asset.amount) || 0;
+        let parts = asset.amount.toString().split(".");
+        let integerPart = Number(parts[0]).toLocaleString(); // adds commas
+        let decimalPart = parts[1]; // already 2 decimals
+        let formattedAmount = `${integerPart}.${decimalPart}`;
+        // If negative, wrap in brackets
+        if (amount < 0) {
+            formattedAmount = `(${formattedAmount.replace('-', '')})`;
+            amountCell.classList.add("text-danger"); // optional: red for negative
+        }
+        amountCell.textContent = formattedAmount;
         row.appendChild(amountCell);
 
         newTbody.appendChild(row);
@@ -155,7 +165,7 @@ export function attachCollapseHandler(row, collapseDiv, accountId) {
                 } else if (d.debit) {
                     total = d.debit;
                 } else if (d.credit) {
-                    total = -d.credit;
+                    total = d.credit;
                 }
 
                 return `
@@ -234,7 +244,17 @@ export function addTbodyCurrentAssets(assets, total, totalAssets) {
         row.appendChild(nameCell);
 
         const amountCell = document.createElement("td");
-        amountCell.textContent = asset.amount;
+         let amount = Number(asset.amount) || 0;
+        let parts = asset.amount.toString().split(".");
+        let integerPart = Number(parts[0]).toLocaleString(); // adds commas
+        let decimalPart = parts[1]; // already 2 decimals
+        let formattedAmount = `${integerPart}.${decimalPart}`;
+        // If negative, wrap in brackets
+        if (amount < 0) {
+            formattedAmount = `(${formattedAmount.replace('-', '')})`;
+            amountCell.classList.add("text-danger"); // optional: red for negative
+        }
+        amountCell.textContent = formattedAmount;
         row.appendChild(amountCell);
 
         newTbody.appendChild(row);
@@ -286,4 +306,74 @@ export function addTbodyCurrentAssets(assets, total, totalAssets) {
 
     // Append the new tbody to the table
     table.appendChild(newTbody);
+}
+
+
+export function attachCollapseHandlerAccPayables(row, collapseDiv, accountId) {
+    console.log(accountId);
+    // Handle clicks (toggle only)
+    row.addEventListener("click", (e) => {
+        if (e.target.closest('a, button, input, select, textarea')) return;
+        const bsCollapse = bootstrap.Collapse.getOrCreateInstance(collapseDiv, { toggle: false });
+        bsCollapse.toggle();
+    });
+
+    // Update arrow when collapse finishes expanding
+    collapseDiv.addEventListener("shown.bs.collapse", (e) => {
+        const span = row.querySelector("span");
+        if (span) span.textContent = "▾"; // ▼ down arrow
+        row.setAttribute("aria-expanded", "true");
+    });
+
+    // Update arrow when collapse finishes collapsing
+    collapseDiv.addEventListener("hidden.bs.collapse", (e) => {
+        const span = row.querySelector("span");
+        if (span) span.textContent = "▸"; // ► right arrow
+        row.setAttribute("aria-expanded", "false");
+    });
+
+    // Lazy-load details when the collapse is about to be shown
+    collapseDiv.addEventListener('show.bs.collapse', async (e) => {
+        if (collapseDiv.dataset.loaded) return;
+
+        try {
+            const res = await fetch(`actions/getAccountPayableDetails.php?account=${encodeURIComponent(accountId)}`);
+
+            // Parse the JSON returned by PHP
+            const json = await res.json();
+
+            // Check if PHP reported an error
+            if (json.error) {
+                console.error("PHP Error:", json.message); // This prints the PHP error
+                collapseDiv.innerHTML = `<div class="text-danger p-2">Failed to load details: ${json.message}</div>`;
+                return; // stop execution if PHP had an error
+            }
+
+            // If no PHP error, build the table
+            const detailsTable = `
+        <table class="details table table-sm mb-0">
+            <tbody>
+                ${json.data.map(d => {
+                let total = Number(d.total_amount) || 0;
+                return `
+                        <tr>
+                            <td class="text-dark text-muted">${d.supplier_name}</td>
+                            <td class="text-muted"></td> <!-- optional middle column -->
+                            <td class="text-danger text-center">KSH&nbsp;${total.toFixed(2)}</td>
+                        </tr>
+                    `;
+            }).join('')}
+            </tbody>
+        </table>
+    `;
+            collapseDiv.innerHTML = detailsTable;
+            collapseDiv.dataset.loaded = "true";
+
+        } catch (err) {
+            // This is only for network or parsing errors (JS errors)
+            console.error("Fetch/JS Error:", err.message);
+            collapseDiv.innerHTML = `<div class="text-danger p-2">Failed to load details</div>`;
+        }
+
+    });
 }

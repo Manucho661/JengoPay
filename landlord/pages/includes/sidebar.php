@@ -48,6 +48,7 @@
       <a href="/Jengopay//landlord/pages/financials/cashflow.php">💵 Cashflow</a>
       <a href="/Jengopay/landlord/pages/financials/invoices/invoice.php">📄 Invoices</a>
       <a href="/Jengopay/landlord/pages/financials/balanceSheet/balanceSheet.php">📊 Balance Sheet</a>
+      <a href="/Jengopay/landlord/pages/financials/cashflow/cashflow.php">📊 Cash flow</a>
       <a href="/Jengopay/landlord/pages/financials/profit&loss/profit&loss.php">📊 Profit&Loss</a>
     </div>
   </div>

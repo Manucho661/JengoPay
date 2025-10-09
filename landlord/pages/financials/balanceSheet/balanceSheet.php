@@ -497,7 +497,7 @@ function formatAccounting($amount)
     <!--end::App Main-->
 
     <!--begin::Footer-->
-    <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?> </div>
+     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?> 
     <!--end::Footer-->
   </div>
   <!--end::App Wrapper-->

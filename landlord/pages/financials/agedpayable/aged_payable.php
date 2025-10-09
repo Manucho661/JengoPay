@@ -235,20 +235,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12 col-sm-12">
-                            <div class="form-group d-flex align-items-center">
-                                <label for="selectFilter" class="form-label p-2">Choose an Building</label>
-                                <select id="selectFilter" class="form-select" aria-label="Select filter">
-                                    <option selected>Select a building</option>
-                                    <option value="1">Option 1</option>
-                                    <option value="2">Option 2</option>
-                                    <option value="3">Option 3</option>
-                                    <option value="4">Option 4</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+                    
                     <!--end::Row-->
                 </div>
                 <!--end::Container-->
