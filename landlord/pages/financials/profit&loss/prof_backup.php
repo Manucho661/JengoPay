@@ -873,13 +873,62 @@ $netProfit = $income - $expenses;
   </tr>
   <?php endif; ?>
 
+                      
 
-  <?php if ($garbageTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#waterDetails" aria-expanded="false" aria-controls="waterDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Garbage Charges(Revenue)</td>
-        <td>Ksh<?=  $formattedGarbage ?></td>
-      </tr>
+
+<?php if ($waterTotal > 0): ?>
+  <!-- Clickable row -->
+  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#waterDetails" style="cursor:pointer;">
+    <td>
+      <i class="fas fa-chevron-right me-2"></i> Water Charges (Revenue)
+    </td>
+    <td>Ksh<?= $formattedWater ?></td>
+  </tr>
+
   <!-- Collapsible row -->
+  <tr>
+    <td colspan="2" class="p-0">
+      <!-- 👇 collapse wrapper must be inside a td -->
+      <div id="waterDetails" class="collapse" data-bs-parent="#accordionFinance">
+        <table class="table table-sm table-bordered mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Invoice Number</th>
+              <th>Tenant</th>
+              <th>Date</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php
+            $stmt = $pdo->prepare("
+              SELECT ii.invoice_number, ii.sub_total, ii.created_at,
+                     CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
+              FROM invoice_items ii
+              JOIN users u ON ii.tenant = u.id
+              WHERE ii.account_item = '510'
+            ");
+            $stmt->execute();
+            foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $inv): ?>
+              <tr>
+                <td><?= htmlspecialchars($inv['invoice_number']) ?></td>
+                <td><?= htmlspecialchars($inv['tenant_name']) ?></td>
+                <td><?= date('Y-m-d', strtotime($inv['created_at'])) ?></td>
+                <td>Ksh<?= number_format($inv['sub_total'], 2) ?></td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+    </td>
+  </tr>
+<?php endif; ?>
+
+<?php if ($garbageTotal > 0): ?>
+  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#garbageDetails" style="cursor:pointer;">
+    <td><i class="fas fa-chevron-right me-2"></i> Garbage Collection Fees (Revenue)</td>
+    <td>Ksh<?= $formattedGarbage ?></td>
+  </tr>
   <tr class="collapse" id="garbageDetails">
     <td colspan="2">
       <table class="table table-sm table-bordered mb-0">
@@ -913,14 +962,13 @@ $netProfit = $income - $expenses;
       </table>
     </td>
   </tr>
-  <?php endif; ?>
+<?php endif; ?>
 
-  <?php if ($lateFees > 0): ?>
-      <tr class="main-row" data-bs-target="#lateDetails" aria-expanded="false" aria-controls="lateDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Late Payment Fees</td>
-        <td>Ksh<?=  $formattedLateFees ?></td>
-      </tr>
-  <!-- Collapsible row -->
+<?php if ($lateFees > 0): ?>
+  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#lateDetails" style="cursor:pointer;">
+    <td><i class="fas fa-chevron-right me-2"></i> Late Payment Fees</td>
+    <td>Ksh<?= $formattedLateFees ?></td>
+  </tr>
   <tr class="collapse" id="lateDetails">
     <td colspan="2">
       <table class="table table-sm table-bordered mb-0">
@@ -954,15 +1002,13 @@ $netProfit = $income - $expenses;
       </table>
     </td>
   </tr>
-  <?php endif; ?>
+<?php endif; ?>
 
-
-  <?php if ($managementFees > 0): ?>
-      <tr class="main-row" data-bs-target="#managementDetails" aria-expanded="false" aria-controls="#managementDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Commissions and Management Fees</td>
-        <td>Ksh<?=  $formattedManagementFees ?></td>
-      </tr>
-  <!-- Collapsible row -->
+<?php if ($managementFees > 0): ?>
+  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#managementDetails" style="cursor:pointer;">
+    <td><i class="fas fa-chevron-right me-2"></i> Commissions and Management Fees</td>
+    <td>Ksh<?= $formattedManagementFees ?></td>
+  </tr>
   <tr class="collapse" id="managementDetails">
     <td colspan="2">
       <table class="table table-sm table-bordered mb-0">
@@ -996,16 +1042,13 @@ $netProfit = $income - $expenses;
       </table>
     </td>
   </tr>
-  <?php endif; ?>
+<?php endif; ?>
 
-
-
-  <?php if ($otherIncome > 0): ?>
-      <tr class="main-row" data-bs-target="#otherDetails" aria-expanded="false" aria-controls="otherDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Other Income (Advertising, Penalties)</td>
-        <td>Ksh<?=  $formattedOtherIncome ?></td>
-      </tr>
-  <!-- Collapsible row -->
+<?php if ($otherIncome > 0): ?>
+  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#otherDetails" style="cursor:pointer;">
+    <td><i class="fas fa-chevron-right me-2"></i> Other Income (Advertising, Penalties)</td>
+    <td>Ksh<?= $formattedOtherIncome ?></td>
+  </tr>
   <tr class="collapse" id="otherDetails">
     <td colspan="2">
       <table class="table table-sm table-bordered mb-0">
@@ -1039,7 +1082,7 @@ $netProfit = $income - $expenses;
       </table>
     </td>
   </tr>
-  <?php endif; ?>
+<?php endif; ?>
 
 <!-- Total -->
 <tr class="category">
@@ -1051,11 +1094,10 @@ $netProfit = $income - $expenses;
 </tr>
 
 <?php if ($maintenanceTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#maintenanceDetails" aria-expanded="false" aria-controls="#maintenanceDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Maintenance and Repair Costs</td>
-        <td>Ksh<?=   $formattedMaintenance ?></td>
-      </tr>
-  <!-- Collapsible row -->
+  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#maintenanceDetails" style="cursor:pointer;">
+    <td><i class="fas fa-chevron-right me-2"></i> Maintenance and Repair Costs</td>
+    <td>Ksh<?= $formattedMaintenance ?></td>
+  </tr>
   <tr class="collapse" id="maintenanceDetails">
     <td colspan="2">
       <table class="table table-sm table-bordered mb-0">
@@ -1085,14 +1127,13 @@ $netProfit = $income - $expenses;
       </table>
     </td>
   </tr>
-  <?php endif; ?>
+<?php endif; ?>
 
-  <?php if ($salaryTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#salaryDetails" aria-expanded="false" aria-controls="salaryDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Staff Salaries and Wages</td>
-        <td>Ksh<?= $formattedSalaryTotal ?></td>
-      </tr>
-  <!-- Collapsible row -->
+<?php if ($salaryTotal > 0): ?>
+  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#salaryDetails" style="cursor:pointer;">
+    <td><i class="fas fa-chevron-right me-2"></i> Staff Salaries and Wages</td>
+    <td>Ksh<?= $formattedSalaryTotal ?></td>
+  </tr>
   <tr class="collapse" id="salaryDetails">
     <td colspan="2">
       <table class="table table-sm table-bordered mb-0">
@@ -1122,16 +1163,13 @@ $netProfit = $income - $expenses;
       </table>
     </td>
   </tr>
-  <?php endif; ?>
-  
+<?php endif; ?>
 
-
-  <?php if ($electricityTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#electricityDetails" aria-expanded="false" aria-controls="electricityDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Electricity Expense</td>
-        <td>Ksh<?= $formattedElectricity ?></td>
-      </tr>
-  <!-- Collapsible row -->
+<?php if ($electricityTotal > 0): ?>
+  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#electricityDetails" style="cursor:pointer;">
+    <td><i class="fas fa-chevron-right me-2"></i> Electricity Expense</td>
+    <td>Ksh<?= $formattedElectricity ?></td>
+  </tr>
   <tr class="collapse" id="electricityDetails">
     <td colspan="2">
       <table class="table table-sm table-bordered mb-0">
@@ -1161,14 +1199,13 @@ $netProfit = $income - $expenses;
       </table>
     </td>
   </tr>
-  <?php endif; ?>
+<?php endif; ?>
 
-  <?php if ($waterExpenseTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#waterExpDetails" aria-expanded="false" aria-controls="waterExpDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Water Expense</td>
-        <td>Ksh<?= $formattedWaterExpense  ?></td>
-      </tr>
-  <!-- Collapsible row -->
+<?php if ($waterExpenseTotal > 0): ?>
+  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#waterExpDetails" style="cursor:pointer;">
+    <td><i class="fas fa-chevron-right me-2"></i> Electricity Expense</td>
+    <td>Ksh<?= $formattedWaterExpense ?></td>
+  </tr>
   <tr class="collapse" id="waterExpDetails">
     <td colspan="2">
       <table class="table table-sm table-bordered mb-0">
@@ -1198,16 +1235,13 @@ $netProfit = $income - $expenses;
       </table>
     </td>
   </tr>
-  <?php endif; ?>
+<?php endif; ?>
 
-
-  
-  <?php if ($internetExpenseTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#internetDetails" aria-expanded="false" aria-controls="waterExpDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Internet Expense</td>
-        <td>Ksh<?= $formattedInternetExpense  ?></td>
-      </tr>
-  <!-- Collapsible row -->
+<?php if ($internetExpenseTotal > 0): ?>
+  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#internetDetails" style="cursor:pointer;">
+    <td><i class="fas fa-chevron-right me-2"></i> Internet Expense</td>
+    <td>Ksh<?= $formattedInternetExpense ?></td>
+  </tr>
   <tr class="collapse" id="internetDetails">
     <td colspan="2">
       <table class="table table-sm table-bordered mb-0">
@@ -1237,16 +1271,13 @@ $netProfit = $income - $expenses;
       </table>
     </td>
   </tr>
-  <?php endif; ?>
+<?php endif; ?>
 
-
-
-  <?php if ($securityExpenseTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#securityDetails" aria-expanded="false" aria-controls="securityDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span> Security Expense</td>
-        <td>Ksh<?= $formattedSecurityExpense ?></td>
-      </tr>
-  <!-- Collapsible row -->
+<?php if ($securityExpenseTotal > 0): ?>
+  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#securityDetails" style="cursor:pointer;">
+    <td><i class="fas fa-chevron-right me-2"></i> Security Expense</td>
+    <td>Ksh<?= $formattedSecurityExpense ?></td>
+  </tr>
   <tr class="collapse" id="securityDetails">
     <td colspan="2">
       <table class="table table-sm table-bordered mb-0">
@@ -1279,16 +1310,14 @@ $netProfit = $income - $expenses;
       </table>
     </td>
   </tr>
-  <?php endif; ?>
+<?php endif; ?>
 
 
-
-  <?php if ($softwareExpenseTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#softwareDetail" aria-expanded="false" aria-controls="softwareDetail" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Property Management Software Subscription</td>
-        <td>Ksh<?= $formattedSecurityExpense ?></td>
-      </tr>
-  <!-- Collapsible row -->
+<?php if ($softwareExpenseTotal > 0): ?>
+  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#softwareDetails" style="cursor:pointer;">
+    <td><i class="fas fa-chevron-right me-2"></i> Property Management Software Subscription</td>
+    <td>Ksh<?= $formattedSoftwareExpense ?></td>
+  </tr>
   <tr class="collapse" id="softwareDetails">
     <td colspan="2">
       <table class="table table-sm table-bordered mb-0">
@@ -1321,15 +1350,14 @@ $netProfit = $income - $expenses;
       </table>
     </td>
   </tr>
-  <?php endif; ?>
-  
+<?php endif; ?>
 
-  <?php if ($marketingExpenseTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#marketingDetails" aria-expanded="false" aria-controls="marketingDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Marketing and Advertising Costs</td>
-        <td>Ksh<?= $formattedMarketingExpense ?></td>
-      </tr>
-  <!-- Collapsible row -->
+
+<?php if ($marketingExpenseTotal > 0): ?>
+  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#marketingDetails" style="cursor:pointer;">
+    <td><i class="fas fa-chevron-right me-2"></i> Marketing and Advertising Costs</td>
+    <td>Ksh<?= $formattedMarketingExpense ?></td>
+  </tr>
   <tr class="collapse" id="marketingDetails">
     <td colspan="2">
       <table class="table table-sm table-bordered mb-0">
@@ -1362,15 +1390,14 @@ $netProfit = $income - $expenses;
       </table>
     </td>
   </tr>
-  <?php endif; ?>
+<?php endif; ?>
 
 
-  <?php if ($legalExpenseTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#legalDetails" aria-expanded="false" aria-controls="legalDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Legal and Compliance Fees</td>
-        <td>Ksh<?= $formattedLegalExpense ?></td>
-      </tr>
-  <!-- Collapsible row -->
+<?php if ($legalExpenseTotal > 0): ?>
+  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#legalDetails" style="cursor:pointer;">
+    <td><i class="fas fa-chevron-right me-2"></i> Legal and Compliance Fees</td>
+    <td>Ksh<?= $formattedLegalExpense ?></td>
+  </tr>
   <tr class="collapse" id="legalDetails">
     <td colspan="2">
       <table class="table table-sm table-bordered mb-0">
@@ -1403,16 +1430,14 @@ $netProfit = $income - $expenses;
       </table>
     </td>
   </tr>
-  <?php endif; ?>
+<?php endif; ?>
 
 
-  
-  <?php if ($loanInterestTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#loanDetails" aria-expanded="false" aria-controls="loanDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Loan Interest Payments</td>
-        <td>Ksh<?= $formattedLoanInterest ?></td>
-      </tr>
-  <!-- Collapsible row -->
+<?php if ($loanInterestTotal > 0): ?>
+  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#loanDetails" style="cursor:pointer;">
+    <td><i class="fas fa-chevron-right me-2"></i> Loan Interest Payments</td>
+    <td>Ksh<?= $formattedLoanInterest ?></td>
+  </tr>
   <tr class="collapse" id="loanDetails">
     <td colspan="2">
       <table class="table table-sm table-bordered mb-0">
@@ -1445,14 +1470,14 @@ $netProfit = $income - $expenses;
       </table>
     </td>
   </tr>
-  <?php endif; ?>
+<?php endif; ?>
 
-  <?php if ($bankChargesTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#loanDetails" aria-expanded="false" aria-controls="#bankDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Bank/Mpesa Charges</td>
-        <td>Ksh<?= $formattedBankCharges  ?></td>
-      </tr>
-  <!-- Collapsible row -->
+
+<?php if ($bankChargesTotal > 0): ?>
+  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#bankDetails" style="cursor:pointer;">
+    <td><i class="fas fa-chevron-right me-2"></i> Bank/Mpesa Charges</td>
+    <td>Ksh<?= $formattedBankCharges ?></td>
+  </tr>
   <tr class="collapse" id="bankDetails">
     <td colspan="2">
       <table class="table table-sm table-bordered mb-0">
@@ -1485,15 +1510,14 @@ $netProfit = $income - $expenses;
       </table>
     </td>
   </tr>
-  <?php endif; ?>
+<?php endif; ?>
 
 
-  <?php if ($otherExpenseTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#otherDetails" aria-expanded="false" aria-controls="#otherDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Other Expenses (Office, Supplies, Travel)</td>
-        <td>Ksh<?=  $formattedOtherExpense ?></td>
-      </tr>
-  <!-- Collapsible row -->
+<?php if ($otherExpenseTotal > 0): ?>
+  <tr class="category-row" data-bs-toggle="collapse" data-bs-target="#otherDetails" style="cursor:pointer;">
+    <td><i class="fas fa-chevron-right me-2"></i> Other Expenses (Office, Supplies, Travel)</td>
+    <td>Ksh<?= $formattedOtherExpense ?></td>
+  </tr>
   <tr class="collapse" id="otherDetails">
     <td colspan="2">
       <table class="table table-sm table-bordered mb-0">
@@ -1526,7 +1550,7 @@ $netProfit = $income - $expenses;
       </table>
     </td>
   </tr>
-  <?php endif; ?>
+<?php endif; ?>
 
 <tr class="category">
   <td><b>Total Expenses</b></td>
