@@ -272,7 +272,7 @@ $incomeStmt = $pdo->query("SELECT SUM(total) AS income FROM invoice_items");
 $income = $incomeStmt->fetch(PDO::FETCH_ASSOC)['income'] ?? 0;
 
 // Calculate EXPENSES from expense_items
-$expenseStmt = $pdo->query("SELECT SUM(item_total) AS expenses FROM expense_items");
+$expenseStmt = $pdo->query("SELECT SUM(item_untaxed_amount) AS expenses FROM expense_items");
 $expenses = $expenseStmt->fetch(PDO::FETCH_ASSOC)['expenses'] ?? 0;
 
 // Calculate NET PROFIT
@@ -740,33 +740,7 @@ $netProfit = $income - $expenses;
               <div>
                 <h3 class=" text-start  balancesheet-header">December 31, 2024</h3>
                 <!-- <div class="table-responsive"> -->
-                <div class="table-responsive">
-                  <table id="myTable" style="width: 100%;">
-                    <thead style="background-color: rgba(128, 128, 128, 0.2); color: black;">
-                      <tr>
-                        <th style="font-size: 16px;">Description</th>
-                        <th style="font-size: 16px;">Amount</th>
-                      </tr>
-                    </thead>
-
-                 <!-- Action Buttons -->
-<div class="col-md-6 col-12 d-flex justify-content-end" style="position: relative; min-height: 60px;">
-  <div style="position: absolute; bottom: 0; right: 0;">
-    <button class="btn rounded-circle shadow-sm me-2" id="hideAllBtn" style="background-color: #FFC107; border: none;">
-      <i class="fas fa-eye-slash" style="font-size: 18px; color: #00192D;"></i>
-    </button>
-    <button class="btn rounded-circle shadow-sm me-2" id="showAllBtn" style="background-color: #FFC107; border: none;">
-      <i class="fas fa-eye" style="font-size: 18px; color: #00192D;"></i>
-    </button>
-    <button class="btn rounded-circle shadow-sm me-2" id="downloadBtn" style="background-color: #FFC107; border: none;">
-      <i class="fas fa-file-pdf" style="font-size: 24px; color: #00192D;"></i>
-    </button>
-    <button class="btn rounded-circle shadow-sm" onclick="exportToExcel()" style="background-color: #FFC107; border: none;">
-      <i class="fas fa-file-excel" style="font-size: 24px; color: #00192D;"></i>
-    </button>
-  </div>
-</div>
-
+           
 <!-- Collapsible Table -->
 <div class="table-responsive">
   <table id="myTable" class="table table-bordered" style="width: 100%;">
@@ -784,240 +758,184 @@ $netProfit = $income - $expenses;
 
       <!-- Example category row -->
       <?php if ($rentTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#rentDetails" aria-expanded="false" aria-controls="rentDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span> Rental Income</td>
-        <td>Ksh<?= $formattedRent ?></td>
-      </tr>
-      <tr>
-        <td colspan="2" class="p-0">
-          <div id="rentDetails" class="collapse" data-bs-parent="#accordionFinance">
-            <table class="table table-sm table-bordered mb-0">
-              <thead class="table-light">
-                <tr>
-                  <th>Invoice #</th>
-                  <th>Tenant</th>
-                  <th>Date</th>
-                  <th>Subtotal</th>
-                </tr>
-              </thead>
-              <tbody>
-          <?php
-          // Fetch rental invoice details (account_item = 500)
-          $stmtRentInvoices = $pdo->prepare("
-              SELECT ii.invoice_number, ii.sub_total, ii.created_at,
-                     CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
-              FROM invoice_items ii
-              JOIN users u ON ii.tenant = u.id
-              WHERE ii.account_item = '500'
-              ORDER BY ii.created_at DESC
-          ");
-          $stmtRentInvoices->execute();
-          $rentInvoices = $stmtRentInvoices->fetchAll(PDO::FETCH_ASSOC);
-
-          foreach ($rentInvoices as $inv): ?>
-            <tr>
-              <td><?= htmlspecialchars($inv['invoice_number']) ?></td>
-              <td><?= htmlspecialchars($inv['tenant_name']) ?></td>
-              <td><?= date('Y-m-d', strtotime($inv['created_at'])) ?></td>
-              <td>Ksh<?= number_format($inv['sub_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
+  <!-- Main Row -->
+  <tr class="main-row" data-bs-target="#rentDetails" aria-expanded="false" aria-controls="rentDetails" style="cursor:pointer;">
+    <td>
+      <span class="text-warning" style="font-size:20px;">▸</span> Rental Income
     </td>
+    <td>Ksh<?= $formattedRent ?></td>
   </tr>
-  <?php endif; ?>
 
-
-  <?php if ($waterTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#waterDetails" aria-expanded="false" aria-controls="waterDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Water Charges (Revenue)</td>
-        <td>Ksh<?=  $formattedWater ?></td>
-      </tr>
-  <!-- Collapsible row -->
+  <!-- Collapsible Section -->
   <tr>
     <td colspan="2" class="p-0">
-      <!-- 👇 collapse wrapper must be inside a td -->
-      <div id="waterDetails" class="collapse" data-bs-parent="#accordionFinance">
-        <table class="table table-sm table-bordered mb-0">
-          <thead class="table-light">
-            <tr>
-              <th>Invoice Number</th>
-              <th>Tenant</th>
-              <th>Date</th>
-              <th>Subtotal</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php
-            $stmt = $pdo->prepare("
-              SELECT ii.invoice_number, ii.sub_total, ii.created_at,
-                     CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
-              FROM invoice_items ii
-              JOIN users u ON ii.tenant = u.id
-              WHERE ii.account_item = '510'
-            ");
-            $stmt->execute();
-            foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $inv): ?>
-              <tr>
-                <td><?= htmlspecialchars($inv['invoice_number']) ?></td>
-                <td><?= htmlspecialchars($inv['tenant_name']) ?></td>
-                <td><?= date('Y-m-d', strtotime($inv['created_at'])) ?></td>
-                <td>Ksh<?= number_format($inv['sub_total'], 2) ?></td>
-              </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
+      <div id="rentDetails" class="collapse" data-bs-parent="#accordionFinance">
+        <div class="d-flex justify-content-between align-items-center p-3">
+          <div>
+            <span class="fw-bold text-dark">Rental Income</span>
+            <!-- Two dots with popover placed exactly after "Rental Income" -->
+            <span class="text-primary fw-bold ms-1"
+                  style="cursor:pointer;"
+                  data-bs-toggle="popover"
+                  data-bs-html="true"
+                  title="Options"
+                  data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
+          </div>
+          <span class="fw-bold text-success">Ksh<?= $formattedRent ?></span>
+        </div>
       </div>
     </td>
   </tr>
-  <?php endif; ?>
+
+  <!-- Popover Activation Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+      popoverTriggerList.map(function (popoverTriggerEl) {
+        return new bootstrap.Popover(popoverTriggerEl)
+      })
+    });
+  </script>
+<?php endif; ?>
 
 
-  <?php if ($garbageTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#waterDetails" aria-expanded="false" aria-controls="waterDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Garbage Charges(Revenue)</td>
-        <td>Ksh<?=  $formattedGarbage ?></td>
-      </tr>
+<?php if ($waterTotal > 0): ?>
+  <tr class="main-row" data-bs-target="#waterDetails" aria-expanded="false" aria-controls="waterDetails" style="cursor:pointer;">
+    <td><span class="text-warning" style="font-size:20px;">▸</span> Water Charges (Revenue)</td>
+    <td>Ksh<?= $formattedWater ?></td>
+  </tr>
+
   <!-- Collapsible row -->
-  <tr class="collapse" id="garbageDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-          <th>Invoice Number</th>
-            <th>Tenant</th>
-            <th>Date</th>
-            <th>Subtotal</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmt = $pdo->prepare("
-            SELECT ii.invoice_number, ii.sub_total, ii.created_at,
-                   CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
-            FROM invoice_items ii
-            JOIN users u ON ii.tenant = u.id
-            WHERE ii.account_item = '515'
-          ");
-          $stmt->execute();
-          foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $inv): ?>
-            <tr>
-              <td><?= htmlspecialchars($inv['invoice_number']) ?></td>
-              <td><?= htmlspecialchars($inv['tenant_name']) ?></td>
-              <td><?= date('Y-m-d', strtotime($inv['created_at'])) ?></td>
-              <td>Ksh<?= number_format($inv['sub_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
+  <tr>
+    <td colspan="2" class="p-0">
+      <div id="waterDetails" class="collapse" data-bs-parent="#accordionFinance">
+        <div class="d-flex justify-content-between align-items-center p-3">
+          <div>
+            <span class="fw-bold text-dark">Water Charges (Revenue)</span>
+            <span class="text-primary fw-bold ms-1"
+                  style="cursor:pointer;"
+                  data-bs-toggle="popover"
+                  data-bs-html="true"
+                  title="Options"
+                  data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
+          </div>
+          <span class="fw-bold text-success">Ksh<?= $formattedWater ?></span>
+        </div>
+      </div>
     </td>
   </tr>
-  <?php endif; ?>
+<?php endif; ?>
 
-  <?php if ($lateFees > 0): ?>
-      <tr class="main-row" data-bs-target="#lateDetails" aria-expanded="false" aria-controls="lateDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Late Payment Fees</td>
-        <td>Ksh<?=  $formattedLateFees ?></td>
-      </tr>
+
+<?php if ($garbageTotal > 0): ?>
+  <tr class="main-row" data-bs-target="#garbageDetails" aria-expanded="false" aria-controls="garbageDetails" style="cursor:pointer;">
+    <td><span class="text-warning" style="font-size:20px;">▸</span> Garbage Charges (Revenue)</td>
+    <td>Ksh<?= $formattedGarbage ?></td>
+  </tr>
+
   <!-- Collapsible row -->
-  <tr class="collapse" id="lateDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-          <th>Invoice Number</th>
-            <th>Tenant</th>
-            <th>Date</th>
-            <th>Subtotal</th>
-          </tr>
-        </thead>
-        <tbody  id="accordionExpenses">
-          <?php
-          $stmt = $pdo->prepare("
-            SELECT ii.invoice_number, ii.sub_total, ii.created_at,
-                   CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
-            FROM invoice_items ii
-            JOIN users u ON ii.tenant = u.id
-            WHERE ii.account_item = '505'
-          ");
-          $stmt->execute();
-          foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $inv): ?>
-            <tr>
-              <td><?= htmlspecialchars($inv['invoice_number']) ?></td>
-              <td><?= htmlspecialchars($inv['tenant_name']) ?></td>
-              <td><?= date('Y-m-d', strtotime($inv['created_at'])) ?></td>
-              <td>Ksh<?= number_format($inv['sub_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
+  <tr>
+    <td colspan="2" class="p-0">
+      <div id="garbageDetails" class="collapse" data-bs-parent="#accordionFinance">
+        <div class="d-flex justify-content-between align-items-center p-3">
+          <div>
+            <span class="fw-bold text-dark">Garbage Charges (Revenue)</span>
+            <span class="text-primary fw-bold ms-1"
+                  style="cursor:pointer;"
+                  data-bs-toggle="popover"
+                  data-bs-html="true"
+                  title="Options"
+                  data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
+          </div>
+          <span class="fw-bold text-success">Ksh<?= $formattedGarbage ?></span>
+        </div>
+      </div>
     </td>
   </tr>
-  <?php endif; ?>
+<?php endif; ?>
 
 
-  <?php if ($managementFees > 0): ?>
-      <tr class="main-row" data-bs-target="#managementDetails" aria-expanded="false" aria-controls="#managementDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Commissions and Management Fees</td>
-        <td>Ksh<?=  $formattedManagementFees ?></td>
-      </tr>
+<?php if ($lateFees > 0): ?>
+  <tr class="main-row" data-bs-target="#lateDetails" aria-expanded="false" aria-controls="lateDetails" style="cursor:pointer;">
+    <td><span class="text-warning" style="font-size:20px;">▸</span> Late Payment Fees</td>
+    <td>Ksh<?= $formattedLateFees ?></td>
+  </tr>
+
   <!-- Collapsible row -->
-  <tr class="collapse" id="managementDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-          <th>Invoice Number</th>
-            <th>Tenant</th>
-            <th>Date</th>
-            <th>Subtotal</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmt = $pdo->prepare("
-            SELECT ii.invoice_number, ii.sub_total, ii.created_at,
-                   CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name
-            FROM invoice_items ii
-            JOIN users u ON ii.tenant = u.id
-            WHERE ii.account_item = '520'
-          ");
-          $stmt->execute();
-          foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $inv): ?>
-            <tr>
-              <td><?= htmlspecialchars($inv['invoice_number']) ?></td>
-              <td><?= htmlspecialchars($inv['tenant_name']) ?></td>
-              <td><?= date('Y-m-d', strtotime($inv['created_at'])) ?></td>
-              <td>Ksh<?= number_format($inv['sub_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
+  <tr>
+    <td colspan="2" class="p-0">
+      <div id="lateDetails" class="collapse" data-bs-parent="#accordionFinance">
+        <div class="d-flex justify-content-between align-items-center p-3">
+          <div>
+            <span class="fw-bold text-dark">Late Payment Fees</span>
+            <span class="text-primary fw-bold ms-1"
+                  style="cursor:pointer;"
+                  data-bs-toggle="popover"
+                  data-bs-html="true"
+                  title="Options"
+                  data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
+          </div>
+          <span class="fw-bold text-success">Ksh<?= $formattedLateFees ?></span>
+        </div>
+      </div>
     </td>
   </tr>
-  <?php endif; ?>
+<?php endif; ?>
 
 
+<?php if ($managementFees > 0): ?>
+  <tr class="main-row" data-bs-target="#managementDetails" aria-expanded="false" aria-controls="managementDetails" style="cursor:pointer;">
+    <td><span class="text-warning" style="font-size:20px;">▸</span> Commissions and Management Fees</td>
+    <td>Ksh<?= $formattedManagementFees ?></td>
+  </tr>
 
-  <?php if ($otherIncome > 0): ?>
-      <tr class="main-row" data-bs-target="#otherDetails" aria-expanded="false" aria-controls="otherDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Other Income (Advertising, Penalties)</td>
-        <td>Ksh<?=  $formattedOtherIncome ?></td>
-      </tr>
   <!-- Collapsible row -->
-  <tr class="collapse" id="otherDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-          <th>Invoice Number</th>
-            <th>Tenant</th>
-            <th>Date</th>
-            <th>Subtotal</th>
-          </tr>
-        </thead>
-        <tbody>
+  <tr>
+    <td colspan="2" class="p-0">
+      <div id="managementDetails" class="collapse" data-bs-parent="#accordionFinance">
+        <div class="d-flex justify-content-between align-items-center p-3">
+          <div>
+            <span class="fw-bold text-dark">Commissions and Management Fees</span>
+            <span class="text-primary fw-bold ms-1"
+                  style="cursor:pointer;"
+                  data-bs-toggle="popover"
+                  data-bs-html="true"
+                  title="Options"
+                  data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
+          </div>
+          <span class="fw-bold text-success">Ksh<?= $formattedManagementFees ?></span>
+        </div>
+      </div>
+    </td>
+  </tr>
+<?php endif; ?>
+
+
+<?php if ($otherIncome > 0): ?>
+  <tr class="main-row" data-bs-target="#otherDetails" aria-expanded="false" aria-controls="otherDetails" style="cursor:pointer;">
+    <td><span style="font-size:20px;">▸</span> Other Income (Advertising, Penalties)</td>
+    <td style="text-align:right;">Ksh<?= $formattedOtherIncome ?></td>
+  </tr>
+
+  <!-- Collapsible details row -->
+  <tr>
+    <td colspan="2" class="p-0">
+      <div id="otherDetails" class="collapse" data-bs-parent="#accordionFinance">
+        <div class="d-flex justify-content-between align-items-center p-3">
+          <div>
+            <span class="fw-bold text-dark">Other Income (Advertising, Penalties)</span>
+            <span class="text-primary fw-bold ms-1"
+                  style="cursor:pointer;"
+                  data-bs-toggle="popover"
+                  data-bs-html="true"
+                  title="Options"
+                  data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
+          </div>
+          <span class="fw-bold text-success">Ksh<?= $formattedOtherIncome ?></span>
+        </div>
+
+        <!-- Existing detailed data -->
+        <div style="padding-left:40px; padding-bottom:10px;">
           <?php
           $stmt = $pdo->prepare("
             SELECT ii.invoice_number, ii.sub_total, ii.created_at,
@@ -1028,18 +946,22 @@ $netProfit = $income - $expenses;
           ");
           $stmt->execute();
           foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $inv): ?>
-            <tr>
-              <td><?= htmlspecialchars($inv['invoice_number']) ?></td>
-              <td><?= htmlspecialchars($inv['tenant_name']) ?></td>
-              <td><?= date('Y-m-d', strtotime($inv['created_at'])) ?></td>
-              <td>Ksh<?= number_format($inv['sub_total'], 2) ?></td>
-            </tr>
+            <div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid #eee;">
+              <div>
+                <strong><?= htmlspecialchars($inv['invoice_number']) ?></strong> - 
+                <?= htmlspecialchars($inv['tenant_name']) ?> 
+                <small>(<?= date('Y-m-d', strtotime($inv['created_at'])) ?>)</small>
+              </div>
+              <div style="text-align:right;">Ksh<?= number_format($inv['sub_total'], 2) ?></div>
+            </div>
           <?php endforeach; ?>
-        </tbody>
-      </table>
+        </div>
+      </div>
     </td>
   </tr>
-  <?php endif; ?>
+<?php endif; ?>
+
+
 
 <!-- Total -->
 <tr class="category">
@@ -1051,482 +973,575 @@ $netProfit = $income - $expenses;
 </tr>
 
 <?php if ($maintenanceTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#maintenanceDetails" aria-expanded="false" aria-controls="#maintenanceDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Maintenance and Repair Costs</td>
-        <td>Ksh<?=   $formattedMaintenance ?></td>
-      </tr>
-  <!-- Collapsible row -->
-  <tr class="collapse" id="maintenanceDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
+<tr class="main-row" data-bs-target="#maintenanceDetails" aria-expanded="false" aria-controls="maintenanceDetails" style="cursor:pointer;">
+  <td><span style="font-size:20px;">▸</span> Maintenance and Repair Costs</td>
+  <td style="text-align:right;">Ksh<?= $formattedMaintenance ?></td>
+</tr>
+
+<tr class="collapse" id="maintenanceDetails">
+  <td colspan="2" style="padding-left:40px;">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <span class="fw-bold text-dark">Maintenance and Repair Costs</span>
+        <span class="text-primary fw-bold ms-1"
+              style="cursor:pointer;"
+              data-bs-toggle="popover"
+              data-bs-html="true"
+              title="Options"
+              data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
+      </div>
+      <span class="fw-bold text-success">Ksh<?= $formattedMaintenance ?></span>
+    </div>
+    <?php
+      $stmt = $pdo->prepare("
+        SELECT description, item_untaxed_amount, created_at
+        FROM expense_items
+        WHERE item_account_code = '600'
+      ");
+      $stmt->execute();
+      foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
+        <div style="display:flex; justify-content:space-between; border-bottom:1px solid #ddd; padding:4px 0;">
+        </div>
+    <?php endforeach; ?>
+  </td>
+</tr>
+<?php endif; ?>
+
+
+<?php if ($salaryTotal > 0): ?>
+<tr class="main-row" data-bs-target="#salaryDetails" aria-expanded="false" aria-controls="salaryDetails" style="cursor:pointer;">
+  <td><span class="text-warning" style="font-size:20px;">▸</span> Staff Salaries and Wages</td>
+  <td>Ksh<?= $formattedSalaryTotal ?></td>
+</tr>
+
+<tr class="collapse" id="salaryDetails">
+  <td colspan="2" style="padding-left:40px;">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <span class="fw-bold text-dark">Staff Salaries and Wages</span>
+        <span class="text-primary fw-bold ms-1"
+              style="cursor:pointer;"
+              data-bs-toggle="popover"
+              data-bs-html="true"
+              title="Options"
+              data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
+      </div>
+      <span class="fw-bold text-success">Ksh<?= $formattedSalaryTotal ?></span>
+    </div>
+    <?php
+      $stmt = $pdo->prepare("
+        SELECT description, item_untaxed_amount, created_at
+        FROM expense_items
+        WHERE item_account_code = '605'
+      ");
+      $stmt->execute();
+      foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
+        <div style="display:flex; justify-content:space-between; border-bottom:1px solid #ddd; padding:4px 0;">
+        </div>
+    <?php endforeach; ?>
+  </td>
+</tr>
+<?php endif; ?>
+
+
+<?php if ($electricityTotal > 0): ?>
+<tr class="main-row" data-bs-target="#electricityDetails" aria-expanded="false" aria-controls="electricityDetails" style="cursor:pointer;">
+  <td><span style="font-size:20px;">▸</span> Electricity Expense</td>
+  <td style="text-align:right;">Ksh<?= $formattedElectricity ?></td>
+</tr>
+
+<tr class="collapse" id="electricityDetails">
+  <td colspan="2" style="padding-left:40px;">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <span class="fw-bold text-dark">Electricity Expense</span>
+        <span class="text-primary fw-bold ms-1"
+              style="cursor:pointer;"
+              data-bs-toggle="popover"
+              data-bs-html="true"
+              title="Options"
+              data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
+      </div>
+      <span class="fw-bold text-success">Ksh<?= $formattedElectricity ?></span>
+    </div>
+    <?php
+      $stmt = $pdo->prepare("
+        SELECT description, item_untaxed_amount, created_at
+        FROM expense_items
+        WHERE item_account_code = '610'
+      ");
+      $stmt->execute();
+      foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
+        <div style="display:flex; justify-content:space-between; border-bottom:1px solid #ddd; padding:4px 0;">
+        </div>
+    <?php endforeach; ?>
+  </td>
+</tr>
+<?php endif; ?>
+
+
+<?php if ($waterExpenseTotal > 0): ?>
+<tr class="main-row" data-bs-target="#waterExpDetails" aria-expanded="false" aria-controls="waterExpDetails" style="cursor:pointer;">
+  <td><span class="text-warning" style="font-size:20px;">▸</span> Water Expense</td>
+  <td>Ksh<?= $formattedWaterExpense ?></td>
+</tr>
+
+<tr class="collapse" id="waterExpDetails">
+  <td colspan="2" style="padding-left:40px;">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <span class="fw-bold text-dark">Water Expense</span>
+        <span class="text-primary fw-bold ms-1"
+              style="cursor:pointer;"
+              data-bs-toggle="popover"
+              data-bs-html="true"
+              title="Options"
+              data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
+      </div>
+      <span class="fw-bold text-success">Ksh<?= $formattedWaterExpense ?></span>
+    </div>
+    <?php
+      $stmt = $pdo->prepare("
+        SELECT description, item_untaxed_amount, created_at
+        FROM expense_items
+        WHERE item_account_code = '615'
+        ORDER BY created_at DESC
+      ");
+      $stmt->execute();
+      $waterExpenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+      if (count($waterExpenses) > 0):
+        foreach ($waterExpenses as $exp): ?>
+          <div style="display:flex; justify-content:space-between; border-bottom:1px solid #ddd; padding:4px 0;">
+          </div>
+        <?php endforeach;
+      else: ?>
+        <div style="color:gray;">No detailed records found.</div>
+      <?php endif; ?>
+  </td>
+</tr>
+<?php endif; ?>
+
+
+<?php if ($internetExpenseTotal > 0): ?>
+<tr class="main-row" data-bs-target="#internetDetails" aria-expanded="false" aria-controls="internetDetails" style="cursor:pointer;">
+  <td><span class="text-warning" style="font-size:20px;">▸</span> Internet Expense</td>
+  <td>Ksh<?= $formattedInternetExpense  ?></td>
+</tr>
+
+<tr class="collapse" id="internetDetails">
+  <td colspan="2">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div>
+        <span class="fw-bold text-dark">Internet Expense</span>
+        <span class="text-primary fw-bold ms-1"
+              style="cursor:pointer;"
+              data-bs-toggle="popover"
+              data-bs-html="true"
+              title="Options"
+              data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
+      </div>
+      <span class="fw-bold text-success">Ksh<?= $formattedInternetExpense ?></span>
+    </div>
+    <table class="table table-sm table-bordered mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        $stmt = $pdo->prepare("
+          SELECT description, item_untaxed_amount, created_at
+          FROM expense_items
+          WHERE item_account_code = '625'
+        ");
+        $stmt->execute();
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
           <tr>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Amount</th>
+            
           </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmt = $pdo->prepare("
-            SELECT description, item_total, created_at
-            FROM expense_items
-            WHERE item_account_code = '600'
-          ");
-          $stmt->execute();
-          foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
-            <tr>
-              <td><?= htmlspecialchars($exp['description']) ?></td>
-              <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
-              <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-  <?php endif; ?>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </td>
+</tr>
+<?php endif; ?>
 
-  <?php if ($salaryTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#salaryDetails" aria-expanded="false" aria-controls="salaryDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Staff Salaries and Wages</td>
-        <td>Ksh<?= $formattedSalaryTotal ?></td>
-      </tr>
-  <!-- Collapsible row -->
-  <tr class="collapse" id="salaryDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
+
+<?php if ($securityExpenseTotal > 0): ?>
+<tr class="main-row" data-bs-target="#securityDetails" aria-expanded="false" aria-controls="securityDetails" style="cursor:pointer;">
+  <td><span class="text-warning" style="font-size:20px;">▸</span> Security Expense</td>
+  <td>Ksh<?= $formattedSecurityExpense ?></td>
+</tr>
+
+<tr class="collapse" id="securityDetails">
+  <td colspan="2">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div>
+        <span class="fw-bold text-dark">Security Expense</span>
+        <span class="text-primary fw-bold ms-1"
+              style="cursor:pointer;"
+              data-bs-toggle="popover"
+              data-bs-html="true"
+              title="Options"
+              data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
+      </div>
+      <span class="fw-bold text-success">Ksh<?= $formattedSecurityExpense ?></span>
+    </div>
+    <table class="table table-sm table-bordered mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Expense ID</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        $stmtSecurity = $pdo->prepare("
+          SELECT e.id, e.description, e.item_untaxed_amount, e.created_at
+          FROM expense_items e
+          WHERE e.item_account_code = '630'
+          ORDER BY e.created_at DESC
+        ");
+        $stmtSecurity->execute();
+        foreach ($stmtSecurity->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
           <tr>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Amount</th>
+           
           </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmt = $pdo->prepare("
-            SELECT description, item_total, created_at
-            FROM expense_items
-            WHERE item_account_code = '605'
-          ");
-          $stmt->execute();
-          foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
-            <tr>
-              <td><?= htmlspecialchars($exp['description']) ?></td>
-              <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
-              <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-  <?php endif; ?>
-  
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </td>
+</tr>
+<?php endif; ?>
+
+<!-- Activate all popovers -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+  popoverTriggerList.map(function (popoverTriggerEl) {
+    return new bootstrap.Popover(popoverTriggerEl);
+  });
+});
+</script>
 
 
-  <?php if ($electricityTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#electricityDetails" aria-expanded="false" aria-controls="electricityDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Electricity Expense</td>
-        <td>Ksh<?= $formattedElectricity ?></td>
-      </tr>
-  <!-- Collapsible row -->
-  <tr class="collapse" id="electricityDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
+
+
+<?php if ($softwareExpenseTotal > 0): ?>
+<tr class="main-row" data-bs-target="#softwareDetails" aria-expanded="false" aria-controls="softwareDetails" style="cursor:pointer;">
+  <td><span class="text-warning" style="font-size:20px;">▸</span> Property Management Software Subscription</td>
+  <td>Ksh<?= $formattedSoftwareExpense ?></td>
+</tr>
+
+<tr class="collapse" id="softwareDetails">
+  <td colspan="2">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div>
+        <span class="fw-bold text-dark">Property Management Software Subscription</span>
+        <span class="text-primary fw-bold ms-1"
+              style="cursor:pointer;"
+              data-bs-toggle="popover"
+              data-bs-html="true"
+              title="Options"
+              data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">..</span>
+      </div>
+      <span class="fw-bold text-success">Ksh<?= $formattedSoftwareExpense ?></span>
+    </div>
+    <table class="table table-sm table-bordered mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Expense ID</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        $stmtSoftware = $pdo->prepare("
+          SELECT e.id, e.description, e.item_untaxed_amount, e.created_at
+          FROM expense_items e
+          WHERE e.item_account_code = '635'
+          ORDER BY e.created_at DESC
+        ");
+        $stmtSoftware->execute();
+        foreach ($stmtSoftware->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
           <tr>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Amount</th>
+            
           </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmt = $pdo->prepare("
-            SELECT description, item_total, created_at
-            FROM expense_items
-            WHERE item_account_code = '610'
-          ");
-          $stmt->execute();
-          foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
-            <tr>
-              <td><?= htmlspecialchars($exp['description']) ?></td>
-              <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
-              <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-  <?php endif; ?>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </td>
+</tr>
+<?php endif; ?>
 
-  <?php if ($waterExpenseTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#waterExpDetails" aria-expanded="false" aria-controls="waterExpDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Water Expense</td>
-        <td>Ksh<?= $formattedWaterExpense  ?></td>
-      </tr>
-  <!-- Collapsible row -->
-  <tr class="collapse" id="waterExpDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
+
+<?php if ($marketingExpenseTotal > 0): ?>
+<tr class="main-row" data-bs-target="#marketingDetails" aria-expanded="false" aria-controls="marketingDetails" style="cursor:pointer;">
+  <td><span class="text-warning" style="font-size:20px;">▸</span> Marketing and Advertising Costs</td>
+  <td>Ksh<?= $formattedMarketingExpense ?></td>
+</tr>
+
+<tr class="collapse" id="marketingDetails">
+  <td colspan="2">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div>
+        <span class="fw-bold text-dark">Marketing and Advertising Costs</span>
+        <span class="text-primary fw-bold ms-1"
+              style="cursor:pointer;"
+              data-bs-toggle="popover"
+              data-bs-html="true"
+              title="Options"
+              data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">..</span>
+      </div>
+      <span class="fw-bold text-success">Ksh<?= $formattedMarketingExpense ?></span>
+    </div>
+    <table class="table table-sm table-bordered mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Expense ID</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        $stmtMarketing = $pdo->prepare("
+          SELECT e.id, e.description, e.item_untaxed_amount, e.created_at
+          FROM expense_items e
+          WHERE e.item_account_code = '640'
+          ORDER BY e.created_at DESC
+        ");
+        $stmtMarketing->execute();
+        foreach ($stmtMarketing->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
           <tr>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Amount</th>
+           
           </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmt = $pdo->prepare("
-            SELECT description, item_total, created_at
-            FROM expense_items
-            WHERE item_account_code = '615'
-          ");
-          $stmt->execute();
-          foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
-            <tr>
-              <td><?= htmlspecialchars($exp['description']) ?></td>
-              <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
-              <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-  <?php endif; ?>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </td>
+</tr>
+<?php endif; ?>
 
 
-  
-  <?php if ($internetExpenseTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#internetDetails" aria-expanded="false" aria-controls="waterExpDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Internet Expense</td>
-        <td>Ksh<?= $formattedInternetExpense  ?></td>
-      </tr>
-  <!-- Collapsible row -->
-  <tr class="collapse" id="internetDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
+<?php if ($legalExpenseTotal > 0): ?>
+<tr class="main-row" data-bs-target="#legalDetails" aria-expanded="false" aria-controls="legalDetails" style="cursor:pointer;">
+  <td><span class="text-warning" style="font-size:20px;">▸</span> Legal and Compliance Fees</td>
+  <td>Ksh<?= $formattedLegalExpense ?></td>
+</tr>
+
+<tr class="collapse" id="legalDetails">
+  <td colspan="2">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div>
+        <span class="fw-bold text-dark">Legal and Compliance Fees</span>
+        <span class="text-primary fw-bold ms-1"
+              style="cursor:pointer;"
+              data-bs-toggle="popover"
+              data-bs-html="true"
+              title="Options"
+              data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">..</span>
+      </div>
+      <span class="fw-bold text-success">Ksh<?= $formattedLegalExpense ?></span>
+    </div>
+    <table class="table table-sm table-bordered mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Expense ID</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        $stmtLegal = $pdo->prepare("
+          SELECT e.id, e.description, e.item_untaxed_amount, e.created_at
+          FROM expense_items e
+          WHERE e.item_account_code = '645'
+          ORDER BY e.created_at DESC
+        ");
+        $stmtLegal->execute();
+        foreach ($stmtLegal->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
           <tr>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Amount</th>
+            
           </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmt = $pdo->prepare("
-            SELECT description, item_total, created_at
-            FROM expense_items
-            WHERE item_account_code = '625'
-          ");
-          $stmt->execute();
-          foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
-            <tr>
-              <td><?= htmlspecialchars($exp['description']) ?></td>
-              <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
-              <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-  <?php endif; ?>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </td>
+</tr>
+<?php endif; ?>
 
 
+<?php if ($loanInterestTotal > 0): ?>
+<tr class="main-row" data-bs-target="#loanDetails" aria-expanded="false" aria-controls="loanDetails" style="cursor:pointer;">
+  <td><span class="text-warning" style="font-size:20px;">▸</span> Loan Interest Payments</td>
+  <td>Ksh<?= $formattedLoanInterest ?></td>
+</tr>
 
-  <?php if ($securityExpenseTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#securityDetails" aria-expanded="false" aria-controls="securityDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span> Security Expense</td>
-        <td>Ksh<?= $formattedSecurityExpense ?></td>
-      </tr>
-  <!-- Collapsible row -->
-  <tr class="collapse" id="securityDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
+<tr class="collapse" id="loanDetails">
+  <td colspan="2">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div>
+        <span class="fw-bold text-dark">Loan Interest Payments</span>
+        <span class="text-primary fw-bold ms-1"
+              style="cursor:pointer;"
+              data-bs-toggle="popover"
+              data-bs-html="true"
+              title="Options"
+              data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">..</span>
+      </div>
+      <span class="fw-bold text-success">Ksh<?= $formattedLoanInterest ?></span>
+    </div>
+    <table class="table table-sm table-bordered mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Expense ID</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        $stmtLoan = $pdo->prepare("
+          SELECT e.id, e.description, e.item_untaxed_amount, e.created_at
+          FROM expense_items e
+          WHERE e.item_account_code = '655'
+          ORDER BY e.created_at DESC
+        ");
+        $stmtLoan->execute();
+        foreach ($stmtLoan->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
           <tr>
-            <th>Expense ID</th>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Amount</th>
+            
           </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmtSecurity = $pdo->prepare("
-              SELECT e.id, e.description, e.item_total, e.created_at
-              FROM expense_items e
-              WHERE e.item_account_code = '630' -- replace with actual code for Security
-              ORDER BY e.created_at DESC
-          ");
-          $stmtSecurity->execute();
-          foreach ($stmtSecurity->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
-            <tr>
-              <td><?= htmlspecialchars($exp['id']) ?></td>
-              <td><?= htmlspecialchars($exp['description']) ?></td>
-              <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
-              <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-  <?php endif; ?>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </td>
+</tr>
+<?php endif; ?>
 
 
+<?php if ($bankChargesTotal > 0): ?>
+<tr class="main-row" data-bs-target="#bankDetails" aria-expanded="false" aria-controls="bankDetails" style="cursor:pointer;">
+  <td><span class="text-warning" style="font-size:20px;">▸</span> Bank/Mpesa Charges</td>
+  <td>Ksh<?= $formattedBankCharges ?></td>
+</tr>
 
-  <?php if ($softwareExpenseTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#softwareDetail" aria-expanded="false" aria-controls="softwareDetail" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Property Management Software Subscription</td>
-        <td>Ksh<?= $formattedSecurityExpense ?></td>
-      </tr>
-  <!-- Collapsible row -->
-  <tr class="collapse" id="softwareDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
+<tr class="collapse" id="bankDetails">
+  <td colspan="2">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div>
+        <span class="fw-bold text-dark">Bank/Mpesa Charges</span>
+        <span class="text-primary fw-bold ms-1"
+              style="cursor:pointer;"
+              data-bs-toggle="popover"
+              data-bs-html="true"
+              title="Options"
+              data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">..</span>
+      </div>
+      <span class="fw-bold text-success">Ksh<?= $formattedBankCharges ?></span>
+    </div>
+    <table class="table table-sm table-bordered mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Expense ID</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        $stmtBank = $pdo->prepare("
+          SELECT e.id, e.description, e.item_untaxed_amount, e.created_at
+          FROM expense_items e
+          WHERE e.item_account_code = '660'
+          ORDER BY e.created_at DESC
+        ");
+        $stmtBank->execute();
+        foreach ($stmtBank->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
           <tr>
-            <th>Expense ID</th>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Amount</th>
+           
           </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmtSoftware = $pdo->prepare("
-              SELECT e.id, e.description, e.item_total, e.created_at
-              FROM expense_items e
-              WHERE e.item_account_code = '635' -- replace with actual code for Software
-              ORDER BY e.created_at DESC
-          ");
-          $stmtSoftware->execute();
-          foreach ($stmtSoftware->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
-            <tr>
-              <td><?= htmlspecialchars($exp['id']) ?></td>
-              <td><?= htmlspecialchars($exp['description']) ?></td>
-              <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
-              <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-  <?php endif; ?>
-  
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </td>
+</tr>
+<?php endif; ?>
 
-  <?php if ($marketingExpenseTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#marketingDetails" aria-expanded="false" aria-controls="marketingDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Marketing and Advertising Costs</td>
-        <td>Ksh<?= $formattedMarketingExpense ?></td>
-      </tr>
-  <!-- Collapsible row -->
-  <tr class="collapse" id="marketingDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
+
+<?php if ($otherExpenseTotal > 0): ?>
+<tr class="main-row" data-bs-target="#otherDetails" aria-expanded="false" aria-controls="otherDetails" style="cursor:pointer;">
+  <td><span class="text-warning" style="font-size:20px;">▸</span> Other Expenses (Office, Supplies, Travel)</td>
+  <td>Ksh<?=  $formattedOtherExpense ?></td>
+</tr>
+
+<tr class="collapse" id="otherDetails">
+  <td colspan="2">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div>
+        <span class="fw-bold text-dark">Other Expenses (Office, Supplies, Travel)</span>
+        <span class="text-primary fw-bold ms-1"
+              style="cursor:pointer;"
+              data-bs-toggle="popover"
+              data-bs-html="true"
+              title="Options"
+              data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">..</span>
+      </div>
+      <span class="fw-bold text-success">Ksh<?= $formattedOtherExpense ?></span>
+    </div>
+    <table class="table table-sm table-bordered mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Expense ID</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        $stmtOther = $pdo->prepare("
+          SELECT e.id, e.description, e.item_untaxed_amount, e.created_at
+          FROM expense_items e
+          WHERE e.item_account_code = '665'
+          ORDER BY e.created_at DESC
+        ");
+        $stmtOther->execute();
+        foreach ($stmtOther->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
           <tr>
-            <th>Expense ID</th>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Amount</th>
+           
           </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmtMarketing = $pdo->prepare("
-              SELECT e.id, e.description, e.item_total, e.created_at
-              FROM expense_items e
-              WHERE e.item_account_code = '640' -- replace with actual code for Marketing
-              ORDER BY e.created_at DESC
-          ");
-          $stmtMarketing->execute();
-          foreach ($stmtMarketing->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
-            <tr>
-              <td><?= htmlspecialchars($exp['id']) ?></td>
-              <td><?= htmlspecialchars($exp['description']) ?></td>
-              <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
-              <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-  <?php endif; ?>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </td>
+</tr>
+<?php endif; ?>
 
+<!-- Activate popovers -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+  popoverTriggerList.map(function (popoverTriggerEl) {
+    return new bootstrap.Popover(popoverTriggerEl);
+  });
+});
+</script>
 
-  <?php if ($legalExpenseTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#legalDetails" aria-expanded="false" aria-controls="legalDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Legal and Compliance Fees</td>
-        <td>Ksh<?= $formattedLegalExpense ?></td>
-      </tr>
-  <!-- Collapsible row -->
-  <tr class="collapse" id="legalDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>Expense ID</th>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmtLegal = $pdo->prepare("
-              SELECT e.id, e.description, e.item_total, e.created_at
-              FROM expense_items e
-              WHERE e.item_account_code = '645' -- replace with actual code for Legal
-              ORDER BY e.created_at DESC
-          ");
-          $stmtLegal->execute();
-          foreach ($stmtLegal->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
-            <tr>
-              <td><?= htmlspecialchars($exp['id']) ?></td>
-              <td><?= htmlspecialchars($exp['description']) ?></td>
-              <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
-              <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-  <?php endif; ?>
-
-
-  
-  <?php if ($loanInterestTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#loanDetails" aria-expanded="false" aria-controls="loanDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Loan Interest Payments</td>
-        <td>Ksh<?= $formattedLoanInterest ?></td>
-      </tr>
-  <!-- Collapsible row -->
-  <tr class="collapse" id="loanDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>Expense ID</th>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmtLoan = $pdo->prepare("
-              SELECT e.id, e.description, e.item_total, e.created_at
-              FROM expense_items e
-              WHERE e.item_account_code = '655' -- replace with actual code for Loan Interest
-              ORDER BY e.created_at DESC
-          ");
-          $stmtLoan->execute();
-          foreach ($stmtLoan->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
-            <tr>
-              <td><?= htmlspecialchars($exp['id']) ?></td>
-              <td><?= htmlspecialchars($exp['description']) ?></td>
-              <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
-              <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-  <?php endif; ?>
-
-  <?php if ($bankChargesTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#loanDetails" aria-expanded="false" aria-controls="#bankDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Bank/Mpesa Charges</td>
-        <td>Ksh<?= $formattedBankCharges  ?></td>
-      </tr>
-  <!-- Collapsible row -->
-  <tr class="collapse" id="bankDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>Expense ID</th>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmtBank = $pdo->prepare("
-              SELECT e.id, e.description, e.item_total, e.created_at
-              FROM expense_items e
-              WHERE e.item_account_code = '660' -- replace with actual code for Bank Charges
-              ORDER BY e.created_at DESC
-          ");
-          $stmtBank->execute();
-          foreach ($stmtBank->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
-            <tr>
-              <td><?= htmlspecialchars($exp['id']) ?></td>
-              <td><?= htmlspecialchars($exp['description']) ?></td>
-              <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
-              <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-  <?php endif; ?>
-
-
-  <?php if ($otherExpenseTotal > 0): ?>
-      <tr class="main-row" data-bs-target="#otherDetails" aria-expanded="false" aria-controls="#otherDetails" style="cursor:pointer;">
-        <td><span class="text-warning" style="font-size:20px;">▸</span>Other Expenses (Office, Supplies, Travel)</td>
-        <td>Ksh<?=  $formattedOtherExpense ?></td>
-      </tr>
-  <!-- Collapsible row -->
-  <tr class="collapse" id="otherDetails">
-    <td colspan="2">
-      <table class="table table-sm table-bordered mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>Expense ID</th>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $stmtOther = $pdo->prepare("
-              SELECT e.id, e.description, e.item_total, e.created_at
-              FROM expense_items e
-              WHERE e.item_account_code = '665' -- replace with actual code for Other
-              ORDER BY e.created_at DESC
-          ");
-          $stmtOther->execute();
-          foreach ($stmtOther->fetchAll(PDO::FETCH_ASSOC) as $exp): ?>
-            <tr>
-              <td><?= htmlspecialchars($exp['id']) ?></td>
-              <td><?= htmlspecialchars($exp['description']) ?></td>
-              <td><?= date('Y-m-d', strtotime($exp['created_at'])) ?></td>
-              <td>Ksh<?= number_format($exp['item_total'], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-  <?php endif; ?>
 
 <tr class="category">
   <td><b>Total Expenses</b></td>
@@ -1909,6 +1924,16 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.main-row span').forEach(span => span.textContent = "▸");
   });
 });
+</script>
+
+<!-- Enable Bootstrap Popovers -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    popoverTriggerList.map(function (popoverTriggerEl) {
+      return new bootstrap.Popover(popoverTriggerEl)
+    })
+  });
 </script>
 <!-- </script> -->
   <!-- <script>
