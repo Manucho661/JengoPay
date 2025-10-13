@@ -779,7 +779,7 @@ $netProfit = $income - $expenses;
                   data-bs-toggle="popover"
                   data-bs-html="true"
                   title="Options"
-                  data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
+                  data-bs-content="<a href='../../financials/generalledger/general_ledger_rent.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
           </div>
           <span class="fw-bold text-success">Ksh<?= $formattedRent ?></span>
         </div>
@@ -805,19 +805,19 @@ $netProfit = $income - $expenses;
     <td>Ksh<?= $formattedWater ?></td>
   </tr>
 
-  <!-- Collapsible row -->
   <tr>
     <td colspan="2" class="p-0">
       <div id="waterDetails" class="collapse" data-bs-parent="#accordionFinance">
         <div class="d-flex justify-content-between align-items-center p-3">
           <div>
             <span class="fw-bold text-dark">Water Charges (Revenue)</span>
+            <!-- Popover: General Ledger -->
             <span class="text-primary fw-bold ms-1"
-                  style="cursor:pointer;"
-                  data-bs-toggle="popover"
-                  data-bs-html="true"
-                  title="Options"
-                  data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
+              style="cursor:pointer;"
+              data-bs-toggle="popover"
+              data-bs-html="true"
+              title="Options"
+              data-bs-content="<a href='../../financials/generalledger/general_ledger_water.php' target='_blank' class='text-decoration-none text-dark'>View General Ledger</a>">⋮</span>
           </div>
           <span class="fw-bold text-success">Ksh<?= $formattedWater ?></span>
         </div>
@@ -833,7 +833,6 @@ $netProfit = $income - $expenses;
     <td>Ksh<?= $formattedGarbage ?></td>
   </tr>
 
-  <!-- Collapsible row -->
   <tr>
     <td colspan="2" class="p-0">
       <div id="garbageDetails" class="collapse" data-bs-parent="#accordionFinance">
@@ -841,11 +840,11 @@ $netProfit = $income - $expenses;
           <div>
             <span class="fw-bold text-dark">Garbage Charges (Revenue)</span>
             <span class="text-primary fw-bold ms-1"
-                  style="cursor:pointer;"
-                  data-bs-toggle="popover"
-                  data-bs-html="true"
-                  title="Options"
-                  data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
+              style="cursor:pointer;"
+              data-bs-toggle="popover"
+              data-bs-html="true"
+              title="Options"
+              data-bs-content="<a href='../../financials/generalledger/general_ledger_garbage.php' target='_blank' class='text-decoration-none text-dark'>View General Ledger</a>">⋮</span>
           </div>
           <span class="fw-bold text-success">Ksh<?= $formattedGarbage ?></span>
         </div>
@@ -861,7 +860,6 @@ $netProfit = $income - $expenses;
     <td>Ksh<?= $formattedLateFees ?></td>
   </tr>
 
-  <!-- Collapsible row -->
   <tr>
     <td colspan="2" class="p-0">
       <div id="lateDetails" class="collapse" data-bs-parent="#accordionFinance">
@@ -869,11 +867,11 @@ $netProfit = $income - $expenses;
           <div>
             <span class="fw-bold text-dark">Late Payment Fees</span>
             <span class="text-primary fw-bold ms-1"
-                  style="cursor:pointer;"
-                  data-bs-toggle="popover"
-                  data-bs-html="true"
-                  title="Options"
-                  data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
+              style="cursor:pointer;"
+              data-bs-toggle="popover"
+              data-bs-html="true"
+              title="Options"
+              data-bs-content="<a href='../../financials/generalledger/general_ledger_late.php' target='_blank' class='text-decoration-none text-dark'>View General Ledger</a>">⋮</span>
           </div>
           <span class="fw-bold text-success">Ksh<?= $formattedLateFees ?></span>
         </div>
@@ -889,7 +887,6 @@ $netProfit = $income - $expenses;
     <td>Ksh<?= $formattedManagementFees ?></td>
   </tr>
 
-  <!-- Collapsible row -->
   <tr>
     <td colspan="2" class="p-0">
       <div id="managementDetails" class="collapse" data-bs-parent="#accordionFinance">
@@ -897,11 +894,11 @@ $netProfit = $income - $expenses;
           <div>
             <span class="fw-bold text-dark">Commissions and Management Fees</span>
             <span class="text-primary fw-bold ms-1"
-                  style="cursor:pointer;"
-                  data-bs-toggle="popover"
-                  data-bs-html="true"
-                  title="Options"
-                  data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
+              style="cursor:pointer;"
+              data-bs-toggle="popover"
+              data-bs-html="true"
+              title="Options"
+              data-bs-content="<a href='../../financials/generalledger/general_management.php' target='_blank' class='text-decoration-none text-dark'>View General Ledger</a>">⋮</span>
           </div>
           <span class="fw-bold text-success">Ksh<?= $formattedManagementFees ?></span>
         </div>
@@ -917,7 +914,6 @@ $netProfit = $income - $expenses;
     <td style="text-align:right;">Ksh<?= $formattedOtherIncome ?></td>
   </tr>
 
-  <!-- Collapsible details row -->
   <tr>
     <td colspan="2" class="p-0">
       <div id="otherDetails" class="collapse" data-bs-parent="#accordionFinance">
@@ -925,16 +921,16 @@ $netProfit = $income - $expenses;
           <div>
             <span class="fw-bold text-dark">Other Income (Advertising, Penalties)</span>
             <span class="text-primary fw-bold ms-1"
-                  style="cursor:pointer;"
-                  data-bs-toggle="popover"
-                  data-bs-html="true"
-                  title="Options"
-                  data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
+              style="cursor:pointer;"
+              data-bs-toggle="popover"
+              data-bs-html="true"
+              title="Options"
+              data-bs-content="<a href='../../financials/generalledger/general_other.php' target='_blank' class='text-decoration-none text-dark'>View General Ledger</a>">⋮</span>
           </div>
           <span class="fw-bold text-success">Ksh<?= $formattedOtherIncome ?></span>
         </div>
 
-        <!-- Existing detailed data -->
+        <!-- Optional: Existing detailed data -->
         <div style="padding-left:40px; padding-bottom:10px;">
           <?php
           $stmt = $pdo->prepare("
@@ -962,7 +958,6 @@ $netProfit = $income - $expenses;
 <?php endif; ?>
 
 
-
 <!-- Total -->
 <tr class="category">
   <td><b>Total Income</b></td>
@@ -988,7 +983,7 @@ $netProfit = $income - $expenses;
               data-bs-toggle="popover"
               data-bs-html="true"
               title="Options"
-              data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
+              data-bs-content="<a href='../../financials/generalledger/general_ledger_maintenance.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
       </div>
       <span class="fw-bold text-success">Ksh<?= $formattedMaintenance ?></span>
     </div>
@@ -1024,7 +1019,7 @@ $netProfit = $income - $expenses;
               data-bs-toggle="popover"
               data-bs-html="true"
               title="Options"
-              data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
+              data-bs-content="<a href='../../financials/generalledger/general_ledger_salary.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
       </div>
       <span class="fw-bold text-success">Ksh<?= $formattedSalaryTotal ?></span>
     </div>
@@ -1060,7 +1055,7 @@ $netProfit = $income - $expenses;
               data-bs-toggle="popover"
               data-bs-html="true"
               title="Options"
-              data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
+              data-bs-content="<a href='../../financials/generalledger/general_ledger_electricity.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
       </div>
       <span class="fw-bold text-success">Ksh<?= $formattedElectricity ?></span>
     </div>
@@ -1096,7 +1091,7 @@ $netProfit = $income - $expenses;
               data-bs-toggle="popover"
               data-bs-html="true"
               title="Options"
-              data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
+              data-bs-content="<a href='../../financials/generalledger/general_ledger_waterexpense.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
       </div>
       <span class="fw-bold text-success">Ksh<?= $formattedWaterExpense ?></span>
     </div>
@@ -1139,7 +1134,7 @@ $netProfit = $income - $expenses;
               data-bs-toggle="popover"
               data-bs-html="true"
               title="Options"
-              data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
+              data-bs-content="<a href='../../financials/generalledger/general_ledger_internet.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
       </div>
       <span class="fw-bold text-success">Ksh<?= $formattedInternetExpense ?></span>
     </div>
@@ -1187,7 +1182,7 @@ $netProfit = $income - $expenses;
               data-bs-toggle="popover"
               data-bs-html="true"
               title="Options"
-              data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
+              data-bs-content="<a href='../../financials/generalledger/general_ledger_security.php' class='text-decoration-none text-dark'>General Ledger</a>">:</span>
       </div>
       <span class="fw-bold text-success">Ksh<?= $formattedSecurityExpense ?></span>
     </div>
@@ -1249,7 +1244,7 @@ document.addEventListener('DOMContentLoaded', function () {
               data-bs-toggle="popover"
               data-bs-html="true"
               title="Options"
-              data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">..</span>
+              data-bs-content="<a href='../../financials/generalledger/general_ledger_software.php' class='text-decoration-none text-dark'>General Ledger</a>">..</span>
       </div>
       <span class="fw-bold text-success">Ksh<?= $formattedSoftwareExpense ?></span>
     </div>
@@ -1299,7 +1294,7 @@ document.addEventListener('DOMContentLoaded', function () {
               data-bs-toggle="popover"
               data-bs-html="true"
               title="Options"
-              data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">..</span>
+              data-bs-content="<a href='../../financials/generalledger/general_ledger_marketing.php' class='text-decoration-none text-dark'>General Ledger</a>">..</span>
       </div>
       <span class="fw-bold text-success">Ksh<?= $formattedMarketingExpense ?></span>
     </div>
@@ -1349,7 +1344,7 @@ document.addEventListener('DOMContentLoaded', function () {
               data-bs-toggle="popover"
               data-bs-html="true"
               title="Options"
-              data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">..</span>
+              data-bs-content="<a href='../../financials/generalledger/general_ledger_legal.php' class='text-decoration-none text-dark'>General Ledger</a>">..</span>
       </div>
       <span class="fw-bold text-success">Ksh<?= $formattedLegalExpense ?></span>
     </div>
@@ -1399,7 +1394,7 @@ document.addEventListener('DOMContentLoaded', function () {
               data-bs-toggle="popover"
               data-bs-html="true"
               title="Options"
-              data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">..</span>
+              data-bs-content="<a href='../../financials/generalledger/general_ledger_loan.php' class='text-decoration-none text-dark'>General Ledger</a>">..</span>
       </div>
       <span class="fw-bold text-success">Ksh<?= $formattedLoanInterest ?></span>
     </div>
@@ -1449,7 +1444,7 @@ document.addEventListener('DOMContentLoaded', function () {
               data-bs-toggle="popover"
               data-bs-html="true"
               title="Options"
-              data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">..</span>
+              data-bs-content="<a href='../../financials/generalledger/general_ledger_bank.php' class='text-decoration-none text-dark'>General Ledger</a>">..</span>
       </div>
       <span class="fw-bold text-success">Ksh<?= $formattedBankCharges ?></span>
     </div>
@@ -1499,7 +1494,7 @@ document.addEventListener('DOMContentLoaded', function () {
               data-bs-toggle="popover"
               data-bs-html="true"
               title="Options"
-              data-bs-content="<a href='../../financials/generalledger/general_ledger.php' class='text-decoration-none text-dark'>General Ledger</a>">..</span>
+              data-bs-content="<a href='../../financials/generalledger/general_ledger_otherexpense.php' class='text-decoration-none text-dark'>General Ledger</a>">..</span>
       </div>
       <span class="fw-bold text-success">Ksh<?= $formattedOtherExpense ?></span>
     </div>

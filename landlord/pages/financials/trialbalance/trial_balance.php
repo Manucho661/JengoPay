@@ -1,11 +1,11 @@
-<?php 
+<?php
 include '../../db/connect.php';
 
-// Build filters
+// --- BUILD FILTERS ---
 $where = [];
 $params = [];
 
-// Date range - FIXED: Use journal_entries.entry_date instead of journal_lines.created_at
+// Date range filter
 if (!empty($_GET['from_date']) && !empty($_GET['to_date'])) {
     $where[] = "je.entry_date BETWEEN :from AND :to";
     $params[':from'] = $_GET['from_date'];
@@ -20,7 +20,7 @@ if (!empty($_GET['account_id'])) {
 
 $whereSql = $where ? "WHERE " . implode(" AND ", $where) : "";
 
-// SQL query
+// --- MAIN QUERY ---
 $sql = "
     SELECT 
         a.account_code,
@@ -43,17 +43,13 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Fetch account list for dropdown
-$accounts = $pdo->query("SELECT account_code, account_name FROM chart_of_accounts ORDER BY account_name")->fetchAll(PDO::FETCH_ASSOC);
+// --- TOTALS ---
+$totalDebit = 0;
+$totalCredit = 0;
 
-// Debug info
-$debug_info = [
-    'sql_query' => $sql,
-    'where_conditions' => $where,
-    'params' => $params,
-    'row_count' => count($rows)
-];
 ?>
+
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -128,143 +124,100 @@ $debug_info = [
     </aside>
 
     <!-- Main Content -->
-    <main class="app-main">
-      <div class="app-content-header">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-12">
-              <h2 class="mb-3">Trial Balance Report</h2>
-              
-              <!-- Debug Info -->
-              <?php if (isset($_GET['debug'])): ?>
-              <div class="debug-info">
-                <h6>Debug Information:</h6>
-                <pre><?php print_r($debug_info); ?></pre>
-              </div>
+    <main class="container">
+    <h3 class="mb-4 text-center">Trial Balance</h3>
+    <div class="card shadow">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table id="trialBalance" class="table table-bordered table-striped mb-0">
+            <thead class="table-dark">
+              <tr>
+                <th width="50%">Account</th>
+                <th width="25%">Debit (Ksh)</th>
+                <th width="25%">Credit (Ksh)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php 
+              $totalDebit = 0;
+              $totalCredit = 0;
+
+              foreach ($rows as $r): 
+                  $net = $r['total_debit'] - $r['total_credit'];
+                  $accountName = strtolower($r['account_name']);
+
+                  // Default handling based on normal balance
+                  if (strtoupper($r['debit_credit']) === 'DEBIT') {
+                      $debit = $net > 0 ? $net : 0;
+                      $credit = $net < 0 ? abs($net) : 0;
+                  } else {
+                      $debit = $net < 0 ? abs($net) : 0;
+                      $credit = $net > 0 ? $net : 0;
+                  }
+
+                  // ✅ Always Credit for Accounts Payable or Owner’s Capital
+                  if (strpos($accountName, 'accounts payable') !== false || 
+                      strpos($accountName, 'owner') !== false && strpos($accountName, 'capital') !== false) {
+                      $credit = max($r['total_credit'], $credit);
+                      $debit = 0;
+                  }
+
+                  // Update totals
+                  $totalDebit  += $debit;
+                  $totalCredit += $credit;
+
+                  if (abs($debit) < 0.01 && abs($credit) < 0.01) continue;
+              ?>
+              <tr data-account-id="<?= htmlspecialchars($r['account_code']) ?>" style="cursor:pointer;">
+                <td>
+                  <div class="fw-bold"><?= htmlspecialchars($r['account_name']) ?></div>
+                  <small class="account-code">
+                    Code: <?= htmlspecialchars($r['account_code']) ?> | 
+                    Type: <?= htmlspecialchars($r['account_type'] ?? 'N/A') ?> | 
+                    Normal: <?= htmlspecialchars($r['debit_credit']) ?>
+                  </small>
+                </td>
+                <td class="text-end <?= $debit > 0 ? 'balance-positive' : '' ?>"><?= number_format($debit, 2) ?></td>
+                <td class="text-end <?= $credit > 0 ? 'balance-negative' : '' ?>"><?= number_format($credit, 2) ?></td>
+              </tr>
+              <?php endforeach; ?>
+
+              <?php if (empty($rows)): ?>
+              <tr>
+                <td colspan="3" class="text-center text-muted py-4">
+                  <i class="fas fa-info-circle me-2"></i>No transactions found for the selected period
+                </td>
+              </tr>
               <?php endif; ?>
-              
-              <!-- Filters -->
-              <div class="card mb-4">
-                <div class="card-header"><h5 class="card-title mb-0">Filter Report</h5></div>
-                <div class="card-body">
-                  <form method="get" class="row g-3">
-                    <div class="col-md-3">
-                      <label class="form-label">From Date</label>
-                      <input type="date" name="from_date" class="form-control" value="<?= htmlspecialchars($_GET['from_date'] ?? '') ?>">
-                    </div>
-                    <div class="col-md-3">
-                      <label class="form-label">To Date</label>
-                      <input type="date" name="to_date" class="form-control" value="<?= htmlspecialchars($_GET['to_date'] ?? '') ?>">
-                    </div>
-                    <div class="col-md-4">
-                      <label class="form-label">Account</label>
-                      <select name="account_id" class="form-select">
-                        <option value="">-- All Accounts --</option>
-                        <?php foreach ($accounts as $acc): ?>
-                          <option value="<?= $acc['account_code'] ?>" <?= (!empty($_GET['account_id']) && $_GET['account_id'] == $acc['account_code']) ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($acc['account_name']) ?>
-                          </option>
-                        <?php endforeach; ?>
-                      </select>
-                    </div>
-                    <div class="col-md-2 d-flex align-items-end">
-                      <button type="submit" class="btn w-100" style="background-color:#FFC107; color:#00192D;">Apply Filters</button>
-                    </div>
-                  </form>
-                  <div class="mt-2">
-                    <a href="?debug=1&<?= http_build_query($_GET) ?>" class="btn btn-sm btn-outline-warning"><i class="fas fa-bug"></i> Debug Mode</a>
-                    <a href="?" class="btn btn-sm btn-outline-secondary"><i class="fas fa-refresh"></i> Reset</a>
-                  </div>
-                </div>
-              </div>
+            </tbody>
 
-              <!-- Trial Balance Table -->
-              <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                  <h5 class="card-title mb-0">Trial Balance</h5>
-                </div>
-                <div class="card-body p-0">
-                  <div class="table-responsive">
-                    <table id="trialBalance" class="table table-bordered table-striped mb-0">
-                      <thead class="table-dark">
-                        <tr>
-                          <th width="50%">Account</th>
-                          <th width="25%">Debit (Ksh)</th>
-                          <th width="25%">Credit (Ksh)</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <?php 
-                        $totalDebit = 0;
-                        $totalCredit = 0;
-                        
-                        foreach ($rows as $r): 
-                          $netBalance = $r['total_debit'] - $r['total_credit'];
-
-                          if ($r['debit_credit'] === 'Debit') {
-                              $debit = $netBalance > 0 ? $netBalance : 0;
-                              $credit = $netBalance < 0 ? abs($netBalance) : 0;
-                          } else {
-                              $debit = $netBalance < 0 ? abs($netBalance) : 0;
-                              $credit = $netBalance > 0 ? $netBalance : 0;
-                          }
-
-                          // totals MUST use raw values
-                          $totalDebit  += $r['total_debit'];
-                          $totalCredit += $r['total_credit'];
-
-                          if (abs($debit) < 0.01 && abs($credit) < 0.01) continue;
-                        ?>
-                        <tr data-account-id="<?= $r['account_code'] ?>" style="cursor: pointer;">
-                          <td>
-                            <div class="fw-bold"><?= htmlspecialchars($r['account_name']) ?></div>
-                            <small class="account-code">
-                              Code: <?= $r['account_code'] ?> | 
-                              Type: <?= $r['account_type'] ?? 'N/A' ?> | 
-                              Normal: <?= $r['debit_credit'] ?>
-                            </small>
-                          </td>
-                          <td class="text-end <?= $debit > 0 ? 'balance-positive' : '' ?>"><?= number_format($debit, 2) ?></td>
-                          <td class="text-end <?= $credit > 0 ? 'balance-negative' : '' ?>"><?= number_format($credit, 2) ?></td>
-                        </tr>
-                        <?php endforeach; ?>
-                        
-                        <?php if (empty($rows)): ?>
-                        <tr>
-                          <td colspan="3" class="text-center text-muted py-4"><i class="fas fa-info-circle me-2"></i>No transactions found for the selected period</td>
-                        </tr>
-                        <?php endif; ?>
-                      </tbody>
-                      <tfoot class="table-dark">
-                        <tr>
-                          <th class="text-end">Total</th>
-                          <th class="text-end"><?= number_format($totalDebit, 2) ?></th>
-                          <th class="text-end"><?= number_format($totalCredit, 2) ?></th>
-                        </tr>
-                        <tr class="<?= abs($totalDebit - $totalCredit) < 0.01 ? 'table-success' : 'table-danger' ?>">
-                          <td colspan="3" class="text-center fw-bold">
-                            <?php if (abs($totalDebit - $totalCredit) < 0.01): ?>
-                              <i class="fas fa-check-circle me-2"></i>Trial Balance is Balanced!
-                            <?php else: ?>
-                              <i class="fas fa-exclamation-triangle me-2"></i>
-                              Trial Balance is Out of Balance by: Ksh <?= number_format(abs($totalDebit - $totalCredit), 2) ?>
-                            <?php endif; ?>
-                          </td>
-                        </tr>
-                      </tfoot>
-                    </table>
-                  </div>
-                </div>
-                <div class="card-footer text-muted d-flex justify-content-between">
-                  <small>Generated on: <?= date('Y-m-d H:i:s') ?></small>
-                  <small>Accounts: <?= count($rows) ?> | Period: <?= $_GET['from_date'] ?? 'All' ?> to <?= $_GET['to_date'] ?? 'All' ?></small>
-                </div>
-              </div>
-            </div>
-          </div>
+            <tfoot class="table-dark">
+              <tr>
+                <th class="text-end">Total</th>
+                <th class="text-end"><?= number_format($totalDebit, 2) ?></th>
+                <th class="text-end"><?= number_format($totalCredit, 2) ?></th>
+              </tr>
+              <tr class="<?= abs($totalDebit - $totalCredit) < 0.01 ? 'table-success' : 'table-danger' ?>">
+                <td colspan="3" class="text-center fw-bold">
+                  <?php if (abs($totalDebit - $totalCredit) < 0.01): ?>
+                    <i class="fas fa-check-circle me-2"></i>Trial Balance is Balanced!
+                  <?php else: ?>
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Trial Balance is Out of Balance by: Ksh <?= number_format(abs($totalDebit - $totalCredit), 2) ?>
+                  <?php endif; ?>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
         </div>
       </div>
-    </main>
+
+      <div class="card-footer text-muted d-flex justify-content-between">
+        <small>Generated on: <?= date('Y-m-d H:i:s') ?></small>
+        <small>Accounts: <?= count($rows) ?> | Period: <?= $_GET['from_date'] ?? 'All' ?> to <?= $_GET['to_date'] ?? 'All' ?></small>
+      </div>
+    </div>
+  </main>
   </div>
 
   <!-- Ledger Modal -->
