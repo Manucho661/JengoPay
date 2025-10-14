@@ -1,7 +1,9 @@
-<?php
+<?php 
 include '../../db/connect.php';
 
-// --- BUILD FILTERS ---
+// ===========================
+// BUILD FILTER CONDITIONS
+// ===========================
 $where = [];
 $params = [];
 
@@ -20,7 +22,9 @@ if (!empty($_GET['account_id'])) {
 
 $whereSql = $where ? "WHERE " . implode(" AND ", $where) : "";
 
-// --- MAIN QUERY ---
+// ===========================
+// MAIN QUERY
+// ===========================
 $sql = "
     SELECT 
         a.account_code,
@@ -41,13 +45,61 @@ $sql = "
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
-$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$rawRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// --- TOTALS ---
-$totalDebit = 0;
-$totalCredit = 0;
+// ===========================
+// POST-PROCESSING: DETERMINE DEBIT / CREDIT POSITION
+// ===========================
+$rows = [];
+foreach ($rawRows as $r) {
+    $accountName = strtolower(trim($r['account_name']));
+    $normalSide  = strtoupper(trim($r['debit_credit'])); // 'DEBIT' or 'CREDIT'
+    $net = $r['total_debit'] - $r['total_credit'];
 
+    // Default logic based on normal side
+    if ($normalSide === 'DEBIT') {
+        $debit = $net >= 0 ? $net : 0;
+        $credit = $net < 0 ? abs($net) : 0;
+    } else {
+        $credit = $net <= 0 ? abs($net) : 0;
+        $debit = $net > 0 ? $net : 0;
+    }
+
+    // ===========================
+    // FORCE CREDIT for these cases
+    // ===========================
+    if (
+        strpos($accountName, 'accounts payable') !== false ||
+        strpos($accountName, 'loan') !== false ||
+        strpos($accountName, 'capital') !== false ||
+        strpos($accountName, 'revenue') !== false ||
+        strpos($accountName, 'income') !== false ||
+        strpos($accountName, 'garbage collection fees') !== false
+    ) {
+        // Ensure it shows under Credit only
+        $credit = max($r['total_credit'], abs($net));
+        $debit = 0;
+    }
+
+    // Skip zero balances
+    if (abs($debit) < 0.01 && abs($credit) < 0.01) continue;
+
+    $r['adjusted_debit'] = $debit;
+    $r['adjusted_credit'] = $credit;
+
+    $rows[] = $r;
+}
+
+// ===========================
+// FETCH ACCOUNT LIST FOR FILTERS
+// ===========================
+$accounts = $pdo->query("
+    SELECT account_code, account_name 
+    FROM chart_of_accounts 
+    ORDER BY account_name
+")->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 
 
 <!doctype html>
@@ -125,100 +177,116 @@ $totalCredit = 0;
 
     <!-- Main Content -->
     <main class="container">
-    <h3 class="mb-4 text-center">Trial Balance</h3>
-    <div class="card shadow">
-      <div class="card-body p-0">
-        <div class="table-responsive">
-          <table id="trialBalance" class="table table-bordered table-striped mb-0">
-            <thead class="table-dark">
-              <tr>
-                <th width="50%">Account</th>
-                <th width="25%">Debit (Ksh)</th>
-                <th width="25%">Credit (Ksh)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php 
-              $totalDebit = 0;
-              $totalCredit = 0;
+  <h3 class="mb-4 text-center">Trial Balance</h3>
+  <div class="card shadow">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table id="trialBalance" class="table table-bordered table-striped mb-0">
+          <thead class="table-dark">
+            <tr>
+              <th width="50%">Account</th>
+              <th width="25%">Debit (Ksh)</th>
+              <th width="25%">Credit (Ksh)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php 
+            $totalDebit = 0;
+            $totalCredit = 0;
 
-              foreach ($rows as $r): 
-                  $net = $r['total_debit'] - $r['total_credit'];
-                  $accountName = strtolower($r['account_name']);
+            foreach ($rows as $r): 
+                $net = $r['total_debit'] - $r['total_credit'];
+                $accountName = strtolower(trim($r['account_name']));
 
-                  // Default handling based on normal balance
-                  if (strtoupper($r['debit_credit']) === 'DEBIT') {
-                      $debit = $net > 0 ? $net : 0;
-                      $credit = $net < 0 ? abs($net) : 0;
-                  } else {
-                      $debit = $net < 0 ? abs($net) : 0;
-                      $credit = $net > 0 ? $net : 0;
-                  }
+                // Default handling based on normal balance
+                if (strtoupper($r['debit_credit']) === 'DEBIT') {
+                    $debit = $net > 0 ? $net : 0;
+                    $credit = $net < 0 ? abs($net) : 0;
+                } else {
+                    $debit = $net < 0 ? abs($net) : 0;
+                    $credit = $net > 0 ? $net : 0;
+                }
 
-                  // ✅ Always Credit for Accounts Payable or Owner’s Capital
-                  if (strpos($accountName, 'accounts payable') !== false || 
-                      strpos($accountName, 'owner') !== false && strpos($accountName, 'capital') !== false) {
-                      $credit = max($r['total_credit'], $credit);
-                      $debit = 0;
-                  }
+                // ✅ Always Credit for specific income/liability accounts
+                if (
+                    strpos($accountName, 'accounts payable') !== false || 
+                    (strpos($accountName, 'owner') !== false && strpos($accountName, 'capital') !== false) ||
+                    strpos($accountName, 'revenue') !== false ||
+                    strpos($accountName, 'income') !== false ||
+                    strpos($accountName, 'garbage') !== false ||
+                    strpos($accountName, 'vat payable') !== false ||
+                    strpos($accountName, 'late payment') !== false ||
+                    strpos($accountName, 'commission') !== false ||
+                    strpos($accountName, 'management fee') !== false
+                ) {
+                    // Force these accounts to show on the Credit side
+                    $credit = max($r['total_credit'], abs($net));
+                    $debit = 0;
+                }
 
-                  // Update totals
-                  $totalDebit  += $debit;
-                  $totalCredit += $credit;
+                // Totals
+                $totalDebit  += $debit;
+                $totalCredit += $credit;
 
-                  if (abs($debit) < 0.01 && abs($credit) < 0.01) continue;
-              ?>
-              <tr data-account-id="<?= htmlspecialchars($r['account_code']) ?>" style="cursor:pointer;">
-                <td>
-                  <div class="fw-bold"><?= htmlspecialchars($r['account_name']) ?></div>
-                  <small class="account-code">
-                    Code: <?= htmlspecialchars($r['account_code']) ?> | 
-                    Type: <?= htmlspecialchars($r['account_type'] ?? 'N/A') ?> | 
-                    Normal: <?= htmlspecialchars($r['debit_credit']) ?>
-                  </small>
-                </td>
-                <td class="text-end <?= $debit > 0 ? 'balance-positive' : '' ?>"><?= number_format($debit, 2) ?></td>
-                <td class="text-end <?= $credit > 0 ? 'balance-negative' : '' ?>"><?= number_format($credit, 2) ?></td>
-              </tr>
-              <?php endforeach; ?>
+                // Skip zero balances
+                if (abs($debit) < 0.01 && abs($credit) < 0.01) continue;
+            ?>
+            <tr data-account-id="<?= htmlspecialchars($r['account_code']) ?>" style="cursor:pointer;">
+              <td>
+                <div class="fw-bold"><?= htmlspecialchars($r['account_name']) ?></div>
+                <small class="account-code">
+                  Code: <?= htmlspecialchars($r['account_code']) ?> | 
+                  Type: <?= htmlspecialchars($r['account_type'] ?? 'N/A') ?> | 
+                  Normal: <?= htmlspecialchars($r['debit_credit']) ?>
+                </small>
+              </td>
+              <td class="text-end <?= $debit > 0 ? 'balance-positive' : '' ?>">
+                <?= $debit > 0 ? number_format($debit, 2) : '' ?>
+              </td>
+              <td class="text-end <?= $credit > 0 ? 'balance-negative' : '' ?>">
+                <?= $credit > 0 ? number_format($credit, 2) : '' ?>
+              </td>
+            </tr>
+            <?php endforeach; ?>
 
-              <?php if (empty($rows)): ?>
-              <tr>
-                <td colspan="3" class="text-center text-muted py-4">
-                  <i class="fas fa-info-circle me-2"></i>No transactions found for the selected period
-                </td>
-              </tr>
-              <?php endif; ?>
-            </tbody>
+            <?php if (empty($rows)): ?>
+            <tr>
+              <td colspan="3" class="text-center text-muted py-4">
+                <i class="fas fa-info-circle me-2"></i>No transactions found for the selected period
+              </td>
+            </tr>
+            <?php endif; ?>
+          </tbody>
 
-            <tfoot class="table-dark">
-              <tr>
-                <th class="text-end">Total</th>
-                <th class="text-end"><?= number_format($totalDebit, 2) ?></th>
-                <th class="text-end"><?= number_format($totalCredit, 2) ?></th>
-              </tr>
-              <tr class="<?= abs($totalDebit - $totalCredit) < 0.01 ? 'table-success' : 'table-danger' ?>">
-                <td colspan="3" class="text-center fw-bold">
-                  <?php if (abs($totalDebit - $totalCredit) < 0.01): ?>
-                    <i class="fas fa-check-circle me-2"></i>Trial Balance is Balanced!
-                  <?php else: ?>
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    Trial Balance is Out of Balance by: Ksh <?= number_format(abs($totalDebit - $totalCredit), 2) ?>
-                  <?php endif; ?>
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      </div>
-
-      <div class="card-footer text-muted d-flex justify-content-between">
-        <small>Generated on: <?= date('Y-m-d H:i:s') ?></small>
-        <small>Accounts: <?= count($rows) ?> | Period: <?= $_GET['from_date'] ?? 'All' ?> to <?= $_GET['to_date'] ?? 'All' ?></small>
+          <tfoot class="table-dark">
+            <tr>
+              <th class="text-end">Total</th>
+              <th class="text-end"><?= number_format($totalDebit, 2) ?></th>
+              <th class="text-end"><?= number_format($totalCredit, 2) ?></th>
+            </tr>
+            <tr class="<?= abs($totalDebit - $totalCredit) < 0.01 ? 'table-success' : 'table-danger' ?>">
+              <td colspan="3" class="text-center fw-bold">
+                <?php if (abs($totalDebit - $totalCredit) < 0.01): ?>
+                  <i class="fas fa-check-circle me-2"></i>Trial Balance is Balanced!
+                <?php else: ?>
+                  <i class="fas fa-exclamation-triangle me-2"></i>
+                  Trial Balance is Out of Balance by: Ksh <?= number_format(abs($totalDebit - $totalCredit), 2) ?>
+                <?php endif; ?>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
       </div>
     </div>
-  </main>
+
+    <div class="card-footer text-muted d-flex justify-content-between">
+      <small>Generated on: <?= date('Y-m-d H:i:s') ?></small>
+      <small>Accounts: <?= count($rows) ?> | Period: <?= $_GET['from_date'] ?? 'All' ?> to <?= $_GET['to_date'] ?? 'All' ?></small>
+    </div>
   </div>
+</main>
+</div>
+
 
   <!-- Ledger Modal -->
   <div class="modal fade" id="ledgerModal" tabindex="-1">
