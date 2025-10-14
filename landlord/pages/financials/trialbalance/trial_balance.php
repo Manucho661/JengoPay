@@ -279,6 +279,7 @@ $accounts = $pdo->query("
       </div>
     </div>
 
+    
     <div class="card-footer text-muted d-flex justify-content-between">
       <small>Generated on: <?= date('Y-m-d H:i:s') ?></small>
       <small>Accounts: <?= count($rows) ?> | Period: <?= $_GET['from_date'] ?? 'All' ?> to <?= $_GET['to_date'] ?? 'All' ?></small>
@@ -286,6 +287,7 @@ $accounts = $pdo->query("
   </div>
 </main>
 </div>
+
 
 
   <!-- Ledger Modal -->
