@@ -2902,6 +2902,38 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script> -->
 
+<script>
+document.getElementById('building').addEventListener('change', function() {
+    const buildingId = this.value;
+    const tenantSelect = document.getElementById('customer');
+
+    // Reset tenant dropdown
+    tenantSelect.innerHTML = '<option value="">Select a Tenant</option>';
+    tenantSelect.disabled = true;
+
+    if (buildingId) {
+        fetch(`/Jengopay/landlord/pages/financials/invoices/action/fetch_tenants.php?building_id=${buildingId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    data.forEach(tenant => {
+                        const option = document.createElement('option');
+                        option.value = tenant.unit_number;
+                        option.textContent = `${tenant.first_name} ${tenant.last_name} - ${tenant.unit_number} (${tenant.structure_type})`;
+                        tenantSelect.appendChild(option);
+                    });
+                    tenantSelect.disabled = false;
+                } else {
+                    const opt = document.createElement('option');
+                    opt.textContent = 'No occupied tenants found';
+                    tenantSelect.appendChild(opt);
+                }
+            })
+            .catch(error => console.error('Error fetching tenants:', error));
+    }
+});
+</script>
+
 
 
 <script>
