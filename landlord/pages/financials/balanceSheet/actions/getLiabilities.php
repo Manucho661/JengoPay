@@ -8,7 +8,7 @@ try {
             coa.account_name AS liability_name,
             coa.account_type AS category,
             coa.account_code AS account_id, 
-            SUM(jl.credit) - SUM(jl.debit) AS amount,
+            SUM(jl.debit) - SUM(jl.credit) AS amount,
             MAX(je.entry_date) AS due_date
         FROM journal_lines jl
         JOIN chart_of_accounts coa ON jl.account_id = coa.account_code

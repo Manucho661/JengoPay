@@ -202,57 +202,58 @@
     // 🔁 Dynamic Request Dropdown Options
     const requestOptions = {
       "Plumbing Issues": [
-        "Leaking pipes or faucets",
-        "Blocked drains or toilets",
+        "Leaking pipes",
+        "Blocked drains/toilets",
         "Low water pressure",
         "Broken water heaters",
         "Sewage backups"
       ],
       "Electrical Problems": [
-        "Power outages in units or common areas",
-        "Faulty wiring or exposed cables",
-        "Malfunctioning sockets or switches",
-        "Broken lights or fixtures",
+        "Power outages in units",
+        "Faulty wiring",
+        "Malfunctioning sockets",
+        "Broken lights",
         "Tripped circuit breakers"
       ],
       "HVAC & Ventilation": [
-        "Broken air conditioning or heating systems",
+        "Broken air conditioning/heating systems",
+        "Poor ventilation in bathrooms",
         "Poor ventilation in bathrooms or kitchens",
         "Thermostat not working",
         "Leaking AC units"
       ],
       "Doors, Windows & Locks": [
-        "Broken door locks or handles",
-        "Jammed or squeaky doors",
-        "Cracked or broken window panes",
+        "Damaged door locks",
+        "Squeaky doors",
+        "Cracked window panes",
         "Damaged window screens",
         "Insecure access control (gate or entrance systems)"
       ],
       "Structural & Interior Issues": [
         "Wall cracks or paint peeling",
-        "Ceiling leaks or water stains",
-        "Damaged flooring (tiles, carpets, wood)",
-        "Mold or mildew growth",
+        "Paint peeling",
+        "Ceiling leaks",
+        "Damaged flooring tiles)",
+        "Mold growth",
         "Loose railings or handrails"
       ],
       "Sanitation & Waste": [
-        "Garbage chute or bin area overflow",
-        "Pest infestations (rats, cockroaches, termites)",
+        "Bin area overflow",
+        "Pest infestations",
         "Blocked sewer lines",
         "Odors from drains"
       ],
       "Safety & Security": [
-        "Broken smoke detectors or fire alarms",
+        "Fire alarms",
         "Malfunctioning emergency lighting",
-        "Non-functional intercom or CCTV",
-        "Loose or missing security grilles"
+        "Non-functional CCTV",
+        "Loose security grilles"
       ],
       "Common Area Maintenance": [
         "Elevator malfunctions",
-        "Dirty or broken stairwells",
         "Faulty lighting in hallways",
-        "Parking area potholes or gate issues",
-        "Playground or gym equipment damage"
+        "Parking area potholes",
+        "Gym equipment damage"
       ]
     };
 

@@ -1,4 +1,4 @@
-import {total_liabilities} from "./liabilitiesApi.js"
+import { total_liabilities } from "./liabilitiesApi.js"
 import { attachCollapseHandler } from "./AssetsApi.js"
 
 export async function getEquity() {
@@ -12,7 +12,7 @@ export async function getEquity() {
 
         const data = await response.json();
         // console.log(data);
-    
+
         addTbodyOwnersCapital(data.owners_capital);
         addTbodyRetainedEarnings(data.retainedEarnings, data.revenue, data.expenses, data.totalEquity);
 
@@ -24,77 +24,63 @@ export async function getEquity() {
 
 export function addTbodyRetainedEarnings(retainedEarnings, totalRevenue, totalExpenses, totalEquity) {
     const table = document.getElementById("myTable");
+    if (!table) return;
 
-    if (!table) {
-        console.log("Table not found");
-        return;
+    // Function to format numbers with commas and brackets for negatives
+    function formatAmount(value) {
+        const num = Number(value) || 0;
+        let formatted = num.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+        if (num < 0) formatted = `(${formatted.replace('-', '')})`; // For negative numbers
+        return formatted;
     }
 
-    // Create a new tbody
     const newTbody = document.createElement("tbody");
-
-    // Unique collapse id
     const collapseId = "retainedEarningsDetails";
 
-    // Add rows with proper structure
+    // Use formatted numbers inside divs
     newTbody.innerHTML = `
-        <!-- Main row (clickable) -->
         <tr class="main-row" data-bs-target="#${collapseId}" aria-expanded="false" style="cursor: pointer;">
-            <td>
-                <span class="text-warning" style="font-size: 20px;">▸</span> Retained Earnings
-            </td>
-            <td>${retainedEarnings}</td>
+            <td><span class="text-warning" style="font-size: 20px;">▸</span> Retained Earnings</td>
+            <td class="amount-cell"><div class="amount-text">${formatAmount(retainedEarnings)}</div></td>
         </tr>
-        <!-- Collapsible row -->
         <tr class="collapse" id="${collapseId}">
             <td colspan="2">
                 <table class="table table-sm mb-0">
                     <tr>
-                        <td>Revenue: ${totalRevenue}</td>
-                        <td>Expenses: ${totalExpenses}</td>
+                        <td>Revenue: <div class="amount-cell"><div class="amount-text">${formatAmount(totalRevenue)}</div></div></td>
+                        <td>Expenses: <div class="amount-cell"><div class="amount-text">${formatAmount(totalExpenses)}</div></div></td>
                     </tr>
                 </table>
             </td>
         </tr>
         <tr>
-            <td class="totalEquityCell">
-                 Total Equity
-            </td>
-            <td>${totalEquity}</td>
+            <td class="totalEquityCell">Total Equity</td>
+            <td class="amount-cell"><div class="amount-text">${formatAmount(totalEquity)}</div></td>
         </tr>
-       <tr>
-        <td class="totalLiabilitiesEquityCell">
-            Total Liabilities and Equity
-        </td>
-        <td class="totalLiabilitiesEquityCell">${totalEquity + total_liabilities}</td>
+        <tr class="equityAndLiabilities">
+            <td class="totalLiabilitiesEquityCell">Total Liabilities and Equity</td>
+            <td class="amount-cell"><div class="amount-text equityAndLiabilities bg-white border-0">${formatAmount(Number(totalEquity) + Number(total_liabilities))}</div></td>
         </tr>
     `;
 
-    // Append the new tbody to the table
     table.appendChild(newTbody);
 
-    // Attach event handlers once
+    // Collapse toggle handler
     if (!table.dataset.collapseHandlers) {
         table.dataset.collapseHandlers = "true";
-
         table.addEventListener("click", (e) => {
             const row = e.target.closest(".main-row");
             if (!row) return;
-
             const targetSelector = row.getAttribute("data-bs-target");
             const collapseEl = document.querySelector(targetSelector);
             if (!collapseEl) return;
-
             const bsCollapse = bootstrap.Collapse.getOrCreateInstance(collapseEl, { toggle: false });
             bsCollapse.toggle();
-
-            // Update arrow
             const span = row.querySelector("span");
-            if (span) {
-                span.textContent = collapseEl.classList.contains("show") ? "▾" : "▸";
-            }
-
-            // Update aria-expanded
+            if (span) span.textContent = collapseEl.classList.contains("show") ? "▾" : "▸";
             row.setAttribute("aria-expanded", collapseEl.classList.contains("show").toString());
         });
     }
@@ -105,6 +91,17 @@ export function addTbodyOwnersCapital(ownersCapital) {
     if (!table) {
         console.log("Table not found");
         return;
+    }
+
+    // Function to format numbers with commas and brackets for negatives
+    function formatAmount(value) {
+        const num = Number(value) || 0;
+        let formatted = num.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+        if (num < 0) formatted = `(${formatted.replace('-', '')})`; // For negative numbers
+        return formatted;
     }
 
     // Create a new tbody
@@ -122,7 +119,9 @@ export function addTbodyOwnersCapital(ownersCapital) {
             <td>
                 <span class="text-warning" style="font-size: 20px;">▸</span> Owner's Capital
             </td>
-            <td>${ownersCapital}</td>
+            <td class="amount-cell">
+                <div class="amount-text">${formatAmount(ownersCapital)}</div>
+            </td>
         </tr>
 
         <!-- Collapsible row -->

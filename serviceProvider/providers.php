@@ -265,28 +265,75 @@ try {
     .apply-btn:hover {
       text-decoration: none !important;
     }
+    .description{
+      
+    }
+    .description.collapsed {
+      max-height: 90px;
+      overflow: hidden;
+      position: relative;
+      
+    }
+
+    .description.collapsed::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100px;
+      background: linear-gradient(transparent, white);
+      padding-bottom: 50px;
+    }
+    .more {
+            background: none;
+            border: none;
+            color: #108a00;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 10px 0;
+            font-size: 14px;
+            cursor: pointer;
+        }
   </style>
 </head>
 
 <body>
   <div class="app-wrapper">
     <!-- Header -->
-    <div class="header header-bar" style="position: fixed; width: 100%; display: flex; justify-content: space-between; align-items: center; background-color: #00192D; padding: 10px 20px; z-index: 1000; color: white;">
+    <div class="header header-bar"
+      style="position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; background-color: white; padding: 10px 30px; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+
       <!-- Left side: Logo and Welcome -->
       <div style="display: flex; align-items: center; gap: 15px;">
-        <div style="font-size: 22px; font-weight: bold; color: #FFC107; letter-spacing: 1px;">
-          <h2>Jengo<span style="color: white;">Pay</span></h2>
+        <div style="font-size: 22px; font-weight: bold; color: #00192D; letter-spacing: 1px;">
+          <h2 style="margin: 0;">Jengo<span style="color: #FFC107;">Pay</span></h2>
         </div>
-        <h1 style="margin: 0; font-size: 20px;">
+        <h1 style="margin: 0; font-size: 18px; color: #00192D;">
           <i class="fas fa-users" style="color: #FFC107;"></i> Welcome Jackson
         </h1>
       </div>
 
+      <!-- Center: Account Balance -->
+      <div style="display: flex; align-items: center; gap: 10px; background-color: #F5F7FA; padding: 8px 16px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <span style="font-weight: 600; font-size: 16px; color: #00192D;">Account Balance:</span>
+        <span id="accountBalance" style="font-weight: bold; font-size: 17px; color: #28A745;">KSH 2,350.00</span>
+        <button style="background-color: #FFC107; color: #00192D; border: none; border-radius: 8px; padding: 6px 14px; font-weight: 600; cursor: pointer;">
+          <i class="fas fa-plus-circle"></i> Top Up
+        </button>
+      </div>
+
       <!-- Right side: Nav links -->
       <div class="nav-links" style="display: flex; gap: 20px;">
-        <a href="dashboard.php" style="color: white; text-decoration: none;"><i class="fas fa-home"></i> Dashboard</a>
-        <a href="units_page.php" style="color: white; text-decoration: none;"><i class="fas fa-building"></i> Units</a>
-        <a href="login.php" style="color: white; text-decoration: none;"><i class="fas fa-sign-out-alt"></i> Login</a>
+        <a href="dashboard.php" style="color: #00192D; text-decoration: none; font-weight: 500;">
+          <i class="fas fa-home"></i> Dashboard
+        </a>
+        <a href="units_page.php" style="color: #00192D; text-decoration: none; font-weight: 500;">
+          <i class="fas fa-building"></i> Units
+        </a>
+        <a href="login.php" style="color: #00192D; text-decoration: none; font-weight: 500;">
+          <i class="fas fa-sign-out-alt"></i> Login
+        </a>
       </div>
     </div>
 
@@ -394,15 +441,6 @@ try {
                               <i class="bi bi-calendar-plus me-1" style="color: #00192D;"></i> Specify Duration
                             </label>
                             <input type="text" name="custom_duration" class="form-control rounded-pill" id="customDuration" placeholder="e.g. 5 days">
-                          </div>
-
-                          <!-- Cover Letter -->
-                          <div class="mb-3" style="font-weight: bold; font-style: oblique;">
-                            <label for="coverLetter" class="form-label">
-                              <i class="bi bi-envelope-paper me-1" style="color: #00192D;"></i> Cover Letter
-                            </label>
-                            <textarea class="form-control rounded-4" name="cover_letter" id="coverLetter" rows="4"
-                              placeholder="Explain why you are the best fit for this job..." required></textarea>
                           </div>
 
                           <!-- Modal Footer -->

@@ -62,7 +62,6 @@
     body {
       background-color: #FFC107 !important;
     }
-
   </style>
   </style>
 </head>
@@ -142,9 +141,19 @@
         <div class="container-fluid">
           <!-- begin row -->
           <div class="row">
-            <p class="text-muted">Manage maintenance requests for tenants</p>
+            <div class="col-md-6">
+              <p class="text-muted">Manage maintenance requests for tenants</p>
+            </div>
+            <div class="col-md-6 d-flex justify-content-end gap-2 mb-2">
+              <button type="button" class="btn rounded-4" style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">Create Request</button>
+              <button type="button" class="btn rounded-4" style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">Set All Available</button>
+              <button type="button" class="btn rounded-4" style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">Set All Unavailable</button>
+              <button type="button" class="btn bg-danger border-0 rounded-4" style="color:white; width:100%; white-space: nowrap;">Cancel all Requests</button>
+            </div>
+          </div>
+          <div class="row">
             <div class="col-12 col-sm-6 col-md-3">
-              
+
               <div class="summary-card mb-2">
                 <div class="summary-card_icon"> <i class="fas fa-clipboard-check"></i></div>
                 <div>
@@ -252,118 +261,118 @@
     </main>
     <!--end::App Main-->
     <!--begin::Footer-->
-          <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?> 
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
     <!-- end::footer -->
-  <!--end::App Wrapper-->
-  <!-- Overlay Cards -->
-  <!-- Overlay scripts -->
-  <!-- main js file -->
-  <script src="maintenance.js"></script>
-  <script type="module" src="js/main.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/js/bootstrap.bundle.min.js"></script>
+    <!--end::App Wrapper-->
+    <!-- Overlay Cards -->
+    <!-- Overlay scripts -->
+    <!-- main js file -->
+    <script src="maintenance.js"></script>
+    <script type="module" src="js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/js/bootstrap.bundle.min.js"></script>
 
-  </script>
+    </script>
 
-  <!-- End view announcement script -->
+    <!-- End view announcement script -->
 
-  <script>
-    // Function to toggle the visibility of the overlay
-    function toggleOverlay() {
-      var overlay = document.getElementById('overlay');
-      // If overlay is hidden, show it
-      if (overlay.style.display === "none" || overlay.style.display === "") {
-        overlay.style.display = "flex";
-      } else {
-        overlay.style.display = "none";
-      }
-    }
-  </script>
-
-
-  <script
-    src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-    integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
-    crossorigin="anonymous"></script>
-  <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-  <script
-    src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-    crossorigin="anonymous"></script>
-  <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      let table = $('#maintanance').DataTable({
-        lengthChange: false, // Removes "Show [X] entries"
-        dom: 't<"bottom"p>', // Removes default search bar & keeps only table + pagination
-      });
-
-      // Link custom search box to DataTables search
-      $('#searchInput').on('keyup', function() {
-        table.search(this.value).draw();
-      });
-    });
-  </script>
-
-  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
-
-
-  <script>
-
-
-  </script>
-
-  <script>
-    $(document).ready(function() {
-      var table = $('#maintenance').DataTable({
-        "lengthChange": false,
-        "dom": 'Bfrtip',
-        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
-        "initComplete": function() {
-          // Move the buttons to the first .col-md-6
-          table.buttons().container().appendTo('#maintenance_wrapper .col-md-6:eq(0)');
-
-          // Move the search box to the second .col-md-6
-          $('#maintenance_filter').appendTo('#maintenance_wrapper .col-md-6:eq(1)');
+    <script>
+      // Function to toggle the visibility of the overlay
+      function toggleOverlay() {
+        var overlay = document.getElementById('overlay');
+        // If overlay is hidden, show it
+        if (overlay.style.display === "none" || overlay.style.display === "") {
+          overlay.style.display = "flex";
+        } else {
+          overlay.style.display = "none";
         }
+      }
+    </script>
+
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
+      integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
+      crossorigin="anonymous"></script>
+    <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"></script>
+    <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
+
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        let table = $('#maintanance').DataTable({
+          lengthChange: false, // Removes "Show [X] entries"
+          dom: 't<"bottom"p>', // Removes default search bar & keeps only table + pagination
+        });
+
+        // Link custom search box to DataTables search
+        $('#searchInput').on('keyup', function() {
+          table.search(this.value).draw();
+        });
       });
-    });
-  </script>
+    </script>
 
-  <script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
 
-  </script>
 
-  </script>
-
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-    integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-    crossorigin="anonymous"></script>
-  <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-  <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
+    <script>
 
 
-  <!-- plugin for pdf -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <!-- individualRequest open -->
-  <script>
-    function goToIndividualRequest(requestID) {
-      window.location.href = "individualrequest.php?id=" + requestID; // Navigate to the given page
-    }
-  </script>
+    </script>
+
+    <script>
+      $(document).ready(function() {
+        var table = $('#maintenance').DataTable({
+          "lengthChange": false,
+          "dom": 'Bfrtip',
+          "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+          "initComplete": function() {
+            // Move the buttons to the first .col-md-6
+            table.buttons().container().appendTo('#maintenance_wrapper .col-md-6:eq(0)');
+
+            // Move the search box to the second .col-md-6
+            $('#maintenance_filter').appendTo('#maintenance_wrapper .col-md-6:eq(1)');
+          }
+        });
+      });
+    </script>
+
+    <script>
+
+    </script>
+
+    </script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+      integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+      crossorigin="anonymous"></script>
+    <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
+    <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
+
+
+    <!-- plugin for pdf -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- individualRequest open -->
+    <script>
+      function goToIndividualRequest(requestID) {
+        window.location.href = "individualrequest.php?id=" + requestID; // Navigate to the given page
+      }
+    </script>
 </body>
 <!--end::Body-->
 

@@ -24,7 +24,7 @@ export async function getNonCurrentLiabilities() {
     }
 }
 
-export function addTbodyNonCurrentLiabilities(nonCrtliabilities, total, $totalLiabilities) {
+export function addTbodyNonCurrentLiabilities(nonCrtliabilities, total, totalLiabilities) {
     const table = document.getElementById("myTable");
 
     if (!table) {
@@ -56,15 +56,39 @@ export function addTbodyNonCurrentLiabilities(nonCrtliabilities, total, $totalLi
         row.setAttribute("aria-expanded", "false");
         row.setAttribute("aria-controls", collapseId);
 
+        // Name cell
         const nameCell = document.createElement("td");
         nameCell.innerHTML = `<span class="text-warning" style="font-size: 20px;">▸</span> ${liability.liability_name}`;
         row.appendChild(nameCell);
 
+        // Amount cell with a div inside
         const amountCell = document.createElement("td");
-        amountCell.textContent = liability.amount;
+        amountCell.classList.add("amount-cell"); // class for td styling
+
+        const amountDiv = document.createElement("div");
+        amountDiv.classList.add("amount-text"); // class for internal div styling
+
+        // Format liability amount
+        let amount = Number(liability.amount) || 0;
+        let formattedAmount = amount.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+
+        // Wrap negative numbers in brackets
+        if (amount < 0) {
+            formattedAmount = `(${formattedAmount.replace('-', '')})`;
+            amountDiv.classList.add("text-danger"); // red for negative
+        } else {
+            amountDiv.classList.add("text-dark"); // dark for positive
+        }
+
+        amountDiv.textContent = formattedAmount;
+        amountCell.appendChild(amountDiv);
         row.appendChild(amountCell);
 
         newTbody.appendChild(row);
+
 
         // Add the collapsible row (hidden by default)
         const collapseRow = document.createElement("tr");
@@ -82,16 +106,39 @@ export function addTbodyNonCurrentLiabilities(nonCrtliabilities, total, $totalLi
         attachCollapseHandler(row, collapseDiv, liability.account_id);
     });
 
-    // Add the total row for non-current-liabilities
+    // Add the total row for non-current liabilities
     const totalRow = document.createElement("tr");
     totalRow.classList.add("total-row");
 
+    // Label cell
     const totalLabelCell = document.createElement("td");
     totalLabelCell.textContent = "Total";
     totalRow.appendChild(totalLabelCell);
 
+    // Value cell with a div inside
     const totalValueCell = document.createElement("td");
-    totalValueCell.textContent = total;
+    totalValueCell.classList.add("amount-cell"); // class for td styling
+
+    const totalDiv = document.createElement("div");
+    totalDiv.classList.add("amount-text"); // class for internal div styling
+
+    // Format total with commas and 2 decimals
+    let nonCrtamount = Number(total) || 0;
+    let nonCrtformattedTotal = nonCrtamount.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+
+    // Wrap negative numbers in brackets
+    if (nonCrtamount < 0) {
+        nonCrtformattedTotal = `(${nonCrtformattedTotal.replace('-', '')})`;
+        totalDiv.classList.add("text-danger"); // red for negative
+    } else {
+        totalDiv.classList.add("text-dark"); // dark for positive
+    }
+
+    totalDiv.textContent = nonCrtformattedTotal;
+    totalValueCell.appendChild(totalDiv);
     totalRow.appendChild(totalValueCell);
 
     newTbody.appendChild(totalRow);
@@ -100,15 +147,39 @@ export function addTbodyNonCurrentLiabilities(nonCrtliabilities, total, $totalLi
     const totalLiabilitiesRow = document.createElement("tr");
     totalLiabilitiesRow.classList.add("totalLiabilities-row");
 
+    // Label cell
     const totalLiabilitiesLabelCell = document.createElement("td");
-    totalLiabilitiesLabelCell.textContent = "Total Liabilities"; // Corrected cell
+    totalLiabilitiesLabelCell.textContent = "Total Liabilities";
     totalLiabilitiesRow.appendChild(totalLiabilitiesLabelCell);
 
+    // Value cell with a div inside
     const totalLiabilitiesValueCell = document.createElement("td");
-    totalLiabilitiesValueCell.textContent = $totalLiabilities; // Corrected cell
+    totalLiabilitiesValueCell.classList.add("amount-cell"); // class for td styling
+
+    const totalLiabilitiesDiv = document.createElement("div");
+    totalLiabilitiesDiv.classList.add("amount-text"); // class for internal div styling
+
+    // Format total liabilities with commas and 2 decimals
+    let amount = Number(totalLiabilities) || 0;
+    let formattedTotal = amount.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+
+    // Wrap negative numbers in brackets
+    if (amount < 0) {
+        formattedTotal = `(${formattedTotal.replace('-', '')})`;
+        totalLiabilitiesDiv.classList.add("text-danger"); // red for negative
+    } else {
+        totalLiabilitiesDiv.classList.add("text-dark"); // dark for positive
+    }
+
+    totalLiabilitiesDiv.textContent = formattedTotal;
+    totalLiabilitiesValueCell.appendChild(totalLiabilitiesDiv);
     totalLiabilitiesRow.appendChild(totalLiabilitiesValueCell);
 
-    newTbody.appendChild(totalLiabilitiesRow); // Append to the tbody
+    newTbody.appendChild(totalLiabilitiesRow); // Append row to tbody
+
 
     // Append the new tbody to the table
     table.appendChild(newTbody);
@@ -175,15 +246,39 @@ export function addTbodyCurrentLiabilities(currentLiabilities, total) {
         row.setAttribute("aria-expanded", "false");
         row.setAttribute("aria-controls", collapseId);
 
+        // Name cell
         const nameCell = document.createElement("td");
         nameCell.innerHTML = `<span class="text-warning" style="font-size: 20px;">▸</span> ${currentLiability.liability_name}`;
         row.appendChild(nameCell);
 
+        // Amount cell with a div inside
         const amountCell = document.createElement("td");
-        amountCell.textContent = currentLiability.amount;
+        amountCell.classList.add("amount-cell"); // class for td styling
+
+        const amountDiv = document.createElement("div");
+        amountDiv.classList.add("amount-text"); // class for internal div styling
+
+        // Format current liability amount
+        let amount = Number(currentLiability.amount) || 0;
+        let formattedAmount = amount.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+
+        // Wrap negative numbers in brackets
+        if (amount < 0) {
+            formattedAmount = `(${formattedAmount.replace('-', '')})`;
+            amountDiv.classList.add("text-danger"); // red for negative
+        } else {
+            amountDiv.classList.add("text-dark"); // dark for positive
+        }
+
+        amountDiv.textContent = formattedAmount;
+        amountCell.appendChild(amountDiv);
         row.appendChild(amountCell);
 
         newTbody.appendChild(row);
+
 
         // Add the collapsible row (hidden by default)
         const collapseRow = document.createElement("tr");
@@ -211,12 +306,35 @@ export function addTbodyCurrentLiabilities(currentLiabilities, total) {
     const totalRow = document.createElement("tr");
     totalRow.classList.add("total-row");
 
+    // Label cell
     const totalLabelCell = document.createElement("td");
     totalLabelCell.textContent = "Total";
     totalRow.appendChild(totalLabelCell);
 
+    // Value cell with a div inside
     const totalValueCell = document.createElement("td");
-    totalValueCell.textContent = total;
+    totalValueCell.classList.add("amount-cell"); // class for td styling
+
+    const totalDiv = document.createElement("div");
+    totalDiv.classList.add("amount-text"); // class for internal div styling
+
+    // Format total with commas and 2 decimals
+    let amount = Number(total) || 0;
+    let formattedTotal = amount.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+
+    // Wrap negative numbers in brackets
+    if (amount < 0) {
+        formattedTotal = `(${formattedTotal.replace('-', '')})`;
+        totalDiv.classList.add("text-danger"); // red for negative
+    } else {
+        totalDiv.classList.add("text-dark"); // dark for positive
+    }
+
+    totalDiv.textContent = formattedTotal;
+    totalValueCell.appendChild(totalDiv);
     totalRow.appendChild(totalValueCell);
 
     newTbody.appendChild(totalRow);
