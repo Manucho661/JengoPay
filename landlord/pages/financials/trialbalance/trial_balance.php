@@ -176,8 +176,72 @@ $accounts = $pdo->query("
     </aside>
 
     <!-- Main Content -->
-    <main class="container">
+    <?php 
+include '../../db/connect.php';
+
+// ===========================
+// BUILD FILTER CONDITIONS
+// ===========================
+$where = [];
+$params = [];
+
+// Date range filter
+if (!empty($_GET['from_date']) && !empty($_GET['to_date'])) {
+    $where[] = "je.entry_date BETWEEN :from AND :to";
+    $params[':from'] = $_GET['from_date'];
+    $params[':to']   = $_GET['to_date'];
+}
+
+// ===========================
+// MAIN QUERY
+// ===========================
+$whereSql = $where ? "WHERE " . implode(" AND ", $where) : "";
+
+$sql = "
+    SELECT 
+        a.account_code,
+        a.account_name,
+        a.account_type,
+        a.financial_statement,
+        a.debit_credit,
+        COALESCE(SUM(jl.debit), 0) AS total_debit,
+        COALESCE(SUM(jl.credit), 0) AS total_credit
+    FROM chart_of_accounts a
+    LEFT JOIN journal_lines jl ON a.account_code = jl.account_id 
+    LEFT JOIN journal_entries je ON jl.journal_entry_id = je.id
+    $whereSql
+    GROUP BY a.account_code, a.account_name, a.account_type, a.financial_statement, a.debit_credit
+    HAVING COALESCE(SUM(jl.debit), 0) != 0 OR COALESCE(SUM(jl.credit), 0) != 0
+    ORDER BY a.account_code
+";
+
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<main class="container">
   <h3 class="mb-4 text-center">Trial Balance</h3>
+
+  <!-- =========================== -->
+  <!-- FILTER FORM -->
+  <!-- =========================== -->
+  <form method="GET" class="row g-3 mb-4">
+    <div class="col-md-4">
+      <label class="form-label">From Date</label>
+      <input type="date" name="from_date" value="<?= htmlspecialchars($_GET['from_date'] ?? '') ?>" class="form-control">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">To Date</label>
+      <input type="date" name="to_date" value="<?= htmlspecialchars($_GET['to_date'] ?? '') ?>" class="form-control">
+    </div>
+    <div class="col-md-4 d-flex align-items-end">
+      <button type="submit" class="btn btn-primary w-100">
+        <i class="fas fa-filter me-2"></i>Filter
+      </button>
+    </div>
+  </form>
+
   <div class="card shadow">
     <div class="card-body p-0">
       <div class="table-responsive">
@@ -198,7 +262,7 @@ $accounts = $pdo->query("
                 $net = $r['total_debit'] - $r['total_credit'];
                 $accountName = strtolower(trim($r['account_name']));
 
-                // Default handling based on normal balance
+                // Default behavior based on normal balance
                 if (strtoupper($r['debit_credit']) === 'DEBIT') {
                     $debit = $net > 0 ? $net : 0;
                     $credit = $net < 0 ? abs($net) : 0;
@@ -207,7 +271,7 @@ $accounts = $pdo->query("
                     $credit = $net > 0 ? $net : 0;
                 }
 
-                // ✅ Always Credit for specific income/liability accounts
+                // ✅ Always Credit these accounts
                 if (
                     strpos($accountName, 'accounts payable') !== false || 
                     (strpos($accountName, 'owner') !== false && strpos($accountName, 'capital') !== false) ||
@@ -219,16 +283,13 @@ $accounts = $pdo->query("
                     strpos($accountName, 'commission') !== false ||
                     strpos($accountName, 'management fee') !== false
                 ) {
-                    // Force these accounts to show on the Credit side
                     $credit = max($r['total_credit'], abs($net));
                     $debit = 0;
                 }
 
-                // Totals
                 $totalDebit  += $debit;
                 $totalCredit += $credit;
 
-                // Skip zero balances
                 if (abs($debit) < 0.01 && abs($credit) < 0.01) continue;
             ?>
             <tr data-account-id="<?= htmlspecialchars($r['account_code']) ?>" style="cursor:pointer;">
@@ -279,13 +340,18 @@ $accounts = $pdo->query("
       </div>
     </div>
 
-    
     <div class="card-footer text-muted d-flex justify-content-between">
       <small>Generated on: <?= date('Y-m-d H:i:s') ?></small>
-      <small>Accounts: <?= count($rows) ?> | Period: <?= $_GET['from_date'] ?? 'All' ?> to <?= $_GET['to_date'] ?? 'All' ?></small>
+      <small>
+        Period: 
+        <?= !empty($_GET['from_date']) ? htmlspecialchars($_GET['from_date']) : 'All' ?> 
+        to 
+        <?= !empty($_GET['to_date']) ? htmlspecialchars($_GET['to_date']) : 'All' ?>
+      </small>
     </div>
   </div>
 </main>
+
 </div>
 
 
