@@ -203,7 +203,7 @@
                 $id = encryptor('decrypt', $id);
                   try{
                     if(!empty($id)) {
-                      $sql = "SELECT * FROM single_units WHERE id =:id";
+                      $sql = "SELECT * FROM bed_seaters WHERE id =:id";
                       $stmt = $pdo->prepare($sql);
                       $stmt->execute(array(':id' => $id));
                       while ($row = $stmt->fetch()) {
