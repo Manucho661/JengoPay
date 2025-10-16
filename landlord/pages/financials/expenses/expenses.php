@@ -9,7 +9,9 @@ require_once 'actions/getExpenses.php';
 // Include expense accounts
 require_once 'actions/getExpenseAccounts.php';
 // include buildings
-require_once 'actions/getBuildings.php'
+require_once 'actions/getBuildings.php';
+
+// var_dump($buildings);
 ?>
 
 <!doctype html>
@@ -287,7 +289,7 @@ require_once 'actions/getBuildings.php'
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row mb-2">
                         <div class="col-md-12 mb-2">
                             <div class="card border-0">
@@ -309,20 +311,18 @@ require_once 'actions/getBuildings.php'
                                                 <form method="POST" id="expenseForm">
                                                     <div class="row g-3">
                                                         <div class="col-md-3">
-                                                            <div class="custom-select-wrapper">
-                                                                <label class="form-label fw-bold">Building</label>
-                                                                <div class="custom-select shadow-sm" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
-                                                                    Select Building
-                                                                </div>
-                                                                <div class="select-options" id="select-options" role="listbox">
+                                                            <div class="form-group">
+                                                                <label class="form-label fw-bold" for="building">Building</label>
+                                                                <select class="form-control shadow-sm" id="building" name="building_id" required>
+                                                                    <option value="">Select Building</option>
                                                                     <?php foreach ($buildings as $building): ?>
-                                                                        <div role="option" data-value="<?= htmlspecialchars($building['id']) ?>">
+                                                                        <option value="<?= htmlspecialchars($building['id']) ?>">
                                                                             <?= htmlspecialchars($building['building_name']) ?>
-                                                                        </div>
+                                                                        </option>
                                                                     <?php endforeach; ?>
-                                                                    <input type="hidden" class="custom-hidden-input" name="building_id">
-                                                                </div>
+                                                                </select>
                                                             </div>
+
                                                         </div>
                                                         <div class="col-md-3">
                                                             <label class="form-label fw-bold">Date&nbsp;:</label>
@@ -491,9 +491,9 @@ require_once 'actions/getBuildings.php'
                             </div>
                         </div>
                     </div>
-                    <!-- row --> 
-                     <hr class="text-dark" style="background-color: #00192D;">
-                     <div class="row g-3 mb-4">
+                    <!-- row -->
+                    <hr class="text-dark" style="background-color: #00192D;">
+                    <div class="row g-3 mb-4">
                         <!-- Filter by Building -->
                         <div class="col-md-3 col-sm-12">
                             <select class="form-select rounded-3">
@@ -563,7 +563,7 @@ require_once 'actions/getBuildings.php'
                                                     <td><?= htmlspecialchars(date('d M Y', strtotime($exp['created_at']))) ?></td>
                                                     <td><?= htmlspecialchars($exp['supplier']) ?></td>
                                                     <td>
-                                                         <div style="color:#28a745;"><?= htmlspecialchars($exp['expense_no']) ?></div>
+                                                        <div style="color:#28a745;"><?= htmlspecialchars($exp['expense_no']) ?></div>
                                                     </td>
                                                     <td style="background-color: #f8f9fa; padding: 0.75rem; border-radius: 8px;">
                                                         <div style="font-weight: 600; color: #00192D; font-size: 1rem;">
@@ -890,7 +890,7 @@ require_once 'actions/getBuildings.php'
         </main>
         <!--end::App Main-->
         <!--begin::Footer-->
-        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?> 
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
         <!--end::Footer-->
 
 
@@ -1372,7 +1372,7 @@ require_once 'actions/getBuildings.php'
     <!-- Scripts -->
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    
+
 </body>
 <!--end::Body-->
 

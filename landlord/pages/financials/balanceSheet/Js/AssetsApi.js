@@ -66,20 +66,39 @@ export function addTbodyNonCurrentAssets(assets, total) {
         row.appendChild(nameCell);
 
         const amountCell = document.createElement("td");
+
         let amount = Number(asset.amount) || 0;
         let parts = asset.amount.toString().split(".");
         let integerPart = Number(parts[0]).toLocaleString(); // adds commas
         let decimalPart = parts[1]; // already 2 decimals
         let formattedAmount = `${integerPart}.${decimalPart}`;
+
         // If negative, wrap in brackets
         if (amount < 0) {
             formattedAmount = `(${formattedAmount.replace('-', '')})`;
-            amountCell.classList.add("text-danger"); // optional: red for negative
         }
-        amountCell.textContent = formattedAmount;
-        row.appendChild(amountCell);
 
+        // Create a div inside the td
+        const amountDiv = document.createElement("div");
+        amountDiv.classList.add("amount-text"); // class for styling
+        amountDiv.textContent = formattedAmount;
+
+        // Optional: color based on negative or positive
+        if (amount < 0) {
+            amountDiv.classList.add("text-danger");
+        } else {
+            amountDiv.classList.add("text-success");
+        }
+
+        // Append the div to the cell
+        amountCell.appendChild(amountDiv);
+
+        // Add a class to the td for cell styling
+        amountCell.classList.add("amount-cell");
+
+        row.appendChild(amountCell);
         newTbody.appendChild(row);
+
 
         // Add the collapsible row (hidden by default)
         const collapseRow = document.createElement("tr");
@@ -102,15 +121,33 @@ export function addTbodyNonCurrentAssets(assets, total) {
     const totalRow = document.createElement("tr");
     totalRow.classList.add("total-row");
 
+    // Label cell
     const totalLabelCell = document.createElement("td");
     totalLabelCell.textContent = "Total";
     totalRow.appendChild(totalLabelCell);
 
+    // Value cell with a div inside
     const totalValueCell = document.createElement("td");
-    totalValueCell.textContent = total;
+    totalValueCell.classList.add("amount-cell"); // class for cell styling
+
+    const totalDiv = document.createElement("div");
+    totalDiv.classList.add("amount-text"); // class for internal div styling
+
+    // Format total with commas and brackets if negative
+    let formattedTotal = Number(total).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (Number(total) < 0) {
+        formattedTotal = `(${formattedTotal.replace('-', '')})`;
+        totalDiv.classList.add("text-danger"); // red for negative
+    } else {
+        totalDiv.classList.add("text-dark"); // green for positive
+    }
+
+    totalDiv.textContent = formattedTotal;
+    totalValueCell.appendChild(totalDiv);
     totalRow.appendChild(totalValueCell);
 
     newTbody.appendChild(totalRow);
+
 
     // Append the new tbody to the table
     table.appendChild(newTbody);
@@ -207,7 +244,7 @@ export async function getCurrentAssets() {
 }
 
 // Main function to add Current Assets section to the table
-export function addTbodyCurrentAssets(assets, total, totalAssets) {
+export function addTbodyCurrentAssets(assets, totalCurrentAssets, totalAssets) {
     const table = document.getElementById("myTable");
 
     if (!table) {
@@ -244,20 +281,39 @@ export function addTbodyCurrentAssets(assets, total, totalAssets) {
         row.appendChild(nameCell);
 
         const amountCell = document.createElement("td");
-         let amount = Number(asset.amount) || 0;
+
+        let amount = Number(asset.amount) || 0;
         let parts = asset.amount.toString().split(".");
         let integerPart = Number(parts[0]).toLocaleString(); // adds commas
         let decimalPart = parts[1]; // already 2 decimals
         let formattedAmount = `${integerPart}.${decimalPart}`;
+
         // If negative, wrap in brackets
         if (amount < 0) {
             formattedAmount = `(${formattedAmount.replace('-', '')})`;
-            amountCell.classList.add("text-danger"); // optional: red for negative
         }
-        amountCell.textContent = formattedAmount;
-        row.appendChild(amountCell);
 
+        // Create a div inside the td
+        const amountDiv = document.createElement("div");
+        amountDiv.classList.add("amount-text"); // class for styling
+        amountDiv.textContent = formattedAmount;
+
+        // Optional: color based on negative or positive
+        if (amount < 0) {
+            amountDiv.classList.add("text-danger");
+        } else {
+            amountDiv.classList.add("text-success");
+        }
+
+        // Append the div to the cell
+        amountCell.appendChild(amountDiv);
+
+        // Add a class to the td for cell styling
+        amountCell.classList.add("amount-cell");
+
+        row.appendChild(amountCell);
         newTbody.appendChild(row);
+
 
         // Add the collapsible row (hidden by default)
         const collapseRow = document.createElement("tr");
@@ -275,33 +331,77 @@ export function addTbodyCurrentAssets(assets, total, totalAssets) {
         attachCollapseHandler(row, collapseDiv, asset.account_id);
     });
 
-    // Add the total row for assets
+    // Add the total row for current assets
     const totalRow = document.createElement("tr");
     totalRow.classList.add("total-row");
 
+    // Label cell
     const totalLabelCell = document.createElement("td");
     totalLabelCell.textContent = "Total";
     totalRow.appendChild(totalLabelCell);
 
+    // Value cell with a div inside
     const totalValueCell = document.createElement("td");
-    totalValueCell.textContent = total;
+    totalValueCell.classList.add("amount-cell"); // class for td styling
+
+    const totalDiv = document.createElement("div");
+    totalDiv.classList.add("amount-text"); // class for internal div styling
+
+    // Format total with commas and 2 decimals
+    let amount = Number(totalCurrentAssets) || 0;
+    let formattedTotalCurrentAssets = amount.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+
+    // Wrap negative numbers in brackets
+    if (amount < 0) {
+        formattedTotalCurrentAssets = `(${formattedTotalCurrentAssets.replace('-', '')})`;
+        totalDiv.classList.add("text-danger"); // red for negative
+    } else {
+        totalDiv.classList.add("text-dark"); // dark for positive
+    }
+
+    totalDiv.textContent = formattedTotalCurrentAssets;
+    totalValueCell.appendChild(totalDiv);
     totalRow.appendChild(totalValueCell);
 
     newTbody.appendChild(totalRow);
 
-    // Add the total assets row
+
+    // Add the total assets row (ALL)
+    // Create Total Assets row
     const totalAssetsRow = document.createElement("tr");
     totalAssetsRow.classList.add("totalAssets-row");
 
+    // Label cell
     const totalAssetsLabelCell = document.createElement("td");
-    totalAssetsLabelCell.textContent = "Total Assets"; // Corrected cell
+    totalAssetsLabelCell.textContent = "Total Assets";
     totalAssetsRow.appendChild(totalAssetsLabelCell);
 
+    // Value cell with a div inside
     const totalAssetsValueCell = document.createElement("td");
-    totalAssetsValueCell.textContent = totalAssets; // Corrected cell
+    totalAssetsValueCell.classList.add("amount-cell"); // class for td styling
+
+    const totalAssetsDiv = document.createElement("div");
+    totalAssetsDiv.classList.add("amount-text"); // class for internal div styling
+
+    // Format totalAssets with commas and brackets if negative
+    let formattedTotalAssets = Number(totalAssets).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (Number(totalAssets) < 0) {
+        formattedTotalAssets = `(${formattedTotalAssets.replace('-', '')})`;
+        totalAssetsDiv.classList.add("text-danger"); // red for negative
+    } else {
+        totalAssetsDiv.classList.add("text-dark"); // green for positive
+    }
+
+    totalAssetsDiv.textContent = formattedTotalAssets;
+    console.log(formattedTotalAssets);
+    totalAssetsValueCell.appendChild(totalAssetsDiv);
     totalAssetsRow.appendChild(totalAssetsValueCell);
 
-    newTbody.appendChild(totalAssetsRow); // Append to the tbody
+    newTbody.appendChild(totalAssetsRow); // Append row to tbody
+
 
 
     // Append the new tbody to the table

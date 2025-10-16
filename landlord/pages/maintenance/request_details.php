@@ -1,7 +1,16 @@
 <?php
+session_start(); // Must be called before any HTML output
+
 require_once "actions/individual/getARequest.php";
 require_once "actions/individual/getGeralRequests.php";
 
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];          // get the ID from the URL
+    $_SESSION['id'] = $id;      // store it in the session
+    // echo "ID $id has been saved in session!";
+} else {
+    echo "No ID found in the URL.";
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -74,13 +83,13 @@ require_once "actions/individual/getGeralRequests.php";
     .request-sidebar h3 {
       background: #00192D;
       color: white;
-      padding: 1.2rem;
+      
       font-size: 1.2rem;
       font-weight: 600;
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin: 0;
+      
+      
       /* border-top-right-radius: 10px; */
       border-top-left-radius: 10px;
     }
@@ -546,7 +555,7 @@ require_once "actions/individual/getGeralRequests.php";
       padding: 0;
       margin: 0;
       overflow-y: auto;
-      min-height: 600px;
+      /* min-height: 600px; */
     }
 
     .visible {
@@ -674,6 +683,66 @@ require_once "actions/individual/getGeralRequests.php";
     .emoji {
       font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", "Twemoji Mozilla", sans-serif;
     }
+
+    .setAvailable {
+      background: linear-gradient(135deg, #00192D, #002B5B);
+      margin-right: 2px !important;
+    }
+
+    .info-box-icon {
+      background-color: #00192D;
+      color: #fff;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+    }
+
+    #requestNav {
+      border-bottom: 2px solid rgba(255, 215, 0, 0.6);
+    }
+
+    /* General font sizing for smaller screens */
+    /* Smaller font sizing for phones */
+    @media (max-width: 768px) {
+      h3.contact_section_header {
+        font-size: 1.05rem;
+      }
+
+      h4 {
+        font-size: 0.9rem;
+      }
+
+      .info-box-icon i {
+        font-size: 1.2rem !important;
+      }
+    }
+
+    /* Mobile dropdown styling */
+    .mobile-nav-menu {
+      right: 15px;
+      top: 50px;
+      min-width: 160px;
+      z-index: 1050;
+    }
+
+    .mobile-nav-menu a {
+      display: block;
+      padding: 8px 12px;
+      color: #002B5B;
+      text-decoration: none;
+    }
+
+    .mobile-nav-menu a:hover {
+      background-color: #f0f4f8;
+    }
+
+    .mobileNavToggleProperty {
+      border-radius: 50%;
+      display: flex;
+    }
   </style>
 </head>
 
@@ -708,155 +777,154 @@ require_once "actions/individual/getGeralRequests.php";
     <main class="app-main">
       <!--begin::App Content Header-->
       <div class="app-content-header">
-        <!--begin::Container-->
         <div class="container-fluid">
-          <!--begin::Row-->
-          <div class="row align-items-center mb-3">
-            <div class="col-sm-8">
-              <div class="d-flex">
-                <h3 class="mb-0"> 🛠 <span class="contact_section_header">Maintenance Requests</span> </h3>
-                <p class="text-muted mt-2">&nbsp;:-
-                  <b><span id="requestID" class="text-success"><?php echo $requestId; ?></span></b>
-                </p>
-                <p class="text-muted mx-5 mt-2"> Received:- <span class="text-dark">19-02-25</span></p>
+          <div class="row align-items-center gy-3 gx-2 mb-2">
+
+            <!-- Request Name -->
+            <div class="col-lg-4 col-md-6 col-12 d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center flex-wrap">
+                <span class="info-box-icon me-2">
+                  <i class="bi bi-tools fs-3 text-white"></i>
+                </span>
+                <h3 class="mb-0 fw-bold contact_section_header" id="request-name">
+                  <!-- Dynamic request name -->
+                </h3>
+              </div>
+
+
+            </div>
+
+            <!-- Request Property -->
+            <div class="col-lg-4 col-md-6 col-12 d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center flex-wrap">
+                <span class="info-box-icon me-2">
+                  <i class="bi bi-house fs-3 text-white"></i>
+                </span>
+                <div class="d-flex align-items-center flex-wrap">
+                  <h4 class="mb-0 me-2" id="request-property"></h4>
+                  <h4 class="mb-0 text-success" id="request-unit"></h4>
+                </div>
+              </div>
+
+              <!-- Optional More Icon (you can hide one if not needed) -->
+              <button class="btn btn-light border-0 d-lg-none mobileNavToggleProperty" id="mobileNavToggleProperty">
+                <i class="bi bi-three-dots fs-5"></i>
+              </button>
+
+              <div id="mobileNavMenuProperty" class="mobile-nav-menu d-none position-absolute bg-white shadow rounded-3 mt-2">
+                <a class="dropdown-item" href="maintenance.php" data-tab="all">All Requests</a>
+                <a class="dropdown-item" href="#" data-tab="saved">Saved</a>
+                <a class="dropdown-item" href="#" data-tab="cancelled">Cancelled</a>
               </div>
             </div>
-            <div class="col-sm-4">
-              <ul class="nav justify-content-end border-bottom" id="requestNav">
+
+            <!-- Navigation (desktop only) -->
+            <div class="col-lg-4 d-none d-lg-flex justify-content-end align-items-center">
+              <ul class="nav" id="requestNav">
                 <li class="nav-item">
-                  <a class="nav-link" href="maintenance.php" data-tab="all">All Requests</a>
+                  <a class="nav-link fw-semibold" href="maintenance.php" data-tab="all">All Requests</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#" data-tab="saved">Saved</a>
+                  <a class="nav-link fw-semibold" href="#" data-tab="saved">Saved</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#" data-tab="cancelled">Cancelled</a>
+                  <a class="nav-link fw-semibold" href="#" data-tab="cancelled">Cancelled</a>
                 </li>
               </ul>
             </div>
           </div>
-          <!--end::Row-->
-        </div>
-        <!--end::Container-->
-      </div>
-      <div class="app-content">
-        <div class="container-fluid rounded-2 mb-2">
-          <div class="row p-1">
-            <div class="col-md-4 px-2">
-              <a href="javascript:history.back()"
-                class="btn shadow-none rounded-4 shadow-sm"
-                style="background-color: #E6EAF0;; color: #00192D; font-weight: 500; width:100%;">
-                All Requests
-              </a>
+          <div class="row ">
+            <div class="col-md-6">
             </div>
-            <div class="col-md-4 px-2">
-              <button id="availabilityBtn"
-                class="btn shadow-none rounded-4 shadow-sm"
-                style="background-color: #E6EAF0; color: #00192D; font-weight: 500; width:100%;">
-                <!-- JS will fill this -->
+            <div class="col-md-6 d-flex gap-1 flex-nowrap">
+              <button type="button" id="availabilityBtn" class="btn seTAvailable text-white"
+                style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">
+                Set Available
+              </button>
+              <button type="button" class="btn bg-danger text-white seTAvailable"
+                style="width:100%; white-space: nowrap;">
+                Cancel Request
               </button>
             </div>
-            <div class="col-md-4 px-2">
-              <button id="cancelRequestBtn"
-                class="btn shadow-none text-danger rounded-4 shadow-sm" data-request-id="<?php echo $requestId; ?>" data-status="<?php echo $request['availability']; ?>"
-                style="background-color: #E6EAF0; color: #00192D; font-weight: 500; width:100%;  margin-left:2px; ">
-                Cancel
-              </button>
-            </div>
+
           </div>
         </div>
-        <div class="container-fluid rounded-2 p-1">
-          <div class="row">
+      </div>
 
-            <div class="col-md-7" style="padding-right:5px; padding-top:0 !important;">
-              <!-- content displays here -->
-              <div class="container-fluid main-content" style="padding: 0px !important;">
 
-                <!-- Row 1: Property, Unit, Provider, Status -->
-                <div class="row-card mb-1 p-3 rounded border-0">
-                  <div class="row gx-3 gy-3 p-3 rounded border-0">
 
-                    <!-- Property -->
-                    <div class="col-md-3">
-                      <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                        <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                          <i class="fa-solid fa-building" style="color: #FFC107; font-size: 16px;"></i>
-                        </span>
-                        <span style="font-weight: 600;">Property</span>
-                      </div>
-                      <div id="request-property" style="margin-top: 6px; font-size: 15px; color: #333;"></div>
-                    </div>
+      <div class="app-content">
+        <div class="container-fluid rounded-2 mb-2">
+          <div class="row gap-2">
 
-                    <!-- Unit -->
-                    <div class="col-md-2">
-                      <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                        <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                          <i class="fa-solid fa-door-closed" style="color: #FFC107; font-size: 16px;"></i>
-                        </span>
-                        <span style="font-weight: 600;">Unit</span>
-                      </div>
-                      <div id="request-unit" style="margin-top: 6px; font-size: 15px; color: #333;"></div>
-                    </div>
+            <div class="col-md-4 p-0">
+              <div class="card p-3 d-flex flex-row justify-content-between align-items-start border-0 shadow-none" style="height:100%;">
 
-                    <!-- Provider -->
-                    <div class="col-md-4">
-                      <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                        <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                          <i class="bi bi-file-text" style="color: #FFC107; font-size: 16px;"></i>
-                        </span>
-                        <span style="font-weight: 600;">Provider</span>
-                      </div>
-                      <div id="request-provider" class="request-provider text-success" style="margin-top: 6px; font-size: 15px; color: #b93232ff;">Unassigned</div>
-                    </div>
-
-                    <!-- Status -->
-                    <div class="col-md-3">
-                      <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                        <span style="background-color: #00192D; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                          <i class="bi bi-file-text" style="color: #FFC107; font-size: 16px;"></i>
-                        </span>
-                        <span style="font-weight: 600;">Status</span>
-                      </div>
-                      <div id="request-status" style="margin-top: 6px; font-size: 15px; color: #b93232ff;">Unassigned</div>
-                    </div>
-
+                <div class="d-flex flex-row gap-5">
+                  <div>
+                    <p class="fw-bold mb-1">Budget</p>
+                    <p class="mb-0 fw-bold text-success" id="budget">Set Budget</p>
+                  </div>
+                  <div>
+                    <p class="fw-bold mb-1">Duration</p>
+                    <p class="mb-0 fw-bold text-warning" id="duration">Set Duration</p>
                   </div>
                 </div>
 
-                <!-- Row 2: Category & Description -->
-                <div class="row-card mb-1 p-3 rounded bg-white">
-                  <div class="row gx-3 gy-3 p-3 rounded border-0" style="border: 1px solid #e0e0e0;">
-                    <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                      <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                        <i class="fa-solid fa-align-left" style="color: white; font-size: 16px;"></i>
-                      </span>
-                      <span style="font-weight: 600;">Description</span>
-                    </div>
-                    <div id="request-description" class="text-muted" style="margin-top: 6px; font-size: 15px; color: #333; line-height: 1.6;"></div>
-                  </div>
-                </div>
-
-                <!-- Row 3: Photo -->
-                <div class="row-card mb-1 p-3 rounded bg-white">
-                  <div class="row gx-3 gy-3 p-3 rounded border-0">
-                    <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                      <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                        <i class="fa-solid fa-image" style="color: white; font-size: 16px;"></i>
-                      </span>
-                      <span style="font-weight: 600;">Request Image</span>
-                    </div>
-                    <img id="request-photo" src="" alt="Photo" class="photo-preview w-100 rounded">
-                  </div>
-                </div>
+                <button class="btn btn-outline-warning btn-sm align-self-start" data-bs-toggle="modal" data-bs-target="#durationBudgetModal">
+                  <i class="bi bi-pencil"></i>
+                </button>
 
               </div>
             </div>
-            <div class="col-md-5" style="overflow: hidden; padding-right:10px; padding-left:0px !important;">
+
+            <div class="col-md-4 p-0">
+              <div class="card p-3 d-flex flex-row gap-5 border-0 shadow-none d-flex ">
+                <div>
+                  <p class="fw-bold">Provider</p>
+                  <p id="request-provider" class="request-provider text-success">Not Assigned</p>
+                </div>
+                <div>
+                  <p class="fw-bold">Status</p>
+                  <p id="request-status" style="font-size: 15px; color: #b93232ff;" class="">Not assigned</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid rounded-2">
+          <div class="row py-2 bg-white rounded-2">
+            <div class="col-md-7 border-end" style="border-right: 1px solid #ccc; padding-top:0 !important; min-height: 100%; padding-top:0 !important;">
+              <!-- content displays here -->
+              <!-- Row 2: Category & Description -->
+               <div class="card p-3 shadow-none border-0">
+                <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                    <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                      <i class="fa-solid fa-align-left" style="color: white; font-size: 16px;"></i>
+                    </span>
+                    <span style="font-weight: 600;">Description</span>
+                  </div>
+                  <div id="request-description" class="text-muted" style="margin-top: 6px; font-size: 15px; color: #333; line-height: 1.6;"></div>
+               </div>
+              
+              <!-- Row 3: Photo -->
+               <div class="card p-3 shadow-none border-0">
+                <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                  <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                    <i class="fa-solid fa-image" style="color: white; font-size: 16px;"></i>
+                  </span>
+                  <span style="font-weight: 600;">Request Image</span>
+                </div>
+                <img id="request-photo" src="" alt="Photo" class="photo-preview w-100 rounded">
+               </div>
+
+            </div>
+            <div class="col-md-5" style="max-height:500px; overflow:auto;">
               <div class="request-sidebar rounded-2">
                 <!-- <h3><i class="fa-solid fa-screwdriver-wrench"></i>Request NO 40</h3> -->
-                <div class="d-flex flex-column p-2">
+                <div class="d-flex flex-column">
                   <!-- Secondary Buttons Container -->
-                  <div id="secondaryButtons" class="secondary-buttons p-1 rounded-2" style="background-color: #E6EAF0;">
+                  <div id="secondaryButtons" class="secondary-buttons p rounded-2" style="background-color: #E6EAF0;">
                     <button id="paidBtn" class="btn shadow-none">
                       <i class="fas fa-check-circle me-2"></i> Paid
                     </button>
@@ -922,78 +990,12 @@ require_once "actions/individual/getGeralRequests.php";
         </div>
     </main>
     <!-- Begin Footer -->
-              <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?> </div> 
-              <!-- end footer -->
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
+    <!-- end footer -->
   </div>
 
-  <!-- ASSign Modal -->
-  <div class="modal fade" id="assignProviderModal" tabindex="-1" aria-labelledby="assignProviderModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content shadow-lg border-0 rounded-3">
-
-        <!-- Modal Header -->
-        <div class="modal-header bg-primary text-white">
-          <h5 class="modal-title" id="assignProviderModalLabel">
-            <i class="bi bi-person-check-fill me-2"></i>Assign Service Provider
-          </h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-
-        <!-- Modal Form -->
-        <form id="assignProviderForm">
-          <div class="modal-body">
-
-            <!-- Hidden Fields -->
-            <input type="hidden" name="maintenance_request_id" id="maintenance_request_id">
-            <input type="hidden" name="unit_id" id="unit_id">
-
-            <!-- Service Provider Dropdown -->
-            <div class="mb-3">
-              <label for="service_provider_id" class="form-label">
-                <i class="bi bi-tools me-1"></i>Service Provider
-              </label>
-              <select class="form-select" name="service_provider_id" id="service_provider_id" required>
-                <option selected disabled value="">Select a provider</option>
-                <!-- Populate dynamically -->
-                <option value="1">John Doe - Plumbing</option>
-                <option value="2">Jane Smith - Electrical</option>
-              </select>
-            </div>
-
-            <!-- Scheduled Date -->
-            <div class="mb-3">
-              <label for="scheduled_date" class="form-label">
-                <i class="bi bi-calendar-event me-1"></i>Scheduled Date
-              </label>
-              <input type="date" class="form-control" name="scheduled_date" id="scheduled_date">
-            </div>
-
-            <!-- Notes / Instructions -->
-            <div class="mb-3">
-              <label for="instructions" class="form-label">
-                <i class="bi bi-pencil-square me-1"></i>Instructions
-              </label>
-              <textarea class="form-control" name="instructions" id="instructions" rows="3" placeholder="Any special notes..."></textarea>
-            </div>
-
-          </div>
-
-          <!-- Modal Footer -->
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-              <i class="bi bi-x-circle me-1"></i>Cancel
-            </button>
-            <button type="submit" class="btn btn-success">
-              <i class="bi bi-check2-circle me-1"></i>Assign
-            </button>
-          </div>
-        </form>
-
-      </div>
-    </div>
-  </div>
-  </div>
-  <!-- Modal -->
+  <!-- MODALS -->
+  <!--Provider Modal -->
   <div class="modal fade" id="proposalModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content custom-modal">
@@ -1115,7 +1117,7 @@ require_once "actions/individual/getGeralRequests.php";
             <button type="button" class="btn btn-accent">Assign</button>
             <button type="button" class="btn btn-outline-danger">Reject</button>
           </div>
-          <div  style="display:none; align-items: center; gap: 0.5rem;">
+          <div style="display:none; align-items: center; gap: 0.5rem;">
             <p class="mb-0">You're about to assign the request to the above provider, are sure?</p>
             <button class="m-1 btn btn-success" id="actualAssignBtn">Yes, Assign</button>
             <button class="m-1 btn btn-outline-danger">Cancel</button>
@@ -1179,6 +1181,36 @@ require_once "actions/individual/getGeralRequests.php";
       </div>
     </div>
   </div>
+  </div>
+
+  <!-- Set the reqeust available -->
+  <div class="modal fade" id="durationBudgetModal" tabindex="-1" aria-labelledby="availabilityModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header" style="background: linear-gradient(135deg, #00192D 0%, #FFC107 100%);">
+          <h5 class="modal-title" id="availabilityModalLabel" style="color: white;">Set Availability</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <form id="durationBudget">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="priceInput" class="form-label" style="color: white;">Enter Price</label>
+              <input type="number" class="form-control" id="priceInput" name="budget" placeholder="Enter price">
+            </div>
+            <div class="mb-3">
+              <label for="durationInput" class="form-label" style="color: white;">Enter Duration (days)</label>
+              <input type="number" class="form-control" id="durationInput" name="duration" placeholder="Enter duration">
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn" style="background-color: #FFC107; color: #00192D;" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn" style="background-color: #00192D; color: white;">Confirm Availability</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 
   <!-- Scripts -->
@@ -1286,6 +1318,34 @@ require_once "actions/individual/getGeralRequests.php";
   </script>
 
   <script src="../../js/adminlte.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const toggles = [{
+        btn: "mobileNavToggleProperty",
+        menu: "mobileNavMenuProperty"
+      }];
+
+      toggles.forEach(({
+        btn,
+        menu
+      }) => {
+        const button = document.getElementById(btn);
+        const dropdown = document.getElementById(menu);
+
+        button.addEventListener("click", () => {
+          dropdown.classList.toggle("d-none");
+        });
+
+        document.addEventListener("click", (e) => {
+          if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.classList.add("d-none");
+          }
+        });
+      });
+    });
+  </script>
+
+
 </body>
 
 </html>

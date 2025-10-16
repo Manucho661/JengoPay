@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // UI setup
   combobox();
-  document.querySelectorAll(".custom-select-wrapper").forEach(initializeCustomSelect);
+  // document.querySelectorAll(".custom-select-wrapper").forEach(initializeCustomSelect);
   // Track invalid fields for forms
   const invalidFields = new Set();
   // Expense features

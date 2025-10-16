@@ -1,9 +1,14 @@
-import { otherRequests, get_request_details, assignProvider, updateAvailabilty, getProviderDetails } from "./api.js";
+import { otherRequests } from "./api/otherRequestDetails.js";
+import { getRequestDetails } from "./api/getRequestDetails.js";
+import { assignProvider } from "./api/assignProvider.js";
+import { updateAvailabilty } from "./api/updateAvailabilty.js";
+import { getProviderDetails } from "./api/getProviderDetails.js";
+import { setDurationBudget } from "./api/durationBudget.js";
 import { toggleProposalsORotherRequests, confirmAssignBox, hideAssignBox, applyAvailabilityStyles } from "./uiControl.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   // Load data
-  get_request_details();
+  getRequestDetails();
   otherRequests();
 
   // set the availability bg color
@@ -37,4 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // get request details
   document.getElementById('request-provider').addEventListener('click', getProviderDetails);
 
+  // set budget and duration
+  document.getElementById('durationBudget').addEventListener('submit', setDurationBudget);
 });

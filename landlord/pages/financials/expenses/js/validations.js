@@ -1,4 +1,4 @@
-import { checkFieldAvailability, checkPaymentAPI } from "./APIs/validations";
+import { checkFieldAvailability, checkPaymentAPI } from "./APIs/validations.js";
 
 export function vldtSupplierReg(invalidFields) {
 

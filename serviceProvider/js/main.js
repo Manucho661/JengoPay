@@ -1,11 +1,17 @@
-import { get_requests, submit_proposal } from "./api.js";
+import { get_requests } from "./api.js";
 import { add_request_id } from "./modal.js";
 import { getAssignedRequests } from "./api/getAssignedJobs.js";
-
-document.addEventListener("DOMContentLoaded", () => {
+import { submitProposal } from "./api/submitProposal.js";
+import { expandCollapseRequest } from "./uiControl.js";
+import { getApplications } from "./api/getYourApplications.js";
+document.addEventListener("DOMContentLoaded", async () => {
     // Fetch requests
-    get_requests();
+    await get_requests();
+    expandCollapseRequest();
     getAssignedRequests();
+
+    // GET applied Requests
+    document.getElementById('apps-tab').addEventListener('click', getApplications);
     // Check if the buttons exist
     const buttons = document.querySelectorAll('.apply-btn');
     if (buttons.length > 0) {
@@ -25,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Handle form submission
     const proposalForm = document.getElementById("applyForm");
     if (proposalForm) {
-        proposalForm.addEventListener('submit', (e) => submit_proposal(e, proposalForm));  // Pass the event object here
+        proposalForm.addEventListener('submit', (e) => submitProposal(e, proposalForm));  // Pass the event object here
     }
 });
 
