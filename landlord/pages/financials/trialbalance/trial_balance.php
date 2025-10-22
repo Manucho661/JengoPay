@@ -23,9 +23,33 @@ if (!empty($_GET['account_id'])) {
 $whereSql = $where ? "WHERE " . implode(" AND ", $where) : "";
 
 // ===========================
-// MAIN QUERY
+// MAIN QUERY (UNION journals + expense_items.item_total)
 // ===========================
+$where = [];
+$params = [];
+
+// Date range filter for both journal_entries.entry_date and expense_items.created_at
+if (!empty($_GET['from_date']) && !empty($_GET['to_date'])) {
+    $where[] = "(je.entry_date BETWEEN :from AND :to OR ei.created_at BETWEEN :from AND :to)";
+    $params[':from'] = $_GET['from_date'];
+    $params[':to']   = $_GET['to_date'];
+}
+
+// Optional account filter (apply to journal_lines.account_id OR expense_items.item_account_code)
+if (!empty($_GET['account_id'])) {
+    $where[] = "(jl.account_id = :account_id OR ei.item_account_code = :account_id)";
+    $params[':account_id'] = $_GET['account_id'];
+}
+
+$whereSql = $where ? "WHERE " . implode(" AND ", $where) : "";
+
+/*
+  Two-part UNION:
+  - Part A: aggregates journal_lines (same as before)
+  - Part B: aggregates expense_items using item_total (explicitly)
+*/
 $sql = "
+    -- PART A: Journal lines
     SELECT 
         a.account_code,
         a.account_name,
@@ -33,15 +57,37 @@ $sql = "
         a.financial_statement,
         a.debit_credit,
         COALESCE(SUM(jl.debit), 0) AS total_debit,
-        COALESCE(SUM(jl.credit), 0) AS total_credit
+        COALESCE(SUM(jl.credit), 0) AS total_credit,
+        'journal' AS source_type
     FROM chart_of_accounts a
-    LEFT JOIN journal_lines jl ON a.account_code = jl.account_id 
+    LEFT JOIN journal_lines jl ON a.account_code = jl.account_id
     LEFT JOIN journal_entries je ON jl.journal_entry_id = je.id
+    LEFT JOIN expense_items ei ON 1=0  -- keep same column namespace for union; no effect
     $whereSql
     GROUP BY a.account_code, a.account_name, a.account_type, a.financial_statement, a.debit_credit
-    HAVING COALESCE(SUM(jl.debit), 0) != 0 OR COALESCE(SUM(jl.credit), 0) != 0
-    ORDER BY a.account_code
+
+    UNION ALL
+
+    -- PART B: Expenses (use item_total explicitly)
+    SELECT
+        ei.item_account_code AS account_code,
+        COALESCE(a.account_name, CONCAT('Expense (code ', ei.item_account_code, ')')) AS account_name,
+        COALESCE(a.account_type, 'Expense') AS account_type,
+        COALESCE(a.financial_statement, 'P&L') AS financial_statement,
+        'DEBIT' AS debit_credit,
+        COALESCE(SUM(CAST(ei.item_total AS DECIMAL(20,2))), 0) AS total_debit,
+        0 AS total_credit,
+        'expense_items' AS source_type
+    FROM expense_items ei
+    LEFT JOIN chart_of_accounts a ON ei.item_account_code = a.account_code
+    LEFT JOIN journal_lines jl ON 1=0
+    LEFT JOIN journal_entries je ON 1=0
+    $whereSql
+    GROUP BY ei.item_account_code, a.account_name, a.account_type, a.financial_statement
+
+    ORDER BY account_code
 ";
+
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
@@ -254,44 +300,80 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </tr>
           </thead>
           <tbody>
-            <?php 
-            $totalDebit = 0;
-            $totalCredit = 0;
+          <?php 
+$totalDebit = 0;
+$totalCredit = 0;
 
-            foreach ($rows as $r): 
-                $net = $r['total_debit'] - $r['total_credit'];
-                $accountName = strtolower(trim($r['account_name']));
+foreach ($rows as $r): 
+    $net = $r['total_debit'] - $r['total_credit'];
+    $accountName = strtolower(trim($r['account_name']));
 
-                // Default behavior based on normal balance
-                if (strtoupper($r['debit_credit']) === 'DEBIT') {
-                    $debit = $net > 0 ? $net : 0;
-                    $credit = $net < 0 ? abs($net) : 0;
-                } else {
-                    $debit = $net < 0 ? abs($net) : 0;
-                    $credit = $net > 0 ? $net : 0;
-                }
+    // Default normal balance
+    if (strtoupper($r['debit_credit']) === 'DEBIT') {
+        $debit = $net > 0 ? $net : 0;
+        $credit = $net < 0 ? abs($net) : 0;
+    } else {
+        $debit = $net < 0 ? abs($net) : 0;
+        $credit = $net > 0 ? $net : 0;
+    }
 
-                // ✅ Always Credit these accounts
-                if (
-                    strpos($accountName, 'accounts payable') !== false || 
-                    (strpos($accountName, 'owner') !== false && strpos($accountName, 'capital') !== false) ||
-                    strpos($accountName, 'revenue') !== false ||
-                    strpos($accountName, 'income') !== false ||
-                    strpos($accountName, 'garbage') !== false ||
-                    strpos($accountName, 'vat payable') !== false ||
-                    strpos($accountName, 'late payment') !== false ||
-                    strpos($accountName, 'commission') !== false ||
-                    strpos($accountName, 'management fee') !== false
-                ) {
-                    $credit = max($r['total_credit'], abs($net));
-                    $debit = 0;
-                }
+    // ✅ Always Credit these (Income & Liabilities) EXCEPT Accounts Payable now removed
+    if (
+        (strpos($accountName, 'owner') !== false && strpos($accountName, 'capital') !== false) ||
+        strpos($accountName, 'revenue') !== false ||
+        strpos($accountName, 'income') !== false ||
+        strpos($accountName, 'garbage') !== false ||
+        strpos($accountName, 'vat payable') !== false ||
+        strpos($accountName, 'late payment') !== false ||
+        strpos($accountName, 'commission') !== false ||
+        strpos($accountName, 'management fee') !== false
+    ) {
+        $credit = max($r['total_credit'], abs($net));
+        $debit = 0;
+    }
 
-                $totalDebit  += $debit;
-                $totalCredit += $credit;
+    // ✅ Accounts Payable Logic - Switch like Accounts Receivable
+    if (strpos($accountName, 'accounts payable') !== false) {
+        // If paid via Cash, Mpesa or Bank → move to Debit
+        if (
+            strpos($accountName, 'cash') !== false ||
+            strpos($accountName, 'mpesa') !== false ||
+            strpos($accountName, 'bank') !== false
+        ) {
+            $debit = max($r['total_debit'], abs($net));
+            $credit = 0;
+        } else {
+            // Otherwise it's a liability → stays Credit
+            $credit = max($r['total_credit'], abs($net));
+            $debit = 0;
+        }
+    }
 
-                if (abs($debit) < 0.01 && abs($credit) < 0.01) continue;
-            ?>
+    // ✅ Always Debit for Expense & Payment Accounts
+    if (
+        strpos($accountName, 'expense') !== false ||
+        strpos($accountName, 'utilities') !== false ||
+        strpos($accountName, 'repair') !== false ||
+        strpos($accountName, 'maintenance') !== false ||
+        strpos($accountName, 'internet') !== false ||
+        strpos($accountName, 'cleaning') !== false ||
+        strpos($accountName, 'security') !== false ||
+        strpos($accountName, 'salary') !== false ||
+        strpos($accountName, 'cash') !== false ||
+        strpos($accountName, 'mpesa') !== false ||
+        strpos($accountName, 'bank') !== false
+    ) {
+        $debit = max($r['total_debit'], abs($net));
+        $credit = 0;
+    }
+
+    // Totals update
+    $totalDebit  += $debit;
+    $totalCredit += $credit;
+
+    if (abs($debit) < 0.01 && abs($credit) < 0.01) continue;
+?>
+
             <tr data-account-id="<?= htmlspecialchars($r['account_code']) ?>" style="cursor:pointer;">
               <td>
                 <div class="fw-bold"><?= htmlspecialchars($r['account_name']) ?></div>
@@ -353,8 +435,6 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </main>
 
 </div>
-
-
 
   <!-- Ledger Modal -->
   <div class="modal fade" id="ledgerModal" tabindex="-1">

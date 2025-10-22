@@ -2,27 +2,24 @@
 require_once '../../db/connect.php';
 
 // Fetch unpaid invoices with tenant and user details
-$sql = "
-  SELECT 
-    i.id, 
-    i.invoice_number, 
-    i.tenant, 
-    i.description, 
-    i.invoice_date, 
-    i.due_date, 
-    i.total,
-    t.unit,
-    t.phone_number,
-    u.first_name,
-    u.middle_name
-  FROM invoice i
-  LEFT JOIN tenants t ON i.tenant = t.id
-  LEFT JOIN users u ON t.user_id = u.id
-  WHERE i.payment_status = 'unpaid'
-  ORDER BY u.first_name, u.middle_name, i.invoice_date DESC
-";
-$stmt = $pdo->query($sql);
-$invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// $sql = "
+//   SELECT 
+//     i.id, 
+//     i.invoice_number, 
+//     i.tenant, 
+//     i.description, 
+//     i.invoice_date, 
+//     i.due_date, 
+//     i.total,
+//     u.first_name,
+//     u.middle_name
+//   FROM invoice i
+//   LEFT JOIN tenants t ON i.tenant = t.id
+//   WHERE i.payment_status = 'unpaid'
+//   ORDER BY u.first_name, u.middle_name, i.invoice_date DESC
+// ";
+// $stmt = $pdo->query($sql);
+// $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Group invoices by tenant
 $tenants = [];

@@ -660,7 +660,9 @@
                                                                                 <a class="dropdown-item" href="single_unit_details.php?details=<?php echo $id;?>"><i class="bi bi-eye"></i> Details</a>
                                                                                 <a class="dropdown-item" href="edit_single_unit_details.php?edit=<?php echo $id;?>"><i class="bi bi-pen"></i> Edit</a>
                                                                                 <a class="dropdown-item btn" data-toggle="modal" data-target="#meterReadingModal<?= $id ;?>"><i class="bi bi-speedometer"></i> Meter Reading</a>
-                                                                                <a class="dropdown-item" href="/Jengopay/landlord/pages/financials/invoices/invoice.php?edit=<?php echo $id;?>"><i class="fas fa-file-invoice"></i> Invoice</a>
+                                                                                <a class="dropdown-item" href="/Jengopay/landlord/pages/financials/invoices/invoice.php?edit=<?php echo $id;?>">
+    <i class="fas fa-file-invoice"></i> Invoice
+</a>
 
                                                                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#markAsVacant<?php echo $id;?>"><i class="bi bi-house-exclamation"></i> Mark As Vacant</a>
                                                                                 <?php
