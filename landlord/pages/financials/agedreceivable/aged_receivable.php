@@ -1,39 +1,43 @@
 <?php
 require_once '../../db/connect.php';
 
-// Fetch unpaid invoices with tenant and user details
-// $sql = "
-//   SELECT 
-//     i.id, 
-//     i.invoice_number, 
-//     i.tenant, 
-//     i.description, 
-//     i.invoice_date, 
-//     i.due_date, 
-//     i.total,
-//     u.first_name,
-//     u.middle_name
-//   FROM invoice i
-//   LEFT JOIN tenants t ON i.tenant = t.id
-//   WHERE i.payment_status = 'unpaid'
-//   ORDER BY u.first_name, u.middle_name, i.invoice_date DESC
-// ";
-// $stmt = $pdo->query($sql);
-// $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Fetch unpaid invoices with tenant details
+$sql = "
+  SELECT 
+    i.id, 
+    i.invoice_number, 
+    i.tenant, 
+    i.description, 
+    i.invoice_date, 
+    i.due_date, 
+    i.total,
+    t.first_name,
+    t.middle_name,
+    t.last_name,
+    t.main_contact AS phone_number,
+    t.building
+  FROM invoice i
+  LEFT JOIN tenants t ON i.tenant = t.id
+  WHERE i.payment_status = 'unpaid'
+  ORDER BY t.first_name, t.middle_name, i.invoice_date DESC
+";
+$stmt = $pdo->query($sql);
+$invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Group invoices by tenant
 $tenants = [];
 foreach ($invoices as $inv) {
     $tenantId = $inv['tenant'];
-    $tenantName = trim($inv['first_name'] . ' ' . $inv['middle_name']);
-    if (empty($tenantName)) $tenantName = "Tenant #" . $tenantId;
-    if (!empty($inv['unit'])) $tenantName .= " (" . $inv['unit'] . ")";
+    $tenantName = trim($inv['first_name'] . ' ' . $inv['middle_name'] . ' ' . $inv['last_name']);
+
+    if (empty(trim($tenantName))) $tenantName = "Tenant #" . $tenantId;
+    if (!empty($inv['building'])) $tenantName .= " (Building: " . $inv['building'] . ")";
 
     if (!isset($tenants[$tenantId])) {
         $tenants[$tenantId] = [
             'name' => $tenantName,
-            'unit' => $inv['unit'],
             'phone' => $inv['phone_number'],
+            'building' => $inv['building'],
             'invoices' => []
         ];
     }
