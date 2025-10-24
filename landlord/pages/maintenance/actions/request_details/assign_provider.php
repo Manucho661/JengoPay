@@ -21,9 +21,11 @@ try {
     }
 
     // Prepare update statement
-    $stmt = $pdo->prepare("UPDATE maintenance_requests 
-                           SET provider_id = :provider_id 
-                           WHERE id = :request_id");
+    $stmt = $pdo->prepare("
+    INSERT INTO request_assignments (request_id, provider_id)
+    VALUES (:request_id, :provider_id)
+    ");
+
 
     $stmt->bindParam(':provider_id', $providerId, PDO::PARAM_INT);
     $stmt->bindParam(':request_id', $requestId, PDO::PARAM_INT);

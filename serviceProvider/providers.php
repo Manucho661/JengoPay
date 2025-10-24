@@ -379,7 +379,7 @@ try {
                   <button class="nav-link" id="apps-tab" data-bs-toggle="tab" data-bs-target="#applications" type="button" role="tab"><span>Your Applications</span> </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="apps-tab" data-bs-toggle="tab" data-bs-target="#applications" type="button" role="tab"><span>Assigned Jobs</span> </button>
+                  <button class="nav-link" id="apps-tab" data-bs-toggle="tab" data-bs-target="#assignments" type="button" role="tab"><span>Assigned Jobs</span> </button>
                 </li>
                 <li class="nav-item" role="presentation">
                   <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab"><span>Previous Jobs</span></button>
@@ -477,6 +477,9 @@ try {
                 <div class="tab-pane fade" id="applications" role="tabpanel">
                 </div>
 
+                <!-- Assignments-->
+                <div class="tab-pane fade" id="assignments" role="tabpanel">
+                </div>
                 <!-- HISTORY -->
                 <div class="tab-pane fade" id="history" role="tabpanel">
                   <div class="section-title">Your Completed Jobs</div>
