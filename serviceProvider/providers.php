@@ -295,6 +295,22 @@ try {
             font-size: 14px;
             cursor: pointer;
         }
+    /* Application */
+    .appliedJobDescription.collapsed{
+      max-height: 90px;
+      overflow: hidden;
+      position: relative;
+    }
+    .appliedJobDescription.collapsed::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100px;
+      background: linear-gradient(transparent, white);
+      padding-bottom: 50px;
+    }
   </style>
 </head>
 
@@ -459,15 +475,6 @@ try {
 
                 <!-- APPLICATIONS -->
                 <div class="tab-pane fade" id="applications" role="tabpanel">
-                  <div class="section-title">Jobs You've been assigned .<span class="text-muted"> <i>Click Accept button to accept</i> </span></div>
-                  <ul class="list-group" id="list-group">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      Backend Developer for Payment Gateway
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      Mobile App React Native
-                    </li>
-                  </ul>
                 </div>
 
                 <!-- HISTORY -->

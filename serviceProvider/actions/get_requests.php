@@ -26,6 +26,7 @@ try {
             mr.provider_id,
             mr.budget,
             mr.duration,
+            mr.created_at,
             mp.photo_url
         FROM maintenance_requests AS mr
         LEFT JOIN maintenance_photos AS mp

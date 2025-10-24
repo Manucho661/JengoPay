@@ -1,15 +1,16 @@
-import { get_requests } from "./api.js";
+import { get_requests } from "./api/getRequests.js";
 import { add_request_id } from "./modal.js";
 import { getAssignedRequests } from "./api/getAssignedJobs.js";
 import { submitProposal } from "./api/submitProposal.js";
-import { expandCollapseRequest } from "./uiControl.js";
+import { expandCollapseRequest, expandCollapseApplication } from "./uiControl.js";
 import { getApplications } from "./api/getYourApplications.js";
 document.addEventListener("DOMContentLoaded", async () => {
     // Fetch requests
     await get_requests();
     expandCollapseRequest();
-    getAssignedRequests();
-
+    await getAssignedRequests();
+    await getApplications();
+    expandCollapseApplication();
     // GET applied Requests
     document.getElementById('apps-tab').addEventListener('click', getApplications);
     // Check if the buttons exist
