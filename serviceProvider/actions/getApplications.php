@@ -13,6 +13,7 @@ try {
     SELECT 
         mrp.bid_amount,
         mrp.estimated_time,
+        mrp.submitted_at,
         mr.id,
         mr.request_date,
         mr.request,

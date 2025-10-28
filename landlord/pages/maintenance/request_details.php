@@ -1020,6 +1020,12 @@ if (isset($_GET['id'])) {
                 <span id="modalBadge" class="badge bg-warning text-dark ms-2">Top Rated</span>
               </h5>
               <p id="modalTitle" class="text-muted mb-0">Full Stack Developer | React & Node.js</p>
+              <p class="mb-0">
+                <strong>Email:</strong> <span id="providerModalEmail" class="text-accent">jane.doe@email.com</span>
+              </p>
+              <p class="mb-0">
+                <strong>Phone:</strong> <span id="providerModalPhone" class="text-accent">+254 700 123 456</span>
+              </p>
             </div>
             <div class="ms-auto text-end">
               <h6 id="modalRate" class="text-accent mb-0">$25/hr</h6>
@@ -1029,11 +1035,6 @@ if (isset($_GET['id'])) {
           </div>
 
           <hr>
-
-          <p><strong>Cover Letter:</strong></p>
-          <p id="modalDescription" class="bg-light p-2 rounded border">
-            Default cover letter here...
-          </p>
 
           <p><strong>Location:</strong>
             <span id="modalLocation" class="text-accent">Nairobi, Kenya</span>
@@ -1099,11 +1100,6 @@ if (isset($_GET['id'])) {
           </div>
 
           <hr>
-
-          <p><strong>Cover Letter:</strong></p>
-          <p id="providerModalDescription" class="bg-light p-2 rounded border">
-            Default cover letter here...
-          </p>
 
           <p><strong>Location:</strong>
             <span id="providerModalLocation" class="text-accent">Nairobi, Kenya</span>

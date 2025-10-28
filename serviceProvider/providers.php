@@ -295,6 +295,22 @@ try {
             font-size: 14px;
             cursor: pointer;
         }
+    /* Application */
+    .appliedJobDescription.collapsed{
+      max-height: 90px;
+      overflow: hidden;
+      position: relative;
+    }
+    .appliedJobDescription.collapsed::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100px;
+      background: linear-gradient(transparent, white);
+      padding-bottom: 50px;
+    }
   </style>
 </head>
 
@@ -363,7 +379,7 @@ try {
                   <button class="nav-link" id="apps-tab" data-bs-toggle="tab" data-bs-target="#applications" type="button" role="tab"><span>Your Applications</span> </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="apps-tab" data-bs-toggle="tab" data-bs-target="#applications" type="button" role="tab"><span>Assigned Jobs</span> </button>
+                  <button class="nav-link" id="apps-tab" data-bs-toggle="tab" data-bs-target="#assignments" type="button" role="tab"><span>Assigned Jobs</span> </button>
                 </li>
                 <li class="nav-item" role="presentation">
                   <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab"><span>Previous Jobs</span></button>
@@ -459,17 +475,11 @@ try {
 
                 <!-- APPLICATIONS -->
                 <div class="tab-pane fade" id="applications" role="tabpanel">
-                  <div class="section-title">Jobs You've been assigned .<span class="text-muted"> <i>Click Accept button to accept</i> </span></div>
-                  <ul class="list-group" id="list-group">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      Backend Developer for Payment Gateway
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      Mobile App React Native
-                    </li>
-                  </ul>
                 </div>
 
+                <!-- Assignments-->
+                <div class="tab-pane fade" id="assignments" role="tabpanel">
+                </div>
                 <!-- HISTORY -->
                 <div class="tab-pane fade" id="history" role="tabpanel">
                   <div class="section-title">Your Completed Jobs</div>

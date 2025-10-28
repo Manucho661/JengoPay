@@ -13,34 +13,13 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
 });
 
 try {
-    // Correct query with quotes around 'available'
-     $stmt = $pdo->prepare("
-        SELECT 
-            mr.id,
-            mr.request_date,
-            mr.request,
-            mr.residence,
-            mr.unit,
-            mr.category,
-            mr.description,
-            mr.provider_id,
-            mr.budget,
-            mr.duration,
-            mr.created_at,
-            mp.photo_url
-        FROM maintenance_requests AS mr
-        LEFT JOIN maintenance_photos AS mp
-            ON mr.id = mp.maintenance_request_id
-        WHERE mr.availability = 'available'
-    ");
-    $stmt->execute();
-
-    $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    
 
     // Return a success response
     echo json_encode([
         "success" => true,
-        "data" => $requests
+        "data" => $response
     ]);
 } catch (PDOException $e) {
     // Handle PDO exceptions (e.g., invalid queries, connection issues)
