@@ -4,6 +4,8 @@ import { getAssignedRequests } from "./api/getAssignedJobs.js";
 import { submitProposal } from "./api/submitProposal.js";
 import { expandCollapseRequest, expandCollapseApplication } from "./uiControl.js";
 import { getApplications } from "./api/getYourApplications.js";
+import { sendResponse } from "./api/assignmentResponse.js";
+
 document.addEventListener("DOMContentLoaded", async () => {
     // Fetch requests
     await get_requests();
@@ -34,5 +36,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (proposalForm) {
         proposalForm.addEventListener('submit', (e) => submitProposal(e, proposalForm));  // Pass the event object here
     }
+
+    // handle assignment
+    document.getElementById("acceptBtn").onclick = () => sendResponse("accepted");
+    document.getElementById("declineBtn").onclick = () => sendResponse("declined");
+
 });
 

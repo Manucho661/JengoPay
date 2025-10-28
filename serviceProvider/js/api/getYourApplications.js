@@ -74,10 +74,6 @@ export async function getApplications() {
                 </div>
             </div>
             <!-- Action buttons -->
-            <div class="text-end">
-                <button class="btn btn-outline-success btn-sm">Accept</button>
-                <button class="btn btn-outline-danger btn-sm">Decline</button>
-            </div>
         </div>
           `
         )}
