@@ -11,7 +11,7 @@ $query = "
         e.expense_no,
         e.expense_date,
         ei.description,
-        ei.item_total AS total,
+        ei.item_untaxed_amount AS item_untaxed_amount,
         ei.created_at
     FROM expense_items ei
     LEFT JOIN expenses e ON e.id = ei.expense_id
@@ -26,7 +26,7 @@ $transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // Calculate running balance
 $balance = 0;
 foreach ($transactions as $key => $tr) {
-    $balance += $tr['total']; // assuming all are debits (expenses)
+    $balance += $tr['item_untaxed_amount']; // assuming all are debits (expenses)
     $transactions[$key]['balance'] = $balance;
 }
 ?>
@@ -390,7 +390,7 @@ foreach ($transactions as $key => $tr) {
                         <td><?= htmlspecialchars($tr['expense_no'] ?? 'N/A') ?></td>
                         <td><?= htmlspecialchars($tr['expense_date'] ?? date('Y-m-d', strtotime($tr['created_at']))) ?></td>
                         <td><?= htmlspecialchars($tr['description']) ?></td>
-                        <td class="text-end"><?= number_format($tr['total'], 2) ?></td>
+                        <td class="text-end"><?= number_format($tr['item_untaxed_amount'], 2) ?></td>
                         <td class="text-end"><?= number_format($tr['balance'], 2) ?></td>
                     </tr>
                 <?php endforeach; ?>

@@ -1,35 +1,170 @@
 <?php
-require_once '../../db/connect.php';
+include '../../db/connect.php';
 
-// Account code for Water
-$account_code = '600';
-$title = "General Ledger - Maintenance";
+// Get account code and name from URL parameters
+$account_code = $_GET['account_code'] ?? '';
+$account_name = $_GET['account_name'] ?? 'General Ledger';
 
-// Fetch Water expense transactions (joined with expense details)
-$query = "
-    SELECT 
-        e.expense_no,
-        e.expense_date,
-        ei.description,
-        ei.item_untaxed_amount AS item_untaxed_amount,
-        ei.created_at
-    FROM expense_items ei
-    LEFT JOIN expenses e ON e.id = ei.expense_id
-    WHERE ei.item_account_code = :account_code
-    ORDER BY ei.created_at ASC
-";
+// Capture filters
+$from_date  = $_GET['from_date'] ?? '';
+$to_date    = $_GET['to_date'] ?? '';
+$building_id = $_GET['building_id'] ?? '';
 
-$stmt = $pdo->prepare($query);
-$stmt->execute(['account_code' => $account_code]);
-$transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$where  = [];
+$params = [];
+$ledgerRows = [];
+
+// Determine if it's an income account (500-599) or expense account (600-699)
+if (!empty($account_code)) {
+    if (substr($account_code, 0, 1) == '5') {
+        // Income account - query invoice_items
+        $base_query = "
+            SELECT 
+                ii.created_at,
+                ii.invoice_number as reference,
+                ii.description,
+                ii.sub_total as amount,
+                'income' as type,
+                b.building_name,
+                CONCAT(u.first_name, ' ', u.middle_name) as tenant_name,
+                'debit' as entry_type,
+                ii.sub_total as debit,
+                0 as credit
+            FROM invoice_items ii
+            LEFT JOIN buildings b ON ii.building_id = b.id
+            LEFT JOIN users u ON ii.tenant = u.id
+            WHERE ii.account_item = :account_code
+        ";
+        $params[':account_code'] = $account_code;
+        
+        // Date filter
+        if (!empty($from_date) && !empty($to_date)) {
+            $base_query .= " AND DATE(ii.created_at) BETWEEN :from AND :to";
+            $params[':from'] = $from_date;
+            $params[':to']   = $to_date;
+        }
+        
+        // Building filter
+        if (!empty($building_id) && $building_id != 'all') {
+            $base_query .= " AND ii.building_id = :building_id";
+            $params[':building_id'] = $building_id;
+        }
+        
+        $base_query .= " ORDER BY ii.created_at DESC";
+        
+    } else {
+        // Expense account - query expense_items
+        $base_query = "
+            SELECT 
+                ei.created_at,
+                ei.expense_number as reference,
+                ei.description,
+                ei.item_untaxed_amount as amount,
+                'expense' as type,
+                b.building_name,
+                '' as tenant_name,
+                'credit' as entry_type,
+                0 as debit,
+                ei.item_untaxed_amount as credit
+            FROM expense_items ei
+            LEFT JOIN buildings b ON ei.building_id = b.id
+            WHERE ei.item_account_code = :account_code
+        ";
+        $params[':account_code'] = $account_code;
+        
+        // Date filter
+        if (!empty($from_date) && !empty($to_date)) {
+            $base_query .= " AND DATE(ei.created_at) BETWEEN :from AND :to";
+            $params[':from'] = $from_date;
+            $params[':to']   = $to_date;
+        }
+        
+        // Building filter
+        if (!empty($building_id) && $building_id != 'all') {
+            $base_query .= " AND ei.building_id = :building_id";
+            $params[':building_id'] = $building_id;
+        }
+        
+        $base_query .= " ORDER BY ei.created_at DESC";
+    }
+
+    try {
+        $stmt = $pdo->prepare($base_query);
+        $stmt->execute($params);
+        $ledgerRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        $ledgerRows = [];
+        $error = "Database error: " . $e->getMessage();
+    }
+}
+
+// Buildings for dropdown filter
+$buildings = $pdo->query("SELECT id, building_name FROM buildings ORDER BY building_name")->fetchAll(PDO::FETCH_ASSOC);
 
 // Calculate running balance
-$balance = 0;
-foreach ($transactions as $key => $tr) {
-    $balance += $tr['item_untaxed_amount']; // assuming all are debits (expenses)
-    $transactions[$key]['balance'] = $balance;
+$runningBalance = 0;
+$totalDebit = 0;
+$totalCredit = 0;
+
+// Calculate totals and prepare data for PDF export
+$pdfData = [];
+$pdfRunningBalance = 0;
+
+foreach ($ledgerRows as $row) {
+    if ($row['type'] == 'income') {
+        $runningBalance += $row['amount'];
+        $totalDebit += $row['amount'];
+        $pdfRunningBalance += $row['amount'];
+    } else {
+        $runningBalance -= $row['amount'];
+        $totalCredit += $row['amount'];
+        $pdfRunningBalance -= $row['amount'];
+    }
+    
+    // Prepare data for PDF export
+    $pdfData[] = [
+        'date' => date('Y-m-d', strtotime($row['created_at'])),
+        'reference' => $row['reference'],
+        'description' => $row['description'],
+        'building' => $row['building_name'] ?? 'N/A',
+        'debit' => $row['type'] == 'income' ? number_format($row['amount'], 2) : '0.00',
+        'credit' => $row['type'] == 'expense' ? number_format($row['amount'], 2) : '0.00',
+        'balance' => number_format($pdfRunningBalance, 2)
+    ];
 }
+
+// Account code to name mapping for display
+$accountNames = [
+    '500' => 'Rental Income',
+    '510' => 'Water Charges (Revenue)',
+    '515' => 'Garbage Charges (Revenue)',
+    '505' => 'Late Payment Fees',
+    '520' => 'Commissions and Management Fees',
+    '525' => 'Other Income (Advertising, Penalties)',
+    '600' => 'Maintenance and Repair Costs',
+    '605' => 'Staff Salaries and Wages',
+    '610' => 'Electricity Expense',
+    '615' => 'Water Expense',
+    '620' => 'Garbage Collection Expense',
+    '625' => 'Internet Expense',
+    '630' => 'Security Expense',
+    '635' => 'Property Management Software Subscription',
+    '640' => 'Marketing and Advertising Costs',
+    '645' => 'Legal and Compliance Fees',
+    '655' => 'Loan Interest Payments',
+    '660' => 'Bank/Mpesa Charges',
+    '665' => 'Other Expenses (Office, Supplies, Travel)'
+];
+
+// If account_name is not provided, get it from the mapping
+if (empty($account_name)) {
+    $account_name = $accountNames[$account_code] ?? 'General Ledger';
+}
+
+// Prepare PDF data as JSON for JavaScript
+$pdfDataJson = json_encode($pdfData);
 ?>
+
 
 <!doctype html>
 <html lang="en">
@@ -368,38 +503,165 @@ foreach ($transactions as $key => $tr) {
       <button type="submit" class="btn w-100"  style="color: #FFC107; background-color: #00192D;">Filter</button>
     </div>
   </form>
-  <h3 class="mb-4"><?= htmlspecialchars($title) ?></h3>
 
-<div class="table-responsive">
-    <table class="table table-bordered table-striped align-middle">
-        <thead class="table-dark">
-            <tr>
-                <th>Expense No</th>
-                <th>Date</th>
-                <th>Description</th>
-                <th>Debit (Ksh)</th>
-                <th>Balance (Ksh)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if (!empty($transactions)): ?>
-                <?php foreach ($transactions as $tr): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($tr['expense_no'] ?? 'N/A') ?></td>
-                        <td><?= htmlspecialchars($tr['expense_date'] ?? date('Y-m-d', strtotime($tr['created_at']))) ?></td>
-                        <td><?= htmlspecialchars($tr['description']) ?></td>
-                        <td class="text-end"><?= number_format($tr['item_untaxed_amount'], 2) ?></td>
-                        <td class="text-end"><?= number_format($tr['balance'], 2) ?></td>
-                    </tr>
+  <!-- Header and Sidebar -->
+    <?php include '../../includes/header.php'; ?>
+    <?php include '../../includes/sidebar.php'; ?>
+
+    <!--begin::App Main-->
+    <main class="app-main">
+      <!--begin::App Content Header-->
+      <div class="app-content-header">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-8">
+              <h3 class="mb-0">
+                <i class="fas fa-file-invoice-dollar" style="color:#FFC107;"></i> 
+                General Ledger - <?= htmlspecialchars($account_name) ?>
+              </h3>
+              <p class="text-muted">Account Code: <?= htmlspecialchars($account_code) ?></p>
+            </div>
+            <div class="col-sm-4">
+              <ol class="breadcrumb float-sm-end">
+                <li class="breadcrumb-item"><a href="#" style="color: #00192D;"><i class="bi bi-house"></i> Home</a></li>
+                <li class="breadcrumb-item"><a href="../profit_loss.php" style="color: #00192D;">Profit & Loss</a></li>
+                <li class="breadcrumb-item active">General Ledger</li>
+              </ol>
+            </div>
+          </div>
+
+          <!-- Filters -->
+          <form method="get" class="row g-3 mb-4 mt-3 p-3 rounded" style="background-color: #f8f9fa;">
+            <input type="hidden" name="account_code" value="<?= htmlspecialchars($account_code) ?>">
+            <input type="hidden" name="account_name" value="<?= htmlspecialchars($account_name) ?>">
+            
+            <div class="col-md-3">
+              <label for="from_date" class="form-label">From Date</label>
+              <input type="date" id="from_date" name="from_date" value="<?= htmlspecialchars($from_date) ?>" class="form-control">
+            </div>
+            
+            <div class="col-md-3">
+              <label for="to_date" class="form-label">To Date</label>
+              <input type="date" id="to_date" name="to_date" value="<?= htmlspecialchars($to_date) ?>" class="form-control">
+            </div>
+            
+            <div class="col-md-3">
+              <label for="building_id" class="form-label">Property</label>
+              <select id="building_id" name="building_id" class="form-select">
+                <option value="all">All Properties</option>
+                <?php foreach ($buildings as $b): ?>
+                  <option value="<?= $b['id'] ?>" <?= $building_id == $b['id'] ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($b['building_name']) ?>
+                  </option>
                 <?php endforeach; ?>
-            <?php else: ?>
+              </select>
+            </div>
+            
+            <div class="col-md-3 d-flex align-items-end">
+              <button type="submit" class="btn w-100 me-2" style="color: #FFC107; background-color: #00192D;">
+                <i class="fas fa-filter"></i> Filter
+              </button>
+              <button type="button" onclick="exportToPDF()" class="btn btn-outline-secondary">
+                <i class="fas fa-file-pdf"></i>
+              </button>
+            </div>
+          </form>
+
+          <!-- Summary Cards -->
+          <div class="row mb-4">
+            <div class="col-md-4">
+              <div class="card bg-success text-white">
+                <div class="card-body">
+                  <h6 class="card-title">Total Amount</h6>
+                  <h4>Ksh<?= number_format(array_sum(array_column($ledgerRows, 'amount')), 2) ?></h4>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card bg-info text-white">
+                <div class="card-body">
+                  <h6 class="card-title">Total Transactions</h6>
+                  <h4><?= count($ledgerRows) ?></h4>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card bg-warning text-dark">
+                <div class="card-body">
+                  <h6 class="card-title">Date Range</h6>
+                  <h6><?= $from_date ? htmlspecialchars($from_date) . ' to ' . htmlspecialchars($to_date) : 'All Dates' ?></h6>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ledger Table -->
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+              <thead class="table-dark">
                 <tr>
-                    <td colspan="5" class="text-center text-muted">No transactions found for this account</td>
+                  <th>Date</th>
+                  <th>Reference</th>
+                  <th>Description</th>
+                  <th>Property</th>
+                  <th>Tenant/Supplier</th>
+                  <th>Debit (KSH)</th>
+                  <th>Credit (KSH)</th>
+                  <th>Type</th>
+                  <th>Running Balance</th>
                 </tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
-</div>
+              </thead>
+              <tbody>
+                <?php if (empty($ledgerRows)): ?>
+                  <tr>
+                    <td colspan="9" class="text-center py-4">
+                      <i class="fas fa-info-circle fa-2x text-muted mb-3"></i><br>
+                      No transactions found for the selected filters.
+                    </td>
+                  </tr>
+                <?php else: ?>
+                  <?php 
+                  $displayRunningBalance = 0;
+                  foreach ($ledgerRows as $row): 
+                    if ($row['type'] == 'income') {
+                        $displayRunningBalance += $row['amount'];
+                    } else {
+                        $displayRunningBalance -= $row['amount'];
+                    }
+                  ?>
+                    <tr>
+                      <td><?= htmlspecialchars(date('Y-m-d', strtotime($row['created_at']))) ?></td>
+                      <td><?= htmlspecialchars($row['reference']) ?></td>
+                      <td><?= htmlspecialchars($row['description']) ?></td>
+                      <td><?= htmlspecialchars($row['building_name'] ?? 'N/A') ?></td>
+                      <td><?= htmlspecialchars($row['tenant_name'] ?? 'N/A') ?></td>
+                      <td class="text-end"><?= $row['type'] == 'income' ? number_format($row['amount'], 2) : '0.00' ?></td>
+                      <td class="text-end"><?= $row['type'] == 'expense' ? number_format($row['amount'], 2) : '0.00' ?></td>
+                      <td>
+                        <span class="badge <?= $row['type'] == 'income' ? 'badge-income' : 'badge-expense' ?>">
+                          <?= ucfirst($row['type']) ?>
+                        </span>
+                      </td>
+                      <td class="text-end fw-bold"><?= number_format($displayRunningBalance, 2) ?></td>
+                    </tr>
+                  <?php endforeach; ?>
+                <?php endif; ?>
+              </tbody>
+              <tfoot class="table-secondary">
+                <tr>
+                  <td colspan="5" class="text-end fw-bold">Totals:</td>
+                  <td class="text-end fw-bold">Ksh<?= number_format($totalDebit, 2) ?></td>
+                  <td class="text-end fw-bold">Ksh<?= number_format($totalCredit, 2) ?></td>
+                  <td class="text-end fw-bold">Net:</td>
+                  <td class="text-end fw-bold">Ksh<?= number_format($runningBalance, 2) ?></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
   <!-- End view announcement -->
   <!-- javascript codes begin here  -->
   <!--begin::Script-->
@@ -512,6 +774,57 @@ $('#trialBalance tbody').on('click', 'tr[data-account-id]', function () {
     
     doc.save('Trial_Balance_' + new Date().toISOString().split('T')[0] + '.pdf');
   }
+  </script>
+
+<script>
+    function exportToPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      // Title
+      doc.setFontSize(16);
+      doc.setTextColor(0, 25, 45);
+      doc.text('General Ledger - <?= addslashes($account_name) ?>', 14, 15);
+      
+      // Account info
+      doc.setFontSize(12);
+      doc.setTextColor(100, 100, 100);
+      doc.text('Account Code: <?= $account_code ?>', 14, 25);
+      doc.text('Date Range: <?= addslashes($from_date ? $from_date . " to " . $to_date : "All Dates") ?>', 14, 32);
+      
+      // Table data from PHP
+      const tableData = [
+        ['Date', 'Reference', 'Description', 'Property', 'Debit', 'Credit', 'Balance']
+      ];
+      
+      // Add data rows from PHP JSON
+      const pdfData = <?= $pdfDataJson ?>;
+      pdfData.forEach(row => {
+        tableData.push([
+          row.date,
+          row.reference,
+          row.description,
+          row.building,
+          row.debit,
+          row.credit,
+          row.balance
+        ]);
+      });
+      
+      // Table
+      doc.autoTable({
+        startY: 40,
+        head: [tableData[0]],
+        body: tableData.slice(1),
+        headStyles: { fillColor: [0, 25, 45] },
+        foot: [
+          ['', '', '', 'Total:', 'Ksh<?= number_format($totalDebit, 2) ?>', 'Ksh<?= number_format($totalCredit, 2) ?>', 'Ksh<?= number_format($runningBalance, 2) ?>']
+        ],
+        footStyles: { fillColor: [200, 200, 200], textColor: [0, 0, 0] }
+      });
+      
+      doc.save('General_Ledger_<?= $account_code ?>_<?= date('Y-m-d') ?>.pdf');
+    }
   </script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

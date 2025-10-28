@@ -4,7 +4,7 @@ $account_code = '505';
 $title = "General Ledger - Late Payment Fees";
 
 $stmt = $pdo->prepare("
-    SELECT invoice_number, description, total, created_at 
+    SELECT invoice_number, description, sub_total, created_at 
     FROM invoice_items 
     WHERE account_item = :account_code 
     ORDER BY created_at ASC
@@ -14,7 +14,7 @@ $transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $balance = 0;
 foreach ($transactions as $key => $tr) {
-    $balance += $tr['total'];
+    $balance += $tr['sub_total'];
     $transactions[$key]['balance'] = $balance;
 }
 // include 'template.php';
@@ -375,7 +375,7 @@ foreach ($transactions as $key => $tr) {
                         <td><?= htmlspecialchars($tr['invoice_number']) ?></td>
                         <td><?= date('Y-m-d', strtotime($tr['created_at'])) ?></td>
                         <td><?= htmlspecialchars($tr['description']) ?></td>
-                        <td style="text-align:right;"><?= number_format($tr['total'], 2) ?></td>
+                        <td style="text-align:right;"><?= number_format($tr['sub_total'], 2) ?></td>
                         <td style="text-align:right;"><?= number_format($tr['balance'], 2) ?></td>
                     </tr>
                 <?php endforeach; ?>

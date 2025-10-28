@@ -1,31 +1,63 @@
 <?php
 require_once '../../db/connect.php';
 
-// Account code for Rent
-$account_code = '510';
-$title = "General Ledger - Water";
+// Capture filters
+$from_date  = $_GET['from_date'] ?? '';
+$to_date    = $_GET['to_date'] ?? '';
+// Force account_id to be '510' for Water Income
+$account_id = '510';
 
-// Fetch Rent transactions
-$stmt = $pdo->prepare("
+$where  = [];
+$params = [];
+
+// Date filter
+if (!empty($from_date) && !empty($to_date)) {
+    $where[] = "DATE(je.created_at) BETWEEN :from AND :to";
+    $params[':from'] = $from_date;
+    $params[':to']   = $to_date;
+}
+
+// Always filter for Water Income account (account code '510')
+$where[] = "jl.account_id = :account_id";
+$params[':account_id'] = $account_id;
+
+$whereSql = $where ? "WHERE " . implode(" AND ", $where) : "";
+
+// General Ledger query for Water Income only
+$sql = "
     SELECT 
-        invoice_number, 
-        description, 
-        total, 
-        created_at 
-    FROM invoice_items 
-    WHERE account_item = :account_code 
-    ORDER BY created_at ASC
-");
-$stmt->execute(['account_code' => $account_code]);
-$transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        je.created_at,
+        je.reference,
+        je.description,
+        a.account_code,
+        a.account_name,
+        jl.debit,
+        jl.credit
+    FROM journal_entries je
+    INNER JOIN journal_lines jl ON je.id = jl.journal_entry_id
+    INNER JOIN chart_of_accounts a ON jl.account_id = a.account_code
+    $whereSql
+    ORDER BY je.created_at, je.id
+";
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
+$ledgerRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Get Water Income account name for title
+$waterAccount = $pdo->prepare("SELECT account_name FROM chart_of_accounts WHERE account_code = ?");
+$waterAccount->execute([$account_id]);
+$waterAccountName = $waterAccount->fetchColumn();
 
 // Calculate running balance
-$balance = 0;
-foreach ($transactions as $key => $tr) {
-    $balance += $tr['total']; // assuming all are credits
-    $transactions[$key]['balance'] = $balance;
+$runningBalance = 0;
+foreach ($ledgerRows as $key => $row) {
+    $runningBalance += $row['debit'] - $row['credit'];
+    $ledgerRows[$key]['balance'] = $runningBalance;
 }
+
+$title = "General Ledger - " . htmlspecialchars($waterAccountName);
 ?>
+
 <!doctype html>
 <html lang="en">
 <!--begin::Head-->
@@ -335,63 +367,57 @@ foreach ($transactions as $key => $tr) {
           <!--begin::Container-->
           <div class="container-fluid">
             <!--begin::Row-->
-            <h2 style="color:#FFC107;">General Ledger</h2>
+            <h2 style="color:#FFC107;">General Ledger - Water Income</h2>
             
-  <!-- Date Filter Form -->
-  <!-- Filters -->
+  <!-- Date Filter Form (Only date filters since account is fixed to Water Income) -->
   <form method="get" class="row g-3 mb-3">
-    <div class="col-md-3">
+    <div class="col-md-4">
       <label for="from_date" class="form-label">From Date</label>
       <input type="date" id="from_date" name="from_date" value="<?= htmlspecialchars($from_date) ?>" class="form-control">
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
       <label for="to_date" class="form-label">To Date</label>
       <input type="date" id="to_date" name="to_date" value="<?= htmlspecialchars($to_date) ?>" class="form-control">
     </div>
-    <div class="col-md-3">
-      <label for="account_id" class="form-label">Account</label>
-      <select id="account_id" name="account_id" class="form-select">
-        <option value="">-- All Accounts --</option>
-        <?php foreach ($accounts as $acc): ?>
-          <option value="<?= $acc['account_code'] ?>" <?= $account_id == $acc['account_code'] ? 'selected' : '' ?>>
-            <?= htmlspecialchars($acc['account_name']) ?>
-          </option>
-        <?php endforeach; ?>
-      </select>
-    </div>
-    <div class="col-md-3 d-flex align-items-end">
-      <button type="submit" class="btn w-100"  style="color: #FFC107; background-color: #00192D;">Filter</button>
+    <div class="col-md-4 d-flex align-items-end">
+      <button type="submit" class="btn w-100" style="color: #FFC107; background-color: #00192D;">Filter</button>
+      <a href="?" class="btn btn-outline-secondary ms-2">Clear</a>
     </div>
   </form>
+  
   <h3 class="mb-4"><?= htmlspecialchars($title) ?></h3>
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <thead class="table-dark">
                 <tr>
-                    <th>Invoice #</th>
                     <th>Date</th>
+                    <th>Reference</th>
                     <th>Description</th>
+                    <th>Account</th>
+                    <th>Debit (Ksh)</th>
                     <th>Credit (Ksh)</th>
                     <th>Balance (Ksh)</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($transactions as $tr): ?>
+                <?php foreach ($ledgerRows as $row): ?>
                     <tr>
-                        <td><?= htmlspecialchars($tr['invoice_number']) ?></td>
-                        <td><?= date('Y-m-d', strtotime($tr['created_at'])) ?></td>
-                        <td><?= htmlspecialchars($tr['description']) ?></td>
-                        <td style="text-align:right;"><?= number_format($tr['total'], 2) ?></td>
-                        <td style="text-align:right;"><?= number_format($tr['balance'], 2) ?></td>
+                        <td><?= htmlspecialchars(date('Y-m-d', strtotime($row['created_at']))) ?></td>
+                        <td><?= htmlspecialchars($row['reference']) ?></td>
+                        <td><?= htmlspecialchars($row['description']) ?></td>
+                        <td><?= htmlspecialchars($row['account_name']) ?></td>
+                        <td style="text-align:right;"><?= number_format($row['debit'], 2) ?></td>
+                        <td style="text-align:right;"><?= number_format($row['credit'], 2) ?></td>
+                        <td style="text-align:right;"><?= number_format($row['balance'], 2) ?></td>
                     </tr>
                 <?php endforeach; ?>
-                <?php if (empty($transactions)): ?>
-                    <tr><td colspan="5" class="text-center text-muted">No transactions found</td></tr>
+                <?php if (empty($ledgerRows)): ?>
+                    <tr><td colspan="7" class="text-center text-muted">No water income transactions found</td></tr>
                 <?php endif; ?>
             </tbody>
         </table>
     </div>
-    <!-- nouncement -->
+  <!-- End view announcement -->
   <!-- javascript codes begin here  -->
   <!--begin::Script-->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -485,15 +511,15 @@ $('#trialBalance tbody').on('click', 'tr[data-account-id]', function () {
 
   function exportToExcel() {
     const table = document.getElementById('trialBalance');
-    const wb = XLSX.utils.table_to_book(table, {sheet: "Trial Balance"});
-    XLSX.writeFile(wb, 'Trial_Balance_' + new Date().toISOString().split('T')[0] + '.xlsx');
+    const wb = XLSX.utils.table_to_book(table, {sheet: "Water Income Ledger"});
+    XLSX.writeFile(wb, 'Water_Income_Ledger_' + new Date().toISOString().split('T')[0] + '.xlsx');
   }
 
   function exportToPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     
-    doc.text('Trial Balance Report', 14, 15);
+    doc.text('Water Income Ledger Report', 14, 15);
     doc.autoTable({
       html: '#trialBalance',
       startY: 25,
@@ -501,10 +527,10 @@ $('#trialBalance tbody').on('click', 'tr[data-account-id]', function () {
       headStyles: { fillColor: [52, 58, 64] }
     });
     
-    doc.save('Trial_Balance_' + new Date().toISOString().split('T')[0] + '.pdf');
+    doc.save('Water_Income_Ledger_' + new Date().toISOString().split('T')[0] + '.pdf');
   }
   </script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0/min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>

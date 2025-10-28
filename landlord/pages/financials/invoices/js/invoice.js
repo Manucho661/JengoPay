@@ -1043,37 +1043,37 @@ $(document).ready(function () {
 });
 
 
-document.addEventListener('DOMContentLoaded', () => {
-const buildingSelect = document.getElementById('building');
-const tenantSelect   = document.getElementById('customer');
+// document.addEventListener('DOMContentLoaded', () => {
+// const buildingSelect = document.getElementById('building');
+// const tenantSelect   = document.getElementById('customer');
 
-buildingSelect.addEventListener('change', () => {
-  const buildingId = buildingSelect.value;
+// buildingSelect.addEventListener('change', () => {
+//   const buildingId = buildingSelect.value;
 
-  // Reset tenant dropdown
-  tenantSelect.innerHTML =
-      '<option value="">Select a Tenant</option>';
-  tenantSelect.disabled = !buildingId;
+//   // Reset tenant dropdown
+//   tenantSelect.innerHTML =
+//       '<option value="">Select a Tenant</option>';
+//   tenantSelect.disabled = !buildingId;
 
-  if (!buildingId) return;
+//   if (!buildingId) return;
 
-  // Fetch tenants for that building
-  fetch(`/Jengopay/landlord/pages/financials/invoices/action/get_tenants.php?building_id=${buildingId}`)
-      .then(r => r.json())
-      .then(tenants => {
-          tenants.forEach(t => {
-              const opt   = document.createElement('option');
-              opt.value   = t.id;
-              opt.textContent = t.name;
-              tenantSelect.appendChild(opt);
-          });
-      })
-      .catch(err => {
-          console.error('Failed to load tenants', err);
-          alert('Could not load tenants for this building.');
-      });
-});
-});
+//   // Fetch tenants for that building
+//   fetch(`/Jengopay/landlord/pages/financials/invoices/action/get_tenants.php?building_id=${buildingId}`)
+//       .then(r => r.json())
+//       .then(tenants => {
+//           tenants.forEach(t => {
+//               const opt   = document.createElement('option');
+//               opt.value   = t.id;
+//               opt.textContent = t.name;
+//               tenantSelect.appendChild(opt);
+//           });
+//       })
+//       .catch(err => {
+//           console.error('Failed to load tenants', err);
+//           alert('Could not load tenants for this building.');
+//       });
+// });
+// });
 
 
 

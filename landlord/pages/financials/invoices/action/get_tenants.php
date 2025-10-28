@@ -1,36 +1,73 @@
 <?php
-require_once '../../../db/connect.php';   // $pdo comes from here
-
+// get_tenants.php
 header('Content-Type: application/json');
 
-// Validate & cast the GET parameter
-$buildingId = isset($_GET['building_id']) ? (int)$_GET['building_id'] : 0;
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-// No building? → return empty JSON array
-if ($buildingId <= 0) {
-    echo json_encode([]);
-    exit;
+try {
+    // Include your PDO configuration
+    include '../../../db/connect.php';
+    
+    // Check if building_id is provided and valid
+    if (!isset($_GET['building_id']) || empty($_GET['building_id'])) {
+        throw new Exception('Building ID is required');
+    }
+    
+    $buildingId = filter_var($_GET['building_id'], FILTER_VALIDATE_INT);
+    if ($buildingId === false || $buildingId <= 0) {
+        throw new Exception('Invalid building ID');
+    }
+    
+    // Debug: Log the request
+    error_log("Fetching tenants for building ID: " . $buildingId);
+    
+    // Get building name first
+    $stmt = $pdo->prepare("SELECT id, building_name FROM buildings WHERE id = ?");
+    $stmt->execute([$buildingId]);
+    $building = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if (!$building) {
+        echo json_encode([]);
+        exit;
+    }
+    
+    // Debug: Log building found
+    error_log("Building found: " . $building['building_name']);
+    
+    // Get tenants for this building
+    $stmt = $pdo->prepare("
+        SELECT 
+            id, 
+            first_name, 
+            middle_name, 
+            last_name,
+            CONCAT(
+                first_name, 
+                ' ', 
+                COALESCE(middle_name, ''), 
+                ' ', 
+                last_name
+            ) as full_name 
+        FROM tenants 
+        WHERE building = ? AND status = 'Active'
+        ORDER BY first_name, last_name
+    ");
+    
+    $stmt->execute([$building['building_name']]);
+    $tenants = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Debug: Log tenants found
+    error_log("Tenants found: " . count($tenants));
+    
+    echo json_encode($tenants);
+    
+} catch (PDOException $e) {
+    error_log("PDO Error in get_tenants.php: " . $e->getMessage());
+    echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
+} catch (Exception $e) {
+    error_log("General Error in get_tenants.php: " . $e->getMessage());
+    echo json_encode(['error' => $e->getMessage()]);
 }
-
-/*
- |------------------------------------------------------------------
- | Fetch tenants for the chosen building
- |------------------------------------------------------------------
- |  • t.user_id      – keeps the same field you were already sending
- |  • name           – built from users.first_name + middle_name
- |  • Add / remove   – any extra columns you may need in the dropdown
- */
-$sql = "
-    SELECT
-        t.user_id                        AS id,
-        CONCAT(u.first_name, ' ', u.middle_name) AS name
-    FROM tenants  AS t
-    JOIN users    AS u ON u.id = t.user_id
-    WHERE t.building_id = ?
-    ORDER BY name
-";
-
-$stmt = $pdo->prepare($sql);
-$stmt->execute([$buildingId]);
-
-echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+?>

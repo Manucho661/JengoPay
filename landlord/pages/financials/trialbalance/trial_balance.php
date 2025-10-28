@@ -269,9 +269,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <main class="container">
   <h3 class="mb-4 text-center">Trial Balance</h3>
 
-  <!-- =========================== -->
   <!-- FILTER FORM -->
-  <!-- =========================== -->
   <form method="GET" class="row g-3 mb-4">
     <div class="col-md-4">
       <label class="form-label">From Date</label>
@@ -282,7 +280,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <input type="date" name="to_date" value="<?= htmlspecialchars($_GET['to_date'] ?? '') ?>" class="form-control">
     </div>
     <div class="col-md-4 d-flex align-items-end">
-      <button type="submit" class="btn btn-primary w-100">
+      <button type="submit" class="btn w-100" style="background-color:#00192D;color:#FFC107;">
         <i class="fas fa-filter me-2"></i>Filter
       </button>
     </div>
@@ -292,65 +290,59 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="card-body p-0">
       <div class="table-responsive">
         <table id="trialBalance" class="table table-bordered table-striped mb-0">
-          <thead class="table-dark">
+          <thead class="table" style="color:#FFC107;">
             <tr>
-              <th width="50%">Account</th>
-              <th width="25%">Debit (Ksh)</th>
-              <th width="25%">Credit (Ksh)</th>
+              <th rowspan="2">Account</th>
+              <th colspan="2">Initial Balance</th>
+              <th colspan="2"><?= !empty($_GET['from_date']) && !empty($_GET['to_date']) ? date('M Y', strtotime($_GET['from_date'])) : 'Period' ?></th>
+              <th colspan="2">End Balance</th>
+            </tr>
+            <tr>
+              <th>Debit</th>
+              <th>Credit</th>
+              <th>Debit</th>
+              <th>Credit</th>
+              <th>Debit</th>
+              <th>Credit</th>
             </tr>
           </thead>
           <tbody>
-          <?php 
-$totalDebit = 0;
-$totalCredit = 0;
+          <?php
+$totalInitialDebit = $totalInitialCredit = 0;
+$totalPeriodDebit = $totalPeriodCredit = 0;
+$totalEndDebit = $totalEndCredit = 0;
 
-foreach ($rows as $r): 
-    $net = $r['total_debit'] - $r['total_credit'];
+foreach ($rows as $r):
     $accountName = strtolower(trim($r['account_name']));
+    $net = $r['total_debit'] - $r['total_credit'];
 
-    // Default normal balance
-    if (strtoupper($r['debit_credit']) === 'DEBIT') {
-        $debit = $net > 0 ? $net : 0;
-        $credit = $net < 0 ? abs($net) : 0;
-    } else {
-        $debit = $net < 0 ? abs($net) : 0;
-        $credit = $net > 0 ? $net : 0;
-    }
+    $debit = $credit = 0;
 
-    // ✅ Always Credit these (Income & Liabilities) EXCEPT Accounts Payable now removed
-    if (
+    if (strpos($accountName, 'vat payable') !== false) {
+        $debit = $r['total_debit'];
+        $credit = $r['total_credit'];
+
+    } elseif (strpos($accountName, 'accounts payable') !== false) {
+        $debit = $r['total_debit'];
+        $credit = $r['total_credit'];
+
+    } elseif (strpos($accountName, 'accounts receivable') !== false) {
+        // ✅ Keep Accounts Receivable visible even after payments
+        $debit = $r['total_debit'];
+        $credit = $r['total_credit'];
+
+    } elseif (
         (strpos($accountName, 'owner') !== false && strpos($accountName, 'capital') !== false) ||
         strpos($accountName, 'revenue') !== false ||
         strpos($accountName, 'income') !== false ||
         strpos($accountName, 'garbage') !== false ||
-        strpos($accountName, 'vat payable') !== false ||
         strpos($accountName, 'late payment') !== false ||
         strpos($accountName, 'commission') !== false ||
         strpos($accountName, 'management fee') !== false
     ) {
-        $credit = max($r['total_credit'], abs($net));
-        $debit = 0;
-    }
+        $credit = abs($net);
 
-    // ✅ Accounts Payable Logic - Switch like Accounts Receivable
-    if (strpos($accountName, 'accounts payable') !== false) {
-        // If paid via Cash, Mpesa or Bank → move to Debit
-        if (
-            strpos($accountName, 'cash') !== false ||
-            strpos($accountName, 'mpesa') !== false ||
-            strpos($accountName, 'bank') !== false
-        ) {
-            $debit = max($r['total_debit'], abs($net));
-            $credit = 0;
-        } else {
-            // Otherwise it's a liability → stays Credit
-            $credit = max($r['total_credit'], abs($net));
-            $debit = 0;
-        }
-    }
-
-    // ✅ Always Debit for Expense & Payment Accounts
-    if (
+    } elseif (
         strpos($accountName, 'expense') !== false ||
         strpos($accountName, 'utilities') !== false ||
         strpos($accountName, 'repair') !== false ||
@@ -358,62 +350,72 @@ foreach ($rows as $r):
         strpos($accountName, 'internet') !== false ||
         strpos($accountName, 'cleaning') !== false ||
         strpos($accountName, 'security') !== false ||
-        strpos($accountName, 'salary') !== false ||
+        strpos($accountName, 'salary') !== false
+    ) {
+        $debit = abs($net);
+
+    } elseif (
         strpos($accountName, 'cash') !== false ||
         strpos($accountName, 'mpesa') !== false ||
         strpos($accountName, 'bank') !== false
     ) {
-        $debit = max($r['total_debit'], abs($net));
-        $credit = 0;
+        $credit = abs($net);
+
+    } else {
+        if ($net >= 0) $debit = $net;
+        else $credit = abs($net);
     }
 
-    // Totals update
-    $totalDebit  += $debit;
-    $totalCredit += $credit;
+    $initialDebit  = $r['initial_debit']  ?? 0;
+    $initialCredit = $r['initial_credit'] ?? 0;
 
-    if (abs($debit) < 0.01 && abs($credit) < 0.01) continue;
+    // End balances
+    $endDebit = $initialDebit + $debit;
+    $endCredit = $initialCredit + $credit;
+
+    $totalInitialDebit += $initialDebit;
+    $totalInitialCredit += $initialCredit;
+    $totalPeriodDebit += $debit;
+    $totalPeriodCredit += $credit;
+    $totalEndDebit += $endDebit;
+    $totalEndCredit += $endCredit;
+
 ?>
 
-            <tr data-account-id="<?= htmlspecialchars($r['account_code']) ?>" style="cursor:pointer;">
-              <td>
-                <div class="fw-bold"><?= htmlspecialchars($r['account_name']) ?></div>
-                <small class="account-code">
-                  Code: <?= htmlspecialchars($r['account_code']) ?> | 
-                  Type: <?= htmlspecialchars($r['account_type'] ?? 'N/A') ?> | 
-                  Normal: <?= htmlspecialchars($r['debit_credit']) ?>
-                </small>
-              </td>
-              <td class="text-end <?= $debit > 0 ? 'balance-positive' : '' ?>">
-                <?= $debit > 0 ? number_format($debit, 2) : '' ?>
-              </td>
-              <td class="text-end <?= $credit > 0 ? 'balance-negative' : '' ?>">
-                <?= $credit > 0 ? number_format($credit, 2) : '' ?>
-              </td>
-            </tr>
-            <?php endforeach; ?>
-
-            <?php if (empty($rows)): ?>
-            <tr>
-              <td colspan="3" class="text-center text-muted py-4">
-                <i class="fas fa-info-circle me-2"></i>No transactions found for the selected period
-              </td>
-            </tr>
-            <?php endif; ?>
+<tr data-account-id="<?= htmlspecialchars($r['account_code']) ?>" style="cursor:pointer;">
+  <td>
+    <div class="fw-bold"><?= htmlspecialchars($r['account_name']) ?></div>
+    <small class="account-code">
+      Code: <?= htmlspecialchars($r['account_code']) ?> | 
+      Type: <?= htmlspecialchars($r['account_type'] ?? 'N/A') ?>
+    </small>
+  </td>
+  <td class="text-end"><?= $initialDebit > 0 ? number_format($initialDebit,2) : '' ?></td>
+  <td class="text-end"><?= $initialCredit > 0 ? number_format($initialCredit,2) : '' ?></td>
+  <td class="text-end <?= $debit > 0 ? 'balance-positive' : '' ?>"><?= $debit > 0 ? number_format($debit,2) : '' ?></td>
+  <td class="text-end <?= $credit > 0 ? 'balance-negative' : '' ?>"><?= $credit > 0 ? number_format($credit,2) : '' ?></td>
+  <td class="text-end"><?= $endDebit > 0 ? number_format($endDebit,2) : '' ?></td>
+  <td class="text-end"><?= $endCredit > 0 ? number_format($endCredit,2) : '' ?></td>
+</tr>
+<?php endforeach; ?>
           </tbody>
-
           <tfoot class="table-dark">
             <tr>
-              <th class="text-end">Total</th>
-              <th class="text-end"><?= number_format($totalDebit, 2) ?></th>
-              <th class="text-end"><?= number_format($totalCredit, 2) ?></th>
+              <th>Total</th>
+              <th class="text-end"><?= number_format($totalInitialDebit,2) ?></th>
+              <th class="text-end"><?= number_format($totalInitialCredit,2) ?></th>
+              <th class="text-end"><?= number_format($totalPeriodDebit,2) ?></th>
+              <th class="text-end"><?= number_format($totalPeriodCredit,2) ?></th>
+              <th class="text-end"><?= number_format($totalEndDebit,2) ?></th>
+              <th class="text-end"><?= number_format($totalEndCredit,2) ?></th>
             </tr>
-            <tr class="<?= abs($totalDebit - $totalCredit) < 0.01 ? 'table-success' : 'table-danger' ?>">
-              <td colspan="3" class="text-center fw-bold">
-                <?php if (abs($totalDebit - $totalCredit) < 0.01): ?>
+            <tr class="<?= abs($totalEndDebit - $totalEndCredit) < 0.01 ? 'table-success' : 'table-danger' ?>">
+              <td colspan="7" class="text-center fw-bold">
+                <?php if (abs($totalEndDebit - $totalEndCredit) < 0.01): ?>
                   <i class="fas fa-check-circle me-2"></i>Trial Balance is Balanced!
                 <?php else: ?>
                   <i class="fas fa-exclamation-triangle me-2"></i>
-                  Trial Balance is Out of Balance by: Ksh <?= number_format(abs($totalDebit - $totalCredit), 2) ?>
+                  Trial Balance is Out of Balance by: Ksh <?= number_format(abs($totalEndDebit - $totalEndCredit), 2) ?>
                 <?php endif; ?>
               </td>
             </tr>
@@ -425,14 +427,13 @@ foreach ($rows as $r):
     <div class="card-footer text-muted d-flex justify-content-between">
       <small>Generated on: <?= date('Y-m-d H:i:s') ?></small>
       <small>
-        Period: 
-        <?= !empty($_GET['from_date']) ? htmlspecialchars($_GET['from_date']) : 'All' ?> 
-        to 
-        <?= !empty($_GET['to_date']) ? htmlspecialchars($_GET['to_date']) : 'All' ?>
+        Period: <?= !empty($_GET['from_date']) ? htmlspecialchars($_GET['from_date']) : 'All' ?> 
+        to <?= !empty($_GET['to_date']) ? htmlspecialchars($_GET['to_date']) : 'All' ?>
       </small>
     </div>
   </div>
 </main>
+
 
 </div>
 

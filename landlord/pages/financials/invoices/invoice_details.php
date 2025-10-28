@@ -16,6 +16,32 @@ function statusClass(string $status): string
 }
 ?>
 <?php
+include '../../db/connect.php';      // PDO $pdo
+// Fetch invoices with tenant details
+try {
+    $stmt = $pdo->prepare("
+        SELECT 
+            i.*,
+            t.first_name,
+            t.middle_name, 
+            t.last_name,
+            t.email as tenant_email,
+            t.main_contact as tenant_phone,
+            CONCAT(t.first_name, ' ', COALESCE(t.middle_name, ''), ' ', t.last_name) as tenant_name
+        FROM invoices i
+        LEFT JOIN tenants t ON i.tenant = t.id  -- If tenant stores ID
+        -- OR if tenant stores name directly:
+        -- LEFT JOIN tenants t ON CONCAT(t.first_name, ' ', COALESCE(t.middle_name, ''), ' ', t.last_name) = i.tenant
+        ORDER BY i.created_at DESC
+    ");
+    $stmt->execute();
+    $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $invoices = [];
+    error_log("Error fetching invoices: " . $e->getMessage());
+}
+?>
+<?php
 // Include database connection
 include '../../db/connect.php';
 
@@ -423,9 +449,9 @@ hr {
 
 
             <div class="app-content-header">
-                <!--begin::Container-->
-                <div class="container-fluid">
-                <div class="wrapper">
+    <!--begin::Container-->
+    <div class="container-fluid">
+    <div class="wrapper">
 
 
 <!-- ================================================================ -->
@@ -451,7 +477,11 @@ try {
           i.status,
           i.payment_status,
           i.building_id,
-          CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name,
+          -- Get tenant name from tenants table
+          CONCAT(t.first_name, ' ', COALESCE(t.middle_name, ''), ' ', t.last_name) AS tenant_name,
+          t.email AS tenant_email,
+          t.main_contact AS tenant_phone,
+          t.account_no,
 
           -- Payments
           (SELECT COALESCE(SUM(p.amount), 0)
@@ -478,7 +508,7 @@ try {
           END AS display_total
 
       FROM invoice i
-      LEFT JOIN users u ON u.id = i.tenant
+      LEFT JOIN tenants t ON t.id = i.tenant  -- CHANGED: Join with tenants table
       ORDER BY i.created_at DESC
   ";
 
@@ -573,17 +603,17 @@ HTML;
 if (!$id) {
     echo '<div class="placeholder">Select an invoice to view its details</div>';
 } else {
-  // ── Fetch invoice with tenant name via users table ──
+  // ── Fetch invoice with tenant details from tenants table ──
   $info = $pdo->prepare("
     SELECT
         i.*,
-        CONCAT(u.first_name, ' ', u.middle_name) AS tenant_name,
-        u.email AS tenant_email,
-        t.phone_number AS tenant_phone,
-        t.unit AS unit_number
+        -- Get tenant details from tenants table
+        CONCAT(t.first_name, ' ', COALESCE(t.middle_name, ''), ' ', t.last_name) AS tenant_name,
+        t.email AS tenant_email,
+        t.main_contact AS tenant_phone,
+        t.account_no
     FROM invoice i
-    LEFT JOIN users u ON i.tenant = u.id
-    LEFT JOIN tenants t ON u.id = t.user_id
+    LEFT JOIN tenants t ON i.tenant = t.id  -- CHANGED: Join with tenants table
     WHERE i.id = ?
 ");
   $info->execute([$id]);
@@ -681,34 +711,29 @@ $lineRows .= "<tr>
     </div>
 
     <!-- Invoice Info -->
-<!-- <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between">
     <div>
-        <h6 class="mb-0"><strong><b><?= htmlspecialchars($inv['tenant_name']) ?></b></strong></h6>
-        <div class="tenant-details">
-            <small>Email: <?= htmlspecialchars($inv['tenant_email']) ?></small><br>
-            <small>Phone: <?= htmlspecialchars($inv['tenant_phone']) ?></small><br>
-            <small>Unit: <?= htmlspecialchars($inv['unit_number']) ?></small>
-        </div>
-    </div> -->
-
-    <!-- Invoice Info -->
-<div class="d-flex justify-content-between">
-    <div>
-        <h6 class="mb-0"><strong><b><?= htmlspecialchars($inv['tenant_name']) ?></b></strong></h6>
+        <h6 class="mb-0"><strong><b><?= htmlspecialchars($inv['tenant_name'] ?? 'N/A') ?></b></strong></h6>
         <div class="tenant-details" style="margin-top: 0rem;">
             <?php if (!empty($inv['tenant_email'])): ?>
-                <div> <b> <strong><?= htmlspecialchars($inv['tenant_email']) ?></b></strong></div>
+                <div><b><strong><?= htmlspecialchars($inv['tenant_email']) ?></strong></b></div>
+            <?php else: ?>
+                <div><b><strong>No email</strong></b></div>
             <?php endif; ?>
+            
             <?php if (!empty($inv['tenant_phone'])): ?>
-                <div> <b><strong><?= htmlspecialchars($inv['tenant_phone']) ?></b></strong> </div>
+                <div><b><strong><?= htmlspecialchars($inv['tenant_phone']) ?></strong></b></div>
+            <?php else: ?>
+                <div><b><strong>No phone</strong></b></div>
             <?php endif; ?>
            
-             <p><b>B20</b></p> 
+            <?php if (!empty($inv['account_no'])): ?>
+                <p><b><?= htmlspecialchars($inv['account_no']) ?></b></p>
+            <?php else: ?>
+                <p><b>No account number</b></p>
+            <?php endif; ?>
         </div>
     </div>
-    <!-- <div class="text-end">
-        <h3><strong><b><?= htmlspecialchars($inv['invoice_number']) ?></b></strong></h3>
-    </div> -->
 </div>
      <div class="text-end">
         <h3><strong><b><?= htmlspecialchars($inv['invoice_number']) ?></b></strong></h3><br>
@@ -732,8 +757,7 @@ $lineRows .= "<tr>
         <table class="table table-striped table-bordered rounded-2 table-sm thick-bordered-table">
             <thead class="table">
                 <tr class="custom-th">
-                    <!-- <th>Item</th> -->
-                    <th>Item</th> <!-- Rental Income -->
+                    <th>Item</th>
                     <th>Description</th>
                     <th class="text-end">Qty</th>
                     <th class="text-end">Unit Price</th>
@@ -781,8 +805,6 @@ $lineRows .= "<tr>
 }
 ?>
 </main>
-
-
 
 </div><!-- /.wrapper -->
 

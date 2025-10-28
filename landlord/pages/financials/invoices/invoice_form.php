@@ -1,38 +1,72 @@
-
 <?php
 include '../../db/connect.php';
 
-// Fetch only revenue accounts
-$stmt = $pdo->prepare("
-  SELECT account_code, account_name
-  FROM chart_of_accounts
-  WHERE account_type = 'Revenue'
-  ORDER BY account_name ASC
-");
-$stmt->execute();
-$accountItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// ===============================
+// CHECK IF EDIT MODE
+// ===============================
+$editMode = false;
+$invoiceData = null;
+$invoiceItems = [];
 
-// Determine if this is a draft (adjust based on your form input)
-$isDraft = isset($_POST['status']) && $_POST['status'] === 'draft';
-
-// Get the highest existing invoice number for the correct prefix
-$prefix = $isDraft ? 'DFT' : 'INV';
-$stmt = $pdo->prepare("SELECT invoice_number FROM invoice WHERE invoice_number LIKE ? ORDER BY id DESC LIMIT 1");
-$stmt->execute([$prefix . '%']);
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Extract the highest number
-if ($row && preg_match('/' . $prefix . '(\d+)/', $row['invoice_number'], $matches)) {
-    $lastNumber = (int)$matches[1];
-    $newNumber = $lastNumber + 1;
-} else {
-    $newNumber = 1; // Start at 1 if no previous invoice of this type
+if (isset($_GET['edit']) && !empty($_GET['edit'])) {
+    $editMode = true;
+    $invoiceId = $_GET['edit'];
+    
+    // Fetch invoice main data
+    $stmt = $pdo->prepare("
+        SELECT i.*, t.first_name, t.middle_name, t.last_name, t.building
+        FROM invoice i 
+        LEFT JOIN tenants t ON i.tenant_id = t.id 
+        WHERE i.id = ?
+    ");
+    $stmt->execute([$invoiceId]);
+    $invoiceData = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($invoiceData) {
+        // Construct full tenant name
+        $tenantFullName = $invoiceData['first_name'];
+        if (!empty($invoiceData['middle_name'])) {
+            $tenantFullName .= ' ' . $invoiceData['middle_name'];
+        }
+        $tenantFullName .= ' ' . $invoiceData['last_name'];
+        
+        // Add tenant name to invoiceData for easy access
+        $invoiceData['tenant_full_name'] = $tenantFullName;
+        
+        // Fetch invoice items
+        $stmt = $pdo->prepare("SELECT * FROM invoice_items WHERE invoice_id = ?");
+        $stmt->execute([$invoiceId]);
+        $invoiceItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 
-// Generate the new invoice number (e.g., DFT001 or INV001)
-$invoiceNumber = $prefix . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
+// ===============================
+// INVOICE NUMBER GENERATION (Only for new invoices)
+// ===============================
+$invoiceNumber = '';
+if (!$editMode) {
+    $isDraft = isset($_POST['status']) && $_POST['status'] === 'draft';
+    $prefix = $isDraft ? 'DFT' : 'INV';
+    
+    $stmt = $pdo->prepare("SELECT invoice_number FROM invoice WHERE invoice_number LIKE ? ORDER BY id DESC LIMIT 1");
+    $stmt->execute([$prefix . '%']);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Fetch buildings list
+    if ($row && preg_match('/' . $prefix . '(\d+)/', $row['invoice_number'], $matches)) {
+        $lastNumber = (int)$matches[1];
+        $newNumber = $lastNumber + 1;
+    } else {
+        $newNumber = 1;
+    }
+
+    $invoiceNumber = $prefix . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
+} else {
+    $invoiceNumber = $invoiceData['invoice_number'] ?? '';
+}
+
+// ===============================
+// FETCH BUILDINGS
+// ===============================
 try {
     $stmt = $pdo->prepare("SELECT id, building_name FROM buildings ORDER BY building_name ASC");
     $stmt->execute();
@@ -41,8 +75,36 @@ try {
     error_log("Error fetching buildings: " . $e->getMessage());
     $buildings = [];
 }
-?>
 
+// ===============================
+// FETCH TENANTS
+// ===============================
+try {
+    $stmt = $pdo->prepare("
+        SELECT id, first_name, middle_name, last_name, main_contact, email, account_no, building
+        FROM tenants
+        WHERE status = 'Active'
+        ORDER BY first_name ASC
+    ");
+    $stmt->execute();
+    $tenants = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    error_log("Error fetching tenants: " . $e->getMessage());
+    $tenants = [];
+}
+
+// ===============================
+// FETCH ACCOUNT ITEMS
+// ===============================
+$stmt = $pdo->prepare("
+  SELECT account_code, account_name
+  FROM chart_of_accounts
+  WHERE account_type = 'Revenue'
+  ORDER BY account_name ASC
+");
+$stmt->execute();
+$accountItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -51,978 +113,425 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-  /* ================ */
-/* BASE STYLES */
-/* ================ */
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-ul {
-  list-style: none;
-}
-
-.container {
-  width: 90%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 15px;
-}
-
-/* ================ */
-/* BUTTON STYLES */
-/* ================ */
-.btn {
-  display: inline-block;
-  padding: 8px 16px;
-  border-radius: 4px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 14px;
-}
-
-.btn-primary {
-  background-color: #2a5bd7;
-  color: white;
-  border: 1px solid #2a5bd7;
-}
-
-.btn-primary:hover {
-  background-color: #1e4bc4;
-  border-color: #1e4bc4;
-}
-
-.btn-outline {
-  background-color: transparent;
-  color: #2a5bd7;
-  border: 1px solid #2a5bd7;
-}
-
-.btn-outline:hover {
-  background-color: #f0f5ff;
-}
-
-.btn-icon {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.pay-btn {
-  margin-top: 6px;
-  padding: 4px 10px;
-  font-size: 12px;
-  font-weight: 600;
-  background-color:  #00192D;
-  color:#FFC107;
-  border: none;
-  border-radius: 20px;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.pay-btn:hover {
-  background-color: #e6ae00;
-  color: white;
-}
-
-/* ================ */
-/* LAYOUT STYLES */
-/* ================ */
-header {
-  background-color: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 0;
-}
-
-.logo {
-  font-size: 24px;
-  font-weight: 700;
-  color: #2a5bd7;
-}
-
-.logo span {
-  color: #ff6b00;
-}
-
-.header-actions {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-}
-
-.user-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: #e2e8f0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  color: #4a5568;
-}
-
-.app-container {
-  display: flex;
-  min-height: calc(100vh - 66px);
-}
-
-.main-content {
-  flex: 1;
-  padding: 20px;
-  background-color: #f5f7fa;
-}
-
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.page-title {
-  font-size: 24px;
-  color: #1a365d;
-}
-
-.page-actions {
-  display: flex;
-  gap: 10px;
-}
-
-/* ================ */
-/* INVOICE TABLE STYLES */
-/* ================ */
-.invoice-list-container {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
-.invoice-list-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 20px;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.invoice-list-title {
-  font-weight: 600;
-  color: #1a365d;
-}
-
-.invoice-list-filters {
-  display: flex;
-  gap: 15px;
-}
-
-.invoice-item {
-  display: flex;
-  align-items: center;
-  padding: 12px 15px;
-  border-bottom: 1px solid #e2e8f0;
-  transition: background-color 0.2s ease;
-}
-
-.invoice-item:hover {
-  background-color: #f8fafc;
-}
-
-.invoice-header {
-  background-color: #f8f9fa;
-  font-weight: bold;
-  border-bottom: 2px solid #dee2e6;
-}
-
-/* Column Widths */
-.invoice-checkbox {
-  flex: 0 0 40px;
-  min-width: 40px;
-}
-
-.invoice-number {
-  flex: 1 0 120px;
-  min-width: 120px;
-}
-
-.invoice-customer {
-  flex: 1 0 150px;
-  min-width: 150px;
-}
-
-.invoice-date {
-  flex: 1 0 100px;
-  min-width: 100px;
-}
-
-.invoice-sub-total {
-  flex: 1 0 100px;
-  min-width: 100px;
-  text-align: right;
-}
-
-.invoice-taxes {
-  flex: 1 0 100px;
-  min-width: 100px;
-  text-align: right;
-}
-
-.invoice-amount {
-  flex: 1 0 100px;
-  min-width: 100px;
-  text-align: right;
-}
-
-.invoice-status {
-  flex: 1 0 120px;
-  min-width: 120px;
-  text-align: center;
-}
-
-.invoice-actions {
-  flex: 0 0 80px;
-  min-width: 80px;
-  text-align: right;
-}
-
-.over-flow {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Status Badges */
-.status-badge {
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.status-paid {
-  background-color: #e6fffa;
-  color: #38b2ac;
-}
-
-.status-pending {
-  background-color: #fffaf0;
-  color: #dd6b20;
-}
-
-.status-overdue {
-  background-color: #fff5f5;
-  color: #f56565;
-}
-
-.action-btn {
-  background: none;
-  border: none;
-  color: #718096;
-  cursor: pointer;
-  padding: 5px;
-}
-
-.action-btn:hover {
-  color: #2a5bd7;
-}
-
-/* ================ */
-/* FORM STYLES */
-/* ================ */
-.invoice-form-container {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-}
-
+/* Enhanced Form Styles */
 .form-section {
-  margin-bottom: 30px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .section-title {
-  font-size: 18px;
-  color: #1a365d;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #e2e8f0;
+    font-size: 18px;
+    color: #1a365d;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e2e8f0;
+    font-weight: 600;
 }
 
 .form-row {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 15px;
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
 }
 
 .form-group {
-  flex: 1;
+    flex: 1;
+}
+
+.form-group.full-width {
+    flex: 1 0 100%;
 }
 
 .form-group label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-  color: #4a5568;
-  font-size: 14px;
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2d3748;
+    font-size: 14px;
 }
 
 .form-control {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #e2e8f0;
-  border-radius: 4px;
-  font-size: 14px;
-  transition: border-color 0.3s ease;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background: #ffffff;
 }
 
 .form-control:focus {
-  outline: none;
-  border-color: #2a5bd7;
+    outline: none;
+    border-color: #00192D;
+    box-shadow: 0 0 0 3px rgba(0, 25, 45, 0.1);
 }
 
-.form-control-sm {
-  padding: 6px 8px;
-  font-size: 13px;
+.form-control:read-only {
+    background-color: #f7fafc;
+    color: #718096;
 }
 
-/* Items Table */
+/* Table Styles */
+.table-container {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
 .items-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
 }
 
 .items-table th {
-  text-align: left;
-  padding: 10px;
-  background-color: #f8fafc;
-  color: #718096;
-  font-weight: 500;
-  font-size: 13px;
+    background: #f8fafc;
+    padding: 16px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #4a5568;
+    font-size: 13px;
+    border-bottom: 2px solid #e2e8f0;
 }
 
 .items-table td {
-  padding: 12px 10px;
-  border-bottom: 1px solid #e2e8f0;
+    padding: 16px 12px;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: top;
 }
 
-.item-row input {
-  width: 100%;
-  border: 1px solid #e2e8f0;
-  padding: 8px;
-  border-radius: 4px;
+.item-row:hover {
+    background-color: #f7fafc;
 }
 
-.item-row input:focus {
-  outline: none;
-  border-color: #2a5bd7;
-}
-
-.item-name {
-  width: 40%;
-}
-
-.item-qty,
-        .item-rate,
-        .item-amount {
-  width: 15%;
-}
-
-.item-actions {
-  width: 15%;
-  text-align: center;
-}
-
-.remove-item {
-  color: #f56565;
-  cursor: pointer;
-}
-
-.add-item-btn {
-  background-color: transparent;
-  border: none;
-  color: #2a5bd7;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 8px;
-}
-
-/* Form Actions */
-.form-actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid #e2e8f0;
-}
-
-.action-left {
-  display: flex;
-  gap: 10px;
-}
-
-.action-right {
-  display: flex;
-  gap: 10px;
-}
-
-/* ================ */
-/* COMPONENT STYLES */
-/* ================ */
-.filter-dropdown {
-  position: relative;
-}
-
-.filter-btn {
-  background-color: transparent;
-  border: 1px solid #e2e8f0;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #4a5568;
-}
-
-.filter-btn:hover {
-  background-color: #f8fafc;
-}
-
-.dropdown-menu {
-  position: absolute;
-  right: 0;
-  top: 100%;
-  background-color: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 4px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  min-width: 100px;
-  z-index: 70;
-  /* display: none; */
-}
- .filter-dropdown:hover .dropdown-menu {
-          display: block;
-        }
-
-.dropdown-menu ul {
-  padding: 10px 0;
-}
-
-.dropdown-menu li {
-  padding: 8px 15px;
-  cursor: pointer;
-}
-
-.dropdown-menu li:hover {
-  background-color: #f8fafc;
-}
-
-/* Payment Status Badges */
-.payment-status-badge {
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  min-width: 60px;
-  text-align: center;
-  border: 1px solid #FFC107;
-}
-
-.badge-payment-paid {
-  background-color: #e6f7ee;
-  color: #00192D;
-}
-
-.badge-payment-partial {
-  background-color: #fff8e6;
-  color: #00192D;
-  border-color: #FFC107;
-}
-
-.badge-payment-unpaid {
-  background-color: #ffebee;
-  color: #00192D;
-  border-color: #FFC107;
-}
-
-/* Status Badges */
-.badge-sent {
-  background-color: #e3f2fd;
-  color: #1565c0;
-}
-
-.badge-paid {
-  background-color: #e8f5e9;
-  color: #2e7d32;
-}
-
-.badge-overdue {
-  background-color: #ffebee;
-  color: #c62828;
-}
-
-.badge-cancelled {
-  background-color: #efebe9;
-  color: #4e342e;
-}
-
-.badge-draft {
-  background-color: #e0e0e0;
-  color: #424242;
-}
-
-/* ================ */
-/* MODAL & PREVIEW STYLES */
-/* ================ */
-#invoicePreviewPanel {
-  position: fixed;
-  top: 0;
-  right: -100%;
-  width: 400px;
-  height: 100vh;
-  background: #fff;
-  box-shadow: -2px 0 8px rgba(0,0,0,0.3);
-  transition: right 0.3s ease-in-out;
-  z-index: 9999;
-}
-
-#invoicePreviewPanel.active {
-  right: 0;
-}
-
-.preview-content {
-  padding: 20px;
-  overflow-y: auto;
-  height: 100%;
-}
-
-.close-btn {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  font-size: 24px;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-/* ================ */
-/* RESPONSIVE STYLES */
-/* ================ */
-
-/* Table responsive wrapper - must come first */
-.table-responsive {
-  display: block;
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Button groups */
-.btn-group-responsive {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-}
-
-/* Filter tags */
-.filter-tag {
-  display: inline-block;
-  background-color: #FFC107;
-  color: #00192D;
-  border-radius: 15px;
-  padding: 5px 10px;
-  margin: 5px 5px 0 0;
-  font-size: 0.9em;
-}
-
-.filter-tag .remove-btn {
-  margin-left: 8px;
-  cursor: pointer;
-  color: #00192D;
-  font-weight: bold;
-}
-
-/* Responsive adjustments */
-@media (max-width: 1200px) {
-  .invoice-item > div {
-    padding: 8px 4px;
-  }
-}
-
-@media (max-width: 992px) {
-  .invoice-container {
-    overflow-x: auto;
-  }
-
-  .invoice-item {
-    min-width: 900px; /* Forces horizontal scroll */
-  }
-
-  .form-row {
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .form-group {
-    width: 100%;
-    margin-bottom: 15px;
-  }
-}
-
-@media (max-width: 768px) {
-  .app-container {
-    flex-direction: column;
-  }
-
-  .page-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .page-actions {
-    margin-top: 15px;
-    width: 100%;
-    justify-content: flex-start;
-  }
-
-  .invoice-list-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .invoice-list-filters {
-    margin-top: 15px;
-    width: 100%;
-    flex-direction: column;
-  }
-
-  .filter-dropdown {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-
-  #invoicePreviewPanel {
-    width: 100%;
-  }
-
-  /* Modals */
-  .modal-dialog {
-    margin: 10px;
-    width: calc(100% - 20px) !important;
-    max-width: none;
-  }
-
-  /* Stack form rows vertically */
-  .form-row {
-    flex-direction: column;
-  }
-}
-
-@media (max-width: 576px) {
-  .btn {
-    padding: 6px 12px;
-    font-size: 12px;
-  }
-
-  .section-title {
-    font-size: 16px;
-  }
-
-  .items-table th,
-  .items-table td {
-    padding: 6px 4px;
-    font-size: 12px;
-  }
-
-  .summary-table {
-    width: 100% !important;
-    float: none !important;
-  }
-
-  .page-actions .btn {
-    margin-bottom: 5px;
-    width: 100%;
-  }
-
-  /* Button groups */
-  .btn-group-responsive .btn {
-    flex: 1 0 calc(50% - 5px);
-    min-width: calc(50% - 5px);
-  }
-}
-
-@media (max-width: 480px) {
-  .filter-panel .row > div {
-    margin-bottom: 10px;
-  }
-
-  .form-control,
-  .form-select {
-    font-size: 12px;
-    padding: 8px;
-  }
-
-  /* Mobile table styles */
-  .invoice-item {
-    flex-wrap: wrap;
-  }
-
-  .search-container {
-    transition: all 0.2s ease;
-    overflow: hidden;
-}
-.search-container:focus-within {
-    border-color: #5E3A56;
-    box-shadow: 0 0 0 2px rgba(94, 58, 86, 0.1);
-}
-#searchTermDisplay {
+/* Button Styles */
+.form-actions-center {
     display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    max-height: 32px;
-    overflow-y: auto;
+    justify-content: center;
+    margin-top: 20px;
 }
-#searchTermDisplay .badge {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
+
+.btn {
     display: inline-flex;
     align-items: center;
-}
-#searchTermDisplay .btn-close {
-    font-size: 0.5rem;
-    opacity: 0.8;
-}
-#searchTermDisplay .btn-close:hover {
-    opacity: 1;
-}
-#clearSearch {
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
     cursor: pointer;
-}
-#clearSearch:hover {
-    color: #5E3A56 !important;
-}
-#noResultsMessage {
-    background: #f8f9fa;
-    border-radius: 8px;
-    margin: 15px 0;
+    transition: all 0.3s ease;
+    border: none;
 }
 
-  .table td,
-  .table th {
-    color: white;
+.btn-success {
     background-color: #00192D;
-    border: 1px solid #FFC107;
-  }
+    color: #FFC107;
+    border: 1px solid #00192D;
+}
 
-  /* Adjust column widths for mobile */
-  .invoice-checkbox,
-  .invoice-number,
-  .invoice-customer,
-  .invoice-date,
-  .invoice-sub-total,
-  .invoice-taxes,
-  .invoice-amount,
-  .invoice-status,
-  .invoice-actions {
-    flex: 1 1 100%;
-    min-width: 100%;
-    text-align: left;
-    padding: 8px 5px;
-  }
+.btn-success:hover {
+    background-color: #002640;
+    border-color: #002640;
+}
+
+.btn-danger {
+    background-color: #e53e3e;
+    color: white;
+    padding: 8px 12px;
+}
+
+.btn-danger:hover {
+    background-color: #c53030;
+}
+
+.btn-attach {
+    background-color: #00192D;
+    color: #FFC107;
+    padding: 12px 24px;
+}
+
+.btn-attach:hover {
+    background-color: #002640;
+}
+
+.btn-submit {
+    background-color: #00192D;
+    color: #FFC107;
+    padding: 14px 32px;
+    font-size: 16px;
+}
+
+.btn-submit:hover {
+    background-color: #002640;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 25, 45, 0.2);
+}
+
+/* File List */
+.file-list {
+    margin-top: 12px;
+}
+
+.file-list .list-group-item {
+    background: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin-bottom: 4px;
+}
+
+/* Submit Section */
+.submit-section {
+    background: #f8fafc;
+    border-color: #00192D;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .form-section {
+        padding: 16px;
+        margin-bottom: 16px;
+    }
+    
+    .table-container {
+        overflow-x: auto;
+    }
+    
+    .items-table {
+        min-width: 800px;
+    }
 }
 </style>
 </head>
 <body>
 <div class="invoice-form-container">
-                        <!-- Customer Section -->
-                        <div class="form-section">
-                            <h3 class="section-title">Tenant Details</h3>
-                            <form  id="myForm" method="POST" action="/Jengopay/landlord/pages/financials/invoices/action/submit_invoice.php" enctype="multipart/form-data">
-                                <div class="form-row">
+    <div class="form-section">
+        <h3 class="section-title">
+            <?php echo $editMode ? 'Edit Invoice' : 'Create New Invoice'; ?>
+        </h3>
+        <form id="myForm" method="POST" 
+      action="/Jengopay/landlord/pages/financials/invoices/action/<?php echo $editMode ? 'update_invoice.php' : 'submit_invoice.php'; ?>" 
+      enctype="multipart/form-data">
+    
+    <!-- Hidden field for invoice ID in edit mode -->
+    <?php if ($editMode && $invoiceData): ?>
+        <input type="hidden" name="invoice_id" value="<?php echo $invoiceData['id']; ?>">
+    <?php endif; ?>
 
-                                    <!-- Existing Invoice # input -->
-                                    <div class="form-group">
-                                        <label for="invoice-number">Invoice #</label>
-                                        <input type="text"
-                                            id="invoice-number"
-                                            value="<?= $invoiceNumber ?>"
-                                            class="form-control"
-                                            readonly>
-                                        <input type="hidden"
-                                            name="invoice_number"
-                                            value="<?= $invoiceNumber ?>">
-                                    </div>
+    <!-- Basic Information Section -->
+    <div class="form-section">
+        <h3 class="section-title">Basic Information</h3>
+        <div class="form-row">
+            <!-- Invoice Number -->
+            <div class="form-group">
+                <label for="invoice-number">Invoice #</label>
+                <input type="text" id="invoice-number" value="<?php echo $invoiceNumber; ?>" class="form-control" readonly>
+                <input type="hidden" name="invoice_number" value="<?php echo $invoiceNumber; ?>">
+            </div>
+            
+            <!-- Invoice Date -->
+            <div class="form-group">
+                <label for="invoice-date">Invoice Date</label>
+                <input type="date" id="invoice-date" name="invoice_date" class="form-control" 
+                       value="<?php echo $editMode && $invoiceData ? $invoiceData['invoice_date'] : ''; ?>" required>
+            </div>
+            
+            <!-- Due Date -->
+            <div class="form-group">
+                <label for="due-date">Due Date</label>
+                <input type="date" id="due-date" name="due_date" class="form-control" 
+                       value="<?php echo $editMode && $invoiceData ? $invoiceData['due_date'] : ''; ?>" required>
+            </div>
+        </div>
+
+        <!-- Tenant Display -->
+        <div class="form-group">
+            <label for="tenant-display">Tenant</label>
+            <?php
+            if ($editMode && $invoiceData) {
+                $tenantFullName = $invoiceData['first_name'] . 
+                                ($invoiceData['middle_name'] ? ' ' . $invoiceData['middle_name'] : '') . 
+                                ' ' . $invoiceData['last_name'];
+                $displayValue = $tenantFullName . ' - ' . $invoiceData['building'];
+            } else {
+                $displayValue = "Tenant information";
+            }
+            ?>
+            <input type="text" class="form-control" 
+                   value="<?php echo htmlspecialchars($displayValue); ?>" 
+                   readonly>
+            <?php if ($editMode && $invoiceData): ?>
+                <input type="hidden" name="tenant_id" value="<?php echo $invoiceData['tenant_id']; ?>">
+            <?php else: ?>
+                <input type="hidden" name="tenant_id" value="">
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <!-- Items Section -->
+    <div class="form-section">
+        <h3 class="section-title">Invoice Items</h3>
+        <div class="table-container">
+            <table class="items-table" id="itemsTable">
+                <thead>
+                    <tr>
+                        <th>Item (Service)</th>
+                        <th>Description</th>
+                        <th>Qty</th>
+                        <th>Unit Price</th>
+                        <th>Taxes</th>
+                        <th>Total</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="itemsBody">
+                    <?php if ($editMode && !empty($invoiceItems)): ?>
+                        <?php foreach ($invoiceItems as $item): ?>
+                            <tr class="item-row">
+                                <td>
+                                    <select name="account_item[]" class="form-select searchable-select" required>
+                                        <option value="" disabled>Select Account Item</option>
+                                        <?php foreach ($accountItems as $accountItem): 
+                                            $selected = ($item['account_code'] == $accountItem['account_code']) ? 'selected' : '';
+                                        ?>
+                                            <option value="<?php echo htmlspecialchars($accountItem['account_code']); ?>" <?php echo $selected; ?>>
+                                                <?php echo htmlspecialchars($accountItem['account_name']); ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </td>
+                                <td>
+                                    <textarea name="description[]" class="form-control" placeholder="Description" rows="1" required><?php echo htmlspecialchars($item['description']); ?></textarea>
+                                </td>
+                                <td>
+                                    <input type="number" name="quantity[]" class="form-control quantity" step="0.01" 
+                                           value="<?php echo $item['quantity']; ?>" required>
+                                </td>
+                                <td>
+                                    <input type="number" name="unit_price[]" class="form-control unit-price" step="0.01" 
+                                           value="<?php echo $item['unit_price']; ?>" required>
+                                </td>
+                                <td>
+                                    <select name="vat_type[]" class="form-select vat-option" required>
+                                        <option value="" disabled>Select Option</option>
+                                        <option value="inclusive" <?php echo $item['vat_type'] == 'inclusive' ? 'selected' : ''; ?>>VAT 16% Inclusive</option>
+                                        <option value="exclusive" <?php echo $item['vat_type'] == 'exclusive' ? 'selected' : ''; ?>>VAT 16% Exclusive</option>
+                                        <option value="zero" <?php echo $item['vat_type'] == 'zero' ? 'selected' : ''; ?>>Zero Rated</option>
+                                        <option value="exempted" <?php echo $item['vat_type'] == 'exempted' ? 'selected' : ''; ?>>Exempted</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" name="total[]" class="form-control total" 
+                                           value="<?php echo number_format($item['total_amount'], 2); ?>" readonly>
+                                </td>
+                                <td class="text-center">
+                                    <button type="button" class="btn btn-danger btn-sm delete-btn">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <!-- Empty row for new invoice -->
+                        <tr class="item-row">
+                            <td>
+                                <select name="account_item[]" class="form-select searchable-select" required>
+                                    <option value="" disabled selected>Select Account Item</option>
+                                    <?php foreach ($accountItems as $item): ?>
+                                        <option value="<?php echo htmlspecialchars($item['account_code']); ?>">
+                                            <?php echo htmlspecialchars($item['account_name']); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </td>
+                            <td>
+                                <textarea name="description[]" class="form-control" placeholder="Description" rows="1" required></textarea>
+                            </td>
+                            <td>
+                                <input type="number" name="quantity[]" class="form-control quantity" step="0.01" required>
+                            </td>
+                            <td>
+                                <input type="number" name="unit_price[]" class="form-control unit-price" step="0.01" required>
+                            </td>
+                            <td>
+                                <select name="vat_type[]" class="form-select vat-option" required>
+                                    <option value="" disabled selected>Select Option</option>
+                                    <option value="inclusive">VAT 16% Inclusive</option>
+                                    <option value="exclusive">VAT 16% Exclusive</option>
+                                    <option value="zero">Zero Rated</option>
+                                    <option value="exempted">Exempted</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" name="total[]" class="form-control total" readonly>
+                            </td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-danger btn-sm delete-btn">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="form-actions-center">
+            <button type="button" class="btn btn-success add-btn" id="addMoreBtn">
+                <i class="fa fa-plus"></i> ADD MORE ITEMS
+            </button>
+        </div>
+    </div>
+
+    <!-- Additional Information Section -->
+    <div class="form-section">
+        <h3 class="section-title">Additional Information</h3>
+        <div class="form-row">
+            <div class="form-group full-width">
+                <label for="notes">Notes (Optional)</label>
+                <textarea id="notes" name="notes" class="form-control" rows="3" placeholder="Thank you for your business!"><?php echo $editMode && $invoiceData ? htmlspecialchars($invoiceData['notes']) : ''; ?></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attachments Section -->
+    <div class="form-section">
+        <h3 class="section-title">Attachments</h3>
+        <div class="form-row">
+            <div class="form-group full-width">
+                <input type="file" id="fileInput" name="attachment[]" multiple style="display: none;">
+                <button type="button" class="btn btn-attach" onclick="document.getElementById('fileInput').click()">
+                    <i class="fas fa-paperclip"></i> Attach Files
+                </button>
+                <div id="fileList" class="file-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Submit Section -->
+    <div class="form-section submit-section">
+        <div class="form-actions-center">
+            <button type="submit" class="btn btn-submit">
+                <i class="fas fa-share-square"></i> 
+                <?php echo $editMode ? 'Update Invoice' : 'Save & Send Invoice'; ?>
+            </button>
+        </div>
+    </div>
+        </form>
+    </div>
 </div>
-
-
-
-                                   <!-- Invoice Date Field -->
-<div class="form-group">
-    <label for="invoice-date">Invoice Date</label>
-    <input type="date" id="invoice-date" name="invoice_date" class="form-control" required>
-</div>
-
-
-
-                                    <!-- ▼ Tenant selector (will be filled by JS) -->
-                                    <div class="form-group">
-                                        <label for="customer">Tenant</label>
-                                        <select id="customer"
-                                            name="tenant"
-                                            class="form-control"
-                                          
-                                            disabled>
-                                            <option value="">Select a Tenant</option>
-                                        </select>
-                                    </div>
-
-                                </div>
-
-                                <!-- <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="invoice-date">Invoice Date</label>
-                                        <input type="date"
-                                            id="invoice-date"
-                                            name="invoice_date"
-                                            class="form-control"
-                                            required>
-                                    </div> -->
-
-                                    <div class="form-group">
-                                        <label for="due-date">Due Date</label>
-                                        <input type="date"
-                                            id="due-date"
-                                            name="due_date"
-                                            class="form-control"
-                                            required>
-                                    </div>
-                                </div>
-
-
-                                <!-- Items Section -->
-                                <div class="form-section">
-        <h3 class="section-title">Items</h3>
-        <table class="items-table" id="itemsTable">
-            <thead>
-                <tr>
-                    <th>Item (Service)</th>
-                    <th>Description</th>
-                    <th>Qty</th>
-                    <th>Unit Price</th>
-                    <th>Taxes</th>
-                    <th>Total</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody id="itemsBody">
-                <!-- One initial row -->
-                <!-- <tr> -->
-                <!-- <td> -->
-                <!-- <select name="account_item[]" class="select-account searchable-select" required>
-            <option value="" disabled selected>Select Account Item</option>
-            <?php foreach ($accountItems as $item): ?>
-              <option value="<?= htmlspecialchars($item['account_code']) ?>">
-                <?= htmlspecialchars($item['account_name']) ?>
-              </option>
-            <?php endforeach; ?>
-          </select>
-            </td>
-            <td style="min-width: 200px;">
-          <textarea name="description[]" class="form-control" placeholder="Description" rows="1" required></textarea>
-        </td>
-                    <td><input type="number" name="quantity[]" class="form-control quantity" required></td>
-                    <td><input type="number" name="unit_price[]" class="form-control unit-price" required></td>
-                    <td>
-                        <select name="vat_type[]" class="form-select vat-option" required>
-                            <option value="" disabled selected>Select Option</option>
-                            <option value="inclusive">VAT 16% Inclusive</option>
-                            <option value="exclusive">VAT 16% Exclusive</option>
-                            <option value="zero">Zero Rated</option>
-                            <option value="exempted">Exempted</option>
-                        </select>
-                    </td>
-                    <td><input type="text" name="total[]" class="form-control total" readonly></td>
-                    <td><button type="button" class="btn btn-danger btn-sm delete-btn"><i class="fa fa-trash"></i></button></td> -->
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- Add More Button -->
-        <button type="button" class="btn btn-success add-btn" id="addMoreBtn" style="background-color: #00192D; color: #FFC107;">
-            <i class="fa fa-plus"></i> ADD MORE
-        </button>
-                                </div>
-
-                                <!-- Notes & Terms -->
-                                <div class="form-section">
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label for="notes">Notes(Optional)</label>
-                                            <textarea id="notes" name="notes" class="form-control" rows="3" placeholder="Thank you for your business!"></textarea>
-                                        </div>
-                                        <!-- <div class="form-group">
-                                <label for="terms">Terms & Conditions</label>
-                                <textarea id="terms"  name="terms_conditions" class="form-control" rows="3" placeholder="Payment due within 15 days"></textarea>
-                            </div> -->
-                                    </div>
-                                </div>
-
-
-                                <!-- Form Actions -->
-                                <div class="form-actions">
-                                    <div class="action-left">
-                                   <!-- File Upload Section -->
-                              <div class="form-section">
-                                  <h3 class="section-title">Attachments</h3>
-                                  <div class="form-row">
-                                      <div class="form-group">
-                                          <!-- Hidden file input -->
-                                          <input type="file" id="fileInput" name="attachment[]" multiple style="display: none;">
-
-                                          <!-- Button to trigger file input -->
-                                          <button type="button"  class="btn btn-outline-secondary" onclick="document.getElementById('fileInput').click()"  style="background-color: #00192D; color: #FFC107;">
-                                              <i class="fas fa-paperclip"></i> Attach Files
-                                          </button>
-
-                                          <!-- Display selected files -->
-                                          <div id="fileList" class="mt-2"></div>
-                                      </div>
-                                  </div>
-</div>
-                                    </div>
-                                </div>
-
-                                <div class="action-right" style="display: flex; justify-content: flex-end;">
-    <button type="submit" style="background-color: #00192D; color: #FFC107; padding: 8px 16px; border: none; border-radius: 4px;">
-    <i class="fas fa-share-square"></i> Save & Send
-    </button>
-</div>
-
                                     <!-- Add this hidden file input if you want actual file attachment -->
 <!-- <input type="file" id="fileInput" style="display: none;"> -->
                                     <!-- <div class="action-right"> -->
@@ -2532,6 +2041,11 @@ document.addEventListener("DOMContentLoaded", function () {
     </script>
 
 
+<script>
+document.getElementById('customer').addEventListener('change', function () {
+    document.getElementById('tenant_id').value = this.value;
+});
+</script>
 
 
     <!-- <script>
