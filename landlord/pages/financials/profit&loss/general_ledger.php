@@ -10,115 +10,105 @@ $from_date  = $_GET['from_date'] ?? '';
 $to_date    = $_GET['to_date'] ?? '';
 $building_id = $_GET['building_id'] ?? '';
 
-$where  = [];
-$params = [];
 $ledgerRows = [];
 
 // Determine if it's an income account (500-599) or expense account (600-699)
 if (!empty($account_code)) {
     if (substr($account_code, 0, 1) == '5') {
         // Income account - query invoice_items
-        $base_query = "
+        $query = "
             SELECT 
-                ii.created_at,
-                ii.invoice_number as reference,
-                ii.description,
-                ii.sub_total as amount,
-                'income' as type,
-                b.building_name,
-                CONCAT(u.first_name, ' ', u.middle_name) as tenant_name,
-                'debit' as entry_type,
-                ii.sub_total as debit,
-                0 as credit
-            FROM invoice_items ii
-            LEFT JOIN buildings b ON ii.building_id = b.id
-            LEFT JOIN users u ON ii.tenant = u.id
-            WHERE ii.account_item = :account_code
+                created_at,
+                invoice_number as reference,
+                description,
+                sub_total as amount,
+                'income' as type
+            FROM invoice_items 
+            WHERE account_item = ?
         ";
-        $params[':account_code'] = $account_code;
+        $params = [$account_code];
         
         // Date filter
         if (!empty($from_date) && !empty($to_date)) {
-            $base_query .= " AND DATE(ii.created_at) BETWEEN :from AND :to";
-            $params[':from'] = $from_date;
-            $params[':to']   = $to_date;
+            $query .= " AND DATE(created_at) BETWEEN ? AND ?";
+            $params[] = $from_date;
+            $params[] = $to_date;
         }
         
         // Building filter
         if (!empty($building_id) && $building_id != 'all') {
-            $base_query .= " AND ii.building_id = :building_id";
-            $params[':building_id'] = $building_id;
+            $query .= " AND building_id = ?";
+            $params[] = $building_id;
         }
         
-        $base_query .= " ORDER BY ii.created_at DESC";
+        $query .= " ORDER BY created_at DESC";
         
     } else {
-        // Expense account - query expense_items
-        $base_query = "
+        // Expense account - query expense_items JOINED with expenses
+        $query = "
             SELECT 
                 ei.created_at,
-                ei.expense_number as reference,
+                e.expense_no as reference,
                 ei.description,
                 ei.item_untaxed_amount as amount,
                 'expense' as type,
-                b.building_name,
-                '' as tenant_name,
-                'credit' as entry_type,
-                0 as debit,
-                ei.item_untaxed_amount as credit
+                e.supplier
             FROM expense_items ei
-            LEFT JOIN buildings b ON ei.building_id = b.id
-            WHERE ei.item_account_code = :account_code
+            INNER JOIN expenses e ON ei.expense_id = e.id
+            WHERE ei.item_account_code = ?
         ";
-        $params[':account_code'] = $account_code;
+        $params = [$account_code];
         
         // Date filter
         if (!empty($from_date) && !empty($to_date)) {
-            $base_query .= " AND DATE(ei.created_at) BETWEEN :from AND :to";
-            $params[':from'] = $from_date;
-            $params[':to']   = $to_date;
+            $query .= " AND DATE(ei.created_at) BETWEEN ? AND ?";
+            $params[] = $from_date;
+            $params[] = $to_date;
         }
         
         // Building filter
         if (!empty($building_id) && $building_id != 'all') {
-            $base_query .= " AND ei.building_id = :building_id";
-            $params[':building_id'] = $building_id;
+            $query .= " AND ei.building_id = ?";
+            $params[] = $building_id;
         }
         
-        $base_query .= " ORDER BY ei.created_at DESC";
+        $query .= " ORDER BY ei.created_at DESC";
     }
 
     try {
-        $stmt = $pdo->prepare($base_query);
+        $stmt = $pdo->prepare($query);
         $stmt->execute($params);
         $ledgerRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Debug: Check if we're getting data
+        error_log("Account Code: " . $account_code);
+        error_log("Query: " . $query);
+        error_log("Params: " . implode(", ", $params));
+        error_log("Rows Found: " . count($ledgerRows));
+        
     } catch (PDOException $e) {
         $ledgerRows = [];
         $error = "Database error: " . $e->getMessage();
+        error_log("General Ledger Error: " . $e->getMessage());
     }
 }
 
 // Buildings for dropdown filter
 $buildings = $pdo->query("SELECT id, building_name FROM buildings ORDER BY building_name")->fetchAll(PDO::FETCH_ASSOC);
 
-// Calculate running balance
+// Calculate running balance and totals
 $runningBalance = 0;
 $totalDebit = 0;
 $totalCredit = 0;
-
-// Calculate totals and prepare data for PDF export
 $pdfData = [];
-$pdfRunningBalance = 0;
 
 foreach ($ledgerRows as $row) {
     if ($row['type'] == 'income') {
         $runningBalance += $row['amount'];
         $totalDebit += $row['amount'];
-        $pdfRunningBalance += $row['amount'];
     } else {
         $runningBalance -= $row['amount'];
         $totalCredit += $row['amount'];
-        $pdfRunningBalance -= $row['amount'];
     }
     
     // Prepare data for PDF export
@@ -126,14 +116,16 @@ foreach ($ledgerRows as $row) {
         'date' => date('Y-m-d', strtotime($row['created_at'])),
         'reference' => $row['reference'],
         'description' => $row['description'],
-        'building' => $row['building_name'] ?? 'N/A',
         'debit' => $row['type'] == 'income' ? number_format($row['amount'], 2) : '0.00',
         'credit' => $row['type'] == 'expense' ? number_format($row['amount'], 2) : '0.00',
-        'balance' => number_format($pdfRunningBalance, 2)
+        'balance' => number_format($runningBalance, 2)
     ];
 }
 
-// Account code to name mapping for display
+// Prepare PDF data as JSON for JavaScript
+$pdfDataJson = json_encode($pdfData);
+
+// Account code to name mapping
 $accountNames = [
     '500' => 'Rental Income',
     '510' => 'Water Charges (Revenue)',
@@ -156,15 +148,10 @@ $accountNames = [
     '665' => 'Other Expenses (Office, Supplies, Travel)'
 ];
 
-// If account_name is not provided, get it from the mapping
 if (empty($account_name)) {
     $account_name = $accountNames[$account_code] ?? 'General Ledger';
 }
-
-// Prepare PDF data as JSON for JavaScript
-$pdfDataJson = json_encode($pdfData);
 ?>
-
 
 <!doctype html>
 <html lang="en">
