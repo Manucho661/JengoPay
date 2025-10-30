@@ -115,12 +115,12 @@ foreach ($rawRows as $r) {
     // FORCE CREDIT for these cases
     // ===========================
     if (
-        strpos($accountName, 'accounts payable') !== false ||
-        strpos($accountName, 'loan') !== false ||
-        strpos($accountName, 'capital') !== false ||
-        strpos($accountName, 'revenue') !== false ||
-        strpos($accountName, 'income') !== false ||
-        strpos($accountName, 'garbage collection fees') !== false
+        strpos($accountName, 'accounts payable..') !== false ||
+        strpos($accountName, 'loan..') !== false ||
+        strpos($accountName, 'capital..') !== false ||
+        strpos($accountName, 'revenue..') !== false ||
+        strpos($accountName, 'income..') !== false ||
+        strpos($accountName, 'garbage collection fees..') !== false
     ) {
         // Ensure it shows under Credit only
         $credit = max($r['total_credit'], abs($net));
@@ -318,46 +318,46 @@ foreach ($rows as $r):
 
     $debit = $credit = 0;
 
-    if (strpos($accountName, 'vat payable') !== false) {
+    if (strpos($accountName, 'vat payable..') !== false) {
         $debit = $r['total_debit'];
         $credit = $r['total_credit'];
 
-    } elseif (strpos($accountName, 'accounts payable') !== false) {
+    } elseif (strpos($accountName, 'accounts payable..') !== false) {
         $debit = $r['total_debit'];
         $credit = $r['total_credit'];
 
-    } elseif (strpos($accountName, 'accounts receivable') !== false) {
-        // ✅ Keep Accounts Receivable visible even after payments
+    } elseif (strpos($accountName, 'accounts receivable..') !== false) {
+        // ✅ Keep Accounts Receivable.. visible even after payments
         $debit = $r['total_debit'];
         $credit = $r['total_credit'];
 
     } elseif (
-        (strpos($accountName, 'owner') !== false && strpos($accountName, 'capital') !== false) ||
-        strpos($accountName, 'revenue') !== false ||
-        strpos($accountName, 'income') !== false ||
-        strpos($accountName, 'garbage') !== false ||
-        strpos($accountName, 'late payment') !== false ||
-        strpos($accountName, 'commission') !== false ||
-        strpos($accountName, 'management fee') !== false
+        (strpos($accountName, 'owner..') !== false && strpos($accountName, 'capital..') !== false) ||
+        strpos($accountName, 'revenue..') !== false ||
+        strpos($accountName, 'income..') !== false ||
+        strpos($accountName, 'garbage..') !== false ||
+        strpos($accountName, 'late payment..') !== false ||
+        strpos($accountName, 'commission..') !== false ||
+        strpos($accountName, 'management fee..') !== false
     ) {
         $credit = abs($net);
 
     } elseif (
-        strpos($accountName, 'expense') !== false ||
-        strpos($accountName, 'utilities') !== false ||
-        strpos($accountName, 'repair') !== false ||
-        strpos($accountName, 'maintenance') !== false ||
-        strpos($accountName, 'internet') !== false ||
-        strpos($accountName, 'cleaning') !== false ||
-        strpos($accountName, 'security') !== false ||
-        strpos($accountName, 'salary') !== false
+        strpos($accountName, 'expense..') !== false ||
+        strpos($accountName, 'utilities..') !== false ||
+        strpos($accountName, 'repair..') !== false ||
+        strpos($accountName, 'maintenance..') !== false ||
+        strpos($accountName, 'internet..') !== false ||
+        strpos($accountName, 'cleaning..') !== false ||
+        strpos($accountName, 'security..') !== false ||
+        strpos($accountName, 'salary..') !== false
     ) {
         $debit = abs($net);
 
     } elseif (
-        strpos($accountName, 'cash') !== false ||
-        strpos($accountName, 'mpesa') !== false ||
-        strpos($accountName, 'bank') !== false
+        strpos($accountName, 'cash..') !== false ||
+        strpos($accountName, 'mpesa..') !== false ||
+        strpos($accountName, 'bank..') !== false
     ) {
         $credit = abs($net);
 
@@ -384,7 +384,25 @@ foreach ($rows as $r):
 
 <tr data-account-id="<?= htmlspecialchars($r['account_code']) ?>" style="cursor:pointer;">
   <td>
-    <div class="fw-bold"><?= htmlspecialchars($r['account_name']) ?></div>
+  <div class="d-flex align-items-center justify-content-between">
+  <div class="fw-bold">
+    <?= htmlspecialchars($r['account_name']) ?>:
+  </div>
+
+  <!-- Dots dropdown -->
+  <div class="dropdown">
+    <button class="btn btn-link text-dark p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration: none;">
+      <i class="fas fa-ellipsis-v"></i>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end">
+      <li>
+        <a class="dropdown-item" href="/Jengopay/landlord/pages/financials/trialbalance/general_ledger.php?account=<?= urlencode($r['account_name']) ?>">
+          View General Ledger
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
     <small class="account-code">
       Code: <?= htmlspecialchars($r['account_code']) ?> | 
       Type: <?= htmlspecialchars($r['account_type'] ?? 'N/A') ?>
@@ -461,96 +479,5 @@ foreach ($rows as $r):
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
-  <script>
-  $(document).ready(function() {
-    $('#trialBalance').DataTable({
-      paging: false,
-      searching: true,
-      ordering: true,
-      info: false,
-      order: [[0, 'asc']]
-    });
-  });
-
-  $('#trialBalance tbody').on('click', 'tr[data-account-id]', function () {
-    var accountId = $(this).data('account-id');
-    var accountName = $(this).find('td:first .fw-bold').text();
-    if (!accountId) return;
-
-    $('#modalAccountName').text(accountName);
-    $('#ledgerModal .modal-body').html('<div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x"></i><br>Loading ledger details...</div>');
-    $('#ledgerModal').modal('show');
-
-    $.ajax({
-      url: '/Jengopay/landlord/pages/financials/generalledger/get_ledger.php',
-      type: 'GET',
-      data: { 
-        account_id: accountId,
-        from_date: '<?= $_GET['from_date'] ?? '' ?>',
-        to_date: '<?= $_GET['to_date'] ?? '' ?>'
-      },
-      success: function (response) {
-        let data;
-        try {
-          data = JSON.parse(response);
-        } catch (e) {
-          $('#ledgerModal .modal-body').html('<div class="alert alert-danger">Failed to load ledger data.</div>');
-          return;
-        }
-
-        if (data.error) {
-          $('#ledgerModal .modal-body').html('<div class="alert alert-warning">' + data.error + '</div>');
-          return;
-        }
-
-        if (data.length === 0) {
-          $('#ledgerModal .modal-body').html('<div class="alert alert-info">No transactions found for this account.</div>');
-          return;
-        }
-
-        let tableHtml = `
-          <div class="table-responsive">
-            <table class="table table-striped table-bordered">
-              <thead class="table-dark">
-                <tr>
-                  <th>Date</th>
-                  <th>Reference</th>
-                  <th>Description</th>
-                  <th>Source</th>
-                  <th class="text-end">Debit</th>
-                  <th class="text-end">Credit</th>
-                  <th class="text-end">Balance</th>
-                </tr>
-              </thead>
-              <tbody>
-        `;
-
-        let runningBalance = 0;
-        data.forEach(row => {
-          runningBalance += parseFloat(row.debit) - parseFloat(row.credit);
-          tableHtml += `
-            <tr>
-              <td>${row.entry_date || '-'}</td>
-              <td>${row.reference || '-'}</td>
-              <td>${row.description || '-'}</td>
-              <td>${row.source_table || '-'}</td>
-              <td class="text-end">${parseFloat(row.debit).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-              <td class="text-end">${parseFloat(row.credit).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-              <td class="text-end fw-bold ${runningBalance >= 0 ? 'text-success' : 'text-danger'}">
-                ${runningBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
-              </td>
-            </tr>`;
-        });
-
-        tableHtml += '</tbody></table></div>';
-        $('#ledgerModal .modal-body').html(tableHtml);
-      },
-      error: function () {
-        $('#ledgerModal .modal-body').html('<div class="alert alert-danger">Error loading ledger data.</div>');
-      }
-    });
-  });
-  </script>
 </body>
 </html>
