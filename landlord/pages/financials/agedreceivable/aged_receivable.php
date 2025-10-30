@@ -276,5 +276,15 @@ $(function(){
   });
 });
 </script>
+
+<!-- JS for rotating arrow -->
+<script>
+document.querySelectorAll('.tenant-row').forEach(row => {
+  row.addEventListener('click', function() {
+    const icon = this.querySelector('.arrow-icon');
+    icon.classList.toggle('rotate');
+  });
+});
+</script>
 </body>
 </html>
