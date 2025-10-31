@@ -154,6 +154,12 @@ foreach ($invoices as $inv) {
     .table-hover tbody tr:hover { background-color: #f8f9fa; }
     .summary-card { background-color: #00192D; color: #FFC107; border-radius: 10px; }
     .summary-card h5 { margin: 0; }
+    .arrow-icon {
+  transition: transform 0.3s ease;
+}
+.arrow-icon.rotate {
+  transform: rotate(90deg);
+}
   </style>
 </head>
 
@@ -167,6 +173,7 @@ foreach ($invoices as $inv) {
     <div><?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?></div>
   </aside>
 
+ 
   <main class="app-main">
     <div class="app-content-header p-3">
       <h3 class="fw-bold text-dark">📋 Aged Receivables Report</h3>
@@ -180,15 +187,17 @@ foreach ($invoices as $inv) {
           <div class="col-md-3">
             <div class="summary-card p-3">
               <h5><?= $range ?> Days</h5>
-              <h4><?= number_format($totals[$range], 2) ?></h4>
+              <h4>KSh <?= number_format($totals[$range], 2) ?></h4>
             </div>
           </div>
           <?php endforeach; ?>
         </div>
 
+        <!-- Main Table (for DataTables) -->
         <table id="agedTable" class="table table-striped table-hover align-middle">
           <thead style="background-color:#00192D; color:#FFC107;">
             <tr>
+              <th style="width: 40px;"></th>
               <th>Tenant</th>
               <th>0-30 Days</th>
               <th>31-60 Days</th>
@@ -209,27 +218,76 @@ foreach ($invoices as $inv) {
               }
               $total = array_sum($buckets);
             ?>
-            <tr class="tenant-row" data-tenant="<?= $tenantId ?>" style="cursor:pointer;">
+            <!-- Only main rows go in DataTable -->
+            <tr class="tenant-row" data-tenant-id="<?= $tenantId ?>">
+              <td class="text-center">
+                <i class="fas fa-chevron-right text-warning arrow-icon"></i>
+              </td>
               <td><?= htmlspecialchars($tenant['name']) ?></td>
-              <td><?= number_format($buckets['0-30'], 2) ?></td>
-              <td><?= number_format($buckets['31-60'], 2) ?></td>
-              <td><?= number_format($buckets['61-90'], 2) ?></td>
-              <td><?= number_format($buckets['90+'], 2) ?></td>
-              <td><?= number_format($total, 2) ?></td>
+              <td>KSh <?= number_format($buckets['0-30'], 2) ?></td>
+              <td>KSh <?= number_format($buckets['31-60'], 2) ?></td>
+              <td>KSh <?= number_format($buckets['61-90'], 2) ?></td>
+              <td>KSh <?= number_format($buckets['90+'], 2) ?></td>
+              <td>KSh <?= number_format($total, 2) ?></td>
             </tr>
             <?php endforeach; ?>
           </tbody>
           <tfoot>
             <tr class="fw-bold bg-light">
-              <td>Total</td>
-              <td><?= number_format($totals['0-30'], 2) ?></td>
-              <td><?= number_format($totals['31-60'], 2) ?></td>
-              <td><?= number_format($totals['61-90'], 2) ?></td>
-              <td><?= number_format($totals['90+'], 2) ?></td>
-              <td><?= number_format($totals['grand'], 2) ?></td>
+              <td colspan="2">Total</td>
+              <td>KSh <?= number_format($totals['0-30'], 2) ?></td>
+              <td>KSh <?= number_format($totals['31-60'], 2) ?></td>
+              <td>KSh <?= number_format($totals['61-90'], 2) ?></td>
+              <td>KSh <?= number_format($totals['90+'], 2) ?></td>
+              <td>KSh <?= number_format($totals['grand'], 2) ?></td>
             </tr>
           </tfoot>
         </table>
+
+        <!-- Detail Tables (outside DataTables) -->
+        <div id="detailTables">
+          <?php foreach ($tenants as $tenantId => $tenant): ?>
+          <div class="detail-table-container" id="details-<?= $tenantId ?>" style="display: none;">
+            <div class="card mt-2 mb-4">
+              <div class="card-header bg-light">
+                <h6 class="mb-0">Invoice Details for <?= htmlspecialchars($tenant['name']) ?></h6>
+              </div>
+              <div class="card-body p-0">
+                <table class="table table-sm table-bordered mb-0">
+                  <thead class="table-secondary">
+                    <tr>
+                      <th>Invoice #</th>
+                      <th>Description</th>
+                      <th>Invoice Date</th>
+                      <th>Due Date</th>
+                      <th>Amount</th>
+                      <th>Days Overdue</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php foreach ($tenant['invoices'] as $inv): 
+                      $days = daysOverdue($inv['invoice_date'], $inv['due_date']);
+                    ?>
+                    <tr>
+                      <td><?= htmlspecialchars($inv['invoice_number']) ?></td>
+                      <td><?= htmlspecialchars($inv['description']) ?></td>
+                      <td><?= htmlspecialchars($inv['invoice_date']) ?></td>
+                      <td><?= htmlspecialchars($inv['due_date']) ?></td>
+                      <td>KSh <?= number_format($inv['total'], 2) ?></td>
+                      <td>
+                        <span class="badge <?= $days > 90 ? 'bg-danger' : ($days > 60 ? 'bg-warning' : ($days > 30 ? 'bg-info' : 'bg-secondary')) ?>">
+                          <?= $days ?> days
+                        </span>
+                      </td>
+                    </tr>
+                    <?php endforeach; ?>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <?php endforeach; ?>
+        </div>
       </div>
     </div>
   </main>
@@ -259,31 +317,56 @@ foreach ($invoices as $inv) {
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script>
-$(function(){
-  $('#agedTable').DataTable({
-    paging:true, searching:true, info:false,
-    language: { searchPlaceholder:"Search tenant..." }
+$(document).ready(function() {
+  // Initialize DataTable with ONLY the main table rows
+  var table = $('#agedTable').DataTable({
+    "paging": true,
+    "searching": true,
+    "info": true,
+    "ordering": true,
+    "autoWidth": false,
+    "language": {
+      "searchPlaceholder": "Search tenant..."
+    },
+    "columnDefs": [
+      { 
+        "orderable": false, 
+        "targets": 0, // arrow column
+        "searchable": false
+      },
+      {
+        "targets": [2, 3, 4, 5, 6], // amount columns
+        "type": "num-fmt",
+        "render": function(data, type, row) {
+          if (type === 'sort' || type === 'type') {
+            // Extract numeric value for sorting
+            return parseFloat(data.replace('KSh', '').replace(/,/g, '')) || 0;
+          }
+          return data;
+        }
+      }
+    ],
+    "order": [[1, 'asc']] // Sort by tenant name by default
   });
 
-  // Click row to open tenant invoice details
-  $('.tenant-row').on('click', function(){
-    const tenantId = $(this).data('tenant');
-    $('#tenantDetails').html('<p class="text-center text-muted">Loading...</p>');
-    $('#tenantModal').modal('show');
-    $.get('get_tenant_invoices.php', { tenant: tenantId }, function(data){
-      $('#tenantDetails').html(data);
-    });
+  // Toggle detail tables
+  $('#agedTable').on('click', '.tenant-row', function() {
+    const tenantId = $(this).data('tenant-id');
+    const detailsContainer = $('#details-' + tenantId);
+    const icon = $(this).find('.arrow-icon');
+    
+    // Toggle visibility
+    if (detailsContainer.is(':visible')) {
+      detailsContainer.hide();
+      icon.removeClass('rotate');
+    } else {
+      detailsContainer.show();
+      icon.addClass('rotate');
+    }
   });
-});
-</script>
 
-<!-- JS for rotating arrow -->
-<script>
-document.querySelectorAll('.tenant-row').forEach(row => {
-  row.addEventListener('click', function() {
-    const icon = this.querySelector('.arrow-icon');
-    icon.classList.toggle('rotate');
-  });
+  // Hide all detail containers initially
+  $('.detail-table-container').hide();
 });
 </script>
 </body>
