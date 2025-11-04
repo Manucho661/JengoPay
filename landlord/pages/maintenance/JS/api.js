@@ -39,21 +39,22 @@ function renderRequestsTable(requests) {
             </td>
             <td>
                 ${req.provider_name && req.provider_name.trim() !== ""
-                ? html`<div>${req.provider_name}</div>`
-                : html`<div>Not assigned</div>`}
+            ? html`<div>${req.provider_name}</div>`
+            : html`<div>Not assigned</div>`}
             </td>
             <td>${req.priority}</td>
-            <td>
-                ${req.status}
+            <td style="color: ${req.status ? 'green' : '#b93232ff'}">
+                ${req.status || 'Not assigned'}
             </td>
+
             <td>
                 ${req.payment_status === "Paid"
-                ? html`
+            ? html`
                     <div class="Paid">
                     <i class="bi bi-check-circle-fill"></i> Paid
                     </div>
                 `
-                : html`
+            : html`
                     <div class="Pending">
                     <i class="bi bi-hourglass-split"></i> Pending
                     </div>

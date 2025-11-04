@@ -1,16 +1,16 @@
 export async function sendResponse(response) {
     try {
-        const res = await fetch("action.php", {
+        const assignmentId = this.getAttribute('data-assignment_id');
+        console.log("Assignment ID:", assignmentId);
+
+        const res = await fetch("actions/sendResponse.php", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
             },
-            body: "provider_response=" + encodeURIComponent(response)
+            body: "provider_response=" + encodeURIComponent(response) +
+                  "&assignment_id=" + encodeURIComponent(assignmentId)
         });
-
-        if (!res.ok) {
-            throw new Error("Network response was not OK");
-        }
 
         const data = await res.text();
         console.log("Server Response:", data);
@@ -18,4 +18,3 @@ export async function sendResponse(response) {
         console.error("Error sending response:", error);
     }
 }
-

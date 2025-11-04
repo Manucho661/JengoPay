@@ -1,5 +1,5 @@
 import { html, render } from "https://unpkg.com/lit@3.1.4/index.js?module";
-import { openProposalModal, openProviderDetailsModal } from "../modals.js";
+import { openProposalModal} from "../modals.js";
 import { applyAvailabilityStyles } from "../uiControl.js";
 
 /* ===========================

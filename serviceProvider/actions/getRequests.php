@@ -23,7 +23,6 @@ try {
             mr.unit,
             mr.category,
             mr.description,
-            mr.provider_id,
             mr.budget,
             mr.duration,
             mp.photo_url

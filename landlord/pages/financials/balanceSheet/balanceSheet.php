@@ -168,17 +168,21 @@ function formatAccounting($amount)
     white-space: nowrap;
     /* Prevent the label text from wrapping */
   }
- .amount-cell {
-    text-align: start;           /* keep the div at the start of the cell */
+
+  .amount-cell {
+    text-align: start;
+    /* keep the div at the start of the cell */
     vertical-align: middle;
-}
+  }
 
-.amount-text {
-    display: inline-block;       /* allows fixed width and internal alignment */
-    width: 100px;                /* width of the div controlling text alignment */
-    text-align: right;           /* aligns text inside the div to the right */
-}
-
+  .amount-text {
+    display: inline-block;
+    /* allows fixed width and internal alignment */
+    width: 100px;
+    /* width of the div controlling text alignment */
+    text-align: right;
+    /* aligns text inside the div to the right */
+  }
 </style>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -508,7 +512,7 @@ function formatAccounting($amount)
     <!--end::App Main-->
 
     <!--begin::Footer-->
-     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?> 
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
     <!--end::Footer-->
   </div>
   <!--end::App Wrapper-->

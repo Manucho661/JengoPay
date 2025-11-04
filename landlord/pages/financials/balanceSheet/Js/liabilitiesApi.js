@@ -1,5 +1,4 @@
-import { attachCollapseHandler } from "./AssetsApi.js";
-import { attachCollapseHandlerAccPayables } from "./AssetsApi.js";
+
 
 let total_liabilities;
 export { total_liabilities };
@@ -46,19 +45,15 @@ export function addTbodyNonCurrentLiabilities(nonCrtliabilities, total, totalLia
     newTbody.appendChild(subHeaderRow);
     // Add rows for each liability
     nonCrtliabilities.forEach((liability, index) => {
-        const collapseId = `collapse-${index}`;
 
         // Create the main row
         const row = document.createElement("tr");
         row.classList.add("main-row");
         row.style.cursor = "pointer"; // Make cursor a pointer on hover
-        row.setAttribute("data-bs-target", `#${collapseId}`);
-        row.setAttribute("aria-expanded", "false");
-        row.setAttribute("aria-controls", collapseId);
 
         // Name cell
         const nameCell = document.createElement("td");
-        nameCell.innerHTML = `<span class="text-warning" style="font-size: 20px;">▸</span> ${liability.liability_name}`;
+        nameCell.innerHTML = `${liability.liability_name} &nbsp;&nbsp;<span class="text-warning" style=""><i class="fa fa-ellipsis-v fs-8"></i></span>`;
         row.appendChild(nameCell);
 
         // Amount cell with a div inside
@@ -89,21 +84,6 @@ export function addTbodyNonCurrentLiabilities(nonCrtliabilities, total, totalLia
 
         newTbody.appendChild(row);
 
-
-        // Add the collapsible row (hidden by default)
-        const collapseRow = document.createElement("tr");
-        const collapseCell = document.createElement("td");
-        collapseCell.colSpan = 2;
-        const collapseDiv = document.createElement("div");
-        collapseDiv.id = collapseId;
-        collapseDiv.classList.add("collapse");
-        collapseDiv.setAttribute("account_id", liability.account_id);
-        collapseCell.appendChild(collapseDiv);
-        collapseRow.appendChild(collapseCell);
-        newTbody.appendChild(collapseRow);
-
-        // Use attachCollapseHandler to handle click and collapse for this row
-        attachCollapseHandler(row, collapseDiv, liability.account_id);
     });
 
     // Add the total row for non-current liabilities
@@ -236,19 +216,10 @@ export function addTbodyCurrentLiabilities(currentLiabilities, total) {
 
     // Loop through the liabilities and create rows
     currentLiabilities.forEach((currentLiability, index) => {
-        const collapseId = `collapse-currentliability-${index}`;
-
-        // Create the main row (clickable)
-        const row = document.createElement("tr");
-        row.classList.add("main-row");
-        row.style.cursor = "pointer"; // Make cursor a pointer on hover
-        row.setAttribute("data-bs-target", `#${collapseId}`);
-        row.setAttribute("aria-expanded", "false");
-        row.setAttribute("aria-controls", collapseId);
 
         // Name cell
         const nameCell = document.createElement("td");
-        nameCell.innerHTML = `<span class="text-warning" style="font-size: 20px;">▸</span> ${currentLiability.liability_name}`;
+        nameCell.innerHTML = ` ${currentLiability.liability_name} &nbsp;&nbsp;<span class="text-warning" style=""><i class="fa fa-ellipsis-v fs-8"></i></span>`;
         row.appendChild(nameCell);
 
         // Amount cell with a div inside
@@ -279,27 +250,6 @@ export function addTbodyCurrentLiabilities(currentLiabilities, total) {
 
         newTbody.appendChild(row);
 
-
-        // Add the collapsible row (hidden by default)
-        const collapseRow = document.createElement("tr");
-        const collapseCell = document.createElement("td");
-        collapseCell.colSpan = 2;
-        const collapseDiv = document.createElement("div");
-        collapseDiv.id = collapseId;
-        collapseDiv.classList.add("collapse");
-        collapseDiv.setAttribute("data-section", "liability");
-        collapseDiv.setAttribute("account_id", currentLiability.account_id);
-        collapseCell.appendChild(collapseDiv);
-        collapseRow.appendChild(collapseCell);
-        newTbody.appendChild(collapseRow);
-
-        // Attach the collapse handler for each row
-        // Attach the appropriate collapse handler based on account_id
-        if (currentLiability.account_id === 300) {
-            attachCollapseHandlerAccPayables(row, collapseDiv, currentLiability.account_id);
-        } else {
-            attachCollapseHandler(row, collapseDiv, currentLiability.account_id);
-        }
     });
 
     // Add the total row for liabilities

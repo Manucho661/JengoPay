@@ -1,5 +1,5 @@
 import { html, render } from "https://unpkg.com/lit@3.1.4/index.js?module";
-import { openProposalModal, openProviderDetailsModal } from "../modals.js";
+import { openProposalModal } from "../modals.js";
 import { applyAvailabilityStyles } from "../uiControl.js";
 
 /* ===========================
@@ -61,6 +61,26 @@ function fillRequestDetails(request, photos) {
   } else {
     durationEl.textContent = "Not set";
   }
+
+  // provider response
+  const providerResponseEl = document.getElementById("provider_response");
+  const response = request?.provider_response || "Not assigned";
+
+  // Set text first
+  providerResponseEl.textContent = response;
+
+  // Apply color based on value
+  if (response === "Accepted") {
+    providerResponseEl.style.color = "green";
+
+  } else {
+    providerResponseEl.style.color = "#b93232ff"; // neutral/gray for Not assigned or others
+  }
+
+  // pass assignment id to terminate button
+  const terminateBtn = document.getElementById("actualTerminateBtn");
+  terminateBtn.dataset.assignmentId = request.assignment_id;
+
 
   document.getElementById("request-unit").textContent = request?.unit || "N/A";
   document.getElementById("request-provider").textContent =

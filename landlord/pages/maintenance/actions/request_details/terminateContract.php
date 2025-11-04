@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json'); // Always return JSON
 
-require_once '../../db/connect.php'; // Your PDO connection file
+require_once '../../../db/connect.php'; // Your PDO connection file
 
 // Enable PDO exceptions
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -19,40 +19,37 @@ try {
     }
 
     // Get the response and assignment ID
-    $provider_response = $_POST['provider_response'] ?? null;
     $assignment_id = $_POST['assignment_id'] ?? null;
 
-    if (!$provider_response || !$assignment_id) {
-        throw new Exception('Missing required fields.');
+    if (!$assignment_id) {
+        throw new Exception('Missing required ID.');
     }
 
     // Prepare the update query
-    $updateQuery = "UPDATE request_assignments SET provider_response = :provider_response";
+    $terminateValue =1;
+    $status = 'Not Assigned';
+    $stmt = $pdo->prepare("
+        UPDATE request_assignments
+        SET terminate = :value,
+        status= :status
+        WHERE id = :id
+    ");
 
-    // If the response is 'Accepted', update the status as well
-    if ($provider_response === 'Accepted') {
-        $updateQuery .= ", status = 'In progress'";
-    }
-
-    $updateQuery .= " WHERE id = :id";
-
-    // Prepare and execute the query
-    $stmt = $pdo->prepare($updateQuery);
     $stmt->execute([
-        ':provider_response' => $provider_response,
+        ':value' => $terminateValue,
+        ':status' => $status,
         ':id' => $assignment_id
     ]);
-
 
     // Return success JSON
     echo json_encode([
         "success" => true,
-        "message" => "Response updated successfully.",
+        "message" => "Contract terminated successfully.",
         "data" => [
-            "assignment_id" => $assignment_id,
-            "provider_response" => $provider_response
+            "assignment_id" => $assignment_id
         ]
     ]);
+
 } catch (PDOException $e) {
     echo json_encode([
         "success" => false,

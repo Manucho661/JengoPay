@@ -12,6 +12,7 @@ try {
     $stmt = $pdo->prepare("
     SELECT 
         ra.id AS assignment_id,
+        ra.provider_response AS provider_response,
         mr.id AS request_id,
         mr.request_date,
         mr.request,
@@ -19,7 +20,6 @@ try {
         mr.unit,
         mr.category,
         mr.description,
-        mr.provider_id,
         mr.budget,
         mr.duration,
         mp.photo_url

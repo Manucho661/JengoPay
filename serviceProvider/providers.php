@@ -265,14 +265,14 @@ try {
     .apply-btn:hover {
       text-decoration: none !important;
     }
-    .description{
-      
-    }
+
+    .description {}
+
     .description.collapsed {
       max-height: 90px;
       overflow: hidden;
       position: relative;
-      
+
     }
 
     .description.collapsed::after {
@@ -285,22 +285,25 @@ try {
       background: linear-gradient(transparent, white);
       padding-bottom: 50px;
     }
+
     .more {
-            background: none;
-            border: none;
-            color: #108a00;
-            font-weight: 600;
-            cursor: pointer;
-            padding: 10px 0;
-            font-size: 14px;
-            cursor: pointer;
-        }
+      background: none;
+      border: none;
+      color: #108a00;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 10px 0;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
     /* Application */
-    .appliedJobDescription.collapsed{
+    .appliedJobDescription.collapsed {
       max-height: 90px;
       overflow: hidden;
       position: relative;
     }
+
     .appliedJobDescription.collapsed::after {
       content: '';
       position: absolute;

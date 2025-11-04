@@ -28,46 +28,38 @@ export function openProposalModal(proposal) {
   safeSet("modalLocation", proposal.location || "Unknown");
 
   const actualAssignBtn = document.getElementById("actualAssignBtn");
-  actualAssignBtn.setAttribute("data-provider-id", proposal.provider_id);
+actualAssignBtn.setAttribute("data-provider-id", proposal.provider_id);
 
+// Check if the request is already assigned
+const el = document.getElementById("request-provider");
+const assignedProvider = el.dataset.providerId?.trim().toLowerCase();
 
-  // --- show modal with Bootstrap ---
-  const modalEl = document.getElementById("proposalModal");
-  if (!modalEl) {
-    console.error("❌ Cannot open modal: #proposalModal not found in DOM");
-    return;
+if (assignedProvider && assignedProvider !== "null") {
+  document.getElementById('assignBox').style.display = "none";
+
+  const footer = document.getElementById('proposalModalFooter');
+  const providerName = el.textContent.trim();
+
+  // Check if the message already exists
+  const existingMsg = footer.querySelector('p[data-assigned="true"]');
+  if (!existingMsg) {
+    const msg = document.createElement('p');
+    msg.innerHTML = `This request is already assigned to <span style="color: green; font-weight: bold;">${providerName}</span>. To reassign, terminate the contract.`;
+
+    // Add a custom attribute to track that this message was created
+    msg.setAttribute('data-assigned', 'true');
+
+    footer.appendChild(msg);
   }
-
-  const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-  modal.show();
 }
 
-export function openProviderDetailsModal(details) {
+// --- show modal with Bootstrap ---
+const modalEl = document.getElementById("proposalModal");
+if (!modalEl) {
+  console.error("❌ Cannot open modal: #proposalModal not found in DOM");
+  return;
+}
 
-  // --- helper: safely set content or attribute ---
-  const safeSet = (id, value, prop = "innerText") => {
-    const el = document.getElementById(id);
-    if (!el) {
-      console.warn(`⚠️ Missing element: #${id}`);
-      return;
-    }
-
-    if (prop === "src") {
-      el.src = value;
-    } else {
-      el[prop] = value;
-    }
-  };
-
-    safeSet("providerModalName", details.details.name || "Unknown Provider");
-
-// --- show modal---
-  const modalEl = document.getElementById("providerModal");
-  if (!modalEl) {
-    console.error("❌ Cannot open modal: #proposalModal not found in DOM");
-    return;
-  }
-
-  const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-  modal.show();
+const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+modal.show();
 }

@@ -5,7 +5,7 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
     throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 });
 try {
-    $stmt = $pdo->prepare("SELECT id, request_date, residence, unit, category, request, description, priority, availability, status, payment_status FROM maintenance_requests");
+    $stmt = $pdo->prepare("SELECT id, request_date, residence, unit, category, request, description, priority, availability, payment_status FROM maintenance_requests");
     $stmt->execute();
     $maintenance_requets = $stmt->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode(["data" => $maintenance_requets]);

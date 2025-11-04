@@ -1,6 +1,8 @@
 import { html, render } from "https://unpkg.com/lit@3.1.4/index.js?module";
-import { openProposalModal, openProviderDetailsModal } from "../modals.js";
+import { openProposalModal } from "../modals.js";
 import { applyAvailabilityStyles } from "../uiControl.js";
+
+import { getRequestDetails } from "./getRequestDetails.js";
 
 /* ===========================
    ASSIGN PROVIDER
@@ -11,7 +13,7 @@ export async function assignProvider() {
 
   try {
     const response = await fetch(
-      `./actions/request_details/assign_provider.php?request_id=${requestId}&provider_id=${providerId}`
+      `./actions/request_details/assignProvider.php?request_id=${requestId}&provider_id=${providerId}`
     );
 
     const data = await response.json();
@@ -20,15 +22,21 @@ export async function assignProvider() {
       console.log("✅ Provider assigned successfully:", data);
 
       // Refresh request details
-      get_request_details();
+      getRequestDetails();
 
-      // Close modal
-      const modalEl = document.getElementById("proposalModal");
-      const modal =
-        bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-      modal.hide();
+
     } else {
       console.warn("⚠️ Assignment failed:", data.message);
+    }
+
+    const modalElement = document.getElementById('proposalModal');
+    const modal = bootstrap.Modal.getInstance(modalElement); // get existing instance
+
+    if (modal) {
+      modal.hide(); // actually hides it
+      console.log('Modal closed');
+    } else {
+      console.warn('No existing modal instance found');
     }
   } catch (err) {
     console.error("❌ Error assigning provider:", err);

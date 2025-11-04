@@ -18,17 +18,23 @@ if (!$requestId || !is_numeric($requestId)) {
 try {
     // Step 1: Get the main request along with provider name
     $stmt = $pdo->prepare("
-        SELECT 
-            mr.*, 
-            pr.name AS provider_name,
-            pr.id as provider_id
-        FROM 
-            maintenance_requests mr
-        LEFT JOIN 
-            providers pr ON mr.provider_id = pr.id
-        WHERE 
-            mr.id = :id
-    ");
+    SELECT 
+        mr.*,
+        pr.name AS provider_name,
+        pr.id AS provider_id,
+        ar.id AS assignment_id,
+        ar.provider_response
+    FROM maintenance_requests AS mr
+    LEFT JOIN request_assignments AS ar 
+        ON ar.request_id = mr.id 
+        AND ar.terminate IS NULL  -- condition moved to JOIN
+    LEFT JOIN providers AS pr 
+        ON ar.provider_id = pr.id
+    WHERE mr.id = :id
+");
+
+
+
     $stmt->execute(['id' => $requestId]);
     $request = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -79,4 +85,3 @@ try {
     http_response_code(500);
     echo json_encode(["error" => $e->getMessage()]);
 }
-?>

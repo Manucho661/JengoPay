@@ -5,11 +5,11 @@ require_once "actions/individual/getARequest.php";
 require_once "actions/individual/getGeralRequests.php";
 
 if (isset($_GET['id'])) {
-    $id = $_GET['id'];          // get the ID from the URL
-    $_SESSION['id'] = $id;      // store it in the session
-    // echo "ID $id has been saved in session!";
+  $id = $_GET['id'];          // get the ID from the URL
+  $_SESSION['id'] = $id;      // store it in the session
+  // echo "ID $id has been saved in session!";
 } else {
-    echo "No ID found in the URL.";
+  echo "No ID found in the URL.";
 }
 ?>
 <!DOCTYPE html>
@@ -83,13 +83,13 @@ if (isset($_GET['id'])) {
     .request-sidebar h3 {
       background: #00192D;
       color: white;
-      
+
       font-size: 1.2rem;
       font-weight: 600;
       display: flex;
       align-items: center;
-      
-      
+
+
       /* border-top-right-radius: 10px; */
       border-top-left-radius: 10px;
     }
@@ -647,7 +647,9 @@ if (isset($_GET['id'])) {
       border-color: #c99700 !important;
       border: 1px solid #c99700 !important;
     }
-
+    .actualAssignBtn{
+      white-space: nowrap;
+    }
     .request-provider:hover {
       cursor: pointer;
       text-decoration: underline;
@@ -670,12 +672,14 @@ if (isset($_GET['id'])) {
       color: #28a745 !important;
       background-color: rgba(40, 167, 69, 0.1) !important;
       border: none;
+      white-space: nowrap !important;
     }
 
     #confirmAssign .btn-outline-danger:hover {
       color: red !important;
       background-color: rgba(220, 53, 69, 0.1) !important;
       border: none;
+      white-space: nowrap !important;
     }
 
     .contact_section_header,
@@ -742,6 +746,32 @@ if (isset($_GET['id'])) {
     .mobileNavToggleProperty {
       border-radius: 50%;
       display: flex;
+    }
+
+    .terminateCancel:hover {
+      color: white !important;
+      background-color: #b93232ff !important;
+    }
+
+    .actualTerminateBtn {
+      background-color: #b93232ff !important;
+      white-space: nowrap;
+    }
+
+    .actualTerminateBtn:hover {
+      background-color: white !important;
+      color: black !important;
+      border: 1px solid #b93232ff;
+    }
+
+    .terminateBtn:hover {
+      background-color: #b93232ff !important;
+      color: white !important;
+    }
+
+    .messageBtn:hover {
+      background-color: rgba(128, 128, 128, 0.7) !important;
+      color: white !important;
     }
   </style>
 </head>
@@ -837,11 +867,12 @@ if (isset($_GET['id'])) {
             <div class="col-md-6">
             </div>
             <div class="col-md-6 d-flex gap-1 flex-nowrap">
-              <button type="button" id="availabilityBtn" class="btn seTAvailable text-white"
+            
+              <button type="button" id="availabilityBtn" class="btn seTAvailable text-white fw-bold"
                 style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">
-                Set Available
+                Set Available 
               </button>
-              <button type="button" class="btn bg-danger text-white seTAvailable"
+              <button type="button" class="btn bg-danger text-white seTAvailable fw-bold"
                 style="width:100%; white-space: nowrap;">
                 Cancel Request
               </button>
@@ -854,10 +885,9 @@ if (isset($_GET['id'])) {
 
 
       <div class="app-content">
-        <div class="container-fluid rounded-2 mb-2">
-          <div class="row gap-2">
-
-            <div class="col-md-4 p-0">
+        <div class="container-fluid px-0 rounded-2 mb-2">
+          <div class="row">
+            <div class="col-md-4">
               <div class="card p-3 d-flex flex-row justify-content-between align-items-start border-0 shadow-none" style="height:100%;">
 
                 <div class="d-flex flex-row gap-5">
@@ -878,14 +908,26 @@ if (isset($_GET['id'])) {
               </div>
             </div>
 
-            <div class="col-md-4 p-0">
+            <div class="col-md-4">
               <div class="card p-3 d-flex flex-row gap-5 border-0 shadow-none d-flex ">
                 <div>
                   <p class="fw-bold">Provider</p>
                   <p id="request-provider" class="request-provider text-success">Not Assigned</p>
                 </div>
                 <div>
+                  <p class="fw-bold">Response</p>
+                  <p id="provider_response" style="font-size: 15px; color: #b93232ff;" class="">Not assigned</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card p-3 d-flex flex-row gap-5 border-0 shadow-none d-flex ">
+                <div>
                   <p class="fw-bold">Status</p>
+                  <p id="request-provider" class="request-provider text-success">Not Assigned</p>
+                </div>
+                <div>
+                  <p class="fw-bold">Payment</p>
                   <p id="request-status" style="font-size: 15px; color: #b93232ff;" class="">Not assigned</p>
                 </div>
               </div>
@@ -897,18 +939,18 @@ if (isset($_GET['id'])) {
             <div class="col-md-7 border-end" style="border-right: 1px solid #ccc; padding-top:0 !important; min-height: 100%; padding-top:0 !important;">
               <!-- content displays here -->
               <!-- Row 2: Category & Description -->
-               <div class="card p-3 shadow-none border-0">
+              <div class="card p-3 shadow-none border-0">
                 <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                    <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                      <i class="fa-solid fa-align-left" style="color: white; font-size: 16px;"></i>
-                    </span>
-                    <span style="font-weight: 600;">Description</span>
-                  </div>
-                  <div id="request-description" class="text-muted" style="margin-top: 6px; font-size: 15px; color: #333; line-height: 1.6;"></div>
-               </div>
-              
+                  <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                    <i class="fa-solid fa-align-left" style="color: white; font-size: 16px;"></i>
+                  </span>
+                  <span style="font-weight: 600;">Description</span>
+                </div>
+                <div id="request-description" class="text-muted" style="margin-top: 6px; font-size: 15px; color: #333; line-height: 1.6;"></div>
+              </div>
+
               <!-- Row 3: Photo -->
-               <div class="card p-3 shadow-none border-0">
+              <div class="card p-3 shadow-none border-0">
                 <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
                   <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
                     <i class="fa-solid fa-image" style="color: white; font-size: 16px;"></i>
@@ -916,7 +958,7 @@ if (isset($_GET['id'])) {
                   <span style="font-weight: 600;">Request Image</span>
                 </div>
                 <img id="request-photo" src="" alt="Photo" class="photo-preview w-100 rounded">
-               </div>
+              </div>
 
             </div>
             <div class="col-md-5" style="max-height:500px; overflow:auto;">
@@ -1042,15 +1084,15 @@ if (isset($_GET['id'])) {
         </div>
 
         <!-- Footer -->
-        <div class="modal-footer border-top">
+        <div class="modal-footer border-top" id="proposalModalFooter">
           <div id="assignBox">
             <button type="button" class="btn btn-outline-navy">Message</button>
-            <button type="button" id="assignBtn" class="btn btn-accent">Assign</button>
+            <button type="button" id="assignBtn" class="assignBtn btn btn-accent">Assign</button>
             <button type="button" class="btn btn-outline-danger">Reject</button>
           </div>
           <div id="confirmAssign" style="display:none; align-items: center; gap: 0.5rem;">
             <p class="mb-0">You're about to assign the request to the above provider, are sure?</p>
-            <button class="m-1 btn btn-success" id="actualAssignBtn">Yes, Assign</button>
+            <button class="actualAssignBtn m-1 btn btn-success" id="actualAssignBtn">Yes, Assign</button>
             <button id="cancelAssignBtn" class="m-1 btn btn-outline-danger">Cancel</button>
           </div>
         </div>
@@ -1108,15 +1150,14 @@ if (isset($_GET['id'])) {
 
         <!-- Footer -->
         <div class="modal-footer border-top">
-          <div id="assignBox">
-            <button type="button" class="btn btn-outline-navy">Message</button>
-            <button type="button" class="btn btn-accent">Assign</button>
-            <button type="button" class="btn btn-outline-danger">Reject</button>
+          <div id="terminateBox">
+            <button type="button" class="messageBtn btn btn-outline-navy">Message</button>
+            <button type="button" id="terminateBtn" class="terminateBtn btn btn-outline-danger">Terminate</button>
           </div>
-          <div style="display:none; align-items: center; gap: 0.5rem;">
-            <p class="mb-0">You're about to assign the request to the above provider, are sure?</p>
-            <button class="m-1 btn btn-success" id="actualAssignBtn">Yes, Assign</button>
-            <button class="m-1 btn btn-outline-danger">Cancel</button>
+          <div id="confirmTerminateBox" style="display:none; align-items: center; gap: 0.5rem;">
+            <p class="mb-0">You're about to terminate the assignment to <span id="providerName"></span> are sure?</p>
+            <button class="actualTerminateBtn m-1 btn text-white" id="actualTerminateBtn">Yes, terminate</button>
+            <button class="terminateCancel m-1 btn btn-outline-danger text-dark" style="" id="cancelTerminateBtn">Cancel</button>
           </div>
         </div>
       </div>
@@ -1296,7 +1337,7 @@ if (isset($_GET['id'])) {
   </script>
 
   <!-- control the requests list sidebar height -->
-  <script>
+  <!-- <script>
     const first = document.querySelector('.main-content');
     const second = document.querySelector('.request-sidebar');
 
@@ -1311,7 +1352,7 @@ if (isset($_GET['id'])) {
     window.addEventListener('resize', syncHeight);
     window.addEventListener('load', syncHeight);
     syncHeight();
-  </script>
+  </script> -->
 
   <script src="../../js/adminlte.js"></script>
   <script>
