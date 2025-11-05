@@ -379,7 +379,6 @@ foreach ($rows as $r):
     $totalPeriodCredit += $credit;
     $totalEndDebit += $endDebit;
     $totalEndCredit += $endCredit;
-
 ?>
 
 <tr data-account-id="<?= htmlspecialchars($r['account_code']) ?>" style="cursor:pointer;">
