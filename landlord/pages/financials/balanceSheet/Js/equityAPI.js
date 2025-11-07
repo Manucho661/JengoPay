@@ -2,7 +2,7 @@ import { total_liabilities } from "./liabilitiesApi.js"
 
 export async function getEquity() {
     try {
-        const response = await fetch("actions/getEquityy.php");
+        const response = await fetch("actions/getEquity.php");
 
         if (!response.ok) {
             console.log("Server couldn't be reached");
@@ -23,6 +23,7 @@ export async function getEquity() {
 
 export function addTbodyRetainedEarnings(retainedEarnings, totalEquity) {
     const table = document.getElementById("myTable");
+    const retainedEarningsAccountCode = 410;
     if (!table) return;
 
     // Function to format numbers with commas and brackets for negatives
@@ -41,8 +42,8 @@ export function addTbodyRetainedEarnings(retainedEarnings, totalEquity) {
     // Use formatted numbers inside divs
     newTbody.innerHTML = `
         <tr class="main-row" style="cursor: pointer;">
-            <td> Retained Earnings &nbsp;&nbsp;<i class="fa fa-ellipsis-v fs-8 text-warning"></i></td>
-            <td class="amount-cell"><div class="amount-text">${formatAmount(retainedEarnings)}</div></td>
+            <td> Retained Earnings &nbsp;&nbsp;<a href="/jengopay/landlord/pages/financials/generalledger/general_ledger.php?account_id=${retainedEarningsAccountCode}" style="text-decoration: none;"> <i class="fa fa-ellipsis-v fs-8 more text-warning"></i> </a></td>
+            <td class="amount-cell"><div class="amount-text">  ${formatAmount(retainedEarnings)} </div></td>
         </tr>
         <tr>
             <td class="totalEquityCell">Total Equity </i></td>
@@ -58,6 +59,7 @@ export function addTbodyRetainedEarnings(retainedEarnings, totalEquity) {
 }
 
 export function addTbodyOwnersCapital(ownersCapital) {
+    const owners_capitalAccount_code=400;
     const table = document.getElementById("myTable");
     if (!table) {
         console.log("Table not found");
@@ -84,7 +86,7 @@ export function addTbodyOwnersCapital(ownersCapital) {
         <tr><th colspan="2">Equity</th></tr>
         <tr class="main-row" style="cursor:pointer;">
             <td>
-                 Owner's Capital &nbsp;&nbsp; <i class="fa fa-ellipsis-v fs-8 text-warning"></i>
+                 Owner's Capital &nbsp;&nbsp; <a href="/jengopay/landlord/pages/financials/generalledger/general_ledger.php?account_id=${owners_capitalAccount_code}" style="text-decoration: none;"> <i class="fa fa-ellipsis-v fs-8 more text-warning"></i> </a>
             </td>
             <td class="amount-cell">
                 <div class="amount-text">${formatAmount(ownersCapital)} </div>

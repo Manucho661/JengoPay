@@ -1,3 +1,5 @@
+import { getAssignedRequests } from "./getAssignedJobs.js";
+
 export async function sendResponse(response) {
     try {
         const assignmentId = this.getAttribute('data-assignment_id');
@@ -9,11 +11,12 @@ export async function sendResponse(response) {
                 "Content-Type": "application/x-www-form-urlencoded",
             },
             body: "provider_response=" + encodeURIComponent(response) +
-                  "&assignment_id=" + encodeURIComponent(assignmentId)
+                "&assignment_id=" + encodeURIComponent(assignmentId)
         });
 
         const data = await res.text();
         console.log("Server Response:", data);
+        getAssignedRequests();
     } catch (error) {
         console.error("Error sending response:", error);
     }

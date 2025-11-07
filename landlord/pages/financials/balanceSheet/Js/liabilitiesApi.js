@@ -44,7 +44,7 @@ export function addTbodyNonCurrentLiabilities(nonCrtliabilities, total, totalLia
     subHeaderRow.appendChild(subHeaderCell);
     newTbody.appendChild(subHeaderRow);
     // Add rows for each liability
-    nonCrtliabilities.forEach((liability, index) => {
+    nonCrtliabilities.forEach((liability) => {
 
         // Create the main row
         const row = document.createElement("tr");
@@ -80,8 +80,14 @@ export function addTbodyNonCurrentLiabilities(nonCrtliabilities, total, totalLia
 
         amountDiv.textContent = formattedAmount;
         amountCell.appendChild(amountDiv);
-        row.appendChild(amountCell);
 
+        row.onclick = () => {
+            // Create the link dynamically when the row is clicked
+            const link = `../../financials/generalledger/general_ledger.php/?account_id=${liability.account_id}`;  // URL with asset.id
+            window.location.href = link;  // Redirect to the created link
+        };
+
+        row.appendChild(amountCell);
         newTbody.appendChild(row);
 
     });
@@ -215,8 +221,12 @@ export function addTbodyCurrentLiabilities(currentLiabilities, total) {
     newTbody.appendChild(subHeaderRow);
 
     // Loop through the liabilities and create rows
-    currentLiabilities.forEach((currentLiability, index) => {
+    currentLiabilities.forEach((currentLiability) => {
 
+        // Create the main row
+        const row = document.createElement("tr");
+        row.classList.add("main-row");
+        row.style.cursor = "pointer"; // Make cursor a pointer on hover
         // Name cell
         const nameCell = document.createElement("td");
         nameCell.innerHTML = ` ${currentLiability.liability_name} &nbsp;&nbsp;<span class="text-warning" style=""><i class="fa fa-ellipsis-v fs-8"></i></span>`;
@@ -246,8 +256,13 @@ export function addTbodyCurrentLiabilities(currentLiabilities, total) {
 
         amountDiv.textContent = formattedAmount;
         amountCell.appendChild(amountDiv);
-        row.appendChild(amountCell);
 
+        row.onclick = () => {
+            // Create the link dynamically when the row is clicked
+            const link = `../../financials/generalledger/general_ledger.php/?account_id=${currentLiability.account_id}`;  // URL with asset.id
+            window.location.href = link;  // Redirect to the created link
+        };
+        row.appendChild(amountCell);
         newTbody.appendChild(row);
 
     });

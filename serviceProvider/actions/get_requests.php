@@ -14,24 +14,29 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
 
 try {
     // Correct query with quotes around 'available'
-     $stmt = $pdo->prepare("
-        SELECT 
-            mr.id,
-            mr.request_date,
-            mr.request,
-            mr.residence,
-            mr.unit,
-            mr.category,
-            mr.description,
-            mr.budget,
-            mr.duration,
-            mr.created_at,
-            mp.photo_url
-        FROM maintenance_requests AS mr
-        LEFT JOIN maintenance_photos AS mp
-            ON mr.id = mp.maintenance_request_id
-        WHERE mr.availability = 'available'
-    ");
+    $stmt = $pdo->prepare("
+    SELECT 
+        mr.id,
+        mr.request_date,
+        mr.request,
+        mr.residence,
+        mr.unit,
+        mr.category,
+        mr.description,
+        mr.budget,
+        mr.duration,
+        mr.created_at,
+        mp.photo_url,
+        mrp.provider_id,
+        mrp.bid_amount
+    FROM maintenance_requests AS mr
+    LEFT JOIN maintenance_photos AS mp
+        ON mr.id = mp.maintenance_request_id
+    LEFT JOIN maintenance_request_proposals AS mrp
+        ON mr.id = mrp.maintenance_request_id
+    WHERE mr.availability = 'available'
+");
+
     $stmt->execute();
 
     $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);

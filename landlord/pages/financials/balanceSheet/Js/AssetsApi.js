@@ -96,6 +96,12 @@ export function addTbodyNonCurrentAssets(assets, total) {
         // Add a class to the td for cell styling
         amountCell.classList.add("amount-cell");
 
+        row.onclick = () => {
+            // Create the link dynamically when the row is clicked
+            const link = `../../financials/generalledger/general_ledger.php/?account_id=${asset.account_id}`;  // URL with asset.id
+            window.location.href = link;  // Redirect to the created link
+        };
+        
         row.appendChild(amountCell);
         newTbody.appendChild(row);
 
@@ -177,16 +183,12 @@ export function addTbodyCurrentAssets(assets, totalCurrentAssets, totalAssets) {
     newTbody.appendChild(headerRow);
 
     // Add rows for each asset
-    assets.forEach((asset, index) => {
-        const collapseId = `collapse-current-${index}`;
-
+    assets.forEach((asset) => {
         // Create the main row (clickable)
         const row = document.createElement("tr");
         row.classList.add("main-row");
         row.style.cursor = "pointer"; // Make cursor a pointer on hover
-        row.setAttribute("data-bs-target", `#${collapseId}`);
-        row.setAttribute("aria-expanded", "false");
-        row.setAttribute("aria-controls", collapseId);
+
 
         const nameCell = document.createElement("td");
         nameCell.innerHTML = `${asset.name} &nbsp;&nbsp;<span class="text-warning" style=""><i class="fa fa-ellipsis-v fs-8"></i></span>`;
@@ -222,6 +224,14 @@ export function addTbodyCurrentAssets(assets, totalCurrentAssets, totalAssets) {
 
         // Add a class to the td for cell styling
         amountCell.classList.add("amount-cell");
+
+        // add link to the row 
+        // Add the onClick event listener to the row
+        row.onclick = () => {
+            // Create the link dynamically when the row is clicked
+            const link = `../../financials/generalledger/general_ledger.php/?account_id=${asset.account_id}`;  // URL with asset.id
+            window.location.href = link;  // Redirect to the created link
+        };
 
         row.appendChild(amountCell);
         newTbody.appendChild(row);

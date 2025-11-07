@@ -1,6 +1,5 @@
 <?php
 require_once 'actions/getLiabilities.php';
-require_once 'actions/getEquity.php';
 require_once 'actions/getRetainedEarnings.php';
 
 // formating negative numbers
@@ -182,6 +181,11 @@ function formatAccounting($amount)
     /* width of the div controlling text alignment */
     text-align: right;
     /* aligns text inside the div to the right */
+  }
+
+  /* more button */
+  .more:hover{
+    color:#00192D !important;
   }
 </style>
 
