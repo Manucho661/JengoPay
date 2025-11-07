@@ -204,13 +204,17 @@
                   try{
                     if(!empty($id)) {
                       $sql = "SELECT * FROM single_units WHERE id =:id";
-                      $stmt = $pdo->prepare($sql);
+                      $stmt = $conn->prepare($sql);
                       $stmt->execute(array(':id' => $id));
                       while ($row = $stmt->fetch()) {
+                        $id = $row['id'];
                         $unit_number = $row['unit_number'];
                         $location = $row['location'];
                         $building_link = $row['building_link'];
                         $purpose = $row['purpose'];
+                        $purpose = $row['purpose'];
+                        $unit_category = $row['unit_category'];
+                        $occupancy_status = $row['occupancy_status'];
                       }
                     }
                   }catch(PDOException $e){
@@ -282,257 +286,12 @@
               Unit.</p>
           </div>
           <!-- Form Start -->
-          <form action="" method="post" enctype="multipart/form-data" autocomplete="off">
-            <!-- Tenant Personal Information -->
-            <div class="card shadow" style="border:1px solid rgba(0,25,45,.3);">
-              <div class="card-header" style="background-color: #00192D; color:#fff;">Personal Information</div>
-              <div class="card-body">
-                <!-- Name Details -->
-                <div class="row">
-                  <div class="col-md-4">
-                    <div class="form-group">
-                      <label for="first_name">First Name</label>
-                      <input type="text" id="first_name" name="first_name" required class="form-control"
-                        placeholder="First Name">
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="form-group">
-                      <label for="middle_name">Middle Name</label>
-                      <input type="text" id="middle_name" name="middle_name" required class="form-control"
-                        placeholder="Middle Name">
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="form-group">
-                      <label for="last_name">Last Name</label>
-                      <input type="text" id="last_name" name="last_name" required class="form-control"
-                        placeholder="Last Name">
-                    </div>
-                  </div>
-                </div>
-                <!-- Contact Details -->
-                <div class="row">
-                  <div class="col-md-3">
-                    <div class="for-group">
-                      <label for="main_contact" class="form-label">Main Contact</label>
-                      <input id="main_contact" type="tel" name="main_contact" class="form-control"
-                        placeholder="Enter phone number" required>
-                    </div>
-                  </div>
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label for="alt_contact" class="form-label">Alternative Contact</label>
-                      <input id="alt_contact" type="tel" name="alt_contact" class="form-control"
-                        placeholder="Alternative phone number">
-                    </div>
-                  </div>
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label for="email">Email</label>
-                      <div class="input-group">
-                        <input type="email" id="email" name="email" required class="form-control" placeholder="Email">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label>Identification Mode</label>
-                      <div class="row">
-                        <div class="col-md-6">
-                          <input type="radio" id="idNational" name="idMode" value="national" required>
-                          <label for="idNational">National ID</label>
-                        </div>
-                        <div class="col-md-6">
-                          <input type="radio" id="idPassport" name="idMode" value="passport">
-                          <label for="idPassport">Passport</label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- National ID Section -->
-                <div id="nationalIdSection" class="popup" style="display:none;">
-                  <label for="nationalId">National ID Number:</label>
-                  <input type="text" id="nationalId" class="form-control" placeholder="ID Number" name="id_no"
-                    pattern="[0-9]{6,10}">
-                  <div id="nationalIdError" class="error text-danger small"></div>
-                  <hr>
-                  <button type="button" onclick="closeId();" class="btn btn-sm btn-outline-dark">OK</button>
-                </div>
-
-                <!-- Passport Section -->
-                <div id="passportPopup" class="popup" style="display:none;">
-                  <label for="passportNumber">Enter Passport Number:</label>
-                  <input type="text" id="passportNumber" class="form-control" placeholder="Passport Number"
-                    name="pass_no" pattern="[A-Z0-9]{5,15}">
-                  <div id="passportError" class="error text-danger small"></div>
-                  <button type="button" onclick="closePassport();"
-                    class="btn btn-sm mt-1 btn-outline-danger">OK</button>
-                </div>
-              </div>
-
-            </div>
-            <!-- Security Deposits Information -->
-            <div class="card shadow" style="border:1px solid rgba(0,25,45,.3);">
-              <div class="card-header" style="background-color: #00192D; color:#fff;">Security Deposits</div>
-              <div class="card-body">
-                <table id="paymentTable" class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th>Deposit For</th>
-                      <th>Required Pay</th>
-                      <th>Amount Paid</th>
-                      <th>Balance</th>
-                      <th>Sub Total</th>
-                      <th>Options</th>
-                    </tr>
-                  </thead>
-                  <tbody></tbody>
-                  <tfoot>
-                    <tr>
-                      <td><b>Totals</b></td>
-                      <td id="totalRequired">0</td>
-                      <td id="totalPaid">0</td>
-                      <td id="totalBalance">0</td>
-                      <td id="totalSub">0</td>
-                      <td></td>
-                    </tr>
-                  </tfoot>
-                </table>
-                <button type="button" onclick="addDepositRow()" class="btn btn-sm"
-                  style="background-color:#00192D; color: #fff;"><i class="bi bi-plus"></i> Add More</button>
-              </div>
-            </div>
-            <!-- Leasing Information -->
-            <div class="card shadow" style="border:1px solid rgba(0,25,45,.3);">
-              <div class="card-header" style="background-color: #00192D; color:#fff;">Leasing Information</div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-md-4">
-                    <div class="form-group">
-                      <label for="leasingPeriod">Leasing Period (In Months)</label>
-                      <input type="number" id="leasingPeriod" required class="form-control" name="leasing_period">
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="form-group">
-                      <label for="leasingStart">Leasing Starts On</label>
-                      <input type="date" id="leasingStart" required class="form-control" name="leasing_start_date">
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="form-group">
-                      <label for="leasingEnd">Leasing Ends On</label>
-                      <input type="date" id="leasingEnd" readonly class="form-control" name="leasing_end_date">
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-2"></div>
-                  <div class="col-md-8">
-                    <div class="form-group">
-                      <label for="moveIn">Move In Date</label>
-                      <input type="date" id="moveIn" required class="form-control" name="move_in_date">
-                    </div>
-                    <div class="form-group">
-                      <label for="moveOut">Move Out Date</label>
-                      <input type="date" id="moveOut" readonly class="form-control" name="move_out_date">
-                    </div>
-                    <div class="form-group">
-                      <label for="account_no">Unit Number</label>
-                      <input type="text" id="account_no" name="account_no" required class="form-control"
-                        value="<?= htmlspecialchars($unit_number); ?>" readonly>
-                    </div>
-                  </div>
-                  <div class="col-md-2"></div>
-                </div>
-              </div>
-            </div>
-            <!-- Uploads Information -->
-            <div class="card shadow" style="border:1px solid rgba(0,25,45,.3);">
-              <div class="card-header" style="background-color: #00192D; color:#fff;">Uploads</div>
-              <div class="card-body">
-                <div class="form-group">
-                  <label for="id_upload">Identification Upload</label>
-                  <input type="file" id="id_upload" required name="id_upload" class="form-control"
-                    accept=".jpg,.jpeg,.png,.pdf" onchange="previewIdUpload(this)">
-                </div>
-                <div id="idPreview" style="margin-top:10px; display:none;"></div>
-                <div class="form-group">
-                  <label for="tax_pin_copy">TAX PIN Upload</label>
-                  <input type="file" id="tax_pin_copy" name="tax_pin_copy" required class="form-control"
-                    accept=".jpg,.jpeg,.png,.pdf" onchange="previewTaxPinCopy(this)">
-                </div>
-                <div id="taxPinPreview" style="margin-top:10px; display:none;"></div>
-                <div class="form-group">
-                  <label for="rental_agreement">Rental Agreement Upload</label>
-                  <input type="file" id="rental_agreement" required name="rental_agreement" class="form-control"
-                    accept="application/pdf" onchange="previewPDF(this)">
-                </div>
-                <div id="pdfPreview" style="margin-top:10px; display:none;">
-                  <iframe class="card shadow" id="pdfFrame"
-                    style="width:100%; height:400px; border:1px solid #00192D;"></iframe>
-                </div>
-              </div>
-            </div>
-            <!-- Source of Income -->
-            <div class="card shadow" style="border:1px solid rgba(0,25,45,.3);">
-              <div class="card-header" style="background-color: #00192D; color:#fff;">Source of Income</div>
-              <div class="card-body text-center">
-                <label>Main Source of Income</label>
-                <div class="row">
-                  <div class="col-md-4">
-                    <input type="radio" id="incomeFormal" name="income" value="formal"> <label for="incomeFormal">Formal
-                      Employment</label>
-                  </div>
-                  <div class="col-md-4">
-                    <input type="radio" id="incomeCasual" name="income" value="casual"> <label for="incomeCasual">Casual
-                      Employment</label>
-                  </div>
-                  <div class="col-md-4">
-                    <input type="radio" id="incomeBusiness" name="income" value="business"> <label
-                      for="incomeBusiness">Business</label>
-                  </div>
-                </div>
-                <!-- Formal -->
-                <div id="formalPopup" class="popup" style="display:none;">
-                  <p>Specify Job Title &amp; Location:</p>
-                  <input type="text" id="formalWork" class="form-control" name="job_title" placeholder="Job Title">
-                  <input type="text" id="formalWorkLocation" class="form-control" name="job_location"
-                    placeholder="Job Location">
-                  <button type="button" class="btn btn-sm mt-2 btn-outline-dark" onclick="closePopup()">OK</button>
-                </div>
-                <!-- Casual -->
-                <div id="casualPopup" class="popup" style="display:none;">
-                  <p>Please Specify:</p>
-                  <input type="text" id="casualWork" class="form-control" name="casual_job">
-                  <button type="button" class="btn btn-sm mt-2 btn-outline-dark" onclick="closePopup()">OK</button>
-                </div>
-                <!-- Business -->
-                <div id="businessPopup" class="popup" style="display:none;">
-                  <p>Business Name and Location:</p>
-                  <input type="text" id="businessName" class="form-control" name="business_name"
-                    placeholder="Business Name">
-                  <input type="text" id="businessLocation" class="form-control" name="business_location"
-                    placeholder="Location">
-                  <button type="button" class="btn btn-sm mt-2 btn-outline-dark" onclick="closePopup()">OK</button>
-                </div>
-                <input type="hidden" name="status" value="Active">
-                <input type="hidden" name="building" value="<?= htmlspecialchars($building_link) ;?>">
-              </div>
-              <div class="card-footer text-right">
-                <button type="submit" name="submit" class="btn btn-sm" style="background-color: #00192D; color: #fff;">
-                  <i class="bi bi-check2-all"></i> Submit
-                </button>
-              </div>
-            </div>
-          </form>
+          <?php include_once '\xampp\htdocs\JengoPay\landlord\pages\includes\tenant_form.php';?>
         </div>
       </section>
 
-      <?php
-        if(isset($_POST['submit'])) {
+       <?php
+        if(isset($_POST['rent_unit'])) {
           $tm = md5(time()); // Unique prefix for uploaded files
 
           //Files Uploads Handling
@@ -551,12 +310,14 @@
           $rental_agreement_destination = uploadFile('rental_agreement', $tm);
 
           //Collect Form Data
-          $first_name = trim($_POST['first_name'] ?? null);
-          $middle_name = trim($_POST['middle_name'] ?? null);
-          $last_name = trim($_POST['last_name'] ?? null);
-          $main_contact = trim($_POST['main_contact'] ?? null);
-          $alt_contact = trim($_POST['alt_contact'] ?? null);
-          $email = trim($_POST['email'] ?? null);
+          $id = trim($_POST['id'] ?? null);
+          $occupancy_status = trim($_POST['occupancy_status'] ?? null);
+          $tfirst_name = trim($_POST['tfirst_name'] ?? null);
+          $tmiddle_name = trim($_POST['tmiddle_name'] ?? null);
+          $tlast_name = trim($_POST['tlast_name'] ?? null);
+          $tmain_contact = trim($_POST['tmain_contact'] ?? null);
+          $talt_contact = trim($_POST['talt_contact'] ?? null);
+          $temail = trim($_POST['temail'] ?? null);
           $idMode = trim($_POST['idMode'] ?? null);
           $id_no = trim($_POST['id_no'] ?? null);
           $pass_no = trim($_POST['pass_no'] ?? null);
@@ -572,116 +333,197 @@
           $casual_job = trim($_POST['casual_job'] ?? null);
           $business_name = trim($_POST['business_name'] ?? null);
           $business_location = trim($_POST['business_location'] ?? null);
-          $status = trim($_POST['status'] ?? null);
-          $building = trim($_POST['building'] ?? null);
+          $tenant_status = trim($_POST['tenant_status'] ?? null);
+
+          // ---------- File Inputs ----------
+          $required_files = [
+            'id_copy'        => 'National ID / Passport Copy',
+            'kra_pin_copy'   => 'KRA PIN Copy',
+            'rental_agreement' => 'Rental Agreement'
+          ];
+
+          // ---------- Required Text Fields ----------
+          $required_text = [
+            'First Name'            => $first_name,
+            'Middle Name'           => $middle_name,
+            'Last Name'             => $last_name,
+            'Main Contact'          => $main_contact,
+            'Alternative Contact'   => $talt_contact,
+            'Email'                 => $email,
+            'Identification Mode'   => $idMode,
+            'Leasing Period'        => $leasing_period,
+            'Leasing Start Date'    => $leasing_start,
+            'Move In Date'          => $move_in_date,
+            'Unit Number'           => $account_no,
+            'Source of Income'      => $income
+          ];
+
+          $emptyFields = [];
+          $missingFiles = [];
+
+          // ---------- For each Loop to Check Empty Text Fields ----------
+          foreach ($required_text as $label => $value) {
+            if (empty($value)) {
+              $emptyFields[] = $label;
+            }
+          }
+
+          // ---------- For Each Loop to Check Missing File Uploads ----------
+          foreach ($required_files as $key => $label) {
+            if (!isset($_FILES[$key]) || $_FILES[$key]['error'] !== UPLOAD_ERR_OK) {
+              $missingFiles[] = $label;
+            }
+          }
+
+          // ---------- If Statement to Check on the Missing Fields or Files ----------
+          if (empty($emptyFields) || empty($missingFiles)) {
+            $message = '';
+            if (empty($emptyFields)) {
+              $message .= 'Please fill the following fields:<br><b>' . implode('<br>', $emptyFields) . '</b><br><br>';
+            }
+            if (empty($missingFiles)) {
+              $message .= 'Please upload the following files:<br><b>' . implode('<br>', $missingFiles) . '</b>';
+            }
+            echo "
+                <script>
+                  Swal.fire({
+                    icon: 'warning',
+                    title: 'Missing Required Information',
+                    html: `$message`,
+                    confirmButtonColor: '#00192D'
+                  });
+                </script>";
+            exit;
+          }
+
+          echo "
+              <script>
+                Swal.fire({
+                  title: 'Saving data...',
+                  text: 'Please wait while we process your request.',
+                  allowOutsideClick: false,
+                  allowEscapeKey: false,
+                  didOpen: () => { Swal.showLoading(); }
+                });
+              </script>";
 
           try {
-            //Check if the Unit No. is occupied by checking on the status of the tenant
-            $checkUnitNoStatus = $pdo->prepare("SELECT COUNT(*) FROM tenants WHERE account_no = :account_no AND status = :status");
-            $checkUnitNoStatus->execute([
-              ':account_no' => $account_no,
-              ':status' => 'Active'
-            ]);
-            $noSavingActive = $checkUnitNoStatus->fetchColumn();
+            //Check if the Tenant Information Exists in the Database. No submission if this is true to avoid duplication of data
+            $checkTenant = $conn->prepare("SELECT * FROM single_units
+                WHERE tmain_contact = :tmain_contact
+                   AND talt_contact = :talt_contact
+                   AND temail = :temail
+                   AND id_no = :id_no
+                   AND pass_no = :pass_no");
 
-            //Check if the tenant information within the same building exists to avoid double registration
-            $checkTenant = $pdo->prepare("SELECT COUNT(*) FROM tenants WHERE account_no =:account_no AND main_contact =:main_contact AND alt_contact =:alt_contact AND email =:email AND building =:building");
             $checkTenant->execute([
-              ':account_no'   => $account_no,
-              ':main_contact' => $main_contact,
-              ':alt_contact'  => $alt_contact,
-              ':email'        => $email,
-              ':building'     => $building
-            ]);
-            $noDuplicateTenant  = $checkTenant->fetchColumn();
-
-            if($noSavingActive > 0) {
-              //No Double Renting of the Unit if it is Occupied
-              echo "<script>
-                      Swal.fire({
-                        icon: 'warning',
-                        title: 'Occupied',
-                        text: 'This Unit is Already Occupied. Double Renting Not Allowed.',
-                        confirmButtonColor: '#00192D'
-                      });
-                    </script>";
-            } else if ($noDuplicateTenant > 0) {
-              // No Duplication of Tenant Data within the same building
-              echo "<script>
-                      Swal.fire({
-                        icon: 'warning',
-                        title: 'Duplicate',
-                        text: 'Some Tenant information within the Same Building Alredy Registered. Please Provide Accurate Data',
-                        confirmButtonColor: '#00192D'
-                      });
-                    </script>";
-            } else {
-              //Submit Data into the Database if all the Above Exceptions are Met
-              $insert = $pdo->prepare("INSERT INTO tenants (first_name, middle_name, last_name, main_contact, alt_contact, email, idMode, id_no, pass_no, leasing_period, leasing_start_date, leasing_end_date, move_in_date, move_out_date, account_no, id_upload, tax_pin_copy, rental_agreement, income, job_title, job_location, casual_job, business_name, business_location, status, building, added_on) VALUES (:first_name, :middle_name, :last_name, :main_contact, :alt_contact, :email, :idMode, :id_no, :pass_no, :leasing_period, :leasing_start_date, :leasing_end_date, :move_in_date, :move_out_date, :account_no, :id_upload, :tax_pin_copy, :rental_agreement, :income, :job_title, :job_location, :casual_job, :business_name, :business_location, :status, :building, NOW())");
-              $insert->execute([
-              ':first_name'         => $first_name,
-              ':middle_name'        => $middle_name,
-              ':last_name'          => $last_name,
-              ':main_contact'       => $main_contact,
-              ':alt_contact'        => $alt_contact,
-              ':email'              => $email,
-              ':idMode'             => $idMode,
-              ':id_no'              => $id_no,
-              ':pass_no'            => $pass_no,
-              ':leasing_period'     => $leasing_period,
-              ':leasing_start_date' => $leasing_start_date,
-              ':leasing_end_date'   => $leasing_end_date,
-              ':move_in_date'       => $move_in_date,
-              ':move_out_date'      => $move_out_date,
-              ':account_no'         => $account_no,
-              ':id_upload'          => $id_upload_destination,
-              ':tax_pin_copy'       => $tax_pin_copy_destination,
-              ':rental_agreement'   => $rental_agreement_destination,
-              ':income'             => $income,
-              ':job_title'          => $job_title,
-              ':job_location'       => $job_location,
-              ':casual_job'         => $casual_job,
-              ':business_name'      => $business_name,
-              ':business_location'  => $business_location,
-              ':status'             => $status,
-              ':building'           => $building
+                ':tmain_contact' => $tmain_contact,
+                ':talt_contact'  => $talt_contact,
+                ':temail'        => $temail,
+                ':id_no'         => $id_no,
+                ':pass_no'       => $pass_no
             ]);
 
-              $tenant_id = $pdo->lastInsertId();
 
-              if (!empty($_POST['deposit_for'])) {
-              $stmtDep = $pdo->prepare("INSERT INTO tenant_deposits (tenant_id, deposit_for, deposit_for_other, required_pay, amount_paid, balance, subtotal, created_at) VALUES (:tenant_id, :deposit_for, :deposit_for_other, :required_pay, :amount_paid, :balance, :subtotal, NOW())");
-               foreach ($_POST['deposit_for'] as $i => $deposit_for) {
-                $stmtDep->execute([
-                  ':tenant_id' => $tenant_id,
-                  ':deposit_for' => $deposit_for,
-                  ':deposit_for_other' => $_POST['deposit_for_other'][$i] ?? null,
-                  ':required_pay' => $_POST['required_pay'][$i] ?? 0,
-                  ':amount_paid' => $_POST['amount_paid'][$i] ?? 0,
-                  ':balance' => $_POST['balance'][$i] ?? 0,
-                  ':subtotal' => $_POST['subtotal'][$i] ?? 0
-                ]);
-               }
-            }
-            echo "<script>
-                    Swal.fire({
-                    icon: 'success',
-                    title: 'Tenant Saved Successfully!',
-                    text: 'Tenant information and deposits were added successfully.',
+            if($checkTenant->rowCount() > 0) {
+              echo "
+                <script>
+                  Swal.fire({
+                    icon: 'warning',
+                    title: 'Duplicate Entry Detected!',
+                    text: 'Some user information already exists in the database.',
                     confirmButtonColor: '#00192D'
-                    }).then(() => {
-                    window.location.href = 'all_tenants.php'; // redirect after confirmation
-                    });
-                  </script>";
+                  });
+                </script>";
+              exit;
+            } else {
+              //Update the Single Units Information by Submitting the Tenant Information
+              $updateTable = $conn->prepare("UPDATE single_units SET
+                occupancy_status =:occupancy_status,
+                tfirst_name =:tfirst_name,
+                tmiddle_name =:tmiddle_name,
+                tlast_name =:tlast_name,
+                tmain_contact =:tmain_contact,
+                talt_contact =:talt_contact,
+                temail =:temail,
+                idMode =:idMode,
+                id_no =:id_no,
+                pass_no =:pass_no,
+                leasing_period =:leasing_period,
+                leasing_start_date =:leasing_start_date,
+                leasing_end_date =:leasing_end_date,
+                move_in_date =:move_in_date,
+                move_out_date =:move_out_date,
+                account_no =:account_no,
+                id_upload =:id_upload,
+                tax_pin_copy =:tax_pin_copy,
+                rental_agreement =:rental_agreement,
+                income =:income,
+                job_title =:job_title,
+                job_location =:job_location,
+                casual_job =:casual_job,
+                business_name =:business_name,
+                business_location =:business_location,
+                tenant_status =:tenant_status,
+                tenant_reg = NOW()
+                WHERE
+                id =:id
+              ");
+              $updateTable->execute([
+                ':occupancy_status'     => $occupancy_status,
+                ':tfirst_name'          => $tfirst_name,
+                ':tmiddle_name'         => $tmiddle_name,
+                ':tlast_name'           => $tlast_name,
+                ':tmain_contact'        => $tmain_contact,
+                ':talt_contact'         => $talt_contact,
+                ':temail'               => $temail,
+                ':idMode'               => $idMode,
+                ':id_no'                => $id_no,
+                ':pass_no'              => $pass_no,
+                ':leasing_period'       => $leasing_period,
+                ':leasing_start_date'   => $leasing_start_date,
+                ':leasing_end_date'     => $leasing_end_date,
+                ':move_in_date'         => $move_in_date,
+                ':move_out_date'        => $move_out_date,
+                ':account_no'           => $account_no,
+                ':id_upload'            => $id_upload_destination,
+                ':tax_pin_copy'         => $tax_pin_copy_destination,
+                ':rental_agreement'     => $rental_agreement_destination,
+                ':income'               => $income,
+                ':job_title'            => $job_title,
+                ':job_location'         => $job_location,
+                ':casual_job'           => $casual_job,
+                ':business_name'        => $business_name,
+                ':business_location'    => $business_location,
+                ':tenant_status'        => $tenant_status,
+                ':id'                   => $id
+              ]);
 
+              echo "
+                  <script>
+                    setTimeout(() => {
+                      Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Tenant Information has been Saved Successfully.',
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK'
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                          window.location.href = 'all_tenants.php';
+                        }
+                      });
+                    }, 800); // short delay to smooth transition from loader
+                    </script>";
             }
+
           } catch (Exception $e) {
             echo "<script>
                   Swal.fire({
                   icon: 'error',
                   title: 'Error Saving Tenant',
                   text: '" . addslashes($e->getMessage()) . "',
-                  confirmButtonColor: '#00192D'
+                  confirmButtonColor: '#cc0001'
                   });
               </script>";
           }
