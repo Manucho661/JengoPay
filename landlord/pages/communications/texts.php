@@ -3,8 +3,8 @@ include '../db/connect.php'; // adjust path
 
 try {
     $sql = "
-        SELECT id AS id, entity_name AS building_name, 'bed_seaters' AS source_table
-        FROM bed_seaters
+        SELECT id AS id, entity_name AS building_name, 'bedsitter_units' AS source_table
+        FROM bedsitter_units
         GROUP BY entity_name
 
         UNION
@@ -15,8 +15,8 @@ try {
 
         UNION
 
-        SELECT id AS id, entity_name AS building_name, 'multi_rooms' AS source_table
-        FROM multi_rooms
+        SELECT id AS id, entity_name AS building_name, 'multi_rooms_units' AS source_table
+        FROM multi_rooms_units
         GROUP BY entity_name
     ";
 
