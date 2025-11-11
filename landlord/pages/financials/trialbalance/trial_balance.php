@@ -146,6 +146,55 @@ $accounts = $pdo->query("
 ")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
+<?php
+include '../../db/connect.php';
+
+// ===========================
+// BUILD FILTER CONDITIONS
+// ===========================
+$where = [];
+$params = [];
+
+// Apply date range filter
+if (!empty($_GET['from_date']) && !empty($_GET['to_date'])) {
+    $where[] = "je.entry_date BETWEEN :from AND :to";
+    $params[':from'] = $_GET['from_date'];
+    $params[':to']   = $_GET['to_date'];
+}
+
+// Optional account filter
+if (!empty($_GET['account_id'])) {
+    $where[] = "jl.account_id = :account_id";
+    $params[':account_id'] = $_GET['account_id'];
+}
+
+$whereSql = $where ? "WHERE " . implode(" AND ", $where) : "";
+
+// ===========================
+// MAIN QUERY (filtered)
+// ===========================
+$sql = "
+    SELECT 
+        a.account_code,
+        a.account_name,
+        a.account_type,
+        a.financial_statement,
+        a.debit_credit,
+        COALESCE(SUM(jl.debit), 0) AS total_debit,
+        COALESCE(SUM(jl.credit), 0) AS total_credit
+    FROM chart_of_accounts a
+    LEFT JOIN journal_lines jl ON a.account_code = jl.account_id 
+    LEFT JOIN journal_entries je ON jl.journal_entry_id = je.id
+    $whereSql
+    GROUP BY a.account_code, a.account_name, a.account_type, a.financial_statement, a.debit_credit
+    HAVING COALESCE(SUM(jl.debit), 0) != 0 OR COALESCE(SUM(jl.credit), 0) != 0
+    ORDER BY a.account_code
+";
+
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
 
 
 <!doctype html>

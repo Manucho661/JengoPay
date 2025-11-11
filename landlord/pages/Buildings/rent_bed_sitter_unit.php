@@ -2,6 +2,46 @@
  require_once "../db/connect.php";
 //  include_once 'includes/lower_right_popup_form.php';
 ?>
+<?php
+require_once "../db/connect.php";
+
+// Initialize variables to prevent undefined variable warnings
+$unit_number = '';
+$location = '';
+$building_link = '';
+$purpose = '';
+$unit_category = '';
+$occupancy_status = '';
+$id = null;
+
+include_once 'processes/encrypt_decrypt_function.php';
+
+if (isset($_GET['rent']) && !empty($_GET['rent'])) {
+    $id = $_GET['rent'];
+    $id = encryptor('decrypt', $id);
+
+    try {
+        if (!empty($id)) {
+            $sql = "SELECT * FROM bedsitter_units WHERE id = :id";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([':id' => $id]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                $id = $row['id'];
+                $unit_number = $row['unit_number'];
+                $location = $row['location'];
+                $building_link = $row['building_link'];
+                $purpose = $row['purpose'];
+                $unit_category = $row['unit_category'];
+                $occupancy_status = $row['occupancy_status'];
+            }
+        }
+    } catch (PDOException $e) {
+        // Handle exception here if needed
+    }
+}
+?>
+
 
 <!doctype html>
 <html lang="en">
@@ -204,7 +244,7 @@
                   try{
                     if(!empty($id)) {
                       $sql = "SELECT * FROM bedsitter_units WHERE id =:id";
-                      $stmt = $conn->prepare($sql);
+                      $stmt = $pdo->prepare($sql);
                       $stmt->execute(array(':id' => $id));
                       while ($row = $stmt->fetch()) {
                         $id = $row['id'];
@@ -410,7 +450,7 @@
 
           try {
             //Check if the Tenant Information Exists in the Database. No submission if this is true to avoid duplication of data
-            $checkTenant = $conn->prepare("SELECT * FROM bedsitter_units
+            $checkTenant = $pdo->prepare("SELECT * FROM bedsitter_units
                 WHERE tmain_contact = :tmain_contact
                    AND talt_contact = :talt_contact
                    AND temail = :temail
@@ -439,7 +479,7 @@
               exit;
             } else {
               //Update the Single Units Information by Submitting the Tenant Information
-              $updateTable = $conn->prepare("UPDATE bedsitter_units SET
+              $updateTable = $pdo->prepare("UPDATE bedsitter_units SET
                 occupancy_status =:occupancy_status,
                 tfirst_name =:tfirst_name,
                 tmiddle_name =:tmiddle_name,
