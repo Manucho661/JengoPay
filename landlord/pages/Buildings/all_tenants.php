@@ -266,7 +266,7 @@
                           <a class="dropdown-item" href="<?= 'https://wa.me/'.$tenant['tmain_contact'].'/?text=Hello,'." ". $tenant['tfirst_name']. '' ?>" target="_blank"><i class="bi bi-whatsapp"></i> WhatsApp</a>
                           <a class="dropdown-item" href="\JengoPay\landlord\pages\communications/texts.php?mesage=<?= $tenant['tfirst_name'] ;?>"><i class="bi bi-envelope"></i> Message</a>
                           <a class="dropdown-item" href="tenant_profile.php?profile=<?= encryptor('encrypt', $tenant['id']);?>"><i class="fas fa-newspaper"></i> Profile</a>
-                          <a class="dropdown-item" href="tenant_invoice.php?invoice=<?= encryptor('encrypt', $tenant['id']);?>"><i class="bi bi-newspaper"></i> Invoice</a>
+                          <a class="dropdown-item" href="\JengoPay\landlord\pages\financials/invoices/invoice.php?invoice=<?= encryptor('encrypt', $tenant['id']);?>"><i class="bi bi-newspaper"></i> Invoice</a>
                           <a class="dropdown-item" href="all_individual_tenant_invoices.php?invoice=<?= encryptor('encrypt', $tenant['id']);?>"><i class="bi bi-receipt"></i> All Invoices</a>
                           <a class="dropdown-item" data-toggle="modal" data-target="#vacateTenantModal<?= htmlspecialchars($tenant['id']);?>" href="#"><i class="bi bi-arrow-right"></i> Vacate</a>
                           <a class="dropdown-item" data-toggle="modal" data-target="#shiftTenantModal<?= htmlspecialchars($tenant['id']);?>" href="#"><i class="fa fa-refresh"></i> Shift</a>
