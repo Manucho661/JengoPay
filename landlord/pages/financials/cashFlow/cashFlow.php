@@ -297,6 +297,7 @@
                                         <p>For the month of September 2025 (KES)</p>
                                     </div>
                                     <div style="text-align:right">
+                                        <p style="font-weight:700" class="mb-2">Opening Cash Balance: <span style="color:#ffffff">KES 180,000</p>
                                         <p style="font-weight:700">Net Cash Movement: <span style="color:#ffffff">KES 180,000</span></p>
                                         <p style="font-size:12px;margin-top:6px;opacity:0.9">Generated: Oct 8, 2025</p>
                                     </div>
@@ -443,6 +444,7 @@
 
     <!-- Main Js File -->
     <script src="../../../../landlord/js/adminlte.js"></script>
+    <script type="module" src="js/main.js" ></script>
     <!-- html2pdf depends on html2canvas and jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script type="module" src="./js/main.js"></script>

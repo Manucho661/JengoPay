@@ -11,15 +11,15 @@ $params = [];
 
 // Date filter
 if (!empty($from_date) && !empty($to_date)) {
-    $where[] = "DATE(je.created_at) BETWEEN :from AND :to";
-    $params[':from'] = $from_date;
-    $params[':to']   = $to_date;
+  $where[] = "DATE(je.created_at) BETWEEN :from AND :to";
+  $params[':from'] = $from_date;
+  $params[':to']   = $to_date;
 }
 
 // Account filter
 if (!empty($account_id)) {
-    $where[] = "jl.account_id = :account_id";
-    $params[':account_id'] = $account_id;
+  $where[] = "jl.account_id = :account_id";
+  $params[':account_id'] = $account_id;
 }
 
 $whereSql = $where ? "WHERE " . implode(" AND ", $where) : "";
@@ -99,7 +99,7 @@ $runningBalance = 0;
 
   <!--end::Third Party Plugin(Bootstrap Icons)-->
   <!--begin::Required Plugin(AdminLTE)-->
-  <link rel="stylesheet" href="../../../../landlord/css/adminlte.css" />
+  <link rel="stylesheet" href="/jengopay/landlord/css/adminlte.css" />
   <!-- <link rel="stylesheet" href="text.css" /> -->
   <!--end::Required Plugin(AdminLTE)-->
   <!-- apexcharts -->
@@ -352,129 +352,131 @@ $runningBalance = 0;
       </div>
       <!--end::Sidebar Brand-->
       <!--begin::Sidebar Wrapper-->
-      <div > <?php include_once '../../includes/sidebar.php'; ?>  </div> <!-- This is where the sidebar is inserted -->
-        <!--end::Sidebar Wrapper-->
-      </aside>
-      <!--end::Sidebar-->
-      <!--begin::App Main-->
-      <main class="app-main">
-        <!--begin::App Content Header-->
-        <div class="app-content-header">
-          <!--begin::Container-->
-          <div class="container-fluid">
-            <!--begin::Row-->
-            <h2 style="color:#FFC107;">General Ledger</h2>
-            
-  <!-- Date Filter Form -->
-  <!-- Filters -->
-  <form method="get" class="row g-3 mb-3">
-    <div class="col-md-3">
-      <label for="from_date" class="form-label">From Date</label>
-      <input type="date" id="from_date" name="from_date" value="<?= htmlspecialchars($from_date) ?>" class="form-control">
-    </div>
-    <div class="col-md-3">
-      <label for="to_date" class="form-label">To Date</label>
-      <input type="date" id="to_date" name="to_date" value="<?= htmlspecialchars($to_date) ?>" class="form-control">
-    </div>
-    <div class="col-md-3">
-      <label for="account_id" class="form-label">Account</label>
-      <select id="account_id" name="account_id" class="form-select">
-        <option value="">-- All Accounts --</option>
-        <?php foreach ($accounts as $acc): ?>
-          <option value="<?= $acc['account_code'] ?>" <?= $account_id == $acc['account_code'] ? 'selected' : '' ?>>
-            <?= htmlspecialchars($acc['account_name']) ?>
-          </option>
-        <?php endforeach; ?>
-      </select>
-    </div>
-    <div class="col-md-3 d-flex align-items-end">
-      <button type="submit" class="btn w-100"  style="color: #FFC107; background-color: #00192D;">Filter</button>
-    </div>
-  </form>
+      <div> <?php include_once '../../includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+      <!--end::Sidebar Wrapper-->
+    </aside>
+    <!--end::Sidebar-->
+    <!--begin::App Main-->
+    <main class="app-main">
+      <!--begin::App Content Header-->
+      <div class="app-content-header">
+        <!--begin::Container-->
+        <div class="container-fluid">
+          <!--begin::Row-->
+          <h2 style="color:#FFC107;">General Ledger</h2>
+
+          <!-- Date Filter Form -->
+          <!-- Filters -->
+          <form method="get" class="row g-3 mb-3">
+            <div class="col-md-3">
+              <label for="from_date" class="form-label">From Date</label>
+              <input type="date" id="from_date" name="from_date" value="<?= htmlspecialchars($from_date) ?>" class="form-control">
+            </div>
+            <div class="col-md-3">
+              <label for="to_date" class="form-label">To Date</label>
+              <input type="date" id="to_date" name="to_date" value="<?= htmlspecialchars($to_date) ?>" class="form-control">
+            </div>
+            <div class="col-md-3">
+              <label for="account_id" class="form-label">Account</label>
+              <select id="account_id" name="account_id" class="form-select">
+                <option value="">-- All Accounts --</option>
+                <?php foreach ($accounts as $acc): ?>
+                  <option value="<?= $acc['account_code'] ?>" <?= $account_id == $acc['account_code'] ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($acc['account_name']) ?>
+                  </option>
+                <?php endforeach; ?>
+              </select>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+              <button type="submit" class="btn w-100" style="color: #FFC107; background-color: #00192D;">Filter</button>
+            </div>
+          </form>
 
 
-  <!-- Ledger Table -->
-  <table class="table table-bordered table-striped">
-    <thead class="table-dark">
-      <tr>
-        <th>Date</th>
-        <th>Reference</th>
-        <th>Description</th>
-        <th>Account</th>
-        <th>Debit (KSH)</th>
-        <th>Credit (KSH)</th>
-        <th>Running Balance</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php foreach ($ledgerRows as $row): ?>
-        <?php $runningBalance += $row['debit'] - $row['credit']; ?>
-        <tr>
-          <td><?= htmlspecialchars(date('Y-m-d', strtotime($row['created_at']))) ?></td>
-          <td><?= htmlspecialchars($row['reference']) ?></td>
-          <td><?= htmlspecialchars($row['description']) ?></td>
-          <td><?= htmlspecialchars($row['account_name']) ?></td>
-          <td><?= number_format($row['debit'], 2) ?></td>
-          <td><?= number_format($row['credit'], 2) ?></td>
-          <td><?= number_format($runningBalance, 2) ?></td>
-        </tr>
-      <?php endforeach; ?>
-    </tbody>
-  </table>
+          <!-- Ledger Table -->
+          <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+              <tr>
+                <th>Date</th>
+                <th>Reference</th>
+                <th>Description</th>
+                <th>Account</th>
+                <th>Debit (KSH)</th>
+                <th>Credit (KSH)</th>
+                <th>Running Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach ($ledgerRows as $row): ?>
+                <?php $runningBalance += $row['debit'] - $row['credit']; ?>
+                <tr>
+                  <td><?= htmlspecialchars(date('Y-m-d', strtotime($row['created_at']))) ?></td>
+                  <td><?= htmlspecialchars($row['reference']) ?></td>
+                  <td><?= htmlspecialchars($row['description']) ?></td>
+                  <td><?= htmlspecialchars($row['account_name']) ?></td>
+                  <td><?= number_format($row['debit'], 2) ?></td>
+                  <td><?= number_format($row['credit'], 2) ?></td>
+                  <td><?= number_format($runningBalance, 2) ?></td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
 
-  <!-- End view announcement -->
-  <!-- javascript codes begin here  -->
-  <!--begin::Script-->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script
-    src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-    integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
-    crossorigin="anonymous"></script>
-  <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-  <script
-    src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-    crossorigin="anonymous"></script>
-  <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-  <!-- more options -->
-  </script>
+          <!-- End view announcement -->
+          <!-- javascript codes begin here  -->
+          <!--begin::Script-->
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+          <script
+            src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
+            integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
+            crossorigin="anonymous"></script>
+          <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
+          <script
+            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"></script>
+          <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
+          <!-- more options -->
+          </script>
 
-  <script>
-$('#trialBalance tbody').on('click', 'tr[data-account-id]', function () {
-  var accountId = $(this).data('account-id');
-  var accountName = $(this).find('td:first .fw-bold').text();
-  if (!accountId) return;
+          <script>
+            $('#trialBalance tbody').on('click', 'tr[data-account-id]', function() {
+              var accountId = $(this).data('account-id');
+              var accountName = $(this).find('td:first .fw-bold').text();
+              if (!accountId) return;
 
-  $('#modalAccountName').text(accountName);
-  $('#ledgerModal .modal-body').html('<div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x"></i><br>Loading ledger details...</div>');
-  $('#ledgerModal').modal('show');
+              $('#modalAccountName').text(accountName);
+              $('#ledgerModal .modal-body').html('<div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x"></i><br>Loading ledger details...</div>');
+              $('#ledgerModal').modal('show');
 
-  // Fetch ledger data from backend
-  $.ajax({
-    url: '/Jengopay/landlord/pages/financials/generalledger/get_ledger.php',
-    type: 'GET',
-    data: { account_id: accountId },
-    success: function (response) {
-      let data;
-      try {
-        data = JSON.parse(response);
-      } catch (e) {
-        $('#ledgerModal .modal-body').html('<div class="alert alert-danger">Failed to load ledger data.</div>');
-        return;
-      }
+              // Fetch ledger data from backend
+              $.ajax({
+                url: '/Jengopay/landlord/pages/financials/generalledger/get_ledger.php',
+                type: 'GET',
+                data: {
+                  account_id: accountId
+                },
+                success: function(response) {
+                  let data;
+                  try {
+                    data = JSON.parse(response);
+                  } catch (e) {
+                    $('#ledgerModal .modal-body').html('<div class="alert alert-danger">Failed to load ledger data.</div>');
+                    return;
+                  }
 
-      if (data.error) {
-        $('#ledgerModal .modal-body').html('<div class="alert alert-warning">' + data.error + '</div>');
-        return;
-      }
+                  if (data.error) {
+                    $('#ledgerModal .modal-body').html('<div class="alert alert-warning">' + data.error + '</div>');
+                    return;
+                  }
 
-      if (data.length === 0) {
-        $('#ledgerModal .modal-body').html('<div class="alert alert-info">No transactions found for this account.</div>');
-        return;
-      }
+                  if (data.length === 0) {
+                    $('#ledgerModal .modal-body').html('<div class="alert alert-info">No transactions found for this account.</div>');
+                    return;
+                  }
 
-      // Build table
-      let tableHtml = `
+                  // Build table
+                  let tableHtml = `
         <table class="table table-striped table-bordered">
           <thead class="table-dark">
             <tr>
@@ -489,10 +491,10 @@ $('#trialBalance tbody').on('click', 'tr[data-account-id]', function () {
           <tbody>
       `;
 
-      let runningBalance = 0;
-      data.forEach(row => {
-        runningBalance += parseFloat(row.debit) - parseFloat(row.credit);
-        tableHtml += `
+                  let runningBalance = 0;
+                  data.forEach(row => {
+                    runningBalance += parseFloat(row.debit) - parseFloat(row.credit);
+                    tableHtml += `
           <tr>
             <td>${row.entry_date || '-'}</td>
             <td>${row.reference || '-'}</td>
@@ -502,56 +504,63 @@ $('#trialBalance tbody').on('click', 'tr[data-account-id]', function () {
             <td class="text-end">${runningBalance.toLocaleString()}</td>
           </tr>
         `;
-      });
+                  });
 
-      tableHtml += `</tbody></table>`;
-      $('#ledgerModal .modal-body').html(tableHtml);
-    },
-    error: function () {
-      $('#ledgerModal .modal-body').html('<div class="alert alert-danger">Error loading ledger data.</div>');
-    }
-  });
-});
+                  tableHtml += `</tbody></table>`;
+                  $('#ledgerModal .modal-body').html(tableHtml);
+                },
+                error: function() {
+                  $('#ledgerModal .modal-body').html('<div class="alert alert-danger">Error loading ledger data.</div>');
+                }
+              });
+            });
 
 
-  function exportToExcel() {
-    const table = document.getElementById('trialBalance');
-    const wb = XLSX.utils.table_to_book(table, {sheet: "Trial Balance"});
-    XLSX.writeFile(wb, 'Trial_Balance_' + new Date().toISOString().split('T')[0] + '.xlsx');
-  }
+            function exportToExcel() {
+              const table = document.getElementById('trialBalance');
+              const wb = XLSX.utils.table_to_book(table, {
+                sheet: "Trial Balance"
+              });
+              XLSX.writeFile(wb, 'Trial_Balance_' + new Date().toISOString().split('T')[0] + '.xlsx');
+            }
 
-  function exportToPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    
-    doc.text('Trial Balance Report', 14, 15);
-    doc.autoTable({
-      html: '#trialBalance',
-      startY: 25,
-      theme: 'grid',
-      headStyles: { fillColor: [52, 58, 64] }
-    });
-    
-    doc.save('Trial_Balance_' + new Date().toISOString().split('T')[0] + '.pdf');
-  }
-  </script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+            function exportToPDF() {
+              const {
+                jsPDF
+              } = window.jspdf;
+              const doc = new jsPDF();
 
-  <script src="../../../../landlord/js/adminlte.js"></script>
+              doc.text('Trial Balance Report', 14, 15);
+              doc.autoTable({
+                html: '#trialBalance',
+                startY: 25,
+                theme: 'grid',
+                headStyles: {
+                  fillColor: [52, 58, 64]
+                }
+              });
 
-  <!--end::Script-->
+              doc.save('Trial_Balance_' + new Date().toISOString().split('T')[0] + '.pdf');
+            }
+          </script>
+          <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+          <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+          <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+          <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+          <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+          <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+          <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+          <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+          <script src="../../../../landlord/js/adminlte.js"></script>
+
+          <!--end::Script-->
 </body>
 <!--end::Body-->
+
 </html>

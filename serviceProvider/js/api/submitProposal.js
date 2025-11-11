@@ -10,7 +10,7 @@ export async function submitProposal(e, proposalForm) {
 
     try {
         // Correctly await fetch
-        const response = await fetch("actions/submit_application.php", {
+        const response = await fetch("actions/submitApplication.php", {
             method: "POST",
             body: formData, // Use formData, not the whole proposalForm
         });
@@ -25,7 +25,7 @@ export async function submitProposal(e, proposalForm) {
         console.log("✅ Proposals fetched:", data);
 
         // Reload the page after successful submission
-        window.location.reload();
+        // window.location.reload();
     } catch (err) {
         console.error("❌ Failed to fetch proposals:", err);
     }

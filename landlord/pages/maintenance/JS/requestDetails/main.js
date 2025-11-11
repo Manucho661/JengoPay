@@ -6,6 +6,8 @@ import { getProviderDetails } from "./api/getProviderDetails.js";
 import { setDurationBudget } from "./api/durationBudget.js";
 import { toggleProposalsORotherRequests, confirmAssignBox, hideAssignBox, applyAvailabilityStyles } from "./uiControl.js";
 
+import { terminateContract, terminateContractBox, hideTerminateBox } from "./api/terminateProvider.js";
+
 document.addEventListener("DOMContentLoaded", () => {
   // Load data
   getRequestDetails();
@@ -44,4 +46,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // set budget and duration
   document.getElementById('durationBudget').addEventListener('submit', setDurationBudget);
+
+  // Terminate contract
+  document.getElementById('terminateBtn').addEventListener('click', terminateContractBox);
+  document.getElementById('cancelTerminateBtn').addEventListener('click', hideTerminateBox);
+
+  document.getElementById('actualTerminateBtn').addEventListener('click', terminateContract);
+
 });

@@ -62,7 +62,7 @@ export function addTbodyNonCurrentAssets(assets, total) {
         row.setAttribute("aria-controls", collapseId);
 
         const nameCell = document.createElement("td");
-        nameCell.innerHTML = `<span class="text-warning" style="font-size: 20px;">▸</span> ${asset.name}`;
+        nameCell.innerHTML = `${asset.name} &nbsp;&nbsp;<span class="text-warning" style=""><i class="fa fa-ellipsis-v fs-8"></i></span>`;
         row.appendChild(nameCell);
 
         const amountCell = document.createElement("td");
@@ -96,25 +96,15 @@ export function addTbodyNonCurrentAssets(assets, total) {
         // Add a class to the td for cell styling
         amountCell.classList.add("amount-cell");
 
+        row.onclick = () => {
+            // Create the link dynamically when the row is clicked
+            const link = `../../financials/generalledger/general_ledger.php/?account_id=${asset.account_id}`;  // URL with asset.id
+            window.location.href = link;  // Redirect to the created link
+        };
+        
         row.appendChild(amountCell);
         newTbody.appendChild(row);
 
-
-        // Add the collapsible row (hidden by default)
-        const collapseRow = document.createElement("tr");
-        const collapseCell = document.createElement("td");
-        collapseCell.colSpan = 2;
-        const collapseDiv = document.createElement("div");
-        collapseDiv.id = collapseId;
-        collapseDiv.setAttribute("data-section", "nonCurrentAssets");
-        collapseDiv.classList.add("collapse");
-        collapseDiv.setAttribute("account_id", asset.account_id);
-        collapseCell.appendChild(collapseDiv);
-        collapseRow.appendChild(collapseCell);
-        newTbody.appendChild(collapseRow);
-
-        // Attach individual click handler for each block
-        attachCollapseHandler(row, collapseDiv, asset.account_id);
     });
 
     // Add the total row at the end with custom styling
@@ -152,78 +142,6 @@ export function addTbodyNonCurrentAssets(assets, total) {
     // Append the new tbody to the table
     table.appendChild(newTbody);
 }
-
-// Function to handle the collapsible behavior for each block
-export function attachCollapseHandler(row, collapseDiv, accountId) {
-    console.log(accountId);
-    // Handle clicks (toggle only)
-    row.addEventListener("click", (e) => {
-        if (e.target.closest('a, button, input, select, textarea')) return;
-        const bsCollapse = bootstrap.Collapse.getOrCreateInstance(collapseDiv, { toggle: false });
-        bsCollapse.toggle();
-    });
-
-    // Update arrow when collapse finishes expanding
-    collapseDiv.addEventListener("shown.bs.collapse", (e) => {
-        const span = row.querySelector("span");
-        if (span) span.textContent = "▾"; // ▼ down arrow
-        row.setAttribute("aria-expanded", "true");
-    });
-
-    // Update arrow when collapse finishes collapsing
-    collapseDiv.addEventListener("hidden.bs.collapse", (e) => {
-        const span = row.querySelector("span");
-        if (span) span.textContent = "▸"; // ► right arrow
-        row.setAttribute("aria-expanded", "false");
-    });
-
-    // Lazy-load details when the collapse is about to be shown
-    collapseDiv.addEventListener('show.bs.collapse', async (e) => {
-        if (collapseDiv.dataset.loaded) return;
-
-        try {
-            const res = await fetch(`actions/getAccountDetails.php?account=${encodeURIComponent(accountId)}`);
-            const json = await res.json();
-
-            const detailsTable = `
-                <table class="details table table-sm mb-0">
-                    <tbody>
-                        ${json.data.map(d => {
-                let sourceTableText = d.source_table;
-                if (sourceTableText === 'expense_payments') {
-                    sourceTableText = 'Expense Payment';
-                } else if (sourceTableText === 'invoice_payment') {
-                    sourceTableText = 'Invoice Payment';
-                }
-
-                let total = 0;
-                if (d.debit && d.credit) {
-                    total = d.debit - d.credit;
-                } else if (d.debit) {
-                    total = d.debit;
-                } else if (d.credit) {
-                    total = d.credit;
-                }
-
-                return `
-                                <tr>
-                                    <td class="text-dark text-muted">${d.created_at}</td>
-                                    <td>${sourceTableText}</td>
-                                    <td class="text-danger">KSH&nbsp;${total.toFixed(2)}</td>
-                                </tr>
-                            `;
-            }).join('')}
-                    </tbody>
-                </table>
-            `;
-            collapseDiv.innerHTML = detailsTable;
-            collapseDiv.dataset.loaded = "true";
-        } catch (err) {
-            collapseDiv.innerHTML = `<div class="text-danger p-2">Failed to load details</div>`;
-        }
-    });
-}
-
 
 export async function getCurrentAssets() {
     try {
@@ -265,19 +183,15 @@ export function addTbodyCurrentAssets(assets, totalCurrentAssets, totalAssets) {
     newTbody.appendChild(headerRow);
 
     // Add rows for each asset
-    assets.forEach((asset, index) => {
-        const collapseId = `collapse-current-${index}`;
-
+    assets.forEach((asset) => {
         // Create the main row (clickable)
         const row = document.createElement("tr");
         row.classList.add("main-row");
         row.style.cursor = "pointer"; // Make cursor a pointer on hover
-        row.setAttribute("data-bs-target", `#${collapseId}`);
-        row.setAttribute("aria-expanded", "false");
-        row.setAttribute("aria-controls", collapseId);
+
 
         const nameCell = document.createElement("td");
-        nameCell.innerHTML = `<span class="text-warning" style="font-size: 20px;">▸</span> ${asset.name}`;
+        nameCell.innerHTML = `${asset.name} &nbsp;&nbsp;<span class="text-warning" style=""><i class="fa fa-ellipsis-v fs-8"></i></span>`;
         row.appendChild(nameCell);
 
         const amountCell = document.createElement("td");
@@ -311,24 +225,17 @@ export function addTbodyCurrentAssets(assets, totalCurrentAssets, totalAssets) {
         // Add a class to the td for cell styling
         amountCell.classList.add("amount-cell");
 
+        // add link to the row 
+        // Add the onClick event listener to the row
+        row.onclick = () => {
+            // Create the link dynamically when the row is clicked
+            const link = `../../financials/generalledger/general_ledger.php/?account_id=${asset.account_id}`;  // URL with asset.id
+            window.location.href = link;  // Redirect to the created link
+        };
+
         row.appendChild(amountCell);
         newTbody.appendChild(row);
 
-
-        // Add the collapsible row (hidden by default)
-        const collapseRow = document.createElement("tr");
-        const collapseCell = document.createElement("td");
-        collapseCell.colSpan = 2;
-        const collapseDiv = document.createElement("div");
-        collapseDiv.id = collapseId;
-        collapseDiv.classList.add("collapse");
-        collapseDiv.setAttribute("account_id", asset.account_id);
-        collapseCell.appendChild(collapseDiv);
-        collapseRow.appendChild(collapseCell);
-        newTbody.appendChild(collapseRow);
-
-        // Attach the collapse handler for each row
-        attachCollapseHandler(row, collapseDiv, asset.account_id);
     });
 
     // Add the total row for current assets
@@ -406,74 +313,4 @@ export function addTbodyCurrentAssets(assets, totalCurrentAssets, totalAssets) {
 
     // Append the new tbody to the table
     table.appendChild(newTbody);
-}
-
-
-export function attachCollapseHandlerAccPayables(row, collapseDiv, accountId) {
-    console.log(accountId);
-    // Handle clicks (toggle only)
-    row.addEventListener("click", (e) => {
-        if (e.target.closest('a, button, input, select, textarea')) return;
-        const bsCollapse = bootstrap.Collapse.getOrCreateInstance(collapseDiv, { toggle: false });
-        bsCollapse.toggle();
-    });
-
-    // Update arrow when collapse finishes expanding
-    collapseDiv.addEventListener("shown.bs.collapse", (e) => {
-        const span = row.querySelector("span");
-        if (span) span.textContent = "▾"; // ▼ down arrow
-        row.setAttribute("aria-expanded", "true");
-    });
-
-    // Update arrow when collapse finishes collapsing
-    collapseDiv.addEventListener("hidden.bs.collapse", (e) => {
-        const span = row.querySelector("span");
-        if (span) span.textContent = "▸"; // ► right arrow
-        row.setAttribute("aria-expanded", "false");
-    });
-
-    // Lazy-load details when the collapse is about to be shown
-    collapseDiv.addEventListener('show.bs.collapse', async (e) => {
-        if (collapseDiv.dataset.loaded) return;
-
-        try {
-            const res = await fetch(`actions/getAccountPayableDetails.php?account=${encodeURIComponent(accountId)}`);
-
-            // Parse the JSON returned by PHP
-            const json = await res.json();
-
-            // Check if PHP reported an error
-            if (json.error) {
-                console.error("PHP Error:", json.message); // This prints the PHP error
-                collapseDiv.innerHTML = `<div class="text-danger p-2">Failed to load details: ${json.message}</div>`;
-                return; // stop execution if PHP had an error
-            }
-
-            // If no PHP error, build the table
-            const detailsTable = `
-        <table class="details table table-sm mb-0">
-            <tbody>
-                ${json.data.map(d => {
-                let total = Number(d.total_amount) || 0;
-                return `
-                        <tr>
-                            <td class="text-dark text-muted">${d.supplier_name}</td>
-                            <td class="text-muted"></td> <!-- optional middle column -->
-                            <td class="text-danger text-center">KSH&nbsp;${total.toFixed(2)}</td>
-                        </tr>
-                    `;
-            }).join('')}
-            </tbody>
-        </table>
-    `;
-            collapseDiv.innerHTML = detailsTable;
-            collapseDiv.dataset.loaded = "true";
-
-        } catch (err) {
-            // This is only for network or parsing errors (JS errors)
-            console.error("Fetch/JS Error:", err.message);
-            collapseDiv.innerHTML = `<div class="text-danger p-2">Failed to load details</div>`;
-        }
-
-    });
 }

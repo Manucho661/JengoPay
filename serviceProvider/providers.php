@@ -265,14 +265,14 @@ try {
     .apply-btn:hover {
       text-decoration: none !important;
     }
-    .description{
-      
-    }
+
+    .description {}
+
     .description.collapsed {
       max-height: 90px;
       overflow: hidden;
       position: relative;
-      
+
     }
 
     .description.collapsed::after {
@@ -285,22 +285,25 @@ try {
       background: linear-gradient(transparent, white);
       padding-bottom: 50px;
     }
+
     .more {
-            background: none;
-            border: none;
-            color: #108a00;
-            font-weight: 600;
-            cursor: pointer;
-            padding: 10px 0;
-            font-size: 14px;
-            cursor: pointer;
-        }
+      background: none;
+      border: none;
+      color: #108a00;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 10px 0;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
     /* Application */
-    .appliedJobDescription.collapsed{
+    .appliedJobDescription.collapsed {
       max-height: 90px;
       overflow: hidden;
       position: relative;
     }
+
     .appliedJobDescription.collapsed::after {
       content: '';
       position: absolute;
@@ -333,9 +336,15 @@ try {
       <!-- Center: Account Balance -->
       <div style="display: flex; align-items: center; gap: 10px; background-color: #F5F7FA; padding: 8px 16px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
         <span style="font-weight: 600; font-size: 16px; color: #00192D;">Account Balance:</span>
-        <span id="accountBalance" style="font-weight: bold; font-size: 17px; color: #28A745;">KSH 2,350.00</span>
+        <span id="accountBalance" style="font-weight: bold; font-size: 17px; color: #FFC107;">KSH 2,350.00</span>
         <button style="background-color: #FFC107; color: #00192D; border: none; border-radius: 8px; padding: 6px 14px; font-weight: 600; cursor: pointer;">
           <i class="fas fa-plus-circle"></i> Top Up
+        </button>
+      </div>
+      <div class="new-messages">
+        <button class="btn btn-warning fw-bold">
+          <i class="bi bi-envelope"></i> New Messages
+          <span class="badge-notification">5</span> <!-- Number of unread messages -->
         </button>
       </div>
 

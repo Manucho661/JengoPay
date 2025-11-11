@@ -1,30 +1,68 @@
 <?php
-include '../../db/connect.php';
+header('Content-Type: application/json');
+
+require_once '../../../db/connect.php'; // Include your PDO connection
+
+// Set a custom error handler to throw exceptions for errors
+set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+    throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+});
 
 try {
-    // ✅ Get owners' equity balances from journal_lines & chart_of_accounts
+    // Define the account_id
+    $account_id = 400;
+
+    // Total credit for account_id 400 (credit amount in journal_lines)
     $sql = "
-        SELECT 
-            coa.account_name AS name,
-            SUM(jl.credit) - SUM(jl.debit) AS amount,
-            MAX(je.entry_date) AS entry_date,
-            GROUP_CONCAT(je.description SEPARATOR ', ') AS description
+        SELECT SUM(credit) AS total_credit 
+        FROM journal_lines 
+        WHERE account_id = :account_id
+    ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':account_id', $account_id, PDO::PARAM_INT);
+    $stmt->execute();
+    $owners_capital = $stmt->fetchColumn();  // Fetching the total credit amount
+
+    // Query for total revenue (sum of credit - debit for revenue accounts)
+    $sqlRevenue = "
+        SELECT COALESCE(SUM(jl.credit) - SUM(jl.debit), 0) AS total_revenue
         FROM journal_lines jl
         JOIN chart_of_accounts coa ON jl.account_id = coa.account_code
-        JOIN journal_entries je ON jl.journal_entry_id = je.id
-        WHERE coa.account_type LIKE '%Equity%'
-        GROUP BY coa.account_name
-        ORDER BY je.entry_date ASC
+        WHERE coa.account_type LIKE '%Revenue%'
     ";
+    $stmtRev = $pdo->prepare($sqlRevenue);
+    $stmtRev->execute();
+    $totalRevenue = $stmtRev->fetchColumn();
 
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    // Query for total expenses (sum of debit - credit for expense accounts)
+    $sqlExpenses = "
+        SELECT COALESCE(SUM(jl.debit) - SUM(jl.credit), 0) AS total_expenses
+        FROM journal_lines jl
+        JOIN chart_of_accounts coa ON jl.account_id = coa.account_code
+        WHERE coa.account_type LIKE '%Expense%'
+    ";
+    $stmtExp = $pdo->prepare($sqlExpenses);
+    $stmtExp->execute();
+    $totalExpenses = $stmtExp->fetchColumn();
 
-    $owners_equities = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Calculate retained earnings (revenue - expenses)
+    $retainedEarnings = $totalRevenue - $totalExpenses;
+    $totalEquity = $retainedEarnings + $owners_capital;
 
-    // Calculate total equity
-    $totalEquity = array_sum(array_column($owners_equities, 'amount'));
+    // Return the response in JSON format
+    echo json_encode([
+        'owners_capital' => $owners_capital,
+        'retainedEarnings' => $retainedEarnings,
+        'revenue' => $totalRevenue,
+        'expenses' => $totalExpenses,
+        'totalEquity' => $totalEquity
+    ]);
 
-} catch (PDOException $e) {
-    echo "Error: " . $e->getMessage();
+} catch (Throwable $e) {
+    // Handle any exceptions or errors
+    echo json_encode([
+        'error' => 'An error occurred while processing the request.',
+        'message' => $e->getMessage()
+    ]);
 }
+?>

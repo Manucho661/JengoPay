@@ -1,5 +1,5 @@
 import { html, render } from "https://unpkg.com/lit@3.1.4/index.js?module";
-import { openProposalModal, openProviderDetailsModal } from "../modals.js";
+import { openProposalModal } from "../modals.js";
 import { applyAvailabilityStyles } from "../uiControl.js";
 import { getRequestDetails } from "./getRequestDetails.js";
 
@@ -9,7 +9,7 @@ import { getRequestDetails } from "./getRequestDetails.js";
 export async function otherRequests() {
   try {
     const response = await fetch(
-      `./actions/request_details/other_requests.php`
+      `./actions/request_details/otherRequests.php`
     );
     const data = await response.json();
     console.log("✅ Other requests fetched:", data);

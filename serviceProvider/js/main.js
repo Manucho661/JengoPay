@@ -38,8 +38,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // handle assignment
-    document.getElementById("acceptBtn").onclick = () => sendResponse("accepted");
-    document.getElementById("declineBtn").onclick = () => sendResponse("declined");
+    document.getElementById("acceptBtn").onclick = function () {
+        sendResponse.call(this, "Accepted"); // `this` refers to the button
+    };
+
+    document.getElementById("declineBtn").onclick = function() {
+    sendResponse.call(this, "Declined"); // `this` refers to the button
+};
+
 
 });
 
