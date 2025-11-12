@@ -1644,7 +1644,6 @@ if (empty($invoices)) {
                             <h3 class="section-title">Tenant Details</h3>
                             <form  id="myForm" method="POST" action="/Jengopay/landlord/pages/financials/invoices/action/submit_invoice.php" enctype="multipart/form-data">
                                 <div class="form-row">
-
                                     <!-- Existing Invoice # input -->
                                     <div class="form-group">
                                         <label for="invoice-number">Invoice #</label>
@@ -1657,8 +1656,6 @@ if (empty($invoices)) {
                                             name="invoice_number"
                                             value="<?= $invoiceNumber ?>">
                                     </div>
-
-
 
                                       <!-- Building selector -->
         <div class="form-group">
