@@ -11,7 +11,7 @@ function createPayInvoiceJournal($pdo, $paymentId, $invoiceId, $customerId, $pay
     $journalEntryId = $pdo->lastInsertId();
     // exit;
 
-    $stmtLine = $pdo->prepare("INSERT INTO journal_lines (journal_entry_id, account_id, debit, credit) VALUES (?, ?, ?, ?, ?)");
+    $stmtLine = $pdo->prepare("INSERT INTO journal_lines (journal_entry_id, account_id, debit, credit, source_table) VALUES (?, ?, ?, ?, ?)");
     error_log("Journal created: entry=$journalEntryId, debitAccount=$paymentAccountId, creditAccount=$accountsReceivableId, amount=$paymentAmount, source_table=$sourceTable");
 
     // exit;

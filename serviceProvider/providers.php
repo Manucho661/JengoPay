@@ -747,16 +747,16 @@ try {
       <i class="bi bi-x-lg" id="closeChatPanel" style="cursor:pointer;"></i>
     </div>
     <div class="chat-list">
-      <div class="chat-item" data-client="Alex Johnson">
-        <strong>Alex Johnson</strong><br>
+      <div class="chat-item" data-client="Manucho Apartments">
+        <strong>Manucho Apartments</strong><br>
         <small>Can we review the last design updates?</small>
       </div>
-      <div class="chat-item" data-client="Sophia Lee">
-        <strong>Sophia Lee</strong><br>
+      <div class="chat-item" data-client="Silver Spoon Apartments">
+        <strong>Silver Spoon Apartments</strong><br>
         <small>Got the latest quote?</small>
       </div>
-      <div class="chat-item" data-client="Mark Evans">
-        <strong>Mark Evans</strong><br>
+      <div class="chat-item" data-client="White House">
+        <strong>White House</strong><br>
         <small>Thanks for sending the document!</small>
       </div>
     </div>
@@ -768,7 +768,7 @@ try {
       <div class="modal-content">
         <div class="modal-header">
           <div>
-            <h5 class="modal-title mb-0" id="chatModalLabel">Chat with Client</h5>
+            <h5 class="modal-title mb-0" id="chatModalLabel">Chat with Manucho Apartments</h5>
             <small class="text-muted" id="projectSubtitle">Ongoing Project</small>
           </div>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

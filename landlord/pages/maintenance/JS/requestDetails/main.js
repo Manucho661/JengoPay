@@ -62,6 +62,6 @@ document.addEventListener("DOMContentLoaded", () => {
   getTextMessages();
 
   // 🔁 refresh messages every 3 seconds
-  setInterval(getTextMessages, 3000);
+  setInterval(getTextMessages, 1000);
 
 });

@@ -95,7 +95,7 @@ const requestsTemplate = (data) => html`
                   <div class="col-md-6">
                     <strong>Duration:</strong>
                     <i class="text-dark fw-bold">
-                      ${request.duration === 'Not set' ? 'Not set' : request.duration + ' Hrs'}
+                      ${request.duration === 'Not set' ? 'Not set' : request.duration + ' days'}
                     </i>
                   </div>
                   <div class="col-md-6 text-md-end">
@@ -177,7 +177,7 @@ const requestsTemplate = (data) => html`
                 <div class="col-md-6">
                   <strong>Duration:</strong>
                   <i class="text-dark fw-bold">
-                    ${data.duration === 'Not set' ? 'Not set' : data.duration + ' Hrs'}
+                    ${data.duration === 'Not set' ? 'Not set' : data.duration + ' days'}
                   </i>
                 </div>
                 <div class="col-md-6 text-md-end">

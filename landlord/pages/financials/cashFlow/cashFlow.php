@@ -317,12 +317,12 @@ $netCash = number_format($netCash, 2);
                                 <header>
                                     <div>
                                         <h1>Emmanuel Properties Ltd. — Cash Flow Statement</h1>
-                                        <p>For the month of September 2025 (KES)</p>
+                                        <p>For the month of November 2025 (KES)</p>
                                     </div>
                                     <div style="text-align:right">
-                                        <p style="font-weight:700" class="mb-2">Opening Cash Balance: <span style="color:#ffffff">KES 180,000</p>
+                                        <p style="font-weight:700" class="mb-2">Opening Cash Balance: <span style="color:#ffffff">KSH 0</p>
                                         <p style="font-weight:700">Net Cash Movement: <span style="color:#ffffff"><?= $netCash ?></span></p>
-                                        <p style="font-size:12px;margin-top:6px;opacity:0.9">Generated: Oct 8, 2025</p>
+                                        <p style="font-size:12px;margin-top:6px;opacity:0.9">Generated: Nov 12, 2025</p>
                                     </div>
                                 </header>
 
@@ -425,7 +425,7 @@ $netCash = number_format($netCash, 2);
                                         </tr>
                                         <tr class="total-row">
                                             <td>Total Net Movement</td>
-                                            <td class="right"><?= number_format($totalFinancingInflows, 2) + number_format($totalInvestingOutflows, 2) ?></td>
+                                            <td class="right"><?= number_format($totalFinancingInflows + $totalInvestingOutflows, 2) ?></td>
                                             <td class="right">
                                                 <?= number_format($cumulativeOutflow + $totalFinancingOutflows + $totalInvestingInflows, 2) ?>
                                             </td>
