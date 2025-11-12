@@ -1,153 +1,3 @@
-<?php 
-include '../../db/connect.php';
-
-// ===========================
-// BUILD FILTER CONDITIONS
-// ===========================
-$where = [];
-$params = [];
-
-// Date range filter
-if (!empty($_GET['from_date']) && !empty($_GET['to_date'])) {
-    $where[] = "je.entry_date BETWEEN :from AND :to";
-    $params[':from'] = $_GET['from_date'];
-    $params[':to']   = $_GET['to_date'];
-}
-
-// Account filter
-if (!empty($_GET['account_id'])) {
-    $where[] = "jl.account_id = :account_id";
-    $params[':account_id'] = $_GET['account_id'];
-}
-
-$whereSql = $where ? "WHERE " . implode(" AND ", $where) : "";
-
-// ===========================
-// MAIN QUERY (UNION journals + expense_items.item_total)
-// ===========================
-$where = [];
-$params = [];
-
-// Date range filter for both journal_entries.entry_date and expense_items.created_at
-if (!empty($_GET['from_date']) && !empty($_GET['to_date'])) {
-    $where[] = "(je.entry_date BETWEEN :from AND :to OR ei.created_at BETWEEN :from AND :to)";
-    $params[':from'] = $_GET['from_date'];
-    $params[':to']   = $_GET['to_date'];
-}
-
-// Optional account filter (apply to journal_lines.account_id OR expense_items.item_account_code)
-if (!empty($_GET['account_id'])) {
-    $where[] = "(jl.account_id = :account_id OR ei.item_account_code = :account_id)";
-    $params[':account_id'] = $_GET['account_id'];
-}
-
-$whereSql = $where ? "WHERE " . implode(" AND ", $where) : "";
-
-/*
-  Two-part UNION:
-  - Part A: aggregates journal_lines (same as before)
-  - Part B: aggregates expense_items using item_total (explicitly)
-*/
-$sql = "
-    -- PART A: Journal lines
-    SELECT 
-        a.account_code,
-        a.account_name,
-        a.account_type,
-        a.financial_statement,
-        a.debit_credit,
-        COALESCE(SUM(jl.debit), 0) AS total_debit,
-        COALESCE(SUM(jl.credit), 0) AS total_credit,
-        'journal' AS source_type
-    FROM chart_of_accounts a
-    LEFT JOIN journal_lines jl ON a.account_code = jl.account_id
-    LEFT JOIN journal_entries je ON jl.journal_entry_id = je.id
-    LEFT JOIN expense_items ei ON 1=0  -- keep same column namespace for union; no effect
-    $whereSql
-    GROUP BY a.account_code, a.account_name, a.account_type, a.financial_statement, a.debit_credit
-
-    UNION ALL
-
-    -- PART B: Expenses (use item_total explicitly)
-    SELECT
-        ei.item_account_code AS account_code,
-        COALESCE(a.account_name, CONCAT('Expense (code ', ei.item_account_code, ')')) AS account_name,
-        COALESCE(a.account_type, 'Expense') AS account_type,
-        COALESCE(a.financial_statement, 'P&L') AS financial_statement,
-        'DEBIT' AS debit_credit,
-        COALESCE(SUM(CAST(ei.item_total AS DECIMAL(20,2))), 0) AS total_debit,
-        0 AS total_credit,
-        'expense_items' AS source_type
-    FROM expense_items ei
-    LEFT JOIN chart_of_accounts a ON ei.item_account_code = a.account_code
-    LEFT JOIN journal_lines jl ON 1=0
-    LEFT JOIN journal_entries je ON 1=0
-    $whereSql
-    GROUP BY ei.item_account_code, a.account_name, a.account_type, a.financial_statement
-
-    ORDER BY account_code
-";
-
-
-$stmt = $pdo->prepare($sql);
-$stmt->execute($params);
-$rawRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// ===========================
-// POST-PROCESSING: DETERMINE DEBIT / CREDIT POSITION
-// ===========================
-$rows = [];
-foreach ($rawRows as $r) {
-    $accountName = strtolower(trim($r['account_name']));
-    $normalSide  = strtoupper(trim($r['debit_credit'])); // 'DEBIT' or 'CREDIT'
-    $net = $r['total_debit'] - $r['total_credit'];
-
-    // Default logic based on normal side
-    if ($normalSide === 'DEBIT') {
-        $debit = $net >= 0 ? $net : 0;
-        $credit = $net < 0 ? abs($net) : 0;
-    } else {
-        $credit = $net <= 0 ? abs($net) : 0;
-        $debit = $net > 0 ? $net : 0;
-    }
-
-    // ===========================
-    // FORCE CREDIT for these cases
-    // ===========================
-    if (
-        strpos($accountName, 'accounts payable..') !== false ||
-        strpos($accountName, 'loan..') !== false ||
-        strpos($accountName, 'capital..') !== false ||
-        strpos($accountName, 'revenue..') !== false ||
-        strpos($accountName, 'income..') !== false ||
-        strpos($accountName, 'garbage collection fees..') !== false
-    ) {
-        // Ensure it shows under Credit only
-        $credit = max($r['total_credit'], abs($net));
-        $debit = 0;
-    }
-
-    // Skip zero balances
-    if (abs($debit) < 0.01 && abs($credit) < 0.01) continue;
-
-    $r['adjusted_debit'] = $debit;
-    $r['adjusted_credit'] = $credit;
-
-    $rows[] = $r;
-}
-
-// ===========================
-// FETCH ACCOUNT LIST FOR FILTERS
-// ===========================
-$accounts = $pdo->query("
-    SELECT account_code, account_name 
-    FROM chart_of_accounts 
-    ORDER BY account_name
-")->fetchAll(PDO::FETCH_ASSOC);
-?>
-
-
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -166,12 +16,200 @@ $accounts = $pdo->query("
   <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
   
   <style>
-    body { font-size: 16px; }
-    .table th { background-color: #343a40; color: white; }
-    .balance-positive { color: #28a745; font-weight: bold; }
-    .balance-negative { color: #dc3545; font-weight: bold; }
-    .account-code { color: #6c757d; font-size: 0.9em; }
-    .debug-info { background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 10px; margin-bottom: 15px; border-radius: 5px; }
+    :root {
+      --primary-dark: #00192D;
+      --primary-gold: #FFC107;
+      --success-light: #e8f5e8;
+      --danger-light: #fde8e8;
+    }
+    
+    body { 
+      font-size: 16px; 
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      min-height: 100vh;
+    }
+    
+    .app-wrapper {
+      background: transparent;
+    }
+    
+    .card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    
+    .card-header {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, #002c4d 100%);
+      color: white;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 3px solid var(--primary-gold);
+    }
+    
+    .table th { 
+      background: linear-gradient(135deg, var(--primary-dark) 0%, #002c4d 100%);
+      color: var(--primary-gold);
+      font-weight: 600;
+      border: none;
+      padding: 1rem 0.75rem;
+      text-align: center;
+    }
+    
+    .table td {
+      padding: 0.85rem 0.75rem;
+      vertical-align: middle;
+      border-color: #e9ecef;
+    }
+    
+    .table tbody tr {
+      transition: all 0.3s ease;
+    }
+    
+    .table tbody tr:hover {
+      background-color: #f8f9fa;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .balance-positive { 
+      color: #28a745; 
+      font-weight: 600;
+      background-color: var(--success-light);
+      border-radius: 4px;
+      padding: 0.25rem 0.5rem;
+    }
+    
+    .balance-negative { 
+      color: #dc3545; 
+      font-weight: 600;
+      background-color: var(--danger-light);
+      border-radius: 4px;
+      padding: 0.25rem 0.5rem;
+    }
+    
+    .account-code { 
+      color: #6c757d; 
+      font-size: 0.85em;
+      display: block;
+      margin-top: 0.25rem;
+    }
+    
+    .filter-section {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      margin-bottom: 2rem;
+    }
+    
+    .btn-primary-custom {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, #002c4d 100%);
+      color: var(--primary-gold);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary-custom:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,25,45,0.3);
+      color: var(--primary-gold);
+    }
+    
+    .form-control {
+      border-radius: 8px;
+      border: 1px solid #dee2e6;
+      padding: 0.75rem;
+      transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+      border-color: var(--primary-dark);
+      box-shadow: 0 0 0 0.2rem rgba(0,25,45,0.1);
+    }
+    
+    .table-responsive {
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    
+    .status-balanced {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: white;
+    }
+    
+    .status-unbalanced {
+      background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
+      color: white;
+    }
+    
+    .dropdown-menu {
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      border: none;
+    }
+    
+    .dropdown-item {
+      padding: 0.5rem 1rem;
+      transition: all 0.2s ease;
+    }
+    
+    .dropdown-item:hover {
+      background-color: #f8f9fa;
+      color: var(--primary-dark);
+    }
+    
+    .main-title {
+      color: var(--primary-dark);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+      padding-bottom: 1rem;
+    }
+    
+    .main-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-dark) 0%, var(--primary-gold) 100%);
+      border-radius: 2px;
+    }
+    
+    .total-row {
+      font-weight: 700;
+      background-color: #f8f9fa !important;
+    }
+    
+    .footer-info {
+      background-color: #f8f9fa;
+      border-top: 1px solid #dee2e6;
+      padding: 1rem 1.5rem;
+      font-size: 0.9em;
+    }
+    
+    .nav-tabs .nav-link.active {
+      border-bottom: 3px solid var(--primary-gold);
+      font-weight: 600;
+    }
+    
+    .loading-spinner {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+    }
+    
+    .date-validation {
+      font-size: 0.875em;
+      margin-top: 0.25rem;
+    }
   </style>
 </head>
 
@@ -266,44 +304,67 @@ $stmt->execute($params);
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<main class="container">
-  <h3 class="mb-4 text-center">Trial Balance</h3>
+<main class="container py-4">
+  <h1 class="main-title">Trial Balance Report</h1>
 
   <!-- FILTER FORM -->
-  <form method="GET" class="row g-3 mb-4">
-    <div class="col-md-4">
-      <label class="form-label">From Date</label>
-      <input type="date" name="from_date" value="<?= htmlspecialchars($_GET['from_date'] ?? '') ?>" class="form-control">
-    </div>
-    <div class="col-md-4">
-      <label class="form-label">To Date</label>
-      <input type="date" name="to_date" value="<?= htmlspecialchars($_GET['to_date'] ?? '') ?>" class="form-control">
-    </div>
-    <div class="col-md-4 d-flex align-items-end">
-      <button type="submit" class="btn w-100" style="background-color:#00192D;color:#FFC107;">
-        <i class="fas fa-filter me-2"></i>Filter
-      </button>
-    </div>
-  </form>
+  <div class="filter-section">
+    <form method="GET" class="row g-3 align-items-end" id="filterForm">
+      <div class="col-md-4">
+        <label class="form-label fw-semibold">From Date</label>
+        <input type="date" name="from_date" id="from_date" value="<?= htmlspecialchars($_GET['from_date'] ?? '') ?>" class="form-control">
+        <div class="date-validation text-danger" id="from_date_error"></div>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label fw-semibold">To Date</label>
+        <input type="date" name="to_date" id="to_date" value="<?= htmlspecialchars($_GET['to_date'] ?? '') ?>" class="form-control">
+        <div class="date-validation text-danger" id="to_date_error"></div>
+      </div>
+      <div class="col-md-2 d-grid">
+        <button type="submit" class="btn btn-primary-custom" id="filterBtn">
+          <i class="fas fa-filter me-2"></i>Apply Filters
+        </button>
+      </div>
+      <div class="col-md-2 d-grid">
+        <button type="button" class="btn btn-outline-secondary" id="resetBtn">
+          <i class="fas fa-redo me-2"></i>Reset
+        </button>
+      </div>
+    </form>
+  </div>
 
-  <div class="card shadow">
+  <!-- Loading Spinner -->
+  <div class="loading-spinner" id="loadingSpinner">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">Loading trial balance data...</p>
+  </div>
+
+  <div class="card" id="resultsCard">
+    <div class="card-header">
+      <h5 class="card-title mb-0"><i class="fas fa-balance-scale me-2"></i>Trial Balance Summary</h5>
+      <?php if (!empty($_GET['from_date']) && !empty($_GET['to_date'])): ?>
+        <small class="text-white-50">Showing data from <?= htmlspecialchars($_GET['from_date']) ?> to <?= htmlspecialchars($_GET['to_date']) ?></small>
+      <?php endif; ?>
+    </div>
     <div class="card-body p-0">
       <div class="table-responsive">
-        <table id="trialBalance" class="table table-bordered table-striped mb-0">
-          <thead class="table" style="color:#FFC107;">
+        <table id="trialBalance" class="table table-hover mb-0">
+          <thead>
             <tr>
-              <th rowspan="2">Account</th>
-              <th colspan="2">Initial Balance</th>
-              <th colspan="2"><?= !empty($_GET['from_date']) && !empty($_GET['to_date']) ? date('M Y', strtotime($_GET['from_date'])) : 'Period' ?></th>
-              <th colspan="2">End Balance</th>
+              <th rowspan="2" class="align-middle">Account</th>
+              <th colspan="2" class="text-center">Initial Balance</th>
+              <th colspan="2" class="text-center"><?= !empty($_GET['from_date']) && !empty($_GET['to_date']) ? date('M Y', strtotime($_GET['from_date'])) : 'Period' ?></th>
+              <th colspan="2" class="text-center">End Balance</th>
             </tr>
             <tr>
-              <th>Debit</th>
-              <th>Credit</th>
-              <th>Debit</th>
-              <th>Credit</th>
-              <th>Debit</th>
-              <th>Credit</th>
+              <th class="text-center">Debit</th>
+              <th class="text-center">Credit</th>
+              <th class="text-center">Debit</th>
+              <th class="text-center">Credit</th>
+              <th class="text-center">Debit</th>
+              <th class="text-center">Credit</th>
             </tr>
           </thead>
           <tbody>
@@ -386,7 +447,7 @@ foreach ($rows as $r):
   <td>
   <div class="d-flex align-items-center justify-content-between">
   <div class="fw-bold">
-    <?= htmlspecialchars($r['account_name']) ?>:
+    <?= htmlspecialchars($r['account_name']) ?>
   </div>
 
   <!-- Dots dropdown -->
@@ -396,8 +457,8 @@ foreach ($rows as $r):
     </button>
     <ul class="dropdown-menu dropdown-menu-end">
       <li>
-        <a class="dropdown-item" href="/Jengopay/landlord/pages/financials/trialbalance/general_ledger.php?account=<?= urlencode($r['account_name']) ?>">
-          View General Ledger
+        <a class="dropdown-item" href="/Jengopay/landlord/pages/financials/trialbalance/general_ledger.php?account=<?= urlencode($r['account_name']) ?>&from_date=<?= htmlspecialchars($_GET['from_date'] ?? '') ?>&to_date=<?= htmlspecialchars($_GET['to_date'] ?? '') ?>">
+          <i class="fas fa-book me-2"></i>View General Ledger
         </a>
       </li>
     </ul>
@@ -417,8 +478,8 @@ foreach ($rows as $r):
 </tr>
 <?php endforeach; ?>
           </tbody>
-          <tfoot class="table-dark">
-            <tr>
+          <tfoot>
+            <tr class="total-row">
               <th>Total</th>
               <th class="text-end"><?= number_format($totalInitialDebit,2) ?></th>
               <th class="text-end"><?= number_format($totalInitialCredit,2) ?></th>
@@ -427,8 +488,8 @@ foreach ($rows as $r):
               <th class="text-end"><?= number_format($totalEndDebit,2) ?></th>
               <th class="text-end"><?= number_format($totalEndCredit,2) ?></th>
             </tr>
-            <tr class="<?= abs($totalEndDebit - $totalEndCredit) < 0.01 ? 'table-success' : 'table-danger' ?>">
-              <td colspan="7" class="text-center fw-bold">
+            <tr class="<?= abs($totalEndDebit - $totalEndCredit) < 0.01 ? 'status-balanced' : 'status-unbalanced' ?>">
+              <td colspan="7" class="text-center fw-bold py-3">
                 <?php if (abs($totalEndDebit - $totalEndCredit) < 0.01): ?>
                   <i class="fas fa-check-circle me-2"></i>Trial Balance is Balanced!
                 <?php else: ?>
@@ -442,16 +503,16 @@ foreach ($rows as $r):
       </div>
     </div>
 
-    <div class="card-footer text-muted d-flex justify-content-between">
-      <small>Generated on: <?= date('Y-m-d H:i:s') ?></small>
+    <div class="footer-info d-flex justify-content-between">
+      <small><i class="fas fa-calendar me-1"></i>Generated on: <?= date('Y-m-d H:i:s') ?></small>
       <small>
+        <i class="fas fa-clock me-1"></i>
         Period: <?= !empty($_GET['from_date']) ? htmlspecialchars($_GET['from_date']) : 'All' ?> 
         to <?= !empty($_GET['to_date']) ? htmlspecialchars($_GET['to_date']) : 'All' ?>
       </small>
     </div>
   </div>
 </main>
-
 
 </div>
 
@@ -479,5 +540,120 @@ foreach ($rows as $r):
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const filterForm = document.getElementById('filterForm');
+      const fromDateInput = document.getElementById('from_date');
+      const toDateInput = document.getElementById('to_date');
+      const filterBtn = document.getElementById('filterBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      const loadingSpinner = document.getElementById('loadingSpinner');
+      const resultsCard = document.getElementById('resultsCard');
+      
+      // Set default dates if not set
+      if (!fromDateInput.value) {
+        const firstDay = new Date();
+        firstDay.setDate(1);
+        fromDateInput.valueAsDate = firstDay;
+      }
+      
+      if (!toDateInput.value) {
+        toDateInput.valueAsDate = new Date();
+      }
+      
+      // Form validation
+      filterForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const fromDate = fromDateInput.value;
+        const toDate = toDateInput.value;
+        let isValid = true;
+        
+        // Clear previous errors
+        document.getElementById('from_date_error').textContent = '';
+        document.getElementById('to_date_error').textContent = '';
+        
+        // Validate dates
+        if (fromDate && toDate) {
+          if (new Date(fromDate) > new Date(toDate)) {
+            document.getElementById('from_date_error').textContent = 'From date cannot be after To date';
+            isValid = false;
+          }
+        }
+        
+        if (!fromDate && toDate) {
+          document.getElementById('from_date_error').textContent = 'From date is required when To date is set';
+          isValid = false;
+        }
+        
+        if (fromDate && !toDate) {
+          document.getElementById('to_date_error').textContent = 'To date is required when From date is set';
+          isValid = false;
+        }
+        
+        if (isValid) {
+          // Show loading spinner
+          loadingSpinner.style.display = 'block';
+          resultsCard.style.display = 'none';
+          filterBtn.disabled = true;
+          
+          // Submit the form
+          setTimeout(() => {
+            filterForm.submit();
+          }, 500);
+        }
+      });
+      
+      // Reset button functionality
+      resetBtn.addEventListener('click', function() {
+        fromDateInput.value = '';
+        toDateInput.value = '';
+        document.getElementById('from_date_error').textContent = '';
+        document.getElementById('to_date_error').textContent = '';
+        
+        // Show loading spinner
+        loadingSpinner.style.display = 'block';
+        resultsCard.style.display = 'none';
+        filterBtn.disabled = true;
+        
+        // Submit the form to show all data
+        setTimeout(() => {
+          filterForm.submit();
+        }, 500);
+      });
+      
+      // Auto-submit when both dates are selected
+      fromDateInput.addEventListener('change', function() {
+        if (fromDateInput.value && toDateInput.value) {
+          filterForm.dispatchEvent(new Event('submit'));
+        }
+      });
+      
+      toDateInput.addEventListener('change', function() {
+        if (fromDateInput.value && toDateInput.value) {
+          filterForm.dispatchEvent(new Event('submit'));
+        }
+      });
+      
+      // Initialize DataTable if there are rows
+      const table = document.getElementById('trialBalance');
+      if (table && table.rows.length > 2) {
+        $('#trialBalance').DataTable({
+          paging: false,
+          searching: true,
+          ordering: true,
+          info: false,
+          dom: '<"row"<"col-sm-12"f>>' +
+               '<"row"<"col-sm-12"tr>>' +
+               '<"row"<"col-sm-12"i>>',
+          language: {
+            search: "Search accounts:",
+            zeroRecords: "No matching accounts found"
+          }
+        });
+      }
+    });
+  </script>
 </body>
 </html>

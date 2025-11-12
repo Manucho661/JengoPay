@@ -235,6 +235,64 @@
                             </div>
                         </div>
                     </div>
+
+                    <?php
+                        include_once 'processes/encrypt_decrypt_function.php';
+                        if(isset($_POST['submit_bed_sitter_btn'])) {
+                            try{
+                                        // Insert unit data 
+                                $stmt = $pdo->prepare("
+                                    INSERT INTO multi_rooms (unit_number, purpose, building_link, location, water_meter, monthly_rent, occupancy_status)
+                                    VALUES (:unit_number, :purpose, :building_link, :location, :water_meter, :monthly_rent, :occupancy_status)");
+                                $stmt->execute([
+                                    ':unit_number'      => $_POST['unit_number'],
+                                    ':purpose'          => $_POST['purpose'],
+                                    ':building_link'    => $_POST['building_link'],
+                                    ':location'         => $_POST['location'],
+                                        ':water_meter'     => (string) $_POST['water_meter'], // decimals handled as strings
+                                        ':monthly_rent' => (string) $_POST['monthly_rent'],
+                                        ':occupancy_status' => $_POST['occupancy_status'],
+                                    ]);
+
+                                $unitId = $pdo->lastInsertId();
+
+                                        // Insert recurring expenses if available
+                                if (!empty($_POST['bill'])) {
+                                    $stmtExp = $pdo->prepare("
+                                        INSERT INTO multi_roombills (unit_id, bill, qty, unit_price)
+                                        VALUES (:unit_id, :bill, :qty, :unit_price)
+                                        ");
+
+                                    foreach ($_POST['bill'] as $i => $bill) {
+                                        if (!empty($bill)) {
+                                            $stmtExp->execute([
+                                                ':unit_id'    => $unitId,
+                                                ':bill'       => $bill,
+                                                ':qty'        => (int) $_POST['qty'][$i],
+                                                ':unit_price' => (string) $_POST['unit_price'][$i],
+                                            ]);
+                                        }
+                                    }
+                                }
+
+                                echo '<div id="countdown" class="alert alert-success" role="alert"></div>
+                                <script>
+                                var timeleft = 10;
+                                var downloadTimer = setInterval(function(){
+                                  if(timeleft <= 0){
+                                    clearInterval(downloadTimer);
+                                    window.location.href=window.location.href;
+                                    } else {
+                                        document.getElementById("countdown").innerHTML = "Bed Seater Unit Information Submitted Successfully! Redirecting in " + timeleft + " seconds remaining";
+                                    }
+                                    timeleft -= 1;
+                                    }, 1000);
+                                    </script>';
+                                } catch(PDOException $e){
+                                    echo "❌ Database error: " . $e->getMessage();
+                                }
+                            }
+                            ?>
                     <!-- Container Box -->
                     <div class="card shadow">
                         <div class="card-header">
