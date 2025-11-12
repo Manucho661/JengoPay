@@ -647,9 +647,11 @@ if (isset($_GET['id'])) {
       border-color: #c99700 !important;
       border: 1px solid #c99700 !important;
     }
-    .actualAssignBtn{
+
+    .actualAssignBtn {
       white-space: nowrap;
     }
+
     .request-provider:hover {
       cursor: pointer;
       text-decoration: underline;
@@ -773,6 +775,149 @@ if (isset($_GET['id'])) {
       background-color: rgba(128, 128, 128, 0.7) !important;
       color: white !important;
     }
+
+    /* Chat section styles */
+    .modal.right .modal-dialog {
+      position: fixed;
+      right: 0;
+      margin: 0;
+      top: 0;
+      bottom: 0;
+      height: 100%;
+      min-width: 450px;
+      transform: translateX(100%);
+      transition: transform 0.3s ease-out;
+    }
+
+    .modal.right.show .modal-dialog {
+      transform: translateX(0);
+    }
+
+    .modal.right .modal-content {
+      height: 100%;
+      border: 0;
+      border-radius: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      background-color: #f8f9fa;
+    }
+
+    .message {
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .message.client {
+      justify-content: flex-start;
+    }
+
+    .message.me {
+      justify-content: flex-end;
+    }
+
+    .message .bubble {
+      max-width: 75%;
+      padding: 0.6rem 1rem;
+      border-radius: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .message.client .bubble {
+      background-color: #e9ecef;
+      color: #212529;
+      border-top-left-radius: 0;
+    }
+
+    .message.me .bubble {
+      background-color: #0d6efd;
+      color: #fff;
+      border-top-right-radius: 0;
+    }
+
+    .chat-footer {
+      border-top: 1px solid #dee2e6;
+      padding: 0.5rem;
+      background-color: #fff;
+    }
+
+    .chat-footer input {
+      border-radius: 2rem;
+      padding: 0.5rem 1rem;
+    }
+
+    /* === Floating mini chat panel === */
+    .chat-panel {
+      position: fixed;
+      top: 80px;
+      /* Adjust distance from top */
+      right: 30px;
+      width: 320px;
+      max-height: 400px;
+      background: white;
+      border: 1px solid #dee2e6;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 1050;
+    }
+
+    .chat-panel-header {
+      background-color: #FFC107;
+      color: #00192D;
+      padding: 0.75rem 1rem;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .chat-item {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #f1f1f1;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .chat-item:hover {
+      background: #f8f9fa;
+    }
+
+    .chat-item small {
+      color: #6c757d;
+    }
+
+    /* === Top-right chat toggle button === */
+    .chat-toggle-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      background-color: #FFC107;
+      color: white;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      z-index: 1100;
+    }
   </style>
 </head>
 
@@ -806,7 +951,7 @@ if (isset($_GET['id'])) {
     <!-- Main Layout -->
     <main class="app-main">
       <!--begin::App Content Header-->
-      <div class="app-content-header">
+      <div class="app-content-header bg-white mb-2">
         <div class="container-fluid">
           <div class="row align-items-center gy-3 gx-2 mb-2">
 
@@ -825,7 +970,7 @@ if (isset($_GET['id'])) {
             </div>
 
             <!-- Request Property -->
-            <div class="col-lg-4 col-md-6 col-12 d-flex align-items-center justify-content-between">
+            <div class="col-lg-4 col-md-6 col-12 d-flex align-items-center border-left justify-content-between">
               <div class="d-flex align-items-center flex-wrap">
                 <span class="info-box-icon me-2">
                   <i class="bi bi-house fs-3 text-white"></i>
@@ -842,15 +987,15 @@ if (isset($_GET['id'])) {
               </button>
 
               <div id="mobileNavMenuProperty" class="mobile-nav-menu d-none position-absolute bg-white shadow rounded-3 mt-2">
-                <a class="dropdown-item" href="maintenance.php" data-tab="all">All Requests</a>
+                <!-- <a class="dropdown-item" href="maintenance.php" data-tab="all">All Requests</a>
                 <a class="dropdown-item" href="#" data-tab="saved">Saved</a>
-                <a class="dropdown-item" href="#" data-tab="cancelled">Cancelled</a>
+                <a class="dropdown-item" href="#" data-tab="cancelled">Cancelled</a> -->
               </div>
             </div>
 
             <!-- Navigation (desktop only) -->
             <div class="col-lg-4 d-none d-lg-flex justify-content-end align-items-center">
-              <ul class="nav" id="requestNav">
+              <!-- <ul class="nav" id="requestNav">
                 <li class="nav-item">
                   <a class="nav-link fw-semibold" href="maintenance.php" data-tab="all">All Requests</a>
                 </li>
@@ -860,29 +1005,35 @@ if (isset($_GET['id'])) {
                 <li class="nav-item">
                   <a class="nav-link fw-semibold" href="#" data-tab="cancelled">Cancelled</a>
                 </li>
-              </ul>
+              </ul> -->
             </div>
           </div>
           <div class="row ">
             <div class="col-md-6">
             </div>
             <div class="col-md-6 d-flex gap-1 flex-nowrap">
-            
+
               <button type="button" id="availabilityBtn" class="btn seTAvailable text-white fw-bold"
                 style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">
-                Set Available 
+                Set Available
               </button>
               <button type="button" class="btn bg-danger text-white seTAvailable fw-bold"
                 style="width:100%; white-space: nowrap;">
                 Cancel Request
               </button>
+              <button type="button" class="btn bg-danger text-white seTAvailable fw-bold"
+                style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">
+                All Requests
+              </button>
             </div>
-
+            <div class="new-messages">
+              <div class="chat-toggle-btn" id="openChatPanel">
+                <i class="bi bi-chat-dots-fill"></i>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
-
 
       <div class="app-content">
         <div class="container-fluid px-0 rounded-2 mb-2">
@@ -924,11 +1075,11 @@ if (isset($_GET['id'])) {
               <div class="card p-3 d-flex flex-row gap-5 border-0 shadow-none d-flex ">
                 <div>
                   <p class="fw-bold">Status</p>
-                  <p id="request-provider" class="request-provider text-success">Not Assigned</p>
+                  <p id="request-status" class="request-status">Not Assigned</p>
                 </div>
                 <div>
                   <p class="fw-bold">Payment</p>
-                  <p id="request-status" style="font-size: 15px; color: #b93232ff;" class="">Not assigned</p>
+                  <p id="request-payment" style="font-size: 15px; color: #b93232ff;" class="">Not assigned</p>
                 </div>
               </div>
             </div>
@@ -1086,7 +1237,7 @@ if (isset($_GET['id'])) {
         <!-- Footer -->
         <div class="modal-footer border-top" id="proposalModalFooter">
           <div id="assignBox">
-            <button type="button" class="btn btn-outline-navy">Message</button>
+            <button type="button" class="btn btn-outline-navy" data-bs-toggle="modal" data-bs-target="#chatModal">Message</button>
             <button type="button" id="assignBtn" class="assignBtn btn btn-accent">Assign</button>
             <button type="button" class="btn btn-outline-danger">Reject</button>
           </div>
@@ -1220,6 +1371,66 @@ if (isset($_GET['id'])) {
   </div>
   </div>
 
+  <!-- CHAT MODAL -->
+  <!-- Floating Mini Chat Panel -->
+  <div class="chat-panel" id="chatPanel">
+    <div class="chat-panel-header">
+      Messages
+      <i class="bi bi-x-lg" id="closeChatPanel" style="cursor:pointer;"></i>
+    </div>
+    <div class="chat-list">
+      <div class="chat-item" data-client="Alex Johnson">
+        <strong>Alex Johnson</strong><br>
+        <small>Can we review the last design updates?</small>
+      </div>
+      <div class="chat-item" data-client="Sophia Lee">
+        <strong>Sophia Lee</strong><br>
+        <small>Got the latest quote?</small>
+      </div>
+      <div class="chat-item" data-client="Mark Evans">
+        <strong>Mark Evans</strong><br>
+        <small>Thanks for sending the document!</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right-side Chat Modal -->
+  <div class="modal right fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div>
+            <h5 class="modal-title mb-0" id="chatModalLabel">Chat with Client</h5>
+            <small class="text-muted" id="projectSubtitle">Ongoing Project</small>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="chat-body" id="chatBody">
+          <div class="message client">
+            <div class="bubble">Hello!</div>
+          </div>
+          <div class="message me">
+            <div class="bubble">Hi there 👋</div>
+          </div>
+        </div>
+
+        <div class="chat-footer">
+          <form id="chatForm" class="input-group">
+            <input
+              type="text"
+              id="chatInput"
+              class="form-control"
+              placeholder="Type a message..."
+              required>
+            <button class="btn btn-primary" id="chatSendBtn" type="submit">
+              <i class="bi bi-send"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- Set the reqeust available -->
   <div class="modal fade" id="durationBudgetModal" tabindex="-1" aria-labelledby="availabilityModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -1231,21 +1442,75 @@ if (isset($_GET['id'])) {
 
         <form id="durationBudget">
           <div class="modal-body">
+            <!-- Price Input -->
             <div class="mb-3">
               <label for="priceInput" class="form-label" style="color: white;">Enter Price</label>
-              <input type="number" class="form-control" id="priceInput" name="budget" placeholder="Enter price">
+              <input
+                type="number"
+                class="form-control"
+                id="priceInput"
+                name="budget"
+                placeholder="Enter price"
+                required>
             </div>
+
+            <!-- Duration Selection -->
             <div class="mb-3">
-              <label for="durationInput" class="form-label" style="color: white;">Enter Duration (days)</label>
-              <input type="number" class="form-control" id="durationInput" name="duration" placeholder="Enter duration">
+              <label for="durationSelect" class="form-label" style="color: white;">Select Duration</label>
+              <select class="form-select" id="durationSelect" name="durationOption">
+                <option value="">-- Choose Duration --</option>
+                <option value="<24">Less than 24 hrs</option>
+                <option value="1">1 day</option>
+                <option value="2">2 days</option>
+                <option value="3">3 days</option>
+                <option value="custom">Enter your own</option>
+              </select>
+            </div>
+
+            <!-- Custom Duration Input (hidden by default) -->
+            <div class="mb-3" id="customDurationDiv" style="display: none;">
+              <label for="customDurationInput" class="form-label" style="color: white;">Enter Custom Duration (days)</label>
+              <input
+                type="number"
+                class="form-control"
+                id="customDurationInput"
+                name="customDuration"
+                placeholder="Enter duration"
+                min="1">
             </div>
           </div>
 
+          <!-- Footer Buttons -->
           <div class="modal-footer">
-            <button type="button" class="btn" style="background-color: #FFC107; color: #00192D;" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn" style="background-color: #00192D; color: white;">Confirm Availability</button>
+            <button
+              type="button"
+              class="btn"
+              style="background-color: #FFC107; color: #00192D;"
+              data-bs-dismiss="modal">
+              Close
+            </button>
+            <button
+              type="submit"
+              class="btn"
+              style="background-color: #00192D; color: white;">
+              Confirm Availability
+            </button>
           </div>
         </form>
+
+        <!-- Script -->
+        <script>
+          const durationSelect = document.getElementById('durationSelect');
+          const customDurationDiv = document.getElementById('customDurationDiv');
+
+          durationSelect.addEventListener('change', function() {
+            if (this.value === 'custom') {
+              customDurationDiv.style.display = 'block';
+            } else {
+              customDurationDiv.style.display = 'none';
+            }
+          });
+        </script>
       </div>
     </div>
   </div>

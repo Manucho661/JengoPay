@@ -4,6 +4,8 @@ import { assignProvider } from "./api/assignProvider.js";
 import { updateAvailabilty } from "./api/updateAvailabilty.js";
 import { getProviderDetails } from "./api/getProviderDetails.js";
 import { setDurationBudget } from "./api/durationBudget.js";
+import { sendText } from "./api/sendText.js";
+import { getTextMessages } from "./api/getTextMessages.js";
 import { toggleProposalsORotherRequests, confirmAssignBox, hideAssignBox, applyAvailabilityStyles } from "./uiControl.js";
 
 import { terminateContract, terminateContractBox, hideTerminateBox } from "./api/terminateProvider.js";
@@ -52,5 +54,14 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById('cancelTerminateBtn').addEventListener('click', hideTerminateBox);
 
   document.getElementById('actualTerminateBtn').addEventListener('click', terminateContract);
+
+  // send text
+  document.getElementById('chatForm').addEventListener('submit', sendText);
+
+  // get text Messages
+  getTextMessages();
+
+  // 🔁 refresh messages every 3 seconds
+  setInterval(getTextMessages, 3000);
 
 });
