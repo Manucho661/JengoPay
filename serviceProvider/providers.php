@@ -314,6 +314,149 @@ try {
       background: linear-gradient(transparent, white);
       padding-bottom: 50px;
     }
+
+    /*chat Modal styles */
+    .modal.right .modal-dialog {
+      position: fixed;
+      right: 0;
+      margin: 0;
+      top: 0;
+      bottom: 0;
+      height: 100%;
+      min-width: 450px;
+      transform: translateX(100%);
+      transition: transform 0.3s ease-out;
+    }
+
+    .modal.right.show .modal-dialog {
+      transform: translateX(0);
+    }
+
+    .modal.right .modal-content {
+      height: 100%;
+      border: 0;
+      border-radius: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      background-color: #f8f9fa;
+    }
+
+    .message {
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .message.client {
+      justify-content: flex-start;
+    }
+
+    .message.me {
+      justify-content: flex-end;
+    }
+
+    .message .bubble {
+      max-width: 75%;
+      padding: 0.6rem 1rem;
+      border-radius: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .message.client .bubble {
+      background-color: #e9ecef;
+      color: #212529;
+      border-top-left-radius: 0;
+    }
+
+    .message.me .bubble {
+      background-color: #0d6efd;
+      color: #fff;
+      border-top-right-radius: 0;
+    }
+
+    .chat-footer {
+      border-top: 1px solid #dee2e6;
+      padding: 0.5rem;
+      background-color: #fff;
+    }
+
+    .chat-footer input {
+      border-radius: 2rem;
+      padding: 0.5rem 1rem;
+    }
+
+    /* === Floating mini chat panel === */
+    .chat-panel {
+      position: fixed;
+      top: 80px;
+      /* Adjust distance from top */
+      right: 30px;
+      width: 320px;
+      max-height: 400px;
+      background: white;
+      border: 1px solid #dee2e6;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 1050;
+    }
+
+    .chat-panel-header {
+      background-color: #FFC107;
+      color: #00192D;
+      padding: 0.75rem 1rem;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .chat-item {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #f1f1f1;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .chat-item:hover {
+      background: #f8f9fa;
+    }
+
+    .chat-item small {
+      color: #6c757d;
+    }
+
+    /* === Top-right chat toggle button === */
+    .chat-toggle-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      background-color: #FFC107;
+      color: white;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      z-index: 1100;
+    }
   </style>
 </head>
 
@@ -342,10 +485,9 @@ try {
         </button>
       </div>
       <div class="new-messages">
-        <button class="btn btn-warning fw-bold">
-          <i class="bi bi-envelope"></i> New Messages
-          <span class="badge-notification">5</span> <!-- Number of unread messages -->
-        </button>
+        <div class="chat-toggle-btn" id="openChatPanel">
+          <i class="bi bi-chat-dots-fill"></i>
+        </div>
       </div>
 
       <!-- Right side: Nav links -->
@@ -597,9 +739,66 @@ try {
 
   </div>
 
+  <!-- CHAT AREA -->
+  <!-- Floating Mini Chat Panel -->
+  <div class="chat-panel" id="chatPanel">
+    <div class="chat-panel-header">
+      Messages
+      <i class="bi bi-x-lg" id="closeChatPanel" style="cursor:pointer;"></i>
+    </div>
+    <div class="chat-list">
+      <div class="chat-item" data-client="Alex Johnson">
+        <strong>Alex Johnson</strong><br>
+        <small>Can we review the last design updates?</small>
+      </div>
+      <div class="chat-item" data-client="Sophia Lee">
+        <strong>Sophia Lee</strong><br>
+        <small>Got the latest quote?</small>
+      </div>
+      <div class="chat-item" data-client="Mark Evans">
+        <strong>Mark Evans</strong><br>
+        <small>Thanks for sending the document!</small>
+      </div>
+    </div>
+  </div>
 
+  <!-- Right-side Chat Modal -->
+  <div class="modal right fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div>
+            <h5 class="modal-title mb-0" id="chatModalLabel">Chat with Client</h5>
+            <small class="text-muted" id="projectSubtitle">Ongoing Project</small>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
 
+        <div class="chat-body" id="chatBody">
+          <div class="message client">
+            <div class="bubble">Hello!</div>
+          </div>
+          <div class="message me">
+            <div class="bubble">Hi there 👋</div>
+          </div>
+        </div>
 
+        <div class="chat-footer">
+          <form id="chatForm" class="input-group">
+            <input
+              type="text"
+              id="chatInput"
+              class="form-control"
+              placeholder="Type a message..."
+              required>
+            <button class="btn btn-primary" id="chatSendBtn" type="submit">
+              <i class="bi bi-send"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script type="module" src="js/main.js"></script>

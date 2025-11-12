@@ -1,3 +1,26 @@
+<?php
+require_once "actions/operatingOutFlow.php";
+require_once  "actions/operatingInflow.php";
+require_once "actions/investingInflow.php";
+require_once "actions/investingOutflow.php";
+require_once "actions/financiangInflow.php";
+require_once "actions/financingOutflow.php";
+
+$openingBalance = "";
+
+$TotalInflows = $totalTenantDeposits + $cumulativeOperatingInflow + $totalInvestingOutflows + $totalFinancingInflows;
+$TotalOutflows = $cumulativeOutflow + $totalInvestingOutflows + $totalFinancingOutflows;
+
+$netCash = $TotalInflows - $TotalOutflows;
+
+// Now format for display (not before calculations)
+$TotalInflows = number_format($TotalInflows, 2);
+$TotalOutflows = number_format($TotalOutflows, 2);
+$netCash = number_format($netCash, 2);
+
+?>
+
+
 <!doctype html>
 <html lang="en">
 <!--begin::Head-->
@@ -298,7 +321,7 @@
                                     </div>
                                     <div style="text-align:right">
                                         <p style="font-weight:700" class="mb-2">Opening Cash Balance: <span style="color:#ffffff">KES 180,000</p>
-                                        <p style="font-weight:700">Net Cash Movement: <span style="color:#ffffff">KES 180,000</span></p>
+                                        <p style="font-weight:700">Net Cash Movement: <span style="color:#ffffff"><?= $netCash ?></span></p>
                                         <p style="font-size:12px;margin-top:6px;opacity:0.9">Generated: Oct 8, 2025</p>
                                     </div>
                                 </header>
@@ -316,93 +339,83 @@
                                         <tr class="section">
                                             <td colspan="3">Operating Activities</td>
                                         </tr>
-                                        <tr>
-                                            <td>Rent received</td>
-                                            <td class="right">450,000</td>
-                                            <td class="right">&mdash;</td>
-                                        </tr>
+                                        <?php foreach ($operatingInflows as $inflow): ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($inflow['item_type']) ?></td>
+                                                <td class="right"><?= number_format($inflow['total_amount'], 2) ?></td>
+                                                <td class="right">&mdash;</td>
+                                            </tr>
+                                        <?php endforeach; ?>
                                         <tr>
                                             <td>Rent deposits from new tenants</td>
-                                            <td class="right">100,000</td>
+                                            <td class="right"> <?= number_format($totalTenantDeposits, 2) ?> </td>
                                             <td class="right">&mdash;</td>
                                         </tr>
-                                        <tr>
-                                            <td>Electricity bills</td>
-                                            <td class="right">&mdash;</td>
-                                            <td class="right">25,000</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Water bills</td>
-                                            <td class="right">&mdash;</td>
-                                            <td class="right">15,000</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Security & cleaning staff salaries</td>
-                                            <td class="right">&mdash;</td>
-                                            <td class="right">60,000</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Repairs & maintenance</td>
-                                            <td class="right">&mdash;</td>
-                                            <td class="right">30,000</td>
-                                        </tr>
+                                        <!-- outflow -->
+
+                                        <?php foreach ($operatingOutflows as $outflow): ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($outflow['item_type']) ?></td>
+                                                <td class="right">&mdash;</td>
+                                                <td class="right"><?= number_format($outflow['total_amount'], 2) ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+
                                         <tr class="total-row">
                                             <td>Net Cash from Operating Activities</td>
-                                            <td class="right positive">550,000</td>
-                                            <td class="right">130,000</td>
+                                            <td class="right positive"><?= number_format($totalTenantDeposits  + $cumulativeOperatingInflow, 2) ?></td>
+                                            <td class="right"><?= number_format($cumulativeOutflow, 2) ?></td>
                                         </tr>
+
                                         <!-- Investing Activities -->
                                         <tr class="section">
                                             <td colspan="3">Investing Activities</td>
                                         </tr>
-                                        <tr>
-                                            <td>Purchase of new plot for expansion</td>
-                                            <td class="right">&mdash;</td>
-                                            <td class="right">1,200,000</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Renovation of rental units</td>
-                                            <td class="right">&mdash;</td>
-                                            <td class="right">200,000</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Sale of old generator</td>
-                                            <td class="right">50,000</td>
-                                            <td class="right">&mdash;</td>
-                                        </tr>
+                                        <!-- outflow -->
+                                        <?php foreach ($investingOutflows as $outflow): ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($outflow['item_type']) ?></td>
+                                                <td class="right">&mdash;</td>
+                                                <td class="right"><?= number_format($outflow['total_amount'], 2) ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                        <!-- inflow -->
+                                        <?php foreach ($investingInflows as $Inflow): ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($Inflow['item_type']) ?></td>
+                                                <td class="right">&mdash;</td>
+                                                <td class="right"><?= number_format($Inflow['total_amount'], 2) ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
                                         <tr class="total-row">
                                             <td>Net Cash from Investing Activities</td>
-                                            <td class="right">50,000</td>
-                                            <td class="right negative">1,400,000</td>
+                                            <td class="right"><?= number_format($totalInvestingInflows, 2) ?></td>
+                                            <td class="right negative"><?= number_format($totalInvestingOutflows, 2) ?></td>
                                         </tr>
                                         <!-- Financing Activities -->
                                         <tr class="section">
                                             <td colspan="3">Financing Activities</td>
                                         </tr>
-                                        <tr>
-                                            <td>Bank loan received</td>
-                                            <td class="right">1,000,000</td>
-                                            <td class="right">&mdash;</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Owner's capital injection</td>
-                                            <td class="right">300,000</td>
-                                            <td class="right">&mdash;</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Loan repayment (principal)</td>
-                                            <td class="right">&mdash;</td>
-                                            <td class="right">150,000</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Loan interest paid</td>
-                                            <td class="right">&mdash;</td>
-                                            <td class="right">40,000</td>
-                                        </tr>
+                                        <!-- outflow -->
+                                        <?php foreach ($financingInflows as $outflow): ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($outflow['item_type']) ?></td>
+                                                <td class="right">&mdash;</td>
+                                                <td class="right"><?= number_format($outflow['total_amount'], 2) ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                        <?php foreach ($financingOutflows as $outflow): ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($outflow['item_type']) ?></td>
+                                                <td class="right">&mdash;</td>
+                                                <td class="right"><?= number_format($outflow['total_amount'], 2) ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+
                                         <tr class="total-row">
                                             <td>Net Cash from Financing Activities</td>
-                                            <td class="right positive">1,300,000</td>
-                                            <td class="right">190,000</td>
+                                            <td class="right positive"> <?= number_format($totalFinancingInflows, 2) ?> </td>
+                                            <td class="right"><?= number_format($totalFinancingOutflows, 2) ?></td>
                                         </tr>
                                         <!-- Totals -->
                                         <tr style="height:8px">
@@ -412,18 +425,17 @@
                                         </tr>
                                         <tr class="total-row">
                                             <td>Total Net Movement</td>
-                                            <td class="right">1,900,000</td>
-                                            <td class="right">1,720,000</td>
+                                            <td class="right"><?= number_format($totalFinancingInflows, 2) + number_format($totalInvestingOutflows, 2) ?></td>
+                                            <td class="right">
+                                                <?= number_format($cumulativeOutflow + $totalFinancingOutflows + $totalInvestingInflows, 2) ?>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td style="font-weight:700">Net Cash (Inflows - Outflows)</td>
-                                            <td class="right" colspan="2" style="font-weight:700;color:#002B5B">KES 180,000</td>
+                                            <td class="right" colspan="2" style="font-weight:700;color:#002B5B"><?= $netCash ?></td>
                                         </tr>
                                     </tbody>
                                 </table>
-
-                                <p id="cf-note" class="footnote m-2">Opening Cash balance not shown. Closing Cash = Opening Cash + Net Cash Movement (KES 180,000).</p>
-
                             </div>
                         </div>
                     </div>
@@ -444,7 +456,7 @@
 
     <!-- Main Js File -->
     <script src="../../../../landlord/js/adminlte.js"></script>
-    <script type="module" src="js/main.js" ></script>
+    <script type="module" src="js/main.js"></script>
     <!-- html2pdf depends on html2canvas and jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script type="module" src="./js/main.js"></script>

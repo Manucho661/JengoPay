@@ -67,3 +67,41 @@ export function applyAvailabilityStyles(status) {
     btn.style.color = "#00192D";
   }
 }
+
+
+// end duration
+const durationSelect = document.getElementById('durationSelect');
+const customDurationDiv = document.getElementById('customDurationDiv');
+
+durationSelect.addEventListener('change', function () {
+  if (this.value === 'custom') {
+    customDurationDiv.style.display = 'block';
+  } else {
+    customDurationDiv.style.display = 'none';
+  }
+});
+
+// CHAT AREA
+const chatPanel = document.getElementById('chatPanel');
+const openChatPanel = document.getElementById('openChatPanel');
+const closeChatPanel = document.getElementById('closeChatPanel');
+const chatItems = document.querySelectorAll('.chat-item');
+const chatModal = new bootstrap.Modal(document.getElementById('chatModal'));
+const chatModalLabel = document.getElementById('chatModalLabel');
+
+openChatPanel.addEventListener('click', () => {
+    chatPanel.style.display = 'flex';
+});
+
+closeChatPanel.addEventListener('click', () => {
+    chatPanel.style.display = 'none';
+});
+
+chatItems.forEach(item => {
+    item.addEventListener('click', () => {
+        const client = item.dataset.client;
+        chatModalLabel.textContent = `Chat with ${client}`;
+        chatPanel.style.display = 'none';
+        chatModal.show();
+    });
+});

@@ -1,7 +1,3 @@
-import { html, render } from "https://unpkg.com/lit@3.1.4/index.js?module";
-import { openProposalModal } from "../modals.js";
-import { applyAvailabilityStyles } from "../uiControl.js";
-
 import { getRequestDetails } from "./getRequestDetails.js";
 
 /* ===========================
@@ -35,6 +31,8 @@ export async function assignProvider() {
     if (modal) {
       modal.hide(); // actually hides it
       console.log('Modal closed');
+      const confirmAssignBox = document.getElementById("confirmAssign");
+      confirmAssignBox.style.display = "none";
     } else {
       console.warn('No existing modal instance found');
     }

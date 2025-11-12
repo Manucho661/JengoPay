@@ -62,14 +62,21 @@ function fillRequestDetails(request, photos) {
     durationEl.textContent = "Not set";
   }
 
-  // provider response
-  const providerResponseEl = document.getElementById("provider_response");
-  const response = request?.provider_response || "Not assigned";
+  // status
+  const requestStatusEl = document.getElementById("request-status");
+  const status = request?.status || "Not assigned";
+  requestStatusEl.textContent = status;
+  if (status === "In progress") {
+    requestStatusEl.style.color = "green";
 
-  // Set text first
+  } else {
+    requestStatusEl.style.color = "#b93232ff";
+  }
+
+  // Provider response
+   const providerResponseEl = document.getElementById("provider_response");
+   const response = request?.provider_response || "Not assigned";
   providerResponseEl.textContent = response;
-
-  // Apply color based on value
   if (response === "Accepted") {
     providerResponseEl.style.color = "green";
 
@@ -108,7 +115,6 @@ function fillRequestDetails(request, photos) {
   if (availabilityBtn) {
     const availability = request?.availability || "unavailable";
     const requestId = request?.id || "";
-
     availabilityBtn.dataset.requestId = requestId;
     availabilityBtn.dataset.status = availability;
     availabilityBtn.textContent =

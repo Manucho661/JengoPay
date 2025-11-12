@@ -22,18 +22,17 @@ try {
         mr.*,
         pr.name AS provider_name,
         pr.id AS provider_id,
-        ar.id AS assignment_id,
-        ar.provider_response
+        ra.id AS assignment_id,
+        ra.provider_response,
+        ra.status
     FROM maintenance_requests AS mr
-    LEFT JOIN request_assignments AS ar 
-        ON ar.request_id = mr.id 
-        AND ar.terminate IS NULL  -- condition moved to JOIN
+    LEFT JOIN request_assignments AS ra 
+        ON ra.request_id = mr.id 
+        AND ra.terminate IS NULL  -- condition moved to JOIN
     LEFT JOIN providers AS pr 
-        ON ar.provider_id = pr.id
+        ON ra.provider_id = pr.id
     WHERE mr.id = :id
 ");
-
-
 
     $stmt->execute(['id' => $requestId]);
     $request = $stmt->fetch(PDO::FETCH_ASSOC);

@@ -1,3 +1,6 @@
+// ─────────────────────────────────────────────
+// 📦 Imports
+// ─────────────────────────────────────────────
 import { get_requests } from "./api/getRequests.js";
 import { add_request_id } from "./modal.js";
 import { getAssignedRequests } from "./api/getAssignedJobs.js";
@@ -5,47 +8,104 @@ import { submitProposal } from "./api/submitProposal.js";
 import { expandCollapseRequest, expandCollapseApplication } from "./uiControl.js";
 import { getApplications } from "./api/getYourApplications.js";
 import { sendResponse } from "./api/assignmentResponse.js";
+import { getTextMessages } from "./api/getTextMessages.js";
+import { sendText } from "./api/sendText.js";
 
+
+// ─────────────────────────────────────────────
+// 🚀 Main Initialization
+// ─────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", async () => {
-    // Fetch requests
+  try {
+    // ── 1️⃣ Initial Data Fetching ─────────────────────────
     await get_requests();
     expandCollapseRequest();
+
     await getAssignedRequests();
     await getApplications();
     expandCollapseApplication();
-    // GET applied Requests
-    document.getElementById('apps-tab').addEventListener('click', getApplications);
-    // Check if the buttons exist
-    const buttons = document.querySelectorAll('.apply-btn');
-    if (buttons.length > 0) {
-        buttons.forEach(button => add_request_id(button));  // Attach the listener to each button
-    } else {
-        console.error("No apply buttons found. Checking after 1 second...");
-        setTimeout(() => {
-            const buttonsRetry = document.querySelectorAll('.apply-btn');
-            if (buttonsRetry.length > 0) {
-                buttonsRetry.forEach(button => add_request_id(button));
-            } else {
-                console.error("Still no apply buttons found.");
-            }
-        }, 1000);  // Retry after 1 second (adjust the time if needed)
-    }
 
-    // Handle form submission
+    // ── 2️⃣ Apply Buttons Setup ───────────────────────────
+    initializeApplyButtons();
+
+    // ── 3️⃣ Chat Setup ───────────────────────────────────
+    initializeChat();
+
+    // ── 4️⃣ Proposal Form Setup ──────────────────────────
     const proposalForm = document.getElementById("applyForm");
     if (proposalForm) {
-        proposalForm.addEventListener('submit', (e) => submitProposal(e, proposalForm));  // Pass the event object here
+      proposalForm.addEventListener("submit", (e) => submitProposal(e, proposalForm));
     }
 
-    // handle assignment
-    document.getElementById("acceptBtn").onclick = function () {
-        sendResponse.call(this, "Accepted"); // `this` refers to the button
-    };
+    // ── 5️⃣ Assignment Response Setup ────────────────────
+    const acceptBtn = document.getElementById("acceptBtn");
+    const declineBtn = document.getElementById("declineBtn");
 
-    document.getElementById("declineBtn").onclick = function() {
-    sendResponse.call(this, "Declined"); // `this` refers to the button
-};
+    if (acceptBtn) {
+      acceptBtn.onclick = function () {
+        sendResponse.call(this, "Accepted");
+      };
+    }
 
+    if (declineBtn) {
+      declineBtn.onclick = function () {
+        sendResponse.call(this, "Declined");
+      };
+    }
 
+    // ── 6️⃣ Applications Tab Refresh ─────────────────────
+    const appsTab = document.getElementById("apps-tab");
+    if (appsTab) {
+      appsTab.addEventListener("click", getApplications);
+    }
+
+  } catch (err) {
+    console.error("❌ Initialization error:", err);
+  }
 });
 
+
+// ─────────────────────────────────────────────
+// 💬 Chat System Setup
+// ─────────────────────────────────────────────
+function initializeChat() {
+  const chatForm = document.getElementById("chatForm");
+  if (!chatForm) return;
+
+  // Handle form submission
+  chatForm.addEventListener("submit", sendText);
+
+  // Initial load of chat messages
+  getTextMessages();
+
+  // Refresh every 3 seconds safely
+  let isFetching = false;
+  setInterval(async () => {
+    if (isFetching) return;
+    isFetching = true;
+    await getTextMessages();
+    isFetching = false;
+  }, 3000);
+}
+
+
+// ─────────────────────────────────────────────
+// 🧩 Apply Button Initialization
+// ─────────────────────────────────────────────
+function initializeApplyButtons() {
+  const buttons = document.querySelectorAll(".apply-btn");
+
+  if (buttons.length > 0) {
+    buttons.forEach((button) => add_request_id(button));
+  } else {
+    console.warn("⚠️ No apply buttons found. Retrying in 1 second...");
+    setTimeout(() => {
+      const buttonsRetry = document.querySelectorAll(".apply-btn");
+      if (buttonsRetry.length > 0) {
+        buttonsRetry.forEach((button) => add_request_id(button));
+      } else {
+        console.error("❌ Still no apply buttons found.");
+      }
+    }, 1000);
+  }
+}

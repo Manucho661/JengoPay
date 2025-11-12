@@ -37,12 +37,12 @@ const requestsTemplate = (data) => html`
                       <div class="text-muted mb-2">
                         ${request.residence || "Unknown residence"}
                       </div>
-                      <div class="text-success">
-                        KSH ${request.unit || "Unknown"}
+                      <div class="text-muted">
+                         ${request.unit || "Unknown"}
                       </div>
-                      <div class="text-muted small">
-                        <strong>Posted on:</strong>
-                        <i class="text-dark fw-bold">
+                      <div class="text-muted">
+                      <span class="text-muted">Posted:</span> 
+                        <i class="text-danger fw-semibold">
                           ${(() => {
                             const d = new Date(request.created_at);
                             const day = d.getDate().toString().padStart(2, '0');
@@ -120,7 +120,7 @@ const requestsTemplate = (data) => html`
                       ${data.residence || "Unknown residence"}
                     </div>
                     <div class="text-success">
-                      KSH ${data.unit || "Unknown"}
+                       ${data.unit || "Unknown"}
                     </div>
                     <div class="text-muted small">
                       <strong>Posted on:</strong>
