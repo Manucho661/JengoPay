@@ -17,10 +17,10 @@ try {
 
     $sessionId = $_SESSION['id'];
 
-    if (isset($_REQUEST['budget']) && isset($_REQUEST['duration'])) {
+    if (isset($_REQUEST['budget']) && isset($_REQUEST['durationOption'])) {
 
         $budget = $_REQUEST['budget'];
-        $duration = $_REQUEST['duration'];
+        $duration = $_REQUEST['durationOption'];
 
         // 3️⃣ Update database using the session ID
         $stmt = $pdo->prepare("

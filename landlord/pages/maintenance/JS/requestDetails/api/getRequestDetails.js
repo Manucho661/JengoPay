@@ -57,7 +57,7 @@ function fillRequestDetails(request, photos) {
 
   // Check if duration is numeric
   if (!isNaN(durationValue) && durationValue !== null && durationValue !== "") {
-    durationEl.textContent = `${durationValue} hrs`;
+    durationEl.textContent = `${durationValue} days`;
   } else {
     durationEl.textContent = "Not set";
   }

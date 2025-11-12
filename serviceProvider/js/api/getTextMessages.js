@@ -24,7 +24,7 @@ export async function getTextMessages() {
 
             // Use 'me' or 'client' depending on sender_id
             messageDiv.classList.add('message');
-            messageDiv.classList.add(msg.sender_id === 2 ? 'me' : 'client');
+            messageDiv.classList.add(msg.sender_id === 3 ? 'me' : 'client');
 
             // Add message bubble
             messageDiv.innerHTML = `

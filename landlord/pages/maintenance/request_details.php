@@ -1436,7 +1436,7 @@ if (isset($_GET['id'])) {
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header" style="background: linear-gradient(135deg, #00192D 0%, #FFC107 100%);">
-          <h5 class="modal-title" id="availabilityModalLabel" style="color: white;">Set Availability</h5>
+          <h5 class="modal-title" id="availabilityModalLabel" style="color: white;">Set Budget and Duration</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
@@ -1493,7 +1493,7 @@ if (isset($_GET['id'])) {
               type="submit"
               class="btn"
               style="background-color: #00192D; color: white;">
-              Confirm Availability
+              Confirm
             </button>
           </div>
         </form>
