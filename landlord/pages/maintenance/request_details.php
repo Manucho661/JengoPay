@@ -1379,16 +1379,16 @@ if (isset($_GET['id'])) {
       <i class="bi bi-x-lg" id="closeChatPanel" style="cursor:pointer;"></i>
     </div>
     <div class="chat-list">
-      <div class="chat-item" data-client="Alex Johnson">
-        <strong>Alex Johnson</strong><br>
+      <div class="chat-item" data-client="GreenLeaf Property Services">
+        <strong>GreenLeaf Property Services</strong><br>
         <small>Can we review the last design updates?</small>
       </div>
-      <div class="chat-item" data-client="Sophia Lee">
-        <strong>Sophia Lee</strong><br>
+      <div class="chat-item" data-client="Nairobi Water Services">
+        <strong>Nairobi Water Services</strong><br>
         <small>Got the latest quote?</small>
       </div>
-      <div class="chat-item" data-client="Mark Evans">
-        <strong>Mark Evans</strong><br>
+      <div class="chat-item" data-client="ZuriHost Softwares">
+        <strong>ZuriHost Softwares</strong><br>
         <small>Thanks for sending the document!</small>
       </div>
     </div>
