@@ -1,3 +1,23 @@
+<?php
+require_once '../db/connect.php';
+include_once 'processes/encrypt_decrypt_function.php'; // ensure this file defines encryptor()
+
+// Check if invoice parameter exists
+if (isset($_GET['invoice'])) {
+    $tenantId = encryptor('decrypt', $_GET['invoice']);
+
+    // Fetch tenant data from DB
+    $stmt = $pdo->prepare("SELECT * FROM tenants WHERE id = ?");
+    $stmt->execute([$tenantId]);
+    $tenant_info = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$tenant_info) {
+        die("Tenant not found.");
+    }
+} else {
+    die("No tenant selected.");
+}
+?>
 
 <?php
 require_once '../db/connect.php';
@@ -17,7 +37,8 @@ if (isset($_GET['invoice'])) {
             last_name,
             main_contact,
             alt_contact,
-            email
+            email,
+            building
         FROM tenants
         WHERE id = ?
     ");
@@ -66,7 +87,7 @@ $invoiceNumber = $prefix . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
 
 // Fetch buildings list
 try {
-    $stmt = $pdo->prepare("SELECT id, building_name FROM buildings ORDER BY building_name ASC");
+    $stmt = $pdo->prepare("SELECT id, building_name FROM tenants ORDER BY building_name ASC");
     $stmt->execute();
     $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
@@ -74,13 +95,13 @@ try {
     $buildings = [];
 }
 // Fetch all active tenants using PDO (for JavaScript approach)
-try {
-  $stmt = $pdo->query("SELECT id, first_name, middle_name, last_name, building FROM tenants WHERE status = 'Active'");
-  $tenants = $stmt->fetchAll();
-} catch (PDOException $e) {
-  $tenants = [];
-  error_log("Error fetching tenants: " . $e->getMessage());
-}
+// try {
+//   $stmt = $pdo->query("SELECT id, first_name, middle_name, last_name, building FROM tenants WHERE status = 'Active'");
+//   $tenants = $stmt->fetchAll();
+// } catch (PDOException $e) {
+//   $tenants = [];
+//   error_log("Error fetching tenants: " . $e->getMessage());
+// }
 ?>
 <!doctype html>
 <html lang="en">
@@ -1011,7 +1032,7 @@ header {
 
                                         <div class="card-body">
                                                 <div class="row">
-                                                <div class="col-md-3">
+                                                <div class="col-md-4">
                                                         <!-- Existing Invoice # input -->
                                                     <div class="form-group">
                                                         <label for="invoice-number">Invoice  Number</label>
@@ -1025,43 +1046,30 @@ header {
                                                             value="<?= $invoiceNumber ?>">
                                                     </div>
                                                     </div>
-    <div class="col-md-3">
-        <div class="form-group">
-            <label>Invoice To:</label>
-            <input type="text" name="receiver" required class="form-control" 
-                   value="<?= htmlspecialchars($tenant_info['first_name'].' '.$tenant_info['middle_name'].' '.$tenant_info['last_name']); ?>" readonly>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="form-group">
-            <label>Main Contact</label>
-            <input class="form-control" value="<?= htmlspecialchars($tenant_info['main_contact']); ?>" readonly name="main_contact">
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="form-group">
-            <label>Alternative Contact</label>
-            <input class="form-control" value="<?= htmlspecialchars($tenant_info['alt_contact']); ?>" readonly name="alt_contact">
-        </div>
+                                                    <div class="col-md-4">
+    <div class="form-group">
+        <label>Building:</label>
+        <input type="text" name="building" class="form-control"
+               value="<?= htmlspecialchars($tenant_info['building']); ?>" readonly>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <div class="form-group">
-            <label>Email</label>
-            <input class="form-control" value="<?= htmlspecialchars($tenant_info['email']); ?>" readonly name="email">
-        </div>
+<div class="col-md-4">
+    <div class="form-group">
+        <label>Tenant Name</label>
+        <input type="text" name="receiver" required class="form-control"
+               value="<?= htmlspecialchars($tenant_info['first_name'] . ' ' . $tenant_info['middle_name'] . ' ' . $tenant_info['last_name']); ?>" readonly>
     </div>
+</div>
 
 
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label>Invoice Date:</label>
                                                             <input type="date" id="invoiceDate" name="invoice_date" required class="form-control" required>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label>Date Due:</label>
                                                             <input type="date" id="dateDue" name="due_date" required class="form-control" readonly>
