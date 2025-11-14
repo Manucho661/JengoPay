@@ -1,5 +1,3 @@
-import { html, render } from "https://unpkg.com/lit@3.1.4/index.js?module";
-import { openProposalModal} from "../modals.js";
 import { applyAvailabilityStyles } from "../uiControl.js";
 
 /* ===========================
@@ -20,7 +18,7 @@ export async function updateAvailabilty() {
 
     // Send update to backend
     const response = await fetch(
-      `./actions/request_details/update_availabilty.php?id=${requestId}&status=${newStatus}`
+      `./actions/requestDetails/update_availabilty.php?id=${requestId}&status=${newStatus}`
     );
     const data = await response.json();
 

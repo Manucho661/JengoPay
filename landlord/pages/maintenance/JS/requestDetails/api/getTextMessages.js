@@ -1,28 +1,27 @@
 export async function getTextMessages() {
     try {
-        const res = await fetch('./actions/request_details/getTextMessages.php');
+        const res = await fetch('./actions/requestDetails/getTextMessages.php');
         const data = await res.json();
 
-        console.log('💬 Chat history:', data);
+        // console.log('💬 Chat history:', data);
 
-        // ✅ Ensure we have a successful response
+        // response
         if (data.status !== 'success' || !Array.isArray(data.messages)) {
             console.warn('⚠️ No messages found or invalid response');
             return;
         }
 
-        // ✅ Get the chat body container
+        // chat body container
         const chatBody = document.getElementById('chatBody');
         if (!chatBody) return;
 
-        // ✅ Clear old messages
+        // Clear old messages
         chatBody.innerHTML = '';
 
-        // ✅ Loop through messages and render them
+        // Loop through messages and render them
         data.messages.forEach(msg => {
             const messageDiv = document.createElement('div');
 
-            // Use 'me' or 'client' depending on sender_id
             messageDiv.classList.add('message');
             messageDiv.classList.add(msg.sender_id === 2 ? 'me' : 'client');
 
@@ -34,7 +33,7 @@ export async function getTextMessages() {
             chatBody.appendChild(messageDiv);
         });
 
-        // ✅ Auto-scroll to the bottom
+        // Auto-scroll to the bottom
         chatBody.scrollTop = chatBody.scrollHeight;
 
     } catch (err) {

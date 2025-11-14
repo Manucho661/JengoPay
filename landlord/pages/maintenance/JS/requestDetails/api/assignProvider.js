@@ -9,24 +9,22 @@ export async function assignProvider() {
 
   try {
     const response = await fetch(
-      `./actions/request_details/assignProvider.php?request_id=${requestId}&provider_id=${providerId}`
+      `./actions/requestDetails/assignProvider.php?request_id=${requestId}&provider_id=${providerId}`
     );
 
     const data = await response.json();
 
     if (data.status === "success") {
       console.log("✅ Provider assigned successfully:", data);
-
       // Refresh request details
       getRequestDetails();
-
-
     } else {
       console.warn("⚠️ Assignment failed:", data.message);
     }
 
+    // hide the Provider details Modal
     const modalElement = document.getElementById('proposalModal');
-    const modal = bootstrap.Modal.getInstance(modalElement); // get existing instance
+    const modal = bootstrap.Modal.getInstance(modalElement);
 
     if (modal) {
       modal.hide(); // actually hides it

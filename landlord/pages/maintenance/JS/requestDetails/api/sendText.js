@@ -13,7 +13,7 @@ export async function sendText(e) {
         const message = input.value.trim();
         if (!message) return;
 
-        const res = await fetch("./actions/request_details/sendText.php", {
+        const res = await fetch("./actions/requestDetails/sendText.php", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ text: message })

@@ -8,7 +8,7 @@ export async function terminateContract() {
         const assignmentId = this.getAttribute('data-assignment-id');
         console.log("Assignment ID:", assignmentId);
 
-        const res = await fetch("actions/request_details/terminateContract.php", {
+        const res = await fetch("actions/requestDetails/terminateContract.php", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",

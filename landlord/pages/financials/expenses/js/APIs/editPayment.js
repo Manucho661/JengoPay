@@ -13,9 +13,6 @@ export async function edit_submittedPayments(form) {
     const result = await response.json();
     console.log("📥 Server response:", result);
 
-    // reload the expenses section
-  
-
     if (result.success) {
       // Optional visual feedback
       form.style.backgroundColor = "#e6ffe6"; // light green

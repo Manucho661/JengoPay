@@ -100,7 +100,7 @@
     <!--begin::App Main-->
     <main class="app-main" style=" height:100%;">
       <!--begin::App Content Header-->
-      <div class="app-content-header">
+      <div class="app-content-header bg-white mb-2">
         <!--begin::Container-->
         <div class="container-fluid">
           <!--begin::Row-->
@@ -132,14 +132,6 @@
               </ul>
             </div>
           </div>
-          <!--end::Row-->
-        </div>
-        <!--end::Container-->
-      </div>
-      <div class="app-content">
-        <!--begin::Container-->
-        <div class="container-fluid">
-          <!-- begin row -->
           <div class="row">
             <div class="col-md-6">
               <p class="text-muted">Manage maintenance requests for tenants</p>
@@ -151,6 +143,14 @@
               <button type="button" class="btn bg-danger border-0 rounded-4" style="color:white; width:100%; white-space: nowrap;">Cancel all Requests</button>
             </div>
           </div>
+          <!--end::Row-->
+        </div>
+        <!--end::Container-->
+      </div>
+      <div class="app-content">
+        <!--begin::Container-->
+        <div class="container-fluid">
+          <!-- begin row -->
           <div class="row">
             <div class="col-12 col-sm-6 col-md-3">
 

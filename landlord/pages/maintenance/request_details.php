@@ -78,6 +78,7 @@ if (isset($_GET['id'])) {
       display: flex;
       flex-direction: column;
       border-right: 1px solid #e0e0e0;
+      border-bottom: none;
     }
 
     .request-sidebar h3 {
@@ -91,13 +92,12 @@ if (isset($_GET['id'])) {
 
 
       /* border-top-right-radius: 10px; */
-      border-top-left-radius: 10px;
+
     }
 
     .search-bar {
       padding: 1rem;
       background: #fff;
-      border-bottom: 1px solid #e0e0e0;
     }
 
     .search-bar input {
@@ -128,19 +128,15 @@ if (isset($_GET['id'])) {
       padding: 15px;
       border-bottom: 1px solid rgba(0, 25, 45, 0.1);
       cursor: pointer;
-      transition: all 0.3s ease;
       display: flex;
       align-items: center;
       gap: 12px;
       background: white;
       margin: 8px;
       border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
     .request-item:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0, 25, 45, 0.1);
       background: #FFF7E0;
     }
 
@@ -957,10 +953,8 @@ if (isset($_GET['id'])) {
 
             <!-- Request Name -->
             <div class="col-lg-4 col-md-6 col-12 d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center flex-wrap">
-                <span class="info-box-icon me-2">
-                  <i class="bi bi-tools fs-3 text-white"></i>
-                </span>
+              <div class="d-flex align-items-center flex-wrap gap-3">
+                <div class="request-icon bg-warning text-white"><i class="fas fa-tools"></i></div>
                 <h3 class="mb-0 fw-bold contact_section_header" id="request-name">
                   <!-- Dynamic request name -->
                 </h3>
@@ -971,15 +965,7 @@ if (isset($_GET['id'])) {
 
             <!-- Request Property -->
             <div class="col-lg-4 col-md-6 col-12 d-flex align-items-center border-left justify-content-between">
-              <div class="d-flex align-items-center flex-wrap">
-                <span class="info-box-icon me-2">
-                  <i class="bi bi-house fs-3 text-white"></i>
-                </span>
-                <div class="d-flex align-items-center flex-wrap">
-                  <h4 class="mb-0 me-2" id="request-property"></h4>
-                  <h4 class="mb-0 text-success" id="request-unit"></h4>
-                </div>
-              </div>
+
 
               <!-- Optional More Icon (you can hide one if not needed) -->
               <button class="btn btn-light border-0 d-lg-none mobileNavToggleProperty" id="mobileNavToggleProperty">
@@ -987,42 +973,38 @@ if (isset($_GET['id'])) {
               </button>
 
               <div id="mobileNavMenuProperty" class="mobile-nav-menu d-none position-absolute bg-white shadow rounded-3 mt-2">
-                <!-- <a class="dropdown-item" href="maintenance.php" data-tab="all">All Requests</a>
-                <a class="dropdown-item" href="#" data-tab="saved">Saved</a>
-                <a class="dropdown-item" href="#" data-tab="cancelled">Cancelled</a> -->
               </div>
             </div>
 
             <!-- Navigation (desktop only) -->
             <div class="col-lg-4 d-none d-lg-flex justify-content-end align-items-center">
-              <!-- <ul class="nav" id="requestNav">
-                <li class="nav-item">
-                  <a class="nav-link fw-semibold" href="maintenance.php" data-tab="all">All Requests</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link fw-semibold" href="#" data-tab="saved">Saved</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link fw-semibold" href="#" data-tab="cancelled">Cancelled</a>
-                </li>
-              </ul> -->
             </div>
           </div>
-          <div class="row ">
+          <div class="row mt-4">
             <div class="col-md-6">
+              <div class="d-flex align-items-center flex-wrap">
+                <span class="info-box-icon me-2 bg-warning">
+                  <i class="bi bi-house fs-3 text-white"></i>
+                </span>
+                <div class="d-flex align-items-center flex-wrap">
+                  <i><b class="mb-0 me-2" id="request-property"></b></i>
+                  <i><b class="mb-0 text-success" id="request-unit"></b></i>
+                </div>
+              </div>
             </div>
             <div class="col-md-6 d-flex gap-1 flex-nowrap">
 
-              <button type="button" id="availabilityBtn" class="btn seTAvailable text-white fw-bold"
-                style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">
+              <button type="button" id="availabilityBtn" class="btn seTAvailable text-white fw-bold bg-warning"
+                style="color:white; width:100%; white-space: nowrap;">
                 Set Available
               </button>
+              <!-- style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;"> -->
               <button type="button" class="btn bg-danger text-white seTAvailable fw-bold"
                 style="width:100%; white-space: nowrap;">
                 Cancel Request
               </button>
-              <button type="button" class="btn bg-danger text-white seTAvailable fw-bold"
-                style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">
+              <button type="button" class="btn bg-warning text-white seTAvailable fw-bold"
+                style=" color:dark; width:100%; white-space: nowrap;">
                 All Requests
               </button>
             </div>
@@ -1036,9 +1018,9 @@ if (isset($_GET['id'])) {
       </div>
 
       <div class="app-content">
-        <div class="container-fluid px-0 rounded-2 mb-2">
-          <div class="row">
-            <div class="col-md-4">
+        <div class="container-fluid rounded-2 mb-2">
+          <div class="row bg-white rounded">
+            <div class="col-md-4 border-right">
               <div class="card p-3 d-flex flex-row justify-content-between align-items-start border-0 shadow-none" style="height:100%;">
 
                 <div class="d-flex flex-row gap-5">
@@ -1052,14 +1034,14 @@ if (isset($_GET['id'])) {
                   </div>
                 </div>
 
-                <button class="btn btn-outline-warning btn-sm align-self-start" data-bs-toggle="modal" data-bs-target="#durationBudgetModal">
-                  <i class="bi bi-pencil"></i>
+                <button class="btn btn-warning btn-sm align-self-start " data-bs-toggle="modal" data-bs-target="#durationBudgetModal">
+                  <i class="bi bi-pencil fw-semibold text-white"></i>
                 </button>
 
               </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4 border-right">
               <div class="card p-3 d-flex flex-row gap-5 border-0 shadow-none d-flex ">
                 <div>
                   <p class="fw-bold">Provider</p>
@@ -1084,16 +1066,15 @@ if (isset($_GET['id'])) {
               </div>
             </div>
           </div>
-        </div>
-        <div class="container-fluid rounded-2">
-          <div class="row py-2 bg-white rounded-2">
-            <div class="col-md-7 border-end" style="border-right: 1px solid #ccc; padding-top:0 !important; min-height: 100%; padding-top:0 !important;">
+
+          <div class="row py-2 bg-white rounded-2 mt-2">
+            <div class="col-md-7 " style="min-height: 100%;">
               <!-- content displays here -->
               <!-- Row 2: Category & Description -->
-              <div class="card p-3 shadow-none border-0">
+              <div class="card p-3 shadow-none border-bottom">
                 <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                  <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                    <i class="fa-solid fa-align-left" style="color: white; font-size: 16px;"></i>
+                  <span class="info-box-icon me-2 bg-warning p-2">
+                    <i class="bi bi-info-circle fs-3 text-white p-2"></i>
                   </span>
                   <span style="font-weight: 600;">Description</span>
                 </div>
@@ -1101,10 +1082,10 @@ if (isset($_GET['id'])) {
               </div>
 
               <!-- Row 3: Photo -->
-              <div class="card p-3 shadow-none border-0">
+              <div class="card p-3 shadow-none mt-2">
                 <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                  <span style="background-color: #00192D; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                    <i class="fa-solid fa-image" style="color: white; font-size: 16px;"></i>
+                  <span class="info-box-icon me-2 bg-warning p-2">
+                    <i class="bi bi-image fs-3 text-white p-2"></i>
                   </span>
                   <span style="font-weight: 600;">Request Image</span>
                 </div>
@@ -1112,8 +1093,8 @@ if (isset($_GET['id'])) {
               </div>
 
             </div>
-            <div class="col-md-5" style="max-height:500px; overflow:auto;">
-              <div class="request-sidebar rounded-2">
+            <div class="col-md-5 border" style="max-height:500px; overflow:auto;">
+              <div class="request-sidebar">
                 <!-- <h3><i class="fa-solid fa-screwdriver-wrench"></i>Request NO 40</h3> -->
                 <div class="d-flex flex-column">
                   <!-- Secondary Buttons Container -->
@@ -1143,38 +1124,11 @@ if (isset($_GET['id'])) {
                   </div>
                   <!-- proposals list -->
                   <ul id="proposals-list" class="proposals-list visible">
-
+                    <!-- Details rentered dynamical through Javascript (getProviderProposals.js) -->
                   </ul>
                   <!-- request list -->
                   <ul class="request-list" id="requestList">
-                    <?php foreach ($requests as $requestItem) : ?>
-                      <li class="request-item">
-                        <div class="request-icon">
-                          <i class="fas fa-tools"></i>
-                        </div>
-                        <div class="request-content">
-                          <div class="request-desc">
-                            <?= $requestItem['description'] ?>
-                          </div>
-                          <div class="request-meta">
-                            <div class="request-date">
-                              <i class="far fa-calendar-alt"></i>
-                              <span class="requestItemDate"><?= $requestItem['request_date'] ?></span>
-                            </div>
-                            <div class="request-status">
-                              <i class="fas fa-circle"></i>
-                              <?= $requestItem['status'] ?>
-                            </div>
-
-                            <div class="request-priority">
-                              <i class="fas fa-circle"></i>
-                              <?= $requestItem['priority'] ?>
-                            </div>
-
-                          </div>
-                        </div>
-                      </li>
-                    <?php endforeach ?>
+                    <!-- Details rentered dynamical through Javascript (otherRequestDetails.js) -->
                   </ul>
                 </div>
               </div>
@@ -1600,24 +1554,6 @@ if (isset($_GET['id'])) {
         });
     });
   </script>
-
-  <!-- control the requests list sidebar height -->
-  <!-- <script>
-    const first = document.querySelector('.main-content');
-    const second = document.querySelector('.request-sidebar');
-
-
-    function syncHeight() {
-      const firstHeight = first.offsetHeight; // measure first element
-      console.log(firstHeight);
-
-      second.style.maxHeight = firstHeight + 'px'; // cap second
-    }
-
-    window.addEventListener('resize', syncHeight);
-    window.addEventListener('load', syncHeight);
-    syncHeight();
-  </script> -->
 
   <script src="../../js/adminlte.js"></script>
   <script>

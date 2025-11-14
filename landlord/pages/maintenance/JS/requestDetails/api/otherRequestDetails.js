@@ -1,6 +1,4 @@
 import { html, render } from "https://unpkg.com/lit@3.1.4/index.js?module";
-import { openProposalModal } from "../modals.js";
-import { applyAvailabilityStyles } from "../uiControl.js";
 import { getRequestDetails } from "./getRequestDetails.js";
 
 /* ===========================
@@ -9,11 +7,10 @@ import { getRequestDetails } from "./getRequestDetails.js";
 export async function otherRequests() {
   try {
     const response = await fetch(
-      `./actions/request_details/otherRequests.php`
+      `./actions/requestDetails/otherRequests.php`
     );
     const data = await response.json();
-    console.log("✅ Other requests fetched:", data);
-
+    // console.log("✅ Other requests fetched:", data);
     renderRequestsList(data.data || data);
   } catch (err) {
     console.error("❌ Error fetching other requests:", err);
@@ -44,7 +41,7 @@ function renderRequestsList(requests) {
 
     render(
       html`
-      <div class="request-icon"><i class="fas fa-tools"></i></div>
+      <div class="request-icon bg-warning text-white"><i class="fas fa-tools"></i></div>
       <div class="request-content">
         <div class="request-desc">${req.description}</div>
         <div class="request-meta">
