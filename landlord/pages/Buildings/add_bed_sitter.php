@@ -275,7 +275,7 @@
                                 if(isset($_POST['submit_unit'])) {
                                     //Check for duplicate unit_number + building_link and avoid double entry of information
                                     try{
-                                        $check = $pdo->prepare("SELECT COUNT(*) FROM bed_seaters WHERE unit_number = :unit_number AND building_link = :building_link");
+                                        $check = $pdo->prepare("SELECT COUNT(*) FROM bedsitter_units WHERE unit_number = :unit_number AND building_link = :building_link");
                                         $check->execute([
                                             ':unit_number'   => $_POST['unit_number'],
                                             ':building_link' => $_POST['building_link']
@@ -300,7 +300,7 @@
                                         $pdo->beginTransaction();
 
                                         //Insert into Bed Sitter Units
-                                        $stmt = $pdo->prepare("INSERT INTO bed_seaters (structure_type, first_name, last_name, owner_email, entity_name, entity_phone, entity_phoneother, entity_email, unit_number, purpose, building_link, location, water_meter, monthly_rent, occupancy_status, created_at) VALUES (:structure_type, :first_name, :last_name, :owner_email, :entity_name, :entity_phone, :entity_phoneother, :entity_email, :unit_number, :purpose, :building_link, :location, :water_meter, :monthly_rent, :occupancy_status, NOW())");
+                                        $stmt = $pdo->prepare("INSERT INTO bedsitter_units (structure_type, first_name, last_name, owner_email, entity_name, entity_phone, entity_phoneother, entity_email, unit_number, purpose, building_link, location, water_meter, monthly_rent, occupancy_status, created_at) VALUES (:structure_type, :first_name, :last_name, :owner_email, :entity_name, :entity_phone, :entity_phoneother, :entity_email, :unit_number, :purpose, :building_link, :location, :water_meter, :monthly_rent, :occupancy_status, NOW())");
 
                                         $stmt->execute([
                                             ':structure_type' => $_POST['structure_type'],
@@ -359,7 +359,10 @@
                                         </script>";
                                         exit;
                                     } catch (PDOException $e) {
-                                        $pdo->rollBack();
+                                        if ($pdo->inTransaction()) {
+                                            $pdo->rollBack();
+                                        }
+                                        echo "Error: " . $e->getMessage();
                                         // SweetAlert error
                                         echo "
                                         <script>

@@ -2,7 +2,6 @@
  require_once "../db/connect.php";
 //  include_once 'includes/lower_right_popup_form.php';
 ?>
-
 <!doctype html>
 <html lang="en">
 <!--begin::Head-->
@@ -156,6 +155,49 @@
             z-index: 10;
             white-space: nowrap;
         }
+        /* Sliding chat panel */
+.chat-panel {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 400px;
+    height: 100%;
+    background: white;
+    border-left: 2px solid #ccc;
+    box-shadow: -2px 0 8px rgba(0,0,0,0.2);
+    transition: right 0.3s ease;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-panel.open {
+    right: 0;
+}
+
+.chat-header {
+    background: #00192D;
+    color: #fff;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+}
+
+.chat-body {
+    padding: 15px;
+    flex: 1;
+    overflow-y: auto;
+    background: #f8f9fa;
+}
+
+.chat-footer {
+    padding: 15px;
+    border-top: 1px solid #ddd;
+    background: #fff;
+}
+
     </style>
 </head>
 
@@ -264,7 +306,11 @@
                         if($tenant['tenant_status'] == 'Active') {
                           ?>
                           <a class="dropdown-item" href="<?= 'https://wa.me/'.$tenant['tmain_contact'].'/?text=Hello,'." ". $tenant['tfirst_name']. '' ?>" target="_blank"><i class="bi bi-whatsapp"></i> WhatsApp</a>
-                          <a class="dropdown-item" href="\JengoPay\landlord\pages\communications/texts.php?mesage=<?= $tenant['tfirst_name'] ;?>"><i class="bi bi-envelope"></i> Message</a>
+                          <a class="dropdown-item open-chat" 
+   data-tenant="<?= $tenant['tfirst_name']; ?>" 
+   href="#">
+   <i class="bi bi-envelope"></i> Message
+</a>
                           <a class="dropdown-item" href="tenant_profile.php?profile=<?= encryptor('encrypt', $tenant['id']);?>"><i class="fas fa-newspaper"></i> Profile</a>
                           <a class="dropdown-item" href="\Jengopay\landlord\pages\Buildings/ten_invoice.php?invoice=<?= encryptor('encrypt', $tenant['id']);?>&tenant_type=single_unit">
     <i class="bi bi-newspaper"></i> Invoice
@@ -320,6 +366,26 @@
     <!--end::App Wrapper-->
 
     <!-- plugin for pdf -->
+
+
+    <!-- RIGHT SIDE CHAT SLIDE PANEL -->
+<div id="chatPanel" class="chat-panel">
+    <div class="chat-header">
+        <strong id="chatTenantName"></strong>
+        <button class="close-chat btn btn-sm btn-danger">X</button>
+    </div>
+
+    <div class="chat-body" id="chatBody">
+        <!-- Messages will load here -->
+        <p class="text-muted">Loading chat...</p>
+    </div>
+
+    <div class="chat-footer">
+        <textarea id="chatMessage" class="form-control" placeholder="Type message..."></textarea>
+        <button id="sendChatBtn" class="btn btn-primary mt-2">Send</button>
+    </div>
+</div>
+
 <script>
 // ==================== Deposits ====================
 function addRow() {
@@ -440,6 +506,30 @@ function calculateEndDate() {
 // ==================== Init ====================
 document.addEventListener("DOMContentLoaded", () => {
   addRow(); // Start with one row
+});
+</script>
+
+<script>
+document.querySelectorAll('.open-chat').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+        e.preventDefault();
+
+        let tenant = this.dataset.tenant;
+
+        // Set tenant name in header
+        document.getElementById("chatTenantName").textContent = tenant;
+
+        // Open slide panel
+        document.getElementById("chatPanel").classList.add("open");
+
+        // TODO: Load chat messages via AJAX
+        // loadChatMessages(tenant);
+    });
+});
+
+// Close button
+document.querySelector('.close-chat').addEventListener('click', function(){
+    document.getElementById("chatPanel").classList.remove("open");
 });
 </script>
 

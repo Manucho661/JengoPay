@@ -276,7 +276,7 @@
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // 🔍 Check for duplicate unit_number + building_link
-        $check = $pdo->prepare("SELECT COUNT(*) FROM multi_rooms WHERE unit_number = :unit_number AND building_link = :building_link");
+        $check = $pdo->prepare("SELECT COUNT(*) FROM multi_rooms_units WHERE unit_number = :unit_number AND building_link = :building_link");
         $check->execute([
             ':unit_number'   => $_POST['unit_number'],
             ':building_link' => $_POST['building_link']
@@ -301,7 +301,7 @@
         $pdo->beginTransaction();
 
         // Insert into multi_rooms
-        $stmt = $pdo->prepare("INSERT INTO multi_rooms 
+        $stmt = $pdo->prepare("INSERT INTO multi_rooms_units
             (structure_type, first_name, last_name, owner_email, entity_name, entity_phone, entity_phoneother, entity_email, unit_number, purpose, building_link, location, water_meter, monthly_rent, number_of_rooms, number_of_washrooms, number_of_doors, occupancy_status, created_at)
             VALUES (:structure_type, :first_name, :last_name, :owner_email, :entity_name, :entity_phone, :entity_phoneother, :entity_email, :unit_number, :purpose, :building_link, :location, :water_meter, :monthly_rent, :number_of_rooms, :number_of_washrooms, :number_of_doors, :occupancy_status, NOW())");
 
@@ -369,7 +369,9 @@
         exit;
 
     } catch (PDOException $e) {
-        $pdo->rollBack();
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
         echo "
         <script>
             Swal.fire({

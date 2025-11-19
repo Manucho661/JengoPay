@@ -324,7 +324,7 @@
 
                                     //Insert the Bills of the Unit into single_unit_bills
                                     if (!empty($_POST['bill'])) {
-                                        $stmtBill = $pdo->prepare("INSERT INTO single_unit_bills (unit_id, bill, qty, unit_price, subtotal, created_at) VALUES (:unit_id, :bill, :qty, :unit_price, :subtotal, NOW())");
+                                        $stmtBill = $pdo->prepare("INSERT INTO single_unit_bills (unit_id, bill, qty, unit_price, created_at) VALUES (:unit_id, :bill, :qty, :unit_price, NOW())");
 
                                         foreach ($_POST['bill'] as $i => $billName) {
                                             if ($billName != "") {
@@ -336,8 +336,7 @@
                                                     ':unit_id'    => $unit_id,
                                                     ':bill'       => $billName,   // ✅ match placeholder
                                                     ':qty'        => $qty,
-                                                    ':unit_price' => $unitPrice,
-                                                    ':subtotal'   => $subtotal
+                                                    ':unit_price' => $unitPrice
                                                 ]);
                                             }
                                         }
