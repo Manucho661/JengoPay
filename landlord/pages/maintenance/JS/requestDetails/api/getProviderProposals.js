@@ -11,7 +11,7 @@ export async function fetchProposals() {
 
   try {
     const response = await fetch(
-      `./actions/request_details/get_proposals.php?id=${id}`
+      `./actions/requestDetails/getProposals.php?id=${id}`
     );
     const data = await response.json();
     console.log("✅ Proposals fetched:", data);

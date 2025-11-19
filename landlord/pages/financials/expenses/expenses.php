@@ -197,7 +197,7 @@ require_once 'actions/getBuildings.php';
         <!--begin::App Main-->
         <main class="app-main">
             <!--begin::App Content Header-->
-            <div class="app-content-header">
+            <div class="app-content-header bg-white">
                 <!--begin::Container-->
                 <div class="container-fluid">
                     <!--begin::Row-->
@@ -207,11 +207,6 @@ require_once 'actions/getBuildings.php';
                         </div>
                         <!--end::Row-->
                     </div>
-                    <!--end::Container-->
-                </div>
-            </div>
-            <div class="app-content">
-                <div class="container-fluid">
                     <div class="row mb-4">
                         <div class="col-md-12 d-flex flex-column justify-content-center">
                             <div class="d-flex justify-content-between">
@@ -241,6 +236,11 @@ require_once 'actions/getBuildings.php';
                         </div>
                     </div>
 
+                    <!--end::Container-->
+                </div>
+            </div>
+            <div class="app-content">
+                <div class="container-fluid">
                     <div class="row mt-2 mb-2">
                         <div class="col-md-3">
                             <div class="summary-info-card bg-white p-3 rounded">

@@ -6,7 +6,7 @@ export async function setDurationBudget(e) {
     const formData = new FormData(form);
 
     try {
-        const response = await fetch("actions/request_details/setDurationBudget.php", {
+        const response = await fetch("actions/requestDetails/setDurationBudget.php", {
             method: "POST",
             body: formData,
         });
@@ -20,14 +20,12 @@ export async function setDurationBudget(e) {
 
         console.log("Duration budget working");
         console.log("Server response:", result.message);
-
         getRequestDetails();
+        
         return result;
     } 
     catch (err) {
         console.error("❌ Error setting duration budget:", err);
-
-        // You could also return the error if needed for further handling
         return { error: true, message: err.message };
     }
 }

@@ -1,117 +1,97 @@
 import { html, render } from "https://unpkg.com/lit@3.1.4/index.js?module";
 import { openProposalModal } from "../modals.js";
-import { applyAvailabilityStyles } from "../uiControl.js";
 
 /* ===========================
    FETCH REQUEST DETAILS
 =========================== */
 export async function getRequestDetails(customId = null) {
-  // Use customId if provided, else use URL parameter
-  const id = customId || new URLSearchParams(window.location.search).get("id");
+  // Helper: get request ID from custom param or URL
+  const getRequestId = () =>
+    customId || new URLSearchParams(window.location.search).get("id");
 
+  const id = getRequestId();
   if (!id) {
     console.warn("⚠️ No request ID provided or found in URL.");
     return;
   }
 
+  const url = `./actions/requestDetails/getRequestDetails.php?id=${id}`;
+
   try {
-    const response = await fetch(`./actions/request_details/getRequestDetails.php?id=${id}`);
+    const response = await fetch(url);
 
     if (!response.ok) {
-      console.error("❌ Server error:", await response.text());
+      const errorText = await response.text();
+      console.error("❌ Server error:", errorText);
       return;
     }
 
     const data = await response.json();
-    fillRequestDetails(data.request, data.photos);
-    fillProposals(data.proposals);
-    console.log("✅ Request details fetched:", data);
+
+    // UI updates
+    if (data?.request || data?.photos) fillRequestDetails(data.request, data.photos);
+    if (data?.proposals) fillProposals(data.proposals);
+
+    console.log("✅ Request details fetched successfully:", data);
   } catch (err) {
     console.error("❌ Fetch failed:", err);
   }
 }
 
-
 /* ===========================
    RENDER REQUEST DETAILS
 =========================== */
 function fillRequestDetails(request, photos) {
-  document.getElementById("request-name").textContent =
-    request?.request || "N/A";
-  document.getElementById("request-property").textContent =
-    request?.residence || "N/A";
+  const getEl = (id) => document.getElementById(id);
 
-  // Budget and Duration
-  // budget
-  const budgetEl = document.getElementById("budget");
-  const durationEl = document.getElementById("duration");
+  // Helper for setting text with default
+  const setText = (el, value, defaultText = "N/A") => {
+    if (!el) return;
+    el.textContent =
+      value !== null && value !== undefined && value !== "" ? value : defaultText;
+  };
 
-  const budgetValue = request?.budget;
-  const durationValue = request?.duration;
+  // Helper for setting color based on condition
+  const setColor = (el, condition, trueColor = "green", falseColor = "#b93232ff") => {
+    if (!el) return;
+    el.style.color = condition ? trueColor : falseColor;
+  };
 
-  if (!isNaN(budgetValue) && budgetValue !== null && budgetValue !== "") {
-    budgetEl.textContent = `KSH ${budgetValue}`;
-  } else {
-    budgetEl.textContent = "Not set";
-  }
+  // Basic request details
+  setText(getEl("request-name"), request?.request);
+  setText(getEl("request-property"), request?.residence);
+  setText(getEl("request-unit"), request?.unit);
+  setText(getEl("request-provider"), request?.provider_name, "Unassigned");
+  setText(getEl("request-description"), request?.description, "No description provided");
 
-  // Check if duration is numeric
-  if (!isNaN(durationValue) && durationValue !== null && durationValue !== "") {
-    durationEl.textContent = `${durationValue} days`;
-  } else {
-    durationEl.textContent = "Not set";
-  }
+  // Budget & Duration
+  const budgetEl = getEl("budget");
+  const durationEl = getEl("duration");
+  setText(budgetEl, !isNaN(request?.budget) ? `KSH ${request.budget}` : null, "Not set");
+  setText(durationEl, !isNaN(request?.duration) ? `${request.duration} days` : null, "Not set");
 
-  // status
-  const requestStatusEl = document.getElementById("request-status");
+  // Status & Provider response
+  const statusEl = getEl("request-status");
+  const providerResponseEl = getEl("provider_response");
+
   const status = request?.status || "Not assigned";
-  requestStatusEl.textContent = status;
-  if (status === "In progress") {
-    requestStatusEl.style.color = "green";
+  const response = request?.provider_response || "Not assigned";
 
-  } else {
-    requestStatusEl.style.color = "#b93232ff";
-  }
+  setText(statusEl, status);
+  setColor(statusEl, status === "In progress");
 
-  // Provider response
-   const providerResponseEl = document.getElementById("provider_response");
-   const response = request?.provider_response || "Not assigned";
-  providerResponseEl.textContent = response;
-  if (response === "Accepted") {
-    providerResponseEl.style.color = "green";
+  setText(providerResponseEl, response);
+  setColor(providerResponseEl, response === "Accepted");
 
-  } else {
-    providerResponseEl.style.color = "#b93232ff"; // neutral/gray for Not assigned or others
-  }
+  // Dataset for buttons
+  const terminateBtn = getEl("actualTerminateBtn");
+  if (terminateBtn) terminateBtn.dataset.assignmentId = request?.assignment_id;
 
-  // pass assignment id to terminate button
-  const terminateBtn = document.getElementById("actualTerminateBtn");
-  terminateBtn.dataset.assignmentId = request.assignment_id;
+  const requestProvider = getEl("request-provider");
+  if (requestProvider && request?.provider_id)
+    requestProvider.dataset.providerId = request.provider_id;
 
-
-  document.getElementById("request-unit").textContent = request?.unit || "N/A";
-  document.getElementById("request-provider").textContent =
-    request?.provider_name || "Unassigned";
-  document.getElementById("request-status").textContent =
-    request?.status || "Unassigned";
-  document.getElementById("request-description").textContent =
-    request?.description || "No description provided";
-
-  // add provider id to provider name
-  const requestProvider = document.getElementById("request-provider");
-  requestProvider.setAttribute("data-provider-id", request.provider_id);
-
-  // Photo
-  const photoEl = document.getElementById("request-photo");
-  if (photos?.length > 0) {
-    photoEl.src = photos[0].photo_url;
-  } else {
-    photoEl.src = "";
-    console.log("ℹ️ No photos available.");
-  }
-
-  // ✅ Availability Button
-  const availabilityBtn = document.getElementById("availabilityBtn");
+  const availabilityBtn = getEl("availabilityBtn");
   if (availabilityBtn) {
     const availability = request?.availability || "unavailable";
     const requestId = request?.id || "";
@@ -120,49 +100,26 @@ function fillRequestDetails(request, photos) {
     availabilityBtn.textContent =
       availability === "available" ? "Set Unavailable" : "Set Available";
   }
+
+  // Photo
+  const photoEl = getEl("request-photo");
+  if (photoEl) {
+    photoEl.src = photos?.[0]?.photo_url || "";
+    if (!photos?.length) console.info("ℹ️ No photos available.");
+  }
 }
+
 
 
 /* ===========================
    PROPOSALS
 =========================== */
-const proposalTemplate = (p) => html`
-  <li class="proposal-item">
-    <img
-      src="${p.provider_photo_url || "https://i.pravatar.cc/70"}"
-      alt="Profile Picture"
-      class="profile-pic me-3"
-    />
-    <div class="proposal-content">
-      <div class="d-flex mb-0">
-        <p class="text-dark my-0"><b>${p.name || "Unknown Provider"}</b>&nbsp;</p>
-        <p class="text-muted my-0">${formatDate(p.submitted_at)}</p>
-      </div>
-      <div class="request-meta">
-        <div class="request-status">
-          <i class="fas fa-circle"></i> ${p.ratings || "N/A"}
-        </div>
-        <div class="request-priority text-success">
-          <i class="fas fa-circle"></i> $${p.bid_amount || "N/A"}/hr
-        </div>
-        <div><p>${p.description || "No description provided"}</p></div>
-      </div>
-    </div>
-  </li>
-`;
-
-const proposalsListTemplate = (proposals) => html`
-  <ul id="proposals-list" class="proposals-list visible">
-    ${proposals.length
-    ? proposals.map(proposalTemplate)
-    : html`<li class="no-proposals">No proposals available.</li>`}
-  </ul>
-`;
 
 function fillProposals(proposals) {
   const container = document.getElementById("proposals-list");
-  render(proposalsListTemplate(proposals), container);
+  render(renderProposals(proposals), container);
 
+  // proposal modal
   container.querySelectorAll(".proposal-item").forEach((item, i) => {
     item.addEventListener("click", () => {
       console.log("👆 Proposal clicked:", proposals[i]);
@@ -170,6 +127,39 @@ function fillProposals(proposals) {
     });
   });
 }
+const renderProposals = (proposals) => html`
+  <ul id="proposals-list" class="proposals-list visible">
+    ${proposals.length
+    ? proposals.map(
+      (p) => html`
+            <li class="proposal-item">
+              <img
+                src="${p.provider_photo_url || "https://i.pravatar.cc/70"}"
+                alt="Profile Picture"
+                class="profile-pic me-3"
+              />
+              <div class="proposal-content">
+                <div class="d-flex mb-0">
+                  <p class="text-dark my-0"><b>${p.name || "Unknown Provider"}</b>&nbsp;</p>
+                  <p class="text-muted my-0">${formatDate(p.submitted_at)}</p>
+                </div>
+                <div class="request-meta">
+                  <div class="request-status">
+                    <i class="fas fa-circle"></i> ${p.ratings || "N/A"}
+                  </div>
+                  <div class="request-priority text-success">
+                    <i class="fas fa-circle"></i> KSH ${p.bid_amount || "N/A"}/hr
+                  </div>
+                  <div><p>${p.description || "No description provided"}</p></div>
+                </div>
+              </div>
+            </li>
+          `
+    )
+    : html`<li class="no-proposals">No proposals available.</li>`}
+  </ul>
+`;
+
 
 /* ===========================
    HELPERS

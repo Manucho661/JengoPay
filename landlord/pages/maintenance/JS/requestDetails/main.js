@@ -15,13 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
   getRequestDetails();
   otherRequests();
 
-  // set the availability bg color
-  const btn = document.getElementById("availabilityBtn");
-  if (btn) {
-    applyAvailabilityStyles(btn.dataset.status);
-  }
 
-  // Tab switching
+  // Tab switching between proposals and other requests
   const proposalsTab = document.getElementById("proposals");
   const otherRequestsTab = document.getElementById("otherRequests");
 
