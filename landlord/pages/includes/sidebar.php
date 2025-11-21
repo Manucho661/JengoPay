@@ -1,6 +1,10 @@
 <nav class="sidebar" style="position:relative;">
-  <h5 class="text-center text-uppercase">Dashboard</h5>
-  <a href="/Jengopay/landlord/pages/Dashboard/index2.php">📊 Dashboard</a>
+  <div>
+    
+  <a href="/Jengopay/landlord/pages/Dashboard/index2.php"><i class="fas fa-home"></i> Dashboard</a>
+
+  </div>
+  
 
   <!-- Property -->
   <div class="menu-group">
@@ -8,14 +12,14 @@
       <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> 🏠 Buildings
     </div>
     <div class="submenu">
-      <a href="/Jengopay/landlord/pages/Buildings/buildings.php" >🏢 Buildings</a>
+      <a href="/Jengopay/landlord/pages/Buildings/buildings.php" ><i class="fas fa-building"></i> Buildings</a>
       <!-- Add more options later -->
     </div>
   </div>
 
   <div class="menu-group">
     <div class="menu-header" onclick="toggleMenu(this)">
-      <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> 👥 People
+      <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> <i class="fas fa-users"></i> People
     </div>
     <div class="submenu">
       <a href="/Jengopay/landlord/pages/people/tenants.php">👥 Tenants</a>
@@ -33,8 +37,7 @@
       <a href="/Jengopay/landlord/pages/communications/announcements/announcements.php">📢 Announcements</a>
     </div>
   </div>
-  
-  <a href="/Jengopay/landlord/pages/inspections/inspections.php">🕵️ Inspections</a>
+
   <a href="/Jengopay/landlord/pages/maintenance/maintenance.php">🛠 Repairs & Maintenance</a>
 
   <!-- Financials -->

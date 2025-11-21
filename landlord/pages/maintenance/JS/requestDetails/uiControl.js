@@ -55,20 +55,6 @@ export function hideAssignBox() {
 
 }
 
-// Availability background color
-export function applyAvailabilityStyles(status) {
-  const btn = document.getElementById("availabilityBtn");
-
-  if (status === "available") {
-    btn.style.backgroundColor = "#fff"; // always white
-    btn.style.color = "#00192D";        // text color consistent
-  } else {
-    btn.style.backgroundColor = "#E6EAF0"; // your default grey
-    btn.style.color = "#00192D";
-  }
-}
-
-
 // end duration
 const durationSelect = document.getElementById('durationSelect');
 const customDurationDiv = document.getElementById('customDurationDiv');
@@ -90,18 +76,18 @@ const chatModal = new bootstrap.Modal(document.getElementById('chatModal'));
 const chatModalLabel = document.getElementById('chatModalLabel');
 
 openChatPanel.addEventListener('click', () => {
-    chatPanel.style.display = 'flex';
+  chatPanel.style.display = 'flex';
 });
 
 closeChatPanel.addEventListener('click', () => {
-    chatPanel.style.display = 'none';
+  chatPanel.style.display = 'none';
 });
 
 chatItems.forEach(item => {
-    item.addEventListener('click', () => {
-        const client = item.dataset.client;
-        chatModalLabel.textContent = `Chat with ${client}`;
-        chatPanel.style.display = 'none';
-        chatModal.show();
-    });
+  item.addEventListener('click', () => {
+    const client = item.dataset.client;
+    chatModalLabel.textContent = `Chat with ${client}`;
+    chatPanel.style.display = 'none';
+    chatModal.show();
+  });
 });

@@ -1,4 +1,4 @@
-import { applyAvailabilityStyles } from "../uiControl.js";
+
 
 /* ===========================
    UPDATE AVAILABILITY

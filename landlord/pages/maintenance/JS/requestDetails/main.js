@@ -6,57 +6,67 @@ import { getProviderDetails } from "./api/getProviderDetails.js";
 import { setDurationBudget } from "./api/durationBudget.js";
 import { sendText } from "./api/sendText.js";
 import { getTextMessages } from "./api/getTextMessages.js";
-import { toggleProposalsORotherRequests, confirmAssignBox, hideAssignBox, applyAvailabilityStyles } from "./uiControl.js";
-
+import { toggleProposalsORotherRequests, confirmAssignBox, hideAssignBox } from "./uiControl.js";
 import { terminateContract, terminateContractBox, hideTerminateBox } from "./api/terminateProvider.js";
-
-document.addEventListener("DOMContentLoaded", () => {
-  // Load data
-  getRequestDetails();
-  otherRequests();
+import { startLoadingAnimation, stopLoadingAnimation } from "./preLoader.js";
 
 
-  // Tab switching between proposals and other requests
-  const proposalsTab = document.getElementById("proposals");
-  const otherRequestsTab = document.getElementById("otherRequests");
-
-  proposalsTab?.addEventListener("click", () =>
+// 🔥 Clean event listeners grouped in one place
+function setupEvents() {
+  document.getElementById("proposals")?.addEventListener("click", () =>
     toggleProposalsORotherRequests("proposals-list")
   );
 
-  otherRequestsTab?.addEventListener("click", () =>
+  document.getElementById("otherRequests")?.addEventListener("click", () =>
     toggleProposalsORotherRequests("requestList")
   );
 
-  // display confirm assign btn
-  document.getElementById('assignBtn').addEventListener('click', confirmAssignBox);
-  document.getElementById('cancelAssignBtn').addEventListener('click', hideAssignBox);
+  document.getElementById("assignBtn").addEventListener("click", confirmAssignBox);
+  document.getElementById("cancelAssignBtn").addEventListener("click", hideAssignBox);
+  document.getElementById("actualAssignBtn").addEventListener("click", assignProvider);
 
-  // assign provider
-  document.getElementById('actualAssignBtn').addEventListener('click', assignProvider);
+  document.getElementById("availabilityBtn").addEventListener("click", updateAvailabilty);
+  document.getElementById("request-provider").addEventListener("click", getProviderDetails);
 
-  // update availability
-  document.getElementById('availabilityBtn').addEventListener('click', updateAvailabilty);
+  document.getElementById("durationBudget").addEventListener("submit", setDurationBudget);
 
-  // get request details
-  document.getElementById('request-provider').addEventListener('click', getProviderDetails);
+  document.getElementById("terminateBtn").addEventListener("click", terminateContractBox);
+  document.getElementById("cancelTerminateBtn").addEventListener("click", hideTerminateBox);
+  document.getElementById("actualTerminateBtn").addEventListener("click", terminateContract);
 
-  // set budget and duration
-  document.getElementById('durationBudget').addEventListener('submit', setDurationBudget);
+  document.getElementById("chatForm").addEventListener("submit", sendText);
 
-  // Terminate contract
-  document.getElementById('terminateBtn').addEventListener('click', terminateContractBox);
-  document.getElementById('cancelTerminateBtn').addEventListener('click', hideTerminateBox);
-
-  document.getElementById('actualTerminateBtn').addEventListener('click', terminateContract);
-
-  // send text
-  document.getElementById('chatForm').addEventListener('submit', sendText);
-
-  // get text Messages
+  // Chat refresh
   getTextMessages();
-
-  // 🔁 refresh messages every 3 seconds
   setInterval(getTextMessages, 1000);
+}
 
+
+// 🔥 Main logic wrapped in async function
+document.addEventListener("DOMContentLoaded", async () => {
+  const main = document.getElementById("appMain");
+  // show preloader + hide main
+  main.style.display = "none";
+  startLoadingAnimation();
+
+  try {
+    await getRequestDetails();
+    await otherRequests();
+  } catch (err) {
+    console.error(err);
+    // show error message perhaps inside the preloader
+    const pre = document.getElementById("preloader");
+    if (pre) pre.innerText = "Failed to load data.";
+    return;
+  }
+
+  // stop animation (waits for fade-out to finish)
+  await stopLoadingAnimation();
+  // reveal main
+  main.style.display = "block";
+
+
+  setupEvents();
 });
+
+
