@@ -1,7 +1,5 @@
-import { login } from "./api/login.js";
 import { registerUser } from "./api/registerUser.js";
 
 document.addEventListener("DOMContentLoaded", async () =>{
-    document.getElementById('loginForm').addEventListener('submit', login);
     document.getElementById('registerForm').addEventListener('submit', registerUser);
 })
