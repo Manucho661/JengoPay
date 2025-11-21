@@ -377,7 +377,7 @@
 
     <div class="chat-body" id="chatBody">
         <!-- Messages will load here -->
-        <p class="text-muted">Loading chat...</p>
+        <p class="text-muted"></p>
     </div>
 
     <div class="chat-footer">
@@ -385,6 +385,7 @@
         <button id="sendChatBtn" class="btn btn-primary mt-2">Send</button>
     </div>
 </div>
+
 
 <script>
 // ==================== Deposits ====================
@@ -507,6 +508,17 @@ function calculateEndDate() {
 document.addEventListener("DOMContentLoaded", () => {
   addRow(); // Start with one row
 });
+</script>
+
+<script>
+  function loadChatMessages(tenant) {
+    fetch("/JengoPay/landlord/pages/communications/actions/load_conversation.php?tenant=" + tenant)
+    .then(res => res.text())
+    .then(data => {
+        document.getElementById("chatBody").innerHTML = data;
+    });
+}
+
 </script>
 
 <script>

@@ -720,9 +720,11 @@ $netProfit = $income - $expenses;
 
             <div class="col-md-6 col-12 d-flex justify-content-end" style="position: relative; min-height: 60px;">
               <div style="position: absolute; bottom: 0; right: 0;">
-                <button class="btn rounded-circle shadow-sm" id="downloadBtn" style="background-color: #FFC107; border: none;">
-                  <i class="fas fa-file-pdf" style="font-size: 24px; color: #00192D;"></i>
-                </button>
+              <button class="btn" id="downloadBtn"
+    style="color: #FFC107; background-color: #00192D; border-radius: 30px;">
+    <i class="bi bi-download"></i> Download PDF
+</button>
+
                 <button class="btn rounded-circle shadow-sm" onclick="exportToExcel()" style="background-color: #FFC107; border: none;">
                   <i class="fas fa-file-excel" style="font-size: 24px; color: #00192D;"></i>
                 </button>
@@ -1916,33 +1918,144 @@ function applyFilters() {
   window.location.href = window.location.pathname + '?' + params.toString();
 }
 </script> -->
+<script>
+document.getElementById('downloadBtn').addEventListener('click', function () {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF("p", "mm", "a4");
 
+    if (typeof doc.autoTable !== "function") {
+        alert("autoTable plugin not loaded");
+        return;
+    }
 
+    /** LOGO **/
+    const logoUrl = "expenseLogo6.png";
 
-  <script>
-    const more_announcement = document.getElementById('more_announcement_btn');
-    const view_announcement = document.getElementById('view_announcement');
-    const close_overlay = document.getElementById("close-overlay-btn");
+    /** Business Info **/
+    const businessName = "Ebenezer Apartment";
+    const address = "50303 Nairobi, Kenya";
+    const email = "silver@gmail.com";
+    const phone = "+254 700 123456";
 
-    more_announcement.addEventListener('click', () => {
+    /** Date Range **/
+    const startDate = document.getElementById("startDate").value;
+    const endDate = document.getElementById("endDate").value;
 
-      view_announcement.style.display = "flex";
-      document.querySelector('.app-wrapper').style.opacity = '0.3'; // Reduce opacity of main content
-      const now = new Date();
-      const formattedTime = now.toLocaleString(); // Format the date and time
-      timestamp.textContent = `Sent on: ${formattedTime}`;
+    let dateRangeText = "For the period ending December 31, 2024";
+    if (startDate && endDate) {
+        const start = new Date(startDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+        const end = new Date(endDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+        dateRangeText = `From ${start} to ${end}`;
+    }
 
+    /** Draw Logo & Business Info **/
+    doc.addImage(logoUrl, "PNG", 12, 10, 30, 30);
 
+    doc.setFillColor(240, 240, 240);
+    doc.roundedRect(140, 10, 60, 25, 3, 3, "F");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.text(businessName, 170, 16, { align: "right" });
+
+    doc.setFontSize(9);
+    doc.text(address, 170, 21, { align: "right" });
+    doc.text(email, 170, 26, { align: "right" });
+    doc.text(phone, 170, 31, { align: "right" });
+
+    /** Title **/
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.setTextColor(0, 25, 45);
+    doc.text("Profit & Loss Statement", 105, 50, { align: "center" });
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    doc.text(dateRangeText, 105, 57, { align: "center" });
+
+    /** Extract ONLY VISIBLE rows **/
+    const table = document.getElementById("myTable");
+    const allRows = table.querySelectorAll("tbody tr");
+
+    const data = [];
+    const sectionHeaders = [];
+
+    allRows.forEach((row) => {
+        const style = window.getComputedStyle(row);
+
+        // SKIP HIDDEN ROWS
+        if (style.display === "none" || style.visibility === "hidden") return;
+
+        let rowData = [];
+        row.querySelectorAll("td").forEach(td => rowData.push(td.innerText.trim()));
+
+        // ❌ FIX: Skip rows where all TDs are empty → removes INCOME GAP
+        if (rowData.every(cell => cell === "")) return;
+
+        if (row.classList.contains("category")) {
+            sectionHeaders.push(data.length);
+        }
+
+        data.push(rowData);
     });
 
-    close_overlay.addEventListener('click', () => {
+    /** MAIN TABLE **/
+    doc.autoTable({
+        startY: 70,
+        head: [["Description", "Amount"]],
+        body: data,
 
-      view_announcement.style.display = "none";
-      document.querySelector('.app-wrapper').style.opacity = '1';
+        theme: "grid",
+        margin: { left: 14, right: 14 },
 
+        styles: {
+            fontSize: 10,
+            cellPadding: 3,
+            lineWidth: 0.2,
+            lineColor: [200, 200, 200],
+        },
 
+        headStyles: {
+            fillColor: [0, 25, 45],
+            textColor: [255, 255, 255],
+            fontSize: 11,
+            fontStyle: "bold",
+        },
+
+        alternateRowStyles: {
+            fillColor: [250, 250, 250],
+        },
+
+        didParseCell: function (tableData) {
+            if (
+                tableData.section === "body" &&
+                sectionHeaders.includes(tableData.row.index)
+            ) {
+                tableData.cell.styles.fontSize = 11;
+                tableData.cell.styles.fontStyle = "bold";
+                tableData.cell.styles.fillColor = [255, 244, 204];
+                tableData.cell.styles.textColor = [0, 25, 45];
+            }
+        },
+
+        didDrawPage: function () {
+            doc.setDrawColor(255, 193, 7);
+            doc.setLineWidth(1.5);
+            doc.line(10, 5, 200, 5);
+        }
     });
-  </script>
+
+    /** Footer **/
+    const pageHeight = doc.internal.pageSize.height;
+    doc.setFontSize(9);
+    doc.setTextColor(150, 150, 150);
+    doc.text("Generated by JengoPay System", 105, pageHeight - 8, { align: "center" });
+
+    doc.save("profit_loss_statement.pdf");
+});
+</script>
+
+
 
   <!-- End view announcement script -->
 
@@ -2148,102 +2261,7 @@ function applyFilters() {
   </script>
 
 
-  <script>
-    document.getElementById('downloadBtn').addEventListener('click', function() {
-      const {
-        jsPDF
-      } = window.jspdf;
-      const doc = new jsPDF();
 
-      // Check if autoTable is available
-      if (typeof doc.autoTable !== 'function') {
-        console.error("Error: autoTable plugin is not properly loaded.");
-        alert("Error: autoTable plugin is not available.");
-        return;
-      }
-
-      const table = document.getElementById("myTable");
-      const rows = table.querySelectorAll("tbody tr");
-      const header = document.querySelector('.balancesheet-header').textContent;
-
-      // Get the current filter dates or use default text
-      const startDate = document.getElementById('startDate').value;
-      const endDate = document.getElementById('endDate').value;
-      let dateRangeText = "From 1 January 2024 to December 31, 2024"; // Default
-
-      if (startDate && endDate) {
-        const start = new Date(startDate).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        });
-        const end = new Date(endDate).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        });
-        dateRangeText = `From ${start} to ${end}`;
-      }
-
-      const data = [];
-      let sectionHeaders = [];
-
-      rows.forEach((row, rowIndex) => {
-        const rowData = [];
-        row.querySelectorAll("td").forEach((cell) => {
-          rowData.push(cell.innerText.trim());
-        });
-
-        if (row.classList.contains("category")) {
-          sectionHeaders.push(rowIndex);
-        }
-
-        data.push(rowData);
-      });
-
-      // Header styling (unchanged from your original)
-      doc.setFontSize(14);
-      doc.setFont("helvetica", "bold");
-      doc.text("Ebenezer Apartment,", 105, 6, {
-        align: "center"
-      });
-
-
-      doc.setFontSize(14);
-      doc.setFont("helvetica", "bold");
-      doc.text("Profit and Loss Statement", 105, 10, {
-        align: "center"
-      });
-
-      doc.setFontSize(12);
-      doc.setFont("helvetica", "bold");
-      doc.text(dateRangeText, 105, 14, {
-        align: "center"
-      });
-
-      // Table configuration (unchanged from your original)
-      doc.autoTable({
-        startY: 20,
-        head: [
-          ['Description', 'Amount']
-        ],
-        body: data,
-        headStyles: {
-          fillColor: [0, 25, 45],
-          textColor: [255, 255, 255],
-          fontStyle: 'bold'
-        },
-        didParseCell: function(data) {
-          if (data.section === 'body' && sectionHeaders.includes(data.row.index)) {
-            data.cell.styles.fontSize = 12;
-            data.cell.styles.fontStyle = 'bold';
-          }
-        }
-      });
-
-      doc.save('profit_loss_statement.pdf');
-    });
-  </script>
   <!-- End script for data_table -->
 
 
