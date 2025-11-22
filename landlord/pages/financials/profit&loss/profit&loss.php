@@ -720,10 +720,10 @@ $netProfit = $income - $expenses;
 
             <div class="col-md-6 col-12 d-flex justify-content-end" style="position: relative; min-height: 60px;">
               <div style="position: absolute; bottom: 0; right: 0;">
-              <button class="btn" id="downloadBtn"
-    style="color: #FFC107; background-color: #00192D; border-radius: 30px;">
-    <i class="bi bi-download"></i> Download PDF
-</button>
+              <button class="btn rounded-circle shadow-sm" id="downloadBtn"
+              style="background-color: #FFC107; border: none;">
+              <i class="fas fa-file-pdf" style="font-size: 24px; color: #00192D;"></i>
+              </button>
 
                 <button class="btn rounded-circle shadow-sm" onclick="exportToExcel()" style="background-color: #FFC107; border: none;">
                   <i class="fas fa-file-excel" style="font-size: 24px; color: #00192D;"></i>

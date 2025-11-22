@@ -192,6 +192,11 @@ foreach ($invoices as $inv) {
           </div>
           <?php endforeach; ?>
         </div>
+          </div>
+        
+<div>
+  
+</div>
 
         <!-- Main Table (for DataTables) -->
         <table id="agedTable" class="table table-striped table-hover align-middle">
