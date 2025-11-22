@@ -319,7 +319,6 @@ require_once "../db/connect.php"
                                     </script>";
                         }
                     }
-
                     ?>
                     <div class="card shadow-sm">
                         <div class="card-header">

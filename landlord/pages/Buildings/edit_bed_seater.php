@@ -2,6 +2,7 @@
  require_once "../db/connect.php";
 //  include_once 'includes/lower_right_popup_form.php';
 ?>
+
 <?php
 require_once "../db/connect.php";
 
@@ -22,7 +23,7 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
 
     try {
         if (!empty($id)) {
-            $sql = "SELECT * FROM bedsitter_units WHERE id = :id";
+            $sql = "SELECT * FROM multi_rooms_units WHERE id = :id";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([':id' => $id]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -41,7 +42,6 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
     }
 }
 ?>
-
 
 <!doctype html>
 <html lang="en">
@@ -235,103 +235,212 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
                 <!-- Main content -->
                 <section class="content">
         <div class="container-fluid">
-          <!-- if the Rent Bed Sitter Unit Button is Clicked -->
-          <?php
-              include_once 'processes/encrypt_decrypt_function.php';
-              if(isset($_GET['rent']) && !empty($_GET['rent'])) {
-                $id = $_GET['rent'];
-                $id = encryptor('decrypt', $id);
-                  try{
-                    if(!empty($id)) {
-                      $sql = "SELECT * FROM bedsitter_units WHERE id =:id";
-                      $stmt = $pdo->prepare($sql);
-                      $stmt->execute(array(':id' => $id));
-                      while ($row = $stmt->fetch()) {
-                        $id = $row['id'];
-                        $unit_number = $row['unit_number'];
-                        $location = $row['location'];
-                        $building_link = $row['building_link'];
-                        $purpose = $row['purpose'];
-                        $purpose = $row['purpose'];
-                        $unit_category = $row['unit_category'];
-                        $occupancy_status = $row['occupancy_status'];
-                      }
-                    }
-                  }catch(PDOException $e){
-                    //if the execution fails
-                  }
-              }
-            ?>
-          <!-- Get Some Details About the Unit and make Cards for it -->
-          <div class="card shadow-sm">
-            <div class="card-header">
-              <b>Overview</b>
-              <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
-                    class="fas fa-minus"></i></button>
-              </div>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-md-3 col-sm-6 col-12">
-                  <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                    <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i
-                        class="fas fa-home"></i></span>
-                    <div class="info-box-content">
-                      <span class="info-box-text">Unit No</span>
-                      <span class="info-box-number"><?= htmlspecialchars($unit_number); ?></span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3 col-sm-6 col-12">
-                  <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                    <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i
-                        class="fa fa-table"></i></span>
-                    <div class="info-box-content">
-                      <span class="info-box-text">Unit Floor</span>
-                      <span class="info-box-number"><?= htmlspecialchars($location);?></span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3 col-sm-6 col-12">
-                  <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                    <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i
-                        class="fas fa-building"></i></span>
-                    <div class="info-box-content">
-                      <span class="info-box-text">Building</span>
-                      <span class="info-box-number"><?= htmlspecialchars($building_link) ;?></span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3 col-sm-6 col-12">
-                  <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                    <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i
-                        class="fas fa-hotel"></i></span>
-                    <div class="info-box-content">
-                      <span class="info-box-text">Rental Purpose</span>
-                      <span class="info-box-number"><?= htmlspecialchars($purpose) ;?></span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- A Simple Callout telling you to type important information -->
-          <div class="callout callout-danger shadow" id="callOutSection">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true"
-              id="closeCallOut">&times;</button>
-            <p style="font-weight:bold;"><span
-                style="background-color:#cc0001; color:#fff; padding:3px; border-radius:4px;">Add Tenant!</span> Enter
-              All the Required Relevant Tenant Details in Order to Rent out this
-              Unit.</p>
-          </div>
-          <!-- Form Start -->
-          <!-- Form Start -->
-          <?php include_once '../includes/tenant_form.php';?>
+            <?php
+                include_once 'processes/encrypt_decrypt_function.php';
+                if(isset($_GET['edit']) && !empty($_GET['edit'])) {
+                    $unit_id = $_GET['edit'];
+                    $unit_id = encryptor('decrypt', $unit_id);
 
+                    try{
+                        // 1. Fetch unit details
+                        $stmt = $pdo->prepare("SELECT * FROM bedsitter_units WHERE id = ?");
+                        $stmt->execute([$unit_id]);
+                        $unit = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                        if (!$unit) {
+                            die("Unit not found!");
+                        }
+
+                        // 2. Fetch bills (always return array)
+                        $stmtBills = $pdo->prepare("SELECT * FROM bed_seater_bills WHERE unit_id = ?");
+                        $stmtBills->execute([$unit_id]);
+                        $bills = $stmtBills->fetchAll(PDO::FETCH_ASSOC) ?: [];
+                    } catch(PDOException $e){  
+                        //if the query fails to select
+                    }
+                }
+
+                //If the Update Button is Clicked
+                if(isset($_POST['update'])) {
+                     $id             = $_POST['id'];
+                    $unit_number    = $_POST['unit_number'];
+                    $purpose        = $_POST['purpose'];
+                    $building_link  = $_POST['building_link'];
+                    $location       = $_POST['location'];
+                    $water_meter    = $_POST['water_meter'];
+                    $monthly_rent   = $_POST['monthly_rent'];
+                    $occupancy_status = $_POST['occupancy_status'];
+                    try{
+                    //No Update to be done until Any of the Form values are changed
+                    $no_changes = "SELECT * FROM bedsitter_units WHERE unit_number = '$_POST[unit_number]' AND purpose = '$_POST[purpose]' AND building_link = '$_POST[building_link]' AND location = '$_POST[location]' AND monthly_rent = '$_POST[monthly_rent]' AND occupancy_status = '$_POST[occupancy_status]'";
+                    $stmt = $pdo->prepare($no_changes);
+                    $stmt->execute();
+                    if($stmt->rowCount() > 0) {
+                        ?>
+                            <script>
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Warning!',
+                                    text: 'Unit Update Failed! You Have not Changed Anything.',
+                                    confirmButtonColor: '#00192D'
+                                    }).then(() => {
+                                    window.location.href = 'bed_sitter_units.php'; // redirect after confirmation
+                                });
+                            </script>
+                        <?php
+                    } else {
+                        
+                        // Start transaction
+                        if (!$pdo->inTransaction()) {
+                            $pdo->beginTransaction();
+                        }
+
+                        // 1. Update single_units
+                        $stmt = $pdo->prepare("
+                            UPDATE bedsitter_units 
+                            SET unit_number = ?, 
+                                purpose = ?, 
+                                building_link = ?, 
+                                location = ?, 
+                                water_meter = ?, 
+                                monthly_rent = ?, 
+                                occupancy_status = ? 
+                            WHERE id = ?
+                        ");
+                        $stmt->execute([
+                            $unit_number,
+                            $purpose,
+                            $building_link,
+                            $location,
+                            $water_meter,
+                            $monthly_rent,
+                            $occupancy_status,
+                            $id
+                        ]);
+
+
+                        // 2. Delete old bills for this unit
+                        $stmt = $pdo->prepare("DELETE FROM single_unit_bills WHERE unit_id = ?");
+                        $stmt->execute([$id]);
+
+                        // 3. Insert new bills
+                        if (!empty($_POST['bill'])) {
+                            $stmt = $pdo->prepare("
+                                INSERT INTO single_unit_bills (unit_id, bill, qty, unit_price) 
+                                VALUES (?, ?, ?, ?)
+                            ");
+
+                            foreach ($_POST['bill'] as $index => $billName) {
+                                $bill       = trim($billName);
+                                $qty        = !empty($_POST['qty'][$index]) ? $_POST['qty'][$index] : 0;
+                                $unit_price = !empty($_POST['unit_price'][$index]) ? $_POST['unit_price'][$index] : 0;
+
+                                if ($bill !== "") {
+                                    $stmt->execute([$id, $bill, $qty, $unit_price]);
+                                }
+                            }
+                        }
+                        // Commit only if still active
+                        if ($pdo->inTransaction()) {
+                            $pdo->commit();
+                        }
+
+                        echo "
+                        <script>
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Unit Information Updated Successfully.',
+                                confirmButtonColor: '#00192D'
+                                }).then(() => {
+                                window.location.href = 'bed_sitter_units.php'; // redirect after confirmation
+                            });
+                        </script>
+                        ";
+                    }
+
+                    } catch(Exception $e){
+                        if ($pdo->inTransaction()) {
+                            $pdo->rollBack();
+                        }
+                        echo "
+                            <script>
+                              Swal.fire({
+                                icon: 'error',
+                                title: 'Database Error',
+                                text: '".addslashes($e->getMessage())."',
+                                confirmButtonColor: '#00192D'
+                              });
+                            </script>";
+                    }
+                } 
+            ?>        
+            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) ;?>" method="POST" enctype="multipart/form-data">
+                <input type="hidden" value="<?= htmlspecialchars($unit['id']); ?>" name="id">
+                <div class="card shadow">
+                    <div class="card-header" style="background-color:#00192D; color: #fff;"><b>Edit Bed Sitter Information</b></div>
+                    <div class="card-body">
+                        <fieldset class="border p-3" style="border: 2px solid #D8DCE0;">
+                            <legend class="w-auto p-2" style="font-size: 18px;">Unit Information</legend>
+                            <div class="row p-2 border">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Unit Number</label>
+                                    <input type="text" name="unit_number" class="form-control" value="<?= htmlspecialchars($unit['unit_number']); ?>" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Purpose</label>
+                                    <input type="text" name="purpose" class="form-control" value="<?= htmlspecialchars($unit['purpose']); ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Building Link</label>
+                                    <input type="text" name="building_link" class="form-control" value="<?= htmlspecialchars($unit['building_link']); ?>">
+                                </div>
+                            </div>
+                        </div> <hr>
+                        
+                        <div class="row p-2 border">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Location</label>
+                                    <input type="text" name="location" class="form-control" value="<?= htmlspecialchars($unit['location']); ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Water Meter</label>
+                                    <input type="number" name="water_meter" class="form-control" value="<?= htmlspecialchars($unit['water_meter']); ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Monthly Rent</label>
+                                    <input type="number" step="0.01" name="monthly_rent" class="form-control" value="<?= htmlspecialchars($unit['monthly_rent']); ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Occupancy Status</label>
+                                    <input type="text" value="<?= htmlspecialchars($unit['occupancy_status']); ?>" name="occupancy_status" class="form-control" readonly>
+                                </div>
+                            </div>
+                        </div>  
+                        </fieldset> <hr>
+                        
+                    </div>
+                    <div class="card-footer text-right">
+                        <button class="btn btn-sm shadow" type="submit" name="update" style="background-color:#00192D; color: #fff;"><i class="bi bi-check"></i> Update</button>
+                    </div>
+                </div>
+            </form>
         </div>
       </section>
-
+      <!-- /.content -->
+      <!-- php script to process the submission of the tenant details -->
       <?php
         if(isset($_POST['rent_unit'])) {
           $tm = md5(time()); // Unique prefix for uploaded files
@@ -451,7 +560,7 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
 
           try {
             //Check if the Tenant Information Exists in the Database. No submission if this is true to avoid duplication of data
-            $checkTenant = $pdo->prepare("SELECT * FROM bedsitter_units
+            $checkTenant = $pdo->prepare("SELECT * FROM multi_rooms_units
                 WHERE tmain_contact = :tmain_contact
                    AND talt_contact = :talt_contact
                    AND temail = :temail
@@ -459,6 +568,7 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
                    AND pass_no = :pass_no");
 
             $checkTenant->execute([
+           
                 ':tmain_contact' => $tmain_contact,
                 ':talt_contact'  => $talt_contact,
                 ':temail'        => $temail,
@@ -479,8 +589,8 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
                 </script>";
               exit;
             } else {
-              //Update the Bed Sitter Units Information by Submitting the Tenant Information
-              $updateTable = $pdo->prepare("UPDATE bedsitter_units SET
+              //Update the Single Units Information by Submitting the Tenant Information
+              $updateTable = $pdo->prepare("UPDATE multi_rooms_units SET
                 occupancy_status =:occupancy_status,
                 tfirst_name =:tfirst_name,
                 tmiddle_name =:tmiddle_name,
@@ -547,12 +657,12 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
                       Swal.fire({
                         icon: 'success',
                         title: 'Success!',
-                        text: 'Unit has been Successfully Rented Out.',
+                        text: 'Tenant Information has been Saved Successfully.',
                         showConfirmButton: true,
                         confirmButtonText: 'OK'
                         }).then((result) => {
                           if (result.isConfirmed) {
-                          window.location.href = 'bed_sitter_tenants.php';
+                          window.location.href = 'all_tenants.php';
                         }
                       });
                     }, 800); // short delay to smooth transition from loader
@@ -592,293 +702,7 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
     <!--end::App Wrapper-->
 
     <!-- plugin for pdf -->
-    <script>
-  // ==================== Security Deposits Table ====================
-  // Handles dynamic addition/removal of deposit rows and updates totals in the table.
-  function addDepositRow() {
-    const tbody = document.querySelector("#paymentTable tbody");
-    const row = document.createElement("tr");
-
-    row.innerHTML = `
-    <td>
-      <select class="form-control depositForSelect" name="deposit_for[]">
-        <option value="" disabled selected>Select option</option>
-        <option value="Rent">Rent</option>
-        <option value="Water">Water</option>
-        <option value="Internet">Internet</option>
-        <option value="Garbage">Garbage</option>
-        <option value="Security">Security</option>
-        <option value="Management Fee">Management Fee</option>
-        <option value="Wellfare">Wellfare</option>
-        <option value="Others">Others</option>
-      </select>
-      <input type="text" class="form-control depositForOther mt-2"
-             name="deposit_for_other[]" style="display:none;" placeholder="Please specify...">
-    </td>
-    <td><input type="number" class="form-control requiredPay" name="required_pay[]" value="0" min="0"></td>
-    <td><input type="number" class="form-control amountPaid" name="amount_paid[]" value="0" min="0"></td>
-
-    <!-- Balance column -->
-    <td class="balance">
-      <input type="hidden" name="balance[]" value="0">0
-    </td>
-
-    <!-- Subtotal column -->
-    <td class="subTotal">
-      <input type="hidden" name="subtotal[]" value="0">0
-    </td>
-
-    <td>
-      <button type="button" class="btn btn-sm removeRow"
-              style="background-color:#cc0001; color:#fff;">
-        <i class="bi bi-trash"></i> Remove
-      </button>
-    </td>
-  `;
-
-    tbody.appendChild(row);
-
-    // Show/hide "Other" input
-    const select = row.querySelector('.depositForSelect');
-    const otherInput = row.querySelector('.depositForOther');
-    select.addEventListener('change', function() {
-      if (this.value === 'Others') {
-        otherInput.style.display = '';
-        otherInput.required = true;
-      } else {
-        otherInput.style.display = 'none';
-        otherInput.required = false;
-      }
-      updateDepositForOptions();
-    });
-
-    // Input listeners for totals
-    row.querySelectorAll(".requiredPay, .amountPaid").forEach(input => {
-      input.addEventListener("input", () => {
-        if (input.value < 0) input.value = 0;
-        updateTableTotals();
-      });
-    });
-
-    // Remove row
-    row.querySelector(".removeRow").addEventListener("click", () => {
-      row.remove();
-      updateTableTotals();
-      updateDepositForOptions();
-    });
-
-    updateTableTotals();
-    updateDepositForOptions();
-  }
-
-
-  // Ensures deposit type options are unique across all rows
-  function updateDepositForOptions() {
-    const selects = document.querySelectorAll('.depositForSelect');
-    // Gather all selected values except 'Others'
-    const selected = Array.from(selects).map(s => s.value).filter(v => v !== 'Others');
-    selects.forEach(select => {
-      const currentValue = select.value;
-      Array.from(select.options).forEach(option => {
-        if (option.value === 'Others') {
-          option.style.display = '';
-        } else if (option.value === currentValue) {
-          option.style.display = '';
-        } else if (selected.includes(option.value)) {
-          option.style.display = 'none';
-        } else {
-          option.style.display = '';
-        }
-      });
-    });
-  }
-
-  //Update Table Totals
-  function updateTableTotals() {
-    let totalRequired = 0,
-      totalPaid = 0,
-      totalBalance = 0,
-      totalSub = 0;
-
-    document.querySelectorAll("#paymentTable tbody tr").forEach(row => {
-      const required = parseFloat(row.querySelector(".requiredPay").value) || 0;
-      const paid = parseFloat(row.querySelector(".amountPaid").value) || 0;
-      const balance = Math.max(required - paid, 0);
-      const sub = paid;
-
-      // Update balance cell
-      row.querySelector(".balance input").value = balance;
-      row.querySelector(".balance").lastChild.nodeValue = balance;
-
-      // Update subtotal cell
-      row.querySelector(".subTotal input").value = sub;
-      row.querySelector(".subTotal").lastChild.nodeValue = sub;
-
-      totalRequired += required;
-      totalPaid += paid;
-      totalBalance += balance;
-      totalSub += sub;
-    });
-
-    document.getElementById("totalRequired").textContent = totalRequired;
-    document.getElementById("totalPaid").textContent = totalPaid;
-    document.getElementById("totalBalance").textContent = totalBalance;
-    document.getElementById("totalSub").textContent = totalSub;
-  }
-
-
-  // ==================== Popups ====================
-  // ==================== Popups for ID and Income ====================
-  // Shows/hides popup sections for ID mode and income type selection.
-  document.querySelectorAll("input[name='idMode']").forEach(radio => {
-    radio.addEventListener("change", function() {
-      document.getElementById("nationalIdSection").style.display = this.value === "national" ?
-        "block" : "none";
-      document.getElementById("passportPopup").style.display = this.value === "passport" ?
-        "block" : "none";
-    });
-  });
-
-  document.querySelectorAll("input[name='income']").forEach(radio => {
-    radio.addEventListener("change", function() {
-      document.getElementById("formalPopup").style.display = this.value === "formal" ? "block" :
-        "none";
-      document.getElementById("casualPopup").style.display = this.value === "casual" ? "block" :
-        "none";
-      document.getElementById("businessPopup").style.display = this.value === "business" ?
-        "block" : "none";
-    });
-  });
-
-  function closePopup() {
-    // Closes all popup sections for income type selection.
-    document.querySelectorAll(".popup").forEach(p => p.style.display = "none");
-  }
-
-  function closeId() {
-    // Validates and closes the National ID popup section.
-    const idInput = document.getElementById('nationalId');
-    if (!idInput.checkValidity()) {
-      document.getElementById('nationalIdError').textContent = "Please enter a valid ID number.";
-      return;
-    }
-    document.getElementById('nationalIdSection').style.display = 'none';
-  }
-
-  function closePassport() {
-    // Validates and closes the Passport popup section.
-    const passInput = document.getElementById('passportNumber');
-    if (!passInput.checkValidity()) {
-      document.getElementById('passportError').textContent = "Please enter a valid Passport number.";
-      return;
-    }
-    document.getElementById('passportPopup').style.display = 'none';
-  }
-
-  // ==================== Leasing Dates ====================
-  // ==================== Leasing Dates Calculation ====================
-  // Automatically calculates lease end and move-out dates based on input values.
-  document.getElementById("leasingPeriod").addEventListener("input", calculateEndDate);
-  document.getElementById("leasingStart").addEventListener("change", calculateEndDate);
-  document.getElementById("moveIn").addEventListener("change", calculateEndDate);
-
-  function calculateEndDate() {
-    // Calculates the leasing end date and move-out date based on leasing period and start/move-in dates.
-    const months = parseInt(document.getElementById("leasingPeriod").value) || 0;
-    const startDate = new Date(document.getElementById("leasingStart").value);
-    const moveInDate = new Date(document.getElementById("moveIn").value);
-
-    if (months > 0 && !isNaN(startDate)) {
-      const endDate = new Date(startDate);
-      endDate.setMonth(endDate.getMonth() + months);
-      const iso = endDate.toISOString().split("T")[0];
-      document.getElementById("leasingEnd").value = iso;
-      document.getElementById("moveOut").value = iso;
-    }
-
-    // Sync move-out with move-in + months if move-in is set
-    if (months > 0 && !isNaN(moveInDate)) {
-      const moveOut = new Date(moveInDate);
-      moveOut.setMonth(moveOut.getMonth() + months);
-      document.getElementById("moveOut").value = moveOut.toISOString().split("T")[0];
-    }
-  }
-
-  // ==================== Initialization ====================
-  // Adds one deposit row on page load for user convenience.
-  document.addEventListener("DOMContentLoaded", () => {
-    addDepositRow(); // Start with one row
-    updateDepositForOptions();
-  });
-
-  //Preview the Rental Agreement Document for Accuracy Purposes
-  function previewPDF(input) {
-    // ==================== PDF Preview ====================
-    // Previews the uploaded rental agreement PDF in an iframe for accuracy.
-    const file = input.files[0];
-    if (file && file.type === "application/pdf") {
-      const url = URL.createObjectURL(file);
-      document.getElementById("pdfFrame").src = url;
-      document.getElementById("pdfPreview").style.display = "block";
-    } else {
-      document.getElementById("pdfPreview").style.display = "none";
-      document.getElementById("pdfFrame").src = "";
-    }
-  }
-
-  // ==================== ID Upload Preview ====================
-  function previewIdUpload(input) {
-    const file = input.files[0];
-    const preview = document.getElementById("idPreview");
-    if (!file) {
-      preview.style.display = "none";
-      preview.innerHTML = "";
-      return;
-    }
-    const ext = file.name.split('.').pop().toLowerCase();
-    if (["jpg", "jpeg", "png"].includes(ext)) {
-      const url = URL.createObjectURL(file);
-      preview.innerHTML =
-        `<img src="${url}" alt="ID Preview" style="max-width:100%; max-height:300px; border:1px solid #00192D;" class="rounded shadow">`;
-      preview.style.display = "block";
-    } else if (ext === "pdf") {
-      const url = URL.createObjectURL(file);
-      preview.innerHTML =
-        `<iframe src="${url}" style="width:100%; height:300px; border:1px solid #00192D;" class="rounded shadow"></iframe>`;
-      preview.style.display = "block";
-    } else {
-      preview.innerHTML = "<span class='text-danger'>Unsupported file type for preview.</span>";
-      preview.style.display = "block";
-    }
-  }
-
-
-  // ==================== TAX PIN Upload Preview ====================
-  function previewTaxPinCopy(input) {
-    const file = input.files[0];
-    const preview = document.getElementById("taxPinPreview");
-    if (!file) {
-      preview.style.display = "none";
-      preview.innerHTML = "";
-      return;
-    }
-    const ext = file.name.split('.').pop().toLowerCase();
-    if (["jpg", "jpeg", "png"].includes(ext)) {
-      const url = URL.createObjectURL(file);
-      preview.innerHTML =
-        `<img src="${url}" alt="TAX PIN Preview" style="max-width:100%; max-height:300px; border:1px solid #00192D;" class="rounded shadow">`;
-      preview.style.display = "block";
-    } else if (ext === "pdf") {
-      const url = URL.createObjectURL(file);
-      preview.innerHTML =
-        `<iframe src="${url}" style="width:100%; height:300px; border:1px solid #00192D;" class="rounded shadow"></iframe>`;
-      preview.style.display = "block";
-    } else {
-      preview.innerHTML = "<span class='text-danger'>Unsupported file type for preview.</span>";
-      preview.style.display = "block";
-    }
-  }
-  </script>
+    
 
     <!-- Main Js File -->
     <script src="../../js/adminlte.js"></script>
@@ -895,6 +719,67 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
     <!-- Scripts -->
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <?php include_once 'includes/required_scripts.php';?>
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Function to recalculate subtotal for a row
+    function updateSubtotal(row) {
+        const qty = parseFloat(row.querySelector(".qty").value) || 0;
+        const unitPrice = parseFloat(row.querySelector(".unit_price").value) || 0;
+        row.querySelector(".subtotal").value = (qty * unitPrice).toFixed(2);
+        updateGrandTotal();
+    }
+
+    // Function to calculate grand total
+    function updateGrandTotal() {
+        let total = 0;
+        document.querySelectorAll(".subtotal").forEach(input => {
+            total += parseFloat(input.value) || 0;
+        });
+        const totalField = document.getElementById("grandTotal");
+        if (totalField) totalField.value = total.toFixed(2);
+    }
+
+    // Handle input changes (qty or unit_price)
+    document.addEventListener("input", function (e) {
+        if (e.target.classList.contains("qty") || e.target.classList.contains("unit_price")) {
+            const row = e.target.closest("tr");
+            updateSubtotal(row);
+        }
+    });
+
+    // Add new row
+    document.getElementById("addRow").addEventListener("click", function () {
+        const table = document.querySelector("#billsTable tbody");
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+            <td><input type="text" name="bill[]" class="form-control bill"></td>
+            <td><input type="number" name="qty[]" class="form-control qty" value="1"></td>
+            <td><input type="number" step="0.01" name="unit_price[]" class="form-control unit_price"></td>
+            <td><input type="text" class="form-control subtotal" readonly></td>
+            <td>
+                <button type="button" class="btn btn-xs removeRow shadow" 
+                        style="background-color:#cc0001; color: #fff; font-weight: bold;">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </td>
+        `;
+        table.appendChild(newRow);
+    });
+
+    // Remove row
+    document.addEventListener("click", function (e) {
+        if (e.target.closest(".removeRow")) {
+            e.target.closest("tr").remove();
+            updateGrandTotal();
+        }
+    });
+
+    // Initialize subtotals for existing rows on load
+    document.querySelectorAll("#billsTable tbody tr").forEach(row => updateSubtotal(row));
+});
+</script>
 </body>
 <!--end::Body-->
 
