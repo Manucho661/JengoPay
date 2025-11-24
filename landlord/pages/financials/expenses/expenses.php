@@ -60,13 +60,8 @@ require_once 'actions/getBuildings.php';
         crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
-
-    <!--end::Third Party Plugin(Bootstrap Icons)-->
-    <!--begin::Required Plugin(AdminLTE)-->
+    <!--Main css file-->
     <link rel="stylesheet" href="../../../../landlord/assets/main.css" />
-    <!-- <link rel="stylesheet" href="text.css" /> -->
-    <!--end::Required Plugin(AdminLTE)-->
-    <!-- apexcharts -->
 
     <link
         rel="stylesheet"
@@ -164,40 +159,22 @@ require_once 'actions/getBuildings.php';
     </style>
 </head>
 
-<body class="layout-fixed sidebar-expand-lg bg-body-dark" style="">
+<body class="" style="">
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
+
         <!--begin::Header-->
         <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
         <!--end::Header-->
-        <!--begin::Sidebar-->
-        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-            <!--begin::Sidebar Brand-->
-            <div class="sidebar-brand">
-                <!--begin::Brand Link-->
-                <a href="./index.html" class="brand-link">
 
-                    <!--begin::Brand Text-->
-                    <span class="brand-text font-weight-light"><b class="p-2"
-                            style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
-                            class="p-2"
-                            style=" border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107;">JENGOPAY</b></span>
-                </a>
-                </span>
-                <!--end::Brand Text-->
-                </a>
-                <!--end::Brand Link-->
-            </div>
-            <!--end::Sidebar Brand-->
-            <!--begin::Sidebar Wrapper-->
-            <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
-            <!--end::Sidebar Wrapper-->
-        </aside>
+        <!--begin::Sidebar Wrapper-->
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?>
         <!--end::Sidebar-->
+
         <!--begin::App Main-->
-        <main class="app-main">
+        <main class="main">
             <!--begin::App Content Header-->
-            <div class="app-content-header bg-white">
+            <div class="app-content-header">
                 <!--begin::Container-->
                 <div class="container-fluid">
                     <!--begin::Row-->
@@ -889,6 +866,7 @@ require_once 'actions/getBuildings.php';
             <!--end::App Content-->
         </main>
         <!--end::App Main-->
+
         <!--begin::Footer-->
         <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
         <!--end::Footer-->
@@ -1064,7 +1042,7 @@ require_once 'actions/getBuildings.php';
 
 
     <!-- Main Js File -->
-    <script src="../../../../landlord/js/adminlte.js"></script>
+    <script src="../../../assets/main.js"></script>
     <!-- html2pdf depends on html2canvas and jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script type="module" src="./js/main.js"></script>

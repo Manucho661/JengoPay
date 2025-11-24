@@ -1,69 +1,37 @@
-<footer class="app-footer bg-white text-dark pt-5 pb-4 mt-5 border-0">
-  <div class="container">
-    <div class="row">
-      <!-- Brand / About -->
-      <div class="col-md-4 mb-4">
-        <h5 class="fw-bold text-uppercase bg-white" style="color:#00192D;">JENGO PAY</h5>
-        <p class="small" style="color:#6c757d;">
-          A comprehensive and efficient property management solution designed to simplify
-          your property operations. Streamline tenant management, maintenance requests,
-          and financial tracking with ease. Trusted by property owners and managers alike.
-        </p>
-        <div class="d-flex gap-3">
-          <a href="#" style="color:#1877F2;"><i class="bi bi-facebook fs-5"></i></a>
-          <a href="#" style="color:#1DA1F2;"><i class="bi bi-twitter fs-5"></i></a>
-          <a href="#" style="color:#0A66C2;"><i class="bi bi-linkedin fs-5"></i></a>
-        </div>
-      </div>
-
-      <!-- Quick Links -->
-      <div class="col-md-3 mb-4">
-        <h6 class="fw-bold text-uppercase mb-3 bg-white" style="color:#00192D;">Quick Links</h6>
-        <ul class="list-unstyled">
-          <li><a href="#" class="d-block mb-2 text-decoration-none" style="color:#6c757d;">Home</a></li>
-          <li><a href="#" class="d-block mb-2 text-decoration-none" style="color:#6c757d;">About Us</a></li>
-          <li><a href="#" class="d-block mb-2 text-decoration-none" style="color:#6c757d;">Services</a></li>
-          <li><a href="#" class="d-block mb-2 text-decoration-none" style="color:#6c757d;">Jobs</a></li>
-          <li><a href="#" class="d-block text-decoration-none" style="color:#6c757d;">Contact</a></li>
-        </ul>
-      </div>
-
-      <!-- Contact Info -->
-      <div class="col-md-3 mb-4">
-        <h6 class="fw-bold text-uppercase mb-3 bg-white" style="color:#00192D;">Contact Us</h6>
-        <ul class="list-unstyled small" style="color:#6c757d;">
-          <li class="mb-2"><i class="bi bi-geo-alt-fill me-2" style="color:#FFC107;"></i> Nairobi, Kenya</li>
-          <li class="mb-2"><i class="bi bi-envelope-fill me-2" style="color:#FFC107;"></i> support@jengopay.com</li>
-          <li><i class="bi bi-telephone-fill me-2" style="color:#FFC107;"></i> +254 700 123 456</li>
-        </ul>
-      </div>
-
-      <!-- NB -->
-      <div class="col-md-2 mb-4">
-        <h6 class="fw-bold text-uppercase mb-3 bg-white" style="color:#00192D;">NB</h6>
-        <p class="small" style="color:#6c757d;">
-          Ensure your account details are always up to date for seamless
-          transactions.
-        </p>
-      </div>
-    </div>
-
-    <hr style="border-color:#e9ecef;">
-
-    <!-- Custom Line Before Footer Bottom -->
-    <div class="my-3" style="border-top: 2px solid #FFC107; width:100%;"></div>
-
-    <!-- Footer Bottom -->
-    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center">
-      <div class="small" style="color:#6c757d;">
-        <strong>&copy; 2014-2024</strong>
-        <a href="https://adminlte.io" class="text-decoration-none" style="color:#00192D; font-weight:600;"> JENGO PAY</a>.
-        All rights reserved.
-      </div>
-      <div class="small fw-semibold" style="color:#00192D;">Anything you want</div>
-    </div>
-  </div>
-</footer>
-
-<!-- Bootstrap Icons -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About JengoPay</h3>
+                    <p>JengoPay is a comprehensive property management system designed to streamline operations, manage tenants, track finances, and optimize property portfolios. Our platform empowers property managers with powerful tools for efficient property administration.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Information</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Property Lane, Nairobi, Kenya</p>
+                    <p><i class="fas fa-phone"></i> +254 700 123 456</p>
+                    <p><i class="fas fa-envelope"></i> support@jengopay.com</p>
+                    <p><i class="fas fa-clock"></i> Mon-Fri: 8:00 AM - 6:00 PM</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <a href="#">Dashboard</a>
+                    <a href="#">Properties</a>
+                    <a href="#">Tenant Portal</a>
+                    <a href="#">Financial Reports</a>
+                    <a href="#">Support Center</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect With Us</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                    <p style="margin-top: 1rem;">Stay updated with the latest features and property management tips.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 JengoPay Property Management System. All rights reserved.</p>
+            </div>
+        </footer>
