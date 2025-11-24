@@ -1,5 +1,6 @@
 <?php
  require_once "../db/connect.php";
+ include_once '../processes/encrypt_decrypt_function.php';
 //  include_once 'includes/lower_right_popup_form.php';
 ?>
 
@@ -235,64 +236,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <?php
-                        include_once 'processes/encrypt_decrypt_function.php';
-                        if(isset($_POST['submit_bed_sitter_btn'])) {
-                            try{
-                                        // Insert unit data 
-                                $stmt = $pdo->prepare("
-                                    INSERT INTO multi_rooms (unit_number, purpose, building_link, location, water_meter, monthly_rent, occupancy_status)
-                                    VALUES (:unit_number, :purpose, :building_link, :location, :water_meter, :monthly_rent, :occupancy_status)");
-                                $stmt->execute([
-                                    ':unit_number'      => $_POST['unit_number'],
-                                    ':purpose'          => $_POST['purpose'],
-                                    ':building_link'    => $_POST['building_link'],
-                                    ':location'         => $_POST['location'],
-                                        ':water_meter'     => (string) $_POST['water_meter'], // decimals handled as strings
-                                        ':monthly_rent' => (string) $_POST['monthly_rent'],
-                                        ':occupancy_status' => $_POST['occupancy_status'],
-                                    ]);
-
-                                $unitId = $pdo->lastInsertId();
-
-                                        // Insert recurring expenses if available
-                                if (!empty($_POST['bill'])) {
-                                    $stmtExp = $pdo->prepare("
-                                        INSERT INTO multi_roombills (unit_id, bill, qty, unit_price)
-                                        VALUES (:unit_id, :bill, :qty, :unit_price)
-                                        ");
-
-                                    foreach ($_POST['bill'] as $i => $bill) {
-                                        if (!empty($bill)) {
-                                            $stmtExp->execute([
-                                                ':unit_id'    => $unitId,
-                                                ':bill'       => $bill,
-                                                ':qty'        => (int) $_POST['qty'][$i],
-                                                ':unit_price' => (string) $_POST['unit_price'][$i],
-                                            ]);
-                                        }
-                                    }
-                                }
-
-                                echo '<div id="countdown" class="alert alert-success" role="alert"></div>
-                                <script>
-                                var timeleft = 10;
-                                var downloadTimer = setInterval(function(){
-                                  if(timeleft <= 0){
-                                    clearInterval(downloadTimer);
-                                    window.location.href=window.location.href;
-                                    } else {
-                                        document.getElementById("countdown").innerHTML = "Bed Seater Unit Information Submitted Successfully! Redirecting in " + timeleft + " seconds remaining";
-                                    }
-                                    timeleft -= 1;
-                                    }, 1000);
-                                    </script>';
-                                } catch(PDOException $e){
-                                    echo "❌ Database error: " . $e->getMessage();
-                                }
-                            }
-                            ?>
                     <!-- Container Box -->
                     <div class="card shadow">
                         <div class="card-header">
@@ -384,12 +327,12 @@
                                                                         <a class="dropdown-item" href="edit_bed_seater.php?details=<?php echo $id;?>"><i class="bi bi-eye"></i> Details</a>
                                                                         <a class="dropdown-item" href="rent_bed_sitter_unit.php?rent=<?php echo $id ;?>"><i class="bi bi-wallet"></i> Rent It</a>
                                                                         <a class="dropdown-item" href="inspect_bed_sitter_unit.php?inspect=<?php echo $id;?>"><i class="bi bi-sliders"></i> Inspect</a>
-                                                                        <a class="dropdown-item" href="edit_single_unit_details.php?edit=<?php echo $id;?>"><i class="bi bi-pen"></i> Edit</a>
+                                                                        <a class="dropdown-item" href="edit_bed_seater.php?edit=<?php echo $id;?>"><i class="bi bi-pen"></i> Edit</a>
                                                                         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#underMaintenance<?php echo $id;?>"><i class="bi bi-house-gear"></i> Under Maintenance</a>
                                                                         <?php
                                                                     } else if (htmlspecialchars($occupancy_status) == 'Under Maintenance') {
                                                                         ?>
-                                                                        <a class="dropdown-item" href="edit_single_unit_details.php?edit=<?php echo $id;?>"><i class="bi bi-pen"></i> Edit</a>
+                                                                        <a class="dropdown-item" href="edit_bed_seater.php?edit=<?php echo $id;?>"><i class="bi bi-pen"></i> Edit</a>
                                                                         <a class="dropdown-item" href="inspect_single_unit.php?inspect=<?php echo $id;?>"><i class="bi bi-sliders"></i> Inspect</a>
                                                                         <a class="dropdown-item" href="single_unit_details.php?details=<?php echo $id;?>"><i class="bi bi-eye"></i> Details</a>
                                                                         <a class="dropdown-item btn" data-toggle="modal" data-target="#meterReadingModal<?= $id ;?>"><i class="bi bi-speedometer"></i> Meter Reading</a>
@@ -413,19 +356,14 @@
                                                                     </button>
                                                                 </div>
                                                                 <form action="" method="POST" enctype="multipart/form-data" autocomplete="off">
+                                                                    <input type="hidden" name="id" value="<?= htmlspecialchars(encryptor('decrypt', $id));?>">
                                                                     <div class="modal-body">
                                                                         <div class="form-group">
                                                                             <label>Reading Date</label>
                                                                             <input type="date" class="form-control" name="reading_date" id="reading_date" required>
                                                                         </div>
                                                                         <div class="row">
-                                                                            <div class="col-md-6">
-                                                                                <div class="form-group">
-                                                                                    <label>Unit Number</label>
-                                                                                    <input class="form-control unit_number" name="unit_number" value="<?= $unit_number ;?>" readonly>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-6">
+                                                                            <div class="col-md-12">
                                                                                 <div class="form-group">
                                                                                     <label>Meter Type</label>
                                                                                     <select class="form-control meter_type" name="meter_type" required>
@@ -440,14 +378,14 @@
                                                                         <div class="row">
                                                                             <div class="col-md-6">
                                                                                 <div class="form-group">
-                                                                                    <label>Previous Reading:</label>
-                                                                                    <input type="number" name="previous_reading" placeholder="Previous Reading" class="form-control previous_reading">
+                                                                                    <label>Current Reading:</label>
+                                                                                    <input type="number" name="current_reading" placeholder="Current Reading" required class="form-control" id="current_reading">
                                                                                 </div>
                                                                             </div>
                                                                             <div class="col-md-6">
                                                                                 <div class="form-group">
-                                                                                    <label>Current Reading:</label>
-                                                                                    <input type="number" name="current_reading" placeholder="Current Reading" requiredclass="form-control current_reading">
+                                                                                    <label>Previous Reading:</label>
+                                                                                    <input type="number" name="previous_reading" placeholder="Previous Reading" class="form-control" id="previous_reading">
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -455,27 +393,25 @@
 
                                                                         <fieldset class="border p-1">
                                                                             <legend class="w-auto" style="font-size: 18px; font-weight: bold; padding: 3px;">
-                                                                            Calculations</legend>
+                                                                                Calculations</legend>
                                                                             <div class="row">
                                                                                 <div class="col-md-6">
                                                                                     <div class="form-group">
                                                                                         <label>Units Consumed:</label>
-                                                                                        <input class="form-control consumption_units" name="consumption_units" readonly>
+                                                                                        <input class="form-control" id="units_consumed" name="units_consumed" readonly>
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-md-6">
                                                                                     <div class="form-group">
                                                                                         <label>Cost Per Unit:</label>
-                                                                                        <input class="form-control consumption_cost" type="text" name="consumption_cost">
+                                                                                        <input class="form-control" id="cost_per_unit" type="text" name="cost_per_unit">
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="form-group">
                                                                                 <label>Bill</label>
-                                                                                <input class="form-control final_bill" name="final_bill" readonly type="text">
+                                                                                <input class="form-control" id="final_bill" name="final_bill" readonly type="text">
                                                                             </div>
-                                                                            <input type="hidden" name="building_id" value="<?= $building_link;?>">
-                                                                            <input type="hidden" name="created_at">
                                                                         </fieldset>
                                                                     </div>
                                                                     <div class="modal-footer text-right">
@@ -586,27 +522,27 @@
             </tbody>
         </table>
         <?php
-          //Change the Occupancy Status to Vacant if the Unit is Occupied and when the user clicks Mark as Vacant
-          if(isset($_POST['update_vacant_status'])) {
-            try {
-              // Fetch current status of the unit
-              $check = $pdo->prepare("SELECT occupancy_status FROM bedsitter_units WHERE id = :id");
-              $check->execute([':id' => $_POST['id']]);
-              $current_status = $check->fetchColumn();
-              if ($current_status === $_POST['occupancy_status']) {
-                // No change made
-                echo "
-                <script>
-                  Swal.fire({
-                      title: 'Warning!',
-                      text: 'Update failed. You did not change the status.',
-                      icon: 'warning',
-                      confirmButtonText: 'OK'
-                    }).then(() => {
-                    window.history.back();
-                  });
-                </script>";
-                } else {
+            //Change the Occupancy Status to Vacant if the Unit is Occupied and when the user clicks Mark as Vacant
+            if(isset($_POST['update_vacant_status'])) {
+                try {
+                    // Fetch current status of the unit
+                    $check = $pdo->prepare("SELECT occupancy_status FROM bedsitter_units WHERE id = :id");
+                    $check->execute([':id' => $_POST['id']]);
+                    $current_status = $check->fetchColumn();
+                    if ($current_status === $_POST['occupancy_status']) {
+                        // No change made
+                        echo "
+                        <script>
+                          Swal.fire({
+                              title: 'Warning!',
+                              text: 'Update failed. You did not change the status.',
+                              icon: 'warning',
+                              confirmButtonText: 'OK'
+                            }).then(() => {
+                            window.history.back();
+                          });
+                        </script>";
+                    } else {
                         // Update with the new status
                         $update = "UPDATE bedsitter_units SET occupancy_status = :occupancy_status WHERE id = :id";
                         $stmt = $pdo->prepare($update);
@@ -689,14 +625,124 @@
                                 confirmButtonText: 'Close'
                                 });
                         </script>";
-                    }
                 }
+            }
+
+            //Submit Meter Reading
+            if(isset($_POST['submit_reading'])) {
+                // Collect and sanitize input data
+                $id = trim($_POST['id'] ?? null);
+                $reading_date = trim($_POST['reading_date'] ?? null);
+                $meter_type = trim($_POST['meter_type'] ?? null);
+                $current_reading = trim($_POST['current_reading'] ?? null);
+                $previous_reading = trim($_POST['previous_reading'] ?? null);
+                $units_consumed = trim($_POST['units_consumed'] ?? null);
+                $cost_per_unit = trim($_POST['cost_per_unit'] ?? null);
+                $final_bill = trim($_POST['final_bill'] ?? null);
+
+                try {
+                    //Basic Validations to Ensure that No Required Field is Left Unfilled
+                    if (empty($reading_date) || empty($meter_type) || empty($current_reading) || empty($cost_per_unit) || $current_reading < $previous_reading) {
+                        echo "<script>
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Invalid Input',
+                                    text: 'Please ensure all fields are filled and readings are valid.'
+                                });
+                            </script>";
+                            exit;
+                    } else {
+                        //Serverside Computation of the Derived Values
+                        $units_consumed = $current_reading - $previous_reading;
+                        $final_bill = $units_consumed * $cost_per_unit;
+
+                        //Check if the for Double Entries of Meter Readings for the Same Unit in the Same Month
+                        $checkReading = $pdo->prepare("SELECT * FROM bedsitter_units WHERE reading_date =:reading_date AND meter_type =:meter_type");
+                        $checkReading->execute([
+                            ':reading_date' => $reading_date,
+                            ':meter_type' => $meter_type
+                        ]);
+
+                        if($checkReading->rowCount() > 0) {
+                            echo "
+                                <script>
+                                    Swal.fire({
+                                        icon: 'warning',
+                                        title: 'Double Reading!',
+                                        text: 'Meter Reading for this Month has Already been Submitted!',
+                                        width: '600px',
+                                        padding: '0.6em',
+                                        customClass: {
+                                            popup: 'compact-swal'
+                                        },
+                                        confirmButtonText: 'OK'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            window.location.href = 'single_units.php';
+                                        }
+                                    });
+                                </script>";
+                                exit;
+                        } else {
+                            //If no Double Reading, then Submit the Meter Readings for this Month
+                            $submitMeterReading = $pdo->prepare("UPDATE bedsitter_units SET 
+                                reading_date =:reading_date,
+                                meter_type =:meter_type,
+                                current_reading =:current_reading,
+                                previous_reading =:previous_reading,
+                                units_consumed =:units_consumed,
+                                cost_per_unit =:cost_per_unit,
+                                final_bill =:final_bill 
+                                WHERE
+                                id =:id
+                            ");
+                            $submitMeterReading->execute([
+                                ':reading_date' => $reading_date,
+                                ':meter_type' => $meter_type,
+                                ':current_reading' => $current_reading,
+                                ':previous_reading' => $previous_reading,
+                                ':units_consumed' => $units_consumed,
+                                ':cost_per_unit' => $cost_per_unit,
+                                ':final_bill' => $final_bill,
+                                ':id' => $id,
+                            ]);
+
+                            echo "
+                                <script>
+                                    setTimeout(() => {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success!',
+                                        text: 'Meter Reading Submitted Successfully.',
+                                        showConfirmButton: true,
+                                        confirmButtonText: 'OK'
+                                    }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = 'bed_sitter_units.php';
+                                    }
+                                    });
+                                    }, 800); // short delay to smooth transition from loader
+                                </script>";
+                        }
+                    }
+                } catch (Exception $e) {
+                    echo 
+                    "<script>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Database Error',
+                            text: 'Failed to insert meter reading: " . addslashes($e->getMessage()) . "'
+                        });
+                    </script>";
+                }
+            }
         ?>
     </div>
     </div>
     </div>
     <!-- Container Box -->
     </section>
+
             </div>
         </main>
         <!--end::App Main-->

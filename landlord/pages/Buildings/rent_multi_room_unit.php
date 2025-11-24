@@ -327,7 +327,7 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
           </div>
           <!-- Form Start -->
           <!-- Form Start -->
-          <?php include_once '\xampp\htdocs\JengoPay\landlord\pages\includes\tenant_form.php';?>
+          <?php include_once '../includes/tenant_form.php';?>
 
         </div>
       </section>

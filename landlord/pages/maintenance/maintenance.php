@@ -187,6 +187,7 @@
               <button type="button" class="btn bg-warning text-white seTAvailable fw-bold bg-danger border-0 rounded-4" style="color:white; width:100%; white-space: nowrap;">Cancel all Requests</button>
             </div>
           </div>
+          
           <!--end::Row-->
         </div>
         <!--end::Container-->

@@ -385,7 +385,7 @@ hr {
 @media print {
   body {
     -webkit-print-color-adjust: exact !important; /* Chrome, Safari */
-    color-adjust: exact !important;              /* Firefox */
+    color-adjust*: exact !important;              /* Firefox */
     print-color-adjust: exact !important;        /* New spec */
   }
 

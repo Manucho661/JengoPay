@@ -331,7 +331,7 @@
 
         // Insert bills if provided
         if (!empty($_POST['bill'])) {
-            $stmtBill = $pdo->prepare("INSERT INTO multi_roombills (unit_id, bill, qty, unit_price, subtotal, created_at) 
+            $stmtBill = $pdo->prepare("INSERT INTO multi_room_bills (unit_id, bill, qty, unit_price, subtotal, created_at) 
                                         VALUES (:unit_id, :bill, :qty, :unit_price, :subtotal, NOW())");
 
             foreach ($_POST['bill'] as $i => $billName) {

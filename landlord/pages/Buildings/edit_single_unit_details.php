@@ -52,7 +52,7 @@
 
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-        <link rel="stylesheet" href="../../assets/main.css" >
+        <link rel="stylesheet" href="../../assets/main.css" />
     <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
@@ -192,10 +192,9 @@
         <!--begin::App Main-->
         <main class="app-main mt-4">
             <div class="content-wrapper">
-                <!-- Main content -->
-                <section class="content">
- <div class="container-fluid">
-                <?php
+            <section class="content">
+                <div class="container-fluid">
+                    <?php
                     include_once 'processes/encrypt_decrypt_function.php';
                     if(isset($_GET['edit']) && !empty($_GET['edit'])) {
                         $unit_id = $_GET['edit'];
@@ -236,11 +235,17 @@
                             $stmt->execute();
                             if($stmt->rowCount() > 0) {
                                 ?>
-                                    <script>
-                                      alert('Update Failed! You Haven\'t Changed Anything in the Form Fields');
-                                      window.location.href = "single_units.php";
-                                    </script>
-                                <?php
+                    <script>
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Warning!',
+                            text: 'Unit Update Failed! You Have not Changed Anything.',
+                            confirmButtonColor: '#00192D'
+                            }).then(() => {
+                            window.location.href = 'single_units.php'; // redirect after confirmation
+                        });
+                    </script>
+                    <?php
                             } else {
                                 // Start transaction
                                 if (!$pdo->inTransaction()) {
@@ -296,135 +301,115 @@
                                 }
 
                                 // ✅ Success feedback
-                                echo '<div id="countdown" class="alert alert-success" role="alert"></div>
-                                        <script>
-                                          var timeleft = 10;
-                                          var downloadTimer = setInterval(function(){
-                                          if(timeleft <= 0){
-                                            clearInterval(downloadTimer);
-                                            
-                                          } else {
-                                              document.getElementById("countdown").innerHTML = "Bed Sitter Unit Updated Succeessfully! Redirecting in " + timeleft + " seconds remaining";
-                                              window.location.href = "single_units.php";
-                                          }
-                                            timeleft -= 1;
-                                            }, 1000);
-                                        </script>';
+                                echo
+                                    "<script>
+                                      Swal.fire({
+                                      icon: 'success',
+                                      title: 'Update Successful!',
+                                      text: 'Unit Information Updated Successfully.',
+                                      confirmButtonColor: '#00192D'
+                                      }).then(() => {
+                                      window.location.href = 'single_units.php'; // redirect after confirmation
+                                      });
+                                    </script>";
                             }
 
                         } catch(Exception $e){
                             if ($pdo->inTransaction()) {
                                 $pdo->rollBack();
                             }
-                            echo "<div class='alert alert-danger'>Error updating record: " . $e->getMessage() . "</div>";
+                            echo "
+                                <script>
+                                  Swal.fire({
+                                    icon: 'error',
+                                    title: 'Database Error',
+                                    text: '".addslashes($e->getMessage())."',
+                                    confirmButtonColor: '#00192D'
+                                  });
+                                </script>";
                         }
                     } 
                 ?>
-          <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) ;?>" method="POST" enctype="multipart/form-data">
-            <!-- Unit Details -->
-            <input type="hidden" value="<?= htmlspecialchars($unit['id']); ?>" name="id">
-            <div class="card shadow" style="border: 1px solid rgb(0,25,45,.3);">
-              <div class="card-header" style="background-color: rgb(0, 25,45); color:#fff;"><i class="bi bi-house-add"></i> Unit Details</div>
-              <div class="card-body">
-                <div class="card-body">
-                <div class="row p-2">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Unit Number</label>
-                            <input type="text" name="unit_number" class="form-control" value="<?= htmlspecialchars($unit['unit_number']); ?>" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Purpose</label>
-                            <input type="text" name="purpose" class="form-control" value="<?= htmlspecialchars($unit['purpose']); ?>">
-                        </div>
-                    </div>
-                </div> <hr>
-                <div class="row p-2">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Building Link</label>
-                            <input type="text" name="building_link" class="form-control" value="<?= htmlspecialchars($unit['building_link']); ?>">
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Location</label>
-                            <input type="text" name="location" class="form-control" value="<?= htmlspecialchars($unit['location']); ?>">
-                        </div>
-                    </div>
-                </div> <hr>
-                <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Monthly Rent</label>
-                                <input type="number" step="0.01" name="monthly_rent" class="form-control" value="<?= htmlspecialchars($unit['monthly_rent']); ?>">
+                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) ;?>" method="POST" enctype="multipart/form-data">
+                        <!-- Unit Details -->
+                        <input type="hidden" value="<?= htmlspecialchars($unit['id']); ?>" name="id">
+                        <div class="card shadow" style="border: 1px solid rgb(0,25,45,.3);">
+                            <div class="card-header" style="background-color: rgb(0, 25,45); color:#fff;"><i class="bi bi-house-add"></i> Unit Details</div>
+                            <div class="card-body">
+                                <div class="card-body">
+                                    <div class="row p-2">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Unit Number</label>
+                                                <input type="text" name="unit_number" class="form-control" value="<?= htmlspecialchars($unit['unit_number']); ?>" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Purpose</label>
+                                                <input type="text" name="purpose" class="form-control" value="<?= htmlspecialchars($unit['purpose']); ?>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row p-2">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Building Link</label>
+                                                <input type="text" name="building_link" class="form-control" value="<?= htmlspecialchars($unit['building_link']); ?>">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Location</label>
+                                                <input type="text" name="location" class="form-control" value="<?= htmlspecialchars($unit['location']); ?>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Monthly Rent</label>
+                                                <input type="number" step="0.01" name="monthly_rent" class="form-control" value="<?= htmlspecialchars($unit['monthly_rent']); ?>">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Occupancy Status</label>
+                                                <select name="occupancy_status" class="form-control">
+                                                    <option value="<?= htmlspecialchars($unit['occupancy_status']); ?>" selected hidden><?= htmlspecialchars($unit['occupancy_status']); ?></option>
+                                                    <option value="Occupied">Occupied</option>
+                                                    <option value="Vacant">Vacant</option>
+                                                    <option value="Under Maintenance">Under Maintenance</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Occupancy Status</label>
-                                <select name="occupancy_status" class="form-control">
-                                    <option value="<?= htmlspecialchars($unit['occupancy_status']); ?>" selected hidden><?= htmlspecialchars($unit['occupancy_status']); ?></option>
-                                    <option value="Occupied">Occupied</option>
-                                    <option value="Vacant">Vacant</option>
-                                    <option value="Under Maintenance">Under Maintenance</option>
-                                </select>
+                        
+                        <div class="card shadow">
+                            <div class="card-body text-right">
+                                <button class="btn btn-sm shadow" type="submit" name="update" style="border: 1px solid #00192D; color: #00192D;"><i class="bi bi-check"></i> Update and Submit</button>
                             </div>
                         </div>
-                    </div>
-            </div>
-              </div>
-            </div>
-            <!-- Recurring Expenses -->
-            <div class="card shadow" style="border: 1px solid rgb(0,25,45,.3);">
-              <div class="card-header" style="background-color: rgb(0, 25,45); color:#fff;"><i class="bi bi-wallet"></i> Recuring Expenses</div>
-              <div class="card-body">
-                                <table class="table table-bordered" id="billsTable">
-                    <thead>
-                        <tr>
-                            <th>Bill</th>
-                            <th>Qty</th>
-                            <th>Unit Price</th>
-                            <th>Subtotal</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php if (!empty($bills)): ?>
-                        <?php foreach ($bills as $bill): ?>
-                        <tr>
-                            <td><input type="text" name="bill[]" class="form-control bill" value="<?= htmlspecialchars($bill['bill']); ?>"></td>
-                            <td><input type="number" name="qty[]" class="form-control qty" value="<?= htmlspecialchars($bill['qty']); ?>"></td>
-                            <td><input type="number" step="0.01" name="unit_price[]" class="form-control unit_price" value="<?= htmlspecialchars($bill['unit_price']); ?>"></td>
-                            <td><input type="text" class="form-control subtotal" value="<?= $bill['qty'] * $bill['unit_price']; ?>" readonly></td>
-                            <td><button type="button" class="btn btn-sm removeRow shadow" style="background-color:#cc0001; color: #fff; font-weight: bold;">X</button></td>
-                        </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                    <!-- Start with an empty row if no bills exist -->
-                    <tr>
-                        <td><input type="text" name="bill[]" class="form-control bill"></td>
-                        <td><input type="number" name="qty[]" class="form-control qty" value="1"></td>
-                        <td><input type="number" step="0.01" name="unit_price[]" class="form-control unit_price"></td>
-                        <td><input type="text" class="form-control subtotal" readonly></td>
-                        <td><button type="button" class="btn btn-sm removeRow" style="background-color:#cc0001; color: #fff;"><i class="bi bi-trash"></i> </button></td>
-                    </tr>
-                    <?php endif; ?>
-                    </tbody>
-                </table>
-                <button type="button" class="btn btn-sm shadow mt-2" style="border: 1px solid #00192D; color: #00192D;" id="addRow"><i class="bi bi-plus"></i> Add More</button>
-              </div>
-            </div>
-            <div class="card shadow">
-              <div class="card-body text-right">
-                <button class="btn btn-sm shadow" type="submit" name="update" style="border: 1px solid #00192D; color: #00192D;"><i class="bi bi-check"></i> Update and Submit</button>
-              </div>
-            </div>
-          </form>
+                    </form>
+                </div>
+            </section>
+                <!-- Main content -->                                         
+            <!-- /.content -->
+            <!-- Help Pop Up Form -->     
         </div>
-                </section>
+        <!-- /.content-wrapper -->
+        <!-- Footer -->
+    </div>
+    <!-- ./wrapper -->
+    <!-- Required Scripts -->
+ 
+    <!-- Meter Readings JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             </div>
         </main>
         <!--end::App Main-->
@@ -463,6 +448,43 @@
     <!-- Scripts -->
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+ 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const tableBody = document.querySelector("#billsTable tbody");
+
+            // Add new row
+            document.getElementById("addRow").addEventListener("click", function() {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+            <td><input type="text" name="bill[]" class="form-control bill"></td>
+            <td><input type="number" name="qty[]" class="form-control qty" value="1"></td>
+            <td><input type="number" step="0.01" name="unit_price[]" class="form-control unit_price"></td>
+            <td><input type="text" class="form-control subtotal" readonly></td>
+            <td><button type="button" class="btn btn-sm shadow removeRow" style="background-color:#cc0001; color:#fff; font-weight:bold;">X</button></td>`;
+                tableBody.appendChild(row);
+            });
+
+            // Delegate remove buttons
+            tableBody.addEventListener("click", function(e) {
+                if (e.target.classList.contains("removeRow")) {
+                    e.target.closest("tr").remove();
+                }
+            });
+
+            // Auto-calc subtotal
+            tableBody.addEventListener("input", function(e) {
+                if (e.target.classList.contains("qty") || e.target.classList.contains("unit_price")) {
+                    const row = e.target.closest("tr");
+                    const qty = parseFloat(row.querySelector(".qty").value) || 0;
+                    const price = parseFloat(row.querySelector(".unit_price").value) || 0;
+                    row.querySelector(".subtotal").value = (qty * price).toFixed(2);
+                }
+            });
+        });
+    </script>
+   
 </body>
 <!--end::Body-->
 

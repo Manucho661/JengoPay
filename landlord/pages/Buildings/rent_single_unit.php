@@ -238,7 +238,6 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
         <div class="container-fluid">
           <!-- if the Rent Single Unit Button is Clicked -->
           <?php
-      
               include_once 'processes/encrypt_decrypt_function.php';
               if(isset($_GET['rent']) && !empty($_GET['rent'])) {
                 $id = $_GET['rent'];
@@ -328,11 +327,11 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
               Unit.</p>
           </div>
           <!-- Form Start -->
-          <?php include_once '\xampp\htdocs\JengoPay\landlord\pages\includes\tenant_form.php';?>
+          <?php include_once '../includes/tenant_form.php';?>
         </div>
       </section>
 
-       <?php
+      <?php
         if(isset($_POST['rent_unit'])) {
           $tm = md5(time()); // Unique prefix for uploaded files
 

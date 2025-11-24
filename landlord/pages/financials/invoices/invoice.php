@@ -1,66 +1,124 @@
 <?php
-if (isset($_GET['edit'])) {
-    include 'invoice_form.php';
-    exit;
-}
-?>
-<?php
-// Your existing code to fetch buildings
-// $buildings = ... 
-
-?>
-
-<?php
 include '../../db/connect.php';
 
-// Fetch only revenue accounts
-$stmt = $pdo->prepare("
-  SELECT account_code, account_name
-  FROM chart_of_accounts
-  WHERE account_type = 'Revenue'
-  ORDER BY account_name ASC
-");
-$stmt->execute();
-$accountItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Determine if this is a draft (adjust based on your form input)
-$isDraft = isset($_POST['status']) && $_POST['status'] === 'draft';
-
-// Get the highest existing invoice number for the correct prefix
-$prefix = $isDraft ? 'DFT' : 'INV';
-$stmt = $pdo->prepare("SELECT invoice_number FROM invoice WHERE invoice_number LIKE ? ORDER BY id DESC LIMIT 1");
-$stmt->execute([$prefix . '%']);
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Extract the highest number
-if ($row && preg_match('/' . $prefix . '(\d+)/', $row['invoice_number'], $matches)) {
-    $lastNumber = (int)$matches[1];
-    $newNumber = $lastNumber + 1;
-} else {
-    $newNumber = 1; // Start at 1 if no previous invoice of this type
+/* -----------------------------
+   FETCH REVENUE ACCOUNTS
+----------------------------- */
+try {
+    $stmt = $pdo->prepare("
+        SELECT account_code, account_name
+        FROM chart_of_accounts
+        WHERE account_type = 'Revenue'
+        ORDER BY account_name ASC
+    ");
+    $stmt->execute();
+    $accountItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    error_log("Error fetching revenue accounts: " . $e->getMessage());
+    $accountItems = [];
 }
 
-// Generate the new invoice number (e.g., DFT001 or INV001)
-$invoiceNumber = $prefix . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
+/* -----------------------------
+   INVOICE NUMBER GENERATION
+----------------------------- */
+$isDraft = isset($_POST['status']) && $_POST['status'] === 'draft';
+$prefix  = $isDraft ? 'DFT' : 'INV';
 
-// Fetch buildings list
 try {
-    $stmt = $pdo->prepare("SELECT id, building_name FROM buildings ORDER BY building_name ASC");
+    $stmt = $pdo->prepare("
+        SELECT invoice_number 
+        FROM invoice 
+        WHERE invoice_number LIKE ? 
+        ORDER BY id DESC 
+        LIMIT 1
+    ");
+    $stmt->execute([$prefix . '%']);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($row && preg_match('/' . $prefix . '(\d+)/', $row['invoice_number'], $matches)) {
+        $lastNumber = (int)$matches[1];
+        $newNumber  = $lastNumber + 1;
+    } else {
+        $newNumber = 1;
+    }
+
+    $invoiceNumber = $prefix . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
+
+} catch (PDOException $e) {
+    error_log("Error generating invoice number: " . $e->getMessage());
+    $invoiceNumber = $prefix . "001";
+}
+
+/* -----------------------------
+   FETCH BUILDINGS LIST
+----------------------------- */
+try {
+    $stmt = $pdo->prepare("
+        SELECT id, building_name 
+        FROM buildings 
+        ORDER BY building_name ASC
+    ");
     $stmt->execute();
     $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 } catch (PDOException $e) {
     error_log("Error fetching buildings: " . $e->getMessage());
     $buildings = [];
 }
-// Fetch all active tenants using PDO (for JavaScript approach)
+
+/* -----------------------------
+   FETCH ACTIVE TENANTS FROM ALL UNIT TABLES
+----------------------------- */
 try {
-  $stmt = $pdo->query("SELECT id, first_name, middle_name, last_name, building FROM tenants WHERE status = 'Active'");
-  $tenants = $stmt->fetchAll();
+    $sql = "
+        SELECT 
+            id,
+            tfirst_name AS first_name,
+            tmiddle_name AS middle_name,
+            tlast_name AS last_name,
+            building_link AS building,
+            unit_number,
+            'Bedsitter' AS unit_type
+        FROM bedsitter_units
+        WHERE tenant_status = 'Active'
+
+        UNION ALL
+
+        SELECT 
+            id,
+            tfirst_name AS first_name,
+            tmiddle_name AS middle_name,
+            tlast_name AS last_name,
+            building_link AS building,
+            unit_number,
+            'Single' AS unit_type
+        FROM single_units
+        WHERE tenant_status = 'Active'
+
+        UNION ALL
+
+        SELECT 
+            id,
+            tfirst_name AS first_name,
+            tmiddle_name AS middle_name,
+            tlast_name AS last_name,
+            building_link AS building,
+            unit_number,
+            'Multi-Room' AS unit_type
+        FROM multi_rooms_units
+        WHERE tenant_status = 'Active'
+    ";
+
+    $stmt = $pdo->query($sql);
+    $tenants = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 } catch (PDOException $e) {
-  $tenants = [];
-  error_log("Error fetching tenants: " . $e->getMessage());
+    error_log("Error fetching tenants: " . $e->getMessage());
+    $tenants = [];
 }
+
 ?>
+
 
 <!doctype html>
 <html lang="en">
@@ -1216,6 +1274,7 @@ header {
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="table-responsive">
   <div class="invoice-container" id="invoice-items-list">
     <div class="invoice-item invoice-header">
@@ -2100,58 +2159,58 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 <script>
-// Debug: Check if PHP variables are available
 console.log('Buildings data:', <?php echo json_encode($buildings ?? []); ?>);
 
 document.getElementById('building').addEventListener('change', function() {
+
     const buildingId = this.value;
     const tenantSelect = document.getElementById('customer');
-    
+
     console.log('Building selected:', buildingId);
-    
-    // Clear existing options
+
     tenantSelect.innerHTML = '<option value="">Loading tenants...</option>';
     tenantSelect.disabled = true;
-    
+
     if (!buildingId) {
         tenantSelect.innerHTML = '<option value="">Select a Building First</option>';
         return;
     }
-    
-    // Fetch tenants via AJAX
+
     fetch(`/Jengopay/landlord/pages/financials/invoices/action/get_tenants.php?building_id=${buildingId}`)
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok: ' + response.status);
-            }
+            if (!response.ok) throw new Error("Network error: " + response.status);
             return response.json();
         })
         .then(tenants => {
             console.log('Tenants received:', tenants);
+
             tenantSelect.innerHTML = '<option value="">Select a Tenant</option>';
-            
+
             if (tenants.length > 0 && !tenants.error) {
+
                 tenants.forEach(tenant => {
                     const option = document.createElement('option');
+
                     option.value = tenant.id;
-                    option.textContent = tenant.full_name;
+                    option.textContent = `${tenant.full_name} - (${tenant.unit_number}, ${tenant.unit_type})`;
+
                     tenantSelect.appendChild(option);
                 });
+
                 tenantSelect.disabled = false;
+
             } else {
-                const option = document.createElement('option');
-                option.value = '';
-                option.textContent = tenants.error ? tenants.error : 'No tenants found for this building';
-                tenantSelect.appendChild(option);
+                tenantSelect.innerHTML = '<option value="">No tenants found for this building</option>';
                 tenantSelect.disabled = false;
             }
         })
         .catch(error => {
-            console.error('Error fetching tenants:', error);
+            console.error("Error fetching tenants:", error);
             tenantSelect.innerHTML = '<option value="">Error loading tenants</option>';
             tenantSelect.disabled = false;
         });
 });
+
 </script>
 
     <script>
