@@ -133,7 +133,7 @@ const renderProposals = (proposals) => html`
       (p) => html`
             <li class="proposal-item">
               <img
-                src="${p.provider_photo_url || "https://i.pravatar.cc/70"}"
+                src="/Jengopay/landlord/pages/maintenance/images/download.webp"
                 alt="Profile Picture"
                 class="profile-pic me-3"
               />
@@ -192,7 +192,12 @@ function openProposalModal(proposal) {
   };
 
   // --- populate modal content ---
-  safeSet("modalPhoto", proposal.provider_photo_url || "https://i.pravatar.cc/70", "src");
+  safeSet(
+  "modalPhoto",
+  "/Jengopay/landlord/pages/maintenance/images/download.webp",
+  "src"
+);
+
   safeSet("modalName", proposal.name || "Unknown Provider");
   safeSet("modalBadge", proposal.topRated ? "Top Rated" : "");
   safeSet("modalTitle", proposal.title || "Service Provider");

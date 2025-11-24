@@ -62,6 +62,66 @@
     body {
       background-color: #FFC107 !important;
     }
+
+    :root {
+      --primary-color: #FFC107;
+      --secondary-color: #00192D;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      color: var(--secondary-color);
+      font-weight: 600;
+    }
+
+    .btn-primary:hover {
+      background-color: #e6ad06;
+      border-color: #e6ad06;
+      color: var(--secondary-color);
+    }
+
+    .modal-header {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+
+    .modal-header .btn-close {
+      filter: invert(1);
+    }
+
+    .form-label {
+      color: var(--secondary-color);
+      font-weight: 600;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25);
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      border-color: #6c757d;
+    }
+
+    #otherRequestBtn {
+      background-color: var(--secondary-color);
+      border-color: var(--secondary-color);
+      color: white;
+      font-size: 0.875rem;
+      padding: 0.25rem 0.75rem;
+    }
+
+    #otherRequestBtn:hover {
+      background-color: #003051;
+      border-color: #003051;
+    }
+
+    #otherRequestField {
+      display: none;
+    }
   </style>
   </style>
 </head>
@@ -113,23 +173,7 @@
             </div>
 
             <div class="col-sm-4">
-              <ul class="nav justify-content-end border-bottom" id="requestNav">
-                <li class="nav-item">
-                  <a class="nav-link active" href="#" data-tab="all">
-                    All Requests
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#" data-tab="saved">
-                    Saved
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#" data-tab="cancelled">
-                    Cancelled
-                  </a>
-                </li>
-              </ul>
+
             </div>
           </div>
           <div class="row">
@@ -137,10 +181,10 @@
               <p class="text-muted">Manage maintenance requests for tenants</p>
             </div>
             <div class="col-md-6 d-flex justify-content-end gap-2 mb-2">
-              <button type="button" class="btn rounded-4" style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">Create Request</button>
-              <button type="button" class="btn rounded-4" style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">Set All Available</button>
-              <button type="button" class="btn rounded-4" style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">Set All Unavailable</button>
-              <button type="button" class="btn bg-danger border-0 rounded-4" style="color:white; width:100%; white-space: nowrap;">Cancel all Requests</button>
+              <button type="button" class="btn bg-warning text-white seTAvailable fw-bold rounded-4" style="color:white; width:100%; white-space: nowrap;" data-bs-toggle="modal" data-bs-target="#requestModal">Create Request</button>
+              <button type="button" class="btn bg-warning text-white seTAvailable fw-bold rounded-4" style="color:white; width:100%; white-space: nowrap;">Set All Available</button>
+              <button type="button" class="btn bg-warning text-white seTAvailable fw-bold rounded-4" style="color:white; width:100%; white-space: nowrap;">Set All Unavailable</button>
+              <button type="button" class="btn bg-warning text-white seTAvailable fw-bold bg-danger border-0 rounded-4" style="color:white; width:100%; white-space: nowrap;">Cancel all Requests</button>
             </div>
           </div>
           <!--end::Row-->
@@ -263,9 +307,72 @@
     <!--begin::Footer-->
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
     <!-- end::footer -->
-    <!--end::App Wrapper-->
-    <!-- Overlay Cards -->
-    <!-- Overlay scripts -->
+
+    <!-- ===========================
+        MODALS
+    ===========================  -->
+    <!-- MODALS -->
+    <div class="modal fade" id="requestModal" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="requestModalLabel">Submit a Request</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="requestForm">
+              <!-- Category -->
+              <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <select class="form-select" id="category" name="category" required>
+                  <option value="">Select a category</option>
+                  <option value="plumbing">Plumbing Request</option>
+                  <option value="security">Security</option>
+                  <option value="electrical">Electrical</option>
+                  <option value="maintenance">Maintenance</option>
+                  <option value="cleaning">Cleaning</option>
+                </select>
+              </div>
+
+              <!-- Request -->
+              <div class="mb-3">
+                <label for="request" class="form-label">Request</label>
+                <select class="form-select" id="request" name="request" required>
+                  <option value="">Select a request</option>
+                  <option value="repair">Repair</option>
+                  <option value="installation">Installation</option>
+                  <option value="inspection">Inspection</option>
+                  <option value="replacement">Replacement</option>
+                </select>
+                <button type="button" class="btn btn-sm mt-2" id="otherRequestBtn">Other</button>
+              </div>
+
+              <!-- Other Request Field (Hidden by default) -->
+              <div class="mb-3" id="otherRequestField">
+                <label for="specifyRequest" class="form-label">Specify Request</label>
+                <input type="text" class="form-control" id="specifyRequest" name="custom_request" placeholder="Enter your specific request">
+              </div>
+
+              <!-- Description -->
+              <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="4" placeholder="Provide details about your request" required></textarea>
+              </div>
+
+              <!-- Upload Photo -->
+              <div class="mb-3">
+                <label for="photoUpload" class="form-label">Upload Photo</label>
+                <input type="file" class="form-control" id="photoUpload" name="photos[]" accept="image/*">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" id="submitBtn">Submit Request</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- main js file -->
     <script src="maintenance.js"></script>
     <script type="module" src="js/main.js"></script>
@@ -368,11 +475,6 @@
     <!-- plugin for pdf -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <!-- individualRequest open -->
-    <script>
-      function goToIndividualRequest(requestID) {
-        window.location.href = "individualrequest.php?id=" + requestID; // Navigate to the given page
-      }
-    </script>
 </body>
 <!--end::Body-->
 

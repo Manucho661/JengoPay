@@ -195,16 +195,16 @@ if (isset($_GET['id'])) {
             </div>
             <div class="col-md-6 d-flex gap-1 flex-nowrap">
 
-              <button type="button" id="availabilityBtn" class="btn seTAvailable text-white fw-bold bg-warning"
+              <button type="button" id="availabilityBtn" class="btn seTAvailable text-white fw-bold bg-warning rounded-4"
                 style="color:white; width:100%; white-space: nowrap;">
                 Set Available
               </button>
               <!-- style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;"> -->
-              <button type="button" class="btn bg-danger text-white seTAvailable fw-bold"
+              <button type="button" class="btn bg-danger text-white seTAvailable fw-bold rounded-4"
                 style="width:100%; white-space: nowrap;">
                 Cancel Request
               </button>
-              <button type="button" class="btn bg-warning text-white seTAvailable fw-bold"
+              <button type="button" class="btn bg-warning text-white seTAvailable fw-bold rounded-4"
                 style=" color:dark; width:100%; white-space: nowrap;">
                 All Requests
               </button>
@@ -358,7 +358,7 @@ if (isset($_GET['id'])) {
         <div class="modal-body text-dark">
           <div class="d-flex align-items-start mb-3">
             <img id="modalPhoto"
-              src="https://i.pravatar.cc/70"
+              src="images/download.webp"
               alt="Profile Picture"
               class="rounded-circle me-3 border border-2 border-navy"
               style="width:70px; height:70px;">
