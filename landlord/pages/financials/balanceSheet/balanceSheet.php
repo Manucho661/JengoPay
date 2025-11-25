@@ -52,21 +52,11 @@ function formatAccounting($amount)
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
 
-  <!--Main css file-->
-  <link rel="stylesheet" href="../../../../landlord/assets/main.css" />
-
-
-
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
-    integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
-    crossorigin="anonymous" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-
+  <!--Css files-->
+  <link rel="stylesheet" href="../../../assets/main.css" />
   <link rel="stylesheet" href="balancesheet.css">
 
-  <link rel="stylesheet" href="">
+
 
   <!-- scripts for data_table -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -192,9 +182,11 @@ function formatAccounting($amount)
   <?php include_once "actions/getAssets.php" ?>
   <!--begin::App Wrapper-->
   <div class="app-wrapper">
+
     <!--begin::Header-->
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
     <!--end::Header-->
+
     <!--begin::Sidebar-->
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?>
     <!--end::Sidebar-->
@@ -217,16 +209,6 @@ function formatAccounting($amount)
             <div class="col-sm-4">
             </div>
           </div>
-          <!--end::Row-->
-          <!-- /end row -->
-        </div>
-        <!--end::Container-->
-      </div>
-      <div class="app-content">
-        <!--begin::Container-->
-        <div class="container-fluid">
-          <!-- Info boxes -->
-          <!-- /.row -->
           <!--begin::Row-->
           <div class="row first mb-2 mt-2 rounded-circle">
             <p class="text-muted">Manage your Balance Sheet </p>
@@ -269,11 +251,8 @@ function formatAccounting($amount)
               </div>
             </div>
           </div>
-
-          <!--end::Row-->
-
-          <!--begin::Row-->
-          <div class="row">
+          <!-- /end row -->
+           <div class="row">
             <!-- Start col -->
             <div class="container balancesheet">
               <div>
@@ -295,9 +274,9 @@ function formatAccounting($amount)
             </div>
             <!--end::Row-->
           </div>
-          <!--end::Container-->
         </div>
-        <!--end::App Content-->
+        <!--end::Container-->
+      </div>
     </main>
     <!--end::App Main-->
 
@@ -330,31 +309,8 @@ function formatAccounting($amount)
     integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
     crossorigin="anonymous"></script>
   <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-  <script
-    src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-    crossorigin="anonymous"></script>
-  <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
 
 
-
-  <!--
-  Add expense scripts.
-
--->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 

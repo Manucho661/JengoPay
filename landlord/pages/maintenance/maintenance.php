@@ -38,13 +38,9 @@
     crossorigin="anonymous" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
+  <!--Main css file-->
+  <link rel="stylesheet" href="../../../landlord/assets/main.css" />
 
-  <!--end::Third Party Plugin(Bootstrap Icons)-->
-  <!--begin::Required Plugin(AdminLTE)-->
-  <link rel="stylesheet" href="../../css/adminlte.css" />
-  <!-- <link rel="stylesheet" href="text.css" /> -->
-  <!--end::Required Plugin(AdminLTE)-->
-  <!-- apexcharts -->
   <link
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
@@ -129,180 +125,153 @@
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
   <!--begin::App Wrapper-->
   <div class="app-wrapper" style="height: 100 vh; ">
+
     <!--begin::Header-->
-    <?php include_once '../includes/header.php' ?>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
     <!--end::Header-->
+
     <!--begin::Sidebar-->
-    <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-      <!--begin::Sidebar Brand-->
-      <div class="sidebar-brand">
-        <!--begin::Brand Link-->
-        <a href="./index.html" class="brand-link">
-          <!--begin::Brand Text-->
-          <span class="brand-text font-weight-light"><b class="p-2"
-              style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
-              class="p-2"
-              style=" border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107;">JENGOPAY</b></span>
-        </a>
-        </span>
-        <!--end::Brand Text-->
-        </a>
-        <!--end::Brand Link-->
-      </div>
-      <!--end::Sidebar Brand-->
-      <!--begin::Sidebar Wrapper-->
-      <!-- <div id="sidebar"></div> -->
-      <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
-
-      <!--end::Sidebar Wrapper-->
-    </aside>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?>
     <!--end::Sidebar-->
+
     <!--begin::App Main-->
-    <main class="app-main" style=" height:100%;">
-      <!--begin::App Content Header-->
-      <div class="app-content-header bg-white mb-2">
-        <!--begin::Container-->
-        <div class="container-fluid">
-          <!--begin::Row-->
-          <div class="row align-items-center mb-3">
-            <div class="col-sm-8 d-flex">
-              <span class="info-box-icon p-2 rounded" style="background-color:#00192D; color:#fff;">
-                <i class="bi bi-tools"></i>
-              </span>
-              <h3 class="mb-0 mx-2">Maintenance Requests</h3>
-            </div>
+    <main class="main" style=" height:100%;">
+      <!--begin::Container-->
+      <div class="container-fluid">
 
-            <div class="col-sm-4">
+        <!--First Row-->
+        <div class="row align-items-center mb-3">
+          <div class="col-sm-8 d-flex">
+            <span class="info-box-icon p-2 rounded" style="background-color:#00192D; color:#fff;">
+              <i class="bi bi-tools"></i>
+            </span>
+            <h3 class="mb-0 mx-2">Maintenance Requests</h3>
+          </div>
 
-            </div>
+          <div class="col-sm-4">
+
           </div>
-          <div class="row">
-            <div class="col-md-6">
-              <p class="text-muted">Manage maintenance requests for tenants</p>
-            </div>
-            <div class="col-md-6 d-flex justify-content-end gap-2 mb-2">
-              <button type="button" class="btn bg-warning text-white seTAvailable fw-bold rounded-4" style="color:white; width:100%; white-space: nowrap;" data-bs-toggle="modal" data-bs-target="#requestModal">Create Request</button>
-              <button type="button" class="btn bg-warning text-white seTAvailable fw-bold rounded-4" style="color:white; width:100%; white-space: nowrap;">Set All Available</button>
-              <button type="button" class="btn bg-warning text-white seTAvailable fw-bold rounded-4" style="color:white; width:100%; white-space: nowrap;">Set All Unavailable</button>
-              <button type="button" class="btn bg-warning text-white seTAvailable fw-bold bg-danger border-0 rounded-4" style="color:white; width:100%; white-space: nowrap;">Cancel all Requests</button>
-            </div>
-          </div>
-          
-          <!--end::Row-->
         </div>
-        <!--end::Container-->
-      </div>
-      <div class="app-content">
-        <!--begin::Container-->
-        <div class="container-fluid">
-          <!-- begin row -->
-          <div class="row">
-            <div class="col-12 col-sm-6 col-md-3">
 
-              <div class="summary-card mb-2">
-                <div class="summary-card_icon"> <i class="fas fa-clipboard-check"></i></div>
-                <div>
-                  <div class="summary-card_label">Scheduled</div>
-                  <div class="summary-card_value">200 </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 col-sm-6 col-md-3">
-              <div class="summary-card">
-                <div class="summary-card_icon"><i class="fas fa-check-circle"></i></div>
-                <div>
-                  <div class="summary-card_label">Completed</div>
-                  <div class="summary-card_value penalities">&nbsp;300</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 col-sm-6 col-md-3">
-              <div class="summary-card">
-                <div class="summary-card_icon"> <i class="fas fa-spinner fa-spin"></i> </div>
-                <div>
-                  <div class="summary-card_label">In Progress</div>
-                  <div class="summary-card_value">&nbsp;200</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 col-sm-6 col-md-3">
-              <div class="summary-card">
-                <div class="summary-card_icon" style="font-weight: bold;"><i class="fas fa-question-circle"></i> </div>
-                <div>
-                  <div class="summary-card_label">Incomplete</div>
-                  <div class="summary-card_value">&nbsp;20</div>
-                </div>
-              </div>
-            </div>
+        <!-- Second Row -->
+        <div class="row">
+          <div class="col-md-6">
+            <p class="text-muted">Manage maintenance requests for tenants</p>
           </div>
-          <hr>
-          <!--begin::Row-->
-          <div class="row g-3 mb-4">
-            <div class="col-md-3">
-              <select class="form-select filter-shadow">
-                <option selected>Filter by Building</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <select class="form-select filter-shadow ">
-                <option selected>Filter by Tenant</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <select class="form-select filter-shadow">
-                <option selected>Filter Status</option>
-                <option>Pending</option>
-                <option>Completed</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <input type="date" class="form-control filter-shadow ">
-            </div>
+          <div class="col-md-6 d-flex justify-content-end gap-2 mb-2">
+            <button type="button" class="btn bg-warning text-white seTAvailable fw-bold rounded-4" style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;" data-bs-toggle="modal" data-bs-target="#requestModal">Create Request</button>
+            <button type="button" class="btn bg-warning text-white seTAvailable fw-bold rounded-4" style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">Set All Available</button>
+            <button type="button" class="btn bg-warning text-white seTAvailable fw-bold rounded-4" style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">Set All Unavailable</button>
+            <button type="button" class="btn bg-warning text-white seTAvailable fw-bold bg-danger border-0 rounded-4" style="color:white; width:100%; white-space: nowrap;">Cancel all Requests</button>
           </div>
-          <!-- begin row -->
-          <div class="row">
-            <div class="col-md-12">
-              <div class="Table-section bg-white p-2 rounded-2">
-                <div class="table-section-header">
-                  <div class="entries">
-                    <h6 class="mb-0 contact_section_header summary mb-2 p-2 rounded-top" style="background-color: #00192D; color:#FFA000;"> <span class="text-white">Manucho |</span> 5 entries</h6>
-                  </div>
-                  <div class="search-pdf-excel d-flex justify-content-between">
-                    <div id="custom-search">
-                      <input type="text" id="searchInput" placeholder="Search request...">
-                    </div>
-                    <div id="custom-buttons"></div>
-                  </div>
-                </div>
-                <div style="overflow: auto;">
-                  <table id="requests-table" class=" display requests-table">
-                    <thead class="mb-2">
-                      <tr>
-                        <th>REQUEST Date</th>
-                        <th>PROPERTY + UNIT</th>
-                        <th>CATEGORY + DESCRIPTION </th>
-                        <th>PROVIDER</th>
-                        <th>PRIORITY</th>
-                        <th>STATUS</th>
-                        <th>PAYMENT</th>
-                        <th>ACTIONS</th>
-                      </tr>
-                    </thead>
-                    <tbody id="maintenanceRequestsTableBod">
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!--end::Row-->
         </div>
-        <!--end::Container-->
+
+        <!-- Third Row: stats -->
+        <div class="row">
+          <div class="col-12 col-sm-6 col-md-3">
+
+            <div class="summary-card mb-2">
+              <div class="summary-card_icon"> <i class="fas fa-clipboard-check"></i></div>
+              <div>
+                <div class="summary-card_label">Scheduled</div>
+                <div class="summary-card_value">200 </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="summary-card">
+              <div class="summary-card_icon"><i class="fas fa-check-circle"></i></div>
+              <div>
+                <div class="summary-card_label">Completed</div>
+                <div class="summary-card_value penalities">&nbsp;300</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="summary-card">
+              <div class="summary-card_icon"> <i class="fas fa-spinner fa-spin"></i> </div>
+              <div>
+                <div class="summary-card_label">In Progress</div>
+                <div class="summary-card_value">&nbsp;200</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="summary-card">
+              <div class="summary-card_icon" style="font-weight: bold;"><i class="fas fa-question-circle"></i> </div>
+              <div>
+                <div class="summary-card_label">Incomplete</div>
+                <div class="summary-card_value">&nbsp;20</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fourth Row: Filter -->
+        <div class="row g-3 mb-4">
+          <div class="col-md-3">
+            <select class="form-select filter-shadow">
+              <option selected>Filter by Building</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <select class="form-select filter-shadow ">
+              <option selected>Filter by Tenant</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <select class="form-select filter-shadow">
+              <option selected>Filter Status</option>
+              <option>Pending</option>
+              <option>Completed</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <input type="date" class="form-control filter-shadow ">
+          </div>
+        </div>
+
+        <!-- Fifth Row: Table -->
+        <div class="row">
+          <div class="col-md-12">
+            <div class="Table-section bg-white p-2 rounded-2">
+              <div class="table-section-header">
+                <div class="entries">
+                  <h6 class="mb-0 contact_section_header summary mb-2 p-2 rounded-top" style="background-color: #00192D; color:#FFA000;"> <span class="text-white">Manucho |</span> 5 entries</h6>
+                </div>
+                <div class="search-pdf-excel d-flex justify-content-between">
+                  <div id="custom-search">
+                    <input type="text" id="searchInput" placeholder="Search request...">
+                  </div>
+                  <div id="custom-buttons"></div>
+                </div>
+              </div>
+              <div style="overflow: auto;">
+                <table id="requests-table" class=" display requests-table">
+                  <thead class="mb-2">
+                    <tr>
+                      <th>REQUEST Date</th>
+                      <th>PROPERTY + UNIT</th>
+                      <th>CATEGORY + DESCRIPTION </th>
+                      <th>PROVIDER</th>
+                      <th>PRIORITY</th>
+                      <th>STATUS</th>
+                      <th>PAYMENT</th>
+                      <th>ACTIONS</th>
+                    </tr>
+                  </thead>
+                  <tbody id="maintenanceRequestsTableBod">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <!--end::App Content-->
+      <!--end:: Main Container-->
     </main>
     <!--end::App Main-->
     <!--begin::Footer-->
@@ -376,6 +345,7 @@
     </div>
     <!-- main js file -->
     <script src="maintenance.js"></script>
+    <script src="../../assets/main.js"></script>
     <script type="module" src="js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/js/bootstrap.bundle.min.js"></script>
 

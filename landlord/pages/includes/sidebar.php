@@ -46,6 +46,9 @@
         <div class="submenu-item"><a href="/Jengopay/landlord/pages/financials/agedpayable/aged_payable.php"> Aged Payable</a></div>
     </div>
     <div class="menu-item">
+      <span><i class="fas fa-tools"></i> <a href="/Jengopay/landlord/pages/maintenance/maintenance.php">Maintenance Requests</a> </span>  
+    </div>
+    <div class="menu-item">
         <span><i class="fas fa-cog"></i> Settings</span>
     </div>
     <div class="menu-item">

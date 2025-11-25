@@ -34,9 +34,10 @@ if (isset($_GET['id'])) {
   <!--begin::Third Party Plugin(Bootstrap Icons)-->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI=" crossorigin="anonymous" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <!--end::Third Party Plugin(Bootstrap Icons)-->
-  <!--begin::Required Plugin(AdminLTE)-->
-  <link rel="stylesheet" href="../../css/adminlte.css" />
+
+
+  <!--Main css file-->
+  <link rel="stylesheet" href="../../../landlord/assets/main.css" />
   <link rel="stylesheet" href="request_details.css">
   <!--end::Required Plugin(AdminLTE)-->
   <!-- apexcharts -->
@@ -53,91 +54,76 @@ if (isset($_GET['id'])) {
 
 </head>
 <style>
-  
-    .preloader-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 70vh; /* adjust to taste */
-  color: #333;
-  font-family: Arial, sans-serif;
-}
-
-.pulse {
-  position: relative;
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: visible;
-  transition: transform 0.3s ease;
-}
-
-/* ripple uses semi-transparent same-hue */
-.ripple {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background: rgba(255, 193, 7, 0.45); /* soft ripple */
-  animation: ripple 1.5s infinite ease-out;
-}
-
-@keyframes ripple {
-  0% {
-    transform: scale(1);
-    opacity: 0.9;
+  .preloader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 70vh;
+    /* adjust to taste */
+    color: #333;
+    font-family: Arial, sans-serif;
   }
-  100% {
-    transform: scale(2.6);
+
+  .pulse {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    transition: transform 0.3s ease;
+  }
+
+  /* ripple uses semi-transparent same-hue */
+  .ripple {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(255, 193, 7, 0.45);
+    /* soft ripple */
+    animation: ripple 1.5s infinite ease-out;
+  }
+
+  @keyframes ripple {
+    0% {
+      transform: scale(1);
+      opacity: 0.9;
+    }
+
+    100% {
+      transform: scale(2.6);
+      /* opacity: 0; */
+    }
+  }
+
+  .percentage {
+    margin-top: 14px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    transition: opacity 0.4s ease, transform 0.25s ease;
+  }
+
+  /* fade class used to fade out both pulse and percentage smoothly */
+  .fade {
     /* opacity: 0; */
   }
-}
 
-.percentage {
-  margin-top: 14px;
-  font-size: 1.25rem;
-  font-weight: 700;
-  transition: opacity 0.4s ease, transform 0.25s ease;
-}
-
-/* fade class used to fade out both pulse and percentage smoothly */
-.fade {
-  /* opacity: 0; */
-}
-/* Hidden state before animation */
-
+  /* Hidden state before animation */
 </style>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-dark" style="">
   <div class="app-wrapper" style="height: 100 vh; ">
     <!--begin::Header-->
-    <?php include_once '../includes/header.php' ?>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
     <!--end::Header-->
-    <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-      <!--begin::Sidebar Brand-->
-      <div class="sidebar-brand">
-        <!--begin::Brand Link-->
-        <a href="./index.html" class="brand-link">
-          <!--begin::Brand Text-->
-          <span class="brand-text font-weight-light"><b class="p-2"
-              style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
-              class="p-2"
-              style=" border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107;">JENGOPAY</b></span>
-        </a>
-        </span>
-        <!--end::Brand Text-->
-        </a>
-        <!--end::Brand Link-->
-      </div>
-      <!--end::Sidebar Brand-->
-      <!--begin::Sidebar Wrapper-->
-      <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
-      <!--end::Sidebar Wrapper-->
-    </aside>
+
+    <!-- start Sidebar -->
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?>
+    <!--end::Sidebar-->
 
     <!-- Main Layout -->
     <div id="preloader" class="preloader-container">
@@ -146,9 +132,9 @@ if (isset($_GET['id'])) {
       </div>
       <div id="percent" class="percentage">0%</div>
     </div>
-    <main class="app-main" id="appMain" style="display: none;">
+    <main class="main" id="appMain" style="display: none;">
       <!--begin::App Content Header-->
-      <div class="app-content-header bg-white mb-2">
+      <div class="app-content-header mb-2">
         <div class="container-fluid">
           <div class="row align-items-center gy-3 gx-2 mb-2">
 
@@ -181,7 +167,7 @@ if (isset($_GET['id'])) {
             <div class="col-lg-4 d-none d-lg-flex justify-content-end align-items-center">
             </div>
           </div>
-          <div class="row mt-4">
+          <div class="row mt-4 mb-2">
             <div class="col-md-6">
               <div class="d-flex align-items-center flex-wrap">
                 <span class="info-box-icon me-2 bg-warning">
@@ -196,7 +182,7 @@ if (isset($_GET['id'])) {
             <div class="col-md-6 d-flex gap-1 flex-nowrap">
 
               <button type="button" id="availabilityBtn" class="btn seTAvailable text-white fw-bold bg-warning rounded-4"
-                style="color:white; width:100%; white-space: nowrap;">
+                style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">
                 Set Available
               </button>
               <!-- style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;"> -->
@@ -205,7 +191,7 @@ if (isset($_GET['id'])) {
                 Cancel Request
               </button>
               <button type="button" class="btn bg-warning text-white seTAvailable fw-bold rounded-4"
-                style=" color:dark; width:100%; white-space: nowrap;">
+                style="background: linear-gradient(135deg, #00192D, #002B5B); color:dark; width:100%; white-space: nowrap;">
                 All Requests
               </button>
             </div>
@@ -215,11 +201,6 @@ if (isset($_GET['id'])) {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div class="app-content">
-        <div class="container-fluid rounded-2 mb-2">
           <div class="row bg-white rounded">
             <div class="col-md-4 border-right">
               <div class="card p-3 d-flex flex-row justify-content-between align-items-start border-0 shadow-none" style="height:100%;">
@@ -267,7 +248,6 @@ if (isset($_GET['id'])) {
               </div>
             </div>
           </div>
-
           <div class="row py-2 bg-white rounded-2 mt-2">
             <div class="col-md-7 " style="min-height: 100%;">
               <!-- content displays here -->
@@ -336,6 +316,7 @@ if (isset($_GET['id'])) {
             </div>
           </div>
         </div>
+      </div>
     </main>
     <!-- Begin Footer -->
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
@@ -671,6 +652,9 @@ if (isset($_GET['id'])) {
   </div>
 
   <!-- Scripts -->
+  <!-- Main Js File -->
+  <script src="../../assets/main.js"></script>
+  <!-- html2pdf depends on html2canvas and jsPDF -->
   <script type="module" src="./JS/requestDetails/main.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
