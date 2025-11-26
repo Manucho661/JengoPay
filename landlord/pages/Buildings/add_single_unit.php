@@ -2,6 +2,16 @@
  require_once "../db/connect.php";
 //  include_once 'includes/lower_right_popup_form.php';
 ?>
+<?php
+    require_once "../db/connect.php";
+
+    $stmt = $pdo->prepare("SELECT id, account_name
+                            FROM chart_of_accounts
+                            WHERE account_name = 'Rental Income'");
+    $stmt->execute();
+    $rentAccounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 
 <!doctype html>
 <html lang="en">
@@ -373,6 +383,7 @@
                             }
                     
                         ?>
+                        
                                 <div class="col-md-3 col-sm-6 col-12">
                                     <div class="info-box shadow">
                                         <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i class="bi bi-building"></i></span>
@@ -472,10 +483,24 @@
                                                 <b>Financials and Other Information</b>
                                             </div>
                                             <div class="card-body">
-                                                <div class="form-group">
-                                                    <label>Monthly Rent</label>
-                                                    <input type="number" class="form-control" id="monthly_rent" name="monthly_rent" placeholder="Monthly Rent">
-                                                </div>
+                                            <div class="form-group">
+    <label>Select Rent Account (Chart of Accounts)</label>
+    <select class="form-control" id="rent_account" name="rent_account" required>
+        <option value="">-- Select Rent Account --</option>
+        <?php foreach ($rentAccounts as $acc): ?>
+            <option value="<?= $acc['id']; ?>">
+                <?= $acc['account_name']; ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+</div>
+
+<div class="form-group" id="monthly_rent_group" style="display:none;">
+    <label>Monthly Rent Amount (KES)</label>
+    <input type="number" class="form-control" id="monthly_rent" name="monthly_rent" placeholder="Enter Monthly Rent">
+</div>
+
+
                                                 <div class="card shadow">
                                                     <div class="card-header" style="background-color:#00192D; color: #fff;">Recurring Bills</div>
                                                     <div class="card-body">
@@ -558,6 +583,22 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
     <!-- pdf download plugin -->
+    <script>
+    document.getElementById('rent_account').addEventListener('change', function () {
+        let selectedText = this.options[this.selectedIndex].text.trim();
+
+        // Show input only when "Rental Income" is selected
+        if (selectedText === "Rental Income") {
+            document.getElementById('monthly_rent_group').style.display = 'block';
+            document.getElementById('monthly_rent').required = true;
+        } else {
+            document.getElementById('monthly_rent_group').style.display = 'none';
+            document.getElementById('monthly_rent').required = false;
+            document.getElementById('monthly_rent').value = '';
+        }
+    });
+</script>
+
 
 
     <!-- Scripts -->
