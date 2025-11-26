@@ -1,4 +1,6 @@
-export async function submitRequest(e) {
+import { fetchRequests } from "./getRequests.js";
+
+export async function submitRequest(e, modal) {
     e.preventDefault();
 
     const form = document.getElementById('requestForm');
@@ -45,15 +47,15 @@ export async function submitRequest(e) {
         console.log('Server response:', submitResult);
 
         if (submitResult.success) {
-            alert('Request submitted successfully!');
+            // alert('Request submitted successfully!');
             // Reset UI
             form.reset();
             otherField.style.display = 'none';
             document.getElementById('otherRequestBtn').textContent = 'Other';
-            const modalEl = document.getElementById('requestModal');
-            if (modalEl && bootstrap && bootstrap.Modal) {
-                bootstrap.Modal.getInstance(modalEl)?.hide();
-            }
+
+            // modal
+            modal.hide();
+            fetchRequests();
         } else {
             // show helpful message
             alert('Submission failed: ' + (submitResult.error || submitResult.message || 'Unknown error'));

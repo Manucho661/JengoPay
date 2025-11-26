@@ -353,3 +353,65 @@ td .Pending:hover {
       border-bottom-color: #00192D;
       /* underline highlight */
     }
+
+
+    /* Submit Request */
+    :root {
+      --primary-color: #FFC107;
+      --secondary-color: #00192D;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color) !important;
+      border-color: var(--primary-color) !important;
+      color: var(--secondary-color) !important;
+      font-weight: 600;
+    }
+
+    .btn-primary:hover {
+      background-color: #e6ad06 !important;
+      border-color: #e6ad06 !important;
+      color: var(--secondary-color) !important;
+    }
+
+    .modal-header {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+
+    .modal-header .btn-close {
+      filter: invert(1);
+    }
+
+    .form-label {
+      color: var(--secondary-color);
+      font-weight: 600;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25);
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      border-color: #6c757d;
+    }
+
+    #otherRequestBtn {
+      background-color: var(--secondary-color);
+      border-color: var(--secondary-color);
+      color: white;
+      font-size: 0.875rem;
+      padding: 0.25rem 0.75rem;
+    }
+
+    #otherRequestBtn:hover {
+      background-color: #003051;
+      border-color: #003051;
+    }
+
+    #otherRequestField {
+      display: none;
+    }

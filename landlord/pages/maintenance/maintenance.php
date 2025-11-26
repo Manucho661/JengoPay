@@ -53,73 +53,6 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
   <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
-
-  <style>
-    body {
-      background-color: #FFC107 !important;
-    }
-
-    :root {
-      --primary-color: #FFC107;
-      --secondary-color: #00192D;
-    }
-
-    .btn-primary {
-      background-color: var(--primary-color);
-      border-color: var(--primary-color);
-      color: var(--secondary-color);
-      font-weight: 600;
-    }
-
-    .btn-primary:hover {
-      background-color: #e6ad06;
-      border-color: #e6ad06;
-      color: var(--secondary-color);
-    }
-
-    .modal-header {
-      background-color: var(--secondary-color);
-      color: white;
-    }
-
-    .modal-header .btn-close {
-      filter: invert(1);
-    }
-
-    .form-label {
-      color: var(--secondary-color);
-      font-weight: 600;
-    }
-
-    .form-control:focus,
-    .form-select:focus {
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25);
-    }
-
-    .btn-secondary {
-      background-color: #6c757d;
-      border-color: #6c757d;
-    }
-
-    #otherRequestBtn {
-      background-color: var(--secondary-color);
-      border-color: var(--secondary-color);
-      color: white;
-      font-size: 0.875rem;
-      padding: 0.25rem 0.75rem;
-    }
-
-    #otherRequestBtn:hover {
-      background-color: #003051;
-      border-color: #003051;
-    }
-
-    #otherRequestField {
-      display: none;
-    }
-  </style>
-  </style>
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -159,7 +92,13 @@
             <p class="text-muted">Manage maintenance requests for tenants</p>
           </div>
           <div class="col-md-6 d-flex justify-content-end gap-2 mb-2">
-            <button type="button" class="btn bg-warning text-white seTAvailable fw-bold rounded-4" style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;" data-bs-toggle="modal" data-bs-target="#requestModal">Create Request</button>
+            <button
+              type="button"
+              class="btn bg-warning text-white seTAvailable fw-bold rounded-4"
+              style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">
+              Create Request
+            </button>
+
             <button type="button" class="btn bg-warning text-white seTAvailable fw-bold rounded-4" style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">Set All Available</button>
             <button type="button" class="btn bg-warning text-white seTAvailable fw-bold rounded-4" style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">Set All Unavailable</button>
             <button type="button" class="btn bg-warning text-white seTAvailable fw-bold bg-danger border-0 rounded-4" style="color:white; width:100%; white-space: nowrap;">Cancel all Requests</button>
@@ -344,7 +283,6 @@
       </div>
     </div>
     <!-- main js file -->
-    <script src="maintenance.js"></script>
     <script src="../../assets/main.js"></script>
     <script type="module" src="js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/js/bootstrap.bundle.min.js"></script>
