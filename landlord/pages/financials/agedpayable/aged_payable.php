@@ -41,7 +41,7 @@
 
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../../../css/adminlte.css" />
+    <!-- <link rel="stylesheet" href="../../../css/adminlte.css" /> -->
     <link rel="stylesheet" href="../../../../landlord/assets/main.css" />
     <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
@@ -176,36 +176,17 @@
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
     <div class="app-wrapper" style="height: 100 vh; background-color:rgba(128,128,128, 0.1);">
+        
         <!--begin::Header-->
         <?php include_once '../../includes/header.php' ?>
         <!--end::Header-->
-        <!--begin::Sidebar-->
-        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-            <!--begin::Sidebar Brand-->
-            <div class="sidebar-brand">
-                <!--begin::Brand Link-->
-                <a href="./index.html" class="brand-link">
-                    <!--begin::Brand Text-->
-                    <span class="brand-text font-weight-light"><b class="p-2"
-                            style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
-                            class="p-2"
-                            style=" border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107;">JENGOPAY</b></span>
-                </a>
-                </span>
-                <!--end::Brand Text-->
-                </a>
-                <!--end::Brand Link-->
-            </div>
-            <!--end::Sidebar Brand-->
-            <!--begin::Sidebar Wrapper-->
-            <!-- <div id="sidebar"></div> -->
-            <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
 
-            <!--end::Sidebar Wrapper-->
-        </aside>
+        <!--begin::Sidebar-->
+       <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?>
         <!--end::Sidebar-->
+
         <!--begin::App Main-->
-        <main class="app-main" style=" height:100%;">
+        <main class="main" style=" height:100%;">
             <!--begin::App Content Header-->
             <div class="app-content-header" style="">
                 <!--begin::Container-->
@@ -215,25 +196,6 @@
                         <div class="col-sm-7">
                             <h3 class="mb-0">🖊️ <span class="contact_section_header">Aged Payable Accounts</span></h3>
                             <p class="text-muted"> Manage your Payable accounts</p>
-                        </div>
-                        <div class="col-sm-5">
-                            <ul class="nav justify-content-end border-bottom" id="requestNav">
-                                <li class="nav-item">
-                                    <a class="nav-link active" href="#" data-tab="all">
-                                        Aged Payable
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#" data-tab="saved">
-                                        Balance Sheet
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#" data-tab="cancelled">
-                                        Aged Recievable
-                                    </a>
-                                </li>
-                            </ul>
                         </div>
                     </div>
                     
@@ -328,7 +290,8 @@
     <!-- Overlay Cards -->
     <!-- Overlay scripts -->
     <!-- main js file -->
-    <script src="../../../js/adminlte.js"></script>
+
+    <script src="../../../../landlord/assets/main.js"></script>
     <script type="module" src="js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/js/bootstrap.bundle.min.js"></script>
 

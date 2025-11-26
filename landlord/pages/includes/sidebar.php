@@ -1,71 +1,57 @@
-<nav class="sidebar" style="position:relative;">
-  <div>
-    
-  <a href="/Jengopay/landlord/pages/Dashboard/index2.php"><i class="fas fa-home"></i> Dashboard</a>
-
-  </div>
-  
-
-  <!-- Property -->
-  <div class="menu-group">
-    <div class="menu-header" onclick="toggleMenu(this)">
-      <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> 🏠 Buildings
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+    <div class="menu-item active">
+        <span><a href="/Jengopay/landlord/pages/Dashboard/index2.php" style="text-decoration: none;"><i class="fas fa-home"></i> Dashboard</a></span>
     </div>
-    <div class="submenu">
-      <a href="/Jengopay/landlord/pages/Buildings/buildings.php" ><i class="fas fa-building"></i> Buildings</a>
-      <!-- Add more options later -->
+    <div class="menu-item">
+        <span><a href="/Jengopay/landlord/pages/Buildings/buildings.php"><i class="fas fa-building"></i> Properties</a></span>
     </div>
-  </div>
-
-  <div class="menu-group">
-    <div class="menu-header" onclick="toggleMenu(this)">
-      <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> <i class="fas fa-users"></i> People
+    <div class="menu-item" onclick="toggleSubmenu('users')">
+        <span><i class="fas fa-users"></i> Users</span>
+        <i class="fas fa-chevron-down chevron" id="users-chevron"></i>
     </div>
-    <div class="submenu">
-      <a href="/Jengopay/landlord/pages/people/tenants.php">👥 Tenants</a>
-      <a href="/Jengopay/landlord/pages/serviceProviders/providers">👥 Providers</a>
+    <div class="submenu" id="users-submenu">
+        <div class="submenu-item">Tenants</div>
+        <div class="submenu-item">Service Providers</div>
     </div>
-  </div>
-
-  <!-- Communications -->
-  <div class="menu-group">
-    <div class="menu-header" onclick="toggleMenu(this)">
-      <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> 💬 Communications
+    <div class="menu-item" onclick="toggleSubmenu('communication')">
+        <span><i class="fas fa-comments"></i> Communication</span>
+        <i class="fas fa-chevron-down chevron" id="communication-chevron"></i>
     </div>
-    <div class="submenu">
-    <a href="/Jengopay/landlord/pages/communications/texts.php">💬 In-app Messages</a>
-      <a href="/Jengopay/landlord/pages/communications/announcements/announcements.php">📢 Announcements</a>
+    <div class="submenu" id="communication-submenu">
+        <div class="submenu-item"> <a href="/Jengopay/landlord/pages/communications/texts.php"> In-app Messages</a></div>
+        <div class="submenu-item"><a href="/Jengopay/landlord/pages/communications/announcements/announcements.php">Announcements</a></div>
+        <div class="submenu-item">Emails</div>
     </div>
-  </div>
-
-  <a href="/Jengopay/landlord/pages/maintenance/maintenance.php">🛠 Repairs & Maintenance</a>
-
-  <!-- Financials -->
-  <div class="menu-group">
-    <div class="menu-header" onclick="toggleMenu(this)">
-      <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> 💼 Financials
+    <div class="menu-item" onclick="toggleSubmenu('financials')">
+        <span><i class="fas fa-dollar-sign"></i> Financials</span>
+        <i class="fas fa-chevron-down chevron" id="financials-chevron"></i>
     </div>
-    <div class="submenu">
-      <a href="/Jengopay/landlord/pages/financials/Rent.php">💸Rent</a>
-      <a href="/Jengopay/landlord/pages/financials/expenses/expenses.php">💵 Expenses</a>
-      <a href="/Jengopay/landlord/pages/financials/invoices/invoice.php">📄 Invoices</a>
-      <a href="/Jengopay/landlord/pages/financials/balanceSheet/balanceSheet.php">📊 Balance Sheet</a>
-      <a href="/Jengopay/landlord/pages/financials/cashflow/cashflow.php">📊 Cash flow</a>
-      <a href="/Jengopay/landlord/pages/financials/profit&loss/profit&loss.php">📊 Profit&Loss</a>
+    <div class="submenu" id="financials-submenu">
+        <div class="submenu-item"><a href="/Jengopay/landlord/pages/financials/invoices/invoice.php">Invoices</a></div>
+        <div class="submenu-item"><a href="/Jengopay/landlord/pages/financials/expenses/expenses.php">Expenses</a></div>
+        <div class="submenu-item"><a href="/Jengopay/landlord/pages/financials/balanceSheet/balanceSheet.php">Balance Sheet</a></div>
+        <div class="submenu-item"><a href="/Jengopay/landlord/pages/financials/Rent.php">Rental Income</a></div>
+        <div class="submenu-item"><a href="/Jengopay/landlord/pages/financials/cashflow/cashflow.php"> Cash flow</a></div>
+        <div class="submenu-item"><a href="/Jengopay/landlord/pages/financials/profit&loss/profit&loss.php"> Profit&Loss</a></div>
     </div>
-  </div>
-  <!-- Financials -->
-  <div class="menu-group">
-    <div class="menu-header" onclick="toggleMenu(this)">
-      <span class="arrow" style="color: #FFC107 !important;"><i class="bi bi-caret-right-fill arrow"></i></span> 💼 Reports
+    <div class="menu-item" onclick="toggleSubmenu('reports')">
+        <span><i class="fas fa-chart-bar"></i> Reports</span>
+        <i class="fas fa-chevron-down chevron" id="reports-chevron"></i>
     </div>
-    <div class="submenu">
-      <a href="/Jengopay/landlord/pages/financials/generalledger/general_ledger.php"><i class="fas fa-book-open"></i>General Ledger</a>
-      <a href="/Jengopay/landlord/pages/financials/trialbalance/trial_balance.php"><i class="fas fa-balance-scale"></i> Trial Balance</a>
-      <a href="/Jengopay//landlord/pages/financials/agedreceivable/aged_receivable.php"><i class="bi bi-receipt"></i> Aged Receivable</a>
-      <a href="/Jengopay/landlord/pages/financials/agedpayable/aged_payable.php"><i class="bi bi-journal-minus"></i>Aged Payable</a>
+    <div class="submenu" id="reports-submenu">
+        <div class="submenu-item"><a href="/Jengopay/landlord/pages/financials/generalledger/general_ledger.php"> General Ledger</a></div>
+        <div class="submenu-item"><a href="/Jengopay/landlord/pages/financials/trialbalance/trial_balance.php"> Trial Balance</a></div>
+        <div class="submenu-item"><a href="/Jengopay//landlord/pages/financials/agedreceivable/aged_receivable.php"> Aged Receivable</a></div>
+        <div class="submenu-item"><a href="/Jengopay/landlord/pages/financials/agedpayable/aged_payable.php"> Aged Payable</a></div>
     </div>
-  </div>
-    <a href="#">⚙️ Settings</a>
-    <a href="#" class="logout"> 🔓  Log Out</a>
-</nav>
+    <div class="menu-item">
+      <span><i class="fas fa-tools"></i> <a href="/Jengopay/landlord/pages/maintenance/maintenance.php">Maintenance Requests</a> </span>  
+    </div>
+    <div class="menu-item">
+        <span><i class="fas fa-cog"></i> Settings</span>
+    </div>
+    <div class="menu-item">
+        <span><i class="fas fa-sign-out-alt"></i> Log Out</span>
+    </div>
+</aside>

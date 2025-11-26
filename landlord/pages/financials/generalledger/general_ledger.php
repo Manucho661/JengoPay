@@ -95,7 +95,7 @@ $runningBalance = 0;
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <!--end::Third Party Plugin(Bootstrap Icons)-->
   <!--begin::Required Plugin(AdminLTE)-->
-  <link rel="stylesheet" href="/jengopay/landlord/css/adminlte.css" />
+  <link rel="stylesheet" href="../../../../landlord/assets/main.css" />
   <!--end::Required Plugin(AdminLTE)-->
   <!-- apexcharts -->
   <link
@@ -127,16 +127,16 @@ $runningBalance = 0;
       --light-bg: #f8f9fa;
       --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-    
+
     body {
       font-size: 16px;
       background-color: var(--light-bg);
     }
-    
+
     .app-wrapper {
       background-color: var(--light-bg);
     }
-    
+
     .app-content-header {
       background: linear-gradient(135deg, var(--primary-color) 0%, #003053 100%);
       color: white;
@@ -144,14 +144,14 @@ $runningBalance = 0;
       margin-bottom: 1.5rem;
       border-radius: 0 0 10px 10px;
     }
-    
+
     .card {
       border: none;
       border-radius: 10px;
       box-shadow: var(--card-shadow);
       margin-bottom: 1.5rem;
     }
-    
+
     .card-header {
       background-color: white;
       border-bottom: 1px solid rgba(0, 0, 0, 0.05);
@@ -159,47 +159,47 @@ $runningBalance = 0;
       border-radius: 10px 10px 0 0 !important;
       font-weight: 600;
     }
-    
+
     .btn-primary {
       background-color: var(--primary-color);
       border-color: var(--primary-color);
     }
-    
+
     .btn-primary:hover {
       background-color: #00243d;
       border-color: #00243d;
     }
-    
+
     .btn-outline-primary {
       color: var(--primary-color);
       border-color: var(--primary-color);
     }
-    
+
     .btn-outline-primary:hover {
       background-color: var(--primary-color);
       border-color: var(--primary-color);
     }
-    
+
     .table thead th {
       background-color: var(--primary-color);
       color: white;
       border: none;
       padding: 1rem;
     }
-    
+
     .table tbody td {
       padding: 0.75rem 1rem;
       vertical-align: middle;
     }
-    
+
     .table-striped tbody tr:nth-of-type(odd) {
       background-color: rgba(0, 25, 45, 0.03);
     }
-    
+
     .table-hover tbody tr:hover {
       background-color: rgba(0, 25, 45, 0.08);
     }
-    
+
     .filter-card {
       background-color: white;
       border-radius: 10px;
@@ -207,7 +207,7 @@ $runningBalance = 0;
       box-shadow: var(--card-shadow);
       margin-bottom: 1.5rem;
     }
-    
+
     .stats-card {
       text-align: center;
       padding: 1.5rem;
@@ -215,62 +215,64 @@ $runningBalance = 0;
       color: white;
       margin-bottom: 1.5rem;
     }
-    
+
     .stats-card.primary {
       background: linear-gradient(135deg, var(--primary-color) 0%, #003053 100%);
     }
-    
+
     .stats-card.success {
       background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
     }
-    
+
     .stats-card.warning {
       background: linear-gradient(135deg, var(--accent-color) 0%, #ffcd39 100%);
     }
-    
+
     .stats-card.info {
       background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%);
     }
-    
+
     .stats-card .stats-value {
       font-size: 2rem;
       font-weight: 700;
       margin: 0.5rem 0;
     }
-    
+
     .stats-card .stats-label {
       font-size: 0.9rem;
       opacity: 0.9;
     }
-    
-    .form-control, .form-select {
+
+    .form-control,
+    .form-select {
       border-radius: 6px;
       padding: 0.6rem 0.75rem;
       border: 1px solid #dee2e6;
     }
-    
-    .form-control:focus, .form-select:focus {
+
+    .form-control:focus,
+    .form-select:focus {
       border-color: var(--primary-color);
       box-shadow: 0 0 0 0.2rem rgba(0, 25, 45, 0.25);
     }
-    
+
     .export-buttons {
       display: flex;
       gap: 0.5rem;
       justify-content: flex-end;
       margin-bottom: 1rem;
     }
-    
+
     .running-balance-positive {
       color: #28a745;
       font-weight: 600;
     }
-    
+
     .running-balance-negative {
       color: #dc3545;
       font-weight: 600;
     }
-    
+
     .badge-account {
       background-color: rgba(0, 25, 45, 0.1);
       color: var(--primary-color);
@@ -278,36 +280,36 @@ $runningBalance = 0;
       padding: 0.3rem 0.6rem;
       border-radius: 4px;
     }
-    
+
     .page-title {
       font-weight: 700;
       margin-bottom: 0.5rem;
     }
-    
+
     .page-subtitle {
       opacity: 0.8;
       margin-bottom: 0;
     }
-    
+
     .filter-actions {
       display: flex;
       gap: 0.5rem;
       justify-content: flex-end;
     }
-    
+
     @media (max-width: 768px) {
       .export-buttons {
         justify-content: flex-start;
       }
-      
+
       .stats-card .stats-value {
         font-size: 1.5rem;
       }
-      
+
       .filter-actions {
         flex-direction: column;
       }
-      
+
       .filter-actions .btn {
         width: 100%;
       }
@@ -318,223 +320,17 @@ $runningBalance = 0;
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
   <!--begin::App Wrapper-->
   <div class="app-wrapper">
+
     <!--begin::Header-->
-    <nav class="app-header navbar navbar-expand bg-body">
-      <!--begin::Container-->
-      <div class="container-fluid">
-        <!--begin::Start Navbar Links-->
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
-              <i class="bi bi-list"></i>
-            </a>
-          </li>
-          <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
-          <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li>
-        </ul>
-        <!--end::Start Navbar Links-->
-        <!--begin::End Navbar Links-->
-        <ul class="navbar-nav ms-auto">
-          <!--begin::Navbar Search-->
-          <li class="nav-item">
-            <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-              <i class="bi bi-search"></i>
-            </a>
-          </li>
-          <!--end::Navbar Search-->
-          <!--begin::Messages Dropdown Menu-->
-          <li class="nav-item dropdown">
-            <a class="nav-link" data-bs-toggle="dropdown" href="#">
-              <i class="bi bi-chat-text"></i>
-              <span class="navbar-badge badge text-bg-danger">3</span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-              <a href="#" class="dropdown-item">
-                <!--begin::Message-->
-                <div class="d-flex">
-                  <div class="flex-shrink-0">
-                    <img
-                      src="../../../dist/assets/img/user1-128x128.jpg"
-                      alt="User Avatar"
-                      class="img-size-50 rounded-circle me-3" />
-                  </div>
-                  <div class="flex-grow-1">
-                    <h3 class="dropdown-item-title">
-                      Brad Diesel
-                      <span class="float-end fs-7 text-danger"><i class="bi bi-star-fill"></i></span>
-                    </h3>
-                    <p class="fs-7">Call me whenever you can...</p>
-                    <p class="fs-7 text-secondary">
-                      <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                    </p>
-                  </div>
-                </div>
-                <!--end::Message-->
-              </a>
-              <div class="dropdown-divider"></div>
-              <a href="#" class="dropdown-item">
-                <!--begin::Message-->
-                <div class="d-flex">
-                  <div class="flex-shrink-0">
-                    <img
-                      src="../../../dist/assets/img/user8-128x128.jpg"
-                      alt="User Avatar"
-                      class="img-size-50 rounded-circle me-3" />
-                  </div>
-                  <div class="flex-grow-1">
-                    <h3 class="dropdown-item-title">
-                      John Pierce
-                      <span class="float-end fs-7 text-secondary">
-                        <i class="bi bi-star-fill"></i>
-                      </span>
-                    </h3>
-                    <p class="fs-7">I got your message bro</p>
-                    <p class="fs-7 text-secondary">
-                      <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                    </p>
-                  </div>
-                </div>
-                <!--end::Message-->
-              </a>
-              <div class="dropdown-divider"></div>
-              <a href="#" class="dropdown-item">
-                <!--begin::Message-->
-                <div class="d-flex">
-                  <div class="flex-shrink-0">
-                    <img
-                      src="../../../dist/assets/img/user3-128x128.jpg"
-                      alt="User Avatar"
-                      class="img-size-50 rounded-circle me-3" />
-                  </div>
-                  <div class="flex-grow-1">
-                    <h3 class="dropdown-item-title">
-                      Nora Silvester
-                      <span class="float-end fs-7 text-warning">
-                        <i class="bi bi-star-fill"></i>
-                      </span>
-                    </h3>
-                    <p class="fs-7">The subject goes here</p>
-                    <p class="fs-7 text-secondary">
-                      <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                    </p>
-                  </div>
-                </div>
-                <!--end::Message-->
-              </a>
-              <div class="dropdown-divider"></div>
-              <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-            </div>
-          </li>
-          <!--end::Messages Dropdown Menu-->
-          <!--begin::Notifications Dropdown Menu-->
-          <li class="nav-item dropdown">
-            <a class="nav-link" data-bs-toggle="dropdown" href="#">
-              <i class="bi bi-bell-fill"></i>
-              <span class="navbar-badge badge text-bg-warning">15</span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-              <span class="dropdown-item dropdown-header">15 Notifications</span>
-              <div class="dropdown-divider"></div>
-              <a href="#" class="dropdown-item">
-                <i class="bi bi-envelope me-2"></i> 4 new messages
-                <span class="float-end text-secondary fs-7">3 mins</span>
-              </a>
-              <div class="dropdown-divider"></div>
-              <a href="#" class="dropdown-item">
-                <i class="bi bi-people-fill me-2"></i> 8 friend requests
-                <span class="float-end text-secondary fs-7">12 hours</span>
-              </a>
-              <div class="dropdown-divider"></div>
-              <a href="#" class="dropdown-item">
-                <i class="bi bi-file-earmark-fill me-2"></i> 3 new reports
-                <span class="float-end text-secondary fs-7">2 days</span>
-              </a>
-              <div class="dropdown-divider"></div>
-              <a href="#" class="dropdown-item dropdown-footer"> See All Notifications </a>
-            </div>
-          </li>
-          <!--end::Notifications Dropdown Menu-->
-          <!--begin::Fullscreen Toggle-->
-          <li class="nav-item">
-            <a class="nav-link" href="#" data-lte-toggle="fullscreen">
-              <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
-              <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none"></i>
-            </a>
-          </li>
-          <!--end::Fullscreen Toggle-->
-          <!--begin::User Menu Dropdown-->
-          <li class="nav-item dropdown user-menu">
-            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-              <img
-                src="17.jpg"
-                class="user-image rounded-circle shadow"
-                alt="User Image" />
-              <span class="d-none d-md-inline"> <b>JENGO PAY</b> </span>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-              <!--begin::User Image-->
-              <li class="user-header text-bg-primary">
-                <img
-                  src="../../dist/assets/img/user2-160x160.jpg"
-                  class="rounded-circle shadow"
-                  alt="User Image" />
-                <p>
-                  Alexander Pierce - Web Developer
-                  <small>Member since Nov. 2023</small>
-                </p>
-              </li>
-              <!--end::User Image-->
-              <!--begin::Menu Body-->
-              <li class="user-body">
-                <!--begin::Row-->
-                <div class="row">
-                  <div class="col-4 text-center"><a href="#">Followers</a></div>
-                  <div class="col-4 text-center"><a href="#">Sales</a></div>
-                  <div class="col-4 text-center"><a href="#">Friends</a></div>
-                </div>
-                <!--end::Row-->
-              </li>
-              <!--end::Menu Body-->
-              <!--begin::Menu Footer-->
-              <li class="user-footer">
-                <a href="#" class="btn btn-default btn-flat">Profile</a>
-                <a href="#" class="btn btn-default btn-flat float-end">Sign out</a>
-              </li>
-              <!--end::Menu Footer-->
-            </ul>
-          </li>
-          <!--end::User Menu Dropdown-->
-        </ul>
-        <!--end::End Navbar Links-->
-      </div>
-      <!--end::Container-->
-    </nav>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
     <!--end::Header-->
+
     <!--begin::Sidebar-->
-    <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-      <!--begin::Sidebar Brand-->
-      <div class="sidebar-brand">
-        <!--begin::Brand Link-->
-        <a href="./index.html" class="brand-link">
-          <!--begin::Brand Text-->
-          <span class="brand-text font-weight-light"><b class="p-2"
-              style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
-              class="p-2"
-              style=" border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107;">JENGOPAY</b></span>
-        </a>
-        </span>
-        <!--end::Brand Text-->
-        </a>
-        <!--end::Brand Link-->
-      </div>
-      <!--end::Sidebar Brand-->
-      <!--begin::Sidebar Wrapper-->
-      <div> <?php include_once '../../includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
-      <!--end::Sidebar Wrapper-->
-    </aside>
+    <?php include_once '../../includes/sidebar.php'; ?>
     <!--end::Sidebar-->
+
     <!--begin::App Main-->
-    <main class="app-main">
+    <main class="main">
       <!--begin::App Content Header-->
       <div class="app-content-header">
         <!--begin::Container-->
@@ -561,12 +357,12 @@ $runningBalance = 0;
         <!--end::Container-->
       </div>
       <!--end::App Content Header-->
-      
+
       <!--begin::App Content-->
       <div class="app-content">
         <!--begin::Container-->
         <div class="container-fluid">
-          
+
           <!-- Stats Cards -->
           <div class="row mb-4">
             <div class="col-md-3">
@@ -619,7 +415,7 @@ $runningBalance = 0;
               </div>
             </div>
           </div>
-          
+
           <!-- Filters Card -->
           <div class="filter-card">
             <h5 class="mb-3">Filter Transactions</h5>
@@ -655,7 +451,7 @@ $runningBalance = 0;
               </div>
             </form>
           </div>
-          
+
           <!-- Ledger Table -->
           <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
@@ -677,9 +473,9 @@ $runningBalance = 0;
                     </tr>
                   </thead>
                   <tbody>
-                    <?php 
+                    <?php
                     $runningBalance = 0;
-                    foreach ($ledgerRows as $row): 
+                    foreach ($ledgerRows as $row):
                       $runningBalance += $row['debit'] - $row['credit'];
                       $balanceClass = $runningBalance >= 0 ? 'running-balance-positive' : 'running-balance-negative';
                     ?>
@@ -698,7 +494,7 @@ $runningBalance = 0;
                         <td class="text-end <?= $balanceClass ?>"><?= number_format($runningBalance, 2) ?></td>
                       </tr>
                     <?php endforeach; ?>
-                    
+
                     <?php if (empty($ledgerRows)): ?>
                       <tr>
                         <td colspan="7" class="text-center py-4">
@@ -712,13 +508,17 @@ $runningBalance = 0;
               </div>
             </div>
           </div>
-          
+
         </div>
         <!--end::Container-->
       </div>
       <!--end::App Content-->
     </main>
     <!--end::App Main-->
+
+    <!--start footer -->
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
+    <!-- end footer -->
   </div>
   <!--end::App Wrapper-->
 
@@ -739,6 +539,8 @@ $runningBalance = 0;
   <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
+
+  <script src="../../../../landlord/assets/main.js"></script>
   <script src="../../../../landlord/js/adminlte.js"></script>
 
   <script>
@@ -765,13 +567,15 @@ $runningBalance = 0;
     }
 
     function exportToPDF() {
-      const { jsPDF } = window.jspdf;
+      const {
+        jsPDF
+      } = window.jspdf;
       const doc = new jsPDF();
-      
+
       // Add title
       doc.setFontSize(16);
       doc.text('General Ledger Report', 14, 15);
-      
+
       // Add date range if available
       const fromDate = document.getElementById('from_date').value;
       const toDate = document.getElementById('to_date').value;
@@ -779,7 +583,7 @@ $runningBalance = 0;
         doc.setFontSize(10);
         doc.text(`Date Range: ${fromDate} to ${toDate}`, 14, 22);
       }
-      
+
       // Add table
       doc.autoTable({
         html: 'table',
@@ -793,7 +597,7 @@ $runningBalance = 0;
           cellPadding: 2
         }
       });
-      
+
       doc.save('General_Ledger_' + new Date().toISOString().split('T')[0] + '.pdf');
     }
 
@@ -803,7 +607,7 @@ $runningBalance = 0;
       document.getElementById('from_date').value = '';
       document.getElementById('to_date').value = '';
       document.getElementById('account_id').value = '';
-      
+
       // Submit the form to reload the page without filters
       window.location.href = window.location.pathname;
     }

@@ -109,7 +109,7 @@ $netCash = number_format($netCash, 2);
             border: none !important;
         }
 
-        header {
+        tableheader {
             background: linear-gradient(90deg, #00192D, #0b3b6e);
             color: #FFC107;
             padding: 18px 20px;
@@ -118,12 +118,12 @@ $netCash = number_format($netCash, 2);
             align-items: center;
         }
 
-        header h1 {
+        tableheader h1 {
             font-size: 18px;
             margin: 0;
         }
 
-        header p {
+        tableheader p {
             margin: 0;
             opacity: 0.9;
             font-size: 13px;
@@ -190,7 +190,7 @@ $netCash = number_format($netCash, 2);
         }
 
         @media (max-width:640px) {
-            header {
+            tableheader {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 8px
@@ -207,35 +207,17 @@ $netCash = number_format($netCash, 2);
 <body class="layout-fixed sidebar-expand-lg bg-body-dark" style="">
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
+
         <!--begin::Header-->
         <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
         <!--end::Header-->
-        <!--begin::Sidebar-->
-        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-            <!--begin::Sidebar Brand-->
-            <div class="sidebar-brand">
-                <!--begin::Brand Link-->
-                <a href="./index.html" class="brand-link">
 
-                    <!--begin::Brand Text-->
-                    <span class="brand-text font-weight-light"><b class="p-2"
-                            style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
-                            class="p-2"
-                            style=" border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107;">JENGOPAY</b></span>
-                </a>
-                </span>
-                <!--end::Brand Text-->
-                </a>
-                <!--end::Brand Link-->
-            </div>
-            <!--end::Sidebar Brand-->
-            <!--begin::Sidebar Wrapper-->
-            <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
-            <!--end::Sidebar Wrapper-->
-        </aside>
+        <!--begin::Sidebar-->
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?>
         <!--end::Sidebar-->
+
         <!--begin::App Main-->
-        <main class="app-main">
+        <main class="main">
             <!--begin::App Content Header-->
             <div class="app-content-header">
                 <!--begin::Container-->
@@ -247,11 +229,6 @@ $netCash = number_format($netCash, 2);
                         </div>
                         <!--end::Row-->
                     </div>
-                    <!--end::Container-->
-                </div>
-            </div>
-            <div class="app-content">
-                <div class="container-fluid">
                     <div class="row mb-4">
                         <div class="col-md-12 d-flex flex-column justify-content-center">
                             <div class="d-flex justify-content-between">
@@ -260,23 +237,11 @@ $netCash = number_format($netCash, 2);
                                 </div>
 
                                 <div class="d-flex" style="vertical-align: middle;">
-                                    <ul class="nav justify-content-end border-bottom" id="requestNav">
-                                        <li class="nav-item">
-                                            <a class="nav-link active" href="#" data-tab="all">
-                                                Balance sheet
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="#" data-tab="saved">
-                                                Profit and Loss
-                                            </a>
-                                        </li>
-                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row align-items-center p-2 rounded mb-3" style="background-color: #ffffff;">
+                    <div class="row align-items-center p-2 rounded mb-3">
                         <div class="col-md-9">
                             <div class="d-flex gap-3 align-items-center w-100">
                                 <!-- Category Filter -->
@@ -314,7 +279,7 @@ $netCash = number_format($netCash, 2);
                     <div class="row mt-2">
                         <div class="col-md-12">
                             <div class="card border-0 shadow-none" style="border: none !important; box-shadow: none !important;">
-                                <header>
+                                <tableheader>
                                     <div>
                                         <h1>Emmanuel Properties Ltd. — Cash Flow Statement</h1>
                                         <p>For the month of November 2025 (KES)</p>
@@ -324,7 +289,7 @@ $netCash = number_format($netCash, 2);
                                         <p style="font-weight:700">Net Cash Movement: <span style="color:#ffffff"><?= $netCash ?></span></p>
                                         <p style="font-size:12px;margin-top:6px;opacity:0.9">Generated: Nov 12, 2025</p>
                                     </div>
-                                </header>
+                                </tableheader>
 
                                 <table aria-describedby="cf-note">
                                     <caption>Cash flows grouped by activity</caption>
@@ -439,9 +404,9 @@ $netCash = number_format($netCash, 2);
                             </div>
                         </div>
                     </div>
+                    <!--end::Container-->
                 </div>
             </div>
-            <!--end::App Content-->
         </main>
         <!--end::App Main-->
         <!--begin::Footer-->
@@ -455,7 +420,7 @@ $netCash = number_format($netCash, 2);
 
 
     <!-- Main Js File -->
-    <script src="../../../../landlord/js/adminlte.js"></script>
+    <script src="../../../assets/main.js"></script>
     <script type="module" src="js/main.js"></script>
     <!-- html2pdf depends on html2canvas and jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>

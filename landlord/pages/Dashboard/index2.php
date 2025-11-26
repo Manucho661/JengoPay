@@ -123,14 +123,7 @@
       width: 20px;
     }
 
-    .stat-card {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); */
-      margin-bottom: 20px;
-      transition: transform 0.2s;
-    }
+    
 
     .stat-card:hover {
       transform: translateY(-5px);
@@ -303,41 +296,31 @@
       flex: 1;
       overflow-y: auto;
     }
+
+    .stat-card {
+      background: #fff;
+      padding: 18px;
+      /* border-radius: 12px; */
+      /* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); */
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-dark" style="">
   <!--begin::App Wrapper-->
   <div class="app-wrapper">
+
     <!--begin::Header-->
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
     <!--end::Header-->
-    <!--begin::Sidebar-->
-    <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-      <!--begin::Sidebar Brand-->
-      <div class="sidebar-brand">
-        <!--begin::Brand Link-->
-        <a href="./index.html" class="brand-link">
 
-          <!--begin::Brand Text-->
-          <span class="brand-text font-weight-light"><b class="p-2"
-              style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
-              class="p-2"
-              style=" border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107;">JENGOPAY</b></span>
-        </a>
-        </span>
-        <!--end::Brand Text-->
-        </a>
-        <!--end::Brand Link-->
-      </div>
-      <!--end::Sidebar Brand-->
-      <!--begin::Sidebar Wrapper-->
-      <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
-      <!--end::Sidebar Wrapper-->
-    </aside>
+    <!--begin::Sidebar-->
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?>
     <!--end::Sidebar-->
+
     <!--begin::App Main-->
-    <main class="app-main">
+    <main class="main">
       <div class="container-fluid">
         <div class="row">
           <!-- Main Content -->
@@ -345,48 +328,65 @@
             <h2 class="mb-4" style="color: var(--main-color); font-weight: 700;">Dashboard Overview</h2>
 
             <!-- Statistics Cards -->
+            <!-- Bootstrap Icons CDN -->
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+            <!-- Bootstrap Icons CDN -->
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
             <div class="row">
+
+              <!-- Properties -->
               <div class="col-lg-3 col-md-6">
-                <div class="stat-card properties">
-                  <div class="icon">
-                    <i class="fas fa-building"></i>
+                <div class="stat-card d-flex align-items-start rounded-2">
+                  <i class="bi bi-building fs-2 me-3 text-warning"></i>
+                  <div>
+                    <h3 class="mb-0">24</h3>
+                    <p class="mb-1">Total Properties</p>
+                    <small class="text-success"><i class="bi bi-arrow-up"></i> 2 new this month</small>
                   </div>
-                  <h3>24</h3>
-                  <p>Total Properties</p>
-                  <small class="text-success"><i class="fas fa-arrow-up"></i> 2 new this month</small>
                 </div>
               </div>
+
+              <!-- Tenants -->
               <div class="col-lg-3 col-md-6">
-                <div class="stat-card tenants">
-                  <div class="icon">
-                    <i class="fas fa-users"></i>
+                <div class="stat-card d-flex align-items-start rounded-2">
+                  <i class="bi bi-people-fill fs-2 me-3 text-warning"></i>
+                  <div>
+                    <h3 class="mb-0">87</h3>
+                    <p class="mb-1">Active Tenants</p>
+                    <small class="text-muted">95.6% occupancy</small>
                   </div>
-                  <h3>87</h3>
-                  <p>Active Tenants</p>
-                  <small class="text-muted">95.6% occupancy</small>
                 </div>
               </div>
+
+              <!-- Revenue -->
               <div class="col-lg-3 col-md-6">
-                <div class="stat-card revenue">
-                  <div class="icon">
-                    <i class="fas fa-dollar-sign"></i>
+                <div class="stat-card d-flex align-items-start rounded-2">
+                  <i class="bi bi-cash-stack fs-2 me-3 text-warning"></i>
+                  <div>
+                    <h3 class="mb-0">$48,250</h3>
+                    <p class="mb-1">Monthly Revenue</p>
+                    <small class="text-success"><i class="bi bi-arrow-up"></i> +12% from last month</small>
                   </div>
-                  <h3>$48,250</h3>
-                  <p>Monthly Revenue</p>
-                  <small class="text-success"><i class="fas fa-arrow-up"></i> +12% from last month</small>
                 </div>
               </div>
+
+              <!-- Maintenance -->
               <div class="col-lg-3 col-md-6">
-                <div class="stat-card maintenance">
-                  <div class="icon">
-                    <i class="fas fa-exclamation-triangle"></i>
+                <div class="stat-card d-flex align-items-start rounded-2">
+                  <i class="bi bi-exclamation-triangle-fill fs-2 me-3 text-danger"></i>
+                  <div>
+                    <h3 class="mb-0">8</h3>
+                    <p class="mb-1">Pending Requests</p>
+                    <small class="text-danger">3 urgent</small>
                   </div>
-                  <h3>8</h3>
-                  <p>Pending Requests</p>
-                  <small class="text-danger">3 urgent</small>
                 </div>
               </div>
+
             </div>
+
+
 
             <!-- Charts and Properties -->
             <div class="row mt-4">
@@ -539,11 +539,11 @@
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
     <!--end::Footer-->
 
-
-
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
+  <script src="../../../landlord/assets/main.js"></script>
   <script>
     // Revenue Chart
     const ctx = document.getElementById('revenueChart').getContext('2d');
