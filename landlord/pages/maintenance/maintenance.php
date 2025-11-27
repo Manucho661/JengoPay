@@ -179,14 +179,14 @@
             <div class="Table-section bg-white p-2 rounded-2">
               <div class="table-section-header">
                 <div class="entries">
-                  <h6 class="mb-0 contact_section_header summary mb-2 p-2 rounded-top" style="background-color: #00192D; color:#FFA000;"> <span class="text-white">Manucho |</span> 5 entries</h6>
+                  <h6 class="mb-0 contact_section_header summary mb-2 p-2 rounded-top" style="background-color: #00192D; color:#FFA000;"> <span class="text-white">Manucho |</span> <i>5 entries</i></h6>
                 </div>
-                <div class="search-pdf-excel d-flex justify-content-between">
+                <!-- <div class="search-pdf-excel d-flex justify-content-between">
                   <div id="custom-search">
                     <input type="text" id="searchInput" placeholder="Search request...">
                   </div>
                   <div id="custom-buttons"></div>
-                </div>
+                </div> -->
               </div>
               <div style="overflow: auto;">
                 <table id="requests-table" class=" display requests-table">
@@ -205,10 +205,24 @@
                   <tbody id="maintenanceRequestsTableBod">
                   </tbody>
                 </table>
+                <div class="pagination mt-2 d-flex justify-content-end" id="pagination" >
+                  <button class="btn btn-warning m-2">Previous</button>
+                  <button class="btn btn-warning m-2">Next</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- Sixth Row -->
+        <div class="row mt-4">
+          <div class="col-12">
+            <div class="requestsGraph bg-white px-2 rounded-2">
+              <canvas id="requestsGraph" height="100"></canvas>
+            </div>
+          </div>
+        </div>
+
       </div>
       <!--end:: Main Container-->
     </main>
@@ -286,6 +300,8 @@
     <script src="../../assets/main.js"></script>
     <script type="module" src="js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
     </script>
 
