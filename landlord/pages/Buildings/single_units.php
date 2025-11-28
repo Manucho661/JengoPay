@@ -185,7 +185,7 @@
             </div>
             <!--end::Sidebar Brand-->
             <!--begin::Sidebar Wrapper-->
-            <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+            <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> 
             <!--end::Sidebar Wrapper-->
         </aside>
         <!--end::Sidebar-->
@@ -904,6 +904,8 @@ document.addEventListener("DOMContentLoaded", function () {
     <!-- Main Js File -->
     <script src="../../js/adminlte.js"></script>
     <script src="js/main.js"></script>
+    <script src="../../../landlord/assets/main.js"></script>
+
     <!-- html2pdf depends on html2canvas and jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script type="module" src="./js/main.js"></script>
