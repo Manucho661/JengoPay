@@ -3,9 +3,10 @@ import { html, render } from 'https://unpkg.com/lit@3.1.4/index.js?module';
 // fetch requests 
 export async function fetchRequests() {
     const response = await fetch('./actions/get_requests.php');
-    const currentData = await response.json();
-    console.log("Fetched data:", currentData);
-    renderRequestsTable(currentData.data);
+    const requests = await response.json();
+    console.log("Fetched data:", requests);
+    renderRequestsTable(requests.data);
+    chartRequests(requests.data);
 }
 
 function renderRequestsTable(requests) {
@@ -83,3 +84,56 @@ function renderRequestsTable(requests) {
 
     render(rowsTemplate, tableBody);
 }
+
+// CHART SECTION
+function chartRequests(requests) {
+    const grouped = {};
+
+    // Group requests by month
+    requests.forEach(element => {
+        const month = element.created_at.slice(5, 7); // "YYYY-MM"
+        if (!grouped[month]) grouped[month] = 0;
+        grouped[month] += 1; // counting number of requests per month
+    });
+
+    // Convert object to arrays for Chart.js
+    const labels = Object.keys(grouped);   // ["2025-01", "2025-02"]
+    const values = Object.values(grouped); // [5, 3, ...]
+
+    console.log(labels, values);
+
+    // Draw the chart
+    function drawChart(labels, values) {
+        const ctx = document.getElementById('requestsGraph').getContext('2d');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels, // x-axis
+                datasets: [{
+                    label: 'Requests',   // series name
+                    data: values,        // y-axis
+                    borderWidth: 2,
+                    backgroundColor: "rgba(0, 25, 45, 0.2)",
+                    borderColor: "#00192D",
+                    tension: 0.3,
+                    fill: true,
+                    pointBackgroundColor: "#FFC107",
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    drawChart(labels, values);
+}
+
+
