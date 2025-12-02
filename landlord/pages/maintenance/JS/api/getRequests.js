@@ -1,10 +1,15 @@
 import { html, render } from 'https://unpkg.com/lit@3.1.4/index.js?module';
 
 // fetch requests 
-export async function fetchRequests() {
-    const response = await fetch('./actions/get_requests.php');
+export async function fetchRequests(page) {
+    const itemsPerPage = 4;
+    const currentPage = page;
+
+    const response = await fetch(`./actions/getRequests.php?page= ${page}&limit=${itemsPerPage}`);
     const requests = await response.json();
     console.log("Fetched data:", requests);
+    updateInfo(requests.start, requests.end, requests.totalRecords);
+    updatePagination(currentPage, requests.total_pages);
     renderRequestsTable(requests.data);
     chartRequests(requests.data);
 }
@@ -84,6 +89,73 @@ function renderRequestsTable(requests) {
 
     render(rowsTemplate, tableBody);
 }
+
+
+
+// pagination
+function updateInfo(start, end, totalRecords) {
+    document.getElementById('showing-start').textContent = start;
+    document.getElementById('showing-end').textContent = end;
+    document.getElementById('total-records').textContent = totalRecords;
+}
+
+export function updatePagination(currentPage, totalPages) {
+    const pagination = document.getElementById('pagination');
+    pagination.innerHTML = '';
+
+    // Previous button
+    const prevBtn = document.createElement('button');
+    prevBtn.textContent = '« Previous';
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.onclick = () => fetchRequests(currentPage - 1);
+    pagination.appendChild(prevBtn);
+
+    // Page number buttons
+    const startPage = Math.max(1, currentPage - 2);
+    const endPage = Math.min(totalPages, currentPage + 2);
+
+    if (startPage > 1) {
+        const firstBtn = document.createElement('button');
+        firstBtn.textContent = '1';
+        firstBtn.onclick = () => fetchRequests(1);
+        pagination.appendChild(firstBtn);
+
+        if (startPage > 2) {
+            const dots = document.createElement('span');
+            dots.textContent = '...';
+            pagination.appendChild(dots);
+        }
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        const pageBtn = document.createElement('button');
+        pageBtn.textContent = i;
+        pageBtn.className = i === currentPage ? 'active' : '';
+        pageBtn.onclick = () => fetchRequests(i);
+        pagination.appendChild(pageBtn);
+    }
+
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+            const dots = document.createElement('span');
+            dots.textContent = '...';
+            pagination.appendChild(dots);
+        }
+
+        const lastBtn = document.createElement('button');
+        lastBtn.textContent = totalPages;
+        lastBtn.onclick = () => fetchRequests(totalPages);
+        pagination.appendChild(lastBtn);
+    }
+
+    // Next button
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = 'Next »';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.onclick = () => fetchRequests(currentPage + 1);
+    pagination.appendChild(nextBtn);
+}
+
 
 // CHART SECTION
 function chartRequests(requests) {

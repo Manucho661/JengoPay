@@ -100,7 +100,7 @@
             </button>
 
             <button type="button" class="btn bg-warning text-white seTAvailable fw-bold rounded-4" style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">Set All Available</button>
-            <button type="button" class="btn bg-warning text-white seTAvailable fw-bold rounded-4" style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">Set All Unavailable</button>
+
             <button type="button" class="btn bg-warning text-white seTAvailable fw-bold bg-danger border-0 rounded-4" style="color:white; width:100%; white-space: nowrap;">Cancel all Requests</button>
           </div>
         </div>
@@ -177,16 +177,13 @@
         <div class="row">
           <div class="col-md-12">
             <div class="Table-section bg-white p-2 rounded-2">
-              <div class="table-section-header">
-                <div class="entries">
-                  <h6 class="mb-0 contact_section_header summary mb-2 p-2 rounded-top" style="background-color: #00192D; color:#FFA000;"> <span class="text-white">Manucho |</span> <i>5 entries</i></h6>
+              <div class="table-section-header rounded d-flex py-2" style="background-color: #00192D; color:#FFA000;" >
+                <div class="filtered-items text-white mx-3">
+                  Manucho |
                 </div>
-                <!-- <div class="search-pdf-excel d-flex justify-content-between">
-                  <div id="custom-search">
-                    <input type="text" id="searchInput" placeholder="Search request...">
-                  </div>
-                  <div id="custom-buttons"></div>
-                </div> -->
+                <div class="entries">
+                  Showing <span id="showing-start">0</span> to <span id="showing-end">0</span> of <span id="total-records">0</span> records
+                </div>
               </div>
               <div style="overflow: auto;">
                 <table id="requests-table" class=" display requests-table">
@@ -205,9 +202,8 @@
                   <tbody id="maintenanceRequestsTableBod">
                   </tbody>
                 </table>
-                <div class="pagination mt-2 d-flex justify-content-end" id="pagination" >
-                  <button class="btn btn-warning m-2">Previous</button>
-                  <button class="btn btn-warning m-2">Next</button>
+                <div class="pagination mt-2 d-flex justify-content-end" id="pagination">
+
                 </div>
               </div>
             </div>

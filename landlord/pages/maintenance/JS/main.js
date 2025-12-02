@@ -1,13 +1,14 @@
 import { otherRequest } from "./uiControl.js";
 import { submitRequest } from "./api/submitRequest.js";
 
-import { fetchRequests } from "./api/getRequests.js";
+import { fetchRequests} from "./api/getRequests.js";
 document.addEventListener("DOMContentLoaded", () => {
-  fetchRequests();       // Load data into table
 
+  // Load Requests
+  let page = 1;
 
+  fetchRequests(page);
 
-  // 
   const modalEl = document.getElementById('requestModal');
   const modal = new bootstrap.Modal(modalEl);
 

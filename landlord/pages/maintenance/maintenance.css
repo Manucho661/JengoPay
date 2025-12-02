@@ -415,3 +415,38 @@ td .Pending:hover {
     #otherRequestField {
       display: none;
     }
+
+
+    /* pagination styles */
+    .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .pagination button {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background-color: white;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight:400;
+        }
+        .pagination button:hover:not(:disabled) {
+            background-color: #FFC107;
+            color: white;
+        }
+        .pagination button.active {
+            background-color: #FFC107;
+            color: white;
+        }
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .info {
+            text-align: center;
+            color: #666;
+            margin: 10px 0;
+        }
