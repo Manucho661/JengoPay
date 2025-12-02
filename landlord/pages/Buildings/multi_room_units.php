@@ -776,6 +776,8 @@
     <!-- Main Js File -->
     <script src="../../js/adminlte.js"></script>
     <script src="js/main.js"></script>
+    <script src="../../../landlord/assets/main.js"></script>
+
     <!-- html2pdf depends on html2canvas and jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script type="module" src="./js/main.js"></script>

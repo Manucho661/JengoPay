@@ -769,6 +769,8 @@
     <!-- Main Js File -->
     <script src="../../js/adminlte.js"></script>
     <script src="js/main.js"></script>
+    <script src="../../../landlord/assets/main.js"></script>
+
     <!-- html2pdf depends on html2canvas and jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script type="module" src="./js/main.js"></script>
@@ -778,16 +780,16 @@
     <!-- pdf download plugin -->
 
     <!-- Help Pop Up Form -->
-    <?php include_once 'includes/lower_right_popup_form.php' ;?>
+
     </div>
 
     <!-- Footer -->
-    <?php include_once 'includes/footer.php';?>
+    <?php include_once '../includes/footer.php';?>
 
     </div>
 
     <!-- Required Scripts -->
-    <?php include_once 'includes/required_scripts.php';?>
+    <?php include_once '../includes/required_scripts.php';?>
 
 
     <!-- Scripts -->
