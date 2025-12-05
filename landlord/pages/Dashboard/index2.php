@@ -123,7 +123,7 @@
       width: 20px;
     }
 
-    
+
 
     .stat-card:hover {
       transform: translateY(-5px);
@@ -334,57 +334,62 @@
             <!-- Bootstrap Icons CDN -->
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
-            <div class="row">
+            <div class="row g-3">
 
               <!-- Properties -->
-              <div class="col-lg-3 col-md-6">
-                <div class="stat-card d-flex align-items-start rounded-2">
-                  <i class="bi bi-building fs-2 me-3 text-warning"></i>
+              <div class="col-lg-3 col-md-6 d-flex">
+                <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
                   <div>
-                    <h3 class="mb-0">24</h3>
-                    <p class="mb-1">Total Properties</p>
-                    <small class="text-success"><i class="bi bi-arrow-up"></i> 2 new this month</small>
+                    <i class="bi bi-building fs-1 me-3 text-warning"></i>
+                  </div>
+                  <div>
+                    <p class="mb-0" style="font-weight: bold;">Total Properties</p>
+                    <b>24</b>
                   </div>
                 </div>
               </div>
 
               <!-- Tenants -->
-              <div class="col-lg-3 col-md-6">
-                <div class="stat-card d-flex align-items-start rounded-2">
-                  <i class="bi bi-people-fill fs-2 me-3 text-warning"></i>
+              <div class="col-lg-3 col-md-6 d-flex">
+                <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
                   <div>
-                    <h3 class="mb-0">87</h3>
-                    <p class="mb-1">Active Tenants</p>
-                    <small class="text-muted">95.6% occupancy</small>
+                    <i class="bi bi-people-fill fs-1 me-3 text-warning"></i>
+                  </div>
+                  <div>
+                    <p class="mb-0" style="font-weight: bold;">Active Tenants</p>
+                    <b>300</b>
                   </div>
                 </div>
               </div>
 
               <!-- Revenue -->
-              <div class="col-lg-3 col-md-6">
-                <div class="stat-card d-flex align-items-start rounded-2">
-                  <i class="bi bi-cash-stack fs-2 me-3 text-warning"></i>
+              <div class="col-lg-3 col-md-6 d-flex">
+                <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
                   <div>
-                    <h3 class="mb-0">$48,250</h3>
-                    <p class="mb-1">Monthly Revenue</p>
-                    <small class="text-success"><i class="bi bi-arrow-up"></i> +12% from last month</small>
+                    <i class="bi bi-cash-stack fs-1 me-3 text-warning"></i>
+                  </div>
+                  <div>
+                    <p class="mb-0" style="font-weight: bold;">Monthly Revenue</p>
+                    <b>KSH 48,250</b>
                   </div>
                 </div>
               </div>
 
               <!-- Maintenance -->
-              <div class="col-lg-3 col-md-6">
-                <div class="stat-card d-flex align-items-start rounded-2">
-                  <i class="bi bi-exclamation-triangle-fill fs-2 me-3 text-danger"></i>
+              <div class="col-lg-3 col-md-6 d-flex">
+                <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
                   <div>
-                    <h3 class="mb-0">8</h3>
-                    <p class="mb-1">Pending Requests</p>
-                    <small class="text-danger">3 urgent</small>
+                    <i class="bi bi-exclamation-triangle-fill fs-1 me-3 text-warning"></i>
+                  </div>
+                  <div>
+                    <p class="mb-0" style="font-weight: bold;">Pending Requests</p>
+                    <b>8</b>
                   </div>
                 </div>
               </div>
 
             </div>
+
 
 
 

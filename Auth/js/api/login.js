@@ -4,7 +4,7 @@ export async function login(e) {
     const form = e.target;
     const formData = new FormData(form);
     try {
-        const response = await fetch('./actions/login.php', {
+        const response = await fetch('./actions/verifyDetails.php', {
             method: "POST",
             body: formData,
         });
@@ -13,7 +13,7 @@ export async function login(e) {
         console.log(data);
         if (data.userRole === 'provider') {
             // Redirect to provider page
-            window.location.href = '/Jengopay/service-provider/provider.php';
+            window.location.href = '/Jengopay/service/requestOrders.php';
         } else if (data.userRole === 'landlord') {
             // Redirect to employer page
             window.location.href = '/Jengopay/landlord/pages/dashboard/index2.php';

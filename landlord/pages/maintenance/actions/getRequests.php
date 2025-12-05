@@ -58,10 +58,15 @@ try {
     $stmt->execute();
     $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
     // Calculate start and end record numbers for display
     $start = $totalRecords > 0 ? $offset + 1 : 0;
     $end = min($offset + $limit, $totalRecords);
+
+    // data for the graph
+    $stmt1 = $pdo ->prepare("SELECT created_at FROM maintenance_requests");
+    $stmt1->execute();
+    $graphData= $stmt1->fetchAll(PDO::FETCH_ASSOC);
+
 
     echo json_encode([
         'success' => true,
@@ -71,7 +76,8 @@ try {
         'current_page' => $page,
         'per_page' => $limit,
         'start' => $start,
-        'end' => $end
+        'end' => $end,
+        'graphData' => $graphData
     ]);
 } catch (PDOException $e) {
     echo json_encode([

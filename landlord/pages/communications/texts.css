@@ -87,76 +87,6 @@ overflow: auto !important;
 
 
                                       /* SELECT, INPUT, TEXT_AREA */
-input, textarea {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  border: 1px solid #00192D;
-  border-radius: 4px;
-  color: #4f4f52;
-}
-
-input:hover{
-border: 1px solid #FFC107;
-}
-select:hover{
-border: 1px solid #FFC107;
-}
-textarea:hover{
-border: 1px solid #FFC107;
-}
-/* notification popup */
-
-/* Form styles */
-.form-row {
-display: flex;
-justify-content: space-between;
-margin-bottom: 15px;
-}
-
-.form-group {
-width: 48%;
-}
-
-label {
-/* display: block; */
-/* margin-bottom: 5px; */
-font-weight: bold;
-white-space: nowrap;
-}
-
-input {
-width: 100%;
-padding: 8px;
-border: 1px solid #00192D;
-border-radius: 5px;
-}
-.form-control{
-border: 1px solid #00192D;
-}
-
-select {
-appearance: none; /* Hides default arrow in some browsers */
-background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="%23FFC107" d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
-background-size: 16px;
-padding-right: 30px;
-}
-input:focus, select:focus, textarea:focus {
-border-color: #FFC107;
-outline: none;
-box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
-input, select {
-width:30%;
-padding: 10px;
-border: 1px solid #00192D;
-border-radius: 5px;
-font-size: 16px;
-background-color: #fff;
-cursor: pointer;
-margin-right: 20px;
-}
 
 .startDate{
 color: #767676;
@@ -194,9 +124,7 @@ width: 100%;
 color: #4f4f52;
 
 }
-.categoryFilter{
-width: 30%;
-}
+
 .recipient{
  width: 100%;
 padding: 10px;
@@ -226,58 +154,6 @@ width: 25%;
 }
                                /* BUTTONS */
 
-.btn{
-  font: bold !important;
-  letter-spacing: 0.15em;
-  padding: 6px 14px;
-  height: fit-content;
-  background-color: #00192D;
-  color: white;
-  cursor: pointer;
-}
-
-.btn:hover {
-  background-color: #002a4d; /* Slightly lighter blue */
-  transform: scale(1.05); /* Slightly enlarge */
-  color: #FFC107;
-}
-
-.submit-btn {
-  margin-right: 5px;
-  }
-
-  .message-send-button {
-    margin-left: 10px;
-    background-color: transparent;
-    color: green;
-    border: 1px solid #002a4d;
-    /* width: 50%; */
-  }
-
-  .message-input-wrapper {
-    position: relative; /* or 'absolute' if within a container */
-    background: #fff; /* Optional: background for contrast */
-    text-align: right; /* Align button to the right */
-    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow */
-  }
-
-
-/* Close button */
-.close-btn:hover{
-  color: red;
-}
-
-.close-btn {
-position: absolute;
-top: 10px;
-right: 15px;
-font-size: 20px;
-cursor: pointer;
-border: none;
-background: none;
-}
-
-
 .recentChats{
   display: none;
   margin-top: 2px;
@@ -304,16 +180,7 @@ background: none;
   color: red;
   cursor: pointer;
 }
-.automated_message{
-  padding: 2px 4px;
-  font-size: 12px;
-  background-color: transparent;
-  color: green;
-  border: 1px solid #FFC107;
-}
-.new-text{
-  padding: 2px 4px;
-}
+
 .go-back{
   padding: 2px 4px;
   font-size: 12px;
@@ -350,7 +217,7 @@ background: none;
 background-color: #f2f2f2;
 position: relative;
 height:100% ;
-overflow: auto;
+/* overflow: auto; */
 
 }
 .message-profiles{
@@ -529,16 +396,6 @@ border-radius: 100%;
   display: flex;
 }
 
-/* .individual-message-body{ */
-/* height: 100%; */
-/* flex-grow: 1; */
- /* position: relative; */
-/* display: flex; */
-/* height: 90%; */
-/* background-color: #E63946; */
-
-/* } */
-
 /* messages */
 .messages{
 /* height: 27em;  */
@@ -590,16 +447,7 @@ bottom: 0;
 width: 98%;
 }
 
-/*
-.input-area {
-display: flex;
-padding: 10px;
-background: #fff;
-border-top: 1px solid #ddd;
- position: absolute;
-bottom: 0;
-width: 100%;
-} */
+
 .RecentChatNewText-btns{
 display: flex;
 justify-content: end;
@@ -710,9 +558,6 @@ font-weight: bold;
 
 
                                        /*  MESSAGE FILTER SECTION*/
-.filter-section{
-  border:1px solid #E2E2E2; max-height: fit-content; align-items: center;
-}
 
 
 /* File preview container */

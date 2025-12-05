@@ -13,12 +13,12 @@ export async function registerUser(e) {
          
          const data = await response.json();
          console.log(data);
-        // const data = await response.json();
-        // console.log(data);
-        // if (data.userRole === 'provider') {
-        //     // Redirect to provider page
-        //     window.location.href = '/Jengopay/service-provider/provider.php';
-        // } else if (data.userRole === 'landlord') {
+        
+         if (data.status === 'success') {
+             // Redirect to provider page
+             window.location.href = '/Jengopay/auth/login.php';
+         } 
+        //  else if (data.userRole === 'landlord') {
         //     // Redirect to employer page
         //     window.location.href = '/Jengopay/landlord/pages/dashboard/index2.php';
         // } else {

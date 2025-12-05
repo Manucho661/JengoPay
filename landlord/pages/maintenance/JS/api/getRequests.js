@@ -11,7 +11,7 @@ export async function fetchRequests(page) {
     updateInfo(requests.start, requests.end, requests.totalRecords);
     updatePagination(currentPage, requests.total_pages);
     renderRequestsTable(requests.data);
-    chartRequests(requests.data);
+    chartRequests(requests.graphData);
 }
 
 function renderRequestsTable(requests) {
