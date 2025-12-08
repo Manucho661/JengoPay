@@ -28,7 +28,7 @@
         <i class="fas fa-chevron-down chevron" id="communication-chevron"></i>
     </div>
     <div class="submenu" id="communication-submenu">
-        <div class="submenu-item"> <a href="/Jengopay/landlord/pages/communications/texts.php"> In-app Messages</a></div>
+        <div class="submenu-item"> <a href="/Jengopay/landlord/pages/communications/inAppMessages.php"> In-app Messages</a></div>
         <div class="submenu-item"><a href="/Jengopay/landlord/pages/communications/announcements/announcements.php">Announcements</a></div>
         <div class="submenu-item">Emails</div>
     </div>

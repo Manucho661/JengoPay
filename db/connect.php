@@ -1,6 +1,6 @@
 <?php
 $host = 'localhost';
-$db   = 'bt_jengopay';
+$db   = 'bt2_jengopay';
 $user = 'root';
 $pass = '';
 $charset = 'utf8mb4';

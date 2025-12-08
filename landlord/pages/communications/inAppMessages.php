@@ -186,7 +186,7 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
     href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
     integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
     crossorigin="anonymous" />
-  >
+
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -642,16 +642,19 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <div class="col-md-6">
             <p class="text-muted">Send messages, receive messages and create announcements</p>
           </div>
+          <hr>
         </div>
 
         <!--Row Search and call to action buttons -->
-        <div class="row">
-          <div class="col-md-6 d-flex">
+        <!-- First Row: Search and Buttons -->
+        <div class="row mb-2">
+          <div class="col-md-4 d-flex mb-2 mb-md-0">
             <input
               type="text"
               class="form-control filter-shadow"
               placeholder="Search requests..."
-              style="border-radius: 25px 0 0 25px;">
+              style="border-radius: 25px 0 0 25px;"
+              id="searchInput">
 
             <!-- Search Button -->
             <button
@@ -660,52 +663,64 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
               Search
             </button>
           </div>
-          <div class="col-md-6 d-flex d-flex justify-content-end">
-            <button type="button" class="btn rounded-4" id="new_text" style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; white-space: nowrap;" onclick="opennewtextPopup()" class="btn">New Chat</button>
-            <button type="button" class="btn rounded-4" style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; white-space: nowrap;">Automated Messages</button>
+
+          <div class="col-md-8 d-flex justify-content-md-end gap-2">
+            <button
+              type="button"
+              class="btn rounded-4"
+              id="new_text"
+              style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; white-space: nowrap;"
+              onclick="opennewtextPopup()">
+              New Chat
+            </button>
+            <button
+              type="button"
+              class="btn rounded-4"
+              style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; white-space: nowrap;">
+              Automated Messages
+            </button>
           </div>
         </div>
 
-        <div class="row mt-2">
-          <div class="col-md-12 message-container">
-            <div class="row filter-section" id="filter-section">
-              <div class="col-12 message-container-header-section">
-                <div class="row">
-                  <div class="col-md-8 col-12">
-                    <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; margin-bottom: 1rem;">
-                      <select id="buildingSelector" name="id" class="categoryFilter form-select">
-                        <option value="">-- Select Building --</option>
-                        <?php foreach ($buildings as $b): ?>
-                          <option value="<?= htmlspecialchars($b['id']) ?>">
-                            <?= htmlspecialchars($b['building_name']) ?> (<?= htmlspecialchars($b['building_type']) ?>)
-                          </option>
-                        <?php endforeach; ?>
-                      </select>
-                      <input type="text" class="search-input" id="searchInput" placeholder="Search Tenant...">
-                    </div>
-                  </div>
-                  <div class="col-md-4 col-12 RecentChatNewText-btns" style="align-items: center;">
-                    <div class="date d-flex date">
-                      <label class="form-label startDate">Start Date</label>
-                      <input type="date" class="form-control" id="startDate" placeholder="end">
-                    </div>
-                    <div class="date d-flex date">
-                      <label class="form-label endDate">End Date</label>
-                      <input type="date" class="form-control" id="endDate" placeholder="end">
-                    </div>
-                  </div>
+        <!-- Second Row: Building Selector and Date Filters -->
+        <div class="row mb-3">
+          <div class="col-md-5 mb-2 mb-md-0">
+            <select id="buildingSelector" name="id" class="form-select">
+              <option value="">-- Select Building --</option>
+              <?php foreach ($buildings as $b): ?>
+                <option value="<?= htmlspecialchars($b['id']) ?>">
+                  <?= htmlspecialchars($b['building_name']) ?> (<?= htmlspecialchars($b['building_name']) ?>)
+                </option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+
+          <div class="col-md-7">
+            <div class="row g-2">
+              <div class="col-sm-6">
+                <div class="d-flex align-items-center gap-2">
+                  <label class="form-label mb-0 text-nowrap" style="min-width: 80px;">Start Date</label>
+                  <input type="date" class="form-control" id="startDate">
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="d-flex align-items-center gap-2">
+                  <label class="form-label mb-0 text-nowrap" style="min-width: 70px;">End Date</label>
+                  <input type="date" class="form-control" id="endDate">
                 </div>
               </div>
             </div>
-
-            <!-- Start Row messages-summmary -->
-            <div class="row" style="display: none;" id="go-back">
-              <div class="col-md-12 d-flex">
-                <button class="btn go-back mb-1" onclick="myBack()"> <i class="fa-solid fa-arrow-left"></i> Go Back</button>
-              </div>
-            </div>
-            <!-- end row -->
-
+          </div>
+        </div>
+        <!-- Start Row messages-summmary -->
+        <div class="row" style="display: none;" id="go-back">
+          <div class="col-md-12 d-flex">
+            <button class="btn go-back mb-1" onclick="myBack()"> <i class="fa-solid fa-arrow-left"></i> Go Back</button>
+          </div>
+        </div>
+        <!-- end row -->
+        <div class="row mt-2">
+          <div class="col-md-12 message-container">
             <!-- start row -->
             <div class="row align-items-stretch all-messages-summary" id="all-messages-summary">
               <div id="message-summary" class="col-md-12 message-summary">
@@ -775,12 +790,6 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
               </div>
             </div>
             <!-- End Row messages-summmary -->
-
-
-            <!-- start  -->
-
-            <!-- end -->
-
             <div class="row h-100 align-items-stretch" id="individual-message-summmary" style="border:1px solid #E2E2E2; padding: 0 !important; display: none; max-height: 95%;">
               <div id="message-profiles" class="col-md-4  message-profiles">
 

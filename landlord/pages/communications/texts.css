@@ -119,11 +119,7 @@ border: none;
 display: block;
 color: #4f4f52;
 }
-.new-message-body .field-group input, select{
-width: 100%;
-color: #4f4f52;
 
-}
 
 .recipient{
  width: 100%;
