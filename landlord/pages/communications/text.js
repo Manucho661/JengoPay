@@ -34,7 +34,7 @@ function sendMessage() {
 
 // SHOWING THE CHATBOT.
 
-const filter_section = document.getElementById('filter-section');
+// const filter_section = document.getElementById('filter-section');
 const go_back = document.getElementById('go-back');
 
 document.querySelectorAll('.view').forEach(item => {
@@ -74,7 +74,7 @@ document.querySelectorAll('.view').forEach(item => {
     }
 
     all_messages_summary.style.display = "none";
-    filter_section.style.display = "none";
+    // filter_section.style.display = "none";
     individual_message_summary.style.display = "flex";
     go_back.style.display = "flex";
 
@@ -87,7 +87,7 @@ function myBack() {
 
   const individual_message_summary = document.getElementById('individual-message-summmary').style.display = "none";
   const all_messages_summary = document.getElementById('all-messages-summary').style.display = "flex";
-  const fliter_section = document.getElementById('filter-section').style.display = "flex";
+  // const fliter_section = document.getElementById('filter-section').style.display = "flex";
   const go_back = document.getElementById('go-back').style.display = "none";
 }
 

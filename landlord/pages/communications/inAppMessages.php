@@ -188,8 +188,7 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
     crossorigin="anonymous" />
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
@@ -197,7 +196,6 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <style>
     body {
       font-size: 16px;
@@ -642,10 +640,7 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <div class="col-md-6">
             <p class="text-muted">Send messages, receive messages and create announcements</p>
           </div>
-          <hr>
         </div>
-
-        <!--Row Search and call to action buttons -->
         <!-- First Row: Search and Buttons -->
         <div class="row mb-2">
           <div class="col-md-4 d-flex mb-2 mb-md-0">
@@ -712,15 +707,18 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
           </div>
         </div>
-        <!-- Start Row messages-summmary -->
-        <div class="row" style="display: none;" id="go-back">
-          <div class="col-md-12 d-flex">
-            <button class="btn go-back mb-1" onclick="myBack()"> <i class="fa-solid fa-arrow-left"></i> Go Back</button>
-          </div>
-        </div>
-        <!-- end row -->
         <div class="row mt-2">
           <div class="col-md-12 message-container">
+            
+
+            <!-- Start Row messages-summmary -->
+            <div class="row" style="display: none;" id="go-back">
+              <div class="col-md-12 d-flex">
+                <button class="btn go-back mb-1" onclick="myBack()"> <i class="fa-solid fa-arrow-left"></i> Go Back</button>
+              </div>
+            </div>
+            <!-- end row -->
+
             <!-- start row -->
             <div class="row align-items-stretch all-messages-summary" id="all-messages-summary">
               <div id="message-summary" class="col-md-12 message-summary">
@@ -790,6 +788,12 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
               </div>
             </div>
             <!-- End Row messages-summmary -->
+
+
+            <!-- start  -->
+
+            <!-- end -->
+
             <div class="row h-100 align-items-stretch" id="individual-message-summmary" style="border:1px solid #E2E2E2; padding: 0 !important; display: none; max-height: 95%;">
               <div id="message-profiles" class="col-md-4  message-profiles">
 
@@ -878,7 +882,6 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   <div class="messages" id="messages">
                     <div class="message incoming">
                       <div class="message outgoing">
-
                       </div>
                     </div>
                   </div>
