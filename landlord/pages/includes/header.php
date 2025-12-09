@@ -49,6 +49,7 @@
             <i class="fas fa-sign-out-alt"></i> <span>Log Out</span>
         </button>
     </div>
+
     <!-- Notifications Dropdown -->
     <div class="notifications-dropdown" id="notificationsDropdown">
         <div class="notification-header">
@@ -58,4 +59,5 @@
             <!-- Notifications will be loaded here -->
         </div>
     </div>
+    
 </header>

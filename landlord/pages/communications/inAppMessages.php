@@ -709,8 +709,6 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
         <div class="row mt-2">
           <div class="col-md-12 message-container">
-            
-
             <!-- Start Row messages-summmary -->
             <div class="row" style="display: none;" id="go-back">
               <div class="col-md-12 d-flex">
@@ -718,7 +716,6 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
               </div>
             </div>
             <!-- end row -->
-
             <!-- start row -->
             <div class="row align-items-stretch all-messages-summary" id="all-messages-summary">
               <div id="message-summary" class="col-md-12 message-summary">
@@ -788,11 +785,6 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
               </div>
             </div>
             <!-- End Row messages-summmary -->
-
-
-            <!-- start  -->
-
-            <!-- end -->
 
             <div class="row h-100 align-items-stretch" id="individual-message-summmary" style="border:1px solid #E2E2E2; padding: 0 !important; display: none; max-height: 95%;">
               <div id="message-profiles" class="col-md-4  message-profiles">
@@ -933,7 +925,6 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
           </div>
           <!--end::Row-->
-
         </div>
       </div>
     </main>
@@ -946,15 +937,8 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </div>
   <!--end::App Wrapper-->
 
-
-
-
-
-  <!-- Overlays -->
-
   <!-- Script source File -->
   <script src="text.js"></script>
-
 
   <!-- PopUp Scripts -->
 
@@ -1729,9 +1713,6 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
     });
   </script>
 
-
-
-
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const viewButtons = document.querySelectorAll('.btn.view');
@@ -1795,10 +1776,6 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
     document.getElementById("endDate").addEventListener("change", filterByDate);
   </script>
 
-
-  <!-- End  -->
-
-
   </script>
   <script
     src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
@@ -1816,26 +1793,7 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
     crossorigin="anonymous"></script>
   <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
   <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
-  <script>
-    const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-    const Default = {
-      scrollbarTheme: 'os-theme-light',
-      scrollbarAutoHide: 'leave',
-      scrollbarClickScroll: true,
-    };
-    document.addEventListener('DOMContentLoaded', function() {
-      const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-      if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
-        OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-          scrollbars: {
-            theme: Default.scrollbarTheme,
-            autoHide: Default.scrollbarAutoHide,
-            clickScroll: Default.scrollbarClickScroll,
-          },
-        });
-      }
-    });
-  </script>
+  
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       document.querySelectorAll('.msg-image').forEach(img => {
