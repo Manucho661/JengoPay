@@ -298,8 +298,8 @@
                                       <?php
                                         if($row['tenant_status'] == 'Active') {
                                           ?>
-                                            <a class="dropdown-item" href="<?= 'https://wa.me/'.$row['tmain_contact'].'/?text=Hello,'." ". $row['tfirst_name']. '' ?>" target="_blank"><i class="fa fa-whatsapp"></i> WhatsApp</a>
-                                            <a class="dropdown-item" href="messaging.php?mesage=<?= $row['tfirst_name'] ;?>"><i class="fa fa-envelope"></i> Message</a>
+                                            <a class="dropdown-item" href="<?= 'https://wa.me/'.$row['main_contact'].'/?text=Hello,'." ". $row['first_name']. '' ?>" target="_blank"><i class="fa fa-whatsapp"></i> WhatsApp</a>
+                                            <a class="dropdown-item" href="messaging.php?mesage=<?= $row['first_name'] ;?>"><i class="fa fa-envelope"></i> Message</a>
                                             <a class="dropdown-item" href="tenant_profile.php?profile=<?= encryptor('encrypt', $row['id']);?>"><i class="fas fa-newspaper"></i> Profile</a>
                                             <a class="dropdown-item" href="edit_tenant_info.php?edit_tenant=<?= encryptor('encrypt', $row['id']);?>"><i class="fas fa-edit"></i> Edit</a>
                                             <a class="dropdown-item" href="single_unit_tenant_invoice.php?invoice=<?= encryptor('encrypt', $row['id']);?>"><i class="fa fa-newspaper"></i> Invoice</a>
@@ -337,7 +337,7 @@
                                       <input type="hidden" name="occupancy_status" value="Vacant">
                                       <div class="modal-body">
                                         <div class="form-group">
-                                         <p class="text-center"><b><?= htmlspecialchars($row['tfirst_name']).' '.htmlspecialchars($row['tlast_name']);?></b> Will be Vacated from this Unit within this Bulding. Note that Other Actions will be Disabled</p>
+                                         <p class="text-center"><b><?= htmlspecialchars($row['first_name']).' '.htmlspecialchars($row['last_name']);?></b> Will be Vacated from this Unit within this Bulding. Note that Other Actions will be Disabled</p>
                                           <label for="">Occupancy tatus</label>
                                           <input type="text" class="form-control" name="tenant_status" id="tenant_status" value="Vacated" readonly>
                                         </div>
@@ -354,7 +354,7 @@
                               <div class="modal-dialog modal-md">
                                 <div class="modal-content">
                                   <div class="modal-header" style="background-color:#00192D; color:#fff;">
-                                    <b class="modal-title">Shift <?= htmlspecialchars($row['tfirst_name']).' '.htmlspecialchars($row['tmiddle_name']).' '.htmlspecialchars($row['tlast_name']);?></b>
+                                    <b class="modal-title">Shift <?= htmlspecialchars($row['first_name']).' '.htmlspecialchars($row['middle_name']).' '.htmlspecialchars($row['tlast_name']);?></b>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
                                       <span aria-hidden="true">&times;</span>
                                     </button>

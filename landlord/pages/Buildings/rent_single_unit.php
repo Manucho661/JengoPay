@@ -562,7 +562,7 @@ if(isset($_POST['rent_unit'])) {
             icon:'success',
             title:'Success!',
             text:'Tenant saved successfully.'
-        }).then(()=>{ window.location='all_tenants.php'; });
+        }).then(()=>{ window.location='single_units_tenants.php'; });
     </script>";
 
 }
