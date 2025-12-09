@@ -148,17 +148,9 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>AdminLTE | Dashboard v2</title>
-  <!--begin::Primary Meta Tags-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="title" content="AdminLTE | Dashboard v2" />
-  <meta name="author" content="ColorlibHQ" />
-  <meta
-    name="description"
-    content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
-  <meta
-    name="keywords"
-    content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
-  <!--end::Primary Meta Tags-->
+
   <!--begin::Fonts-->
   <link
     rel="stylesheet"
@@ -194,23 +186,16 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
     href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
     integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
     crossorigin="anonymous" />
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-
-
-
-
-
-  <!-- scripts for data_table -->
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <style>
     body {
       font-size: 16px;
@@ -522,18 +507,6 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
         /* Ensure it doesn't get squished if its parent is a flex container */
         flex-shrink: 0;
         flex-grow: 0;
-
-        /* If needed, position it absolutely within the message bubble */
-        /* This can be useful if space is extremely tight and you want it in a fixed corner.
-           Requires the message bubble (parent) to have `position: relative;`. */
-        /*
-        position: absolute;
-        bottom: 5px;
-        right: 5px;
-        background-color: rgba(255, 255, 255, 0.7); // Semi-transparent background
-        padding: 2px 5px;
-        border-radius: 3px;
-        */
       }
 
       /* Reduce margin between the time and the tick icon for tighter spacing */
@@ -630,11 +603,6 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
       margin-right: 5px;
       color: #6c757d;
     }
-
-    .text-muted {
-      color: #6c757d;
-      font-style: italic;
-    }
   </style>
 </head>
 
@@ -646,328 +614,337 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   <!--begin::App Wrapper-->
   <div class="app-wrapper">
+
     <!--begin::Header-->
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
     <!--end::Header-->
+
     <!--begin::Sidebar-->
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?>
     <!--end::Sidebar-->
+
     <!--begin::App Main-->
-    <main class="main">
-      <!--begin::App Content Header-->
-      <div class="app-content-header">
-        <!--begin::Container-->
-        <div class="container-fluid">
-          <!--begin::Row-->
-          <div class="row">
-            <div class="col-sm-8">
+    <main class="main" style="height:100%">
+      <!--begin::Container-->
+      <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+          <div class="col-12">
 
-              <h3 class="mb-0 contact_section_header"> <i class="fas fa-comments title-icon"></i></i> In App Messages</h3>
+            <h3 class="mb-0 contact_section_header"> <i class="fas fa-comments title-icon"></i></i> In App Messages</h3>
+          </div>
+        </div>
+
+        <!-- Second Row -->
+        <div class="row">
+          <div class="col-md-6">
+            <p class="text-muted">Send messages, receive messages and create announcements</p>
+          </div>
+        </div>
+        <!-- First Row: Search and Buttons -->
+        <div class="row mb-2">
+          <div class="col-md-4 d-flex mb-2 mb-md-0">
+            <input
+              type="text"
+              class="form-control filter-shadow"
+              placeholder="Search requests..."
+              style="border-radius: 25px 0 0 25px;"
+              id="searchInput">
+
+            <!-- Search Button -->
+            <button
+              class="btn text-white"
+              style="border-radius: 0 25px 25px 0; background: linear-gradient(135deg, #00192D, #002B5B)">
+              Search
+            </button>
+          </div>
+
+          <div class="col-md-8 d-flex justify-content-md-end gap-2">
+            <button
+              type="button"
+              class="btn rounded-4"
+              id="new_text"
+              style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; white-space: nowrap;"
+              onclick="opennewtextPopup()">
+              New Chat
+            </button>
+            <button
+              type="button"
+              class="btn rounded-4"
+              style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; white-space: nowrap;">
+              Automated Messages
+            </button>
+          </div>
+        </div>
+
+        <!-- Second Row: Building Selector and Date Filters -->
+        <div class="row mb-3">
+          <div class="col-md-5 mb-2 mb-md-0">
+            <select id="buildingSelector" name="id" class="form-select">
+              <option value="">-- Select Building --</option>
+              <?php foreach ($buildings as $b): ?>
+                <option value="<?= htmlspecialchars($b['id']) ?>">
+                  <?= htmlspecialchars($b['building_name']) ?> (<?= htmlspecialchars($b['building_name']) ?>)
+                </option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+
+          <div class="col-md-7">
+            <div class="row g-2">
+              <div class="col-sm-6">
+                <div class="d-flex align-items-center gap-2">
+                  <label class="form-label mb-0 text-nowrap" style="min-width: 80px;">Start Date</label>
+                  <input type="date" class="form-control" id="startDate">
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="d-flex align-items-center gap-2">
+                  <label class="form-label mb-0 text-nowrap" style="min-width: 70px;">End Date</label>
+                  <input type="date" class="form-control" id="endDate">
+                </div>
+              </div>
             </div>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-md-12 message-container">
+            
 
-            <div class="col-sm-4 d-flex justify-content-end">
-              <button class="btn automated_message">Automated Messages</button>
-
+            <!-- Start Row messages-summmary -->
+            <div class="row" style="display: none;" id="go-back">
+              <div class="col-md-12 d-flex">
+                <button class="btn go-back mb-1" onclick="myBack()"> <i class="fa-solid fa-arrow-left"></i> Go Back</button>
+              </div>
             </div>
+            <!-- end row -->
 
+            <!-- start row -->
+            <div class="row align-items-stretch all-messages-summary" id="all-messages-summary">
+              <div id="message-summary" class="col-md-12 message-summary">
+                <div class="message-list p-2" style="display: flex; justify-content: space-between;">
+                  <div class="recent-messages-header">Recent Messages</div>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-hover table-summary-messages" style="border-radius: 20px; flex-grow: 1;">
+                    <thead>
+                      <tr>
+                        <th>DATE</th>
+                        <th>TITLE</th>
+                        <th>SENT BY</th>
+                        <th>SENT TO</th>
+                        <th>ACTION</th>
+                      </tr>
+                    </thead>
+                    <tbody id="conversationTableBody">
+                      <?php if (!empty($communications)): ?>
+                        <?php foreach ($communications as $comm):
+                          $datetime = new DateTime($comm['created_at'] ?? date('Y-m-d H:i:s'));
+                          $date = $datetime->format('d-m-Y');
+                          $time = $datetime->format('h:iA');
+                          $sender = htmlspecialchars($comm['tenant'] ?: 'Tenant');
+                          $email = ''; // Add email logic if needed
+                          $recipient = htmlspecialchars($comm['recipient'] ?? 'Sender Name'); // Adjust key as needed
+                          $title = htmlspecialchars($comm['title']);
+                          $threadId = $comm['thread_id'];
+                        ?>
+                          <tr class="table-row" data-date="<?= $datetime->format('Y-m-d') ?>">
+                            <td class="timestamp">
+                              <div class="date"><?= $date ?></div>
+                              <div class="time"><?= $time ?></div>
+                            </td>
+                            <td class="title"><?= $title ?></td>
+                            <td>
+                              <div class="recipient"><?= $recipient ?></div>
+                            </td>
+                            <td>
+                              <div class="sender"><?= $sender ?></div>
+                              <div class="sender-email"><?= $email ?></div>
+                            </td>
+                            <td>
+                              <button class="btn btn-primary view" onclick="loadConversation(<?= $threadId ?>)">
+                                <i class="bi bi-eye"></i> View
+                              </button>
+                              <button class="btn btn-danger delete" data-thread-id="<?= $threadId ?>">
+                                <i class="bi bi-trash3"></i> Delete
+                              </button>
+                            </td>
+                          </tr>
+                        <?php endforeach; ?>
+                        <tr id="noResultsRow" style="display: none;">
+                          <td colspan="5" class="text-center text-danger">No matching results found.</td>
+                        </tr>
+
+                      <?php else: ?>
+                        <tr>
+                          <td colspan="5" class="text-center">No message available</td>
+                        </tr>
+                      <?php endif; ?>
+
+                    </tbody>
+                  </table>
+
+                </div>
+              </div>
+            </div>
+            <!-- End Row messages-summmary -->
+
+
+            <!-- start  -->
+
+            <!-- end -->
+
+            <div class="row h-100 align-items-stretch" id="individual-message-summmary" style="border:1px solid #E2E2E2; padding: 0 !important; display: none; max-height: 95%;">
+              <div id="message-profiles" class="col-md-4  message-profiles">
+
+                <div class="topic-profiles-header-section d-flex">
+                  <div class="content d-flex">
+                    <div class="individual-details-container">
+                      <div class="content d-flex">
+                        <div class="profile-initials" id="profile-initials">JM</div>
+
+                        <div class="individual-residence d-flex">
+                          <div class="individual-name body">Emmanuel,</div>
+                          <div class="initial-topic-separator">|</div>
+                          <div class="residence mt-2"><?= htmlspecialchars($b['building_name']) ?></div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="h-80 other-topics-section">
+                  <?php foreach ($communications as $comm): ?>
+                    <div class="individual-topic-profiles d-flex"
+                      data-message-id="<?= $comm['thread_id'] ?>"
+                      onclick="loadConversation(this.dataset.messageId)">
+
+                      <div class="individual-topic-profile-container">
+                        <div class="individual-topic"><?= htmlspecialchars($comm['title']) ?></div>
+                        <div class="individual-message mt-2">
+                          <?php if (!empty($comm['last_file'])): ?>
+                            <!-- Show file preview if last message is a file -->
+                            <span class="file-preview">
+                              <i class="fas fa-paperclip"></i>
+                              <?php
+                              $filename = basename($comm['last_file']);
+                              echo htmlspecialchars(mb_strimwidth($filename, 0, 30, '...'));
+                              ?>
+                            </span>
+                          <?php elseif (!empty($comm['last_message'])): ?>
+                            <!-- Show message preview if last message is text -->
+                            <?= htmlspecialchars(mb_strimwidth($comm['last_message'], 0, 60, '...')) ?>
+                          <?php else: ?>
+                            <!-- Fallback if neither exists -->
+                            <span class="text-muted">No messages yet</span>
+                          <?php endif; ?>
+                        </div>
+                      </div>
+
+                      <div class="d-flex justify-content-end time-count">
+                        <div class="time">
+                          <?php
+                          // Prefer last_sent_at if available, else fallback to thread creation
+                          $datetime = !empty($comm['last_sent_at'])
+                            ? new DateTime($comm['last_sent_at'])
+                            : new DateTime($comm['created_at']);
+                          echo $datetime->format('d/m/y H:i');
+                          ?>
+                        </div>
+                        <div class="message-count mt-2">
+                          <?= $comm['unread_count'] > 0 ? $comm['unread_count'] : '' ?>
+                        </div>
+                      </div>
+                    </div>
+                  <?php endforeach; ?>
+                </div>
+
+
+
+              </div>
+
+              <div id="messageBody" class="col-md-8 message-body" style="padding: 0 !important; height:100%;">
+                <div class="individual-message-body-header">
+                  <div class="individual-details-container">
+                    <div class="content">
+                      <div class="individual-residence d-flex" style="align-items: center;">
+                        <div class="profile-initials initials-topic" id="profile-initials-initials-topic"><b>JM</b></div>
+                        <div id="initial-topic-separator" class="initial-topic-separator">|</div>
+                        <div class="individual-topic body">Rental Arrears</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="individual-message-body" style="height: 100%;">
+                  <div class="messages" id="messages">
+                    <div class="message incoming">
+                      <div class="message outgoing">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="input-area">
+                    <!-- Attachment input -->
+                    <input
+                      type="file"
+                      name="file[]"
+                      id="fileInput"
+                      class="form-control"
+                      style="display: none;"
+                      onchange="showFilePreview()"
+                      multiple
+                      accept=".jpg,.jpeg,.png,.gif,.webp,.bmp,.xls,.xlsx,.pdf,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,image/*">
+
+                    <button class="btn attach-button" onclick="document.getElementById('fileInput').click();">
+                      <i class="fa fa-paperclip"></i>
+                    </button>
+
+                    <!-- File preview container -->
+                    <div id="filePreviewContainer" style="display: none; margin-right: 10px; max-width: 200px; flex-wrap: wrap; gap: 10px;">
+                      <div style="display: flex; align-items: center; background: #f5f5f5; padding: 5px; border-radius: 4px;">
+                        <!-- Image thumbnail (shown only for image files) -->
+                        <img id="fileThumbnail" src="" style="max-height: 40px; max-width: 40px; margin-right: 8px; display: none;">
+                        <!-- File info -->
+                        <div style="flex-grow: 1;">
+                          <div id="fileName" style="font-size: 12px; color: #333;"></div>
+                          <div style="font-size: 10px; color: #666;">Click to remove</div>
+                        </div>
+                        <button onclick="clearFileSelection()" style="background: none; border: none; color: #999; cursor: pointer; margin-left: 5px;">×</button>
+                      </div>
+                    </div>
+
+                    <div class="input-box" id="inputBox" contenteditable="true" placeholder="Type your message..."></div>
+
+                    <!-- MESSAGE SEND BUTTON -->
+                    <div class="message-input-wrapper">
+                      <button name="incoming_message" class="btn message-send-button" onclick="sendMessage()">
+                        <i class="fa fa-paper-plane"></i>
+                      </button>
+                    </div>
+                  </div>
+
+
+
+                </div>
+              </div>
+            </div>
           </div>
           <!--end::Row-->
+
         </div>
-        <!--end::Container-->
       </div>
-
-      <div class="app-content" style="flex-grow: 1;">
-        <!--begin::Container-->
-        <div class="container-fluid" style="flex-grow: 1; height:100%">
-
-          <!--begin::Row-->
-          <!-- Message Container -->
-
-          <div class="row" style="height: 100%;">
-            <div class="col-md-12 message-container">
-              <!-- <div class="container" style="border:1px solid #E2E2E2" > -->
-              <div class="row filter-section" id="filter-section">
-                <div class="col-12 message-container-header-section">
-                  <div class="row">
-                    <div class="col-md-8 col-12">
-                      <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; margin-bottom: 1rem;">
-                        <select id="buildingSelector" name="id" class="categoryFilter form-select">
-                          <option value="">-- Select Building --</option>
-                          <?php foreach ($buildings as $b): ?>
-                            <option value="<?= htmlspecialchars($b['id']) ?>">
-                              <?= htmlspecialchars($b['building_name']) ?> (<?= htmlspecialchars($b['building_type']) ?>)
-                            </option>
-                          <?php endforeach; ?>
-                        </select>
-                        <input type="text" class="search-input" id="searchInput" placeholder="Search Tenant...">
-                      </div>
-                    </div>
-                    <div class="col-md-4 col-12 RecentChatNewText-btns" style="align-items: center;">
-                      <div class="date d-flex date">
-                        <label class="form-label startDate">Start Date</label>
-                        <input type="date" class="form-control" id="startDate" placeholder="end">
-                      </div>
-                      <div class="date d-flex date">
-                        <label class="form-label endDate">End Date</label>
-                        <input type="date" class="form-control" id="endDate" placeholder="end">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- </div> -->
-              <!-- </div> -->
-              <!-- Start Row messages-summmary -->
-              <div class="row" style="display: none;" id="go-back">
-                <div class="col-md-12 d-flex">
-                  <button class="btn go-back mb-1" onclick="myBack()"> <i class="fa-solid fa-arrow-left"></i> Go Back</button>
-                </div>
-
-              </div>
-
-              <!-- end row -->
-
-              <!-- Start Row -->
-
-
-              <!-- End Row -->
-
-              <!-- start row -->
-              <div class="row align-items-stretch all-messages-summary" id="all-messages-summary">
-                <div id="message-summary" class="col-md-12 message-summary">
-                  <div class="message-list p-2" style="display: flex; justify-content: space-between;">
-                    <div class="recent-messages-header">Recent Messages</div>
-                    <div>
-                      <button id="new_text" onclick="opennewtextPopup()" class="btn new-text"><i class="bi bi-plus"></i> New Chat</button>
-                    </div>
-                  </div>
-                  <div class="table-responsive">
-                    <table class="table table-hover table-summary-messages" style="border-radius: 20px; flex-grow: 1;">
-                      <thead>
-                        <tr>
-                          <th>DATE</th>
-                          <th>TITLE</th>
-                          <th>SENT BY</th>
-                          <th>SENT TO</th>
-                          <th>ACTION</th>
-                        </tr>
-                      </thead>
-                      <tbody id="conversationTableBody">
-                        <?php if (!empty($communications)): ?>
-                          <?php foreach ($communications as $comm):
-                            $datetime = new DateTime($comm['created_at'] ?? date('Y-m-d H:i:s'));
-                            $date = $datetime->format('d-m-Y');
-                            $time = $datetime->format('h:iA');
-                            $sender = htmlspecialchars($comm['tenant'] ?: 'Tenant');
-                            $email = ''; // Add email logic if needed
-                            $recipient = htmlspecialchars($comm['recipient'] ?? 'Sender Name'); // Adjust key as needed
-                            $title = htmlspecialchars($comm['title']);
-                            $threadId = $comm['thread_id'];
-                          ?>
-                            <tr class="table-row" data-date="<?= $datetime->format('Y-m-d') ?>">
-                              <td class="timestamp">
-                                <div class="date"><?= $date ?></div>
-                                <div class="time"><?= $time ?></div>
-                              </td>
-                              <td class="title"><?= $title ?></td>
-                              <td>
-                                <div class="recipient"><?= $recipient ?></div>
-                              </td>
-                              <td>
-                                <div class="sender"><?= $sender ?></div>
-                                <div class="sender-email"><?= $email ?></div>
-                              </td>
-                              <td>
-                                <button class="btn btn-primary view" onclick="loadConversation(<?= $threadId ?>)">
-                                  <i class="bi bi-eye"></i> View
-                                </button>
-                                <button class="btn btn-danger delete" data-thread-id="<?= $threadId ?>">
-                                  <i class="bi bi-trash3"></i> Delete
-                                </button>
-                              </td>
-                            </tr>
-                          <?php endforeach; ?>
-                          <tr id="noResultsRow" style="display: none;">
-                            <td colspan="5" class="text-center text-danger">No matching results found.</td>
-                          </tr>
-
-                        <?php else: ?>
-                          <tr>
-                            <td colspan="5" class="text-center">No message available</td>
-                          </tr>
-                        <?php endif; ?>
-
-                      </tbody>
-                    </table>
-
-                  </div>
-                </div>
-              </div>
-              <!-- End Row messages-summmary -->
-
-
-              <!-- start  -->
-
-              <!-- end -->
-
-              <div class="row h-100 align-items-stretch" id="individual-message-summmary" style="border:1px solid #E2E2E2; padding: 0 !important; display: none; max-height: 95%;">
-                <div id="message-profiles" class="col-md-4  message-profiles">
-
-                  <div class="topic-profiles-header-section d-flex">
-                    <div class="content d-flex">
-                      <div class="individual-details-container">
-                        <div class="content d-flex">
-                          <div class="profile-initials" id="profile-initials">JM</div>
-
-                          <div class="individual-residence d-flex">
-                            <div class="individual-name body">Emmanuel,</div>
-                            <div class="initial-topic-separator">|</div>
-                            <div class="residence mt-2"><?= htmlspecialchars($b['building_name']) ?></div>
-                          </div>
-
-                        </div>
-                      </div>
-
-                    </div>
-                  </div>
-
-                  <div class="h-80 other-topics-section">
-                    <?php foreach ($communications as $comm): ?>
-                      <div class="individual-topic-profiles d-flex"
-                        data-message-id="<?= $comm['thread_id'] ?>"
-                        onclick="loadConversation(this.dataset.messageId)">
-
-                        <div class="individual-topic-profile-container">
-                          <div class="individual-topic"><?= htmlspecialchars($comm['title']) ?></div>
-                          <div class="individual-message mt-2">
-                            <?php if (!empty($comm['last_file'])): ?>
-                              <!-- Show file preview if last message is a file -->
-                              <span class="file-preview">
-                                <i class="fas fa-paperclip"></i>
-                                <?php
-                                $filename = basename($comm['last_file']);
-                                echo htmlspecialchars(mb_strimwidth($filename, 0, 30, '...'));
-                                ?>
-                              </span>
-                            <?php elseif (!empty($comm['last_message'])): ?>
-                              <!-- Show message preview if last message is text -->
-                              <?= htmlspecialchars(mb_strimwidth($comm['last_message'], 0, 60, '...')) ?>
-                            <?php else: ?>
-                              <!-- Fallback if neither exists -->
-                              <span class="text-muted">No messages yet</span>
-                            <?php endif; ?>
-                          </div>
-                        </div>
-
-                        <div class="d-flex justify-content-end time-count">
-                          <div class="time">
-                            <?php
-                            // Prefer last_sent_at if available, else fallback to thread creation
-                            $datetime = !empty($comm['last_sent_at'])
-                              ? new DateTime($comm['last_sent_at'])
-                              : new DateTime($comm['created_at']);
-                            echo $datetime->format('d/m/y H:i');
-                            ?>
-                          </div>
-                          <div class="message-count mt-2">
-                            <?= $comm['unread_count'] > 0 ? $comm['unread_count'] : '' ?>
-                          </div>
-                        </div>
-                      </div>
-                    <?php endforeach; ?>
-                  </div>
-
-
-
-                </div>
-
-                <div id="messageBody" class="col-md-8 message-body" style="padding: 0 !important; height:100%;">
-                  <div class="individual-message-body-header">
-                    <div class="individual-details-container">
-                      <div class="content">
-                        <div class="individual-residence d-flex" style="align-items: center;">
-                          <div class="profile-initials initials-topic" id="profile-initials-initials-topic"><b>JM</b></div>
-                          <div id="initial-topic-separator" class="initial-topic-separator">|</div>
-                          <div class="individual-topic body">Rental Arrears</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="individual-message-body" style="height: 100%;">
-                    <div class="messages" id="messages">
-                      <div class="message incoming">
-                        <div class="message outgoing">
-
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="input-area">
-                      <!-- Attachment input -->
-                      <input
-                        type="file"
-                        name="file[]"
-                        id="fileInput"
-                        class="form-control"
-                        style="display: none;"
-                        onchange="showFilePreview()"
-                        multiple
-                        accept=".jpg,.jpeg,.png,.gif,.webp,.bmp,.xls,.xlsx,.pdf,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,image/*">
-
-                      <button class="btn attach-button" onclick="document.getElementById('fileInput').click();">
-                        <i class="fa fa-paperclip"></i>
-                      </button>
-
-                      <!-- File preview container -->
-                      <div id="filePreviewContainer" style="display: none; margin-right: 10px; max-width: 200px; flex-wrap: wrap; gap: 10px;">
-                        <div style="display: flex; align-items: center; background: #f5f5f5; padding: 5px; border-radius: 4px;">
-                          <!-- Image thumbnail (shown only for image files) -->
-                          <img id="fileThumbnail" src="" style="max-height: 40px; max-width: 40px; margin-right: 8px; display: none;">
-                          <!-- File info -->
-                          <div style="flex-grow: 1;">
-                            <div id="fileName" style="font-size: 12px; color: #333;"></div>
-                            <div style="font-size: 10px; color: #666;">Click to remove</div>
-                          </div>
-                          <button onclick="clearFileSelection()" style="background: none; border: none; color: #999; cursor: pointer; margin-left: 5px;">×</button>
-                        </div>
-                      </div>
-
-                      <div class="input-box" id="inputBox" contenteditable="true" placeholder="Type your message..."></div>
-
-                      <!-- MESSAGE SEND BUTTON -->
-                      <div class="message-input-wrapper">
-                        <button name="incoming_message" class="btn message-send-button" onclick="sendMessage()">
-                          <i class="fa fa-paper-plane"></i>
-                        </button>
-                      </div>
-                    </div>
-
-
-
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!--end::Row-->
-
-          </div>
-          <!-- /.col -->
-        </div>
-        <!--end::Row-->
-      </div>
-      <!--end::Container-->
-
-      <!--end::App Content-->
     </main>
     <!--end::App Main-->
+
     <!--begin::Footer-->
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
     <!--end::Footer-->
+
   </div>
   <!--end::App Wrapper-->
-  <!--begin::Script-->
-  <!--begin::Third Party Plugin(OverlayScrollbars)-->
 
 
 

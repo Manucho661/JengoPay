@@ -31,24 +31,26 @@ try {
     // Verify hashed password
     if (!password_verify($password, $user['password'])) {
         echo json_encode([
-            "status" => "incorrect_password"
+            "status" => "incorrect_password",
+            "entered_password" => $password,
+            "stored_hash" => $user["password"]
         ]);
         exit;
     }
 
+
     // At this point: login successful
     $_SESSION['user'] = [
         "id" => $user['id'],
-        "name" => $user['first_name'],
+        "name" => $user['username'],
         "role" => $user['role']
     ];
 
     echo json_encode([
         "status" => "Logged in",
-        "userName" => $user['first_name'],
+        "userName" => $user['username'],
         "userRole" => $user['role']
     ]);
-
 } catch (Throwable $e) {
     error_log("Login error: " . $e->getMessage());
     echo json_encode([

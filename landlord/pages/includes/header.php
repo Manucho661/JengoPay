@@ -49,4 +49,13 @@
             <i class="fas fa-sign-out-alt"></i> <span>Log Out</span>
         </button>
     </div>
+    <!-- Notifications Dropdown -->
+    <div class="notifications-dropdown" id="notificationsDropdown">
+        <div class="notification-header">
+            <i class="fas fa-bell me-2"></i>Incoming Messages
+        </div>
+        <div id="notificationsList">
+            <!-- Notifications will be loaded here -->
+        </div>
+    </div>
 </header>

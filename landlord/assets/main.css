@@ -128,6 +128,20 @@
             color: var(--main-color);
         }
 
+        .notifications-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            width: 360px;
+            max-height: 500px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            /* display: none; */
+            z-index: 1000;
+            overflow: hidden;
+        }
+
         /* Sidebar Styles */
         .sidebar {
             grid-area: sidebar;
