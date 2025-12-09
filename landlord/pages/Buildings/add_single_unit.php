@@ -3,15 +3,169 @@
 //  include_once 'includes/lower_right_popup_form.php';
 ?>
 <?php
-    require_once "../db/connect.php";
+// Database connection
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "bt_jengopay";
 
-    $stmt = $pdo->prepare("SELECT id, account_name
-                            FROM chart_of_accounts
-                            WHERE account_name = 'Rental Income'");
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Function to create journal entry
+function createJournalEntry($conn, $date, $description, $entries) {
+    // Start transaction
+    $conn->begin_transaction();
+    
+    try {
+        // Insert into journal_entries table (create this table if not exists)
+        $sql = "INSERT INTO journal_entries (entry_date, description) VALUES (?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ss", $date, $description);
+        $stmt->execute();
+        $journal_id = $conn->insert_id;
+        
+        // Insert each journal entry line
+        $sql = "INSERT INTO journal_entry_lines 
+                (journal_id, account_code, debit_amount, credit_amount) 
+                VALUES (?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        
+        foreach ($entries as $entry) {
+            $stmt->bind_param(
+                "iidd", 
+                $journal_id, 
+                $entry['account_code'],
+                $entry['debit'],
+                $entry['credit']
+            );
+            $stmt->execute();
+        }
+        
+        $conn->commit();
+        return true;
+    } catch (Exception $e) {
+        $conn->rollback();
+        return false;
+    }
+}
+
+// Handle rent payment form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Get form data
+    $monthly_rent = floatval($_POST['monthly_rent']);
+    $tenant_id = $_POST['tenant_id'] ?? null;
+    $property_id = $_POST['property_id'] ?? null;
+    $payment_method = $_POST['payment_method'] ?? 'cash'; // cash, mpesa, bank
+    $payment_date = $_POST['payment_date'] ?? date('Y-m-d');
+    $description = "Rent Payment - " . date('F Y');
+    
+    if ($tenant_id) {
+        $description .= " - Tenant ID: " . $tenant_id;
+    }
+    
+    // Validate amount
+    if ($monthly_rent <= 0) {
+        $response = [
+            'success' => false,
+            'message' => 'Invalid rent amount'
+        ];
+        echo json_encode($response);
+        exit;
+    }
+    
+    // Determine cash/bank account based on payment method
+    $cash_account_code = 100; // Default to Cash (100)
+    
+    switch ($payment_method) {
+        case 'mpesa':
+            $cash_account_code = 110; // M-pesa
+            break;
+        case 'bank':
+            $cash_account_code = 120; // Bank
+            break;
+        case 'cash':
+        default:
+            $cash_account_code = 100; // Cash
+            break;
+    }
+    
+    // Prepare journal entries
+    $entries = [
+        [
+            'account_code' => $cash_account_code, // Cash/M-pesa/Bank account (debit)
+            'debit' => $monthly_rent,
+            'credit' => 0.00
+        ],
+        [
+            'account_code' => 500, // Rental Income account (credit)
+            'debit' => 0.00,
+            'credit' => $monthly_rent
+        ]
+    ];
+    
+    // Create the journal entry
+    $result = createJournalEntry($conn, $payment_date, $description, $entries);
+    
+    if ($result) {
+        // Optionally, update tenant's payment record in another table
+        if ($tenant_id) {
+            $sql = "INSERT INTO tenant_payments 
+                    (tenant_id, property_id, amount, payment_date, payment_method, journal_id) 
+                    VALUES (?, ?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param(
+                "iidssi", 
+                $tenant_id, 
+                $property_id,
+                $monthly_rent,
+                $payment_date,
+                $payment_method,
+                $journal_id
+            );
+            $stmt->execute();
+        }
+        
+        $response = [
+            'success' => true,
+            'message' => 'Rent payment recorded successfully!',
+            'data' => [
+                'amount' => $monthly_rent,
+                'date' => $payment_date,
+                'rent_account' => '500 - Rental Income',
+                'cash_account' => $cash_account_code . ' - ' . getAccountName($conn, $cash_account_code)
+            ]
+        ];
+    } else {
+        $response = [
+            'success' => false,
+            'message' => 'Failed to record payment'
+        ];
+    }
+    
+    echo json_encode($response);
+}
+
+// Helper function to get account name
+function getAccountName($conn, $account_code) {
+    $sql = "SELECT account_name FROM chart_of_accounts WHERE account_code = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $account_code);
     $stmt->execute();
-    $rentAccounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
+    $result = $stmt->get_result();
+    
+    if ($row = $result->fetch_assoc()) {
+        return $row['account_name'];
+    }
+    
+    return "Unknown Account";
+}
 
+$conn->close();
+?>
 
 <!doctype html>
 <html lang="en">
@@ -245,7 +399,6 @@
                                       $ownership_proof = $row['ownership_proof'];
                                       $title_deed = $row['title_deed'];
                                       $legal_document = $row['legal_document'];
-                                      $utilities = $row['utilities'];
                                       $photo_one = $row['photo_one'];
                                       $photo_two = $row['photo_two'];
                                       $photo_three = $row['photo_three'];
@@ -383,7 +536,6 @@
                             }
                     
                         ?>
-                        
                                 <div class="col-md-3 col-sm-6 col-12">
                                     <div class="info-box shadow">
                                         <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i class="bi bi-building"></i></span>
@@ -483,24 +635,10 @@
                                                 <b>Financials and Other Information</b>
                                             </div>
                                             <div class="card-body">
-                                            <div class="form-group">
-    <label>Select Rent Account (Chart of Accounts)</label>
-    <select class="form-control" id="rent_account" name="rent_account" required>
-        <option value="">-- Select Rent Account --</option>
-        <?php foreach ($rentAccounts as $acc): ?>
-            <option value="<?= $acc['id']; ?>">
-                <?= $acc['account_name']; ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
-</div>
-
-<div class="form-group" id="monthly_rent_group" style="display:none;">
-    <label>Monthly Rent Amount (KES)</label>
-    <input type="number" class="form-control" id="monthly_rent" name="monthly_rent" placeholder="Enter Monthly Rent">
-</div>
-
-
+                                                <div class="form-group">
+                                                    <label>Monthly Rent</label>
+                                                    <input type="number" class="form-control" id="monthly_rent" name="monthly_rent" placeholder="Monthly Rent">
+                                                </div>
                                                 <div class="card shadow">
                                                     <div class="card-header" style="background-color:#00192D; color: #fff;">Recurring Bills</div>
                                                     <div class="card-body">
@@ -583,22 +721,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
     <!-- pdf download plugin -->
-    <script>
-    document.getElementById('rent_account').addEventListener('change', function () {
-        let selectedText = this.options[this.selectedIndex].text.trim();
-
-        // Show input only when "Rental Income" is selected
-        if (selectedText === "Rental Income") {
-            document.getElementById('monthly_rent_group').style.display = 'block';
-            document.getElementById('monthly_rent').required = true;
-        } else {
-            document.getElementById('monthly_rent_group').style.display = 'none';
-            document.getElementById('monthly_rent').required = false;
-            document.getElementById('monthly_rent').value = '';
-        }
-    });
-</script>
-
 
 
     <!-- Scripts -->

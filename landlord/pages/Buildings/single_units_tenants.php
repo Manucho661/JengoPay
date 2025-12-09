@@ -196,7 +196,7 @@
                 <section class="content">
         <div class="container-fluid">
           <?php
-            $single_unit_tenants = "SELECT tenant_status, COUNT(*) AS total FROM single_units GROUP BY tenant_status";
+            $single_unit_tenants = "SELECT tenant_status, COUNT(*) AS total FROM tenants GROUP BY tenant_status";
             $result_single_unit_tenants = $pdo->prepare($single_unit_tenants);
             $result_single_unit_tenants->execute();
             //Initialize the countings for all the buildings
@@ -248,7 +248,7 @@
                 <tbody>
                   <?php
                   include_once 'processes/encrypt_decrypt_function.php';
-                    $select = $pdo->prepare("SELECT * FROM single_units ORDER BY tenant_reg DESC");
+                    $select = $pdo->prepare("SELECT * FROM tenants ORDER BY tenant_reg DESC");
                     $select->execute();
                     $row = 0;
                     while($row = $select->fetch()){
@@ -265,12 +265,12 @@
                             </script>";
                             ?>
                               <tr>
-                                <td><?= $row['tfirst_name'].' '.$row['tmiddle_name'];?></td>
+                                <td><?= $row['first_name'].' '.$row['middle_name'];?></td>
                                 <td><?= $row['account_no'].' ('.$row['building_link'].')';?></td>
                                 <td><?= htmlspecialchars($row['unit_category']) ;?></td>
                                 <td>
-                                  <a href="tel:<?= $row['tmain_contact'];?>"><?= $row['tmain_contact'];?></a><br>
-                                  <a href="tel:<?= $row['talt_contact'];?>"> <?= $row['talt_contact'];?></a>
+                                  <a href="tel:<?= $row['main_contact'];?>"><?= $row['main_contact'];?></a><br>
+                                  <a href="tel:<?= $row['alt_contact'];?>"> <?= $row['alt_contact'];?></a>
                               </td>
                                 <td><i class="bi bi-person-vcard"></i> <?= $row['pass_no'].''.$row['id_no']. ' ('.ucfirst($row['idMode']).')';?></td>
                                 <td><?= $row['move_in_date'];?></td>
@@ -298,8 +298,8 @@
                                       <?php
                                         if($row['tenant_status'] == 'Active') {
                                           ?>
-                                            <a class="dropdown-item" href="<?= 'https://wa.me/'.$row['tmain_contact'].'/?text=Hello,'." ". $row['tfirst_name']. '' ?>" target="_blank"><i class="fa fa-whatsapp"></i> WhatsApp</a>
-                                            <a class="dropdown-item" href="messaging.php?mesage=<?= $row['tfirst_name'] ;?>"><i class="fa fa-envelope"></i> Message</a>
+                                            <a class="dropdown-item" href="<?= 'https://wa.me/'.$row['main_contact'].'/?text=Hello,'." ". $row['first_name']. '' ?>" target="_blank"><i class="fa fa-whatsapp"></i> WhatsApp</a>
+                                            <a class="dropdown-item" href="messaging.php?mesage=<?= $row['first_name'] ;?>"><i class="fa fa-envelope"></i> Message</a>
                                             <a class="dropdown-item" href="tenant_profile.php?profile=<?= encryptor('encrypt', $row['id']);?>"><i class="fas fa-newspaper"></i> Profile</a>
                                             <a class="dropdown-item" href="edit_tenant_info.php?edit_tenant=<?= encryptor('encrypt', $row['id']);?>"><i class="fas fa-edit"></i> Edit</a>
                                             <a class="dropdown-item" href="single_unit_tenant_invoice.php?invoice=<?= encryptor('encrypt', $row['id']);?>"><i class="fa fa-newspaper"></i> Invoice</a>
@@ -337,7 +337,7 @@
                                       <input type="hidden" name="occupancy_status" value="Vacant">
                                       <div class="modal-body">
                                         <div class="form-group">
-                                         <p class="text-center"><b><?= htmlspecialchars($row['tfirst_name']).' '.htmlspecialchars($row['tlast_name']);?></b> Will be Vacated from this Unit within this Bulding. Note that Other Actions will be Disabled</p>
+                                         <p class="text-center"><b><?= htmlspecialchars($row['first_name']).' '.htmlspecialchars($row['last_name']);?></b> Will be Vacated from this Unit within this Bulding. Note that Other Actions will be Disabled</p>
                                           <label for="">Occupancy tatus</label>
                                           <input type="text" class="form-control" name="tenant_status" id="tenant_status" value="Vacated" readonly>
                                         </div>
@@ -354,7 +354,7 @@
                               <div class="modal-dialog modal-md">
                                 <div class="modal-content">
                                   <div class="modal-header" style="background-color:#00192D; color:#fff;">
-                                    <b class="modal-title">Shift <?= htmlspecialchars($row['tfirst_name']).' '.htmlspecialchars($row['tmiddle_name']).' '.htmlspecialchars($row['tlast_name']);?></b>
+                                    <b class="modal-title">Shift <?= htmlspecialchars($row['first_name']).' '.htmlspecialchars($row['middle_name']).' '.htmlspecialchars($row['tlast_name']);?></b>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
                                       <span aria-hidden="true">&times;</span>
                                     </button>
@@ -387,7 +387,7 @@
                                             $unit_category = $row['unit_category'];
 
                                             $getVacantSingle = $pdo->prepare("
-                                                SELECT * FROM single_units
+                                                SELECT * FROM tenants
                                                 WHERE unit_category = :unit_category
                                                   AND occupancy_status = 'Vacant'
                                                   AND building_link = :building_link
@@ -664,7 +664,7 @@
           $occupancy_status = $_POST['occupancy_status'] ?? '';
           $tenant_status = $_POST['tenant_status'] ?? '';
             try {
-                $update = $pdo->prepare("UPDATE single_units SET occupancy_status =:occupancy_status, tenant_status = :tenant_status, vacated_on = NOW() WHERE id = :id");
+                $update = $pdo->prepare("UPDATE tenants SET occupancy_status =:occupancy_status, tenant_status = :tenant_status, vacated_on = NOW() WHERE id = :id");
                 $updated = $update->execute([
                     ':occupancy_status' => $occupancy_status,
                     ':tenant_status' => $tenant_status,
@@ -714,7 +714,7 @@
           $newoccupancy_status = 'Occupied';
           
           try {
-            $shiftTenant = $pdo->prepare("UPDATE single_units SET occupancy_status =:occupancy_status WHERE id =:id");
+            $shiftTenant = $pdo->prepare("UPDATE tenants SET occupancy_status =:occupancy_status WHERE id =:id");
             $shiftTenantConfirm = $shiftTenant->execute([
               ':occupancy_status' => $newoccupancy_status,
               ':id' => $tenant_id
@@ -766,7 +766,7 @@
           $hashedPassword = password_hash($password, PASSWORD_DEFAULT); //Secure the Password
           try {
             //Check for the Existance of the Same Username in the Database to avoid double regustration
-            $check_username = $pdo->prepare("SELECT * FROM single_units WHERE username =:username");
+            $check_username = $pdo->prepare("SELECT * FROM tenants WHERE username =:username");
             $check_username->execute([
               'username' => $username
             ]);
@@ -799,7 +799,7 @@
                 exit;
             } else {
               //If All is well, Submit data
-              $addInfo = $pdo->prepare("UPDATE single_units SET username =:username, password=:password WHERE id =:id");
+              $addInfo = $pdo->prepare("UPDATE tenants SET username =:username, password=:password WHERE id =:id");
               $addInfo->execute([
                 ':username' => $username,
                 ':password' => $hashedPassword,

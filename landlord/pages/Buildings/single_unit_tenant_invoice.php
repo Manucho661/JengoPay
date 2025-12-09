@@ -1,6 +1,17 @@
 <?php
- require_once "../db/connect.php";
-//  include_once 'includes/lower_right_popup_form.php';
+require_once "../db/connect.php";
+// include_once 'includes/lower_right_popup_form.php';
+
+// Initialize message variables to avoid undefined variable errors
+$successMessage = $successMessage ?? null;
+$errorMessage = $errorMessage ?? null;
+
+// Handle "missing first name" validation
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (empty($_POST['first_name'])) {
+        $errorMessage = "Missing Information: Please enter your First Name.";
+    }
+}
 ?>
 
 <!doctype html>
@@ -162,7 +173,7 @@
             <div class="content-wrapper">
                 <!-- Main content -->
                 <?php
-            include_once 'processes/encrypt_decrypt_function.php';
+            include_once '../processes/encrypt_decrypt_function.php';
             // Initialize $tenant_info to prevent errors if 'invoice' GET param is not set
             $tenant_info = [
                 'tfirst_name' => '', 'tmiddle_name' => '', 'tlast_name' => '',
@@ -171,6 +182,7 @@
             ];
             $monthly_rent = 0;
             $final_bill = 0;
+            $garbage_data = [];
 
             // Fetch Tenant Information from the Database
             if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
@@ -197,6 +209,11 @@
                         } else {
                             $monthly_rent = $tenant_info['monthly_rent'] ?? 0;
                             $final_bill = $tenant_info['final_bill'] ?? 0; // Ensure it's not null
+                            
+                            // FETCH GARBAGE DATA ONLY
+                            $garbage_stmt = $pdo->prepare("SELECT bill, qty, unit_price, subtotal FROM single_unit_bills WHERE unit_id = ? AND bill = 'Garbage'");
+                            $garbage_stmt->execute([$decrypted_id]);
+                            $garbage_data = $garbage_stmt->fetch(PDO::FETCH_ASSOC);
                         }
                     } catch (PDOException $e) {
                         // Log the database error
@@ -291,7 +308,52 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody id="invoiceBody"></tbody>
+                        <tbody id="invoiceBody">
+                        <?php
+// First, display all regular rows (excluding garbage)
+// ... your existing code for other rows here ...
+
+// Then, display garbage row if exists (always last)
+// Then, display garbage row if exists (always last)
+if (!empty($garbage_data)) {
+    $unitPrice = floatval($garbage_data['unit_price']);
+    $quantity = intval($garbage_data['qty']);
+    $totalPrice = floatval($garbage_data['subtotal']);
+    
+    // If subtotal is not provided, calculate from unit price and quantity
+    if ($totalPrice <= 0) {
+        $totalPrice = $unitPrice * $quantity;
+    }
+    
+    $taxType = 'VAT Inclusive';
+    
+    // For VAT Inclusive (16%), the tax calculation should be:
+    // totalPrice = price_including_tax
+    // taxAmount = totalPrice * (16/116)
+    // netPrice = totalPrice - taxAmount
+    $taxAmount = round($totalPrice * (16/116), 2);
+    
+    // The unit price should be the net price (without tax)
+    $netPrice = $totalPrice - $taxAmount;
+    $unitPrice = $quantity > 0 ? $netPrice / $quantity : 0;
+    
+    echo "<tr id='rowGarbage'>";
+    echo "<td>Garbage</td>";
+    echo "<td>Garbage Collection Fee</td>";
+    echo "<td class='unit-price'>" . number_format($unitPrice, 2) . "</td>";
+    echo "<td class='quantity'>" . $quantity . "</td>";
+    echo "<td class='tax-type'>" . $taxType . "</td>";
+    echo "<td class='tax-amount'>" . number_format($taxAmount, 2) . "</td>";
+    echo "<td class='total-price'>" . number_format($totalPrice, 2) . "</td>";
+    echo "<td>";
+    echo "<button type='button' class='btn btn-sm btn-danger' onclick='removeRow(\"rowGarbage\")'>";
+    echo "<i class='fa fa-trash'></i>";
+    echo "</button>";
+    echo "</td>";
+    echo "</tr>";
+}
+?>
+</tbody>
                         <tfoot>
                             <tr><td colspan="6" class="text-end">Subtotal:</td><td id="subtotal" class="text-end">0.00</td><td></td></tr>
                             <tr><td colspan="6" class="text-end">Total Tax:</td><td id="totalTax" class="text-end">0.00</td><td></td></tr>
@@ -343,7 +405,15 @@
                 <div class="mb-3">
                     <label for="drawerItemName" class="form-label">Paid For <span class="text-danger">*</span></label>
                     <select class="form-control" id="drawerItemName" onchange="checkDrawerOthersInput(this)" required>
-                        <!-- Options will be populated by JS -->
+                        <option value="Rent">Rent</option>
+                        <option value="Water">Water</option>
+                        <option value="Garbage">Garbage</option>
+                        <option value="Electricity">Electricity</option>
+                        <option value="Maintenance">Maintenance</option>
+                        <option value="Parking">Parking</option>
+                        <option value="Internet">Internet</option>
+                        <option value="Security">Security</option>
+                        <option value="Other">Other</option>
                     </select>
                     <input type="text" class="form-control mt-2 d-none" id="drawerOtherInput" placeholder="Please specify">
                 </div>
@@ -369,7 +439,7 @@
                     </select>
                 </div> <hr>
                 <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-sm shadow text-white" style="background-color:#00192D;" style="background-color:#00192D;"><i class="fa fa-plus"></i> Add Item</button>
+                    <button type="submit" class="btn btn-sm shadow text-white" style="background-color:#00192D;"><i class="fa fa-plus"></i> Add Item</button>
                     <button type="button" class="btn btn-sm text-white shadow" onclick="closeAddItemDrawer()" style="background-color:#cc0001;"><i class="fa fa-close"></i> Cancel</button>
                 </div>
             </form>
@@ -392,33 +462,229 @@
     <!-- Meter Readings JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
- 
-            </div>
-        </main>
-        <!--end::App Main-->
-        <!--begin::Footer-->
-        <footer class="app-footer">
-            <!--begin::To the end-->
-            <div class="float-end d-none d-sm-inline">Anything you want</div>
-            <!--end::To the end-->
-            <!--begin::Copyright-->
-            <strong>
-                Copyright &copy; 2014-2024&nbsp;
-                <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;">JENGO PAY</a>.
-            </strong>
-            All rights reserved.
-            <!--end::Copyright-->
-        </footer>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Calculate initial totals based on database data
+        calculateTotals();
+        
+        // Set today's date as invoice date and due date (30 days from now)
+        const today = new Date();
+        const dueDate = new Date();
+        dueDate.setDate(today.getDate() + 30);
+        
+        document.getElementById('invoiceDate').valueAsDate = today;
+        document.getElementById('dateDue').valueAsDate = dueDate;
+        
+        // Generate invoice number
+        const invoiceNumber = 'INV-' + today.getFullYear() + '-' + 
+                             String(today.getMonth() + 1).padStart(2, '0') + '-' + 
+                             Math.floor(1000 + Math.random() * 9000);
+        document.getElementById('invoiceNumber').value = invoiceNumber;
+    });
 
-    </div>
-    <!--end::App Wrapper-->
+    function calculateTotals() {
+        let subtotal = 0;
+        let totalTax = 0;
+        
+        // Loop through all rows in the invoice body
+        const rows = document.querySelectorAll('#invoiceBody tr');
+        rows.forEach(row => {
+            const totalPriceCell = row.querySelector('.total-price');
+            const taxAmountCell = row.querySelector('.tax-amount');
+            
+            if (totalPriceCell && taxAmountCell) {
+                const totalPrice = parseFloat(totalPriceCell.textContent.replace(/,/g, '')) || 0;
+                const taxAmount = parseFloat(taxAmountCell.textContent.replace(/,/g, '')) || 0;
+                
+                subtotal += totalPrice;
+                totalTax += taxAmount;
+            }
+        });
+        
+        // Update footer totals
+        document.getElementById('subtotal').textContent = subtotal.toFixed(2);
+        document.getElementById('totalTax').textContent = totalTax.toFixed(2);
+        document.getElementById('finalTotal').textContent = (subtotal + totalTax).toFixed(2);
+        
+        // Update hidden fields
+        document.getElementById('subtotalValue').value = subtotal.toFixed(2);
+        document.getElementById('totalTaxValue').value = totalTax.toFixed(2);
+        document.getElementById('finalTotalValue').value = (subtotal + totalTax).toFixed(2);
+    }
 
-    <!-- plugin for pdf -->
+    function removeRow(rowId) {
+        const row = document.getElementById(rowId);
+        if (row) {
+            row.remove();
+            calculateTotals();
+        }
+    }
 
+    function prepareInvoiceData() {
+        // Gather all invoice items data
+        const items = [];
+        const rows = document.querySelectorAll('#invoiceBody tr');
+        
+        rows.forEach((row, index) => {
+            const cells = row.querySelectorAll('td');
+            if (cells.length >= 7) {
+                const item = {
+                    paidFor: cells[0].textContent.trim(),
+                    description: cells[1].textContent.trim(),
+                    unitPrice: parseFloat(cells[2].textContent.replace(/,/g, '')) || 0,
+                    quantity: parseInt(cells[3].textContent) || 1,
+                    taxType: cells[4].textContent.trim(),
+                    taxAmount: parseFloat(cells[5].textContent.replace(/,/g, '')) || 0,
+                    totalPrice: parseFloat(cells[6].textContent.replace(/,/g, '')) || 0
+                };
+                items.push(item);
+            }
+        });
+        
+        // Store in hidden field as JSON
+        document.getElementById('invoiceItems').value = JSON.stringify(items);
+        
+        // Calculate final values
+        calculateTotals();
+        
+        return true; // Allow form submission
+    }
+
+    // Functions for the add item drawer
+    function openAddItemDrawer() {
+        document.getElementById('addItemDrawer').classList.add('show');
+        document.getElementById('addItemDrawerBackdrop').classList.add('show');
+    }
+
+    function closeAddItemDrawer() {
+        document.getElementById('addItemDrawer').classList.remove('show');
+        document.getElementById('addItemDrawerBackdrop').classList.remove('show');
+        document.getElementById('addItemForm').reset();
+        document.getElementById('drawerOtherInput').classList.add('d-none');
+    }
+
+    // Handle add item form submission
+    document.getElementById('addItemForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        let itemName = document.getElementById('drawerItemName').value;
+        if (itemName === 'Other') {
+            itemName = document.getElementById('drawerOtherInput').value.trim();
+            if (!itemName) {
+                alert('Please specify the item name');
+                return;
+            }
+        }
+        
+        const description = document.getElementById('drawerDescription').value || itemName;
+        const unitPrice = parseFloat(document.getElementById('drawerUnitPrice').value) || 0;
+        const quantity = parseInt(document.getElementById('drawerQuantity').value) || 1;
+        const taxType = document.getElementById('drawerTaxType').value;
+        
+        // Calculate tax amount
+        const totalPrice = unitPrice * quantity;
+        let taxAmount = 0;
+        if (taxType === 'VAT Inclusive') {
+            taxAmount = totalPrice * 0.16;
+        } else if (taxType === 'VAT Exclusive') {
+            taxAmount = totalPrice * 0.16;
+        }
+        
+        // Add row to table
+        const rowId = 'row' + Date.now(); // Unique ID
+        const newRow = document.createElement('tr');
+        newRow.id = rowId;
+        newRow.innerHTML = `
+            <td>${itemName}</td>
+            <td>${description}</td>
+            <td class="unit-price">${unitPrice.toFixed(2)}</td>
+            <td class="quantity">${quantity}</td>
+            <td class="tax-type">${taxType}</td>
+            <td class="tax-amount">${taxAmount.toFixed(2)}</td>
+            <td class="total-price">${totalPrice.toFixed(2)}</td>
+            <td>
+                <button type="button" class="btn btn-sm btn-danger" onclick="removeRow('${rowId}')">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </td>
+        `;
+        
+        document.getElementById('invoiceBody').appendChild(newRow);
+        
+        // Recalculate totals
+        calculateTotals();
+        
+        // Close drawer and reset form
+        closeAddItemDrawer();
+    });
+
+    function checkDrawerOthersInput(select) {
+        const otherInput = document.getElementById('drawerOtherInput');
+        if (select.value === 'Other') {
+            otherInput.classList.remove('d-none');
+            otherInput.required = true;
+        } else {
+            otherInput.classList.add('d-none');
+            otherInput.required = false;
+        }
+    }
+    </script>
+    
+    <script>
+    letfunction calculateRowTotal(row) {
+    let unitPrice = parseFloat($(row).find('.unit-price').text()) || 0;
+    let quantity = parseFloat($(row).find('.quantity').text()) || 0;
+    let taxType = $(row).find('.tax-type').text().trim();
+    
+    let netTotal = unitPrice * quantity;
+    let taxAmount = 0;
+    let totalPrice = 0;
+    
+    if (taxType === 'VAT Inclusive') {
+        // For VAT Inclusive: total = netTotal * 1.16
+        totalPrice = netTotal * 1.16;
+        taxAmount = totalPrice * (16/116);
+    } else if (taxType === 'VAT Exclusive') {
+        // For VAT Exclusive: tax = netTotal * 0.16, total = netTotal + tax
+        taxAmount = netTotal * 0.16;
+        totalPrice = netTotal + taxAmount;
+    } else {
+        // No tax
+        totalPrice = netTotal;
+        taxAmount = 0;
+    }
+    
+    // Update the row
+    $(row).find('.tax-amount').text(taxAmount.toFixed(2));
+    $(row).find('.total-price').text(totalPrice.toFixed(2));
+    
+    return { netTotal, taxAmount, totalPrice };
+}
+
+function updateTotals() {
+    let subtotal = 0;
+    let totalTax = 0;
+    let finalTotal = 0;
+    
+    $('#invoiceBody tr').each(function() {
+        let rowTotal = parseFloat($(this).find('.total-price').text()) || 0;
+        let rowTax = parseFloat($(this).find('.tax-amount').text()) || 0;
+        
+        finalTotal += rowTotal;
+        totalTax += rowTax;
+        subtotal = finalTotal - totalTax;
+    });
+    
+    $('#subtotal').text(subtotal.toFixed(2));
+    $('#totalTax').text(totalTax.toFixed(2));
+    $('#finalTotal').text(finalTotal.toFixed(2));
+}
+}
+    </script>
 
     <!-- Main Js File -->
     <script src="../../js/adminlte.js"></script>
-    <script src="js/main.js"></script>
+    <script src="../js/main.js"></script>
     <!-- html2pdf depends on html2canvas and jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script type="module" src="./js/main.js"></script>
@@ -426,7 +692,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
     <!-- pdf download plugin -->
-
 
     <!-- Scripts -->
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->

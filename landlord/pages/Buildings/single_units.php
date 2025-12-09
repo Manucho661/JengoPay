@@ -196,12 +196,12 @@
                 <section class="content">
                 <div class="container-fluid">
                     <?php
-                    include_once 'processes/encrypt_decrypt_function.php';
+                    include_once '../processes/encrypt_decrypt_function.php';
                     //Submit Single Unit Information
                     if(isset($_POST['submit'])) {
                         try{
                             // Insert unit data
-                            $stmt = $pdo->prepare("INSERT INTO single_units (unit_number, purpose, building_link, location, monthly_rent, occupancy_status)
+                            $stmt = $pdo->prepare("INSERT INTO single_units(unit_number, purpose, building_link, location, monthly_rent, occupancy_status)
                                 VALUES (:unit_number, :purpose, :building_link, :location, :monthly_rent, :occupancy_status)");
                             $stmt->execute([
                                 ':unit_number'      => $_POST['unit_number'],
@@ -849,7 +849,7 @@
     </div>
     <!-- ./wrapper -->
     <!-- Required Scripts -->
-   <?php include_once '../includes/required_scripts.php';?>
+
     <!-- Meter Readings JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
@@ -899,8 +899,6 @@ document.addEventListener("DOMContentLoaded", function () {
     <!--end::App Wrapper-->
 
     <!-- plugin for pdf -->
-
-
     <!-- Main Js File -->
     <script src="../../js/adminlte.js"></script>
     <script src="js/main.js"></script>
