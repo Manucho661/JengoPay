@@ -203,7 +203,7 @@
             <div class="content-wrapper">
                 <!-- Main content -->
                 <section class="content">
-<div class="container-fluid">
+                 <div class="container-fluid">
                     <div class="row">
                         <?php
                             include_once 'processes/encrypt_decrypt_function.php';

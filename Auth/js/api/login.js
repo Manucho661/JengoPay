@@ -4,7 +4,7 @@ export async function login(e) {
     const form = e.target;
     const formData = new FormData(form);
     try {
-        const response = await fetch('./actions/verifyDetails.php', {
+        const response = await fetch('./actions/verifyLoginDetails.php', {
             method: "POST",
             body: formData,
         });

@@ -54,6 +54,84 @@ if (isset($_GET['id'])) {
 
 </head>
 <style>
+  :root {
+    --primary: #00192D;
+    --secondary: #FFC107;
+    --success: #27ae60;
+    --danger: #e74c3c;
+    --warning: #FFC107;
+    --light-bg: #f8f9fa;
+    --accent-color: #FFC107;
+  }
+
+  .card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1.5rem;
+  }
+
+  .card-header {
+    background-color: white;
+    border-bottom: 2px solid var(--accent-color);
+    padding: 1.25rem;
+    font-weight: 600;
+  }
+
+  /* .card h5 {
+    color: var(--main-color);
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--accent-color);
+  } */
+
+  .content-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); */
+    margin-bottom: 20px;
+  }
+
+  .content-card h5 {
+    color: var(--main-color);
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--accent-color);
+  }
+
+  .badge-status {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+  }
+
+  .request-image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--light-bg);
+  }
+
+  .info-row:last-child {
+    border-bottom: none;
+  }
+
+  .info-label {
+    font-weight: 600;
+    color: #6c757d;
+  }
+
+
   .preloader-container {
     display: flex;
     flex-direction: column;
@@ -134,189 +212,274 @@ if (isset($_GET['id'])) {
     </div>
     <main class="main" id="appMain" style="display: none;">
       <!--begin::App Content Header-->
-      <div class="app-content-header mb-2">
-        <div class="container-fluid">
-          <div class="row align-items-center gy-3 gx-2 mb-2">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb" style="">
+          <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/index2.php" style="text-decoration: none;">Home</a></li>
+          <li class="breadcrumb-item"><a href="maintenance.php" style="text-decoration: none;">Requests</a></li>
+          <li class="breadcrumb-item active">Request Details</li>
+        </ol>
+      </nav>
 
-            <!-- Request Name -->
-            <div class="col-lg-4 col-md-6 col-12 d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center flex-wrap gap-3">
-                <div class="request-icon bg-warning text-white"><i class="fas fa-tools"></i></div>
-                <h3 class="mb-0 fw-bold contact_section_header" id="request-name">
-                  <!-- Dynamic request name -->
-                </h3>
+      <!-- Page Title & Actions -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center">
+          <span style="width:5px;height:28px;background:#F5C518;" class="rounded"></span>
+          <h3 class="mb-0 ms-3">Requests details</h3>
+        </div>
+        <div class="d-flex">
+          <button type="button" id="availabilityBtn" class="btn seTAvailable text-white fw-bold bg-warning rounded-4"
+            style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">
+            Set Available
+          </button>
+          <button type="button" class="btn bg-danger text-white seTAvailable fw-bold rounded-4"
+            style="width:100%; white-space: nowrap;">
+            Cancel Request
+          </button>
+          <button type="button" class="btn bg-warning text-white seTAvailable fw-bold rounded-4"
+            style="background: linear-gradient(135deg, #00192D, #002B5B); color:dark; width:100%; white-space: nowrap;">
+            All Requests
+          </button>
+        </div>
+      </div>
+
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="content-card">
+              <h5>Request Information</h5>
+              <!-- <span class="badge bg-warning badge-status">In Progress</span> -->
+              <div class="info-row">
+                <span class="info-label">Category:</span>
+                <span id="request-category"> </span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Title:</span>
+                <span id="request-name"></span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Request ID:</span>
+                <span id="request-id">#REQ-2024-1247</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Property:</span>
+                <span>White House, C17</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Created:</span>
+                <span id="created-at">December 8, 2025</span>
               </div>
 
-
             </div>
-
-            <!-- Request Property -->
-            <div class="col-lg-4 col-md-6 col-12 d-flex align-items-center border-left justify-content-between">
-
-
-              <!-- Optional More Icon (you can hide one if not needed) -->
-              <button class="btn btn-light border-0 d-lg-none mobileNavToggleProperty" id="mobileNavToggleProperty">
-                <i class="bi bi-three-dots fs-5"></i>
-              </button>
-
-              <div id="mobileNavMenuProperty" class="mobile-nav-menu d-none position-absolute bg-white shadow rounded-3 mt-2">
+            <!-- Description & Image -->
+            <div class="content-card">
+              <h5>Description & Photo</h5>
+              <div class="">
+                <p id="request-description"></p>
+                <!-- <p id="request-description"></p> -->
+                <img src="https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=800&h=400&fit=crop" alt="Blocked Sink" class="request-image mt-3">
               </div>
+
             </div>
 
-            <!-- Navigation (desktop only) -->
-            <div class="col-lg-4 d-none d-lg-flex justify-content-end align-items-center">
-            </div>
           </div>
-          <div class="row mt-4 mb-2">
-            <div class="col-md-6">
-              <div class="d-flex align-items-center flex-wrap">
-                <span class="info-box-icon me-2 bg-warning">
-                  <i class="bi bi-house fs-3 text-white"></i>
-                </span>
-                <div class="d-flex align-items-center flex-wrap">
-                  <i><b class="mb-0 me-2" id="request-property"></b></i>
-                  <i><b class="mb-0 text-success" id="request-unit"></b></i>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 d-flex gap-1 flex-nowrap">
-
-              <button type="button" id="availabilityBtn" class="btn seTAvailable text-white fw-bold bg-warning rounded-4"
-                style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">
-                Set Available
-              </button>
-              <!-- style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;"> -->
-              <button type="button" class="btn bg-danger text-white seTAvailable fw-bold rounded-4"
-                style="width:100%; white-space: nowrap;">
-                Cancel Request
-              </button>
-              <button type="button" class="btn bg-warning text-white seTAvailable fw-bold rounded-4"
-                style="background: linear-gradient(135deg, #00192D, #002B5B); color:dark; width:100%; white-space: nowrap;">
-                All Requests
-              </button>
-            </div>
-            <div class="new-messages">
-              <div class="chat-toggle-btn" id="openChatPanel">
-                <i class="bi bi-chat-dots-fill"></i>
-              </div>
-            </div>
-          </div>
-          <div class="row bg-white rounded">
-            <div class="col-md-4 border-right">
-              <div class="card p-3 d-flex flex-row justify-content-between align-items-start border-0 shadow-none" style="height:100%;">
-
-                <div class="d-flex flex-row gap-5">
-                  <div>
-                    <p class="fw-bold mb-1">Budget</p>
-                    <p class="mb-0 fw-bold text-success" id="budget">Set Budget</p>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header">Budget & Timeline</div>
+              <div class="card-body d-flex">
+                <div>
+                  <div class="info-row">
+                    <span class="info-label">Budget:</span>
+                    <span class="text-success fw-bold" id="budget"></span>
                   </div>
-                  <div>
-                    <p class="fw-bold mb-1">Duration</p>
-                    <p class="mb-0 fw-bold text-warning" id="duration">Set Duration</p>
+                  <div class="info-row">
+                    <span class="info-label">Duration:</span>
+                    <span id="duration"></span>
+                  </div>
+                  <div class="info-row">
+                    <span class="info-label">Deadline:</span>
+                    <span class="text-danger">Not set</span>
                   </div>
                 </div>
-
-                <button class="btn btn-warning btn-sm align-self-start " data-bs-toggle="modal" data-bs-target="#durationBudgetModal">
-                  <i class="bi bi-pencil fw-semibold text-white"></i>
-                </button>
-
-              </div>
-            </div>
-
-            <div class="col-md-4 border-right">
-              <div class="card p-3 d-flex flex-row gap-5 border-0 shadow-none d-flex ">
                 <div>
-                  <p class="fw-bold">Provider</p>
-                  <p id="request-provider" class="request-provider text-success">Not Assigned</p>
-                </div>
-                <div>
-                  <p class="fw-bold">Response</p>
-                  <p id="provider_response" style="font-size: 15px; color: #b93232ff;" class="">Not assigned</p>
+                  <button class="mx-4 btn btn-warning btn-sm align-self-start " data-bs-toggle="modal" data-bs-target="#durationBudgetModal">
+                    <i class="bi bi-pencil fw-semibold text-white"></i>
+                  </button>
                 </div>
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="card p-3 d-flex flex-row gap-5 border-0 shadow-none d-flex ">
-                <div>
-                  <p class="fw-bold">Status</p>
-                  <p id="request-status" class="request-status">Not Assigned</p>
+            <div class="card">
+              <div class="card-header">Provider Details</div>
+              <div class="card-body">
+                <div class="text-center mb-3">
+                  <img src="https://ui-avatars.com/api/?name=QuickFix+Plumbing&size=80&background=3498db&color=fff" alt="Provider" class="rounded-circle mb-2">
+                  <h5 class="mb-0">QuickFix Plumbing Services</h5>
+                  <small class="text-muted">Licensed Plumber</small>
                 </div>
-                <div>
-                  <p class="fw-bold">Payment</p>
-                  <p id="request-payment" style="font-size: 15px; color: #b93232ff;" class="">Not assigned</p>
+                <div class="info-row">
+                  <span class="info-label">Contact:</span>
+                  <span>+254 712 345 678</span>
                 </div>
-              </div>
-            </div>
-          </div>
-          <div class="row py-2 bg-white rounded-2 mt-2">
-            <div class="col-md-7 " style="min-height: 100%;">
-              <!-- content displays here -->
-              <!-- Row 2: Category & Description -->
-              <div class="card p-3 shadow-none border-bottom">
-                <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                  <span class="info-box-icon me-2 bg-warning p-2">
-                    <i class="bi bi-info-circle fs-3 text-white p-2"></i>
+                <div class="info-row">
+                  <span class="info-label">Email:</span>
+                  <span>info@quickfix.ke</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Response:</span>
+                  <span><span class="badge bg-success">Accepted</span></span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Rating:</span>
+                  <span>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star-half-alt text-warning"></i>
+                    (4.5)
                   </span>
-                  <span style="font-weight: 600;">Description</span>
-                </div>
-                <div id="request-description" class="text-muted" style="margin-top: 6px; font-size: 15px; color: #333; line-height: 1.6;"></div>
-              </div>
-
-              <!-- Row 3: Photo -->
-              <div class="card p-3 shadow-none mt-2">
-                <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                  <span class="info-box-icon me-2 bg-warning p-2">
-                    <i class="bi bi-image fs-3 text-white p-2"></i>
-                  </span>
-                  <span style="font-weight: 600;">Request Image</span>
-                </div>
-                <img id="request-photo" src="" alt="Photo" class="photo-preview w-100 rounded">
-              </div>
-
-            </div>
-            <div class="col-md-5 border" style="max-height:500px; overflow:auto;">
-              <div class="request-sidebar">
-                <!-- <h3><i class="fa-solid fa-screwdriver-wrench"></i>Request NO 40</h3> -->
-                <div class="d-flex flex-column">
-                  <!-- Secondary Buttons Container -->
-                  <div id="secondaryButtons" class="secondary-buttons p rounded-2" style="background-color: #E6EAF0;">
-                    <button id="paidBtn" class="btn shadow-none">
-                      <i class="fas fa-check-circle me-2"></i> Paid
-                    </button>
-                    <div id="paymentContainer" class="payment-container" style="display: none;">
-                      <p class="text-muted justify-content-between">Choose the Option</p>
-                      <div class="d-flex justify-content-between">
-                        <button class="btn shadow-none">Cash</button>
-                        <button class="btn shadow-none">Mpesa</button>
-                        <button class="btn shadow-none">Bank</button>
-                        <button class="btn shadow-none" id="openRecordPaymentModalBtn">Record</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="search-bar rounded-2">
-                  <div class="text-muted rounded-2 w-100 mb-2 d-flex" style="background-color: #E6EAF0;">
-                    <button onclick="toggleProposalsORotherRequests(proposals-list)" id="proposals" class="btn shadow-none m-1 border-0 shadow-0 flex-fill proposals">Proposals</button>
-                    <button onclick="toggleProposalsORotherRequests(requestList)" id="otherRequests" class="btn shadow-none m-1 border-0 flex-fill">Other Requests</button>
-                  </div>
-                  <div>
-                    <input class="rounded-2" type="text" id="searchInput" placeholder="Search by unit, category, or property...">
-                  </div>
-                  <!-- proposals list -->
-                  <ul id="proposals-list" class="proposals-list visible">
-                    <!-- Details rentered dynamical through Javascript (getProviderProposals.js) -->
-                  </ul>
-                  <!-- request list -->
-                  <ul class="request-list" id="requestList">
-                    <!-- Details rentered dynamical through Javascript (otherRequestDetails.js) -->
-                  </ul>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <div class="row align-items-center gy-3 gx-2 mb-2">
+          <!-- Request Name -->
+          <div class="col-lg-4 col-md-6 col-12 d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center flex-wrap gap-3">
+            </div>
+          </div>
+
+          <!-- Request Property -->
+          <div class="col-lg-4 col-md-6 col-12 d-flex align-items-center border-left justify-content-between">
+
+
+            <!-- Optional More Icon (you can hide one if not needed) -->
+            <button class="btn btn-light border-0 d-lg-none mobileNavToggleProperty" id="mobileNavToggleProperty">
+              <i class="bi bi-three-dots fs-5"></i>
+            </button>
+
+            <div id="mobileNavMenuProperty" class="mobile-nav-menu d-none position-absolute bg-white shadow rounded-3 mt-2">
+            </div>
+          </div>
+
+          <!-- Navigation (desktop only) -->
+          <div class="col-lg-4 d-none d-lg-flex justify-content-end align-items-center">
+          </div>
+        </div>
+        <div class="row mt-4 mb-2">
+          <div class="col-md-6">
+            <div class="d-flex align-items-center flex-wrap">
+              <span class="info-box-icon me-2 bg-warning">
+                <i class="bi bi-house fs-3 text-white"></i>
+              </span>
+              <div class="d-flex align-items-center flex-wrap">
+                <i><b class="mb-0 me-2" id="request-property"></b></i>
+                <i><b class="mb-0 text-success" id="request-unit"></b></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 d-flex gap-1 flex-nowrap">
+
+
+            <!-- style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;"> -->
+
+          </div>
+          <div class="new-messages">
+            <div class="chat-toggle-btn" id="openChatPanel">
+              <i class="bi bi-chat-dots-fill"></i>
+            </div>
+          </div>
+        </div>
+        <div class="row bg-white rounded">
+          <div class="col-md-4 border-right">
+            <div class="card p-3 d-flex flex-row gap-5 border-0 shadow-none d-flex ">
+              <div>
+                <p class="fw-bold">Provider</p>
+                <p id="request-provider" class="request-provider text-success">Not Assigned</p>
+              </div>
+              <div>
+                <p class="fw-bold">Response</p>
+                <p id="provider_response" style="font-size: 15px; color: #b93232ff;" class="">Not assigned</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card p-3 d-flex flex-row gap-5 border-0 shadow-none d-flex ">
+              <div>
+                <p class="fw-bold">Status</p>
+                <p id="request-status" class="request-status">Not Assigned</p>
+              </div>
+              <div>
+                <p class="fw-bold">Payment</p>
+                <p id="request-payment" style="font-size: 15px; color: #b93232ff;" class="">Not assigned</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row py-2 bg-white rounded-2 mt-2">
+          <div class="col-md-7 " style="min-height: 100%;">
+            <!-- content displays here -->
+            <!-- Row 2: Category & Description -->
+            <div class="card p-3 shadow-none border-bottom">
+
+
+            </div>
+
+            <!-- Row 3: Photo -->
+            <div class="card p-3 shadow-none mt-2">
+              <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
+                <span class="info-box-icon me-2 bg-warning p-2">
+                  <i class="bi bi-image fs-3 text-white p-2"></i>
+                </span>
+                <span style="font-weight: 600;">Request Image</span>
+              </div>
+              <img id="request-photo" src="" alt="Photo" class="photo-preview w-100 rounded">
+            </div>
+
+          </div>
+          <div class="col-md-5 border" style="max-height:500px; overflow:auto;">
+            <div class="request-sidebar">
+              <!-- <h3><i class="fa-solid fa-screwdriver-wrench"></i>Request NO 40</h3> -->
+              <div class="d-flex flex-column">
+                <!-- Secondary Buttons Container -->
+                <div id="secondaryButtons" class="secondary-buttons p rounded-2" style="background-color: #E6EAF0;">
+                  <button id="paidBtn" class="btn shadow-none">
+                    <i class="fas fa-check-circle me-2"></i> Paid
+                  </button>
+                  <div id="paymentContainer" class="payment-container" style="display: none;">
+                    <p class="text-muted justify-content-between">Choose the Option</p>
+                    <div class="d-flex justify-content-between">
+                      <button class="btn shadow-none">Cash</button>
+                      <button class="btn shadow-none">Mpesa</button>
+                      <button class="btn shadow-none">Bank</button>
+                      <button class="btn shadow-none" id="openRecordPaymentModalBtn">Record</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="search-bar rounded-2">
+                <div class="text-muted rounded-2 w-100 mb-2 d-flex" style="background-color: #E6EAF0;">
+                  <button onclick="toggleProposalsORotherRequests(proposals-list)" id="proposals" class="btn shadow-none m-1 border-0 shadow-0 flex-fill proposals">Proposals</button>
+                  <button onclick="toggleProposalsORotherRequests(requestList)" id="otherRequests" class="btn shadow-none m-1 border-0 flex-fill">Other Requests</button>
+                </div>
+                <div>
+                  <input class="rounded-2" type="text" id="searchInput" placeholder="Search by unit, category, or property...">
+                </div>
+                <!-- proposals list -->
+                <ul id="proposals-list" class="proposals-list visible">
+                  <!-- Details rentered dynamical through Javascript (getProviderProposals.js) -->
+                </ul>
+                <!-- request list -->
+                <ul class="request-list" id="requestList">
+                  <!-- Details rentered dynamical through Javascript (otherRequestDetails.js) -->
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
     </main>
     <!-- Begin Footer -->
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>

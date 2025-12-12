@@ -122,6 +122,38 @@
             background-color: #003a5d;
             transform: translateY(-2px);
         }
+        /* Basic button styling for the logout/login link */
+/* Basic button styling for the logout/login link */
+.logout-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #00192D; /* New background color */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin-left: 10px; /* Optional, to add space between other items */
+}
+
+/* Icon styling */
+.logout-link i {
+    margin-right: 8px; /* Add space between the icon and text */
+}
+
+/* Hover effect */
+.logout-link:hover {
+    background-color: #00334e; /* Darker shade of #00192D for hover effect */
+    transform: translateY(-2px); /* Slightly lift the button */
+}
+
+/* Focus effect for accessibility */
+.logout-link:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 25, 45, 0.5); /* Lighter blue border on focus */
+}
+
 
         .hamburger {
             display: none;

@@ -158,33 +158,39 @@ export function updatePagination(currentPage, totalPages) {
 
 
 // CHART SECTION
+let requestsChart = null; // GLOBAL Chart.js instance
+
 function chartRequests(requests) {
     const grouped = {};
 
     // Group requests by month
     requests.forEach(element => {
-        const month = element.created_at.slice(5, 7); // "YYYY-MM"
+        const month = element.created_at.slice(5, 7); 
         if (!grouped[month]) grouped[month] = 0;
-        grouped[month] += 1; // counting number of requests per month
+        grouped[month] += 1;
     });
 
-    // Convert object to arrays for Chart.js
-    const labels = Object.keys(grouped);   // ["2025-01", "2025-02"]
-    const values = Object.values(grouped); // [5, 3, ...]
+    const labels = Object.keys(grouped);
+    const values = Object.values(grouped);
 
     console.log(labels, values);
 
-    // Draw the chart
     function drawChart(labels, values) {
         const ctx = document.getElementById('requestsGraph').getContext('2d');
 
-        new Chart(ctx, {
+        // 🛑 Destroy previous chart before creating a new one
+        if (requestsChart !== null) {
+            requestsChart.destroy();
+        }
+
+        // ✅ Create new chart and assign to global variable
+        requestsChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: labels, // x-axis
+                labels: labels,
                 datasets: [{
-                    label: 'Requests',   // series name
-                    data: values,        // y-axis
+                    label: 'Requests',
+                    data: values,
                     borderWidth: 2,
                     backgroundColor: "rgba(0, 25, 45, 0.2)",
                     borderColor: "#00192D",
@@ -197,9 +203,7 @@ function chartRequests(requests) {
             options: {
                 responsive: true,
                 scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+                    y: { beginAtZero: true }
                 }
             }
         });

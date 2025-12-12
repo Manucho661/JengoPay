@@ -4,29 +4,30 @@ export async function submitRequest(e, modal) {
     e.preventDefault();
 
     const form = document.getElementById('requestForm');
-    const otherField = document.getElementById('otherRequestField');
-    const specifyRequest = document.getElementById('specifyRequest');
+    // const otherField = document.getElementById('otherRequestField');
+    // const specifyRequest = document.getElementById('specifyRequest');
 
-    // Validate other field if visible
-    if (otherField.style.display === 'block' && !specifyRequest.value.trim()) {
-        specifyRequest.setCustomValidity('Please specify your request');
-        specifyRequest.reportValidity();
-        return;
-    } else {
-        specifyRequest.setCustomValidity('');
-    }
+    // // Validate other field if visible
+    // if (otherField.style.display === 'block' && !specifyRequest.value.trim()) {
+    //     specifyRequest.setCustomValidity('Please specify your request');
+    //     specifyRequest.reportValidity();
+    //     return;
+    // } else {
+    //     specifyRequest.setCustomValidity('');
+    // }
 
-    if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-    }
+    // if (!form.checkValidity()) {
+    //     form.reportValidity();
+    //     return;
+    // }
 
     // Build FormData (important — this sends files + fields properly)
     const fd = new FormData();
     fd.append('category', document.getElementById('category').value);
-    const requestValue = otherField.style.display === 'block' ? specifyRequest.value : document.getElementById('request').value;
-    fd.append('request', requestValue);
+    // const requestValue = otherField.style.display === 'block' ? specifyRequest.value : document.getElementById('request').value;
+    fd.append('request', document.getElementById('priority').value);
     fd.append('description', document.getElementById('description').value);
+    fd.append('title', document.getElementById('request_title').value);
 
     // If your file input has id "photoUpload" and allows multiple, append all files with name 'photos[]'
     const fileInput = document.getElementById('photoUpload');
@@ -50,8 +51,8 @@ export async function submitRequest(e, modal) {
             // alert('Request submitted successfully!');
             // Reset UI
             form.reset();
-            otherField.style.display = 'none';
-            document.getElementById('otherRequestBtn').textContent = 'Other';
+            // otherField.style.display = 'none';
+            // document.getElementById('otherRequestBtn').textContent = 'Other';
 
             // modal
             modal.hide();

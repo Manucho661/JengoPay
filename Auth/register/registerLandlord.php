@@ -100,12 +100,12 @@
                 </div>
                 <!-- Form -->
                 <div>
-                    <form id="registerForm" class="space-y-6">
+                    <form id="registerLandlordForm" class="space-y-6">
                         <input
                             type="hidden"
                             name="role"
                             id="provider"
-                            value="provider"
+                            value="landlord"
                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-yellow-500 focus:outline-none transition-colors"
                             required>
 

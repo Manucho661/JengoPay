@@ -1,5 +1,15 @@
 
 
+async function getSummary() {
+    const response = await fetch(`../../actions/getSummary.php`);
+    const summary = await response.json();
+    console.log("Fetched data:", summary);
+
+    document.getElementById('totalProperties').textContent = summary.totalBuildings;
+}
+getSummary();
+
+
 function toggleSubmenu(menuId) {
     const submenu = document.getElementById(menuId + '-submenu');
     const chevron = document.getElementById(menuId + '-chevron');
@@ -42,3 +52,9 @@ window.addEventListener('load', function () {
         sidebar.classList.add('hidden');
     }
 });
+
+// control the notification part at the header
+function toggleNotifications() {
+    const dropdown = document.getElementById('notificationsDropdown');
+    dropdown.classList.toggle('show');
+}

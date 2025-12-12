@@ -31,9 +31,18 @@
             <i class="fas fa-bell"></i>
             <span class="notification-badge">3</span>
         </div>
-        <span class="user-name">John Doe</span>
-        <button class="logout-btn">
-            <i class="fas fa-sign-out-alt"></i> <span>Log Out</span>
-        </button>
+        <span class="user-name">
+            <?php echo ($serviceProvider) ? $serviceProvider : ''; ?>
+        </span>
+
+        <!-- Replaced the button with a link styled as a button -->
+        <a href="<?php echo ($serviceProvider) ? 'logout.php' : '/jengopay/auth/login.php'; ?>" class="logout-link">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>
+                <?php echo ($serviceProvider) ? 'Log Out' : 'Login'; ?>
+            </span>
+        </a>
     </div>
+
+
 </header>

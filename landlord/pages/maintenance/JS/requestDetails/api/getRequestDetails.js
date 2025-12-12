@@ -57,8 +57,12 @@ function fillRequestDetails(request, photos) {
   };
 
   // Basic request details
-  setText(getEl("request-name"), request?.request);
+  setText(getEl("request-name"), request?.title);
+  setText(getEl("request-category"), request?.category);
+  setText(getEl("request-id"), request?.id);
   setText(getEl("request-property"), request?.residence);
+  setText(getEl("created-at"), request?.created_at);
+  
   setText(getEl("request-unit"), request?.unit);
   setText(getEl("request-provider"), request?.provider_name, "Unassigned");
   setText(getEl("request-description"), request?.description, "No description provided");

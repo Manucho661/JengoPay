@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -33,7 +37,12 @@
     <main class="main" style=" height:100%;">
       <!--begin::Container-->
       <div class="container-fluid">
-
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb" style="">
+            <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/index2.php" style="text-decoration: none;">Home</a></li>
+            <li class="breadcrumb-item active">Requests</li>
+          </ol>
+        </nav>
         <!--First Row-->
         <div class="row align-items-center mb-3">
           <div class="col-12 d-flex align-items-center">
@@ -247,27 +256,31 @@
                   <option value="electrical">Electrical</option>
                   <option value="maintenance">Maintenance</option>
                   <option value="cleaning">Cleaning</option>
+                  <option value="cleaning">Other</option>
                 </select>
               </div>
 
-              <!-- Request -->
+              <!-- Priority level -->
               <div class="mb-3">
-                <label for="request" class="form-label">Request</label>
-                <select class="form-select" id="request" name="request" required>
-                  <option value="">Select a request</option>
-                  <option value="repair">Repair</option>
-                  <option value="installation">Installation</option>
-                  <option value="inspection">Inspection</option>
-                  <option value="replacement">Replacement</option>
+                <label for="priority" class="form-label">Priority Level</label>
+                <select class="form-select" id="priority" name="priority" required>
+                  <option value="">Select a Level</option>
+                  <option value="high">Low</option>
+                  <option value="moderate">Moderate</option>
+                  <option value="high">High</option>
                 </select>
-                <button type="button" class="btn btn-sm mt-2" id="otherRequestBtn">Other</button>
+                <!-- <button type="button" class="btn btn-sm mt-2" id="otherRequestBtn">Other</button> -->
               </div>
 
+              <div class="mb-3">
+                <label for="priority" class="form-label">Title</label>
+                <input type="text" class="form-control" id="request_title" name="title" placeholder="Enter request title">
+              </div>
               <!-- Other Request Field (Hidden by default) -->
-              <div class="mb-3" id="otherRequestField">
+              <!-- <div class="mb-3" id="otherRequestField">
                 <label for="specifyRequest" class="form-label">Specify Request</label>
                 <input type="text" class="form-control" id="specifyRequest" name="custom_request" placeholder="Enter your specific request">
-              </div>
+              </div> -->
 
               <!-- Description -->
               <div class="mb-3">

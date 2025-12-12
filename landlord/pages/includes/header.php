@@ -17,7 +17,7 @@
             <i class="fas fa-home" style="color: var(--accent-color);"></i>
             <div>
                 <div style="font-size: 0.75rem; color: #adb5bd;">Total Properties</div>
-                <div style="font-weight: 600; color: var(--main-color);">24</div>
+                <div style="font-weight: 600; color: var(--main-color);" id="totalProperties"></div>
             </div>
         </div>
         <div style="display: flex; align-items: center; gap: 0.5rem; color: #6c757d;">
@@ -36,7 +36,7 @@
         </div>
     </div>
     <div class="header-right">
-        <div class="notification-icon">
+        <div class="notification-icon" onclick="toggleNotifications()">
             <i class="fas fa-envelope"></i>
             <span class="notification-badge">5</span>
         </div>
@@ -44,11 +44,25 @@
             <i class="fas fa-bell"></i>
             <span class="notification-badge">3</span>
         </div>
-        <span class="user-name">John Doe</span>
+
+        <span class="user-name">
+            <?php
+            $fullName = $_SESSION['user']['name'];   // e.g. "mildred wanyonyi"
+
+            // Get first name only
+            $firstName = explode(" ", trim($fullName))[0];
+
+            // Ensure first letter is uppercase
+            echo ucfirst(strtolower($firstName));
+            ?>
+        </span>
+
+
         <button class="logout-btn">
             <i class="fas fa-sign-out-alt"></i> <span>Log Out</span>
         </button>
     </div>
+
 
     <!-- Notifications Dropdown -->
     <div class="notifications-dropdown" id="notificationsDropdown">
@@ -59,5 +73,5 @@
             <!-- Notifications will be loaded here -->
         </div>
     </div>
-    
+
 </header>

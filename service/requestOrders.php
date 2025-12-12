@@ -1,17 +1,28 @@
 <?php
+// Start session
+session_start();
+
 // 🔌 Include your PDO database connection
 include '../db/connect.php';
 
+// 📥 Check if the user is logged in and their role is 'provider'
+if (isset($_SESSION['user']['id']) && $_SESSION['user']['role'] === 'provider') {
+    // Get the full name from the session and capitalize the first name
+    $fullName = $_SESSION['user']['name']; // Assuming first_name is like 'john wangui'
+    $serviceProvider = ucwords(strtok($fullName, ' ')); // Get the first word (John)
+} else {
+    $serviceProvider = ''; // Default if user is not logged in or not a provider
+}
+
 // 📥 Fetch maintenance requests using PDO
 try {
-  $stmt = $pdo->prepare("SELECT * FROM maintenance_requests WHERE availability = 'unavailable' ORDER BY request_date DESC");
-  $stmt->execute();
-  $requests = $stmt->fetchAll(PDO::FETCH_ASSOC); // 🎯 Fetch as associative array
+    $stmt = $pdo->prepare("SELECT * FROM maintenance_requests WHERE availability = 'unavailable' ORDER BY created_at DESC");
+    $stmt->execute();
+    $requests = $stmt->fetchAll(PDO::FETCH_ASSOC); // 🎯 Fetch as associative array
 } catch (PDOException $e) {
-  die("Query failed: " . $e->getMessage());
+    die("Query failed: " . $e->getMessage());
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">

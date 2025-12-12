@@ -107,7 +107,37 @@ const requestsTemplate = (data) => html`
                 </div>
               </div>
             `)
-          : html`<p class="text-danger">No requests available.</p>`
+          : html`<div class="bg-white rounded p-4 text-center border">
+    <div class="mb-3">
+        <svg
+            class="mx-auto" 
+            style="height: 60px; width: 60px; color: #6c757d;"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+            />
+        </svg>
+    </div>
+
+    <h3 class="h5 fw-semibold text-dark mb-2">
+        No Jobs Available
+    </h3>
+
+    <p class="text-muted mb-3">
+        There are currently no such job postings. Check back later for new opportunities!
+    </p>
+
+    <button class="btn btn-warning px-4 py-2">
+        Get Notified
+    </button>
+</div>
+`
         : html`
             <div class="job-card mb-3 p-3 bg-white shadow-sm rounded">
               <div class="d-flex justify-content-between">
@@ -201,7 +231,41 @@ function fillRequests(requests) {
     } else {
         const requestList = requests.data || []; // Use the 'data' property for the requests array
         if (requestList.length === 0) {
-            container.innerHTML = `<p class="text-danger">No requests available.</p>`;
+            container.innerHTML = `<div class="bg-white rounded p-4 text-center border">
+
+    <div class="mb-3">
+        <svg
+            class="mx-auto d-block"
+            style="height: 60px; width: 60px; color: #6c757d;"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+            />
+        </svg>
+    </div>
+
+    <h3 class="h5 fw-semibold text-dark mb-2">
+        No Jobs Available
+    </h3>
+
+    <p class="text-muted mb-3">
+        Stay tuned for more job opportunities coming soon!
+    </p>
+
+    <button class="btn btn-warning px-4 py-2">
+        Get Notified
+    </button>
+
+</div>
+
+
+`;
         } else {
             render(requestsTemplate(requestList), container); // Pass only the requests array to the template
         }

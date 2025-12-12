@@ -1,5 +1,5 @@
 <?php
- require_once "../db/connect.php";
+require_once "../db/connect.php";
 //  include_once 'includes/lower_right_popup_form.php';
 ?>
 
@@ -52,7 +52,7 @@
 
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-        <link rel="stylesheet" href="../../assets/main.css" />
+    <link rel="stylesheet" href="../../assets/main.css" />
     <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
@@ -165,116 +165,98 @@
         <!--begin::Header-->
         <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
         <!--end::Header-->
-        <!--begin::Sidebar-->
-        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-            <!--begin::Sidebar Brand-->
-            <div class="sidebar-brand">
-                <!--begin::Brand Link-->
-                <a href="./index.html" class="brand-link">
 
-                    <!--begin::Brand Text-->
-                    <span class="brand-text font-weight-light"><b class="p-2"
-                            style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
-                            class="p-2"
-                            style=" border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107;">JENGOPAY</b></span>
-                </a>
-                </span>
-                <!--end::Brand Text-->
-                </a>
-                <!--end::Brand Link-->
-            </div>
-            <!--end::Sidebar Brand-->
-            <!--begin::Sidebar Wrapper-->
-            <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
-            <!--end::Sidebar Wrapper-->
-        </aside>
+        <!--begin::Sidebar-->
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?>
+        <!--end::Sidebar Wrapper-->
         <!--end::Sidebar-->
+
         <!--begin::App Main-->
-        <main class="app-main mt-4 mx-2 my-2">
+        <main class="main mt-4 mx-2 my-2">
             <div class="content-wrapper">
                 <!-- Main content -->
                 <section class="content">
-                        <div class="card shadow-sm">
-                            <div class="card-header">
-                                <b>Overview</b>
-                                <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
-                                </div>
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <b>Overview</b>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
                             </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-4 col-sm-6 col-12">
-                                        <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                                            <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i class="fas fa-home"></i></span>
-                                            <div class="info-box-content">
-                                                <span class="info-box-text">Multi-Room Units</span>
-                                                <span class="info-box-number">0</span>
-                                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4 col-sm-6 col-12">
+                                    <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
+                                        <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i class="fas fa-home"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Multi-Room Units</span>
+                                            <span class="info-box-number">0</span>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 col-sm-6 col-12">
-                                        <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                                            <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i class="fas fa-users"></i></span>
-                                            <div class="info-box-content">
-                                                <span class="info-box-text">Occupied Units</span>
-                                                <span class="info-box-number">0</span>
-                                            </div>
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-12">
+                                    <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
+                                        <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i class="fas fa-users"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Occupied Units</span>
+                                            <span class="info-box-number">0</span>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 col-sm-6 col-12">
-                                        <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                                            <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i class="fas fa-home"></i></span>
-                                            <div class="info-box-content">
-                                                <span class="info-box-text">Vacant Units</span>
-                                                <span class="info-box-number">0</span>
-                                            </div>
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-12">
+                                    <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
+                                        <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i class="fas fa-home"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Vacant Units</span>
+                                            <span class="info-box-number">0</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <?php
-                        include_once 'processes/encrypt_decrypt_function.php';
-                        if(isset($_POST['submit_bed_sitter_btn'])) {
-                            try{
-                                        // Insert unit data 
-                                $stmt = $pdo->prepare("
+                    </div>
+                    <?php
+                    include_once 'processes/encrypt_decrypt_function.php';
+                    if (isset($_POST['submit_bed_sitter_btn'])) {
+                        try {
+                            // Insert unit data 
+                            $stmt = $pdo->prepare("
                                     INSERT INTO multi_rooms (unit_number, purpose, building_link, location, water_meter, monthly_rent, occupancy_status)
                                     VALUES (:unit_number, :purpose, :building_link, :location, :water_meter, :monthly_rent, :occupancy_status)");
-                                $stmt->execute([
-                                    ':unit_number'      => $_POST['unit_number'],
-                                    ':purpose'          => $_POST['purpose'],
-                                    ':building_link'    => $_POST['building_link'],
-                                    ':location'         => $_POST['location'],
-                                        ':water_meter'     => (string) $_POST['water_meter'], // decimals handled as strings
-                                        ':monthly_rent' => (string) $_POST['monthly_rent'],
-                                        ':occupancy_status' => $_POST['occupancy_status'],
-                                    ]);
+                            $stmt->execute([
+                                ':unit_number'      => $_POST['unit_number'],
+                                ':purpose'          => $_POST['purpose'],
+                                ':building_link'    => $_POST['building_link'],
+                                ':location'         => $_POST['location'],
+                                ':water_meter'     => (string) $_POST['water_meter'], // decimals handled as strings
+                                ':monthly_rent' => (string) $_POST['monthly_rent'],
+                                ':occupancy_status' => $_POST['occupancy_status'],
+                            ]);
 
-                                $unitId = $pdo->lastInsertId();
+                            $unitId = $pdo->lastInsertId();
 
-                                        // Insert recurring expenses if available
-                                if (!empty($_POST['bill'])) {
-                                    $stmtExp = $pdo->prepare("
+                            // Insert recurring expenses if available
+                            if (!empty($_POST['bill'])) {
+                                $stmtExp = $pdo->prepare("
                                         INSERT INTO multi_roombills (unit_id, bill, qty, unit_price)
                                         VALUES (:unit_id, :bill, :qty, :unit_price)
                                         ");
 
-                                    foreach ($_POST['bill'] as $i => $bill) {
-                                        if (!empty($bill)) {
-                                            $stmtExp->execute([
-                                                ':unit_id'    => $unitId,
-                                                ':bill'       => $bill,
-                                                ':qty'        => (int) $_POST['qty'][$i],
-                                                ':unit_price' => (string) $_POST['unit_price'][$i],
-                                            ]);
-                                        }
+                                foreach ($_POST['bill'] as $i => $bill) {
+                                    if (!empty($bill)) {
+                                        $stmtExp->execute([
+                                            ':unit_id'    => $unitId,
+                                            ':bill'       => $bill,
+                                            ':qty'        => (int) $_POST['qty'][$i],
+                                            ':unit_price' => (string) $_POST['unit_price'][$i],
+                                        ]);
                                     }
                                 }
+                            }
 
-                                echo '<div id="countdown" class="alert alert-success" role="alert"></div>
+                            echo '<div id="countdown" class="alert alert-success" role="alert"></div>
                                 <script>
                                 var timeleft = 10;
                                 var downloadTimer = setInterval(function(){
@@ -287,327 +269,327 @@
                                     timeleft -= 1;
                                     }, 1000);
                                     </script>';
-                                } catch(PDOException $e){
-                                    echo "❌ Database error: " . $e->getMessage();
-                                }
-                            }
-                            ?>
-                            <!-- Container Box -->
-                            <div class="card shadow">
-                                <div class="card-header">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <b>All Multi Room Units</b>
-                                        </div>
-                                        <div class="col-md-6 text-right">
-                                        </div>
-                                    </div>
+                        } catch (PDOException $e) {
+                            echo "❌ Database error: " . $e->getMessage();
+                        }
+                    }
+                    ?>
+                    <!-- Container Box -->
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <b>All Multi Room Units</b>
                                 </div>
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-hover" id="dataTable">
-                                            <thead>
-                                                <th>Unit No</th>
-                                                <th>Building</th>
-                                                <th>Purpose</th>
-                                                <th>Monthly Rent</th>
-                                                <th>Water Meter</th>
-                                                <th>Occupancy Status</th>
-                                                <th>Added On</th>
-                                                <th>Options</th>
-                                            </thead>
-                                            <tbody>
-                                                <?php
-                                                try{
-                                                    $select = "SELECT * FROM multi_rooms_units";
-                                                    $stmt = $pdo->prepare($select);
-                                                    $stmt->execute();
-                                                    while($row = $stmt->fetch()){
-                                                        $id = encryptor('encrypt', $row['id']);
-                                                        $unit_number = $row['unit_number'];
-                                                        $building_link = $row['building_link'];
-                                                        $purpose = $row['purpose'];
-                                                        $location = $row['location'];
-                                                        $monthly_rent = $row['monthly_rent'];
-                                                        $water_meter = $row['water_meter'];
-                                                        $occupancy_status = $row['occupancy_status'];
-                                                        $created_at = $row['created_at'];
+                                <div class="col-md-6 text-right">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="dataTable">
+                                    <thead>
+                                        <th>Unit No</th>
+                                        <th>Building</th>
+                                        <th>Purpose</th>
+                                        <th>Monthly Rent</th>
+                                        <th>Water Meter</th>
+                                        <th>Occupancy Status</th>
+                                        <th>Added On</th>
+                                        <th>Options</th>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        try {
+                                            $select = "SELECT * FROM multi_rooms_units";
+                                            $stmt = $pdo->prepare($select);
+                                            $stmt->execute();
+                                            while ($row = $stmt->fetch()) {
+                                                $id = encryptor('encrypt', $row['id']);
+                                                $unit_number = $row['unit_number'];
+                                                $building_link = $row['building_link'];
+                                                $purpose = $row['purpose'];
+                                                $location = $row['location'];
+                                                $monthly_rent = $row['monthly_rent'];
+                                                $water_meter = $row['water_meter'];
+                                                $occupancy_status = $row['occupancy_status'];
+                                                $created_at = $row['created_at'];
+                                        ?>
+                                                <tr>
+                                                    <td><i class="bi bi-house-door"></i><?= htmlspecialchars($unit_number) ?></td>
+                                                    <td><i class="bi bi-building"></i>
+                                                        <?= htmlspecialchars($building_link) ?></td>
+                                                    <td>
+                                                        <?php
+                                                        if (htmlspecialchars($purpose) == 'Business') {
+                                                            echo '<i class="bi bi-shop"></i> ' . htmlspecialchars($purpose);
+                                                        } else if (htmlspecialchars($purpose) == 'Office') {
+                                                            echo '<i class="bi bi-briefcase"></i> ' . htmlspecialchars($purpose);
+                                                        } else if (htmlspecialchars($purpose) == 'Residential') {
+                                                            echo '<i class="bi bi-file-person"></i> ' . htmlspecialchars($purpose);
+                                                        } else if (htmlspecialchars($purpose) == 'Store') {
+                                                            echo '<i class="bi bi-house-gear"></i> ' . htmlspecialchars($purpose);
+                                                        }
                                                         ?>
-                                                        <tr>
-                                                            <td><i class="bi bi-house-door"></i><?= htmlspecialchars($unit_number)?></td>
-                                                            <td><i class="bi bi-building"></i>
-                                                                <?= htmlspecialchars($building_link)?></td>
-                                                                <td>
-                                                                    <?php
-                                                                    if(htmlspecialchars($purpose) == 'Business') {
-                                                                        echo '<i class="bi bi-shop"></i> ' .htmlspecialchars($purpose);
-                                                                    } else if (htmlspecialchars($purpose) == 'Office') {
-                                                                        echo '<i class="bi bi-briefcase"></i> ' .htmlspecialchars($purpose);
-                                                                    } else if (htmlspecialchars($purpose) == 'Residential') {
-                                                                        echo '<i class="bi bi-file-person"></i> ' .htmlspecialchars($purpose);
-                                                                    } else if (htmlspecialchars($purpose) == 'Store') {
-                                                                        echo '<i class="bi bi-house-gear"></i> ' .htmlspecialchars($purpose);
-                                                                    }
-                                                                    ?>
-                                                                </td>
-                                                                <td><?= htmlspecialchars('Kshs.'. $monthly_rent)?></td>
-                                                                <td><?= htmlspecialchars($water_meter)?></td>
-                                                                <td>
-                                                                    <?php
-                                                                    if(htmlspecialchars($occupancy_status) == 'Occupied') {
-                                                                        echo '<button class="btn btn-xs shadow" style="border:1px solid #2C9E4B; color:#2C9E4B;"><i class="fa fa-user"></i> '.htmlspecialchars($occupancy_status).'</button>';
-                                                                    } else if (htmlspecialchars($occupancy_status) == 'Vacant') {
-                                                                        echo '<button class="btn btn-xs shadow" style="border:1px solid #cc0001; color:#cc0001;"><i class="bi bi-house-exclamation"></i> '.htmlspecialchars($occupancy_status).'</button>';
-                                                                    } else if (htmlspecialchars($occupancy_status) == 'Under Maintenance') {
-                                                                        echo '<button class="btn btn-xs shadow" style="border:1px solid #F74B00; color:#F74B00;"><i class="fa fa-calendar" ;?=""></i> '.htmlspecialchars($occupancy_status).'</button>';
-                                                                    }
-                                                                    ?>
-                                                                </td>
-                                                                <td><i class="bi bi-calendar"></i>
-                                                                    <?= htmlspecialchars($created_at)?>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="btn-group">
-                                                                        <button type="button" class="btn btn-default btn-sm shadow" style="border:1px solid rgb(0, 25, 45 ,.3);">Action</button>
-                                                                        <button type="button" class="btn btn-default dropdown-toggle dropdown-icon btn-sm" data-toggle="dropdown" style="border:1px solid rgb(0, 25, 45 ,.3);"> <span class="sr-only">Toggle Dropdown</span></button>
-                                                                        <div class="dropdown-menu shadow" role="menu" style="border:1px solid rgb(0, 25, 45 ,.3);">
-                                                                            <?php
-                                                                            if(htmlspecialchars($occupancy_status) == 'Occupied') {
-                                                                                ?>
-                                                                                <a class="dropdown-item" href="bed_seater_unit_details.php?details=<?php echo $id;?>"><i class="bi bi-eye"></i> Details</a>
-                                                                                <a class="dropdown-item" href="edit_bed_seater.php?edit=<?php echo $id;?>"><i class="bi bi-pen"></i> Edit</a>
-                                                                                <a class="dropdown-item btn" data-toggle="modal" data-target="#meterReadingModal<?= $id ;?>"><i class="bi bi-speedometer"></i> Meter Reading</a>
-                                                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#markAsVacant<?php echo $id;?>"><i class="bi bi-house-exclamation"></i> Mark As Vacant</a>
-                                                                                <?php
-                                                                            } else if (htmlspecialchars($occupancy_status) == 'Vacant') {
-                                                                                ?>
-                                                                                <a class="dropdown-item" href="edit_bed_seater.php?details=<?php echo $id;?>"><i class="bi bi-eye"></i> Details</a>
-                                                                                <a class="dropdown-item" href="rent_multi_room_unit.php?rent=<?php echo $id ;?>"><i class="bi bi-person-fill-check"></i> Rent It</a>
-                                                                                <a class="dropdown-item" href="inspect_multi_room_unit.php?inspect=<?php echo $id;?>"><i class="bi bi-sliders"></i> Inspect</a>
-                                                                                <a class="dropdown-item" href="edit_single_unit_details.php?edit=<?php echo $id;?>"><i class="bi bi-pen"></i> Edit</a>
-                                                                                <a class="dropdown-item" href="rent_multi_room_unit.php?rent=<?php echo $id;?>"><i class="bi bi-person-fill-check"></i> Rent It</a>
-                                                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#underMaintenance<?php echo $id;?>"><i class="bi bi-house-gear"></i> Under Maintenance</a>
-                                                                                <?php
-                                                                            } else if (htmlspecialchars($occupancy_status) == 'Under Maintenance') {
-                                                                                ?>
-                                                                                <a class="dropdown-item" href="edit_single_unit_details.php?edit=<?php echo $id;?>"><i class="bi bi-pen"></i> Edit</a>
-                                                                                <a class="dropdown-item" href="inspect_single_unit.php?inspect=<?php echo $id;?>"><i class="bi bi-sliders"></i> Inspect</a>
-                                                                                <a class="dropdown-item" href="single_unit_details.php?details=<?php echo $id;?>"><i class="bi bi-eye"></i> Details</a>
-                                                                                <a class="dropdown-item btn" data-toggle="modal" data-target="#meterReadingModal<?= $id ;?>"><i class="bi bi-speedometer"></i> Meter Reading</a>
-                                                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#occupiedModal<?php echo $id;?>"><i class="bi bi-person-fill-check"></i> Rent It</a>
-                                                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#markAsVacant<?php echo $id;?>"><i class="bi bi-house-exclamation"></i> Mark As Vacant</a>
-                                                                                <?php
-                                                                            }
-                                                                            ?>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                            <!-- Meter Readings Modal -->
-                                                            <div class="modal fade shadow" id="meterReadingModal<?= $id ;?>">
-                                                                <div class="modal-dialog modal-md">
-                                                                    <div class="modal-content">
-                                                                        <div class="modal-header" style="background-color:#00192D; color: #fff;">
-                                                                            <b>Add Meter Reading for Unit <?= $unit_number;?></b>
-                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
-                                                                                <span aria-hidden="true">&times;</span>
-                                                                            </button>
-                                                                        </div>
-                                                                        <form action="" method="POST" enctype="multipart/form-data" autocomplete="off">
-                                                                            <div class="modal-body">
-                                                                                <div class="form-group">
-                                                                                    <label>Reading Date</label>
-                                                                                    <input type="date" class="form-control" name="reading_date" id="reading_date" required>
-                                                                                </div>
-                                                                                <div class="row">
-                                                                                    <div class="col-md-6">
-                                                                                        <div class="form-group">
-                                                                                            <label>Unit Number</label>
-                                                                                            <input class="form-control unit_number" name="unit_number" value="<?= $unit_number ;?>" readonly>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="col-md-6">
-                                                                                        <div class="form-group">
-                                                                                            <label>Meter Type</label>
-                                                                                            <select class="form-control meter_type" name="meter_type" required>
-                                                                                                <option value="" selected hidden> Meter Type</option>
-                                                                                                <option value="Water">Water</option>
-                                                                                                <option value="Electricity">Electricity</option>
-                                                                                            </select>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <hr>
-                                                                                <div class="row">
-                                                                                    <div class="col-md-6">
-                                                                                        <div class="form-group">
-                                                                                            <label>Previous Reading:</label>
-                                                                                            <input type="number" name="previous_reading" placeholder="Previous Reading" class="form-control previous_reading">
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="col-md-6">
-                                                                                        <div class="form-group">
-                                                                                            <label>Current Reading:</label>
-                                                                                            <input type="number" name="current_reading" placeholder="Current Reading" requiredclass="form-control current_reading">
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <hr>
-
-                                                                                <fieldset class="border p-1">
-                                                                                    <legend class="w-auto" style="font-size: 18px; font-weight: bold; padding: 3px;">
-                                                                                    Calculations</legend>
-                                                                                    <div class="row">
-                                                                                        <div class="col-md-6">
-                                                                                            <div class="form-group">
-                                                                                                <label>Units Consumed:</label>
-                                                                                                <input class="form-control consumption_units" name="consumption_units" readonly>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div class="col-md-6">
-                                                                                            <div class="form-group">
-                                                                                                <label>Cost Per Unit:</label>
-                                                                                                <input class="form-control consumption_cost" type="text" name="consumption_cost">
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group">
-                                                                                        <label>Bill</label>
-                                                                                        <input class="form-control final_bill" name="final_bill" readonly type="text">
-                                                                                    </div>
-                                                                                    <input type="hidden" name="building_id" value="<?= $building_link;?>">
-                                                                                    <input type="hidden" name="created_at">
-                                                                                </fieldset>
-                                                                            </div>
-                                                                            <div class="modal-footer text-right">
-                                                                                <button type="submit" name="submit_reading" class="btn btn-sm" style="border:1px solid #00192D;">
-                                                                                    <i class="bi bi-send"></i> Submit
-                                                                                </button>
-                                                                            </div>
-                                                                        </form>
-
-                                                                    </div>
-                                                                </div>
+                                                    </td>
+                                                    <td><?= htmlspecialchars('Kshs.' . $monthly_rent) ?></td>
+                                                    <td><?= htmlspecialchars($water_meter) ?></td>
+                                                    <td>
+                                                        <?php
+                                                        if (htmlspecialchars($occupancy_status) == 'Occupied') {
+                                                            echo '<button class="btn btn-xs shadow" style="border:1px solid #2C9E4B; color:#2C9E4B;"><i class="fa fa-user"></i> ' . htmlspecialchars($occupancy_status) . '</button>';
+                                                        } else if (htmlspecialchars($occupancy_status) == 'Vacant') {
+                                                            echo '<button class="btn btn-xs shadow" style="border:1px solid #cc0001; color:#cc0001;"><i class="bi bi-house-exclamation"></i> ' . htmlspecialchars($occupancy_status) . '</button>';
+                                                        } else if (htmlspecialchars($occupancy_status) == 'Under Maintenance') {
+                                                            echo '<button class="btn btn-xs shadow" style="border:1px solid #F74B00; color:#F74B00;"><i class="fa fa-calendar" ;?=""></i> ' . htmlspecialchars($occupancy_status) . '</button>';
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td><i class="bi bi-calendar"></i>
+                                                        <?= htmlspecialchars($created_at) ?>
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-default btn-sm shadow" style="border:1px solid rgb(0, 25, 45 ,.3);">Action</button>
+                                                            <button type="button" class="btn btn-default dropdown-toggle dropdown-icon btn-sm" data-toggle="dropdown" style="border:1px solid rgb(0, 25, 45 ,.3);"> <span class="sr-only">Toggle Dropdown</span></button>
+                                                            <div class="dropdown-menu shadow" role="menu" style="border:1px solid rgb(0, 25, 45 ,.3);">
+                                                                <?php
+                                                                if (htmlspecialchars($occupancy_status) == 'Occupied') {
+                                                                ?>
+                                                                    <a class="dropdown-item" href="bed_seater_unit_details.php?details=<?php echo $id; ?>"><i class="bi bi-eye"></i> Details</a>
+                                                                    <a class="dropdown-item" href="edit_bed_seater.php?edit=<?php echo $id; ?>"><i class="bi bi-pen"></i> Edit</a>
+                                                                    <a class="dropdown-item btn" data-toggle="modal" data-target="#meterReadingModal<?= $id; ?>"><i class="bi bi-speedometer"></i> Meter Reading</a>
+                                                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#markAsVacant<?php echo $id; ?>"><i class="bi bi-house-exclamation"></i> Mark As Vacant</a>
+                                                                <?php
+                                                                } else if (htmlspecialchars($occupancy_status) == 'Vacant') {
+                                                                ?>
+                                                                    <a class="dropdown-item" href="edit_bed_seater.php?details=<?php echo $id; ?>"><i class="bi bi-eye"></i> Details</a>
+                                                                    <a class="dropdown-item" href="rent_multi_room_unit.php?rent=<?php echo $id; ?>"><i class="bi bi-person-fill-check"></i> Rent It</a>
+                                                                    <a class="dropdown-item" href="inspect_multi_room_unit.php?inspect=<?php echo $id; ?>"><i class="bi bi-sliders"></i> Inspect</a>
+                                                                    <a class="dropdown-item" href="edit_single_unit_details.php?edit=<?php echo $id; ?>"><i class="bi bi-pen"></i> Edit</a>
+                                                                    <a class="dropdown-item" href="rent_multi_room_unit.php?rent=<?php echo $id; ?>"><i class="bi bi-person-fill-check"></i> Rent It</a>
+                                                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#underMaintenance<?php echo $id; ?>"><i class="bi bi-house-gear"></i> Under Maintenance</a>
+                                                                <?php
+                                                                } else if (htmlspecialchars($occupancy_status) == 'Under Maintenance') {
+                                                                ?>
+                                                                    <a class="dropdown-item" href="edit_single_unit_details.php?edit=<?php echo $id; ?>"><i class="bi bi-pen"></i> Edit</a>
+                                                                    <a class="dropdown-item" href="inspect_single_unit.php?inspect=<?php echo $id; ?>"><i class="bi bi-sliders"></i> Inspect</a>
+                                                                    <a class="dropdown-item" href="single_unit_details.php?details=<?php echo $id; ?>"><i class="bi bi-eye"></i> Details</a>
+                                                                    <a class="dropdown-item btn" data-toggle="modal" data-target="#meterReadingModal<?= $id; ?>"><i class="bi bi-speedometer"></i> Meter Reading</a>
+                                                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#occupiedModal<?php echo $id; ?>"><i class="bi bi-person-fill-check"></i> Rent It</a>
+                                                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#markAsVacant<?php echo $id; ?>"><i class="bi bi-house-exclamation"></i> Mark As Vacant</a>
+                                                                <?php
+                                                                }
+                                                                ?>
                                                             </div>
                                                         </div>
-
-                                                        <!-- Mark as Vacant Modal -->
-                                                        <div class="modal fade shadow" id="markAsVacant<?php echo $id;?>">
-                                                            <div class="modal-dialog modal-md">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header"
-                                                                    style="background-color:#00192D; color: #fff;">
-                                                                    <b class="modal-title">Mark Unit <?= htmlspecialchars($row['unit_number']);?> as Vacant</b>
-                                                                    <button type="button" class="close" data-dismiss="modal"
-                                                                    aria-label="Close" style="color:#fff;">
+                                                    </td>
+                                                </tr>
+                                                <!-- Meter Readings Modal -->
+                                                <div class="modal fade shadow" id="meterReadingModal<?= $id; ?>">
+                                                    <div class="modal-dialog modal-md">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header" style="background-color:#00192D; color: #fff;">
+                                                                <b>Add Meter Reading for Unit <?= $unit_number; ?></b>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                             </div>
-                                                            <form action="" method="post" enctype="multipart/form-data" autocomplete="off">
+                                                            <form action="" method="POST" enctype="multipart/form-data" autocomplete="off">
                                                                 <div class="modal-body">
-                                                                    <p class="text-center">Change the Unit Occupancy Status to Vacant. This will Prepare the Unit for Another Possible Tenant</p>
-                                                                    <input type="hidden" name="id"
-                                                                    value="<?= htmlspecialchars(encryptor('decrypt', $id));?>">
                                                                     <div class="form-group">
-                                                                        <label>Mark as Vacant</label>
-                                                                        <input class="form-control" id="occupancy_status" name="occupancy_status" value="Vacant" readonly>
+                                                                        <label>Reading Date</label>
+                                                                        <input type="date" class="form-control" name="reading_date" id="reading_date" required>
                                                                     </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label>Unit Number</label>
+                                                                                <input class="form-control unit_number" name="unit_number" value="<?= $unit_number; ?>" readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label>Meter Type</label>
+                                                                                <select class="form-control meter_type" name="meter_type" required>
+                                                                                    <option value="" selected hidden> Meter Type</option>
+                                                                                    <option value="Water">Water</option>
+                                                                                    <option value="Electricity">Electricity</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <hr>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label>Previous Reading:</label>
+                                                                                <input type="number" name="previous_reading" placeholder="Previous Reading" class="form-control previous_reading">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label>Current Reading:</label>
+                                                                                <input type="number" name="current_reading" placeholder="Current Reading" requiredclass="form-control current_reading">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <hr>
+
+                                                                    <fieldset class="border p-1">
+                                                                        <legend class="w-auto" style="font-size: 18px; font-weight: bold; padding: 3px;">
+                                                                            Calculations</legend>
+                                                                        <div class="row">
+                                                                            <div class="col-md-6">
+                                                                                <div class="form-group">
+                                                                                    <label>Units Consumed:</label>
+                                                                                    <input class="form-control consumption_units" name="consumption_units" readonly>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <div class="form-group">
+                                                                                    <label>Cost Per Unit:</label>
+                                                                                    <input class="form-control consumption_cost" type="text" name="consumption_cost">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label>Bill</label>
+                                                                            <input class="form-control final_bill" name="final_bill" readonly type="text">
+                                                                        </div>
+                                                                        <input type="hidden" name="building_id" value="<?= $building_link; ?>">
+                                                                        <input type="hidden" name="created_at">
+                                                                    </fieldset>
                                                                 </div>
                                                                 <div class="modal-footer text-right">
-                                                                    <button type="submit" class="btn btn-sm" style="border:1px solid #00192D; color: #00192D;" name="update_vacant_status"><i class="bi bi-send"></i> Update</button>
+                                                                    <button type="submit" name="submit_reading" class="btn btn-sm" style="border:1px solid #00192D;">
+                                                                        <i class="bi bi-send"></i> Submit
+                                                                    </button>
                                                                 </div>
                                                             </form>
+
                                                         </div>
                                                     </div>
                                                 </div>
+                            </div>
 
-                                                <!-- Under Maintenance Modal -->
-                                                <div class="modal fade shadow" id="underMaintenance<?php echo $id;?>">
-                                                    <div class="modal-dialog modal-md">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header"
-                                                            style="background-color:#00192D; color: #fff;">
-                                                            <p class="modal-title">Mark Unit
-                                                                <?= htmlspecialchars($row['unit_number']);?> as
-                                                            Under Maintenance</p>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <form action="" method="post" enctype="multipart/form-data"
-                                                        autocomplete="off">
-                                                        <div class="modal-body">
-                                                            <p class="text-center">Change the Unit Status to Under Maintenance. Meaning there are Some Works Being done on the Unit</p>
-                                                            <input type="hidden" name="id" value="<?= htmlspecialchars(encryptor('decrypt', $id));?>">
-                                                            <div class="form-group">
-                                                                <label>Status</label>
-                                                                <input class="form-control" id="occupancy_status" name="occupancy_status" value="Under Maintenance" readonly>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer text-right">
-                                                            <button type="submit" class="btn btn-sm" style="border:1px solid #00192D; color: #00192D;" name="update_maintenance_status"><i class="bi bi-send"></i> Update</button>
-                                                        </div>
-                                                    </form>
+                            <!-- Mark as Vacant Modal -->
+                            <div class="modal fade shadow" id="markAsVacant<?php echo $id; ?>">
+                                <div class="modal-dialog modal-md">
+                                    <div class="modal-content">
+                                        <div class="modal-header"
+                                            style="background-color:#00192D; color: #fff;">
+                                            <b class="modal-title">Mark Unit <?= htmlspecialchars($row['unit_number']); ?> as Vacant</b>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close" style="color:#fff;">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form action="" method="post" enctype="multipart/form-data" autocomplete="off">
+                                            <div class="modal-body">
+                                                <p class="text-center">Change the Unit Occupancy Status to Vacant. This will Prepare the Unit for Another Possible Tenant</p>
+                                                <input type="hidden" name="id"
+                                                    value="<?= htmlspecialchars(encryptor('decrypt', $id)); ?>">
+                                                <div class="form-group">
+                                                    <label>Mark as Vacant</label>
+                                                    <input class="form-control" id="occupancy_status" name="occupancy_status" value="Vacant" readonly>
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        <!-- Rent Single Unit Modal -->
-                                        <div class="modal fade shadow" id="rentUnit<?php echo $id;?>">
-                                            <div class="modal-dialog modal-lg">
-                                                <div class="modal-content">
-                                                    <div class="modal-header"
-                                                    style="background-color:#00192D; color: #fff;">
-                                                    <p class="modal-title">Rent Out <?= $unit_number;?></p>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                    aria-label="Close" style="color:#fff;">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
+                                            <div class="modal-footer text-right">
+                                                <button type="submit" class="btn btn-sm" style="border:1px solid #00192D; color: #00192D;" name="update_vacant_status"><i class="bi bi-send"></i> Update</button>
                                             </div>
-                                            <form action="" method="post" enctype="multipart/form-data" autocomplete="off">
-                                                <div class="modal-body">
-                                                    <p>Rent out this Unit&hellip;</p>
-                                                </div>
-                                                <div class="modal-footer text-right">
-                                                    <button type="submit" class="btn btn-sm" style="border:1px solid #00192D; color: #00192D;">
-                                                        <i class="bi bi-send"></i> Submit
-                                                    </button>
-                                                </div>
-                                            </form>
-                                        </div>
+                                        </form>
                                     </div>
                                 </div>
-                                <?php
-                            }
-                        }catch(PDOException $e){
-                            echo '<div class="alert alert-danger>
-                            Selection Failed! "'.$e->getMessage().'"
+                            </div>
+
+                            <!-- Under Maintenance Modal -->
+                            <div class="modal fade shadow" id="underMaintenance<?php echo $id; ?>">
+                                <div class="modal-dialog modal-md">
+                                    <div class="modal-content">
+                                        <div class="modal-header"
+                                            style="background-color:#00192D; color: #fff;">
+                                            <p class="modal-title">Mark Unit
+                                                <?= htmlspecialchars($row['unit_number']); ?> as
+                                                Under Maintenance</p>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form action="" method="post" enctype="multipart/form-data"
+                                            autocomplete="off">
+                                            <div class="modal-body">
+                                                <p class="text-center">Change the Unit Status to Under Maintenance. Meaning there are Some Works Being done on the Unit</p>
+                                                <input type="hidden" name="id" value="<?= htmlspecialchars(encryptor('decrypt', $id)); ?>">
+                                                <div class="form-group">
+                                                    <label>Status</label>
+                                                    <input class="form-control" id="occupancy_status" name="occupancy_status" value="Under Maintenance" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer text-right">
+                                                <button type="submit" class="btn btn-sm" style="border:1px solid #00192D; color: #00192D;" name="update_maintenance_status"><i class="bi bi-send"></i> Update</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Rent Single Unit Modal -->
+                            <div class="modal fade shadow" id="rentUnit<?php echo $id; ?>">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header"
+                                            style="background-color:#00192D; color: #fff;">
+                                            <p class="modal-title">Rent Out <?= $unit_number; ?></p>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close" style="color:#fff;">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form action="" method="post" enctype="multipart/form-data" autocomplete="off">
+                                            <div class="modal-body">
+                                                <p>Rent out this Unit&hellip;</p>
+                                            </div>
+                                            <div class="modal-footer text-right">
+                                                <button type="submit" class="btn btn-sm" style="border:1px solid #00192D; color: #00192D;">
+                                                    <i class="bi bi-send"></i> Submit
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                    <?php
+                                            }
+                                        } catch (PDOException $e) {
+                                            echo '<div class="alert alert-danger>
+                            Selection Failed! "' . $e->getMessage() . '"
                             </div>';
-                        }
-                        ?>
+                                        }
+                    ?>
                     </tbody>
-                </table>
+                    </table>
+                        </div>
+                    </div>
             </div>
-        </div>
-    </div>
-    <!-- Container Box -->
+            <!-- Container Box -->
 
-    </section>
+            </section>
 
-    <?php
-    //This is the PHP Script that will change the occupancy Status when one clicks Rent Out
-    if(isset($_POST['update_occupied_status'])) {
-        $id = encryptor('encrypt', $_POST['id']);
-        try {
-            // Update with the new status
-            $update = "UPDATE multi_rooms_units SET occupancy_status = :occupancy_status WHERE id = :id";
-            $stmtUpdate = $pdo->prepare($update);
-            $stmtUpdate->bindParam(':occupancy_status', $_POST['occupancy_status'], PDO::PARAM_STR);
-            $stmtUpdate->bindParam(':id', $_POST['id'], PDO::PARAM_INT);
-            $stmtUpdate->execute();
+            <?php
+            //This is the PHP Script that will change the occupancy Status when one clicks Rent Out
+            if (isset($_POST['update_occupied_status'])) {
+                $id = encryptor('encrypt', $_POST['id']);
+                try {
+                    // Update with the new status
+                    $update = "UPDATE multi_rooms_units SET occupancy_status = :occupancy_status WHERE id = :id";
+                    $stmtUpdate = $pdo->prepare($update);
+                    $stmtUpdate->bindParam(':occupancy_status', $_POST['occupancy_status'], PDO::PARAM_STR);
+                    $stmtUpdate->bindParam(':id', $_POST['id'], PDO::PARAM_INT);
+                    $stmtUpdate->execute();
 
-            if($stmtUpdate->rowCount() > 0) {
-                echo "
+                    if ($stmtUpdate->rowCount() > 0) {
+                        echo "
                     <script>
                         Swal.fire({
                             icon: 'success',
@@ -620,8 +602,8 @@
                             }
                         });
                     </script>";
-            } else {
-                echo "
+                    } else {
+                        echo "
                     <script>
                         Swal.fire({
                             icon: 'error',
@@ -630,30 +612,30 @@
                             confirmButtonText: 'OK'
                         });
                     </script>";
-            }
-        } catch (Exception $e) {
-            echo "
+                    }
+                } catch (Exception $e) {
+                    echo "
                 <script>
                     Swal.fire({
                         icon: 'error',
                         title: 'Database Error',
-                        text: '".addslashes($e->getMessage())."',
+                        text: '" . addslashes($e->getMessage()) . "',
                         confirmButtonText: 'Close'
                     });
                 </script>";
-        }
-    }
+                }
+            }
 
-    //Change the Occupancy Status to Vacant if the Unit is Occupied and when the user clicks Mark as Vacant
-    if(isset($_POST['update_vacant_status'])) {
-        try {
-            // Fetch current status of the unit
-            $check = $pdo->prepare("SELECT occupancy_status FROM multi_rooms_units WHERE id = :id");
-            $check->execute([':id' => $_POST['id']]);
-            $current_status = $check->fetchColumn();
-            if ($current_status === $_POST['occupancy_status']) {
-                // No change made
-                echo "
+            //Change the Occupancy Status to Vacant if the Unit is Occupied and when the user clicks Mark as Vacant
+            if (isset($_POST['update_vacant_status'])) {
+                try {
+                    // Fetch current status of the unit
+                    $check = $pdo->prepare("SELECT occupancy_status FROM multi_rooms_units WHERE id = :id");
+                    $check->execute([':id' => $_POST['id']]);
+                    $current_status = $check->fetchColumn();
+                    if ($current_status === $_POST['occupancy_status']) {
+                        // No change made
+                        echo "
                     <script>
                         Swal.fire({
                             title: 'Warning!',
@@ -664,15 +646,15 @@
                         window.history.back();
                         });
                     </script>";
-            } else {
-                // Update with the new status
-                $update = "UPDATE multi_rooms_units SET occupancy_status = :occupancy_status WHERE id = :id";
-                $stmt = $pdo->prepare($update);
-                $stmt->bindParam(':occupancy_status', $_POST['occupancy_status'], PDO::PARAM_STR);
-                $stmt->bindParam(':id', $_POST['id'], PDO::PARAM_INT);
-                $stmt->execute();
-                // Success message
-                echo "
+                    } else {
+                        // Update with the new status
+                        $update = "UPDATE multi_rooms_units SET occupancy_status = :occupancy_status WHERE id = :id";
+                        $stmt = $pdo->prepare($update);
+                        $stmt->bindParam(':occupancy_status', $_POST['occupancy_status'], PDO::PARAM_STR);
+                        $stmt->bindParam(':id', $_POST['id'], PDO::PARAM_INT);
+                        $stmt->execute();
+                        // Success message
+                        echo "
                     <script>
                         Swal.fire({
                             icon: 'success',
@@ -690,36 +672,36 @@
                             }
                         });
                     </script>";
-            }
-        } catch (PDOException $e) {
-            echo "
+                    }
+                } catch (PDOException $e) {
+                    echo "
                 <script>
                     Swal.fire({
                     icon: 'error',
                     title: 'Database Error',
-                    text: '".addslashes($e->getMessage())."',
+                    text: '" . addslashes($e->getMessage()) . "',
                     confirmButtonText: 'Close'
                     });
                 </script>";
+                }
             }
-        }
 
-        //Change the Unit Status to Under Maintenance when the User clicks the Relavant Button
-        if(isset($_POST['update_maintenance_status'])) {
-            try {
-                // Fetch current status of the unit
-                $check = $pdo->prepare("SELECT occupancy_status FROM multi_rooms_units WHERE id = :id");
-                $check->execute([':id' => $_POST['id']]);
-                $current_status = $check->fetchColumn();
-                
-                // Update with the new status
-                $update = "UPDATE multi_rooms_units SET occupancy_status = :occupancy_status WHERE id = :id";
-                $stmt = $pdo->prepare($update);
-                $stmt->bindParam(':occupancy_status', $_POST['occupancy_status'], PDO::PARAM_STR);
-                $stmt->bindParam(':id', $_POST['id'], PDO::PARAM_INT);
-                $stmt->execute();
-                // Success message
-                echo "
+            //Change the Unit Status to Under Maintenance when the User clicks the Relavant Button
+            if (isset($_POST['update_maintenance_status'])) {
+                try {
+                    // Fetch current status of the unit
+                    $check = $pdo->prepare("SELECT occupancy_status FROM multi_rooms_units WHERE id = :id");
+                    $check->execute([':id' => $_POST['id']]);
+                    $current_status = $check->fetchColumn();
+
+                    // Update with the new status
+                    $update = "UPDATE multi_rooms_units SET occupancy_status = :occupancy_status WHERE id = :id";
+                    $stmt = $pdo->prepare($update);
+                    $stmt->bindParam(':occupancy_status', $_POST['occupancy_status'], PDO::PARAM_STR);
+                    $stmt->bindParam(':id', $_POST['id'], PDO::PARAM_INT);
+                    $stmt->execute();
+                    // Success message
+                    echo "
                     <script>
                         Swal.fire({
                             icon: 'success',
@@ -737,40 +719,30 @@
                             }
                         });
                     </script>";
-            } catch (PDOException $e) {
-                echo "
+                } catch (PDOException $e) {
+                    echo "
                     <script>
                         Swal.fire({
                         icon: 'error',
                         title: 'Database Error',
-                        text: '".addslashes($e->getMessage())."',
+                        text: '" . addslashes($e->getMessage()) . "',
                         confirmButtonText: 'Close'
                         });
                     </script>";
+                }
             }
-        }
-    ?>
-            </div>
-        </main>
-        <!--end::App Main-->
-        <!--begin::Footer-->
-        <footer class="app-footer">
-            <!--begin::To the end-->
-            <div class="float-end d-none d-sm-inline">Anything you want</div>
-            <!--end::To the end-->
-            <!--begin::Copyright-->
-            <strong>
-                Copyright &copy; 2014-2024&nbsp;
-                <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;">JENGO PAY</a>.
-            </strong>
-            All rights reserved.
-            <!--end::Copyright-->
-        </footer>
+            ?>
+    
+    </main>
+    <!--end::App Main-->
+    
+    <!--begin::Footer-->
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
+        <!-- end::footer -->
 
     </div>
     <!--end::App Wrapper-->
 
-    <!-- plugin for pdf -->
 
 
     <!-- Main Js File -->

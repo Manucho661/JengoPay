@@ -42,13 +42,13 @@ try {
     // At this point: login successful
     $_SESSION['user'] = [
         "id" => $user['id'],
-        "name" => $user['username'],
+        "name" => $user['name'],
         "role" => $user['role']
     ];
 
     echo json_encode([
         "status" => "Logged in",
-        "userName" => $user['username'],
+        "userName" => $user['name'],
         "userRole" => $user['role']
     ]);
 } catch (Throwable $e) {

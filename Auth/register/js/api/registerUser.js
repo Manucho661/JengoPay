@@ -18,12 +18,12 @@ export async function registerUser(e) {
              // Redirect to provider page
              window.location.href = '/Jengopay/auth/login.php';
          } 
-        //  else if (data.userRole === 'landlord') {
-        //     // Redirect to employer page
-        //     window.location.href = '/Jengopay/landlord/pages/dashboard/index2.php';
-        // } else {
-        //     alert('Unknown user role');
-        // }
+         else if (data.userRole === 'landlord') {
+            // Redirect to employer page
+             window.location.href = '/Jengopay/landlord/pages/dashboard/index2.php';
+         } else {
+             alert('Unknown user role');
+         }
     } catch (err) {
         console.error(err);
     }

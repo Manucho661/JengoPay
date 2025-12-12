@@ -37,8 +37,8 @@ function setupEvents() {
   document.getElementById("chatForm").addEventListener("submit", sendText);
 
   // Chat refresh
-  getTextMessages();
-  setInterval(getTextMessages, 1000);
+  // getTextMessages();
+  // setInterval(getTextMessages, 1000);
 }
 
 

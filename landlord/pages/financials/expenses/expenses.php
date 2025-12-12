@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once '../../db/connect.php';
 include_once 'actions/getSuppliers.php';
 $expenses = [];
@@ -175,13 +176,18 @@ require_once 'actions/getBuildings.php';
         <main class="main">
             <!--begin:: Main Container-->
             <div class="container-fluid">
-
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb" style="">
+                        <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/index2.php" style="text-decoration: none;">Home</a></li>
+                        <li class="breadcrumb-item active">Expenses</li>
+                    </ol>
+                </nav>
                 <!--begin::first Row-->
-                <div class="row">
-                    <div class="col-sm-8">
-                        <h3 class="mb-0 m-0 contact_section_header"> 💰 Expenses</h3>
+                <div class="row align-items-center mb-3">
+                    <div class="col-12 d-flex align-items-center">
+                        <span style="width:5px;height:28px;background:#F5C518;" class="rounded"></span>
+                        <h3 class="mb-0 ms-3">Expenses</h3>
                     </div>
-                    <!--end::Row-->
                 </div>
 
                 <!-- Second row: some action buttons -->

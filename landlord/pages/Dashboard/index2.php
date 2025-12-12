@@ -1,3 +1,8 @@
+<?php
+require_once "../../../auth/auth_check.php";   // Protect this page
+?>
+
+
 <!doctype html>
 <html lang="en">
 <!--begin::Head-->
@@ -10,13 +15,7 @@
   <!--begin::Primary Meta Tags-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="title" content="AdminLTE | Dashboard v2" />
-  <meta name="author" content="ColorlibHQ" />
-  <meta
-    name="description"
-    content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
-  <meta
-    name="keywords"
-    content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
+  
   <!-- LINKS -->
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css">
@@ -548,7 +547,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 
-  <script src="../../../landlord/assets/main.js"></script>
+  <script type="module" src="../../../landlord/assets/main.js"></script>
   <script>
     // Revenue Chart
     const ctx = document.getElementById('revenueChart').getContext('2d');

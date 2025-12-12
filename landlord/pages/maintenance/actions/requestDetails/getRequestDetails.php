@@ -26,10 +26,10 @@ try {
         ra.provider_response,
         ra.status
     FROM maintenance_requests AS mr
-    LEFT JOIN request_assignments AS ra 
-        ON ra.request_id = mr.id 
-        AND ra.terminate IS NULL  -- condition moved to JOIN
-    LEFT JOIN providers AS pr 
+    LEFT JOIN maintenance_request_assignments AS ra 
+        ON ra.maintenance_request_id = mr.id 
+        AND ra.terminated IS NULL  -- condition moved to JOIN
+    LEFT JOIN service_providers AS pr 
         ON ra.provider_id = pr.id
     WHERE mr.id = :id
 ");
@@ -44,7 +44,7 @@ try {
     }
 
     // Step 2: Get photos
-    $stmt = $pdo->prepare("SELECT * FROM maintenance_photos WHERE maintenance_request_id = :id");
+    $stmt = $pdo->prepare("SELECT * FROM maintenance_request_photos WHERE maintenance_request_id = :id");
     $stmt->execute(['id' => $requestId]);
     $photos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -59,7 +59,7 @@ try {
         FROM 
             maintenance_request_proposals p
         JOIN 
-            providers pr ON p.provider_id = pr.id
+            service_providers pr ON p.provider_id = pr.id
         WHERE 
             p.maintenance_request_id = :id
     ");
@@ -67,7 +67,7 @@ try {
     $proposals = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Step 4: Get payments
-    $stmt = $pdo->prepare("SELECT * FROM maintenance_payments WHERE maintenance_request_id = :id");
+    $stmt = $pdo->prepare("SELECT * FROM maintenance_request_payments WHERE maintenance_request_id = :id");
     $stmt->execute(['id' => $requestId]);
     $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

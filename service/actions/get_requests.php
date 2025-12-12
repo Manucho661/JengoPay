@@ -17,20 +17,17 @@ try {
     $stmt = $pdo->prepare("
     SELECT 
         mr.id,
-        mr.request_date,
-        mr.request,
-        mr.residence,
-        mr.unit,
+        mr.title,
         mr.category,
         mr.description,
         mr.budget,
         mr.duration,
         mr.created_at,
-        mp.photo_url,
+        mp.photo_path,
         mrp.provider_id,
-        mrp.bid_amount
+        mrp.proposed_budget
     FROM maintenance_requests AS mr
-    LEFT JOIN maintenance_photos AS mp
+    LEFT JOIN maintenance_request_photos AS mp
         ON mr.id = mp.maintenance_request_id
     LEFT JOIN maintenance_request_proposals AS mrp
         ON mr.id = mrp.maintenance_request_id

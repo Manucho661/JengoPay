@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // handle create request
-  document.getElementById('otherRequestBtn').addEventListener('click', otherRequest);
+  // document.getElementById('otherRequestBtn').addEventListener('click', otherRequest);
 
   document.getElementById('submitBtn').addEventListener('click', (e) => {
     submitRequest(e, modal);  // pass modal instance

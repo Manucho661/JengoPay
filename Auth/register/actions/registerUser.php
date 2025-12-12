@@ -41,7 +41,7 @@ try {
     // -----------------------------
     // Clean Inputs
     // -----------------------------
-    $role   = trim($_POST['role']);
+    $role     = trim($_POST['role']);
     $username = trim($_POST['userName']);
     $email    = trim($_POST['email']);
     $password = $_POST['password'];
@@ -55,11 +55,28 @@ try {
     // Insert User
     // -----------------------------
     $stmt = $pdo->prepare("
-        INSERT INTO users (username, email, password, role)
+        INSERT INTO users (name, email, password, role)
         VALUES (?, ?, ?, ?)
     ");
-
     $stmt->execute([$username, $email, $hashedPassword, $role]);
+
+    $user_id = $pdo->lastInsertId();
+
+    // -----------------------------
+    // Insert into related table based on role
+    // -----------------------------
+    if ($role === "landlord") {
+        $landlordStmt = $pdo->prepare("
+            INSERT INTO landlords (user_id) VALUES (?)
+        ");
+        $landlordStmt->execute([$user_id]);
+
+    } elseif ($role === "service_provider") {
+        $providerStmt = $pdo->prepare("
+            INSERT INTO service_providers (user_id) VALUES (?)
+        ");
+        $providerStmt->execute([$user_id]);
+    }
 
     // -----------------------------
     // Success Response
@@ -67,9 +84,10 @@ try {
     echo json_encode([
         "status"  => "success",
         "message" => "User registered successfully.",
-        "user_id" => $pdo->lastInsertId()
+        "user_id" => $user_id
     ]);
     exit;
+
 } catch (Throwable $e) {
     // Log internal error
     error_log("register error: " . $e->getMessage());

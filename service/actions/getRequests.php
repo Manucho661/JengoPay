@@ -30,7 +30,7 @@ try {
         mrp.provider_id,
         mrp.bid_amount
     FROM maintenance_requests AS mr
-    LEFT JOIN maintenance_photos AS mp
+    LEFT JOIN maintenance_requests_photos AS mp
         ON mr.id = mp.maintenance_request_id
     LEFT JOIN maintenance_request_proposals AS mrp
         ON mr.id = mrp.maintenance_request_id

@@ -1,6 +1,8 @@
                                                                                                                               <?php
 header('Content-Type: application/json');
 
+session_start();
+
 require_once '../../db/connect.php';
 
 try {
@@ -18,11 +20,11 @@ try {
             LEFT JOIN (
                 SELECT 
                     ra.*, 
-                    ROW_NUMBER() OVER (PARTITION BY ra.request_id ORDER BY ra.created_at DESC) AS row_num
-                FROM request_assignments ra
-            ) ra ON mr.id = ra.request_id AND ra.row_num = 1
-            LEFT JOIN maintenance_photos mp ON mp.maintenance_request_id = mr.id
-            LEFT JOIN providers p ON ra.provider_id = p.id
+                    ROW_NUMBER() OVER (PARTITION BY ra.maintenance_request_id ORDER BY ra.created_at DESC) AS row_num
+                FROM maintenance_request_assignments ra
+            ) ra ON mr.id = ra.maintenance_request_id AND ra.row_num = 1
+            LEFT JOIN maintenance_request_photos mp ON mp.maintenance_request_id = mr.id
+            LEFT JOIN service_providers p ON ra.provider_id = p.id
         ");
 
         $countQuery->execute();
@@ -40,18 +42,18 @@ try {
                 p.name AS provider_name,
                 p.email AS provider_email,
                 p.phone AS provider_phone,
-                mp.photo_url
+                mp.photo_path
             FROM
                 maintenance_requests mr
             LEFT JOIN (
                 SELECT 
                     ra.*, 
-                    ROW_NUMBER() OVER (PARTITION BY ra.request_id ORDER BY ra.created_at DESC) AS row_num
+                    ROW_NUMBER() OVER (PARTITION BY ra.maintenance_request_id ORDER BY ra.created_at DESC) AS row_num
                 FROM
-                    request_assignments ra
-            ) ra ON mr.id = ra.request_id AND ra.row_num = 1
-            LEFT JOIN maintenance_photos mp ON mp.maintenance_request_id = mr.id
-            LEFT JOIN providers p ON ra.provider_id = p.id
+                    maintenance_request_assignments ra
+            ) ra ON mr.id = ra.maintenance_request_id AND ra.row_num = 1
+            LEFT JOIN maintenance_request_photos mp ON mp.maintenance_request_id = mr.id
+            LEFT JOIN service_providers p ON ra.provider_id = p.id
             LIMIT ? OFFSET ?
         ");
     $stmt->execute([$limit, $offset]);

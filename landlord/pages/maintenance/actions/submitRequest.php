@@ -17,6 +17,7 @@ try {
 
     // Read POST fields safely (trim to avoid accidental whitespace)
     $category = isset($_POST['category']) ? trim($_POST['category']) : null;
+    $title = isset($_POST['title']) ? trim($_POST['title']) : null;
     $request  = isset($_POST['request']) ? trim($_POST['request']) : null;
     $description = isset($_POST['description']) ? trim($_POST['description']) : null;
 
@@ -27,21 +28,23 @@ try {
         exit;
     }
 
-    // Set request_date to current date (YYYY-MM-DD). If you want time use date('Y-m-d H:i:s')
-    $request_date = date('Y-m-d');
 
     // Insert maintenance request
+    // created by id
+    $userId = $_SESSION['user']['id'];
+    $role = $_SESSION['user']['role'];
     $stmt = $pdo->prepare("
         INSERT INTO maintenance_requests 
-            (request_date, category, request, description, created_at) 
-        VALUES (:request_date, :category, :request, :description, NOW())
+            (created_by_user_id, requester_role, title, description, category, created_at) 
+        VALUES (:created_by_user_id, :requester_role, :title, :description, :category, NOW())
     ");
 
     $stmt->execute([
-        ':request_date' => $request_date,
-        ':category' => $category,
-        ':request' => $request,
-        ':description' => $description
+        ':created_by_user_id' => $userId,
+        ':requester_role' => $role,
+        ':title' => $title,
+        ':description' => $description,
+        ':category' => $category
     ]);
 
     $maintenance_request_id = $pdo->lastInsertId();
@@ -72,7 +75,7 @@ try {
                 $relativePath = $uploadUrl . $fileName;
 
                 $photoStmt = $pdo->prepare("
-                    INSERT INTO maintenance_photos (maintenance_request_id, photo_url)
+                    INSERT INTO maintenance_request_photos (maintenance_request_id, photo_path)
                     VALUES (:request_id, :photo_url)
                 ");
                 $photoStmt->execute([
@@ -88,6 +91,7 @@ try {
     http_response_code(500);
     echo json_encode([
         'success' => false,
+        'user_id' => $userId,
         'message' => $e->getMessage()
     ]);
 }
