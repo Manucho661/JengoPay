@@ -2,6 +2,8 @@
 session_start();
 require_once "../db/connect.php";
 //  include_once 'includes/lower_right_popup_form.php';
+
+
 ?>
 <?php
 // Database connection
@@ -112,43 +114,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Create the journal entry
     $result = createJournalEntry($conn, $payment_date, $description, $entries);
 
-    if ($result) {
-        // Optionally, update tenant's payment record in another table
-        if ($tenant_id) {
-            $sql = "INSERT INTO tenant_payments 
-                    (tenant_id, property_id, amount, payment_date, payment_method, journal_id) 
-                    VALUES (?, ?, ?, ?, ?, ?)";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param(
-                "iidssi",
-                $tenant_id,
-                $property_id,
-                $monthly_rent,
-                $payment_date,
-                $payment_method,
-                $journal_id
-            );
-            $stmt->execute();
-        }
+    // if ($result) {
+    //     // Optionally, update tenant's payment record in another table
+    //     if ($tenant_id) {
+    //         $sql = "INSERT INTO tenant_payments 
+    //                 (tenant_id, property_id, amount, payment_date, payment_method, journal_id) 
+    //                 VALUES (?, ?, ?, ?, ?, ?)";
+    //         $stmt = $conn->prepare($sql);
+    //         $stmt->bind_param(
+    //             "iidssi",
+    //             $tenant_id,
+    //             $property_id,
+    //             $monthly_rent,
+    //             $payment_date,
+    //             $payment_method,
+    //             $journal_id
+    //         );
+    //         $stmt->execute();
+    //     }
 
-        $response = [
-            'success' => true,
-            'message' => 'Rent payment recorded successfully!',
-            'data' => [
-                'amount' => $monthly_rent,
-                'date' => $payment_date,
-                'rent_account' => '500 - Rental Income',
-                'cash_account' => $cash_account_code . ' - ' . getAccountName($conn, $cash_account_code)
-            ]
-        ];
-    } else {
-        $response = [
-            'success' => false,
-            'message' => 'Failed to record payment'
-        ];
-    }
+    //     $response = [
+    //         'success' => true,
+    //         'message' => 'Rent payment recorded successfully!',
+    //         'data' => [
+    //             'amount' => $monthly_rent,
+    //             'date' => $payment_date,
+    //             'rent_account' => '500 - Rental Income',
+    //             'cash_account' => $cash_account_code . ' - ' . getAccountName($conn, $cash_account_code)
+    //         ]
+    //     ];
+    // } else {
+    //     $response = [
+    //         'success' => false,
+    //         'message' => 'Failed to record payment'
+    //     ];
+    // }
 
-    echo json_encode($response);
+    // echo json_encode($response);
 }
 
 // Helper function to get account name
@@ -348,6 +350,7 @@ $conn->close();
             <div class="container-fluid">
                 <?php
                 include_once 'processes/encrypt_decrypt_function.php';
+                $id =null;
                 if (isset($_GET['add_single_unit']) && !empty($_GET['add_single_unit'])) {
                     $id = $_GET['add_single_unit'];
                     $id = encryptor('decrypt', $id);
@@ -422,15 +425,17 @@ $conn->close();
 
                 //if the Submit button is clicked
                 if (isset($_POST['submit_unit'])) {
+
                     //Check for duplicate unit_number + building_link and avoid double entry of information
                     try {
-                        $check = $pdo->prepare("SELECT COUNT(*) FROM building_units WHERE unit_number = :unit_number AND building_link = :building_link");
+
+                        $check = $pdo->prepare("SELECT COUNT(*) FROM building_units WHERE unit_number = :unit_number AND building_id = :building_id");
                         $check->execute([
                             ':unit_number'   => $_POST['unit_number'],
-                            ':building_link' => $_POST['building_link']
+                            ':building_id' => $id
                         ]);
 
-                        if ($check->fetchColumn() > 0) {
+                        if ($check->fetchColumn() < 0) {
                             // Check if Duplicate found
                             echo "
                                         <script>
@@ -443,11 +448,11 @@ $conn->close();
                                                 window.history.back();
                                             });
                                         </script>";
-                            exit;
+                            // exit;
                         }
                         // Start transaction
                         $pdo->beginTransaction();
-
+                        echo 'yoyoy';
                         //Insert into building_units
                         $stmt = $pdo->prepare("INSERT INTO building_units (structure_type, first_name, last_name, owner_email, entity_name, entity_phone, entity_phoneother, entity_email, unit_number, purpose, building_link, location, monthly_rent, occupancy_status, created_at) VALUES (:structure_type, :first_name, :last_name, :owner_email, :entity_name, :entity_phone, :entity_phoneother, :entity_email, :unit_number, :purpose, :building_link, :location, :monthly_rent, :occupancy_status, NOW())");
 
@@ -472,24 +477,24 @@ $conn->close();
                         $unit_id = $pdo->lastInsertId();
 
                         //Insert the Bills of the Unit into single_unit_bills
-                        if (!empty($_POST['bill'])) {
-                            $stmtBill = $pdo->prepare("INSERT INTO single_unit_bills (unit_id, bill, qty, unit_price, created_at) VALUES (:unit_id, :bill, :qty, :unit_price, NOW())");
+                        // if (!empty($_POST['bill'])) {
+                        //     $stmtBill = $pdo->prepare("INSERT INTO single_unit_bills (unit_id, bill, qty, unit_price, created_at) VALUES (:unit_id, :bill, :qty, :unit_price, NOW())");
 
-                            foreach ($_POST['bill'] as $i => $billName) {
-                                if ($billName != "") {
-                                    $qty       = $_POST['qty'][$i] ?? 0;
-                                    $unitPrice = $_POST['unit_price'][$i] ?? 0;
-                                    $subtotal  = $qty * $unitPrice;
+                        //     foreach ($_POST['bill'] as $i => $billName) {
+                        //         if ($billName != "") {
+                        //             $qty       = $_POST['qty'][$i] ?? 0;
+                        //             $unitPrice = $_POST['unit_price'][$i] ?? 0;
+                        //             $subtotal  = $qty * $unitPrice;
 
-                                    $stmtBill->execute([
-                                        ':unit_id'    => $unit_id,
-                                        ':bill'       => $billName,   // ✅ match placeholder
-                                        ':qty'        => $qty,
-                                        ':unit_price' => $unitPrice
-                                    ]);
-                                }
-                            }
-                        }
+                        //             $stmtBill->execute([
+                        //                 ':unit_id'    => $unit_id,
+                        //                 ':bill'       => $billName,   // ✅ match placeholder
+                        //                 ':qty'        => $qty,
+                        //                 ':unit_price' => $unitPrice
+                        //             ]);
+                        //         }
+                        //     }
+                        // }
                         $pdo->commit();
 
                         //SweetAlert success and redirect
@@ -680,7 +685,6 @@ $conn->close();
                                         <button class="btn btn-sm" type="submit" name="submit_unit" style="background-color:#00192D; color: #fff;"><i class="bi bi-send"></i> Submit</button
                                             </div>
                                     </div>
-                                </div>
                         </form>
                     </div>
                 </div>
