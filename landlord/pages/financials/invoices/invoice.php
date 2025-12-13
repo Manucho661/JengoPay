@@ -1,6 +1,5 @@
 <?php
 include '../../db/connect.php';
-
 /* -----------------------------
    FETCH REVENUE ACCOUNTS
 ----------------------------- */

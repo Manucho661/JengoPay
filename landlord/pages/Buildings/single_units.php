@@ -1,6 +1,3 @@
-<?php
-require_once "../db/connect.php";
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -469,11 +466,11 @@ require_once "../db/connect.php";
         
         <!-- Alerts -->
         <?php if (isset($successMessage)): ?>
-            <div class='alert alert-success animate-fade-in'><?= $successMessage ?></div>
+            <div class='alert alert-success animate-fade-in'><?= htmlspecialchars($successMessage) ?></div>
         <?php endif; ?>
         
         <?php if (isset($errorMessage)): ?>
-            <div class='alert alert-danger animate-fade-in'><?= $errorMessage ?></div>
+            <div class='alert alert-danger animate-fade-in'><?= htmlspecialchars($errorMessage) ?></div>
         <?php endif; ?>
         
         <!-- Header -->
@@ -504,6 +501,7 @@ require_once "../db/connect.php";
                     <div class="container-fluid animate-fade-in">
                         
                         <?php
+                        require_once "../db/connect.php";
                         include_once '../processes/encrypt_decrypt_function.php';
                         
                         // Submit Single Unit Information
@@ -572,69 +570,78 @@ require_once "../db/connect.php";
                             $final_bill = trim($_POST['final_bill'] ?? null);
                             
                             try {
-                                if (empty($reading_date) || empty($meter_type) || empty($current_reading) || empty($cost_per_unit) || $current_reading < $previous_reading) {
+                                if (empty($reading_date) || empty($meter_type) || empty($current_reading) || empty($cost_per_unit)) {
                                     echo "<script>
                                         Swal.fire({
                                             icon: 'error',
                                             title: 'Invalid Input',
-                                            text: 'Please ensure all fields are filled and readings are valid.',
+                                            text: 'Please ensure all required fields are filled.',
                                             background: 'white',
                                             color: '#333'
                                         });
                                     </script>";
-                                    exit;
                                 } else {
-                                    $units_consumed = $current_reading - $previous_reading;
-                                    $final_bill = $units_consumed * $cost_per_unit;
+                                    // Calculate units consumed and final bill
+                                    $previous_reading = $previous_reading ? (float)$previous_reading : 0;
+                                    $current_reading = (float)$current_reading;
+                                    $cost_per_unit = (float)$cost_per_unit;
                                     
-                                    $checkReading = $pdo->prepare("SELECT * FROM single_units WHERE reading_date = :reading_date AND meter_type = :meter_type");
-                                    $checkReading->execute([
-                                        ':reading_date' => $reading_date,
-                                        ':meter_type' => $meter_type
-                                    ]);
-                                    
-                                    if ($checkReading->rowCount() > 0) {
+                                    if ($current_reading < $previous_reading) {
                                         echo "<script>
                                             Swal.fire({
-                                                icon: 'warning',
-                                                title: 'Double Reading!',
-                                                text: 'Meter Reading for this Month has Already been Submitted!',
-                                                width: '600px',
-                                                padding: '0.6em',
+                                                icon: 'error',
+                                                title: 'Invalid Reading',
+                                                text: 'Current reading cannot be less than previous reading.',
                                                 background: 'white',
-                                                color: '#333',
-                                                confirmButtonText: 'OK'
-                                            }).then((result) => {
-                                                if (result.isConfirmed) {
-                                                    window.location.href = 'single_units.php';
-                                                }
+                                                color: '#333'
                                             });
                                         </script>";
-                                        exit;
                                     } else {
-                                        $submitMeterReading = $pdo->prepare("UPDATE single_units SET 
-                                            reading_date = :reading_date,
-                                            meter_type = :meter_type,
-                                            current_reading = :current_reading,
-                                            previous_reading = :previous_reading,
-                                            units_consumed = :units_consumed,
-                                            cost_per_unit = :cost_per_unit,
-                                            final_bill = :final_bill 
-                                            WHERE id = :id
-                                        ");
-                                        $submitMeterReading->execute([
+                                        $units_consumed = $current_reading - $previous_reading;
+                                        $final_bill = $units_consumed * $cost_per_unit;
+                                        
+                                        // Check if reading already exists for this date and meter type
+                                        $checkReading = $pdo->prepare("SELECT * FROM meter_readings WHERE reading_date = :reading_date AND meter_type = :meter_type AND unit_id = :unit_id");
+                                        $checkReading->execute([
                                             ':reading_date' => $reading_date,
                                             ':meter_type' => $meter_type,
-                                            ':current_reading' => $current_reading,
-                                            ':previous_reading' => $previous_reading,
-                                            ':units_consumed' => $units_consumed,
-                                            ':cost_per_unit' => $cost_per_unit,
-                                            ':final_bill' => $final_bill,
-                                            ':id' => $id,
+                                            ':unit_id' => $id
                                         ]);
                                         
-                                        echo "<script>
-                                            setTimeout(() => {
+                                        if ($checkReading->rowCount() > 0) {
+                                            echo "<script>
+                                                Swal.fire({
+                                                    icon: 'warning',
+                                                    title: 'Double Reading!',
+                                                    text: 'Meter Reading for this Month has Already been Submitted!',
+                                                    width: '600px',
+                                                    padding: '0.6em',
+                                                    background: 'white',
+                                                    color: '#333',
+                                                    confirmButtonText: 'OK'
+                                                }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        window.location.href = 'single_units.php';
+                                                    }
+                                                });
+                                            </script>";
+                                        } else {
+                                            // Insert into meter_readings table
+                                            $submitMeterReading = $pdo->prepare("INSERT INTO meter_readings 
+                                                (unit_id, reading_date, meter_type, current_reading, previous_reading, units_consumed, cost_per_unit, final_bill) 
+                                                VALUES (:unit_id, :reading_date, :meter_type, :current_reading, :previous_reading, :units_consumed, :cost_per_unit, :final_bill)");
+                                            $submitMeterReading->execute([
+                                                ':unit_id' => $id,
+                                                ':reading_date' => $reading_date,
+                                                ':meter_type' => $meter_type,
+                                                ':current_reading' => $current_reading,
+                                                ':previous_reading' => $previous_reading,
+                                                ':units_consumed' => $units_consumed,
+                                                ':cost_per_unit' => $cost_per_unit,
+                                                ':final_bill' => $final_bill
+                                            ]);
+                                            
+                                            echo "<script>
                                                 Swal.fire({
                                                     icon: 'success',
                                                     title: 'Success!',
@@ -648,8 +655,8 @@ require_once "../db/connect.php";
                                                         window.location.href = 'all_meter_readings.php';
                                                     }
                                                 });
-                                            }, 800);
-                                        </script>";
+                                            </script>";
+                                        }
                                     }
                                 }
                             } catch (Exception $e) {
@@ -811,7 +818,7 @@ require_once "../db/connect.php";
                                             </span>
                                             <div class="info-box-content">
                                                 <span class="info-box-text">Vacant Units</span>
-                                                <span class="info-box-number"><?= $vacant; ?></span>
+                                                <span class="info-box-number"><?= htmlspecialchars($vacant) ?></span>
                                                 <small class="text-muted">Available for rent</small>
                                             </div>
                                         </div>
@@ -853,7 +860,7 @@ require_once "../db/connect.php";
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <div>
                                     <b><i class="bi bi-buildings-fill me-2"></i>All Single Units</b>
-                                    <span class="badge bg-primary ms-2"><?= ($vacant + $occupied + $maintenance) ?> Total</span>
+                                    <span class="badge bg-primary ms-2"><?= htmlspecialchars($vacant + $occupied + $maintenance) ?> Total</span>
                                 </div>
                                 <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addUnitModal">
                                     <i class="bi bi-plus-circle me-1"></i> Add New Unit
@@ -1030,32 +1037,33 @@ require_once "../db/connect.php";
                                                 </td>
                                             </tr>
                                             
-                                            <!-- Meter Readings Modal -->
-                                            <div class="modal fade" id="meterReadingModal<?= $id ?>" tabindex="-1">
+                                            <!-- Meter Readings Modal
+                                            <div class="modal fade" id="meterReadingModal<?= $id ?>" tabindex="-1" aria-labelledby="meterReadingModalLabel<?= $id ?>" aria-hidden="true">
                                                 <div class="modal-dialog modal-lg">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title">
                                                                 <i class="bi bi-speedometer me-2"></i>
-                                                                Add Meter Reading for Unit <?= $unit_number; ?>
+                                                                Add Meter Reading for Unit <?= htmlspecialchars($unit_number); ?>
                                                             </h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
-                                                        <form action="" method="POST" enctype="multipart/form-data" autocomplete="off">
+                                                        <form action="" method="POST" enctype="multipart/form-data" autocomplete="off" id="meterReadingForm<?= $id ?>">
                                                             <input type="hidden" name="id" value="<?= htmlspecialchars(encryptor('decrypt', $id)); ?>">
                                                             <div class="modal-body">
                                                                 <div class="row g-3">
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
-                                                                            <label class="form-label">Reading Date</label>
-                                                                            <input type="date" class="form-control" name="reading_date" id="reading_date" required>
+                                                                            <label class="form-label">Reading Date <span class="text-danger">*</span></label>
+                                                                            <input type="date" class="form-control" name="reading_date" id="reading_date_<?= $id ?>" required 
+                                                                                   value="<?= date('Y-m-d') ?>">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
-                                                                            <label class="form-label">Meter Type</label>
-                                                                            <select class="form-select meter_type" name="meter_type" required>
-                                                                                <option value="" selected hidden>Select Meter Type</option>
+                                                                            <label class="form-label">Meter Type <span class="text-danger">*</span></label>
+                                                                            <select class="form-select meter-type" name="meter_type" id="meter_type_<?= $id ?>" required>
+                                                                                <option value="" selected disabled>Select Meter Type</option>
                                                                                 <option value="Water">Water Meter</option>
                                                                                 <option value="Electricity">Electricity Meter</option>
                                                                             </select>
@@ -1066,14 +1074,18 @@ require_once "../db/connect.php";
                                                                 <div class="row g-3 mt-3">
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
-                                                                            <label class="form-label">Current Reading:</label>
-                                                                            <input type="number" name="current_reading" placeholder="Enter current reading" required class="form-control" id="current_reading" step="0.01">
+                                                                            <label class="form-label">Current Reading: <span class="text-danger">*</span></label>
+                                                                            <input type="number" name="current_reading" placeholder="Enter current reading" 
+                                                                                   required class="form-control current-reading" id="current_reading_<?= $id ?>" 
+                                                                                   step="0.01" min="0">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label class="form-label">Previous Reading:</label>
-                                                                            <input type="number" name="previous_reading" placeholder="Enter previous reading" class="form-control" id="previous_reading" step="0.01">
+                                                                            <input type="number" name="previous_reading" placeholder="Enter previous reading" 
+                                                                                   class="form-control previous-reading" id="previous_reading_<?= $id ?>" 
+                                                                                   step="0.01" min="0">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1086,32 +1098,35 @@ require_once "../db/connect.php";
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <label class="form-label">Units Consumed:</label>
-                                                                                <input class="form-control bg-light" id="units_consumed" name="units_consumed" readonly>
+                                                                                <input class="form-control bg-light units-consumed" id="units_consumed_<?= $id ?>" 
+                                                                                       name="units_consumed" readonly type="text">
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
-                                                                                <label class="form-label">Cost Per Unit (Ksh):</label>
-                                                                                <input class="form-control" id="cost_per_unit" type="number" name="cost_per_unit" step="0.01">
+                                                                                <label class="form-label">Cost Per Unit (Ksh): <span class="text-danger">*</span></label>
+                                                                                <input class="form-control cost-per-unit" id="cost_per_unit_<?= $id ?>" 
+                                                                                       type="number" name="cost_per_unit" step="0.01" min="0" required>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group mt-3">
                                                                         <label class="form-label">Total Bill (Ksh):</label>
-                                                                        <input class="form-control bg-light fs-5 fw-bold" id="final_bill" name="final_bill" readonly type="text">
+                                                                        <input class="form-control bg-light fs-5 fw-bold final-bill" id="final_bill_<?= $id ?>" 
+                                                                               name="final_bill" readonly type="text">
                                                                     </div>
                                                                 </fieldset>
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                                <button type="submit" name="submit_reading" class="btn btn-primary">
+                                                                <button type="submit" name="submit_reading" class="btn btn-primary" id="submitReadingBtn<?= $id ?>">
                                                                     <i class="bi bi-send me-1"></i> Submit Reading
                                                                 </button>
                                                             </div>
                                                         </form>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             
                                             <!-- Mark as Vacant Modal -->
                                             <div class="modal fade" id="markAsVacant<?= $id ?>" tabindex="-1">
@@ -1176,33 +1191,6 @@ require_once "../db/connect.php";
                                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                                                 <button type="submit" class="btn btn-warning text-white" name="update_maintenance_status">
                                                                     <i class="bi bi-check-circle me-1"></i> Confirm Maintenance
-                                                                </button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <!-- Rent Single Unit Modal -->
-                                            <div class="modal fade" id="rentUnit<?= $id ?>" tabindex="-1">
-                                                <div class="modal-dialog modal-lg">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title text-success">
-                                                                <i class="bi bi-person-fill-check me-2"></i>
-                                                                Rent Out Unit <?= $unit_number; ?>
-                                                            </h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                        </div>
-                                                        <form action="" method="post" enctype="multipart/form-data" autocomplete="off">
-                                                            <div class="modal-body">
-                                                                <p class="lead">Rent out this unit to a new tenant...</p>
-                                                                <!-- Add rent form fields here -->
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                                <button type="submit" class="btn btn-success">
-                                                                    <i class="bi bi-send me-1"></i> Process Rental
                                                                 </button>
                                                             </div>
                                                         </form>
@@ -1289,7 +1277,7 @@ require_once "../db/connect.php";
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     
-    <!-- Meter Readings JavaScript -->
+    Meter Readings JavaScript
     <script>
     document.addEventListener("DOMContentLoaded", function() {
         // Initialize DataTable
@@ -1304,54 +1292,160 @@ require_once "../db/connect.php";
             }
         });
         
-        // Calculate bill function
-        function calculateBill() {
-            let current = parseFloat(document.getElementById("current_reading")?.value) || 0;
-            let previous = parseFloat(document.getElementById("previous_reading")?.value) || 0;
-            let cost = parseFloat(document.getElementById("cost_per_unit")?.value) || 0;
+        // Initialize all modals and attach event listeners
+        function initializeMeterReadingModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
             
-            let units = current - previous;
-            if (units < 0) units = 0;
+            // Get the specific form elements for this modal
+            const currentReading = modal.querySelector('.current-reading');
+            const previousReading = modal.querySelector('.previous-reading');
+            const costPerUnit = modal.querySelector('.cost-per-unit');
+            const unitsConsumed = modal.querySelector('.units-consumed');
+            const finalBill = modal.querySelector('.final-bill');
             
-            if (document.getElementById("units_consumed")) {
-                document.getElementById("units_consumed").value = units.toFixed(2);
+            if (!currentReading || !previousReading || !costPerUnit || !unitsConsumed || !finalBill) return;
+            
+            // Function to calculate bill for this specific modal
+            function calculateBill() {
+                const current = parseFloat(currentReading.value) || 0;
+                const previous = parseFloat(previousReading.value) || 0;
+                const cost = parseFloat(costPerUnit.value) || 0;
+                
+                let units = current - previous;
+                if (units < 0) units = 0;
+                
+                unitsConsumed.value = units.toFixed(2);
+                finalBill.value = (units * cost).toFixed(2);
             }
             
-            let finalBill = units * cost;
-            if (document.getElementById("final_bill")) {
-                document.getElementById("final_bill").value = finalBill.toFixed(2);
+            // Add input event listeners
+            currentReading.addEventListener('input', calculateBill);
+            previousReading.addEventListener('input', calculateBill);
+            costPerUnit.addEventListener('input', calculateBill);
+            
+            // Also calculate when modal is shown
+            modal.addEventListener('shown.bs.modal', function() {
+                calculateBill();
+            });
+            
+            // Clear form when modal is hidden
+            modal.addEventListener('hidden.bs.modal', function() {
+                // Don't clear the form if it was submitted
+                if (modal.dataset.submitted !== 'true') {
+                    const form = modal.querySelector('form');
+                    if (form) {
+                        form.reset();
+                        unitsConsumed.value = '';
+                        finalBill.value = '';
+                    }
+                }
+                modal.dataset.submitted = 'false';
+            });
+            
+            // Handle form submission
+            const form = modal.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', function() {
+                    modal.dataset.submitted = 'true';
+                    
+                    // Show loading state on submit button
+                    const submitBtn = modal.querySelector('button[name="submit_reading"]');
+                    if (submitBtn) {
+                        const originalText = submitBtn.innerHTML;
+                        submitBtn.innerHTML = '<span class="loader"></span> Processing...';
+                        submitBtn.disabled = true;
+                        
+                        // Reset after 5 seconds if still on page
+                        setTimeout(() => {
+                            submitBtn.innerHTML = originalText;
+                            submitBtn.disabled = false;
+                        }, 5000);
+                    }
+                });
             }
         }
         
-        // Add event listeners dynamically for all meter reading modals
-        document.addEventListener('input', function(e) {
-            if (e.target.id === 'current_reading' || e.target.id === 'previous_reading' || e.target.id === 'cost_per_unit') {
-                calculateBill();
-            }
+        // Find and initialize all meter reading modals
+        document.querySelectorAll('[id^="meterReadingModal"]').forEach(modal => {
+            initializeMeterReadingModal(modal.id);
         });
         
         // Add smooth scrolling
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
             });
         });
         
-        // Add loading state to buttons
+        // Add loading state to other submit buttons
         document.querySelectorAll('button[type="submit"]').forEach(button => {
-            button.addEventListener('click', function() {
-                const originalText = this.innerHTML;
-                this.innerHTML = '<span class="loader"></span> Processing...';
-                this.disabled = true;
+            if (!button.closest('[id^="meterReadingModal"]')) {
+                button.addEventListener('click', function() {
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<span class="loader"></span> Processing...';
+                    this.disabled = true;
+                    
+                    // Reset after 3 seconds if still on page
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                        this.disabled = false;
+                    }, 3000);
+                });
+            }
+        });
+        
+        // Set today's date as default for all reading date fields
+        const today = new Date().toISOString().split('T')[0];
+        document.querySelectorAll('input[name="reading_date"]').forEach(input => {
+            if (!input.value) {
+                input.value = today;
+            }
+        });
+        
+        // Validate meter reading form before submission
+        document.querySelectorAll('form[id^="meterReadingForm"]').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                const currentReading = this.querySelector('.current-reading');
+                const previousReading = this.querySelector('.previous-reading');
+                const costPerUnit = this.querySelector('.cost-per-unit');
                 
-                // Reset after 3 seconds if still on page
-                setTimeout(() => {
-                    this.innerHTML = originalText;
-                    this.disabled = false;
-                }, 3000);
+                if (currentReading && previousReading) {
+                    const current = parseFloat(currentReading.value) || 0;
+                    const previous = parseFloat(previousReading.value) || 0;
+                    
+                    if (current < previous) {
+                        e.preventDefault();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Invalid Reading',
+                            text: 'Current reading cannot be less than previous reading.',
+                            background: 'white',
+                            color: '#333'
+                        });
+                        return false;
+                    }
+                }
+                
+                if (costPerUnit && (!costPerUnit.value || parseFloat(costPerUnit.value) <= 0)) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Cost',
+                        text: 'Please enter a valid cost per unit.',
+                        background: 'white',
+                        color: '#333'
+                    });
+                    return false;
+                }
+                
+                return true;
             });
         });
     });

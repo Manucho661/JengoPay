@@ -677,6 +677,15 @@ $conn->close();
                                                         <option value="Under Maintenance">Under Maintenance</option>
                                                     </select>
                                                 </div>
+                                                <div class="form-group">
+                                                    <label>Unit Category</label>
+                                                    <select name="unit_category" id="unit_category" required class="form-control">
+                                                        <option value="" selected hidden>-- Select Status --</option>
+                                                        <option value="single_unit">Single Unit</option>
+                                                        <option value="bedsitter">Bedsitter</option>
+                                                        <option value="multi_room">Multi Room</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                             <div class="card-footer text-right">
                                                 <button class="btn btn-sm" id="secondSectionBackBtn" type="button" style="background-color:#00192D; color:#fff;">Go Back</button>

@@ -333,244 +333,241 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
       </section>
 
       <?php
-        if(isset($_POST['rent_unit'])) {
-          $tm = md5(time()); // Unique prefix for uploaded files
+if(isset($_POST['rent_unit'])) {
 
-          //Files Uploads Handling
-          function uploadFile($fileKey, $tm) {
-            if (isset($_FILES[$fileKey]) && $_FILES[$fileKey]['error'] === UPLOAD_ERR_OK) {
-              $name = basename($_FILES[$fileKey]['name']);
-              $safeName = preg_replace('/[^A-Za-z0-9._-]/', '_', $name); // sanitize
-              $destination = "all_uploads/" . $tm . "_" . $safeName;
-              move_uploaded_file($_FILES[$fileKey]['tmp_name'], $destination);
-              return $destination;
-            }
+    $tm = md5(time()); // Unique prefix for uploaded files
+
+    // --------------------------------------------
+    // FILE UPLOAD HANDLER (Keep as is)
+    // --------------------------------------------
+    function uploadFile($fileKey, $tm) {
+        if (!isset($_FILES[$fileKey]) || $_FILES[$fileKey]['error'] !== UPLOAD_ERR_OK) {
             return null;
-          }
-          $id_upload_destination = uploadFile('id_upload', $tm);
-          $tax_pin_copy_destination = uploadFile('tax_pin_copy', $tm);
-          $rental_agreement_destination = uploadFile('rental_agreement', $tm);
-
-          //Collect Form Data
-          $id = trim($_POST['id'] ?? null);
-          $occupancy_status = trim($_POST['occupancy_status'] ?? null);
-          $tfirst_name = trim($_POST['tfirst_name'] ?? null);
-          $tmiddle_name = trim($_POST['tmiddle_name'] ?? null);
-          $tlast_name = trim($_POST['tlast_name'] ?? null);
-          $tmain_contact = trim($_POST['tmain_contact'] ?? null);
-          $talt_contact = trim($_POST['talt_contact'] ?? null);
-          $temail = trim($_POST['temail'] ?? null);
-          $idMode = trim($_POST['idMode'] ?? null);
-          $id_no = trim($_POST['id_no'] ?? null);
-          $pass_no = trim($_POST['pass_no'] ?? null);
-          $leasing_period = trim($_POST['leasing_period'] ?? null);
-          $leasing_start_date = trim($_POST['leasing_start_date'] ?? null);
-          $leasing_end_date = trim($_POST['leasing_end_date'] ?? null);
-          $move_in_date = trim($_POST['move_in_date'] ?? null);
-          $move_out_date = trim($_POST['move_out_date'] ?? null);
-          $account_no = trim($_POST['account_no'] ?? null);
-          $income = trim($_POST['income'] ?? null);
-          $job_title = trim($_POST['job_title'] ?? null);
-          $job_location = trim($_POST['job_location'] ?? null);
-          $casual_job = trim($_POST['casual_job'] ?? null);
-          $business_name = trim($_POST['business_name'] ?? null);
-          $business_location = trim($_POST['business_location'] ?? null);
-          $tenant_status = trim($_POST['tenant_status'] ?? null);
-
-          // ---------- File Inputs ----------
-          $required_files = [
-            'id_copy'        => 'National ID / Passport Copy',
-            'kra_pin_copy'   => 'KRA PIN Copy',
-            'rental_agreement' => 'Rental Agreement'
-          ];
-
-          // ---------- Required Text Fields ----------
-          $required_text = [
-            'First Name'            => $first_name,
-            'Middle Name'           => $middle_name,
-            'Last Name'             => $last_name,
-            'Main Contact'          => $main_contact,
-            'Alternative Contact'   => $talt_contact,
-            'Email'                 => $email,
-            'Identification Mode'   => $idMode,
-            'Leasing Period'        => $leasing_period,
-            'Leasing Start Date'    => $leasing_start,
-            'Move In Date'          => $move_in_date,
-            'Unit Number'           => $account_no,
-            'Source of Income'      => $income
-          ];
-
-          $emptyFields = [];
-          $missingFiles = [];
-
-          // ---------- For each Loop to Check Empty Text Fields ----------
-          foreach ($required_text as $label => $value) {
-            if (empty($value)) {
-              $emptyFields[] = $label;
-            }
-          }
-
-          // ---------- For Each Loop to Check Missing File Uploads ----------
-          foreach ($required_files as $key => $label) {
-            if (!isset($_FILES[$key]) || $_FILES[$key]['error'] !== UPLOAD_ERR_OK) {
-              $missingFiles[] = $label;
-            }
-          }
-
-          // ---------- If Statement to Check on the Missing Fields or Files ----------
-          if (empty($emptyFields) || empty($missingFiles)) {
-            $message = '';
-            if (empty($emptyFields)) {
-              $message .= 'Please fill the following fields:<br><b>' . implode('<br>', $emptyFields) . '</b><br><br>';
-            }
-            if (empty($missingFiles)) {
-              $message .= 'Please upload the following files:<br><b>' . implode('<br>', $missingFiles) . '</b>';
-            }
-            echo "
-                <script>
-                  Swal.fire({
-                    icon: 'warning',
-                    title: 'Missing Required Information',
-                    html: `$message`,
-                    confirmButtonColor: '#00192D'
-                  });
-                </script>";
-            exit;
-          }
-
-          echo "
-              <script>
-                Swal.fire({
-                  title: 'Saving data...',
-                  text: 'Please wait while we process your request.',
-                  allowOutsideClick: false,
-                  allowEscapeKey: false,
-                  didOpen: () => { Swal.showLoading(); }
-                });
-              </script>";
-
-          try {
-            //Check if the Tenant Information Exists in the Database. No submission if this is true to avoid duplication of data
-            $checkTenant = $pdo->prepare("SELECT * FROM bedsitter_units
-                WHERE tmain_contact = :tmain_contact
-                   AND talt_contact = :talt_contact
-                   AND temail = :temail
-                   AND id_no = :id_no
-                   AND pass_no = :pass_no");
-
-            $checkTenant->execute([
-                ':tmain_contact' => $tmain_contact,
-                ':talt_contact'  => $talt_contact,
-                ':temail'        => $temail,
-                ':id_no'         => $id_no,
-                ':pass_no'       => $pass_no
-            ]);
-
-
-            if($checkTenant->rowCount() > 0) {
-              echo "
-                <script>
-                  Swal.fire({
-                    icon: 'warning',
-                    title: 'Duplicate Entry Detected!',
-                    text: 'Some user information already exists in the database.',
-                    confirmButtonColor: '#00192D'
-                  });
-                </script>";
-              exit;
-            } else {
-              //Update the Bed Sitter Units Information by Submitting the Tenant Information
-              $updateTable = $pdo->prepare("UPDATE bedsitter_units SET
-                occupancy_status =:occupancy_status,
-                tfirst_name =:tfirst_name,
-                tmiddle_name =:tmiddle_name,
-                tlast_name =:tlast_name,
-                tmain_contact =:tmain_contact,
-                talt_contact =:talt_contact,
-                temail =:temail,
-                idMode =:idMode,
-                id_no =:id_no,
-                pass_no =:pass_no,
-                leasing_period =:leasing_period,
-                leasing_start_date =:leasing_start_date,
-                leasing_end_date =:leasing_end_date,
-                move_in_date =:move_in_date,
-                move_out_date =:move_out_date,
-                account_no =:account_no,
-                id_upload =:id_upload,
-                tax_pin_copy =:tax_pin_copy,
-                rental_agreement =:rental_agreement,
-                income =:income,
-                job_title =:job_title,
-                job_location =:job_location,
-                casual_job =:casual_job,
-                business_name =:business_name,
-                business_location =:business_location,
-                tenant_status =:tenant_status,
-                tenant_reg = NOW()
-                WHERE
-                id =:id
-              ");
-              $updateTable->execute([
-                ':occupancy_status'     => $occupancy_status,
-                ':tfirst_name'          => $tfirst_name,
-                ':tmiddle_name'         => $tmiddle_name,
-                ':tlast_name'           => $tlast_name,
-                ':tmain_contact'        => $tmain_contact,
-                ':talt_contact'         => $talt_contact,
-                ':temail'               => $temail,
-                ':idMode'               => $idMode,
-                ':id_no'                => $id_no,
-                ':pass_no'              => $pass_no,
-                ':leasing_period'       => $leasing_period,
-                ':leasing_start_date'   => $leasing_start_date,
-                ':leasing_end_date'     => $leasing_end_date,
-                ':move_in_date'         => $move_in_date,
-                ':move_out_date'        => $move_out_date,
-                ':account_no'           => $account_no,
-                ':id_upload'            => $id_upload_destination,
-                ':tax_pin_copy'         => $tax_pin_copy_destination,
-                ':rental_agreement'     => $rental_agreement_destination,
-                ':income'               => $income,
-                ':job_title'            => $job_title,
-                ':job_location'         => $job_location,
-                ':casual_job'           => $casual_job,
-                ':business_name'        => $business_name,
-                ':business_location'    => $business_location,
-                ':tenant_status'        => $tenant_status,
-                ':id'                   => $id
-              ]);
-
-              echo "
-                  <script>
-                    setTimeout(() => {
-                      Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: 'Unit has been Successfully Rented Out.',
-                        showConfirmButton: true,
-                        confirmButtonText: 'OK'
-                        }).then((result) => {
-                          if (result.isConfirmed) {
-                          window.location.href = 'bed_sitter_tenants.php';
-                        }
-                      });
-                    }, 800); // short delay to smooth transition from loader
-                    </script>";
-            }
-
-          } catch (Exception $e) {
-            echo "<script>
-                  Swal.fire({
-                  icon: 'error',
-                  title: 'Error Saving Tenant',
-                  text: '" . addslashes($e->getMessage()) . "',
-                  confirmButtonColor: '#cc0001'
-                  });
-              </script>";
-          }
         }
-      ?>
+
+        $name = basename($_FILES[$fileKey]['name']);
+        $safeName = preg_replace('/[^A-Za-z0-9._-]/', '_', $name);
+        $destination = "all_uploads/" . $tm . "_" . $safeName;
+
+        move_uploaded_file($_FILES[$fileKey]['tmp_name'], $destination);
+        return $destination;
+    }
+
+    $id_upload_destination        = uploadFile('id_upload', $tm);
+    $tax_pin_copy_destination     = uploadFile('tax_pin_copy', $tm);
+    $rental_agreement_destination = uploadFile('rental_agreement', $tm);
+
+
+    // --------------------------------------------
+    // COLLECT FORM DATA (USE CORRECT FORM NAMES)
+    // --------------------------------------------
+    $id                 = $_POST['id'] ?? null;
+    $occupancy_status   = $_POST['occupancy_status'] ?? null;
+
+    $first_name         = $_POST['tfirst_name'] ?? null;
+    $middle_name        = $_POST['tmiddle_name'] ?? null;
+    $last_name          = $_POST['tlast_name'] ?? null;
+
+    $main_contact       = $_POST['tmain_contact'] ?? null;
+    $alt_contact        = $_POST['talt_contact'] ?? null;
+    $email              = $_POST['temail'] ?? null;
+
+    $idMode             = $_POST['idMode'] ?? null;
+    $id_no              = $_POST['id_no'] ?? null;
+    $pass_no            = $_POST['pass_no'] ?? null;
+
+    $leasing_period     = $_POST['leasing_period'] ?? null;
+    $leasing_start_date = $_POST['leasing_start_date'] ?? null;
+    $leasing_end_date   = $_POST['leasing_end_date'] ?? null;
+
+    $move_in_date       = $_POST['move_in_date'] ?? null;
+    $move_out_date      = $_POST['move_out_date'] ?? null;
+
+    $account_no         = $_POST['account_no'] ?? null;
+    $income             = $_POST['income'] ?? null;
+
+    $job_title          = $_POST['job_title'] ?? null;
+    $job_location       = $_POST['job_location'] ?? null;
+    $casual_job         = $_POST['casual_job'] ?? null;
+    $business_name      = $_POST['business_name'] ?? null;
+    $business_location  = $_POST['business_location'] ?? null;
+
+    $tenant_status      = $_POST['tenant_status'] ?? null;
+
+
+    // --------------------------------------------
+    // VALIDATION
+    // --------------------------------------------
+    $required_fields = [
+        "First Name"        => $first_name,
+        "Last Name"         => $last_name,
+        "Main Contact"      => $main_contact,
+        "Email"             => $email,
+        "ID Mode"           => $idMode,
+        "Leasing Period"    => $leasing_period,
+        "Leasing Start"     => $leasing_start_date,
+        "Move In Date"      => $move_in_date,
+        "Unit Account No."  => $account_no,
+        "Source of Income"  => $income
+    ];
+
+    $required_files = [
+        "ID Copy"             => $id_upload_destination,
+        "KRA PIN Copy"        => $tax_pin_copy_destination,
+        "Rental Agreement"    => $rental_agreement_destination
+    ];
+
+    $emptyFields = [];
+    foreach($required_fields as $label => $val){
+        if(empty($val)){
+            $emptyFields[] = $label;
+        }
+    }
+
+    $missingFiles = [];
+    foreach($required_files as $label => $val){
+        if(empty($val)){
+            $missingFiles[] = $label;
+        }
+    }
+
+    if(!empty($emptyFields) || !empty($missingFiles)) {
+        $msg = "";
+
+        if(!empty($emptyFields)){
+            $msg .= "Missing Fields:<br><b>" . implode("<br>", $emptyFields) . "</b><br><br>";
+        }
+
+        if(!empty($missingFiles)){
+            $msg .= "Missing Files:<br><b>" . implode("<br>", $missingFiles) . "</b><br>";
+        }
+
+        echo "
+        <script>
+            Swal.fire({
+                icon:'warning',
+                title:'Missing Information',
+                html:`$msg`,
+                confirmButtonColor:'#00192D'
+            });
+        </script>";
+        exit;
+    }
+
+
+    // --------------------------------------------
+    // DUPLICATE CHECK IN TENANTS TABLE
+    // --------------------------------------------
+    $checkTenant = $pdo->prepare("
+        SELECT id FROM tenants 
+        WHERE main_contact = :main_contact 
+          AND email = :email
+    ");
+
+    $checkTenant->execute([
+        ":main_contact" => $main_contact,
+        ":email"        => $email
+    ]);
+
+    if($checkTenant->rowCount() > 0) {
+        echo "
+        <script>
+            Swal.fire({
+                icon:'warning',
+                title:'Duplicate Entry!',
+                text:'A tenant with same contact/email already exists.'
+            });
+        </script>";
+        exit;
+    }
+
+
+    // --------------------------------------------
+    // INSERT INTO TENANTS TABLE
+    // --------------------------------------------
+    $insert = $pdo->prepare("
+        INSERT INTO tenants (
+            first_name, middle_name, last_name,
+            main_contact, alt_contact, email,
+            idMode, id_no, pass_no,
+            leasing_period, leasing_start_date, leasing_end_date,
+            move_in_date, move_out_date,
+            account_no,
+            id_upload, tax_pin_copy, rental_agreement,
+            income, job_title, job_location, casual_job,
+            business_name, business_location,
+            tenant_status, tenant_reg
+        ) VALUES (
+            :first_name, :middle_name, :last_name,
+            :main_contact, :alt_contact, :email,
+            :idMode, :id_no, :pass_no,
+            :leasing_period, :leasing_start_date, :leasing_end_date,
+            :move_in_date, :move_out_date,
+            :account_no,
+            :id_upload, :tax_pin_copy, :rental_agreement,
+            :income, :job_title, :job_location, :casual_job,
+            :business_name, :business_location,
+            :tenant_status, NOW()
+        )
+    ");
+
+    $insert->execute([
+        ":first_name"        => $first_name,
+        ":middle_name"       => $middle_name,
+        ":last_name"         => $last_name,
+        ":main_contact"      => $main_contact,
+        ":alt_contact"       => $alt_contact,
+        ":email"             => $email,
+        ":idMode"            => $idMode,
+        ":id_no"             => $id_no,
+        ":pass_no"           => $pass_no,
+        ":leasing_period"    => $leasing_period,
+        ":leasing_start_date"=> $leasing_start_date,
+        ":leasing_end_date"  => $leasing_end_date,
+        ":move_in_date"      => $move_in_date,
+        ":move_out_date"     => $move_out_date,
+        ":account_no"        => $account_no,
+        ":id_upload"         => $id_upload_destination,
+        ":tax_pin_copy"      => $tax_pin_copy_destination,
+        ":rental_agreement"  => $rental_agreement_destination,
+        ":income"            => $income,
+        ":job_title"         => $job_title,
+        ":job_location"      => $job_location,
+        ":casual_job"        => $casual_job,
+        ":business_name"     => $business_name,
+        ":business_location" => $business_location,
+        ":tenant_status"     => $tenant_status
+    ]);
+
+
+    // --------------------------------------------
+    // UPDATE OCCUPANCY STATUS IN BEDSITTER_UNITS TABLE
+    // --------------------------------------------
+    $updateUnit = $pdo->prepare("
+        UPDATE bedsitter_units 
+        SET occupancy_status = :status 
+        WHERE id = :id
+    ");
+    $updateUnit->execute([
+        ":status" => $occupancy_status,
+        ":id"     => $id
+    ]);
+
+
+    // --------------------------------------------
+    // SUCCESS MESSAGE
+    // --------------------------------------------
+    echo "
+    <script>
+        Swal.fire({
+            icon:'success',
+            title:'Success!',
+            text:'Tenant saved successfully.'
+        }).then(()=>{ window.location='bed_sitter_tenants.php'; });
+    </script>";
+
+}
+?>
             </div>
         </main>
         <!--end::App Main-->

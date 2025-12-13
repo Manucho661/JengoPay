@@ -1,5 +1,5 @@
 <?php
- require_once "../db/connect.php";
+require_once "../db/connect.php";
 //  include_once 'includes/lower_right_popup_form.php';
 ?>
 
@@ -196,26 +196,27 @@
                 <section class="content">
         <div class="container-fluid">
           <?php
-            $single_unit_tenants = "SELECT tenant_status, COUNT(*) AS total FROM bedsitter_units GROUP BY tenant_status";
-            $result_single_unit_tenants = $pdo->prepare($single_unit_tenants);
-            $result_single_unit_tenants->execute();
+            // CHANGED: Query tenants table instead of bedsitter_units
+            $bedsitter_tenants = "SELECT tenant_status, COUNT(*) AS total FROM tenants GROUP BY tenant_status";
+            $result_bedsitter_tenants = $pdo->prepare($bedsitter_tenants);
+            $result_bedsitter_tenants->execute();
+            
             //Initialize the countings for all the buildings
             $counts = [
                       'Active' => 0,
                       'Vacated'   => 0
                     ];
-                    while($row = $result_single_unit_tenants->fetch()) {
-                      $counts[$row['tenant_status']] = $row['total'];
-                    }
+                    
+            while($row = $result_bedsitter_tenants->fetch()) {
+                $counts[$row['tenant_status']] = $row['total'];
+            }
 
-                    // Assign icons for each building type
-              $icons = [
+            // Assign icons for each building type
+            $icons = [
                 'Active' => 'bi-check',
                 'Vacated'   => 'bi-house'
-                 ];
+            ];
             ?>
-
-
 
           <div class="row">
               <?php foreach ($counts as $type => $total): ?>
@@ -231,12 +232,12 @@
                 <?php endforeach; ?>
             </div><hr>
           <div class="card shadow">
-            <div class="card-header" style="background-color:#00192D; color:#fff;"><b>All Tenants</b></div>
+            <div class="card-header" style="background-color:#00192D; color:#fff;"><b>All Bed Sitter Tenants</b></div>
             <div class="card-body">
               <table class="table table-striped" id="dataTable">
                 <thead>
                   <th>Name</th>
-                  <th>Unit | Building</th>
+                  <th>Unit Account No</th>
                   <th>Unit Category</th>
                   <th>Contacts</th>
                   <th>Identification</th>
@@ -248,342 +249,279 @@
                 <tbody>
                   <?php
                   include_once 'processes/encrypt_decrypt_function.php';
-                    $select = $pdo->prepare("SELECT * FROM bedsitter_units ORDER BY tenant_reg DESC");
+                    
+                    // CHANGED: Query tenants table instead of bedsitter_units
+                    $select = $pdo->prepare("SELECT * FROM tenants ORDER BY tenant_reg DESC");
                     $select->execute();
-                    $row = 0;
+                    
+                    $hasRecords = false;
+                    
                     while($row = $select->fetch()){
+                      $hasRecords = true;
                       $id = encryptor('encrypt', $row['id']);
-                      if($row > 0) {
-                        echo "<script>
-                              Swal.fire({
-                                icon: 'success',
-                                title: 'Data Loaded',
-                                text: 'Tenant information retrieved successfully.',
-                                timer: 2000,
-                                showConfirmButton: false
-                              });
-                            </script>";
-                            ?>
-                              <tr>
-                                <td><?= $row['tfirst_name'].' '.$row['tmiddle_name'];?></td>
-                                <td><?= $row['account_no'].' ('.$row['building_link'].')';?></td>
-                                <td><?= htmlspecialchars($row['unit_category']) ;?></td>
-                                <td>
-                                  <a href="tel:<?= $row['tmain_contact'];?>"><?= $row['tmain_contact'];?></a><br>
-                                  <a href="tel:<?= $row['talt_contact'];?>"> <?= $row['talt_contact'];?></a>
-                              </td>
-                                <td><i class="bi bi-person-vcard"></i> <?= $row['pass_no'].''.$row['id_no']. ' ('.ucfirst($row['idMode']).')';?></td>
-                                <td><?= $row['move_in_date'];?></td>
-                                <td><?= $row['tenant_reg'];?></td>
-                                <td>
-                                  <?php
-                                    if($row['tenant_status'] == 'Active') {
-                                      ?>
-                                        <button class="btn btn-xs shadow" style="background-color:#24953E; color:#fff"><i class="bi bi-person-check"></i> <?= $row['tenant_status'];?></button>
-                                      <?php
-                                    } else {
-                                      ?>
-                                        <button class="btn btn-xs shadow" style="background-color: #cc0001; color:#fff"><i class="bi bi-person-exclamation"></i> <?= $row['tenant_status'];?></button>
-                                      <?php
-                                    }
-                                  ?>
-                                </td>
-                                <td>
-                                  <div class="btn-group shadow">
-                                    <button type="button" class="btn btn-default btn-xs" style="border:1px solid rgb(0, 25, 45 ,.3);">Action</button>
-                                    <button type="button" class="btn btn-default dropdown-toggle dropdown-icon btn-xs" data-toggle="dropdown" style="border:1px solid rgb(0, 25, 45 ,.3);">
-                                      <span class="sr-only">Toggle Dropdown</span>
-                                    </button>
-                                    <div class="dropdown-menu shadow" role="menu" style="border:1px solid rgb(0, 25, 45 ,.3);">
-                                      <?php
-                                        if($row['tenant_status'] == 'Active') {
-                                          ?>
-                                            <a class="dropdown-item" href="<?= 'https://wa.me/'.$row['tmain_contact'].'/?text=Hello,'." ". $row['tfirst_name']. '' ?>" target="_blank"><i class="fa fa-whatsapp"></i> WhatsApp</a>
-                                            <a class="dropdown-item" href="messaging.php?mesage=<?= $row['tfirst_name'] ;?>"><i class="fa fa-envelope"></i> Message</a>
-                                            <a class="dropdown-item" href="tenant_profile.php?profile=<?= encryptor('encrypt', $row['id']);?>"><i class="fas fa-newspaper"></i> Profile</a>
-                                            <a class="dropdown-item" href="edit_tenant_info.php?edit_tenant=<?= encryptor('encrypt', $row['id']);?>"><i class="fas fa-edit"></i> Edit</a>
-                                            <a class="dropdown-item" href="bed_sitter_tenant_invoice.php?invoice=<?= encryptor('encrypt', $row['id']);?>"><i class="fa fa-newspaper"></i> Invoice</a>
-                                            <a class="dropdown-item" href="all_individual_tenant_invoices.php?invoice=<?= encryptor('encrypt', $row['id']);?>"><i class="fa fa-table"></i> All Invoices</a>
-                                            <a class="dropdown-item" data-toggle="modal" data-target="#vacateTenantModal<?= htmlspecialchars($row['id']);?>" href="#"><i class="fa fa-arrow-right"></i> Vacate</a>
-                                            <a class="dropdown-item" data-toggle="modal" data-target="#shiftTenantModal<?= htmlspecialchars($row['id']);?>" href="#"><i class="fa fa-refresh"></i> Shift</a>
-                                            <a class="dropdown-item" href="email_tenant.php?email=<?= encryptor('encrypt', $row['id']);?>"><i class="fa fa-envelope-open"></i> Email</a>
-                                            <a class="dropdown-item" href="tenant_payment.php?payment=<?= encryptor('encrypt', $row['id']);?>"><i class="fas fa-money"></i> Payment</a>
-                                            <!--<div class="dropdown-divider"></div>-->
-                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#addInfoModal<?= htmlspecialchars($row['id']);?>"><i class="fa fa-plus-square"></i> Add Info</a>
-                                          <?php
-                                        } else {
-                                          ?>
-                                            <a class="dropdown-item" href="tenant_profile.php?profile=<?= encryptor('encrypt', $row['id']);?>"><i class="fas fa-newspaper"></i> Profile</a>
-                                            <a class="dropdown-item" href="all_individual_tenant_invoices.php?invoice=<?= encryptor('encrypt', $row['id']);?>"><i class="bi bi-receipt"></i> All Invoices</a>
-                                          <?php
-                                        }
-                                      ?>
-                                    </div>
-                                  </div>
-                                </td>
-                              </tr>
-                              <!-- Vacate Tenant Modal Display -->
-                              <div class="modal fade shadow" id="vacateTenantModal<?= htmlspecialchars($row['id']);?>">
-                                <div class="modal-dialog modal-md">
-                                  <div class="modal-content">
-                                    <div class="modal-header" style="background-color:#00192D; color:#fff;">
-                                      <b class="modal-title">Vacate <?= htmlspecialchars($row['tfirst_name']).' '.htmlspecialchars($row['tlast_name']);?></b>
-                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
-                                        <span aria-hidden="true">&times;</span>
-                                      </button>
-                                    </div>
-                                    <form action="" method="post" autocomplete="off">
-                                      <input type="hidden" name="id" value="<?= $row['id'];?>">
-                                      <input type="hidden" name="occupancy_status" value="Vacant">
-                                      <div class="modal-body">
-                                        <div class="form-group">
-                                         <p class="text-center"><b><?= htmlspecialchars($row['tfirst_name']).' '.htmlspecialchars($row['tlast_name']);?></b> Will be Vacated from this Unit within this Bulding. Note that Other Actions will be Disabled</p>
-                                          <label for="">Occupancy tatus</label>
-                                          <input type="text" class="form-control" name="tenant_status" id="tenant_status" value="Vacated" readonly>
-                                        </div>
-                                      </div>
-                                      <div class="modal-footer text-right">
-                                        <button type="submit" class="btn btn-sm" style="border:1px solid #00192D; color: #00192D;" name="vacate_tenant"><i class="bi bi-send"></i> Vacate</button>
-                                      </div>
-                                    </form>
-                                </div>
-                              </div>
-                            </div>
-                            <!-- Shift Tenant Modal Display -->
-                            <div class="modal fade shadow" id="shiftTenantModal<?= htmlspecialchars($row['id']);?>" style="border: 1px solid rgb(0,24,45,.3);">
-                              <div class="modal-dialog modal-md">
-                                <div class="modal-content">
-                                  <div class="modal-header" style="background-color:#00192D; color:#fff;">
-                                    <b class="modal-title">Shift <?= htmlspecialchars($row['tfirst_name']).' '.htmlspecialchars($row['tmiddle_name']).' '.htmlspecialchars($row['tlast_name']);?></b>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
-                                      <span aria-hidden="true">&times;</span>
-                                    </button>
-                                  </div>
-
-                                    <div class="modal-body">
-                                      <p class="text-center" style="font-weight:bold;">Please Specify the Unit to Shift the Tenant</p>
-                                      <div class="row text-center">
-                                        <div class="col-md-4">
-                                          <input type="radio" name="#" value="Single"> Single Units
-                                        </div>
-                                        <div class="col-md-4">
-                                            <input type="radio" name="#" value="BedSitter"> Bed Sitter
-                                        </div>
-                                        <div class="col-md-4">
-                                            <input type="radio" name="#" value="MultiRooms"> Multi-Rooms
-                                        </div>
-                                      </div>
-
-                                      <!-- Show the Form to Display Vacant Single Units with in the Specific Building -->
-                                      <div class="Single box" style="display:none; margin-top: 10px; margin-bottom: 10px;">
-                                        <div class="card shadow" style="border: 1px solid rgb(0, 25, 45, .3);">
-                                          <div class="card-header" style="background-color:#00192D; color: #fff;">
-                                            <b class="modal-title">Shift <?= htmlspecialchars($row['tfirst_name']).' '.htmlspecialchars($row['tlast_name']);?></b>
-                                          </div>
-
-                                          <!-- This PHP Code will Extract Single Vacant Units within the Building -->
-                                          <?php
-                                            $building_link = $row['building_link'];
-                                            $unit_category = $row['unit_category'];
-
-                                            $getVacantSingle = $pdo->prepare("
-                                                SELECT * FROM bedsitter_units
-                                                WHERE unit_category = :unit_category
-                                                  AND occupancy_status = 'Vacant'
-                                                  AND building_link = :building_link
-                                                  AND tenant_status = 'Vacated'
-                                            ");
-
-                                            $getVacantSingle->execute([
-                                              ':unit_category' => $unit_category,
-                                              ':building_link'      => $building_link
-                                            ]);
-
-                                            $allVacantSingleUnits = $getVacantSingle->fetchAll(PDO::FETCH_ASSOC);
-                                            ?>
-
-                                          <form action="" method="post" autocomplete="off">
-                                            <input type="hidden" name="id" value="<?= htmlspecialchars(encryptor('decrypt', $id)) ;?>">
-                                            <div class="card-body">
-                                              <p class="text-center">You are Shifting <span style="font-weight:bold; background-color: #cc0001; color: #fff; padding: 2px; border-radius: 2px;"><?= htmlspecialchars($row['tfirst_name']).' '.htmlspecialchars($row['tlast_name']);?></span> to Available <?= htmlspecialchars($unit_category) ;?> Units within <?= htmlspecialchars($row['building_link']) ;?></p>
-                                              <div class="form-group">
-                                                <label for="">Current Unit No</label>
-                                                <input type="text" class="form-control" value="<?= htmlspecialchars($row['account_no']) ;?>" readonly name="account_no">
-                                              </div>
-                                              <div class="form-group">
-                                                <label>Updated Status</label>
-                                                <input class="form-control" value="Vacant" name="occupancy_status" readonly>
-                                              </div>
-                                              <div class="form-group">
-                                                <label>Assign New Unit</label>
-                                                <select name="account_no" id="account_no" class="form-control" required>
-                                                  <option value="" selected hidden>-- Select Vacant Unit --</option>
-                                                  <?php if (count($allVacantSingleUnits) > 0): ?>
-                                                      <?php foreach ($allVacantSingleUnits as $unit): ?>
-                                                          <option value="<?= htmlspecialchars($unit['account_no']); ?>">
-                                                            <?= htmlspecialchars($unit['account_no']); ?>
-                                                          </option>
-                                                      <?php endforeach; ?>
-                                                  <?php else: ?>
-                                                      <option disabled>No Vacant Units Found</option>
-                                                  <?php endif; ?>
-                                                </select>
-                                              </div>
-                                            </div>
-                                            <div class="card-footer text-right">
-                                              <button type="submit" class="btn btn-sm" style="border:1px solid #00192D; color: #00192D;" name="shift_to_single_unit"><i class="bi bi-send"></i> Shift Tenant</button>
-                                            </div>
-                                          </form>
-                                        </div>
-                                      </div>
-
-                                      <!-- Show the Form to Display Only Bed Sitter Units with in the Specific Building -->
-                                      <div class="BedSitter box" style="display:none; margin-top: 10px;">
-                                        <div class="card shadow" style="border: 1px solid rgb(0, 25, 45, .3);">
-                                          <div class="card-header" style="background-color:#00192D; color: #fff;">
-                                            <b class="modal-title">Shift <?= htmlspecialchars($row['first_name']).' '.htmlspecialchars($row['last_name']);?></b>
-                                          </div>
-                                          <!-- This PHP Code will Extract Bed Sitter Vacant Units within the Building -->
-                                          <?php
-                                            $building = $row['building'];           // current building name
-                                            $bedSitterCategory = 'Bed Sitter'; // Specify the Unit Category which is Bed Sitters
-
-                                            //Query Out all the Vacant Single Units within the Building
-                                            $getVacantBedSitter = $pdo->prepare("SELECT * FROM tenants WHERE unit_category = :unit_category AND building = :building AND status = 'Vacated'");
-
-                                            $getVacantBedSitter->execute([
-                                              ':unit_category' => $bedSitterCategory,
-                                              ':building'      => $building
-                                            ]);
-                                            $allVacantBedSitterUnits = $getVacantBedSitter->fetchAll(PDO::FETCH_ASSOC);
-                                          ?>
-                                          <form action="" method="post" autocomplete="off">
-                                            <div class="card-body">
-                                              <p class="text-center" style="font-weight:bold;">You are Shifting <?= htmlspecialchars($row['first_name']).' '.htmlspecialchars($row['last_name']);?> to Available <?= htmlspecialchars($bedSitterCategory) ;?> Units within <?= htmlspecialchars($row['building']) ;?></p>
-                                              <div class="form-group">
-                                                <label for="">Current Unit No</label>
-                                                <input type="text" class="form-control" value="<?= htmlspecialchars($row['account_no']) ;?>" readonly name="account_no">
-                                              </div>
-                                              <div class="form-group">
-                                                <label>Assign New Unit</label>
-                                                <select name="account_no" id="account_no" class="form-control" required>
-                                                  <option value="" selected hidden>-- Select Vacant Unit --</option>
-                                                  <?php if (count($allVacantBedSitterUnits) > 0): ?>
-                                                      <?php foreach ($allVacantBedSitterUnits as $unit): ?>
-                                                          <option value="<?= htmlspecialchars($unit['account_no']); ?>">
-                                                              <?= htmlspecialchars($unit['account_no']); ?>
-                                                          </option>
-                                                      <?php endforeach; ?>
-                                                  <?php else: ?>
-                                                      <option disabled>No Vacant Units Found</option>
-                                                  <?php endif; ?>
-                                                </select>
-                                              </div>
-                                            </div>
-                                            <div class="card-footer text-right">
-                                              <button type="submit" class="btn btn-sm" style="border:1px solid #00192D; color: #00192D;" name="shift_to_bed_sitter_unit"><i class="bi bi-send"></i> Shift Tenant</button>
-                                            </div>
-                                          </form>
-                                        </div>
-                                      </div>
-
-                                      <!-- Show the Form to Display Only Multi-Rooms with in the Specific Building -->
-                                      <div class="MultiRooms box" style="display:none; margin-top: 10px;">
-                                        <div class="card shadow">
-                                          <div class="card-header" style="background-color:#00192D; color: #fff;">
-                                             <b class="modal-title">Shift <?= htmlspecialchars($row['first_name']).' '.htmlspecialchars($row['last_name']);?></b>
-                                          </div>
-                                          <!-- This PHP Code will Extract Multi Rooms Vacant Units within the Building -->
-                                          <?php
-                                            $building = $row['building'];           // current building name
-                                            $multiRoomCategory = 'Multi Room'; // Specify the Unit Category which is Multi Rooms
-
-                                            //Query Out all the Vacant Single Units within the Building
-                                            $getVacantMultiRoom = $pdo->prepare("SELECT * FROM tenants WHERE unit_category = :unit_category AND building = :building AND status = 'Vacated'");
-
-                                            $getVacantMultiRoom->execute([
-                                              ':unit_category' => $multiRoomCategory,
-                                              ':building'      => $building
-                                            ]);
-                                            $allVacantMultiRooms = $getVacantMultiRoom->fetchAll(PDO::FETCH_ASSOC);
-                                          ?>
-                                          <form action="" method="post" autocomplete="off">
-                                            <div class="card-body">
-                                              <p class="text-center" style="font-weight:bold;">You are Shifting <?= htmlspecialchars($row['first_name']).' '.htmlspecialchars($row['last_name']);?> to Available <?= htmlspecialchars($multiRoomCategory) ;?> Units within <?= htmlspecialchars($row['building']) ;?></p>
-                                              <div class="form-group">
-                                                <label for="">Current Unit No</label>
-                                                <input type="text" class="form-control" value="<?= htmlspecialchars($row['account_no']) ;?>" readonly name="account_no">
-                                              </div>
-                                              <div class="form-group">
-                                                <label>Assign New Unit</label>
-                                                <select name="account_no" id="account_no" class="form-control" required>
-                                                  <option value="" selected hidden>-- Select Vacant Unit --</option>
-                                                  <?php if (count($allVacantMultiRooms) > 0): ?>
-                                                      <?php foreach ($allVacantMultiRooms as $unit): ?>
-                                                          <option value="<?= htmlspecialchars($unit['account_no']); ?>">
-                                                              <?= htmlspecialchars($unit['account_no']); ?>
-                                                          </option>
-                                                      <?php endforeach; ?>
-                                                  <?php else: ?>
-                                                      <option disabled>No Vacant Units Found</option>
-                                                  <?php endif; ?>
-                                                </select>
-                                              </div>
-                                            </div>
-                                            <div class="card-footer text-right">
-                                              <button type="submit" class="btn btn-sm" style="border:1px solid #00192D; color: #00192D;" name="shift_to_multi_room_unit"><i class="bi bi-send"></i> Shift Tenant</button>
-                                            </div>
-                                          </form>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                              </div>
-                            </div>
-                            <!-- Add More Info for the Tenant Modal Display -->
-                             <div class="modal fade shadow" id="addInfoModal<?= htmlspecialchars($row['id']);?>">
-                                <div class="modal-dialog modal-md">
-                                  <div class="modal-content">
-                                    <div class="modal-header" style="background-color:#00192D; color:#fff;">
-                                      <b class="modal-title">Add Info for <?= htmlspecialchars($row['tfirst_name']).' '.htmlspecialchars($row['tlast_name']);?></b>
-                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
-                                        <span aria-hidden="true">&times;</span>
-                                      </button>
-                                    </div>
-                                    <form action="" method="post" autocomplete="off">
-                                      <input type="hidden" name="id" value="<?= htmlspecialchars($row['id']);?>">
-                                      <div class="modal-body">
-                                        <p class="text-center">These will be the Login Credentials for the Tenant to Access the Software Features</p>
-                                        <div class="form-group">
-                                            <label for="">Username</label>
-                                            <input type="text" class="form-control" name="username" id="username" placeholder="Enter Username" 
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Password</label>
-                                            <input type="password" class="form-control" name="password" id="password" placeholder="Enter Password">
-                                        </div>
-                                        <div class="form-group" style="display:none;">
-                                            <label for="">Password</label>
-                                            <input type="password" class="form-control" name="password_confirm" id="password" placeholder="Enter Password">
-                                        </div>
-                                      </div>
-                                      <div class="modal-footer text-right">
-                                        <button type="submit" class="btn btn-sm" style="border:1px solid #00192D; color: #00192D;" name="add_tenant_info"><i class="bi bi-send"></i> Submit</button>
-                                      </div>
-                                    </form>
-                                </div>
-                                 </div>
-                             </div>
+                      ?>
+                        <tr>
+                          <td><?= htmlspecialchars($row['first_name'].' '.$row['middle_name']);?></td>
+                          <td><?= htmlspecialchars($row['account_no']);?></td>
+                          <td><?= htmlspecialchars($row['unit_category']) ;?></td>
+                          <td>
+                            <a href="tel:<?= htmlspecialchars($row['main_contact']);?>"><?= htmlspecialchars($row['main_contact']);?></a><br>
+                            <a href="tel:<?= htmlspecialchars($row['alt_contact']);?>"> <?= htmlspecialchars($row['alt_contact']);?></a>
+                        </td>
+                          <td><i class="bi bi-person-vcard"></i> <?= htmlspecialchars($row['pass_no'].''.$row['id_no']. ' ('.ucfirst($row['idMode']).')');?></td>
+                          <td><?= htmlspecialchars($row['move_in_date']);?></td>
+                          <td><?= htmlspecialchars($row['tenant_reg']);?></td>
+                          <td>
                             <?php
-                      } else {
-                        echo "<script>
-                                Swal.fire({
-                                    icon: 'warning',
-                                    title: 'No Data',
-                                    text: 'No tenants found in the database.'
-                                });
-                            </script>";
-                      }
+                              if($row['tenant_status'] == 'Active') {
+                                ?>
+                                  <button class="btn btn-xs shadow" style="background-color:#24953E; color:#fff"><i class="bi bi-person-check"></i> <?= htmlspecialchars($row['tenant_status']);?></button>
+                                <?php
+                              } else {
+                                ?>
+                                  <button class="btn btn-xs shadow" style="background-color: #cc0001; color:#fff"><i class="bi bi-person-exclamation"></i> <?= htmlspecialchars($row['tenant_status']);?></button>
+                                <?php
+                              }
+                            ?>
+                          </td>
+                          <td>
+                            <div class="btn-group shadow">
+                              <button type="button" class="btn btn-default btn-xs" style="border:1px solid rgb(0, 25, 45 ,.3);">Action</button>
+                              <button type="button" class="btn btn-default dropdown-toggle dropdown-icon btn-xs" data-toggle="dropdown" style="border:1px solid rgb(0, 25, 45 ,.3);">
+                                <span class="sr-only">Toggle Dropdown</span>
+                              </button>
+                              <div class="dropdown-menu shadow" role="menu" style="border:1px solid rgb(0, 25, 45 ,.3);">
+                                <?php
+                                  if($row['tenant_status'] == 'Active') {
+                                    ?>
+                                      <a class="dropdown-item" href="<?= 'https://wa.me/'.$row['main_contact'].'/?text=Hello,'." ". $row['first_name']. '' ?>" target="_blank"><i class="fa fa-whatsapp"></i> WhatsApp</a>
+                                      <a class="dropdown-item" href="messaging.php?mesage=<?= $row['first_name'] ;?>"><i class="fa fa-envelope"></i> Message</a>
+                                      <a class="dropdown-item" href="tenant_profile.php?profile=<?= encryptor('encrypt', $row['id']);?>"><i class="fas fa-newspaper"></i> Profile</a>
+                                      <a class="dropdown-item" href="edit_tenant_info.php?edit_tenant=<?= encryptor('encrypt', $row['id']);?>"><i class="fas fa-edit"></i> Edit</a>
+                                      <a class="dropdown-item" href="bed_sitter_tenant_invoice.php?invoice=<?= encryptor('encrypt', $row['id']);?>"><i class="fa fa-newspaper"></i> Invoice</a>
+                                      <a class="dropdown-item" href="all_individual_tenant_invoices.php?invoice=<?= encryptor('encrypt', $row['id']);?>"><i class="fa fa-table"></i> All Invoices</a>
+                                      <a class="dropdown-item" data-toggle="modal" data-target="#vacateTenantModal<?= htmlspecialchars($row['id']);?>" href="#"><i class="fa fa-arrow-right"></i> Vacate</a>
+                                      <a class="dropdown-item" data-toggle="modal" data-target="#shiftTenantModal<?= htmlspecialchars($row['id']);?>" href="#"><i class="fa fa-refresh"></i> Shift</a>
+                                      <a class="dropdown-item" href="email_tenant.php?email=<?= encryptor('encrypt', $row['id']);?>"><i class="fa fa-envelope-open"></i> Email</a>
+                                      <a class="dropdown-item" href="tenant_payment.php?payment=<?= encryptor('encrypt', $row['id']);?>"><i class="fas fa-money"></i> Payment</a>
+                                      <!--<div class="dropdown-divider"></div>-->
+                                      <a class="dropdown-item" href="#" data-toggle="modal" data-target="#addInfoModal<?= htmlspecialchars($row['id']);?>"><i class="fa fa-plus-square"></i> Add Info</a>
+                                    <?php
+                                  } else {
+                                    ?>
+                                      <a class="dropdown-item" href="tenant_profile.php?profile=<?= encryptor('encrypt', $row['id']);?>"><i class="fas fa-newspaper"></i> Profile</a>
+                                      <a class="dropdown-item" href="all_individual_tenant_invoices.php?invoice=<?= encryptor('encrypt', $row['id']);?>"><i class="bi bi-receipt"></i> All Invoices</a>
+                                    <?php
+                                  }
+                                ?>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                        
+                        <!-- Vacate Tenant Modal Display -->
+                        <div class="modal fade shadow" id="vacateTenantModal<?= htmlspecialchars($row['id']);?>">
+                          <div class="modal-dialog modal-md">
+                            <div class="modal-content">
+                              <div class="modal-header" style="background-color:#00192D; color:#fff;">
+                                <b class="modal-title">Vacate <?= htmlspecialchars($row['first_name']).' '.htmlspecialchars($row['last_name']);?></b>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <form action="" method="post" autocomplete="off">
+                                <input type="hidden" name="id" value="<?= htmlspecialchars($row['id']);?>">
+                                <input type="hidden" name="account_no" value="<?= htmlspecialchars($row['account_no']);?>">
+                                <input type="hidden" name="unit_category" value="<?= htmlspecialchars($row['unit_category']);?>">
+                                <div class="modal-body">
+                                  <div class="form-group">
+                                   <p class="text-center"><b><?= htmlspecialchars($row['first_name']).' '.htmlspecialchars($row['last_name']);?></b> Will be Vacated from this Unit. Note that Other Actions will be Disabled</p>
+                                    <label for="">Tenant Status</label>
+                                    <input type="text" class="form-control" name="tenant_status" id="tenant_status" value="Vacated" readonly>
+                                  </div>
+                                </div>
+                                <div class="modal-footer text-right">
+                                  <button type="submit" class="btn btn-sm" style="border:1px solid #00192D; color: #00192D;" name="vacate_tenant"><i class="bi bi-send"></i> Vacate</button>
+                                </div>
+                              </form>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <!-- Shift Tenant Modal Display -->
+                      <div class="modal fade shadow" id="shiftTenantModal<?= htmlspecialchars($row['id']);?>" style="border: 1px solid rgb(0,24,45,.3);">
+                        <div class="modal-dialog modal-md">
+                          <div class="modal-content">
+                            <div class="modal-header" style="background-color:#00192D; color:#fff;">
+                              <b class="modal-title">Shift <?= htmlspecialchars($row['first_name']).' '.htmlspecialchars($row['middle_name']).' '.htmlspecialchars($row['last_name']);?></b>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+
+                            <div class="modal-body">
+                              <p class="text-center" style="font-weight:bold;">Please Specify the Unit to Shift the Tenant</p>
+                              <div class="row text-center">
+                                <div class="col-md-4">
+                                  <input type="radio" name="unit_type_<?= htmlspecialchars($row['id']);?>" value="Single" class="unit-type-radio"> Single Units
+                                </div>
+                                <div class="col-md-4">
+                                  <input type="radio" name="unit_type_<?= htmlspecialchars($row['id']);?>" value="BedSitter" class="unit-type-radio"> Bed Sitter
+                                </div>
+                                <div class="col-md-4">
+                                  <input type="radio" name="unit_type_<?= htmlspecialchars($row['id']);?>" value="MultiRooms" class="unit-type-radio"> Multi-Rooms
+                                </div>
+                              </div>
+
+                              <!-- Show the Form to Display Vacant Single Units -->
+                              <div class="Single box" style="display:none; margin-top: 10px; margin-bottom: 10px;">
+                                <div class="card shadow" style="border: 1px solid rgb(0, 25, 45, .3);">
+                                  <div class="card-header" style="background-color:#00192D; color: #fff;">
+                                    <b class="modal-title">Shift <?= htmlspecialchars($row['first_name']).' '.htmlspecialchars($row['last_name']);?></b>
+                                  </div>
+
+                                  <?php
+                                    // Get building_link from tenant record
+                                    $building_link = $row['building_link'];
+                                    
+                                    // Get vacant single units in the same building
+                                    $getVacantSingle = $pdo->prepare("
+                                        SELECT * FROM single_units
+                                        WHERE occupancy_status = 'Vacant'
+                                        AND building_link = :building_link
+                                    ");
+                                    $getVacantSingle->execute([':building_link' => $building_link]);
+                                    $allVacantSingleUnits = $getVacantSingle->fetchAll(PDO::FETCH_ASSOC);
+                                  ?>
+
+                                  <form action="" method="post" autocomplete="off">
+                                    <input type="hidden" name="tenant_id" value="<?= htmlspecialchars($row['id']);?>">
+                                    <input type="hidden" name="current_account_no" value="<?= htmlspecialchars($row['account_no']);?>">
+                                    <input type="hidden" name="current_unit_category" value="<?= htmlspecialchars($row['unit_category']);?>">
+                                    <input type="hidden" name="building_link" value="<?= htmlspecialchars($building_link);?>">
+                                    <div class="card-body">
+                                      <p class="text-center">You are Shifting <span style="font-weight:bold; background-color: #cc0001; color: #fff; padding: 2px; border-radius: 2px;"><?= htmlspecialchars($row['first_name']).' '.htmlspecialchars($row['last_name']);?></span> to Available Single Units within <?= htmlspecialchars($building_link);?></p>
+                                      <div class="form-group">
+                                        <label for="">Current Unit No</label>
+                                        <input type="text" class="form-control" value="<?= htmlspecialchars($row['account_no']);?>" readonly>
+                                      </div>
+                                      <div class="form-group">
+                                        <label>Assign New Unit</label>
+                                        <select name="new_account_no" class="form-control" required>
+                                          <option value="" selected hidden>-- Select Vacant Unit --</option>
+                                          <?php if (count($allVacantSingleUnits) > 0): ?>
+                                              <?php foreach ($allVacantSingleUnits as $unit): ?>
+                                                  <option value="<?= htmlspecialchars($unit['unit_number']); ?>">
+                                                    <?= htmlspecialchars($unit['unit_number']); ?>
+                                                  </option>
+                                              <?php endforeach; ?>
+                                          <?php else: ?>
+                                              <option disabled>No Vacant Units Found</option>
+                                          <?php endif; ?>
+                                        </select>
+                                      </div>
+                                    </div>
+                                    <div class="card-footer text-right">
+                                      <button type="submit" class="btn btn-sm" style="border:1px solid #00192D; color: #00192D;" name="shift_tenant"><i class="bi bi-send"></i> Shift Tenant</button>
+                                    </div>
+                                  </form>
+                                </div>
+                              </div>
+
+                              <!-- Show the Form to Display Bed Sitter Units -->
+                              <div class="BedSitter box" style="display:none; margin-top: 10px;">
+                                <div class="card shadow" style="border: 1px solid rgb(0, 25, 45, .3);">
+                                  <div class="card-header" style="background-color:#00192D; color: #fff;">
+                                    <b class="modal-title">Shift <?= htmlspecialchars($row['first_name']).' '.htmlspecialchars($row['last_name']);?></b>
+                                  </div>
+                                  
+                                  <?php
+                                    // Get vacant bedsitter units in the same building
+                                    $getVacantBedSitter = $pdo->prepare("
+                                        SELECT * FROM bedsitter_units
+                                        WHERE occupancy_status = 'Vacant'
+                                        AND building_link = :building_link
+                                        AND unit_number != :current_unit
+                                    ");
+                                    $getVacantBedSitter->execute([
+                                        ':building_link' => $building_link,
+                                        ':current_unit' => $row['account_no']
+                                    ]);
+                                    $allVacantBedSitterUnits = $getVacantBedSitter->fetchAll(PDO::FETCH_ASSOC);
+                                  ?>
+                                  
+                                  <form action="" method="post" autocomplete="off">
+                                    <input type="hidden" name="tenant_id" value="<?= htmlspecialchars($row['id']);?>">
+                                    <input type="hidden" name="current_account_no" value="<?= htmlspecialchars($row['account_no']);?>">
+                                    <input type="hidden" name="building_link" value="<?= htmlspecialchars($building_link);?>">
+                                    <div class="card-body">
+                                      <p class="text-center" style="font-weight:bold;">You are Shifting <?= htmlspecialchars($row['first_name']).' '.htmlspecialchars($row['last_name']);?> to Available Bed Sitter Units within <?= htmlspecialchars($building_link);?></p>
+                                      <div class="form-group">
+                                        <label for="">Current Unit No</label>
+                                        <input type="text" class="form-control" value="<?= htmlspecialchars($row['account_no']);?>" readonly>
+                                      </div>
+                                      <div class="form-group">
+                                        <label>Assign New Unit</label>
+                                        <select name="new_account_no" class="form-control" required>
+                                          <option value="" selected hidden>-- Select Vacant Unit --</option>
+                                          <?php if (count($allVacantBedSitterUnits) > 0): ?>
+                                              <?php foreach ($allVacantBedSitterUnits as $unit): ?>
+                                                  <option value="<?= htmlspecialchars($unit['unit_number']); ?>">
+                                                    <?= htmlspecialchars($unit['unit_number']); ?>
+                                                  </option>
+                                              <?php endforeach; ?>
+                                          <?php else: ?>
+                                              <option disabled>No Vacant Units Found</option>
+                                          <?php endif; ?>
+                                        </select>
+                                      </div>
+                                    </div>
+                                    <div class="card-footer text-right">
+                                      <button type="submit" class="btn btn-sm" style="border:1px solid #00192D; color: #00192D;" name="shift_tenant"><i class="bi bi-send"></i> Shift Tenant</button>
+                                    </div>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <!-- Add More Info for the Tenant Modal Display -->
+                      <div class="modal fade shadow" id="addInfoModal<?= htmlspecialchars($row['id']);?>">
+                        <div class="modal-dialog modal-md">
+                          <div class="modal-content">
+                            <div class="modal-header" style="background-color:#00192D; color:#fff;">
+                              <b class="modal-title">Add Info for <?= htmlspecialchars($row['first_name']).' '.htmlspecialchars($row['last_name']);?></b>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <form action="" method="post" autocomplete="off">
+                              <input type="hidden" name="id" value="<?= htmlspecialchars($row['id']);?>">
+                              <div class="modal-body">
+                                <p class="text-center">These will be the Login Credentials for the Tenant to Access the Software Features</p>
+                                <div class="form-group">
+                                  <label for="">Username</label>
+                                  <input type="text" class="form-control" name="username" id="username" placeholder="Enter Username" required>
+                                </div>
+                                <div class="form-group">
+                                  <label for="">Password</label>
+                                  <input type="password" class="form-control" name="password" id="password" placeholder="Enter Password" required>
+                                </div>
+                              </div>
+                              <div class="modal-footer text-right">
+                                <button type="submit" class="btn btn-sm" style="border:1px solid #00192D; color: #00192D;" name="add_tenant_info"><i class="bi bi-send"></i> Submit</button>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    <?php
+                    }
+                    
+                    if (!$hasRecords) {
+                      echo "<tr><td colspan='9' class='text-center'>No tenants found</td></tr>";
                     }
                   ?>
                 </tbody>
@@ -609,6 +547,22 @@
     <!-- Meter Readings JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- JavaScript for radio button toggling -->
+    <script>
+    $(document).ready(function() {
+        // Handle radio button changes for shift tenant modal
+        $('input[class="unit-type-radio"]').change(function() {
+            var tenantId = this.name.replace('unit_type_', '');
+            var selectedValue = this.value;
+            
+            // Hide all boxes first
+            $('.box').hide();
+            
+            // Show selected box
+            $('.' + selectedValue + '.box').show();
+        });
+    });
+    </script>
  
             </div>
         </main>
@@ -649,169 +603,230 @@
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <?php
+        // =============== VACATE TENANT ====================
         if (isset($_POST['vacate_tenant'])) {
-          $tenant_id = $_POST['id'] ?? '';
-          $occupancy_status = $_POST['occupancy_status'] ?? '';
-          $tenant_status = $_POST['tenant_status'] ?? '';
+            $tenant_id = $_POST['id'] ?? '';
+            $tenant_status = $_POST['tenant_status'] ?? '';
+            $account_no = $_POST['account_no'] ?? '';
+            $unit_category = $_POST['unit_category'] ?? '';
+            
             try {
-                $update = $pdo->prepare("UPDATE bedsitter_units SET occupancy_status =:occupancy_status, tenant_status = :tenant_status, vacated_on = NOW() WHERE id = :id");
-                $updated = $update->execute([
-                    ':occupancy_status' => $occupancy_status,
+                // Update tenant status
+                $updateTenant = $pdo->prepare("UPDATE tenants SET tenant_status = :tenant_status, tenant_occupancy_status = 'INACTIVE', move_out_date = NOW() WHERE id = :id");
+                $updatedTenant = $updateTenant->execute([
                     ':tenant_status' => $tenant_status,
                     ':id' => $tenant_id
                 ]);
+                
+                // Update unit occupancy status based on unit category
+                if ($unit_category == 'Single Unit') {
+                    $updateUnit = $pdo->prepare("UPDATE single_units SET occupancy_status = 'Vacant' WHERE unit_number = :account_no");
+                } elseif ($unit_category == 'Bed Sitter') {
+                    $updateUnit = $pdo->prepare("UPDATE bedsitter_units SET occupancy_status = 'Vacant' WHERE unit_number = :account_no");
+                }
+                
+                if (isset($updateUnit)) {
+                    $updatedUnit = $updateUnit->execute([':account_no' => $account_no]);
+                }
 
-              if($updated) {
-                  echo
-                    "<script>
-                      Swal.fire({
-                      icon: 'success',
-                      title: 'Vacate Successful!',
-                      text: 'Tenant has been Vacated Successfully. This Unit is Now Vacant.',
-                      confirmButtonColor: '#00192D'
-                      }).then(() => {
-                      window.location.href = 'all_tenants.php'; // redirect after confirmation
-                      });
+                if($updatedTenant) {
+                    echo "<script>
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Vacate Successful!',
+                            text: 'Tenant has been Vacated Successfully.',
+                            confirmButtonColor: '#00192D'
+                        }).then(() => {
+                            window.location.href = 'bed_sitter_tenants.php';
+                        });
                     </script>";
-              } else {
-                  echo "
-                  <script>
+                } else {
+                    echo "<script>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Update Failed',
+                            text: 'Unable to update tenant status. Please try again.',
+                            confirmButtonColor: '#00192D'
+                        });
+                    </script>";
+                }
+            } catch (PDOException $e) {
+                echo "<script>
                     Swal.fire({
-                      icon: 'error',
-                      title: 'Update Failed',
-                      text: 'Unable to update tenant status. Please try again.',
-                      confirmButtonColor: '#00192D'
+                        icon: 'error',
+                        title: 'Database Error',
+                        text: '".addslashes($e->getMessage())."',
+                        confirmButtonColor: '#00192D'
                     });
-                  </script>";
-              }
-          } catch (PDOException $e) {
-            echo "
-            <script>
-              Swal.fire({
-                icon: 'error',
-                title: 'Database Error',
-                text: '".addslashes($e->getMessage())."',
-                confirmButtonColor: '#00192D'
-              });
-            </script>";
+                </script>";
             }
         }
 
-        //=============== PHP Shift Tenant to a Single Vacant Unit ====================
-        if(isset($_POST['shift_to_single_unit'])) {
-          $tenant_id = $_POST['id'] ?? '';
-          $tenant_status = $_POST['tenant_status'] ?? '';
-          $newoccupancy_status = 'Occupied';
-          
-          try {
-            $shiftTenant = $pdo->prepare("UPDATE bedsitter_units SET occupancy_status =:occupancy_status WHERE id =:id");
-            $shiftTenantConfirm = $shiftTenant->execute([
-              ':occupancy_status' => $newoccupancy_status,
-              ':id' => $tenant_id
-            ]);
-
-            if($shiftTenantConfirm) {
-              echo
-                    "<script>
-                      Swal.fire({
-                      icon: 'success',
-                      title: 'Shift Successful!',
-                      text: 'Tenant has been Vacated Successfully Shifted to another Unit.',
-                      confirmButtonColor: '#00192D'
-                      }).then(() => {
-                      window.location.href = 'all_tenants.php'; // redirect after confirmation
-                      });
-                    </script>";
-            } else {
-              echo "
-                  <script>
+        // =============== SHIFT TENANT ====================
+        if(isset($_POST['shift_tenant'])) {
+            $tenant_id = $_POST['tenant_id'] ?? '';
+            $current_account_no = $_POST['current_account_no'] ?? '';
+            $new_account_no = $_POST['new_account_no'] ?? '';
+            $current_unit_category = $_POST['current_unit_category'] ?? '';
+            $building_link = $_POST['building_link'] ?? '';
+            
+            try {
+                // Begin transaction
+                $pdo->beginTransaction();
+                
+                // 1. Vacate current unit based on category
+                if ($current_unit_category == 'Single Unit') {
+                    $vacateCurrent = $pdo->prepare("UPDATE single_units SET occupancy_status = 'Vacant' WHERE unit_number = :current_account_no");
+                } elseif ($current_unit_category == 'Bed Sitter') {
+                    $vacateCurrent = $pdo->prepare("UPDATE bedsitter_units SET occupancy_status = 'Vacant' WHERE unit_number = :current_account_no");
+                }
+                
+                if (isset($vacateCurrent)) {
+                    $vacateCurrent->execute([':current_account_no' => $current_account_no]);
+                }
+                
+                // 2. Determine new unit category based on table pattern
+                // Check if new unit exists in single_units table
+                $checkSingleUnit = $pdo->prepare("SELECT COUNT(*) as count FROM single_units WHERE unit_number = :new_account_no");
+                $checkSingleUnit->execute([':new_account_no' => $new_account_no]);
+                $singleUnitExists = $checkSingleUnit->fetch()['count'] > 0;
+                
+                if ($singleUnitExists) {
+                    // Occupy new single unit
+                    $occupyNew = $pdo->prepare("UPDATE single_units SET occupancy_status = 'Occupied' WHERE unit_number = :new_account_no");
+                    $new_unit_category = 'Single Unit';
+                } else {
+                    // Check bedsitter_units table
+                    $checkBedSitterUnit = $pdo->prepare("SELECT COUNT(*) as count FROM bedsitter_units WHERE unit_number = :new_account_no");
+                    $checkBedSitterUnit->execute([':new_account_no' => $new_account_no]);
+                    $bedSitterUnitExists = $checkBedSitterUnit->fetch()['count'] > 0;
+                    
+                    if ($bedSitterUnitExists) {
+                        $occupyNew = $pdo->prepare("UPDATE bedsitter_units SET occupancy_status = 'Occupied' WHERE unit_number = :new_account_no");
+                        $new_unit_category = 'Bed Sitter';
+                    } else {
+                        throw new Exception("New unit not found in any unit table");
+                    }
+                }
+                
+                if (isset($occupyNew)) {
+                    $occupyNew->execute([':new_account_no' => $new_account_no]);
+                }
+                
+                // 3. Update tenant's account number and unit category
+                $updateTenant = $pdo->prepare("UPDATE tenants SET account_no = :new_account_no, unit_category = :unit_category WHERE id = :id");
+                $updateTenant->execute([
+                    ':new_account_no' => $new_account_no,
+                    ':unit_category' => $new_unit_category,
+                    ':id' => $tenant_id
+                ]);
+                
+                // Commit transaction
+                $pdo->commit();
+                
+                echo "<script>
                     Swal.fire({
-                      icon: 'error',
-                      title: 'Update Failed',
-                      text: 'Unable to Shift tenant status. Please try again.',
-                      confirmButtonColor: '#00192D'
+                        icon: 'success',
+                        title: 'Shift Successful!',
+                        text: 'Tenant has been successfully shifted to new unit.',
+                        confirmButtonColor: '#00192D'
+                    }).then(() => {
+                        window.location.href = 'bed_sitter_tenants.php';
                     });
-                  </script>";
+                </script>";
+                
+            } catch (PDOException $e) {
+                // Rollback transaction on error
+                if ($pdo->inTransaction()) {
+                    $pdo->rollBack();
+                }
+                echo "<script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Database Error',
+                        text: '".addslashes($e->getMessage())."',
+                        confirmButtonColor: '#00192D'
+                    });
+                </script>";
+            } catch (Exception $e) {
+                if ($pdo->inTransaction()) {
+                    $pdo->rollBack();
+                }
+                echo "<script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: '".addslashes($e->getMessage())."',
+                        confirmButtonColor: '#00192D'
+                    });
+                </script>";
             }
-
-          } catch (PDOException $e) {
-            echo "
-            <script>
-              Swal.fire({
-                icon: 'error',
-                title: 'Database Error',
-                text: '".addslashes($e->getMessage())."',
-                confirmButtonColor: '#00192D'
-              });
-            </script>";
-          }
         }
 
-        //==================== Add Tenant Informatin for Loging innto the System ====================
+        // =============== ADD TENANT LOGIN INFO ====================
         if(isset($_POST['add_tenant_info'])) {
-          //Sanitize and validate the inputs
-          $id = trim($_POST['id'] ?? '');
-          $username = trim($_POST['username'] ?? '');
-          $password = trim($_POST['password'] ?? '');
-          $hashedPassword = password_hash($password, PASSWORD_DEFAULT); //Secure the Password
-          try {
-            //Check for the Existance of the Same Username in the Database to avoid double regustration
-            $check_username = $pdo->prepare("SELECT * FROM bedsitter_units WHERE username =:username");
-            $check_username->execute([
-              'username' => $username
-            ]);
-            //Check for Empty Fields and Avoid Submission
-            if(empty($username) || empty($password)) {
-              //Show Message for required Inputs
-              echo "
-                <script>
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Missing Fields',
-                    text: 'Username or Password Missing.',
-                    confirmButtonColor: '#00192D'
-                });
-                </script>";
-                exit;
-                //Check if the Username Already Exists in the Database
-            } 
-            if ($check_username->rowCount() > 0) {
-              //Show Message warning the Existance of the Username
-              echo "
-                <script>
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Double Registration',
-                    text: 'Username Entered Already Registered. Choose a Different One.',
-                    confirmButtonColor: '#00192D'
-                });
-                </script>";
-                exit;
-            } else {
-              //If All is well, Submit data
-              $addInfo = $pdo->prepare("UPDATE bedsitter_units SET username =:username, password=:password WHERE id =:id");
-              $addInfo->execute([
-                ':username' => $username,
-                ':password' => $hashedPassword,
-                ':id' => $id,
-              ]);
+            $id = trim($_POST['id'] ?? '');
+            $username = trim($_POST['username'] ?? '');
+            $password = trim($_POST['password'] ?? '');
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            
+            try {
+                // Check if username already exists in tenants table
+                $check_username = $pdo->prepare("SELECT * FROM tenants WHERE username = :username");
+                $check_username->execute([':username' => $username]);
+                
+                if(empty($username) || empty($password)) {
+                    echo "<script>
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Missing Fields',
+                            text: 'Username or Password Missing.',
+                            confirmButtonColor: '#00192D'
+                        });
+                    </script>";
+                    exit;
+                }
+                
+                if ($check_username->rowCount() > 0) {
+                    echo "<script>
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Double Registration',
+                            text: 'Username Entered Already Registered. Choose a Different One.',
+                            confirmButtonColor: '#00192D'
+                        });
+                    </script>";
+                    exit;
+                } else {
+                    // Update tenant with login credentials
+                    $addInfo = $pdo->prepare("UPDATE tenants SET username = :username, password = :password WHERE id = :id");
+                    $addInfo->execute([
+                        ':username' => $username,
+                        ':password' => $hashedPassword,
+                        ':id' => $id,
+                    ]);
 
-              //Alert Message Showing Successful Submision of Added Data
-              echo
-                "<script>
-                  Swal.fire({
-                    icon: 'success',
-                    title: 'Confirmation',
-                    text: 'Tenant Login Credentials Added Successfully.',
-                    confirmButtonColor: '#00192D'
-                  }).then(() => {
-                    window.location.href = 'all_tenants.php'; // redirect after confirmation
-                  });
+                    echo "<script>
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Confirmation',
+                            text: 'Tenant Login Credentials Added Successfully.',
+                            confirmButtonColor: '#00192D'
+                        }).then(() => {
+                            window.location.href = 'bed_sitter_tenants.php';
+                        });
+                    </script>";
+                }
+            } catch (Exception $e) {
+                echo "<script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An error occurred: " . addslashes($e->getMessage()) . "',
+                        confirmButtonColor: '#00192D'
+                    });
                 </script>";
             }
-          } catch (Exception $e) {
-
-          }
         }
     ?>
 </body>
