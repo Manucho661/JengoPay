@@ -1,6 +1,10 @@
 <?php
+session_start();
 require_once "../db/connect.php";
-//  include_once 'includes/lower_right_popup_form.php';
+//   include_once 'includes/lower_right_popup_form.php';
+$select = "SELECT * FROM building_units";
+$stmt = $pdo->prepare($select);
+$stmt->execute();
 ?>
 
 <!doctype html>
@@ -551,7 +555,7 @@ require_once "../db/connect.php";
                                                 <tbody>
                                                     <?php
                                                     try {
-                                                        $select = "SELECT * FROM single_units";
+                                                        $select = "SELECT * FROM building_units";
                                                         $stmt = $pdo->prepare($select);
                                                         $stmt->execute();
                                                         while ($row = $stmt->fetch()) {
@@ -831,7 +835,7 @@ require_once "../db/connect.php";
     <!-- ./wrapper -->
     <!-- Required Scripts -->
 
-    
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
 
@@ -860,7 +864,7 @@ require_once "../db/connect.php";
 
     </div>
     </main>
-   
+
 
     <!--begin::Footer-->
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
@@ -872,7 +876,7 @@ require_once "../db/connect.php";
 
     <!-- plugin for pdf -->
     <!-- Main Js File -->
-     <!-- Meter Readings JavaScript -->
+    <!-- Meter Readings JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../../js/adminlte.js"></script>
     <script src="js/main.js"></script>

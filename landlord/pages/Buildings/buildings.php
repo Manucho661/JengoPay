@@ -173,10 +173,102 @@ require_once "../db/connect.php"
 
         <!--begin::App Main-->
         <main class="main">
-            
-            <div class="content-wrapper">
-                <!-- Main content -->
-                <section class="content">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" style="">
+                    <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/index2.php" style="text-decoration: none;">Home</a></li>
+                    <li class="breadcrumb-item active">Buildings</li>
+                </ol>
+            </nav>
+            <div class="container-fluid">
+                <!--First Row-->
+                <div class="row align-items-center mb-3">
+                    <div class="col-12 d-flex align-items-center">
+                        <span style="width:5px;height:28px;background:#F5C518;" class="rounded"></span>
+                        <h3 class="mb-0 ms-3">Buildings</h3>
+                    </div>
+                </div>
+
+                <!-- Statistics Cards -->
+                <div class="row g-3">
+                    <!-- Properties -->
+                    <?php
+                    $count_buildings = "SELECT building_type, COUNT(*) AS total FROM buildings GROUP BY building_type";
+                    $result = $pdo->prepare($count_buildings);
+                    $result->execute();
+                    //Initialize the countings for all the buildings
+                    $counts = [
+                        'Residential' => 0,
+                        'Commercial'   => 0,
+                        'Industrial'   => 0,
+                        'Mixed-Use'    => 0,
+                        // 'Ware House'   => 0
+                    ];
+                    while ($row = $result->fetch()) {
+                        $counts[$row['building_type']] = $row['total'];
+                    }
+
+                    // Assign icons for each building type
+                    $icons = [
+                        'Residential' => 'bi-house-door-fill',
+                        'Commercial'   => 'bi-shop',
+                        'Industrial'   => 'bi-building-gear',
+                        'Mixed-Use'    => 'bi-buildings',
+                        // 'Ware House'   => 'bi-box-seam'
+                    ];
+                    ?>
+                    <?php foreach ($counts as $type => $total): ?>
+                        <div class="col-lg-3 col-md-6 d-flex">
+                            <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
+                                <div>
+                                    <i class="bi  <?php echo $icons[$type]; ?> fs-1 me-3 text-warning"></i>
+                                    <!-- <i class="bi bi-building fs-1 me-3 text-warning"></i> -->
+                                </div>
+                                <div>
+                                    <p class="mb-0" style="font-weight: bold;"><?php echo $type; ?></p>
+                                    <b><?php echo $total; ?></b>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    <?php endforeach; ?>
+                    
+                </div>
+
+                <hr style="border: 1px solid #000;">
+
+                <!-- filter and search section -->
+                <div class="row mb-3 mt-3">
+                    <div class="col-md-6 d-flex">
+                        <input
+                            type="text"
+                            class="form-control filter-shadow"
+                            placeholder="Search requests..."
+                            style="border-radius: 25px 0 0 25px;">
+
+                        <!-- Search Button -->
+                        <button
+                            class="btn text-white"
+                            style="border-radius: 0 25px 25px 0; background: linear-gradient(135deg, #00192D, #002B5B)">
+                            Search
+                        </button>
+                    </div>
+
+                    <div class="col-md-3">
+                        <select class="form-select filter-shadow">
+                            <option selected>Filter by Category</option>
+                        </select>
+                    </div>
+
+                    <!-- Filter by Tenant -->
+                    <div class="col-md-3">
+                        <select class="form-select filter-shadow">
+                            <option selected>Filter by Ownership</option>
+                        </select>
+                    </div>
+
+                </div>
+                <!-- buildings -->
+                <div class="row g-3 mt-4">
                     <?php
                     include_once 'processes/encrypt_decrypt_function.php';
                     //nclude_once 'db_connection.php'; // ensure PDO $conn is here
@@ -313,202 +405,154 @@ require_once "../db/connect.php"
                         }
                     }
                     ?>
-                    <div class="card shadow-sm">
-                        <div class="card-header">
-                            <b>Overview</b>
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <?php
-                            $count_buildings = "SELECT building_type, COUNT(*) AS total FROM buildings GROUP BY building_type";
-                            $result = $pdo->prepare($count_buildings);
-                            $result->execute();
-                            //Initialize the countings for all the buildings
-                            $counts = [
-                                'Residential' => 0,
-                                'Commercial'   => 0,
-                                'Industrial'   => 0,
-                                'Mixed-Use'    => 0,
-                                'Ware House'   => 0
-                            ];
-                            while ($row = $result->fetch()) {
-                                $counts[$row['building_type']] = $row['total'];
-                            }
-
-                            // Assign icons for each building type
-                            $icons = [
-                                'Residential' => 'bi-house-door-fill',
-                                'Commercial'   => 'bi-shop',
-                                'Industrial'   => 'bi-building-gear',
-                                'Mixed-Use'    => 'bi-buildings',
-                                'Ware House'   => 'bi-box-seam'
-                            ];
-                            ?>
-                            <div class="row g-3">
-                                <?php foreach ($counts as $type => $total): ?>
-                                    <div class="col-md-3">
-                                        <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                                            <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i class="bi  <?php echo $icons[$type]; ?>"></i></span>
-                                            <div class="info-box-content">
-                                                <span class="info-box-text"><?php echo $type; ?></span>
-                                                <span class="info-box-number"><?php echo $total; ?></span>
-                                            </div>
-                                        </div>
+                    <div class="col-md-12">
+                        <div class="card shadow-sm">
+                            <div class="card-header" style="background-color: #00192D;">
+                                <div class="row">
+                                    <div class="col-md-6 mt-2"><b class="text-white">Registered Buildings (1000)</b></div>
+                                    <div class="col-md-6 text-right mt-2">
+                                        <button class="btn btn-sm" style="border: 1px solid #fff; color:#fff; font-weight:bold;" data-toggle="modal" data-target="#addBuildingModal"><i class="fas fa-building"></i>
+                                            Add Building</button>
                                     </div>
-                                <?php endforeach; ?>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="card shadow-sm">
-                        <div class="card-header" style="background-color: #00192D;">
-                            <div class="row">
-                                <div class="col-md-6 mt-2"><b class="text-white">Registered Buildings (1000)</b></div>
-                                <div class="col-md-6 text-right mt-2">
-                                    <button class="btn btn-sm" style="border: 1px solid #fff; color:#fff; font-weight:bold;" data-toggle="modal" data-target="#addBuildingModal"><i class="fas fa-building"></i>
-                                        Add Building</button>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="dataTable">
+                                        <thead>
+                                            <th>Building</th>
+                                            <th>Category</th>
+                                            <th>Type</th>
+                                            <th>No. of Units</th>
+                                            <th>Ownership Mode</th>
+                                            <th>Reg. Date</th>
+                                            <th>Options</th>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+
+
+                                            $show_buildings = "SELECT * FROM buildings";
+                                            $results_show_buildings = $pdo->prepare($show_buildings);
+                                            $results_show_buildings->execute();
+                                            while ($row = $results_show_buildings->fetch()) {
+                                                $id = encryptor('encrypt', $row['id']);
+                                                $building_name = $row['building_name'];
+                                                $county = $row['county'];
+                                                $constituency = $row['constituency'];
+                                                $ward = $row['ward'];
+                                                $structure_type = $row['structure_type'];
+                                                $floors_no = $row['floors_no'];
+                                                $no_of_units = $row['no_of_units'];
+                                                $building_type = $row['building_type'];
+                                                $tax_rate = $row['tax_rate'];
+                                                $ownership_info = $row['ownership_info'];
+                                                $first_name = $row['first_name'];
+                                                $last_name = $row['last_name'];
+                                                $id_number = $row['id_number'];
+                                                $primary_contact = $row['primary_contact'];
+                                                $other_contact = $row['other_contact'];
+                                                $owner_email = $row['owner_email'];
+                                                $postal_address = $row['postal_address'];
+                                                $entity_name = $row['entity_name'];
+                                                $entity_phone = $row['entity_phone'];
+                                                $entity_phoneother = $row['entity_phoneother'];
+                                                $entity_email = $row['entity_email'];
+                                                $entity_rep = $row['entity_rep'];
+                                                $rep_role = $row['rep_role'];
+                                                $entity_postal = $row['entity_postal'];
+                                                $ownership_proof = $row['ownership_proof'];
+                                                $title_deed = $row['title_deed'];
+                                                $legal_document = $row['legal_document'];
+                                                $photo_one = $row['photo_one'];
+                                                $photo_two = $row['photo_two'];
+                                                $photo_three = $row['photo_three'];
+                                                $photo_four = $row['photo_four'];
+                                                $added_on = $row['added_on'];
+                                            ?>
+                                                <tr>
+                                                    <td><i class="fas fa-building"></i> <?php echo $building_name; ?></td>
+                                                    <td>
+                                                        <?php
+                                                        if ($structure_type == 'High Rise') {
+                                                        ?>
+                                                            <i class="fas fa-bars"></i> <?php echo $structure_type; ?>
+                                                        <?php
+                                                        } else {
+                                                        ?>
+                                                            <i class="fas fa-home"></i> <?php echo $structure_type; ?>
+                                                        <?php
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php
+                                                        if ($building_type == 'Residential') {
+                                                        ?>
+                                                            <button class="btn btn-sm" style="border: 1px solid rgb(0, 25, 45);"><i class="fas fa-hotel"></i> <?php echo $building_type; ?></button>
+                                                        <?php
+                                                        } else if ($building_type == 'Commercial') {
+                                                        ?>
+                                                            <button class="btn btn-sm" style="border: 1px solid rgb(0, 25, 45);"><i class="fas fa-building"></i> <?php echo $building_type; ?></button>
+                                                        <?php
+                                                        } else if ($building_type == 'Industrial') {
+                                                        ?>
+                                                            <button class="btn btn-sm" style="border: 1px solid rgb(0, 25, 45);"><i class="fas fa-industry"></i> <?php echo $building_type; ?></button>
+                                                        <?php
+                                                        } else if ($building_type == 'Ware House') {
+                                                        ?>
+                                                            <button class="btn btn-sm" style="border: 1px solid rgb(0, 25, 45);"><i class="fas fa-bank"></i> <?php echo $building_type; ?></button>
+                                                        <?php
+                                                        } else {
+                                                        ?>
+                                                            <button class="btn btn-sm" style="border: 1px solid rgb(0, 25, 45);"><i class="fas fa-home"></i> <?php echo $building_type; ?></button>
+                                                        <?php
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td><i class="fas fa-home"></i> <?php echo $no_of_units; ?></td>
+                                                    <td>
+                                                        <?php
+                                                        if ($ownership_info == 'Individual') {
+                                                        ?>
+                                                            <i class="fa fa-user-circle" style="font-size:1.5rem;"></i>
+                                                            <?php echo $ownership_info; ?>
+                                                        <?php
+                                                        } else {
+                                                        ?>
+                                                            <i class="fa fa-users" style="font-size:1.5rem;"></i>
+                                                            <?php echo $ownership_info; ?>
+                                                        <?php
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td><i class="fa fa-calendar"></i> <?php echo $added_on; ?></td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-default btn-sm" style="border:1px solid rgb(0, 25, 45 ,.3);">Action</button>
+                                                            <button type="button" class="btn btn-default dropdown-toggle dropdown-icon btn-sm" data-toggle="dropdown" style="border:1px solid rgb(0, 25, 45 ,.3);">
+                                                                <span class="sr-only">Toggle Dropdown</span>
+                                                            </button>
+                                                            <div class="dropdown-menu shadow" role="menu" style="border:1px solid rgb(0, 25, 45 ,.3);">
+                                                                <a href="add_single_unit.php?add_single_unit=<?php echo $id; ?>" class="dropdown-item" onclick="return confirmAddUnit(event, '<?php echo $building_name; ?>')"><i class="bi bi-house"></i> Add Single Unit</a>
+                                                                <a href="add_bed_sitter.php?add_bed_sitter=<?php echo $id; ?>" class="dropdown-item" onclick="return confirmAddBedsitter(event, '<?php echo $building_name; ?>')"> <i class="bi bi-house"></i> Add Bedsitter</a>
+                                                                <a href="add_multi_rooms.php?add_multi_rooms=<?php echo $id; ?>" class="dropdown-item" onclick="return confirmAddMultiRooms(event, '<?php echo $building_name; ?>')"> <i class="bi bi-houses"></i> Add Multi Rooms
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Edit Building Modal -->
+                                                    </td>
+                                                <?php
+                                            }
+                                                ?>
+                                                </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover" id="dataTable">
-                                <thead>
-                                    <th>Building</th>
-                                    <th>Category</th>
-                                    <th>Type</th>
-                                    <th>No. of Units</th>
-                                    <th>Ownership Mode</th>
-                                    <th>Reg. Date</th>
-                                    <th>Options</th>
-                                </thead>
-                                <tbody>
-                                    <?php
-
-
-                                    $show_buildings = "SELECT * FROM buildings";
-                                    $results_show_buildings = $pdo->prepare($show_buildings);
-                                    $results_show_buildings->execute();
-                                    while ($row = $results_show_buildings->fetch()) {
-                                        $id = encryptor('encrypt', $row['id']);
-                                        $building_name = $row['building_name'];
-                                        $county = $row['county'];
-                                        $constituency = $row['constituency'];
-                                        $ward = $row['ward'];
-                                        $structure_type = $row['structure_type'];
-                                        $floors_no = $row['floors_no'];
-                                        $no_of_units = $row['no_of_units'];
-                                        $building_type = $row['building_type'];
-                                        $tax_rate = $row['tax_rate'];
-                                        $ownership_info = $row['ownership_info'];
-                                        $first_name = $row['first_name'];
-                                        $last_name = $row['last_name'];
-                                        $id_number = $row['id_number'];
-                                        $primary_contact = $row['primary_contact'];
-                                        $other_contact = $row['other_contact'];
-                                        $owner_email = $row['owner_email'];
-                                        $postal_address = $row['postal_address'];
-                                        $entity_name = $row['entity_name'];
-                                        $entity_phone = $row['entity_phone'];
-                                        $entity_phoneother = $row['entity_phoneother'];
-                                        $entity_email = $row['entity_email'];
-                                        $entity_rep = $row['entity_rep'];
-                                        $rep_role = $row['rep_role'];
-                                        $entity_postal = $row['entity_postal'];
-                                        $ownership_proof = $row['ownership_proof'];
-                                        $title_deed = $row['title_deed'];
-                                        $legal_document = $row['legal_document'];
-                                        $photo_one = $row['photo_one'];
-                                        $photo_two = $row['photo_two'];
-                                        $photo_three = $row['photo_three'];
-                                        $photo_four = $row['photo_four'];
-                                        $added_on = $row['added_on'];
-                                    ?>
-                                        <tr>
-                                            <td><i class="fas fa-building"></i> <?php echo $building_name; ?></td>
-                                            <td>
-                                                <?php
-                                                if ($structure_type == 'High Rise') {
-                                                ?>
-                                                    <i class="fas fa-bars"></i> <?php echo $structure_type; ?>
-                                                <?php
-                                                } else {
-                                                ?>
-                                                    <i class="fas fa-home"></i> <?php echo $structure_type; ?>
-                                                <?php
-                                                }
-                                                ?>
-                                            </td>
-                                            <td>
-                                                <?php
-                                                if ($building_type == 'Residential') {
-                                                ?>
-                                                    <button class="btn btn-sm" style="border: 1px solid rgb(0, 25, 45);"><i class="fas fa-hotel"></i> <?php echo $building_type; ?></button>
-                                                <?php
-                                                } else if ($building_type == 'Commercial') {
-                                                ?>
-                                                    <button class="btn btn-sm" style="border: 1px solid rgb(0, 25, 45);"><i class="fas fa-building"></i> <?php echo $building_type; ?></button>
-                                                <?php
-                                                } else if ($building_type == 'Industrial') {
-                                                ?>
-                                                    <button class="btn btn-sm" style="border: 1px solid rgb(0, 25, 45);"><i class="fas fa-industry"></i> <?php echo $building_type; ?></button>
-                                                <?php
-                                                } else if ($building_type == 'Ware House') {
-                                                ?>
-                                                    <button class="btn btn-sm" style="border: 1px solid rgb(0, 25, 45);"><i class="fas fa-bank"></i> <?php echo $building_type; ?></button>
-                                                <?php
-                                                } else {
-                                                ?>
-                                                    <button class="btn btn-sm" style="border: 1px solid rgb(0, 25, 45);"><i class="fas fa-home"></i> <?php echo $building_type; ?></button>
-                                                <?php
-                                                }
-                                                ?>
-                                            </td>
-                                            <td><i class="fas fa-home"></i> <?php echo $no_of_units; ?></td>
-                                            <td>
-                                                <?php
-                                                if ($ownership_info == 'Individual') {
-                                                ?>
-                                                    <i class="fa fa-user-circle" style="font-size:1.5rem;"></i>
-                                                    <?php echo $ownership_info; ?>
-                                                <?php
-                                                } else {
-                                                ?>
-                                                    <i class="fa fa-users" style="font-size:1.5rem;"></i>
-                                                    <?php echo $ownership_info; ?>
-                                                <?php
-                                                }
-                                                ?>
-                                            </td>
-                                            <td><i class="fa fa-calendar"></i> <?php echo $added_on; ?></td>
-                                            <td>
-                                                <div class="btn-group">
-                                                    <button type="button" class="btn btn-default btn-sm" style="border:1px solid rgb(0, 25, 45 ,.3);">Action</button>
-                                                    <button type="button" class="btn btn-default dropdown-toggle dropdown-icon btn-sm" data-toggle="dropdown" style="border:1px solid rgb(0, 25, 45 ,.3);">
-                                                        <span class="sr-only">Toggle Dropdown</span>
-                                                    </button>
-                                                    <div class="dropdown-menu shadow" role="menu" style="border:1px solid rgb(0, 25, 45 ,.3);">
-                                                        <a href="add_single_unit.php?add_single_unit=<?php echo $id; ?>" class="dropdown-item" onclick="return confirmAddUnit(event, '<?php echo $building_name; ?>')"><i class="bi bi-house"></i> Add Single Unit</a>
-                                                        <a href="add_bed_sitter.php?add_bed_sitter=<?php echo $id; ?>" class="dropdown-item" onclick="return confirmAddBedsitter(event, '<?php echo $building_name; ?>')"> <i class="bi bi-house"></i> Add Bedsitter</a>
-                                                        <a href="add_multi_rooms.php?add_multi_rooms=<?php echo $id; ?>" class="dropdown-item" onclick="return confirmAddMultiRooms(event, '<?php echo $building_name; ?>')"> <i class="bi bi-houses"></i> Add Multi Rooms
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <!-- Edit Building Modal -->
-                                            </td>
-                                        <?php
-                                    }
-                                        ?>
-                                        </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                </div>
             </div>
             <!-- Register New Building Modal Popup -->
             <div class="modal fade" id="addBuildingModal" style="overflow-y: auto;">
@@ -1431,13 +1475,13 @@ require_once "../db/connect.php"
                 </div>
             </div>
             </section>
-    </div>
-    </main>
-    <!--end::App Main-->
 
-    <!--begin::Footer-->
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
-    <!-- end footer -->
+        </main>
+        <!--end::App Main-->
+
+        <!--begin::Footer-->
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
+        <!-- end footer -->
 
     </div>
     <!--end::App Wrapper-->

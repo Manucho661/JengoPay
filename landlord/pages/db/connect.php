@@ -1,8 +1,8 @@
 <?php
-$host = 'localhost';
+$host = 'jobsphere.cbs4eusmuarq.eu-north-1.rds.amazonaws.com';
 $db   = 'bt_jengopay';
-$user = 'root';
-$pass = '';
+$user = 'admin';
+$pass = 'Manu1538';
 $charset = 'utf8mb4';
 
 
