@@ -1,5 +1,6 @@
 <?php
- require_once "../db/connect.php";
+session_start();
+require_once "../db/connect.php";
 //  include_once 'includes/lower_right_popup_form.php';
 ?>
 <?php
@@ -16,10 +17,11 @@ if ($conn->connect_error) {
 }
 
 // Function to create journal entry
-function createJournalEntry($conn, $date, $description, $entries) {
+function createJournalEntry($conn, $date, $description, $entries)
+{
     // Start transaction
     $conn->begin_transaction();
-    
+
     try {
         // Insert into journal_entries table (create this table if not exists)
         $sql = "INSERT INTO journal_entries (entry_date, description) VALUES (?, ?)";
@@ -27,24 +29,24 @@ function createJournalEntry($conn, $date, $description, $entries) {
         $stmt->bind_param("ss", $date, $description);
         $stmt->execute();
         $journal_id = $conn->insert_id;
-        
+
         // Insert each journal entry line
         $sql = "INSERT INTO journal_entry_lines 
                 (journal_id, account_code, debit_amount, credit_amount) 
                 VALUES (?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        
+
         foreach ($entries as $entry) {
             $stmt->bind_param(
-                "iidd", 
-                $journal_id, 
+                "iidd",
+                $journal_id,
                 $entry['account_code'],
                 $entry['debit'],
                 $entry['credit']
             );
             $stmt->execute();
         }
-        
+
         $conn->commit();
         return true;
     } catch (Exception $e) {
@@ -62,11 +64,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $payment_method = $_POST['payment_method'] ?? 'cash'; // cash, mpesa, bank
     $payment_date = $_POST['payment_date'] ?? date('Y-m-d');
     $description = "Rent Payment - " . date('F Y');
-    
+
     if ($tenant_id) {
         $description .= " - Tenant ID: " . $tenant_id;
     }
-    
+
     // Validate amount
     if ($monthly_rent <= 0) {
         $response = [
@@ -76,10 +78,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo json_encode($response);
         exit;
     }
-    
+
     // Determine cash/bank account based on payment method
     $cash_account_code = 100; // Default to Cash (100)
-    
+
     switch ($payment_method) {
         case 'mpesa':
             $cash_account_code = 110; // M-pesa
@@ -92,7 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $cash_account_code = 100; // Cash
             break;
     }
-    
+
     // Prepare journal entries
     $entries = [
         [
@@ -106,10 +108,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'credit' => $monthly_rent
         ]
     ];
-    
+
     // Create the journal entry
     $result = createJournalEntry($conn, $payment_date, $description, $entries);
-    
+
     if ($result) {
         // Optionally, update tenant's payment record in another table
         if ($tenant_id) {
@@ -118,8 +120,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param(
-                "iidssi", 
-                $tenant_id, 
+                "iidssi",
+                $tenant_id,
                 $property_id,
                 $monthly_rent,
                 $payment_date,
@@ -128,7 +130,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             );
             $stmt->execute();
         }
-        
+
         $response = [
             'success' => true,
             'message' => 'Rent payment recorded successfully!',
@@ -145,22 +147,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'message' => 'Failed to record payment'
         ];
     }
-    
+
     echo json_encode($response);
 }
 
 // Helper function to get account name
-function getAccountName($conn, $account_code) {
+function getAccountName($conn, $account_code)
+{
     $sql = "SELECT account_name FROM chart_of_accounts WHERE account_code = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $account_code);
     $stmt->execute();
     $result = $stmt->get_result();
-    
+
     if ($row = $result->fetch_assoc()) {
         return $row['account_name'];
     }
-    
+
     return "Unknown Account";
 }
 
@@ -216,7 +219,7 @@ $conn->close();
 
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-        <link rel="stylesheet" href="../../assets/main.css" />
+    <link rel="stylesheet" href="../../assets/main.css" />
     <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
@@ -329,32 +332,13 @@ $conn->close();
         <!--begin::Header-->
         <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
         <!--end::Header-->
-        <!--begin::Sidebar-->
-        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-            <!--begin::Sidebar Brand-->
-            <div class="sidebar-brand">
-                <!--begin::Brand Link-->
-                <a href="./index.html" class="brand-link">
 
-                    <!--begin::Brand Text-->
-                    <span class="brand-text font-weight-light"><b class="p-2"
-                            style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
-                            class="p-2"
-                            style=" border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107;">JENGOPAY</b></span>
-                </a>
-                </span>
-                <!--end::Brand Text-->
-                </a>
-                <!--end::Brand Link-->
-            </div>
-            <!--end::Sidebar Brand-->
-            <!--begin::Sidebar Wrapper-->
-            <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
-            <!--end::Sidebar Wrapper-->
-        </aside>
+        <!--begin::Sidebar-->
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?>
         <!--end::Sidebar-->
+
         <!--begin::App Main-->
-        <main class="app-main mt-4">
+        <main class="main">
             <div class="content-wrapper">
                 <!-- Main content -->
                 <section class="content">
@@ -362,58 +346,58 @@ $conn->close();
                         <div class="row">
                             <?php
                             include_once 'processes/encrypt_decrypt_function.php';
-                            if(isset($_GET['add_single_unit']) && !empty($_GET['add_single_unit'])) {
+                            if (isset($_GET['add_single_unit']) && !empty($_GET['add_single_unit'])) {
                                 $id = $_GET['add_single_unit'];
                                 $id = encryptor('decrypt', $id);
-                            try{
-                                if(!empty($id)) {
-                                    $select = "SELECT * FROM buildings WHERE id =:id";
-                                    $stmt = $pdo->prepare($select);
-                                    $stmt->execute(array(':id' => $id));
+                                try {
+                                    if (!empty($id)) {
+                                        $select = "SELECT * FROM buildings WHERE id =:id";
+                                        $stmt = $pdo->prepare($select);
+                                        $stmt->execute(array(':id' => $id));
 
-                                    while ($row = $stmt->fetch()) {
-                                      $building_name = $row['building_name'];
-                                      $county = $row['county'];
-                                      $constituency = $row['constituency'];
-                                      $ward = $row['ward'];
-                                      $structure_type = $row['structure_type'];
-                                      $floors_no = $row['floors_no'];
-                                      $no_of_units = $row['no_of_units'];
-                                      $building_type = $row['building_type'];
-                                      $tax_rate = $row['tax_rate'];
-                                      $ownership_info = $row['ownership_info'];
-                                      $first_name = $row['first_name'];
-                                      $last_name = $row['last_name'];
-                                      $id_number = $row['id_number'];
-                                      $primary_contact = $row['primary_contact'];
-                                      $other_contact = $row['other_contact'];
-                                      $owner_email = $row['owner_email'];
-                                      $postal_address = $row['postal_address'];
-                                      $entity_name = $row['entity_name'];
-                                      $entity_phone = $row['entity_phone'];
-                                      $entity_phoneother = $row['entity_phoneother'];
-                                      $entity_email = $row['entity_email'];
-                                      $entity_rep = $row['entity_rep'];
-                                      $rep_role = $row['rep_role'];
-                                      $entity_postal = $row['entity_postal'];
-                                      $ownership_proof = $row['ownership_proof'];
-                                      $title_deed = $row['title_deed'];
-                                      $legal_document = $row['legal_document'];
-                                      $photo_one = $row['photo_one'];
-                                      $photo_two = $row['photo_two'];
-                                      $photo_three = $row['photo_three'];
-                                      $photo_four = $row['photo_four'];
-                                      $added_on = $row['added_on'];
-                                      $ownership_proof = $row['ownership_proof'];
-                                      $title_deed = $row['title_deed'];
-                                      $legal_document = $row['legal_document'];
-                                      $photo_one = $row['photo_one'];
-                                      $photo_two = $row['photo_two'];
-                                      $photo_three = $row['photo_three'];
-                                      $photo_four = $row['photo_four'];
-                                  }
-                              } else {
-                                echo "<script>
+                                        while ($row = $stmt->fetch()) {
+                                            $building_name = $row['building_name'];
+                                            $county = $row['county'];
+                                            $constituency = $row['constituency'];
+                                            $ward = $row['ward'];
+                                            $structure_type = $row['structure_type'];
+                                            $floors_no = $row['floors_no'];
+                                            $no_of_units = $row['no_of_units'];
+                                            $building_type = $row['building_type'];
+                                            $tax_rate = $row['tax_rate'];
+                                            $ownership_info = $row['ownership_info'];
+                                            $first_name = $row['first_name'];
+                                            $last_name = $row['last_name'];
+                                            $id_number = $row['id_number'];
+                                            $primary_contact = $row['primary_contact'];
+                                            $other_contact = $row['other_contact'];
+                                            $owner_email = $row['owner_email'];
+                                            $postal_address = $row['postal_address'];
+                                            $entity_name = $row['entity_name'];
+                                            $entity_phone = $row['entity_phone'];
+                                            $entity_phoneother = $row['entity_phoneother'];
+                                            $entity_email = $row['entity_email'];
+                                            $entity_rep = $row['entity_rep'];
+                                            $rep_role = $row['rep_role'];
+                                            $entity_postal = $row['entity_postal'];
+                                            $ownership_proof = $row['ownership_proof'];
+                                            $title_deed = $row['title_deed'];
+                                            $legal_document = $row['legal_document'];
+                                            $photo_one = $row['photo_one'];
+                                            $photo_two = $row['photo_two'];
+                                            $photo_three = $row['photo_three'];
+                                            $photo_four = $row['photo_four'];
+                                            $added_on = $row['added_on'];
+                                            $ownership_proof = $row['ownership_proof'];
+                                            $title_deed = $row['title_deed'];
+                                            $legal_document = $row['legal_document'];
+                                            $photo_one = $row['photo_one'];
+                                            $photo_two = $row['photo_two'];
+                                            $photo_three = $row['photo_three'];
+                                            $photo_four = $row['photo_four'];
+                                        }
+                                    } else {
+                                        echo "<script>
                                 Swal.fire({
                                   icon: 'error',
                                   title: 'No Information!',
@@ -421,9 +405,9 @@ $conn->close();
                                   confirmButtonColor: '#cc0001'
                                   });
                                   </script>";
-                              }
-                            }catch(PDOException $e){
-                            echo "<script>
+                                    }
+                                } catch (PDOException $e) {
+                                    echo "<script>
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Error!',
@@ -435,10 +419,10 @@ $conn->close();
                             }
 
                             //if the Submit button is clicked
-                            if(isset($_POST['submit_unit'])) {
+                            if (isset($_POST['submit_unit'])) {
                                 //Check for duplicate unit_number + building_link and avoid double entry of information
-                                try{
-                                    $check = $pdo->prepare("SELECT COUNT(*) FROM single_units WHERE unit_number = :unit_number AND building_link = :building_link");
+                                try {
+                                    $check = $pdo->prepare("SELECT COUNT(*) FROM building_units WHERE unit_number = :unit_number AND building_link = :building_link");
                                     $check->execute([
                                         ':unit_number'   => $_POST['unit_number'],
                                         ':building_link' => $_POST['building_link']
@@ -462,8 +446,8 @@ $conn->close();
                                     // Start transaction
                                     $pdo->beginTransaction();
 
-                                    //Insert into single_units
-                                    $stmt = $pdo->prepare("INSERT INTO single_units (structure_type, first_name, last_name, owner_email, entity_name, entity_phone, entity_phoneother, entity_email, unit_number, purpose, building_link, location, monthly_rent, occupancy_status, created_at) VALUES (:structure_type, :first_name, :last_name, :owner_email, :entity_name, :entity_phone, :entity_phoneother, :entity_email, :unit_number, :purpose, :building_link, :location, :monthly_rent, :occupancy_status, NOW())");
+                                    //Insert into building_units
+                                    $stmt = $pdo->prepare("INSERT INTO building_units (structure_type, first_name, last_name, owner_email, entity_name, entity_phone, entity_phoneother, entity_email, unit_number, purpose, building_link, location, monthly_rent, occupancy_status, created_at) VALUES (:structure_type, :first_name, :last_name, :owner_email, :entity_name, :entity_phone, :entity_phoneother, :entity_email, :unit_number, :purpose, :building_link, :location, :monthly_rent, :occupancy_status, NOW())");
 
                                     $stmt->execute([
                                         ':structure_type' => $_POST['structure_type'],
@@ -483,7 +467,7 @@ $conn->close();
                                     ]);
 
                                     // Get inserted unit_id from single units. This will be used to initiate recurring bills on the foreign key unit_id
-                                        $unit_id = $pdo->lastInsertId();
+                                    $unit_id = $pdo->lastInsertId();
 
                                     //Insert the Bills of the Unit into single_unit_bills
                                     if (!empty($_POST['bill'])) {
@@ -526,7 +510,7 @@ $conn->close();
                                     <script>
                                         Swal.fire({
                                             title: 'Error!',
-                                            text: '". addslashes($e->getMessage()) ."',
+                                            text: '" . addslashes($e->getMessage()) . "',
                                             icon: 'error',
                                             confirmButtonText: 'OK'
                                         });
@@ -534,176 +518,168 @@ $conn->close();
                                     exit;
                                 }
                             }
-                    
-                        ?>
-                                <div class="col-md-3 col-sm-6 col-12">
-                                    <div class="info-box shadow">
-                                        <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i class="bi bi-building"></i></span>
 
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Building</span>
-                                            <span class="info-box-number"><?= htmlspecialchars($building_name) ;?></span>
-                                        </div>
+                            ?>
+                            <div class="col-md-3 col-sm-6 col-12">
+                                <div class="info-box shadow">
+                                    <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i class="bi bi-building"></i></span>
+
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Building</span>
+                                        <span class="info-box-number"><?= htmlspecialchars($building_name); ?></span>
                                     </div>
                                 </div>
-                                <div class="col-md-3 col-sm-6 col-12">
-                                    <div class="info-box shadow">
-                                        <span class="info-box-icon" style="background-color:#00192D; color: #fff;"><i class="bi bi-houses"></i></span>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-12">
+                                <div class="info-box shadow">
+                                    <span class="info-box-icon" style="background-color:#00192D; color: #fff;"><i class="bi bi-houses"></i></span>
 
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Structure Type</span>
-                                            <span class="info-box-number"><?= htmlspecialchars($structure_type) ;?></span>
-                                        </div>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Structure Type</span>
+                                        <span class="info-box-number"><?= htmlspecialchars($structure_type); ?></span>
                                     </div>
                                 </div>
-                                <div class="col-md-3 col-sm-6 col-12">
-                                    <div class="info-box shadow">
-                                        <span class="info-box-icon" style="background-color:#00192D; color: #fff;"><i class="bi bi-house-exclamation"></i></span>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-12">
+                                <div class="info-box shadow">
+                                    <span class="info-box-icon" style="background-color:#00192D; color: #fff;"><i class="bi bi-house-exclamation"></i></span>
 
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Building Type</span>
-                                            <span class="info-box-number"><?= htmlspecialchars($building_type) ;?></span>
-                                        </div>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Building Type</span>
+                                        <span class="info-box-number"><?= htmlspecialchars($building_type); ?></span>
                                     </div>
                                 </div>
-                                <div class="col-md-3 col-sm-6 col-12">
-                                    <div class="info-box shadow">
-                                        <span class="info-box-icon" style="background-color:#00192D; color: #fff;"><i class="bi bi-table"></i></span>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-12">
+                                <div class="info-box shadow">
+                                    <span class="info-box-icon" style="background-color:#00192D; color: #fff;"><i class="bi bi-table"></i></span>
 
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Number of Units</span>
-                                            <span class="info-box-number"><?= htmlspecialchars($no_of_units) ;?></span>
-                                        </div>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Number of Units</span>
+                                        <span class="info-box-number"><?= htmlspecialchars($no_of_units); ?></span>
                                     </div>
                                 </div>
-                            </div> <hr>
-                            <div class="card shadow">
-                                <div class="card-header" style="background-color: #00192D; color:#fff;">
-                                    <p>Add Unit (<?= htmlspecialchars($building_name);?>)</p>
-                                </div>
-                                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) ;?>" method="POST" enctype="multipart/form-data">
-                                    <input type="hidden" name="structure_type" value="<?= htmlspecialchars($structure_type);?>">
-                                    <input type="hidden" name="first_name" value="<?= htmlspecialchars($first_name);?>">
-                                    <input type="hidden" name="last_name" value="<?= htmlspecialchars($last_name);?>">
-                                    <input type="hidden" name="owner_email" value="<?= htmlspecialchars($owner_email);?>">
-                                    <input type="hidden" name="entity_name" value="<?= htmlspecialchars($entity_name);?>">
-                                    <input type="hidden" name="entity_phone" value="<?= htmlspecialchars($entity_phone);?>">
-                                    <input type="hidden" name="entity_phoneother" value="<?= htmlspecialchars($entity_phoneother);?>">
-                                    <input type="hidden" name="entity_email" value="<?= htmlspecialchars($entity_email);?>">
-                                    <div class="card-body">
-                                        <div class="card shadow" id="firstSection" style="border:1px solid rgb(0,25,45,.2);">
-                                            <div class="card-header" style="background-color: #00192D; color:#fff;">
-                                                <b>Unit Identification</b>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label>Unit Number</label>
-                                                            <input type="text" name="unit_number" required class="form-control" id="unit_number" placeholder="Unit Number">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="">Purpose</label>
-                                                            <select name="purpose" id="purpose" class="form-control select2 select2-danger" data-dropdown-css-class="select2-danger" style="width: 100%;">
-                                                                <option value="" selected hidden>-- Select Option -- </option>
-                                                                <option value="Office">Office</option>
-                                                                <option value="Residential">Residential</option>
-                                                                <option value="Business">Business</option>
-                                                                <option value="Store">Store</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label for="">Link to the Building</label>
-                                                            <input type="text" name="building_link" class="form-control" value="<?= htmlspecialchars($building_name);?>" readonly>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="">Location with in the Building</label>
-                                                            <input name="location" type="text" class="form-control" id="location" placeholder="Location e.g.Second Floor">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card-footer text-right">
-                                                <button type="button" class="btn btn-sm next-btn" id="firstSectionNexttBtn">Next</button>
-                                            </div>
-                                        </div>
-
-                                        <div class="card shadow" id="secondSection" style="border:1px solid rgb(0,25,45,.2); display:none;">
-                                            <div class="card-header" style="background-color: #00192D; color:#fff;">
-                                                <b>Financials and Other Information</b>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="form-group">
-                                                    <label>Monthly Rent</label>
-                                                    <input type="number" class="form-control" id="monthly_rent" name="monthly_rent" placeholder="Monthly Rent">
-                                                </div>
-                                                <div class="card shadow">
-                                                    <div class="card-header" style="background-color:#00192D; color: #fff;">Recurring Bills</div>
-                                                    <div class="card-body">
-                                                        <table id="expensesTable" class="table">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>Bill</th>
-                                                                    <th>Qty</th>
-                                                                    <th>Unit Price</th>
-                                                                    <th>Subtotal</th>
-                                                                    <th>Options</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <!-- Rows will be added here dynamically -->
-                                                            </tbody>
-                                                            <tfoot>
-                                                                <tr>
-                                                                    <td>Total</td>
-                                                                    <td id="totalQty">0</td>
-                                                                    <td id="totalUnitPrice">0.00</td>
-                                                                    <td id="totalSubtotal">0.00</td>
-                                                                    <td></td>
-                                                                </tr>
-                                                            </tfoot>
-                                                        </table>
-                                                        <button type="button" class="btn btn-sm shadow" style="border:1px solid #00192D; color:#00192D;" onclick="addRow()">+ Add Row</button>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Occupancy Status</label>
-                                                    <select name="occupancy_status" id="occupancy_status" required class="form-control">
-                                                        <option value="" selected hidden>-- Select Status --</option>
-                                                        <option value="Occupied">Occupied</option>
-                                                        <option value="Vacant">Vacant</option>
-                                                        <option value="Under Maintenance">Under Maintenance</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="card-footer text-right">
-                                                <button class="btn btn-sm" id="secondSectionBackBtn" type="button" style="background-color:#00192D; color:#fff;">Go Back</button>
-                                                <button class="btn btn-sm" type="submit" name="submit_unit" style="background-color:#00192D; color: #fff;"><i class="bi bi-send"></i> Submit</button
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
                             </div>
                         </div>
+                        <hr>
+                        <div class="card shadow">
+                            <div class="card-header" style="background-color: #00192D; color:#fff;">
+                                <p>Add Unit (<?= htmlspecialchars($building_name); ?>)</p>
+                            </div>
+                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" enctype="multipart/form-data">
+                                <input type="hidden" name="structure_type" value="<?= htmlspecialchars($structure_type); ?>">
+                                <input type="hidden" name="first_name" value="<?= htmlspecialchars($first_name); ?>">
+                                <input type="hidden" name="last_name" value="<?= htmlspecialchars($last_name); ?>">
+                                <input type="hidden" name="owner_email" value="<?= htmlspecialchars($owner_email); ?>">
+                                <input type="hidden" name="entity_name" value="<?= htmlspecialchars($entity_name); ?>">
+                                <input type="hidden" name="entity_phone" value="<?= htmlspecialchars($entity_phone); ?>">
+                                <input type="hidden" name="entity_phoneother" value="<?= htmlspecialchars($entity_phoneother); ?>">
+                                <input type="hidden" name="entity_email" value="<?= htmlspecialchars($entity_email); ?>">
+                                <div class="card-body">
+                                    <div class="card shadow" id="firstSection" style="border:1px solid rgb(0,25,45,.2);">
+                                        <div class="card-header" style="background-color: #00192D; color:#fff;">
+                                            <b>Unit Identification</b>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Unit Number</label>
+                                                        <input type="text" name="unit_number" required class="form-control" id="unit_number" placeholder="Unit Number">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="">Purpose</label>
+                                                        <select name="purpose" id="purpose" class="form-control select2 select2-danger" data-dropdown-css-class="select2-danger" style="width: 100%;">
+                                                            <option value="" selected hidden>-- Select Option -- </option>
+                                                            <option value="Office">Office</option>
+                                                            <option value="Residential">Residential</option>
+                                                            <option value="Business">Business</option>
+                                                            <option value="Store">Store</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="">Link to the Building</label>
+                                                        <input type="text" name="building_link" class="form-control" value="<?= htmlspecialchars($building_name); ?>" readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="">Location with in the Building</label>
+                                                        <input name="location" type="text" class="form-control" id="location" placeholder="Location e.g.Second Floor">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer text-right">
+                                            <button type="button" class="btn btn-sm next-btn" id="firstSectionNexttBtn">Next</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="card shadow" id="secondSection" style="border:1px solid rgb(0,25,45,.2); display:none;">
+                                        <div class="card-header" style="background-color: #00192D; color:#fff;">
+                                            <b>Financials and Other Information</b>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label>Monthly Rent</label>
+                                                <input type="number" class="form-control" id="monthly_rent" name="monthly_rent" placeholder="Monthly Rent">
+                                            </div>
+                                            <div class="card shadow">
+                                                <div class="card-header" style="background-color:#00192D; color: #fff;">Recurring Bills</div>
+                                                <div class="card-body">
+                                                    <table id="expensesTable" class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Bill</th>
+                                                                <th>Qty</th>
+                                                                <th>Unit Price</th>
+                                                                <th>Subtotal</th>
+                                                                <th>Options</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <!-- Rows will be added here dynamically -->
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <td>Total</td>
+                                                                <td id="totalQty">0</td>
+                                                                <td id="totalUnitPrice">0.00</td>
+                                                                <td id="totalSubtotal">0.00</td>
+                                                                <td></td>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                    <button type="button" class="btn btn-sm shadow" style="border:1px solid #00192D; color:#00192D;" onclick="addRow()">+ Add Row</button>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Occupancy Status</label>
+                                                <select name="occupancy_status" id="occupancy_status" required class="form-control">
+                                                    <option value="" selected hidden>-- Select Status --</option>
+                                                    <option value="Occupied">Occupied</option>
+                                                    <option value="Vacant">Vacant</option>
+                                                    <option value="Under Maintenance">Under Maintenance</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer text-right">
+                                            <button class="btn btn-sm" id="secondSectionBackBtn" type="button" style="background-color:#00192D; color:#fff;">Go Back</button>
+                                            <button class="btn btn-sm" type="submit" name="submit_unit" style="background-color:#00192D; color: #fff;"><i class="bi bi-send"></i> Submit</button
+                                                </div>
+                                        </div>
+                                    </div>
+                            </form>
+                        </div>
+                    </div>
                 </section>
             </div>
         </main>
         <!--end::App Main-->
+
         <!--begin::Footer-->
-        <footer class="app-footer">
-            <!--begin::To the end-->
-            <div class="float-end d-none d-sm-inline">Anything you want</div>
-            <!--end::To the end-->
-            <!--begin::Copyright-->
-            <strong>
-                Copyright &copy; 2014-2024&nbsp;
-                <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;">JENGO PAY</a>.
-            </strong>
-            All rights reserved.
-            <!--end::Copyright-->
-        </footer>
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
+        <!-- end footer -->
 
     </div>
     <!--end::App Wrapper-->

@@ -86,7 +86,7 @@ require_once "../db/connect.php";
     <!--Tailwind CSS  -->
     <style>
         .app-wrapper {
-            background-color: rgba(128, 128, 128, 0.1);
+            /* background-color: rgba(128, 128, 128, 0.1); */
         }
 
         .modal-backdrop.show {
@@ -172,8 +172,22 @@ require_once "../db/connect.php";
         <!--end::Sidebar-->
 
         <!--begin::App Main-->
-        <main class="main mt-4">
+        <main class="main">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" style="">
+                    <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/index2.php" style="text-decoration: none;">Home</a></li>
+                    <li class="breadcrumb-item active">Single units</li>
+                </ol>
+            </nav>
             <div class="container-fluid">
+                <!--First Row-->
+                <div class="row align-items-center mb-4">
+                    <div class="col-12 d-flex align-items-center">
+                        <span style="width:5px;height:28px;background:#F5C518;" class="rounded"></span>
+                        <h3 class="mb-0 ms-3">Single units</h3>
+                    </div>
+                </div>
+
                 <div class="row mb-4">
                     <?php
                     try {
