@@ -452,22 +452,23 @@ $conn->close();
                         }
                         // Start transaction
                         $pdo->beginTransaction();
-                        echo 'yoyoy';
+                        
                         //Insert into building_units
-                        $stmt = $pdo->prepare("INSERT INTO building_units (structure_type, first_name, last_name, owner_email, entity_name, entity_phone, entity_phoneother, entity_email, unit_number, purpose, building_link, location, monthly_rent, occupancy_status, created_at) VALUES (:structure_type, :first_name, :last_name, :owner_email, :entity_name, :entity_phone, :entity_phoneother, :entity_email, :unit_number, :purpose, :building_link, :location, :monthly_rent, :occupancy_status, NOW())");
-
+                        // $stmt = $pdo->prepare("INSERT INTO building_units (structure_type, first_name, last_name, owner_email, entity_name, entity_phone, entity_phoneother, entity_email, unit_number, purpose, building_link, location, monthly_rent, occupancy_status, created_at) VALUES (:structure_type, :first_name, :last_name, :owner_email, :entity_name, :entity_phone, :entity_phoneother, :entity_email, :unit_number, :purpose, :building_link, :location, :monthly_rent, :occupancy_status, NOW())");
+                        $stmt = $pdo->prepare("INSERT INTO building_units (building_id, unit_number, purpose, location, monthly_rent, occupancy_status, created_at) VALUES (:buiding_id, :unit_number, :purpose, :location, :monthly_rent, :occupancy_status, NOW())");
                         $stmt->execute([
-                            ':structure_type' => $_POST['structure_type'],
-                            ':first_name' => $_POST['first_name'],
-                            ':last_name' => $_POST['last_name'],
-                            ':owner_email' => $_POST['owner_email'],
-                            ':entity_name' => $_POST['entity_name'],
-                            ':entity_phone' => $_POST['entity_phone'],
-                            ':entity_phoneother' => $_POST['entity_phoneother'],
-                            ':entity_email' => $_POST['entity_email'],
+                            // ':structure_type' => $_POST['structure_type'],
+                            // ':first_name' => $_POST['first_name'],
+                            // ':last_name' => $_POST['last_name'],
+                            // ':owner_email' => $_POST['owner_email'],
+                            // ':entity_name' => $_POST['entity_name'],
+                            // ':entity_phone' => $_POST['entity_phone'],
+                            // ':entity_phoneother' => $_POST['entity_phoneother'],
+                            // ':entity_email' => $_POST['entity_email'],
+                            ':building_id' => $id,
                             ':unit_number' => $_POST['unit_number'],
                             ':purpose' => $_POST['purpose'],
-                            ':building_link' => $_POST['building_link'],
+                            // ':building_link' => $_POST['building_link'],
                             ':location' => $_POST['location'],
                             ':monthly_rent' => $_POST['monthly_rent'],
                             ':occupancy_status' => $_POST['occupancy_status']
